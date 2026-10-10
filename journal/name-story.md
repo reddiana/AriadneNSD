@@ -10,7 +10,7 @@ updated: 2026-10-11
 
 이 제품의 이름은 `AriadneNSD`이고, 문자 로고에서는 `Ariadne’s NSD`라고 적습니다. "아리아드네의 NS 차트"라는 뜻이고, **"Ariadne's Thread"(아리아드네의 실)** 를 떠올리게 하려고 지은 이름입니다.
 
-![[2026-10-11-wordmark-n1-warm-grey.svg|320]]
+![[2026-10-11-wordmark-p1-cream-plate.svg|380]]
 
 ## 아리아드네의 실
 
