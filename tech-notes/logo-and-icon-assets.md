@@ -3,7 +3,7 @@ title: 로고와 아이콘 파일 만들기
 tags:
   - ariadne-nsd
   - tech-notes
-updated: 2026-10-10
+updated: 2026-10-11
 ---
 
 # 로고와 아이콘 파일 만들기
@@ -33,6 +33,7 @@ updated: 2026-10-10
 
 ## AriadneNSD에서 어디에 쓰나
 
+- **바탕 그림:** 메트로폴리탄 미술관이 CC0로 공개한 벽화 모사화의 사진입니다. → [[logo-source]]
 - **그림 로고:** 크노소스 벽화의 가운데 여인을 색 면 네 가지(바탕, 머리, 살, 가는 선)로 옮겼습니다. 눈은 뭉개져서 자리를 재어 다시 그렸습니다. → `journal/assets/2026-10-10-logo-aegean-lady.svg`
 - **크기별 판:** 32px부터는 벽화 그대로, 16~24px은 머리·얼굴·눈만 남기고 얼굴을 더 크게 잡은 판입니다. → `…-lady-tiny.svg`
 - **문자 로고:** `Ariadne`는 GFS Didot, `NSD`는 IBM Plex Mono이고, 둘 다 윤곽선으로 바꿨습니다. 밝은 화면용과 어두운 화면용 두 파일입니다. → `journal/assets/2026-10-10-wordmark-light.svg`, `…-dark.svg`
