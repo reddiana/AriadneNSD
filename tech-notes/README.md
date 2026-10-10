@@ -3,7 +3,7 @@ title: 기술 노트
 tags:
   - ariadne-nsd
   - tech-notes
-updated: 2026-10-10
+updated: 2026-10-11
 ---
 
 # 기술 노트
@@ -22,4 +22,5 @@ AriadneNSD를 만들며 배운 기술을 정리하는 곳입니다. 메인테이
 - [[feedback-and-funding-channels]] — 사용자 의견 받기(Issues·Discussions·양식)와 후원·광고 채널 (2026-10-10)
 - [[browser-focus-and-double-click]] — 브라우저의 포커스 표시(캔버스의 파란 선)와 더블클릭이 안 먹던 이유 (2026-10-10)
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
+- [[git-history-rewrite]] — git 기록에서 파일 지우기: 지워도 남는 까닭, 기록 고쳐 쓰기, 강제 push, 바뀌는 해시 (2026-10-11)
 - [[logo-and-icon-assets]] — 로고와 아이콘 파일 만들기: 벡터, 사진 옮기기, 크기별 판, 윤곽선 글자, 라이선스 (2026-10-10)
