@@ -181,7 +181,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
         <dt><kbd>U</kbd></dt><dd>풀기</dd>
-        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개)</dd>
+        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 줄을 더블클릭하면 폅니다</dd>
         <dt><kbd>H</kbd> / <kbd>Shift</kbd>+<kbd>H</kbd></dt><dd>강조 영역 만들기·넓히기 / 지우기</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
@@ -197,6 +197,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 지금 있는 제어 블록의 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
         <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
         <li><b>이벤트 머리의 이름은 겹칠 수 없습니다.</b> 겹치면 고치던 칸이 다시 열립니다.</li>
+        <li><b>If는 갈래별로 접습니다.</b> 참 갈래와 거짓 갈래가 따로 "⋯ 블록 N개" 줄이 됩니다. 블록이 하나뿐인 갈래, 안에 블록이 하나뿐인 반복문은 접지 않습니다.</li>
         <li><b>접힌 영역을 더블클릭하면 폅니다.</b> 이름은 고르고 <kbd>Enter</kbd>로 고칩니다.</li>
       </ul>
       <h2>세 번째 판에서 바뀐 것</h2>
@@ -405,7 +406,7 @@ function visibleOrder(only) {
     if (n.type === 'range') { if (folded.has(n.id)) out.push(n.id); else walk(n.children); return; }
     out.push(n.id);
     if (folded.has(n.id)) return;
-    (SLOTS[n.type] || []).forEach(s => walk(n[s]));
+    (SLOTS[n.type] || []).forEach(s => { if (!laneFolded(n, s)) walk(n[s]); });
   });
   (only ? [only] : doc.diagrams).forEach(d => { if (d.event != null) out.push(d.id); walk(d.body); });
   return out;
@@ -436,7 +437,7 @@ function move(key, shift, ctrl) {
     for (let c = isHead(cur) ? null : container(cur); c; c = container(c.node.id)) {
       if (c.node.type !== 'if') continue;
       inIf = true;
-      if (c.slot === (fwd ? 'yes' : 'no')) { next = firstIn(fwd ? c.node.no : c.node.yes); break; }
+      if (c.slot === (fwd ? 'yes' : 'no')) { next = enter(c.node, fwd ? 'no' : 'yes'); break; }
     }
     if (!inIf) next = step();
   } else if (ctrl) {
@@ -456,11 +457,11 @@ function move(key, shift, ctrl) {
   else if (isHead(cur)) next = neighbour();   // 머리에서 좌우: 옆 다이어그램으로
   else if (key === 'ArrowLeft') {
     const c = container(cur);
-    if (c && c.node.type === 'if' && c.slot === 'no') next = firstIn(c.node.yes);   // 건너편 갈래
+    if (c && c.node.type === 'if' && c.slot === 'no') next = enter(c.node, 'yes');   // 건너편 갈래
     else next = c ? c.node.id : null;                                                // 위쪽 바깥 블록
   } else {
     const c = container(cur);
-    if (c && c.node.type === 'if' && c.slot === 'yes') next = firstIn(c.node.no);   // 건너편 갈래
+    if (c && c.node.type === 'if' && c.slot === 'yes') next = enter(c.node, 'no');   // 건너편 갈래
     else if (c && c.node.type === 'if')                                              // 아래쪽 바깥 블록
       next = order.slice(orderPos(order, c.node.id) + 1).find(id => !ancestors(id).includes(c.node.id));
     else {
@@ -485,6 +486,7 @@ function container(id) {
   while (e && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
   return e && e.parent ? { node: e.parent, slot: e.slot } : null;
 }
+const enter = (node, slot) => laneFolded(node, slot) ? null : firstIn(node[slot]);
 function firstIn(list) {
   let n = list[0];
   while (n.type === 'range' && !folded.has(n.id)) n = n.children[0];
@@ -505,7 +507,10 @@ function tsize(text) {
   return { w: Math.ceil(w), h: lines.length * K.lh, lines };
 }
 const callText = n => (n.target == null ? '? ' : '') + (n.text || '(이름 없음)');
-const foldRowText = n => `⋯ 블록 ${countBlocks(SLOTS[n.type].flatMap(s => n[s]))}개`;
+const foldRowText = list => `⋯ 블록 ${countBlocks(list)}개`;
+const laneKey = (n, slot) => n.id + ':' + slot;
+const laneFolded = (n, slot) => folded.has(laneKey(n, slot));
+const foldRowSize = list => { const t = tsize(foldRowText(list)); return { w: t.w + 2 * K.padX, h: t.h + 2 * K.padY }; };
 let M, L, T;
 function measure(n) {
   let r;
@@ -520,17 +525,14 @@ function measure(n) {
     else r = measureSeq(n.children);
   } else {
     const t = tsize(n.text);
-    const fr = folded.has(n.id) ? tsize(foldRowText(n)) : null;
     if (n.type === 'if') {
       const headH = t.h + 2 * K.padY + K.ifLab, headW = t.w + 2 * K.padX + 70;
-      if (fr) r = { w: Math.max(headW, fr.w + 2 * K.padX), h: headH + fr.h + 2 * K.padY, headH };
-      else {
-        const y = measureSeq(n.yes), no = measureSeq(n.no);
-        r = { w: Math.max(headW, y.w + no.w), h: headH + Math.max(y.h, no.h), headH, yw: y.w, nw: no.w };
-      }
+      const y = laneFolded(n, 'yes') ? foldRowSize(n.yes) : measureSeq(n.yes);
+      const no = laneFolded(n, 'no') ? foldRowSize(n.no) : measureSeq(n.no);
+      r = { w: Math.max(headW, y.w + no.w), h: headH + Math.max(y.h, no.h), headH, yw: y.w, nw: no.w };
     } else {
       const headH = t.h + 2 * K.padY;
-      const inner = fr ? { w: fr.w + 2 * K.padX, h: fr.h + 2 * K.padY } : measureSeq(n.body);
+      const inner = folded.has(n.id) ? foldRowSize(n.body) : measureSeq(n.body);
       r = { w: Math.max(t.w + 2 * K.padX, K.strip + inner.w), h: headH + inner.h, headH };
     }
   }
@@ -567,24 +569,19 @@ function place(n, x, y, w, h, out) {
     else if (!fd && opts.showRanges && 'name' in n) out.ghosts.push({ x, y, w, h, text: foldLabel(n) });
   } else if (n.type === 'if') {
     const hh = m.headH, by = y + hh, bh = h - hh;
-    let sx = x + w / 2;
-    if (!fd) {
-      const extra = w - (m.yw + m.nw);
-      const yW = Math.round(m.yw + extra * m.yw / (m.yw + m.nw));
-      sx = x + yW;
-      out.items.push({ k: 'ifHead', id: n.id, x, y, w, h: hh, sx, text: n.text });
-      placeSeq(n.yes, x, by, yW, bh, out);
-      placeSeq(n.no, x + yW, by, w - yW, bh, out);
-    } else {
-      out.items.push({ k: 'ifHead', id: n.id, x, y, w, h: hh, sx, text: n.text });
-      out.items.push({ k: 'foldRow', pid: n.id, x, y: by, w, h: bh, text: foldRowText(n) });
-    }
+    const extra = w - (m.yw + m.nw);
+    const yW = Math.round(m.yw + extra * m.yw / (m.yw + m.nw));
+    out.items.push({ k: 'ifHead', id: n.id, x, y, w, h: hh, sx: x + yW, text: n.text });
+    [['yes', x, yW], ['no', x + yW, w - yW]].forEach(([slot, lx, lw]) => {
+      if (laneFolded(n, slot)) out.items.push({ k: 'foldRow', pid: n.id, slot, x: lx, y: by, w: lw, h: bh, text: foldRowText(n[slot]) });
+      else placeSeq(n[slot], lx, by, lw, bh, out);
+    });
     T.set(n.id, { x, y, w, h: hh });
   } else {
     const hh = m.headH, bottom = n.type === 'dowhile';
     out.items.push({ k: 'loop', id: n.id, x, y, w, h, headH: hh, bottom, text: n.text });
     const iy = bottom ? y : y + hh, ih = h - hh;
-    if (fd) out.items.push({ k: 'foldRow', pid: n.id, x: x + K.strip, y: iy, w: w - K.strip, h: ih, text: foldRowText(n) });
+    if (fd) out.items.push({ k: 'foldRow', pid: n.id, x: x + K.strip, y: iy, w: w - K.strip, h: ih, text: foldRowText(n.body) });
     else placeSeq(n.body, x + K.strip, iy, w - K.strip, ih, out);
     T.set(n.id, { x, y: bottom ? y + h - hh : y, w, h: hh });
   }
@@ -682,7 +679,7 @@ function drawSVG(lay, ui) {
       s.push(`<text x="${x + 6}" y="${y + h - 5}" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">참</text>`);
       s.push(`<text x="${x + w - 6}" y="${y + h - 5}" text-anchor="end" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">거짓</text>`);
     } else if (it.k === 'foldRow') {
-      s.push(rect(it.x, it.y, it.w, it.h, COL.fold, ui ? ` data-id="${it.pid}" data-unfold="1"` : ''));
+      s.push(rect(it.x, it.y, it.w, it.h, COL.fold, ui ? ` data-id="${it.pid}" data-unfold="1"${it.slot ? ` data-slot="${it.slot}"` : ''}` : ''));
       s.push(`<text x="${it.x + K.padX}" y="${it.y + K.padY + K.lh - 5}" font-family="${FAM_SANS}" font-size="12.5" font-style="italic" fill="${COL.muted}" pointer-events="none">${esc(it.text)}</text>`);
     } else if (it.k === 'rangeFold') {
       const { x, y, w, h } = it;
@@ -1052,7 +1049,7 @@ function unwrap() {
     else if (t.type === 'range') content = t.children;
     else content = emptyBranch(t.body) ? [] : t.body;
     r.list.splice(r.lo, 1, ...content);
-    folded.delete(t.id);
+    folded.delete(t.id); SLOTS.if.forEach(sl => folded.delete(laneKey(t, sl)));
   });
   if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
   render();
@@ -1068,11 +1065,29 @@ function fold() {
   const r = needSel();
   if (!r) return;
   if (r.event) return say('이벤트 머리는 접을 수 없습니다');
+  const many = list => countBlocks(list) >= 2;
   if (r.items.length === 1) {
     const t = r.items[0];
+    if (t.type === 'if') {
+      // If는 갈래별로 접는다. If를 고르고 누르면 접을 수 있는 갈래를 모두 접거나 편다
+      const lanes = SLOTS.if.filter(sl => many(t[sl]) || laneFolded(t, sl));
+      if (!lanes.length) return say('갈래마다 블록이 하나뿐이라 접지 않습니다');
+      const open = lanes.some(sl => laneFolded(t, sl));
+      lanes.forEach(sl => open ? folded.delete(laneKey(t, sl)) : folded.add(laneKey(t, sl)));
+      saveFold(); render();
+      return say(open ? '갈래를 폈습니다' : '갈래별로 접었습니다. 갈래 하나만 접으려면 그 갈래의 블록을 모두 고르고 F');
+    }
     if (folded.has(t.id)) { folded.delete(t.id); saveFold(); render(); return say('폈습니다'); }
+    if (isCtrl(t) && !many(t.body)) return say('안에 블록이 하나뿐인 제어 블록은 접지 않습니다');
     if (isCtrl(t)) { folded.add(t.id); saveFold(); render(); return say('접었습니다. 머리만 남습니다'); }
     if (t.type === 'range') return foldRange(t, false);
+  }
+  if (r.parent && isCtrl(r.parent) && r.lo === 0 && r.hi === r.list.length - 1 && many(r.items)) {
+    // 갈래(또는 반복문 안)의 블록을 모두 골랐으면 영역을 만들지 않고 그 갈래를 접는다
+    const p = r.parent, slot = idx.get(r.items[0].id).slot;
+    folded.add(p.type === 'if' ? laneKey(p, slot) : p.id);
+    selectOne(p.id); saveFold(); render();
+    return say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 접힌 줄을 더블클릭하거나 If를 고르고 F' : '접었습니다. 머리만 남습니다');
   }
   if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) {
     const g = r.parent; selectOne(g.id); return foldRange(g, false);
@@ -1262,7 +1277,7 @@ svg.addEventListener('dblclick', ev => {
   if (!t) return;
   const dn = idx.get(t.dataset.id)?.node;
   if (t.dataset.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
-    folded.delete(t.dataset.id); saveFold(); selectOne(t.dataset.id); render();
+    folded.delete(t.dataset.slot ? t.dataset.id + ':' + t.dataset.slot : t.dataset.id); saveFold(); selectOne(t.dataset.id); render();
     return say(t.dataset.unfold ? '폈습니다' : '폈습니다. 이름은 접은 칸을 고르고 Enter로 고칩니다');
   }
   selectOne(t.dataset.id); render(); startEdit(t.dataset.id);
