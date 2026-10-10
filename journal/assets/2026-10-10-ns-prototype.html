@@ -194,7 +194,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
-        <li><b>펴진 접기 영역은 이름 띠로 보입니다.</b> 영역 맨 위에 이름이 적힌 얇은 줄이 붙습니다. 띠를 더블클릭하면 접히고, 띠를 고르고 <kbd>Enter</kbd>를 누르면 이름을 고칩니다. 저장되는 그림에는 띠가 들어가지 않습니다.</li>
+        <li><b>펴진 접기 영역은 이름 띠로 보입니다.</b> 영역 맨 위에 이름이 적힌 얇은 줄이 붙습니다. 띠를 더블클릭하면 접히고, 띠를 고르고 <kbd>Enter</kbd>를 누르면 이름을 고칩니다.</li>
+        <li><b>저장되는 그림은 지금 화면 그대로입니다.</b> 접힌 곳은 접힌 채로, 이름 띠도 보이는 대로 저장됩니다. 접힘 상태도 파일에 함께 들어가서, 다시 열면 저장할 때의 모양으로 열립니다. "SVG 보기"로 확인해 보세요.</li>
         <li><b>접히는 것은 접기 영역뿐입니다.</b> 제어 블록을 고르고 <kbd>F</kbd>를 누르면 그 안의 갈래마다 접기 영역이 만들어져 접힙니다. "⋯ 블록 n개" 줄은 없앴고, 접힌 칸에는 접기 영역의 이름이 보입니다.</li>
         <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. 펴진 영역은 이름 띠과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
@@ -231,7 +232,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>넣기 단축키.</b> 뒤에 넣기가 기본이고 <kbd>Shift</kbd>를 누르면 앞에 넣습니다 (위치를 고르던 방식은 헷갈려서 없앰). 브라우저가 Alt·Ctrl 조합을 많이 가져가서, 감싸기는 <kbd>S</kbd> 다음 글자를 누르는 두 번 누르기로 했습니다. <span class="ref">^edit-keyboard</span></li>
         <li><b>고른 상태에서 바로 타자를 치면?</b> 엑셀처럼 바로 글자 고치기로 들어갈까요? 지금은 단축키로 쓰여서 아무 일도 없습니다. <span class="ref">^edit-basic</span></li>
         <li><b>처리 블록 하나 접기.</b> 답을 받음: 막았습니다. 블록 하나만 고르고 <kbd>F</kbd>를 누르면 접지 않습니다. <span class="ref">^edit-fold-range</span></li>
-        <li><b>접기는 되돌리기 대상이 아닙니다.</b> 접힘은 보기 상태라(ADR-0016) <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다. 단, 처음 접을 때 영역이 생기는 것은 되돌립니다. <span class="ref">^edit-undo</span></li>
+        <li><b>접기는 되돌리기 대상이 아닙니다.</b> 접고 펴는 것은 <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다. 이제 접힘이 파일에 저장되므로, 되돌리기에 넣을지 다시 정해야 합니다. 단, 처음 접을 때 영역이 생기는 것은 되돌립니다. <span class="ref">^edit-undo</span></li>
         <li><b>이벤트 머리 위치.</b> 머리는 다이어그램마다 맨 위 하나뿐이라 고르고 지울 수만 있고, 옮기거나 감쌀 수 없습니다. 머리 "뒤에" 넣으면 본문 맨 앞에 들어갑니다. <span class="ref">^blk-event</span></li>
         <li><b>블록 글자: 코드인가 문장인가.</b> 예제 두 개로 같은 로직을 비교해 보세요. 문장식에서는 구문 강조가 거의 하는 일이 없습니다. <span class="ref">미결정 사항</span></li>
         <li><b>Method 다이어그램의 머리.</b> 지금은 부를 수 있는 다이어그램이 모두 이벤트 머리(모자)를 답니다. Method로 부르는 다이어그램은 머리를 다르게 그릴까요? <span class="ref">^blk-call</span></li>
@@ -259,7 +260,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 <div class="modal" id="modal" hidden>
   <div class="box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <h3 id="mTitle">저장될 .ns.svg 내용</h3>
-    <p>그림 부분은 모두 펼친 모양이고, 모델(JSON)은 <code>&lt;metadata&gt;</code> 안에 있습니다. 접힘 상태는 들어가지 않습니다.</p>
+    <p>그림 부분은 지금 화면 그대로이고(접힌 곳은 접힌 채), 모델(JSON)은 <code>&lt;metadata&gt;</code> 안에 있습니다. 접힘 상태는 모델의 <code>view</code>에 들어갑니다.</p>
     <textarea id="svgText" readonly spellcheck="false"></textarea>
     <div class="row">
       <button data-cmd="copySvg">복사</button>
@@ -299,7 +300,7 @@ const activeDia = () => (sel && diaOf(sel.anchor)) || dia(lastDia) || doc.diagra
 
 let doc = { diagrams: [newDia()] };
 let asked = new Set();           // 이름을 이미 물어본 접힌 부분 (보기 상태, 이 화면에서만 기억)
-let folded = new Set();          // 보기 상태: 파일에 넣지 않음 (ADR-0016)
+let folded = new Set();          // 접힌 접기 영역의 id. 저장할 때 모델의 view에 함께 넣는다
 let sel = null;                  // { root, anchor, focus } — anchor·focus는 같은 목록 안
 let undoStack = [], redoStack = [];
 let idx = new Map();
@@ -767,14 +768,15 @@ function drawSVG(lay, ui) {
   // 강조 영역: 레이아웃이 끝난 뒤 굵은 테두리만 덧그린다 (ADR-0015). 안으로 들여 그려서 맞붙은 영역도 따로 보인다
   for (const r of lay.regions)
     s.push(`<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" fill="none" stroke="${COL.region}" stroke-width="3" rx="2" pointer-events="none"/>`);
-  if (ui) {
+  {
+    // 이름 띠는 저장되는 그림에도 그린다 (화면 그대로 저장)
     const view = regionView(), c = COL.sel, used = new Map();
     const tag = (x, y, text, anchor) => `<text x="${x}" y="${y}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(text)}</text>`;
     for (const g of lay.ghosts) {
       const d = 2.5 + (g.depth || 0) * 4;
       if (view === 'band') {
         // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
-        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges" data-id="${g.id}" data-band="1" style="cursor:pointer"/>`);
+        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${ui ? ` data-id="${g.id}" data-band="1" style="cursor:pointer"` : ''}/>`);
         s.push(`<text x="${g.x + K.padX}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
         s.push(`<rect x="${g.x + 1.5}" y="${g.y + 1.5}" width="${g.w - 3}" height="${g.h - 3}" fill="none" stroke="${c}" stroke-width="1.5" pointer-events="none"/>`);
         continue;
@@ -791,7 +793,7 @@ function drawSVG(lay, ui) {
         s.push(tag(g.left - 7 - g.cols * 10, g.y + 13 + k * 14, g.text, 'end'));
       }
     }
-    const r = selRange();
+    const r = ui ? selRange() : null;
     if (r) {
       const boxes = r.event ? [L.get(r.dia.id)] : r.items.map(n => L.get(n.id));
       if (boxes.every(Boolean)) {
@@ -836,17 +838,14 @@ function describeSel0() {
 
 /* ---------- 파일 (.ns.svg) ---------- */
 function modelJSON() {
-  return JSON.stringify({ format: 'nsdrawing', version: 0, diagrams: doc.diagrams }, null, 2);
+  // 그림이 화면 그대로이므로, 그 화면을 만든 보기 상태(접힘, 이름 띠)도 모델과 함께 넣는다. 같은 내용이면 같은 파일이 나오도록 순서를 맞춘다
+  const view = { folded: [...folded].filter(id => idx.has(id)).sort(), bands: opts.showRegions !== false };
+  return JSON.stringify({ format: 'nsdrawing', version: 0, diagrams: doc.diagrams, view }, null, 2);
 }
 function exportSVG() {
-  const keep = folded;
-  folded = new Set();               // 저장되는 그림은 항상 모두 펼친 모양 (ADR-0016)
-  exporting = true;                 // 접기 영역 표시는 화면에만 있다
+  // 저장되는 그림은 지금 화면 그대로다: 접힌 곳은 접힌 채, 이름 띠도 보이는 대로 (선택 테두리만 뺀다)
   const lay = layout();
   const body = drawSVG(lay, false);
-  exporting = false;
-  folded = keep;
-  render();
   const json = modelJSON().split(']]>').join(']]]]><![CDATA[>');   // ^fmt-escape
   return `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="${lay.W}" height="${lay.H}" viewBox="0 0 ${lay.W} ${lay.H}">\n` +
@@ -870,8 +869,11 @@ function importSVG(text) {
   if (!opened) return say('NSDrawing 모델이 아닙니다', true);
   pushUndo();
   doc = opened;
-  fixUid(); folded = new Set(); selectOne(null); asked = new Set();
-  normalize(); render(); save(); say('파일을 열었습니다. 접힘은 모두 펼쳐진 채로 열립니다');
+  fixUid(); selectOne(null); asked = new Set();
+  // 저장할 때의 화면 그대로 연다
+  folded = new Set(m.view && Array.isArray(m.view.folded) ? m.view.folded : []);
+  if (m.view && typeof m.view.bands === 'boolean') { opts.showRegions = m.view.bands; $('#optRanges').checked = m.view.bands; }
+  normalize(); render(); save(); saveFold(); say('파일을 열었습니다. 저장할 때의 접힘 그대로 열립니다');
 }
 async function download() {
   const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
