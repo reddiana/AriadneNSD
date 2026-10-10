@@ -10,6 +10,6 @@
 
 # 5. 질문
 # 6. 기타
-## 로고와 데스크탑 어플리케이션의 아이콘
+## 로고와 데스크탑 어플리케이션의 아이콘 및 Favicon
 ### 영감을 주는 작품
 ![[Pasted image 20261010161222.png]]![[Pasted image 20261010162142.png|253]]![[Pasted image 20261010161348.png]]![[Pasted image 20261010161444.png|429]]![[Pasted image 20261010161540.png|213]]![[Pasted image 20261010161627.png|216]]![[Pasted image 20261010161558.png|228]]![[Pasted image 20261010161659.png|222]]
