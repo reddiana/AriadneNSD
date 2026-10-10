@@ -125,7 +125,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="wrap:while">While</button>
       <button data-cmd="wrap:dowhile">Do-While</button>
       <button data-cmd="wrap:if">If</button>
-      <button data-cmd="unwrap">풀기</button>
+      <button data-cmd="unwrap">제어 블록 풀기</button>
     </div>
     <div class="grp">
       <span class="lbl">보기</span>
@@ -184,7 +184,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다 (중첩)</dd>
         <dt><kbd>F</kbd></dt><dd>접기 · 펴기: 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다 (If는 갈래별로). 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 폅니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다 (접혔든 펴졌든). 블록은 그대로 남습니다</dd>
-        <dt><kbd>U</kbd></dt><dd>풀기: 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>와 같습니다</dd>
+        <dt><kbd>U</kbd></dt><dd>제어 블록 풀기: 제어 블록 하나를 없애고 안의 블록을 그 자리에 남깁니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
@@ -194,7 +194,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
-        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>(또는 <kbd>U</kbd>)로 풉니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
+        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
@@ -1092,12 +1092,12 @@ function wrap(kind) {
 }
 const emptyBranch = b => b.every(n => n.type === 'process' && !n.text.trim());
 function unwrap() {
-  // U: 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 접기 영역을 푼다
+  // U: 제어 블록 풀기. 접기 영역 풀기는 Ctrl+Shift+F
   const r = needSel();
   if (!r) return;
   if (r.event) return say('이벤트 머리는 풀 수 없습니다');
   const t = r.items.length === 1 ? r.items[0] : null;
-  if (!t || !isCtrl(t)) return releaseRegion();
+  if (!t || !isCtrl(t)) return say('풀 제어 블록 하나를 고르세요. 접기 영역을 풀려면 Ctrl+Shift+F');
   let content;
   apply(() => {
     if (t.type === 'if') content = [t.yes, t.no].filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
@@ -1116,7 +1116,7 @@ function regionOf(r) {
   return null;
 }
 function releaseRegion() {
-  // Ctrl+Shift+F · U: 고른 것을 온전히 담는 가장 작은 접기 영역을 푼다 (접혔든 펴졌든). 블록은 그대로 남는다
+  // Ctrl+Shift+F: 고른 것을 온전히 담는 가장 작은 접기 영역을 푼다 (접혔든 펴졌든). 블록은 그대로 남는다
   const r = needSel();
   if (!r) return;
   const g = r.event ? null : regionOf(r);
@@ -1155,6 +1155,12 @@ function fold() {
   if (r.event) return say('이벤트 머리는 접을 수 없습니다');
   const many = list => countBlocks(list) >= 2;
   const t = r.items.length === 1 ? r.items[0] : null;
+  const toggleRegion = g => {
+    selectOne(g.id);
+    if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
+    foldRange(g, false);
+  };
+  if (t && t.type === 'range') return toggleRegion(t);
   if (t && t.type === 'if') {
     // If는 갈래별로 접는다. If를 고르고 누르면 접을 수 있는 갈래를 모두 접거나 편다
     const lanes = SLOTS.if.filter(sl => many(t[sl]) || laneFolded(t, sl));
@@ -1182,9 +1188,7 @@ function fold() {
   }
   const g = regionOf(r);
   if (!g) return say('고른 곳을 담은 접기 영역이 없습니다. Shift+F로 접기 영역을 만드세요');
-  selectOne(g.id);
-  if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
-  foldRange(g, false);
+  toggleRegion(g);
 }
 function hasHLInside(n) {
   return (SLOTS[n.type] || []).some(s => n[s].some(c => isHL(c) || hasHLInside(c)));
@@ -1394,7 +1398,7 @@ function showMenu(x, y) {
     : [it('edit', one && one.type === 'call' ? '부를 것 바꾸기…' : '글자 고치기', 'Enter'), null,
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('event', evLabel, 'E'), it('head', headLabel, 'M'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
-       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '풀기', 'U'), null,
+       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '제어 블록 풀기', 'U'), null,
        it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
   menuAt = -1;
