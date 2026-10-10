@@ -1,4 +1,4 @@
-<title>NSDrawing 프로토타입</title>
+<title>AriadneNSD 프로토타입</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
@@ -83,6 +83,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .menu button.on { box-shadow: inset 0 0 0 2px #2c55c9; }
 .menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
 
+.modal[hidden] { display: none; }
 .modal { position: fixed; inset: 0; z-index: 30; background: rgba(10,14,22,.45); display: grid; place-items: center; padding: 16px; }
 .modal .box { background: var(--panel); border-radius: 8px; padding: 16px; width: min(860px, 100%); max-height: 90%; display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; min-height: 0; }
 .modal h3 { margin: 0; font-size: 15px; }
@@ -99,7 +100,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>NSDrawing</b><span>요구사항 점검용 프로토타입 · 버리는 코드</span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드</span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -111,6 +112,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="exCode">코드식</button>
       <button data-cmd="exText">문장식</button>
       <button data-cmd="exCase">Case</button>
+      <button data-cmd="exQuick" title="다이어그램 둘: quicksort와 partition">퀵소트</button>
+      <button data-cmd="exRaft" title="다이어그램 열: 이벤트 처리기 일곱과 Method 셋">Raft</button>
     </div>
     <div class="grp">
       <span class="lbl" title="고른 블록 뒤에 넣습니다. Shift를 누른 채 누르면 앞에 넣습니다">뒤에 넣기</span>
@@ -194,7 +197,13 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
       </dl>
 
-      <h2>이번에 바뀐 것 (10-10 네 번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-11)</h2>
+      <ul>
+        <li><b>예제 둘을 더했습니다.</b> "퀵소트"는 코드식으로 적은 다이어그램 둘(quicksort, partition)입니다. "Raft"는 문장식으로 적은 Raft 합의 프로토콜의 한 노드입니다: 이벤트 처리기 일곱과, 호출 블록으로 부르는 Method 셋.</li>
+        <li><b>화면의 이름을 AriadneNSD로 바꿨습니다.</b></li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-10 네 번째 판)</h2>
       <ul>
         <li><b>Case(다중 선택) 블록.</b> <kbd>K</kbd>로 넣고, 위의 "Case" 예제로 볼 수 있습니다. 갈래는 <kbd>+</kbd>로 넣고 <kbd>-</kbd>로 빼며, 갈래 이름은 <kbd>L</kbd>이나 더블클릭으로 고칩니다. 접기와 방향키는 If와 같은 규칙을 따릅니다.</li>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
@@ -925,7 +934,7 @@ function importSVG(text) {
   let m;
   try { m = JSON.parse(md.textContent); } catch (e) { return say('모델이 손상되어 열 수 없습니다', true); }
   const opened = toDoc(m);
-  if (!opened) return say('NSDrawing 모델이 아닙니다', true);
+  if (!opened) return say('AriadneNSD 모델이 아닙니다', true);
   pushUndo();
   doc = opened;
   fixUid(); selectOne(null); asked = new Set();
@@ -1426,6 +1435,7 @@ function build(spec) {
     const [type, a, x, y] = s;
     if (type === 'if') return { id: nid(), type, text: a, yes: x.map(b), no: y.map(b) };
     if (type === 'case') { const o = { id: nid(), type, text: a, labels: x.map(l => l[0]) }; x.forEach((l, i) => { o['c' + i] = l[1].map(b); }); return o; }
+    if (type === 'call') return { id: nid(), type, target: null, text: a, to: a };
     if (type === 'range') return { id: nid(), type, highlight: !!y, ...(a !== undefined ? { name: a } : {}), children: x.map(b) };
     return { id: nid(), type, text: a, body: x.map(b) };
   };
@@ -1485,6 +1495,137 @@ function loadCaseExample() {
   say('Case 예제: 갈래가 넷인 다중 선택');
 }
 
+// 다이어그램 여러 개짜리 예제: [머리 글자, 본문] 목록. ['call', 머리 글자]는 그 머리의 다이어그램에 잇는다
+function loadDiagrams(list, mono, msg) {
+  uid = 1;
+  const bodies = list.map(([, spec]) => build(spec));
+  if (undoStack.length || allBlocks() > 1) pushUndo();
+  doc = { diagrams: list.map(([event], i) => newDia(event, bodies[i])) };
+  eachNode(n => {
+    if (n.type !== 'call') return;
+    n.target = doc.diagrams.find(d => d.event === n.to)?.id ?? null;
+    delete n.to;
+  });
+  normalize();
+  folded = new Set(); asked = new Set();
+  opts.mono = mono; $('#optMono').checked = mono;
+  selectOne(null); render(); save(); saveFold();
+  say(msg);
+}
+
+function loadQuickExample() {
+  loadDiagrams([
+    ['quicksort(a, lo, hi)', [
+      ['if', 'lo < hi',
+        ['p = partition(a, lo, hi);', 'quicksort(a, lo, p - 1);', 'quicksort(a, p + 1, hi);'],
+        ['']]
+    ]],
+    ['partition(a, lo, hi)', [
+      'pivot = a[hi];',
+      'i = lo - 1;',
+      'j = lo;',
+      ['while', 'j < hi', [
+        ['if', 'a[j] <= pivot', ['i++;', 'swap(a[i], a[j]);'], ['']],
+        'j++;'
+      ]],
+      'swap(a[i + 1], a[hi]);',
+      'return i + 1;'
+    ]]
+  ], true, '퀵소트 예제: 다이어그램 둘 (Lomuto 분할)');
+}
+
+function loadRaftExample() {
+  const down = () => ['call', '팔로워로 물러난다'];
+  const apply = () => ['call', '커밋된 항목을 상태 기계에 적용한다'];
+  const send = () => ['call', '모든 피어에게 로그를 보낸다'];
+  loadDiagrams([
+    ['선거 타이머가 끝나면', [
+      ['if', '내가 리더인가?', [''], [
+        '후보가 된다',
+        '임기를 하나 올린다',
+        '나에게 투표한다\n(받은 표 = 1)',
+        '선거 타이머를 무작위 시간으로 다시 맞춘다',
+        '모든 피어에게 투표 요청을 보낸다\n(임기, 내 마지막 항목의 번호와 임기)'
+      ]]
+    ]],
+    ['투표 요청을 받으면', [
+      ['if', '요청의 임기 > 내 임기?', [down()], ['']],
+      ['if', '요청의 임기 < 내 임기?',
+        ['거절한다고 답한다'],
+        [['if', '이번 임기에 아직 투표하지 않았거나\n이미 이 후보에게 투표했는가?',
+          [['if', '후보의 로그가 내 로그만큼 최신인가?',
+            ['이 후보에게 투표했다고 적어 둔다', '선거 타이머를 다시 맞춘다', '투표한다고 답한다'],
+            ['거절한다고 답한다']]],
+          ['거절한다고 답한다']]]]
+    ]],
+    ['투표 응답을 받으면', [
+      ['if', '응답의 임기 > 내 임기?', [down()], [
+        ['if', '나는 아직 후보이고\n이번 임기의 찬성표인가?', [
+          '받은 표를 하나 늘린다',
+          ['if', '받은 표가 과반인가?', [
+            '리더가 된다',
+            '피어마다 다음에 보낼 번호를\n내 마지막 번호 + 1로 둔다',
+            send()
+          ], ['']]
+        ], ['']]
+      ]]
+    ]],
+    ['하트비트 타이머가 끝나면', [
+      ['if', '내가 리더인가?', [send()], ['']]
+    ]],
+    ['클라이언트 요청을 받으면', [
+      ['if', '내가 리더인가?',
+        ['명령을 이번 임기의 새 항목으로\n로그에 붙인다', send()],
+        ['리더의 주소를 알려 준다']]
+    ]],
+    ['로그 복제 요청을 받으면', [
+      ['if', '요청의 임기 < 내 임기?',
+        ['실패라고 답한다\n(내 임기를 함께)'],
+        [
+          ['if', '요청의 임기 > 내 임기\n또는 내가 후보인가?', [down()], ['']],
+          '선거 타이머를 다시 맞춘다',
+          ['if', '앞 항목의 번호와 임기가 내 로그와 맞는가?', [
+            '내 로그와 어긋나는 항목부터 뒤를 지운다',
+            '새 항목을 로그에 붙인다',
+            ['if', '리더의 커밋 번호 > 내 커밋 번호?',
+              ['커밋 번호를 올린다\n(리더의 커밋 번호와 내 마지막 번호 중 작은 쪽)', apply()],
+              ['']],
+            '성공이라고 답한다'
+          ], ['실패라고 답한다']]
+        ]]
+    ]],
+    ['로그 복제 응답을 받으면', [
+      ['if', '응답의 임기 > 내 임기?', [down()], [
+        ['if', '성공인가?', [
+          '그 피어의 맞춘 번호와 다음 번호를 올린다',
+          ['if', '과반이 가진 이번 임기의 항목 가운데\n아직 커밋하지 않은 것이 있는가?',
+            ['커밋 번호를 거기까지 올린다', apply()],
+            ['']]
+        ], ['그 피어의 다음 번호를 하나 줄인다\n(다음 하트비트 때 다시 보낸다)']]
+      ]]
+    ]],
+    ['모든 피어에게 로그를 보낸다', [
+      ['while', '아직 보내지 않은 피어가 있는 동안', [
+        '그 피어에게 보낼 항목을 고른다\n(다음 번호부터 끝까지, 없으면 빈 하트비트)',
+        '로그 복제 요청을 보낸다\n(임기, 앞 항목의 번호와 임기, 항목들, 커밋 번호)'
+      ]]
+    ]],
+    ['커밋된 항목을 상태 기계에 적용한다', [
+      ['while', '적용한 번호 < 커밋 번호', [
+        '적용한 번호를 하나 올린다',
+        '그 항목의 명령을 상태 기계에 적용한다',
+        ['if', '내가 리더인가?', ['클라이언트에게 결과를 답한다'], ['']]
+      ]]
+    ]],
+    ['팔로워로 물러난다', [
+      ['if', '상대의 임기 > 내 임기?',
+        ['내 임기를 상대의 임기로 올린다', '이번 임기의 투표 기록을 지운다'],
+        ['']],
+      '팔로워가 된다'
+    ]]
+  ], false, 'Raft 예제: 이벤트 처리기 일곱과 Method 셋');
+}
+
 /* ---------- 저장 (이 브라우저에만) ---------- */
 function save() { try { localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc, opts })); } catch (e) {} }
 function saveFold() { try { localStorage.setItem('nsd-proto-fold', JSON.stringify([...folded])); } catch (e) {} }
@@ -1519,7 +1660,7 @@ const COMMANDS = {
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   event: eventCmd, head: headCmd, evNew: () => addDiagram(false), evExtract: () => addDiagram(true), callAsk: () => callCmd(false), goto: gotoTarget,
-  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, laneAdd, laneRemove, laneLabel, exCase: loadCaseExample, undo, redo, del: () => del(false),
+  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, laneAdd, laneRemove, laneLabel, exCase: loadCaseExample, exQuick: loadQuickExample, exRaft: loadRaftExample, undo, redo, del: () => del(false),
   copy: () => copy(false), cut: () => copy(true), paste,
   zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
   closeModal: () => { $('#modal').hidden = true; stage.focus({ preventScroll: true }); },
