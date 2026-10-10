@@ -180,7 +180,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
         <dt><kbd>U</kbd></dt><dd>풀기. 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 고른 곳에 걸린 접기 영역을 접혔든 펴졌든 모두 풉니다</dd>
-        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 갈래는 방향키나 클릭으로 고를 수 있고, <kbd>F</kbd>나 더블클릭으로 폅니다</dd>
+        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접기 영역은 안의 블록을 일부만 골라도 접힙니다. 접힌 갈래는 방향키나 클릭으로 고를 수 있고, <kbd>F</kbd>나 더블클릭으로 폅니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
@@ -1138,19 +1138,22 @@ function fold() {
   if (!r) return;
   if (r.event) return say('이벤트 머리는 접을 수 없습니다');
   const many = list => countBlocks(list) >= 2;
+  // 접기 영역 안의 블록을 일부만 골라도 그 접기 영역을 접는다
+  const host = r.parent && r.parent.type === 'range' ? r.parent : null;
+  const foldHost = () => { selectOne(host.id); foldRange(host, false); };
   if (r.items.length === 1) {
     const t = r.items[0];
     if (t.type === 'if') {
       // If는 갈래별로 접는다. If를 고르고 누르면 접을 수 있는 갈래를 모두 접거나 편다
       const lanes = SLOTS.if.filter(sl => many(t[sl]) || laneFolded(t, sl));
-      if (!lanes.length) return say('갈래마다 블록이 하나뿐이라 접지 않습니다');
+      if (!lanes.length) return host ? foldHost() : say('갈래마다 블록이 하나뿐이라 접지 않습니다');
       const open = lanes.some(sl => laneFolded(t, sl));
       lanes.forEach(sl => open ? folded.delete(laneKey(t, sl)) : folded.add(laneKey(t, sl)));
       saveFold(); render();
       return say(open ? '갈래를 폈습니다' : '갈래별로 접었습니다. 갈래 하나만 접으려면 그 갈래의 블록을 모두 고르고 F');
     }
     if (folded.has(t.id)) { folded.delete(t.id); saveFold(); render(); return say('폈습니다'); }
-    if (isCtrl(t) && !many(t.body)) return say('안에 블록이 하나뿐인 제어 블록은 접지 않습니다');
+    if (isCtrl(t) && !many(t.body)) return host ? foldHost() : say('안에 블록이 하나뿐인 제어 블록은 접지 않습니다');
     if (isCtrl(t)) { folded.add(t.id); saveFold(); render(); return say('접었습니다. 머리만 남습니다'); }
     if (t.type === 'range') return foldRange(t, false);
   }
@@ -1166,9 +1169,7 @@ function fold() {
     saveFold(); render();
     return say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 F를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
   }
-  if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) {
-    const g = r.parent; selectOne(g.id); return foldRange(g, false);
-  }
+  if (host) return foldHost();
   if (r.items.length === 1) return say('블록 하나는 접지 않습니다. 제어 블록이나 블록 여러 개를 고르세요');
   const g = { id: nid(), type: 'range', highlight: false, children: [] };
   apply(() => { g.children = r.list.splice(r.lo, r.hi - r.lo + 1); r.list.splice(r.lo, 0, g); });
