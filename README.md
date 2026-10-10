@@ -20,12 +20,12 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 >
 > **Obsidian으로 보는 법:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요.
 
-| 폴더 | 내용 |
-| --- | --- |
-| [`docs/`](docs/README.md) | 애플리케이션 문서: 요구사항, 아키텍처, 아키텍처 결정 기록(ADR), 설계, 파일 형식 명세 |
-| [`plan/`](plan/README.md) | 일하기 위한 기록: 현재 상태, 부채 목록, 세션 기록, inbox |
-| [`journal/`](journal/README.md) | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록 |
-| [`tech-notes/`](tech-notes/README.md) | 백엔드 개발자가 프론트엔드를 배우며 정리한 기술 노트 |
+| 폴더                                    | 내용                                                   |
+| ------------------------------------- | ---------------------------------------------------- |
+| [`docs/`](docs/README.md)             | 애플리케이션 문서: 요구사항, 아키텍처, 아키텍처 결정 기록(ADR), 설계, 파일 형식 명세 |
+| [`plan/`](plan/README.md)             | 일하기 위한 기록: 현재 상태, 부채 목록, 세션 기록, inbox                |
+| [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                  |
+| [`tech-notes/`](tech-notes/README.md) | 백엔드 개발자가 프론트엔드를 배우며 정리한 기술 노트                        |
 
 ## 어떻게 만들고 있나
 

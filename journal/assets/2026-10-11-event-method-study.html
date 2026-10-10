@@ -1,0 +1,226 @@
+<title>Event와 Method 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 결정할 것마다 한 단락: 안(案)을 카드로 나란히 놓고, 카드 안에는 프로토타입과 같은 색의 NS 차트를 흰 종이 위에 그린다 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --paper: #ffffff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --paper: #ffffff; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; border: 1px solid var(--line); }
+.paper svg { display: block; flex: none; }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 620px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-weight: 600; font-size: 12.5px; color: var(--muted); background: var(--bg); }
+td.same { color: var(--muted); }
+td.new { background: var(--pick-soft); }
+kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--bg); white-space: nowrap; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--pick); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 6px; max-width: 80ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>Event와 Method를 구분한다면</h1>
+    <p class="lede">정할 것은 네 가지입니다: <b>Method의 머리 모양</b>, <b>인자와 결과를 적는 법</b>, <b>호출 블록으로 Event를 부를 수 있는지</b>, <b>단축키</b>. 그림은 프로토타입의 Raft 예제와 퀵소트 예제에서 가져왔습니다. 초록 테두리는 Claude가 권하는 안입니다.</p>
+  </div>
+
+  <section>
+    <h2>1. Method의 머리 모양</h2>
+    <p class="q">Event는 지금의 모자 머리를 그대로 씁니다. Method의 머리를 어떻게 그려야 <b>"밖에서 시작되는 것"과 "불려서 도는 것"</b>이 한눈에 갈릴까요? 그림마다 왼쪽이 Event(하트비트 타이머), 오른쪽이 그것이 부르는 Method입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">H0</span><h3>지금: 둘 다 모자</h3></header>
+        <div class="paper" data-head="event"></div>
+        <p>구분이 없습니다. 다이어그램이 열 개쯤 되면 어디서 시작하는지 찾기 어렵습니다.</p></article>
+      <article class="card pick"><header><span class="tag">H1</span><h3>이중선 머리</h3><span class="badge">권함</span></header>
+        <div class="paper" data-head="bars"></div>
+        <p>호출 블록과 같은 양옆 이중선에 같은 색. 부르는 블록과 불리는 머리가 같은 표기라서 눈으로 이어집니다. NS 차트의 서브루틴 표기를 그대로 넓힌 것입니다.</p></article>
+      <article class="card"><header><span class="tag">H2</span><h3>납작한 머리</h3></header>
+        <div class="paper" data-head="flat"></div>
+        <p>모자 없이 네모난 머리. 가장 단순하지만, 머리 없는 다이어그램의 첫 처리 블록과 색으로만 갈립니다.</p></article>
+      <article class="card"><header><span class="tag">H3</span><h3>낮은 아치 머리</h3></header>
+        <div class="paper" data-head="arch"></div>
+        <p>Scratch의 "정의하기" 블록처럼 폭 전체에 걸친 낮은 아치. Event의 모자와 한 식구로 보이지만, 작게 보면 둘이 비슷합니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. 인자와 결과를 적는 법</h2>
+    <p class="q">지금 호출 블록은 부르는 다이어그램의 머리 글자를 그대로 보여 줍니다. 그래서 퀵소트의 두 재귀 호출이 같은 글자가 되고, <code>partition</code>의 결과를 받을 수도 없습니다. Method에는 인자와 결과가 있어야 합니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">A0</span><h3>지금: 머리 글자 그대로</h3></header>
+        <div class="paper" data-args="same"></div>
+        <ul><li>두 재귀 호출을 가를 수 없습니다.</li><li>결과 <code>p</code>를 받는 자리가 없습니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A1</span><h3>호출 블록에 글자를 자유롭게</h3></header>
+        <div class="paper" data-args="free"></div>
+        <ul><li>호출 블록의 글자를 처리 블록처럼 마음대로 적습니다. 어느 다이어그램을 부르는지는 따로 고릅니다.</li><li><b>쉬움.</b> 코드식과 문장식 모두 자연스럽습니다.</li><li>머리 이름을 고쳐도 호출 블록의 글자는 따라 바뀌지 않습니다. 글자와 이어진 곳이 어긋날 수 있습니다.</li></ul></article>
+      <article class="card pick"><header><span class="tag">A2</span><h3>이름은 따라오고, 인자만 적기</h3><span class="badge">권함</span></header>
+        <div class="paper" data-args="slots"></div>
+        <ul><li>호출 블록은 <b>결과 ← 이름(인자)</b> 꼴입니다. 굵은 이름은 머리를 따라 저절로 바뀌고, 괄호 안과 결과만 적습니다.</li><li>머리에는 이름과 인자 이름을 적습니다.</li><li><b>코드 연동에 가장 좋음.</b> 이름, 인자, 결과가 따로 있어서 코드로 옮기기 쉽습니다.</li><li>칸이 나뉘어 있어 고치는 방법이 하나 더 필요합니다. 인자가 없는 Method는 지금과 똑같이 보입니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. 호출 블록으로 Event를 부를 수 있는가</h2>
+    <p class="q">지금 요구사항은 "이벤트를 일으키는 호출"도 호출 블록으로 한다고 적혀 있습니다. 그런데 Event를 부르는 것과 Method를 부르는 것은 뜻이 다릅니다. Method는 끝나면 돌아오고 결과를 줍니다. Event를 일으키는 것은 신호를 보내는 일이라 돌아올 결과가 없습니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">C0</span><h3>지금처럼 둘 다 부른다</h3></header>
+        <p>호출 목록에 Event와 Method가 모두 나옵니다. 가장 자유롭지만 "타이머 인터럽트를 함수처럼 부른다"는 어색한 그림이 생깁니다.</p></article>
+      <article class="card pick"><header><span class="tag">C1</span><h3>Method만 부른다</h3><span class="badge">권함</span></header>
+        <p>호출 목록에는 Method만 나옵니다. 두 Event가 같은 일을 하면 그 일을 Method로 빼서 둘 다 부릅니다(Raft 예제의 "모든 피어에게 로그를 보낸다"가 이 꼴). "이벤트 일으키기"는 필요해질 때 다른 블록으로 더합니다.</p></article>
+      <article class="card"><header><span class="tag">C2</span><h3>Event는 "일으키기" 블록으로</h3></header>
+        <p>호출 블록과 모양이 다른 블록을 하나 더 둡니다(예: 오른쪽이 화살표로 뾰족한 블록). 뜻은 가장 정확하지만 블록 종류가 하나 늡니다. 나중으로 미뤄도 됩니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. 단축키</h2>
+    <p class="q">지금 프로토타입: <kbd>E</kbd> 새 다이어그램(블록을 골랐으면 빼기), <kbd>M</kbd> 머리 달기, <kbd>C</kbd> 호출 넣기, <kbd>G</kbd> 부르는 곳으로 가기. Event와 Method가 갈리면 "어느 종류인가"를 정하는 키가 필요합니다. 두 안 모두 <kbd>C</kbd>, <kbd>G</kbd>, <kbd>Enter</kbd>(머리 글자 고치기), <kbd>Delete</kbd>는 그대로입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">S1</span><h3>지금 키에 하나만 더하기</h3></header>
+        <p>배운 키가 그대로 남습니다. 종류는 상황에 따라 저절로 정해지고, 바꿀 때만 새 키 <kbd>T</kbd>를 씁니다.</p></article>
+      <article class="card pick"><header><span class="tag">S2</span><h3>글자가 곧 종류: E는 Event, M은 Method</h3><span class="badge">권함</span></header>
+        <p>키의 글자와 뜻이 같아서 외울 것이 없습니다. 종류를 바꾸는 키가 따로 없고, 머리에서 그 글자를 누르면 그 종류가 됩니다. 대신 <kbd>E</kbd>와 <kbd>M</kbd>의 뜻이 지금과 조금 달라집니다.</p></article>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>하려는 일</th><th>지금</th><th>S1</th><th>S2 (권함)</th></tr></thead>
+        <tbody>
+          <tr><td>고른 블록들을 새 다이어그램으로 빼기 (그 자리에 호출 블록)</td><td><kbd>E</kbd></td><td class="same"><kbd>E</kbd> → Method로 빠짐</td><td class="new"><kbd>M</kbd> → Method로 빠짐</td></tr>
+          <tr><td>새 빈 다이어그램</td><td><kbd>E</kbd> (고른 것이 없을 때)</td><td class="same"><kbd>E</kbd> → Event로 생김</td><td class="new"><kbd>Shift</kbd>+<kbd>E</kbd> 새 Event<br><kbd>Shift</kbd>+<kbd>M</kbd> 새 Method</td></tr>
+          <tr><td>머리 없는 다이어그램에 머리 달기</td><td><kbd>M</kbd></td><td class="same"><kbd>M</kbd> → Event 머리</td><td class="new"><kbd>E</kbd> Event 머리<br><kbd>M</kbd> Method 머리</td></tr>
+          <tr><td>머리의 종류 바꾸기 (Event ↔ Method)</td><td>없음</td><td class="new"><kbd>T</kbd></td><td class="new">머리를 고르고 <kbd>E</kbd> 또는 <kbd>M</kbd></td></tr>
+          <tr><td>머리 글자 고치기</td><td><kbd>Enter</kbd> · <kbd>F2</kbd> · <kbd>M</kbd></td><td class="same"><kbd>Enter</kbd> · <kbd>F2</kbd> · <kbd>M</kbd></td><td class="same"><kbd>Enter</kbd> · <kbd>F2</kbd></td></tr>
+          <tr><td>호출 블록 넣기</td><td><kbd>C</kbd></td><td class="same"><kbd>C</kbd></td><td class="same"><kbd>C</kbd></td></tr>
+          <tr><td>호출 블록의 인자 고치기 (2번에서 A2를 고르면)</td><td>없음</td><td class="new"><kbd>Enter</kbd> 인자 고치기<br><kbd>C</kbd> 부를 것 바꾸기</td><td class="new"><kbd>Enter</kbd> 인자 고치기<br><kbd>C</kbd> 부를 것 바꾸기</td></tr>
+          <tr><td>부르는 다이어그램으로 가기</td><td><kbd>G</kbd></td><td class="same"><kbd>G</kbd></td><td class="same"><kbd>G</kbd></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="q">초록 칸이 지금과 달라지는 곳입니다. S2에서 블록을 고르고 <kbd>E</kbd>를 누르면 아무 일도 하지 않고 "Method로 빼려면 M"이라고 알려 줍니다. 블록을 빼면 그 자리에 호출 블록이 남는데, 3번에서 C1을 고르면 Event는 부를 수 없기 때문입니다.</p>
+  </section>
+
+  <div class="sum">
+    <h3>Claude가 권하는 조합</h3>
+    <ol>
+      <li><b>H1</b> 이중선 머리: 호출 블록과 같은 표기로 "부르는 것과 불리는 것"을 잇습니다.</li>
+      <li><b>A2</b> 이름은 따라오고 인자만 적기: 이름을 고쳐도 어긋나지 않고 코드 연동에 좋습니다.</li>
+      <li><b>C1</b> Method만 부르기: 뜻이 분명해집니다.</li>
+      <li><b>S2</b> E는 Event, M은 Method.</li>
+    </ol>
+  </div>
+</main>
+
+<script>
+(() => {
+'use strict';
+// 프로토타입(기본 스타일 C)과 같은 색. 그림은 테마와 상관없이 흰 종이에 그린다
+const COL = { stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf', call: '#ebe7f4', ink: '#151a22', label: '#1f45d6' };
+const MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
+const SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
+const ROW = 32, IFH = 46, STRIP = 22, HAT = 16, BAR = 7;
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function diagram(d) {
+  const fam = d.mono ? MONO : SANS, s = [];
+  const rect = (x, y, w, h, fill) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" shape-rendering="crispEdges"/>`);
+  // 글자는 문자열이거나, 굵게 할 조각이 섞인 배열 [{ t, b }]
+  const text = (t, x, y, anchor) => {
+    const body = Array.isArray(t) ? t.map(p => p.b ? `<tspan font-weight="600">${esc(p.t)}</tspan>` : esc(p.t)).join('') : esc(t);
+    s.push(`<text x="${x}" y="${y + 21}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${fam}" font-size="13" fill="${COL.ink}" xml:space="preserve">${body}</text>`);
+  };
+  const bars = (x, y, w, h) => { for (const bx of [x + BAR, x + w - BAR]) s.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}"/>`); };
+  const height = n => typeof n === 'string' || n.call ? ROW : n.if ? IFH + Math.max(seqH(n.yes), seqH(n.no)) : ROW + seqH(n.body);
+  const seqH = list => list.reduce((a, n) => a + height(n), 0);
+  function place(n, x, y, w, h) {
+    if (typeof n === 'string') { rect(x, y, w, h, COL.process); text(n, x + 10, y); }
+    else if (n.call) { rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.call, x + 10 + BAR, y); }
+    else if (n.if) {
+      const yw = Math.round(w * (n.ratio || 0.8));
+      rect(x, y, w, IFH, COL.if);
+      s.push(`<path d="M ${x} ${y} L ${x + yw} ${y + IFH} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}"/>`);
+      text(n.if, x + Math.min(yw, w - 60), y - 3, 'middle');
+      s.push(`<text x="${x + 6}" y="${y + IFH - 5}" font-family="${SANS}" font-size="11" fill="${COL.label}">참</text>`);
+      s.push(`<text x="${x + w - 6}" y="${y + IFH - 5}" text-anchor="end" font-family="${SANS}" font-size="11" fill="${COL.label}">거짓</text>`);
+      seq(n.yes, x, y + IFH, yw, h - IFH); seq(n.no, x + yw, y + IFH, w - yw, h - IFH);
+    } else { rect(x, y, w, h, COL.loop); text(n.loop, x + 10, y); seq(n.body, x + STRIP, y + ROW, w - STRIP, h - ROW); }
+  }
+  function seq(list, x, y, w, h) {
+    let cy = y;
+    list.forEach((n, i) => { const ch = i === list.length - 1 ? y + h - cy : height(n); place(n, x, cy, w, ch); cy += ch; });
+  }
+  const W = d.w, x = 1, top = 1;
+  let y = top;
+  const k = d.head.kind, hh = ROW;
+  if (k === 'event') {
+    const bw = Math.min(110, W * 0.45), t = y + HAT;
+    s.push(`<path d="M ${x} ${t} C ${x + 22} ${y - 2}, ${x + bw - 22} ${y - 2}, ${x + bw} ${t} L ${x + W} ${t} L ${x + W} ${t + hh} L ${x} ${t + hh} Z" fill="${COL.event}" stroke="${COL.stroke}"/>`);
+    text(d.head.text, x + 10, t); y = t + hh;
+  } else if (k === 'arch') {
+    const t = y + HAT;
+    s.push(`<path d="M ${x} ${t} C ${x + W * 0.2} ${y + 1}, ${x + W * 0.8} ${y + 1}, ${x + W} ${t} L ${x + W} ${t + hh} L ${x} ${t + hh} Z" fill="${COL.call}" stroke="${COL.stroke}"/>`);
+    text(d.head.text, x + 10, t); y = t + hh;
+  } else {
+    // 모자가 없는 머리도 Event 머리와 높이를 맞춰 아래 블록이 같은 줄에 오게 한다
+    y += HAT; rect(x, y, W, hh, COL.call);
+    if (k === 'bars') { bars(x, y, W, hh); text(d.head.text, x + 10 + BAR, y); } else text(d.head.text, x + 10, y);
+    y += hh;
+  }
+  const bh = seqH(d.body);
+  seq(d.body, x, y, W, bh);
+  const H = y + bh + 1;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${H}" viewBox="0 0 ${W + 2} ${H}" role="img" aria-label="${esc(typeof d.head.text === 'string' ? d.head.text : d.head.text.map(p => p.t).join(''))}">${s.join('')}</svg>`;
+}
+
+// 1. 머리 모양: Raft의 하트비트 타이머와, 그것이 부르는 Method
+document.querySelectorAll('[data-head]').forEach(el => {
+  const kind = el.dataset.head;
+  el.innerHTML = diagram({ w: 262, head: { kind: 'event', text: '하트비트 타이머가 끝나면' },
+    body: [{ if: '내가 리더인가?', ratio: 0.84, yes: [{ call: '모든 피어에게 로그를 보낸다' }], no: [''] }] }) +
+    diagram({ w: 262, head: { kind, text: '모든 피어에게 로그를 보낸다' },
+    body: [{ loop: '보내지 않은 피어가 있는 동안', body: ['보낼 항목을 고른다', '로그 복제 요청을 보낸다'] }] });
+});
+
+// 2. 인자와 결과: 퀵소트
+const b = t => ({ t, b: true }), p = t => ({ t });
+const CALLS = {
+  same: ['partition(a, lo, hi)', 'quicksort(a, lo, hi)', 'quicksort(a, lo, hi)'],
+  free: ['p = partition(a, lo, hi);', 'quicksort(a, lo, p - 1);', 'quicksort(a, p + 1, hi);'],
+  slots: [[p('p ← '), b('partition'), p('(a, lo, hi)')], [b('quicksort'), p('(a, lo, p - 1)')], [b('quicksort'), p('(a, p + 1, hi)')]]
+};
+document.querySelectorAll('[data-args]').forEach(el => {
+  const c = CALLS[el.dataset.args];
+  el.innerHTML = diagram({ w: 300, mono: true, head: { kind: 'bars', text: el.dataset.args === 'slots' ? [b('quicksort'), p('(a, lo, hi)')] : 'quicksort(a, lo, hi)' },
+    body: [{ if: 'lo < hi', ratio: 0.86, yes: c.map(t => ({ call: t })), no: [''] }] });
+});
+})();
+</script>

@@ -18,6 +18,7 @@ updated: 2026-10-11
 | 색상 시안 (기본 스타일) | https://claude.ai/artifact/XVzT38DvGVir97z9j47Aaj | `journal/assets/2026-10-09-ns-color-study.html` |
 | 영역 강조 시안 (없앤 기능) | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html` |
 | 로고 시안 | (주소를 기록해 두지 않음) | `journal/assets/2026-10-10-logo-concepts.html` |
+| Event와 Method 시안 (2026-10-11, 결정 기다림) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11) | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html` |
 
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
