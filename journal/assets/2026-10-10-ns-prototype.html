@@ -176,7 +176,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). 호출 블록에서는 부를 것 고르기. 접힌 영역을 더블클릭하면 폅니다</dd>
         <dt><kbd>P</kbd> <kbd>I</kbd> <kbd>W</kbd> <kbd>D</kbd></dt><dd>처리 · If · While · Do-While 넣기. 고른 블록 <b>뒤에</b> 넣고, <kbd>Shift</kbd>를 같이 누르면 <b>앞에</b> 넣습니다. 빈 블록을 골랐으면 그 자리에 넣습니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>X</kbd> / <kbd>C</kbd> / <kbd>V</kbd></dt><dd>잘라내기 / 복사 / 고른 블록 뒤에 붙여넣기</dd>
-        <dt><kbd>E</kbd></dt><dd>이벤트 머리 달기. 이미 있으면: 블록을 골랐을 때는 그 블록을 새 다이어그램으로 빼고(그 자리에는 호출 블록), 머리를 골랐거나 고른 것이 없을 때는 새 빈 다이어그램을 만듭니다</dd>
+        <dt><kbd>E</kbd></dt><dd>새 다이어그램. 블록을 골랐으면 그 블록을 새 다이어그램으로 빼고(그 자리에는 호출 블록), 머리를 골랐거나 고른 것이 없으면 새 빈 다이어그램을 만듭니다. 묻지 않습니다</dd>
+        <dt><kbd>M</kbd></dt><dd>이벤트 머리 달기 (이미 있으면 머리 글자 고치기)</dd>
         <dt><kbd>C</kbd></dt><dd>호출 블록 넣기 (부를 다이어그램을 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고름)</dd>
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
@@ -192,7 +193,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
-        <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다.</li>
+        <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
         <li><b>방향키는 다이어그램 안에서만.</b> 옆 다이어그램으로는 머리에서 <kbd>←</kbd> <kbd>→</kbd>, 또는 어디서든 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>.</li>
         <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 지금 있는 제어 블록의 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
         <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
@@ -908,14 +909,15 @@ function put(r, nodes, pos) {
 }
 
 /* ---------- 여러 다이어그램 · 호출 블록 ---------- */
+function headCmd() {
+  // M: 지금 다이어그램에 이벤트 머리를 단다. 이미 있으면 그 머리의 글자를 고친다
+  const d = activeDia(), fresh = d.event == null;
+  if (fresh) apply(() => { d.event = ''; });
+  selectOne(d.id); render();
+  startEdit(d.id, { fresh });
+}
 function eventCmd() {
-  const d = activeDia();
-  if (d.event == null) {
-    apply(() => { d.event = ''; });
-    selectOne(d.id); render();
-    return startEdit(d.id, { fresh: true });
-  }
-  // 머리가 이미 있으면: 블록을 골랐으면 묻지 않고 새 다이어그램으로 빼고, 아니면 새 빈 다이어그램을 만든다
+  // E: 블록을 골랐으면 묻지 않고 새 다이어그램으로 빼고(머리가 없는 다이어그램에서도), 아니면 새 빈 다이어그램을 만든다
   const r = selRange();
   addDiagram(!!(r && !r.event));
 }
@@ -1248,7 +1250,7 @@ const COMMANDS = {
   open: () => $('#file').click(),
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
-  event: eventCmd, evNew: () => addDiagram(false), evExtract: () => addDiagram(true), callAsk: () => callCmd(false), goto: gotoTarget,
+  event: eventCmd, head: headCmd, evNew: () => addDiagram(false), evExtract: () => addDiagram(true), callAsk: () => callCmd(false), goto: gotoTarget,
   delDia: delDiagram, unwrap, fold, region, unregion, undo, redo, del: () => del(false),
   copy: () => copy(false), cut: () => copy(true), paste,
   zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
@@ -1321,7 +1323,8 @@ svg.addEventListener('contextmenu', ev => {
 function showMenu(x, y) {
   const it = (cmd, label, key) => ({ cmd, label, key });
   const r = selRange(), d = activeDia();
-  const evLabel = d.event == null ? '이벤트 머리 달기' : r && !r.event ? '새 다이어그램으로 빼기 (그 자리에는 호출 블록)' : '새 빈 다이어그램';
+  const evLabel = r && !r.event ? '새 다이어그램으로 빼기 (그 자리에는 호출 블록)' : '새 빈 다이어그램';
+  const headLabel = d.event == null ? '이벤트 머리 달기' : '이벤트 머리 고치기';
   const one = r && !r.event && r.items.length === 1 ? r.items[0] : null;
   menuCmds = [];
   menuItems = r && r.event
@@ -1329,7 +1332,7 @@ function showMenu(x, y) {
        it('del', '이벤트 머리 떼기', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', '다이어그램 지우기', '⇧Del')] : [])]
     : [it('edit', one && one.type === 'call' ? '부를 것 바꾸기…' : '글자 고치기', 'Enter'), null,
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
-       it('event', evLabel, 'E'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
+       it('event', evLabel, 'E'), it('head', headLabel, 'M'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
        it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '풀기', 'U'), null,
        it('fold', '접기 · 펴기', 'F'), it('region', '강조', 'H'), it('unregion', '강조 지우기', '⇧H'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
@@ -1423,6 +1426,7 @@ document.addEventListener('keydown', ev => {
     insert(kind, ev.shiftKey ? 'before' : 'after');
   }
   else if (code === 'KeyE') eventCmd();
+  else if (code === 'KeyM') headCmd();
   else if (code === 'KeyC') callCmd(ev.shiftKey);
   else if (code === 'KeyG') gotoTarget();
   else if (code === 'KeyS') { chord = 'S'; say('감싸기: W = While, D = Do-While, I = If'); }
