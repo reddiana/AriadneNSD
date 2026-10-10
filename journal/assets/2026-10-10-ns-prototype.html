@@ -197,7 +197,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>방향키는 다이어그램 안에서만.</b> 옆 다이어그램으로는 머리에서 <kbd>←</kbd> <kbd>→</kbd>, 또는 어디서든 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>.</li>
         <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 제어 블록을 한 덩어리로 보고 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
         <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
-        <li><b>이벤트 머리의 이름은 겹칠 수 없습니다.</b> 겹치면 고치던 칸이 다시 열립니다.</li>
+        <li><b>이벤트 머리의 이름은 겹치거나 비울 수 없습니다.</b> 그러면 고치던 칸이 다시 열립니다. 새 머리에는 "이벤트 1" 같은 이름이 미리 들어가 있고, 바로 치면 바뀝니다.</li>
         <li><b>If는 갈래별로 접습니다.</b> 참 갈래와 거짓 갈래가 따로 "⋯ 블록 N개" 줄이 됩니다. 블록이 하나뿐인 갈래, 안에 블록이 하나뿐인 반복문은 접지 않습니다.</li>
         <li><b>접힌 영역을 더블클릭하면 폅니다.</b> 이름은 고르고 <kbd>Enter</kbd>로 고칩니다.</li>
       </ul>
@@ -324,6 +324,13 @@ function normalize() {
   // 머리도 내용도 없는 다이어그램은 없앤다 (하나는 남긴다)
   const keep = doc.diagrams.filter(d => d.event != null || !(d.body.length === 1 && d.body[0].type === 'process' && !d.body[0].text));
   doc.diagrams = keep.length ? keep : [doc.diagrams[0]];
+  // 이벤트 머리의 이름은 비울 수 없다: 이름이 없으면 "이벤트 n"을 붙인다
+  doc.diagrams.forEach(d => {
+    if (d.event == null || d.event.trim()) return;
+    let k = 1;
+    while (doc.diagrams.some(x => x.event != null && x.event.trim() === '이벤트 ' + k)) k++;
+    d.event = '이벤트 ' + k;
+  });
   // 호출 블록의 글자는 부르는 다이어그램의 머리 글자를 따른다. 그 다이어그램이 없어지면 글자만 남는다
   eachNode(n => {
     if (n.type !== 'call' || n.target == null) return;
@@ -868,10 +875,11 @@ function commitEdit(cancel) {
     if (g) g.name = (cancel || v === e.orig || v.trim() === '') ? null : v;
     say(g && g.name ? `"${g.name}"(으)로 접었습니다` : '기본 이름으로 접었습니다');
   } else if (!cancel && v !== e.orig) {
-    if (isHead(e.id) && v.trim() && doc.diagrams.some(d => d.id !== e.id && d.event != null && d.event.trim() === v.trim())) {
-      // 이벤트 머리의 이름은 겹칠 수 없다: 고치던 칸을 다시 연다
+    const dup = isHead(e.id) && doc.diagrams.some(d => d.id !== e.id && d.event != null && d.event.trim() === v.trim());
+    if (isHead(e.id) && (dup || !v.trim())) {
+      // 이벤트 머리의 이름은 비우거나 겹칠 수 없다: 고치던 칸을 다시 연다
       render(); startEdit(e.id, { fresh: e.fresh }); editor.value = v; growEditor();
-      return say('같은 이름의 이벤트 머리가 이미 있습니다. 다른 이름을 적으세요 (Esc: 그만두기)', true);
+      return say(dup ? '같은 이름의 이벤트 머리가 이미 있습니다. 다른 이름을 적으세요 (Esc: 그만두기)' : '이벤트 머리의 이름은 비울 수 없습니다 (Esc: 그만두기)', true);
     }
     if (!e.fresh) pushUndo();
     setText(e.id, v);
@@ -940,7 +948,7 @@ function addDiagram(extract) {
   });
   selectOne(d.id); render();
   startEdit(d.id, { fresh: true });
-  say(r ? '새 다이어그램으로 뺐습니다. 이벤트 이름을 적으세요. 원래 자리에는 호출 블록이 남았습니다' : '새 다이어그램입니다. 이벤트 이름을 적으세요');
+  say(r ? '새 다이어그램으로 뺐습니다. 이름을 적으세요 (Enter·Esc: 지금 이름 그대로). 원래 자리에는 호출 블록이 남았습니다' : '새 다이어그램입니다. 이름을 적으세요 (Enter·Esc: 지금 이름 그대로)');
 }
 let callPos = 'after';
 function callCmd(shift) {
