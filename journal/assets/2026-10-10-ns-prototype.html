@@ -150,7 +150,15 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <div class="opts">
         <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
-        <label><input type="checkbox" id="optRanges"> 접기 영역 보기</label>
+        <label>접기 영역 표시
+          <select id="optRanges">
+            <option value="off">숨김</option>
+            <option value="outline">점선만 (이름은 아래 상태 줄)</option>
+            <option value="gutter">왼쪽 여백에 이름</option>
+            <option value="band">이름 띠</option>
+            <option value="corner">모서리 이름표 (글자를 가릴 수 있음)</option>
+          </select>
+        </label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
           <output id="zoomOut">100%</output>
@@ -194,8 +202,9 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
+        <li><b>"접기 영역 표시"를 고를 수 있습니다 (시안).</b> 이름표가 블록 글자를 가리는 문제 때문에 네 가지 방식을 넣었습니다. 비교해 보고 하나를 골라 주세요. 어느 방식이든 고른 블록을 담은 접기 영역의 이름이 아래 상태 줄에 나옵니다.</li>
         <li><b>접히는 것은 접기 영역뿐입니다.</b> 제어 블록을 고르고 <kbd>F</kbd>를 누르면 그 안의 갈래마다 접기 영역이 만들어져 접힙니다. "⋯ 블록 n개" 줄은 없앴고, 접힌 칸에는 접기 영역의 이름이 보입니다.</li>
-        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
+        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 표시"를 고르면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
@@ -223,7 +232,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>만들며 생긴 질문</h2>
       <p>요구사항에 답이 없어서 프로토타입에서 임시로 정한 것들입니다. 써 보고 맞는지 알려 주세요.</p>
       <ol class="qs">
-        <li><b>펼친 뒤에도 접기 영역이 남습니다.</b> 이름을 모델에 두니(ADR-0017) 펼쳐도 영역이 보이지 않게 남아 있습니다. 위의 "접기 영역 보기"를 켜면 점선으로 보입니다. 평소에도 보여야 할까요? 지우는 방법은 "풀기"(<kbd>U</kbd>)로 해 두었습니다. <span class="ref">^edit-fold-range</span></li>
+        <li><b>펼친 뒤에도 접기 영역이 남습니다.</b> 이름을 모델에 두니(ADR-0017) 펼쳐도 영역이 보이지 않게 남아 있습니다. 위의 "접기 영역 표시"를 고르면 점선으로 보입니다. 평소에도 보여야 할까요? 지우는 방법은 "풀기"(<kbd>U</kbd>)로 해 두었습니다. <span class="ref">^edit-fold-range</span></li>
         <li><b>기본 이름을 고른 경우.</b> 처음 접을 때 Enter·Esc로 기본 이름을 고르면, "이미 물어봤음"을 파일에 남겨야 다음에 묻지 않습니다. 그래서 이름 없이도 영역이 저장됩니다. <span class="ref">^edit-fold-range</span></li>
         <li><b>안쪽 깊은 곳에 강조 영역이 있으면?</b> While 안에 강조 영역이 있을 때 그 While을 포함해 강조하면, 넓힐 수도(부모가 다름) 새로 만들 수도(중첩 금지) 없습니다. 지금은 거절합니다. <span class="ref">^edit-region</span></li>
         <li><b>짧은 갈래의 빈 공간.</b> If의 두 갈래 높이가 다르면, 짧은 쪽 마지막 블록을 늘려 채웠습니다. 빈 칸을 따로 그리는 방법도 있습니다. <span class="ref">^lay-branch-width</span></li>
@@ -305,7 +314,10 @@ let idx = new Map();
 let editing = null;
 let chord = null;
 let zoom = 1;
-const opts = { syntax: true, mono: true, showRanges: false };
+const opts = { syntax: true, mono: true, regionView: 'off' };
+let exporting = false;
+// 펴져 있는 접기 영역을 화면에 어떻게 보여 줄지. 저장되는 그림에는 넣지 않는다
+const regionView = () => exporting ? 'off' : (opts.regionView || 'off');
 
 function reindex() {
   idx = new Map();
@@ -533,7 +545,7 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420 };
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18 };
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
 const cv = document.createElement('canvas').getContext('2d');
@@ -545,6 +557,7 @@ function tsize(text) {
   lines.forEach(l => { w = Math.max(w, cv.measureText(l).width); });
   return { w: Math.ceil(w), h: lines.length * K.lh, lines };
 }
+function tagW(text) { cv.font = `600 11.5px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
 const callText = n => (n.target == null ? '? ' : '') + (n.text || '(이름 없음)');
 // 제어 블록의 접히는 부분: If는 갈래마다, 반복문은 안쪽 하나. 접힘 열쇠는 If가 "id:갈래", 반복문이 id
 const partKey = (n, slot) => n.type === 'if' ? n.id + ':' + slot : n.id;
@@ -567,7 +580,10 @@ function measure(n) {
     r = { w: t.w + 2 * K.padX + 2 * K.bar, h: t.h + 2 * K.padY };
   } else if (n.type === 'range') {
     if (folded.has(n.id)) { const t = tsize(foldLabel(n)); r = { w: t.w + 2 * K.padX + 20, h: t.h + 2 * K.padY + 4 }; }
-    else r = measureSeq(n.children);
+    else {
+      r = measureSeq(n.children);
+      if (regionView() === 'band') r = { w: Math.max(r.w, tagW(foldLabel(n)) + 2 * K.padX), h: r.h + K.band, band: K.band };
+    }
   } else {
     const t = tsize(n.text);
     if (n.type === 'if') {
@@ -609,13 +625,12 @@ function place(n, x, y, w, h, out) {
     T.set(n.id, { x, y, w, h: m.h });
   } else if (n.type === 'range') {
     if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
-    else placeSeq(n.children, x, y, w, h, out);
-    if (n.highlight) out.regions.push({ x, y, w, h });
-    // "접기 영역 보기": 펴져 있는 접기 영역을 점선과 이름표로 보여 준다. 강조 영역은 굵은 테두리가 이미 있으니 이름표만 단다
-    if (!fd && opts.showRanges) {
+    else placeSeq(n.children, x, y + (m.band || 0), w, h - (m.band || 0), out);
+    // 펴져 있는 접기 영역의 자리를 적어 둔다. 어떻게 그릴지는 "접기 영역 표시"가 정한다
+    if (!fd && regionView() !== 'off') {
       let depth = 0;
       for (let e = idx.get(n.id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.type === 'range') depth++;
-      out.ghosts.push({ x, y, w, h, text: foldLabel(n), depth });
+      out.ghosts.push({ x, y, w, h, text: foldLabel(n), depth, band: m.band || 0 });
     }
   } else if (n.type === 'if') {
     const hh = m.headH, by = y + hh, bh = h - hh;
@@ -651,20 +666,34 @@ function layout() {
       W = Math.max(W, et.w + 2 * K.padX + 24);
       eh = K.hat + et.h + 2 * K.padY;
     }
-    return { d, bm, W, eh, H: eh + bm.h };
+    // "왼쪽 여백에 이름": 다이어그램 왼쪽에 이름과 괄호선을 그릴 자리를 둔다
+    let gut = 0, cols = 0;
+    if (regionView() === 'gutter') {
+      let wmax = 0;
+      const walk = (list, depth) => list.forEach(n => {
+        if (n.type !== 'range') return (SLOTS[n.type] || []).forEach(sl => walk(n[sl], depth));
+        if (folded.has(n.id)) return;
+        wmax = Math.max(wmax, tagW(foldLabel(n))); cols = Math.max(cols, depth + 1);
+        walk(n.children, depth + 1);
+      });
+      walk(d.body, 0);
+      if (cols) gut = wmax + cols * 10 + 14;
+    }
+    return { d, bm, W, eh, H: eh + bm.h, gut, cols };
   });
   const top = 24, limit = Math.max(K.colMin, ...boxes.map(b => b.H));
   let X = 24, Y = top, colW = 0, bottom = 0;
   for (const b of boxes) {
     if (Y > top && Y + b.H > top + limit) { X += colW + K.gap; Y = top; colW = 0; }
-    const d = b.d;
+    const d = b.d, DX = X + b.gut, g0 = out.ghosts.length;
     if (d.event != null) {
-      out.items.push({ k: 'event', id: d.id, x: X, y: Y, w: b.W, h: b.eh, text: d.event });
-      L.set(d.id, { x: X, y: Y, w: b.W, h: b.eh });
-      T.set(d.id, { x: X, y: Y + K.hat, w: b.W, h: b.eh - K.hat });
+      out.items.push({ k: 'event', id: d.id, x: DX, y: Y, w: b.W, h: b.eh, text: d.event });
+      L.set(d.id, { x: DX, y: Y, w: b.W, h: b.eh });
+      T.set(d.id, { x: DX, y: Y + K.hat, w: b.W, h: b.eh - K.hat });
     }
-    placeSeq(d.body, X, Y + b.eh, b.W, b.bm.h, out);
-    colW = Math.max(colW, b.W);
+    placeSeq(d.body, DX, Y + b.eh, b.W, b.bm.h, out);
+    out.ghosts.slice(g0).forEach(g => { g.left = DX; g.cols = b.cols; });
+    colW = Math.max(colW, b.W + b.gut);
     bottom = Math.max(bottom, Y + b.H);
     Y += b.H + K.gap;
   }
@@ -746,11 +775,28 @@ function drawSVG(lay, ui) {
   for (const r of lay.regions)
     s.push(`<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" fill="none" stroke="${COL.region}" stroke-width="3" rx="2" pointer-events="none"/>`);
   if (ui) {
+    const view = regionView(), c = COL.sel, used = new Map();
+    const tag = (x, y, text, anchor) => `<text x="${x}" y="${y}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(text)}</text>`;
     for (const g of lay.ghosts) {
-      const c = g.hl ? COL.region : COL.sel;
       const d = 2.5 + (g.depth || 0) * 4;
-      s.push(`<rect x="${g.x + d}" y="${g.y + d}" width="${g.w - 2 * d}" height="${g.h - 2 * d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3" pointer-events="none"/>`);
-      s.push(`<text x="${g.x + g.w - 6 - d}" y="${g.y + 13 + d}" text-anchor="end" font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(g.text)}</text>`);
+      if (view === 'band') {
+        // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
+        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges" pointer-events="none"/>`);
+        s.push(`<text x="${g.x + K.padX}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
+        s.push(`<rect x="${g.x + 1.5}" y="${g.y + 1.5}" width="${g.w - 3}" height="${g.h - 3}" fill="none" stroke="${c}" stroke-width="1.5" pointer-events="none"/>`);
+        continue;
+      }
+      s.push(`<rect x="${g.x + d}" y="${g.y + d}" width="${g.w - 2 * d}" height="${g.h - 2 * d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3"${view === 'gutter' ? ' stroke-opacity="0.55"' : ''} pointer-events="none"/>`);
+      if (view === 'corner') s.push(tag(g.x + g.w - 6 - d, g.y + 13 + d, g.text, 'end'));
+      if (view === 'gutter') {
+        // 왼쪽 여백: 다이어그램 밖에 괄호선과 이름. 블록 글자와 겹치지 않고 그림 크기도 그대로다. 바깥 영역일수록 왼쪽 줄
+        const bx = g.left - 7 - (g.cols - 1 - g.depth) * 10;
+        s.push(`<path d="M ${bx + 5} ${g.y + 3} H ${bx} V ${g.y + g.h - 3} H ${bx + 5}" fill="none" stroke="${c}" stroke-width="1.5" pointer-events="none"/>`);
+        if (g.x > g.left + 1) s.push(`<line x1="${bx + 5}" y1="${g.y + 3}" x2="${g.x + d}" y2="${g.y + 3}" stroke="${c}" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" pointer-events="none"/>`);
+        const key = g.left + ':' + g.y, k = used.get(key) || 0;
+        used.set(key, k + 1);
+        s.push(tag(g.left - 7 - g.cols * 10, g.y + 13 + k * 14, g.text, 'end'));
+      }
     }
     const r = selRange();
     if (r) {
@@ -775,6 +821,13 @@ function render() {
   if (sel && diaOf(sel.anchor)) lastDia = diaOf(sel.anchor).id;
 }
 function describeSel() {
+  const base = describeSel0(), r = selRange();
+  if (!r || r.event) return base;
+  const chain = [];
+  for (let e = idx.get(r.items[0].id); e; e = e.parent ? idx.get(e.parent.id) : null) if (e.node.type === 'range') chain.unshift(foldLabel(e.node));
+  return chain.length ? base + '  ·  접기 영역: ' + chain.join(' › ') : base;
+}
+function describeSel0() {
   const r = selRange();
   if (!r) return `다이어그램 ${doc.diagrams.length}개 · 블록 ${allBlocks()}개`;
   if (r.event) return '이벤트 머리';
@@ -795,8 +848,10 @@ function modelJSON() {
 function exportSVG() {
   const keep = folded;
   folded = new Set();               // 저장되는 그림은 항상 모두 펼친 모양 (ADR-0016)
+  exporting = true;                 // 접기 영역 표시는 화면에만 있다
   const lay = layout();
   const body = drawSVG(lay, false);
+  exporting = false;
   folded = keep;
   render();
   const json = modelJSON().split(']]>').join(']]]]><![CDATA[>');   // ^fmt-escape
@@ -1319,7 +1374,7 @@ function restore() {
     doc = d; Object.assign(opts, s.opts || {});
     folded = new Set(JSON.parse(localStorage.getItem('nsd-proto-fold') || '[]'));
     fixUid(); normalize();
-    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').checked = opts.showRanges;
+    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').value = opts.regionView || 'off';
     return true;
   } catch (e) { return false; }
 }
@@ -1386,7 +1441,7 @@ $('#file').addEventListener('change', ev => {
 });
 $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
 $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
-$('#optRanges').addEventListener('change', e => { opts.showRanges = e.target.checked; render(); save(); });
+$('#optRanges').addEventListener('change', e => { opts.regionView = e.target.value; render(); save(); stage.focus({ preventScroll: true }); });
 
 svg.addEventListener('mousedown', ev => {
   if (ev.button !== 0) return;
