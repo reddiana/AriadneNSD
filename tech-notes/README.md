@@ -20,3 +20,4 @@ NSDrawing을 만들며 배운 기술을 정리하는 곳입니다. 메인테이�
 - [[git-line-endings]] — git과 줄 끝 문자 (LF / CRLF) (2026-10-10)
 - [[obsidian-plugin-internals]] — Obsidian 플러그인이 파일 열기와 메뉴에 끼어드는 법 (2026-10-10)
 - [[feedback-and-funding-channels]] — 사용자 의견 받기(Issues·Discussions·양식)와 후원·광고 채널 (2026-10-10)
+- [[browser-focus-and-double-click]] — 브라우저의 포커스 표시(캔버스의 파란 선)와 더블클릭이 안 먹던 이유 (2026-10-10)
