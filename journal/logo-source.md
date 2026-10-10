@@ -53,9 +53,16 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 문자 로고에서만 이름을 `Ariadne’s NSD`로 적습니다 (2026-10-11, 메인테이너의 제안). "Ariadne's Thread"(아리아드네의 실)와 같은 꼴이라, 코드라는 미궁을 빠져나오는 실이라는 뜻이 전해집니다.
 
 - **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[0019-product-name|ADR-0019]]
-- **글자:** `Ariadne`는 먹색 GFS Didot, 소유격 `’s`는 주홍 GFS Didot, `NSD`는 주홍 IBM Plex Mono입니다. 주홍은 그림 로고의 바탕색이자 실의 색입니다. 두 글꼴 모두 OFL 라이선스입니다.
+- **글자:** `Ariadne`는 먹색 GFS Didot, 소유격 `’s`는 주홍의 기울인 글씨(Playfair Display Italic)로 조금 작게, `NSD`는 주홍의 고딕(Josefin Sans, 굵기 600)으로 자간 없이 적습니다. 주홍은 그림 로고의 바탕색이자 실의 색입니다. 세 글꼴 모두 OFL 라이선스입니다.
 - **파일:** `journal/assets/2026-10-10-wordmark-light.svg`(밝은 화면용), `…-dark.svg`(어두운 화면용). 글자를 윤곽선으로 바꿔서 글꼴이 없어도 보입니다. 만든 스크립트는 `journal/assets/2026-10-10-logo-wordmark.py`입니다.
-- **견주어 본 시안:** 붙여 쓴 `AriadneNSD`(W1), 소유격을 먹색으로(W2), 소유격을 주홍으로(W3). W3으로 정했습니다. → `journal/assets/2026-10-10-logo-concepts.html`
+- **견주어 본 시안:** 모두 `journal/assets/2026-10-10-logo-concepts.html`에 있습니다.
+
+| 차례 | 시안 | 결과 |
+| --- | --- | --- |
+| 1 | 붙여 쓴 `AriadneNSD`(W1), 소유격을 먹색으로(W2), 소유격을 주홍으로(W3) | W3 |
+| 2 | 소유격을 필기체에 가깝게 작게, `NSD`를 고정폭이 아닌 글자로 크게 (W4~W6) | W4 |
+| 3 | W4에서 `NSD`의 글꼴만 일곱 가지로 (W4-1~W4-7) | W4-5 또는 W4-6 |
+| 4 | 그 둘에서 `NSD`의 자간을 세 단계로 | **W4-6b** (Josefin Sans, 글꼴의 기본 간격) |
 
 ## 바탕 그림을 바꾼 일
 
