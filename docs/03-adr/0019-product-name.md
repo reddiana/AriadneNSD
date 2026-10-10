@@ -11,7 +11,7 @@ superseded-by:
 # ADR-0019: 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`로 한다
 
 > [!NOTE] 이후 변경
-> - 2026-10-11: 문자 로고(그림)에서만 `Ariadne’s NSD`로 적는다. "Ariadne's Thread"(아리아드네의 실)를 떠올리게 하려는 것이다. 이 ADR에서 `Ariadne's NSD`를 고르지 않은 까닭(아포스트로피를 식별자에 쓸 수 없음)은 그림에는 해당하지 않는다. 글로 적는 제품 이름과 식별자는 이 ADR 그대로 `AriadneNSD` · `ariadne-nsd`다 → [[logo-source#문자 로고]]
+> - 2026-10-11: 문자 로고(그림)에서만 `Ariadne’s NSD`로 적는다. "Ariadne's Thread"(아리아드네의 실)를 떠올리게 하려는 것이다. 이 ADR에서 `Ariadne's NSD`를 고르지 않은 까닭(아포스트로피를 식별자에 쓸 수 없음)은 그림에는 해당하지 않는다. 글로 적는 제품 이름과 식별자는 이 ADR 그대로 `AriadneNSD` · `ariadne-nsd`다 → [[0020-logo|ADR-0020]]
 
 ## 배경
 
