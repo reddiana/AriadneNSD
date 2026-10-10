@@ -24,7 +24,7 @@ updated: 2026-10-09
 | [[timeline]] | 날짜별 주요 사건과 전환점 |
 | [[story-ideas]] | 영상 구성안, 챕터 아이디어, 장면 메모 |
 | [[learning-claude-code]] | Claude Code 초보자가 배워 가는 과정 |
-| [[name-story]] | 이름 이야기: 왜 `Ariadne’s NSD`인가, 아리아드네의 실, 이름이 정해진 과정 |
+| [[name-story]] | 이름 이야기: 왜 `Ariadne’s NSD`인가, 아리아드네의 실, 적는 법 |
 | [[logo-source]] | 로고의 바탕 그림(메트로폴리탄 미술관의 CC0 사진)과 로고가 나온 과정 |
 | `assets/` | 스크린샷, 화면 녹화, 그림 (파일 이름: `날짜-설명.png`) |
 
