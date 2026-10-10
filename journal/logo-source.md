@@ -55,6 +55,7 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 - **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[0019-product-name|ADR-0019]]
 - **글자:** `Ariadne`는 먹색 GFS Didot, 소유격 `’s`는 주홍의 기울인 글씨(Playfair Display Italic)로 조금 작게, `NSD`는 주홍의 고딕(Josefin Sans, 굵기 600)으로 자간 없이 적습니다. 주홍은 그림 로고의 바탕색이자 실의 색입니다. 세 글꼴 모두 OFL 라이선스입니다.
 - **파일:** `journal/assets/2026-10-10-wordmark-light.svg`(밝은 화면용), `…-dark.svg`(어두운 화면용). 글자를 윤곽선으로 바꿔서 글꼴이 없어도 보입니다. 만든 스크립트는 `journal/assets/2026-10-10-logo-wordmark.py`입니다.
+- **알려진 한계 (2026-10-11):** GitHub에서 어두운 테마인데도 `Ariadne`가 검게 보일 때가 있습니다. README는 "어두운 화면이면 어두운 화면용 파일"이라고 적고, GitHub의 스크립트가 이 조건을 GitHub의 테마에 맞게 고쳐 씁니다. 그 스크립트가 켜지지 않으면 브라우저는 운영체제의 밝기를 따릅니다. 그래서 Windows가 밝은 모드이고 GitHub만 어두운 테마이면 밝은 화면용 파일이 나옵니다. "시스템과 맞춤"에 낮 테마를 어두운 것으로 고른 경우도 같습니다. 파일 하나로 어느 바탕에서나 읽히게 하는 시안 다섯 가지(`journal/assets/2026-10-11-wordmark-any-background.html`)를 그려 보았으나, 메인테이너가 지금 모습을 그대로 두기로 했습니다. → [[2026-10-11-01-inbox-samples#어두운 테마에서 문자 로고가 검게 보이는 문제]]
 - **견주어 본 시안:** 모두 `journal/assets/2026-10-10-logo-concepts.html`에 있습니다.
 
 | 차례 | 시안 | 결과 |

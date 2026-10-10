@@ -58,7 +58,7 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 - **Claude의 시험** (헤드리스 Chrome, 로그인 없음): 테마를 어둡게 고정하면 어두운 화면용이 골라졌다. "시스템과 맞춤"에 낮 테마가 어두운 경우에는 밝은 화면용이 골라졌다(GitHub의 한계. `#gh-dark-mode-only`도 같다).
 - **Claude의 추정 둘은 틀렸다.** "시스템과 맞춤 + 낮 테마 어두움"과 "밝은 칸에 어두운 테마" 모두 메인테이너의 상태가 아니었다. 콘솔 값은 `dark / light / dark`였다.
 - **메인테이너의 화면에서 읽은 값** (Edge, 로그인, Single theme: Dark, Windows는 밝은 모드): `2026-10-10-wordmark-light.svg ; (prefers-color-scheme: dark) ; false ; false ; /reddiana/ariadne-nsd`. 그림을 바꿔 주는 스크립트(`themed-picture`)가 켜지지 않았고, 그래서 조건이 고쳐지지 않은 채 운영체제의 밝기(밝음)를 따라 밝은 화면용이 그려졌다. 스크립트가 왜 켜지지 않았는지는 모른다.
-- **고칠 길:** README 쪽에서 GitHub의 스크립트를 켤 방법은 없다. 문자 로고를 파일 하나로 두고 어느 바탕에서나 읽히게 하는 시안 다섯 가지를 그렸다 → https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7, `journal/assets/2026-10-11-wordmark-*`. 어느 것으로 할지는 아직 정하지 않았다.
+- **고칠 길:** README 쪽에서 GitHub의 스크립트를 켤 방법은 없다. 문자 로고를 파일 하나로 두고 어느 바탕에서나 읽히게 하는 시안 다섯 가지를 그렸다 → https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7, `journal/assets/2026-10-11-wordmark-*`. 메인테이너의 결정: "그냥 둡시다". README와 문자 로고는 바꾸지 않는다. 시안은 기록으로 남긴다.
 
 ## 결정
 
@@ -67,6 +67,7 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 | 프로토타입 주소는 `plan/status.md` 맨 위 "바로 가기"에 둔다 | [[status#바로 가기]], `plan/inbox.md` |
 | 예제는 프로토타입의 예제 단추로 넣는다 | 프로토타입 34번째 판 |
 | 강제 push는 마무리 때 한다 | |
+| 어두운 테마에서 문자 로고가 검게 보일 수 있는 것은 그대로 둔다 | [[logo-source#문자 로고]] "알려진 한계" |
 
 ## inbox 원문 (지운 항목)
 
@@ -91,4 +92,10 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 	- P2P Raft 프로토콜
 ```
 
-남긴 항목: `6. 기타` → `## 로고와 데스크탑 어플리케이션의 아이콘 및 Favicon`의 어두운 테마 문자 로고 물음.
+`6. 기타` → `## 로고와 데스크탑 어플리케이션의 아이콘 및 Favicon` (제목은 남김)
+
+```text
+- GitHub에서 다크테마를 설정했는데 문자로고의 Ariadne가 여전히 검게 나옵니다. 밝은 색상으로 나오는게 맞다고 하지 않았나요?
+```
+
+inbox에 남은 항목은 없다.
