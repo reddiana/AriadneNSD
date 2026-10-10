@@ -169,7 +169,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <dl class="keys">
         <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>그림 순서대로 이동 (다이어그램 안에서만)</dd>
         <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>If 안에서는 건너편 갈래의 첫 블록으로. 왼쪽 갈래에서 <kbd>←</kbd>는 위쪽 바깥 블록, 오른쪽 갈래에서 <kbd>→</kbd>는 아래쪽 바깥 블록. 그 밖에서는 바깥 블록 / 안쪽 첫 블록</dd>
-        <dt><kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></dt><dd>제어 블록 안에서: 그 제어 블록의 위·아래 블록으로</dd>
+        <dt><kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></dt><dd>제어 블록을 안쪽까지 한 덩어리로 보고 위·아래 블록으로. 제어 블록 안으로 들어가지 않고 제어 블록 전체를 고릅니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>If 안에서: 옆 갈래로. 그 밖에서는 위·아래 블록으로</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>옆 다이어그램으로 (머리에서는 <kbd>←</kbd> <kbd>→</kbd>만으로도)</dd>
         <dt><kbd>Shift</kbd>+클릭, <kbd>Shift</kbd>+<kbd>↑↓</kbd></dt><dd>영역 고르기 (같은 부모로 자동 확장)</dd>
@@ -195,7 +195,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
         <li><b>방향키는 다이어그램 안에서만.</b> 옆 다이어그램으로는 머리에서 <kbd>←</kbd> <kbd>→</kbd>, 또는 어디서든 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>.</li>
-        <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 지금 있는 제어 블록의 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
+        <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 제어 블록을 한 덩어리로 보고 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
         <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
         <li><b>이벤트 머리의 이름은 겹칠 수 없습니다.</b> 겹치면 고치던 칸이 다시 열립니다.</li>
         <li><b>If는 갈래별로 접습니다.</b> 참 갈래와 거짓 갈래가 따로 "⋯ 블록 N개" 줄이 됩니다. 블록이 하나뿐인 갈래, 안에 블록이 하나뿐인 반복문은 접지 않습니다.</li>
@@ -443,11 +443,10 @@ function move(key, shift, ctrl) {
     }
     if (!inIf) next = step();
   } else if (ctrl) {
-    // 제어 블록 안이면 그 제어 블록의 위·아래 블록으로. 아니면 위아래와 같다
-    const c = isHead(cur) ? null : container(cur);
-    if (!c) next = step();
-    else if (fwd) next = order.slice(orderPos(order, c.node.id) + 1).find(id => !ancestors(id).includes(c.node.id));
-    else next = prevOf(c.node.id);
+    // 제어 블록을 안쪽까지 한 덩어리로 보고, 같은 줄의 위·아래 블록으로 간다 (제어 블록 안으로 들어가지 않는다)
+    if (isHead(cur)) next = step();
+    else if (inLane) next = fwd ? nextOf(idx.get(cur).parent.id) : idx.get(cur).parent.id;
+    else next = fwd ? nextOf(cur) : prevOf(cur);
   } else if (shift && inLane) return say('접힌 갈래에서는 영역을 넓히지 않습니다');
   else if (shift && !isHead(sel.anchor)) {
     const f = idx.get(sel.focus);
@@ -473,6 +472,15 @@ function move(key, shift, ctrl) {
     }
   }
   if (next) { pickId(next); render(); }
+}
+function nextOf(id) {
+  // 바로 아래 블록: 뒤 형제, 없으면 담고 있는 제어 블록의 아래 블록
+  let e = idx.get(id);
+  while (e.index === e.list.length - 1 && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
+  if (e.index === e.list.length - 1) return e.parent ? nextOf(e.parent.id) : null;
+  let p = e.list[e.index + 1];
+  while (p.type === 'range' && !folded.has(p.id)) p = p.children[0];
+  return p.id;
 }
 function prevOf(id) {
   // 바로 위 블록: 앞 형제, 없으면 담고 있는 제어 블록, 그것도 없으면 머리
