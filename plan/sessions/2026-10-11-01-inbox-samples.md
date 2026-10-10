@@ -58,7 +58,9 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 - **Claude의 시험** (헤드리스 Chrome, 로그인 없음): 테마를 어둡게 고정하면 어두운 화면용이 골라졌다. "시스템과 맞춤"에 낮 테마가 어두운 경우에는 밝은 화면용이 골라졌다(GitHub의 한계. `#gh-dark-mode-only`도 같다).
 - **Claude의 추정 둘은 틀렸다.** "시스템과 맞춤 + 낮 테마 어두움"과 "밝은 칸에 어두운 테마" 모두 메인테이너의 상태가 아니었다. 콘솔 값은 `dark / light / dark`였다.
 - **메인테이너의 화면에서 읽은 값** (Edge, 로그인, Single theme: Dark, Windows는 밝은 모드): `2026-10-10-wordmark-light.svg ; (prefers-color-scheme: dark) ; false ; false ; /reddiana/ariadne-nsd`. 그림을 바꿔 주는 스크립트(`themed-picture`)가 켜지지 않았고, 그래서 조건이 고쳐지지 않은 채 운영체제의 밝기(밝음)를 따라 밝은 화면용이 그려졌다. 스크립트가 왜 켜지지 않았는지는 모른다.
-- **고칠 길:** README 쪽에서 GitHub의 스크립트를 켤 방법은 없다. 문자 로고를 파일 하나로 두고 어느 바탕에서나 읽히게 하는 시안 다섯 가지를 그렸다 → https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7, `journal/assets/2026-10-11-wordmark-*`. 메인테이너의 결정: "그냥 둡시다". README와 문자 로고는 바꾸지 않는다. 시안은 기록으로 남긴다.
+- **고칠 길:** README 쪽에서 GitHub의 스크립트를 켤 방법은 없다. 문자 로고를 파일 하나로 두고 어느 바탕에서나 읽히게 하는 시안 다섯 가지를 그렸다 → https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7, `journal/assets/2026-10-11-wordmark-*`. 메인테이너의 첫 결정은 "그냥 둡시다"였다.
+- **Obsidian에서도 같았다.** 메인테이너가 "Obsidian에서도 다크테마에서 동일한 문제가 발생하는데 이건 왜죠?"라고 물었다. README의 조건은 Obsidian에서도 운영체제의 밝기를 따르고, `logo-source`와 `name-story`에는 Claude가 밝은 화면용 파일만 넣어 두었다.
+- **시험과 결정.** 메인테이너가 N1과 P1을 차례로 실제 문서에 넣어 보고("N1을 테스트해봅시다", "P1 테스트") **N1으로 정했다**("N1으로 합시다"). 문자 로고는 파일 하나가 되었다.
 
 ## 결정
 
@@ -67,7 +69,7 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 | 프로토타입 주소는 `plan/status.md` 맨 위 "바로 가기"에 둔다 | [[status#바로 가기]], `plan/inbox.md` |
 | 예제는 프로토타입의 예제 단추로 넣는다 | 프로토타입 34번째 판 |
 | 강제 push는 마무리 때 한다 | |
-| 어두운 테마에서 문자 로고가 검게 보일 수 있는 것은 그대로 둔다 | [[logo-source#문자 로고]] "알려진 한계" |
+| 문자 로고를 파일 하나(시안 N1)로 바꾼다. `Ariadne`는 회갈색, 주홍은 조금 밝게 | `README.md`, [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo\|ADR-0020]] "이후 변경", [[name-story]] |
 
 ## inbox 원문 (지운 항목)
 
