@@ -1021,6 +1021,7 @@ function reId(list, plain) {
 function paste() {
   if (!clip) return say('붙일 것이 없습니다. 먼저 Ctrl+C나 Ctrl+X를 누르세요');
   const r = selRange();
+  if (!r) return say('붙일 자리를 먼저 고르세요. 고른 블록 뒤에 붙습니다');
   const at = r && !r.event ? r : null;
   const inHL = !!(at && at.parent) && ancestors(at.parent.id).some(id => isHL(idx.get(id).node));
   const nodes = reId(JSON.parse(clip), inHL);
