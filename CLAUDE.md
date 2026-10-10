@@ -1,6 +1,6 @@
 # AriadneNSD
 
-NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 저장소·패키지·플러그인 id·문서 태그는 `ariadne-nsd`로 쓴다(→ [[0019-product-name|ADR-0019]]). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[logo-source]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
+NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 저장소·패키지·플러그인 id·문서 태그는 `ariadne-nsd`로 쓴다(→ [[0019-product-name|ADR-0019]]). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[0020-logo|ADR-0020]], 이름의 뜻은 [[name-story]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
 
 ## 저장소 구성
 

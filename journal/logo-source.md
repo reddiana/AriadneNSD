@@ -50,7 +50,7 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 
 ![[2026-10-10-wordmark-light.svg|320]]
 
-문자 로고에서만 이름을 `Ariadne’s NSD`로 적습니다 (2026-10-11, 메인테이너의 제안). "Ariadne's Thread"(아리아드네의 실)와 같은 꼴이라, 코드라는 미궁을 빠져나오는 실이라는 뜻이 전해집니다.
+문자 로고에서만 이름을 `Ariadne’s NSD`로 적습니다 (2026-10-11, 메인테이너의 제안). 이름의 뜻과 내력은 [[name-story]]에 따로 적었습니다. "Ariadne's Thread"(아리아드네의 실)와 같은 꼴이라, 코드라는 미궁을 빠져나오는 실이라는 뜻이 전해집니다.
 
 - **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[0019-product-name|ADR-0019]]
 - **글자:** `Ariadne`는 먹색 GFS Didot, 소유격 `’s`는 주홍의 기울인 글씨(Playfair Display Italic)로 조금 작게, `NSD`는 주홍의 고딕(Josefin Sans, 굵기 600)으로 자간 없이 적습니다. 주홍은 그림 로고의 바탕색이자 실의 색입니다. 세 글꼴 모두 OFL 라이선스입니다.
