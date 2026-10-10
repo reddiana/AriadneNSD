@@ -1,0 +1,144 @@
+// 프로토타입의 Event / Method 동작을 헤드리스 Chrome에서 눌러 본다
+import { spawn } from 'node:child_process';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+const page = process.argv[2], outDir = process.argv[3];
+const port = 9344;
+const chrome = spawn('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', [
+  '--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`,
+  `--user-data-dir=${mkdtempSync(join(tmpdir(), 'protoem-'))}`, '--window-size=2300,1500', 'about:blank',
+], { stdio: 'ignore' });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function target() {
+  for (let i = 0; i < 40; i++) {
+    try { const p = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find(t => t.type === 'page'); if (p) return p.webSocketDebuggerUrl; } catch {}
+    await sleep(250);
+  }
+  throw new Error('chrome did not start');
+}
+const ws = new WebSocket(await target());
+await new Promise(r => ws.addEventListener('open', r, { once: true }));
+let seq = 0; const pending = new Map(); const errors = [];
+ws.addEventListener('message', ev => {
+  const m = JSON.parse(ev.data);
+  if (m.id && pending.has(m.id)) { pending.get(m.id)(m.result ?? m.error); pending.delete(m.id); }
+  if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
+});
+const send = (method, params = {}) => new Promise(r => { const id = ++seq; pending.set(id, r); ws.send(JSON.stringify({ id, method, params })); });
+const ev = async expr => { const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || 'eval error'); return r.result.value; };
+
+await send('Page.enable'); await send('Runtime.enable');
+await send('Page.navigate', { url: page });
+await sleep(2500);
+
+// 페이지 안에서 쓸 도우미: 키 누르기, 블록 고르기, 문서 읽기
+await ev(`
+window.T = {
+  key(code, o = {}) { (o.editor ? document.querySelector('#editor') : document).dispatchEvent(new KeyboardEvent('keydown', { code, key: o.key || code, shiftKey: !!o.shift, ctrlKey: !!o.ctrl, bubbles: true, cancelable: true })); },
+  click(id) { const el = document.querySelector('#svg [data-id="' + id + '"]'); if (!el) throw new Error('no element ' + id); el.dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true })); },
+  cmd(c) { document.querySelector('button[data-cmd="' + c + '"]').click(); },
+  doc() { return JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; },
+  type(v) { const e = document.querySelector('#editor'); if (e.hidden) throw new Error('editor closed'); e.value = v; T.key('Enter', { editor: true, key: 'Enter' }); },
+  editing() { const e = document.querySelector('#editor'); return e.hidden ? null : e.value; },
+  msg() { return document.querySelector('#msg').textContent; },
+  calls(d) { const out = []; const walk = l => l.forEach(n => { if (n.type === 'call') out.push(n); for (const k of ['yes', 'no', 'body', 'children', 'c0', 'c1', 'c2', 'c3']) if (Array.isArray(n[k])) walk(n[k]); }); d.diagrams.forEach(x => walk(x.body)); return out; },
+  sum() { const d = T.doc(); return { dias: d.diagrams.map(x => x.kind + ':' + x.event), calls: T.calls(d).map(c => c.text + ' -> ' + (c.target ? d.diagrams.find(x => x.id === c.target)?.event : 'X')) }; },
+};`);
+
+const results = [];
+const check = (name, ok, detail) => { results.push({ name, ok }); console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : '  ' + JSON.stringify(detail))); };
+const shot = async name => { const r = await send('Page.captureScreenshot', { format: 'png' }); writeFileSync(join(outDir, name), Buffer.from(r.data, 'base64')); };
+
+// a. 퀵소트 예제
+await ev(`T.cmd('exQuick')`);
+let s = await ev(`T.sum()`);
+check('퀵소트: Method 둘', s.dias.length === 2 && s.dias.every(d => d.startsWith('method:')), s);
+check('퀵소트: 호출 셋이 이어짐, 글자는 따로', s.calls.join('|') === 'p = partition(a, lo, hi); -> partition(a, lo, hi)|quicksort(a, lo, p - 1); -> quicksort(a, lo, hi)|quicksort(a, p + 1, hi); -> quicksort(a, lo, hi)', s);
+await shot('em-quick.png');
+
+// b. Raft 예제
+await ev(`T.cmd('exRaft')`);
+s = await ev(`T.sum()`);
+check('Raft: Event 일곱, Method 셋', s.dias.filter(d => d.startsWith('event:')).length === 7 && s.dias.filter(d => d.startsWith('method:')).length === 3, s);
+check('Raft: 호출이 모두 Method에 이어짐', s.calls.length === 9 && s.calls.every(c => !c.endsWith('X')), s);
+await shot('em-raft.png');
+
+// c. 코드식 예제에서 블록을 고르고 M: 새 Method로 빠짐
+await ev(`T.cmd('exCode')`);
+let d = await ev(`T.doc()`);
+check('코드식: Event 하나', d.diagrams.length === 1 && d.diagrams[0].kind === 'event', d.diagrams.map(x => x.kind));
+const first = d.diagrams[0].body[0].id;
+await ev(`T.click('${first}'); T.key('KeyE')`);
+check('블록을 고르고 E: 빼지 않고 알려 줌', (await ev(`T.doc().diagrams.length`)) === 1 && (await ev(`T.msg()`)).includes('M을 누르세요'), await ev(`T.msg()`));
+await ev(`T.key('KeyM')`);
+check('블록을 고르고 M: 머리 이름을 묻는 칸이 열림', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
+await ev(`T.key('Enter', { editor: true, key: 'Enter' })`);
+s = await ev(`T.sum()`);
+check('M으로 뺌: 새 Method와 이어진 호출 블록', s.dias[1] === 'method:Method 1' && s.calls.join() === 'Method 1 -> Method 1', s);
+d = await ev(`T.doc()`);
+const mId = d.diagrams[1].id, callId = d.diagrams[0].body[0].id;
+
+// d. 부르는 호출이 있는 Method는 Event로 못 바꿈
+await ev(`T.click('${mId}'); T.key('KeyE')`);
+check('부르는 호출이 있으면 Event로 못 바꿈', (await ev(`T.doc().diagrams[1].kind`)) === 'method' && (await ev(`T.msg()`)).includes('바꿀 수 없습니다'), await ev(`T.msg()`));
+
+// e. Shift+E 새 Event, 머리에서 M / E로 종류 바꾸기
+await ev(`T.key('KeyE', { shift: true })`);
+check('Shift+E: 새 Event의 이름 칸', (await ev(`T.editing()`)) === '이벤트 1', await ev(`T.editing()`));
+await ev(`T.type('버튼을 누르면')`);
+d = await ev(`T.doc()`);
+const eDia = d.diagrams.find(x => x.event === '버튼을 누르면');
+check('새 Event 다이어그램', !!eDia && eDia.kind === 'event', d.diagrams.map(x => x.kind + ':' + x.event));
+await ev(`T.click('${eDia.id}'); T.key('KeyM')`);
+check('머리에서 M: Method로', (await ev(`T.doc().diagrams.find(x => x.id === '${eDia.id}').kind`)) === 'method');
+await ev(`T.key('KeyE')`);
+check('머리에서 E: 다시 Event로', (await ev(`T.doc().diagrams.find(x => x.id === '${eDia.id}').kind`)) === 'event');
+
+// f. 호출 블록의 글자 고치기
+await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
+check('호출 블록에서 Enter: 글자 고치는 칸', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
+await ev(`T.type('n = Method 1(3)')`);
+s = await ev(`T.sum()`);
+check('호출 블록의 글자만 바뀌고 이어짐은 그대로', s.calls.join() === 'n = Method 1(3) -> Method 1', s);
+
+// g. 호출을 하나 더 넣고(C, 1번), 머리 이름을 고치면 글자가 같던 호출만 따라 바뀜
+await ev(`T.click('${callId}'); T.key('KeyC'); T.key('Digit1')`);
+s = await ev(`T.sum()`);
+check('C로 넣은 호출: 목록에 Method만', s.calls.length === 2 && s.calls[1] === 'Method 1 -> Method 1', s);
+await ev(`T.click('${mId}'); T.key('Enter', { key: 'Enter' })`);
+await ev(`T.type('count_up(n)')`);
+s = await ev(`T.sum()`);
+check('머리 이름을 고침: 글자가 같던 호출만 따라 바뀜', s.calls.join('|') === 'n = Method 1(3) -> count_up(n)|count_up(n) -> count_up(n)', s);
+
+// h. R로 부를 Method 바꾸기: 새 Method를 만들고 호출
+d = await ev(`T.doc()`);
+const call2 = d.diagrams[0].body[1].id;
+await ev(`T.click('${call2}'); T.key('KeyR'); T.key('Digit2')`);
+check('R → 새 Method: 이름 칸이 열림', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
+await ev(`T.type('reset()')`);
+s = await ev(`T.sum()`);
+check('R로 바꿈: 호출이 새 Method에 이어지고 글자도 따라옴', s.calls.join('|') === 'n = Method 1(3) -> count_up(n)|reset() -> reset()', s);
+
+// i. Method의 머리를 떼면 호출 블록은 글자만 남음, 되돌리면 다시 이어짐
+d = await ev(`T.doc()`);
+const rId = d.diagrams.find(x => x.event === 'reset()').id;
+await ev(`T.click('${rId}'); T.key('Delete')`);
+s = await ev(`T.sum()`);
+check('머리를 떼면 호출은 글자만 남음', s.calls[1] === 'reset() -> X', s);
+await ev(`T.key('KeyZ', { ctrl: true })`);
+s = await ev(`T.sum()`);
+check('되돌리면 다시 이어짐', s.calls[1] === 'reset() -> reset()', s);
+
+// j. 종류가 없는 예전 문서 열기: 불리는 다이어그램은 Method로
+await ev(`localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc: { diagrams: [
+  { id: 'g1', event: '타이머', body: [{ id: 'n1', type: 'call', target: 'g2', text: '센서 읽기' }] },
+  { id: 'g2', event: '센서 읽기', body: [{ id: 'n2', type: 'process', text: 'adc_start();' }] } ] }, opts: {} })); location.reload()`);
+await sleep(2500);
+const old = await ev(`(() => { document.querySelector('#optSyntax').dispatchEvent(new Event('change')); const d = JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; return d.diagrams.map(x => x.kind + ':' + x.event).join('|') + ' / ' + d.diagrams[0].body[0].target; })()`);
+check('예전 문서: 불리는 것은 Method, 나머지는 Event', old === 'event:타이머|method:센서 읽기 / g2', old);
+
+check('스크립트 오류 없음', errors.length === 0, errors);
+console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
+ws.close(); chrome.kill(); process.exit(0);

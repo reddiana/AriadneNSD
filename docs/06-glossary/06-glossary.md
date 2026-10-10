@@ -24,11 +24,12 @@ updated: 2026-10-10
 | 전위 판정 반복 | while (pre-test loop)                    | `WhileBlock`   | 조건을 먼저 검사하는 반복              |
 | 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhileBlock` | 본문을 먼저 실행하고 조건을 검사하는 반복     |
 | 횟수 반복    | for                                      | `ForBlock`     | 정해진 횟수만큼 반복                 |
-| 서브루틴 호출  | call                                     | `CallBlock`    | 다른 절차를 부르는 블록               |
+| 서브루틴 호출  | call                                     | `CallBlock`    | 같은 문서의 Method를 부르는 블록. 글자(인자와 결과)는 자유롭게 적는다 |
 | 갈래       | branch                                   | `Branch`       | 선택 블록 안의 각 경로. 하나의 시퀀스를 가짐  |
 | 본문       | body                                     | `body`         | 반복 블록 안에서 반복되는 시퀀스          |
 | 조건       | condition                                | `condition`    | 선택·반복 블록의 판정 텍스트            |
-| 이벤트 머리 | event hat | `EventHead`(안) | 다이어그램 맨 위에 다는 이벤트. 그 다이어그램이 처리기임을 나타냄 (Scratch에서 가져옴) |
+| Event 머리 (이벤트 머리) | event hat | `EventHead`(안) | 다이어그램 맨 위에 다는 이벤트. 그 다이어그램이 문서 밖에서 시작되는 처리기임을 나타냄. 모자 모양 (Scratch에서 가져옴) |
+| Method 머리 | method head | `MethodHead`(안) | 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. 낮은 아치 모양 → [[0021-event-and-method\|ADR-0021]] |
 
 ## 편집 개념
 

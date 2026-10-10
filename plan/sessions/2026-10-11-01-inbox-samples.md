@@ -62,6 +62,14 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 - **Obsidian에서도 같았다.** 메인테이너가 "Obsidian에서도 다크테마에서 동일한 문제가 발생하는데 이건 왜죠?"라고 물었다. README의 조건은 Obsidian에서도 운영체제의 밝기를 따르고, `logo-source`와 `name-story`에는 Claude가 밝은 화면용 파일만 넣어 두었다.
 - **시험과 결정.** 메인테이너가 N1과 P1을 차례로 실제 문서에 넣어 보고("N1을 테스트해봅시다", "P1 테스트") **N1으로 정했다**("N1으로 합시다"). 문자 로고는 파일 하나가 되었다.
 
+## Event와 Method: 시안과 결정
+
+메인테이너가 "Event와 Method를 구분 시안과 단축키 설명해주세요"라고 해서 시안 페이지를 만들었다 → https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8, `journal/assets/2026-10-11-event-method-study.html`. 정할 것 네 가지(머리 모양, 인자와 결과, Event를 부를 수 있는지, 단축키)마다 안을 나란히 놓았고 Claude는 `H1 / A2 / C1 / S2`를 권했다.
+
+메인테이너의 결정: **"H3, A1, C1, S2"**. 머리 모양과 인자 표기는 Claude가 권한 것과 다른 안이다. → [[0021-event-and-method|ADR-0021]]
+
+프로토타입에 넣어 다시 게시했다(35번째 판). 넣으면서 Claude가 정한 것은 [[debt]]에 적었다. 헤드리스 Chrome에서 키를 눌러 보는 시험 23개를 만들어 모두 통과했다(`journal/assets/2026-10-11-ns-prototype-test.mjs`). 지난 세션의 검사 177개는 임시 폴더에만 있어서 사라졌는데, 이번 시험은 저장소에 두었다.
+
 ## 결정
 
 | 결정 | 반영한 곳 |
@@ -69,6 +77,7 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 | 프로토타입 주소는 `plan/status.md` 맨 위 "바로 가기"에 둔다 | [[status#바로 가기]], `plan/inbox.md` |
 | 예제는 프로토타입의 예제 단추로 넣는다 | 프로토타입 34번째 판 |
 | 강제 push는 마무리 때 한다 | |
+| Event와 Method를 구분한다: 낮은 아치 머리(H3), 호출 블록의 글자는 자유(A1), Method만 부름(C1), `E`는 Event · `M`은 Method(S2) | [[0021-event-and-method\|ADR-0021]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^edit-extract]], 프로토타입 35번째 판 |
 | 문자 로고를 파일 하나(시안 N1)로 바꾼다. `Ariadne`는 회갈색, 주홍은 조금 밝게 | `README.md`, [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo\|ADR-0020]] "이후 변경", [[name-story]] |
 
 ## inbox 원문 (지운 항목)

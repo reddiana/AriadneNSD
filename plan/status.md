@@ -18,7 +18,7 @@ updated: 2026-10-11
 | 색상 시안 (기본 스타일) | https://claude.ai/artifact/XVzT38DvGVir97z9j47Aaj | `journal/assets/2026-10-09-ns-color-study.html` |
 | 영역 강조 시안 (없앤 기능) | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html` |
 | 로고 시안 | (주소를 기록해 두지 않음) | `journal/assets/2026-10-10-logo-concepts.html` |
-| Event와 Method 시안 (2026-10-11, 결정 기다림) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html` |
+| Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11) | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html` |
 
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
@@ -73,7 +73,8 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 - [ ] inbox에서 넘어온 일 (2026-10-11, [[2026-10-11-01-inbox-samples]])
 	- [x] 프로토타입 주소를 고정해 두기 → 이 문서 맨 위 "바로 가기", inbox 첫 줄에서 링크
 	- [x] 예제: 퀵소트, Raft 프로토콜 → 프로토타입의 예제 단추로 넣어 다시 게시함
-	- [ ] Event와 Method(Sub process)를 따로 둘지 정하기. 모양을 정하기 전에 뜻이 있는지부터. Claude의 검토는 세션 기록에 있음. 호출 블록의 인자·결과와 함께 정한다 → [[01-requirements#6. 미결정 사항]]
+	- [x] Event와 Method(Sub process)를 따로 둘지 → 구분함 (2026-10-11, [[0021-event-and-method|ADR-0021]] 승인: 낮은 아치 머리, 호출 블록의 글자는 자유, Method만 부름, `E`·`M` 키). 요구사항과 프로토타입(35번째 판)에 반영
+	- [ ] ADR-0021의 후속: 파일 형식에 종류(Event / Method) 넣기, 모델 설계에 반영 → [[01-file-format]], [[01-model]]
 	- [x] GitHub 어두운 테마에서 문자 로고의 `Ariadne`가 검게 보임 → 원인을 찾았고(GitHub의 스크립트가 켜지지 않으면 운영체제의 밝기를 따름. Obsidian도 운영체제를 따름), 문자 로고를 파일 하나(시안 N1: 회갈색 `Ariadne`)로 바꿈 (2026-10-11) → [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo|ADR-0020]] "이후 변경"
 - [ ] **다음 세션:** 접기에서 덜 정해진 곳을 마저 정한다
 	- [ ] 접기: 접기 영역 안의 제어 블록에서 `F`, 갈래의 일부만 접기 영역일 때, 접힌 줄을 펼 때 안쪽 접기 영역의 상태 → [[01-requirements#접기 · 펼치기]]
@@ -100,10 +101,9 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 - 모델 네임스페이스 URI → [[01-file-format#6. 미결정 사항]]
 - 블록 글자는 코드인가, 일반 문장인가 (구문 강조 방식이 갈림) → [[01-requirements#6. 미결정 사항]]
 - 저장된 SVG의 색: 고정 / 보는 환경의 테마를 따름 → [[0013-default-visual-style|ADR-0013]]
-- Method 다이어그램의 머리를 이벤트 머리와 다르게 그릴지, 모델에서 구분할지 → [[01-requirements#6. 미결정 사항]]
+- 다른 Event를 일으키는 블록이 필요한지, 쓰이지 않는 Method를 알려 줄지 → [[01-requirements#6. 미결정 사항]]
 - 접고 펴기가 이제 파일을 바꾸는데, 실행 취소 대상에 넣을지 → [[0018-save-as-shown|ADR-0018]]
 - `F` 하나로 제어 블록과 접기 영역을 모두 다루는 것이 괜찮은지 (접기 영역 안의 제어 블록에서 헷갈림) → [[01-requirements#접기 · 펼치기]]
-- 호출 블록마다 다른 글자(예: 인자)를 적을 수 있어야 하는지. 프로토타입은 머리 글자를 그대로 따른다 → [[01-requirements#^blk-call]]
 - Google Drive 연동을 Obsidian · 데스크톱과 견주어 언제 만들지 → [[0011-development-order|ADR-0011]] "이후 변경"
 - 웹 광고의 자리: 광고 네트워크 정책이 "저장·내보내기·공유 때만"을 허용하는지 → [[01-requirements#6. 미결정 사항]]
 - 비공개 문제 알리기 채널: 이메일 / 폼 (웹 베타 무렵 결정) → [[01-requirements#^rep-issue]]
