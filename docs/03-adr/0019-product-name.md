@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0019: 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`로 한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-11: 문자 로고(그림)에서만 `Ariadne’s NSD`로 적는다. "Ariadne's Thread"(아리아드네의 실)를 떠올리게 하려는 것이다. 이 ADR에서 `Ariadne's NSD`를 고르지 않은 까닭(아포스트로피를 식별자에 쓸 수 없음)은 그림에는 해당하지 않는다. 글로 적는 제품 이름과 식별자는 이 ADR 그대로 `AriadneNSD` · `ariadne-nsd`다 → [[logo-source#문자 로고]]
+
 ## 배경
 
 이 애플리케이션은 처음부터 `NSDrawing`이라는 임시 이름으로 불렸다. 메인테이너는 이 이름이 멋이 없다고 보고 `Ariadne`, `Ariadne's NSD`, `AriadneNSD`를 차례로 제안했다.

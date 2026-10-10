@@ -46,6 +46,17 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 | `journal/assets/2026-10-10-logo-trace-small.py` | 5단계를 하는 스크립트 |
 | `journal/assets/2026-10-10-logo-concepts.html` | 시안을 견주어 본 페이지 |
 
+## 문자 로고
+
+![[2026-10-10-wordmark-light.svg|320]]
+
+문자 로고에서만 이름을 `Ariadne’s NSD`로 적습니다 (2026-10-11, 메인테이너의 제안). "Ariadne's Thread"(아리아드네의 실)와 같은 꼴이라, 코드라는 미궁을 빠져나오는 실이라는 뜻이 전해집니다.
+
+- **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[0019-product-name|ADR-0019]]
+- **글자:** `Ariadne`는 먹색 GFS Didot, 소유격 `’s`는 주홍 GFS Didot, `NSD`는 주홍 IBM Plex Mono입니다. 주홍은 그림 로고의 바탕색이자 실의 색입니다. 두 글꼴 모두 OFL 라이선스입니다.
+- **파일:** `journal/assets/2026-10-10-wordmark-light.svg`(밝은 화면용), `…-dark.svg`(어두운 화면용). 글자를 윤곽선으로 바꿔서 글꼴이 없어도 보입니다. 만든 스크립트는 `journal/assets/2026-10-10-logo-wordmark.py`입니다.
+- **견주어 본 시안:** 붙여 쓴 `AriadneNSD`(W1), 소유격을 먹색으로(W2), 소유격을 주홍으로(W3). W3으로 정했습니다. → `journal/assets/2026-10-10-logo-concepts.html`
+
 ## 바탕 그림을 바꾼 일
 
 처음(2026-10-10)에는 메인테이너가 inbox에 붙여 넣은 사진에서 로고를 뽑았습니다. 그 사진은 출처를 알 수 없었습니다. 메인테이너가 "공개 사진으로 거의 동일한 사진이 있을 것 같아요"라고 해서 찾아보니 위의 CC0 사진이 있었고, 2026-10-11에 이 사진으로 로고를 다시 뽑았습니다. 구도는 거의 같고 사진이 커서 진주 줄이 더 또렷해졌습니다. inbox의 사진 9장은 저장소에서 지웠습니다. → [[2026-10-10-06-logo]]

@@ -5,7 +5,7 @@
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="journal/assets/2026-10-10-wordmark-dark.svg">
-    <img src="journal/assets/2026-10-10-wordmark-light.svg" width="300" alt="AriadneNSD">
+    <img src="journal/assets/2026-10-10-wordmark-light.svg" width="340" alt="AriadneNSD">
   </picture>
 </h1>
 
