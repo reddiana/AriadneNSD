@@ -130,8 +130,6 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
     <div class="grp">
       <span class="lbl">보기</span>
       <button data-cmd="fold">접기·펴기</button>
-      <button data-cmd="region">강조</button>
-      <button data-cmd="unregion">강조 지우기</button>
     </div>
     <div class="grp">
       <button data-cmd="undo" title="Ctrl+Z">↶ 되돌리기</button>
@@ -181,9 +179,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>C</kbd></dt><dd>호출 블록 넣기 (부를 다이어그램을 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고름)</dd>
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
-        <dt><kbd>U</kbd></dt><dd>풀기. 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 고른 곳에 걸린 접기 영역을 접혔든 펴졌든 모두 풉니다 (강조는 남음)</dd>
+        <dt><kbd>U</kbd></dt><dd>풀기. 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 고른 곳에 걸린 접기 영역을 접혔든 펴졌든 모두 풉니다</dd>
         <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 갈래는 방향키나 클릭으로 고를 수 있고, <kbd>F</kbd>나 더블클릭으로 폅니다</dd>
-        <dt><kbd>H</kbd> / <kbd>Shift</kbd>+<kbd>H</kbd></dt><dd>강조 영역 만들기·넓히기 / 지우기</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
@@ -191,6 +188,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
       <h2>이번에 바뀐 것 (10-10 네 번째 판)</h2>
       <ul>
+        <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 이름 붙은 접기 영역입니다.</li>
+        <li><b><kbd>U</kbd>는 접기 영역도 풉니다.</b> 접혔든 펴졌든, 고른 곳에 걸린 접기 영역을 모두 풉니다. "이름 붙은 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
@@ -316,6 +315,11 @@ function normalize() {
     for (let i = list.length - 1; i >= 0; i--) {
       const n = list[i];
       (SLOTS[n.type] || []).forEach(s => fix(n[s], n.type !== 'range'));
+      if (n.type === 'range' && n.highlight) {
+        // 강조 영역은 없앤 기능이다: 이름이 있으면 접기 영역으로 남기고, 없으면 푼다
+        delete n.highlight;
+        if (!('name' in n)) { list.splice(i, 1, ...n.children); folded.delete(n.id); continue; }
+      }
       if (n.type === 'range' && n.children.length === 0) { list.splice(i, 1); folded.delete(n.id); }
     }
     if (mustFill && list.length === 0) list.push(P());
@@ -1379,7 +1383,7 @@ function showMenu(x, y) {
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('event', evLabel, 'E'), it('head', headLabel, 'M'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
        it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '풀기', 'U'), null,
-       it('fold', '접기 · 펴기', 'F'), it('region', '강조', 'H'), it('unregion', '강조 지우기', '⇧H'), null,
+       it('fold', '접기 · 펴기', 'F'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
   menuAt = -1;
   drawMenu();
@@ -1485,7 +1489,6 @@ document.addEventListener('keydown', ev => {
   else if (code === 'KeyS') { chord = 'S'; say('감싸기: W = While, D = Do-While, I = If'); }
   else if (code === 'KeyU') unwrap();
   else if (code === 'KeyF') fold();
-  else if (code === 'KeyH') ev.shiftKey ? unregion() : region();
   else handled = false;
   if (handled) ev.preventDefault();
 });
