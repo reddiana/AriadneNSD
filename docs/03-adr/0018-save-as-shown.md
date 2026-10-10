@@ -2,7 +2,7 @@
 title: "ADR-0018: 저장되는 그림은 지금 화면 그대로이고, 접힘 상태도 파일에 저장한다"
 tags:
   - adr
-status: 제안됨
+status: 승인
 date: 2026-10-10
 supersedes: "[[0016-fold-state-outside-file]]"
 superseded-by:
@@ -66,4 +66,3 @@ C. 저장되는 그림은 지금 화면 그대로 그리고, 그 화면을 만�
 	- 접고 펴는 것이 파일을 바꾸므로, 접고 펴기를 실행 취소([[01-requirements#^edit-undo]]) 대상에 넣을지 정한다.
 	- "모두 펼친 그림"이 필요한 때를 위한 길을 정한다 (예: 모두 펼쳐서 내보내기). [[01-requirements#^exp-png-folded]]는 뜻이 뒤집히므로 고친다.
 	- 파일 형식 [[01-file-format]]에 보기 상태의 자리를 넣는다.
-	- 승인되면 [[0016-fold-state-outside-file|ADR-0016]]을 "대체됨"으로 바꾸고, 요구사항의 접기 절과 [[0017-fold-name-in-model|ADR-0017]]의 "이후 변경"을 고친다.
