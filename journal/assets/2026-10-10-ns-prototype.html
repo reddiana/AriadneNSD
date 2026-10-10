@@ -110,11 +110,13 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <span class="lbl">예제</span>
       <button data-cmd="exCode">코드식</button>
       <button data-cmd="exText">문장식</button>
+      <button data-cmd="exCase">Case</button>
     </div>
     <div class="grp">
       <span class="lbl" title="고른 블록 뒤에 넣습니다. Shift를 누른 채 누르면 앞에 넣습니다">뒤에 넣기</span>
       <button data-cmd="ins:process" title="P (앞에: Shift+P)">처리</button>
       <button data-cmd="ins:if" title="I (앞에: Shift+I)">If</button>
+      <button data-cmd="ins:case" title="K (앞에: Shift+K)">Case</button>
       <button data-cmd="ins:while" title="W (앞에: Shift+W)">While</button>
       <button data-cmd="ins:dowhile" title="D (앞에: Shift+D)">Do-While</button>
       <button data-cmd="callAsk" title="C: 다른 다이어그램을 부르는 블록">호출</button>
@@ -125,6 +127,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="wrap:while">While</button>
       <button data-cmd="wrap:dowhile">Do-While</button>
       <button data-cmd="wrap:if">If</button>
+      <button data-cmd="wrap:case">Case</button>
       <button data-cmd="unwrap">제어 블록 풀기</button>
     </div>
     <div class="grp">
@@ -174,13 +177,14 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>옆 다이어그램으로 (머리에서는 <kbd>←</kbd> <kbd>→</kbd>만으로도)</dd>
         <dt><kbd>Shift</kbd>+클릭, <kbd>Shift</kbd>+<kbd>↑↓</kbd></dt><dd>영역 고르기 (같은 부모로 자동 확장)</dd>
         <dt><kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). 접힌 칸을 골랐으면 그 접기 영역의 이름 고치기. 호출 블록에서는 부를 것 고르기. 접힌 영역을 더블클릭하면 폅니다</dd>
-        <dt><kbd>P</kbd> <kbd>I</kbd> <kbd>W</kbd> <kbd>D</kbd></dt><dd>처리 · If · While · Do-While 넣기. 고른 블록 <b>뒤에</b> 넣고, <kbd>Shift</kbd>를 같이 누르면 <b>앞에</b> 넣습니다. 빈 블록을 골랐으면 그 자리에 넣습니다</dd>
+        <dt><kbd>P</kbd> <kbd>I</kbd> <kbd>K</kbd> <kbd>W</kbd> <kbd>D</kbd></dt><dd>처리 · If · Case · While · Do-While 넣기. 고른 블록 <b>뒤에</b> 넣고, <kbd>Shift</kbd>를 같이 누르면 <b>앞에</b> 넣습니다. 빈 블록을 골랐으면 그 자리에 넣습니다</dd>
+        <dt><kbd>+</kbd> / <kbd>-</kbd> / <kbd>L</kbd></dt><dd>Case 안에서: 지금 갈래 뒤에 갈래 넣기 / 지금 갈래 빼기 / 갈래 이름 고치기 (갈래 이름을 더블클릭해도 됩니다). default 갈래는 늘 맨 끝에 있고 뺄 수 없습니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>X</kbd> / <kbd>C</kbd> / <kbd>V</kbd></dt><dd>잘라내기 / 복사 / 고른 블록 뒤에 붙여넣기</dd>
         <dt><kbd>E</kbd></dt><dd>새 다이어그램. 블록을 골랐으면 그 블록을 새 다이어그램으로 빼고(그 자리에는 호출 블록), 머리를 골랐거나 고른 것이 없으면 새 빈 다이어그램을 만듭니다. 묻지 않습니다</dd>
         <dt><kbd>M</kbd></dt><dd>이벤트 머리 달기 (이미 있으면 머리 글자 고치기)</dd>
         <dt><kbd>C</kbd></dt><dd>호출 블록 넣기 (부를 다이어그램을 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고름)</dd>
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
-        <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
+        <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd>/<kbd>K</kbd></dt><dd>감싸기</dd>
         <dt><kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다 (중첩)</dd>
         <dt><kbd>F</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다 (접기 영역을 만들지 않습니다). 갈래 전체가 이미 접기 영역 하나이면 줄 대신 그 접기 영역이 접힙니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 펴진 접기 영역은 이름 띠를 더블클릭해도 접힙니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다 (접혔든 펴졌든). 블록은 그대로 남습니다</dd>
@@ -192,6 +196,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
       <h2>이번에 바뀐 것 (10-10 네 번째 판)</h2>
       <ul>
+        <li><b>Case(다중 선택) 블록.</b> <kbd>K</kbd>로 넣고, 위의 "Case" 예제로 볼 수 있습니다. 갈래는 <kbd>+</kbd>로 넣고 <kbd>-</kbd>로 빼며, 갈래 이름은 <kbd>L</kbd>이나 더블클릭으로 고칩니다. 접기와 방향키는 If와 같은 규칙을 따릅니다.</li>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
         <li><b>펴진 접기 영역은 이름 띠로 보입니다.</b> 영역 맨 위에 이름이 적힌 얇은 줄이 붙습니다. 띠를 더블클릭하면 접히고, 띠를 고르고 <kbd>Enter</kbd>를 누르면 이름을 고칩니다.</li>
@@ -242,7 +247,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </ol>
 
       <h2>이 프로토타입에 없는 것</h2>
-      <p>Obsidian · 데스크톱 · Drive, 테마, PNG 내보내기, 정확한 텍스트 폭, 드래그. 이 코드는 아키텍처 설계 전에 버립니다.</p>
+      <p>블록: For, 탈출(Break·Return), 병렬 처리(Parallel), 주석. 요구사항에는 있고 이 프로토타입에만 없습니다.</p>
+      <p>그 밖: Obsidian · 데스크톱 · Drive, 테마, PNG 내보내기, 정확한 텍스트 폭, 드래그. 이 코드는 아키텍처 설계 전에 버립니다.</p>
       <p class="note">"받기"를 누르면 claude.ai가 저장할지 한 번 묻습니다. 받은 <code>diagram.ns.svg</code>를 "열기"로 다시 열어 보세요. 저장소의 <code>journal/assets/2026-10-10-ns-prototype.html</code>을 브라우저로 직접 열어도 됩니다.</p>
       <p>그림은 어두운 테마에서도 흰 종이에 그립니다. 저장되는 SVG의 색이 정해지지 않았기 때문입니다 (ADR-0013 열린 질문).</p>
     </aside>
@@ -283,17 +289,22 @@ const P = (text = '') => ({ id: nid(), type: 'process', text });
 function mk(type, text = '') {
   if (type === 'process') return P(text);
   if (type === 'if') return { id: nid(), type, text, yes: [P()], no: [P()] };
+  if (type === 'case') return { id: nid(), type, text, labels: ['1', '2', 'default'], c0: [P()], c1: [P()], c2: [P()] };
   return { id: nid(), type, text, body: [P()] };
 }
 const SLOTS = { if: ['yes', 'no'], while: ['body'], dowhile: ['body'], range: ['children'] };
-const isCtrl = n => n.type === 'if' || n.type === 'while' || n.type === 'dowhile';
+const isCtrl = n => n.type === 'if' || n.type === 'case' || n.type === 'while' || n.type === 'dowhile';
+// 갈래가 나란히 놓이는 제어 블록
+const multi = n => n.type === 'if' || n.type === 'case';
+// 블록이 가진 갈래(자식 목록)의 이름들. Case는 갈래 수가 정해져 있지 않다
+const slots = n => n.type === 'case' ? n.labels.map((_, i) => 'c' + i) : (SLOTS[n.type] ?? []);
 const isHL = n => n.type === 'range' && n.highlight;
 // 문서 = 다이어그램 여러 개. 다이어그램의 id는 머리를 고를 때의 id로도 쓴다
 const newDia = (event = null, body) => ({ id: 'g' + (uid++), event, body: body || [P()] });
 const isHead = id => typeof id === 'string' && id[0] === 'g';
 const dia = id => doc.diagrams.find(d => d.id === id);
 const diaOf = id => isHead(id) ? dia(id) : idx.get(id)?.dia;
-const eachNode = fn => { const walk = list => list.forEach(n => { fn(n); (SLOTS[n.type] || []).forEach(s => walk(n[s])); }); doc.diagrams.forEach(d => walk(d.body)); };
+const eachNode = fn => { const walk = list => list.forEach(n => { fn(n); slots(n).forEach(s => walk(n[s])); }); doc.diagrams.forEach(d => walk(d.body)); };
 const allBlocks = () => doc.diagrams.reduce((a, d) => a + countBlocks(d.body), 0);
 let lastDia = null;
 const activeDia = () => (sel && diaOf(sel.anchor)) || dia(lastDia) || doc.diagrams[0];
@@ -316,7 +327,7 @@ function reindex() {
   idx = new Map();
   const walk = (list, parent, slot, d) => list.forEach((n, i) => {
     idx.set(n.id, { node: n, list, index: i, parent, slot, dia: d });
-    (SLOTS[n.type] || []).forEach(s => walk(n[s], n, s, d));
+    slots(n).forEach(s => walk(n[s], n, s, d));
   });
   doc.diagrams.forEach(d => walk(d.body, null, 'body', d));
 }
@@ -325,7 +336,7 @@ function normalize() {
   const fix = (list, mustFill) => {
     for (let i = list.length - 1; i >= 0; i--) {
       const n = list[i];
-      (SLOTS[n.type] || []).forEach(s => fix(n[s], n.type !== 'range'));
+      slots(n).forEach(s => fix(n[s], n.type !== 'range'));
       delete n.foldNames;   // 접힌 줄의 이름은 없앤 기능이다
       if (n.type === 'range' && n.highlight) {
         // 강조 영역은 없앤 기능이다: 이름이 있으면 접기 영역으로 남기고, 없으면 푼다
@@ -363,7 +374,7 @@ function fixUid() {
   uid = max + 1;
 }
 const countBlocks = list => list.reduce((a, n) =>
-  a + (n.type === 'range' ? 0 : 1) + (SLOTS[n.type] || []).reduce((b, s) => b + countBlocks(n[s]), 0), 0);
+  a + (n.type === 'range' ? 0 : 1) + slots(n).reduce((b, s) => b + countBlocks(n[s]), 0), 0);
 function firstText(n) {
   if (n.type === 'range') return n.name || firstText(n.children[0]);
   const t = (n.text || '').split('\n')[0];
@@ -429,7 +440,7 @@ function visibleOrder(only) {
   const walk = list => list.forEach(n => {
     if (n.type === 'range') { if (folded.has(n.id)) out.push(n.id); else walk(n.children); return; }
     out.push(n.id);
-    (SLOTS[n.type] || []).forEach(s => { if (laneFolded(n, s)) out.push(n[s][0].id); else walk(n[s]); });
+    slots(n).forEach(s => { if (laneFolded(n, s)) out.push(n[s][0].id); else walk(n[s]); });
   });
   (only ? [only] : doc.diagrams).forEach(d => { if (d.event != null) out.push(d.id); walk(d.body); });
   return out;
@@ -459,9 +470,10 @@ function move(key, shift, ctrl) {
     // 가장 가까운 If의 옆 갈래로. If 안이 아니면 위아래와 같다
     let inIf = false;
     for (let c = isHead(cur) ? null : container(cur); c; c = container(c.node.id)) {
-      if (c.node.type !== 'if') continue;
+      if (!multi(c.node)) continue;
       inIf = true;
-      if (c.slot === (fwd ? 'yes' : 'no')) { next = enter(c.node, fwd ? 'no' : 'yes'); break; }
+      const side2 = slots(c.node)[slots(c.node).indexOf(c.slot) + (fwd ? 1 : -1)];
+      if (side2) { next = enter(c.node, side2); break; }
     }
     if (!inIf) next = step();
   } else if (ctrl) {
@@ -480,13 +492,13 @@ function move(key, shift, ctrl) {
   else if (!side) next = step();
   else if (isHead(cur)) next = neighbour();   // 머리에서 좌우: 옆 다이어그램으로
   else if (key === 'ArrowLeft') {
-    const c = container(cur);
-    if (c && c.node.type === 'if' && c.slot === 'no') next = enter(c.node, 'yes');   // 건너편 갈래
+    const c = container(cur), ls = c && multi(c.node) ? slots(c.node) : null, k = ls ? ls.indexOf(c.slot) : -1;
+    if (k > 0) next = enter(c.node, ls[k - 1]);                                      // 왼쪽 옆 갈래
     else next = c ? c.node.id : null;                                                // 위쪽 바깥 블록
   } else {
-    const c = container(cur);
-    if (c && c.node.type === 'if' && c.slot === 'yes') next = enter(c.node, 'no');   // 건너편 갈래
-    else if (c && c.node.type === 'if')                                              // 아래쪽 바깥 블록
+    const c = container(cur), ls = c && multi(c.node) ? slots(c.node) : null, k = ls ? ls.indexOf(c.slot) : -1;
+    if (ls && k < ls.length - 1) next = enter(c.node, ls[k + 1]);                    // 오른쪽 옆 갈래
+    else if (ls)                                                                     // 아래쪽 바깥 블록
       next = order.slice(orderPos(order, c.node.id) + 1).find(id => !ancestors(id).includes(c.node.id));
     else {
       const cand = order[i + 1];
@@ -539,7 +551,7 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18 };
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28 };
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
 const cv = document.createElement('canvas').getContext('2d');
@@ -554,7 +566,7 @@ function tsize(text) {
 function tagW(text) { cv.font = `600 11.5px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
 const callText = n => (n.target == null ? '? ' : '') + (n.text || '(이름 없음)');
 // 제어 블록의 접히는 부분: If는 갈래마다, 반복문은 안쪽 하나. 접힘 열쇠는 If가 "id:갈래", 반복문이 id
-const partKey = (n, slot) => n.type === 'if' ? n.id + ':' + slot : n.id;
+const partKey = (n, slot) => multi(n) ? n.id + ':' + slot : n.id;
 const laneKey = partKey;
 const laneFolded = (n, slot) => isCtrl(n) && folded.has(partKey(n, slot));
 // 접힌 부분의 이름은 모델(제어 블록의 foldNames)에 둔다. 이름을 고칠 때의 id는 "제어 블록 id:갈래"
@@ -580,7 +592,16 @@ function measure(n) {
     }
   } else {
     const t = tsize(n.text);
-    if (n.type === 'if') {
+    if (n.type === 'case') {
+      // 갈래마다 폭을 재고, 갈래 이름이 들어갈 만큼은 넓힌다
+      const headH = t.h + 2 * K.padY + K.caseLab, lws = [], lhs = [];
+      slots(n).forEach((sl, i) => {
+        const mm = laneFolded(n, sl) ? foldRowSize(n, sl) : measureSeq(n[sl]);
+        lws.push(Math.max(mm.w, tagW(n.labels[i]) + 18)); lhs.push(mm.h);
+      });
+      const sum = lws.reduce((a, b) => a + b, 0);
+      r = { w: Math.max(t.w + 2 * K.padX + 90, sum), h: headH + Math.max(...lhs), headH, lws, sum };
+    } else if (n.type === 'if') {
       const headH = t.h + 2 * K.padY + K.ifLab, headW = t.w + 2 * K.padX + 70;
       const y = laneFolded(n, 'yes') ? foldRowSize(n, 'yes') : measureSeq(n.yes);
       const no = laneFolded(n, 'no') ? foldRowSize(n, 'no') : measureSeq(n.no);
@@ -627,6 +648,21 @@ function place(n, x, y, w, h, out) {
       out.ghosts.push({ id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name, depth, band: m.band || 0 });
       if (m.band) T.set(n.id, { x, y, w, h: m.band });
     }
+  } else if (n.type === 'case') {
+    const hh = m.headH, by = y + hh, bh = h - hh, extra = w - m.sum, ls = slots(n), xs = [];
+    let lx = x;
+    ls.forEach((slot, i) => { const lw = i === ls.length - 1 ? x + w - lx : Math.round(m.lws[i] + extra * m.lws[i] / m.sum); xs.push([lx, lw]); lx += lw; });
+    out.items.push({ k: 'caseHead', id: n.id, x, y, w, h: hh, xs, labels: n.labels, text: n.text });
+    ls.forEach((slot, i) => {
+      const [bx, lw] = xs[i];
+      if (laneFolded(n, slot)) {
+        out.items.push({ k: 'foldRow', pid: n.id, slot, x: bx, y: by, w: lw, h: bh, text: foldRowText(n, slot), named: false });
+        n[slot].forEach(c => L.set(c.id, { x: bx, y: by, w: lw, h: bh }));
+      }
+      else placeSeq(n[slot], bx, by, lw, bh, out);
+      T.set(n.id + '#' + i, { x: bx, y: y + hh - 20, w: lw, h: 20 });   // 갈래 이름을 고치는 자리
+    });
+    T.set(n.id, { x, y, w, h: hh - 20 });
   } else if (n.type === 'if') {
     const hh = m.headH, by = y + hh, bh = h - hh;
     const extra = w - (m.yw + m.nw);
@@ -672,7 +708,7 @@ function layout() {
     if (regionView() === 'gutter') {
       let wmax = 0;
       const walk = (list, depth) => list.forEach(n => {
-        if (n.type !== 'range') return (SLOTS[n.type] || []).forEach(sl => walk(n[sl], depth));
+        if (n.type !== 'range') return slots(n).forEach(sl => walk(n[sl], depth));
         if (folded.has(n.id)) return;
         wmax = Math.max(wmax, tagW(foldLabel(n))); cols = Math.max(cols, depth + 1);
         walk(n.children, depth + 1);
@@ -761,6 +797,23 @@ function drawSVG(lay, ui) {
       s.push(txt(it.text, cx, y + K.padY - 2, 'middle'));
       s.push(`<text x="${x + 6}" y="${y + h - 5}" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">참</text>`);
       s.push(`<text x="${x + w - 6}" y="${y + h - 5}" text-anchor="end" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">거짓</text>`);
+    } else if (it.k === 'caseHead') {
+      // NS 차트의 Case 머리: 왼쪽 위에서 default 갈래의 왼쪽 아래로 긴 빗금, 오른쪽 위에서 같은 점으로 짧은 빗금.
+      // 갈래 사이의 세로선은 빗금에서 아래로 내려온다. 갈래 이름은 빗금 아래 오른쪽 구석(default는 왼쪽 구석)에 적는다
+      const { x, y, w, h, xs } = it, t = tsize(it.text), xd = xs[xs.length - 1][0];
+      s.push(rect(x, y, w, h, COL.if, da(it.id)));
+      s.push(`<path d="M ${x} ${y} L ${xd} ${y + h} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      for (let i = 1; i < xs.length - 1; i++) {
+        const bx = xs[i][0], yy = y + h * (bx - x) / (xd - x);
+        s.push(`<line x1="${bx}" y1="${yy}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      }
+      const cx = Math.min(Math.max(xd, x + t.w / 2 + K.padX), x + w - t.w / 2 - K.padX);
+      s.push(txt(it.text, cx, y + K.padY - 2, 'middle'));
+      xs.forEach(([bx, lw], i) => {
+        const dflt = i === xs.length - 1;
+        if (ui) s.push(`<rect x="${bx}" y="${y + h - 20}" width="${lw}" height="20" fill="#ffffff" fill-opacity="0" data-id="${it.id}" data-label="${i}" style="cursor:text"/>`);
+        s.push(`<text x="${dflt ? bx + 6 : bx + lw - 5}" y="${y + h - 5}"${dflt ? '' : ' text-anchor="end"'} font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">${esc(it.labels[i])}</text>`);
+      });
     } else if (it.k === 'foldRow') {
       s.push(rect(it.x, it.y, it.w, it.h, COL.fold, ui ? ` data-id="${it.pid}" data-unfold="1"${it.slot ? ` data-slot="${it.slot}"` : ''}` : ''));
       s.push(`<text x="${it.x + K.padX}" y="${it.y + K.padY + K.lh - 5}" font-family="${FAM_SANS}" font-size="12.5"${it.named ? '' : ' font-style="italic"'} fill="${it.named ? COL.ink : COL.muted}" xml:space="preserve" style="white-space:pre" pointer-events="none">${esc(it.text)}</text>`);
@@ -832,7 +885,7 @@ function describeSel0() {
   const r = selRange();
   if (!r) return `다이어그램 ${doc.diagrams.length}개 · 블록 ${allBlocks()}개`;
   if (r.event) return '이벤트 머리';
-  const names = { process: '처리', if: 'If', while: 'While', dowhile: 'Do-While', call: '호출' };
+  const names = { process: '처리', if: 'If', case: 'Case', while: 'While', dowhile: 'Do-While', call: '호출' };
   if (r.items.length === 1) {
     const n = r.items[0];
     if (n.type === 'range') return '접기 영역' + (folded.has(n.id) ? ' (접힘)' : '');
@@ -900,8 +953,10 @@ async function download() {
 }
 
 /* ---------- 글자 고치기 ---------- */
+const isLabel = id => typeof id === 'string' && id.includes('#');
 function currentText(id) {
   if (isHead(id)) return dia(id)?.event ?? '';
+  if (isLabel(id)) { const [a, i] = id.split('#'); return idx.get(a)?.node.labels[+i] ?? ''; }
   if (isPart(id)) { const [a, slot] = id.split(':'); const p = idx.get(a)?.node; return p ? partName(p, slot) : ''; }
   const n = idx.get(id)?.node;
   if (!n) return '';
@@ -949,7 +1004,10 @@ function commitEdit(cancel) {
   editing = null;
   editor.hidden = true;
   const v = editor.value;
-  if (isPart(e.id)) {
+  if (isLabel(e.id)) {
+    const [a, i] = e.id.split('#'), p = idx.get(a)?.node;
+    if (p && !cancel && v.trim() && v !== e.orig) { pushUndo(); p.labels[+i] = v.trim(); }
+  } else if (isPart(e.id)) {
     // 제어 블록의 접힌 부분에 붙이는 이름. 이름이 있을 때만 모델에 남긴다. 물어봤다는 것은 보기 상태로만 기억한다
     const [a, slot] = e.id.split(':'), p = idx.get(a)?.node;
     asked.add(e.id);
@@ -1120,7 +1178,7 @@ function reId(list, plain) {
   // 붙여 넣을 사본에 새 id를 준다. 강조 영역 안에 붙일 때는 사본의 강조를 뗀다 (중첩 금지)
   const out = [];
   list.forEach(n => {
-    (SLOTS[n.type] || []).forEach(s => { n[s] = reId(n[s], plain); });
+    slots(n).forEach(s => { n[s] = reId(n[s], plain); });
     if (plain && isHL(n)) {
       if (!('name' in n)) { out.push(...n.children); return; }
       n.highlight = false;
@@ -1162,7 +1220,7 @@ function wrap(kind) {
   const node = mk(kind);
   apply(() => {
     const items = r.list.splice(r.lo, r.hi - r.lo + 1);
-    if (kind === 'if') node.yes = items; else node.body = items;
+    if (kind === 'if') node.yes = items; else if (kind === 'case') node.c0 = items; else node.body = items;
     r.list.splice(r.lo, 0, node);
   });
   selectOne(node.id); render();
@@ -1178,14 +1236,57 @@ function unwrap() {
   if (!t || !isCtrl(t)) return say('풀 제어 블록 하나를 고르세요. 접기 영역을 풀려면 Ctrl+Shift+F');
   let content;
   apply(() => {
-    if (t.type === 'if') content = [t.yes, t.no].filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
+    if (multi(t)) content = slots(t).map(sl => t[sl]).filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
     else content = emptyBranch(t.body) ? [] : t.body;
     r.list.splice(r.lo, 1, ...content);
-    folded.delete(t.id); SLOTS.if.forEach(sl => folded.delete(laneKey(t, sl)));
+    folded.delete(t.id); slots(t).forEach(sl => folded.delete(t.id + ':' + sl));
   });
   if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
   render();
   say('풀었습니다. 안의 블록은 그 자리에 남았습니다');
+}
+function caseAt() {
+  // 고른 곳이 속한 가장 가까운 Case와 그 갈래 번호. Case 자체를 골랐으면 번호는 -1
+  const r = selRange();
+  if (!r || r.event) return null;
+  if (r.items.length === 1 && r.items[0].type === 'case') return { node: r.items[0], index: -1 };
+  for (let c = container(r.items[0].id); c; c = container(c.node.id)) if (c.node.type === 'case') return { node: c.node, index: +c.slot.slice(1) };
+  return null;
+}
+function laneAdd() {
+  const c = caseAt();
+  if (!c) return say('Case나 Case 안의 블록을 고르고 누르세요');
+  const t = c.node, cnt = t.labels.length, at = c.index < 0 ? cnt - 1 : Math.min(c.index + 1, cnt - 1);   // default는 늘 맨 끝
+  apply(() => {
+    for (let i = cnt - 1; i >= at; i--) t['c' + (i + 1)] = t['c' + i];
+    t['c' + at] = [P()];
+    t.labels.splice(at, 0, String(cnt));
+    [...folded].forEach(k => { if (String(k).startsWith(t.id + ':')) folded.delete(k); });
+  });
+  selectOne(t['c' + at][0].id); render();
+  startEdit(t.id + '#' + at);
+  say('갈래를 넣었습니다. 갈래 이름을 적으세요');
+}
+function laneRemove() {
+  const c = caseAt();
+  if (!c) return say('Case 안의 블록을 고르고 누르세요');
+  const t = c.node, cnt = t.labels.length;
+  if (c.index < 0) return say('뺄 갈래 안의 블록을 고르세요');
+  if (c.index === cnt - 1) return say('default 갈래는 뺄 수 없습니다');
+  if (cnt <= 2) return say('갈래가 하나뿐이라 뺄 수 없습니다. Case를 없애려면 지우거나(Delete) 푸세요(U)');
+  apply(() => {
+    for (let i = c.index; i < cnt - 1; i++) t['c' + i] = t['c' + (i + 1)];
+    delete t['c' + (cnt - 1)];
+    t.labels.splice(c.index, 1);
+    [...folded].forEach(k => { if (String(k).startsWith(t.id + ':')) folded.delete(k); });
+  });
+  selectOne(t.id); render();
+  say('갈래를 뺐습니다. 안의 블록도 함께 지워졌습니다 (Ctrl+Z로 되돌리기)');
+}
+function laneLabel() {
+  const c = caseAt();
+  if (!c || c.index < 0) return say('이름을 고칠 갈래 안의 블록을 고르세요. 갈래 이름을 더블클릭해도 됩니다');
+  startEdit(c.node.id + '#' + c.index);
 }
 function regionOf(r) {
   // 고른 것을 온전히 담는 가장 작은 접기 영역. 접기 영역 자체를 골랐으면 그것
@@ -1242,7 +1343,7 @@ function fold() {
   if (t && t.type === 'range') return toggleRegion(t);
   if (t && isCtrl(t)) {
     // 제어 블록은 갈래별로 접는다. 갈래 전체가 접기 영역 하나이면 그 접기 영역을 접고, 아니면 "⋯ 블록 n개" 줄로 접는다
-    const parts = SLOTS[t.type].map(sl => {
+    const parts = slots(t).map(sl => {
       const g = t[sl].length === 1 && t[sl][0].type === 'range' ? t[sl][0] : null;
       if (g) folded.delete(partKey(t, sl));
       return { key: g ? g.id : partKey(t, sl), ok: !!g || many(t[sl]) };
@@ -1263,7 +1364,7 @@ function fold() {
     const p = r.parent, slot = idx.get(r.items[0].id).slot;
     folded.add(partKey(p, slot));
     saveFold(); render();
-    say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 F를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
+    say(multi(p) ? '이 갈래를 접었습니다. 펴려면 F를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
     return askPart(p, slot);
   }
   const g = regionOf(r);
@@ -1271,7 +1372,7 @@ function fold() {
   toggleRegion(g);
 }
 function hasHLInside(n) {
-  return (SLOTS[n.type] || []).some(s => n[s].some(c => isHL(c) || hasHLInside(c)));
+  return slots(n).some(s => n[s].some(c => isHL(c) || hasHLInside(c)));
 }
 function region() {
   const r = needSel();
@@ -1324,6 +1425,7 @@ function build(spec) {
     if (typeof s === 'string') return P(s);
     const [type, a, x, y] = s;
     if (type === 'if') return { id: nid(), type, text: a, yes: x.map(b), no: y.map(b) };
+    if (type === 'case') { const o = { id: nid(), type, text: a, labels: x.map(l => l[0]) }; x.forEach((l, i) => { o['c' + i] = l[1].map(b); }); return o; }
     if (type === 'range') return { id: nid(), type, highlight: !!y, ...(a !== undefined ? { name: a } : {}), children: x.map(b) };
     return { id: nid(), type, text: a, body: x.map(b) };
   };
@@ -1362,6 +1464,27 @@ function loadExample(kind) {
   say(code ? '코드식 예제: C 코드를 그대로 적은 모양' : '문장식 예제: 같은 로직을 한국어 문장으로 적은 모양');
 }
 
+function loadCaseExample() {
+  uid = 1;
+  const body = build([
+    'cmd = uart_read();',
+    ['case', 'cmd', [
+      ['CMD_START', ['motor_on();', 'state = RUN;']],
+      ['CMD_STOP', ['motor_off();', ['if', 'brake_enabled', ['brake_on();'], ['']], 'state = IDLE;']],
+      ['CMD_SPEED', ['speed = uart_read();', 'pwm_set(speed);']],
+      ['default', ['error_cnt++;']]
+    ]],
+    'uart_write(ACK);'
+  ]);
+  if (undoStack.length || allBlocks() > 1) pushUndo();
+  doc = { diagrams: [newDia('UART 수신 인터럽트', body)] };
+  normalize();
+  folded = new Set(); asked = new Set();
+  opts.mono = true; $('#optMono').checked = true;
+  selectOne(null); render(); save(); saveFold();
+  say('Case 예제: 갈래가 넷인 다중 선택');
+}
+
 /* ---------- 저장 (이 브라우저에만) ---------- */
 function save() { try { localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc, opts })); } catch (e) {} }
 function saveFold() { try { localStorage.setItem('nsd-proto-fold', JSON.stringify([...folded])); } catch (e) {} }
@@ -1396,7 +1519,7 @@ const COMMANDS = {
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   event: eventCmd, head: headCmd, evNew: () => addDiagram(false), evExtract: () => addDiagram(true), callAsk: () => callCmd(false), goto: gotoTarget,
-  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, undo, redo, del: () => del(false),
+  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, laneAdd, laneRemove, laneLabel, exCase: loadCaseExample, undo, redo, del: () => del(false),
   copy: () => copy(false), cut: () => copy(true), paste,
   zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
   closeModal: () => { $('#modal').hidden = true; stage.focus({ preventScroll: true }); },
@@ -1458,6 +1581,8 @@ svg.addEventListener('mousedown', ev => {
 });
 function dbl(d) {
   const dn = idx.get(d.id)?.node;
+  // Case 머리의 갈래 이름을 더블클릭하면 그 이름을 고친다
+  if (d.label != null && dn && dn.type === 'case') { selectOne(dn.id); render(); return startEdit(dn.id + '#' + d.label); }
   // 이름 띠를 더블클릭하면 그 접기 영역을 접는다
   if (d.band && dn && dn.type === 'range') { selectOne(dn.id); foldRange(dn, false); return say('접었습니다. 펴려면 접힌 칸을 더블클릭하거나 F'); }
   if (d.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
@@ -1486,9 +1611,10 @@ function showMenu(x, y) {
     ? [it('edit', '글자 고치기', 'Enter'), it('ins:process', '본문 맨 앞에 처리 넣기', 'P'), it('event', evLabel, 'E'), null,
        it('del', '이벤트 머리 떼기', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', '다이어그램 지우기', '⇧Del')] : [])]
     : [it('edit', one && one.type === 'call' ? '부를 것 바꾸기…' : '글자 고치기', 'Enter'), null,
-       it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
+       it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:case', '뒤에 Case 넣기', 'K'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('event', evLabel, 'E'), it('head', headLabel, 'M'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
-       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '제어 블록 풀기', 'U'), null,
+       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('wrap:case', 'Case로 감싸기', 'S K'), it('unwrap', '제어 블록 풀기', 'U'), null,
+       ...(caseAt() ? [it('laneAdd', 'Case: 갈래 넣기', '+'), it('laneRemove', 'Case: 이 갈래 빼기', '-'), it('laneLabel', 'Case: 갈래 이름 고치기', 'L'), null] : []),
        it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
   menuAt = -1;
@@ -1566,7 +1692,7 @@ document.addEventListener('keydown', ev => {
   let handled = true;
   if (chord === 'S') {
     chord = null;
-    const k = { KeyW: 'while', KeyD: 'dowhile', KeyI: 'if' }[code];
+    const k = { KeyW: 'while', KeyD: 'dowhile', KeyI: 'if', KeyK: 'case' }[code];
     if (k) wrap(k); else say('감싸기를 그만뒀습니다');
     ev.preventDefault();
     return;
@@ -1585,15 +1711,18 @@ document.addEventListener('keydown', ev => {
   else if (code === 'Enter' || code === 'NumpadEnter' || code === 'F2') run('edit');
   else if (code === 'Delete' || code === 'Backspace') del(ev.shiftKey);
   else if (code === 'Escape') { hideMenu(); selectOne(null); render(); }
-  else if (code === 'KeyP' || code === 'KeyI' || code === 'KeyW' || code === 'KeyD') {
-    const kind = { KeyP: 'process', KeyI: 'if', KeyW: 'while', KeyD: 'dowhile' }[code];
+  else if (code === 'KeyP' || code === 'KeyI' || code === 'KeyW' || code === 'KeyD' || code === 'KeyK') {
+    const kind = { KeyP: 'process', KeyI: 'if', KeyW: 'while', KeyD: 'dowhile', KeyK: 'case' }[code];
     insert(kind, ev.shiftKey ? 'before' : 'after');
   }
+  else if (code === 'Equal' || code === 'NumpadAdd') laneAdd();
+  else if (code === 'Minus' || code === 'NumpadSubtract') laneRemove();
+  else if (code === 'KeyL') laneLabel();
   else if (code === 'KeyE') eventCmd();
   else if (code === 'KeyM') headCmd();
   else if (code === 'KeyC') callCmd(ev.shiftKey);
   else if (code === 'KeyG') gotoTarget();
-  else if (code === 'KeyS') { chord = 'S'; say('감싸기: W = While, D = Do-While, I = If'); }
+  else if (code === 'KeyS') { chord = 'S'; say('감싸기: W = While, D = Do-While, I = If, K = Case'); }
   else if (code === 'KeyU') unwrap();
   else if (code === 'KeyF') ev.shiftKey ? makeRegion() : fold();
   else handled = false;
