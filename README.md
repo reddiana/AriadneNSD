@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="journal/assets/2026-10-10-logo-aegean-lady-rounded.svg" width="160" alt="AriadneNSD 로고: 크노소스 벽화의 여인">
+</p>
+
 # AriadneNSD
 
 NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일은 어디서나 열리는 SVG 그림이면서, 다시 열어 편집할 수 있는 원본입니다.
@@ -29,6 +33,10 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 
 - 처음부터 지금까지의 흐름: [`journal/timeline.md`](journal/timeline.md)
 - AI와 일하는 법을 배워 간 기록: [`journal/learning-claude-code.md`](journal/learning-claude-code.md)
+
+## 로고
+
+크노소스 궁전의 벽화 "푸른 옷의 여인들"에서 가운데 여인을 옮겨 그렸습니다. 아리아드네는 크노소스의 공주이고, 미궁에서 길을 잃지 않게 실타래를 건넨 사람입니다. 아직 시안이며 바뀔 수 있습니다.
 
 ## 라이선스
 
