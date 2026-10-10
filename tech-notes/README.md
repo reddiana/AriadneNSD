@@ -24,3 +24,4 @@ AriadneNSD를 만들며 배운 기술을 정리하는 곳입니다. 메인테이
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
 - [[git-history-rewrite]] — git 기록에서 파일 지우기: 지워도 남는 까닭, 기록 고쳐 쓰기, 강제 push, 바뀌는 해시 (2026-10-11)
 - [[logo-and-icon-assets]] — 로고와 아이콘 파일 만들기: 벡터, 사진 옮기기, 크기별 판, 윤곽선 글자, 라이선스 (2026-10-10)
+- [[theme-aware-images]] — 테마에 따라 그림 바꾸기와 그 한계: `prefers-color-scheme`은 운영체제를 본다, GitHub의 스크립트, 브라우저 콘솔로 페이지 상태 읽기 (2026-10-11)

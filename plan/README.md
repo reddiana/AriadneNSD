@@ -41,3 +41,4 @@ updated: 2026-10-11
 - [[2026-10-10-04-prototype-feedback|2026-10-10 프로토타입 피드백: 여러 다이어그램, 접기 영역, Case, 화면 그대로 저장]]
 - [[2026-10-10-05-product-name|2026-10-10 제품 이름 바꾸기: NSDrawing에서 AriadneNSD로]]
 - [[2026-10-10-06-logo|2026-10-10 ~ 11 로고: 크노소스 벽화의 여인, 문자 로고 `Ariadne’s NSD`, 이름 이야기]]
+- [[2026-10-11-01-inbox-samples|2026-10-11 inbox 검토: 예제 둘(퀵소트, Raft), 문자 로고의 색, Event와 Method 구분]]
