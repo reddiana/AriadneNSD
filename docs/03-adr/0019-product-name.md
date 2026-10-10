@@ -2,7 +2,7 @@
 title: "ADR-0019: 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`로 한다"
 tags:
   - adr
-status: 제안됨
+status: 승인
 date: 2026-10-10
 supersedes:
 superseded-by:

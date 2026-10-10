@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0014: Google Drive에서 만드는 파일은 `.ns.svg`로 저장한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-10: 제품 이름이 `NSDrawing`에서 `AriadneNSD`로 바뀌었다. 본문의 "NSDrawing으로 열기"는 지금의 "AriadneNSD로 열기"다. 확장자는 그대로다 → [[0019-product-name|ADR-0019]]
+
 ## 배경
 
 [[0012-google-drive-integration|ADR-0012]]는 Drive 연동을 웹 버전 위에 얹기로 하고, Drive에 저장할 확장자를 후속 결정으로 남겼다.
