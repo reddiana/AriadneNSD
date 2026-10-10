@@ -1294,6 +1294,8 @@ svg.addEventListener('mousedown', ev => {
   if (editing) commitEdit(false);
   const t = ev.target.closest('[data-id]');
   if (!t) { selectOne(null); render(); return; }
+  // 더블클릭은 두 번째 누름에서 처리한다. 첫 누름에서 그림을 다시 그리기 때문에 dblclick 이벤트는 사라진 요소를 가리켜 믿을 수 없다
+  if (ev.detail >= 2) { ev.preventDefault(); return dbl(t.dataset); }
   const lane = t.dataset.slot && idx.get(t.dataset.id)?.node[t.dataset.slot];
   if (lane) pickId(lane[0].id);
   else if (ev.shiftKey) selectTo(t.dataset.id); else selectOne(t.dataset.id);
@@ -1301,16 +1303,14 @@ svg.addEventListener('mousedown', ev => {
   stage.focus({ preventScroll: true });
   ev.preventDefault();
 });
-svg.addEventListener('dblclick', ev => {
-  const t = ev.target.closest('[data-id]');
-  if (!t) return;
-  const dn = idx.get(t.dataset.id)?.node;
-  if (t.dataset.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
-    folded.delete(t.dataset.slot ? t.dataset.id + ':' + t.dataset.slot : t.dataset.id); saveFold(); selectOne(t.dataset.id); render();
-    return say(t.dataset.unfold ? '폈습니다' : '폈습니다. 이름은 접은 칸을 고르고 Enter로 고칩니다');
+function dbl(d) {
+  const dn = idx.get(d.id)?.node;
+  if (d.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
+    folded.delete(d.slot ? d.id + ':' + d.slot : d.id); saveFold(); selectOne(d.id); render();
+    return say(d.unfold ? '폈습니다' : '폈습니다. 이름은 접은 칸을 고르고 Enter로 고칩니다');
   }
-  selectOne(t.dataset.id); render(); startEdit(t.dataset.id);
-});
+  selectOne(d.id); render(); startEdit(d.id);
+}
 svg.addEventListener('contextmenu', ev => {
   const t = ev.target.closest('[data-id]');
   if (!t) return;
