@@ -767,7 +767,6 @@ function drawSVG(lay, ui) {
     } else if (it.k === 'rangeFold') {
       const { x, y, w, h } = it;
       s.push(rect(x, y, w, h, COL.fold, da(it.id)));
-      s.push(`<line x1="${x + 4}" y1="${y + h - 3.5}" x2="${x + w - 4}" y2="${y + h - 3.5}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
       s.push(`<path d="M ${x + 8} ${y + K.padY + 4} l 6 4.5 l -6 4.5 z" fill="${COL.muted}" pointer-events="none"/>`);
       s.push(txt(it.text, x + K.padX + 12, y + K.padY, null, it.named ? '' : ` font-style="italic"`));
     }
