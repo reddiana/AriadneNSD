@@ -150,15 +150,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <div class="opts">
         <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
-        <label>접기 영역 표시
-          <select id="optRanges">
-            <option value="off">숨김</option>
-            <option value="outline">점선만 (이름은 아래 상태 줄)</option>
-            <option value="gutter">왼쪽 여백에 이름</option>
-            <option value="band">이름 띠</option>
-            <option value="corner">모서리 이름표 (글자를 가릴 수 있음)</option>
-          </select>
-        </label>
+        <label><input type="checkbox" id="optRanges" checked> 접기 영역 이름 띠 보기</label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
           <output id="zoomOut">100%</output>
@@ -190,7 +182,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
         <dt><kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다 (중첩)</dd>
-        <dt><kbd>F</kbd></dt><dd>접기 · 펴기: 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 제어 블록 하나를 골랐으면 그 안의 갈래마다 접기 영역을 만들어(이미 있으면 그것을) 접거나 폅니다. 블록이 하나뿐인 갈래는 그대로 둡니다. 접힌 칸은 더블클릭으로도 폅니다</dd>
+        <dt><kbd>F</kbd></dt><dd>접기 · 펴기: 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 제어 블록 하나를 골랐으면 그 안의 갈래마다 접기 영역을 만들어(이미 있으면 그것을) 접거나 폅니다. 블록이 하나뿐인 갈래는 그대로 둡니다. 접힌 칸은 더블클릭으로도 펴고, 펴진 영역은 이름 띠를 더블클릭해도 접힙니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다 (접혔든 펴졌든). 블록은 그대로 남습니다</dd>
         <dt><kbd>U</kbd></dt><dd>제어 블록 풀기: 제어 블록 하나를 없애고 안의 블록을 그 자리에 남깁니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
@@ -202,9 +194,9 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
-        <li><b>"접기 영역 표시"를 고를 수 있습니다 (시안).</b> 이름표가 블록 글자를 가리는 문제 때문에 네 가지 방식을 넣었습니다. 비교해 보고 하나를 골라 주세요. 어느 방식이든 고른 블록을 담은 접기 영역의 이름이 아래 상태 줄에 나옵니다.</li>
+        <li><b>펴진 접기 영역은 이름 띠로 보입니다.</b> 영역 맨 위에 이름이 적힌 얇은 줄이 붙습니다. 띠를 더블클릭하면 접히고, 띠를 고르고 <kbd>Enter</kbd>를 누르면 이름을 고칩니다. 저장되는 그림에는 띠가 들어가지 않습니다.</li>
         <li><b>접히는 것은 접기 영역뿐입니다.</b> 제어 블록을 고르고 <kbd>F</kbd>를 누르면 그 안의 갈래마다 접기 영역이 만들어져 접힙니다. "⋯ 블록 n개" 줄은 없앴고, 접힌 칸에는 접기 영역의 이름이 보입니다.</li>
-        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 표시"를 고르면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
+        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. 펴진 영역은 이름 띠과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
@@ -232,7 +224,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>만들며 생긴 질문</h2>
       <p>요구사항에 답이 없어서 프로토타입에서 임시로 정한 것들입니다. 써 보고 맞는지 알려 주세요.</p>
       <ol class="qs">
-        <li><b>펼친 뒤에도 접기 영역이 남습니다.</b> 이름을 모델에 두니(ADR-0017) 펼쳐도 영역이 보이지 않게 남아 있습니다. 위의 "접기 영역 표시"를 고르면 점선으로 보입니다. 평소에도 보여야 할까요? 지우는 방법은 "풀기"(<kbd>U</kbd>)로 해 두었습니다. <span class="ref">^edit-fold-range</span></li>
+        <li><b>펼친 뒤에도 접기 영역이 남습니다.</b> 이름을 모델에 두니(ADR-0017) 펼쳐도 영역이 남아 있습니다. 답을 받음: 펴진 영역은 맨 위의 이름 띠로 보여 줍니다. 없애는 방법은 "접기 영역 풀기"(<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>)입니다. <span class="ref">^edit-fold-range</span></li>
         <li><b>기본 이름을 고른 경우.</b> 처음 접을 때 Enter·Esc로 기본 이름을 고르면, "이미 물어봤음"을 파일에 남겨야 다음에 묻지 않습니다. 그래서 이름 없이도 영역이 저장됩니다. <span class="ref">^edit-fold-range</span></li>
         <li><b>안쪽 깊은 곳에 강조 영역이 있으면?</b> While 안에 강조 영역이 있을 때 그 While을 포함해 강조하면, 넓힐 수도(부모가 다름) 새로 만들 수도(중첩 금지) 없습니다. 지금은 거절합니다. <span class="ref">^edit-region</span></li>
         <li><b>짧은 갈래의 빈 공간.</b> If의 두 갈래 높이가 다르면, 짧은 쪽 마지막 블록을 늘려 채웠습니다. 빈 칸을 따로 그리는 방법도 있습니다. <span class="ref">^lay-branch-width</span></li>
@@ -314,10 +306,10 @@ let idx = new Map();
 let editing = null;
 let chord = null;
 let zoom = 1;
-const opts = { syntax: true, mono: true, regionView: 'off' };
+const opts = { syntax: true, mono: true, showRegions: true };
 let exporting = false;
 // 펴져 있는 접기 영역을 화면에 어떻게 보여 줄지. 저장되는 그림에는 넣지 않는다
-const regionView = () => exporting ? 'off' : (opts.regionView || 'off');
+const regionView = () => exporting || opts.showRegions === false ? 'off' : 'band';
 
 function reindex() {
   idx = new Map();
@@ -626,11 +618,12 @@ function place(n, x, y, w, h, out) {
   } else if (n.type === 'range') {
     if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
     else placeSeq(n.children, x, y + (m.band || 0), w, h - (m.band || 0), out);
-    // 펴져 있는 접기 영역의 자리를 적어 둔다. 어떻게 그릴지는 "접기 영역 표시"가 정한다
+    // 펴져 있는 접기 영역의 자리를 적어 둔다 (이름 띠를 그릴 곳)
     if (!fd && regionView() !== 'off') {
       let depth = 0;
       for (let e = idx.get(n.id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.type === 'range') depth++;
-      out.ghosts.push({ x, y, w, h, text: foldLabel(n), depth, band: m.band || 0 });
+      out.ghosts.push({ id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name, depth, band: m.band || 0 });
+      if (m.band) T.set(n.id, { x, y, w, h: m.band });
     }
   } else if (n.type === 'if') {
     const hh = m.headH, by = y + hh, bh = h - hh;
@@ -781,8 +774,8 @@ function drawSVG(lay, ui) {
       const d = 2.5 + (g.depth || 0) * 4;
       if (view === 'band') {
         // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
-        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges" pointer-events="none"/>`);
-        s.push(`<text x="${g.x + K.padX}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
+        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges" data-id="${g.id}" data-band="1" style="cursor:pointer"/>`);
+        s.push(`<text x="${g.x + K.padX}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
         s.push(`<rect x="${g.x + 1.5}" y="${g.y + 1.5}" width="${g.w - 3}" height="${g.h - 3}" fill="none" stroke="${c}" stroke-width="1.5" pointer-events="none"/>`);
         continue;
       }
@@ -909,7 +902,7 @@ function currentText(id) {
 function startEdit(id, o = {}) {
   if (!id) return;
   const n = isHead(id) ? null : idx.get(id)?.node;
-  if (n && n.type === 'range' && !folded.has(n.id)) return say('영역 이름은 접은 칸에서 고칩니다');
+  if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 이름 띠 보기"를 켜세요');
   if (n && n.type === 'call') return retargetAsk(id);
   const box = T.get(id);
   if (!box) return;
@@ -1374,7 +1367,7 @@ function restore() {
     doc = d; Object.assign(opts, s.opts || {});
     folded = new Set(JSON.parse(localStorage.getItem('nsd-proto-fold') || '[]'));
     fixUid(); normalize();
-    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').value = opts.regionView || 'off';
+    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').checked = opts.showRegions !== false;
     return true;
   } catch (e) { return false; }
 }
@@ -1441,7 +1434,7 @@ $('#file').addEventListener('change', ev => {
 });
 $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
 $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
-$('#optRanges').addEventListener('change', e => { opts.regionView = e.target.value; render(); save(); stage.focus({ preventScroll: true }); });
+$('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
 
 svg.addEventListener('mousedown', ev => {
   if (ev.button !== 0) return;
@@ -1459,6 +1452,8 @@ svg.addEventListener('mousedown', ev => {
 });
 function dbl(d) {
   const dn = idx.get(d.id)?.node;
+  // 이름 띠를 더블클릭하면 그 접기 영역을 접는다
+  if (d.band && dn && dn.type === 'range') { selectOne(dn.id); foldRange(dn, false); return say('접었습니다. 펴려면 접힌 칸을 더블클릭하거나 F'); }
   if (d.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
     folded.delete(d.slot ? partKey(dn, d.slot) : d.id); saveFold(); selectOne(d.id); render();
     return say(d.unfold ? '폈습니다' : '폈습니다. 이름은 접은 칸을 고르고 Enter로 고칩니다');
