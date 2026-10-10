@@ -596,7 +596,8 @@ function place(n, x, y, w, h, out) {
     if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
     else placeSeq(n.children, x, y, w, h, out);
     if (n.highlight) out.regions.push({ x, y, w, h });
-    else if (!fd && opts.showRanges && 'name' in n) out.ghosts.push({ x, y, w, h, text: foldLabel(n) });
+    // "이름 붙은 영역 보기": 펴져 있는 접기 영역을 점선과 이름표로 보여 준다. 강조 영역은 굵은 테두리가 이미 있으니 이름표만 단다
+    if (!fd && opts.showRanges && 'name' in n) out.ghosts.push({ x, y, w, h, text: foldLabel(n), hl: !!n.highlight });
   } else if (n.type === 'if') {
     const hh = m.headH, by = y + hh, bh = h - hh;
     const extra = w - (m.yw + m.nw);
@@ -727,8 +728,9 @@ function drawSVG(lay, ui) {
     s.push(`<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" fill="none" stroke="${COL.region}" stroke-width="3" rx="2" pointer-events="none"/>`);
   if (ui) {
     for (const g of lay.ghosts) {
-      s.push(`<rect x="${g.x + 2}" y="${g.y + 2}" width="${g.w - 4}" height="${g.h - 4}" fill="none" stroke="${COL.ghost}" stroke-width="1.2" stroke-dasharray="4 3" pointer-events="none"/>`);
-      s.push(`<text x="${g.x + g.w - 6}" y="${g.y + 13}" text-anchor="end" font-family="${FAM_SANS}" font-size="10.5" fill="${COL.ghost}" pointer-events="none">${esc(g.text)}</text>`);
+      const c = g.hl ? COL.region : COL.sel;
+      if (!g.hl) s.push(`<rect x="${g.x + 2.5}" y="${g.y + 2.5}" width="${g.w - 5}" height="${g.h - 5}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3" pointer-events="none"/>`);
+      s.push(`<text x="${g.x + g.w - 8}" y="${g.y + 15}" text-anchor="end" font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(g.text)}</text>`);
     }
     const r = selRange();
     if (r) {
