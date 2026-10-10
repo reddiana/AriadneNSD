@@ -1388,6 +1388,14 @@ function choose(items, at = 0) {
   placeMenu(o.left + (b ? b.x * zoom : 24), o.top + (b ? (b.y + b.h) * zoom + 4 : 24));
 }
 function hideMenu() { menu.hidden = true; menuCmds = []; menuItems = []; menuAt = -1; }
+// 키보드로 캔버스에 들어오면 첫 블록을 고른다 (캔버스 둘레의 포커스 선 대신). 마우스로 누른 때는 누른 곳을 따른다
+let pressing = false;
+stage.addEventListener('mousedown', () => { pressing = true; }, true);
+document.addEventListener('mouseup', () => { pressing = false; });
+stage.addEventListener('focus', () => {
+  if (sel || pressing || editing) return;
+  selectOne(visibleOrder(activeDia())[0]); render();
+});
 stage.addEventListener('wheel', ev => {
   if (!ev.ctrlKey) return;
   ev.preventDefault();
