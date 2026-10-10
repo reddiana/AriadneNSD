@@ -1,7 +1,7 @@
 ---
 title: 부채 목록
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - plan
 updated: 2026-10-10
 ---

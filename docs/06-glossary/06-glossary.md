@@ -1,7 +1,7 @@
 ---
 title: 용어집
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - glossary
 updated: 2026-10-10
 ---

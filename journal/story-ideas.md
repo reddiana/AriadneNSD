@@ -1,7 +1,7 @@
 ---
 title: 영상 구성 아이디어
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - journal
 updated: 2026-10-07
 ---

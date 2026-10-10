@@ -1,7 +1,7 @@
 ---
 title: Claude Code 초보자의 배움 기록
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - journal
   - learning
 updated: 2026-10-10

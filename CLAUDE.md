@@ -1,4 +1,4 @@
-# NSDrawing
+# AriadneNSD
 
 NS 차트(Nassi-Shneiderman Diagram) 편집기. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
 
@@ -14,7 +14,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. Obsidian 플러그인 · 데스�
 
 ## 문서 작성 규칙
 
-- 이 저장소의 주인을 **메인테이너**라고 부른다 (`plan/` · `journal/` · `tech-notes/` · CLAUDE.md). `docs/`의 "사용자"는 NSDrawing을 쓰는 사람이다.
+- 이 저장소의 주인을 **메인테이너**라고 부른다 (`plan/` · `journal/` · `tech-notes/` · CLAUDE.md). `docs/`의 "사용자"는 AriadneNSD를 쓰는 사람이다.
 - 메인테이너는 모든 문서를 **Obsidian**으로 읽고 편집한다. 속성(frontmatter), `[[위키링크]]`, 태그, 체크박스, 콜아웃, Mermaid를 쓴다.
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.

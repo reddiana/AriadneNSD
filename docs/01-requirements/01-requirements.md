@@ -1,16 +1,16 @@
 ---
-title: NSDrawing 요구사항 명세
+title: AriadneNSD 요구사항 명세
 aliases:
-  - NSDrawing 요구사항
+  - AriadneNSD 요구사항
   - 요구사항
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - requirements
 status: 초안
 updated: 2026-10-10
 ---
 
-# NSDrawing 요구사항 명세
+# AriadneNSD 요구사항 명세
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항입니다. 이 문서는 **무엇을** 만드는지만 다룹니다.
 **왜** 그렇게 정했는지는 [[docs/README#아키텍처 결정 기록 (ADR)|ADR]]에, **어떻게** 만드는지는 [[02-architecture]]와 설계 문서에 있습니다.
@@ -70,7 +70,7 @@ flowchart LR
 	- 파일 목록에서 `.ns.svg`를 우클릭해도 같은 항목이 나온다. 자리는 "삭제" 바로 위 구역의 맨 아래("폴더에서 보기" 아래)다.
 - [ ] #P0 같은 기능을 명령 팔레트에서도 실행 ("Insert new NS diagram") ^obs-insert-command
 - [ ] #P0 편집을 마치면, 그 그림을 넣은 노트가 이미 열려 있어도 다시 열지 않고 새 그림으로 보인다. 같은 그림을 넣은 다른 열린 노트도 마찬가지다. ^obs-refresh
-	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. NSDrawing은 별도 플러그인 없이 갱신되어야 한다.
+	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. AriadneNSD는 별도 플러그인 없이 갱신되어야 한다.
 
 **파일 다루기**
 
@@ -116,7 +116,7 @@ flowchart LR
 
 웹 버전에 Drive 연동을 더한 형태다. Drive에서 만드는 파일은 `.ns.svg`로 저장한다. → [[0012-google-drive-integration|ADR-0012]], [[0014-drive-file-extension|ADR-0014]]
 
-- [ ] #P1 Drive에서 NS 파일을 우클릭해 "NSDrawing으로 열기"로 편집 ^gd-open-with
+- [ ] #P1 Drive에서 NS 파일을 우클릭해 "AriadneNSD로 열기"로 편집 ^gd-open-with
 - [ ] #P1 Drive의 "새로 만들기" 메뉴에서 새 NS 다이어그램 만들기 ^gd-new
 - [ ] #P1 편집한 내용을 Drive의 원래 파일에 저장 ^gd-save
 - [ ] #P1 Drive 미리보기와 썸네일에서 다이어그램 그림이 보임 ^gd-preview
@@ -133,7 +133,7 @@ flowchart LR
 
 Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려 준다. 예: "퀵소트를 설명해 줘".
 
-- [ ] #P3 Claude skill: 설명할 알고리즘을 NS 모델로 만들어 `.ns.svg` 파일과 공유 URL([[#^web-share-url]])을 함께 내놓는다. 파일은 NSDrawing에서 그대로 열어 고칠 수 있다 ^skill-claude
+- [ ] #P3 Claude skill: 설명할 알고리즘을 NS 모델로 만들어 `.ns.svg` 파일과 공유 URL([[#^web-share-url]])을 함께 내놓는다. 파일은 AriadneNSD에서 그대로 열어 고칠 수 있다 ^skill-claude
 
 ## 3. 기능 요구사항
 
@@ -338,7 +338,7 @@ DIN 66261 / 원 논문 기준입니다.
 	- 공개: GitHub Discussions에 올린다. 양식으로 거른다 (재현 단계 필수, "도움말을 확인했음" 체크). 이슈는 메인테이너가 진짜 버그만 골라 만든다
 	- 비공개: 다이어그램을 공개하고 싶지 않은 사용자는 이메일이나 폼으로 보낸다
 	- 비공개로 같은 문제가 여러 번 들어오면 메인테이너가 자주 묻는 질문(FAQ) 페이지에 정리한다. 보내기 전에 보여 주는 FAQ가 이 페이지다
-	- 실행 환경: NSDrawing 버전, 배포 대상(Obsidian 버전 등), OS, 브라우저, 화면 배율, 쓰는 글꼴
+	- 실행 환경: AriadneNSD 버전, 배포 대상(Obsidian 버전 등), OS, 브라우저, 화면 배율, 쓰는 글꼴
 	- 로그: 예상 못 한 오류와 그 위치(스택), 불변 조건 검사 실패, 파일 열기·저장 실패(Drive API 오류 포함)
 	- 최근 편집 기록: 문제가 나기 전 편집 명령 몇 개. 블록 글자는 빼고 명령 종류만
 	- 다이어그램: 사용자가 동의하면 첨부한다. 개인적인 내용이 담길 수 있으므로 기본은 빼 둔다

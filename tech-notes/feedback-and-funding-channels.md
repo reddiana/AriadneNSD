@@ -1,7 +1,7 @@
 ---
 title: 사용자 의견 받기와 후원 채널
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---
@@ -18,7 +18,7 @@ GitHub는 버그용 **Issues**와 대화용 **Discussions**를 따로 두고, �
 - **Discussions** = 고객 지원 게시판. 질문·착각은 여기서 답하고, 진짜 버그만 작업 큐로 옮깁니다 (Discussions 글에서 "Create issue from discussion"으로 옮길 수 있습니다).
 - **양식** = API의 입력 검증. 저장소의 `.github/ISSUE_TEMPLATE/*.yml`(이슈)이나 `.github/DISCUSSION_TEMPLATE/*.yml`(Discussions 분류별)에 필수 칸과 체크박스를 정하면, 빠진 것이 있을 때 올릴 수 없습니다.
 
-## NSDrawing에서 어디에 쓰나
+## AriadneNSD에서 어디에 쓰나
 
 - 문제 알리기([[01-requirements#^rep-issue]]): 공개는 Discussions + 양식, 비공개는 이메일·폼. 반복되는 문제는 FAQ 페이지로 정리.
 - 후원 링크([[01-requirements#^all-donate]]):

@@ -1,7 +1,7 @@
 ---
 title: 여정 기록
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - journal
 updated: 2026-10-09
 ---

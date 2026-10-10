@@ -1,7 +1,7 @@
 ---
 title: 계획과 세션 기록
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - plan
 updated: 2026-10-10
 ---

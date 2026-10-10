@@ -1,13 +1,13 @@
 ---
-title: NSDrawing 문서
+title: AriadneNSD 문서
 aliases:
-  - NSDrawing
+  - AriadneNSD
 tags:
-  - nsdrawing
+  - ariadne-nsd
 updated: 2026-10-10
 ---
 
-# NSDrawing 문서
+# AriadneNSD 문서
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포합니다.
 
@@ -49,6 +49,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. Obsidia
 | [[0016-fold-state-outside-file\|0016]]       | 접힘 상태는 파일에 저장하지 않는다 | 대체됨 (→ 0018) |
 | [[0017-fold-name-in-model\|0017]]            | 접는 범위의 이름은 모델에 저장한다 | 승인  |
 | [[0018-save-as-shown\|0018]]                 | 저장되는 그림은 지금 화면 그대로이고, 접힘 상태도 파일에 저장한다 (0016을 대체) | 승인 |
+| [[0019-product-name\|0019]]                  | 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd` | 제안됨 |
 
 ADR 상태: **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**
 

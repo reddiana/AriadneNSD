@@ -1,7 +1,7 @@
 ---
 title: "설계: 레이아웃 · 렌더링"
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - design
 status: 작성 전
 updated: 2026-10-07

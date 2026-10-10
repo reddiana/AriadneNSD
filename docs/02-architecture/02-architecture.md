@@ -1,15 +1,15 @@
 ---
-title: NSDrawing 아키텍처 개요
+title: AriadneNSD 아키텍처 개요
 aliases:
   - 아키텍처
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - architecture
 status: 초안
 updated: 2026-10-10
 ---
 
-# NSDrawing 아키텍처 개요
+# AriadneNSD 아키텍처 개요
 
 현재 아키텍처를 한눈에 보여 주는 문서입니다. 각 결정의 근거는 ADR에 있고, 세부 설계는 설계 문서에 있습니다. → [[docs/README|문서 색인]]
 
@@ -35,7 +35,7 @@ updated: 2026-10-10
 ```mermaid
 flowchart LR
     user(("사용자"))
-    subgraph apps["NSDrawing"]
+    subgraph apps["AriadneNSD"]
         obs["Obsidian 플러그인"]
         dsk["데스크톱 앱"]
         web["웹 (정적 페이지)"]

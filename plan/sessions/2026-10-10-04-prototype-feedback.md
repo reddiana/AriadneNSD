@@ -1,7 +1,7 @@
 ---
 title: 2026-10-10 프로토타입 피드백
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - plan
   - session
 date: 2026-10-10

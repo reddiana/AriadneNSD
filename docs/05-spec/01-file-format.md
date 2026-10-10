@@ -3,7 +3,7 @@ title: 파일 형식 명세
 aliases:
   - file-format
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - spec
 status: 초안
 format-version: 1

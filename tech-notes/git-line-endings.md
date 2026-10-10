@@ -1,7 +1,7 @@
 ---
 title: git과 줄 끝 문자 (LF / CRLF)
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---
@@ -33,7 +33,7 @@ updated: 2026-10-10
 
 - DB의 문자 집합(charset)을 서버 설정에 맡기지 않고 테이블 정의에 박아 두는 것과 같습니다. 접속하는 클라이언트 설정이 달라도 저장되는 값은 같습니다.
 
-## NSDrawing에서 어디에 쓰나
+## AriadneNSD에서 어디에 쓰나
 
 - 문서뿐 아니라 나중의 코드와 `.ns.svg` 파일도 LF로 저장됩니다. 요구사항 [[01-requirements#^fmt-deterministic]](같은 모델이면 같은 파일)과도 맞습니다. 줄 끝이 바뀌면 같은 그림이어도 git diff가 생깁니다.
 

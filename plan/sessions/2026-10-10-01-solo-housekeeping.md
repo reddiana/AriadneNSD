@@ -1,7 +1,7 @@
 ---
 title: "2026-10-10 inbox 정리, 접기와 강조 영역, Obsidian 스파이크"
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - plan
   - session
 date: 2026-10-10

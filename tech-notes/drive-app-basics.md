@@ -1,7 +1,7 @@
 ---
 title: Google Drive 앱의 기초
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---
@@ -21,18 +21,18 @@ Drive 앱은 Drive 화면에 메뉴를 하나 걸어 두고, 사용자가 누르
 
 ## 흐름: Drive에서 열고 저장하기
 
-NSDrawing에는 서버가 없습니다. 정적 호스팅은 HTML과 JS 파일만 내려 주고, 그 뒤의 일은 모두 **웹 브라우저 안의 JS**가 Google과 직접 주고받습니다.
+AriadneNSD에는 서버가 없습니다. 정적 호스팅은 HTML과 JS 파일만 내려 주고, 그 뒤의 일은 모두 **웹 브라우저 안의 JS**가 Google과 직접 주고받습니다.
 
 ```mermaid
 sequenceDiagram
     actor U as 사용자
-    participant B as 웹 브라우저<br/>(NSDrawing JS)
+    participant B as 웹 브라우저<br/>(AriadneNSD JS)
     participant D as Google Drive 화면
     participant H as 정적 호스팅<br/>(GitHub Pages 등)
     participant A as Google 인증<br/>(Identity Services)
     participant API as Drive API
 
-    U->>+D: 파일 우클릭 → "NSDrawing으로 열기"
+    U->>+D: 파일 우클릭 → "AriadneNSD로 열기"
     D->>-B: 등록해 둔 Open URL로 이동<br/>state={"ids":["파일ID"],"action":"open"}
     activate B
     B->>+H: GET /index.html, app.js
@@ -59,7 +59,7 @@ OAuth에 등록한 **애플리케이션 자신의 비밀번호**입니다. 사�
 
 - `client_id`는 앱의 아이디, `client_secret`은 앱의 비밀번호에 해당합니다. 백엔드 서버가 Google에 토큰을 요청할 때 둘을 함께 보내서 "이 요청은 정말 우리 서버에서 왔다"고 증명합니다. DB 접속 계정의 비밀번호를 서버 설정에만 두는 것과 같습니다.
 - 브라우저에서 도는 JS는 누구나 소스를 볼 수 있습니다. 그래서 비밀을 넣어 둘 수 없습니다. OAuth는 이런 앱을 **공개 클라이언트(public client)** 라 부르고, client secret 없이 동작하게 합니다.
-- 대신 Google은 Cloud Console에 등록한 **허용된 JavaScript 출처**(예: `https://nsdrawing.example.com`)에서 온 요청에만 토큰을 줍니다. 다른 사이트가 우리 `client_id`를 훔쳐 써도 출처가 달라서 거절됩니다.
+- 대신 Google은 Cloud Console에 등록한 **허용된 JavaScript 출처**(예: `https://ariadne-nsd.example.com`)에서 온 요청에만 토큰을 줍니다. 다른 사이트가 우리 `client_id`를 훔쳐 써도 출처가 달라서 거절됩니다.
 
 ## 확장자와 미리보기 (`.ns` vs `.ns.svg`)
 
@@ -69,7 +69,7 @@ OAuth에 등록한 **애플리케이션 자신의 비밀번호**입니다. 사�
 - 썸네일은 앱이 저장할 때마다 PNG를 직접 만들어 함께 올리면(`contentHints.thumbnail`) 보이게 할 수 있습니다. 하지만 저장할 때마다 할 일이 늘고, 다른 도구로 고친 파일은 썸네일이 맞지 않게 됩니다.
 - 그래서 Drive에서는 `.ns.svg`가 더 간단합니다. 그래서 `.ns.svg`로 정했습니다. → [[0014-drive-file-extension|ADR-0014]]
 
-## NSDrawing에서 어디에 쓰나
+## AriadneNSD에서 어디에 쓰나
 
 - 웹 버전 위에 Drive 연동을 얹는다. → [[0012-google-drive-integration|ADR-0012]]
 - 파일이 SVG라서 Drive가 썸네일과 미리보기를 알아서 보여 준다.

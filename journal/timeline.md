@@ -1,7 +1,7 @@
 ---
 title: 여정 타임라인
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - journal
 updated: 2026-10-10
 ---

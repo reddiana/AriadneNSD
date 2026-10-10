@@ -1,7 +1,7 @@
 ---
 title: 현재 상태
 tags:
-  - nsdrawing
+  - ariadne-nsd
   - plan
 updated: 2026-10-10
 ---
@@ -67,7 +67,7 @@ updated: 2026-10-10
 - Method 다이어그램의 머리를 이벤트 머리와 다르게 그릴지, 모델에서 구분할지 → [[01-requirements#6. 미결정 사항]]
 - 접고 펴기가 이제 파일을 바꾸는데, 실행 취소 대상에 넣을지 → [[0018-save-as-shown|ADR-0018]]
 - `F` 하나로 제어 블록과 접기 영역을 모두 다루는 것이 괜찮은지 (접기 영역 안의 제어 블록에서 헷갈림) → [[01-requirements#접기 · 펼치기]]
-- 애플리케이션 이름: `NSDrawing`을 `Ariadne` / `Ariadne's NSD`로 바꿀지 → [[inbox]]
+- 애플리케이션 이름: `AriadneNSD`을 `Ariadne` / `Ariadne's NSD`로 바꿀지 → [[inbox]]
 - 호출 블록마다 다른 글자(예: 인자)를 적을 수 있어야 하는지. 프로토타입은 머리 글자를 그대로 따른다 → [[01-requirements#^blk-call]]
 - Google Drive 연동을 Obsidian · 데스크톱과 견주어 언제 만들지 → [[0011-development-order|ADR-0011]] "이후 변경"
 - 웹 광고의 자리: 광고 네트워크 정책이 "저장·내보내기·공유 때만"을 허용하는지 → [[01-requirements#6. 미결정 사항]]
