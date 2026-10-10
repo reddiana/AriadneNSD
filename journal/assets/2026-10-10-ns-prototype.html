@@ -130,6 +130,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
     <div class="grp">
       <span class="lbl">보기</span>
       <button data-cmd="fold">접기·펴기</button>
+      <button data-cmd="makeRegion">접기 영역 만들기</button>
+      <button data-cmd="releaseRegion">접기 영역 풀기</button>
     </div>
     <div class="grp">
       <button data-cmd="undo" title="Ctrl+Z">↶ 되돌리기</button>
@@ -179,8 +181,10 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>C</kbd></dt><dd>호출 블록 넣기 (부를 다이어그램을 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고름)</dd>
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
-        <dt><kbd>U</kbd></dt><dd>풀기. 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 고른 것 안의 접기 영역을 접혔든 펴졌든 모두 풉니다. 고른 것 안에 없으면 고른 블록을 감싼 가장 가까운 접기 영역 하나를 풉니다</dd>
-        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접기 영역은 안의 블록 하나만 골라도 접힙니다. 접기 영역 안에서 블록 여러 개를 골라 접으면 안쪽에 접기 영역이 하나 더 생깁니다 (중첩). 접힌 갈래는 방향키나 클릭으로 고를 수 있고, <kbd>F</kbd>나 더블클릭으로 폅니다</dd>
+        <dt><kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다 (중첩)</dd>
+        <dt><kbd>F</kbd></dt><dd>접기 · 펴기: 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다 (If는 갈래별로). 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 폅니다</dd>
+        <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다 (접혔든 펴졌든). 블록은 그대로 남습니다</dd>
+        <dt><kbd>U</kbd></dt><dd>풀기: 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>와 같습니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
@@ -190,7 +194,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
         <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
-        <li><b><kbd>U</kbd>는 접기 영역도 풉니다.</b> 접혔든 펴졌든, 고른 곳에 걸린 접기 영역을 모두 풉니다. "접기 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
+        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>(또는 <kbd>U</kbd>)로 풉니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. "접기 영역 보기"를 켜면 펴진 영역이 파란 점선과 이름표로 보입니다.</li>
         <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
         <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
         <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
@@ -1088,49 +1092,55 @@ function wrap(kind) {
 }
 const emptyBranch = b => b.every(n => n.type === 'process' && !n.text.trim());
 function unwrap() {
+  // U: 제어 블록 하나를 골랐으면 그 제어 블록을 풀고, 그 밖에는 접기 영역을 푼다
   const r = needSel();
   if (!r) return;
   if (r.event) return say('이벤트 머리는 풀 수 없습니다');
   const t = r.items.length === 1 ? r.items[0] : null;
-  if (t && isCtrl(t)) {
-    // 제어 블록 하나: 제어 블록을 없애고 안의 블록을 그 자리에 남긴다
-    let content;
-    apply(() => {
-      if (t.type === 'if') content = [t.yes, t.no].filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
-      else content = emptyBranch(t.body) ? [] : t.body;
-      r.list.splice(r.lo, 1, ...content);
-      folded.delete(t.id); SLOTS.if.forEach(sl => folded.delete(laneKey(t, sl)));
-    });
-    if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
-    render();
-    return say('풀었습니다. 안의 블록은 그 자리에 남았습니다');
-  }
-  // 그 밖에는: 고른 곳에 걸린 접기 영역을 접혔든 펴졌든 모두 푼다.
-  // 고른 블록 안쪽 깊은 곳의 영역도 함께 푼다. 고른 것 안에 영역이 없으면 고른 블록을 감싼 가장 가까운 영역 하나를 푼다
-  const isFoldRange = n => n.type === 'range' && (!n.highlight || 'name' in n);
-  const targets = [];
-  const walk = list => list.forEach(n => { (SLOTS[n.type] || []).forEach(sl => walk(n[sl])); if (isFoldRange(n)) targets.push(n); });
-  walk(r.items);
-  if (!targets.length && r.parent && r.parent.type === 'range') targets.push(r.parent);   // 가장 가까운 것 하나만
-  if (!targets.length) return say('풀 것이 없습니다. 제어 블록 하나, 또는 접기 영역이 걸린 곳을 고르세요');
-  const gone = new Set(targets.filter(g => !g.highlight));
-  const edge = (n, last) => { while (gone.has(n)) n = n.children[last ? n.children.length - 1 : 0]; return n; };
-  const a = edge(r.items[0], false), b = edge(r.items[r.items.length - 1], true);
-  const where = g => {
-    let res = null;
-    const look = list => { const k = list.indexOf(g); if (k >= 0) { res = { list, k }; return; } list.forEach(n => (SLOTS[n.type] || []).forEach(sl => { if (!res) look(n[sl]); })); };
-    doc.diagrams.forEach(d => { if (!res) look(d.body); });
-    return res;
-  };
-  apply(() => targets.forEach(g => {
-    folded.delete(g.id);
-    if (g.highlight) { delete g.name; return; }
-    const w = where(g);
-    if (w) w.list.splice(w.k, 1, ...g.children);
-  }));
-  sel = { root: a.id, anchor: a.id, focus: b.id };
+  if (!t || !isCtrl(t)) return releaseRegion();
+  let content;
+  apply(() => {
+    if (t.type === 'if') content = [t.yes, t.no].filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
+    else content = emptyBranch(t.body) ? [] : t.body;
+    r.list.splice(r.lo, 1, ...content);
+    folded.delete(t.id); SLOTS.if.forEach(sl => folded.delete(laneKey(t, sl)));
+  });
+  if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
+  render();
+  say('풀었습니다. 안의 블록은 그 자리에 남았습니다');
+}
+function regionOf(r) {
+  // 고른 것을 온전히 담는 가장 작은 접기 영역. 접기 영역 자체를 골랐으면 그것
+  if (r.items.length === 1 && r.items[0].type === 'range') return r.items[0];
+  for (let p = r.parent; p; p = idx.get(p.id).parent) if (p.type === 'range') return p;
+  return null;
+}
+function releaseRegion() {
+  // Ctrl+Shift+F · U: 고른 것을 온전히 담는 가장 작은 접기 영역을 푼다 (접혔든 펴졌든). 블록은 그대로 남는다
+  const r = needSel();
+  if (!r) return;
+  const g = r.event ? null : regionOf(r);
+  if (!g) return say('고른 곳을 담은 접기 영역이 없습니다');
+  const kids = g.children, own = r.items[0] === g, keep = sel;
+  apply(() => { const e = idx.get(g.id); e.list.splice(e.index, 1, ...kids); folded.delete(g.id); });
+  sel = own ? { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id } : keep;
   fixSel(); render();
-  say(`접기 영역 ${targets.length}개를 풀었습니다. 블록은 그대로입니다` + (targets.some(g => g.highlight) ? ' (강조는 남았습니다)' : ''));
+  say(`접기 영역 "${g.name || '이름 없음'}"을(를) 풀었습니다. 블록은 그대로입니다`);
+}
+function makeRegion() {
+  // Shift+F: 고른 블록들을 접기 영역으로 만든다. 만들면서 바로 접고 이름을 묻는다
+  const r = needSel();
+  if (!r) return;
+  if (r.event) return say('이벤트 머리는 접기 영역에 넣을 수 없습니다');
+  const one = r.items.length === 1 ? r.items[0] : null;
+  if (one && one.type === 'range') return say('이미 접기 영역입니다');
+  if (one && !isCtrl(one)) return say('블록 하나는 접기 영역으로 만들지 않습니다. 블록 여러 개나 제어 블록을 고르세요');
+  if (r.parent && r.parent.type === 'if' && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return say('접힌 갈래는 먼저 펴세요 (F)');
+  if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) return say('같은 범위의 접기 영역이 이미 있습니다');
+  const g = { id: nid(), type: 'range', children: [] };
+  apply(() => { g.children = r.list.splice(r.lo, r.hi - r.lo + 1); r.list.splice(r.lo, 0, g); });
+  selectOne(g.id);
+  foldRange(g, true);
 }
 function foldRange(g, fresh) {
   const ask = !('name' in g);
@@ -1139,47 +1149,42 @@ function foldRange(g, fresh) {
   if (ask) startEdit(g.id, { naming: true, fresh: true });
 }
 function fold() {
+  // F: 제어 블록(갈래)을 골랐으면 그것을, 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 편다
   const r = needSel();
   if (!r) return;
   if (r.event) return say('이벤트 머리는 접을 수 없습니다');
   const many = list => countBlocks(list) >= 2;
-  // 접기 영역 안: 블록 하나(또는 전부)를 골랐으면 그 접기 영역을 접고, 여러 개를 일부만 골랐으면 안쪽에 새 접기 영역을 만든다 (중첩)
-  const host = r.parent && r.parent.type === 'range' ? r.parent : null;
-  const foldHost = () => { selectOne(host.id); foldRange(host, false); };
-  if (r.items.length === 1) {
-    const t = r.items[0];
-    if (t.type === 'if') {
-      // If는 갈래별로 접는다. If를 고르고 누르면 접을 수 있는 갈래를 모두 접거나 편다
-      const lanes = SLOTS.if.filter(sl => many(t[sl]) || laneFolded(t, sl));
-      if (!lanes.length) return host ? foldHost() : say('갈래마다 블록이 하나뿐이라 접지 않습니다');
+  const t = r.items.length === 1 ? r.items[0] : null;
+  if (t && t.type === 'if') {
+    // If는 갈래별로 접는다. If를 고르고 누르면 접을 수 있는 갈래를 모두 접거나 편다
+    const lanes = SLOTS.if.filter(sl => many(t[sl]) || laneFolded(t, sl));
+    if (lanes.length) {
       const open = lanes.some(sl => laneFolded(t, sl));
       lanes.forEach(sl => open ? folded.delete(laneKey(t, sl)) : folded.add(laneKey(t, sl)));
       saveFold(); render();
       return say(open ? '갈래를 폈습니다' : '갈래별로 접었습니다. 갈래 하나만 접으려면 그 갈래의 블록을 모두 고르고 F');
     }
+  } else if (t && isCtrl(t)) {
     if (folded.has(t.id)) { folded.delete(t.id); saveFold(); render(); return say('폈습니다'); }
-    if (isCtrl(t) && !many(t.body)) return host ? foldHost() : say('안에 블록이 하나뿐인 제어 블록은 접지 않습니다');
-    if (isCtrl(t)) { folded.add(t.id); saveFold(); render(); return say('접었습니다. 머리만 남습니다'); }
-    if (t.type === 'range') return foldRange(t, false);
+    if (many(t.body)) { folded.add(t.id); saveFold(); render(); return say('접었습니다. 머리만 남습니다'); }
   }
   if (r.parent && r.parent.type === 'if' && laneFolded(r.parent, idx.get(r.items[0].id).slot)) {
     folded.delete(laneKey(r.parent, idx.get(r.items[0].id).slot)); saveFold(); render();
     return say('갈래를 폈습니다');
   }
   if (r.parent && isCtrl(r.parent) && r.lo === 0 && r.hi === r.list.length - 1 && many(r.items)) {
-    // 갈래(또는 반복문 안)의 블록을 모두 골랐으면 영역을 만들지 않고 그 갈래를 접는다
+    // 갈래(또는 반복문 안)의 블록을 모두 골랐으면 그 갈래를 접는다
     const p = r.parent, slot = idx.get(r.items[0].id).slot;
     folded.add(p.type === 'if' ? laneKey(p, slot) : p.id);
     if (p.type !== 'if') selectOne(p.id);
     saveFold(); render();
     return say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 F를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
   }
-  if (host && (r.items.length === 1 || (r.lo === 0 && r.hi === r.list.length - 1))) return foldHost();
-  if (r.items.length === 1) return say('블록 하나는 접지 않습니다. 제어 블록이나 블록 여러 개를 고르세요');
-  const g = { id: nid(), type: 'range', highlight: false, children: [] };
-  apply(() => { g.children = r.list.splice(r.lo, r.hi - r.lo + 1); r.list.splice(r.lo, 0, g); });
+  const g = regionOf(r);
+  if (!g) return say('고른 곳을 담은 접기 영역이 없습니다. Shift+F로 접기 영역을 만드세요');
   selectOne(g.id);
-  foldRange(g, true);
+  if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
+  foldRange(g, false);
 }
 function hasHLInside(n) {
   return (SLOTS[n.type] || []).some(s => n[s].some(c => isHL(c) || hasHLInside(c)));
@@ -1307,7 +1312,7 @@ const COMMANDS = {
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   event: eventCmd, head: headCmd, evNew: () => addDiagram(false), evExtract: () => addDiagram(true), callAsk: () => callCmd(false), goto: gotoTarget,
-  delDia: delDiagram, unwrap, fold, region, unregion, undo, redo, del: () => del(false),
+  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, undo, redo, del: () => del(false),
   copy: () => copy(false), cut: () => copy(true), paste,
   zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
   closeModal: () => { $('#modal').hidden = true; stage.focus({ preventScroll: true }); },
@@ -1390,7 +1395,7 @@ function showMenu(x, y) {
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('event', evLabel, 'E'), it('head', headLabel, 'M'), it('goto', '부르는 다이어그램으로 가기', 'G'), null,
        it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('unwrap', '풀기', 'U'), null,
-       it('fold', '접기 · 펴기', 'F'), null,
+       it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
   menuAt = -1;
   drawMenu();
@@ -1478,6 +1483,7 @@ document.addEventListener('keydown', ev => {
     else if (code === 'KeyC') copy(false);
     else if (code === 'KeyX') copy(true);
     else if (code === 'KeyV') paste();
+    else if (code === 'KeyF' && ev.shiftKey) releaseRegion();
     else if (code.startsWith('Arrow')) move(code, ev.shiftKey, true);
     else handled = false;
   } else if (ev.altKey) handled = false;
@@ -1495,7 +1501,7 @@ document.addEventListener('keydown', ev => {
   else if (code === 'KeyG') gotoTarget();
   else if (code === 'KeyS') { chord = 'S'; say('감싸기: W = While, D = Do-While, I = If'); }
   else if (code === 'KeyU') unwrap();
-  else if (code === 'KeyF') fold();
+  else if (code === 'KeyF') ev.shiftKey ? makeRegion() : fold();
   else handled = false;
   if (handled) ev.preventDefault();
 });
