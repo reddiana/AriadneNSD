@@ -181,7 +181,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>G</kbd></dt><dd>호출 블록에서: 부르는 다이어그램으로 가기</dd>
         <dt><kbd>S</kbd> 다음 <kbd>W</kbd>/<kbd>D</kbd>/<kbd>I</kbd></dt><dd>감싸기</dd>
         <dt><kbd>U</kbd></dt><dd>풀기</dd>
-        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 줄을 더블클릭하면 폅니다</dd>
+        <dt><kbd>F</kbd></dt><dd>접기 · 펴기 (제어 블록, 또는 블록 여러 개). If는 갈래별로 접습니다: If를 고르고 누르면 갈래를 모두, 한 갈래의 블록을 모두 고르고 누르면 그 갈래만. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 갈래는 방향키나 클릭으로 고를 수 있고, <kbd>F</kbd>나 더블클릭으로 폅니다</dd>
         <dt><kbd>H</kbd> / <kbd>Shift</kbd>+<kbd>H</kbd></dt><dd>강조 영역 만들기·넓히기 / 지우기</dd>
         <dt><kbd>Delete</kbd></dt><dd>지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>되돌리기 / 다시</dd>
@@ -406,7 +406,7 @@ function visibleOrder(only) {
     if (n.type === 'range') { if (folded.has(n.id)) out.push(n.id); else walk(n.children); return; }
     out.push(n.id);
     if (folded.has(n.id)) return;
-    (SLOTS[n.type] || []).forEach(s => { if (!laneFolded(n, s)) walk(n[s]); });
+    (SLOTS[n.type] || []).forEach(s => { if (laneFolded(n, s)) out.push(n[s][0].id); else walk(n[s]); });
   });
   (only ? [only] : doc.diagrams).forEach(d => { if (d.event != null) out.push(d.id); walk(d.body); });
   return out;
@@ -422,7 +422,8 @@ function move(key, shift, ctrl) {
   const here = diaOf(sel.focus);
   // 방향키는 다이어그램 안에서만 움직인다. 옆 다이어그램으로는 머리에서 좌우, 또는 Ctrl+Shift+좌우
   const order = visibleOrder(here);
-  const cur = sel.focus, i = orderPos(order, cur);
+  const cur = laneHome(sel.focus), i = orderPos(order, cur);
+  const inLane = cur !== sel.focus || (idx.get(cur)?.parent?.type === 'if' && laneFolded(idx.get(cur).parent, idx.get(cur).slot));
   const step = () => order[i + (fwd ? 1 : -1)];
   const neighbour = () => {
     const d = doc.diagrams[doc.diagrams.indexOf(here) + (fwd ? 1 : -1)];
@@ -446,7 +447,8 @@ function move(key, shift, ctrl) {
     if (!c) next = step();
     else if (fwd) next = order.slice(orderPos(order, c.node.id) + 1).find(id => !ancestors(id).includes(c.node.id));
     else next = prevOf(c.node.id);
-  } else if (shift && !isHead(sel.anchor)) {
+  } else if (shift && inLane) return say('접힌 갈래에서는 영역을 넓히지 않습니다');
+  else if (shift && !isHead(sel.anchor)) {
     const f = idx.get(sel.focus);
     const j = f.index + (key === 'ArrowDown' ? 1 : -1);
     if (j >= 0 && j < f.list.length) sel.focus = f.list[j].id;
@@ -469,7 +471,7 @@ function move(key, shift, ctrl) {
       if (cand && !isHead(cand) && ancestors(cand).includes(cur)) next = cand;
     }
   }
-  if (next) { selectOne(next); render(); }
+  if (next) { pickId(next); render(); }
 }
 function prevOf(id) {
   // 바로 위 블록: 앞 형제, 없으면 담고 있는 제어 블록, 그것도 없으면 머리
@@ -486,7 +488,19 @@ function container(id) {
   while (e && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
   return e && e.parent ? { node: e.parent, slot: e.slot } : null;
 }
-const enter = (node, slot) => laneFolded(node, slot) ? null : firstIn(node[slot]);
+const enter = (node, slot) => laneFolded(node, slot) ? node[slot][0].id : firstIn(node[slot]);
+// 접힌 갈래 안의 블록이면 그 갈래의 첫 블록(이동할 때 그 갈래를 대표한다)
+function laneHome(id) {
+  const e = idx.get(id);
+  return e && e.parent && e.parent.type === 'if' && laneFolded(e.parent, e.slot) ? e.list[0].id : id;
+}
+function pickId(id) {
+  // 접힌 갈래로 가면 갈래 전체를 고른다
+  const e = idx.get(id);
+  if (e && laneHome(id) === id && e.parent && e.parent.type === 'if' && laneFolded(e.parent, e.slot))
+    sel = { root: id, anchor: id, focus: e.list[e.list.length - 1].id };
+  else selectOne(id);
+}
 function firstIn(list) {
   let n = list[0];
   while (n.type === 'range' && !folded.has(n.id)) n = n.children[0];
@@ -573,7 +587,10 @@ function place(n, x, y, w, h, out) {
     const yW = Math.round(m.yw + extra * m.yw / (m.yw + m.nw));
     out.items.push({ k: 'ifHead', id: n.id, x, y, w, h: hh, sx: x + yW, text: n.text });
     [['yes', x, yW], ['no', x + yW, w - yW]].forEach(([slot, lx, lw]) => {
-      if (laneFolded(n, slot)) out.items.push({ k: 'foldRow', pid: n.id, slot, x: lx, y: by, w: lw, h: bh, text: foldRowText(n[slot]) });
+      if (laneFolded(n, slot)) {
+        out.items.push({ k: 'foldRow', pid: n.id, slot, x: lx, y: by, w: lw, h: bh, text: foldRowText(n[slot]) });
+        n[slot].forEach(c => L.set(c.id, { x: lx, y: by, w: lw, h: bh }));
+      }
       else placeSeq(n[slot], lx, by, lw, bh, out);
     });
     T.set(n.id, { x, y, w, h: hh });
@@ -729,6 +746,7 @@ function describeSel() {
     if (n.type === 'range') return (n.highlight ? '강조 영역' : '이름 붙은 영역') + (folded.has(n.id) ? ' (접힘)' : '');
     return names[n.type] + (folded.has(n.id) ? ' (접힘)' : '');
   }
+  if (r.parent && r.parent.type === 'if' && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return `접힌 갈래 (블록 ${countBlocks(r.list)}개)`;
   return `${r.items.length}개 고름`;
 }
 
@@ -882,6 +900,7 @@ function put(r, nodes, pos) {
     else d.body.splice(r ? 0 : d.body.length, 0, ...nodes);
     return;
   }
+  if (r.parent && r.parent.type === 'if') folded.delete(laneKey(r.parent, idx.get(r.items[0].id).slot));
   const one = r.items.length === 1 ? r.items[0] : null;
   if (one && one.type === 'process' && !one.text) r.list.splice(r.lo, 1, ...nodes);
   else if (pos === 'before') r.list.splice(r.lo, 0, ...nodes);
@@ -1082,12 +1101,17 @@ function fold() {
     if (isCtrl(t)) { folded.add(t.id); saveFold(); render(); return say('접었습니다. 머리만 남습니다'); }
     if (t.type === 'range') return foldRange(t, false);
   }
+  if (r.parent && r.parent.type === 'if' && laneFolded(r.parent, idx.get(r.items[0].id).slot)) {
+    folded.delete(laneKey(r.parent, idx.get(r.items[0].id).slot)); saveFold(); render();
+    return say('갈래를 폈습니다');
+  }
   if (r.parent && isCtrl(r.parent) && r.lo === 0 && r.hi === r.list.length - 1 && many(r.items)) {
     // 갈래(또는 반복문 안)의 블록을 모두 골랐으면 영역을 만들지 않고 그 갈래를 접는다
     const p = r.parent, slot = idx.get(r.items[0].id).slot;
     folded.add(p.type === 'if' ? laneKey(p, slot) : p.id);
-    selectOne(p.id); saveFold(); render();
-    return say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 접힌 줄을 더블클릭하거나 If를 고르고 F' : '접었습니다. 머리만 남습니다');
+    if (p.type !== 'if') selectOne(p.id);
+    saveFold(); render();
+    return say(p.type === 'if' ? '이 갈래를 접었습니다. 펴려면 F를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
   }
   if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) {
     const g = r.parent; selectOne(g.id); return foldRange(g, false);
@@ -1267,7 +1291,9 @@ svg.addEventListener('mousedown', ev => {
   if (editing) commitEdit(false);
   const t = ev.target.closest('[data-id]');
   if (!t) { selectOne(null); render(); return; }
-  if (ev.shiftKey) selectTo(t.dataset.id); else selectOne(t.dataset.id);
+  const lane = t.dataset.slot && idx.get(t.dataset.id)?.node[t.dataset.slot];
+  if (lane) pickId(lane[0].id);
+  else if (ev.shiftKey) selectTo(t.dataset.id); else selectOne(t.dataset.id);
   render();
   stage.focus({ preventScroll: true });
   ev.preventDefault();
