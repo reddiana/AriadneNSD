@@ -16,6 +16,11 @@ updated: 2026-10-11
 
 > `docs/01-requirements`도 우리의 작품입니다. 단순하고 합리적이며 우리가 원하는 결과를 만들고 평가하기에 부족함이 없어야합니다.
 
+> [!example] 물음을 그림으로 보기
+> 메인테이너의 요청("물어보는 것은 모두 시안을 확인할 수 있게 해주세요", 2026-10-11)으로, 물음마다 선택지를 그림으로 그린 시안을 만들었습니다. 카드의 딱지(`Q2 · 1번`)가 답할 때 적는 번호입니다.
+> - **UX 규칙 시안** (Q1~Q12, Q17~Q23): https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y · 사본 `journal/assets/2026-10-11-ux-rules-study.html`
+> - **호출 블록 펴 보기 시안** (Q13~Q16): https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL · 사본 `journal/assets/2026-10-11-call-expand-study.html`
+
 > [!info] 읽는 법
 > - **7장**에 물음 23개를 표 하나로 모았습니다. 바쁘시면 7장만 보고 답하셔도 됩니다.
 > - **1장**은 물음마다 "지금 → 장면 → 고를 것 → 추천" 순서로 풀어 적은 것입니다. `Q3: 1`처럼 번호로 답하시면 됩니다. "추천대로"라고만 하셔도 됩니다.

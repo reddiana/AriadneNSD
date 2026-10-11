@@ -22,6 +22,7 @@ updated: 2026-10-11
 | 다이어그램 배치 시안 (2026-10-11, 결정함: L4 + 순서 바꾸기) | https://claude.ai/artifact/NMZH1BMT42KMJAd5HcaQkW | `journal/assets/2026-10-11-diagram-layout-study.html` |
 | 호출 블록 글자 시안 (2026-10-11, 결정함: A2) | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
 | 호출 블록 펴 보기 시안 (2026-10-11, 답을 기다림: [[ux-review]] Q13~Q16) | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
+| UX 규칙 시안 (2026-10-11, 답을 기다림: [[ux-review]] Q1~Q12, Q17~Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
 
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
