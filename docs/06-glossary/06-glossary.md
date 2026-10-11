@@ -24,7 +24,7 @@ updated: 2026-10-10
 | 전위 판정 반복 | while (pre-test loop)                    | `WhileBlock`   | 조건을 먼저 검사하는 반복              |
 | 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhileBlock` | 본문을 먼저 실행하고 조건을 검사하는 반복     |
 | 횟수 반복    | for                                      | `ForBlock`     | 정해진 횟수만큼 반복                 |
-| 서브루틴 호출  | call                                     | `CallBlock`    | 같은 문서의 Method를 부르는 블록. 글자(인자와 결과)는 자유롭게 적는다 |
+| 서브루틴 호출  | call                                     | `CallBlock`    | 같은 문서의 Method를 부르는 블록. 이름은 Method의 머리를 따르고, 인자와 결과만 적는다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 갈래       | branch                                   | `Branch`       | 선택 블록 안의 각 경로. 하나의 시퀀스를 가짐  |
 | 본문       | body                                     | `body`         | 반복 블록 안에서 반복되는 시퀀스          |
 | 조건       | condition                                | `condition`    | 선택·반복 블록의 판정 텍스트            |

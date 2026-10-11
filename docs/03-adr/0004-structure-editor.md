@@ -13,6 +13,7 @@ superseded-by:
 > [!NOTE] 이후 변경
 > - 2026-10-10: 한 문서에 다이어그램을 여러 개 두기로 했고(#P1), 다른 다이어그램을 부르는 호출 블록이 생겼다. 문서는 트리 하나가 아니라 트리 여러 개이고, 호출 블록이 다른 트리를 가리킨다 → [[01-requirements#^edit-multi-diagram]], [[01-requirements#^blk-call]]
 > - 2026-10-11: 머리가 있는 다이어그램을 Event와 Method로 구분했다. 호출 블록은 Method만 부르고, 호출 블록의 글자는 부르는 Method의 머리 글자와 따로 적는다. → [[0021-event-and-method|ADR-0021]]
+> - 2026-10-11: 호출 블록은 이름을 글자로 갖지 않는다. 이름은 부르는 Method의 머리를 따르고, 호출 블록에는 인자와 결과만 적는다. → [[0022-call-name-follows-head|ADR-0022]]
 
 ## 배경
 

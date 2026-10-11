@@ -19,7 +19,7 @@ updated: 2026-10-11
 | 영역 강조 시안 (없앤 기능)                                      | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html`           |
 | 로고 시안                                                 | https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD | `journal/assets/2026-10-10-logo-concepts.html`                 |
 | Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html`            |
-| 호출 블록 글자 시안 (2026-10-11, 결정 기다림: A0 / A2) | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
+| 호출 블록 글자 시안 (2026-10-11, 결정함: A2) | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
 
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
@@ -76,6 +76,8 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 	- [x] 예제: 퀵소트, Raft 프로토콜 → 프로토타입의 예제 단추로 넣어 다시 게시함
 	- [x] Event와 Method(Sub process)를 따로 둘지 → 구분함 (2026-10-11, [[0021-event-and-method|ADR-0021]] 승인: 낮은 아치 머리, 호출 블록의 글자는 자유, Method만 부름, `E`·`M` 키). 요구사항과 프로토타입(35번째 판)에 반영
 	- [ ] ADR-0021의 후속: 파일 형식에 종류(Event / Method) 넣기, 모델 설계에 반영 → [[01-file-format]], [[01-model]]
+	- [x] 호출 블록의 글자: 이름은 머리를 따르고 인자와 결과만 적음 (2026-10-11, [[0022-call-name-follows-head|ADR-0022]] 승인: A2). 요구사항에 반영
+	- [ ] ADR-0022를 프로토타입에 넣기 (지금 프로토타입은 A1: 글자가 자유). 파일 형식과 모델 설계에도 반영
 	- [x] GitHub 어두운 테마에서 문자 로고의 `Ariadne`가 검게 보임 → 원인을 찾았고(GitHub의 스크립트가 켜지지 않으면 운영체제의 밝기를 따름. Obsidian도 운영체제를 따름), 문자 로고를 파일 하나(시안 N1: 회갈색 `Ariadne`)로 바꿈 (2026-10-11) → [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo|ADR-0020]] "이후 변경"
 - [ ] **다음 세션:** Event와 Method에서 Claude가 정한 여섯 가지를 확인하고(→ [[debt]]), 접기에서 덜 정해진 곳을 마저 정한다
 	- [ ] 접기: 접기 영역 안의 제어 블록에서 `F`, 갈래의 일부만 접기 영역일 때, 접힌 줄을 펼 때 안쪽 접기 영역의 상태 → [[01-requirements#접기 · 펼치기]]

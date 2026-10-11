@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0021: Event와 Method를 구분한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-11: 인자와 결과를 적는 법을 A1에서 A2로 바꿨다. 호출 블록의 이름은 Method의 머리를 따르고 호출 블록에서는 고칠 수 없으며, 인자와 결과만 적는다. 구분 자체와 H3 · C1 · S2는 그대로다 → [[0022-call-name-follows-head|ADR-0022]]
+
 ## 배경
 
 한 문서에 다이어그램을 여러 개 두고 호출 블록으로 서로를 부르게 된 뒤([[01-requirements#^edit-multi-diagram]], [[01-requirements#^blk-call]]), 머리가 있는 다이어그램은 모두 같은 모자 모양 머리([[01-requirements#^blk-event]])를 달았다. 이벤트 처리기와, 호출 블록이 부르는 Method(Sub process)를 따로 둘지는 미결정으로 남아 있었다.
