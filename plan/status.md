@@ -61,7 +61,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 	- [x] 로컬 폴더 `C:\myProject\NSDrawing`을 `C:\myProject\ariadne-nsd`로 바꾸기 (Claude Code를 닫은 뒤). Claude Code 메모리 폴더 `C--myProject-NSDrawing`도 새 경로 이름으로 옮긴다 → 됨 (2026-10-10, 메모리 2건이 새 폴더에 있음)
 	- [ ] Obsidian에서 새 폴더 `C:\myProject\ariadne-nsd`를 볼트로 다시 열기 (메인테이너). Obsidian의 볼트 목록에는 아직 옛 경로 `C:\myProject\NSDrawing`만 있다
 	- [ ] 모델 네임스페이스 URI 정하기 (저장소 주소가 정해지면) → [[01-file-format#6. 미결정 사항]]
-	- [ ] npm 패키지 이름과 도메인을 미리 잡아 둘지 정하기
+	- [x] npm 패키지 이름과 도메인을 미리 잡아 둘지 정하기 → 지금은 잡지 않음 (2026-10-11)
 	- [x] 프로토타입을 다음에 고쳐 게시할 때 화면의 이름도 바꾸기 → 됨 (2026-10-11, 예제를 더하며 함께)
 - [ ] 로고 · 아이콘 · 파비콘 (2026-10-10 시안). 메인테이너가 고른 방향: 크노소스 벽화 "푸른 옷의 여인들"의 가운데 여인, 주홍 바탕. 32px부터는 벽화 그대로, 16~24px은 머리·얼굴·눈만 남긴 작은 판. 시안은 `journal/assets/2026-10-10-logo-concepts.html`, 그림은 `2026-10-10-logo-aegean-lady.svg` · `…-lady-tiny.svg`, 뽑은 스크립트는 `2026-10-10-logo-trace-*.py`
 	- [x] 로고 확정 (2026-10-11) → [[0020-logo|ADR-0020]] 승인
@@ -95,6 +95,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 	- [ ] 설계 [[01-model]] · [[02-layout]]에 반영 (나란히 놓기)
 - [x] 프로토타입을 써 본 결과로 inbox의 프로토타입 항목을 모두 확인해 요구사항에 반영 (2026-10-10, [[2026-10-10-04-prototype-feedback]])
 - [ ] 단축키 전체 정리: 프로토타입에서 임시로 고른 키(`M`, `K`, `+`, `-`, `L`, `G`, `C` 등)를 모아 요구사항이나 설계 문서에 정한다
+- [ ] 웹 베타를 출시할 무렵: `.com` 도메인 하나를 등록한다 (메인테이너. 비어 있는지 그때 다시 확인) → [[names-and-registries]]
 - [ ] 웹 베타를 출시할 때: 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^all-donate]]
 - [ ] 나중에 검토: 유료 버전. Confluence는 요구사항에 #P2로 올림([[01-requirements#2.5 Confluence (유료, 나중에)]]). 다른 후보: Jira(같은 Forge로 묶음), Google Workspace Marketplace
 
