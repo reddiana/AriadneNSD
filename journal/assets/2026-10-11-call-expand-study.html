@@ -59,15 +59,15 @@ code { font-family: var(--mono); font-size: 12.5px; }
 
   <section>
     <h2>펴진 접기 영역: 왼쪽 막대 + 이름 띠</h2>
-    <p class="q">접기 영역 "피벗 고르기"를 편 모습입니다(셋째 판). <b>영역 강조 시안의 A</b>를 따랐습니다: 속을 채운 좁은 막대(8px)가 영역의 끝까지 내려갑니다. 이름 띠의 높이와 색은 지금 프로토타입 그대로입니다.</p>
+    <p class="q">접기 영역 "피벗 고르기"를 편 모습입니다. <b>Q15-d는 가운데 두 카드 가운데 하나를 고르는 물음입니다. 다른 것은 막대의 색뿐입니다.</b> <b>영역 강조 시안의 A</b>를 따랐습니다: 속을 채운 좁은 막대(8px)가 영역의 끝까지 내려갑니다. 이름 띠의 높이와 색은 지금 프로토타입 그대로입니다.</p>
     <div class="cards">
       <article class="card"><header><span class="tag">전</span><h3>이름 띠와 가는 둘레선</h3><span class="badge now">지금 프로토타입</span></header>
         <div class="paper" data-fold="band"></div>
         <p>영역의 범위를 가는 파란 둘레선으로 보여 줍니다. 블록의 선과 겹쳐서 눈에 덜 띕니다.</p></article>
-      <article class="card pick"><header><span class="tag">후</span><h3>왼쪽 막대 + 이름 띠</h3><span class="badge yours">메인테이너가 정함</span></header>
+      <article class="card"><header><span class="tag">Q15-d · 1번</span><h3>파란 막대</h3><span class="badge">추천</span></header>
         <div class="paper" data-fold="bar"></div>
         <ul><li>막대가 영역의 끝까지 내려가서 어디까지인지 보입니다. 둘레선은 없앴습니다.</li><li>막대만큼 폭을 씁니다. 높이는 지금과 같습니다.</li><li>막대의 색은 띠와 같은 계열의 짙은 파랑으로 Claude가 골랐습니다.</li></ul></article>
-      <article class="card"><header><span class="tag">막대 색</span><h3>A의 주황 막대 그대로</h3></header>
+      <article class="card"><header><span class="tag">Q15-d · 2번</span><h3>주황 막대</h3></header>
         <div class="paper" data-fold="barA"></div>
         <p>영역 강조 시안 A의 막대 색을 그대로 쓴 모습입니다. 더 눈에 띄고 While의 파란 띠와 확실히 갈립니다. 띠의 파랑과는 계열이 다릅니다.</p></article>
       <article class="card"><header><span class="tag">겹침</span><h3>영역 안의 영역</h3></header>
@@ -83,10 +83,10 @@ code { font-family: var(--mono); font-size: 12.5px; }
       <article class="card"><header><span class="tag">접힘</span><h3>지금 모습</h3><span class="badge now">지금 프로토타입</span></header>
         <div class="paper" data-look="closed"></div>
         <p>양옆 이중선이 호출 블록입니다. 굵은 글자가 부르는 Method의 이름입니다.</p></article>
-      <article class="card"><header><span class="tag">C1</span><h3>접기 영역과 똑같이, 색만 다르게</h3></header>
+      <article class="card pick"><header><span class="tag">C1</span><h3>접기 영역과 똑같이, 색만 다르게</h3><span class="badge yours">메인테이너가 정함</span></header>
         <div class="paper" data-look="bar"></div>
         <ul><li>얇은 이름 띠에 호출 글자가 들어가고, 막대와 띠가 호출 블록의 보라색입니다. 색으로만 호출 블록임을 알립니다.</li><li>접기 영역과 규칙이 완전히 같습니다.</li><li>이중선이 사라져서 흑백 인쇄에서는 <span class="bad">접기 영역과 가를 수 없습니다.</span></li></ul></article>
-      <article class="card pick"><header><span class="tag">C2</span><h3>호출 블록 줄은 그대로, 왼쪽 이중선이 내려온다</h3><span class="badge">추천</span></header>
+      <article class="card"><header><span class="tag">C2</span><h3>호출 블록 줄은 그대로, 왼쪽 이중선이 내려온다</h3></header>
         <div class="paper" data-look="bar2"></div>
         <ul><li>접힌 모습의 호출 블록 줄이 그대로 띠가 됩니다. 왼쪽 이중선이 아래로 내려와 막대가 됩니다.</li><li>접힌 모습과 이어져 보이고, 흑백에서도 이중선으로 알아봅니다.</li><li>띠가 접기 영역의 띠보다 조금 두껍습니다(블록 한 줄 높이).</li></ul></article>
     </div>
@@ -96,15 +96,15 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <h2>Q15-b. While과 헷갈리지 않는가</h2>
     <p class="q">"위의 줄 + 왼쪽 띠"는 While의 모양이기도 합니다. 셋을 한 다이어그램에 놓았습니다. 가르는 것은 <b>막대</b>(While의 띠는 22px이고 옅은 색, 접기 영역의 막대는 8px이고 짙게 채운 색), <b>띠의 높이와 글자</b>(이름 띠는 얇고 ▾가 붙은 작은 파란 글자)입니다.</p>
     <div class="cards wide">
-      <article class="card"><header><span class="tag">나란히</span><h3>접기 영역 · While · 펴 보인 호출 블록(C2)</h3></header>
+      <article class="card"><header><span class="tag">나란히</span><h3>접기 영역 · While · 펴 보인 호출 블록(C1)</h3></header>
         <div class="paper" data-mix="1"></div>
-        <p>흑백으로 찍어도 폭과 이중선으로 가를 수 있는지 봐 주세요. 헷갈리면 막대를 더 좁히거나 무늬를 넣는 길이 있습니다.</p></article>
+        <p>접기 영역은 파란 막대, 펴 보인 호출 블록은 보라 막대, While은 넓고 옅은 띠입니다. 흑백으로 찍으면 접기 영역과 호출 블록은 띠의 글자로만 갈립니다. 헷갈리면 막대를 더 좁히거나 무늬를 넣는 길이 있습니다.</p></article>
     </div>
   </section>
 
   <section>
     <h2>Q14. 재귀: 펴 보인 안쪽의 호출 블록도 펼 수 있는가</h2>
-    <p class="q"><code>quicksort</code>는 자기를 부릅니다. 첫 재귀 호출을 폈습니다(C2 모양). 새 모습에서는 겹마다 막대 하나만큼만 좁아집니다.</p>
+    <p class="q"><code>quicksort</code>는 자기를 부릅니다. 첫 재귀 호출을 폈습니다(C1 모양). 새 모습에서는 겹마다 막대 하나만큼만 좁아집니다.</p>
     <div class="cards wide">
       <article class="card"><header><span class="tag">D1</span><h3>한 겹만</h3></header>
         <div class="paper" data-depth="1"></div>
@@ -151,9 +151,9 @@ code { font-family: var(--mono); font-size: 12.5px; }
       <li><b>Q13.</b> 펴 보인 블록: <b>정함.</b> E1 고칠 수 없다</li>
       <li><b>Q14.</b> 재귀: <b>정함.</b> D2 안쪽도 펼 수 있다. 재귀로 세 겹째부터는 펼 때마다 경고</li>
       <li><b>Q14-a.</b> 경고의 모양: 펴고 나서 알림 한 줄을 띄운다(추천. 막지 않음) / 펴기 전에 "펼까요?"를 묻는다</li>
-      <li><b>Q15-a.</b> 펴 보인 호출 블록: C1 접기 영역과 똑같이 / C2 호출 블록 줄은 그대로(추천)</li>
+      <li><b>Q15-a.</b> 펴 보인 호출 블록: <b>정함.</b> C1 접기 영역과 똑같이, 색만 다르게</li>
       <li><b>Q15-b.</b> While과 가르는 법: 짙게 채운 좁은 막대와 얇은 띠로 충분한가</li>
-      <li><b>Q15-d.</b> 막대의 색: 띠와 같은 계열의 짙은 파랑(추천) / A의 주황</li>
+      <li><b>Q15-d.</b> 접기 영역의 막대 색: 1번 파란 막대(추천) / 2번 주황 막대. 맨 위 단락의 가운데 두 카드입니다</li>
       <li><b>Q15-c.</b> 이름 띠를 끄면: 막대는 남긴다(추천. 영역이 있다는 것은 보임) / 막대도 감춘다</li>
       <li><b>Q16.</b> 풀 때 글자: 그대로 복사한다(추천) / 풀기 기능을 넣지 않는다</li>
     </ol>
@@ -273,15 +273,15 @@ document.querySelectorAll('[data-look]').forEach(el => {
 // Q15-b: 접기 영역 · While · 펴 보인 호출 블록을 한 다이어그램에
 document.querySelector('[data-mix]').innerHTML = diagram({ w: 380, head: [b('sortAll'), p('(lists)')], body: [
   { fold: '빈 목록 걸러내기', look: 'bar', body: ['lists ← 비어 있지 않은 것만', 'n ← lists의 개수'] },
-  { loop: 'while n > 0', body: ['a ← lists[n - 1]', { open: [b('quicksort'), p('(a, 0, len(a) - 1)')], look: 'bar2', body: [{ if: 'lo < hi', ratio: 0.86, yes: [{ call: callPart }, { call: callLeft }, { call: callRight }], no: [''] }] }, 'n ← n - 1'] },
+  { loop: 'while n > 0', body: ['a ← lists[n - 1]', { open: [b('quicksort'), p('(a, 0, len(a) - 1)')], look: 'bar', body: [{ if: 'lo < hi', ratio: 0.86, yes: [{ call: callPart }, { call: callLeft }, { call: callRight }], no: [''] }] }, 'n ← n - 1'] },
   'return lists'] });
 
 // Q14: 재귀
 const qsInner = deeper => [{ if: 'lo < hi', ratio: 0.88, yes: [{ call: callPart }, deeper || { call: callLeft }, { call: callRight }], no: [''] }];
 document.querySelectorAll('[data-depth]').forEach(el => {
   const two = el.dataset.depth === '2';
-  const inner = two ? { open: callLeft, look: 'bar2', body: qsInner() } : null;
-  el.innerHTML = quicksort(two ? 440 : 380, [{ call: callPart }, { open: callLeft, look: 'bar2', body: qsInner(inner) }, { call: callRight }]);
+  const inner = two ? { open: callLeft, look: 'bar', body: qsInner() } : null;
+  el.innerHTML = quicksort(two ? 440 : 380, [{ call: callPart }, { open: callLeft, look: 'bar', body: qsInner(inner) }, { call: callRight }]);
 });
 
 // Q16: 풀기
