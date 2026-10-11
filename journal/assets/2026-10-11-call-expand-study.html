@@ -90,10 +90,10 @@ code { font-family: var(--mono); font-size: 12.5px; }
       <article class="card"><header><span class="tag">기준</span><h3>이름 띠를 켠 모습</h3></header>
         <div class="paper" data-fold="bar"></div>
         <p>막대와 이름 띠가 다 보입니다.</p></article>
-      <article class="card pick"><header><span class="tag">Q15-c · 1번</span><h3>띠만 사라지고 막대는 남는다</h3><span class="badge">추천</span></header>
+      <article class="card"><header><span class="tag">Q15-c · 1번</span><h3>띠만 사라지고 막대는 남는다</h3></header>
         <div class="paper" data-fold="barOnly"></div>
         <ul><li>이름은 안 보이지만, 여기가 접기 영역이라는 것과 어디까지인지는 보입니다.</li><li>그림이 띠만큼 짧아집니다. 폭은 그대로입니다.</li></ul></article>
-      <article class="card"><header><span class="tag">Q15-c · 2번</span><h3>띠도 막대도 사라진다</h3></header>
+      <article class="card pick"><header><span class="tag">Q15-c · 2번</span><h3>띠도 막대도 사라진다</h3><span class="badge yours">메인테이너가 정함</span></header>
         <div class="paper" data-fold="off"></div>
         <ul><li>접기 영역이 없는 것과 똑같이 보입니다.</li><li>그림이 가장 깔끔합니다.</li><li>접기 영역이 <span class="bad">어디 있는지 알 수 없습니다.</span> 접어 봐야 압니다.</li></ul></article>
     </div>
@@ -142,7 +142,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <h2>Q14-a. 재귀로 세 겹째 펼 때의 경고는 어떤 모양인가</h2>
     <p class="q"><code>quicksort</code> 안의 <code>quicksort</code>를 두 겹까지 편 상태에서, 가장 안쪽의 <code>quicksort(a, lo, p - 1)</code>을 또 펴려고 합니다. <b>같은 Method가 세 번째로 펴지는 때이고, 여기서부터 펼 때마다 경고합니다.</b> 경고가 어떻게 뜨는지를 고르는 물음입니다.</p>
     <div class="cards wide">
-      <article class="card pick"><header><span class="tag">Q14-a · 1번</span><h3>먼저 펴고, 알림 한 줄을 띄운다</h3><span class="badge">추천</span></header>
+      <article class="card pick"><header><span class="tag">Q14-a · 1번</span><h3>먼저 펴고, 알림 한 줄을 띄운다</h3><span class="badge yours">메인테이너가 정함</span></header>
         <div class="paper" data-warn="1"></div>
         <div class="toast" role="img" aria-label="알림 줄 그림">quicksort를 세 겹째 폈습니다. 자기를 부르는 Method는 끝없이 펼 수 있습니다.</div>
         <ul><li>누르면 바로 펴집니다(그림은 세 겹이 펴진 모습). 화면 아래에 알림 줄이 잠깐 떴다 사라집니다.</li><li>하던 일을 막지 않습니다. 잘못 폈으면 한 번 더 눌러 접습니다.</li><li>네 겹째, 다섯 겹째를 펼 때도 같은 알림이 뜹니다.</li></ul></article>
@@ -188,11 +188,11 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <ol>
       <li><b>Q13.</b> 펴 보인 블록: <b>정함.</b> E1 고칠 수 없다</li>
       <li><b>Q14.</b> 재귀: <b>정함.</b> D2 안쪽도 펼 수 있다. 재귀로 세 겹째부터는 펼 때마다 경고</li>
-      <li><b>Q14-a.</b> 경고의 모양: 1번 먼저 펴고 알림 한 줄(추천) / 2번 펴기 전에 묻는다. "Q14-a" 단락의 두 카드입니다</li>
+      <li><b>Q14-a.</b> 경고의 모양: <b>정함.</b> 1번 먼저 펴고 알림 한 줄</li>
       <li><b>Q15-a.</b> 펴 보인 호출 블록: <b>정함.</b> C1 접기 영역과 똑같이, 색만 다르게</li>
       <li><b>Q15-b.</b> While과 가르는 법: 짙게 채운 좁은 막대와 얇은 띠로 충분한가</li>
       <li><b>Q15-d.</b> 접기 영역의 막대 색: <b>정함.</b> 1번 파란 막대. 색은 테마에서 바꿀 수 있는 값으로 둡니다</li>
-      <li><b>Q15-c.</b> 이름 띠를 끄면: 1번 막대는 남는다(추천) / 2번 막대도 사라진다. "Q15-c" 단락의 두 카드입니다</li>
+      <li><b>Q15-c.</b> 이름 띠를 끄면: <b>정함.</b> 2번 띠도 막대도 사라진다</li>
       <li><b>Q16.</b> 풀 때 글자: 그대로 복사한다(추천) / 풀기 기능을 넣지 않는다</li>
     </ol>
   </div>
