@@ -20,7 +20,7 @@ updated: 2026-10-11
 - [x] 문서 폴더 이름 → 메인테이너 확인: "`docs/`로 둔다" (2026-10-11)
 - [ ] 제안 상태인 ADR 결정: [[0010-ui-framework|ADR-0010]], [[0009-desktop-framework|ADR-0009]] (2026-10-07). [[0011-development-order|ADR-0011]]은 승인함 (2026-10-10)
 - [x] 무료 버전을 오픈소스로 공개할지, 어떤 라이선스로 할지 → 메인테이너: "누구나 가져다 쓰고 고치고 팔 수 있지만 AriadneNSD를 가져다 썼다고 공지하게 하고 싶어요" → Apache-2.0 + `NOTICE`. `LICENSE`와 `NOTICE`를 저장소 맨 위에 넣음 (2026-10-11) → [[0023-license|ADR-0023]]
-- [ ] `NOTICE`의 저작권자 이름 "서세일 (Dionysus)"은 Claude가 git 사용자 이름에서 옮겨 적음. 어떻게 적을지 여쭸으나 답을 받지 못함. 확인 필요 (2026-10-11)
+- [x] `NOTICE`의 저작권자 이름 → 메인테이너: "서세일(Seil Suh)". 그대로 적음 (2026-10-11)
 - [x] 문서와 로고 그림에도 Apache-2.0을 그대로 둘지 → 메인테이너가 "docs/ 하위에 있는 모든 내용들도 다 라이센서에 적용되나요?"라고 물었고, 범위를 나눔: 코드는 Apache-2.0, 글은 CC BY 4.0(`LICENSE-docs`), 로고는 허락하지 않음 (2026-10-11) → [[0024-license-scope|ADR-0024]]
 - [ ] 라이선스에서 Claude가 정한 것과 정하지 않은 것 (2026-10-11) → [[0024-license-scope|ADR-0024]]
 	- Claude가 정함: 프로토타입 · 시안 페이지 · 스크립트는 코드로 봄. `CLAUDE.md`와 저장소 맨 위 README는 글로 봄. CC BY 4.0 글의 파일 이름은 `LICENSE-docs`. 출처 표기 문구 "AriadneNSD (https://github.com/reddiana/ariadne-nsd)". 로고는 "이 프로젝트를 가리키는 데에만 쓸 수 있다"
