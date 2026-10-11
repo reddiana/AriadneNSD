@@ -19,7 +19,7 @@ updated: 2026-10-11
 | 영역 강조 시안 (없앤 기능)                                      | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html`           |
 | 로고 시안                                                 | https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD | `journal/assets/2026-10-10-logo-concepts.html`                 |
 | Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html`            |
-| 다이어그램 배치 시안 (2026-10-11, 결정 기다림: L0 / L1 / L4 / L2 / L3) | https://claude.ai/artifact/NMZH1BMT42KMJAd5HcaQkW | `journal/assets/2026-10-11-diagram-layout-study.html` |
+| 다이어그램 배치 시안 (2026-10-11, 결정함: L4 + 순서 바꾸기) | https://claude.ai/artifact/NMZH1BMT42KMJAd5HcaQkW | `journal/assets/2026-10-11-diagram-layout-study.html` |
 | 호출 블록 글자 시안 (2026-10-11, 결정함: A2) | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
 
@@ -79,6 +79,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 	- [ ] ADR-0021의 후속: 파일 형식에 종류(Event / Method) 넣기, 모델 설계에 반영 → [[01-file-format]], [[01-model]]
 	- [x] 호출 블록의 글자: 이름은 머리를 따르고 인자와 결과만 적음 (2026-10-11, [[0022-call-name-follows-head|ADR-0022]] 승인: A2). 요구사항에 반영
 	- [x] ADR-0022를 프로토타입에 넣기 → 됨 (2026-10-11, 36번째 판)
+	- [ ] 새 다이어그램 배치(Event 왼쪽 · Method 오른쪽, 16 : 10, 같은 종류 안에서 순서 바꾸기)를 프로토타입에 넣기. 순서를 바꾸는 방법 정하기 → [[01-requirements#^edit-multi-diagram]]
 	- [ ] ADR-0022를 파일 형식과 모델 설계에 반영 → [[01-file-format]], [[01-model]]
 	- [x] GitHub 어두운 테마에서 문자 로고의 `Ariadne`가 검게 보임 → 원인을 찾았고(GitHub의 스크립트가 켜지지 않으면 운영체제의 밝기를 따름. Obsidian도 운영체제를 따름), 문자 로고를 파일 하나(시안 N1: 회갈색 `Ariadne`)로 바꿈 (2026-10-11) → [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo|ADR-0020]] "이후 변경"
 - [ ] **다음 세션:** Event와 Method에서 Claude가 정한 여섯 가지를 확인하고(→ [[debt]]), 접기에서 덜 정해진 곳을 마저 정한다
