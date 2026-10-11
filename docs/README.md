@@ -54,6 +54,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. Obsidia
 | [[0021-event-and-method\|0021]]              | Event와 Method를 구분한다 (낮은 아치 머리, 호출 블록은 Method만) | 승인 |
 | [[0022-call-name-follows-head\|0022]] | 호출 블록의 이름은 Method의 머리를 따른다 (인자와 결과만 적음) | 승인 |
 | [[0023-license\|0023]] | Apache-2.0으로 공개하고 NOTICE 파일을 둔다 | 승인 |
+| [[0024-license-scope\|0024]] | 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않는다 | 승인 |
 
 ADR 상태: **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**
 
