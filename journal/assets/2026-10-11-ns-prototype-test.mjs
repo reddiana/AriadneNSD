@@ -1,4 +1,5 @@
-// 프로토타입의 Event / Method 동작을 헤드리스 Chrome에서 눌러 본다
+// 프로토타입의 Event / Method / 호출 블록(ADR-0022) 동작을 헤드리스 Chrome에서 눌러 본다
+// 쓰는 법: node 2026-10-11-ns-prototype-test.mjs file:///…/2026-10-10-ns-prototype.html <화면을 찍어 둘 폴더>
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -34,7 +35,7 @@ await send('Page.navigate', { url: page });
 await sleep(2500);
 
 // 페이지 안에서 쓸 도우미: 키 누르기, 블록 고르기, 문서 읽기
-await ev(`
+const HELPERS = `
 window.T = {
   key(code, o = {}) { (o.editor ? document.querySelector('#editor') : document).dispatchEvent(new KeyboardEvent('keydown', { code, key: o.key || code, shiftKey: !!o.shift, ctrlKey: !!o.ctrl, bubbles: true, cancelable: true })); },
   click(id) { const el = document.querySelector('#svg [data-id="' + id + '"]'); if (!el) throw new Error('no element ' + id); el.dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true })); },
@@ -42,32 +43,49 @@ window.T = {
   doc() { return JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; },
   type(v) { const e = document.querySelector('#editor'); if (e.hidden) throw new Error('editor closed'); e.value = v; T.key('Enter', { editor: true, key: 'Enter' }); },
   editing() { const e = document.querySelector('#editor'); return e.hidden ? null : e.value; },
+  picked() { const e = document.querySelector('#editor'); return e.value.slice(e.selectionStart, e.selectionEnd); },
   msg() { return document.querySelector('#msg').textContent; },
+  svg() { return document.querySelector('#svg').innerHTML; },
   calls(d) { const out = []; const walk = l => l.forEach(n => { if (n.type === 'call') out.push(n); for (const k of ['yes', 'no', 'body', 'children', 'c0', 'c1', 'c2', 'c3']) if (Array.isArray(n[k])) walk(n[k]); }); d.diagrams.forEach(x => walk(x.body)); return out; },
-  sum() { const d = T.doc(); return { dias: d.diagrams.map(x => x.kind + ':' + x.event), calls: T.calls(d).map(c => c.text + ' -> ' + (c.target ? d.diagrams.find(x => x.id === c.target)?.event : 'X')) }; },
-};`);
+  // 호출 블록이 화면에 보이는 글자: 결과 ← 이름(인자). 이름은 부르는 Method의 머리에서 온다
+  line(c, d) { const t = c.target ? d.diagrams.find(x => x.id === c.target) : null; const e = t ? t.event.trim() : ''; const i = e.indexOf('('); const name = t ? (i > 0 ? e.slice(0, i).trim() : e) : c.name; return (c.result ? c.result + ' ← ' : '') + name + (c.args || (t && i > 0) ? '(' + (c.args || '') + ')' : ''); },
+  sum() { const d = T.doc(); return { dias: d.diagrams.map(x => x.kind + ':' + x.event), calls: T.calls(d).map(c => T.line(c, d) + ' -> ' + (c.target ? d.diagrams.find(x => x.id === c.target)?.event : 'X')) }; },
+};`;
+await ev(HELPERS);
 
 const results = [];
 const check = (name, ok, detail) => { results.push({ name, ok }); console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : '  ' + JSON.stringify(detail))); };
 const shot = async name => { const r = await send('Page.captureScreenshot', { format: 'png' }); writeFileSync(join(outDir, name), Buffer.from(r.data, 'base64')); };
 
-// a. 퀵소트 예제
+// a. 퀵소트 예제: 호출 블록은 결과 ← 이름(인자)
 await ev(`T.cmd('exQuick')`);
 let s = await ev(`T.sum()`);
 check('퀵소트: Method 둘', s.dias.length === 2 && s.dias.every(d => d.startsWith('method:')), s);
-check('퀵소트: 호출 셋이 이어짐, 글자는 따로', s.calls.join('|') === 'p = partition(a, lo, hi); -> partition(a, lo, hi)|quicksort(a, lo, p - 1); -> quicksort(a, lo, hi)|quicksort(a, p + 1, hi); -> quicksort(a, lo, hi)', s);
+check('퀵소트: 호출 셋이 이어지고 인자와 결과가 따로', s.calls.join('|') === 'p ← partition(a, lo, hi) -> partition(a, lo, hi)|quicksort(a, lo, p - 1) -> quicksort(a, lo, hi)|quicksort(a, p + 1, hi) -> quicksort(a, lo, hi)', s);
+check('퀵소트: 호출 블록에 글자(text)가 없음', (await ev(`T.calls(T.doc()).every(c => !('text' in c))`)) === true);
+check('퀵소트: 이름을 굵게 그림', (await ev(`T.svg().includes('<tspan font-weight="600">partition</tspan>')`)) === true);
 await shot('em-quick.png');
+let d = await ev(`T.doc()`);
+const pId = d.diagrams[1].id;
+await ev(`T.click('${pId}'); T.key('Enter', { key: 'Enter' })`);
+await ev(`T.type('quicksort(x)')`);
+check('머리 이름이 겹침(이름만으로 견줌): 받아들이지 않음', (await ev(`T.editing()`)) === 'quicksort(x)' && (await ev(`T.msg()`)).includes('같은 이름'), await ev(`T.msg()`));
+await ev(`T.type('split(a, lo, hi)')`);
+s = await ev(`T.sum()`);
+check('머리 이름을 고침: 호출 블록의 이름이 따라 바뀌고 인자와 결과는 남음', s.calls[0] === 'p ← split(a, lo, hi) -> split(a, lo, hi)', s);
+await shot('em-quick-renamed.png');
 
 // b. Raft 예제
 await ev(`T.cmd('exRaft')`);
 s = await ev(`T.sum()`);
 check('Raft: Event 일곱, Method 셋', s.dias.filter(d => d.startsWith('event:')).length === 7 && s.dias.filter(d => d.startsWith('method:')).length === 3, s);
 check('Raft: 호출이 모두 Method에 이어짐', s.calls.length === 9 && s.calls.every(c => !c.endsWith('X')), s);
+check('Raft: 받는 것이 없으면 이름만 보임', s.calls.every(c => { const [l, r] = c.split(' -> '); return l === r; }), s);
 await shot('em-raft.png');
 
 // c. 코드식 예제에서 블록을 고르고 M: 새 Method로 빠짐
 await ev(`T.cmd('exCode')`);
-let d = await ev(`T.doc()`);
+d = await ev(`T.doc()`);
 check('코드식: Event 하나', d.diagrams.length === 1 && d.diagrams[0].kind === 'event', d.diagrams.map(x => x.kind));
 const first = d.diagrams[0].body[0].id;
 await ev(`T.click('${first}'); T.key('KeyE')`);
@@ -86,7 +104,7 @@ check('부르는 호출이 있으면 Event로 못 바꿈', (await ev(`T.doc().di
 
 // e. Shift+E 새 Event, 머리에서 M / E로 종류 바꾸기
 await ev(`T.key('KeyE', { shift: true })`);
-check('Shift+E: 새 Event의 이름 칸', (await ev(`T.editing()`)) === '이벤트 1', await ev(`T.editing()`));
+check('Shift+E: 새 Event의 이름 칸 (기본 이름은 Event 1)', (await ev(`T.editing()`)) === 'Event 1', await ev(`T.editing()`));
 await ev(`T.type('버튼을 누르면')`);
 d = await ev(`T.doc()`);
 const eDia = d.diagrams.find(x => x.event === '버튼을 누르면');
@@ -96,48 +114,74 @@ check('머리에서 M: Method로', (await ev(`T.doc().diagrams.find(x => x.id ==
 await ev(`T.key('KeyE')`);
 check('머리에서 E: 다시 Event로', (await ev(`T.doc().diagrams.find(x => x.id === '${eDia.id}').kind`)) === 'event');
 
-// f. 호출 블록의 글자 고치기
+// f. 받는 것이 없는 Method를 부르는 호출 블록: 결과만 적는다. 이름과 인자는 못 고친다
 await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
-check('호출 블록에서 Enter: 글자 고치는 칸', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
-await ev(`T.type('n = Method 1(3)')`);
+check('호출 블록에서 Enter: 한 줄이 열리고 맨 앞(결과 자리)에 커서', (await ev(`T.editing()`)) === 'Method 1' && (await ev(`T.picked()`)) === '', await ev(`T.editing()`));
+await ev(`T.type('n = Other')`);
+check('이름을 바꿔 적으면 받아들이지 않음', (await ev(`T.editing()`)) === 'n = Other' && (await ev(`T.msg()`)).includes('고칠 수 없습니다'), await ev(`T.msg()`));
+await ev(`T.type('Method 1(3)')`);
+check('받는 것이 없는 Method에 인자를 적으면 받아들이지 않음', (await ev(`T.editing()`)) === 'Method 1(3)' && (await ev(`T.msg()`)).includes('받는 것이 없는'), await ev(`T.msg()`));
+await ev(`T.type('n = Method 1')`);
 s = await ev(`T.sum()`);
-check('호출 블록의 글자만 바뀌고 이어짐은 그대로', s.calls.join() === 'n = Method 1(3) -> Method 1', s);
+check('결과만 적음: n ← Method 1', s.calls.join() === 'n ← Method 1 -> Method 1', s);
 
-// g. 호출을 하나 더 넣고(C, 1번), 머리 이름을 고치면 글자가 같던 호출만 따라 바뀜
+// g. 호출을 하나 더 넣고(C, 1번), 머리에 괄호를 붙이면 이름이 따라 바뀌고 빈 인자가 채워짐
 await ev(`T.click('${callId}'); T.key('KeyC'); T.key('Digit1')`);
 s = await ev(`T.sum()`);
-check('C로 넣은 호출: 목록에 Method만', s.calls.length === 2 && s.calls[1] === 'Method 1 -> Method 1', s);
+check('C로 넣은 호출: 받는 것이 없으면 인자를 묻지 않음', s.calls.length === 2 && s.calls[1] === 'Method 1 -> Method 1' && (await ev(`T.editing()`)) === null, s);
 await ev(`T.click('${mId}'); T.key('Enter', { key: 'Enter' })`);
 await ev(`T.type('count_up(n)')`);
 s = await ev(`T.sum()`);
-check('머리 이름을 고침: 글자가 같던 호출만 따라 바뀜', s.calls.join('|') === 'n = Method 1(3) -> count_up(n)|count_up(n) -> count_up(n)', s);
+check('머리를 count_up(n)으로: 호출 블록 모두 이름이 바뀌고 인자가 채워짐', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|count_up(n) -> count_up(n)', s);
+await ev(`T.click('${callId}'); T.key('KeyC'); T.key('Digit1')`);
+check('C로 넣은 호출: 받는 것이 있으면 인자를 고른 채로 열림', (await ev(`T.editing()`)) === 'count_up(n)' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
+await ev(`T.type('count_up(5)')`);
+s = await ev(`T.sum()`);
+check('인자를 적음', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|count_up(5) -> count_up(n)|count_up(n) -> count_up(n)', s);
+await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
+check('호출 블록에서 Enter: 인자를 고른 채로 열림', (await ev(`T.editing()`)) === 'n ← count_up(n)' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
+await ev(`T.type('total = count_up(n + 1);')`);
+s = await ev(`T.sum()`);
+check('인자와 결과를 고침 (= 와 ; 로 적어도 됨)', s.calls[0] === 'total ← count_up(n + 1) -> count_up(n)', s);
+await ev(`T.key('KeyZ', { ctrl: true })`);
+s = await ev(`T.sum()`);
+check('되돌리면 고치기 전으로', s.calls[0] === 'n ← count_up(n) -> count_up(n)', s);
 
-// h. R로 부를 Method 바꾸기: 새 Method를 만들고 호출
+// h. R로 부를 Method 바꾸기: 새 Method를 만들고 호출. 이름만 바뀌고 인자는 남는다
 d = await ev(`T.doc()`);
 const call2 = d.diagrams[0].body[1].id;
 await ev(`T.click('${call2}'); T.key('KeyR'); T.key('Digit2')`);
 check('R → 새 Method: 이름 칸이 열림', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
 await ev(`T.type('reset()')`);
 s = await ev(`T.sum()`);
-check('R로 바꿈: 호출이 새 Method에 이어지고 글자도 따라옴', s.calls.join('|') === 'n = Method 1(3) -> count_up(n)|reset() -> reset()', s);
+check('R로 바꿈: 이름만 바뀌고 인자는 남음', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|reset(5) -> reset()|count_up(n) -> count_up(n)', s);
 
-// i. Method의 머리를 떼면 호출 블록은 글자만 남음, 되돌리면 다시 이어짐
+// i. Method의 머리를 떼면 호출 블록은 보이던 글자 그대로 남고 끊김, 되돌리면 다시 이어짐
 d = await ev(`T.doc()`);
 const rId = d.diagrams.find(x => x.event === 'reset()').id;
 await ev(`T.click('${rId}'); T.key('Delete')`);
 s = await ev(`T.sum()`);
-check('머리를 떼면 호출은 글자만 남음', s.calls[1] === 'reset() -> X', s);
+check('머리를 떼면 호출은 글자만 남음 (점선)', s.calls[1] === 'reset(5) -> X' && (await ev(`T.svg().includes('stroke-dasharray="3 3"')`)) === true, s);
+await ev(`T.click('${call2}'); T.key('Enter', { key: 'Enter' })`);
+check('끊긴 호출 블록은 고치지 않고 알려 줌', (await ev(`T.editing()`)) === null && (await ev(`T.msg()`)).includes('이어진 Method가 없습니다'), await ev(`T.msg()`));
 await ev(`T.key('KeyZ', { ctrl: true })`);
 s = await ev(`T.sum()`);
-check('되돌리면 다시 이어짐', s.calls[1] === 'reset() -> reset()', s);
+check('되돌리면 다시 이어짐', s.calls[1] === 'reset(5) -> reset()', s);
 
-// j. 종류가 없는 예전 문서 열기: 불리는 다이어그램은 Method로
+// j. 예전 문서 열기: 종류가 없으면 불리는 다이어그램은 Method로, 호출 블록의 자유 글자는 결과와 인자로 가름
 await ev(`localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc: { diagrams: [
-  { id: 'g1', event: '타이머', body: [{ id: 'n1', type: 'call', target: 'g2', text: '센서 읽기' }] },
-  { id: 'g2', event: '센서 읽기', body: [{ id: 'n2', type: 'process', text: 'adc_start();' }] } ] }, opts: {} })); location.reload()`);
+  { id: 'g1', event: '타이머', body: [
+    { id: 'n1', type: 'call', target: 'g2', text: '센서 읽기' },
+    { id: 'n3', type: 'call', target: 'g3', text: 'y = calc(3);' },
+    { id: 'n4', type: 'call', target: 'g3', text: 'v = f(x + 1)' },
+    { id: 'n5', type: 'call', target: 'g3', text: '그냥 글자' },
+    { id: 'n6', type: 'call', target: null, text: '없어진 것' } ] },
+  { id: 'g2', event: '센서 읽기', body: [{ id: 'n2', type: 'process', text: 'adc_start();' }] },
+  { id: 'g3', event: 'calc(x)', body: [{ id: 'n7', type: 'process', text: 'return x * 2;' }] } ] }, opts: {} })); location.reload()`);
 await sleep(2500);
-const old = await ev(`(() => { document.querySelector('#optSyntax').dispatchEvent(new Event('change')); const d = JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; return d.diagrams.map(x => x.kind + ':' + x.event).join('|') + ' / ' + d.diagrams[0].body[0].target; })()`);
-check('예전 문서: 불리는 것은 Method, 나머지는 Event', old === 'event:타이머|method:센서 읽기 / g2', old);
+await ev(HELPERS);
+const old = await ev(`(() => { document.querySelector('#optSyntax').dispatchEvent(new Event('change')); const d = T.doc(), cs = d.diagrams[0].body; return d.diagrams.map(x => x.kind + ':' + x.event).join('|') + ' / ' + cs.map(c => T.line(c, d)).join('|') + ' / ' + cs.some(c => 'text' in c); })()`);
+check('예전 문서: 종류를 가르고, 자유 글자를 결과와 인자로 가름', old === 'event:타이머|method:센서 읽기|method:calc(x) / 센서 읽기|y ← calc(3)|v ← calc(x + 1)|calc(그냥 글자)|없어진 것 / false', old);
 
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');

@@ -180,7 +180,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>If 안에서: 옆 갈래로. 그 밖에서는 위·아래 블록으로</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>옆 다이어그램으로 (머리에서는 <kbd>←</kbd> <kbd>→</kbd>만으로도)</dd>
         <dt><kbd>Shift</kbd>+클릭, <kbd>Shift</kbd>+<kbd>↑↓</kbd></dt><dd>영역 고르기 (같은 부모로 자동 확장)</dd>
-        <dt><kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). 호출 블록의 글자도 이렇게 고칩니다 (인자와 결과를 적는 자리). 접힌 칸을 골랐으면 그 접기 영역의 이름 고치기. 접힌 영역을 더블클릭하면 폅니다</dd>
+        <dt><kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). 호출 블록에서는 인자와 결과만 고칩니다 (이름은 Method의 머리에서). 접힌 칸을 골랐으면 그 접기 영역의 이름 고치기. 접힌 영역을 더블클릭하면 폅니다</dd>
         <dt><kbd>P</kbd> <kbd>I</kbd> <kbd>K</kbd> <kbd>W</kbd> <kbd>D</kbd></dt><dd>처리 · If · Case · While · Do-While 넣기. 고른 블록 <b>뒤에</b> 넣고, <kbd>Shift</kbd>를 같이 누르면 <b>앞에</b> 넣습니다. 빈 블록을 골랐으면 그 자리에 넣습니다</dd>
         <dt><kbd>+</kbd> / <kbd>-</kbd> / <kbd>L</kbd></dt><dd>Case 안에서: 지금 갈래 뒤에 갈래 넣기 / 지금 갈래 빼기 / 갈래 이름 고치기 (갈래 이름을 더블클릭해도 됩니다). default 갈래는 늘 맨 끝에 있고 뺄 수 없습니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>X</kbd> / <kbd>C</kbd> / <kbd>V</kbd></dt><dd>잘라내기 / 복사 / 고른 블록 뒤에 붙여넣기</dd>
@@ -203,7 +203,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <ul>
         <li><b>Event와 Method를 구분합니다.</b> 밖에서 시작되는 것(인터럽트, 타이머, 받은 메시지)은 Event이고 모자 머리를 씁니다. 불려서 도는 것은 Method이고 낮은 아치 머리를 씁니다. <kbd>E</kbd>는 Event, <kbd>M</kbd>은 Method입니다.</li>
         <li><b>호출 블록은 Method만 부릅니다.</b> 두 Event가 같은 일을 하면 그 일을 Method로 빼서 둘 다 부르세요. 부르는 호출 블록이 있는 Method는 Event로 바꿀 수 없습니다.</li>
-        <li><b>호출 블록의 글자를 마음대로 적습니다.</b> <kbd>Enter</kbd>로 고칩니다. <code>p = partition(a, lo, hi);</code>처럼 인자와 결과를 적을 수 있습니다. 부를 Method는 <kbd>R</kbd>로 바꿉니다. 글자가 머리 글자와 똑같은 동안에는 머리 이름을 고치면 함께 바뀌고, 따로 고친 뒤에는 따라 바뀌지 않습니다.</li>
+        <li><b>호출 블록의 이름은 Method의 머리를 따릅니다 (둘째 판).</b> 호출 블록은 <code>p ← partition(a, lo, hi)</code>처럼 "결과 ← 이름(인자)"로 보입니다. 굵은 이름은 머리를 따라 저절로 바뀌고 호출 블록에서는 고칠 수 없습니다. <kbd>Enter</kbd>로 인자와 결과만 고칩니다(<code>p = …</code>라고 적어도 됩니다). 부를 Method는 <kbd>R</kbd>로 바꾸며, 적어 둔 인자와 결과는 남습니다.</li>
+        <li><b>Method 머리의 괄호.</b> 머리 글자에서 첫 여는 괄호 앞까지가 이름이고, 괄호 안은 받는 것입니다. 괄호가 없으면 받는 것이 없는 Method이고, 호출 블록에는 이름만 보입니다. 이름이 겹치는지는 이름만으로 견줍니다. 새 Event의 기본 이름은 "Event 1"입니다.</li>
         <li><b>블록을 새 다이어그램으로 빼는 키가 <kbd>E</kbd>에서 <kbd>M</kbd>으로 바뀌었습니다.</b> 새 빈 다이어그램은 <kbd>Shift</kbd>+<kbd>E</kbd>(Event)나 <kbd>Shift</kbd>+<kbd>M</kbd>(Method)입니다.</li>
         <li><b>예제 둘을 더했습니다.</b> "퀵소트"는 코드식으로 적은 Method 둘(quicksort, partition)이고, 서로를 호출 블록으로 부릅니다. "Raft"는 문장식으로 적은 Raft 합의 프로토콜의 한 노드입니다: 이벤트 처리기 일곱과, 호출 블록으로 부르는 Method 셋.</li>
         <li><b>화면의 이름을 AriadneNSD로 바꿨습니다.</b></li>
@@ -224,7 +225,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>방향키는 다이어그램 안에서만.</b> 옆 다이어그램으로는 머리에서 <kbd>←</kbd> <kbd>→</kbd>, 또는 어디서든 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>.</li>
         <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 제어 블록을 한 덩어리로 보고 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
         <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
-        <li><b>이벤트 머리의 이름은 겹치거나 비울 수 없습니다.</b> 그러면 고치던 칸이 다시 열립니다. 새 머리에는 "이벤트 1" 같은 이름이 미리 들어가 있고, 바로 치면 바뀝니다.</li>
+        <li><b>이벤트 머리의 이름은 겹치거나 비울 수 없습니다.</b> 그러면 고치던 칸이 다시 열립니다. 새 머리에는 "Event 1" 같은 이름이 미리 들어가 있고, 바로 치면 바뀝니다.</li>
         <li><b>접힌 영역을 더블클릭하면 폅니다.</b> 이름은 고르고 <kbd>Enter</kbd>로 고칩니다.</li>
       </ul>
       <h2>세 번째 판에서 바뀐 것</h2>
@@ -256,7 +257,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>이벤트 머리 위치.</b> 머리는 다이어그램마다 맨 위 하나뿐이라 고르고 지울 수만 있고, 옮기거나 감쌀 수 없습니다. 머리 "뒤에" 넣으면 본문 맨 앞에 들어갑니다. <span class="ref">^blk-event</span></li>
         <li><b>블록 글자: 코드인가 문장인가.</b> 예제 두 개로 같은 로직을 비교해 보세요. 문장식에서는 구문 강조가 거의 하는 일이 없습니다. <span class="ref">미결정 사항</span></li>
         <li><b>Method 다이어그램의 머리.</b> 답을 받음: Event와 Method를 구분하고, Method는 낮은 아치 머리로 그립니다. <span class="ref">^blk-method</span></li>
-        <li><b>호출 블록의 글자.</b> 답을 받음: 호출 블록의 글자는 마음대로 적고(인자와 결과), 부를 Method는 따로 고릅니다. <span class="ref">^blk-call</span></li>
+        <li><b>호출 블록의 글자.</b> 답을 받음: 이름은 Method의 머리를 따르고, 호출 블록에는 인자와 결과만 적습니다. <span class="ref">^blk-call</span></li>
         <li><b>부르던 다이어그램을 지우면?</b> 호출 블록은 글자만 남고 이중선이 점선으로 바뀌며 앞에 "?"가 붙습니다. <span class="ref">^blk-call</span></li>
         <li><b>머리도 내용도 없는 다이어그램은 저절로 사라집니다.</b> 다이어그램을 통째로 지우는 것은 머리를 고르고 <kbd>Shift</kbd>+<kbd>Delete</kbd>입니다. <span class="ref">^edit-multi-diagram</span></li>
       </ol>
@@ -320,6 +321,37 @@ const newDia = (event = null, body, kind) => ({ id: 'g' + (uid++), event, ...(ev
 const isMethod = d => !!d && d.event != null && d.kind === 'method';
 const kindName = d => isMethod(d) ? 'Method' : 'Event';
 const callersOf = d => { let k = 0; eachNode(n => { if (n.type === 'call' && n.target === d.id) k++; }); return k; };
+// Method의 머리 글자: 첫 여는 괄호 앞까지가 이름, 괄호 안은 받는 것이다. 괄호가 없으면 글자 전체가 이름이다 (ADR-0022)
+const headName = t => { const s = String(t ?? '').trim(), i = s.indexOf('('); return (i > 0 ? s.slice(0, i) : s).trim(); };
+const headParens = t => String(t ?? '').trim().indexOf('(') > 0;
+const headParams = t => { const s = String(t ?? '').trim(), i = s.indexOf('('); if (i <= 0) return ''; const j = s.lastIndexOf(')'); return s.slice(i + 1, j > i ? j : s.length).trim(); };
+// 이름이 겹치는지 견줄 때 쓰는 글자: Method는 괄호 앞의 이름만, Event는 글자 전체
+const nameKey = d => isMethod(d) ? headName(d.event) : String(d.event ?? '').trim();
+const oneLine = v => String(v ?? '').replace(/\s*\n\s*/g, ' ').trim();
+// 호출 블록에 적은 한 줄("결과 ← 이름(인자)")에서 결과와 인자를 가려낸다. 이름이 없으면 null
+function parseCall(v, name) {
+  const s = oneLine(v).replace(/;$/, '').trim();
+  if (!name) return null;
+  let i = -1;
+  for (let from = 0; ;) {
+    const k = s.indexOf(name, from);
+    if (k < 0) break;
+    if (i < 0) i = k;
+    const pre = s.slice(0, k).trim();
+    if (!pre || /(←|<-|:=|=)$/.test(pre)) { i = k; break; }
+    from = k + 1;
+  }
+  if (i < 0) return null;
+  const result = s.slice(0, i).trim().replace(/\s*(←|<-|:=|=)$/, '').trim();
+  const post = s.slice(i + name.length).trim();
+  return { result, args: post.startsWith('(') && post.endsWith(')') ? post.slice(1, -1).trim() : post };
+}
+// 예전 문서의 자유 글자에서 이름을 찾지 못했을 때: "결과 = 무엇(인자)" 꼴이면 가르고, 아니면 통째로 인자에 둔다
+function looseCall(v) {
+  const s = oneLine(v).replace(/;$/, '').trim();
+  const m = /^(?:(.*?)\s*(?:←|<-|:=|=)\s*)?[^()=←]*\((.*)\)$/.exec(s);
+  return m ? { result: (m[1] || '').trim(), args: m[2].trim() } : { result: '', args: s };
+}
 const isHead = id => typeof id === 'string' && id[0] === 'g';
 const dia = id => doc.diagrams.find(d => d.id === id);
 const diaOf = id => isHead(id) ? dia(id) : idx.get(id)?.dia;
@@ -372,21 +404,31 @@ function normalize() {
   doc.diagrams = keep.length ? keep : [doc.diagrams[0]];
   // 머리가 있으면 종류가 있다: Event 아니면 Method
   doc.diagrams.forEach(d => { if (d.event == null) delete d.kind; else if (d.kind !== 'method') d.kind = 'event'; });
-  // 머리의 이름은 비울 수 없다: 이름이 없으면 "이벤트 n"이나 "Method n"을 붙인다
+  // 머리의 이름은 비울 수 없다: 이름이 없으면 "Event n"이나 "Method n"을 붙인다
   doc.diagrams.forEach(d => {
     if (d.event == null || d.event.trim()) return;
-    const base = isMethod(d) ? 'Method ' : '이벤트 ';
+    const base = isMethod(d) ? 'Method ' : 'Event ';
     let k = 1;
-    while (doc.diagrams.some(x => x.event != null && x.event.trim() === base + k)) k++;
+    while (doc.diagrams.some(x => x.event != null && nameKey(x) === base + k)) k++;
     d.event = base + k;
   });
-  // 호출 블록은 Method만 부른다. 부르던 Method가 없어지면(지워짐, 머리를 뗌) 글자만 남는다.
-  // 호출 블록의 글자는 따로 적는다. 비어 있으면 Method의 머리 글자를 넣는다
+  // 호출 블록은 Method만 부른다. 이름은 글자로 갖지 않고 부르는 Method의 머리를 따른다. 인자와 결과만 갖는다 (ADR-0022).
+  // name은 부르던 Method가 없어졌을 때(지워짐, 머리를 뗌) 보여 줄 마지막 이름이다
   eachNode(n => {
-    if (n.type !== 'call' || n.target == null) return;
-    const t = dia(n.target);
-    if (!isMethod(t)) n.target = null;
-    else if (!n.text) n.text = t.event;
+    if (n.type !== 'call') return;
+    const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
+    if ('text' in n) {
+      // 예전 문서: 호출 블록에 자유롭게 적은 글자가 있다
+      const old = String(n.text ?? '');
+      delete n.text;
+      if (!alive) { if (n.name == null) n.name = oneLine(old); }
+      else { const p = parseCall(old, headName(t.event)) || looseCall(old); n.args = p.args; n.result = p.result; }
+    }
+    n.args = oneLine(n.args); n.result = oneLine(n.result);
+    if (!alive) { n.target = null; n.name = n.name || ''; return; }
+    n.name = headName(t.event);
+    // 넘겨주는 것이 비어 있으면 머리의 괄호 안 글자를 채운다
+    if (!n.args) n.args = headParams(t.event);
   });
   reindex();
 }
@@ -588,7 +630,16 @@ function tsize(text) {
   return { w: Math.ceil(w), h: lines.length * K.lh, lines };
 }
 function tagW(text) { cv.font = `600 11.5px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
-const callText = n => (n.target == null ? '? ' : '') + (n.text || '(이름 없음)');
+function boldW(text) { cv.font = `600 13px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
+// 호출 블록의 글자: 결과 ← 이름(인자). 이름은 굵게 그린다. 이어진 곳이 없으면 앞에 "?"
+function callParts(n) {
+  const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
+  const res = n.result ? n.result + ' ← ' : '';
+  return { res, pre: (alive ? '' : '? ') + res, name: (alive ? headName(t.event) : n.name) || '(이름 없음)',
+    post: n.args || (alive && headParens(t.event)) ? '(' + (n.args || '') + ')' : '' };
+}
+const callLine = n => { const p = callParts(n); return p.res + p.name + p.post; };
+const callText = n => { const p = callParts(n); return p.pre + p.name + p.post; };
 // 제어 블록의 접히는 부분: If는 갈래마다, 반복문은 안쪽 하나. 접힘 열쇠는 If가 "id:갈래", 반복문이 id
 const partKey = (n, slot) => multi(n) ? n.id + ':' + slot : n.id;
 const laneKey = partKey;
@@ -606,8 +657,8 @@ function measure(n) {
     const t = tsize(n.text);
     r = { w: Math.max(K.minW, t.w + 2 * K.padX), h: t.h + 2 * K.padY };
   } else if (n.type === 'call') {
-    const t = tsize(callText(n));
-    r = { w: t.w + 2 * K.padX + 2 * K.bar, h: t.h + 2 * K.padY };
+    const p = callParts(n);
+    r = { w: tsize(p.pre).w + boldW(p.name) + tsize(p.post).w + 2 * K.padX + 2 * K.bar, h: K.lh + 2 * K.padY };
   } else if (n.type === 'range') {
     if (folded.has(n.id)) { const t = tsize(foldLabel(n)); r = { w: t.w + 2 * K.padX + 20, h: t.h + 2 * K.padY + 4 }; }
     else {
@@ -660,7 +711,7 @@ function place(n, x, y, w, h, out) {
     out.items.push({ k: 'process', id: n.id, x, y, w, h, text: n.text });
     T.set(n.id, { x, y, w, h: m.h });
   } else if (n.type === 'call') {
-    out.items.push({ k: 'call', id: n.id, x, y, w, h, text: callText(n), linked: n.target != null });
+    out.items.push({ k: 'call', id: n.id, x, y, w, h, text: callText(n), parts: callParts(n), linked: n.target != null });
     T.set(n.id, { x, y, w, h: m.h });
   } else if (n.type === 'range') {
     if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
@@ -790,6 +841,11 @@ function txt(text, x, y, anchor, extra = '') {
     `<text x="${x}" y="${y + (i + 1) * K.lh - 5}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${fam()}" font-size="13" fill="${COL.ink}" xml:space="preserve" style="white-space:pre" pointer-events="none"${extra}>` +
     tokens(ln).map(([s, c]) => c ? `<tspan fill="${COL[c]}">${esc(s)}</tspan>` : esc(s)).join('') + `</text>`).join('');
 }
+function callTxt(p, x, y) {
+  const part = ln => tokens(ln).map(([s, c]) => c ? `<tspan fill="${COL[c]}">${esc(s)}</tspan>` : esc(s)).join('');
+  return `<text x="${x}" y="${y + K.lh - 5}" font-family="${fam()}" font-size="13" fill="${COL.ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">` +
+    part(p.pre) + `<tspan font-weight="600">${esc(p.name)}</tspan>` + part(p.post) + `</text>`;
+}
 const rect = (x, y, w, h, fill, attr = '') =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${attr}/>`;
 function drawSVG(lay, ui) {
@@ -811,7 +867,7 @@ function drawSVG(lay, ui) {
       s.push(rect(it.x, it.y, it.w, it.h, COL.call, da(it.id)));
       for (const bx of [it.x + K.bar, it.x + it.w - K.bar])
         s.push(`<line x1="${bx}" y1="${it.y}" x2="${bx}" y2="${it.y + it.h}" stroke="${COL.stroke}" stroke-width="1"${dash} pointer-events="none"/>`);
-      s.push(txt(it.text, it.x + K.padX + K.bar, it.y + K.padY));
+      s.push(callTxt(it.parts, it.x + K.padX + K.bar, it.y + K.padY));
     } else if (it.k === 'loop') {
       s.push(rect(it.x, it.y, it.w, it.h, COL.loop, da(it.id)));
       s.push(txt(it.text, it.x + K.padX, (it.bottom ? it.y + it.h - it.headH : it.y) + K.padY));
@@ -994,12 +1050,13 @@ function currentText(id) {
   if (isPart(id)) { const [a, slot] = id.split(':'); const p = idx.get(a)?.node; return p ? partName(p, slot) : ''; }
   const n = idx.get(id)?.node;
   if (!n) return '';
-  return n.type === 'range' ? foldLabel(n) : n.text;
+  return n.type === 'range' ? foldLabel(n) : n.type === 'call' ? callLine(n) : n.text;
 }
 function startEdit(id, o = {}) {
   if (!id) return;
   const n = isHead(id) ? null : idx.get(id)?.node;
   if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 이름 띠 보기"를 켜세요');
+  if (n && n.type === 'call' && n.target == null) return say('이어진 Method가 없습니다. R로 부를 Method를 고르세요');
   const box = T.get(id);
   if (!box) return;
   const orig = currentText(id);
@@ -1017,6 +1074,12 @@ function startEdit(id, o = {}) {
   growEditor();
   editor.focus();
   editor.select();
+  if (n && n.type === 'call') {
+    // 한 줄로 고친다. 이름은 잠겨 있고 인자(괄호 안)와 결과(← 앞)만 바뀐다. 인자가 있으면 인자를, 없으면 맨 앞(결과 자리)을 고른 채로 연다
+    const p = callParts(n), at = (p.res + p.name).length;
+    if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
+    say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (Enter: 정하기, Esc: 그만두기)' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (Enter: 정하기, Esc: 그만두기)');
+  }
   if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (Enter: 정하기, Esc: 그만두기)');
   else if (o.naming) say('접은 영역의 이름을 적으세요. Enter나 Esc는 기본 이름 그대로 둡니다');
 }
@@ -1059,16 +1122,30 @@ function commitEdit(cancel) {
     const g = idx.get(e.id)?.node;
     if (g) g.name = (cancel || v === e.orig || v.trim() === '') ? null : v;
     say(g && g.name ? `"${g.name}"(으)로 접었습니다` : '기본 이름으로 접었습니다');
+  } else if (idx.get(e.id)?.node.type === 'call') {
+    const n = idx.get(e.id).node, t = n.target != null ? dia(n.target) : null;
+    if (!cancel && v !== e.orig && isMethod(t)) {
+      const p = parseCall(v, headName(t.event));
+      const bad = !p ? '이름은 호출 블록에서 고칠 수 없습니다. Method의 머리에서 고치거나 R로 다른 Method를 고르세요'
+        : p.args && !headParens(t.event) ? '받는 것이 없는 Method입니다. 넘겨주려면 먼저 머리에 괄호를 붙이세요: 이름(받는 것)' : '';
+      if (bad) {
+        render(); startEdit(e.id, { fresh: e.fresh }); editor.value = v; growEditor();
+        return say(bad + ' (Esc: 그만두기)', true);
+      }
+      if (!e.fresh) pushUndo();
+      n.args = p.args; n.result = p.result;
+    }
   } else if (!cancel && v !== e.orig) {
-    const dup = isHead(e.id) && doc.diagrams.some(d => d.id !== e.id && d.event != null && d.event.trim() === v.trim());
-    if (isHead(e.id) && (dup || !v.trim())) {
+    // 이름이 겹치는지는 Method면 괄호 앞의 이름만으로 견준다
+    const d0 = isHead(e.id) ? dia(e.id) : null, key = d0 ? (isMethod(d0) ? headName(v) : v.trim()) : '';
+    const dup = !!d0 && doc.diagrams.some(d => d.id !== e.id && d.event != null && nameKey(d) === key);
+    if (d0 && (dup || !key)) {
       // 머리의 이름은 비우거나 겹칠 수 없다: 고치던 칸을 다시 연다
       render(); startEdit(e.id, { fresh: e.fresh }); editor.value = v; growEditor();
       return say(dup ? '같은 이름의 머리가 이미 있습니다. 다른 이름을 적으세요 (Esc: 그만두기)' : '머리의 이름은 비울 수 없습니다 (Esc: 그만두기)', true);
     }
     if (!e.fresh) pushUndo();
-    // 머리 글자와 똑같이 적혀 있던 호출 블록은 함께 바꾼다. 따로 고친 호출 블록은 그대로 둔다
-    if (isHead(e.id)) eachNode(n => { if (n.type === 'call' && n.target === e.id && n.text === e.orig) n.text = v; });
+    // 호출 블록의 이름은 머리를 따르므로 따로 고칠 것이 없다
     setText(e.id, v);
   }
   normalize(); render(); save();
@@ -1144,7 +1221,7 @@ function addDiagram(extract, kind = 'event') {
   const host = activeDia();
   const d = newDia('', null, extract ? 'method' : kind);
   apply(() => {
-    if (r) d.body = r.list.splice(r.lo, r.hi - r.lo + 1, { id: nid(), type: 'call', target: d.id, text: '' });
+    if (r) d.body = r.list.splice(r.lo, r.hi - r.lo + 1, { id: nid(), type: 'call', target: d.id, args: '', result: '' });
     doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
   });
   selectOne(d.id); render();
@@ -1165,16 +1242,20 @@ function insertCall(arg) {
   const host = activeDia();
   const d = arg === 'new' ? newDia('', null, 'method') : dia(arg);
   if (!d) return;
-  const node = { id: nid(), type: 'call', target: d.id, text: d.event || '' };
+  const node = { id: nid(), type: 'call', target: d.id, args: '', result: '' };
   apply(() => {
     put(r, [node], callPos);
     if (arg === 'new') doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
   });
   if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); }
-  else { selectOne(node.id); render(); }
+  else {
+    selectOne(node.id); render();
+    // 받는 것이 있는 Method면 바로 인자를 적게 한다 (머리의 괄호 안 글자가 미리 들어 있다)
+    if (headParams(d.event)) startEdit(node.id, { fresh: true });
+  }
 }
 function retargetCmd() {
-  // R: 고른 호출 블록이 부를 Method를 바꾼다. 호출 블록의 글자는 Enter로 따로 고친다
+  // R: 고른 호출 블록이 부를 Method를 바꾼다. 인자와 결과는 Enter로 고친다
   const r = needSel();
   if (!r) return;
   const n = !r.event && r.items.length === 1 ? r.items[0] : null;
@@ -1187,7 +1268,7 @@ function retargetAsk(id) {
   const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'retarget:' + d.id, label: (d.id === n.target ? '지금: ' : '호출: ') + (d.event || '(이름 없음)') }));
   items.push({ cmd: 'retarget:new', label: '새 Method를 만들고 호출' });
   choose(items, Math.max(0, items.findIndex(i => i.cmd === 'retarget:' + n.target)));
-  say('부를 Method를 고르세요. 호출 블록의 글자는 Enter로 고칩니다 (Esc: 그만두기)');
+  say('부를 Method를 고르세요. 적어 둔 인자와 결과는 남습니다 (Esc: 그만두기)');
 }
 function retarget(arg) {
   const r = selRange();
@@ -1198,14 +1279,12 @@ function retarget(arg) {
   if (!d) return;
   if (d.id === n.target) return say('그대로 둡니다');
   apply(() => {
-    // 글자가 예전 Method의 머리 글자 그대로였으면 새 Method의 머리 글자로 바꾸고, 따로 적은 글자는 둔다
-    const old = dia(n.target);
-    if (!n.text || (old && n.text === old.event)) n.text = d.event || '';
+    // 이름만 바뀐다. 적어 둔 인자와 결과는 남는다
     n.target = d.id;
     if (arg === 'new') doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
   });
   if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); }
-  else { selectOne(n.id); render(); say('부를 Method를 바꿨습니다'); }
+  else { selectOne(n.id); render(); say('부를 Method를 바꿨습니다. 인자와 결과는 그대로입니다'); }
 }
 function gotoTarget() {
   const r = needSel();
@@ -1485,7 +1564,7 @@ function build(spec) {
     const [type, a, x, y] = s;
     if (type === 'if') return { id: nid(), type, text: a, yes: x.map(b), no: y.map(b) };
     if (type === 'case') { const o = { id: nid(), type, text: a, labels: x.map(l => l[0]) }; x.forEach((l, i) => { o['c' + i] = l[1].map(b); }); return o; }
-    if (type === 'call') return { id: nid(), type, target: null, text: a, to: x ?? a };   // ['call', 글자, 부를 Method의 머리 글자]
+    if (type === 'call') return { id: nid(), type, target: null, to: a, args: x ?? '', result: y ?? '' };   // ['call', 부를 Method의 머리 글자, 인자, 결과]
     if (type === 'range') return { id: nid(), type, highlight: !!y, ...(a !== undefined ? { name: a } : {}), children: x.map(b) };
     return { id: nid(), type, text: a, body: x.map(b) };
   };
@@ -1545,7 +1624,7 @@ function loadCaseExample() {
   say('Case 예제: 갈래가 넷인 다중 선택');
 }
 
-// 다이어그램 여러 개짜리 예제: [머리 글자, 본문, 종류] 목록. ['call', 글자, 머리 글자]는 그 머리의 Method에 잇는다
+// 다이어그램 여러 개짜리 예제: [머리 글자, 본문, 종류] 목록. ['call', 머리 글자, 인자, 결과]는 그 머리의 Method에 잇는다
 function loadDiagrams(list, mono, msg) {
   uid = 1;
   const bodies = list.map(([, spec]) => build(spec));
@@ -1567,9 +1646,9 @@ function loadQuickExample() {
   loadDiagrams([
     ['quicksort(a, lo, hi)', [
       ['if', 'lo < hi',
-        [['call', 'p = partition(a, lo, hi);', 'partition(a, lo, hi)'],
-          ['call', 'quicksort(a, lo, p - 1);', 'quicksort(a, lo, hi)'],
-          ['call', 'quicksort(a, p + 1, hi);', 'quicksort(a, lo, hi)']],
+        [['call', 'partition(a, lo, hi)', 'a, lo, hi', 'p'],
+          ['call', 'quicksort(a, lo, hi)', 'a, lo, p - 1'],
+          ['call', 'quicksort(a, lo, hi)', 'a, p + 1, hi']],
         ['']]
     ], 'method'],
     ['partition(a, lo, hi)', [
@@ -1806,7 +1885,7 @@ function showMenu(x, y) {
     ? [it('edit', '글자 고치기', 'Enter'), it('ins:process', '본문 맨 앞에 처리 넣기', 'P'), null,
        it('kind:event', 'Event 머리로 바꾸기', 'E'), it('kind:method', 'Method 머리로 바꾸기', 'M'), ...fresh, null,
        it('del', '머리 떼기', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', '다이어그램 지우기', '⇧Del')] : [])]
-    : [it('edit', '글자 고치기', 'Enter'), ...(one && one.type === 'call' ? [it('retargetAsk', '부를 Method 바꾸기…', 'R'), it('goto', '부르는 Method로 가기', 'G')] : []), null,
+    : [it('edit', one && one.type === 'call' ? '인자와 결과 고치기' : '글자 고치기', 'Enter'), ...(one && one.type === 'call' ? [it('retargetAsk', '부를 Method 바꾸기…', 'R'), it('goto', '부르는 Method로 가기', 'G')] : []), null,
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:case', '뒤에 Case 넣기', 'K'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('kind:method', '새 Method로 빼기 (그 자리에는 호출 블록)', 'M'),
        ...(d.event == null ? [it('head:event', '이 다이어그램에 Event 머리 달기', ''), it('head:method', '이 다이어그램에 Method 머리 달기', '')] : []), ...fresh, null,
