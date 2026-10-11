@@ -1,0 +1,246 @@
+<title>호출 블록 글자 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 장면마다 한 단락: 세 안(A1 · A0 · A2)을 카드로 나란히 놓고, 카드 안에는 프로토타입과 같은 색의 NS 차트를 흰 종이 위에 그린다 (Event와 Method 시안과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #f8eadc; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.badge.yours { color: var(--accent); background: var(--accent-soft); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; border: 1px solid var(--line); }
+.paper svg { display: block; flex: none; }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 720px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-weight: 600; font-size: 12.5px; color: var(--muted); background: var(--bg); }
+td.no { background: var(--warn-soft); }
+td.new { background: var(--pick-soft); }
+kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--bg); white-space: nowrap; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--pick); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 6px; max-width: 80ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 14px; }
+.sum.ask { border-left-color: var(--accent); }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>호출 블록의 글자는 누가 정하는가</h1>
+    <p class="lede">메인테이너의 규칙: <b>Method의 머리 글자를 바꾸면 호출 블록도 따라 바뀐다. 호출 블록에서 이름을 적는 것은 새 Method를 만들 때뿐이고, 그 밖에는 있는 Method 가운데 고르기만 한다.</b> 이 규칙을 지키는 길이 둘(A0, A2)입니다. 오전에 고른 A1과 함께 세 장면에서 견주었습니다. 초록 테두리는 Claude가 권하는 안입니다.</p>
+  </div>
+
+  <section>
+    <h2>장면 1. 퀵소트: 인자가 다른 호출과 결과를 받는 호출</h2>
+    <p class="q"><code>quicksort</code>는 자신을 두 번 부르는데 인자가 다릅니다. <code>partition</code>은 결과 <code>p</code>를 돌려줍니다. 양옆 이중선이 호출 블록입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">A1</span><h3>글자를 자유롭게</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-qs="free"></div>
+        <ul><li>호출 블록의 글자를 처리 블록처럼 적습니다. 부를 Method는 따로 고릅니다.</li><li>인자와 결과를 다 적을 수 있습니다.</li><li>메인테이너의 규칙과 <span class="bad">맞지 않습니다</span>(호출 블록에서 글자를 고칠 수 있음).</li></ul></article>
+      <article class="card"><header><span class="tag">A0</span><h3>글자 전체가 머리와 같다</h3><span class="badge yours">규칙 그대로</span></header>
+        <div class="paper" data-qs="same"></div>
+        <ul><li>호출 블록에는 아무것도 적지 않습니다. 머리 글자가 그대로 보입니다.</li><li>두 재귀 호출이 <span class="bad">같은 글자</span>가 됩니다. 결과 <code>p</code>를 받는 자리가 없습니다.</li><li>가장 단순하고, 어긋날 일이 없습니다.</li></ul></article>
+      <article class="card pick"><header><span class="tag">A2</span><h3>이름은 따라오고, 인자와 결과만 적는다</h3><span class="badge yours">규칙 그대로</span><span class="badge">권함</span></header>
+        <div class="paper" data-qs="slots"></div>
+        <ul><li>굵은 글자가 <b>이름</b>입니다. 머리를 따라 저절로 바뀌고, 호출 블록에서는 고칠 수 없습니다.</li><li>괄호 안의 인자와 <code>←</code> 앞의 결과만 호출 블록마다 적습니다.</li><li>이름을 고르기만 한다는 규칙을 지키면서 퀵소트를 그릴 수 있습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>장면 2. 머리 이름을 <code>partition</code>에서 <code>split</code>으로 고치면</h2>
+    <p class="q">왼쪽이 이름을 고친 Method, 오른쪽이 그것을 부르는 쪽입니다. 호출 블록은 손대지 않았습니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">A1</span><h3>글자를 자유롭게</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-rename="free"></div>
+        <p>호출 블록의 글자는 <span class="bad">옛 이름 그대로</span>입니다. 이어진 곳은 <code>split</code>인데 글자는 <code>partition</code>이라고 말합니다. 지금 프로토타입은 글자가 머리와 똑같을 때만 따라 바꿉니다.</p></article>
+      <article class="card"><header><span class="tag">A0</span><h3>글자 전체가 머리와 같다</h3><span class="badge yours">규칙 그대로</span></header>
+        <div class="paper" data-rename="same"></div>
+        <p>호출 블록이 모두 따라 바뀝니다. 어긋나지 않습니다.</p></article>
+      <article class="card pick"><header><span class="tag">A2</span><h3>이름은 따라오고, 인자와 결과만 적는다</h3><span class="badge yours">규칙 그대로</span><span class="badge">권함</span></header>
+        <div class="paper" data-rename="slots"></div>
+        <p>이름만 따라 바뀌고, 적어 둔 인자와 결과는 남습니다. 어긋나지 않습니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>장면 3. Raft: 문장으로 적은 Method</h2>
+    <p class="q">문장식에서는 인자가 없는 Method가 많습니다. 그때는 <b>A0와 A2가 똑같이 보입니다.</b> 갈리는 것은 넘겨줄 것이 생겼을 때뿐입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">A0 · A2</span><h3>인자가 없을 때</h3></header>
+        <div class="paper" data-raft="plain"></div>
+        <p>두 안이 같습니다. 호출 블록에는 머리 글자가 그대로 보이고 적을 것이 없습니다.</p></article>
+      <article class="card"><header><span class="tag">A0</span><h3>넘겨줄 것이 있을 때</h3></header>
+        <div class="paper" data-raft="same"></div>
+        <p>"어느 임기로 물러나는가"를 호출 블록에 적을 수 없습니다. 앞의 처리 블록에 적어 두거나, Method 안에서 알아서 찾아야 합니다.</p></article>
+      <article class="card pick"><header><span class="tag">A2</span><h3>넘겨줄 것이 있을 때</h3><span class="badge">권함</span></header>
+        <div class="paper" data-raft="slots"></div>
+        <p>머리에 받는 것의 이름을, 호출 블록에 넘겨주는 것을 괄호로 적습니다. 문장식에서는 조금 코드처럼 보입니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>고치는 법</h2>
+    <p class="q">주황 칸은 할 수 없는 일, 초록 칸은 지금 프로토타입과 달라지는 곳입니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>하려는 일</th><th>A1 (지금)</th><th>A0</th><th>A2 (권함)</th></tr></thead>
+        <tbody>
+          <tr><td>호출 블록 넣기 <kbd>C</kbd></td><td>목록에서 Method를 고른다</td><td>목록에서 Method를 고른다</td><td class="new">목록에서 고르면 바로 인자 칸이 열린다 (인자가 없는 Method면 열리지 않는다)</td></tr>
+          <tr><td>고른 블록을 새 Method로 빼기 <kbd>M</kbd></td><td>새 머리의 이름을 적는다</td><td>새 머리의 이름을 적는다</td><td>새 머리의 이름을 적는다</td></tr>
+          <tr><td>호출 블록에서 <kbd>Enter</kbd></td><td>글자 전체를 고친다</td><td class="new">부를 Method를 고르는 목록이 열린다</td><td class="new">인자와 결과만 고친다. 이름은 잠겨 있다</td></tr>
+          <tr><td>부를 Method 바꾸기 <kbd>R</kbd></td><td>목록에서 고른다. 글자는 그대로</td><td class="new">목록에서 고른다. 글자가 새 머리 글자로 바뀐다</td><td class="new">목록에서 고른다. 이름이 바뀌고, 적어 둔 인자와 결과는 남는다</td></tr>
+          <tr><td>머리 이름 고치기</td><td>글자가 머리와 똑같은 호출 블록만 따라 바뀐다</td><td class="new">호출 블록이 모두 따라 바뀐다</td><td class="new">호출 블록의 이름이 모두 따라 바뀐다</td></tr>
+          <tr><td>인자가 다른 호출 그리기</td><td>된다</td><td class="no">안 된다. 처리 블록으로 적어야 하고, 그러면 Method와 이어지지 않는다</td><td>된다</td></tr>
+          <tr><td>결과 받기</td><td>된다</td><td class="no">안 된다</td><td>된다</td></tr>
+          <tr><td>코드로 옮기기 (나중)</td><td>글자에서 이름·인자·결과를 가려내야 한다</td><td>인자와 결과를 알 수 없다</td><td>이름·인자·결과가 따로 있다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="sum">
+    <h3>Claude가 권하는 안: A2</h3>
+    <ul>
+      <li>"이름은 머리에서만 정하고, 호출 블록은 고르기만 한다"는 메인테이너의 규칙을 그대로 지킵니다.</li>
+      <li>A1을 고른 까닭이었던 퀵소트의 재귀와 결과 받기가 그대로 됩니다.</li>
+      <li>인자가 없는 Method는 A0와 똑같이 보이므로, 문장식으로 쓰는 사람에게는 더 배울 것이 없습니다.</li>
+    </ul>
+  </div>
+
+  <div class="sum ask">
+    <h3>A2를 고르면 더 정할 것</h3>
+    <ol>
+      <li><b>머리 글자에서 어디까지가 이름인가.</b> 권함: 첫 여는 괄호 <code>(</code> 앞까지가 이름, 괄호 안은 받는 것의 이름. 괄호가 없으면 글자 전체가 이름입니다. <code>partition(a, lo, hi)</code>의 이름은 <code>partition</code>입니다.</li>
+      <li><b>이름이 겹치는지는 이름만으로 견줄지.</b> 권함: 이름만. <code>sort(a)</code>와 <code>sort(a, lo, hi)</code>는 겹치는 것으로 봅니다.</li>
+      <li><b>결과를 적는 기호.</b> 그림은 <code>p ← partition(…)</code>으로 그렸습니다. 코드식에서는 <code>p = partition(…)</code>이 더 익숙할 수 있습니다.</li>
+      <li><b>인자 칸에 처음 들어가는 글자.</b> 권함: 머리의 괄호 안 글자를 그대로 넣어 두고 고르게 합니다(<code>a, lo, hi</code>).</li>
+    </ol>
+  </div>
+</main>
+
+<script>
+(() => {
+'use strict';
+// 프로토타입(기본 스타일 C)과 같은 색. 그림은 테마와 상관없이 흰 종이에 그린다
+const COL = { stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf', call: '#ebe7f4', ink: '#151a22', label: '#1f45d6', stale: '#b4531b' };
+const MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
+const SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
+const ROW = 32, IFH = 46, STRIP = 22, HAT = 16, BAR = 7;
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function diagram(d) {
+  const fam = d.mono ? MONO : SANS, s = [];
+  const rect = (x, y, w, h, fill) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" shape-rendering="crispEdges"/>`);
+  // 글자는 문자열이거나, 조각이 섞인 배열 [{ t, b(굵게), stale(어긋난 글자) }]
+  const text = (t, x, y, anchor) => {
+    const body = Array.isArray(t) ? t.map(p => p.b || p.stale ? `<tspan${p.b ? ' font-weight="600"' : ''}${p.stale ? ` fill="${COL.stale}" text-decoration="underline"` : ''}>${esc(p.t)}</tspan>` : esc(p.t)).join('') : esc(t);
+    s.push(`<text x="${x}" y="${y + 21}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${fam}" font-size="13" fill="${COL.ink}" xml:space="preserve">${body}</text>`);
+  };
+  const bars = (x, y, w, h) => { for (const bx of [x + BAR, x + w - BAR]) s.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}"/>`); };
+  const leaf = n => typeof n === 'string' || Array.isArray(n) || n.call;
+  const height = n => leaf(n) ? ROW : n.if ? IFH + Math.max(seqH(n.yes), seqH(n.no)) : ROW + seqH(n.body);
+  const seqH = list => list.reduce((a, n) => a + height(n), 0);
+  function place(n, x, y, w, h) {
+    if (typeof n === 'string' || Array.isArray(n)) { rect(x, y, w, h, COL.process); text(n, x + 10, y); }
+    else if (n.call) { rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.call, x + 10 + BAR, y); }
+    else if (n.if) {
+      const yw = Math.round(w * (n.ratio || 0.8));
+      rect(x, y, w, IFH, COL.if);
+      s.push(`<path d="M ${x} ${y} L ${x + yw} ${y + IFH} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}"/>`);
+      text(n.if, x + Math.min(yw, w - 60), y - 3, 'middle');
+      s.push(`<text x="${x + 6}" y="${y + IFH - 5}" font-family="${SANS}" font-size="11" fill="${COL.label}">참</text>`);
+      s.push(`<text x="${x + w - 6}" y="${y + IFH - 5}" text-anchor="end" font-family="${SANS}" font-size="11" fill="${COL.label}">거짓</text>`);
+      seq(n.yes, x, y + IFH, yw, h - IFH); seq(n.no, x + yw, y + IFH, w - yw, h - IFH);
+    } else { rect(x, y, w, h, COL.loop); text(n.loop, x + 10, y); seq(n.body, x + STRIP, y + ROW, w - STRIP, h - ROW); }
+  }
+  function seq(list, x, y, w, h) {
+    let cy = y;
+    list.forEach((n, i) => { const ch = i === list.length - 1 ? y + h - cy : height(n); place(n, x, cy, w, ch); cy += ch; });
+  }
+  const W = d.w, x = 1, hh = ROW;
+  let y = 1;
+  const t = y + HAT;
+  if (d.head.kind === 'event') {
+    // Event: 왼쪽에 솟은 모자
+    const bw = Math.min(110, W * 0.45);
+    s.push(`<path d="M ${x} ${t} C ${x + 22} ${y - 2}, ${x + bw - 22} ${y - 2}, ${x + bw} ${t} L ${x + W} ${t} L ${x + W} ${t + hh} L ${x} ${t + hh} Z" fill="${COL.event}" stroke="${COL.stroke}"/>`);
+  } else {
+    // Method: 폭 전체에 걸친 낮은 아치 (ADR-0021의 H3)
+    s.push(`<path d="M ${x} ${t} C ${x + W * 0.2} ${y + 1}, ${x + W * 0.8} ${y + 1}, ${x + W} ${t} L ${x + W} ${t + hh} L ${x} ${t + hh} Z" fill="${COL.call}" stroke="${COL.stroke}"/>`);
+  }
+  text(d.head.text, x + 10, t); y = t + hh;
+  const bh = seqH(d.body);
+  seq(d.body, x, y, W, bh);
+  const H = y + bh + 1;
+  const label = typeof d.head.text === 'string' ? d.head.text : d.head.text.map(p => p.t).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${H}" viewBox="0 0 ${W + 2} ${H}" role="img" aria-label="${esc(label)}">${s.join('')}</svg>`;
+}
+
+const b = t => ({ t, b: true }), p = t => ({ t }), stale = t => ({ t, stale: true });
+const slots = v => v === 'slots';
+
+// 장면 1: 퀵소트
+const QS = {
+  free: ['p = partition(a, lo, hi);', 'quicksort(a, lo, p - 1);', 'quicksort(a, p + 1, hi);'],
+  same: ['partition(a, lo, hi)', 'quicksort(a, lo, hi)', 'quicksort(a, lo, hi)'],
+  slots: [[p('p ← '), b('partition'), p('(a, lo, hi)')], [b('quicksort'), p('(a, lo, p - 1)')], [b('quicksort'), p('(a, p + 1, hi)')]]
+};
+const quicksort = (v, calls) => diagram({ w: 300, mono: true,
+  head: { kind: 'method', text: slots(v) ? [b('quicksort'), p('(a, lo, hi)')] : 'quicksort(a, lo, hi)' },
+  body: [{ if: 'lo < hi', ratio: 0.86, yes: calls.map(t => ({ call: t })), no: [''] }] });
+document.querySelectorAll('[data-qs]').forEach(el => { el.innerHTML = quicksort(el.dataset.qs, QS[el.dataset.qs]); });
+
+// 장면 2: partition → split
+const RENAMED = {
+  free: [[p('p = '), stale('partition'), p('(a, lo, hi);')], 'quicksort(a, lo, p - 1);', 'quicksort(a, p + 1, hi);'],
+  same: ['split(a, lo, hi)', 'quicksort(a, lo, hi)', 'quicksort(a, lo, hi)'],
+  slots: [[p('p ← '), b('split'), p('(a, lo, hi)')], [b('quicksort'), p('(a, lo, p - 1)')], [b('quicksort'), p('(a, p + 1, hi)')]]
+};
+document.querySelectorAll('[data-rename]').forEach(el => {
+  const v = el.dataset.rename;
+  el.innerHTML = diagram({ w: 210, mono: true, head: { kind: 'method', text: slots(v) ? [b('split'), p('(a, lo, hi)')] : 'split(a, lo, hi)' },
+    body: ['pivot = a[hi]', { loop: 'for j = lo .. hi - 1', body: ['…'] }, 'return i'] }) + quicksort(v, RENAMED[v]);
+});
+
+// 장면 3: Raft (문장식)
+const RAFT = {
+  plain: { head: '팔로워로 물러난다', call: '팔로워로 물러난다', body: ['역할을 팔로워로 바꾼다', '선거 타이머를 다시 맞춘다'] },
+  same: { head: '팔로워로 물러난다', call: '팔로워로 물러난다', body: ['내 임기를 ?로 올린다', '역할을 팔로워로 바꾼다'] },
+  slots: { head: [b('팔로워로 물러난다'), p('(새 임기)')], call: [b('팔로워로 물러난다'), p('(요청의 임기)')], body: ['내 임기를 새 임기로 올린다', '역할을 팔로워로 바꾼다'] }
+};
+document.querySelectorAll('[data-raft]').forEach(el => {
+  const r = RAFT[el.dataset.raft];
+  el.innerHTML = diagram({ w: 300, head: { kind: 'event', text: '투표 요청을 받으면' },
+    body: [{ if: '요청의 임기가 더 큰가?', ratio: 0.84, yes: [{ call: r.call }], no: [''] }, '투표할지 정해 답한다'] }) +
+    diagram({ w: 230, head: { kind: 'method', text: r.head }, body: r.body });
+});
+})();
+</script>
