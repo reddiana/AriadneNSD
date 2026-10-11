@@ -64,10 +64,10 @@ code { font-family: var(--mono); font-size: 12.5px; }
       <article class="card"><header><span class="tag">전</span><h3>이름 띠와 가는 둘레선</h3><span class="badge now">지금 프로토타입</span></header>
         <div class="paper" data-fold="band"></div>
         <p>영역의 범위를 가는 파란 둘레선으로 보여 줍니다. 블록의 선과 겹쳐서 눈에 덜 띕니다.</p></article>
-      <article class="card"><header><span class="tag">Q15-d · 1번</span><h3>파란 막대</h3><span class="badge">추천</span></header>
+      <article class="card"><header><span class="tag">Q15-d · 1번</span><h3>파란 막대</h3></header>
         <div class="paper" data-fold="bar"></div>
         <ul><li>막대가 영역의 끝까지 내려가서 어디까지인지 보입니다. 둘레선은 없앴습니다.</li><li>막대만큼 폭을 씁니다. 높이는 지금과 같습니다.</li><li>막대의 색은 띠와 같은 계열의 짙은 파랑으로 Claude가 골랐습니다.</li></ul></article>
-      <article class="card"><header><span class="tag">Q15-d · 2번</span><h3>주황 막대</h3></header>
+      <article class="card pick"><header><span class="tag">Q15-d · 2번</span><h3>주황 막대</h3><span class="badge yours">메인테이너가 정함</span></header>
         <div class="paper" data-fold="barA"></div>
         <p>영역 강조 시안 A의 막대 색을 그대로 쓴 모습입니다. 더 눈에 띄고 While의 파란 띠와 확실히 갈립니다. 띠의 파랑과는 계열이 다릅니다.</p></article>
       <article class="card"><header><span class="tag">겹침</span><h3>영역 안의 영역</h3></header>
@@ -98,7 +98,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <div class="cards wide">
       <article class="card"><header><span class="tag">나란히</span><h3>접기 영역 · While · 펴 보인 호출 블록(C1)</h3></header>
         <div class="paper" data-mix="1"></div>
-        <p>접기 영역은 파란 막대, 펴 보인 호출 블록은 보라 막대, While은 넓고 옅은 띠입니다. 흑백으로 찍으면 접기 영역과 호출 블록은 띠의 글자로만 갈립니다. 헷갈리면 막대를 더 좁히거나 무늬를 넣는 길이 있습니다.</p></article>
+        <p>접기 영역은 주황 막대, 펴 보인 호출 블록은 보라 막대, While은 넓고 옅은 띠입니다. 흑백으로 찍으면 접기 영역과 호출 블록은 띠의 글자로만 갈립니다. 헷갈리면 막대를 더 좁히거나 무늬를 넣는 길이 있습니다.</p></article>
     </div>
   </section>
 
@@ -153,7 +153,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
       <li><b>Q14-a.</b> 경고의 모양: 펴고 나서 알림 한 줄을 띄운다(추천. 막지 않음) / 펴기 전에 "펼까요?"를 묻는다</li>
       <li><b>Q15-a.</b> 펴 보인 호출 블록: <b>정함.</b> C1 접기 영역과 똑같이, 색만 다르게</li>
       <li><b>Q15-b.</b> While과 가르는 법: 짙게 채운 좁은 막대와 얇은 띠로 충분한가</li>
-      <li><b>Q15-d.</b> 접기 영역의 막대 색: 1번 파란 막대(추천) / 2번 주황 막대. 맨 위 단락의 가운데 두 카드입니다</li>
+      <li><b>Q15-d.</b> 접기 영역의 막대 색: <b>정함.</b> 2번 주황 막대. 색은 테마에서 바꿀 수 있는 값으로 둡니다</li>
       <li><b>Q15-c.</b> 이름 띠를 끄면: 막대는 남긴다(추천. 영역이 있다는 것은 보임) / 막대도 감춘다</li>
       <li><b>Q16.</b> 풀 때 글자: 그대로 복사한다(추천) / 풀기 기능을 넣지 않는다</li>
     </ol>
@@ -200,7 +200,7 @@ function diagram(d) {
         s.push(`<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" fill="none" stroke="${COL.bandInk}" stroke-width="1.5"/>`);
       } else {
         rect(x, y, w, BAND, COL.band); seq(n.body, x + RBAR, y + BAND, w - RBAR, h - BAND);
-        solidBar(x, y, h, n.look === 'barA' ? COL.barA : COL.bar); bandText(n.fold, x + RBAR + 8, y);
+        solidBar(x, y, h, n.look === 'barB' ? COL.bar : COL.barA); bandText(n.fold, x + RBAR + 8, y);
       }
     }
     else if (n.open) {
@@ -255,7 +255,7 @@ const quicksort = (w, yes) => diagram({ w, head: qsHead, body: [{ if: 'lo < hi',
 // 펴진 접기 영역
 const FOLD = {
   band: [{ fold: '피벗 고르기', look: 'band', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
-  bar: [{ fold: '피벗 고르기', look: 'bar', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
+  bar: [{ fold: '피벗 고르기', look: 'barB', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
   barA: [{ fold: '피벗 고르기', look: 'barA', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
   nest: [{ fold: '나누기', look: 'bar', body: [
     { fold: '피벗 고르기', look: 'bar', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo',
