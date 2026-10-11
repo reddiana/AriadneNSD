@@ -32,6 +32,7 @@ section { display: grid; gap: 16px; }
 .tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
 .badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
 .badge.now { color: var(--muted); background: var(--bg); }
+.badge.yours { color: var(--accent); background: var(--accent-soft); }
 .card p { font-size: 13.5px; color: var(--muted); }
 .card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
 .card li b, .card p b { color: var(--fg); font-weight: 600; }
@@ -52,39 +53,62 @@ code { font-family: var(--mono); font-size: 12.5px; }
 
 <main>
   <div>
-    <h1>호출 블록을 펴면 어떻게 보이는가</h1>
-    <p class="lede">호출 블록을 접기 영역처럼 펴서, 부르는 Method의 블록들을 그 자리에서 봅니다. <b>보기만 바뀌고 다이어그램의 내용은 바뀌지 않습니다.</b> 펴 보인 블록의 글자는 회색으로 그렸습니다(빌려 와 보여 주는 것이라는 뜻). 예제는 퀵소트입니다. 초록 테두리는 Claude가 추천하는 안입니다.</p>
+    <h1>펴진 접기 영역과 펴진 호출 블록</h1>
+    <p class="lede">메인테이너가 정한 모습(둘째 판): <b>EasyCODE처럼 왼쪽 세로 막대와 위의 이름 띠.</b> 펴진 접기 영역도, 펴 보인 호출 블록도 같은 모습으로 그립니다. 호출 블록을 펴면 부르는 Method의 블록들이 그 자리에 보이고, 다이어그램의 내용은 바뀌지 않습니다. 펴 보인 블록의 글자는 회색입니다(빌려 와 보여 주는 것이라는 뜻). 초록 테두리는 Claude가 추천하는 안입니다.</p>
   </div>
 
   <section>
-    <h2>Q15. 펴 보인 모습</h2>
-    <p class="q"><code>p ← partition(a, lo, hi)</code>를 폈습니다. 맨 왼쪽은 접힌 모습(지금)입니다.</p>
+    <h2>펴진 접기 영역: 왼쪽 막대 + 이름 띠</h2>
+    <p class="q">접기 영역 "피벗 고르기"를 편 모습입니다. 막대와 띠의 색, 막대의 폭은 Claude가 임시로 골랐습니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">전</span><h3>이름 띠만</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-fold="band"></div>
+        <p>영역이 <span class="bad">어디서 끝나는지</span> 보이지 않습니다. 이름 띠를 끄면 영역이 있는지도 알 수 없습니다.</p></article>
+      <article class="card pick"><header><span class="tag">후</span><h3>왼쪽 막대 + 이름 띠</h3><span class="badge yours">메인테이너가 정함</span></header>
+        <div class="paper" data-fold="bar"></div>
+        <ul><li>막대가 영역의 끝까지 내려가서 어디까지인지 보입니다.</li><li>막대만큼 폭을, 띠만큼 높이를 씁니다.</li></ul></article>
+      <article class="card"><header><span class="tag">겹침</span><h3>영역 안의 영역</h3></header>
+        <div class="paper" data-fold="nest"></div>
+        <p>겹칠 때마다 막대 하나만큼 안쪽이 좁아집니다. 막대를 좁게(10px) 잡아서 세 겹이어도 30px입니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Q15-a. 펴 보인 호출 블록: 같은 모습에서 무엇으로 호출 블록임을 알리는가</h2>
+    <p class="q"><code>p ← partition(a, lo, hi)</code>를 폈습니다. 두 안 모두 왼쪽 막대와 위의 띠입니다.</p>
     <div class="cards">
       <article class="card"><header><span class="tag">접힘</span><h3>지금 모습</h3><span class="badge now">지금 프로토타입</span></header>
         <div class="paper" data-look="closed"></div>
         <p>양옆 이중선이 호출 블록입니다. 굵은 글자가 부르는 Method의 이름입니다.</p></article>
-      <article class="card pick"><header><span class="tag">X1</span><h3>이중선이 감싼다</h3><span class="badge">추천</span></header>
-        <div class="paper" data-look="frame"></div>
-        <ul><li>호출 블록의 양옆 이중선이 아래로 길어지고, 그 안에 Method의 블록이 들어갑니다.</li><li>접힌 모습과 같은 표기라서 <b>호출 블록이 펴진 것</b>임이 바로 보입니다.</li><li>어디서 끝나는지가 분명합니다. 양옆으로 폭을 조금 씁니다.</li></ul></article>
-      <article class="card"><header><span class="tag">X2</span><h3>머리 줄 아래에 그대로</h3></header>
-        <div class="paper" data-look="strip"></div>
-        <ul><li>호출 블록은 머리 줄로 남고, 그 아래에 Method의 블록이 폭 전체로 놓입니다.</li><li>폭을 잃지 않습니다.</li><li>펴 보인 블록이 <span class="bad">어디서 끝나는지</span>가 글자 색으로만 보입니다.</li></ul></article>
-      <article class="card"><header><span class="tag">X3</span><h3>왼쪽 띠</h3></header>
-        <div class="paper" data-look="side"></div>
-        <ul><li>반복문처럼 왼쪽 띠 안에 넣습니다.</li><li>끝이 분명하고 폭을 덜 씁니다.</li><li><span class="bad">반복문과 닮아</span> 헷갈릴 수 있습니다.</li></ul></article>
+      <article class="card"><header><span class="tag">C1</span><h3>접기 영역과 똑같이, 색만 다르게</h3></header>
+        <div class="paper" data-look="bar"></div>
+        <ul><li>얇은 이름 띠에 호출 글자가 들어갑니다. 색으로만 호출 블록임을 알립니다.</li><li>접기 영역과 규칙이 완전히 같습니다.</li><li>이중선이 사라져서 흑백 인쇄에서는 <span class="bad">접기 영역과 가를 수 없습니다.</span></li></ul></article>
+      <article class="card pick"><header><span class="tag">C2</span><h3>호출 블록 줄은 그대로, 왼쪽 이중선이 내려온다</h3><span class="badge">추천</span></header>
+        <div class="paper" data-look="bar2"></div>
+        <ul><li>접힌 모습의 호출 블록 줄이 그대로 띠가 됩니다. 왼쪽 이중선이 아래로 내려와 막대가 됩니다.</li><li>접힌 모습과 이어져 보이고, 흑백에서도 이중선으로 알아봅니다.</li><li>띠가 접기 영역의 띠보다 조금 두껍습니다(블록 한 줄 높이).</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Q15-b. While과 헷갈리지 않는가</h2>
+    <p class="q">"위의 줄 + 왼쪽 띠"는 While의 모양이기도 합니다. 셋을 한 다이어그램에 놓았습니다. 가르는 것은 <b>막대의 폭</b>(While의 띠 22px, 접기 영역의 막대 10px), <b>띠의 높이와 글자</b>(이름 띠는 얇고 ▾가 붙은 작은 글자), <b>색</b>입니다.</p>
+    <div class="cards wide">
+      <article class="card"><header><span class="tag">나란히</span><h3>접기 영역 · While · 펴 보인 호출 블록(C2)</h3></header>
+        <div class="paper" data-mix="1"></div>
+        <p>흑백으로 찍어도 폭과 이중선으로 가를 수 있는지 봐 주세요. 헷갈리면 막대를 더 좁히거나 무늬를 넣는 길이 있습니다.</p></article>
     </div>
   </section>
 
   <section>
     <h2>Q14. 재귀: 펴 보인 안쪽의 호출 블록도 펼 수 있는가</h2>
-    <p class="q"><code>quicksort</code>는 자기를 부릅니다. 첫 재귀 호출을 폈습니다(X1 모양).</p>
+    <p class="q"><code>quicksort</code>는 자기를 부릅니다. 첫 재귀 호출을 폈습니다(C2 모양). 새 모습에서는 겹마다 막대 하나만큼만 좁아집니다.</p>
     <div class="cards wide">
-      <article class="card pick"><header><span class="tag">D1</span><h3>한 겹만</h3><span class="badge">추천</span></header>
+      <article class="card"><header><span class="tag">D1</span><h3>한 겹만</h3></header>
         <div class="paper" data-depth="1"></div>
         <ul><li>펴 보인 안쪽의 호출 블록은 접힌 모습으로만 보이고 펼 수 없습니다.</li><li>더 보려면 그 Method로 따라가서(<code>G</code>) 거기서 폅니다.</li><li>"이 호출 블록이 펴져 있는가" 하나만 기억하면 됩니다.</li></ul></article>
-      <article class="card"><header><span class="tag">D2</span><h3>안쪽도 펼 수 있다</h3></header>
+      <article class="card pick"><header><span class="tag">D2</span><h3>안쪽도 펼 수 있다</h3><span class="badge yours">메인테이너가 정함</span></header>
         <div class="paper" data-depth="2"></div>
-        <ul><li>펴 보인 안쪽의 호출 블록도 폅니다. 그림은 두 겹을 편 모습입니다.</li><li>호출이 이어지는 흐름을 한 그림에서 따라갈 수 있습니다.</li><li>겹마다 폭이 줄고, <span class="bad">겹마다 펴짐 상태를 따로 기억</span>해야 합니다. 재귀에서는 끝이 없습니다.</li></ul></article>
+        <ul><li>펴 보인 안쪽의 호출 블록도 폅니다. 그림은 <code>quicksort</code>를 두 겹 편 모습입니다.</li><li>호출이 이어지는 흐름을 한 그림에서 따라갈 수 있습니다.</li><li><b>같은 Method를 재귀로 세 겹째 펴려 하면, 그때부터는 펼 때마다 경고합니다.</b> 이 그림에서 안쪽의 <code>quicksort(a, lo, p - 1)</code>을 또 펴면 세 겹째입니다.</li><li>겹마다 펴짐 상태를 따로 기억합니다.</li></ul></article>
     </div>
   </section>
 
@@ -122,8 +146,11 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <h3>답해 주실 것</h3>
     <ol>
       <li><b>Q13.</b> 펴 보인 블록: E1 고칠 수 없다(추천) / E2 고칠 수 있다</li>
-      <li><b>Q14.</b> 재귀: D1 한 겹만(추천) / D2 안쪽도 펼 수 있다</li>
-      <li><b>Q15.</b> 모습: X1 이중선이 감싼다(추천) / X2 머리 줄 아래에 그대로 / X3 왼쪽 띠</li>
+      <li><b>Q14.</b> 재귀: <b>정함.</b> D2 안쪽도 펼 수 있다. 재귀로 세 겹째부터는 펼 때마다 경고</li>
+      <li><b>Q14-a.</b> 경고의 모양: 펴고 나서 알림 한 줄을 띄운다(추천. 막지 않음) / 펴기 전에 "펼까요?"를 묻는다</li>
+      <li><b>Q15-a.</b> 펴 보인 호출 블록: C1 접기 영역과 똑같이 / C2 호출 블록 줄은 그대로(추천)</li>
+      <li><b>Q15-b.</b> While과 가르는 법: 좁은 막대와 얇은 띠로 충분한가</li>
+      <li><b>Q15-c.</b> 이름 띠를 끄면: 막대는 남긴다(추천. 영역이 있다는 것은 보임) / 막대도 감춘다</li>
       <li><b>Q16.</b> 풀 때 글자: 그대로 복사한다(추천) / 풀기 기능을 넣지 않는다</li>
     </ol>
   </div>
@@ -132,41 +159,47 @@ code { font-family: var(--mono); font-size: 12.5px; }
 <script>
 (() => {
 'use strict';
-// 프로토타입(기본 스타일 C)과 같은 색. 그림은 테마와 상관없이 흰 종이에 그린다
-const COL = { stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf', call: '#ebe7f4', ink: '#151a22', ghost: '#6b7386', label: '#1f45d6', stale: '#b4531b' };
+// 프로토타입(기본 스타일 C)과 같은 색. 그림은 테마와 상관없이 흰 종이에 그린다. region은 이 시안에서 임시로 고른 색
+const COL = { stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', call: '#ebe7f4', region: '#dde1e8', ink: '#151a22', ghost: '#6b7386', label: '#1f45d6', stale: '#b4531b' };
 const MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
-const ROW = 32, IFH = 46, STRIP = 22, HAT = 16, BAR = 7, INSET = 13;
+// BAND: 이름 띠의 높이, RBAR: 접기 영역의 왼쪽 막대, CBAR: 펴 보인 호출 블록의 왼쪽 막대(이중선)
+const ROW = 32, IFH = 46, STRIP = 22, HAT = 16, BAR = 7, BAND = 20, RBAR = 10, CBAR = 14;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 function diagram(d) {
   const s = [];
   let ink = COL.ink;
   const rect = (x, y, w, h, fill) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" shape-rendering="crispEdges"/>`);
+  const vline = (x, y, h) => s.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${y + h}" stroke="${COL.stroke}"/>`);
   // 글자는 문자열이거나, 조각이 섞인 배열 [{ t, b(굵게), stale(손으로 맞출 글자) }]
-  const text = (t, x, y, anchor) => {
-    const body = Array.isArray(t) ? t.map(p => p.b || p.stale ? `<tspan${p.b ? ' font-weight="600"' : ''}${p.stale ? ` fill="${COL.stale}" text-decoration="underline"` : ''}>${esc(p.t)}</tspan>` : esc(p.t)).join('') : esc(t);
-    s.push(`<text x="${x}" y="${y + 21}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${MONO}" font-size="13" fill="${ink}" xml:space="preserve">${body}</text>`);
-  };
-  const bars = (x, y, w, h) => { for (const bx of [x + BAR, x + w - BAR]) s.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}"/>`); };
+  const spans = t => Array.isArray(t) ? t.map(p => p.b || p.stale ? `<tspan${p.b ? ' font-weight="600"' : ''}${p.stale ? ` fill="${COL.stale}" text-decoration="underline"` : ''}>${esc(p.t)}</tspan>` : esc(p.t)).join('') : esc(t);
+  const text = (t, x, y, anchor) => s.push(`<text x="${x}" y="${y + 21}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${MONO}" font-size="13" fill="${ink}" xml:space="preserve">${spans(t)}</text>`);
+  // 이름 띠의 글자: 작고 굵게, 앞에 ▾
+  const bandText = (t, x, y, mono) => s.push(`<text x="${x}" y="${y + 14}" font-family="${mono ? MONO : SANS}" font-size="11.5"${mono ? '' : ' font-weight="600"'} fill="${COL.ink}" xml:space="preserve">▾ ${spans(t)}</text>`);
+  const bars = (x, y, w, h) => { vline(x + BAR, y, h); vline(x + w - BAR, y, h); };
   const leaf = n => typeof n === 'string' || Array.isArray(n) || n.call;
-  // 펴 보인 호출 블록: { open: 글자, look: 'frame' | 'strip' | 'side', body }
-  const height = n => leaf(n) ? ROW : n.if ? IFH + Math.max(seqH(n.yes), seqH(n.no)) : n.open ? ROW + seqH(n.body) + (n.look === 'frame' ? 6 : 0) : ROW + seqH(n.body);
+  // 접기 영역: { fold: 이름, look: 'band' | 'bar', body }, 펴 보인 호출 블록: { open: 글자, look: 'bar' | 'bar2', body }
+  const headH = n => n.open && n.look === 'bar2' ? ROW : BAND;
+  const height = n => leaf(n) ? ROW : n.if ? IFH + Math.max(seqH(n.yes), seqH(n.no)) : n.fold || n.open ? headH(n) + seqH(n.body) : ROW + seqH(n.body);
   const seqH = list => list.reduce((a, n) => a + height(n), 0);
   function place(n, x, y, w, h) {
     if (typeof n === 'string' || Array.isArray(n)) { rect(x, y, w, h, COL.process); text(n, x + 10, y); }
     else if (n.call) { rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.call, x + 10 + BAR, y); }
+    else if (n.fold) {
+      if (n.look === 'band') { rect(x, y, w, BAND, COL.region); bandText(n.fold, x + 8, y); seq(n.body, x, y + BAND, w, h - BAND); }
+      else { rect(x, y, w, h, COL.region); bandText(n.fold, x + 8, y); seq(n.body, x + RBAR, y + BAND, w - RBAR, h - BAND); }
+    }
     else if (n.open) {
       const keep = ink;
-      if (n.look === 'frame') {
-        rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.open, x + 10 + BAR, y);
-        ink = COL.ghost; seq(n.body, x + INSET, y + ROW, w - INSET * 2, h - ROW - 6);
-      } else if (n.look === 'strip') {
-        rect(x, y, w, ROW, COL.call); bars(x, y, w, ROW); text(n.open, x + 10 + BAR, y);
-        ink = COL.ghost; seq(n.body, x, y + ROW, w, h - ROW);
+      rect(x, y, w, h, COL.call);
+      if (n.look === 'bar2') {
+        // 호출 블록 줄은 접힌 모습 그대로, 왼쪽 이중선만 끝까지 내려온다
+        vline(x + BAR, y, h); vline(x + w - BAR, y, ROW); text(n.open, x + 10 + BAR, y);
+        ink = COL.ghost; seq(n.body, x + CBAR, y + ROW, w - CBAR, h - ROW);
       } else {
-        rect(x, y, w, h, COL.call); s.push(`<line x1="${x + BAR}" y1="${y}" x2="${x + BAR}" y2="${y + h}" stroke="${COL.stroke}"/>`); text(n.open, x + 10 + BAR, y);
-        ink = COL.ghost; seq(n.body, x + STRIP, y + ROW, w - STRIP, h - ROW);
+        bandText(n.open, x + 8, y, true);
+        ink = COL.ghost; seq(n.body, x + RBAR, y + BAND, w - RBAR, h - BAND);
       }
       ink = keep;
     }
@@ -200,25 +233,41 @@ const b = t => ({ t, b: true }), p = t => ({ t }), stale = t => ({ t, stale: tru
 const callPart = [p('p ← '), b('partition'), p('(a, lo, hi)')];
 const callLeft = [b('quicksort'), p('(a, lo, p - 1)')];
 const callRight = [b('quicksort'), p('(a, p + 1, hi)')];
-const partitionBody = () => ['pivot ← a[hi]', 'i ← lo',
-  { loop: 'for j = lo .. hi - 1', body: [{ if: 'a[j] < pivot', ratio: 0.78, yes: ['swap a[i], a[j]', 'i ← i + 1'], no: [''] }] },
-  'swap a[i], a[hi]', 'return i'];
+const sweep = () => ({ loop: 'for j = lo .. hi - 1', body: [{ if: 'a[j] < pivot', ratio: 0.78, yes: ['swap a[i], a[j]', 'i ← i + 1'], no: [''] }] });
+const partitionBody = () => ['pivot ← a[hi]', 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'];
+const partHead = [b('partition'), p('(a, lo, hi)')];
 const qsHead = [b('quicksort'), p('(a, lo, hi)')];
 const quicksort = (w, yes) => diagram({ w, head: qsHead, body: [{ if: 'lo < hi', ratio: 0.88, yes, no: [''] }] });
 
-// Q15: 펴 보인 모습
+// 펴진 접기 영역
+const FOLD = {
+  band: [{ fold: '피벗 고르기', look: 'band', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
+  bar: [{ fold: '피벗 고르기', look: 'bar', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo', sweep(), 'swap a[i], a[hi]', 'return i'],
+  nest: [{ fold: '나누기', look: 'bar', body: [
+    { fold: '피벗 고르기', look: 'bar', body: ['mid ← (lo + hi) / 2', 'swap a[mid], a[hi]', 'pivot ← a[hi]'] }, 'i ← lo',
+    { fold: '작은 것을 앞으로', look: 'bar', body: [sweep(), 'swap a[i], a[hi]'] }] }, 'return i']
+};
+document.querySelectorAll('[data-fold]').forEach(el => { el.innerHTML = diagram({ w: 290, head: partHead, body: FOLD[el.dataset.fold] }); });
+
+// Q15-a: 펴 보인 호출 블록
 document.querySelectorAll('[data-look]').forEach(el => {
   const look = el.dataset.look;
   const first = look === 'closed' ? { call: callPart } : { open: callPart, look, body: partitionBody() };
-  el.innerHTML = quicksort(look === 'closed' ? 300 : 340, [first, { call: callLeft }, { call: callRight }]);
+  el.innerHTML = quicksort(310, [first, { call: callLeft }, { call: callRight }]);
 });
+
+// Q15-b: 접기 영역 · While · 펴 보인 호출 블록을 한 다이어그램에
+document.querySelector('[data-mix]').innerHTML = diagram({ w: 380, head: [b('sortAll'), p('(lists)')], body: [
+  { fold: '빈 목록 걸러내기', look: 'bar', body: ['lists ← 비어 있지 않은 것만', 'n ← lists의 개수'] },
+  { loop: 'while n > 0', body: ['a ← lists[n - 1]', { open: [b('quicksort'), p('(a, 0, len(a) - 1)')], look: 'bar2', body: [{ if: 'lo < hi', ratio: 0.86, yes: [{ call: callPart }, { call: callLeft }, { call: callRight }], no: [''] }] }, 'n ← n - 1'] },
+  'return lists'] });
 
 // Q14: 재귀
 const qsInner = deeper => [{ if: 'lo < hi', ratio: 0.88, yes: [{ call: callPart }, deeper || { call: callLeft }, { call: callRight }], no: [''] }];
 document.querySelectorAll('[data-depth]').forEach(el => {
   const two = el.dataset.depth === '2';
-  const inner = two ? { open: callLeft, look: 'frame', body: qsInner() } : null;
-  el.innerHTML = quicksort(two ? 500 : 400, [{ call: callPart }, { open: callLeft, look: 'frame', body: qsInner(inner) }, { call: callRight }]);
+  const inner = two ? { open: callLeft, look: 'bar2', body: qsInner() } : null;
+  el.innerHTML = quicksort(two ? 440 : 380, [{ call: callPart }, { open: callLeft, look: 'bar2', body: qsInner(inner) }, { call: callRight }]);
 });
 
 // Q16: 풀기
