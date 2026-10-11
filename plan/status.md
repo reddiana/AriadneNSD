@@ -12,14 +12,14 @@ updated: 2026-10-11
 
 자주 여는 주소를 여기에 모읍니다. 주소가 바뀌거나 새 페이지가 생기면 Claude가 이 칸을 고칩니다.
 
-| 무엇 | 주소 | 저장소의 사본 |
-| --- | --- | --- |
-| **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
-| 색상 시안 (기본 스타일) | https://claude.ai/artifact/XVzT38DvGVir97z9j47Aaj | `journal/assets/2026-10-09-ns-color-study.html` |
-| 영역 강조 시안 (없앤 기능) | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html` |
-| 로고 시안 | (주소를 기록해 두지 않음) | `journal/assets/2026-10-10-logo-concepts.html` |
-| Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html` |
-| 문자 로고 바탕 시안 (2026-10-11) | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html` |
+| 무엇                                                    | 주소                                                | 저장소의 사본                                                        |
+| ----------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------- |
+| **프로토타입** (요구사항 점검용)                                  | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
+| 색상 시안 (기본 스타일)                                        | https://claude.ai/artifact/XVzT38DvGVir97z9j47Aaj | `journal/assets/2026-10-09-ns-color-study.html`                |
+| 영역 강조 시안 (없앤 기능)                                      | https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7 | `journal/assets/2026-10-10-ns-region-highlight.html`           |
+| 로고 시안                                                 | https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD | `journal/assets/2026-10-10-logo-concepts.html`                 |
+| Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html`            |
+| 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
 
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
