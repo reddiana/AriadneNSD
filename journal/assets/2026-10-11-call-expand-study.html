@@ -1,0 +1,233 @@
+<title>호출 블록 펴 보기 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 프로토타입과 같은 색의 NS 차트를 흰 종이 위에 그린다 (호출 블록 글자 시안과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #f8eadc; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.cards.wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; border: 1px solid var(--line); }
+.paper svg { display: block; flex: none; }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 640px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-weight: 600; font-size: 12.5px; color: var(--muted); background: var(--bg); }
+td.no { background: var(--warn-soft); }
+td.new { background: var(--pick-soft); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 6px; max-width: 80ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>호출 블록을 펴면 어떻게 보이는가</h1>
+    <p class="lede">호출 블록을 접기 영역처럼 펴서, 부르는 Method의 블록들을 그 자리에서 봅니다. <b>보기만 바뀌고 다이어그램의 내용은 바뀌지 않습니다.</b> 펴 보인 블록의 글자는 회색으로 그렸습니다(빌려 와 보여 주는 것이라는 뜻). 예제는 퀵소트입니다. 초록 테두리는 Claude가 추천하는 안입니다.</p>
+  </div>
+
+  <section>
+    <h2>Q15. 펴 보인 모습</h2>
+    <p class="q"><code>p ← partition(a, lo, hi)</code>를 폈습니다. 맨 왼쪽은 접힌 모습(지금)입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">접힘</span><h3>지금 모습</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-look="closed"></div>
+        <p>양옆 이중선이 호출 블록입니다. 굵은 글자가 부르는 Method의 이름입니다.</p></article>
+      <article class="card pick"><header><span class="tag">X1</span><h3>이중선이 감싼다</h3><span class="badge">추천</span></header>
+        <div class="paper" data-look="frame"></div>
+        <ul><li>호출 블록의 양옆 이중선이 아래로 길어지고, 그 안에 Method의 블록이 들어갑니다.</li><li>접힌 모습과 같은 표기라서 <b>호출 블록이 펴진 것</b>임이 바로 보입니다.</li><li>어디서 끝나는지가 분명합니다. 양옆으로 폭을 조금 씁니다.</li></ul></article>
+      <article class="card"><header><span class="tag">X2</span><h3>머리 줄 아래에 그대로</h3></header>
+        <div class="paper" data-look="strip"></div>
+        <ul><li>호출 블록은 머리 줄로 남고, 그 아래에 Method의 블록이 폭 전체로 놓입니다.</li><li>폭을 잃지 않습니다.</li><li>펴 보인 블록이 <span class="bad">어디서 끝나는지</span>가 글자 색으로만 보입니다.</li></ul></article>
+      <article class="card"><header><span class="tag">X3</span><h3>왼쪽 띠</h3></header>
+        <div class="paper" data-look="side"></div>
+        <ul><li>반복문처럼 왼쪽 띠 안에 넣습니다.</li><li>끝이 분명하고 폭을 덜 씁니다.</li><li><span class="bad">반복문과 닮아</span> 헷갈릴 수 있습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Q14. 재귀: 펴 보인 안쪽의 호출 블록도 펼 수 있는가</h2>
+    <p class="q"><code>quicksort</code>는 자기를 부릅니다. 첫 재귀 호출을 폈습니다(X1 모양).</p>
+    <div class="cards wide">
+      <article class="card pick"><header><span class="tag">D1</span><h3>한 겹만</h3><span class="badge">추천</span></header>
+        <div class="paper" data-depth="1"></div>
+        <ul><li>펴 보인 안쪽의 호출 블록은 접힌 모습으로만 보이고 펼 수 없습니다.</li><li>더 보려면 그 Method로 따라가서(<code>G</code>) 거기서 폅니다.</li><li>"이 호출 블록이 펴져 있는가" 하나만 기억하면 됩니다.</li></ul></article>
+      <article class="card"><header><span class="tag">D2</span><h3>안쪽도 펼 수 있다</h3></header>
+        <div class="paper" data-depth="2"></div>
+        <ul><li>펴 보인 안쪽의 호출 블록도 폅니다. 그림은 두 겹을 편 모습입니다.</li><li>호출이 이어지는 흐름을 한 그림에서 따라갈 수 있습니다.</li><li>겹마다 폭이 줄고, <span class="bad">겹마다 펴짐 상태를 따로 기억</span>해야 합니다. 재귀에서는 끝이 없습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Q13. 펴 보인 블록을 고칠 수 있는가</h2>
+    <p class="q">펴 보인 블록은 Method의 블록을 빌려 와 보여 주는 것입니다. 여기서 고치면 그 Method와, 그 Method를 부르는 <b>다른 모든 곳</b>이 함께 바뀝니다.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>펴 보인 블록에서 하려는 일</th><th>E1 고칠 수 없다 (추천)</th><th>E2 고칠 수 있다</th></tr></thead>
+        <tbody>
+          <tr><td>고르기, 방향키로 지나가기</td><td>된다</td><td>된다</td></tr>
+          <tr><td>글자 고치기, 블록 넣기 · 지우기</td><td class="no">안 된다. 아무 일도 일어나지 않는다</td><td class="new">된다. Method가 바뀌고, 부르는 다른 곳도 함께 바뀐다</td></tr>
+          <tr><td>원래 블록으로 가기</td><td>고르고 따라가기(<code>G</code>)를 하면 Method의 그 블록으로 간다</td><td>갈 까닭이 없다</td></tr>
+          <tr><td>복사</td><td>된다. 붙이면 보통 블록이 된다</td><td>된다</td></tr>
+          <tr><td>놀랄 일</td><td>고치려는데 안 된다</td><td>한 곳을 고쳤는데 보이지 않는 여러 곳이 바뀐다. 같은 Method를 두 곳에서 펴 두었으면 두 곳이 함께 움직인다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Q16. 풀기: 호출 블록을 Method의 블록들로 바꾸면</h2>
+    <p class="q">펴 보기와 달리 <b>내용이 바뀝니다.</b> Method로 빼기의 반대이고, 실행 취소 한 번으로 되돌립니다. <code>p ← partition(a, lo, mid)</code>를 풀었습니다.</p>
+    <div class="cards wide">
+      <article class="card"><header><span class="tag">전</span><h3>호출 블록</h3></header>
+        <div class="paper" data-inline="before"></div>
+        <p>넘겨주는 것은 <code>a, lo, mid</code>이고 결과는 <code>p</code>로 받습니다.</p></article>
+      <article class="card"><header><span class="tag">후</span><h3>Method의 블록이 복사되어 들어감</h3></header>
+        <div class="paper" data-inline="after"></div>
+        <ul><li>글자는 Method에 적힌 그대로 복사됩니다. 편집기는 글자 안을 읽지 않습니다.</li><li>밑줄 친 곳은 <span class="bad">손으로 맞춰야 하는 글자</span>입니다: <code>hi</code>는 <code>mid</code>여야 하고, <code>return i</code>는 <code>p ← i</code>여야 합니다.</li><li>호출 블록에 적혀 있던 인자와 결과는 사라집니다. Method <code>partition</code>은 그대로 남습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <div class="sum">
+    <h3>답해 주실 것</h3>
+    <ol>
+      <li><b>Q13.</b> 펴 보인 블록: E1 고칠 수 없다(추천) / E2 고칠 수 있다</li>
+      <li><b>Q14.</b> 재귀: D1 한 겹만(추천) / D2 안쪽도 펼 수 있다</li>
+      <li><b>Q15.</b> 모습: X1 이중선이 감싼다(추천) / X2 머리 줄 아래에 그대로 / X3 왼쪽 띠</li>
+      <li><b>Q16.</b> 풀 때 글자: 그대로 복사한다(추천) / 풀기 기능을 넣지 않는다</li>
+    </ol>
+  </div>
+</main>
+
+<script>
+(() => {
+'use strict';
+// 프로토타입(기본 스타일 C)과 같은 색. 그림은 테마와 상관없이 흰 종이에 그린다
+const COL = { stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf', call: '#ebe7f4', ink: '#151a22', ghost: '#6b7386', label: '#1f45d6', stale: '#b4531b' };
+const MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
+const SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
+const ROW = 32, IFH = 46, STRIP = 22, HAT = 16, BAR = 7, INSET = 13;
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function diagram(d) {
+  const s = [];
+  let ink = COL.ink;
+  const rect = (x, y, w, h, fill) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" shape-rendering="crispEdges"/>`);
+  // 글자는 문자열이거나, 조각이 섞인 배열 [{ t, b(굵게), stale(손으로 맞출 글자) }]
+  const text = (t, x, y, anchor) => {
+    const body = Array.isArray(t) ? t.map(p => p.b || p.stale ? `<tspan${p.b ? ' font-weight="600"' : ''}${p.stale ? ` fill="${COL.stale}" text-decoration="underline"` : ''}>${esc(p.t)}</tspan>` : esc(p.t)).join('') : esc(t);
+    s.push(`<text x="${x}" y="${y + 21}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${MONO}" font-size="13" fill="${ink}" xml:space="preserve">${body}</text>`);
+  };
+  const bars = (x, y, w, h) => { for (const bx of [x + BAR, x + w - BAR]) s.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}"/>`); };
+  const leaf = n => typeof n === 'string' || Array.isArray(n) || n.call;
+  // 펴 보인 호출 블록: { open: 글자, look: 'frame' | 'strip' | 'side', body }
+  const height = n => leaf(n) ? ROW : n.if ? IFH + Math.max(seqH(n.yes), seqH(n.no)) : n.open ? ROW + seqH(n.body) + (n.look === 'frame' ? 6 : 0) : ROW + seqH(n.body);
+  const seqH = list => list.reduce((a, n) => a + height(n), 0);
+  function place(n, x, y, w, h) {
+    if (typeof n === 'string' || Array.isArray(n)) { rect(x, y, w, h, COL.process); text(n, x + 10, y); }
+    else if (n.call) { rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.call, x + 10 + BAR, y); }
+    else if (n.open) {
+      const keep = ink;
+      if (n.look === 'frame') {
+        rect(x, y, w, h, COL.call); bars(x, y, w, h); text(n.open, x + 10 + BAR, y);
+        ink = COL.ghost; seq(n.body, x + INSET, y + ROW, w - INSET * 2, h - ROW - 6);
+      } else if (n.look === 'strip') {
+        rect(x, y, w, ROW, COL.call); bars(x, y, w, ROW); text(n.open, x + 10 + BAR, y);
+        ink = COL.ghost; seq(n.body, x, y + ROW, w, h - ROW);
+      } else {
+        rect(x, y, w, h, COL.call); s.push(`<line x1="${x + BAR}" y1="${y}" x2="${x + BAR}" y2="${y + h}" stroke="${COL.stroke}"/>`); text(n.open, x + 10 + BAR, y);
+        ink = COL.ghost; seq(n.body, x + STRIP, y + ROW, w - STRIP, h - ROW);
+      }
+      ink = keep;
+    }
+    else if (n.if) {
+      const yw = Math.round(w * (n.ratio || 0.8));
+      rect(x, y, w, IFH, COL.if);
+      s.push(`<path d="M ${x} ${y} L ${x + yw} ${y + IFH} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}"/>`);
+      text(n.if, x + Math.min(yw, w - 60), y - 3, 'middle');
+      s.push(`<text x="${x + 6}" y="${y + IFH - 5}" font-family="${SANS}" font-size="11" fill="${COL.label}">참</text>`);
+      s.push(`<text x="${x + w - 6}" y="${y + IFH - 5}" text-anchor="end" font-family="${SANS}" font-size="11" fill="${COL.label}">거짓</text>`);
+      seq(n.yes, x, y + IFH, yw, h - IFH); seq(n.no, x + yw, y + IFH, w - yw, h - IFH);
+    } else { rect(x, y, w, h, COL.loop); text(n.loop, x + 10, y); seq(n.body, x + STRIP, y + ROW, w - STRIP, h - ROW); }
+  }
+  function seq(list, x, y, w, h) {
+    let cy = y;
+    list.forEach((n, i) => { const ch = i === list.length - 1 ? y + h - cy : height(n); place(n, x, cy, w, ch); cy += ch; });
+  }
+  const W = d.w, x = 1, hh = ROW;
+  let y = 1;
+  const t = y + HAT;
+  // Method: 폭 전체에 걸친 낮은 아치 (ADR-0021의 H3)
+  s.push(`<path d="M ${x} ${t} C ${x + W * 0.2} ${y + 1}, ${x + W * 0.8} ${y + 1}, ${x + W} ${t} L ${x + W} ${t + hh} L ${x} ${t + hh} Z" fill="${COL.call}" stroke="${COL.stroke}"/>`);
+  text(d.head, x + 10, t); y = t + hh;
+  const bh = seqH(d.body);
+  seq(d.body, x, y, W, bh);
+  const H = y + bh + 1;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${H}" viewBox="0 0 ${W + 2} ${H}" role="img" aria-label="${esc(d.head.map(p => p.t).join(''))}">${s.join('')}</svg>`;
+}
+
+const b = t => ({ t, b: true }), p = t => ({ t }), stale = t => ({ t, stale: true });
+const callPart = [p('p ← '), b('partition'), p('(a, lo, hi)')];
+const callLeft = [b('quicksort'), p('(a, lo, p - 1)')];
+const callRight = [b('quicksort'), p('(a, p + 1, hi)')];
+const partitionBody = () => ['pivot ← a[hi]', 'i ← lo',
+  { loop: 'for j = lo .. hi - 1', body: [{ if: 'a[j] < pivot', ratio: 0.78, yes: ['swap a[i], a[j]', 'i ← i + 1'], no: [''] }] },
+  'swap a[i], a[hi]', 'return i'];
+const qsHead = [b('quicksort'), p('(a, lo, hi)')];
+const quicksort = (w, yes) => diagram({ w, head: qsHead, body: [{ if: 'lo < hi', ratio: 0.88, yes, no: [''] }] });
+
+// Q15: 펴 보인 모습
+document.querySelectorAll('[data-look]').forEach(el => {
+  const look = el.dataset.look;
+  const first = look === 'closed' ? { call: callPart } : { open: callPart, look, body: partitionBody() };
+  el.innerHTML = quicksort(look === 'closed' ? 300 : 340, [first, { call: callLeft }, { call: callRight }]);
+});
+
+// Q14: 재귀
+const qsInner = deeper => [{ if: 'lo < hi', ratio: 0.88, yes: [{ call: callPart }, deeper || { call: callLeft }, { call: callRight }], no: [''] }];
+document.querySelectorAll('[data-depth]').forEach(el => {
+  const two = el.dataset.depth === '2';
+  const inner = two ? { open: callLeft, look: 'frame', body: qsInner() } : null;
+  el.innerHTML = quicksort(two ? 500 : 400, [{ call: callPart }, { open: callLeft, look: 'frame', body: qsInner(inner) }, { call: callRight }]);
+});
+
+// Q16: 풀기
+const findHead = [b('find'), p('(a, lo, mid)')];
+document.querySelector('[data-inline="before"]').innerHTML =
+  diagram({ w: 300, head: findHead, body: [{ call: [p('p ← '), b('partition'), p('(a, lo, mid)')] }, 'return a[p]'] });
+document.querySelector('[data-inline="after"]').innerHTML =
+  diagram({ w: 300, head: findHead, body: [[p('pivot ← a['), stale('hi'), p(']')], 'i ← lo',
+    { loop: [p('for j = lo .. '), stale('hi'), p(' - 1')], body: [{ if: 'a[j] < pivot', ratio: 0.78, yes: ['swap a[i], a[j]', 'i ← i + 1'], no: [''] }] },
+    [p('swap a[i], a['), stale('hi'), p(']')], [stale('return i')], 'return a[p]'] });
+})();
+</script>
