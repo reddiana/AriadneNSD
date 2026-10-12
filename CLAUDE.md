@@ -7,8 +7,8 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 | 폴더 | 용도 |
 | --- | --- |
 | `README.md` | GitHub 방문자를 위한 첫 화면. 저장소 소개와 "Obsidian으로 보라"는 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다 |
-| `docs/` | 애플리케이션 문서: 요구사항, 아키텍처, ADR, 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
-| `plan/` | 일하기 위한 기록: 현재 상태(`status.md`), 부채 목록(`debt.md`), 세션 기록(`sessions/`), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
+| `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
+| `plan/` | 일하기 위한 기록: 현재 상태(`status.md`), 부채 목록(`debt.md`), 세션 기록(`sessions/`), 결정 기록(`adr/`: ADR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
 | `journal/` | 이야기하기 위한 여정 기록: 타임라인, 이야기 구성 아이디어, 스크린샷. 누구나 따라 해 볼 용기를 얻도록 쓴다 |
 | `tech-notes/` | 메인테이너에게 설명한 기술 정리 (메인테이너는 백엔드 개발자, 프론트엔드는 처음) |
 
@@ -18,11 +18,12 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 - 메인테이너는 모든 문서를 **Obsidian**으로 읽고 편집한다. 속성(frontmatter), `[[위키링크]]`, 태그, 체크박스, 콜아웃, Mermaid를 쓴다.
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.
-- `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). ADR만 네 자리 번호(`0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
+- `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). `plan/adr/`의 ADR은 네 자리 번호(`0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
 - 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `plan/`, `journal/`, `tech-notes/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
-- 요구사항에는 "무엇을"만 쓴다. 근거는 ADR(`docs/03-adr/`, 템플릿 `0000-template.md`), 방법은 설계 문서로 링크한다.
+- 문서는 공학의 순서를 따른다: 요구사항(`01-requirements`, 무엇을)이 아키텍처(`02-architecture`)와 UX 설계(`03-ux-design`, 사용자의 조작 규칙)의 입력이고, 이 둘이 상세 설계(`04-design`)의 입력이다. 검토하다 나온 "앞 문서를 고칠 것"은 `plan/`에 작업 목록으로 두고, `docs/`에는 설계 결과만 둔다.
+- 요구사항에는 "무엇을"만 쓴다. 근거는 ADR(`plan/adr/`, 템플릿 `0000-template.md`), 방법은 설계 문서로 링크한다.
 - 요구사항 항목은 블록 ID(`^edit-wrap` 등)로 가리킨다. 새 요구사항에도 ID를 단다.
-- 제안됨 상태의 ADR은 자유롭게 고친다. 승인된 ADR은 본문을 고치지 않는다. 결정이 바뀌면 새 ADR을 쓰고 `supersedes`/`superseded-by`로 잇는다. ADR을 추가하면 `docs/README.md` 목록도 갱신한다.
+- 제안됨 상태의 ADR은 자유롭게 고친다. 승인된 ADR은 본문을 고치지 않는다. 결정이 바뀌면 새 ADR을 쓰고 `supersedes`/`superseded-by`로 잇는다. ADR을 추가하면 `plan/README.md` 목록도 갱신한다.
 - 승인된 ADR과 관련된 내용이 이후 작업으로 달라지면(예: 배포 대상이 늘어남), 그 ADR 맨 앞(제목 바로 아래)의 `> [!NOTE] 이후 변경` 콜아웃에 날짜·한 줄 설명·링크를 덧붙인다. 본문은 그대로 둔다. ADR을 읽는 사람은 우리가 논의한 과정을 모른다. "이 ADR을 쓸 때는 이랬고, 지금 모습이 다른 것은 그 뒤 이런 것이 더해지거나 바뀌어서다"를 그 ADR만 보고 알 수 있어야 한다. 그래서 요구사항이나 다른 ADR을 바꿀 때마다 영향받는 승인 ADR을 찾아 이 콜아웃을 단다.
 
 ## 함께 일하는 방식
@@ -48,7 +49,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 4. `journal/timeline.md`에 전환점을 추가한다. 메인테이너의 요청 원문을 짧게 인용한다.
 5. 메인테이너는 Claude Code 초보자다. 메인테이너가 Claude Code나 AI와 일하는 법에 대해 새로 배운 것이 있으면 `journal/learning-claude-code.md`에 추가한다.
 6. 메인테이너에게 기술을 설명했으면 `tech-notes/`에 정리한다.
-7. 결정은 `docs/`(요구사항 또는 ADR)에 반영하고, `plan/`에는 링크만 남긴다.
+7. 결정은 `docs/`(요구사항, 설계)와 ADR(`plan/adr/`)에 반영하고, 세션 기록과 상태 문서에는 링크만 남긴다.
 8. 바뀐 파일을 모두 커밋하고 push한다. 커밋하지 않은 내용은 git으로 되살릴 수 없다.
 
 **git 규칙:** 커밋은 세션 중에도 Claude가 필요하다고 판단하면 묻지 않고 한다 (예: inbox 원문을 지키려고, 결정 하나를 반영한 뒤). **push는 마무리할 때만 한다.**
