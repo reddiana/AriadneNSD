@@ -32,10 +32,15 @@ updated: 2026-10-10
 **가로채기:** `WorkspaceLeaf.prototype.setViewState`를 감싸서, 열려는 보기가 `image`이고 파일 이름이 `.ns.svg`로 끝나면 보기 종류를 NS 편집기로 바꿉니다. Excalidraw 플러그인이 `.excalidraw.md`를 여는 방식과 같습니다.
 
 **노트 그림 갱신 ([[01-requirements#^obs-refresh]]):** Obsidian은 노트의 그림을 `<img>`로 한 번 그린 뒤, 파일이 바뀌어도 다시 불러오지 않습니다. 그래서 볼트의 `modify` 이벤트에서 `.ns.svg`가 바뀌면, 열린 모든 탭에서 그 파일을 가리키는 `.internal-embed` 안의 `<img>` 주소를 `vault.getResourcePath(file)`(수정 시각이 붙어 주소가 바뀜)로 바꿉니다. 이벤트에 걸었으므로 git pull이나 다른 도구로 바뀌어도 갱신됩니다.
+- 이 요구사항이 나온 까닭 (2026-10-12에 요구사항에서 옮김):
+	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. AriadneNSD는 별도 플러그인 없이 갱신되어야 한다.
 
 **그림 우클릭 메뉴 ([[01-requirements#^obs-edit-embed]]):** Obsidian의 공개 API인 `file-menu` 이벤트로 기존 메뉴에 항목을 더합니다. 노트의 그림 우클릭은 `source`가 `link-context-menu`, 파일 목록 우클릭은 `file-explorer-context-menu`로 옵니다. 항목은 `setSection('system')`으로 system 구역(기본 앱에서 열기, 폴더에서 보기 …)의 맨 아래에 둡니다. 그 바로 아래가 삭제 항목이 있는 danger 구역입니다.
 - 처음에는 `contextmenu`를 가로채 우리 메뉴만 띄웠는데, Obsidian의 기존 메뉴가 모두 사라졌습니다. 메인테이너의 지적으로 `file-menu` 방식으로 바꿨습니다. 이 부분은 내부 동작에 기대지 않습니다.
 - 같은 구역에 항목을 넣는 다른 플러그인이 있으면 우리 항목이 그 뒤로 밀릴 수 있습니다.
+- 메뉴 항목의 자리 (2026-10-12에 요구사항에서 옮김):
+	- Obsidian의 기존 우클릭 메뉴는 그대로 두고 이 항목만 더한다. 자리는 "이미지 삭제" 바로 위 구역의 맨 아래("파일 탐색기에서 파일 보기" 아래)다.
+	- 파일 목록에서 `.ns.svg`를 우클릭해도 같은 항목이 나온다. 자리는 "삭제" 바로 위 구역의 맨 아래("폴더에서 보기" 아래)다.
 
 > [!warning] 남은 위험
 > 가로채기(`setViewState`), 노트 그림 갱신에 쓰는 `.internal-embed`의 `src` 속성과 `<img>` 구조는 Obsidian이 공개하지 않은 내부 동작입니다. Obsidian이 업데이트되면 깨질 수 있습니다. 본 구현에서는 이 부분을 한곳에 모으고, Obsidian 새 버전마다 확인할 테스트 목록을 둡니다.
@@ -69,4 +74,9 @@ updated: 2026-10-10
 
 ## 미결정 사항
 
-- [ ] 
+2026-10-12에 요구사항 2.1에서 옮긴 것입니다.
+
+- [ ] 새 파일의 이름과 저장 위치 (제안: Obsidian의 "첨부 파일 폴더" 설정을 따르고, 이름은 `노트이름-diagram-1.ns.svg`처럼 자동 생성)
+- [ ] 아무것도 그리지 않고 탭을 닫았을 때 (제안: 파일을 지우고 노트에 삽입하지 않음)
+- [ ] 편집 중 저장 시점 (탭을 닫을 때만 / 편집할 때마다 자동 저장)
+
