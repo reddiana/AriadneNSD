@@ -140,20 +140,22 @@ DIN 66261 / 원 논문 기준입니다.
 | 블록 | 설명 | 우선순위 |
 | --- | --- | --- |
 | 처리 (Process) | 한 단계의 명령 | #P0 |
-| 선택 (If-Then-Else) | 역삼각형 헤더와 참/거짓 두 칸 | #P0 |
-| 전위 판정 반복 (While) | 조건을 먼저 검사, 왼쪽 띠 안에 본문 | #P0 |
-| 후위 판정 반복 (Do-While / Repeat-Until) | 조건이 아래쪽에 위치 | #P0 |
+| 선택 (If-Then-Else) | 조건에 따라 참 갈래나 거짓 갈래를 실행 | #P0 |
+| 전위 판정 반복 (While) | 조건을 먼저 검사하고 본문을 반복 | #P0 |
+| 후위 판정 반복 (Do-While / Repeat-Until) | 본문을 먼저 실행하고 조건을 검사 | #P0 |
 | 다중 선택 (Switch/Case) | 여러 갈래 + default (아래 [[#^blk-case]]) | #P1 |
 | 횟수 반복 (For) | While의 변형 | #P1 |
-| 호출 (Call) | 양옆 세로 이중선. 같은 문서의 Method를 부른다 (아래 [[#^blk-call]]) | #P1 |
+| 호출 (Call) | 같은 문서의 Method를 부른다 (아래 [[#^blk-call]]) | #P1 |
 | 탈출 (Exit / Break / Return) | 반복·함수 탈출 | #P2 |
 | 병렬 처리 (Parallel) | 동시 실행 갈래 | #P2 |
 | 주석 블록 |  | #P2 |
 
-- [ ] #P1 Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 모자 모양 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[01-interaction-rules#Event 머리|상세]] ^blk-event
+블록과 머리를 어떤 모양으로 그리는지는 설계에 있다 → [[01-interaction-rules#블록의 모양]]
+
+- [ ] #P1 Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[01-interaction-rules#Event 머리|상세]] ^blk-event
 - [ ] #P1 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[01-interaction-rules#Case 블록|상세]] ^blk-case
-- [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. 폭 전체에 걸친 낮은 아치 모양으로 그려 Event 머리와 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[01-interaction-rules#Method 머리|상세]] ^blk-method
-- [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기(양옆 세로 이중선)로 그린다 → [[01-interaction-rules#호출 블록|상세]] ^blk-call
+- [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[01-interaction-rules#Method 머리|상세]] ^blk-method
+- [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[01-interaction-rules#호출 블록|상세]] ^blk-call
 
 ### 3.2 편집
 

@@ -21,6 +21,20 @@ updated: 2026-10-12
 
 ## 1. 블록
 
+### 블록의 모양
+
+요구사항: [[01-requirements#3.1 블록 종류]]. 표준의 블록은 DIN 66261 / 원 논문의 모양을 따른다. 기본 스타일의 색과 선은 [[0013-default-visual-style|ADR-0013]]에 있다.
+
+| 블록 | 모양 |
+| --- | --- |
+| 선택 (If-Then-Else) | 역삼각형 헤더와 참/거짓 두 칸 |
+| 전위 판정 반복 (While) | 왼쪽 띠 안에 본문 |
+| 후위 판정 반복 (Do-While / Repeat-Until) | 조건이 아래쪽에 위치 |
+| 다중 선택 (Switch/Case) | 긴 빗금과 짧은 빗금 (아래 [[#Case 블록]]) |
+| 호출 (Call) | 양옆 세로 이중선 (NS 차트 표준의 서브루틴 호출 표기) |
+| Event 머리 | 모자 모양 머리 ([Scratch](https://scratch.mit.edu/)에서 가져온 표기) |
+| Method 머리 | 폭 전체에 걸친 낮은 아치 모양. Event 머리와 가르려는 것이다 (→ [[0021-event-and-method|ADR-0021]]) |
+
 ### Event 머리
 
 요구사항: [[01-requirements#^blk-event]]
