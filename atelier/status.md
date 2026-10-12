@@ -100,8 +100,8 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 		- [ ] 6판: 2026-10-11 둘째 세션에서 정하고 넣지 못한 것. 호출 블록을 고치는 칸 둘, 결과 기호 설정, 인자 숨기기, 새 다이어그램 배치
 		- [ ] 7판: 남은 것 (Q9, Q12, Q21). 문서에 대한 물음(Q18, Q22, Q23)은 프로토타입과 상관없이 따로 답한다
 - [ ] inbox "1. 일하는 방식"에서 넘어온 일 (2026-10-12. 메인테이너: "inbox의 일하는 방식만 적용해주세요. 금방 다시 나갈거에요." 세션 기록은 마무리 때 쓴다. 지운 항목의 원문을 여기 적어 둔다)
-	- [x] "adr/은 plan/ 밑으로 옮깁시다. docs/는 최종 결과/모습만 있게 합시다." → `docs/03-adr/`를 `plan/adr/`로 옮김. ADR 목록은 [[plan/README#아키텍처 결정 기록 (ADR)]]으로. [[0001-record-architecture-decisions|ADR-0001]]에 "이후 변경", CLAUDE.md와 README들 고침
-	- [ ] "plan/ 이름을 재검토해주세요." → 재검토함. Claude의 추천은 `process/`. 바꾸지는 않았고 메인테이너의 결정을 기다림. inbox에 남겨 둠 → [[debt]]
+	- [x] "adr/은 plan/ 밑으로 옮깁시다. docs/는 최종 결과/모습만 있게 합시다." → `docs/03-adr/`를 `plan/adr/`로 옮김. ADR 목록은 [[atelier/README#아키텍처 결정 기록 (ADR)]]으로. [[0001-record-architecture-decisions|ADR-0001]]에 "이후 변경", CLAUDE.md와 README들 고침
+	- [x] "plan/ 이름을 재검토해주세요." → Claude가 `process/`를 추천했고, 메인테이너가 "process/도 좋은데 work라는 의미로 몇가지 더 추천해주세요", "몇가지 더 추천해주세요"라고 해 후보를 두 번 더 냄(`workshop/` · `workbench/` · `work/` · `workspace/` · `backstage/`, `studio/` · `atelier/` · `desk/` · `lab/` · `making/` · `working/` · `ops/` · `pm/` · `thread/` · `loom/`). 메인테이너: "atelier/로 해주세요" → `plan/`을 `atelier/`로 바꿈. 아래 두 줄에 적힌 `plan/…`은 지금의 `atelier/…`
 	- [x] "[[03-ux-design|ux-review]]는 내용을 보니 ux 설계입니다. ux 설계를 위한 입력은 [[01-requirements]]에 있습니다. 이 공학적인 방법을 고려해서 문서의 위치와 문서명, 내용을 조정해주세요." → `plan/ux-review.md`를 둘로 나눔: UX 설계 [[03-ux-design]](`docs/03-ux-design/`, 공통 규칙과 Q1~Q17 · Q19~Q21)과 요구사항 문서 검토 [[requirements-review]](`plan/`, Q18 · Q22 · Q23과 고칠 곳 목록). 물음의 번호는 그대로
 	- [x] "이 문서를 보는 사람이 어떤 목적의 문서인지 궁금해하겠네요. 이 문서 머리에 설명해주세요." → "이 문서"가 inbox인지 ux-review인지 몰라 둘 다 함: [[inbox]], [[03-ux-design]], [[requirements-review]]의 머리에 "이 문서는" 콜아웃
 - [ ] **다음 세션:** 메인테이너가 프로토타입 1판(37번째 판)을 써 본 느낌을 듣고, 2판(풀기를 하나로)으로 간다. inbox에 남은 "단축키를 통일할 수 있나요?"를 2판에서 닫는다

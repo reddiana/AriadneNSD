@@ -66,7 +66,7 @@ Apache-2.0과 MIT는 소프트웨어를 생각하고 쓴 글입니다. 문서, �
 | 대상 | 라이선스 | 파일 |
 | --- | --- | --- |
 | 코드 (소스 코드, 프로토타입과 시안 페이지, 스크립트) | Apache-2.0 | `LICENSE`, `NOTICE` |
-| 글 (`docs/` · `plan/` · `journal/` · `tech-notes/`의 문서, README) | CC BY 4.0 | `LICENSE-docs` |
+| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, README) | CC BY 4.0 | `LICENSE-docs` |
 | 로고 | 허락하지 않음 | |
 
 근거: [[0023-license|ADR-0023]], [[0024-license-scope|ADR-0024]]

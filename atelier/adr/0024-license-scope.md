@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0024: 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않는다
 
+> [!NOTE] 이후 변경
+> - 2026-10-12: `plan/` 폴더의 이름이 `atelier/`로 바뀌었다. 아래 표의 "글"에 적힌 `plan/`은 지금의 `atelier/`이고, 라이선스의 범위는 그대로다. 이 ADR도 `docs/03-adr/`에서 `atelier/adr/`로 옮겨졌다 → [[atelier/README|아틀리에]]
+
 ## 배경
 
 [[0023-license|ADR-0023]]에서 Apache-2.0으로 공개하기로 하고 `LICENSE`를 저장소 맨 위에 두었다. 범위를 따로 적지 않아 저장소 전체에 적용된다고 읽혔다. 메인테이너가 물었다.

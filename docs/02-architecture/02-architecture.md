@@ -147,4 +147,4 @@ sequenceDiagram
 
 ## 8. 결정 목록
 
-모든 ADR은 [[plan/README#아키텍처 결정 기록 (ADR)]]에 있습니다.
+모든 ADR은 [[atelier/README#아키텍처 결정 기록 (ADR)]]에 있습니다.

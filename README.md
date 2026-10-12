@@ -23,7 +23,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | 폴더                                    | 내용                                                   |
 | ------------------------------------- | ---------------------------------------------------- |
 | [`docs/`](docs/README.md)             | 애플리케이션 문서: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세 |
-| [`plan/`](plan/README.md)             | 일하기 위한 기록: 현재 상태, 부채 목록, 세션 기록, 아키텍처 결정 기록(ADR), inbox |
+| [`atelier/`](atelier/README.md)             | 일하기 위한 기록: 현재 상태, 부채 목록, 세션 기록, 아키텍처 결정 기록(ADR), inbox |
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                  |
 | [`tech-notes/`](tech-notes/README.md) | 백엔드 개발자가 프론트엔드를 배우며 정리한 기술 노트                        |
 
@@ -54,7 +54,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | 대상 | 라이선스 |
 | --- | --- |
 | 코드 (소스 코드, 프로토타입과 시안 페이지, 스크립트) | [Apache License 2.0](LICENSE). 가져다 사용한 배포물에 [`NOTICE`](NOTICE) 파일의 글을 함께 실어 주세요 |
-| 글 (`docs/` · `plan/` · `journal/` · `tech-notes/`의 문서, 이 README) | [CC BY 4.0](LICENSE-docs). 출처를 "AriadneNSD (https://github.com/reddiana/ariadne-nsd)"로 밝혀 주세요 |
+| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, 이 README) | [CC BY 4.0](LICENSE-docs). 출처를 "AriadneNSD (https://github.com/reddiana/ariadne-nsd)"로 밝혀 주세요 |
 | 로고 (그림 로고와 문자 로고의 그림 파일) | 허락하지 않습니다. 이 프로젝트를 가리키는 데에만 사용할 수 있습니다 |
 | 이름 (`AriadneNSD`) | 허락하지 않습니다. 가져다 만든 제품에 이 이름을 붙일 수 없습니다. "AriadneNSD를 가져다 사용했다"고 알리는 데에는 사용할 수 있습니다 |
 
