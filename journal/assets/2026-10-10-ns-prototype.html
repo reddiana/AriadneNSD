@@ -220,6 +220,9 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
         <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>펴진 접기 영역은 굵은 테두리로 보입니다 (46번째 판).</b> 왼쪽 막대를 없애고 영역의 둘레를 굵은 실선으로 두릅니다. 보통 블록은 테두리에 붙고, 겹친 접기 영역과 이어진 접기 영역 사이에는 1px의 틈이 있습니다. 이름 띠는 그대로입니다.</li>
+        <li><b>펴 보인 호출 블록은 가는 점선으로 두릅니다 (46번째 판).</b> 강조가 아니라서 접기 영역보다 가볍게 그립니다.</li>
+        <li><b>펴 보인 곳에만 있는 접기 영역 (46번째 판).</b> 펴 보인 블록을 고르고 <kbd>zf</kbd>를 누르면 그 호출 블록 자리에만 접기 영역이 생깁니다. Method의 원본과, 같은 Method를 부르는 다른 호출 블록에는 생기지 않습니다. <kbd>za</kbd>로 접고 펴고, <kbd>zd</kbd>로 풀고, <kbd>i</kbd>나 <kbd>Enter</kbd>로 이름을 고칩니다. Method에 원래 있던 접기 영역은 여기서 풀 수 없습니다. 호출 블록을 <kbd>ds</kbd>로 풀면 보통 접기 영역이 되어 함께 들어옵니다.</li>
       </ul>
 
       <p class="note">아래의 "앞서 바뀐 것"과 "만들며 생긴 질문"은 그때의 기록이라 옛 키로 적혀 있습니다.</p>
@@ -412,6 +415,28 @@ const shownCopy = (list, pre) => list.map(n => {
 // 접힘은 원래 블록의 것을 따른다: 펴 보인 쪽은 Method에 저장된 접힘 그대로 보인다
 const fid = n => n.rid || n.id;
 const isFd = n => folded.has(fid(n));
+// 펴 보인 자리에서 만든 접기 영역: 그 호출 블록 자리에만 있고 Method의 원본에는 없다.
+// 문서의 sfolds에 { id, pre(펴 보인 경로), rids(묶은 원래 블록의 id), name }으로 둔다. 사본을 만들 때마다 그 자리에 끼워 넣는다
+const sitePre = id => id.slice(0, id.lastIndexOf('>'));
+const siteFold = g => (doc.sfolds || []).find(f => f.id === g.local && f.pre === sitePre(g.id));
+function localFolds(copy, pre) {
+  (doc.sfolds || []).filter(f => f.pre === pre).forEach(f => {
+    // 묶어 둔 블록 가운데 지금 남아 있는 것의 처음부터 끝까지를 묶는다. Method가 바뀌어 블록이 지워졌으면 줄어들고, 사이에 든 블록은 함께 묶인다
+    const find = list => {
+      const at = list.map((c, i) => f.rids.includes(c.local || c.rid) ? i : -1).filter(i => i >= 0);
+      if (at.length) return { list, lo: at[0], hi: at[at.length - 1] };
+      for (const c of list) for (const sl of slots(c)) { const r = find(c[sl]); if (r) return r; }
+      return null;
+    };
+    const r = find(copy);
+    if (!r) return;
+    const g = { id: pre + '>' + f.id, type: 'range', local: f.id, children: [] };
+    if ('name' in f) g.name = f.name;
+    g.children = r.list.splice(r.lo, r.hi - r.lo + 1);
+    r.list.splice(r.lo, 0, g);
+  });
+  return copy;
+}
 function reindex() {
   idx = new Map(); shown = new Map();
   const walk = (list, parent, slot, d) => list.forEach((n, i) => {
@@ -419,7 +444,7 @@ function reindex() {
     slots(n).forEach(s => walk(n[s], n, s, d));
     // 펴 보인 호출 블록: 부르는 Method의 블록을 사본으로 만들어 그 아래에 단다. 사본도 고를 수 있도록 색인에 넣는다
     if (n.type === 'call' && opened.has(n.id) && isMethod(dia(n.target))) {
-      const copy = shownCopy(dia(n.target).body, n.id);
+      const copy = localFolds(shownCopy(dia(n.target).body, n.id), n.id);
       shown.set(n.id, copy);
       walk(copy, n, 'shown', d);
     }
@@ -479,6 +504,21 @@ function normalize() {
     // 넘겨주는 것이 비어 있으면 머리의 괄호 안 글자를 채운다
     if (!n.args) n.args = headParams(t.event);
   });
+  // 이 자리의 접기 영역은 그 호출 블록이 없어지거나, 묶어 둔 블록이 모두 없어지면 사라진다
+  if (doc.sfolds) {
+    const real = new Map();
+    eachNode(n => real.set(n.id, n));
+    for (let again = true; again;) {
+      const live = doc.sfolds.filter(f => {
+        const path = f.pre.split('>'), last = real.get(path[path.length - 1]);
+        return path.every(id => real.has(id)) && last.type === 'call' && isMethod(dia(last.target)) &&
+          f.rids.some(id => real.has(id) || doc.sfolds.some(o => o !== f && o.pre === f.pre && o.id === id));
+      });
+      again = live.length !== doc.sfolds.length;
+      doc.sfolds = live;
+    }
+    if (!doc.sfolds.length) delete doc.sfolds;
+  }
   reindex();
 }
 function fixUid() {
@@ -486,6 +526,7 @@ function fixUid() {
   const see = id => { const k = parseInt(String(id).replace(/\D/g, ''), 10); if (k > max) max = k; };
   doc.diagrams.forEach(d => see(d.id));
   eachNode(n => see(n.id));
+  (doc.sfolds || []).forEach(f => see(f.id));
   uid = max + 1;
 }
 const countBlocks = list => list.reduce((a, n) =>
@@ -688,7 +729,8 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rbar: 8 };
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, rgap: 1 };
+const RIN = K.rb + K.rgap;   // 테두리 안에 겹친 테두리가 들어가는 깊이: 테두리 굵기 + 틈
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
 const cv = document.createElement('canvas').getContext('2d');
@@ -723,6 +765,8 @@ const partName = () => '';   // 접힌 줄에는 이름을 붙이지 않는다
 const foldRowText = (n, slot) => (partName(n, slot) ? partName(n, slot) + '   ' : '') + `⋯ 블록 ${countBlocks(n[slot])}개`;
 const foldRowSize = (n, slot) => { const t = tsize(foldRowText(n, slot)); return { w: t.w + 2 * K.padX, h: t.h + 2 * K.padY }; };
 let M, L, T;
+// 테두리를 두르는 것: 펴진 접기 영역("접기 영역 보기"를 켰을 때)과 펴 보인 호출 블록
+const boxed = n => n.type === 'range' ? !isFd(n) && regionView() === 'band' : n.type === 'call' && shown.has(n.id);
 function measure(n) {
   let r;
   if (n.type === 'process') {
@@ -731,17 +775,18 @@ function measure(n) {
   } else if (n.type === 'call') {
     const p = callParts(n), kids = shown.get(n.id);
     if (kids) {
-      // 펴 보인 호출 블록: 얇은 띠 아래에 Method의 블록이 왼쪽 막대만큼 들여져 놓인다
-      const inner = measureSeq(kids);
-      r = { w: Math.max(inner.w + K.rbar, K.rbar + 8 + smallW('▾ ' + p.pre) + smallW(p.name, true) + smallW(p.post) + K.padX), h: K.band + inner.h, band: K.band };
+      // 펴 보인 호출 블록: 얇은 띠 아래에 Method의 블록이 놓이고 둘레에 점선을 두른다
+      const inner = measureSeq(kids, RIN);
+      r = { w: Math.max(inner.w, 10 + smallW('▾ ' + p.pre) + smallW(p.name, true) + smallW(p.post) + K.padX), h: K.band + inner.h, band: K.band };
     }
     else r = { w: tsize(p.pre).w + boldW(p.name) + tsize(p.post).w + 2 * K.padX + 2 * K.bar, h: K.lh + 2 * K.padY };
   } else if (n.type === 'range') {
     if (isFd(n)) { const t = tsize(foldLabel(n)); r = { w: t.w + 2 * K.padX + 20, h: t.h + 2 * K.padY + 4 }; }
     else {
-      r = measureSeq(n.children);
-      // 펴진 접기 영역: 맨 위 이름 띠와 왼쪽 막대. 안의 블록은 막대만큼 들어간다. 띠를 끄면 막대도 들임도 없다
-      if (regionView() === 'band') r = { w: Math.max(r.w + K.rbar, tagW('▾ ' + foldLabel(n)) + K.rbar + 8 + K.padX), h: r.h + K.band, band: K.band, bar: K.rbar };
+      // 펴진 접기 영역: 맨 위 이름 띠와 둘레의 굵은 테두리. 보통 블록은 테두리에 붙고, 겹친 테두리만 틈을 두고 들어간다. 띠를 끄면 테두리도 없다
+      const band = regionView() === 'band';
+      r = measureSeq(n.children, band ? RIN : 0);
+      if (band) r = { w: Math.max(r.w, tagW('▾ ' + foldLabel(n)) + 10 + K.padX), h: r.h + K.band, band: K.band };
     }
   } else {
     const t = tsize(n.text);
@@ -768,16 +813,24 @@ function measure(n) {
   M.set(n.id, r);
   return r;
 }
-function measureSeq(list) {
+// ins: 이 목록이 테두리 안에 있을 때, 그 안의 테두리가 양옆과 맨 아래에서 들어가는 깊이. 이어진 테두리 사이에는 틈을 둔다
+function measureSeq(list, ins = 0) {
   let w = 0, h = 0;
-  list.forEach(c => { const m = measure(c); w = Math.max(w, m.w); h += m.h; });
+  list.forEach((c, i) => {
+    const m = measure(c), b = boxed(c);
+    w = Math.max(w, m.w + (b ? 2 * ins : 0)); h += m.h;
+    if (b && i > 0 && boxed(list[i - 1])) h += K.rgap + 1;
+    if (b && i === list.length - 1) h += ins;
+  });
   return { w, h };
 }
-function placeSeq(list, x, y, w, h, out) {
+function placeSeq(list, x, y, w, h, out, ins = 0) {
   let cy = y;
   list.forEach((c, i) => {
-    const ch = i === list.length - 1 ? (y + h - cy) : M.get(c.id).h;
-    place(c, x, cy, w, ch, out);
+    const b = boxed(c), d = b ? ins : 0;
+    if (b && i > 0 && boxed(list[i - 1])) cy += K.rgap + 1;
+    const ch = i === list.length - 1 ? (y + h - cy - d) : M.get(c.id).h;
+    place(c, x + d, cy, w - 2 * d, ch, out);
     cy += ch;
   });
 }
@@ -791,23 +844,23 @@ function place(n, x, y, w, h, out) {
   } else if (n.type === 'call' && shown.has(n.id)) {
     const i0 = out.items.length, g0 = out.ghosts.length;
     out.items.push({ k: 'callOpen', id: n.id, x, y, w, h, band: m.band, parts: callParts(n) });
-    placeSeq(shown.get(n.id), x + K.rbar, y + m.band, w - K.rbar, h - m.band, out);
+    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, RIN);
     // 그 안에 놓인 것은 모두 펴 보인 것이다 (글자를 회색으로 그린다)
     for (let k = i0 + 1; k < out.items.length; k++) out.items[k].shown = true;
     for (let k = g0; k < out.ghosts.length; k++) out.ghosts[k].shown = true;
-    T.set(n.id, { x: x + K.rbar, y, w: w - K.rbar, h: m.band });
+    T.set(n.id, { x, y, w, h: m.band });
   } else if (n.type === 'call') {
     out.items.push({ k: 'call', id: n.id, x, y, w, h, text: callText(n), parts: callParts(n), linked: n.target != null });
     T.set(n.id, { x, y, w, h: m.h });
   } else if (n.type === 'range') {
     if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
-    else placeSeq(n.children, x + (m.bar || 0), y + (m.band || 0), w - (m.bar || 0), h - (m.band || 0), out);
+    else placeSeq(n.children, x, y + (m.band || 0), w, h - (m.band || 0), out, m.band ? RIN : 0);
     // 펴져 있는 접기 영역의 자리를 적어 둔다 (이름 띠를 그릴 곳)
     if (!fd && regionView() !== 'off') {
       let depth = 0;
       for (let e = idx.get(n.id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.type === 'range') depth++;
       out.ghosts.push({ id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name, depth, band: m.band || 0 });
-      if (m.band) T.set(n.id, { x: x + m.bar, y, w: w - m.bar, h: m.band });
+      if (m.band) T.set(n.id, { x, y, w, h: m.band });
     }
   } else if (n.type === 'case') {
     const hh = m.headH, by = y + hh, bh = h - hh, extra = w - m.sum, ls = slots(n), xs = [];
@@ -904,7 +957,7 @@ const COL = {
   stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
   ink: '#151a22', label: '#1f45d6', kw: '#1f45d6', cm: '#2e8b2e', num: '#a1531b', str: '#a1531b',
   call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', region: '#d0821c', ghost: '#8a93a6', sel: '#2c55c9',
-  bar: '#93aee8', callBar: '#b9a9dc', shown: '#6b7386'   // 접기 영역의 막대, 펴 보인 호출 블록의 막대, 펴 보인 블록의 글자
+  edge: '#4f74d6', callEdge: '#8a72c4', callBand: '#ddd4ef', shown: '#6b7386'   // 접기 영역의 테두리, 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
 };
 let ink = COL.ink;   // 지금 그리는 블록의 글자 색. 펴 보인 블록은 회색으로, 구문 강조 없이 그린다
 const KW = new Set(('if else while for do return break continue switch case default true false null NULL ' +
@@ -937,7 +990,7 @@ function callTxt(p, x, y) {
 const rect = (x, y, w, h, fill, attr = '') =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${attr}/>`;
 function drawSVG(lay, ui) {
-  const s = [];
+  const s = [], over = [];
   const da = id => ui ? ` data-id="${id}"` : '';
   for (const it of lay.items) {
     ink = it.shown ? COL.shown : COL.ink;
@@ -958,11 +1011,14 @@ function drawSVG(lay, ui) {
         s.push(`<line x1="${bx}" y1="${it.y}" x2="${bx}" y2="${it.y + it.h}" stroke="${COL.stroke}" stroke-width="1"${dash} pointer-events="none"/>`);
       s.push(callTxt(it.parts, it.x + K.padX + K.bar, it.y + K.padY));
     } else if (it.k === 'callOpen') {
-      // 펴 보인 호출 블록: 펴진 접기 영역과 같은 틀에 색만 다르다. 왼쪽 막대가 끝까지 내려가고, 맨 위 얇은 띠에 호출 블록의 글자를 적는다. 양옆 이중선은 그리지 않는다
-      const p = it.parts;
-      s.push(rect(it.x, it.y, it.w, it.h, COL.call, da(it.id)));
-      s.push(`<rect x="${it.x}" y="${it.y}" width="${K.rbar}" height="${it.h}" fill="${COL.callBar}" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges" pointer-events="none"/>`);
-      s.push(`<text x="${it.x + K.rbar + 8}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="11.5" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
+      // 펴 보인 호출 블록: 맨 위 얇은 띠에 호출 블록의 글자를 적고, 둘레에 가는 점선을 두른다. 강조가 아니라서 접기 영역의 굵은 실선보다 가볍다.
+      // 테두리 자리를 흰 줄로 비우고 그 가운데에 점선을 그어, 블록의 가는 선과 겹치지 않게 한다
+      const p = it.parts, e = `x="${it.x + 1}" y="${it.y + 1}" width="${it.w - 2}" height="${it.h - 2}" fill="none" pointer-events="none"`;
+      s.push(`<rect x="${it.x - .5}" y="${it.y - .5}" width="${it.w + 1}" height="${it.h + 1}" fill="#ffffff" pointer-events="none"/>`);
+      s.push(`<rect x="${it.x - .5}" y="${it.y - .5}" width="${it.w + 1}" height="${it.band + .5}" fill="${COL.callBand}"${da(it.id)}/>`);
+      s.push(`<line x1="${it.x}" y1="${it.y + it.band}" x2="${it.x + it.w}" y2="${it.y + it.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      s.push(`<text x="${it.x + 10}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="11.5" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
+      over.push(`<rect data-dash="${it.id}" ${e} stroke="#ffffff" stroke-width="${K.rb}"/>`, `<rect ${e} stroke="${COL.callEdge}" stroke-width="1.5" stroke-dasharray="6 4"/>`);
     } else if (it.k === 'loop') {
       s.push(rect(it.x, it.y, it.w, it.h, COL.loop, da(it.id)));
       s.push(txt(it.text, it.x + K.padX, (it.bottom ? it.y + it.h - it.headH : it.y) + K.padY));
@@ -1002,6 +1058,7 @@ function drawSVG(lay, ui) {
     }
   }
   ink = COL.ink;
+  s.push(...over);
   // 강조 영역: 레이아웃이 끝난 뒤 굵은 테두리만 덧그린다 (ADR-0015). 안으로 들여 그려서 맞붙은 영역도 따로 보인다
   for (const r of lay.regions)
     s.push(`<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" fill="none" stroke="${COL.region}" stroke-width="3" rx="2" pointer-events="none"/>`);
@@ -1013,11 +1070,12 @@ function drawSVG(lay, ui) {
       const d = 2.5 + (g.depth || 0) * 4;
       if (view === 'band') {
         // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
-        // 왼쪽 막대: 속을 채운 좁은 막대가 띠 위에 겹쳐 영역의 끝까지 내려간다. 띠와 한 몸이라 누르면 띠를 누른 것과 같다
+        // 테두리: 영역의 둘레를 굵은 실선으로 두른다. 겹치거나 이어져도 상자가 따로 보인다. 누르는 곳은 띠다
         const hit = ui ? ` data-id="${g.id}" data-band="1" style="cursor:pointer"` : '';
-        s.push(`<rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.band}" fill="#e6ecfb" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${hit}/>`);
-        s.push(`<rect x="${g.x}" y="${g.y}" width="${K.rbar}" height="${g.h}" fill="${COL.bar}" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${hit}/>`);
-        s.push(`<text x="${g.x + K.rbar + 8}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
+        s.push(`<rect x="${g.x - .5}" y="${g.y - .5}" width="${g.w + 1}" height="${g.band + .5}" fill="#e6ecfb"${hit}/>`);
+        s.push(`<line x1="${g.x}" y1="${g.y + g.band}" x2="${g.x + g.w}" y2="${g.y + g.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+        s.push(`<rect data-edge="${g.id}" x="${g.x + 1}" y="${g.y + 1}" width="${g.w - 2}" height="${g.h - 2}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
+        s.push(`<text x="${g.x + 10}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
         continue;
       }
       s.push(`<rect x="${g.x + d}" y="${g.y + d}" width="${g.w - 2 * d}" height="${g.h - 2 * d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3"${view === 'gutter' ? ' stroke-opacity="0.55"' : ''} pointer-events="none"/>`);
@@ -1042,7 +1100,8 @@ function drawSVG(lay, ui) {
       }
     }
   }
-  return s.join('\n');
+  // 그림 전체를 반 픽셀 옮긴다: 가는 선(1px)과 굵은 테두리(3px)가 같은 픽셀 줄에서 시작해 바깥 선이 곧다
+  return '<g transform="translate(.5 .5)">\n' + s.join('\n') + '\n</g>';
 }
 function render() {
   const lay = layout();
@@ -1081,7 +1140,7 @@ function modelJSON() {
   // 그림이 화면 그대로이므로, 그 화면을 만든 보기 상태(접힘, 이름 띠)도 모델과 함께 넣는다. 같은 내용이면 같은 파일이 나오도록 순서를 맞춘다
   const view = { folded: [...folded].filter(id => idx.has(String(id).split(':')[0])).sort(), bands: opts.showRegions !== false,
     opened: [...opened].filter(id => id.split('>').every(k => idx.has(k))).sort() };
-  return JSON.stringify({ format: 'nsdrawing', version: 0, diagrams: doc.diagrams, view }, null, 2);
+  return JSON.stringify({ format: 'nsdrawing', version: 0, diagrams: doc.diagrams, ...(doc.sfolds ? { siteFolds: doc.sfolds } : {}), view }, null, 2);
 }
 function exportSVG() {
   // 저장되는 그림은 지금 화면 그대로다: 접힌 곳은 접힌 채, 이름 띠도 보이는 대로 (선택 테두리만 뺀다)
@@ -1103,7 +1162,8 @@ function toDoc(m) {
     const walk = list => list.forEach(n => { if (n.type === 'call' && n.target != null) called.add(n.target); slots(n).forEach(sl => walk(n[sl] || [])); });
     ds.forEach(d => walk(d.body));
     ds.forEach(d => { if (d.event != null && !d.kind) d.kind = called.has(d.id) ? 'method' : 'event'; });
-    return { diagrams: ds };
+    const sf = m.siteFolds || m.sfolds;
+    return { diagrams: ds, ...(Array.isArray(sf) && sf.every(f => f && typeof f.pre === 'string' && Array.isArray(f.rids)) ? { sfolds: sf } : {}) };
   }
   if (m && Array.isArray(m.body)) return { diagrams: [{ id: 'g0', event: m.event ?? null, body: m.body }] };
   return null;
@@ -1155,7 +1215,7 @@ function currentText(id) {
 }
 function startEdit(id, o = {}) {
   if (!id) return;
-  if (isShown(id)) return void locked();
+  if (isShown(id) && !idx.get(id)?.node.local) return void locked();   // 이 자리에서 만든 접기 영역의 이름은 고칠 수 있다
   const n = isHead(id) ? null : idx.get(id)?.node;
   if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 보기"를 켜세요');
   if (n && n.type === 'call' && n.target == null) return say('이어진 Method가 없습니다. r로 부를 Method를 고르세요');
@@ -1200,7 +1260,7 @@ function setText(id, v) {
   if (isHead(id)) { const d = dia(id); if (d) d.event = v; return; }
   const n = idx.get(id)?.node;
   if (!n) return;
-  if (n.type === 'range') n.name = v.trim() === '' ? null : v;
+  if (n.type === 'range') (n.local ? siteFold(n) : n).name = v.trim() === '' ? null : v;
   else n.text = v;
 }
 function commitEdit(cancel) {
@@ -1228,7 +1288,7 @@ function commitEdit(cancel) {
     }
   } else if (e.naming) {
     // 처음 접을 때: 치지 않고 Enter·Esc → 기본 이름. 이름을 물어봤다는 표시로 name 키는 남는다
-    const g = idx.get(e.id)?.node;
+    const g0 = idx.get(e.id)?.node, g = g0 && g0.local ? siteFold(g0) : g0;
     if (g) g.name = (cancel || v === e.orig || v.trim() === '') ? null : v;
     say(g && g.name ? `"${g.name}"(으)로 접었습니다` : '기본 이름으로 접었습니다');
   } else if (idx.get(e.id)?.node.type === 'call') {
@@ -1413,8 +1473,10 @@ function gotoTarget() {
   if (!r) return;
   if (shownSel()) {
     // 펴 보인 블록에서는 그 Method 다이어그램의 원래 블록으로 간다
-    const real = id => idx.get(id).node.rid;
-    sel = { root: real(sel.root), anchor: real(sel.anchor), focus: real(sel.focus) };
+    // 이 자리에서 만든 접기 영역은 원본에 없으므로 그 안의 첫 블록과 마지막 블록으로 간다
+    const end = (n, last) => n.local ? end(n.children[last ? n.children.length - 1 : 0], last) : n.rid;
+    const a = end(r.items[0], false);
+    sel = { root: a, anchor: a, focus: end(r.items[r.items.length - 1], true) };
     fixSel(); render();
     return say(`${nameKey(diaOf(sel.anchor))}의 원래 블록입니다. 여기서 고칩니다`);
   }
@@ -1439,7 +1501,7 @@ function copy(cut) {
   if (r.event) return say('머리는 복사할 수 없습니다');
   if (cut && locked()) return;
   // 펴 보인 블록을 복사하면 원래 블록이 복사된다 (붙이면 보통 블록)
-  clip = JSON.stringify(shownSel() ? r.items.map(n => idx.get(n.rid).node) : r.items);
+  clip = JSON.stringify(shownSel() ? r.items.flatMap(function orig(n) { return n.local ? n.children.flatMap(orig) : [idx.get(n.rid).node]; }) : r.items);
   if (cut) del();
   say((cut ? '잘라냈습니다' : '복사했습니다') + '. p를 누르면 고른 블록 뒤에, P는 앞에 붙습니다');
 }
@@ -1526,7 +1588,9 @@ function inlineCall(n) {
   // 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대). 글자는 그대로 복사하고, 적어 둔 인자와 결과는 사라진다. Method는 남는다
   const t = n.target != null ? dia(n.target) : null;
   if (!isMethod(t)) return say('이어진 Method가 없어 풀 수 없습니다');
-  const nodes = reId(JSON.parse(JSON.stringify(t.body)), false);
+  // 이 자리에서 만든 접기 영역은 보통 접기 영역이 되어 함께 들어온다
+  const plain = list => list.map(c => { const { rid, local, ...o } = c; slots(c).forEach(sl => { o[sl] = plain(c[sl]); }); return o; });
+  const nodes = reId(JSON.parse(JSON.stringify(plain(localFolds(shownCopy(t.body, n.id), n.id)))), false);
   apply(() => {
     const e = idx.get(n.id);
     e.list.splice(e.index, 1, ...nodes);
@@ -1585,15 +1649,31 @@ function laneLabel() {
 function regionOf(r) {
   // 고른 것을 온전히 담는 가장 작은 접기 영역. 접기 영역 자체를 골랐으면 그것
   if (r.items.length === 1 && r.items[0].type === 'range') return r.items[0];
-  for (let p = r.parent; p; p = idx.get(p.id).parent) if (p.type === 'range') return p;
+  for (let e = idx.get(r.items[0].id); e.parent; e = idx.get(e.parent.id)) {
+    if (e.slot === 'shown') return null;   // 펴 보인 자리에서는 그 자리 안의 접기 영역만 본다
+    if (e.parent.type === 'range') return e.parent;
+  }
   return null;
 }
 function releaseRegion() {
   // Ctrl+Shift+F: 고른 것을 온전히 담는 가장 작은 접기 영역을 푼다 (접혔든 펴졌든). 블록은 그대로 남는다
   const r = needSel();
-  if (!r || locked()) return;
-  const g = r.event ? null : regionOf(r);
-  if (!g) return say('고른 곳을 담은 접기 영역이 없습니다');
+  if (!r) return;
+  const site = shownSel(), g = r.event ? null : regionOf(r);
+  if (site && g && !g.local) return say('Method에 있는 접기 영역은 여기서 풀 수 없습니다. gd로 원래 블록으로 갑니다');
+  if (!g) return say(site ? '고른 곳을 담은, 이 자리에서 만든 접기 영역이 없습니다' : '고른 곳을 담은 접기 영역이 없습니다');
+  if (g.local) {
+    const f = siteFold(g), kids = g.children, own = r.items[0] === g, keep = sel;
+    apply(() => {
+      // 이것을 묶고 있던 바깥 접기 영역은 이것이 묶던 블록을 대신 묶는다
+      doc.sfolds.forEach(o => { if (o.pre === f.pre) o.rids = o.rids.flatMap(x => x === f.id ? f.rids : [x]); });
+      doc.sfolds = doc.sfolds.filter(o => o !== f);
+      folded.delete(g.id);
+    });
+    sel = own ? { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id } : keep;
+    fixSel(); render();
+    return say(`이 자리의 접기 영역 "${g.name || '이름 없음'}"을(를) 풀었습니다. 블록과 Method는 그대로입니다`);
+  }
   const kids = g.children, own = r.items[0] === g, keep = sel;
   apply(() => { const e = idx.get(g.id); e.list.splice(e.index, 1, ...kids); folded.delete(g.id); });
   sel = own ? { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id } : keep;
@@ -1601,15 +1681,25 @@ function releaseRegion() {
   say(`접기 영역 "${g.name || '이름 없음'}"을(를) 풀었습니다. 블록은 그대로입니다`);
 }
 function makeRegion() {
-  // Shift+F: 고른 블록들을 접기 영역으로 만든다. 만들면서 바로 접고 이름을 묻는다
+  // zf: 고른 블록들을 접기 영역으로 만든다. 만들면서 바로 접고 이름을 묻는다
   const r = needSel();
-  if (!r || locked()) return;
+  if (!r) return;
   if (r.event) return say('머리는 접기 영역에 넣을 수 없습니다');
   const one = r.items.length === 1 ? r.items[0] : null;
   if (one && one.type === 'range') return say('이미 접기 영역입니다');
   if (one && !isCtrl(one)) return say('블록 하나는 접기 영역으로 만들지 않습니다. 블록 여러 개나 제어 블록을 고르세요');
   if (r.parent && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return say('접힌 갈래는 먼저 펴세요 (za)');
   if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) return say('같은 범위의 접기 영역이 이미 있습니다');
+  if (shownSel()) {
+    // 펴 보인 자리에서는 Method를 바꾸지 않고, 이 호출 블록 자리에만 있는 접기 영역을 만든다
+    const pre = sitePre(r.items[0].id), f = { id: nid(), pre, rids: r.items.map(n => n.local || n.rid) };
+    apply(() => { (doc.sfolds = doc.sfolds || []).push(f); });
+    const made = idx.get(pre + '>' + f.id)?.node;
+    if (!made) return;
+    selectOne(made.id);
+    foldRange(made, true);
+    return say('이 자리에만 있는 접기 영역입니다. Method의 원본은 그대로입니다. 이름을 적으세요 (Enter나 Esc는 기본 이름)');
+  }
   const g = { id: nid(), type: 'range', children: [] };
   apply(() => { g.children = r.list.splice(r.lo, r.hi - r.lo + 1); r.list.splice(r.lo, 0, g); });
   selectOne(g.id);
@@ -1646,17 +1736,20 @@ function fold() {
   const t = r.items.length === 1 ? r.items[0] : null;
   // 호출 블록 하나를 골랐으면 펴 보거나 접는다. 펴 보인 안쪽의 호출 블록도 된다
   if (t && t.type === 'call') return toggleCall(t);
-  if (shownSel()) {
-    // 펴 보인 안쪽에서는 그것을 담은 가장 가까운 펴 보인 호출 블록을 접는다 (접기 영역 안쪽에서 접는 것과 같게)
-    for (let e = idx.get(sel.anchor); e && e.parent; e = idx.get(e.parent.id))
-      if (e.slot === 'shown') { selectOne(e.parent.id); return toggleCall(e.parent); }
-    return;
-  }
   const toggleRegion = g => {
     selectOne(g.id);
     if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
     foldRange(g, false);
   };
+  if (shownSel()) {
+    // 펴 보인 안쪽에서는 가장 가까운 것을 접는다: 이 자리에서 만든 접기 영역, 없으면 그것을 담은 펴 보인 호출 블록
+    if (t && t.local) return toggleRegion(t);
+    for (let e = idx.get(sel.anchor); e && e.parent; e = idx.get(e.parent.id)) {
+      if (e.slot === 'shown') { selectOne(e.parent.id); return toggleCall(e.parent); }
+      if (e.parent.local) return toggleRegion(e.parent);
+    }
+    return;
+  }
   if (t && t.type === 'range') return toggleRegion(t);
   if (t && isCtrl(t)) {
     // 제어 블록은 갈래별로 접는다. 갈래 전체가 접기 영역 하나이면 그 접기 영역을 접고, 아니면 "⋯ 블록 n개" 줄로 접는다
@@ -1987,7 +2080,7 @@ const COMMANDS = {
     const r = needSel();
     if (!r) return;
     if (r.event) return startEdit(r.dia.id);
-    if (locked()) return;
+    if (!(r.items.length === 1 && r.items[0].local) && locked()) return;
     // 접힌 부분을 골랐으면 그 부분의 이름을 고친다
     const slot = idx.get(r.items[0].id).slot;
     if (r.parent && laneFolded(r.parent, slot)) return say('접힌 줄에는 고칠 글자가 없습니다. 펴려면 za나 더블클릭');
@@ -2043,7 +2136,7 @@ svg.addEventListener('mousedown', ev => {
 function dbl(d) {
   const dn = idx.get(d.id)?.node;
   // 펴 보인 블록은 고르기만 한다
-  if (isShown(d.id)) { const lane = d.slot && dn && dn[d.slot]; if (lane) pickId(lane[0].id); else selectOne(d.id); render(); return void locked(); }
+  if (isShown(d.id) && !(dn && dn.local)) { const lane = d.slot && dn && dn[d.slot]; if (lane) pickId(lane[0].id); else selectOne(d.id); render(); return void locked(); }
   // Case 머리의 갈래 이름을 더블클릭하면 그 이름을 고친다
   if (d.label != null && dn && dn.type === 'case') { selectOne(dn.id); render(); return startEdit(dn.id + '#' + d.label); }
   // 이름 띠를 더블클릭하면 그 접기 영역을 접는다

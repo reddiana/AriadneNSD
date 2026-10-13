@@ -169,27 +169,26 @@ await ev(`T.key('KeyZ', { ctrl: true })`);
 s = await ev(`T.sum()`);
 check('되돌리면 다시 이어짐', s.calls[1] === 'reset(5) -> reset()', s);
 
-// k. 펴진 접기 영역: 왼쪽 막대와 이름 띠. 안의 블록은 막대만큼 들어가고, 둘레의 가는 선은 없다
+// k. 펴진 접기 영역: 굵은 테두리와 이름 띠. 보통 블록은 테두리에 붙는다 (46번째 판. 그 전에는 왼쪽 막대였다)
 await ev(`T.cmd('exCode')`);
 d = await ev(`T.doc()`);
 const reg = d.diagrams[0].body[2];
 const geo = `(() => {
   const at = el => el && ['x', 'y', 'width', 'height'].map(a => +el.getAttribute(a));
   const q = s => document.querySelector('#svg ' + s);
-  return { band: at(q('rect[data-band][data-id="${reg.id}"]')), bar: at(q('rect[fill="#93aee8"]')), kid: at(q('rect[data-id="${reg.children[0].id}"]')),
-    last: at(q('rect[data-id="${reg.children[reg.children.length - 1].id}"]')), thin: T.svg().includes('stroke-width="1.5"') };
+  return { band: at(q('rect[data-band][data-id="${reg.id}"]')), edge: at(q('rect[data-edge="${reg.id}"]')), kid: at(q('rect[data-id="${reg.children[0].id}"]')),
+    last: at(q('rect[data-id="${reg.children[reg.children.length - 1].id}"]')), sw: q('rect[data-edge="${reg.id}"]')?.getAttribute('stroke-width') };
 })()`;
 const saved = `(() => { T.cmd('svg'); const v = document.querySelector('#svgText').value; T.cmd('closeModal'); return v; })()`;
 let g = await ev(geo);
-check('접기 영역: 폭 8의 막대가 영역의 맨 위부터 끝까지', !!g.bar && g.bar[0] === g.band[0] && g.bar[1] === g.band[1] && g.bar[2] === 8 && g.bar[1] + g.bar[3] === g.last[1] + g.last[3], g);
-check('접기 영역: 안의 블록이 막대만큼 들어가고 띠는 폭 전체', g.kid[0] === g.band[0] + 8 && g.kid[1] === g.band[1] + 18 && g.band[3] === 18 && g.band[2] === g.kid[2] + 8, g);
-check('접기 영역: 둘레의 가는 선이 없음', g.thin === false, g);
-check('저장되는 그림에 막대와 띠가 들어감', (await ev(`(v => v.includes('#93aee8') && v.includes('#e6ecfb'))(${saved})`)) === true);
+check('접기 영역: 굵기 3의 테두리가 영역의 맨 위부터 끝까지 두름', !!g.edge && g.sw === '3' && g.edge[0] === g.kid[0] + 1 && g.edge[2] === g.kid[2] - 2 && g.edge[1] === g.kid[1] - 18 + 1 && g.edge[1] + g.edge[3] === g.last[1] + g.last[3] - 1, g);
+check('접기 영역: 보통 블록은 테두리에 붙고(들이지 않음) 띠는 폭 전체', g.kid[0] === g.band[0] + .5 && g.kid[1] === g.band[1] + 18.5 && g.band[2] === g.kid[2] + 1, g);
+check('저장되는 그림에 테두리와 띠가 들어감', (await ev(`(v => v.includes('#4f74d6') && v.includes('#e6ecfb'))(${saved})`)) === true);
 const bandX = g.band[0];
 await ev(`document.querySelector('#optRanges').click()`);
 g = await ev(geo);
-check('이름 띠를 끄면 막대도 들임도 사라짐', g.band === null && g.bar === null && g.kid[0] === bandX, g);
-check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('#93aee8') && !v.includes('#e6ecfb'))(${saved})`)) === true);
+check('이름 띠를 끄면 테두리도 사라짐', g.band === null && g.edge === null && g.kid[0] === bandX + .5, g);
+check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('#4f74d6') && !v.includes('#e6ecfb'))(${saved})`)) === true);
 await ev(`document.querySelector('#optRanges').click()`);
 
 // l. 호출 블록 펴 보기: 보기만 바뀌고 모델은 그대로
@@ -201,11 +200,11 @@ const press = (id, code, o = '{}') => ev(`T.click('${id}'); T.key('${code}', ${o
 const model = () => ev(`JSON.stringify(T.doc())`);
 const m0 = await model();
 await press(pc, 'KeyF');
-check('호출 블록에서 F: Method의 블록이 그 자리에 보임', (await has(`${pc}>${pb[0]}`)) && (await ev(`T.svg().includes('#b9a9dc') && T.svg().includes('fill="#6b7386"')`)) === true, await ev(`T.msg()`));
+check('호출 블록에서 F: Method의 블록이 그 자리에 보임', (await has(`${pc}>${pb[0]}`)) && (await ev(`T.svg().includes('stroke="#8a72c4"') && T.svg().includes('stroke-dasharray="6 4"') && T.svg().includes('fill="#6b7386"')`)) === true, await ev(`T.msg()`));
 check('펴 보인 호출 블록: 띠에 호출 블록의 글자 (이름은 굵게)', (await ev(`T.svg().includes('▾ p ← <tspan font-weight="600">partition</tspan>(a, lo, hi)')`)) === true);
 check('펴 보기는 모델을 바꾸지 않음', (await model()) === m0);
 await press(pc, 'KeyF');
-check('다시 F: 접힘', !(await has(`${pc}>${pb[0]}`)) && (await ev(`!T.svg().includes('#b9a9dc')`)) === true);
+check('다시 F: 접힘', !(await has(`${pc}>${pb[0]}`)) && (await ev(`!T.svg().includes('#8a72c4')`)) === true);
 await press(pc, 'KeyF');
 
 // m. 펴 보인 블록은 고를 수 있지만 고칠 수 없다
@@ -258,17 +257,17 @@ await press(pc, 'KeyF');
 await ev(`T.click('${pb[0]}'); T.key('ArrowDown', { shift: true }); T.key('ArrowDown', { shift: true }); T.key('KeyZ'); T.key('KeyF')`);
 await ev(`T.type('준비')`);
 await ev(`T.key('KeyF')`);
-check('펴 보인 쪽의 접기 영역은 Method의 접힘대로 (펴짐)', (await ev(`document.querySelectorAll('#svg rect[fill="#93aee8"]').length`)) === 3, await ev(`document.querySelectorAll('#svg rect[fill="#93aee8"]').length`));
+check('펴 보인 쪽의 접기 영역은 Method의 접힘대로 (펴짐)', (await ev(`document.querySelectorAll('#svg rect[data-edge]').length`)) === 3, await ev(`document.querySelectorAll('#svg rect[data-edge]').length`));
 await shot('p37-quick-open.png');
 await ev(`T.key('KeyF')`);
-check('펴 보인 쪽의 접기 영역은 Method의 접힘대로 (접힘)', (await ev(`document.querySelectorAll('#svg rect[fill="#93aee8"]').length`)) === 0 && !(await has(`${pc}>${pb[0]}`)) && (await has(`${pc}>${pb[3]}`)));
+check('펴 보인 쪽의 접기 영역은 Method의 접힘대로 (접힘)', (await ev(`document.querySelectorAll('#svg rect[data-edge]').length`)) === 0 && !(await has(`${pc}>${pb[0]}`)) && (await has(`${pc}>${pb[3]}`)));
 await ev(`T.key('KeyF')`);
 
 // q. 저장했다 다시 열면 펴짐이 남는다. 저장되는 그림에도 펴진 모습 그대로
 const shownIds = `[...document.querySelectorAll('#svg [data-id*=">"]')].map(e => e.dataset.id).sort().join()`;
 const before = await ev(shownIds);
 const file = await ev(saved);
-check('저장되는 그림과 보기 상태에 펴짐이 들어감', file.includes('#b9a9dc') && file.includes('fill="#6b7386"') && /"opened": \[\s*"/.test(file), file.slice(0, 400));
+check('저장되는 그림과 보기 상태에 펴짐이 들어감', file.includes('#8a72c4') && file.includes('fill="#6b7386"') && /"opened": \[\s*"/.test(file), file.slice(0, 400));
 await ev(`T.cmd('new')`);
 check('새 문서: 펴 보인 것이 없음', (await ev(shownIds)) === '');
 // 파일 고르기 창 대신, 저장한 파일을 '열기'의 파일 칸에 직접 넣는다
@@ -512,6 +511,77 @@ const hint = await ev(`T.key('ArrowUp', { shift: true }); T.msg()`);
 await ev(`document.querySelector('#optRanges').click()`);
 check('영역을 넓힐 수 없을 때: 접기 영역 보기가 꺼져 있으면 그것도 알림', !noHint.includes('접기 영역 보기') && hint.includes('같은 부모 안에서만') && hint.includes('"접기 영역 보기"가 꺼져'), [noHint, hint]);
 check('설정의 이름은 "접기 영역 보기"', (await ev(`document.querySelector('#optRanges').parentElement.textContent.trim()`)) === '접기 영역 보기');
+
+// z. 46번째 판: 겹친 테두리의 틈, 펴 보인 곳에만 있는 접기 영역
+await ev(`T.cmd('exQuick')`);
+d = await ev(`T.doc()`);
+{
+  const call = d.diagrams[0].body[0].yes[0].id, part = d.diagrams[1], pid = part.body.map(n => n.id);
+  const gid = id => `${call}>${id}`;
+  const sf = () => ev(`T.doc().sfolds || []`);
+  const box = sel => ev(`(el => el && ['x', 'y', 'width', 'height'].map(a => +el.getAttribute(a)))(document.querySelector('#svg ${sel}'))`);
+  const m0 = JSON.stringify((await ev(`T.doc()`)).diagrams);
+  await ev(`T.click('${call}')`); await keys('KeyZ', 'KeyA');
+  await ev(`T.click('${gid(pid[0])}'); T.key('ArrowDown', { shift: true })`); await keys('KeyZ', 'KeyF');
+  check('펴 보인 곳에서 zf: 이름을 묻는 칸이 열림', (await ev(`T.editing()`)) !== null, await ev(`T.msg()`));
+  await ev(`T.type('피벗 준비')`);
+  let f = await sf();
+  check('펴 보인 곳에서 zf: 이 자리의 접기 영역이 생기고 Method는 그대로', f.length === 1 && f[0].pre === call && f[0].name === '피벗 준비' && f[0].rids.join() === pid.slice(0, 2).join() && JSON.stringify((await ev(`T.doc()`)).diagrams) === m0, f);
+  const lid = `${call}>${f[0].id}`;
+  check('이 자리의 접기 영역: 만들면 접힌 채, 원본 다이어그램에는 없음', (await has(lid)) && !(await has(gid(pid[0]))) && (await has(pid[0])) && (await ev(`document.querySelectorAll('#svg rect[data-edge]').length`)) === 0);
+  await ev(`T.click('${lid}')`); await keys('KeyZ', 'KeyA');
+  const e1 = await box(`rect[data-edge="${lid}"]`), dash = await box(`rect[data-dash="${call}"]`);
+  check('이 자리의 접기 영역을 za로 폄: 접기 영역과 같은 테두리', (await has(gid(pid[0]))) && !!e1, e1);
+  check('겹친 테두리: 양옆에 틈 1px (테두리 3 + 틈 1)', !!e1 && !!dash && e1[0] - dash[0] === 4 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 4, [e1, dash]);
+  await ev(`T.click('${gid(pid[0])}')`); await keys('KeyZ', 'KeyA');
+  check('이 자리의 접기 영역 안에서 za: 호출 블록이 아니라 그 접기 영역이 접힘', (await has(lid)) && !(await has(gid(pid[0]))) && (await has(gid(pid[2]))), await ev(`T.msg()`));
+  await ev(`T.click('${lid}')`); await keys('KeyI');
+  check('이 자리의 접기 영역: i로 이름을 고침', (await ev(`T.editing()`)) === '피벗 준비', await ev(`T.msg()`));
+  await ev(`T.type('준비')`);
+  check('이 자리의 접기 영역: 고친 이름이 남음', (await sf())[0].name === '준비', await sf());
+  await ev(`T.click('${lid}')`); await keys('KeyD', 'KeyD');
+  check('이 자리의 접기 영역에서 dd: 고칠 수 없다고 알림', (await sf()).length === 1 && JSON.stringify((await ev(`T.doc()`)).diagrams) === m0 && (await ev(`T.msg()`)).includes('펴 보인 블록은 고칠 수 없습니다'), await ev(`T.msg()`));
+  // Method에서 묶인 블록 하나를 지우면 줄어든다
+  await ev(`T.click('${pid[1]}')`); await keys('KeyX');
+  await ev(`T.click('${lid}')`); await keys('KeyZ', 'KeyA');
+  check('Method에서 묶인 블록 하나를 지움: 접기 영역이 남은 블록으로 줄어듦', (await sf()).length === 1 && (await has(gid(pid[0]))) && !(await has(gid(pid[1]))) && !!(await box(`rect[data-edge="${lid}"]`)), await ev(`T.msg()`));
+  await ev(`T.click('${pid[0]}')`); await keys('KeyX');
+  check('묶인 블록이 모두 지워짐: 이 자리의 접기 영역이 사라짐', (await sf()).length === 0, await sf());
+  await keys('KeyU', 'KeyU');
+  check('되돌리면 이 자리의 접기 영역도 돌아옴', (await sf()).length === 1 && JSON.stringify((await ev(`T.doc()`)).diagrams) === m0, await sf());
+  // 저장했다 다시 열기
+  const file2 = await ev(saved);
+  check('저장되는 파일에 이 자리의 접기 영역이 들어감', file2.includes('"siteFolds"') && file2.includes('"준비"'), file2.slice(0, 300));
+  // zd: 이 자리의 것만 풀린다
+  await ev(`T.click('${gid(pid[0])}')`); await keys('KeyZ', 'KeyD');
+  check('이 자리의 접기 영역에서 zd: 풀림, Method는 그대로', (await sf()).length === 0 && JSON.stringify((await ev(`T.doc()`)).diagrams) === m0, await ev(`T.msg()`));
+  await keys('KeyU');
+  // ds: 보통 접기 영역이 되어 함께 들어온다
+  await ev(`T.click('${call}')`); await keys('KeyD', 'KeyS');
+  const yes = (await ev(`T.doc()`)).diagrams[0].body[0].yes;
+  check('호출 블록을 ds로 풂: 이 자리의 접기 영역이 보통 접기 영역으로 들어옴', yes[0].type === 'range' && yes[0].name === '준비' && yes[0].children.length === 2 && !yes[0].id.includes('>') && !('local' in yes[0]) && (await sf()).length === 0, yes[0]);
+  await keys('KeyU');
+  check('되돌리면 호출 블록과 이 자리의 접기 영역이 돌아옴', (await sf()).length === 1 && JSON.stringify((await ev(`T.doc()`)).diagrams) === m0);
+  // 호출 블록을 지우면 함께 사라진다
+  await ev(`T.click('${call}')`); await keys('KeyX');
+  check('호출 블록을 지움: 이 자리의 접기 영역도 사라짐', (await sf()).length === 0, await sf());
+  await keys('KeyU');
+  await shot('p46-site-fold.png');
+}
+// Method에 원래 있던 접기 영역은 펴 보인 곳에서 풀 수 없다
+{
+  d = await ev(`T.doc()`);
+  const call = d.diagrams[0].body[0].yes[0].id, pid = d.diagrams[1].body.map(n => n.id);
+  await ev(`T.click('${pid[2]}'); T.key('ArrowDown', { shift: true })`); await keys('KeyZ', 'KeyF');
+  await ev(`T.type('끝내기')`);
+  const orig = (await ev(`T.doc()`)).diagrams[1].body.find(n => n.type === 'range');
+  await ev(`T.click('${orig.id}')`); await keys('KeyZ', 'KeyA');
+  await ev(`T.click('${call}')`); await keys('KeyZ', 'KeyO');   // ds를 되돌려도 펴짐(보기 상태)은 돌아오지 않으므로 다시 편다
+  const before = JSON.stringify(await ev(`T.doc()`));
+  await ev(`T.click('${call}>${orig.children[0].id}')`); await keys('KeyZ', 'KeyD');
+  check('펴 보인 곳에서 Method의 접기 영역에 zd: 풀지 않고 알림', JSON.stringify(await ev(`T.doc()`)) === before && (await ev(`T.msg()`)).includes('여기서 풀 수 없습니다'), await ev(`T.msg()`));
+  await shot('p46-borders.png');
+}
 
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');

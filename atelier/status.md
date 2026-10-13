@@ -27,12 +27,12 @@ updated: 2026-10-13
 | 호출 블록 펴 보기 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q13~Q16) | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q1~Q12, Q17, Q19~Q21 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
-| 접기 영역 테두리 시안 (2026-10-13, 답을 기다림: T1 · T2 · P1 · P2, 확인 1~4) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
+| 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
 
-**프로토타입으로 UX 규칙을 한 묶음씩 리뷰하는 중.** 프로토타입 45번째 판이 게시되어 있고, 메인테이너가 써 볼 차례입니다. 리뷰 1판(펴진 접기 영역의 왼쪽 막대, 호출 블록 펴 보기)의 단축키를 Vim 키로 바꾼 판입니다. 리뷰 순서는 [[prototype#리뷰 순서]]에 있습니다. 요구사항과 조작 규칙을 다시 짜는 일은 리뷰가 끝난 뒤에 합니다.
+**프로토타입으로 UX 규칙을 한 묶음씩 리뷰하는 중.** 프로토타입 46번째 판이 게시되어 있고, 메인테이너가 써 볼 차례입니다. 45번째 판(단축키를 Vim 키로)에 inbox의 둘을 넣은 판입니다: 펴진 접기 영역은 굵은 테두리로, 펴 보인 호출 블록은 가는 점선으로, 그리고 펴 보인 곳에만 있는 접기 영역. 리뷰 순서는 [[prototype#리뷰 순서]]에 있습니다. 요구사항과 조작 규칙을 다시 짜는 일은 리뷰가 끝난 뒤에 합니다.
 
 2026-10-13에 단축키 설계를 앞당겼습니다. Vim 키를 들이고 키 배열은 하나로 둡니다([[0025-vim-keys|ADR-0025]]). 키 표의 초안은 [[03-editor#4. 단축키]]에 있습니다.
 
@@ -57,7 +57,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 ## 이번과 다음 세션에 할 것
 
 - [ ] 메인테이너가 Vim 키로 써 보기. 한글 입력 상태에서 `j`, `dd`, `zf`가 듣는 것은 확인함(2026-10-13). 남은 것: 한글을 적다가 `Esc`를 누르면 한 번에 받아들이는지, 키 표가 손에 맞는지. Claude가 정해 놓은 키는 [[debt#확인해 주세요]]의 맨 위
-- [ ] **다음 세션:** 메인테이너가 프로토타입 1판과 2판(45번째 판. 단축키는 Vim 키, 풀기는 `ds`)을 써 본 느낌을 듣고, 3판(고치기 규칙, Q1 · Q2 · Q4)으로 간다 → [[prototype#리뷰 순서]]
+- [ ] **다음 세션:** 메인테이너가 프로토타입 1판과 2판(46번째 판. 단축키는 Vim 키, 풀기는 `ds`, 접기 영역은 테두리)을 써 본 느낌을 듣고, 3판(고치기 규칙, Q1 · Q2 · Q4)으로 간다 → [[prototype#리뷰 순서]]
 - [ ] 새 문서 구조를 Obsidian에서 열어 보고 어색한 곳을 알려 주기 (메인테이너). 2026-10-12에 Claude가 정해 놓고 확인받지 못한 것은 [[debt#확인해 주세요]]의 맨 위 세 묶음
 
 ## 열린 질문이 있는 곳
