@@ -233,7 +233,9 @@ function place(n, x, y, w, h, S, o, shown) {
     placeSeq(n.kids, x + f.l, y + f.t, w - f.l, h - f.t, S, o, inShown);
     o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar), text);
   } else {
-    o.a.push(rect(x, y, w, h, C.gap), rect(x, y, w, K.band, isCall ? C.callBand : C.band), text);
+    // 바탕과 띠에는 가는 선을 두르지 않는다. 두르면 그 선이 한쪽 틈(1px)으로 번져 왼쪽과 오른쪽 틈이 달라 보인다
+    o.a.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.gap}"/>`, `<rect x="${x}" y="${y}" width="${w}" height="${K.band}" fill="${isCall ? C.callBand : C.band}"/>`,
+      `<rect x="${x}" y="${y + K.band - 1}" width="${w}" height="1" fill="${C.stroke}"/>`, text);
     placeSeq(n.kids, x + f.l, y + f.t, w - f.l - f.r, h - f.t - f.b, S, o, inShown, f.ins);
     const dash = n.local && S.local === 'dash' ? ' stroke-dasharray="7 4"' : '';
     o.b.push(`<rect x="${x + K.bw / 2}" y="${y + K.bw / 2}" width="${w - K.bw}" height="${h - K.bw}" fill="none" stroke="${isCall ? C.callEdge : C.edge}" stroke-width="${K.bw}"${dash}/>`);
