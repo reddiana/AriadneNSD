@@ -90,7 +90,7 @@ d = await ev(`T.doc()`);
 check('코드식: Event 하나', d.diagrams.length === 1 && d.diagrams[0].kind === 'event', d.diagrams.map(x => x.kind));
 const first = d.diagrams[0].body[0].id;
 await ev(`T.click('${first}'); T.key('KeyE')`);
-check('블록을 고르고 E: 빼지 않고 알려 줌', (await ev(`T.doc().diagrams.length`)) === 1 && (await ev(`T.msg()`)).includes('M을 누르세요'), await ev(`T.msg()`));
+check('블록을 고르고 E: 빼지 않고 알려 줌', (await ev(`T.doc().diagrams.length`)) === 1 && (await ev(`T.msg()`)).includes('m을 누르세요'), await ev(`T.msg()`));
 await ev(`T.key('KeyM')`);
 check('블록을 고르고 M: 머리 이름을 묻는 칸이 열림', (await ev(`T.editing()`)) === 'Method 1', await ev(`T.editing()`));
 await ev(`T.key('Enter', { editor: true, key: 'Enter' })`);
@@ -127,14 +127,14 @@ s = await ev(`T.sum()`);
 check('결과만 적음: n ← Method 1', s.calls.join() === 'n ← Method 1 -> Method 1', s);
 
 // g. 호출을 하나 더 넣고(C, 1번), 머리에 괄호를 붙이면 이름이 따라 바뀌고 빈 인자가 채워짐
-await ev(`T.click('${callId}'); T.key('KeyC'); T.key('Digit1')`);
+await ev(`T.click('${callId}'); T.key('KeyA'); T.key('KeyC'); T.key('Digit1')`);
 s = await ev(`T.sum()`);
 check('C로 넣은 호출: 받는 것이 없으면 인자를 묻지 않음', s.calls.length === 2 && s.calls[1] === 'Method 1 -> Method 1' && (await ev(`T.editing()`)) === null, s);
 await ev(`T.click('${mId}'); T.key('Enter', { key: 'Enter' })`);
 await ev(`T.type('count_up(n)')`);
 s = await ev(`T.sum()`);
 check('머리를 count_up(n)으로: 호출 블록 모두 이름이 바뀌고 인자가 채워짐', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|count_up(n) -> count_up(n)', s);
-await ev(`T.click('${callId}'); T.key('KeyC'); T.key('Digit1')`);
+await ev(`T.click('${callId}'); T.key('KeyA'); T.key('KeyC'); T.key('Digit1')`);
 check('C로 넣은 호출: 받는 것이 있으면 인자를 고른 채로 열림', (await ev(`T.editing()`)) === 'count_up(n)' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
 await ev(`T.type('count_up(5)')`);
 s = await ev(`T.sum()`);
@@ -215,8 +215,8 @@ check('방향키로 펴 보인 블록에 들어감', (await ev(`document.querySe
 await press(ghost, 'Enter', `{ key: 'Enter' }`);
 check('펴 보인 블록에서 Enter: 고치지 않고 알려 줌', (await ev(`T.editing()`)) === null && (await ev(`T.msg()`)).includes('펴 보인 블록은 고칠 수 없습니다'), await ev(`T.msg()`));
 await ev(`T.click('${pb[1]}'); T.key('KeyC', { ctrl: true })`);
-for (const [code, o] of [['Delete', '{}'], ['KeyP', '{}'], ['KeyI', '{ shift: true }'], ['KeyC', '{}'], ['KeyM', '{}'], ['KeyU', '{}'], ['KeyX', '{ ctrl: true }'], ['KeyV', '{ ctrl: true }'], ['KeyF', '{ shift: true }']]) await press(ghost, code, o);
-await ev(`T.click('${ghost}'); T.key('KeyS'); T.key('KeyW')`);
+for (const [code, o] of [['Delete', '{}'], ['KeyO', '{}'], ['KeyO', '{ shift: true }'], ['KeyP', '{}'], ['KeyM', '{}'], ['KeyX', '{ ctrl: true }'], ['KeyV', '{ ctrl: true }']]) await press(ghost, code, o);
+for (const [k1, k2] of [['KeyA', 'KeyI'], ['KeyA', 'KeyC'], ['KeyD', 'KeyD'], ['KeyD', 'KeyS'], ['KeyZ', 'KeyF'], ['KeyS', 'KeyW']]) await ev(`T.click('${ghost}'); T.key('${k1}'); T.key('${k2}')`);
 check('펴 보인 블록: 넣기 · 지우기 · 감싸기 · 붙여넣기가 아무것도 바꾸지 않음', (await model()) === m0 && (await ev(`T.editing()`)) === null && (await ev(`T.msg()`)).includes('펴 보인 블록은 고칠 수 없습니다'), await ev(`T.msg()`));
 await press(ghost, 'KeyC', '{ ctrl: true }');
 await press(pb[pb.length - 1], 'KeyV', '{ ctrl: true }');
@@ -226,8 +226,8 @@ check('펴 보인 블록을 복사해 붙이면 보통 블록', d.diagrams[1].bo
 await ev(`T.key('KeyZ', { ctrl: true })`);
 check('되돌리면 붙이기 전으로, 펴짐은 그대로', (await model()) === m0 && (await has(ghost)));
 
-// n. G: 펴 보인 블록에서 원래 블록으로
-await press(ghost, 'KeyG');
+// n. gd: 펴 보인 블록에서 원래 블록으로
+await ev(`T.click('${ghost}'); T.key('KeyG'); T.key('KeyD')`);
 await ev(`T.key('Enter', { key: 'Enter' })`);
 check('펴 보인 블록에서 G: 원래 블록을 고름 (거기서는 고쳐짐)', (await ev(`T.editing()`)) === 'pivot = a[hi];', [await ev(`T.editing()`), await ev(`T.msg()`)]);
 await ev(`T.type('pivot = a[lo];')`);
@@ -255,7 +255,7 @@ check('모델은 처음 그대로', (await model()) === m0);
 
 // p. 확인 장면: partition 호출과 재귀 호출 하나를 펴고, partition 안에 접기 영역 하나를 펴 둔다
 await press(pc, 'KeyF');
-await ev(`T.click('${pb[0]}'); T.key('ArrowDown', { shift: true }); T.key('ArrowDown', { shift: true }); T.key('KeyF', { shift: true })`);
+await ev(`T.click('${pb[0]}'); T.key('ArrowDown', { shift: true }); T.key('ArrowDown', { shift: true }); T.key('KeyZ'); T.key('KeyF')`);
 await ev(`T.type('준비')`);
 await ev(`T.key('KeyF')`);
 check('펴 보인 쪽의 접기 영역은 Method의 접힘대로 (펴짐)', (await ev(`document.querySelectorAll('#svg rect[fill="#93aee8"]').length`)) === 3, await ev(`document.querySelectorAll('#svg rect[fill="#93aee8"]').length`));
@@ -304,7 +304,7 @@ await ev(HELPERS);
 const old = await ev(`(() => { document.querySelector('#optSyntax').dispatchEvent(new Event('change')); const d = T.doc(), cs = d.diagrams[0].body; return d.diagrams.map(x => x.kind + ':' + x.event).join('|') + ' / ' + cs.map(c => T.line(c, d)).join('|') + ' / ' + cs.some(c => 'text' in c); })()`);
 check('예전 문서: 종류를 가르고, 자유 글자를 결과와 인자로 가름', old === 'event:타이머|method:센서 읽기|method:calc(x) / 센서 읽기|y ← calc(3)|v ← calc(x + 1)|calc(그냥 글자)|없어진 것 / false', old);
 
-// v. Vim 키 (시험): 스위치를 켜면 한 글자 키가 Vim 식으로 바뀐다 (ADR-0025)
+// v. Vim 키: 키 배열은 하나이고, 표준 키 위에 Vim 키가 얹혀 있다 (ADR-0025)
 await ev(`T.cmd('exCode')`);
 const texts = `T.doc().diagrams[0].body.map(n => n.type === 'process' ? n.text : n.type).join('|')`;
 const where = `document.querySelector('#where').textContent`;
@@ -313,10 +313,7 @@ const keys = async (...ks) => { for (const k of ks) await ev(`T.key('${k.replace
 const t0 = await ev(texts);
 d = await ev(`T.doc()`);
 const b0 = d.diagrams[0].body[0].id, hd = d.diagrams[0].id;
-await ev(`T.click('${b0}')`); await keys('KeyJ');
-check('Vim 끔: j는 아무 일도 하지 않음', (await ev(where)) === '처리' && (await ev(texts)) === t0);
-await ev(`document.querySelector('#optVim').click()`);
-check('Vim 켬: 키 표가 바뀜', await ev(`!document.querySelector('#keysVim').hidden && document.querySelector('#keysNow').hidden`));
+check('끄고 켜는 스위치가 없음', await ev(`!document.querySelector('#optVim') && document.querySelectorAll('dl.keys').length === 1`));
 await ev(`T.click('${b0}')`); await keys('KeyJ');
 check('j: 아래 블록으로', (await ev(where)) === 'If', await ev(where));
 await keys('KeyK', 'KeyK');
@@ -384,14 +381,10 @@ await keys('BracketLeft', 'BracketLeft');
 const atFirst = await ev(where);
 await keys('BracketRight', 'BracketRight', 'KeyJ');
 check('[[ ]]: 앞 · 뒤 다이어그램', atFirst === 'Method 머리' && (await ev(where)) === '처리', [atFirst, await ev(where)]);
-await ev(`document.querySelector('#optVim').click()`);
 await ev(`T.cmd('exCode')`);
 d = await ev(`T.doc()`);
-await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyP'); await ev(`T.type('p1')`);
-check('Vim 끔: P는 다시 처리 넣기', (await ev(texts)).startsWith('tick++;|p1|if') && (await ev(mode)) === '', await ev(texts));
-await keys('KeyP');
-await ev(`document.querySelector('#editor').value = 'p2'; T.key('Escape', { editor: true, key: 'Escape' })`);
-check('Vim 끔: Esc는 그만두기 (지금 그대로)', await ev(`T.doc().diagrams[0].body[2].text === ''`), await ev(texts));
+await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyW', '+KeyK', 'KeyC', '+KeyD');
+check('옛 한 글자 키(W, K, C, D)는 아무것도 넣지 않음', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
 
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
