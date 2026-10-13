@@ -102,7 +102,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">50번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">51번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -221,7 +221,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
         <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
-        <li><b>메뉴의 글자가 영어입니다 (50번째 판).</b> 오른쪽 클릭 메뉴와, 부를 Method를 고르는 메뉴입니다. 도구 모음과 안내 글, 상태 줄의 알림은 한국어 그대로입니다.</li>
+        <li><b>메뉴의 글자를 한국어로 되돌렸습니다 (51번째 판).</b> 50번째 판에서 영어로 바꿨던 것입니다. 제품은 영어를 기본으로 하고 한국어를 지원하지만, 이 프로토타입은 한국어로 둡니다.</li>
         <li><b>오른쪽 클릭 메뉴에 한 번 누르는 키도 함께 적습니다 (49번째 판).</b> 접기 · 펴기는 <kbd>za</kbd> · <kbd>f</kbd>, 지우기는 <kbd>x</kbd> · <kbd>Del</kbd>, 글자 고치기는 <kbd>i</kbd> · <kbd>Enter</kbd>.</li>
         <li><b>펴 보인 호출 블록의 점선이 1px 안으로 들어갑니다 (48번째 판).</b> 바깥의 가는 선은 다른 블록처럼 그대로 있고, 점선은 그 안쪽에 있습니다.</li>
         <li><b>지금 보는 판의 번호가 왼쪽 위 이름 아래에 보입니다 (47번째 판).</b></li>
@@ -1417,8 +1417,8 @@ let callPos = 'after';
 function callCmd(shift) {
   if (locked()) return;
   callPos = shift ? 'before' : 'after';
-  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'call:' + d.id, label: 'Call: ' + (d.event || '(no name)') }));
-  items.push({ cmd: 'call:new', label: 'Create a new Method and call it' });
+  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'call:' + d.id, label: '호출: ' + (d.event || '(이름 없음)') }));
+  items.push({ cmd: 'call:new', label: '새 Method를 만들고 호출' });
   choose(items);
   say('부를 Method를 고르세요: ↑↓와 Enter, 숫자 키, 클릭 (Esc: 그만두기)');
 }
@@ -1452,8 +1452,8 @@ function retargetCmd() {
 function retargetAsk(id) {
   selectOne(id); render();
   const n = idx.get(id).node;
-  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'retarget:' + d.id, label: (d.id === n.target ? 'Current: ' : 'Call: ') + (d.event || '(no name)') }));
-  items.push({ cmd: 'retarget:new', label: 'Create a new Method and call it' });
+  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'retarget:' + d.id, label: (d.id === n.target ? '지금: ' : '호출: ') + (d.event || '(이름 없음)') }));
+  items.push({ cmd: 'retarget:new', label: '새 Method를 만들고 호출' });
   choose(items, Math.max(0, items.findIndex(i => i.cmd === 'retarget:' + n.target)));
   say('부를 Method를 고르세요. 적어 둔 인자와 결과는 남습니다 (Esc: 그만두기)');
 }
@@ -2165,20 +2165,20 @@ function showMenu(x, y) {
   const it = (cmd, label, key) => ({ cmd, label, key: VIMKEY[cmd] ?? key });
   const r = selRange(), d = activeDia();
   const one = r && !r.event && r.items.length === 1 ? r.items[0] : null;
-  const fresh = [it('newDia:event', 'New empty Event diagram', '⇧E'), it('newDia:method', 'New empty Method diagram', '⇧M')];
+  const fresh = [it('newDia:event', '새 빈 Event 다이어그램', '⇧E'), it('newDia:method', '새 빈 Method 다이어그램', '⇧M')];
   menuCmds = [];
   menuItems = r && r.event
-    ? [it('edit', 'Edit text', 'Enter'), it('ins:process', 'Insert Process at top of body', 'P'), null,
-       it('kind:event', 'Change to Event header', 'E'), it('kind:method', 'Change to Method header', 'M'), ...fresh, null,
-       it('del', 'Remove header', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', 'Delete diagram', '⇧Del')] : [])]
-    : [it('edit', one && one.type === 'call' ? 'Edit arguments and result' : 'Edit text', 'Enter'), ...(one && one.type === 'call' ? [it('retargetAsk', 'Change called Method…', 'R'), it('goto', shownSel() ? 'Go to original block' : 'Go to called Method', 'G'), ...(one.target != null ? [it('fold', shown.has(one.id) ? 'Collapse' : 'Expand in place', 'F')] : [])] : []), null,
-       it('ins:process', 'Insert Process after', 'P'), it('ins:if', 'Insert If after', 'I'), it('ins:case', 'Insert Case after', 'K'), it('ins:while', 'Insert While after', 'W'), it('ins:dowhile', 'Insert Do-While after', 'D'), it('callAsk', 'Insert Call after…', 'C'), null,
-       it('kind:method', 'Extract to new Method (leaves a Call block)', 'M'),
-       ...(d.event == null ? [it('head:event', 'Add Event header to this diagram', ''), it('head:method', 'Add Method header to this diagram', '')] : []), ...fresh, null,
-       it('wrap:while', 'Wrap in While', 'S W'), it('wrap:dowhile', 'Wrap in Do-While', 'S D'), it('wrap:if', 'Wrap in If', 'S I'), it('wrap:case', 'Wrap in Case', 'S K'), it('unwrap', one && one.type === 'call' ? 'Unwrap: replace with the Method\'s blocks' : 'Unwrap control block', 'U'), null,
-       ...(caseAt() ? [it('laneAdd', 'Case: add branch', '+'), it('laneRemove', 'Case: remove this branch', '-'), it('laneLabel', 'Case: rename branch', 'L'), null] : []),
-       it('fold', 'Fold / Unfold', 'F'), it('makeRegion', 'Create fold region', '⇧F'), it('releaseRegion', 'Remove fold region', 'Ctrl+⇧F'), null,
-       it('cut', 'Cut', 'Ctrl+X'), it('copy', 'Copy', 'Ctrl+C'), it('paste', 'Paste after', 'Ctrl+V'), it('del', 'Delete', 'Del')];
+    ? [it('edit', '글자 고치기', 'Enter'), it('ins:process', '본문 맨 앞에 처리 넣기', 'P'), null,
+       it('kind:event', 'Event 머리로 바꾸기', 'E'), it('kind:method', 'Method 머리로 바꾸기', 'M'), ...fresh, null,
+       it('del', '머리 떼기', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', '다이어그램 지우기', '⇧Del')] : [])]
+    : [it('edit', one && one.type === 'call' ? '인자와 결과 고치기' : '글자 고치기', 'Enter'), ...(one && one.type === 'call' ? [it('retargetAsk', '부를 Method 바꾸기…', 'R'), it('goto', shownSel() ? '원래 블록으로 가기' : '부르는 Method로 가기', 'G'), ...(one.target != null ? [it('fold', shown.has(one.id) ? '접기' : '펴 보기', 'F')] : [])] : []), null,
+       it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:case', '뒤에 Case 넣기', 'K'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
+       it('kind:method', '새 Method로 빼기 (그 자리에는 호출 블록)', 'M'),
+       ...(d.event == null ? [it('head:event', '이 다이어그램에 Event 머리 달기', ''), it('head:method', '이 다이어그램에 Method 머리 달기', '')] : []), ...fresh, null,
+       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('wrap:case', 'Case로 감싸기', 'S K'), it('unwrap', one && one.type === 'call' ? '풀기: Method의 블록들로 바꾸기' : '풀기: 제어 블록 벗기기', 'U'), null,
+       ...(caseAt() ? [it('laneAdd', 'Case: 갈래 넣기', '+'), it('laneRemove', 'Case: 이 갈래 빼기', '-'), it('laneLabel', 'Case: 갈래 이름 고치기', 'L'), null] : []),
+       it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
+       it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
   menuAt = -1;
   drawMenu();
   placeMenu(x, y);
