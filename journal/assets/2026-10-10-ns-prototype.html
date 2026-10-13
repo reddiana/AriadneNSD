@@ -75,6 +75,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .status { background: var(--panel); border-top: 1px solid var(--line); padding-block: 6px; padding-inline: 16px; font-size: 12.5px; color: var(--muted); min-height: 30px; display: flex; gap: 14px; align-items: center; }
 .status .msg { color: var(--fg); }
 .status .msg.flash { color: var(--accent); font-weight: 500; }
+.status .mode { font-family: var(--mono); color: var(--accent); font-weight: 500; }
 .status .where { margin-left: auto; font-variant-numeric: tabular-nums; }
 
 .menu { position: fixed; z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; min-width: 210px; }
@@ -158,6 +159,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
         <label><input type="checkbox" id="optRanges" checked> 접기 영역 이름 띠 보기</label>
+        <label title="한 글자 키를 Vim 식으로 읽습니다. 끄면 지금까지의 키 그대로입니다"><input type="checkbox" id="optVim"> Vim 키 (시험)</label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
           <output id="zoomOut">100%</output>
@@ -173,7 +175,27 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
     <aside class="side">
       <h2>써 보는 법</h2>
       <p>블록을 클릭해 고르고 키보드로 다룹니다. 오른쪽 클릭하면 메뉴가 나옵니다. 고친 내용은 이 브라우저에 남습니다.</p>
-      <dl class="keys">
+      <dl class="keys" id="keysVim" hidden>
+        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 방향키도 그대로 듣습니다</dd>
+        <dt><kbd>{</kbd> <kbd>}</kbd></dt><dd>제어 블록을 한 덩어리로 보고 위·아래 블록으로 (<kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>와 같음)</dd>
+        <dt><kbd>gg</kbd> / <kbd>G</kbd></dt><dd>이 다이어그램의 머리(없으면 첫 블록) / 마지막 블록</dd>
+        <dt><kbd>[[</kbd> / <kbd>]]</kbd></dt><dd>앞 / 뒤 다이어그램</dd>
+        <dt><kbd>gd</kbd></dt><dd>호출 블록에서: 부르는 Method로. 펴 보인 블록에서는 원래 블록으로</dd>
+        <dt><kbd>v</kbd></dt><dd>영역 고르기 시작. <kbd>j</kbd> <kbd>k</kbd>로 넓히고 <kbd>y</kbd> <kbd>d</kbd> <kbd>s</kbd> <kbd>zf</kbd>를 누릅니다. <kbd>v</kbd>나 <kbd>Esc</kbd>로 끝냅니다. <kbd>Shift</kbd>+<kbd>↑↓</kbd>와 <kbd>Shift</kbd>+클릭도 그대로 됩니다</dd>
+        <dt><kbd>i</kbd> <kbd>Enter</kbd> <kbd>F2</kbd></dt><dd>글자 고치기. 고치다가 <kbd>Enter</kbd>와 <kbd>Esc</kbd> 어느 쪽을 눌러도 <b>적은 대로 받아들입니다</b>. 되돌리려면 <kbd>u</kbd></dd>
+        <dt><kbd>o</kbd> / <kbd>O</kbd></dt><dd>처리 블록을 뒤 / 앞에 넣고 바로 적습니다</dd>
+        <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다</dd>
+        <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>감싸기</dd>
+        <dt><kbd>ds</kbd></dt><dd>제어 블록 풀기</dd>
+        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기. 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd>나 <kbd>x</kbd> 한 번</dd>
+        <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기. <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
+        <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시</dd>
+        <dt><kbd>za</kbd> <kbd>f</kbd> / <kbd>zf</kbd> / <kbd>zd</kbd></dt><dd>접기 · 펴기 / 접기 영역 만들기 / 접기 영역 풀기</dd>
+        <dt><kbd>e</kbd> <kbd>m</kbd> <kbd>r</kbd> <kbd>+</kbd> <kbd>-</kbd></dt><dd>지금 키와 같습니다: Event, Method(<kbd>E</kbd> <kbd>M</kbd>은 새 빈 다이어그램), 부를 Method 바꾸기, 갈래 넣기 · 빼기</dd>
+        <dt>그대로</dt><dd><kbd>Delete</kbd>, <kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>Z</kbd> <kbd>Y</kbd>, <kbd>Ctrl</kbd>+방향키, <kbd>Ctrl</kbd>+휠</dd>
+        <dt>없음</dt><dd>갈래 이름 고치기(<kbd>L</kbd>)는 키가 없습니다. 갈래 이름을 더블클릭하세요</dd>
+      </dl>
+      <dl class="keys" id="keysNow">
         <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>그림 순서대로 이동 (다이어그램 안에서만)</dd>
         <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>If 안에서는 건너편 갈래의 첫 블록으로. 왼쪽 갈래에서 <kbd>←</kbd>는 위쪽 바깥 블록, 오른쪽 갈래에서 <kbd>→</kbd>는 아래쪽 바깥 블록. 그 밖에서는 바깥 블록 / 안쪽 첫 블록</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></dt><dd>제어 블록을 안쪽까지 한 덩어리로 보고 위·아래 블록으로. 제어 블록 안으로 들어가지 않고 제어 블록 전체를 고릅니다</dd>
@@ -199,7 +221,14 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
       </dl>
 
-      <h2>이번에 바뀐 것 (10-11)</h2>
+      <h2>이번에 바뀐 것 (10-13)</h2>
+      <ul>
+        <li><b>Vim 키를 써 볼 수 있습니다.</b> 캔버스 위의 "Vim 키 (시험)"을 켜면 한 글자 키가 Vim 식으로 바뀌고, 위의 키 표도 바뀝니다. 끄면 지금까지의 키 그대로입니다. 켜 둔 동안 상태 줄 왼쪽에 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>글자는 자판의 자리로 읽습니다.</b> 한글 입력 상태에서도 <kbd>j</kbd> 자리의 키는 아래로 갑니다.</li>
+        <li><b>아직 지금 키로 적혀 있는 곳.</b> 도구 모음의 풍선말과 상태 줄의 안내 글 일부(예: "펴려면 F")는 Vim 키를 켜도 바뀌지 않습니다. 오른쪽 클릭 메뉴의 키는 바뀝니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-11)</h2>
       <ul>
         <li><b>호출 블록을 펴 봅니다.</b> 호출 블록을 고르고 <kbd>F</kbd>를 누르면 부르는 Method의 블록이 그 자리에 보입니다. 보기만 바뀌고 내용은 그대로입니다. 펴 보인 블록은 글자가 회색이고, 고를 수 있지만 고칠 수 없습니다. <kbd>G</kbd>를 누르면 원래 블록으로 갑니다. 펴 보인 안쪽의 호출 블록도 펼 수 있고, 같은 Method를 세 겹째 펴면 알려 줍니다. 펴짐은 접힘처럼 파일에 함께 들어가고 <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다.</li>
         <li><b>펴진 접기 영역은 왼쪽 막대와 이름 띠로 보입니다.</b> 영역 둘레의 가는 파란 선을 없애고, 왼쪽에 영역의 끝까지 내려가는 막대를 그립니다. 안의 블록은 막대만큼 들어갑니다. "접기 영역 이름 띠 보기"를 끄면 띠와 막대가 함께 사라집니다.</li>
@@ -273,6 +302,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
   </div>
 
   <footer class="status" aria-live="polite">
+    <span class="mode" id="mode"></span>
     <span class="msg" id="msg">블록을 클릭해 보세요.</span>
     <span class="where" id="where"></span>
   </footer>
@@ -373,7 +403,7 @@ let idx = new Map();
 let editing = null;
 let chord = null;
 let zoom = 1;
-const opts = { syntax: true, mono: true, showRegions: true };
+const opts = { syntax: true, mono: true, showRegions: true, vim: false };
 let exporting = false;
 // 펴져 있는 접기 영역을 화면에 어떻게 보여 줄지. 저장되는 그림에는 넣지 않는다
 const regionView = () => exporting || opts.showRegions === false ? 'off' : 'band';
@@ -1007,6 +1037,7 @@ function render() {
   svg.innerHTML = drawSVG(lay, true);
   $('#zoomOut').textContent = Math.round(zoom * 100) + '%';
   $('#where').textContent = describeSel();
+  showMode();
   if (sel && diaOf(sel.anchor)) lastDia = diaOf(sel.anchor).id;
 }
 function describeSel() {
@@ -1116,7 +1147,8 @@ function startEdit(id, o = {}) {
   const box = T.get(id);
   if (!box) return;
   const orig = currentText(id);
-  editing = { id, orig, naming: !!o.naming, fresh: !!o.fresh };
+  editing = { id, orig, naming: !!o.naming, fresh: !!o.fresh, retry: !!o.retry };
+  showMode();
   editor.value = orig;
   editor.style.left = (box.x * zoom) + 'px';
   editor.style.top = (box.y * zoom) + 'px';
@@ -1134,11 +1166,12 @@ function startEdit(id, o = {}) {
     // 한 줄로 고친다. 이름은 잠겨 있고 인자(괄호 안)와 결과(← 앞)만 바뀐다. 인자가 있으면 인자를, 없으면 맨 앞(결과 자리)을 고른 채로 연다
     const p = callParts(n), at = (p.res + p.name).length;
     if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
-    say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (Enter: 정하기, Esc: 그만두기)' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (Enter: 정하기, Esc: 그만두기)');
+    say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (' + endHint() + ')' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (' + endHint() + ')');
   }
-  if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (Enter: 정하기, Esc: 그만두기)');
+  if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (' + endHint() + ')');
   else if (o.naming) say('접은 영역의 이름을 적으세요. Enter나 Esc는 기본 이름 그대로 둡니다');
 }
+const endHint = () => opts.vim ? 'Enter · Esc: 정하기' : 'Enter: 정하기, Esc: 그만두기';
 function growEditor() {
   const lines = editor.value.split('\n').length;
   editor.style.height = Math.max(+editor.dataset.minh, (lines * K.lh + 2 * K.padY) * zoom) + 'px';
@@ -1185,7 +1218,7 @@ function commitEdit(cancel) {
       const bad = !p ? '이름은 호출 블록에서 고칠 수 없습니다. Method의 머리에서 고치거나 R로 다른 Method를 고르세요'
         : p.args && !headParens(t.event) ? '받는 것이 없는 Method입니다. 넘겨주려면 먼저 머리에 괄호를 붙이세요: 이름(받는 것)' : '';
       if (bad) {
-        render(); startEdit(e.id, { fresh: e.fresh }); editor.value = v; growEditor();
+        render(); startEdit(e.id, { fresh: e.fresh, retry: true }); editor.value = v; growEditor();
         return say(bad + ' (Esc: 그만두기)', true);
       }
       if (!e.fresh) pushUndo();
@@ -1197,7 +1230,7 @@ function commitEdit(cancel) {
     const dup = !!d0 && doc.diagrams.some(d => d.id !== e.id && d.event != null && nameKey(d) === key);
     if (d0 && (dup || !key)) {
       // 머리의 이름은 비우거나 겹칠 수 없다: 고치던 칸을 다시 연다
-      render(); startEdit(e.id, { fresh: e.fresh }); editor.value = v; growEditor();
+      render(); startEdit(e.id, { fresh: e.fresh, retry: true }); editor.value = v; growEditor();
       return say(dup ? '같은 이름의 머리가 이미 있습니다. 다른 이름을 적으세요 (Esc: 그만두기)' : '머리의 이름은 비울 수 없습니다 (Esc: 그만두기)', true);
     }
     if (!e.fresh) pushUndo();
@@ -1212,7 +1245,8 @@ editor.addEventListener('keydown', ev => {
   ev.stopPropagation();
   if (ev.isComposing || ev.keyCode === 229) return;
   if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commitEdit(false); }
-  else if (ev.key === 'Escape') { ev.preventDefault(); commitEdit(true); }
+  // Vim 키에서는 Esc가 적은 대로 받아들이고 나간다. 받아들이지 못해 다시 연 칸에서만 그만두기다
+  else if (ev.key === 'Escape') { ev.preventDefault(); commitEdit(!opts.vim || !!editing?.retry); }
 });
 editor.addEventListener('blur', () => commitEdit(false));
 
@@ -1387,7 +1421,7 @@ function copy(cut) {
   // 펴 보인 블록을 복사하면 원래 블록이 복사된다 (붙이면 보통 블록)
   clip = JSON.stringify(shownSel() ? r.items.map(n => idx.get(n.rid).node) : r.items);
   if (cut) del();
-  say((cut ? '잘라냈습니다' : '복사했습니다') + '. Ctrl+V를 누르면 고른 블록 뒤에 붙습니다');
+  say((cut ? '잘라냈습니다' : '복사했습니다') + (opts.vim ? '. p를 누르면 고른 블록 뒤에, P는 앞에 붙습니다' : '. Ctrl+V를 누르면 고른 블록 뒤에 붙습니다'));
 }
 function reId(list, plain) {
   // 붙여 넣을 사본에 새 id를 준다. 강조 영역 안에 붙일 때는 사본의 강조를 뗀다 (중첩 금지)
@@ -1403,15 +1437,16 @@ function reId(list, plain) {
   });
   return out;
 }
-function paste() {
+function paste(pos = 'after') {
   if (locked()) return;
-  if (!clip) return say('붙일 것이 없습니다. 먼저 Ctrl+C나 Ctrl+X를 누르세요');
+  if (!clip) return say(`붙일 것이 없습니다. 먼저 ${opts.vim ? 'yy나 dd' : 'Ctrl+C나 Ctrl+X'}를 누르세요`);
   const r = selRange();
   if (!r) return say('붙일 자리를 먼저 고르세요. 고른 블록 뒤에 붙습니다');
+  if (r.event && pos === 'before') return say('머리 앞에는 붙일 수 없습니다');
   const at = r && !r.event ? r : null;
   const inHL = !!(at && at.parent) && ancestors(at.parent.id).some(id => isHL(idx.get(id).node));
   const nodes = reId(JSON.parse(clip), inHL);
-  apply(() => put(r, nodes, 'after'));
+  apply(() => put(r, nodes, pos));
   sel = { root: nodes[0].id, anchor: nodes[0].id, focus: nodes[nodes.length - 1].id };
   render();
   say(inHL ? '붙였습니다. 강조 영역 안이라 사본의 강조는 뗐습니다' : '붙였습니다');
@@ -1871,7 +1906,7 @@ function restore() {
     folded = new Set(JSON.parse(localStorage.getItem('nsd-proto-fold') || '[]'));
     opened = new Set(JSON.parse(localStorage.getItem('nsd-proto-open') || '[]'));
     fixUid(); normalize();
-    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').checked = opts.showRegions !== false;
+    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').checked = opts.showRegions !== false; $('#optVim').checked = !!opts.vim;
     return true;
   } catch (e) { return false; }
 }
@@ -1895,7 +1930,7 @@ const COMMANDS = {
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   callAsk: () => callCmd(false), retargetAsk: retargetCmd, goto: gotoTarget,
   delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, laneAdd, laneRemove, laneLabel, exCase: loadCaseExample, exQuick: loadQuickExample, exRaft: loadRaftExample, undo, redo, del: () => del(false),
-  copy: () => copy(false), cut: () => copy(true), paste,
+  copy: () => copy(false), cut: () => copy(true), paste: () => paste(),
   zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
   closeModal: () => { $('#modal').hidden = true; stage.focus({ preventScroll: true }); },
   copySvg: () => {
@@ -1916,6 +1951,7 @@ const COMMANDS = {
 };
 function run(cmd, shift) {
   hideMenu();
+  pend = ''; visual = false;
   if (editing) commitEdit(false);
   const [name, arg] = cmd.split(':');
   if (name === 'ins') insert(arg, shift ? 'before' : 'after');
@@ -1943,10 +1979,12 @@ $('#file').addEventListener('change', ev => {
 $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
 $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
 $('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
+$('#optVim').addEventListener('change', e => { opts.vim = e.target.checked; pend = ''; visual = false; chord = null; showKeys(); render(); save(); say(opts.vim ? 'Vim 키를 켰습니다. 오른쪽의 키 표가 바뀌었습니다' : '지금까지의 키로 돌아왔습니다'); stage.focus({ preventScroll: true }); });
 
 svg.addEventListener('mousedown', ev => {
   if (ev.button !== 0) return;
   if (editing) commitEdit(false);
+  pend = ''; visual = false;
   const t = ev.target.closest('[data-id]');
   if (!t) { selectOne(null); render(); return; }
   // 더블클릭은 두 번째 누름에서 처리한다. 첫 누름에서 그림을 다시 그리기 때문에 dblclick 이벤트는 사라진 요소를 가리켜 믿을 수 없다
@@ -1982,7 +2020,7 @@ svg.addEventListener('contextmenu', ev => {
   showMenu(ev.clientX, ev.clientY);
 });
 function showMenu(x, y) {
-  const it = (cmd, label, key) => ({ cmd, label, key });
+  const it = (cmd, label, key) => ({ cmd, label, key: opts.vim ? (VIMKEY[cmd] ?? key) : key });
   const r = selRange(), d = activeDia();
   const one = r && !r.event && r.items.length === 1 ? r.items[0] : null;
   const fresh = [it('newDia:event', '새 빈 Event 다이어그램', '⇧E'), it('newDia:method', '새 빈 Method 다이어그램', '⇧M')];
@@ -2049,6 +2087,103 @@ stage.addEventListener('wheel', ev => {
   setZoom(zoom * (ev.deltaY < 0 ? 1.1 : 0.9));
 }, { passive: false });
 
+/* ---------- Vim 키 (시험) ---------- */
+// "Vim 키"를 켜면 한 글자 키를 이 표로 읽는다. 표준 키(방향키, Enter, F2, Delete, Ctrl 조합)는 그대로 듣는다.
+// 글자는 자판의 자리(code)로 읽으므로 한글 입력 상태에서도 같다
+let pend = '';        // 두 번 누르기에서 먼저 누른 키
+let visual = false;   // v로 시작한 영역 고르기
+const KINDS = { i: 'if', w: 'while', d: 'dowhile', k: 'case' };
+const PEND_HINT = {
+  a: 'a 뒤에 넣기: i If · w While · d Do-While · k Case · c 호출',
+  A: 'A 앞에 넣기: i If · w While · d Do-While · k Case · c 호출',
+  s: 's 감싸기: w While · d Do-While · i If · k Case',
+  d: 'd: d 잘라내기 · s 제어 블록 풀기', y: 'y: y 복사',
+  z: 'z: a 접기·펴기 · f 접기 영역 만들기 · d 접기 영역 풀기',
+  g: 'g: g 다이어그램의 처음 · d 부르는 Method로', '[': '[: [ 앞 다이어그램', ']': ']: ] 뒤 다이어그램'
+};
+const VIMKEY = {
+  edit: 'i', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
+  'kind:event': 'e', 'kind:method': 'm', 'newDia:event': 'E', 'newDia:method': 'M', retargetAsk: 'r', goto: 'gd',
+  'wrap:while': 's w', 'wrap:dowhile': 's d', 'wrap:if': 's i', 'wrap:case': 's k', unwrap: 'd s', laneLabel: '',
+  fold: 'za', makeRegion: 'zf', releaseRegion: 'zd', cut: 'dd', copy: 'yy', paste: 'p'
+};
+function showMode() { $('#mode').textContent = !opts.vim ? '' : editing ? '-- 고치기 --' : pend ? pend : visual ? '-- 영역 --' : ''; }
+function showKeys() { $('#keysVim').hidden = !opts.vim; $('#keysNow').hidden = !!opts.vim; }
+function vimName(ev) {
+  const c = ev.code, sh = ev.shiftKey;
+  if (/^Key[A-Z]$/.test(c)) return sh ? c[3] : c[3].toLowerCase();
+  if (c === 'BracketLeft') return sh ? '{' : '[';
+  if (c === 'BracketRight') return sh ? '}' : ']';
+  if (c === 'Equal' || c === 'NumpadAdd') return '+';
+  if (c === 'Minus' || c === 'NumpadSubtract') return '-';
+  if (c === 'Escape') return 'Esc';
+  return '';
+}
+function edge(last) {
+  // gg · G: 이 다이어그램에서 보이는 첫 것(머리가 있으면 머리)과 마지막 것
+  const o = visibleOrder(activeDia());
+  if (o.length) { pickId(o[last ? o.length - 1 : 0]); render(); }
+}
+function vimKey(ev) { const done = vimKey0(ev); showMode(); return done; }
+function vimKey0(ev) {
+  const c = ev.code;
+  // 조합 키와 한/영 키만 누른 것은 먼저 누른 키를 지우지 않는다
+  if (/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(c)) return false;
+  let k = vimName(ev);
+  if (visual && (c === 'ArrowDown' || c === 'ArrowUp')) k = c === 'ArrowDown' ? 'j' : 'k';
+  const p = pend;
+  pend = '';
+  if (p) {
+    // 두 번 누르기의 둘째 키. 맞는 것이 없으면 그만두고, 누른 키는 버린다
+    const seq = p + k, at = p === 'a' || p === 'A';
+    if (at && KINDS[k]) insert(KINDS[k], p === 'A' ? 'before' : 'after');
+    else if (at && k === 'c') callCmd(p === 'A');
+    else if (p === 's' && KINDS[k]) wrap(KINDS[k]);
+    else if (seq === 'dd') copy(true);
+    else if (seq === 'ds') unwrap();
+    else if (seq === 'yy') copy(false);
+    else if (seq === 'za') fold();
+    else if (seq === 'zf') makeRegion();
+    else if (seq === 'zd') releaseRegion();
+    else if (seq === 'gg') edge(false);
+    else if (seq === 'gd') gotoTarget();
+    else if (seq === '[[') move('ArrowLeft', true, true);
+    else if (seq === ']]') move('ArrowRight', true, true);
+    else say(k && k !== 'Esc' ? `${p}${k}: 없는 키입니다` : '그만뒀습니다');
+    visual = false;
+    return true;
+  }
+  if (!k) { visual = false; return false; }   // Enter, F2, Delete, 방향키 들은 지금 키 그대로
+  if (visual) {
+    if (k === 'j' || k === 'k') { move(k === 'j' ? 'ArrowDown' : 'ArrowUp', true); return true; }
+    if (k === 'v' || k === 'Esc') { visual = false; if (sel) selectOne(sel.focus); render(); return true; }
+    if (k === 'y' || k === 'd' || k === 'x') { copy(k !== 'y'); visual = false; return true; }
+    if (k === 's' || k === 'z') { pend = k; say(PEND_HINT[k]); return true; }
+    visual = false;
+  }
+  if (PEND_HINT[k]) { pend = k; say(PEND_HINT[k]); }
+  else if (k === 'h' || k === 'j' || k === 'k' || k === 'l') move({ h: 'ArrowLeft', j: 'ArrowDown', k: 'ArrowUp', l: 'ArrowRight' }[k], false);
+  else if (k === '{' || k === '}') move(k === '{' ? 'ArrowUp' : 'ArrowDown', false, true);
+  else if (k === 'G') edge(true);
+  else if (k === 'v') {
+    if (!sel || isHead(sel.anchor)) say('영역은 블록에서 시작합니다. 먼저 블록을 고르세요');
+    else { visual = true; say('영역 고르기: j k로 넓히고 y 복사 · d 잘라내기 · s 감싸기 · zf 접기 영역. v나 Esc로 끝'); }
+  }
+  else if (k === 'i') run('edit');
+  else if (k === 'o' || k === 'O') insert('process', k === 'O' ? 'before' : 'after');
+  else if (k === 'p' || k === 'P') paste(k === 'P' ? 'before' : 'after');
+  else if (k === 'u') undo();
+  else if (k === 'U') redo();
+  else if (k === 'f') fold();
+  else if (k === 'e' || k === 'E') kindCmd('event', k === 'E');
+  else if (k === 'm' || k === 'M') kindCmd('method', k === 'M');
+  else if (k === 'r') retargetCmd();
+  else if (k === '+') laneAdd();
+  else if (k === '-') laneRemove();
+  else if (k !== 'Esc') say(`${k}: Vim 키에 없는 키입니다`);   // 고른 상태의 Esc는 아무 일도 하지 않는다 (고른 것을 풀지 않는다)
+  return true;
+}
+
 document.addEventListener('keydown', ev => {
   if (editing) return;
   const tag = ev.target.tagName;
@@ -2088,11 +2223,14 @@ document.addEventListener('keydown', ev => {
     else if (code === 'KeyF' && ev.shiftKey) releaseRegion();
     else if (code.startsWith('Arrow')) move(code, ev.shiftKey, true);
     else handled = false;
+    if (handled) { pend = ''; visual = false; showMode(); }
   } else if (ev.altKey) handled = false;
+  else if (opts.vim && vimKey(ev)) {}
   else if (code.startsWith('Arrow')) move(code, ev.shiftKey);
   else if (code === 'Enter' || code === 'NumpadEnter' || code === 'F2') run('edit');
   else if (code === 'Delete' || code === 'Backspace') del(ev.shiftKey);
   else if (code === 'Escape') { hideMenu(); selectOne(null); render(); }
+  else if (opts.vim) handled = false;   // Vim 키에서는 아래의 한 글자 키를 쓰지 않는다
   else if (code === 'KeyP' || code === 'KeyI' || code === 'KeyW' || code === 'KeyD' || code === 'KeyK') {
     const kind = { KeyP: 'process', KeyI: 'if', KeyW: 'while', KeyD: 'dowhile', KeyK: 'case' }[code];
     insert(kind, ev.shiftKey ? 'before' : 'after');
@@ -2115,6 +2253,7 @@ document.addEventListener('keydown', ev => {
 /* ---------- 시작 ---------- */
 if (!restore()) loadExample('code');
 else { render(); say('지난번 상태를 되살렸습니다. 처음 예제는 "코드식"을 누르세요'); }
+showKeys();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => render());
 stage.focus({ preventScroll: true });
 })();
