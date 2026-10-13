@@ -102,7 +102,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">48번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">49번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -221,6 +221,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
         <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>오른쪽 클릭 메뉴에 한 번 누르는 키도 함께 적습니다 (49번째 판).</b> 접기 · 펴기는 <kbd>za</kbd> · <kbd>f</kbd>, 지우기는 <kbd>x</kbd> · <kbd>Del</kbd>, 글자 고치기는 <kbd>i</kbd> · <kbd>Enter</kbd>.</li>
         <li><b>펴 보인 호출 블록의 점선이 1px 안으로 들어갑니다 (48번째 판).</b> 바깥의 가는 선은 다른 블록처럼 그대로 있고, 점선은 그 안쪽에 있습니다.</li>
         <li><b>지금 보는 판의 번호가 왼쪽 위 이름 아래에 보입니다 (47번째 판).</b></li>
         <li><b>블록 하나도 접기 영역으로 만들 수 있습니다 (47번째 판).</b> 블록 하나를 고르고 <kbd>zf</kbd>를 누릅니다. 눈에 띄게 하고 싶은 블록에 굵은 테두리와 이름을 붙이는 데 씁니다.</li>
@@ -2242,11 +2243,12 @@ const PEND_HINT = {
   z: 'z: a 접기·펴기 · o 펴기 · c 접기 · R 모두 펴기 · M 모두 접기 · f 접기 영역 만들기 · d 접기 영역 풀기',
   g: 'g: g 다이어그램의 처음 · d 부르는 Method로', '[': '[: [ 앞 다이어그램', ']': ']: ] 뒤 다이어그램'
 };
+// 오른쪽 클릭 메뉴에 적는 키. 한 번 누르는 키가 따로 있으면 함께 적는다 (za · f)
 const VIMKEY = {
-  edit: 'i', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
+  edit: 'i · Enter', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
   'kind:event': 'e', 'kind:method': 'm', 'newDia:event': 'E', 'newDia:method': 'M', retargetAsk: 'r', goto: 'gd',
   'wrap:while': 's w', 'wrap:dowhile': 's d', 'wrap:if': 's i', 'wrap:case': 's k', unwrap: 'd s', laneLabel: '',
-  fold: 'za', makeRegion: 'zf', releaseRegion: 'zd', cut: 'dd', copy: 'yy', paste: 'p'
+  fold: 'za · f', makeRegion: 'zf', releaseRegion: 'zd', cut: 'dd', copy: 'yy', paste: 'p', del: 'x · Del'
 };
 function showMode() { $('#mode').textContent = editing ? '-- 고치기 --' : pend ? pend : visual ? '-- 영역 --' : ''; }
 function vimName(ev) {
