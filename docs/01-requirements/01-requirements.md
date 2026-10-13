@@ -7,7 +7,7 @@ tags:
   - ariadne-nsd
   - requirements
 status: 초안
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 
 # AriadneNSD 요구사항 명세
@@ -165,6 +165,7 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P0 여러 블록 선택 (아래 [[#여러 블록 선택 규칙]]) ^edit-multiselect
 - [ ] #P1 선택한 블록들을 제어 블록으로 감싸기 (아래 [[#감싸기 · 풀기]]) ^edit-wrap
 - [ ] #P1 제어 블록 풀기: 제어 블록만 지우고 안의 블록은 그 자리에 남기기 ^edit-unwrap
+- [ ] #P1 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[01-interaction-rules#감싸기 · 풀기|상세]] ^edit-call-inline
 - [ ] #P1 드래그 앤 드롭으로 블록 하나 또는 선택한 블록들을 통째로 이동 (놓을 수 있는 자리 미리 강조) ^edit-dnd
 - [ ] #P1 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[01-interaction-rules#붙여넣기|상세]] ^edit-clipboard
 - [ ] #P1 If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[01-interaction-rules#갈래 순서 바꾸기|상세]] ^edit-branch

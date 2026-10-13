@@ -133,7 +133,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="wrap:dowhile" title="s d">Do-While</button>
       <button data-cmd="wrap:if" title="s i">If</button>
       <button data-cmd="wrap:case" title="s k">Case</button>
-      <button data-cmd="unwrap" title="ds">제어 블록 풀기</button>
+      <button data-cmd="unwrap" title="ds: 제어 블록은 벗기고, 호출 블록은 Method의 블록들로 바꿉니다">풀기</button>
     </div>
     <div class="grp">
       <span class="lbl">보기</span>
@@ -180,17 +180,18 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>gg</kbd> / <kbd>G</kbd></dt><dd>이 다이어그램의 머리(없으면 첫 블록) / 마지막 블록</dd>
         <dt><kbd>[[</kbd> / <kbd>]]</kbd></dt><dd>앞 / 뒤 다이어그램 (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>와 같음)</dd>
         <dt><kbd>gd</kbd></dt><dd>호출 블록에서: 부르는 Method로. 펴 보인 블록에서는 원래 블록으로</dd>
-        <dt><kbd>v</kbd></dt><dd>영역 고르기 시작. <kbd>j</kbd> <kbd>k</kbd>로 넓히고 <kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>s</kbd> <kbd>zf</kbd>를 누릅니다. <kbd>v</kbd>나 <kbd>Esc</kbd>로 끝냅니다. <kbd>Shift</kbd>+<kbd>↑↓</kbd>와 <kbd>Shift</kbd>+클릭도 됩니다 (같은 부모로 자동 확장)</dd>
-        <dt><kbd>i</kbd> <kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). <kbd>Enter</kbd>와 <kbd>Esc</kbd> 어느 쪽을 눌러도 <b>적은 대로 받아들입니다</b>. 되돌리려면 <kbd>u</kbd>. 호출 블록에서는 인자와 결과만 고칩니다 (이름은 Method의 머리에서). 접힌 칸을 골랐으면 그 접기 영역의 이름을 고칩니다</dd>
+        <dt><kbd>v</kbd> <kbd>V</kbd></dt><dd>영역 고르기 시작. <kbd>j</kbd> <kbd>k</kbd>로 넓히고 <kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>s</kbd> <kbd>zf</kbd>를 누릅니다. <kbd>v</kbd>나 <kbd>Esc</kbd>로 끝냅니다. <kbd>Shift</kbd>+<kbd>↑↓</kbd>와 <kbd>Shift</kbd>+클릭도 됩니다 (같은 부모로 자동 확장)</dd>
+        <dt><kbd>i</kbd> <kbd>cc</kbd> <kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). <kbd>i</kbd>는 있던 글자를 두고 커서를 맨 앞에 둡니다. <kbd>cc</kbd>는 비우고 새로 적습니다. <kbd>Enter</kbd> · <kbd>F2</kbd> · 더블클릭은 글자 전체를 고른 채로 엽니다. <kbd>Enter</kbd>와 <kbd>Esc</kbd> 어느 쪽을 눌러도 <b>적은 대로 받아들입니다</b>. 되돌리려면 <kbd>u</kbd>. 호출 블록에서는 인자와 결과만 고칩니다 (이름은 Method의 머리에서). 접힌 칸을 골랐으면 그 접기 영역의 이름을 고칩니다</dd>
         <dt><kbd>o</kbd> / <kbd>O</kbd></dt><dd>처리 블록을 고른 블록 뒤 / 앞에 넣고 바로 적습니다. 빈 블록을 골랐으면 그 자리에 적습니다</dd>
         <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
         <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>고른 블록(들)을 While · Do-While · If · Case로 감싸기</dd>
-        <dt><kbd>ds</kbd></dt><dd>제어 블록 풀기: 제어 블록 하나를 없애고 안의 블록을 그 자리에 남깁니다</dd>
+        <dt><kbd>ds</kbd></dt><dd>풀기: 껍데기를 없애고 안의 것을 남깁니다. 제어 블록을 골랐으면 그 제어 블록을 벗깁니다. 그 안의 블록을 골랐으면 그것을 담은 가장 가까운 제어 블록을 벗깁니다. 호출 블록을 골랐으면 부르는 Method의 블록들로 바꿉니다 (적어 둔 인자와 결과는 사라지고, Method는 남습니다)</dd>
         <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd> 한 번. 머리는 잘라낼 수 없어서 머리에서 <kbd>dd</kbd>는 머리 떼기입니다</dd>
         <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기 (<kbd>Ctrl</kbd>+<kbd>V</kbd>는 뒤에). <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
         <dt><kbd>x</kbd> <kbd>Delete</kbd></dt><dd>복사 없이 지우기. 머리를 고르고 누르면 머리 떼기. <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기 (글자 키는 없습니다)</dd>
-        <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음)</dd>
+        <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음). <kbd>Ctrl</kbd>+<kbd>R</kbd>도 다시 하기입니다</dd>
         <dt><kbd>za</kbd> 또는 <kbd>f</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 이름 띠를 더블클릭하면 접힙니다. 호출 블록 하나를 골랐으면 펴 봅니다: 부르는 Method의 블록이 그 자리에 회색 글자로 보이고, 다시 누르면 접힙니다. 펴 보인 안쪽의 블록을 고르고 눌러도 그 호출 블록이 접힙니다</dd>
+        <dt><kbd>zo</kbd> / <kbd>zc</kbd></dt><dd>펴기만 / 접기만</dd>
         <dt><kbd>zf</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다</dd>
         <dt><kbd>zd</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다. 블록은 그대로 남습니다</dd>
         <dt><kbd>e</kbd></dt><dd><b>Event</b>. 머리 없는 다이어그램에서는 Event 머리(모자)를 달고, 머리를 고르고 누르면 Event 머리로 바꿉니다. 대문자 <kbd>E</kbd>는 새 빈 Event 다이어그램</dd>
@@ -213,6 +214,10 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>"접기 영역 이름 띠 보기"를 "접기 영역 보기"로 부릅니다.</b> 꺼 둔 채로 영역을 넓히다 막히면, 꺼져 있어서 경계가 안 보인다고 알려 줍니다.</li>
         <li><b><kbd>x</kbd>는 <kbd>Delete</kbd>와 같습니다.</b> 복사 없이 지웁니다. <kbd>dd</kbd>는 잘라내기입니다(붙일 수 있음). 머리에서는 <kbd>x</kbd>도 <kbd>dd</kbd>도 머리 떼기입니다.</li>
         <li><b>펴 보인 호출 블록은 안쪽에서도 접습니다.</b> 펴 보인 블록을 고르고 <kbd>za</kbd>를 누르면 그것을 담은 가장 가까운 펴 보인 호출 블록이 접힙니다. 접기 영역과 같습니다.</li>
+        <li><b><kbd>ds</kbd>가 호출 블록도 풉니다.</b> 호출 블록을 고르고 누르면 부르는 Method의 블록들로 바뀝니다. 글자는 Method에 적힌 그대로 복사되고, 호출 블록에 적어 둔 인자와 결과는 사라집니다. Method는 남습니다. 이어진 곳이 없는 호출 블록은 풀 수 없습니다.</li>
+        <li><b><kbd>ds</kbd>는 안쪽에서도 듣습니다.</b> 제어 블록 안의 블록을 고르고 누르면 그것을 담은 가장 가까운 제어 블록이 벗겨집니다.</li>
+        <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
+        <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
       </ul>
 
@@ -1171,10 +1176,15 @@ function startEdit(id, o = {}) {
   growEditor();
   editor.focus();
   editor.select();
+  // i로 들어오면 있던 글자를 두고 커서만 맨 앞에 둔다. cc로 들어오면 비우고 새로 적는다 (호출 블록은 이름을 지울 수 없어 인자를 고른 채로)
+  const how = editHow;
+  if (how === 'start') editor.setSelectionRange(0, 0);
+  else if (how === 'clear' && !(n && n.type === 'call')) { editor.value = ''; growEditor(); }
   if (n && n.type === 'call') {
     // 한 줄로 고친다. 이름은 잠겨 있고 인자(괄호 안)와 결과(← 앞)만 바뀐다. 인자가 있으면 인자를, 없으면 맨 앞(결과 자리)을 고른 채로 연다
     const p = callParts(n), at = (p.res + p.name).length;
-    if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
+    if (p.post && how === 'start') editor.setSelectionRange(at + 1, at + 1);
+    else if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
     say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (' + endHint() + ')' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (' + endHint() + ')');
   }
   if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (' + endHint() + ')');
@@ -1488,22 +1498,42 @@ function wrap(kind) {
 }
 const emptyBranch = b => b.every(n => n.type === 'process' && !n.text.trim());
 function unwrap() {
-  // ds: 제어 블록 풀기. 접기 영역 풀기는 zd
+  // ds: 껍데기를 없애고 안의 것을 남긴다. 제어 블록은 벗기고, 호출 블록은 부르는 Method의 블록들로 바꾼다.
+  // 그 밖의 것을 골랐으면 그것을 담은 가장 가까운 제어 블록을 벗긴다 (vim-surround처럼 안쪽에서도 듣는다). 접기 영역 풀기는 zd
   const r = needSel();
   if (!r || locked()) return;
   if (r.event) return say('머리는 풀 수 없습니다');
-  const t = r.items.length === 1 ? r.items[0] : null;
-  if (!t || !isCtrl(t)) return say('풀 제어 블록 하나를 고르세요. 접기 영역을 풀려면 zd');
+  const one = r.items.length === 1 ? r.items[0] : null;
+  if (one && one.type === 'call') return inlineCall(one);
+  const t = one && isCtrl(one) ? one : container(r.items[0].id)?.node;
+  if (!t) return say('벗길 제어 블록이 없습니다. 접기 영역을 풀려면 zd');
+  const inner = t !== one, keep = sel;
   let content;
   apply(() => {
+    const e = idx.get(t.id);
     if (multi(t)) content = slots(t).map(sl => t[sl]).filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
     else content = emptyBranch(t.body) ? [] : t.body;
-    r.list.splice(r.lo, 1, ...content);
+    e.list.splice(e.index, 1, ...content);
     folded.delete(t.id); slots(t).forEach(sl => folded.delete(t.id + ':' + sl));
   });
-  if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
+  if (inner) { sel = keep; fixSel(); }   // 안쪽에서 벗겼으면 고른 것은 그대로 둔다
+  else if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
   render();
-  say('풀었습니다. 안의 블록은 그 자리에 남았습니다');
+  say(inner ? '고른 블록을 담고 있던 제어 블록을 벗겼습니다. 안의 블록은 그 자리에 남았습니다' : '풀었습니다. 안의 블록은 그 자리에 남았습니다');
+}
+function inlineCall(n) {
+  // 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대). 글자는 그대로 복사하고, 적어 둔 인자와 결과는 사라진다. Method는 남는다
+  const t = n.target != null ? dia(n.target) : null;
+  if (!isMethod(t)) return say('이어진 Method가 없어 풀 수 없습니다');
+  const nodes = reId(JSON.parse(JSON.stringify(t.body)), false);
+  apply(() => {
+    const e = idx.get(n.id);
+    e.list.splice(e.index, 1, ...nodes);
+    [...opened].forEach(k => { if (k.split('>').includes(n.id)) opened.delete(k); });
+  });
+  sel = { root: nodes[0].id, anchor: nodes[0].id, focus: nodes[nodes.length - 1].id };
+  fixSel(); saveFold(); render();
+  say(`호출 블록을 ${headName(t.event)}의 블록들로 바꿨습니다. 적어 둔 인자와 결과는 사라졌고, Method는 그대로 남아 있습니다 (u로 되돌리기)`);
 }
 function caseAt() {
   // 고른 곳이 속한 가장 가까운 Case와 그 갈래 번호. Case 자체를 골랐으면 번호는 -1
@@ -2046,7 +2076,7 @@ function showMenu(x, y) {
        it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:case', '뒤에 Case 넣기', 'K'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
        it('kind:method', '새 Method로 빼기 (그 자리에는 호출 블록)', 'M'),
        ...(d.event == null ? [it('head:event', '이 다이어그램에 Event 머리 달기', ''), it('head:method', '이 다이어그램에 Method 머리 달기', '')] : []), ...fresh, null,
-       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('wrap:case', 'Case로 감싸기', 'S K'), it('unwrap', '제어 블록 풀기', 'U'), null,
+       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('wrap:case', 'Case로 감싸기', 'S K'), it('unwrap', one && one.type === 'call' ? '풀기: Method의 블록들로 바꾸기' : '풀기: 제어 블록 벗기기', 'U'), null,
        ...(caseAt() ? [it('laneAdd', 'Case: 갈래 넣기', '+'), it('laneRemove', 'Case: 이 갈래 빼기', '-'), it('laneLabel', 'Case: 갈래 이름 고치기', 'L'), null] : []),
        it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
        it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
@@ -2104,14 +2134,15 @@ stage.addEventListener('wheel', ev => {
 // 한 글자 키는 이 표로 읽는다. 표준 키(방향키, Enter, F2, Delete, Ctrl 조합)는 그대로 듣는다.
 // 글자는 자판의 자리(code)로 읽으므로 한글 입력 상태에서도 같다
 let pend = '';        // 두 번 누르기에서 먼저 누른 키
+let editHow = '';     // 고치기를 어떻게 시작하는가: 'start'(i) · 'clear'(cc) · ''(Enter, F2: 전체를 고름)
 let visual = false;   // v로 시작한 영역 고르기
 const KINDS = { i: 'if', w: 'while', d: 'dowhile', k: 'case' };
 const PEND_HINT = {
   a: 'a 뒤에 넣기: i If · w While · d Do-While · k Case · c 호출',
   A: 'A 앞에 넣기: i If · w While · d Do-While · k Case · c 호출',
   s: 's 감싸기: w While · d Do-While · i If · k Case',
-  d: 'd: d 잘라내기 · s 제어 블록 풀기', y: 'y: y 복사',
-  z: 'z: a 접기·펴기 · f 접기 영역 만들기 · d 접기 영역 풀기',
+  d: 'd: d 잘라내기 · s 풀기(제어 블록 벗기기, 호출 블록을 Method의 블록들로)', y: 'y: y 복사', c: 'c: c 글자를 비우고 새로 적기',
+  z: 'z: a 접기·펴기 · o 펴기 · c 접기 · f 접기 영역 만들기 · d 접기 영역 풀기',
   g: 'g: g 다이어그램의 처음 · d 부르는 Method로', '[': '[: [ 앞 다이어그램', ']': ']: ] 뒤 다이어그램'
 };
 const VIMKEY = {
@@ -2136,6 +2167,13 @@ function edge(last) {
   const o = visibleOrder(activeDia());
   if (o.length) { pickId(o[last ? o.length - 1 : 0]); render(); }
 }
+function foldTo(open) {
+  // zo · zc: za가 듣는 것을 펴기만 / 접기만 한다. 반대쪽으로 움직였으면 되돌린다
+  const level = () => opened.size - folded.size, before = level();
+  fold();
+  const d = level() - before;
+  if (d !== 0 && (d > 0) !== open) { if (editing) commitEdit(true); fold(); say(open ? '이미 펴져 있습니다' : '이미 접혀 있습니다'); }
+}
 function vimKey(ev) { const done = vimKey0(ev); showMode(); return done; }
 function vimKey0(ev) {
   const c = ev.code;
@@ -2155,6 +2193,9 @@ function vimKey0(ev) {
     else if (seq === 'ds') unwrap();
     else if (seq === 'yy') copy(false);
     else if (seq === 'za') fold();
+    else if (seq === 'zo' || seq === 'zc') foldTo(seq === 'zo');
+    else if (seq === 'zR' || seq === 'zM') say('모두 펴기(zR) · 모두 접기(zM)는 아직 없습니다');
+    else if (seq === 'cc') { editHow = 'clear'; run('edit'); editHow = ''; }
     else if (seq === 'zf') makeRegion();
     else if (seq === 'zd') releaseRegion();
     else if (seq === 'gg') edge(false);
@@ -2168,7 +2209,7 @@ function vimKey0(ev) {
   if (!k) { visual = false; return false; }   // Enter, F2, Delete, 방향키 들은 지금 키 그대로
   if (visual) {
     if (k === 'j' || k === 'k') { move(k === 'j' ? 'ArrowDown' : 'ArrowUp', true); return true; }
-    if (k === 'v' || k === 'Esc') { visual = false; if (sel) selectOne(sel.focus); render(); return true; }
+    if (k === 'v' || k === 'V' || k === 'Esc') { visual = false; if (sel) selectOne(sel.focus); render(); return true; }
     if (k === 'y' || k === 'd') { copy(k === 'd'); visual = false; return true; }
     if (k === 'x') { del(false); visual = false; return true; }
     if (k === 's' || k === 'z') { pend = k; say(PEND_HINT[k]); return true; }
@@ -2178,11 +2219,11 @@ function vimKey0(ev) {
   else if (k === 'h' || k === 'j' || k === 'k' || k === 'l') move({ h: 'ArrowLeft', j: 'ArrowDown', k: 'ArrowUp', l: 'ArrowRight' }[k], false);
   else if (k === '{' || k === '}') move(k === '{' ? 'ArrowUp' : 'ArrowDown', false, true);
   else if (k === 'G') edge(true);
-  else if (k === 'v') {
+  else if (k === 'v' || k === 'V') {
     if (!sel || isHead(sel.anchor)) say('영역은 블록에서 시작합니다. 먼저 블록을 고르세요');
     else { visual = true; say('영역 고르기: j k로 넓히고 y 복사 · d 잘라내기 · x 지우기 · s 감싸기 · zf 접기 영역. v나 Esc로 끝'); }
   }
-  else if (k === 'i') run('edit');
+  else if (k === 'i') { editHow = 'start'; run('edit'); editHow = ''; }
   else if (k === 'o' || k === 'O') insert('process', k === 'O' ? 'before' : 'after');
   else if (k === 'p' || k === 'P') paste(k === 'P' ? 'before' : 'after');
   else if (k === 'u') undo();
@@ -2223,7 +2264,7 @@ document.addEventListener('keydown', ev => {
   let handled = true;
   if (ctrl) {
     if (code === 'KeyZ' && !ev.shiftKey) undo();
-    else if (code === 'KeyY' || (code === 'KeyZ' && ev.shiftKey)) redo();
+    else if (code === 'KeyY' || (code === 'KeyZ' && ev.shiftKey) || (code === 'KeyR' && !ev.shiftKey)) redo();   // Ctrl+R은 Vim의 다시 하기. 잡지 않으면 페이지가 새로 고쳐진다
     else if (code === 'KeyC') copy(false);
     else if (code === 'KeyX') copy(true);
     else if (code === 'KeyV') paste();

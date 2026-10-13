@@ -386,6 +386,61 @@ d = await ev(`T.doc()`);
 await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyW', '+KeyK', 'KeyC', '+KeyD');
 check('옛 한 글자 키(W, K, C, D)는 아무것도 넣지 않음', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
 
+// y. Vim에 맞춘 것 (2026-10-13): ds가 호출 블록을 풀고 안쪽에서도 들음, i · cc, Ctrl+R, V, zo · zc
+await ev(`T.cmd('exQuick')`);
+d = await ev(`T.doc()`);
+{
+  const call = d.diagrams[0].body[0].yes[0].id, nMeth = d.diagrams[1].body.length;
+  await ev(`T.click('${call}')`); await keys('KeyD', 'KeyS');
+  let q = await ev(`T.doc()`);
+  check('호출 블록에서 ds: Method의 블록들로 바뀜 (글자 그대로, Method는 남음)', q.diagrams[0].body[0].yes.length === nMeth + 2 && q.diagrams[0].body[0].yes[0].text === 'pivot = a[hi];' && q.diagrams[1].body.length === nMeth && q.diagrams[0].body[0].yes[0].id !== q.diagrams[1].body[0].id, q.diagrams[0].body[0].yes.map(n => n.type));
+  await ev(`T.key('KeyR', { ctrl: true })`);
+  await keys('KeyU');
+  q = await ev(`T.doc()`);
+  check('u 한 번으로 되돌림', q.diagrams[0].body[0].yes.length === 3 && q.diagrams[0].body[0].yes[0].type === 'call', q.diagrams[0].body[0].yes.map(n => n.type));
+  await ev(`T.key('KeyR', { ctrl: true })`);
+  check('Ctrl+R: 다시 하기', (await ev(`T.doc().diagrams[0].body[0].yes.length`)) === nMeth + 2);
+  await keys('KeyU');
+  await ev(`T.click('${d.diagrams[1].id}')`); await keys('KeyX');
+  await ev(`T.click('${call}')`); await keys('KeyD', 'KeyS');
+  check('이어진 곳이 없는 호출 블록에서 ds: 풀 수 없음', (await ev(`T.msg()`)).includes('풀 수 없습니다') && (await ev(`T.doc().diagrams[0].body[0].yes[0].type`)) === 'call', await ev(`T.msg()`));
+}
+await ev(`T.cmd('exCode')`);
+d = await ev(`T.doc()`);
+{
+  const inIf = d.diagrams[0].body[1].yes[1].yes[0].id;
+  await ev(`T.click('${inIf}')`); await keys('KeyD', 'KeyS');
+  const q = await ev(`T.doc()`);
+  check('안쪽 블록에서 ds: 가장 가까운 제어 블록이 벗겨지고 고른 것은 그대로', q.diagrams[0].body[1].type === 'if' && q.diagrams[0].body[1].yes.map(n => n.type).join() === 'process,process,process' && (await ev(where)) === '처리', q.diagrams[0].body[1].yes.map(n => n.type));
+  await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyD', 'KeyS');
+  check('담은 제어 블록이 없으면 ds는 아무것도 하지 않음', (await ev(`T.msg()`)).includes('벗길 제어 블록이 없습니다'), await ev(`T.msg()`));
+  await keys('KeyI');
+  const caret = await ev(`(() => { const e = document.querySelector('#editor'); return [e.value, e.selectionStart, e.selectionEnd].join('|'); })()`);
+  await ev(`T.key('Escape', { editor: true, key: 'Escape' })`);
+  check('i: 글자를 두고 커서를 맨 앞에', caret === 'tick++;|0|0' && (await ev(`T.doc().diagrams[0].body[0].text`)) === 'tick++;', caret);
+  await ev(`T.key('Enter', { key: 'Enter' })`);
+  check('Enter: 글자 전체를 고른 채로', (await ev(`T.picked()`)) === 'tick++;');
+  await ev(`T.key('Escape', { editor: true, key: 'Escape' })`);
+  await keys('KeyC', 'KeyC');
+  check('cc: 비우고 새로 적기', (await ev(`T.editing()`)) === '');
+  await ev(`T.type('tock++;')`);
+  check('cc로 적은 글자가 들어감', (await ev(`T.doc().diagrams[0].body[0].text`)) === 'tock++;');
+  await keys('+KeyV', 'KeyJ');
+  check('V: 영역 고르기', (await ev(where)) === '2개 고름', await ev(where));
+  await keys('Escape');
+  const fN = `JSON.parse(localStorage.getItem('nsd-proto-fold')).length`;
+  await ev(`T.click(T.doc().diagrams[0].body[2].children[0].id)`);
+  const n0 = await ev(fN);
+  await keys('KeyZ', 'KeyO');
+  const n1 = await ev(fN), m1 = await ev(`T.msg()`);
+  await keys('KeyZ', 'KeyC');
+  const n2 = await ev(fN);
+  await keys('KeyZ', 'KeyC');
+  const n3 = await ev(fN), m3 = await ev(`T.msg()`);
+  await keys('KeyZ', 'KeyO');
+  check('zo · zc: 펴기만 / 접기만', n1 === n0 && m1.includes('이미 펴져') && n2 === n0 + 1 && n3 === n2 && m3.includes('이미 접혀') && (await ev(fN)) === n0, [n0, n1, m1, n2, n3, m3, await ev(fN)]);
+}
+
 // x. 펴 보인 안쪽에서 za: 가장 가까운 펴 보인 호출 블록이 접힘
 await ev(`T.cmd('exQuick')`);
 d = await ev(`T.doc()`);
