@@ -158,7 +158,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <div class="opts">
         <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
-        <label><input type="checkbox" id="optRanges" checked> 접기 영역 이름 띠 보기</label>
+        <label><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
           <output id="zoomOut">100%</output>
@@ -175,7 +175,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>써 보는 법</h2>
       <p>블록을 클릭해 고르고 키보드로 다룹니다. 오른쪽 클릭하면 메뉴가 나옵니다. 고친 내용은 이 브라우저에 남습니다.</p>
       <dl class="keys">
-        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 위·아래는 그림 순서대로 움직입니다 (다이어그램 안에서만). 좌우는 If · Case 안에서 옆 갈래의 첫 블록으로 갑니다. 맨 왼쪽 갈래에서 왼쪽은 위쪽 바깥 블록, 맨 오른쪽 갈래에서 오른쪽은 아래쪽 바깥 블록입니다. 머리에서 좌우는 옆 다이어그램입니다</dd>
+        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 위·아래는 그림 순서대로 움직입니다 (다이어그램 안에서만). 다만 If · Case의 옆 갈래로는 넘어가지 않습니다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로 갑니다. 좌우는 If · Case 안에서 옆 갈래의 첫 블록으로 갑니다. 맨 왼쪽 갈래에서 왼쪽은 위쪽 바깥 블록, 맨 오른쪽 갈래에서 오른쪽은 아래쪽 바깥 블록입니다. 머리에서 좌우는 옆 다이어그램입니다</dd>
         <dt><kbd>{</kbd> <kbd>}</kbd></dt><dd>제어 블록을 안쪽까지 한 덩어리로 보고 위·아래 블록으로. 제어 블록 안으로 들어가지 않고 제어 블록 전체를 고릅니다 (<kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>와 같음)</dd>
         <dt><kbd>gg</kbd> / <kbd>G</kbd></dt><dd>이 다이어그램의 머리(없으면 첫 블록) / 마지막 블록</dd>
         <dt><kbd>[[</kbd> / <kbd>]]</kbd></dt><dd>앞 / 뒤 다이어그램 (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>와 같음)</dd>
@@ -186,7 +186,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
         <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>고른 블록(들)을 While · Do-While · If · Case로 감싸기</dd>
         <dt><kbd>ds</kbd></dt><dd>제어 블록 풀기: 제어 블록 하나를 없애고 안의 블록을 그 자리에 남깁니다</dd>
-        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd>나 <kbd>x</kbd> 한 번</dd>
+        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd>나 <kbd>x</kbd> 한 번. 머리에서 <kbd>dd</kbd>는 머리 떼기입니다 (<kbd>Delete</kbd>와 같음)</dd>
         <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기 (<kbd>Ctrl</kbd>+<kbd>V</kbd>는 뒤에). <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>복사 없이 지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음)</dd>
@@ -209,6 +209,9 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>고치다 누른 <kbd>Esc</kbd>는 적은 대로 받아들입니다.</b> 전에는 그만두기였습니다. 되돌리려면 <kbd>u</kbd>. 겹친 머리 이름처럼 받아들일 수 없어 다시 열린 칸에서만 <kbd>Esc</kbd>가 그만두기입니다.</li>
         <li><b>블록을 고른 상태의 <kbd>Esc</kbd>는 아무 일도 하지 않습니다.</b> 전에는 고른 것을 풀었습니다.</li>
         <li><b>앞에 붙이기가 생겼습니다.</b> <kbd>P</kbd>.</li>
+        <li><b>위·아래로는 옆 갈래로 넘어가지 않습니다.</b> If · Case의 갈래 끝에서 <kbd>j</kbd>는 그 If · Case의 다음 블록으로, 갈래의 처음에서 <kbd>k</kbd>는 그 If · Case로 갑니다. 옆 갈래로는 <kbd>h</kbd> <kbd>l</kbd>로 갑니다.</li>
+        <li><b>"접기 영역 이름 띠 보기"를 "접기 영역 보기"로 부릅니다.</b> 꺼 둔 채로 영역을 넓히다 막히면, 꺼져 있어서 경계가 안 보인다고 알려 줍니다.</li>
+        <li><b>머리에서 <kbd>dd</kbd>는 머리 떼기입니다.</b></li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
       </ul>
 
@@ -216,7 +219,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>앞서 바뀐 것 (10-11)</h2>
       <ul>
         <li><b>호출 블록을 펴 봅니다.</b> 호출 블록을 고르고 <kbd>F</kbd>를 누르면 부르는 Method의 블록이 그 자리에 보입니다. 보기만 바뀌고 내용은 그대로입니다. 펴 보인 블록은 글자가 회색이고, 고를 수 있지만 고칠 수 없습니다. <kbd>G</kbd>를 누르면 원래 블록으로 갑니다. 펴 보인 안쪽의 호출 블록도 펼 수 있고, 같은 Method를 세 겹째 펴면 알려 줍니다. 펴짐은 접힘처럼 파일에 함께 들어가고 <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다.</li>
-        <li><b>펴진 접기 영역은 왼쪽 막대와 이름 띠로 보입니다.</b> 영역 둘레의 가는 파란 선을 없애고, 왼쪽에 영역의 끝까지 내려가는 막대를 그립니다. 안의 블록은 막대만큼 들어갑니다. "접기 영역 이름 띠 보기"를 끄면 띠와 막대가 함께 사라집니다.</li>
+        <li><b>펴진 접기 영역은 왼쪽 막대와 이름 띠로 보입니다.</b> 영역 둘레의 가는 파란 선을 없애고, 왼쪽에 영역의 끝까지 내려가는 막대를 그립니다. 안의 블록은 막대만큼 들어갑니다. "접기 영역 보기"를 끄면 띠와 막대가 함께 사라집니다.</li>
         <li><b>Event와 Method를 구분합니다.</b> 밖에서 시작되는 것(인터럽트, 타이머, 받은 메시지)은 Event이고 모자 머리를 씁니다. 불려서 도는 것은 Method이고 낮은 아치 머리를 씁니다. <kbd>E</kbd>는 Event, <kbd>M</kbd>은 Method입니다.</li>
         <li><b>호출 블록은 Method만 부릅니다.</b> 두 Event가 같은 일을 하면 그 일을 Method로 빼서 둘 다 부르세요. 부르는 호출 블록이 있는 Method는 Event로 바꿀 수 없습니다.</li>
         <li><b>호출 블록의 이름은 Method의 머리를 따릅니다 (둘째 판).</b> 호출 블록은 <code>p ← partition(a, lo, hi)</code>처럼 "결과 ← 이름(인자)"로 보입니다. 굵은 이름은 머리를 따라 저절로 바뀌고 호출 블록에서는 고칠 수 없습니다. <kbd>Enter</kbd>로 인자와 결과만 고칩니다(<code>p = …</code>라고 적어도 됩니다). 부를 Method는 <kbd>R</kbd>로 바꾸며, 적어 둔 인자와 결과는 남습니다.</li>
@@ -592,10 +595,15 @@ function move(key, shift, ctrl) {
     const f = idx.get(sel.focus);
     const j = f.index + (key === 'ArrowDown' ? 1 : -1);
     if (j >= 0 && j < f.list.length) sel.focus = f.list[j].id;
-    else say('같은 부모 안에서만 영역을 넓힐 수 있습니다');
+    else say('같은 부모 안에서만 영역을 넓힐 수 있습니다' + (opts.showRegions === false ? '. "접기 영역 보기"가 꺼져 있어 접기 영역의 경계가 보이지 않습니다. 켜면 어디까지가 같은 부모인지 보입니다' : ''));
     return render();
   }
-  else if (!side) next = step();
+  else if (!side) {
+    // 위·아래로는 옆 갈래로 넘어가지 않는다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로
+    next = step();
+    for (let m; next && (m = crossed(cur, next)); )
+      next = fwd ? order.slice(orderPos(order, m.id) + 1).find(id => !ancestors(id).includes(m.id)) : m.id;
+  }
   else if (isHead(cur)) next = neighbour();   // 머리에서 좌우: 옆 다이어그램으로
   else if (key === 'ArrowLeft') {
     const c = container(cur), ls = c && multi(c.node) ? slots(c.node) : null, k = ls ? ls.indexOf(c.slot) : -1;
@@ -612,6 +620,22 @@ function move(key, shift, ctrl) {
     }
   }
   if (next) { pickId(next); render(); }
+}
+// 이 블록이 If · Case m의 어느 갈래에 있는가 (안에 없으면 null)
+function laneIn(id, m) {
+  for (let e = idx.get(id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.id === m.id) return e.slot;
+  return null;
+}
+// a에서 b로 가면 어떤 If · Case의 다른 갈래로 넘어가는가. 넘어가면 그 If · Case, 아니면 null
+function crossed(a, b) {
+  if (isHead(a) || isHead(b)) return null;
+  for (const id of ancestors(a).slice(1)) {
+    const m = idx.get(id).node;
+    if (!multi(m)) continue;
+    const lb = laneIn(b, m);
+    if (lb != null && lb !== laneIn(a, m)) return m;
+  }
+  return null;
 }
 function nextOf(id) {
   // 바로 아래 블록: 뒤 형제, 없으면 담고 있는 제어 블록의 아래 블록
@@ -1126,7 +1150,7 @@ function startEdit(id, o = {}) {
   if (!id) return;
   if (isShown(id)) return void locked();
   const n = isHead(id) ? null : idx.get(id)?.node;
-  if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 이름 띠 보기"를 켜세요');
+  if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 보기"를 켜세요');
   if (n && n.type === 'call' && n.target == null) return say('이어진 Method가 없습니다. r로 부를 Method를 고르세요');
   const box = T.get(id);
   if (!box) return;
@@ -2121,7 +2145,7 @@ function vimKey0(ev) {
     if (at && KINDS[k]) insert(KINDS[k], p === 'A' ? 'before' : 'after');
     else if (at && k === 'c') callCmd(p === 'A');
     else if (p === 's' && KINDS[k]) wrap(KINDS[k]);
-    else if (seq === 'dd') copy(true);
+    else if (seq === 'dd') { const r = selRange(); if (r && r.event) del(false); else copy(true); }   // 머리는 잘라낼 수 없으므로 Delete와 같다(머리 떼기)
     else if (seq === 'ds') unwrap();
     else if (seq === 'yy') copy(false);
     else if (seq === 'za') fold();

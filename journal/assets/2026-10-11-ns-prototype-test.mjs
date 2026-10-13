@@ -386,6 +386,32 @@ d = await ev(`T.doc()`);
 await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyW', '+KeyK', 'KeyC', '+KeyD');
 check('옛 한 글자 키(W, K, C, D)는 아무것도 넣지 않음', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
 
+// w. inbox(2026-10-13): 위·아래로는 옆 갈래로 넘어가지 않음, 머리에서 dd, 접기 영역 보기가 꺼졌을 때의 안내
+await ev(`T.cmd('exCode')`);
+d = await ev(`T.doc()`);
+const if1 = d.diagrams[0].body[1], if2 = d.diagrams[0].body[1].yes[1];
+await ev(`T.click('${if2.yes[1].id}')`); await keys('KeyJ');
+check('안쪽 If의 참 갈래 끝에서 j: 거짓 갈래가 아니라 바깥 If의 다음 블록으로', (await ev(where)) === '처리  ·  접기 영역: 센서 읽기', await ev(where));
+await ev(`T.click('${if1.no[0].id}')`); await keys('KeyK');
+check('거짓 갈래의 처음에서 k: 참 갈래가 아니라 그 If로', (await ev(where)) === 'If', await ev(where));
+await ev(`T.click('${if1.no[0].id}')`); await keys('KeyJ');
+check('거짓 갈래의 끝에서 j: If의 다음 블록으로', (await ev(where)) === '처리  ·  접기 영역: 센서 읽기', await ev(where));
+await ev(`T.click('${if1.yes[0].id}')`); await keys('KeyJ');
+check('갈래 안에서 j: 그대로 아래 블록으로', (await ev(where)) === 'If', await ev(where));
+await ev(`T.click('${if1.yes[0].id}')`); await keys('KeyL');
+check('l: 옆 갈래로는 좌우로', (await ev(where)) === '처리' && (await ev(`T.msg()`)) !== '', await ev(where));
+await ev(`T.click('${d.diagrams[0].id}')`); await keys('KeyD', 'KeyD');
+check('머리에서 dd: 머리 떼기 (Delete와 같음)', (await ev(`T.doc().diagrams[0].event`)) === null, await ev(`T.msg()`));
+await keys('KeyU');
+await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyK');
+const noHint = await ev(`T.key('ArrowUp', { shift: true }); T.msg()`);
+await ev(`document.querySelector('#optRanges').click()`);
+await ev(`T.click('${d.diagrams[0].body[0].id}')`);
+const hint = await ev(`T.key('ArrowUp', { shift: true }); T.msg()`);
+await ev(`document.querySelector('#optRanges').click()`);
+check('영역을 넓힐 수 없을 때: 접기 영역 보기가 꺼져 있으면 그것도 알림', !noHint.includes('접기 영역 보기') && hint.includes('같은 부모 안에서만') && hint.includes('"접기 영역 보기"가 꺼져'), [noHint, hint]);
+check('설정의 이름은 "접기 영역 보기"', (await ev(`document.querySelector('#optRanges').parentElement.textContent.trim()`)) === '접기 영역 보기');
+
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
 ws.close(); chrome.kill(); process.exit(0);
