@@ -302,7 +302,9 @@ function run(fontOk) {
   // 저장된 그림 셋
   const texts = ['p ← partition(a, lo, hi)', '피벗보다 작은 값을 왼쪽으로 옮긴다', 'AVATAR To WAVE, Type "Yes"'];
   const w = Math.ceil(Math.max(...texts.map(table))) + 20, lh = 30, hh = lh * texts.length;
-  const face = getComputedStyle(document.documentElement) && document.querySelector('style').textContent.match(/@font-face[^}]+}/)[0];
+  // 게시된 페이지에는 앞에 다른 <style>이 하나 더 있으므로 모든 <style>에서 찾는다
+  const face = ([...document.querySelectorAll('style')].map(e => e.textContent).join('
+').match(/@font-face[^}]+}/) || [''])[0];
   const svg = mode => {
     const fam = mode === 'none' ? "NSDSpike, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" : 'NSDSpike';
     let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${w + 2}" height="${hh + 2}" viewBox="-1 -1 ${w + 2} ${hh + 2}">`;
