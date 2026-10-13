@@ -1,0 +1,240 @@
+<title>접기 영역 테두리 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 프로토타입과 같은 색의 NS 차트를 흰 종이 위에 그린다 (호출 블록 펴 보기 시안과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #f8eadc; --paper: #ffffff; --paper-ink: #3d4658;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; --paper-ink: #3d4658; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; --paper-ink: #3d4658; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+blockquote { margin: 0; padding: 10px 16px; border-left: 4px solid var(--accent); background: var(--panel); border-radius: 0 8px 8px 0; max-width: 80ch; font-size: 14.5px; }
+section { display: grid; gap: 16px; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.cards.wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; border: 1px solid var(--line); }
+.paper figure { margin: 0; display: grid; gap: 6px; flex: none; }
+.paper figcaption { font-size: 12px; color: var(--paper-ink); font-variant-numeric: tabular-nums; }
+.paper svg { display: block; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+.toast { background: var(--fg); color: var(--bg); border-radius: 6px; padding: 8px 14px; font-size: 13px; justify-self: start; max-width: 100%; }
+</style>
+
+<main>
+  <div>
+    <h1>접기 영역을 굵은 테두리로, 펴 보인 곳에만 두는 접기 영역</h1>
+    <p class="lede">2026-10-13에 inbox에 적힌 두 항목을 그림으로 옮겼습니다. 물음은 넷(<b>T1 · T2 · P1 · P2</b>)이고, 맨 아래에 Claude가 읽은 뜻 넷(<b>확인 1~4</b>)이 있습니다. 초록 테두리 카드는 Claude가 추천하는 안입니다. 그림의 색과 치수는 프로토타입 45번째 판과 같습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">첫째 항목</span>
+    <blockquote>접기 영역 표시를 왼쪽 막대로 했었는데 중첩된다든지 연속되면 알아보기가 힘드네요. 테두리 굵은 선으로 바꿔봅시다.</blockquote>
+    <h2>T1. 겹치거나 이어진 접기 영역의 테두리 사이를 띄우는가</h2>
+    <p class="q">"정렬 준비" 안에 "피벗 고르기"가 겹쳐 있고, 그 아래로 "나누기"와 "마무리"가 이어집니다. 이름 띠는 그대로 두고 막대만 테두리(3px)로 바꿨습니다. <b>테두리만 그리면 겹친 곳에서 안쪽 테두리가 바깥 테두리에 붙습니다.</b> 폐기한 ADR-0015도 같은 단점을 적었습니다("포개지거나 맞붙으면 굵은 선이 겹친다"). 그래서 띄우는 안을 함께 그렸습니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">기준</span><h3>왼쪽 막대</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-scene="A" data-fold="bar"></div>
+        <ul><li>겹치면 막대 둘이 나란히 붙어 굵은 막대 하나처럼 보입니다.</li><li>이어지면 막대가 한 줄로 이어져, 어디서 끝나고 시작하는지는 띠로만 갈립니다.</li></ul></article>
+      <article class="card"><header><span class="tag">T1 · 1번</span><h3>테두리만, 띄우지 않는다</h3></header>
+        <div class="paper" data-scene="A" data-fold="border" data-pad="0"></div>
+        <ul><li>그림의 크기가 막대일 때보다 작습니다(막대의 폭이 빠짐).</li><li>겹친 곳의 <span class="bad">왼쪽과 오른쪽 선이 한 줄로 포개집니다.</span> 안쪽 영역의 아래 끝만 따로 보입니다.</li><li>이어진 곳은 테두리 둘이 맞닿아 6px 선이 됩니다.</li></ul></article>
+      <article class="card pick"><header><span class="tag">T1 · 2번</span><h3>테두리 안쪽을 6px 들인다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-scene="A" data-fold="border" data-pad="6"></div>
+        <ul><li>테두리마다 안쪽에 3px의 틈이 생겨, 겹쳐도 이어져도 상자가 따로 보입니다.</li><li>한 겹마다 폭 12px, 높이 6px를 씁니다(막대는 폭 8px).</li><li>흑백 인쇄에서도 상자로 갈립니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>T2. 펴 보인 호출 블록도 테두리로 바꾸는가</h2>
+    <p class="q">2026-10-11에 "펴 보인 호출 블록은 접기 영역과 똑같이 그리고 색만 다르게"(Q15-a의 C1)로 정했습니다. 접기 영역이 테두리가 되면 이 규칙을 따라 호출 블록도 보라 테두리가 되는지, 호출 블록은 막대로 남는지를 고르는 물음입니다. 접기 영역 "나누기" 안에서 <code>p ← partition(a, lo, hi)</code>를 편 모습이고, 접기 영역은 T1의 2번으로 그렸습니다.</p>
+    <div class="cards wide">
+      <article class="card pick"><header><span class="tag">T2 · 1번</span><h3>호출 블록도 테두리</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-scene="B" data-fold="border" data-pad="6" data-call="border"></div>
+        <ul><li>"같은 틀에 색만 다르게"가 그대로 지켜집니다.</li><li>남아 있던 물음 Q15-b(위의 줄 + 왼쪽 띠가 While과 닮았다)가 함께 풀립니다. 사방을 두른 상자는 While과 닮지 않았습니다.</li></ul></article>
+      <article class="card"><header><span class="tag">T2 · 2번</span><h3>호출 블록은 막대 그대로</h3></header>
+        <div class="paper" data-scene="B" data-fold="border" data-pad="6" data-call="bar"></div>
+        <ul><li>접기 영역과 호출 블록이 모양으로도 갈립니다.</li><li>호출 블록을 겹쳐 펴면(재귀) 막대의 겹침 문제가 호출 블록에는 그대로 남습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">둘째 항목</span>
+    <blockquote>호출블록 펼친 부분에 접기 영역을 설정하고 싶어요. 원본에는 설정을 안 하고 펼친 부분에만 적용됩니다.</blockquote>
+    <h2>P1. 이 자리에서 만든 접기 영역을 원본의 것과 가려 보이는가</h2>
+    <p class="q">Method <code>partition</code>에는 원래 접기 영역 "끝내기"가 있고, 펴 보인 곳에도 그대로 보입니다. 펴 보인 곳에서 위의 두 블록을 골라 <kbd>zf</kbd>로 "피벗 준비"를 만들었습니다. 카드마다 둘째 그림은 Method의 원본이고, "피벗 준비"가 없습니다. <b>"끝내기"는 이 자리에서 풀거나 이름을 고칠 수 없고, "피벗 준비"는 할 수 있습니다.</b> 이 차이를 그림에서 보이게 할지를 고르는 물음입니다.</p>
+    <div class="cards wide">
+      <article class="card"><header><span class="tag">P1 · 1번</span><h3>똑같이 그린다</h3></header>
+        <div class="paper" data-scene="C" data-fold="border" data-pad="6" data-call="border" data-local="same"></div>
+        <ul><li>새로 익힐 모양이 없습니다.</li><li>어느 것이 이 자리의 것인지 <span class="bad">눌러 봐야 압니다.</span> "끝내기"에서 <kbd>zd</kbd>를 누르면 "여기서는 풀 수 없습니다"라는 알림을 받게 됩니다.</li></ul></article>
+      <article class="card pick"><header><span class="tag">P1 · 2번</span><h3>점선 테두리와 꼬리표</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-scene="C" data-fold="border" data-pad="6" data-call="border" data-local="dash"></div>
+        <ul><li>이 자리에서 만든 것은 테두리가 점선이고, 띠에 "이 자리에만"이 붙습니다.</li><li>여기서 고칠 수 있는 것과 없는 것이 눈으로 갈립니다.</li><li>모양이 하나 늘어납니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>P2. Method가 바뀌어 묶어 둔 블록이 달라지면</h2>
+    <p class="q">이 자리의 접기 영역은 남의 블록(Method의 블록)을 묶은 것입니다. 누군가 Method <code>partition</code>에서 <code>i ← lo</code>를 지우면 "피벗 준비"가 묶던 두 블록 가운데 하나가 없어집니다. 그때 이 자리의 접기 영역이 어떻게 되는지를 고르는 물음입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">앞</span><h3>Method를 고치기 전</h3></header>
+        <div class="paper" data-scene="D0" data-fold="border" data-pad="6" data-call="border" data-local="dash"></div>
+        <p>"피벗 준비"가 두 블록을 묶고 있습니다.</p></article>
+      <article class="card pick"><header><span class="tag">P2 · 1번</span><h3>남은 블록으로 줄어든다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-scene="D1" data-fold="border" data-pad="6" data-call="border" data-local="dash"></div>
+        <ul><li>묶인 블록 사이에 새 블록이 들어오면 함께 묶입니다. 묶인 블록이 모두 없어지면 접기 영역도 사라집니다.</li><li>알림은 없습니다. 원본의 접기 영역이 블록을 지울 때 움직이는 것과 같습니다.</li></ul></article>
+      <article class="card"><header><span class="tag">P2 · 2번</span><h3>풀리고 알린다</h3></header>
+        <div class="paper" data-scene="D2" data-fold="border" data-pad="6" data-call="border" data-local="dash"></div>
+        <div class="toast">partition이 바뀌어 "피벗 준비" 접기 영역이 풀렸습니다</div>
+        <ul><li>묶은 것이 처음과 달라지면 믿을 수 없다고 보고 풉니다.</li><li>Method를 조금만 고쳐도 부르는 곳마다 접기 영역이 사라집니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>T1</b> 테두리 사이: 1번 띄우지 않는다 / <b>2번 6px 들인다 (추천)</b></li>
+        <li><b>T2</b> 펴 보인 호출 블록: <b>1번 테두리 (추천)</b> / 2번 막대 그대로</li>
+        <li><b>P1</b> 이 자리의 접기 영역의 모습: 1번 똑같이 / <b>2번 점선과 꼬리표 (추천)</b></li>
+        <li><b>P2</b> Method가 바뀌면: <b>1번 줄어든다 (추천)</b> / 2번 풀리고 알린다</li>
+      </ol>
+      <p>Claude가 읽은 뜻입니다. 다르면 번호로 알려 주세요.</p>
+      <ul>
+        <li><b>확인 1.</b> 이름 띠는 그대로 둡니다. 바뀌는 것은 왼쪽 막대뿐입니다. 테두리의 굵기 3px과 색(띠의 글자와 같은 계열의 파랑)은 Claude가 골랐습니다.</li>
+        <li><b>확인 2.</b> 이 자리의 접기 영역은 그 호출 블록에 딸려 파일에 저장됩니다. 같은 Method를 부르는 다른 호출 블록을 펴면 보이지 않습니다. 호출 블록을 접었다 펴도 남고, 호출 블록을 지우면 함께 사라집니다.</li>
+        <li><b>확인 3.</b> "펴 보인 블록은 고칠 수 없다"(Q13)는 그대로입니다. 이 자리에서 할 수 있는 일에 접기 영역 만들기 · 풀기 · 이름 고치기 · 접기와 펴기만 더해집니다. 펴 보인 안쪽에서 <kbd>za</kbd>를 누르면 가장 가까운 것(이 자리의 접기 영역, 없으면 펴 보인 호출 블록)이 접힙니다.</li>
+        <li><b>확인 4.</b> 호출 블록을 <kbd>ds</kbd>로 풀면 이 자리의 접기 영역은 보통 접기 영역이 되어 블록들과 함께 들어옵니다.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 프로토타입과 같은 색과 치수로 작은 NS 차트를 그린다. 접기 영역(fold)과 펴 보인 호출 블록(open)의 틀만 안마다 바꾼다 */
+const C = { stroke: '#7e9ccf', process: '#edf0f5', loop: '#dce6f6', call: '#ebe7f4', ink: '#151a22', shown: '#6b7386', muted: '#5a6476',
+  bar: '#93aee8', callBar: '#b9a9dc', band: '#e6ecfb', callBand: '#ddd4ef', tag: '#2c55c9', edge: '#4f74d6', callEdge: '#8a72c4', gap: '#ffffff', fold: '#fbfcfe' };
+const K = { lh: 18, padX: 10, padY: 6, strip: 22, band: 18, rbar: 8, bw: 3 };
+const MONO = `13px 'IBM Plex Mono','IBM Plex Sans KR',Consolas,monospace`, TAG = `600 11.5px 'IBM Plex Sans KR','Malgun Gothic',sans-serif`;
+const cv = document.createElement('canvas').getContext('2d');
+const tw = (s, f) => { cv.font = f; return Math.ceil(cv.measureText(s).width); };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const p = text => ({ t: 'p', text }), call = text => ({ t: 'call', text });
+const loop = (text, kids) => ({ t: 'while', text, kids });
+const fold = (name, kids, local) => ({ t: 'fold', name, kids, local });
+const open = (pre, name, post, kids) => ({ t: 'open', pre, name, post, kids });
+
+const partition = (head, tail) => [
+  ...head,
+  loop('while (j < hi)', [p('if (a[j] < pivot) swap(a, i++, j)'), p('j ← j + 1')]),
+  ...tail
+];
+const TAIL = [fold('끝내기', [p('swap(a, i, hi)'), p('return i')])];
+const quick = inner => [p('if (lo >= hi) return'), open('p ← ', 'partition', '(a, lo, hi)', inner), call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')];
+const SCENES = {
+  A: [[null, [p('n ← length(a)'),
+    fold('정렬 준비', [p('lo ← 0'), fold('피벗 고르기', [p('mid ← (lo + hi) / 2'), p('pivot ← a[mid]')]), p('i ← lo')]),
+    fold('나누기', [loop('while (i < hi)', [p('swap(a, i, j)'), p('i ← i + 1')])]),
+    fold('마무리', [p('swap(a, i, hi)')]),
+    p('return i')]]],
+  B: [[null, [p('if (lo >= hi) return'),
+    fold('나누기', [open('p ← ', 'partition', '(a, lo, hi)', partition([p('pivot ← a[hi]'), p('i ← lo')], [p('swap(a, i, hi)'), p('return i')]))]),
+    call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')]]],
+  C: [['quicksort: partition을 펴 보인 자리', quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))],
+      ['Method partition의 원본', partition([p('pivot ← a[hi]'), p('i ← lo')], TAIL)]],
+  D0: [[null, quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))]],
+  D1: [[null, quick(partition([fold('피벗 준비', [p('pivot ← a[hi]')], true)], TAIL))]],
+  D2: [[null, quick(partition([p('pivot ← a[hi]')], TAIL))]]
+};
+
+function frame(n, S) {
+  const mode = n.t === 'open' ? S.call : S.fold;
+  return mode === 'bar' ? { l: K.rbar, r: 0, t: K.band, b: 0, mode } : { l: S.pad, r: S.pad, t: K.band, b: S.pad, mode };
+}
+const label = (n, S) => n.t === 'open' ? '▾ ' + n.pre + n.name + n.post : '▾ ' + n.name + (n.local && S.local === 'dash' ? '  · 이 자리에만' : '');
+function seq(kids, S) { let w = 0, h = 0; kids.forEach(c => { const m = measure(c, S); w = Math.max(w, m.w); h += m.h; }); return { w, h }; }
+function measure(n, S) {
+  let r;
+  if (n.t === 'p' || n.t === 'call') r = { w: tw(n.text, MONO) + 2 * K.padX + (n.t === 'call' ? 8 : 0), h: K.lh + 2 * K.padY };
+  else if (n.t === 'while') { const i = seq(n.kids, S); r = { w: Math.max(tw(n.text, MONO) + 2 * K.padX, K.strip + i.w), h: K.lh + 2 * K.padY + i.h }; }
+  else { const i = seq(n.kids, S), f = frame(n, S); r = { w: Math.max(i.w + f.l + f.r, tw(label(n, S), TAG) + f.l + 16 + K.padX), h: i.h + f.t + f.b }; }
+  return (n.m = r);
+}
+function placeSeq(kids, x, y, w, h, S, o, shown) {
+  let cy = y;
+  kids.forEach((c, i) => { const ch = i === kids.length - 1 ? y + h - cy : c.m.h; place(c, x, cy, w, ch, S, o, shown); cy += ch; });
+}
+const rect = (x, y, w, h, fill) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${C.stroke}" stroke-width="1" shape-rendering="crispEdges"/>`;
+const mono = (s, x, y, shown) => `<text x="${x}" y="${y + K.lh - 5}" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="${shown ? C.shown : C.ink}" xml:space="preserve">${esc(s)}</text>`;
+function place(n, x, y, w, h, S, o, shown) {
+  if (n.t === 'p') { o.a.push(rect(x, y, w, h, C.process), mono(n.text, x + K.padX, y + K.padY, shown)); return; }
+  if (n.t === 'call') {
+    o.a.push(rect(x, y, w, h, C.call));
+    for (const bx of [x + 4, x + w - 4]) o.a.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${C.stroke}" stroke-width="1"/>`);
+    o.a.push(mono(n.text, x + K.padX + 4, y + K.padY, shown)); return;
+  }
+  if (n.t === 'while') {
+    const hh = K.lh + 2 * K.padY;
+    o.a.push(rect(x, y, w, h, C.loop), mono(n.text, x + K.padX, y + K.padY, shown));
+    placeSeq(n.kids, x + K.strip, y + hh, w - K.strip, h - hh, S, o, shown); return;
+  }
+  const f = frame(n, S), isCall = n.t === 'open', inShown = shown || isCall;
+  const tx = x + (f.mode === 'bar' ? K.rbar + 8 : 10), ty = y + K.band - 5;
+  const text = isCall
+    ? `<text x="${tx}" y="${ty}" font-family="IBM Plex Mono, IBM Plex Sans KR, monospace" font-size="11.5" fill="${shown ? C.shown : C.ink}" xml:space="preserve">▾ ${esc(n.pre)}<tspan font-weight="600">${esc(n.name)}</tspan>${esc(n.post)}</text>`
+    : `<text x="${tx}" y="${ty}" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="11.5" font-weight="600" fill="${C.tag}" xml:space="preserve">${esc(label(n, S))}</text>`;
+  if (f.mode === 'bar') {
+    o.a.push(rect(x, y, w, h, isCall ? C.call : C.gap), rect(x, y, w, K.band, isCall ? C.call : C.band));
+    placeSeq(n.kids, x + f.l, y + f.t, w - f.l, h - f.t, S, o, inShown);
+    o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar), text);
+  } else {
+    o.a.push(rect(x, y, w, h, C.gap), rect(x, y, w, K.band, isCall ? C.callBand : C.band), text);
+    placeSeq(n.kids, x + f.l, y + f.t, w - f.l - f.r, h - f.t - f.b, S, o, inShown);
+    const dash = n.local && S.local === 'dash' ? ' stroke-dasharray="7 4"' : '';
+    o.b.push(`<rect x="${x + K.bw / 2}" y="${y + K.bw / 2}" width="${w - K.bw}" height="${h - K.bw}" fill="none" stroke="${isCall ? C.callEdge : C.edge}" stroke-width="${K.bw}"${dash}/>`);
+  }
+}
+function draw(kids, S) {
+  const m = seq(kids, S), o = { a: [], b: [] };
+  placeSeq(kids, 1, 1, m.w, m.h, S, o, false);
+  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img">${o.a.join('')}${o.b.join('')}</svg>` };
+}
+function render() {
+  document.querySelectorAll('.paper[data-scene]').forEach(el => {
+    const d = el.dataset, S = { fold: d.fold, pad: +d.pad || 0, call: d.call || d.fold, local: d.local || 'same' };
+    el.innerHTML = SCENES[d.scene].map(([cap, kids]) => {
+      const r = draw(kids, S);
+      return `<figure>${r.svg}<figcaption>${cap ? esc(cap) + ' · ' : ''}폭 ${r.w}px · 높이 ${r.h}px</figcaption></figure>`;
+    }).join('');
+  });
+}
+render();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(render).catch(() => {});
+</script>

@@ -27,6 +27,7 @@ updated: 2026-10-13
 | 호출 블록 펴 보기 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q13~Q16) | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q1~Q12, Q17, Q19~Q21 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
+| 접기 영역 테두리 시안 (2026-10-13, 답을 기다림: T1 · T2 · P1 · P2, 확인 1~4) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
