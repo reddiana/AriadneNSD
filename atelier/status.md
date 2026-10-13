@@ -15,6 +15,7 @@ updated: 2026-10-14
 
 ## 바로 가기
 프로토타입과, 메인테이너의 답을 기다리는 페이지만 여기에 둡니다. 시안과 스파이크 전체의 목록은 [[study-pages]]에 있습니다.
+
 | 무엇 | 주소 | 저장소의 사본 |
 | --- | --- | --- |
 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |

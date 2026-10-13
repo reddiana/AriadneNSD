@@ -30,7 +30,8 @@ updated: 2026-10-14
 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 | 아키텍처 전 물음 시안 (2026-10-13, 결정함: A4 1 · A6 3 · A8 1 · A8-가 1) | https://claude.ai/artifact/Jez6xT5qB9HbdoN1aRSKSn | `journal/assets/2026-10-13-before-architecture-study.html` |
 
-- claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개). 방문자에게 공개하는 방법은 정하지 않았습니다 → [[debt#정해 주세요]]
+- **방문자에게는 claude.ai의 공개 링크로 보여 줍니다**(2026-10-14, 메인테이너: "\"나\"로 합시다"). 페이지마다 메인테이너가 Share 메뉴에서 "링크를 가진 누구나"로 바꿉니다. Claude는 공유 설정을 바꿀 수 없습니다. 견준 다른 길은 GitHub Pages였습니다.
+- 아직 공개로 바꾸지 않은 페이지는 메인테이너만 열 수 있습니다. 어느 페이지를 공개로 바꿨는지는 메인테이너가 알려 주면 이 표에 적습니다. 새 페이지를 만들면 Claude가 "공개로 바꿔 주세요"라고 알립니다.
 - 저장소의 사본은 브라우저로 직접 열어도 됩니다. 스파이크 페이지를 만들고 재는 스크립트도 같은 폴더(`journal/assets/`)에 있습니다.
 - Obsidian에서 `.ns.svg`만 가로채는 스파이크(2026-10-10)는 페이지가 아니라 플러그인 코드입니다: `journal/assets/2026-10-10-obsidian-spike-main.js`
 - 글꼴 추리기 스파이크(2026-10-13)는 Node 스크립트입니다: `journal/assets/2026-10-13-font-subset-spike.mjs`
