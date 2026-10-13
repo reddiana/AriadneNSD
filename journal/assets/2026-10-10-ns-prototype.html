@@ -39,6 +39,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font); font-s
 .brand { display: flex; flex-direction: column; line-height: 1.2; margin-right: 6px; }
 .brand b { font-weight: 600; font-size: 15px; letter-spacing: .01em; }
 .brand span { font-size: 11px; color: var(--muted); }
+.brand span b { font-size: 11px; font-weight: 600; color: var(--accent); }
 .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .lbl { font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-right: 2px; }
 button, select { font: inherit; font-size: 13px; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 5px; padding: 4px 9px; cursor: pointer; }
@@ -101,7 +102,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드</span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">47번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -193,7 +194,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>za</kbd> 또는 <kbd>f</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 이름 띠를 더블클릭하면 접힙니다. 호출 블록 하나를 골랐으면 펴 봅니다: 부르는 Method의 블록이 그 자리에 회색 글자로 보이고, 다시 누르면 접힙니다. 펴 보인 안쪽의 블록을 고르고 눌러도 그 호출 블록이 접힙니다</dd>
         <dt><kbd>zo</kbd> / <kbd>zc</kbd></dt><dd>펴기만 / 접기만</dd>
         <dt><kbd>zR</kbd> / <kbd>zM</kbd></dt><dd>문서 전체에서 모두 펴기 / 모두 접기. 모두 접기는 접기 영역, 제어 블록의 안쪽(블록이 둘 이상인 곳), 펴 보인 호출 블록을 접습니다. 모두 펴기는 접힌 것만 펴고 호출 블록은 펴 보이지 않습니다</dd>
-        <dt><kbd>zf</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다</dd>
+        <dt><kbd>zf</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 블록 하나만 골라도 됩니다. 접기 영역 안에 또 만들 수 있습니다. 펴 보인 블록을 골랐으면 그 호출 블록 자리에만 생깁니다</dd>
         <dt><kbd>zd</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다. 블록은 그대로 남습니다</dd>
         <dt><kbd>e</kbd></dt><dd><b>Event</b>. 머리 없는 다이어그램에서는 Event 머리(모자)를 달고, 머리를 고르고 누르면 Event 머리로 바꿉니다. 대문자 <kbd>E</kbd>는 새 빈 Event 다이어그램</dd>
         <dt><kbd>m</kbd></dt><dd><b>Method</b>. 블록을 고르고 누르면 그 블록을 새 Method로 뺍니다 (그 자리에는 호출 블록). 머리 없는 다이어그램에서는 Method 머리(낮은 아치)를 달고, 머리를 고르고 누르면 Method 머리로 바꿉니다. 대문자 <kbd>M</kbd>은 새 빈 Method 다이어그램</dd>
@@ -220,6 +221,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
         <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>지금 보는 판의 번호가 왼쪽 위 이름 아래에 보입니다 (47번째 판).</b></li>
+        <li><b>블록 하나도 접기 영역으로 만들 수 있습니다 (47번째 판).</b> 블록 하나를 고르고 <kbd>zf</kbd>를 누릅니다. 눈에 띄게 하고 싶은 블록에 굵은 테두리와 이름을 붙이는 데 씁니다.</li>
         <li><b>펴진 접기 영역은 굵은 테두리로 보입니다 (46번째 판).</b> 왼쪽 막대를 없애고 영역의 둘레를 굵은 실선으로 두릅니다. 보통 블록은 테두리에 붙고, 겹친 접기 영역과 이어진 접기 영역 사이에는 1px의 틈이 있습니다. 이름 띠는 그대로입니다.</li>
         <li><b>펴 보인 호출 블록은 가는 점선으로 두릅니다 (46번째 판).</b> 강조가 아니라서 접기 영역보다 가볍게 그립니다.</li>
         <li><b>펴 보인 곳에만 있는 접기 영역 (46번째 판).</b> 펴 보인 블록을 고르고 <kbd>zf</kbd>를 누르면 그 호출 블록 자리에만 접기 영역이 생깁니다. Method의 원본과, 같은 Method를 부르는 다른 호출 블록에는 생기지 않습니다. <kbd>za</kbd>로 접고 펴고, <kbd>zd</kbd>로 풀고, <kbd>i</kbd>나 <kbd>Enter</kbd>로 이름을 고칩니다. Method에 원래 있던 접기 영역은 여기서 풀 수 없습니다. 호출 블록을 <kbd>ds</kbd>로 풀면 보통 접기 영역이 되어 함께 들어옵니다.</li>
@@ -1687,7 +1690,6 @@ function makeRegion() {
   if (r.event) return say('머리는 접기 영역에 넣을 수 없습니다');
   const one = r.items.length === 1 ? r.items[0] : null;
   if (one && one.type === 'range') return say('이미 접기 영역입니다');
-  if (one && !isCtrl(one)) return say('블록 하나는 접기 영역으로 만들지 않습니다. 블록 여러 개나 제어 블록을 고르세요');
   if (r.parent && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return say('접힌 갈래는 먼저 펴세요 (za)');
   if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) return say('같은 범위의 접기 영역이 이미 있습니다');
   if (shownSel()) {

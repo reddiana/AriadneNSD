@@ -215,7 +215,7 @@ await press(ghost, 'Enter', `{ key: 'Enter' }`);
 check('펴 보인 블록에서 Enter: 고치지 않고 알려 줌', (await ev(`T.editing()`)) === null && (await ev(`T.msg()`)).includes('펴 보인 블록은 고칠 수 없습니다'), await ev(`T.msg()`));
 await ev(`T.click('${pb[1]}'); T.key('KeyC', { ctrl: true })`);
 for (const [code, o] of [['Delete', '{}'], ['KeyO', '{}'], ['KeyO', '{ shift: true }'], ['KeyP', '{}'], ['KeyM', '{}'], ['KeyX', '{ ctrl: true }'], ['KeyV', '{ ctrl: true }']]) await press(ghost, code, o);
-for (const [k1, k2] of [['KeyA', 'KeyI'], ['KeyA', 'KeyC'], ['KeyD', 'KeyD'], ['KeyD', 'KeyS'], ['KeyZ', 'KeyF'], ['KeyS', 'KeyW']]) await ev(`T.click('${ghost}'); T.key('${k1}'); T.key('${k2}')`);
+for (const [k1, k2] of [['KeyA', 'KeyI'], ['KeyA', 'KeyC'], ['KeyD', 'KeyD'], ['KeyD', 'KeyS'], ['KeyS', 'KeyW']]) await ev(`T.click('${ghost}'); T.key('${k1}'); T.key('${k2}')`);
 check('펴 보인 블록: 넣기 · 지우기 · 감싸기 · 붙여넣기가 아무것도 바꾸지 않음', (await model()) === m0 && (await ev(`T.editing()`)) === null && (await ev(`T.msg()`)).includes('펴 보인 블록은 고칠 수 없습니다'), await ev(`T.msg()`));
 await press(ghost, 'KeyC', '{ ctrl: true }');
 await press(pb[pb.length - 1], 'KeyV', '{ ctrl: true }');
@@ -581,6 +581,19 @@ d = await ev(`T.doc()`);
   await ev(`T.click('${call}>${orig.children[0].id}')`); await keys('KeyZ', 'KeyD');
   check('펴 보인 곳에서 Method의 접기 영역에 zd: 풀지 않고 알림', JSON.stringify(await ev(`T.doc()`)) === before && (await ev(`T.msg()`)).includes('여기서 풀 수 없습니다'), await ev(`T.msg()`));
   await shot('p46-borders.png');
+}
+
+// 47번째 판: 블록 하나도 접기 영역으로, 판 번호가 보임
+await ev(`T.cmd('exQuick')`);
+{
+  const one = (await ev(`T.doc()`)).diagrams[1].body[0];
+  await ev(`T.click('${one.id}')`); await keys('KeyZ', 'KeyF');
+  await ev(`T.type('피벗')`);
+  const g1 = (await ev(`T.doc()`)).diagrams[1].body[0];
+  check('블록 하나에서 zf: 접기 영역이 됨', g1.type === 'range' && g1.name === '피벗' && g1.children.length === 1 && g1.children[0].id === one.id, g1);
+  await ev(`T.click('${g1.id}')`); await keys('KeyZ', 'KeyA');
+  check('블록 하나짜리 접기 영역을 폄: 테두리가 보임', (await ev(`!!document.querySelector('#svg rect[data-edge="${g1.id}"]')`)) === true);
+  check('판 번호가 화면에 보임', /^\d+번째 판$/.test(await ev(`document.querySelector('#edition').textContent`)), await ev(`document.querySelector('#edition').textContent`));
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);
