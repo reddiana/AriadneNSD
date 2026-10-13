@@ -28,6 +28,8 @@ updated: 2026-10-13
 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q1~Q12, Q17, Q19~Q21 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11)                              | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html`       |
 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
+| 글자 폭 스파이크 (2026-10-13, 답을 기다림: 다른 브라우저에서 지문 견주기, F1 → [[debt#정해 주세요]]) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
+| 아키텍처 전 물음 시안 (2026-10-13, 답을 기다림: A4 · A6 · A8 · A8-가 → [[debt#정해 주세요]]) | https://claude.ai/artifact/Jez6xT5qB9HbdoN1aRSKSn | `journal/assets/2026-10-13-before-architecture-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
@@ -51,7 +53,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 - **아키텍처 설계는 세 조건이 모두 맞으면 시작한다.**
 	1. inbox의 기능 후보가 모두 요구사항에 들어가고 우선순위가 붙었다.
-	2. 아키텍처를 가르는 열린 질문에 답이 났다: 블록 글자는 코드인가 문장인가, 저장 SVG의 색, 주 사용자, 확장자(스파이크로 `.ns.svg` 확인함).
+	2. 아키텍처를 가르는 열린 질문에 답이 났다: 블록 글자는 코드인가 문장인가(2026-10-13: 종류를 고름), 저장 SVG의 색(시안 A4로 물음), 주 사용자(2026-10-13: 실무용), 확장자(스파이크로 `.ns.svg` 확인함).
 	3. 프로토타입을 써 본 뒤 나온 새 요구사항이 모델(블록 종류, 트리 구조)과 파일 형식을 바꾸지 않는다.
 
 근거: [[2026-10-10-01-solo-housekeeping#제안 3. 아키텍처 설계를 시작할 시점 (1-5)|제안 3]]
@@ -68,7 +70,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 제품에 대한 열린 질문은 그 문서의 미결정 절이 원본입니다. 여기에 다시 적지 않습니다.
 
-- 요구사항: [[01-requirements#6. 미결정 사항]] (주 사용자, 블록 글자, 저장된 SVG의 색, Event를 일으키는 블록, 웹 광고의 자리)
+- 요구사항: [[01-requirements#6. 미결정 사항]] (블록 글자의 종류를 고르는 단위, 번들하는 글꼴, 저장된 SVG의 색, Event를 일으키는 블록, 웹 광고의 자리)
 - UX 설계의 물음: [[02-ux-design#7. 결정 모음]]
 - 요구사항 문서에 대한 물음(Q18, Q22, Q23): [[requirements-review#답하실 것]]
 - 아키텍처: [[03-architecture#7. 위험과 검증이 필요한 사항]] (텍스트 폭 측정), 제안됨 상태의 ADR → [[atelier/README#아키텍처 결정 기록 (ADR)]]
