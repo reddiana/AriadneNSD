@@ -76,13 +76,17 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
   <section>
     <h2>T2. 펴 보인 호출 블록도 테두리로 바꾸는가</h2>
     <p class="q">2026-10-11에 "펴 보인 호출 블록은 접기 영역과 똑같이 그리고 색만 다르게"(Q15-a의 C1)로 정했습니다. 접기 영역이 테두리가 되면 이 규칙을 따라 호출 블록도 보라 테두리가 되는지, 호출 블록은 막대로 남는지를 고르는 물음입니다. 접기 영역 "나누기" 안에서 <code>p ← partition(a, lo, hi)</code>를 편 모습이고, 접기 영역은 T1의 고친 2번으로 그렸습니다.</p>
-    <div class="cards wide">
-      <article class="card pick"><header><span class="tag">T2 · 1번</span><h3>호출 블록도 테두리</h3><span class="badge yours">메인테이너가 정함</span></header>
-        <div class="paper" data-scene="B" data-fold="border" data-gap="1" data-call="border"></div>
-        <ul><li>"같은 틀에 색만 다르게"가 그대로 지켜집니다.</li><li>남아 있던 물음 Q15-b(위의 줄 + 왼쪽 띠가 While과 닮았다)가 함께 풀립니다. 사방을 두른 상자는 While과 닮지 않았습니다.</li></ul></article>
-      <article class="card"><header><span class="tag">T2 · 2번</span><h3>호출 블록은 막대 그대로</h3></header>
-        <div class="paper" data-scene="B" data-fold="border" data-gap="1" data-call="bar"></div>
-        <ul><li>접기 영역과 호출 블록이 모양으로도 갈립니다.</li><li>호출 블록을 겹쳐 펴면(재귀) 막대의 겹침 문제가 호출 블록에는 그대로 남습니다.</li></ul></article>
+    <p class="q"><b>다섯째 판 (2026-10-13).</b> 메인테이너: "테두리도 막대도 안 하면 혼란스러울까요? 실은 접기 영역은 예전의 강조 영역의 역할도 겸하게 하려고 했습니다. 호출블록 확장은 강조와는 다르지요". 3번을 더했고, 펴 보인 <code>partition</code> 안에서 <code>swap(a, i, hi)</code>를 한 번 더 편 모습으로 다시 그렸습니다. <b>볼 곳은 <code>a[hi] ← t</code>와 <code>return i</code> 사이입니다.</b> <code>swap</code>이 거기서 끝나고 <code>return i</code>는 <code>partition</code>의 블록입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">T2 · 1번</span><h3>호출 블록도 테두리</h3></header>
+        <div class="paper" data-scene="B2" data-fold="border" data-gap="1" data-call="border"></div>
+        <ul><li>어디서 끝나는지 상자로 보입니다.</li><li>접기 영역과 같은 무게로 눈에 띕니다. 강조하려는 것이 아닌데 강조됩니다.</li></ul></article>
+      <article class="card"><header><span class="tag">T2 · 2번</span><h3>왼쪽 막대와 띠</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-scene="B2" data-fold="border" data-gap="1" data-call="bar"></div>
+        <ul><li>막대가 끝나는 곳이 호출 블록이 끝나는 곳입니다. 겹쳐 펴도 막대의 수로 겹이 보입니다.</li><li>한 겹마다 폭 8px를 씁니다.</li></ul></article>
+      <article class="card"><header><span class="tag">T2 · 3번</span><h3>띠만</h3></header>
+        <div class="paper" data-scene="B2" data-fold="border" data-gap="1" data-call="none"></div>
+        <ul><li>가장 조용하고 폭을 쓰지 않습니다. 펴 보인 블록은 회색 글자로 갈립니다.</li><li>한 겹만 펴면 헷갈리지 않습니다. 회색 글자가 끝나는 곳이 끝입니다.</li><li>겹쳐 펴면 <span class="bad">안쪽 호출 블록이 어디서 끝나는지 보이지 않습니다.</span> <code>return i</code>가 <code>swap</code>의 것인지 <code>partition</code>의 것인지 그림으로는 알 수 없습니다.</li></ul></article>
     </div>
   </section>
 
@@ -123,7 +127,7 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <div class="sum">
       <ol>
         <li><b>T1</b> 테두리 사이: 2번을 고친 그림(틈 1px, 보통 블록은 테두리에 붙임)을 보고 다시 의견을 주시기로 함</li>
-        <li><b>T2</b> 펴 보인 호출 블록: <b>정함. 1번 테두리</b></li>
+        <li><b>T2</b> 펴 보인 호출 블록: 다시 물음. 1번 테두리 / 2번 왼쪽 막대와 띠 / 3번 띠만</li>
         <li><b>P1</b> 이 자리의 접기 영역의 모습: <b>정함. 1번 똑같이</b></li>
         <li><b>P2</b> Method가 바뀌면: <b>정함. 1번 줄어든다</b></li>
       </ol>
@@ -168,6 +172,10 @@ const SCENES = {
   B: [[null, [p('if (lo >= hi) return'),
     fold('나누기', [open('p ← ', 'partition', '(a, lo, hi)', partition([p('pivot ← a[hi]'), p('i ← lo')], [p('swap(a, i, hi)'), p('return i')]))]),
     call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')]]],
+  B2: [[null, [p('if (lo >= hi) return'),
+    fold('나누기', [open('p ← ', 'partition', '(a, lo, hi)', partition([p('pivot ← a[hi]'), p('i ← lo')],
+      [open('', 'swap', '(a, i, hi)', [p('t ← a[i]'), p('a[i] ← a[hi]'), p('a[hi] ← t')]), p('return i')]))]),
+    call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')]]],
   C: [['quicksort: partition을 펴 보인 자리', quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))],
       ['Method partition의 원본', partition([p('pivot ← a[hi]'), p('i ← lo')], TAIL)]],
   D0: [[null, quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))]],
@@ -177,6 +185,7 @@ const SCENES = {
 
 function frame(n, S) {
   const mode = n.t === 'open' ? S.call : S.fold;
+  if (mode === 'none') return { l: 0, r: 0, t: K.band, b: 0, mode, ins: 0 };   // 띠만: 막대도 테두리도 없다
   if (mode === 'bar') return { l: K.rbar, r: 0, t: K.band, b: 0, mode, ins: 0 };
   // flush: 보통 블록은 테두리에 붙이고, 겹친 영역만 테두리에서 틈(S.gap)만큼 띄운다
   return S.flush ? { l: 0, r: 0, t: K.band, b: 0, mode, ins: K.bw + S.gap } : { l: S.pad, r: S.pad, t: K.band, b: S.pad, mode, ins: 0 };
@@ -228,10 +237,11 @@ function place(n, x, y, w, h, S, o, shown) {
   const text = isCall
     ? `<text x="${tx}" y="${ty}" font-family="IBM Plex Mono, IBM Plex Sans KR, monospace" font-size="11.5" fill="${shown ? C.shown : C.ink}" xml:space="preserve">▾ ${esc(n.pre)}<tspan font-weight="600">${esc(n.name)}</tspan>${esc(n.post)}</text>`
     : `<text x="${tx}" y="${ty}" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="11.5" font-weight="600" fill="${C.tag}" xml:space="preserve">${esc(label(n, S))}</text>`;
-  if (f.mode === 'bar') {
+  if (f.mode === 'bar' || f.mode === 'none') {
     o.a.push(rect(x, y, w, h, isCall ? C.call : C.gap), rect(x, y, w, K.band, isCall ? C.call : C.band));
     placeSeq(n.kids, x + f.l, y + f.t, w - f.l, h - f.t, S, o, inShown);
-    o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar), text);
+    if (f.mode === 'bar') o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar));
+    o.a.push(text);
   } else {
     // 바탕과 띠에는 가는 선을 두르지 않는다. 두르면 그 선이 한쪽 틈(1px)으로 번져 왼쪽과 오른쪽 틈이 달라 보인다
     // 그림 전체를 반 픽셀 옮겨 그리므로(draw), 블록의 가는 선은 x와 x + w의 픽셀 한 줄을 차지한다. 바탕은 그 줄까지 덮는다
