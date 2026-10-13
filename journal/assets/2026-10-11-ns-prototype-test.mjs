@@ -532,6 +532,8 @@ d = await ev(`T.doc()`);
   await ev(`T.click('${lid}')`); await keys('KeyZ', 'KeyA');
   const e1 = await box(`rect[data-edge="${lid}"]`), dash = await box(`rect[data-dash="${call}"]`);
   check('이 자리의 접기 영역을 za로 폄: 접기 영역과 같은 테두리', (await has(gid(pid[0]))) && !!e1, e1);
+  const outer = await box(`rect[data-id="${gid(pid[2])}"]`);
+  check('펴 보인 호출 블록: 점선이 바깥 선에서 1px 안으로 (보통 블록의 왼쪽 선 + 2가 점선 자리의 가운데)', !!outer && dash[0] === outer[0] + 2, [outer, dash]);
   check('겹친 테두리: 양옆에 틈 1px (테두리 3 + 틈 1)', !!e1 && !!dash && e1[0] - dash[0] === 4 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 4, [e1, dash]);
   await ev(`T.click('${gid(pid[0])}')`); await keys('KeyZ', 'KeyA');
   check('이 자리의 접기 영역 안에서 za: 호출 블록이 아니라 그 접기 영역이 접힘', (await has(lid)) && !(await has(gid(pid[0]))) && (await has(gid(pid[2]))), await ev(`T.msg()`));

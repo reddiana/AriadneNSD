@@ -102,7 +102,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">47번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">48번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -221,6 +221,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
         <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>펴 보인 호출 블록의 점선이 1px 안으로 들어갑니다 (48번째 판).</b> 바깥의 가는 선은 다른 블록처럼 그대로 있고, 점선은 그 안쪽에 있습니다.</li>
         <li><b>지금 보는 판의 번호가 왼쪽 위 이름 아래에 보입니다 (47번째 판).</b></li>
         <li><b>블록 하나도 접기 영역으로 만들 수 있습니다 (47번째 판).</b> 블록 하나를 고르고 <kbd>zf</kbd>를 누릅니다. 눈에 띄게 하고 싶은 블록에 굵은 테두리와 이름을 붙이는 데 씁니다.</li>
         <li><b>펴진 접기 영역은 굵은 테두리로 보입니다 (46번째 판).</b> 왼쪽 막대를 없애고 영역의 둘레를 굵은 실선으로 두릅니다. 보통 블록은 테두리에 붙고, 겹친 접기 영역과 이어진 접기 영역 사이에는 1px의 틈이 있습니다. 이름 띠는 그대로입니다.</li>
@@ -779,7 +780,7 @@ function measure(n) {
     const p = callParts(n), kids = shown.get(n.id);
     if (kids) {
       // 펴 보인 호출 블록: 얇은 띠 아래에 Method의 블록이 놓이고 둘레에 점선을 두른다
-      const inner = measureSeq(kids, RIN);
+      const inner = measureSeq(kids, RIN + 1);
       r = { w: Math.max(inner.w, 10 + smallW('▾ ' + p.pre) + smallW(p.name, true) + smallW(p.post) + K.padX), h: K.band + inner.h, band: K.band };
     }
     else r = { w: tsize(p.pre).w + boldW(p.name) + tsize(p.post).w + 2 * K.padX + 2 * K.bar, h: K.lh + 2 * K.padY };
@@ -847,7 +848,7 @@ function place(n, x, y, w, h, out) {
   } else if (n.type === 'call' && shown.has(n.id)) {
     const i0 = out.items.length, g0 = out.ghosts.length;
     out.items.push({ k: 'callOpen', id: n.id, x, y, w, h, band: m.band, parts: callParts(n) });
-    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, RIN);
+    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, RIN + 1);
     // 그 안에 놓인 것은 모두 펴 보인 것이다 (글자를 회색으로 그린다)
     for (let k = i0 + 1; k < out.items.length; k++) out.items[k].shown = true;
     for (let k = g0; k < out.ghosts.length; k++) out.ghosts[k].shown = true;
@@ -1015,10 +1016,10 @@ function drawSVG(lay, ui) {
       s.push(callTxt(it.parts, it.x + K.padX + K.bar, it.y + K.padY));
     } else if (it.k === 'callOpen') {
       // 펴 보인 호출 블록: 맨 위 얇은 띠에 호출 블록의 글자를 적고, 둘레에 가는 점선을 두른다. 강조가 아니라서 접기 영역의 굵은 실선보다 가볍다.
-      // 테두리 자리를 흰 줄로 비우고 그 가운데에 점선을 그어, 블록의 가는 선과 겹치지 않게 한다
-      const p = it.parts, e = `x="${it.x + 1}" y="${it.y + 1}" width="${it.w - 2}" height="${it.h - 2}" fill="none" pointer-events="none"`;
-      s.push(`<rect x="${it.x - .5}" y="${it.y - .5}" width="${it.w + 1}" height="${it.h + 1}" fill="#ffffff" pointer-events="none"/>`);
-      s.push(`<rect x="${it.x - .5}" y="${it.y - .5}" width="${it.w + 1}" height="${it.band + .5}" fill="${COL.callBand}"${da(it.id)}/>`);
+      // 점선은 블록의 바깥 선에서 1px 안으로 들어간다: 바깥의 가는 선은 다른 블록처럼 그대로 두고, 그 안쪽 자리를 흰 줄로 비워 가운데에 점선을 긋는다
+      const p = it.parts, e = `x="${it.x + 2}" y="${it.y + 2}" width="${it.w - 4}" height="${it.h - 4}" fill="none" pointer-events="none"`;
+      s.push(rect(it.x, it.y, it.w, it.h, '#ffffff', ' pointer-events="none"'));
+      s.push(`<rect x="${it.x + .5}" y="${it.y + .5}" width="${it.w - 1}" height="${it.band - .5}" fill="${COL.callBand}"${da(it.id)}/>`);
       s.push(`<line x1="${it.x}" y1="${it.y + it.band}" x2="${it.x + it.w}" y2="${it.y + it.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
       s.push(`<text x="${it.x + 10}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="11.5" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
       over.push(`<rect data-dash="${it.id}" ${e} stroke="#ffffff" stroke-width="${K.rb}"/>`, `<rect ${e} stroke="${COL.callEdge}" stroke-width="1.5" stroke-dasharray="6 4"/>`);
