@@ -188,7 +188,7 @@ function seq(kids, S, ins = 0) {
   kids.forEach((c, i) => {
     const m = measure(c, S), b = boxed(c, S);
     w = Math.max(w, m.w + (b ? 2 * ins : 0)); h += m.h;
-    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) h += S.gap;   // 이어진 영역 사이의 틈
+    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) h += S.gap + 1;   // 이어진 영역 사이의 틈
     if (b && i === kids.length - 1) h += ins;
   });
   return { w, h };
@@ -204,12 +204,12 @@ function placeSeq(kids, x, y, w, h, S, o, shown, ins = 0) {
   let cy = y;
   kids.forEach((c, i) => {
     const b = boxed(c, S), d = b ? ins : 0;
-    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) cy += S.gap;
+    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) cy += S.gap + 1;
     const ch = i === kids.length - 1 ? y + h - cy - d : c.m.h;
     place(c, x + d, cy, w - 2 * d, ch, S, o, shown); cy += ch;
   });
 }
-const rect = (x, y, w, h, fill) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${C.stroke}" stroke-width="1" shape-rendering="crispEdges"/>`;
+const rect = (x, y, w, h, fill) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${C.stroke}" stroke-width="1"/>`;
 const mono = (s, x, y, shown) => `<text x="${x}" y="${y + K.lh - 5}" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="${shown ? C.shown : C.ink}" xml:space="preserve">${esc(s)}</text>`;
 function place(n, x, y, w, h, S, o, shown) {
   if (n.t === 'p') { o.a.push(rect(x, y, w, h, C.process), mono(n.text, x + K.padX, y + K.padY, shown)); return; }
@@ -234,17 +234,18 @@ function place(n, x, y, w, h, S, o, shown) {
     o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar), text);
   } else {
     // 바탕과 띠에는 가는 선을 두르지 않는다. 두르면 그 선이 한쪽 틈(1px)으로 번져 왼쪽과 오른쪽 틈이 달라 보인다
-    o.a.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.gap}"/>`, `<rect x="${x}" y="${y}" width="${w}" height="${K.band}" fill="${isCall ? C.callBand : C.band}"/>`,
-      `<rect x="${x}" y="${y + K.band - 1}" width="${w}" height="1" fill="${C.stroke}"/>`, text);
+    // 그림 전체를 반 픽셀 옮겨 그리므로(draw), 블록의 가는 선은 x와 x + w의 픽셀 한 줄을 차지한다. 바탕은 그 줄까지 덮는다
+    o.a.push(`<rect x="${x - .5}" y="${y - .5}" width="${w + 1}" height="${h + 1}" fill="${C.gap}"/>`, `<rect x="${x - .5}" y="${y - .5}" width="${w + 1}" height="${K.band + .5}" fill="${isCall ? C.callBand : C.band}"/>`,
+      `<line x1="${x}" y1="${y + K.band}" x2="${x + w}" y2="${y + K.band}" stroke="${C.stroke}" stroke-width="1"/>`, text);
     placeSeq(n.kids, x + f.l, y + f.t, w - f.l - f.r, h - f.t - f.b, S, o, inShown, f.ins);
     const dash = n.local && S.local === 'dash' ? ' stroke-dasharray="7 4"' : '';
-    o.b.push(`<rect x="${x + K.bw / 2}" y="${y + K.bw / 2}" width="${w - K.bw}" height="${h - K.bw}" fill="none" stroke="${isCall ? C.callEdge : C.edge}" stroke-width="${K.bw}"${dash}/>`);
+    o.b.push(`<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none" stroke="${isCall ? C.callEdge : C.edge}" stroke-width="${K.bw}"${dash}/>`);
   }
 }
 function draw(kids, S) {
   const m = seq(kids, S), o = { a: [], b: [] };
   placeSeq(kids, 1, 1, m.w, m.h, S, o, false);
-  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img">${o.a.join('')}${o.b.join('')}</svg>` };
+  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img"><g transform="translate(.5 .5)">${o.a.join('')}${o.b.join('')}</g></svg>` };
 }
 function render() {
   document.querySelectorAll('.paper[data-scene]').forEach(el => {
