@@ -106,6 +106,11 @@ def main():
         '__REF__': json.dumps(ref, ensure_ascii=False),
     }.items():
         html = html.replace(key, val)
+    # 라이선스 안내 (ADR-0027). 같은 폴더의 스크립트에서 가져온다
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('licnote', os.path.join(HERE, '2026-10-14-add-license-note.py'))
+    lic = importlib.util.module_from_spec(spec); spec.loader.exec_module(lic)
+    html = html.rstrip('\n') + '\n' + lic.note('font')
     with open(OUT, 'w', encoding='utf-8', newline='\n') as f:
         f.write(html)
     print('글꼴에 없는 글자:', missing)

@@ -2,10 +2,10 @@
 title: "ADR-0024: 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않는다"
 tags:
   - adr
-status: 승인
+status: 대체됨
 date: 2026-10-11
 supersedes:
-superseded-by:
+superseded-by: "[[0027-study-pages-cc-by]]"
 ---
 
 # ADR-0024: 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않는다
