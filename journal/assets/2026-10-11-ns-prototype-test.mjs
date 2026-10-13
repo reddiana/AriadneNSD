@@ -386,6 +386,17 @@ d = await ev(`T.doc()`);
 await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyW', '+KeyK', 'KeyC', '+KeyD');
 check('옛 한 글자 키(W, K, C, D)는 아무것도 넣지 않음', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
 
+// x. 펴 보인 안쪽에서 za: 가장 가까운 펴 보인 호출 블록이 접힘
+await ev(`T.cmd('exQuick')`);
+d = await ev(`T.doc()`);
+{
+  const call = d.diagrams[0].body[0].yes[0].id, inner = d.diagrams[1].body[0].id;
+  await ev(`T.click('${call}')`); await keys('KeyZ', 'KeyA');
+  const opened = await has(`${call}>${inner}`);
+  await ev(`T.click('${call}>${inner}')`); await keys('KeyZ', 'KeyA');
+  check('펴 보인 안쪽에서 za: 그 호출 블록이 접히고 호출 블록이 골라짐', opened && !(await has(`${call}>${inner}`)) && (await ev(where)) === '호출', [opened, await ev(where), await ev(`T.msg()`)]);
+}
+
 // w. inbox(2026-10-13): 위·아래로는 옆 갈래로 넘어가지 않음, 머리에서 dd, 접기 영역 보기가 꺼졌을 때의 안내
 await ev(`T.cmd('exCode')`);
 d = await ev(`T.doc()`);

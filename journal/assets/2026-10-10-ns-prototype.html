@@ -190,7 +190,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기 (<kbd>Ctrl</kbd>+<kbd>V</kbd>는 뒤에). <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
         <dt><kbd>x</kbd> <kbd>Delete</kbd></dt><dd>복사 없이 지우기. 머리를 고르고 누르면 머리 떼기. <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기 (글자 키는 없습니다)</dd>
         <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음)</dd>
-        <dt><kbd>za</kbd> 또는 <kbd>f</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 이름 띠를 더블클릭하면 접힙니다. 호출 블록 하나를 골랐으면 펴 봅니다: 부르는 Method의 블록이 그 자리에 회색 글자로 보이고, 다시 누르면 접힙니다</dd>
+        <dt><kbd>za</kbd> 또는 <kbd>f</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 이름 띠를 더블클릭하면 접힙니다. 호출 블록 하나를 골랐으면 펴 봅니다: 부르는 Method의 블록이 그 자리에 회색 글자로 보이고, 다시 누르면 접힙니다. 펴 보인 안쪽의 블록을 고르고 눌러도 그 호출 블록이 접힙니다</dd>
         <dt><kbd>zf</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 접기 영역 안에 또 만들 수 있습니다</dd>
         <dt><kbd>zd</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다. 블록은 그대로 남습니다</dd>
         <dt><kbd>e</kbd></dt><dd><b>Event</b>. 머리 없는 다이어그램에서는 Event 머리(모자)를 달고, 머리를 고르고 누르면 Event 머리로 바꿉니다. 대문자 <kbd>E</kbd>는 새 빈 Event 다이어그램</dd>
@@ -212,6 +212,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>위·아래로는 옆 갈래로 넘어가지 않습니다.</b> If · Case의 갈래 끝에서 <kbd>j</kbd>는 그 If · Case의 다음 블록으로, 갈래의 처음에서 <kbd>k</kbd>는 그 If · Case로 갑니다. 옆 갈래로는 <kbd>h</kbd> <kbd>l</kbd>로 갑니다.</li>
         <li><b>"접기 영역 이름 띠 보기"를 "접기 영역 보기"로 부릅니다.</b> 꺼 둔 채로 영역을 넓히다 막히면, 꺼져 있어서 경계가 안 보인다고 알려 줍니다.</li>
         <li><b><kbd>x</kbd>는 <kbd>Delete</kbd>와 같습니다.</b> 복사 없이 지웁니다. <kbd>dd</kbd>는 잘라내기입니다(붙일 수 있음). 머리에서는 <kbd>x</kbd>도 <kbd>dd</kbd>도 머리 떼기입니다.</li>
+        <li><b>펴 보인 호출 블록은 안쪽에서도 접습니다.</b> 펴 보인 블록을 고르고 <kbd>za</kbd>를 누르면 그것을 담은 가장 가까운 펴 보인 호출 블록이 접힙니다. 접기 영역과 같습니다.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
       </ul>
 
@@ -1614,7 +1615,12 @@ function fold() {
   const t = r.items.length === 1 ? r.items[0] : null;
   // 호출 블록 하나를 골랐으면 펴 보거나 접는다. 펴 보인 안쪽의 호출 블록도 된다
   if (t && t.type === 'call') return toggleCall(t);
-  if (shownSel()) return say('펴 보인 쪽에서는 접거나 펴지 않습니다. gd로 원래 블록으로 갑니다');
+  if (shownSel()) {
+    // 펴 보인 안쪽에서는 그것을 담은 가장 가까운 펴 보인 호출 블록을 접는다 (접기 영역 안쪽에서 접는 것과 같게)
+    for (let e = idx.get(sel.anchor); e && e.parent; e = idx.get(e.parent.id))
+      if (e.slot === 'shown') { selectOne(e.parent.id); return toggleCall(e.parent); }
+    return;
+  }
   const toggleRegion = g => {
     selectOne(g.id);
     if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
