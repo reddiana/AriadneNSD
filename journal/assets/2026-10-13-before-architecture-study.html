@@ -1,0 +1,217 @@
+<title>아키텍처 전 물음 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 "하기 전 → 한 뒤"를 작은 NS 차트로 그린다 (접기 영역 테두리 시안과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #f8eadc; --paper: #ffffff; --paper-ink: #3d4658;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; --paper-ink: #3d4658; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2a1b; --paper: #ffffff; --paper-ink: #3d4658; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.badge.yours { color: var(--accent); background: var(--accent-soft); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; border: 1px solid var(--line); }
+.paper figure { margin: 0; display: grid; gap: 6px; flex: none; }
+.paper figcaption { font-size: 12px; color: var(--paper-ink); }
+.paper svg, .paper img { display: block; max-width: none; }
+.notes { display: flex; flex-wrap: wrap; gap: 12px; overflow-x: auto; }
+.note { margin: 0; display: grid; gap: 6px; flex: none; }
+.note > div { border-radius: 6px; padding: 12px; display: grid; gap: 8px; border: 1px solid var(--line); }
+.note i { display: block; height: 7px; border-radius: 4px; }
+.note figcaption { font-size: 12px; color: var(--muted); }
+.note svg, .note img { display: block; }
+.tabbar { display: inline-flex; align-items: center; gap: 8px; background: #e9edf4; color: #1c2230; border: 1px solid #c9d2e0; border-bottom: 0; border-radius: 6px 6px 0 0; padding: 4px 12px; font-size: 12.5px; font-family: var(--mono); }
+.tabbar .dot { width: 8px; height: 8px; border-radius: 50%; background: #c2571a; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>아키텍처를 짜기 전에 정할 것 셋</h1>
+    <p class="lede">2026-10-13에 글로 여쭌 여덟 가지 가운데 "질문을 이해 못 함"이라고 하신 <b>4번 · 6번 · 8번</b>을 그림으로 옮겼습니다. 카드마다 번호 딱지가 있습니다. 답은 <code>A4: 1</code>처럼 적어 주시면 됩니다. 글꼴 번들에서 새로 나온 물음 하나(F1)는 글자 폭 스파이크 페이지에 그림이 있습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">4번</span>
+    <h2>A4. 저장된 그림의 색은 누가 정하는가</h2>
+    <p class="q">저장한 <code>.ns.svg</code>는 그림 파일입니다. Obsidian의 노트에 넣으면 그 노트 위에 그림으로 보입니다. <b>노트가 밝을 때와 어두울 때(다크 모드) 그 그림이 어떤 색으로 보여야 하는가</b>를 고르는 물음입니다. 카드마다 같은 파일을 밝은 노트와 어두운 노트에 넣은 모습을 그렸습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">A4 · 1번</span><h3>늘 문서의 색으로 저장한다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="notes" data-a4="fixed"></div>
+        <ul><li>편집 화면이 어두워도 저장되는 그림은 문서에 정해 둔 색(기본은 밝은 종이)입니다.</li><li>어디서 열어도, 인쇄해도, 동료에게 보내도 <b>같은 그림</b>입니다.</li><li>어두운 노트에서는 <span class="bad">밝은 네모로 보입니다.</span> draw.io 같은 도구의 그림도 이렇게 보입니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A4 · 2번</span><h3>보는 곳의 밝기를 따른다</h3></header>
+        <div class="notes" data-a4="follow"></div>
+        <ul><li>파일 안에 밝은 색과 어두운 색을 둘 다 적어 두고, 보는 프로그램이 고릅니다.</li><li>어두운 노트에 잘 녹아듭니다.</li><li><span class="bad">고르는 기준이 프로그램마다 다릅니다.</span> 대개 노트의 밝기가 아니라 기기의 설정을 봅니다. 기기는 밝은데 Obsidian만 어둡게 쓰면 맞지 않을 수 있습니다. 로고를 만들 때 GitHub에서 겪은 일과 같습니다.</li><li>Word, PowerPoint, 인쇄에서는 밝은 쪽으로만 보입니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A4 · 3번</span><h3>저장할 때 화면에 보이던 색 그대로</h3></header>
+        <div class="notes" data-a4="asseen"></div>
+        <p>어두운 Obsidian에서 저장한 경우를 그렸습니다.</p>
+        <ul><li>"저장되는 그림은 지금 화면 그대로"(ADR-0018)를 색에도 그대로 잇는 길입니다.</li><li><span class="bad">누가 저장했느냐에 따라 색이 바뀝니다.</span> 밝은 화면을 쓰는 동료가 한 글자만 고쳐 저장해도 그림 전체의 색이 바뀌어 git에 큰 변경으로 남습니다.</li></ul></article>
+    </div>
+    <div class="card" style="max-width: 560px"><header><span class="tag">A4 · 2번의 실물</span><h3>이 그림은 2번으로 만든 진짜 SVG입니다</h3></header>
+      <div class="paper" style="background: var(--bg)"><img id="live" alt="보는 곳의 밝기를 따르는 SVG" width="232" height="86"></div>
+      <p>기기의 설정을 다크 모드로 바꾸면 그림의 색이 바뀝니다. claude.ai의 테마만 바꾸면 바뀌지 않을 수 있습니다. 그것이 위에 적은 "고르는 기준이 프로그램마다 다르다"입니다.</p></div>
+  </section>
+
+  <section>
+    <span class="part">6번</span>
+    <h2>A6. Method의 머리에서 괄호를 지웠을 때, 호출 블록에 적어 둔 인자는 어디에 두는가</h2>
+    <p class="q">Method <code>partition(a, lo, hi)</code>를 부르는 호출 블록에 <code>nums, 0, n - 1</code>을 적어 두었습니다. 그런데 머리에서 괄호를 지워 <code>partition</code>으로 만들었다가(받는 것이 없는 Method), 나중에 괄호를 다시 붙입니다. <b>그때 호출 블록에 <code>nums, 0, n - 1</code>이 돌아오는가</b>를 고르는 물음입니다. 2026-10-11에 1번으로 정하셨습니다. 그런데 1번은 편집기가 파일 말고도 "이 기기에 적어 두는 곳"을 가져야 하고, 그 자리를 웹 · Obsidian · 데스크톱마다 따로 만들어야 해서 아키텍처에 부품이 하나 늘어납니다. 그래서 다시 여쭙니다.</p>
+    <div class="cards">
+      <article class="card" style="grid-column: 1 / -1"><header><span class="tag">앞</span><h3>같은 장면: 괄호를 지웠다가 다시 붙인다</h3></header>
+        <div class="paper" data-a6="story"></div></article>
+      <article class="card"><header><span class="tag">A6 · 1번</span><h3>파일에서 빼고, 이 기기에만 기억한다</h3><span class="badge yours">2026-10-11에 정함</span></header>
+        <div class="paper" data-a6="device"></div>
+        <ul><li>파일에는 보이는 것만 들어갑니다.</li><li><span class="bad">같은 파일이 기기에 따라 다르게 되살아납니다.</span> 동료가 열거나 다른 컴퓨터에서 열면 인자는 머리의 글자 <code>a, lo, hi</code>로 채워집니다.</li><li>기억해 둘 자리를 배포 대상마다 따로 만들어야 합니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A6 · 2번</span><h3>파일 안에 보이지 않게 남겨 둔다</h3></header>
+        <div class="paper" data-a6="file"></div>
+        <ul><li>어디서 열어도 적어 둔 인자가 돌아옵니다.</li><li>따로 기억해 둘 자리가 필요 없습니다.</li><li><span class="bad">그림에 보이지 않는 글자가 파일에 남습니다.</span> 2026-10-11에 "숨겨서 저장하는 곳은 모델이 아니라 사용자 환경의 어딘가로"라고 하신 것과 어긋납니다.</li></ul></article>
+      <article class="card pick"><header><span class="tag">A6 · 3번</span><h3>기억하지 않는다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-a6="forget"></div>
+        <ul><li>괄호를 지우면 인자는 사라집니다. 잘못 지웠으면 바로 실행 취소(<kbd>u</kbd>)로 되살립니다.</li><li>괄호를 다시 붙이면 어디서나 머리의 글자 <code>a, lo, hi</code>로 채워집니다. 누가 열어도 같습니다.</li><li>파일에 숨긴 것도 없고, 따로 기억해 둘 자리도 없습니다.</li><li><span class="bad">며칠 뒤에 괄호를 다시 붙이면 적어 둔 인자는 손으로 다시 적어야 합니다.</span></li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">8번</span>
+    <h2>A8. 접고 편 것도 실행 취소로 되돌아가는가</h2>
+    <p class="q">글자를 하나 고치고(①), 그다음에 접기 영역 "나누기"를 접었습니다(②). 여기서 실행 취소(<kbd>u</kbd>)를 <b>한 번</b> 누릅니다. <b>무엇이 되돌아가는가</b>를 고르는 물음입니다. 편집기가 "내용을 바꾸는 일"과 "보이는 모습만 바꾸는 일"을 따로 다루는지가 여기서 갈립니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">앞</span><h3>누르기 전</h3></header>
+        <div class="paper" data-a8="before"></div>
+        <p>① <code>i ← lo</code>를 <code>i ← lo + 1</code>로 고침 → ② "나누기"를 접음.</p></article>
+      <article class="card pick"><header><span class="tag">A8 · 1번</span><h3>접힘은 그대로, 글자가 되돌아간다</h3><span class="badge">Claude의 추천</span><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-a8="content"></div>
+        <ul><li>실행 취소는 <b>내용</b>(블록, 글자, 구조)만 되돌립니다. 접고 펴기, 호출 블록 펴 보기, 확대는 건너뜁니다.</li><li>이리저리 접고 펴며 읽다가 <kbd>u</kbd>를 눌러도 고친 내용으로 바로 갑니다.</li><li><span class="bad">"방금 접은 것"이 되돌아가지 않아 처음에는 놀랄 수 있습니다.</span> 접힘은 <kbd>za</kbd>를 한 번 더 누르면 돌아옵니다.</li><li>Vim과 VS Code도 이렇게 움직입니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A8 · 2번</span><h3>방금 접은 것이 펴진다</h3></header>
+        <div class="paper" data-a8="all"></div>
+        <ul><li>화면에서 바뀐 것은 무엇이든 순서대로 되돌아갑니다. 글자는 <kbd>u</kbd>를 한 번 더 눌러야 되돌아갑니다.</li><li><span class="bad">많이 접고 편 뒤에는 고친 내용까지 가려면 <kbd>u</kbd>를 여러 번 눌러야 합니다.</span></li></ul></article>
+    </div>
+
+    <h2>A8-가. 접기만 했는데 "저장 안 됨" 표시가 뜨는가</h2>
+    <p class="q">접힘 상태는 파일에 저장됩니다(ADR-0018, 저장되는 그림은 지금 화면 그대로). 내용은 그대로 두고 <b>접기만 했을 때</b> 제목 옆에 "저장 안 됨" 점이 뜨는지를 고르는 물음입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">A8-가 · 1번</span><h3>뜬다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper"><figure><span class="tabbar">quicksort.ns.svg <span class="dot"></span></span><div data-a8="tab"></div></figure></div>
+        <ul><li>파일에 들어갈 그림이 달라졌으므로 뜹니다. 저장하면 접힌 그림이 저장됩니다.</li><li>읽기만 하려고 열어 접었다 펴도 닫을 때 "저장할까요"를 묻습니다.</li></ul></article>
+      <article class="card"><header><span class="tag">A8-가 · 2번</span><h3>뜨지 않는다</h3></header>
+        <div class="paper"><figure><span class="tabbar">quicksort.ns.svg</span><div data-a8="tab"></div></figure></div>
+        <ul><li>내용을 고쳤을 때만 뜹니다. 읽기만 한 사람은 묻지 않고 닫힙니다.</li><li><span class="bad">접어 놓고 그냥 닫으면 접힌 모습이 저장되지 않습니다.</span> 노트의 그림은 예전 모습 그대로입니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>A4</b> 저장된 그림의 색: 1 늘 문서의 색 / 2 보는 곳의 밝기를 따름 / 3 저장할 때 화면의 색. 추천 1</li>
+        <li><b>A6</b> 숨긴 인자: 1 이 기기에만 기억(2026-10-11에 정함) / 2 파일 안에 남김 / 3 기억하지 않음. 추천 3</li>
+        <li><b>A8</b> 실행 취소: 1 내용만 되돌림 / 2 접고 편 것도 되돌림. 추천 1</li>
+        <li><b>A8-가</b> 접기만 했을 때 "저장 안 됨": 1 뜬다 / 2 뜨지 않는다. 추천 1</li>
+        <li><b>F1</b> 번들한 글꼴을 저장되는 그림에도 넣는가: 글자 폭 스파이크 페이지의 "저장된 그림을 글꼴이 없는 곳에서 열면"에 그림이 있습니다</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 프로토타입과 같은 색으로 작은 NS 차트를 그린다. 줄 하나가 블록 하나다 */
+const LIGHT = { page: '#ffffff', stroke: '#7e9ccf', proc: '#edf0f5', head: '#dce6f6', call: '#ebe7f4', ink: '#151a22', hot: '#b3470e', dim: '#8791a3', edge: '#4f74d6', band: '#e6ecfb', tag: '#2c55c9', fold: '#fbfcfe' };
+const DARK = { page: '#1b1f27', stroke: '#5f7bb3', proc: '#262b36', head: '#2a3550', call: '#322c44', ink: '#e5e8ee', hot: '#f0a868', dim: '#8a93a5', edge: '#7f9cf0', band: '#27314d', tag: '#a9bcff', fold: '#20242d' };
+const FAM = "'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace";
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const W = 230, H = 28;
+
+/* rows: { t, kind: 'proc' | 'head' | 'call' | 'folded' | 'band', hot, dim, inFold } */
+function chart(rows, C = LIGHT, opts = {}) {
+  const w = opts.w || W, pad = 1.5;
+  let y = 0, s = '', foldTop = null;
+  const out = [];
+  rows.forEach((r, i) => {
+    const h = r.kind === 'band' ? 18 : H;
+    const x = r.inFold || r.kind === 'band' || r.kind === 'folded' ? 3 : 0, ww = w - x * 2;
+    if (r.kind === 'band') foldTop = y;
+    const fill = r.kind === 'head' ? C.head : r.kind === 'call' ? C.call : r.kind === 'band' ? C.band : r.kind === 'folded' ? C.fold : C.proc;
+    out.push(`<rect x="${x}" y="${y}" width="${ww}" height="${h}" fill="${fill}" stroke="${r.kind === 'band' ? 'none' : C.stroke}"/>`);
+    if (r.kind === 'call') out.push(`<path d="M${x + 6} ${y}v${h}M${x + ww - 6} ${y}v${h}" stroke="${C.stroke}" fill="none"/>`);
+    const ink = r.hot ? C.hot : r.dim ? C.dim : (r.kind === 'band' || r.kind === 'folded') ? C.tag : C.ink;
+    const tx = x + (r.kind === 'call' ? 14 : 9);
+    out.push(`<text x="${tx}" y="${y + h - (r.kind === 'band' ? 5 : 9)}" font-family="${FAM}" font-size="${r.kind === 'band' ? 11.5 : 12.5}" font-weight="${r.kind === 'head' || r.hot ? 600 : 400}" fill="${ink}" xml:space="preserve">${esc(r.t)}</text>`);
+    if (r.kind === 'folded') out.push(`<rect x="1.5" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" fill="none" stroke="${C.edge}" stroke-width="3"/>`);
+    y += h;
+    const next = rows[i + 1];
+    if (foldTop != null && (!next || !next.inFold)) { out.push(`<rect x="1.5" y="${foldTop + 1.5}" width="${w - 3}" height="${y - foldTop - 3}" fill="none" stroke="${C.edge}" stroke-width="3"/>`); foldTop = null; }
+  });
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w + 2}" height="${y + 2}" viewBox="-1 -1 ${w + 2} ${y + 2}"><rect x="-1" y="-1" width="${w + 2}" height="${y + 2}" fill="${C.page}"/>${out.join('')}</svg>`;
+}
+const fig = (cap, svg) => `<figure>${svg}<figcaption>${cap}</figcaption></figure>`;
+
+/* A4: 같은 그림을 밝은 노트와 어두운 노트에 넣은 모습 */
+const A4ROWS = [{ t: 'partition(a, lo, hi)', kind: 'head' }, { t: 'pivot ← a[hi]' }, { t: 'swap(a, i, hi)', kind: 'call' }];
+function note(dark, C) {
+  const bg = dark ? '#1e1e1e' : '#ffffff', bar = dark ? '#3a3a3a' : '#dfe3ea', bd = dark ? '#333' : '#d4dbe6';
+  return `<figure class="note"><div style="background:${bg};border-color:${bd}"><i style="background:${bar};width:150px"></i><i style="background:${bar};width:110px"></i>${chart(A4ROWS, C, { w: 190 })}<i style="background:${bar};width:130px"></i></div><figcaption>${dark ? '어두운 노트' : '밝은 노트'}</figcaption></figure>`;
+}
+document.querySelectorAll('[data-a4]').forEach(el => {
+  const m = el.dataset.a4;
+  el.innerHTML = m === 'fixed' ? note(false, LIGHT) + note(true, LIGHT) : m === 'follow' ? note(false, LIGHT) + note(true, DARK) : note(false, DARK) + note(true, DARK);
+});
+/* A4 · 2번의 실물: 색을 둘 다 적어 두고 보는 쪽이 고르게 한 SVG */
+{
+  const L = LIGHT, D = DARK;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="232" height="86" viewBox="-1 -1 232 86"><style>.pg{fill:${L.page}}.b{fill:${L.proc};stroke:${L.stroke}}.h{fill:${L.head};stroke:${L.stroke}}.c{fill:${L.call};stroke:${L.stroke}}.l{stroke:${L.stroke};fill:none}text{fill:${L.ink};font:12.5px Consolas,monospace}@media (prefers-color-scheme: dark){.pg{fill:${D.page}}.b{fill:${D.proc};stroke:${D.stroke}}.h{fill:${D.head};stroke:${D.stroke}}.c{fill:${D.call};stroke:${D.stroke}}.l{stroke:${D.stroke}}text{fill:${D.ink}}}</style><rect class="pg" x="-1" y="-1" width="232" height="86"/><rect class="h" width="230" height="28"/><text x="9" y="19" font-weight="600">partition(a, lo, hi)</text><rect class="b" y="28" width="230" height="28"/><text x="9" y="47">pivot ← a[hi]</text><rect class="c" y="56" width="230" height="28"/><path class="l" d="M6 56v28M224 56v28"/><text x="14" y="75">swap(a, i, hi)</text></svg>`;
+  document.getElementById('live').src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+/* A6: 머리의 괄호를 지웠다가 다시 붙인다 */
+const a6 = (head, call, o = {}) => chart([{ t: head, kind: 'head', hot: o.hotHead }, { t: '⋮', dim: true }, { t: call, kind: 'call', hot: o.hotCall }], LIGHT, { w: 262 });
+const A6 = {
+  story: fig('처음', a6('partition(a, lo, hi)', 'p ← partition(nums, 0, n - 1)')) +
+         fig('머리에서 괄호를 지움', a6('partition', 'p ← partition', { hotHead: true })) +
+         fig('괄호를 다시 붙임. 호출 블록에는?', a6('partition(a, lo, hi)', 'p ← partition( ? )', { hotHead: true, hotCall: true })),
+  device: fig('같은 기기에서', a6('partition(a, lo, hi)', 'p ← partition(nums, 0, n - 1)')) +
+          fig('동료의 기기, 다른 컴퓨터에서', a6('partition(a, lo, hi)', 'p ← partition(a, lo, hi)', { hotCall: true })),
+  file: fig('어디서 열어도', a6('partition(a, lo, hi)', 'p ← partition(nums, 0, n - 1)')),
+  forget: fig('어디서 열어도', a6('partition(a, lo, hi)', 'p ← partition(a, lo, hi)', { hotCall: true })),
+};
+document.querySelectorAll('[data-a6]').forEach(el => { el.innerHTML = A6[el.dataset.a6]; });
+
+/* A8: 글자를 고치고, 접고, 실행 취소 */
+const open = hot => [{ t: hot ? 'i ← lo + 1' : 'i ← lo', hot }, { t: '▾ 나누기', kind: 'band' }, { t: 'pivot ← a[hi]', inFold: true }, { t: 'swap(a, i, hi)', kind: 'call', inFold: true }, { t: 'return i' }];
+const shut = hot => [{ t: hot ? 'i ← lo + 1' : 'i ← lo', hot }, { t: '▸ 나누기  ⋯ 블록 2개', kind: 'folded' }, { t: 'return i' }];
+const A8 = {
+  before: fig('① 글자를 고침', chart(open(true))) + fig('② "나누기"를 접음', chart(shut(true))),
+  content: fig('u 한 번: 글자가 되돌아가고, 접힌 채', chart(shut(false))),
+  all: fig('u 한 번: 펴지고, 글자는 그대로', chart(open(true))) + fig('u 두 번: 글자가 되돌아감', chart(open(false))),
+  tab: chart(shut(false)),
+};
+document.querySelectorAll('[data-a8]').forEach(el => { el.innerHTML = A8[el.dataset.a8]; });
+</script>
