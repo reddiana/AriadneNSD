@@ -403,6 +403,11 @@ check('l: 옆 갈래로는 좌우로', (await ev(where)) === '처리' && (await 
 await ev(`T.click('${d.diagrams[0].id}')`); await keys('KeyD', 'KeyD');
 check('머리에서 dd: 머리 떼기 (Delete와 같음)', (await ev(`T.doc().diagrams[0].event`)) === null, await ev(`T.msg()`));
 await keys('KeyU');
+await ev(`T.click('${d.diagrams[0].id}')`); await keys('KeyX');
+check('머리에서 x: 머리 떼기 (Delete와 같음)', (await ev(`T.doc().diagrams[0].event`)) === null, await ev(`T.msg()`));
+await keys('KeyU');
+await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyX');
+check('블록에서 x: 아직 아무 일도 하지 않음', (await ev(`T.doc().diagrams[0].body[0].text`)) === 'tick++;', await ev(`T.msg()`));
 await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyK');
 const noHint = await ev(`T.key('ArrowUp', { shift: true }); T.msg()`);
 await ev(`document.querySelector('#optRanges').click()`);

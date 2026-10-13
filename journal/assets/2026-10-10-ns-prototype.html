@@ -186,7 +186,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
         <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>고른 블록(들)을 While · Do-While · If · Case로 감싸기</dd>
         <dt><kbd>ds</kbd></dt><dd>제어 블록 풀기: 제어 블록 하나를 없애고 안의 블록을 그 자리에 남깁니다</dd>
-        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd>나 <kbd>x</kbd> 한 번. 머리에서 <kbd>dd</kbd>는 머리 떼기입니다 (<kbd>Delete</kbd>와 같음)</dd>
+        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd>나 <kbd>x</kbd> 한 번. 머리에서는 <kbd>dd</kbd>와 <kbd>x</kbd>가 머리 떼기입니다 (<kbd>Delete</kbd>와 같음)</dd>
         <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기 (<kbd>Ctrl</kbd>+<kbd>V</kbd>는 뒤에). <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
         <dt><kbd>Delete</kbd></dt><dd>복사 없이 지우기. 머리를 고르고 누르면 머리 떼기, <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기</dd>
         <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음)</dd>
@@ -211,7 +211,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <li><b>앞에 붙이기가 생겼습니다.</b> <kbd>P</kbd>.</li>
         <li><b>위·아래로는 옆 갈래로 넘어가지 않습니다.</b> If · Case의 갈래 끝에서 <kbd>j</kbd>는 그 If · Case의 다음 블록으로, 갈래의 처음에서 <kbd>k</kbd>는 그 If · Case로 갑니다. 옆 갈래로는 <kbd>h</kbd> <kbd>l</kbd>로 갑니다.</li>
         <li><b>"접기 영역 이름 띠 보기"를 "접기 영역 보기"로 부릅니다.</b> 꺼 둔 채로 영역을 넓히다 막히면, 꺼져 있어서 경계가 안 보인다고 알려 줍니다.</li>
-        <li><b>머리에서 <kbd>dd</kbd>는 머리 떼기입니다.</b></li>
+        <li><b>머리에서 <kbd>dd</kbd>와 <kbd>x</kbd>는 머리 떼기입니다.</b> <kbd>Delete</kbd>와 같습니다.</li>
         <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
       </ul>
 
@@ -2184,6 +2184,7 @@ function vimKey0(ev) {
   else if (k === 'e' || k === 'E') kindCmd('event', k === 'E');
   else if (k === 'm' || k === 'M') kindCmd('method', k === 'M');
   else if (k === 'r') retargetCmd();
+  else if (k === 'x' && isHead(sel?.anchor)) del(false);   // 머리에서는 x도 dd도 Delete와 같다(머리 떼기)
   else if (k === '+') laneAdd();
   else if (k === '-') laneRemove();
   else if (k !== 'Esc') say(`${k}: Vim 키에 없는 키입니다`);   // 고른 상태의 Esc는 아무 일도 하지 않는다 (고른 것을 풀지 않는다)
