@@ -441,6 +441,30 @@ d = await ev(`T.doc()`);
   check('zo · zc: 펴기만 / 접기만', n1 === n0 && m1.includes('이미 펴져') && n2 === n0 + 1 && n3 === n2 && m3.includes('이미 접혀') && (await ev(fN)) === n0, [n0, n1, m1, n2, n3, m3, await ev(fN)]);
 }
 
+// z. zR · zM: 모두 펴기 / 모두 접기
+await ev(`T.cmd('exCode')`);
+{
+  const fN = `JSON.parse(localStorage.getItem('nsd-proto-fold')).length`, shownBlocks = `document.querySelectorAll('#svg [data-id]').length`;
+  const m0 = await ev(`JSON.stringify(T.doc())`), v0 = await ev(shownBlocks);
+  await ev(`T.click(T.doc().diagrams[0].body[2].children[0].id)`); await keys('KeyZ', '+KeyM');
+  const nM = await ev(fN), vM = await ev(shownBlocks), wM = await ev(where);
+  await keys('KeyZ', '+KeyR');
+  const nR = await ev(fN), vR = await ev(shownBlocks);
+  await keys('KeyZ', '+KeyR');
+  check('zM: 접기 영역과 접을 수 있는 제어 블록이 모두 접히고, 숨은 블록 대신 그 접기 영역이 골라짐', nM >= 4 && vM < v0 && wM.startsWith('접기 영역 (접힘)'), [nM, v0, vM, wM]);
+  check('zR: 모두 펴짐. 한 번 더 누르면 알려 줌', nR === 0 && vR > v0 && (await ev(`T.msg()`)).includes('접힌 곳이 없습니다'), [nR, vR, await ev(`T.msg()`)]);
+  check('zR · zM은 내용을 바꾸지 않음', (await ev(`JSON.stringify(T.doc())`)) === m0);
+}
+await ev(`T.cmd('exQuick')`);
+d = await ev(`T.doc()`);
+{
+  const call = d.diagrams[0].body[0].yes[0].id, inner = d.diagrams[1].body[0].id;
+  await ev(`T.click('${call}')`); await keys('KeyZ', 'KeyA', 'KeyZ', '+KeyM');
+  const closed = !(await has(`${call}>${inner}`));
+  await keys('KeyZ', '+KeyR');
+  check('zM은 펴 보인 호출 블록도 접고, zR은 호출 블록을 펴 보이지 않음', closed && !(await has(`${call}>${inner}`)));
+}
+
 // x. 펴 보인 안쪽에서 za: 가장 가까운 펴 보인 호출 블록이 접힘
 await ev(`T.cmd('exQuick')`);
 d = await ev(`T.doc()`);
