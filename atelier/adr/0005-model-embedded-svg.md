@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0005: 모델 내장 SVG를 저장 형식으로 사용
 
+> [!NOTE] 이후 변경
+> - 2026-10-13: 저장되는 SVG에 모델과 그림 말고도 글꼴 조각(쓰인 글자만 추린 것)이 들어가게 됐다. 글꼴이 없는 곳에서도 글자가 칸에 맞게 하려는 것이다. ADR은 아직 제안됨이다 → [[0026-bundled-font-metrics|ADR-0026]]
+
 ## 배경
 
 다이어그램을 저장할 파일 형식을 정해야 한다. Obsidian 노트에 그림을 바로 넣어 보고 싶고, 다시 열어 편집도 할 수 있어야 한다. [drawio-obsidian](https://github.com/zapthedingbat/drawio-obsidian)은 SVG 안에 다이어그램 정보를 넣어 저장하는데, 이 방식이 마음에 든다.
