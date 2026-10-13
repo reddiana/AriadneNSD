@@ -164,16 +164,16 @@ function run(fontOk) {
   const chip = (ok, t) => `<span class="chip ${ok == null ? 'na' : ok ? 'ok' : 'no'}">${t}</span>`;
   lines.push([chip(cd <= TOL, cd <= TOL ? '같음' : '다름'), `<b>브라우저가 잰 값(다)과 글꼴 파일로 셈한 값(라).</b> 가장 큰 차이 ${cd.toFixed(3)}px. 위로 올림한 값이 다른 줄은 ${ceilBad}개. 같으면 브라우저에 묻지 않고 셈만으로 폭을 정할 수 있습니다.`]);
   if (REF) {
-    const da = maxDiff(a, REF.a), dc = maxDiff(c, REF.c);
+    const da = maxDiff(a, REF.a), dc = maxDiff(cIn, REF.c.filter((v, i) => has[i]));
     lines.push([chip(da <= TOL, da <= TOL ? '같음' : '다름'), `<b>기기의 글꼴로 잰 값(가)을 기준(${esc(REF.env)})과 견줌.</b> 가장 큰 차이 ${da.toFixed(3)}px. 지금 프로토타입이 재는 방법입니다.`]);
-    lines.push([chip(dc <= TOL, dc <= TOL ? '같음' : '다름'), `<b>번들 글꼴로 잰 값(다)을 기준과 견줌.</b> 가장 큰 차이 ${dc.toFixed(3)}px.`]);
+    lines.push([chip(dc <= TOL, dc <= TOL ? '같음' : '다름'), `<b>번들 글꼴로 잰 값(다)을 기준과 견줌.</b> 가장 큰 차이 ${dc.toFixed(3)}px. 번들 글꼴에 없는 글자가 든 줄은 뺐습니다.`]);
   } else {
     lines.push([chip(null, '기준 없음'), '기준값을 아직 넣지 않았습니다.']);
   }
   const miss = SAMPLES.filter((s, i) => !has[i]);
   if (miss.length) lines.push([chip(false, '빠진 글자'), `<b>번들 글꼴에 없는 글자가 든 줄 ${miss.length}개</b> (${miss.map(s => '<code>' + esc(s) + '</code>').join(', ')}). 없는 글자는 기기의 다른 글꼴로 그려지므로 번들해도 폭이 환경을 따릅니다.`]);
   $('verdict').innerHTML = lines.map(l => `<div>${l[0]}<span>${l[1]}</span></div>`).join('');
-  $('fp').innerHTML = `지문 <b>가</b> <span class="code">${hash(a)}</span> &nbsp; <b>다</b> <span class="code">${hash(c)}</span><br>브라우저마다 <b>가</b>의 지문은 달라도 되고, <b>다</b>의 지문이 같으면 번들이 듣는 것입니다.`;
+  $('fp').innerHTML = `지문 <b>가</b> <span class="code">${hash(a)}</span> &nbsp; <b>다</b> <span class="code">${hash(cIn)}</span><br>브라우저마다 <b>가</b>의 지문은 달라도 되고, <b>다</b>의 지문이 같으면 번들이 듣는 것입니다. 다의 지문은 번들 글꼴에 없는 글자가 든 줄을 빼고 냅니다(둘째 판까지는 그 줄이 들어 있어 기기마다 달라졌습니다).`;
 
   // 표
   const cell = (v, base) => { const df = (v == null || base == null) ? null : v - base; return `<td>${f3(v)}</td>` + `<td class="${df != null && Math.abs(df) > TOL ? 'd1' : 'd0'}">${df == null ? '' : (df >= 0 ? '+' : '') + df.toFixed(3)}</td>`; };
