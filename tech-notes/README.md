@@ -26,4 +26,5 @@ AriadneNSD를 만들며 배운 기술을 정리하는 곳입니다. 메인테이
 - [[logo-and-icon-assets]] — 로고와 아이콘 파일 만들기: 벡터, 사진 옮기기, 크기별 판, 윤곽선 글자, 라이선스 (2026-10-10)
 - [[theme-aware-images]] — 테마에 따라 그림 바꾸기와 그 한계: `prefers-color-scheme`은 운영체제를 본다, GitHub의 스크립트, 브라우저 콘솔로 페이지 상태 읽기 (2026-10-11)
 - [[model-layout-render-theme]] — 모양을 바꾸는 일의 크기: 모델 · 레이아웃 · 그리기 · 테마의 네 단계, 테마로 바꿀 수 있는 것과 없는 것 (2026-10-11)
+- [[keyboard-keys-and-ime]] — 키보드 입력 읽기: 글자(`key`)와 자리(`code`), 한글 입력기와 조합, 두 번 누르는 키, 브라우저가 가져가는 키 (2026-10-13)
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
