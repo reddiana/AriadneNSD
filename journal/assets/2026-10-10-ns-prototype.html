@@ -102,7 +102,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">51번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">52번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -176,7 +176,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>써 보는 법</h2>
       <p>블록을 클릭해 고르고 키보드로 다룹니다. 오른쪽 클릭하면 메뉴가 나옵니다. 고친 내용은 이 브라우저에 남습니다.</p>
       <dl class="keys">
-        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 위·아래는 그림 순서대로 움직입니다 (다이어그램 안에서만). 다만 If · Case의 옆 갈래로는 넘어가지 않습니다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로 갑니다. 좌우는 If · Case 안에서 옆 갈래의 첫 블록으로 갑니다. 맨 왼쪽 갈래에서 왼쪽은 위쪽 바깥 블록, 맨 오른쪽 갈래에서 오른쪽은 아래쪽 바깥 블록입니다. 머리에서 좌우는 옆 다이어그램입니다</dd>
+        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 위·아래는 그림 순서대로 움직입니다 (다이어그램 안에서만). 다만 If · Case의 옆 갈래로는 넘어가지 않습니다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로 갑니다. If · Case 아래 블록에서 위로는 가장 왼쪽 갈래의 맨 아래 블록으로 들어갑니다. 좌우는 If · Case 안에서 옆 갈래의 첫 블록으로 갑니다. 맨 왼쪽 갈래에서 왼쪽은 위쪽 바깥 블록, 맨 오른쪽 갈래에서 오른쪽은 아래쪽 바깥 블록입니다. 머리에서 좌우는 옆 다이어그램입니다</dd>
         <dt><kbd>{</kbd> <kbd>}</kbd></dt><dd>제어 블록을 안쪽까지 한 덩어리로 보고 위·아래 블록으로. 제어 블록 안으로 들어가지 않고 제어 블록 전체를 고릅니다 (<kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>와 같음)</dd>
         <dt><kbd>gg</kbd> / <kbd>G</kbd></dt><dd>이 다이어그램의 머리(없으면 첫 블록) / 마지막 블록</dd>
         <dt><kbd>[[</kbd> / <kbd>]]</kbd></dt><dd>앞 / 뒤 다이어그램 (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>와 같음)</dd>
@@ -201,11 +201,21 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>r</kbd></dt><dd>호출 블록에서: 부를 Method 바꾸기</dd>
         <dt><kbd>+</kbd> / <kbd>-</kbd></dt><dd>Case 안에서: 지금 갈래 뒤에 갈래 넣기 / 지금 갈래 빼기. 갈래 이름은 더블클릭해서 고칩니다 (키는 아직 없습니다). default 갈래는 늘 맨 끝에 있고 뺄 수 없습니다</dd>
         <dt><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>If · Case 안에서: 옆 갈래로. 그 밖에서는 위·아래 블록으로</dd>
+        <dt>휠</dt><dd>블록을 골랐으면 <kbd>j</kbd> <kbd>k</kbd>와 같습니다 (한 칸에 한 블록). 고르지 않았으면 캔버스를 스크롤합니다</dd>
+        <dt><kbd>Esc</kbd> <kbd>Esc</kbd></dt><dd>두 번 연속 누르면 고른 것을 풉니다. 다이어그램 바깥의 빈 캔버스를 눌러도 됩니다. 풀린 뒤 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다</dd>
         <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-13)</h2>
+      <h2>이번에 바뀐 것 (10-15, 52번째 판)</h2>
+      <ul>
+        <li><b>고른 것을 풀 수 있습니다.</b> <kbd>Esc</kbd>를 두 번 연속 누르거나, 다이어그램 바깥의 빈 캔버스를 누릅니다. 한 번만 누르면 상태 줄에 안내가 뜹니다. 글자를 고치다 누른 <kbd>Esc</kbd>(받아들이기)는 세지 않습니다. 풀린 뒤 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다.</li>
+        <li><b>휠로 블록을 옮겨 다닙니다.</b> 블록을 골랐으면 휠 한 칸이 <kbd>j</kbd> · <kbd>k</kbd> 한 번과 같습니다(<kbd>v</kbd> 영역 고르기 중에는 영역을 넓힙니다). 고르지 않았으면 전처럼 캔버스를 스크롤합니다. 가로 휠과 <kbd>Shift</kbd>+휠은 늘 스크롤입니다.</li>
+        <li><b>If · Case 아래 블록에서 <kbd>k</kbd>는 가장 왼쪽 갈래의 맨 아래 블록으로 갑니다.</b> 전에는 가장 오른쪽 갈래로 갔습니다. 그 블록이 또 If · Case이면 그 안의 가장 왼쪽 갈래로 더 들어갑니다. 갈래가 접혀 있으면 접힌 칸으로 갑니다.</li>
+        <li><b>키나 휠로 고른 블록이 화면 밖으로 나가면 캔버스가 따라 움직입니다.</b></li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-13)</h2>
       <ul>
         <li><b>단축키가 Vim 키로 바뀌었습니다.</b> 방향키, <kbd>Enter</kbd>, <kbd>F2</kbd>, <kbd>Delete</kbd>, <kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>Z</kbd> <kbd>Y</kbd>는 그대로이고, 한 글자 키가 위의 표대로 바뀌었습니다. 키 배열은 하나입니다 (끄고 켜는 스위치는 없앴습니다).</li>
         <li><b>자리를 옮긴 키.</b> 넣기 <kbd>P</kbd> <kbd>I</kbd> <kbd>K</kbd> <kbd>W</kbd> <kbd>D</kbd> <kbd>C</kbd> → <kbd>o</kbd>와 <kbd>a</kbd> + 종류. 풀기 <kbd>U</kbd> → <kbd>ds</kbd>. 따라가기 <kbd>G</kbd> → <kbd>gd</kbd>. 접기 영역 만들기 · 풀기 <kbd>Shift</kbd>+<kbd>F</kbd> · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> → <kbd>zf</kbd> · <kbd>zd</kbd>. 갈래 이름 고치기 <kbd>L</kbd> → 더블클릭.</li>
@@ -573,6 +583,9 @@ function fixSel() {
   if (!exists(sel.root)) sel.root = sel.anchor;
 }
 const selectOne = id => { sel = id ? { root: id, anchor: id, focus: id } : null; };
+// 고른 것을 푼다. 마지막에 골랐던 블록을 기억해 두었다가 이동 키를 누르면 거기서 다시 시작한다
+let lastSel = null;
+function clearSel() { if (sel) lastSel = sel.focus; sel = null; visual = false; pend = ''; }
 function selRange() {
   if (!sel) return null;
   if (isHead(sel.anchor)) return { event: true, dia: dia(sel.anchor) };
@@ -614,7 +627,10 @@ function orderPos(order, id) {
   return i;
 }
 function move(key, shift, ctrl) {
-  if (!sel) { selectOne(visibleOrder()[0]); return render(); }
+  if (!sel) {
+    const all = visibleOrder();
+    pickId(all.includes(lastSel) ? lastSel : all[0]); render(); return showSel();
+  }
   const side = key === 'ArrowLeft' || key === 'ArrowRight', fwd = key === 'ArrowDown' || key === 'ArrowRight';
   const here = diaOf(sel.focus);
   // 방향키는 다이어그램 안에서만 움직인다. 옆 다이어그램으로는 머리에서 좌우, 또는 Ctrl+Shift+좌우
@@ -657,6 +673,11 @@ function move(key, shift, ctrl) {
     next = step();
     for (let m; next && (m = crossed(cur, next)); )
       next = fwd ? order.slice(orderPos(order, m.id) + 1).find(id => !ancestors(id).includes(m.id)) : m.id;
+    // 아래에서 위로 If · Case에 들어가면 가장 왼쪽 갈래의 맨 아래 블록으로 (가장 바깥 것부터)
+    if (!fwd && next && !isHead(next) && !isHead(cur)) {
+      const outer = ancestors(next).slice(1).reverse().find(id => multi(idx.get(id).node) && !ancestors(cur).includes(id));
+      if (outer) next = bottomOf(idx.get(outer).node);
+    }
   }
   else if (isHead(cur)) next = neighbour();   // 머리에서 좌우: 옆 다이어그램으로
   else if (key === 'ArrowLeft') {
@@ -673,7 +694,19 @@ function move(key, shift, ctrl) {
       if (cand && !isHead(cand) && ancestors(cand).includes(cur)) next = cand;
     }
   }
-  if (next) { pickId(next); render(); }
+  if (next) { pickId(next); render(); showSel(); }
+}
+// 고른 블록이 화면 밖에 있으면 캔버스를 그쪽으로 움직인다
+function showSel() { svg.querySelector('[data-selbox]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+// 아래에서 위로 들어갈 때 닿는 맨 아래 블록. If · Case는 가장 왼쪽 갈래로 들어간다
+function bottomOf(n) {
+  if (n.type === 'range') return isFd(n) ? n.id : bottomOf(n.children[n.children.length - 1]);
+  const sl = shown.get(n.id);
+  if (sl && sl.length) return bottomOf(sl[sl.length - 1]);
+  const ss = slots(n);
+  if (!ss.length) return n.id;
+  const s = multi(n) ? ss[0] : ss[ss.length - 1];
+  return laneFolded(n, s) ? n[s][0].id : bottomOf(n[s][n[s].length - 1]);
 }
 // 이 블록이 If · Case m의 어느 갈래에 있는가 (안에 없으면 null)
 function laneIn(id, m) {
@@ -1102,7 +1135,7 @@ function drawSVG(lay, ui) {
       if (boxes.every(Boolean)) {
         const x1 = Math.min(...boxes.map(b => b.x)), y1 = Math.min(...boxes.map(b => b.y));
         const x2 = Math.max(...boxes.map(b => b.x + b.w)), y2 = Math.max(...boxes.map(b => b.y + b.h));
-        s.push(`<rect x="${x1 + 1}" y="${y1 + 1}" width="${x2 - x1 - 2}" height="${y2 - y1 - 2}" fill="${COL.sel}" fill-opacity="0.10" stroke="${COL.sel}" stroke-width="2" pointer-events="none"/>`);
+        s.push(`<rect data-selbox="" x="${x1 + 1}" y="${y1 + 1}" width="${x2 - x1 - 2}" height="${y2 - y1 - 2}" fill="${COL.sel}" fill-opacity="0.10" stroke="${COL.sel}" stroke-width="2" pointer-events="none"/>`);
       }
     }
   }
@@ -2126,9 +2159,9 @@ $('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.ch
 svg.addEventListener('mousedown', ev => {
   if (ev.button !== 0) return;
   if (editing) commitEdit(false);
-  pend = ''; visual = false;
+  pend = ''; visual = false; escArmed = false;
   const t = ev.target.closest('[data-id]');
-  if (!t) { selectOne(null); render(); return; }
+  if (!t) { clearSel(); render(); return; }
   // 더블클릭은 두 번째 누름에서 처리한다. 첫 누름에서 그림을 다시 그리기 때문에 dblclick 이벤트는 사라진 요소를 가리켜 믿을 수 없다
   if (ev.detail >= 2) { ev.preventDefault(); return dbl(t.dataset); }
   const lane = t.dataset.slot && idx.get(t.dataset.id)?.node[t.dataset.slot];
@@ -2223,10 +2256,30 @@ stage.addEventListener('focus', () => {
   if (sel || pressing || editing) return;
   selectOne(visibleOrder(activeDia())[0]); render();
 });
+// 다이어그램 바깥의 빈 캔버스를 누르면 고른 것을 푼다 (스크롤 막대와 위쪽 설정 줄은 빼고)
+stage.addEventListener('mousedown', ev => {
+  if (ev.button !== 0 || ev.target !== stage) return;
+  if (ev.offsetX >= stage.clientWidth || ev.offsetY >= stage.clientHeight) return;
+  if (editing) commitEdit(false);
+  escArmed = false;
+  clearSel(); hideMenu(); render(); showMode();
+});
+// 휠: 블록을 고른 상태에서는 위아래 이동(j · k)과 같고, 고르지 않았으면 캔버스를 스크롤한다. Ctrl+휠은 확대·축소
+let wheelSum = 0;
+const WHEEL_STEP = 50;   // 휠 한 칸(보통 100px)은 한 번, 터치패드의 작은 움직임은 이만큼 쌓여야 한 번
 stage.addEventListener('wheel', ev => {
-  if (!ev.ctrlKey) return;
+  if (ev.ctrlKey) { ev.preventDefault(); return setZoom(zoom * (ev.deltaY < 0 ? 1.1 : 0.9)); }
+  if (!sel || editing || !$('#modal').hidden || ev.shiftKey || !ev.deltaY || Math.abs(ev.deltaX) > Math.abs(ev.deltaY)) return;
   ev.preventDefault();
-  setZoom(zoom * (ev.deltaY < 0 ? 1.1 : 0.9));
+  hideMenu(); pend = ''; escArmed = false;
+  const dy = ev.deltaY * (ev.deltaMode === 1 ? 40 : ev.deltaMode === 2 ? 400 : 1);
+  if (Math.sign(dy) !== Math.sign(wheelSum)) wheelSum = 0;
+  wheelSum += dy;
+  if (Math.abs(wheelSum) < WHEEL_STEP) return;
+  const down = wheelSum > 0;
+  wheelSum = 0;
+  move(down ? 'ArrowDown' : 'ArrowUp', visual);
+  showMode();
 }, { passive: false });
 
 /* ---------- 단축키: 표준 키 위에 Vim 키 (ADR-0025) ---------- */
@@ -2235,6 +2288,7 @@ stage.addEventListener('wheel', ev => {
 let pend = '';        // 두 번 누르기에서 먼저 누른 키
 let editHow = '';     // 고치기를 어떻게 시작하는가: 'start'(i) · 'clear'(cc) · ''(Enter, F2: 전체를 고름)
 let visual = false;   // v로 시작한 영역 고르기
+let escArmed = false; // 고른 상태에서 Esc를 한 번 눌렀다 (다른 키를 누르거나 마우스를 쓰면 지운다)
 const KINDS = { i: 'if', w: 'while', d: 'dowhile', k: 'case' };
 const PEND_HINT = {
   a: 'a 뒤에 넣기: i If · w While · d Do-While · k Case · c 호출',
@@ -2361,7 +2415,13 @@ function vimKey0(ev) {
   else if (k === 'x') del(false);   // x는 Delete와 같다: 복사 없이 지우기, 머리에서는 머리 떼기
   else if (k === '+') laneAdd();
   else if (k === '-') laneRemove();
-  else if (k !== 'Esc') say(`${k}: Vim 키에 없는 키입니다`);   // 고른 상태의 Esc는 아무 일도 하지 않는다 (고른 것을 풀지 않는다)
+  else if (k === 'Esc') {
+    // Esc를 두 번 연속 누르면 고른 것을 푼다. 한 번만 누르면 안내만 띄운다
+    if (!sel) {}
+    else if (escArmed) { escArmed = false; clearSel(); render(); say('고른 것을 풀었습니다. 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다'); }
+    else { escArmed = true; say('한 번 더 Esc를 누르면 고른 것을 풉니다'); }
+  }
+  else say(`${k}: Vim 키에 없는 키입니다`);
   return true;
 }
 
@@ -2372,6 +2432,7 @@ document.addEventListener('keydown', ev => {
   if (!$('#modal').hidden) { if (ev.key === 'Escape') run('closeModal'); return; }
   if (tag === 'BUTTON' && (ev.key === 'Enter' || ev.key === ' ')) return;
   const code = ev.code, ctrl = ev.ctrlKey || ev.metaKey;
+  if (code !== 'Escape' && !/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(code)) escArmed = false;
   if (menuItems.length) {
     // 메뉴가 떠 있는 동안: 위아래 방향키로 옮기고 Enter로 고른다. 고르기 메뉴는 숫자로도 고른다
     if (code === 'ArrowDown' || code === 'ArrowUp') { menuStep(code === 'ArrowDown' ? 1 : -1); ev.preventDefault(); return; }

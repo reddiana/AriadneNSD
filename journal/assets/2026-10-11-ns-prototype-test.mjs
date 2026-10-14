@@ -598,6 +598,48 @@ await ev(`T.cmd('exQuick')`);
   check('판 번호가 화면에 보임', /^\d+번째 판$/.test(await ev(`document.querySelector('#edition').textContent`)), await ev(`document.querySelector('#edition').textContent`));
 }
 
+// 52번째 판: 고른 것 풀기(Esc 두 번, 빈 캔버스), 휠로 이동, If · Case 아래에서 k는 가장 왼쪽 갈래로
+{
+  // 지금 고른 블록의 id: 고른 칸의 왼쪽 위 안쪽에 있는 블록
+  const selId = `(() => { const b = document.querySelector('#svg [data-selbox]'); if (!b) return null; const r = b.getBoundingClientRect(); const el = document.elementFromPoint(r.left + 4, r.top + 4); return el && el.closest('[data-id]') ? el.closest('[data-id]').dataset.id : '?'; })()`;
+  // 아래에 블록이 있는 If · Case와, 그 아래 블록, 가장 왼쪽 · 가장 오른쪽 갈래의 맨 아래 블록
+  const findIf = `(() => { const sl = n => n.type === 'case' ? n.labels.map((_, i) => 'c' + i) : n.type === 'if' ? ['yes', 'no'] : [];
+    const bot = (n, left) => { if (n.type === 'range') return bot(n.children[n.children.length - 1], left); const s = sl(n); if (!s.length) return n.id; const l = n[left ? s[0] : s[s.length - 1]]; return bot(l[l.length - 1], left); };
+    for (const d of T.doc().diagrams) { const b = d.body; for (let i = 0; i + 1 < b.length; i++) if (sl(b[i]).length && b[i + 1].type === 'process') return { below: b[i + 1].id, left: bot(b[i], true), right: bot(b[i], false) }; } return null; })()`;
+  let f = null;
+  for (const ex of ['exCode', 'exCase', 'exRaft']) { await ev(`T.cmd('${ex}')`); if ((f = await ev(findIf))) break; }
+  check('52: 아래에 블록이 있는 If · Case를 예제에서 찾음', !!f && f.left !== f.right, f);
+  await ev(`T.click('${f.below}')`); await keys('KeyK');
+  check('52: If · Case 아래에서 k: 가장 왼쪽 갈래의 맨 아래 블록', (await ev(selId)) === f.left, { got: await ev(selId), f });
+  await ev(`T.click('${f.below}')`); await keys('ArrowUp');
+  check('52: ↑도 같음', (await ev(selId)) === f.left, await ev(selId));
+
+  await ev(`T.click('${f.below}')`); await keys('Escape');
+  check('52: Esc 한 번: 고른 채로 두고 안내', (await ev(selId)) === f.below && (await ev(`T.msg()`)).includes('한 번 더'), await ev(`T.msg()`));
+  await keys('Escape');
+  check('52: Esc 두 번: 고른 것이 풀림', (await ev(selId)) === null && (await ev(where)).startsWith('다이어그램 '), await ev(where));
+  await keys('KeyJ');
+  check('52: 풀린 뒤 j: 마지막에 골랐던 블록을 다시 고름', (await ev(selId)) === f.below, await ev(selId));
+  await keys('Escape', 'KeyL', 'Escape');
+  check('52: Esc 사이에 다른 키를 누르면 풀지 않음', (await ev(selId)) !== null, await ev(where));
+
+  await ev(`T.click('${f.below}')`);
+  await ev(`(() => { const s = document.querySelector('#stage'), r = s.getBoundingClientRect(); s.dispatchEvent(new MouseEvent('mousedown', { button: 0, clientX: r.left + 3, clientY: r.top + s.clientHeight - 6, bubbles: true, cancelable: true })); })()`);
+  check('52: 빈 캔버스를 누르면 고른 것이 풀림', (await ev(selId)) === null, await ev(where));
+
+  const wheel = dy => ev(`(() => { const e = new WheelEvent('wheel', { deltaY: ${dy}, bubbles: true, cancelable: true }); document.querySelector('#paper').dispatchEvent(e); return e.defaultPrevented; })()`);
+  check('52: 고르지 않은 상태의 휠: 스크롤에 맡김', (await wheel(100)) === false && (await ev(selId)) === null);
+  await ev(`T.click('${f.below}')`); await keys('KeyK'); const up1 = await ev(selId);
+  await ev(`T.click('${f.below}')`);
+  check('52: 고른 상태의 휠 위로 한 칸: k와 같음', (await wheel(-100)) === true && (await ev(selId)) === up1, await ev(selId));
+  await ev(`T.click('${f.below}')`); await keys('KeyJ'); const down1 = await ev(selId);
+  await ev(`T.click('${f.below}')`);
+  for (let i = 0; i < 4; i++) await wheel(10);
+  check('52: 터치패드의 작은 움직임은 쌓일 때까지 움직이지 않음', (await ev(selId)) === f.below, await ev(selId));
+  await wheel(10);
+  check('52: 쌓이면 한 번 움직임 (j와 같음)', (await ev(selId)) === down1, { got: await ev(selId), down1 });
+}
+
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
 ws.close(); chrome.kill(); process.exit(0);
