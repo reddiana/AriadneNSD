@@ -1,2 +1,5 @@
 # Obsidian 설정은 개인 환경이라 올리지 않는다
 .obsidian/
+
+# Python이 만드는 캐시
+__pycache__/
