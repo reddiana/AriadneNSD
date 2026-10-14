@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0027: 시안과 스파이크 페이지는 글로 보아 CC BY 4.0으로 공개한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-15: 저장소 이름이 바뀌어 출처 표기 문구의 주소가 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"가 되었다. README, 시안과 스파이크 페이지의 안내, 안내를 넣는 스크립트를 고쳤다 → [[0028-repo-name|ADR-0028]]
+
 ## 배경
 
 [[0024-license-scope|ADR-0024]]는 저장소의 내용을 코드(Apache-2.0), 글(CC BY 4.0), 로고(허락하지 않음)로 나누면서, 프로토타입과 시안 페이지(`.html`)를 코드에 넣었다. HTML과 스크립트로 된 파일이라는 까닭이었고, 그 분류는 Claude가 정해 놓고 확인받지 못한 채였다.
