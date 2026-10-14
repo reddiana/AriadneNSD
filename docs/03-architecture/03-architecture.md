@@ -234,8 +234,9 @@ sequenceDiagram
 | Obsidian 플러그인 | Obsidian 플러그인 API | `.ns.svg` | [[0006-file-extensions\|ADR-0006]] |
 | 데스크톱 | Electron 또는 Tauri | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
 | Confluence (#P2) | Forge 앱의 iframe 안에 웹 화면 | 정하지 않음 | [[01-requirements#^cf-app]] |
+| IDE 플러그인 (#P2) | VSCode 확장의 웹뷰, 그다음 IntelliJ | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
 
-셸이 하는 일은 파일 입출력과 그 플랫폼의 메뉴 · 창에 붙이는 것뿐입니다. 네 번째, 다섯 번째 대상도 같은 인터페이스를 구현하면 붙습니다.
+셸이 하는 일은 파일 입출력과 그 플랫폼의 메뉴 · 창에 붙이는 것뿐입니다. 네 번째, 다섯 번째 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델을 오가는 일(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
 
 ## 7. 위험과 검증이 필요한 사항
 
