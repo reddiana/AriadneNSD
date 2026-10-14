@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0028: GitHub 저장소 이름은 `AriadneNSD`로 한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-15: 로컬 폴더도 `C:\myProject\AriadneNSD`로 바꾸기로 했다(메인테이너: "로컬 repo 디렉토리명도 바꾸려고 합니다"). 이 세션이 끝난 뒤 메인테이너가 바꾸고, Claude Code의 메모리 폴더는 Claude가 새 이름으로 복사해 두었다. 아래 표의 "로컬 폴더 · 그대로 둔다"와 후속 작업의 마지막 줄은 이것으로 바뀌었다 → [[2026-10-15-01-inbox-repo-name]]
+
 ## 배경
 
 [[0019-product-name|ADR-0019]]는 제품 이름을 `AriadneNSD`로, 저장소 · 패키지 · Obsidian 플러그인 id · 문서 태그를 `ariadne-nsd`로 정했다. 그래서 GitHub 저장소는 `https://github.com/reddiana/ariadne-nsd`였다.
