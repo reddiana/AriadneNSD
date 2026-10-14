@@ -10,6 +10,9 @@
 > 프로토타입과 답을 기다리는 페이지의 주소는 [[status#바로 가기]]에, 시안과 스파이크 전체의 목록은 [[study-pages]]에 있습니다.
 
 # 1. 일하는 방식
+- 저장소 이름을 변경했습니다.
+	- before: https://github.com/reddiana/ariadne-nsd.git
+	- after: https://github.com/reddiana/AriadneNSD.git
 # 2. 배포 대상
 # 3. 기능
 ## 프로토타입
