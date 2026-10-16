@@ -48,7 +48,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
 <main>
   <div>
     <h1>M19 · 펴진 접기 영역의 테두리 색</h1>
-    <p class="lede">53번째 판의 진회색 테두리(F0)가 마음에 들지 않는다고 하셨습니다(2026-10-17). <b>고른 표시의 파랑과 섞이지 않아야 한다</b>는 데는 동의하셨으므로, 파랑이 아닌 후보를 같은 그림에 그렸습니다. 그림에는 펴진 접기 영역이 셋 있습니다: "센서 읽기" 안에 "습도"가 <b>겹쳐</b> 있고, 그 바로 아래에 "판정"이 <b>맞닿아</b> 있습니다. "판정" 안의 <code>fan_on()</code>이 골라져 있습니다(A에서는 파랑 테두리). 두 표시가 한눈에 갈리는지 보세요. 오른쪽은 흑백으로 본 모습입니다(흑백 인쇄는 따로 검정으로 바뀌지만, 색각 이상이 있는 사람이 보는 밝기를 짐작할 수 있습니다).</p>
+    <p class="lede">53번째 판의 진회색 테두리(F0)가 마음에 들지 않는다고 하셨습니다(2026-10-17). <b>고른 표시의 파랑과 섞이지 않아야 한다</b>는 데는 동의하셨으므로, 파랑이 아닌 후보를 같은 그림에 그렸습니다. 그림은 <b>M11 T1에서 고르신 "2번 고침"의 그림 그대로</b>입니다(같은 코드, 같은 블록, 테두리 3px · 틈 1px · 보통 블록은 테두리에 붙음). "정렬 준비" 안에 "피벗 고르기"가 <b>겹쳐</b> 있고, "나누기"와 "마무리"가 <b>이어져</b> 있습니다. 바꾼 것은 색과, "나누기" 안의 <code>i ← i + 1</code>에 더한 고른 표시뿐입니다. 두 표시가 한눈에 갈리는지 보세요. 오른쪽은 흑백으로 본 모습입니다(흑백 인쇄는 따로 검정으로 바뀌지만, 색각 이상이 있는 사람이 보는 밝기를 짐작할 수 있습니다).</p>
   </div>
 
   <section>
@@ -75,11 +75,139 @@ code { font-family: var(--mono); font-size: 12.5px; }
 </main>
 
 <script>
-/* 밝은 기본 테마의 색 (시각 디자인 명세 3.3절) */
-const C = { page: '#ffffff', line: '#5b77ad', proc: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6', head: '#e2efdf', ink: '#151a22', sub: '#4b5567', kw: '#1f45d6', sel: '#2c55c9' };
-const FAM = "'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace";
-const SANS = "'IBM Plex Sans KR', 'Malgun Gothic', sans-serif";
-/* 후보: 테두리 · 이름 띠 바탕 · 이름 글자 */
+/* M11(접기 영역 테두리 시안)의 T1 · 2번 고침(메인테이너가 고른 그림: 틈 1px, 보통 블록은 테두리에 붙임)을 그린 코드를 그대로 가져왔다.
+   바꾼 것은 색(테두리 · 띠 · 이름 글자)과, 고른 블록의 안쪽 2px 테두리를 더한 것뿐이다 */
+const C = { stroke: '#7e9ccf', process: '#edf0f5', loop: '#dce6f6', call: '#ebe7f4', ink: '#151a22', shown: '#6b7386', muted: '#5a6476',
+  bar: '#93aee8', callBar: '#b9a9dc', band: '#e6ecfb', callBand: '#ddd4ef', tag: '#2c55c9', edge: '#4f74d6', callEdge: '#8a72c4', gap: '#ffffff', fold: '#fbfcfe' };
+const K = { lh: 18, padX: 10, padY: 6, strip: 22, band: 18, rbar: 8, bw: 3 };
+const MONO = `13px 'IBM Plex Mono','IBM Plex Sans KR',Consolas,monospace`, TAG = `600 11.5px 'IBM Plex Sans KR','Malgun Gothic',sans-serif`;
+const cv = document.createElement('canvas').getContext('2d');
+const tw = (s, f) => { cv.font = f; return Math.ceil(cv.measureText(s).width); };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const p = (text, sel) => ({ t: 'p', text, sel }), call = text => ({ t: 'call', text });
+const loop = (text, kids) => ({ t: 'while', text, kids });
+const fold = (name, kids, local) => ({ t: 'fold', name, kids, local });
+const open = (pre, name, post, kids) => ({ t: 'open', pre, name, post, kids });
+
+const partition = (head, tail) => [
+  ...head,
+  loop('while (j < hi)', [p('if (a[j] < pivot) swap(a, i++, j)'), p('j ← j + 1')]),
+  ...tail
+];
+const TAIL = [fold('끝내기', [p('swap(a, i, hi)'), p('return i')])];
+const quick = inner => [p('if (lo >= hi) return'), open('p ← ', 'partition', '(a, lo, hi)', inner), call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')];
+const SCENES = {
+  A: [[null, [p('n ← length(a)'),
+    fold('정렬 준비', [p('lo ← 0'), fold('피벗 고르기', [p('mid ← (lo + hi) / 2'), p('pivot ← a[mid]')]), p('i ← lo')]),
+    fold('나누기', [loop('while (i < hi)', [p('swap(a, i, j)'), p('i ← i + 1')])]),
+    fold('마무리', [p('swap(a, i, hi)')]),
+    p('return i')]]],
+  B: [[null, [p('if (lo >= hi) return'),
+    fold('나누기', [open('p ← ', 'partition', '(a, lo, hi)', partition([p('pivot ← a[hi]'), p('i ← lo')], [p('swap(a, i, hi)'), p('return i')]))]),
+    call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')]]],
+  B2: [[null, [p('if (lo >= hi) return'),
+    fold('나누기', [open('p ← ', 'partition', '(a, lo, hi)', partition([p('pivot ← a[hi]'), p('i ← lo')],
+      [open('', 'swap', '(a, i, hi)', [p('t ← a[i]'), p('a[i] ← a[hi]'), p('a[hi] ← t')]), p('return i')]))]),
+    call('quicksort(a, lo, p - 1)'), call('quicksort(a, p + 1, hi)')]]],
+  C: [['quicksort: partition을 펴 보인 자리', quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))],
+      ['Method partition의 원본', partition([p('pivot ← a[hi]'), p('i ← lo')], TAIL)]],
+  D0: [[null, quick(partition([fold('피벗 준비', [p('pivot ← a[hi]'), p('i ← lo')], true)], TAIL))]],
+  D1: [[null, quick(partition([fold('피벗 준비', [p('pivot ← a[hi]')], true)], TAIL))]],
+  D2: [[null, quick(partition([p('pivot ← a[hi]')], TAIL))]]
+};
+
+function frame(n, S) {
+  const mode = n.t === 'open' ? S.call : S.fold;
+  if (mode === 'none') return { l: 0, r: 0, t: K.band, b: 0, mode, ins: 0 };   // 띠만: 막대도 테두리도 없다
+  if (mode === 'bar') return { l: K.rbar, r: 0, t: K.band, b: 0, mode, ins: 0 };
+  // flush: 보통 블록은 테두리에 붙이고, 겹친 영역만 테두리에서 틈(S.gap)만큼 띄운다
+  return S.flush ? { l: 0, r: 0, t: K.band, b: 0, mode, ins: K.bw + S.gap } : { l: S.pad, r: S.pad, t: K.band, b: S.pad, mode, ins: 0 };
+}
+const boxed = (n, S) => (n.t === 'fold' || n.t === 'open') && ['border', 'dash'].includes(frame(n, S).mode);
+const label = (n, S) => n.t === 'open' ? '▾ ' + n.pre + n.name + n.post : '▾ ' + n.name + (n.local && S.local === 'dash' ? '  · 이 자리에만' : '');
+function seq(kids, S, ins = 0) {
+  let w = 0, h = 0;
+  kids.forEach((c, i) => {
+    const m = measure(c, S), b = boxed(c, S);
+    w = Math.max(w, m.w + (b ? 2 * ins : 0)); h += m.h;
+    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) h += S.gap + 1;   // 이어진 영역 사이의 틈
+    if (b && i === kids.length - 1) h += ins;
+  });
+  return { w, h };
+}
+function measure(n, S) {
+  let r;
+  if (n.t === 'p' || n.t === 'call') r = { w: tw(n.text, MONO) + 2 * K.padX + (n.t === 'call' ? 8 : 0), h: K.lh + 2 * K.padY };
+  else if (n.t === 'while') { const i = seq(n.kids, S); r = { w: Math.max(tw(n.text, MONO) + 2 * K.padX, K.strip + i.w), h: K.lh + 2 * K.padY + i.h }; }
+  else { const f = frame(n, S), i = seq(n.kids, S, f.ins); r = { w: Math.max(i.w + f.l + f.r, tw(label(n, S), TAG) + f.l + 16 + K.padX), h: i.h + f.t + f.b }; }
+  return (n.m = r);
+}
+function placeSeq(kids, x, y, w, h, S, o, shown, ins = 0) {
+  let cy = y;
+  kids.forEach((c, i) => {
+    const b = boxed(c, S), d = b ? ins : 0;
+    if (S.flush && b && i > 0 && boxed(kids[i - 1], S)) cy += S.gap + 1;
+    const ch = i === kids.length - 1 ? y + h - cy - d : c.m.h;
+    place(c, x + d, cy, w - 2 * d, ch, S, o, shown); cy += ch;
+  });
+}
+const rect = (x, y, w, h, fill) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${C.stroke}" stroke-width="1"/>`;
+const mono = (s, x, y, shown) => `<text x="${x}" y="${y + K.lh - 5}" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="${shown ? C.shown : C.ink}" xml:space="preserve">${esc(s)}</text>`;
+function place(n, x, y, w, h, S, o, shown) {
+  if (n.t === 'p') { o.a.push(rect(x, y, w, h, C.process), mono(n.text, x + K.padX, y + K.padY, shown)); if (n.sel) o.b.push(`<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" fill="none" stroke="${C.sel}" stroke-width="2"/>`); return; }
+  if (n.t === 'call') {
+    o.a.push(rect(x, y, w, h, C.call));
+    for (const bx of [x + 4, x + w - 4]) o.a.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${C.stroke}" stroke-width="1"/>`);
+    o.a.push(mono(n.text, x + K.padX + 4, y + K.padY, shown)); return;
+  }
+  if (n.t === 'while') {
+    const hh = K.lh + 2 * K.padY;
+    o.a.push(rect(x, y, w, h, C.loop), mono(n.text, x + K.padX, y + K.padY, shown));
+    placeSeq(n.kids, x + K.strip, y + hh, w - K.strip, h - hh, S, o, shown); return;
+  }
+  const f = frame(n, S), isCall = n.t === 'open', inShown = shown || isCall;
+  const tx = x + (f.mode === 'bar' ? K.rbar + 8 : 10), ty = y + K.band - 5;
+  const text = isCall
+    ? `<text x="${tx}" y="${ty}" font-family="IBM Plex Mono, IBM Plex Sans KR, monospace" font-size="11.5" fill="${shown ? C.shown : C.ink}" xml:space="preserve">▾ ${esc(n.pre)}<tspan font-weight="600">${esc(n.name)}</tspan>${esc(n.post)}</text>`
+    : `<text x="${tx}" y="${ty}" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="11.5" font-weight="600" fill="${C.tag}" xml:space="preserve">${esc(label(n, S))}</text>`;
+  if (f.mode === 'bar' || f.mode === 'none') {
+    o.a.push(rect(x, y, w, h, isCall ? C.call : C.gap), rect(x, y, w, K.band, isCall ? C.call : C.band));
+    placeSeq(n.kids, x + f.l, y + f.t, w - f.l, h - f.t, S, o, inShown);
+    if (f.mode === 'bar') o.a.push(rect(x, y, K.rbar, h, isCall ? C.callBar : C.bar));
+    o.a.push(text);
+  } else {
+    // 바탕과 띠에는 가는 선을 두르지 않는다. 두르면 그 선이 한쪽 틈(1px)으로 번져 왼쪽과 오른쪽 틈이 달라 보인다
+    // 그림 전체를 반 픽셀 옮겨 그리므로(draw), 블록의 가는 선은 x와 x + w의 픽셀 한 줄을 차지한다. 바탕은 그 줄까지 덮는다
+    o.a.push(`<rect x="${x - .5}" y="${y - .5}" width="${w + 1}" height="${h + 1}" fill="${C.gap}"/>`, `<rect x="${x - .5}" y="${y - .5}" width="${w + 1}" height="${K.band + .5}" fill="${isCall ? C.callBand : C.band}"/>`,
+      `<line x1="${x}" y1="${y + K.band}" x2="${x + w}" y2="${y + K.band}" stroke="${C.stroke}" stroke-width="1"/>`, text);
+    placeSeq(n.kids, x + f.l, y + f.t, w - f.l - f.r, h - f.t - f.b, S, o, inShown, f.ins);
+    const edge = `x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none"`;
+    if (f.mode === 'dash') {
+      // 점선 테두리: 테두리 자리를 흰 줄로 비우고 그 가운데에 점선을 긋는다. 블록의 가는 선과 겹치지 않아 점선이 또렷하다
+      o.b.push(`<rect ${edge} stroke="${C.gap}" stroke-width="${K.bw}"/>`, `<rect ${edge} stroke="${C.callEdge}" stroke-width="${S.dw}" stroke-dasharray="6 4"/>`);
+    } else {
+      const dash = n.local && S.local === 'dash' ? ' stroke-dasharray="7 4"' : '';
+      o.b.push(`<rect ${edge} stroke="${isCall ? C.callEdge : C.edge}" stroke-width="${K.bw}"${dash}/>`);
+    }
+  }
+}
+function draw(kids, S) {
+  const m = seq(kids, S), o = { a: [], b: [] };
+  placeSeq(kids, 1, 1, m.w, m.h, S, o, false);
+  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img"><g transform="translate(.5 .5)">${o.a.join('')}${o.b.join('')}</g></svg>` };
+}
+
+C.sel = '#2c55c9';
+/* 그림: M11의 장면 A와 같은 블록. "정렬 준비" 안에 "피벗 고르기"가 겹쳐 있고, "나누기" · "마무리"가 이어져 있다. "나누기" 안의 i ← i + 1이 골라져 있다 */
+const SCENE = [p('n ← length(a)'),
+  fold('정렬 준비', [p('lo ← 0'), fold('피벗 고르기', [p('mid ← (lo + hi) / 2'), p('pivot ← a[mid]')]), p('i ← lo')]),
+  fold('나누기', [loop('while (i < hi)', [p('swap(a, i, j)'), p('i ← i + 1', true)])]),
+  fold('마무리', [p('swap(a, i, hi)')]),
+  p('return i')];
+const S = { fold: 'border', pad: 0, flush: true, gap: 1, dw: 1.5, call: 'border', local: 'same' };
+function chart(F, sel) { Object.assign(C, { edge: F.edge, band: F.band, tag: F.text, sel }); return draw(SCENE, S).svg; }
+const BLOCK = '#edf0f5';
+
 const CANDS = [
   { id: 'F0', name: '진회색 (지금, 53번째 판)', edge: '#343b48', band: '#eceef2', text: '#343b48', now: true,
     notes: ['색이 없어 구조선 · 글자와 같은 무리로 읽힘. 고른 표시와는 가장 잘 갈림', '<span class="bad">마음에 들지 않으심</span>'] },
@@ -97,58 +225,6 @@ const CANDS = [
 /* WCAG 대비율 */
 const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
 const cr = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
-
-function chart(F, sel = C.sel) {
-  /* 펴진 접기 영역 셋: "센서 읽기" 안에 "습도"가 겹쳐 있고, 그 바로 아래에 "판정"이 맞닿아 있다.
-     시각 디자인 명세 5장: 테두리 2px, 겹친 테두리는 1px 틈을 두고 3px 안으로, 맞닿은 테두리 사이도 1px 틈. 보통 블록은 테두리에 붙는다 */
-  const W = 300, H = 26, B = 18, s = [];
-  const t = (x, y, str, o = {}) => s.push(`<text x="${x}" y="${y}" font-family="${o.sans ? SANS : FAM}" font-size="${o.size || 11.5}" font-weight="${o.b ? 600 : 400}" fill="${o.c || C.ink}">${str}</text>`);
-  const r = (x, y, w, h, f) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" stroke="${C.line}"/>`);
-  const band = (x, y, w, name) => { s.push(`<rect x="${x}" y="${y}" width="${w}" height="${B}" fill="${F.band}"/>`); t(x + 8, y + 13, '▾ ' + name, { sans: 1, b: 1, size: 11, c: F.text }); };
-  const edge = (x, y, w, h) => s.push(`<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none" stroke="${F.edge}" stroke-width="2"/>`);
-  let y = 0;
-  r(0, y, W, H, C.head); t(8, y + 17, 'on timer tick', { b: 1 }); y += H;
-  /* 센서 읽기 */
-  const aTop = y;
-  band(0, y, W, '센서 읽기'); y += B;
-  r(0, y, W, H, C.proc); t(8, y + 17, 't ← read_temp(adc0)'); y += H;
-  /* 습도: 겹친 접기 영역, 3px 안으로 */
-  const bTop = y, ix = 3, iw = W - 6;
-  band(ix, y, iw, '습도'); y += B;
-  r(ix, y, iw, H, C.proc); t(ix + 8, y + 17, 'h ← read_humidity(adc1)'); y += H;
-  r(ix, y, iw, H, C.proc); t(ix + 8, y + 17, 'h ← clamp(h, 0, 100)'); y += H;
-  edge(ix, bTop, iw, y - bTop);
-  y += 1;
-  r(0, y, W, H, C.proc); t(8, y + 17, 'avg.push(t)'); y += H;
-  edge(0, aTop, W, y - aTop);
-  /* 판정: 바로 아래에 맞닿은 접기 영역, 1px 틈 */
-  y += 1;
-  const cTop = y;
-  band(0, y, W, '판정'); y += B;
-  r(0, y, W, H, C.branch);
-  s.push(`<path d="M0 ${y}L${W / 2} ${y + H}L${W} ${y}" fill="none" stroke="${C.line}"/>`);
-  t(W / 2 - 34, y + 12, 't &gt; limit');
-  t(5, y + H - 4, '참', { c: C.sub, sans: 1, size: 11 }); t(W - 26, y + H - 4, '거짓', { c: C.sub, sans: 1, size: 11 }); y += H;
-  r(0, y, W / 2, H, C.proc); t(8, y + 17, 'fan_on()');
-  r(W / 2, y, W / 2, H, C.proc); t(W / 2 + 8, y + 17, 'fan_off()');
-  /* 고른 블록: 안쪽 2px */
-  s.push(`<rect x="3" y="${y + 2}" width="${W / 2 - 5}" height="${H - 4}" fill="none" stroke="${sel}" stroke-width="2"/>`);
-  y += H;
-  edge(0, cTop, W, y - cTop);
-  r(0, y, W, H, C.proc); t(8, y + 17, `<tspan fill="${C.kw}">log</tspan>(t, h)`); y += H;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${y + 2}" viewBox="-1 -1 ${W + 2} ${y + 2}"><rect x="-1" y="-1" width="${W + 2}" height="${y + 2}" fill="${C.page}"/>${s.join('')}</svg>`;
-}
-
-document.getElementById('cards').innerHTML = CANDS.map(F => {
-  const svg = chart(F);
-  const nums = `테두리 대비 ${cr(F.edge, C.proc).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 이름 글자 ${cr(F.text, F.band).toFixed(2)}:1 (띠 위, 기준 4.5:1)`;
-  return `<article class="card"><header><span class="tag">${F.id}</span><h3>${F.name}</h3>${F.now ? '<span class="badge now">지금</span>' : ''}</header>
-    <div class="paper"><figure>${svg}<figcaption>색</figcaption></figure><figure class="gray">${svg}<figcaption>흑백</figcaption></figure></div>
-    <p class="nums">${nums}</p>
-    <ul>${F.notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
-}).join('');
-
-/* B: 접기 영역은 52번째 판의 파랑, 고른 표시의 색을 바꾼다 */
 const OLD = { edge: '#4f74d6', band: '#e6ecfb', text: '#2f55c4' };
 const SELS = [
   { id: 'S1', name: '주황', sel: '#e8590c', notes: ['파랑의 반대색이라 접기 영역과 가장 잘 갈림. 도구에서 "지금 잡은 것"에 흔히 쓰는 색', '<span class="bad">오류 표시(빨강)와 가까움</span>'] },
@@ -156,14 +232,19 @@ const SELS = [
   { id: 'S3', name: '녹색', sel: '#15803d', notes: ['"지금 여기"를 차분하게 알림', '<span class="bad">주석의 녹색과 닮음. 녹색맹에게는 파랑 접기 영역과의 차이가 줄어듦</span>'] },
   { id: 'S4', name: '검정', sel: '#111111', notes: ['색 없이 가장 진하게. 어느 색각에서도 갈림', '<span class="bad">블록의 구조선과 같은 무리로 읽힐 수 있음</span>'] },
 ];
-document.getElementById('cardsSel').innerHTML = SELS.map(S => {
-  const svg = chart(OLD, S.sel);
-  const nums = `고른 표시 대비 ${cr(S.sel, C.proc).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 접기 영역 테두리 ${cr(OLD.edge, C.proc).toFixed(2)}:1`;
-  return `<article class="card"><header><span class="tag">${S.id}</span><h3>고른 표시: ${S.name}</h3></header>
+
+const card = (id, title, now, svg, nums, notes) => `<article class="card"><header><span class="tag">${id}</span><h3>${title}</h3>${now ? '<span class="badge now">지금</span>' : ''}</header>
     <div class="paper"><figure>${svg}<figcaption>색</figcaption></figure><figure class="gray">${svg}<figcaption>흑백</figcaption></figure></div>
     <p class="nums">${nums}</p>
-    <ul>${S.notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
-}).join('');
+    <ul>${notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
+function render() {
+  document.getElementById('cards').innerHTML = CANDS.map(F => card(F.id, F.name, F.now, chart(F, '#2c55c9'),
+    `테두리 대비 ${cr(F.edge, BLOCK).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 이름 글자 ${cr(F.text, F.band).toFixed(2)}:1 (띠 위, 기준 4.5:1)`, F.notes)).join('');
+  document.getElementById('cardsSel').innerHTML = SELS.map(X => card(X.id, '고른 표시: ' + X.name, false, chart(OLD, X.sel),
+    `고른 표시 대비 ${cr(X.sel, BLOCK).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 접기 영역 테두리 ${cr(OLD.edge, BLOCK).toFixed(2)}:1`, X.notes)).join('');
+}
+render();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(render).catch(() => {});
 </script>
 
 <footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
