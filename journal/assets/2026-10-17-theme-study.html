@@ -73,7 +73,7 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>TH1. 그림의 테마는 누가 고르는가</h2>
     <p class="q">내가 문서를 <b>어두운 기본 테마</b>로 그리고 저장했습니다. 이 파일을 내 편집 화면, 동료의 편집 화면, Obsidian의 밝은 노트와 어두운 노트에서 열면 어떻게 보여야 하는가를 고르는 물음입니다. 저장된 그림의 색은 "늘 문서의 색"으로 정하셨습니다(M13의 A4 · 1번, 요구사항 <code>^fmt-color</code>).</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">TH1 · 1번</span><h3>문서마다 고르고, 파일에 저장한다</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card pick"><header><span class="tag">TH1 · 1번</span><h3>문서마다 고르고, 파일에 저장한다</h3><span class="badge">Claude의 추천</span><span class="badge yours">2026-10-17에 정함</span></header>
         <div class="shots" data-th1="doc"></div>
         <ul><li>테마는 문서의 설정입니다. 고른 테마의 색으로 그림이 저장됩니다.</li><li>누가 어디서 열어도 <b>같은 그림</b>입니다. A4 · 1번 "늘 문서의 색"과 그대로 이어집니다.</li><li>어두운 노트에 넣을 문서는 어두운 테마로 그리면 노트에 녹아듭니다.</li><li><span class="bad">밝은 노트에서는 어두운 네모로 보입니다.</span> 어느 노트에 넣을지 생각해 고르셔야 합니다.</li></ul></article>
       <article class="card"><header><span class="tag">TH1 · 2번</span><h3>보는 사람마다 고른다 (사용자 설정)</h3></header>
@@ -87,7 +87,7 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>TH2. 편집 화면(도구 막대, 바탕)의 색도 테마에 넣는가</h2>
     <p class="q">편집기에는 그림 말고도 도구 막대, 캔버스의 바탕, 메뉴가 있습니다. Obsidian에서는 이것들이 Obsidian의 밝기를 따르기로 했습니다(요구사항 <code>^obs-theme</code>). <b>그림의 테마를 고르면 편집 화면의 색도 함께 바뀌는가</b>를 고르는 물음입니다. 두 카드 모두 TH1 · 1번(문서마다)을 전제로 그렸습니다.</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">TH2 · 1번</span><h3>따로 둔다</h3><span class="badge">Claude의 추천</span><span class="badge now">지금 명세</span></header>
+      <article class="card pick"><header><span class="tag">TH2 · 1번</span><h3>따로 둔다</h3><span class="badge">Claude의 추천</span><span class="badge yours">2026-10-17에 정함</span></header>
         <div class="shots" data-th2="apart"></div>
         <ul><li>편집 화면은 Obsidian(데스크톱과 웹에서는 기기)의 밝기를 따릅니다. 그림은 문서의 테마를 따릅니다.</li><li>어두운 Obsidian에서 밝은 테마의 문서를 열면, 어두운 캔버스 위에 밝은 종이가 놓입니다. 지금 프로토타입이 이렇습니다.</li><li>편집 화면의 색은 "화면 색"이라 부르고 테마라고 부르지 않습니다. 테마라는 말은 그림의 색 묶음에만 씁니다.</li></ul></article>
       <article class="card"><header><span class="tag">TH2 · 2번</span><h3>함께 바뀐다</h3></header>
@@ -100,8 +100,8 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>답하실 것</h2>
     <div class="sum">
       <ol>
-        <li><b>TH1</b> 그림의 테마를 고르는 사람: 1 문서마다(파일에 저장) / 2 보는 사람마다(사용자 설정). 추천 1</li>
-        <li><b>TH2</b> 편집 화면의 색: 1 따로 둔다(Obsidian · 기기의 밝기를 따름) / 2 테마와 함께 바뀐다. 추천 1</li>
+        <li><b>TH1</b> 그림의 테마를 고르는 사람: 1 문서마다(파일에 저장) / 2 보는 사람마다(사용자 설정). 추천 1. <b>정함: 1번</b> (2026-10-17)</li>
+        <li><b>TH2</b> 편집 화면의 색: 1 따로 둔다(Obsidian · 기기의 밝기를 따름) / 2 테마와 함께 바뀐다. 추천 1. <b>정함: 1번</b> (2026-10-17)</li>
       </ol>
       <p>정하시면 요구사항 <code>^lay-theme</code>과 시각 디자인 명세의 3장 · 8장을 고칩니다. 흑백 인쇄는 테마가 아니라 인쇄할 때 고르는 방식으로 그대로 둡니다.</p>
     </div>

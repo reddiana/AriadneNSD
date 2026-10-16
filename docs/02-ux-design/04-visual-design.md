@@ -24,12 +24,12 @@ updated: 2026-10-17
 > - 그림은 모두 프로토타입에서 찍거나 스크립트로 그린 것이고, 언제든 다시 만들 수 있습니다: `journal/assets/2026-10-16-visual-design-shots.mjs`(화면), `2026-10-17-visual-anatomy.py`(해부도), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산)
 > - **용어.**
 > 	- **대비율**은 WCAG 2.2의 contrast ratio(상대 휘도의 비)입니다. 글자는 4.5:1(AA, 1.4.3), 뜻을 가진 선과 도형은 3:1(1.4.11)이 기준입니다.
-> 	- **문서 팔레트**는 저장되는 그림의 색, **UI 테마**는 편집 화면의 색입니다(2장).
+> 	- **테마**는 그림의 색 묶음입니다. 문서마다 고르고 파일과 함께 갑니다. 밝은 테마와 어두운 테마가 있습니다. **화면 색**은 도구 막대 · 캔버스 바탕 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
 > 	- **토큰**은 값 대신 쓰는 이름입니다(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` → <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `#5b77ad`). 코드와 문서는 값이 아니라 이름을 씁니다.
 
 ![[visual-design-code.png|500]]
 
-*기본 문서 팔레트로 그린 코드식 예제. Event 머리, 처리, If, 펴진 접기 영역("센서 읽기"), 접힌 접기 영역("로그 남기기"), Do-While, 구문 강조.*
+*밝은 기본 테마로 그린 코드식 예제. Event 머리, 처리, If, 펴진 접기 영역("센서 읽기"), 접힌 접기 영역("로그 남기기"), Do-While, 구문 강조.*
 
 ## 1. 원칙
 
@@ -78,10 +78,10 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 ### 원칙 4. 문서는 종이다
 
-편집 화면이 어두워도 그림은 흰 종이에 그립니다. 같은 파일은 GitHub에서도, Obsidian의 어두운 테마에서도, 인쇄물에서도 같은 색이어야 하기 때문입니다([[01-requirements#^fmt-color]]). 종이 둘레의 그림자와 바깥 바탕의 점 무늬가 "여기부터 종이다"를 알립니다. 어두운 화면에서 흰 종이가 밝은 것은 감수합니다.
+그림은 문서의 테마가 정한 종이에 그립니다. 편집 화면이 어둡다고 그림이 어두워지지 않습니다. 같은 파일은 GitHub에서도, 어두운 Obsidian에서도, 인쇄물에서도 같은 색이어야 하기 때문입니다([[01-requirements#^fmt-color]]). 종이 둘레의 그림자와 바깥 바탕의 점 무늬가 "여기부터 종이다"를 알립니다. 어두운 화면에서 흰 종이가 밝은 것은 감수합니다.
 
-> [!example] 밝은 UI 테마와 어두운 UI 테마
-> 도구 막대와 옆 창은 UI 테마를 따르고, 가운데의 종이는 그대로입니다.
+> [!example] 밝은 화면 색과 어두운 화면 색
+> 도구 막대와 옆 창은 화면 색을 따르고, 가운데의 종이는 그대로입니다.
 >
 > ![[visual-design-screen-light.png|640]]
 > ![[visual-design-screen-dark.png|640]]
@@ -107,8 +107,8 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 ```mermaid
 flowchart LR
   M[(모델)] --> L[레이아웃<br/>폭 표로 셈한 좌표]
-  L --> D["문서 층<br/>문서 팔레트"]
-  L --> E["편집 층<br/>UI 테마"]
+  L --> D["문서 층<br/>테마"]
+  L --> E["편집 층<br/>화면 색"]
   D --> S[저장되는 SVG]
   D --> V[편집 화면]
   E --> V
@@ -118,11 +118,11 @@ flowchart LR
 | --- | --- | --- |
 | 무엇 | 블록, 선, 글자, 펴진 접기 영역의 테두리와 이름 띠, 펴 보인 호출 블록, 접힌 칸 | 고른 블록과 범위, 글자를 고치는 칸, 마우스 올림, 끌어 놓을 자리, 오류, 캔버스 포커스 |
 | 저장 | 된다. 저장되는 그림은 지금 화면 그대로 → [[0018-save-as-shown\|ADR-0018]] | 되지 않는다 |
-| 색을 정하는 것 | 문서 팔레트 (파일과 함께 감) | UI 테마 (사용자 설정) |
+| 색을 정하는 것 | 테마 (문서마다 고름, 파일과 함께 감) | 화면 색 (사용자 설정) |
 
 **저장되는 SVG에 들어가는 것:**
 
-- 흰 바탕 사각형(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper`) 하나. 투명하게 두지 않습니다. 어두운 뷰어에서도 원칙 4가 지켜집니다.
+- 테마의 종이 색 사각형(밝은 기본 테마에서는 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper`) 하나. 투명하게 두지 않습니다. 어두운 뷰어에서도 원칙 4가 지켜집니다.
 - 그림 둘레 여백 24px.
 - 쓰인 글자만 추린 번들 글꼴과 대체 글꼴 목록 → [[01-requirements#^fmt-text]]
 - 기호(`▾` `▶` `⋯` `←`)는 **도형(path)으로** 그립니다. 글자로 두면 글꼴에 그 기호가 없는 뷰어에서 깨집니다. 프로토타입은 `▶`만 도형이고 나머지는 아직 글자입니다(11장).
@@ -156,7 +156,7 @@ flowchart LR
 | `green.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `#22702a` | 41 | `red.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `#b42318` | 40 |
 | `amber.800` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `#8a5a00` | 42 | | | |
 
-### 3.3 문서 팔레트 (기본)
+### 3.3 밝은 기본 테마
 
 대비율은 블록 바탕 다섯과 종이에 대어 본 가장 낮은 값 ~ 가장 높은 값입니다. 전부 기준을 넘습니다.
 
@@ -187,9 +187,9 @@ flowchart LR
 - 갈래 이름은 구문 강조의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700`)을 쓰지 않습니다. 구조의 글자가 코드의 일부처럼 보이지 않게 하려는 것입니다.
 - 펴 보인 블록의 글자는 흐리게 하되 4.5:1을 지킵니다. "고칠 수 없다"는 것은 점선과 띠가 알리고, 글자는 들여다보려고 편 것이라 읽혀야 합니다.
 
-### 3.4 UI 테마
+### 3.4 화면 색
 
-| 토큰 | 밝은 테마 | 어두운 테마 | 역할 |
+| 토큰 | 밝은 화면 | 어두운 화면 | 역할 |
 | --- | --- | --- | --- |
 | `ui.bg` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#eef1f6;border:1px solid #8888;vertical-align:-0.1em"></span> `#eef1f6` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#12151b;border:1px solid #8888;vertical-align:-0.1em"></span> `#12151b` | 종이 바깥의 바탕 |
 | `ui.dots` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d3d9e4;border:1px solid #8888;vertical-align:-0.1em"></span> `#d3d9e4` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#262c37;border:1px solid #8888;vertical-align:-0.1em"></span> `#262c37` | 바탕의 점 무늬 (18px 간격) |
@@ -201,9 +201,9 @@ flowchart LR
 | `ui.accent-soft` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e4eafb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e4eafb` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232c45;border:1px solid #8888;vertical-align:-0.1em"></span> `#232c45` | 단추에 마우스가 올라감 |
 | `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b35a10;border:1px solid #8888;vertical-align:-0.1em"></span> `#b35a10` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0a560;border:1px solid #8888;vertical-align:-0.1em"></span> `#f0a560` | 안내 상자의 왼쪽 줄 |
 
-UI 테마의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (바탕 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1). 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 바탕(`ui.bg`) 위에 그립니다. 종이 위에서는 어두운 테마의 `ui.accent`가 2.3:1밖에 되지 않습니다.
+화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (바탕 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1). 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 바탕(`ui.bg`) 위에 그립니다. 종이 위에서는 어두운 테마의 `ui.accent`가 2.3:1밖에 되지 않습니다.
 
-편집 층의 표시는 종이 위에 그려지므로, 어두운 테마에서도 종이에 맞는 같은 값을 씁니다.
+편집 층의 표시는 종이 위에 그려지므로, 어두운 화면에서도 종이에 맞는 같은 값을 씁니다. 어두운 테마의 종이 위에서 쓸 값은 어두운 기본 테마를 정할 때 함께 정합니다.
 
 | 토큰 | → 원시 | 역할 |
 | --- | --- | --- |
@@ -353,10 +353,11 @@ UI 테마의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 
 
 ## 8. 테마
 
-- **문서 팔레트**는 저장되는 그림의 색을 정합니다. 기본 팔레트는 3.3절입니다.
-- **흑백 인쇄 팔레트**([[01-requirements#^lay-theme]]의 흑백 인쇄 모드)는 문서 팔레트 하나로 만듭니다. 모든 바탕은 흰색, 선과 글자는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 값은 9.3절에 있습니다.
-- **UI 테마**는 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 테마와 어두운 테마가 있고, Obsidian에서는 Obsidian의 밝기를 따릅니다([[01-requirements#^obs-theme]]).
-- **고대비**([[01-requirements#^nfr-a11y]])는 두 곳에 나뉩니다. UI는 고대비 UI 테마로, 그림은 흑백 인쇄 팔레트를 화면에서도 고를 수 있게 하는 것으로 합니다. 문서 팔레트를 화면에서 바꾸면 저장되는 그림도 바뀌므로, 화면에서만 바꾸는 "보기 전용" 선택을 따로 둡니다.
+- **테마**는 그림의 색 묶음입니다. 3장의 의미 · 구성 요소 토큰이 어느 색을 가리키는지를 정합니다. 문서마다 고르고 파일과 함께 갑니다. 그래서 누가 어디서 열어도, 저장된 그림과 인쇄물과 PNG도 같은 색입니다([[01-requirements#^lay-theme]], [[01-requirements#^fmt-color]]). → 고른 과정은 M17 테마 시안(TH1 · 1번): https://claude.ai/artifact/CABapWNP4NnQupcmTpwyZf, 사본 `journal/assets/2026-10-17-theme-study.html`
+- 테마에는 **밝은 테마와 어두운 테마** 두 종류가 있습니다. 지금은 종류마다 기본 테마 하나씩 둡니다: **밝은 기본 테마**(3.3절)와 **어두운 기본 테마**(아직 정하지 않음. 시안의 초안은 M17에 있음). 새 문서는 밝은 기본 테마로 시작합니다.
+- **흑백 인쇄 팔레트**([[01-requirements#^lay-theme]]의 흑백 인쇄 모드)는 문서의 테마 하나로 만듭니다. 모든 바탕은 흰색, 선과 글자는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 값은 9.3절에 있습니다.
+- **화면 색**(도구 막대, 옆 창, 캔버스 바탕, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^obs-theme]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번).
+- **고대비**([[01-requirements#^nfr-a11y]])는 두 곳에 나뉩니다. UI는 고대비 화면 색으로, 그림은 흑백 인쇄 팔레트를 화면에서도 고를 수 있게 하는 것으로 합니다. 테마를 화면에서 바꾸면 저장되는 그림도 바뀌므로, 화면에서만 바꾸는 "보기 전용" 선택을 따로 둡니다.
 - 테마가 바꿀 수 없는 것: 5장의 치수, 6장의 선 굵기, 블록의 모양, 글꼴(원칙 6).
 
 ## 9. 렌더링 규칙
@@ -403,7 +404,7 @@ UI 테마의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 
 
 ### 10.1 대비율
 
-3.3절의 표가 결과입니다. 기본 문서 팔레트의 모든 글자와 뜻을 가진 선이, 쓰이는 모든 바탕에서 기준을 넘습니다. 기준에 닿지 않는 짝은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 띠 위의 구문 강조는 없습니다(펴 보인 글자는 강조하지 않음).
+3.3절의 표가 결과입니다. 밝은 기본 테마의 모든 글자와 뜻을 가진 선이, 쓰이는 모든 바탕에서 기준을 넘습니다. 기준에 닿지 않는 짝은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 띠 위의 구문 강조는 없습니다(펴 보인 글자는 강조하지 않음).
 
 | 짝 | 대비율 | 쓰임 |
 | --- | --- | --- |
@@ -439,12 +440,15 @@ UI 테마의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 
 - 마우스 올림, 끌어 놓기, 받아들일 수 없는 입력의 모습이 없습니다(7장).
 - 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 바탕이 토큰이 아니라 코드에 적힌 값입니다.
 - 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다.
+- 테마를 고를 수 없습니다. 늘 밝은 기본 테마입니다.
 - 토큰의 이름은 코드에 아직 없습니다. 코드는 짧은 이름(`COL.edge` 등)을 씁니다.
 
 ## 12. 미결정 사항
 
 - 번들할 글꼴과 그에 따른 크기 단계의 확인 ([[01-requirements#6. 미결정 사항]])
-- 문서 팔레트의 이름을 파일에 저장할지 ([[01-file-format]])
+- 어두운 기본 테마의 색. 대비를 3.3절처럼 맞춰 정한다 (초안은 M17 테마 시안)
+- 문서에 테마를 무엇으로 적을지: 테마의 이름만 적을지, 색 값까지 적을지. 다른 사람에게 없는 테마로 그린 문서를 열 때가 갈린다 ([[01-file-format]])
+- 테마를 고르는 자리(문서 설정의 어디에서, 어떤 모습으로)
 - 화면의 나머지(도구 막대, 메뉴, 대화 상자, 설정 화면, 아이콘). 배포 대상마다 그 앱의 모습을 따를지, 공통 모습을 둘지. 프로토타입의 도구 막대는 단추 서른 개가 같은 무게로 놓여 위계가 없습니다
 - 이름이 겹친 머리에 붙이는 표시의 모양 ([[01-requirements#^blk-event]])
-- 어두운 UI 테마에서 종이를 화면에서만 조금 어둡게 할지 (저장되는 색은 그대로)
+- 어두운 화면 색에서 종이를 화면에서만 조금 어둡게 할지 (저장되는 색은 그대로)

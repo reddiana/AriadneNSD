@@ -70,9 +70,9 @@ updated: 2026-10-10
 
 ## 5. 테마 연동
 
-정한 것: 편집 화면(UI 테마)은 Obsidian의 밝기를 따르고, 그림(문서 팔레트)은 따르지 않는다 → [[04-visual-design#8. 테마]], [[01-requirements#^fmt-color]]
+정한 것: 편집 화면(화면 색)은 Obsidian의 밝기를 따르고, 그림(테마)은 따르지 않는다 → [[04-visual-design#8. 테마]], [[01-requirements#^fmt-color]]
 
-> [!info] 미완성: Obsidian의 밝기 바뀜을 받아 UI 테마를 바꾸는 방법 ([[01-requirements#^obs-theme]])
+> [!info] 미완성: Obsidian의 밝기 바뀜을 받아 화면 색을 바꾸는 방법 ([[01-requirements#^obs-theme]])
 
 > [!warning] 위험: 번들 글꼴과 wasm을 `main.js`에 실으면 플러그인이 커진다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 

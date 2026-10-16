@@ -53,7 +53,7 @@ updated: 2026-10-17
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^fmt-svg]]).
 - 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
 - **글꼴 조각:** 번들한 글꼴에서 그 그림에 쓰인 글자만 추려 `<style>`의 `@font-face`에 넣는다. 그림의 `font-family`는 이 글꼴 다음에 대체 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^fmt-text]]. 글꼴 조각도 같은 모델이면 같은 바이트여야 한다(3.1).
-- **종이:** 흰 바탕 사각형을 둔다. 투명하게 두지 않는다. 그림의 색은 늘 문서 팔레트의 색이다 → [[01-requirements#^fmt-color]], [[04-visual-design#2. 층과 출력]]
+- **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^fmt-color]], [[04-visual-design#2. 층과 출력]]
 - 그림 부분은 모델에서 생성한 결과일 뿐이며, 읽을 때 무시한다([[01-requirements#^fmt-model-source]]). 저장되는 그림은 지금 화면 그대로이고 편집 층의 표시(고른 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 
 ## 3. 모델 JSON
@@ -83,7 +83,7 @@ updated: 2026-10-17
 
 | 묶음 | 무엇 | 실행 취소 |
 | --- | --- | --- |
-| `settings` | 문서 설정: 블록 글자의 종류([[01-requirements#^lay-text-kind]]), 문서 팔레트 | 대상 |
+| `settings` | 문서 설정: 블록 글자의 종류([[01-requirements#^lay-text-kind]]), 테마 | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 머리(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등. 제어 블록은 갈래나 본문으로 블록의 줄을 품는다. 줄은 비지 않는다 | 대상 |
 | 호출 블록 | 부르는 Method의 **id**, 인자, 결과. 이름은 갖지 않는다. 이어진 곳이 없으면 마지막에 보이던 이름을 품는다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |

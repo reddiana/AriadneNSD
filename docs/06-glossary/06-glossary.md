@@ -75,7 +75,8 @@ updated: 2026-10-17
 | 용어 | 영어 | 뜻 |
 | --- | --- | --- |
 | 문서 층 · 편집 층 | document layer · edit layer | 그림 위의 표시 가운데 파일에 저장되는 것(문서 층)과 화면에만 있는 것(편집 층: 고른 표시, 고치는 칸 등) → [[04-visual-design#원칙 3. 문서의 표시와 편집의 표시는 다른 층이다\|원칙 3]] |
-| 문서 팔레트 · UI 테마 | document palette · UI theme | 저장되는 그림의 색 · 편집 화면의 색 → [[04-visual-design#2. 층과 출력]] |
+| 테마 | theme | 그림의 색 묶음. 문서마다 고르고 파일에 저장한다. 밝은 테마와 어두운 테마가 있다 → [[04-visual-design#8. 테마]] |
+| 화면 색 | screen colors | 도구 막대 · 캔버스 바탕 같은 편집 화면의 색. 테마가 아니며 Obsidian · 기기의 밝기를 따른다 → [[04-visual-design#2. 층과 출력]] |
 | 토큰 | design token | 값 대신 쓰는 이름(`line.structure` → `#5b77ad`). 원시 · 의미 · 구성 요소의 세 단계 → [[04-visual-design#3. 디자인 토큰]] |
 | 대비율 | contrast ratio | WCAG 2.2의 상대 휘도의 비. 글자는 4.5:1, 뜻을 가진 선은 3:1이 기준 |
 
