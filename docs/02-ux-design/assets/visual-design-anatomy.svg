@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="640" viewBox="0 0 780 640">
+<rect width="780" height="640" fill="#ffffff"/>
+<g transform="translate(.5 .5)">
+<text x="70" y="36" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">처리</text>
+<rect x="70" y="60" width="230" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<text x="80" y="80" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">tick++;</text>
+<path d="M70 54 H80 M70 51 V57 M80 51 V57" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="75.0" y="50" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">padX 10</text>
+<path d="M310 60 V67 M307 60 H313 M307 67 H313" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="315" y="67.0" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">padY 7</text>
+<path d="M360 67 V85 M357 67 H363 M357 85 H363" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="365" y="79.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">줄 18</text>
+<path d="M60 60 V92 M57 60 H63 M57 92 H63" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="55" y="79.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="end">32</text>
+<text x="400" y="36" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">If</text>
+<rect x="400" y="60" width="230" height="46" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1"/>
+<path d="M400 60 L550 106 L630 60" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="550" y="78" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22" text-anchor="middle">btn == PRESSED</text>
+<text x="406" y="101" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="12" fill="#4b5567">참</text>
+<text x="624" y="101" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="12" fill="#4b5567" text-anchor="end">거짓</text>
+<rect x="400" y="106" width="150" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<rect x="550" y="106" width="80" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<path d="M640 90 V106 M637 90 H643 M637 106 H643" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="645" y="101.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">갈래 이름 줄 16</text>
+<path d="M400 150 H406 M400 147 V153 M406 147 V153" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="403.0" y="162" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">6</text>
+<text x="400" y="180" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">빗금의 꼭짓점 = 두 갈래의 경계</text>
+<text x="400" y="194" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">조건은 그 위 가운데, 갈래 이름은 12px</text>
+<text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 머리가 아래)</text>
+<rect x="70" y="250" width="230" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/>
+<text x="80" y="270" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">j &lt; hi</text>
+<rect x="92" y="282" width="208" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<rect x="92" y="314" width="208" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<text x="102" y="302" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">i++;</text>
+<path d="M70 360 H92 M70 357 V363 M92 357 V363" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="81.0" y="372" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">띠 22</text>
+<text x="400" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">호출 블록</text>
+<rect x="400" y="250" width="230" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<line x1="407" y1="250" x2="407" y2="282" stroke="#5b77ad" stroke-width="1"/>
+<line x1="623" y1="250" x2="623" y2="282" stroke="#5b77ad" stroke-width="1"/>
+<text x="417" y="270" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">p ← <tspan font-weight="700">partition</tspan>(a, lo)</text>
+<path d="M400 244 H407 M400 241 V247 M407 241 V247" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="403.5" y="240" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">7</text>
+<text x="400" y="300" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이름은 굵게, 인자와 결과는 보통 (ADR-0022)</text>
+<text x="400" y="314" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">부를 Method가 없으면 이중선이 점선</text>
+<text x="70" y="406" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">Event 머리 · Method 머리</text>
+<path d="M70 456 C92 438,151.5 438,173.5 456 L300 456 L300 488 L70 488 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="80" y="476" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">TIM2 인터럽트</text>
+<path d="M60 440 V456 M57 440 H63 M57 456 H63" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="55" y="451.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="end">모자 16</text>
+<path d="M70 432 H173.5 M70 429 V435 M173.5 429 V435" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="121.75" y="428" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">min(110, 폭×0.45)</text>
+<path d="M70 536 C116.0 521,254.0 521,300 536 L300 568 L70 568 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="80" y="556" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">partition(a, lo, hi)</text>
+<text x="70" y="586" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">Method는 폭 전체의 낮은 아치, 색은 호출 블록과 같음</text>
+<text x="400" y="396" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">펴진 접기 영역 · 펴 보인 호출 블록</text>
+<rect x="400" y="420" width="230" height="18" fill="#eceef2"/>
+<line x1="400" y1="438" x2="630" y2="438" stroke="#5b77ad" stroke-width="1"/>
+<text x="410" y="433" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="12" fill="#343b48" font-weight="600">▾ 센서 읽기</text>
+<rect x="400" y="438" width="230" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<text x="410" y="458" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">adc_start(CH0);</text>
+<rect x="400.5" y="420.5" width="229" height="49" fill="none" stroke="#343b48" stroke-width="2"/>
+<path d="M640 420 V438 M637 420 H643 M637 438 H643" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="645" y="432.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">띠 18</text>
+<text x="636" y="460" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">테두리 2px 실선</text>
+<rect x="400" y="510" width="230" height="50" fill="#ffffff" stroke="#5b77ad" stroke-width="1"/>
+<rect x="400.5" y="510.5" width="229" height="17.5" fill="#ddd4ef"/>
+<line x1="400" y1="528" x2="630" y2="528" stroke="#5b77ad" stroke-width="1"/>
+<text x="410" y="523" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="12" fill="#555e70">▾ p ← <tspan font-weight="600">partition</tspan>(a, lo)</text>
+<text x="414" y="548" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#555e70">pivot = a[hi];</text>
+<rect x="402" y="512" width="226" height="46" fill="none" stroke="#ffffff" stroke-width="3"/>
+<rect x="402" y="512" width="226" height="46" fill="none" stroke="#7a5fb8" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="636" y="532" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">점선 1px (6 · 4)</text>
+<text x="636" y="546" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">바깥 선에서 1px 안</text>
+<text x="636" y="560" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">글자는 회색, 강조 없음</text>
+</g>
+</svg>

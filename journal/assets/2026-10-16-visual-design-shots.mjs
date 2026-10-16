@@ -98,4 +98,20 @@ await shot('visual-design-screen-light.png', '.app');
 await ev(`document.documentElement.dataset.theme = 'dark'`);
 await shot('visual-design-screen-dark.png', '.app');
 
+await ev(`document.documentElement.dataset.theme = 'light'`);
+
+// 7. 원칙 2의 증거: 색각 이상(Chrome의 시각 결함 에뮬레이션)과 흑백으로 본 같은 그림. 고른 것 없이
+await ev(`T.cmd('exQuick')`); await ev(`T.clear()`);
+for (const [type, name] of [['achromatopsia', 'grayscale'], ['deuteranopia', 'deuteranopia'], ['protanopia', 'protanopia'], ['tritanopia', 'tritanopia']]) {
+  await send('Emulation.setEmulatedVisionDeficiency', { type });
+  await shot(`visual-design-vision-${name}.png`);
+}
+await send('Emulation.setEmulatedVisionDeficiency', { type: 'none' });
+
+// 8. 고른 것이 없을 때의 키보드 포커스: 캔버스 안쪽 테두리 (Tab으로 들어온 것처럼 focus-visible)
+await ev(`T.cmd('exCode')`); await ev(`T.clear()`);
+await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+await ev(`document.querySelector('.stage').focus({ focusVisible: true })`);
+await shot('visual-design-focus-none.png', '.stage', 0, { w: 560, h: 360 });
+
 ws.close(); chrome.kill();

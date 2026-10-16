@@ -181,14 +181,14 @@ const geo = `(() => {
 })()`;
 const saved = `(() => { T.cmd('svg'); const v = document.querySelector('#svgText').value; T.cmd('closeModal'); return v; })()`;
 let g = await ev(geo);
-check('접기 영역: 굵기 3의 테두리가 영역의 맨 위부터 끝까지 두름', !!g.edge && g.sw === '3' && g.edge[0] === g.kid[0] + 1 && g.edge[2] === g.kid[2] - 2 && g.edge[1] === g.kid[1] - 18 + 1 && g.edge[1] + g.edge[3] === g.last[1] + g.last[3] - 1, g);
+check('접기 영역: 굵기 2의 테두리가 영역의 맨 위부터 끝까지 두름 (선의 가운데가 정수 픽셀)', !!g.edge && g.sw === '2' && g.edge[0] === g.kid[0] + .5 && g.edge[2] === g.kid[2] - 1 && g.edge[1] === g.kid[1] - 18 + .5 && g.edge[1] + g.edge[3] === g.last[1] + g.last[3] - .5, g);
 check('접기 영역: 보통 블록은 테두리에 붙고(들이지 않음) 띠는 폭 전체', g.kid[0] === g.band[0] + .5 && g.kid[1] === g.band[1] + 18.5 && g.band[2] === g.kid[2] + 1, g);
-check('저장되는 그림에 테두리와 띠가 들어감', (await ev(`(v => v.includes('#4f74d6') && v.includes('#e6ecfb'))(${saved})`)) === true);
+check('저장되는 그림에 테두리와 띠가 들어감', (await ev(`(v => v.includes('stroke="#343b48" stroke-width="2"') && v.includes('#eceef2'))(${saved})`)) === true);
 const bandX = g.band[0];
 await ev(`document.querySelector('#optRanges').click()`);
 g = await ev(geo);
 check('이름 띠를 끄면 테두리도 사라짐', g.band === null && g.edge === null && g.kid[0] === bandX + .5, g);
-check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('#4f74d6') && !v.includes('#e6ecfb'))(${saved})`)) === true);
+check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('stroke="#343b48" stroke-width="2"') && !v.includes('#eceef2'))(${saved})`)) === true);
 await ev(`document.querySelector('#optRanges').click()`);
 
 // l. 호출 블록 펴 보기: 보기만 바뀌고 모델은 그대로
@@ -200,11 +200,11 @@ const press = (id, code, o = '{}') => ev(`T.click('${id}'); T.key('${code}', ${o
 const model = () => ev(`JSON.stringify(T.doc())`);
 const m0 = await model();
 await press(pc, 'KeyF');
-check('호출 블록에서 F: Method의 블록이 그 자리에 보임', (await has(`${pc}>${pb[0]}`)) && (await ev(`T.svg().includes('stroke="#8a72c4"') && T.svg().includes('stroke-dasharray="6 4"') && T.svg().includes('fill="#6b7386"')`)) === true, await ev(`T.msg()`));
+check('호출 블록에서 F: Method의 블록이 그 자리에 보임', (await has(`${pc}>${pb[0]}`)) && (await ev(`T.svg().includes('stroke="#7a5fb8"') && T.svg().includes('stroke-dasharray="6 4"') && T.svg().includes('fill="#555e70"')`)) === true, await ev(`T.msg()`));
 check('펴 보인 호출 블록: 띠에 호출 블록의 글자 (이름은 굵게)', (await ev(`T.svg().includes('▾ p ← <tspan font-weight="600">partition</tspan>(a, lo, hi)')`)) === true);
 check('펴 보기는 모델을 바꾸지 않음', (await model()) === m0);
 await press(pc, 'KeyF');
-check('다시 F: 접힘', !(await has(`${pc}>${pb[0]}`)) && (await ev(`!T.svg().includes('#8a72c4')`)) === true);
+check('다시 F: 접힘', !(await has(`${pc}>${pb[0]}`)) && (await ev(`!T.svg().includes('#7a5fb8')`)) === true);
 await press(pc, 'KeyF');
 
 // m. 펴 보인 블록은 고를 수 있지만 고칠 수 없다
@@ -230,7 +230,7 @@ await ev(`T.click('${ghost}'); T.key('KeyG'); T.key('KeyD')`);
 await ev(`T.key('Enter', { key: 'Enter' })`);
 check('펴 보인 블록에서 G: 원래 블록을 고름 (거기서는 고쳐짐)', (await ev(`T.editing()`)) === 'pivot = a[hi];', [await ev(`T.editing()`), await ev(`T.msg()`)]);
 await ev(`T.type('pivot = a[lo];')`);
-check('Method를 고치면 펴 보인 곳도 따라 바뀜', (await ev(`T.svg().includes('fill="#6b7386" xml:space="preserve" style="white-space:pre" pointer-events="none">pivot = a[lo];</text>')`)) === true);
+check('Method를 고치면 펴 보인 곳도 따라 바뀜', (await ev(`T.svg().includes('fill="#555e70" xml:space="preserve" style="white-space:pre" pointer-events="none">pivot = a[lo];</text>')`)) === true);
 await ev(`T.key('KeyZ', { ctrl: true })`);
 check('실행 취소는 내용만 되돌리고 펴짐은 그대로', (await model()) === m0 && (await has(ghost)) && (await ev(`T.svg().includes('>pivot = a[hi];</text>')`)) === true);
 await press(pc, 'KeyF');
@@ -267,7 +267,7 @@ await ev(`T.key('KeyF')`);
 const shownIds = `[...document.querySelectorAll('#svg [data-id*=">"]')].map(e => e.dataset.id).sort().join()`;
 const before = await ev(shownIds);
 const file = await ev(saved);
-check('저장되는 그림과 보기 상태에 펴짐이 들어감', file.includes('#8a72c4') && file.includes('fill="#6b7386"') && /"opened": \[\s*"/.test(file), file.slice(0, 400));
+check('저장되는 그림과 보기 상태에 펴짐이 들어감', file.includes('#7a5fb8') && file.includes('fill="#555e70"') && /"opened": \[\s*"/.test(file), file.slice(0, 400));
 await ev(`T.cmd('new')`);
 check('새 문서: 펴 보인 것이 없음', (await ev(shownIds)) === '');
 // 파일 고르기 창 대신, 저장한 파일을 '열기'의 파일 칸에 직접 넣는다
@@ -534,7 +534,7 @@ d = await ev(`T.doc()`);
   check('이 자리의 접기 영역을 za로 폄: 접기 영역과 같은 테두리', (await has(gid(pid[0]))) && !!e1, e1);
   const outer = await box(`rect[data-id="${gid(pid[2])}"]`);
   check('펴 보인 호출 블록: 점선이 바깥 선에서 1px 안으로 (보통 블록의 왼쪽 선 + 2가 점선 자리의 가운데)', !!outer && dash[0] === outer[0] + 2, [outer, dash]);
-  check('겹친 테두리: 양옆에 틈 1px (테두리 3 + 틈 1)', !!e1 && !!dash && e1[0] - dash[0] === 4 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 4, [e1, dash]);
+  check('겹친 테두리: 양옆에 틈 1px (점선 자리 + 틈 1 + 테두리의 가운데)', !!e1 && !!dash && e1[0] - dash[0] === 2.5 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 2.5, [e1, dash]);
   await ev(`T.click('${gid(pid[0])}')`); await keys('KeyZ', 'KeyA');
   check('이 자리의 접기 영역 안에서 za: 호출 블록이 아니라 그 접기 영역이 접힘', (await has(lid)) && !(await has(gid(pid[0]))) && (await has(gid(pid[2]))), await ev(`T.msg()`));
   await ev(`T.click('${lid}')`); await keys('KeyI');
@@ -638,6 +638,21 @@ await ev(`T.cmd('exQuick')`);
   check('52: 터치패드의 작은 움직임은 쌓일 때까지 움직이지 않음', (await ev(selId)) === f.below, await ev(selId));
   await wheel(10);
   check('52: 쌓이면 한 번 움직임 (j와 같음)', (await ev(selId)) === down1, { got: await ev(selId), down1 });
+}
+
+// 53번째 판: 시각 디자인 문서에 맞춘 모습 (docs/02-ux-design/03-visual-design.md)
+await ev(`T.cmd('exCode')`);
+{
+  const b = (await ev(`T.doc()`)).diagrams[0].body;
+  await ev(`T.click('${b[1].id}')`);
+  const box = await ev(`(e => e && [e.getAttribute('fill'), e.getAttribute('stroke-width'), e.getAttribute('x')])(document.querySelector('#svg rect[data-selbox]'))`);
+  check('53: 고른 표시는 바탕 없이 2px 테두리, 선의 가운데가 정수 픽셀', !!box && box[0] === 'none' && box[1] === '2' && String(box[2]).endsWith('.5'), box);
+  check('53: 고른 것이 있으면 캔버스 포커스 테두리 없음', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === false);
+  const file = await ev(saved);
+  check('53: 저장되는 그림에는 편집 층의 파랑이 없음 (고른 표시와 접기 영역의 색이 다름)', !file.includes('#2c55c9') && file.includes('#343b48'), file.slice(0, 200));
+  check('53: 작은 글자는 12px 하나', !/font-size="(11|11\.5|12\.5)"/.test(file));
+  await keys('Escape', 'Escape');
+  check('53: 고른 것을 풀면 캔버스에 포커스 테두리용 표시', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === true);
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);

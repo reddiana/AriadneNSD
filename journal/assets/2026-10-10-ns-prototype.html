@@ -50,6 +50,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
 .stage { position: relative; overflow: auto; min-width: 0; background-color: var(--bg); background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 18px 18px; padding: 20px; outline: none; }
+.stage.nosel:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .paper { position: relative; display: inline-block; background: var(--paper); border-radius: 4px; box-shadow: 0 1px 3px rgba(20,30,60,.12), 0 6px 20px rgba(20,30,60,.06); }
 .paper svg { display: block; user-select: none; }
 .opts { position: sticky; top: 0; left: 0; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-bottom: 14px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; width: fit-content; max-width: 100%; font-size: 13px; }
@@ -57,7 +58,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .zoom { display: flex; gap: 4px; align-items: center; }
 .zoom output { min-width: 3.5em; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
 
-#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #2c55c9; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; box-shadow: 0 2px 10px rgba(44,85,201,.25); line-height: 18px; white-space: pre; }
+#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #2c55c9; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
 
 .side { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding-block: 14px; padding-inline: 18px; min-width: 0; }
 .side h2 { font-size: 13px; font-weight: 600; margin: 18px 0 8px; letter-spacing: .02em; }
@@ -102,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">52번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">53번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -207,7 +208,12 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-15, 52번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 53번째 판)</h2>
+      <ul>
+        <li><b>색과 선을 시각 디자인 문서에 맞췄습니다.</b> 구조선 · 주석 · 숫자 · 펴 보인 글자의 색을 진하게 해 WCAG 대비를 맞췄습니다. 접기 영역의 테두리와 이름 띠는 고른 표시의 파랑과 섞이지 않게 무채색 2px로, 갈래 이름("참" · "거짓")은 키워드의 파랑과 섞이지 않게 회색으로 바꿨습니다. 고른 표시는 바탕을 칠하지 않고 테두리만 둡니다. 작은 글자는 모두 12px입니다. 고른 것이 없을 때 키보드로 캔버스에 오면 캔버스 안쪽에 테두리가 보입니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-15, 52번째 판)</h2>
       <ul>
         <li><b>고른 것을 풀 수 있습니다.</b> <kbd>Esc</kbd>를 두 번 연속 누르거나, 다이어그램 바깥의 빈 캔버스를 누릅니다. 한 번만 누르면 상태 줄에 안내가 뜹니다. 글자를 고치다 누른 <kbd>Esc</kbd>(받아들이기)는 세지 않습니다. 풀린 뒤 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다.</li>
         <li><b>휠로 블록을 옮겨 다닙니다.</b> 블록을 골랐으면 휠 한 칸이 <kbd>j</kbd> · <kbd>k</kbd> 한 번과 같습니다(<kbd>v</kbd> 영역 고르기 중에는 영역을 넓힙니다). 고르지 않았으면 전처럼 캔버스를 스크롤합니다. 가로 휠과 <kbd>Shift</kbd>+휠은 늘 스크롤입니다.</li>
@@ -768,7 +774,7 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, rgap: 1 };
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 2, rgap: 1 };
 const RIN = K.rb + K.rgap;   // 테두리 안에 겹친 테두리가 들어가는 깊이: 테두리 굵기 + 틈
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
@@ -781,9 +787,9 @@ function tsize(text) {
   lines.forEach(l => { w = Math.max(w, cv.measureText(l).width); });
   return { w: Math.ceil(w), h: lines.length * K.lh, lines };
 }
-function tagW(text) { cv.font = `600 11.5px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
+function tagW(text) { cv.font = `600 12px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
 function boldW(text) { cv.font = `600 13px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
-function smallW(text, bold) { cv.font = `${bold ? '600 ' : ''}11.5px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
+function smallW(text, bold) { cv.font = `${bold ? '600 ' : ''}12px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
 // 호출 블록의 글자: 결과 ← 이름(인자). 이름은 굵게 그린다. 이어진 곳이 없으면 앞에 "?"
 function callParts(n) {
   const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
@@ -993,10 +999,12 @@ function layout() {
 
 /* ---------- 그리기 (기본 스타일 C, ADR-0013) ---------- */
 const COL = {
-  stroke: '#7e9ccf', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
-  ink: '#151a22', label: '#1f45d6', kw: '#1f45d6', cm: '#2e8b2e', num: '#a1531b', str: '#a1531b',
-  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', region: '#d0821c', ghost: '#8a93a6', sel: '#2c55c9',
-  edge: '#4f74d6', callEdge: '#8a72c4', callBand: '#ddd4ef', shown: '#6b7386'   // 접기 영역의 테두리, 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
+  // 값과 까닭은 docs/02-ux-design/03-visual-design.md (53번째 판에서 WCAG 대비를 맞춤)
+  stroke: '#5b77ad', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
+  ink: '#151a22', label: '#4b5567', kw: '#1f45d6', cm: '#22702a', num: '#8a5a00', str: '#8a5a00',
+  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#2c55c9',   // sel은 편집 층(저장되지 않음)에만 쓴다
+  edge: '#343b48', foldBand: '#eceef2', foldName: '#343b48',            // 접기 영역의 테두리, 이름 띠, 띠의 글자 (문서 층이라 무채색)
+  callEdge: '#7a5fb8', callBand: '#ddd4ef', shown: '#555e70'            // 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
 };
 let ink = COL.ink;   // 지금 그리는 블록의 글자 색. 펴 보인 블록은 회색으로, 구문 강조 없이 그린다
 const KW = new Set(('if else while for do return break continue switch case default true false null NULL ' +
@@ -1056,8 +1064,8 @@ function drawSVG(lay, ui) {
       s.push(rect(it.x, it.y, it.w, it.h, '#ffffff', ' pointer-events="none"'));
       s.push(`<rect x="${it.x + .5}" y="${it.y + .5}" width="${it.w - 1}" height="${it.band - .5}" fill="${COL.callBand}"${da(it.id)}/>`);
       s.push(`<line x1="${it.x}" y1="${it.y + it.band}" x2="${it.x + it.w}" y2="${it.y + it.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
-      s.push(`<text x="${it.x + 10}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="11.5" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
-      over.push(`<rect data-dash="${it.id}" ${e} stroke="#ffffff" stroke-width="${K.rb}"/>`, `<rect ${e} stroke="${COL.callEdge}" stroke-width="1.5" stroke-dasharray="6 4"/>`);
+      s.push(`<text x="${it.x + 10}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="12" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
+      over.push(`<rect data-dash="${it.id}" ${e} stroke="#ffffff" stroke-width="3"/>`, `<rect ${e} stroke="${COL.callEdge}" stroke-width="1" stroke-dasharray="6 4"/>`);
     } else if (it.k === 'loop') {
       s.push(rect(it.x, it.y, it.w, it.h, COL.loop, da(it.id)));
       s.push(txt(it.text, it.x + K.padX, (it.bottom ? it.y + it.h - it.headH : it.y) + K.padY));
@@ -1067,8 +1075,8 @@ function drawSVG(lay, ui) {
       s.push(`<path d="M ${x} ${y} L ${sx} ${y + h} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
       const cx = Math.min(Math.max(sx, x + t.w / 2 + K.padX), x + w - t.w / 2 - K.padX);
       s.push(txt(it.text, cx, y + K.padY - 2, 'middle'));
-      s.push(`<text x="${x + 6}" y="${y + h - 5}" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">참</text>`);
-      s.push(`<text x="${x + w - 6}" y="${y + h - 5}" text-anchor="end" font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">거짓</text>`);
+      s.push(`<text x="${x + 6}" y="${y + h - 5}" font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">참</text>`);
+      s.push(`<text x="${x + w - 6}" y="${y + h - 5}" text-anchor="end" font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">거짓</text>`);
     } else if (it.k === 'caseHead') {
       // NS 차트의 Case 머리: 왼쪽 위에서 default 갈래의 왼쪽 아래로 긴 빗금, 오른쪽 위에서 같은 점으로 짧은 빗금.
       // 갈래 사이의 세로선은 빗금에서 아래로 내려온다. 갈래 이름은 빗금 아래 오른쪽 구석(default는 왼쪽 구석)에 적는다
@@ -1084,11 +1092,11 @@ function drawSVG(lay, ui) {
       xs.forEach(([bx, lw], i) => {
         const dflt = i === xs.length - 1;
         if (ui) s.push(`<rect x="${bx}" y="${y + h - 20}" width="${lw}" height="20" fill="#ffffff" fill-opacity="0" data-id="${it.id}" data-label="${i}" style="cursor:text"/>`);
-        s.push(`<text x="${dflt ? bx + 6 : bx + lw - 5}" y="${y + h - 5}"${dflt ? '' : ' text-anchor="end"'} font-family="${FAM_SANS}" font-size="11" fill="${COL.label}" pointer-events="none">${esc(it.labels[i])}</text>`);
+        s.push(`<text x="${dflt ? bx + 6 : bx + lw - 5}" y="${y + h - 5}"${dflt ? '' : ' text-anchor="end"'} font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">${esc(it.labels[i])}</text>`);
       });
     } else if (it.k === 'foldRow') {
       s.push(rect(it.x, it.y, it.w, it.h, COL.fold, ui ? ` data-id="${it.pid}" data-unfold="1"${it.slot ? ` data-slot="${it.slot}"` : ''}` : ''));
-      s.push(`<text x="${it.x + K.padX}" y="${it.y + K.padY + K.lh - 5}" font-family="${FAM_SANS}" font-size="12.5"${it.named ? '' : ' font-style="italic"'} fill="${it.named ? COL.ink : COL.muted}" xml:space="preserve" style="white-space:pre" pointer-events="none">${esc(it.text)}</text>`);
+      s.push(`<text x="${it.x + K.padX}" y="${it.y + K.padY + K.lh - 5}" font-family="${FAM_SANS}" font-size="12"${it.named ? '' : ' font-style="italic"'} fill="${it.named ? COL.ink : COL.muted}" xml:space="preserve" style="white-space:pre" pointer-events="none">${esc(it.text)}</text>`);
     } else if (it.k === 'rangeFold') {
       const { x, y, w, h } = it;
       s.push(rect(x, y, w, h, COL.fold, da(it.id)));
@@ -1098,23 +1106,20 @@ function drawSVG(lay, ui) {
   }
   ink = COL.ink;
   s.push(...over);
-  // 강조 영역: 레이아웃이 끝난 뒤 굵은 테두리만 덧그린다 (ADR-0015). 안으로 들여 그려서 맞붙은 영역도 따로 보인다
-  for (const r of lay.regions)
-    s.push(`<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" fill="none" stroke="${COL.region}" stroke-width="3" rx="2" pointer-events="none"/>`);
   {
     // 이름 띠는 저장되는 그림에도 그린다 (화면 그대로 저장)
-    const view = regionView(), c = COL.sel, used = new Map();
-    const tag = (x, y, text, anchor) => `<text x="${x}" y="${y}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${FAM_SANS}" font-size="11.5" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(text)}</text>`;
+    const view = regionView(), c = COL.foldName, used = new Map();
+    const tag = (x, y, text, anchor) => `<text x="${x}" y="${y}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${FAM_SANS}" font-size="12" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(text)}</text>`;
     for (const g of lay.ghosts) {
       const d = 2.5 + (g.depth || 0) * 4;
       if (view === 'band') {
         // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
         // 테두리: 영역의 둘레를 굵은 실선으로 두른다. 겹치거나 이어져도 상자가 따로 보인다. 누르는 곳은 띠다
         const hit = ui ? ` data-id="${g.id}" data-band="1" style="cursor:pointer"` : '';
-        s.push(`<rect x="${g.x - .5}" y="${g.y - .5}" width="${g.w + 1}" height="${g.band + .5}" fill="#e6ecfb"${hit}/>`);
+        s.push(`<rect x="${g.x - .5}" y="${g.y - .5}" width="${g.w + 1}" height="${g.band + .5}" fill="${COL.foldBand}"${hit}/>`);
         s.push(`<line x1="${g.x}" y1="${g.y + g.band}" x2="${g.x + g.w}" y2="${g.y + g.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
-        s.push(`<rect data-edge="${g.id}" x="${g.x + 1}" y="${g.y + 1}" width="${g.w - 2}" height="${g.h - 2}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
-        s.push(`<text x="${g.x + 10}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="11.5" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
+        s.push(`<rect data-edge="${g.id}" x="${g.x + .5}" y="${g.y + .5}" width="${g.w - 1}" height="${g.h - 1}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
+        s.push(`<text x="${g.x + 10}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="12" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
         continue;
       }
       s.push(`<rect x="${g.x + d}" y="${g.y + d}" width="${g.w - 2 * d}" height="${g.h - 2 * d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3"${view === 'gutter' ? ' stroke-opacity="0.55"' : ''} pointer-events="none"/>`);
@@ -1135,7 +1140,7 @@ function drawSVG(lay, ui) {
       if (boxes.every(Boolean)) {
         const x1 = Math.min(...boxes.map(b => b.x)), y1 = Math.min(...boxes.map(b => b.y));
         const x2 = Math.max(...boxes.map(b => b.x + b.w)), y2 = Math.max(...boxes.map(b => b.y + b.h));
-        s.push(`<rect data-selbox="" x="${x1 + 1}" y="${y1 + 1}" width="${x2 - x1 - 2}" height="${y2 - y1 - 2}" fill="${COL.sel}" fill-opacity="0.10" stroke="${COL.sel}" stroke-width="2" pointer-events="none"/>`);
+        s.push(`<rect data-selbox="" x="${x1 + .5}" y="${y1 + .5}" width="${x2 - x1 - 1}" height="${y2 - y1 - 1}" fill="none" stroke="${COL.sel}" stroke-width="2" pointer-events="none"/>`);
       }
     }
   }
@@ -1150,6 +1155,7 @@ function render() {
   svg.innerHTML = drawSVG(lay, true);
   $('#zoomOut').textContent = Math.round(zoom * 100) + '%';
   $('#where').textContent = describeSel();
+  $('.stage').classList.toggle('nosel', !sel);
   showMode();
   if (sel && diaOf(sel.anchor)) lastDia = diaOf(sel.anchor).id;
 }
