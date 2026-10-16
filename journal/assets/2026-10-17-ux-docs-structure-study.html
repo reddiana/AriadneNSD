@@ -1,0 +1,210 @@
+<title>UX 문서 구조 시안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음 하나: 지금의 문서 나무와 안 셋을 카드로 나란히. 나무는 폴더 · 파일 · 절을 들여쓰기로 그리고, 옮겨 가는 절에 색 딱지를 붙인다 (다른 시안과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #f8eadc;
+  --move: #6b4fb0; --move-soft: #eee8f8;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2616; --move: #b9a3f0; --move-soft: #2a2340; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a868; --warn-soft: #3a2616; --move: #b9a3f0; --move-soft: #2a2340; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+/* 문서 나무 */
+.tree { font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; overflow-x: auto; margin: 0; list-style: none; display: grid; gap: 1px; }
+.tree li { white-space: nowrap; }
+.tree .d { color: var(--muted); }
+.tree .f { color: var(--fg); font-weight: 600; }
+.tree .s { color: var(--muted); padding-left: 2.2em; }
+.tree .s::before { content: "§ "; opacity: .6; }
+.tree .i1 { padding-left: 1.1em; }
+.chip { display: inline-block; font-family: var(--font); font-size: 11px; font-weight: 600; border-radius: 4px; padding: 0 6px; margin-left: 6px; vertical-align: 1px; }
+.chip.mv { color: var(--move); background: var(--move-soft); }
+.chip.new { color: var(--pick); background: var(--pick-soft); }
+.chip.bad { color: var(--warn); background: var(--warn-soft); }
+.timeline { display: grid; gap: 10px; max-width: 86ch; margin: 0; padding: 0; list-style: none; }
+.timeline li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; font-size: 14px; }
+.timeline time { font-family: var(--mono); font-size: 12.5px; color: var(--accent); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.timeline span { color: var(--muted); }
+.timeline b { color: var(--fg); font-weight: 600; }
+.problems { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+.problem { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.problem .tag { color: var(--warn); }
+.problem p { font-size: 13.5px; color: var(--muted); }
+.problem b { color: var(--fg); font-weight: 600; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13.5px; min-width: 640px; width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: 12.5px; color: var(--muted); }
+td code { font-family: var(--mono); font-size: 12.5px; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>UX 설계 문서는 어떻게 나뉘어야 하나</h1>
+    <p class="lede">inbox(2026-10-17): <b>"<code>docs/02-ux-design</code> 하위 문서 구조를 검토해주세요. 어떤 기준으로 문서들 구조가 만들어졌나요?"</b> 위에서 지금의 구조가 생긴 내력과 문제를 보이고, 아래에서 고칠 안 셋을 나무 그림으로 견줍니다. 카드마다 번호 딱지가 있습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">답</span>
+    <h2>지금의 구조는 목적이 아니라 생긴 순서대로 나뉘었습니다</h2>
+    <p class="q">세 문서는 처음부터 설계한 나눔이 아닙니다. 그때그때 생긴 문서를 한 폴더에 모은 것이라, <b>"이 내용은 어느 문서에 있나"를 기준으로 답할 수 없습니다.</b></p>
+    <ol class="timeline">
+      <li><time>2026-10-11</time><span><b>요구사항 검토</b>에서 "같은 일을 곳마다 다르게 다루는 곳"을 모아 공통 규칙 R1~R7과 물음 Q1~Q23을 만들었습니다. 이름은 <code>ux-review</code>였습니다.</span></li>
+      <li><time>2026-10-12</time><span>메인테이너: "ux-review는 내용을 보니 ux 설계입니다." → <code>docs/02-ux-design/02-ux-design.md</code>가 되었습니다. 같은 날 요구사항에 있던 세부 규칙을 <b>문장 그대로</b> 옮겨 <code>01-interaction-rules.md</code>를 만들었습니다.</span></li>
+      <li><time>2026-10-16</time><span>시각 디자인이 빠졌다는 물음에서 <code>03-visual-design.md</code>를 더했습니다.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <span class="part">문제</span>
+    <h2>그래서 생긴 문제 넷</h2>
+    <div class="problems">
+      <article class="problem"><span class="tag">문제 1</span><h3>폴더 이름의 문서가 개요가 아니다</h3><p><code>02-ux-design.md</code>는 폴더와 이름이 같아 "UX 설계의 대표 문서"처럼 보이지만, 실제로는 <b>열린 물음의 목록</b>입니다. 개요(사용자, 원칙, 문서 지도)는 어디에도 없습니다.</p></article>
+      <article class="problem"><span class="tag">문제 2</span><h3>과정이 결과 문서에 있다</h3><p>물음마다 "지금 → 장면 → 고를 것 → 추천"이 적혀 있습니다. 저장소의 약속은 <b>docs/에는 지금의 결과만, 고른 과정은 시안 페이지에</b>입니다. 정한 물음도 견준 안이 그대로 남아 있습니다.</p></article>
+      <article class="problem"><span class="tag">문제 3</span><h3>"모습"이 두 문서에 있다</h3><p><code>01-interaction-rules</code>의 제목은 "모습과 조작 규칙"이고 블록 모양 표가 있습니다. 같은 표가 <code>03-visual-design</code>의 원칙 2에도 있습니다. 한 항목이 두 곳에 있으면 한쪽만 고쳐지기 쉽습니다.</p></article>
+      <article class="problem"><span class="tag">문제 4</span><h3>단축키가 UX 밖에 있다</h3><p>어떤 키로 무엇을 하는지는 사용자의 조작 규칙(UX)인데, 키 표는 상세 설계 <code>04-design/03-editor</code>의 4장에 있습니다. 조작 규칙 문서에는 옛 키가 섞여 남아 있습니다.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">S</span>
+    <h2>S. 어떻게 나눌까</h2>
+    <p class="q">UX 설계 문서는 흔히 <b>개요(누가, 무엇을 위해, 원칙) → 조작(인터랙션) → 키 → 시각 → 결정 기록</b>으로 나눕니다. 읽는 사람이 "무엇을 알고 싶은가"로 문서를 고르게 하려는 것입니다. 파일 이름을 바꾸면 위키링크를 함께 고쳐야 합니다(지금 <code>[[02-ux-design]]</code> 63곳, <code>[[01-interaction-rules]]</code> 57곳). Claude가 스크립트로 고치고, 세션 기록 안의 링크도 함께 고칩니다(글은 그대로 두고 링크의 파일 이름만).</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">지금</span><h3>생긴 순서대로 셋</h3><span class="badge now">비교용</span></header>
+        <ul class="tree">
+          <li class="d">docs/02-ux-design/</li>
+          <li class="f i1">01-interaction-rules.md</li>
+          <li class="s">블록의 모양 <span class="chip bad">시각과 겹침</span></li>
+          <li class="s">이동 · 선택 · 편집 · 접기 · 배치 <span class="chip bad">옛 키 섞임</span></li>
+          <li class="f i1">02-ux-design.md</li>
+          <li class="s">입력과 출력, 공통 규칙 R1~R7</li>
+          <li class="s">물음 Q1~Q21과 견준 안 <span class="chip bad">과정</span></li>
+          <li class="s">결정 모음</li>
+          <li class="f i1">03-visual-design.md</li>
+          <li class="d">docs/04-design/03-editor.md</li>
+          <li class="s">4. 단축키 표 <span class="chip bad">UX 밖</span></li>
+        </ul>
+      </article>
+
+      <article class="card pick"><header><span class="tag">S · 1번</span><h3>목적별 다섯</h3><span class="badge">Claude의 추천</span></header>
+        <ul class="tree">
+          <li class="d">docs/02-ux-design/</li>
+          <li class="f i1">01-ux-overview.md <span class="chip new">새로</span></li>
+          <li class="s">사용자와 쓰임 장면, UX 원칙</li>
+          <li class="s">공통 규칙 R1~R7 (정한 것만) <span class="chip mv">← 02에서</span></li>
+          <li class="s">문서 지도</li>
+          <li class="f i1">02-interaction-rules.md</li>
+          <li class="s">기능마다의 조작 규칙 (모습의 값은 04로 링크)</li>
+          <li class="f i1">03-keymap.md <span class="chip new">새로</span></li>
+          <li class="s">단축키 표 <span class="chip mv">← 03-editor에서</span></li>
+          <li class="f i1">04-visual-design.md</li>
+          <li class="s">블록의 모양 표 <span class="chip mv">← 01에서</span></li>
+          <li class="f i1">05-ux-decisions.md</li>
+          <li class="s">열린 물음 (안은 시안 링크로)</li>
+          <li class="s">결정 기록: 한 줄 + 근거 링크</li>
+        </ul>
+        <ul>
+          <li><b>읽는 목적마다 문서 하나</b>: "무엇을 위한 편집기인가"는 01, "이걸 누르면?"은 02, "키는?"은 03, "어떻게 보이나"는 04, "아직 안 정한 것은?"은 05.</li>
+          <li>견준 안과 장면 설명은 이미 시안 페이지(UX 규칙 시안 등)에 있어서, 05에는 <b>물음 한 줄 + 시안 링크 + 결정</b>만 남깁니다.</li>
+          <li><span class="bad">파일 이름 넷이 바뀝니다.</span> 링크 고치기와 승인 ADR의 "이후 변경" 콜아웃이 따라옵니다.</li>
+        </ul>
+      </article>
+
+      <article class="card"><header><span class="tag">S · 2번</span><h3>넷 (키는 상세 설계에 둠)</h3></header>
+        <ul class="tree">
+          <li class="d">docs/02-ux-design/</li>
+          <li class="f i1">01-ux-overview.md <span class="chip new">새로</span></li>
+          <li class="f i1">02-interaction-rules.md</li>
+          <li class="f i1">03-visual-design.md</li>
+          <li class="f i1">04-ux-decisions.md</li>
+          <li class="d">docs/04-design/03-editor.md</li>
+          <li class="s">4. 단축키 표 (그대로)</li>
+        </ul>
+        <ul>
+          <li>1번에서 키 표만 옮기지 않습니다. 키 표가 지금 자리에 익숙하면 이쪽입니다.</li>
+          <li>시각 디자인은 03을 유지해 그 링크는 그대로입니다.</li>
+          <li><span class="bad">"키는 UX의 일부"</span>라는 문제 4는 남습니다.</li>
+        </ul>
+      </article>
+
+      <article class="card"><header><span class="tag">S · 3번</span><h3>이름은 그대로, 내용만 바로잡기</h3></header>
+        <ul class="tree">
+          <li class="d">docs/02-ux-design/</li>
+          <li class="f i1">01-interaction-rules.md</li>
+          <li class="s">블록의 모양 표는 03으로 링크</li>
+          <li class="f i1">02-ux-design.md</li>
+          <li class="s">머리에 개요(원칙, 문서 지도)를 더함</li>
+          <li class="s">정한 물음은 한 줄로 줄임</li>
+          <li class="f i1">03-visual-design.md</li>
+        </ul>
+        <ul>
+          <li><span class="good">파일 이름이 바뀌지 않아</span> 링크를 고칠 일이 없습니다.</li>
+          <li><span class="bad">"폴더 이름의 문서가 물음 목록"</span>이라는 문제 1이 반쯤 남습니다. 개요와 물음이 한 문서에 섞입니다.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">S · 1번의 세부</span>
+    <h2>1번을 고르시면 지금의 절이 이렇게 옮겨 갑니다</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>지금 있는 곳</th><th>옮겨 갈 곳</th><th>어떻게</th></tr></thead>
+        <tbody>
+          <tr><td><code>02-ux-design</code> 1장 입력과 출력, 2장 공통 규칙</td><td><code>01-ux-overview</code></td><td>공통 규칙은 정한 것과 정하지 않은 것을 표 하나로. 사용자와 원칙은 요구사항의 핵심 원칙을 가리키고 UX 원칙만 더함</td></tr>
+          <tr><td><code>02-ux-design</code> 3~5장 물음 Q1~Q21</td><td><code>05-ux-decisions</code></td><td>정한 물음: 결정 한 줄 + 근거(시안 · ADR) 링크. 정하지 않은 물음: 물음 한 줄 + 추천 한 줄 + 시안 링크. 견준 안과 장면 설명은 시안 페이지에 이미 있으므로 지움</td></tr>
+          <tr><td><code>02-ux-design</code> 6장 놀라웠던 곳, 7장 결정 모음</td><td><code>05-ux-decisions</code></td><td>결정 모음은 05의 본체가 됨</td></tr>
+          <tr><td><code>01-interaction-rules</code> 블록의 모양 표</td><td><code>04-visual-design</code> 원칙 2의 표와 합침</td><td>조작 규칙에는 "모양은 시각 디자인"으로 링크</td></tr>
+          <tr><td><code>01-interaction-rules</code>의 옛 키</td><td><code>03-keymap</code></td><td>조작 규칙에는 키를 적지 않고 "명령 이름"으로 씀. 키는 표 한 곳에만</td></tr>
+          <tr><td><code>04-design/03-editor</code> 4장 단축키</td><td><code>03-keymap</code></td><td>편집기 설계에는 "키 표는 03-keymap" 링크만</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="sum">
+    <h3>정해 주실 것</h3>
+    <ol>
+      <li><b>S</b>: 1번(목적별 다섯), 2번(넷, 키는 그대로), 3번(이름 그대로) 가운데 하나.</li>
+      <li>1번이나 2번이면 Claude가 파일을 나누고 링크를 고칩니다. 내용은 줄이기만 하고 새로 정하지 않습니다.</li>
+    </ol>
+  </div>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다.</footer>

@@ -650,6 +650,7 @@ await ev(`T.cmd('exCode')`);
   check('53: 고른 것이 있으면 캔버스 포커스 테두리 없음', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === false);
   const file = await ev(saved);
   check('53: 저장되는 그림에는 편집 층의 파랑이 없음 (고른 표시와 접기 영역의 색이 다름)', !file.includes('#2c55c9') && file.includes('#343b48'), file.slice(0, 200));
+  check('53: 저장 파일의 이름은 ariadne-nsd (옛 이름 없음)', file.includes('"format": "ariadne-nsd"') && file.includes('id="ariadne-nsd-model"') && !file.includes('nsdrawing'), file.slice(0, 300));
   check('53: 작은 글자는 12px 하나', !/font-size="(11|11\.5|12\.5)"/.test(file));
   check('53: 저장되는 그림에서 2px 선은 모두 접기 영역의 테두리 색 (두르는 표시는 문서 층에 하나뿐)', [...file.matchAll(/stroke="(#[0-9a-f]{6})" stroke-width="2"/g)].every(m => m[1] === '#343b48') && file.includes('stroke="#343b48" stroke-width="2"'));
   await keys('Escape', 'Escape');
