@@ -3,7 +3,7 @@ title: 프로토타입
 tags:
   - ariadne-nsd
   - plan
-updated: 2026-10-14
+updated: 2026-10-17
 ---
 
 # 프로토타입

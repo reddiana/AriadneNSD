@@ -3,7 +3,7 @@ title: 기술 노트
 tags:
   - ariadne-nsd
   - tech-notes
-updated: 2026-10-14
+updated: 2026-10-17
 ---
 
 # 기술 노트
@@ -28,6 +28,7 @@ AriadneNSD를 만들며 배운 기술을 정리하는 곳입니다. 메인테이
 - [[model-layout-render-theme]] — 모양을 바꾸는 일의 크기: 모델 · 레이아웃 · 그리기 · 테마의 네 단계, 테마로 바꿀 수 있는 것과 없는 것 (2026-10-11)
 - [[pixel-aligned-lines]] — 선을 픽셀에 맞추기: 선은 좌표의 양쪽으로 반씩 퍼진다, 굵기가 다른 선이 어긋나는 까닭, 그림 전체를 반 픽셀 옮기기 (2026-10-13)
 - [[keyboard-keys-and-ime]] — 키보드 입력 읽기: 글자(`key`)와 자리(`code`), 한글 입력기와 조합, 두 번 누르는 키, 브라우저가 가져가는 키 (2026-10-13)
+- [[visual-design-basics]] — 시각 디자인 명세의 기초: UX 문서에 시각 디자인이 들어가는가, 디자인 토큰 세 단계, WCAG 대비율, 색각 이상과 흑백, 포커스 표시, claude.ai 페이지(아티팩트) (2026-10-17)
 - [[browser-storage-and-api-keys]] — 브라우저 저장소와 API 키: 서버 없는 페이지에서 AI를 부르는 법, 저장소를 읽을 수 있는 것은 누구인가, CORS (2026-10-14)
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
 - [[text-width-and-bundled-fonts]] — 글자의 폭과 번들 글꼴: 폭은 글꼴 파일에 적혀 있다, 기기마다 달라지는 까닭 셋, 번들과 셈하기, 그림에 글꼴 조각 넣기, wasm (2026-10-13)

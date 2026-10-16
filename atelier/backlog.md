@@ -3,7 +3,7 @@ title: 할 일 목록
 tags:
   - ariadne-nsd
   - plan
-updated: 2026-10-14
+updated: 2026-10-17
 ---
 
 # 할 일 목록
@@ -48,7 +48,7 @@ updated: 2026-10-14
 - [ ] AI 대화창(2026-10-14, [[01-requirements#^web-ai-chat]])의 방법을 ADR로: AI가 모델을 쓰고 고치는 형식(JSON 그대로인지, 의사코드 DSL [[01-requirements#^code-dsl]]인지), 키 보관, 고친 결과를 실행 취소 한 번으로 넣기. Claude skill([[01-requirements#^skill-claude]])과 같은 형식을 쓰게 함께 본다
 - [ ] 모델 네임스페이스 URI 정하기 (저장소 주소가 정해지면) → [[01-file-format#6. 미결정 사항]]
 
-- [ ] 2026-10-17 정합성 검토에서 남은 것 (고친 것은 세션 기록 [[2026-10-16-01-inbox-old-address]]에)
+- [ ] 2026-10-17 정합성 검토에서 남은 것 (고친 것은 세션 기록 [[2026-10-16-01-visual-design]]에)
 	- 아키텍처 §3 "배포 대상마다 다른 것은 파일 입출력 하나"에 UI 밝기 · 화면 글꼴을 플랫폼에서 받는 것도 넣을지(제안 §8.6과 함께 확인) → [[03-architecture#8. 확인받지 못한 제안]]
 	- PNG 내보내기([[01-requirements#^exp-png]], #P0)의 자리를 아키텍처 §3 · §4에 그린다. 지금은 [[02-layout]]의 할 일에만 있다
 	- [[01-model]]과 [[01-file-format]]의 필드 이름은 아키텍처의 확인이 끝난 뒤 굳힌다. 프로토타입 파일(`version: 0`)을 열지도 그때 정한다
