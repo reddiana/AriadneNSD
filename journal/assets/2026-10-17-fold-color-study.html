@@ -52,16 +52,23 @@ code { font-family: var(--mono); font-size: 12.5px; }
   </div>
 
   <section>
+    <h2>A. 접기 영역의 색을 바꾼다 (고른 표시는 파랑 그대로)</h2>
     <div class="cards" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>B. 접기 영역은 이전의 파랑으로 두고, 고른 표시의 색을 바꾼다</h2>
+    <p class="q">접기 영역은 52번째 판까지의 파랑(테두리 <code>#4f74d6</code>)으로 돌리고, 고른 표시를 파랑이 아닌 색으로 바꿉니다. <b>고른 표시는 편집 화면에만 보이고 저장되지 않으므로</b>, 그림에 쓰는 색과 닮아도 파일에는 영향이 없습니다. 접기 영역 이름 글자의 파랑은 고른 표시와 따로 둡니다(예전 코드는 같은 값을 썼음).</p>
+    <div class="cards" id="cardsSel"></div>
   </section>
 
   <section>
     <h2>답하실 것</h2>
     <div class="sum">
       <ul>
-        <li>마음에 드는 번호(F1 ~ F5). 여럿이면 순서대로</li>
+        <li>마음에 드는 번호: A의 F1 ~ F5(접기 영역을 바꿈) 또는 B의 S1 ~ S4(접기 영역은 파랑, 고른 표시를 바꿈). 여럿이면 순서대로</li>
         <li>모두 아니면, F0의 어디가 마음에 들지 않는지: 너무 어두움 · 너무 무거움 · 색이 없어 밋밋함 · 그 밖에</li>
-        <li>정하시면 시각 디자인 명세의 <code>fold.edge</code> · <code>fold.band</code> · <code>fold.name</code>을 그 색으로 바꾸고 대비를 다시 재어, 프로토타입 54번째 판에 넣습니다.</li>
+        <li>정하시면 시각 디자인 명세의 <code>fold.*</code>(A) 또는 고른 표시의 색(B)을 그 색으로 바꾸고 대비를 다시 재어, 프로토타입 54번째 판에 넣습니다.</li>
       </ul>
     </div>
   </section>
@@ -91,7 +98,7 @@ const CANDS = [
 const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
 const cr = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
 
-function chart(F) {
+function chart(F, sel = C.sel) {
   const W = 290, H = 26, s = [];
   const t = (x, y, str, o = {}) => s.push(`<text x="${x}" y="${y}" font-family="${o.sans ? SANS : FAM}" font-size="${o.size || 11.5}" font-weight="${o.b ? 600 : 400}" fill="${o.c || C.ink}">${str}</text>`);
   const r = (x, y, w, h, f) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" stroke="${C.line}"/>`);
@@ -111,7 +118,7 @@ function chart(F) {
   r(0, y, W / 2, H, C.proc); t(8, y + 17, 'fan_on()');
   r(W / 2, y, W / 2, H, C.proc); t(W / 2 + 8, y + 17, 'fan_off()');
   /* 고른 블록: 안쪽 2px 파랑 */
-  s.push(`<rect x="2" y="${y + 2}" width="${W / 2 - 4}" height="${H - 4}" fill="none" stroke="${C.sel}" stroke-width="2"/>`);
+  s.push(`<rect x="2" y="${y + 2}" width="${W / 2 - 4}" height="${H - 4}" fill="none" stroke="${sel}" stroke-width="2"/>`);
   y += H;
   r(0, y, W, H, C.proc); t(8, y + 17, `<tspan fill="${C.kw}">log</tspan>(t, h)`); y += H;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${y + 2}" viewBox="-1 -1 ${W + 2} ${y + 2}"><rect x="-1" y="-1" width="${W + 2}" height="${y + 2}" fill="${C.page}"/>${s.join('')}</svg>`;
@@ -124,6 +131,23 @@ document.getElementById('cards').innerHTML = CANDS.map(F => {
     <div class="paper"><figure>${svg}<figcaption>색</figcaption></figure><figure class="gray">${svg}<figcaption>흑백</figcaption></figure></div>
     <p class="nums">${nums}</p>
     <ul>${F.notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
+}).join('');
+
+/* B: 접기 영역은 52번째 판의 파랑, 고른 표시의 색을 바꾼다 */
+const OLD = { edge: '#4f74d6', band: '#e6ecfb', text: '#2f55c4' };
+const SELS = [
+  { id: 'S1', name: '주황', sel: '#e8590c', notes: ['파랑의 반대색이라 접기 영역과 가장 잘 갈림. 도구에서 "지금 잡은 것"에 흔히 쓰는 색', '<span class="bad">오류 표시(빨강)와 가까움</span>'] },
+  { id: 'S2', name: '자홍', sel: '#c2189a', notes: ['그림에 없는 색이라 어느 블록 위에서도 도드라짐', '<span class="bad">펴 보기의 보라 점선과 같은 계열</span>'] },
+  { id: 'S3', name: '녹색', sel: '#15803d', notes: ['"지금 여기"를 차분하게 알림', '<span class="bad">주석의 녹색과 닮음. 녹색맹에게는 파랑 접기 영역과의 차이가 줄어듦</span>'] },
+  { id: 'S4', name: '검정', sel: '#111111', notes: ['색 없이 가장 진하게. 어느 색각에서도 갈림', '<span class="bad">블록의 구조선과 같은 무리로 읽힐 수 있음</span>'] },
+];
+document.getElementById('cardsSel').innerHTML = SELS.map(S => {
+  const svg = chart(OLD, S.sel);
+  const nums = `고른 표시 대비 ${cr(S.sel, C.proc).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 접기 영역 테두리 ${cr(OLD.edge, C.proc).toFixed(2)}:1`;
+  return `<article class="card"><header><span class="tag">${S.id}</span><h3>고른 표시: ${S.name}</h3></header>
+    <div class="paper"><figure>${svg}<figcaption>색</figcaption></figure><figure class="gray">${svg}<figcaption>흑백</figcaption></figure></div>
+    <p class="nums">${nums}</p>
+    <ul>${S.notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
 }).join('');
 </script>
 
