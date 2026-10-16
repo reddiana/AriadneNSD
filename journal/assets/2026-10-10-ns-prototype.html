@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">57번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">58번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -140,8 +140,8 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
     <div class="grp">
       <span class="lbl">보기</span>
       <button data-cmd="fold" title="za 또는 f">접기·펴기</button>
-      <button data-cmd="makeRegion" title="zf">접기 영역 만들기</button>
-      <button data-cmd="releaseRegion" title="zd">접기 영역 풀기</button>
+      <button data-cmd="makeRegion" title="zf 또는 Shift+F">접기 영역 만들기</button>
+      <button data-cmd="releaseRegion" title="zd 또는 Ctrl+Shift+F">접기 영역 풀기</button>
     </div>
     <div class="grp">
       <button data-cmd="undo" title="u (Ctrl+Z)">↶ 되돌리기</button>
@@ -208,7 +208,12 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 57번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 58번째 판)</h2>
+      <ul>
+        <li><b>접기 영역의 옛 키를 되살렸습니다.</b> 만들기 <kbd>Shift</kbd>+<kbd>F</kbd>, 풀기 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>. <kbd>zf</kbd> · <kbd>zd</kbd>도 그대로 듣습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 57번째 판)</h2>
       <ul>
         <li><b>고른 표시는 주황 3px로 정했습니다.</b> 56번째 판에 잠시 두었던 색 고르기(주황 · 자홍)를 없앴습니다.</li>
       </ul>
@@ -2331,7 +2336,7 @@ const VIMKEY = {
   edit: 'i · Enter', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
   'kind:event': 'e', 'kind:method': 'm', 'newDia:event': 'E', 'newDia:method': 'M', retargetAsk: 'r', goto: 'gd',
   'wrap:while': 's w', 'wrap:dowhile': 's d', 'wrap:if': 's i', 'wrap:case': 's k', unwrap: 'd s', laneLabel: '',
-  fold: 'za · f', makeRegion: 'zf', releaseRegion: 'zd', cut: 'dd', copy: 'yy', paste: 'p', del: 'x · Del'
+  fold: 'za · f', makeRegion: 'zf · ⇧F', releaseRegion: 'zd · Ctrl+⇧F', cut: 'dd', copy: 'yy', paste: 'p', del: 'x · Del'
 };
 function showMode() { $('#mode').textContent = editing ? '-- 고치기 --' : pend ? pend : visual ? '-- 영역 --' : ''; }
 function vimName(ev) {
@@ -2437,6 +2442,7 @@ function vimKey0(ev) {
   else if (k === 'u') undo();
   else if (k === 'U') redo();
   else if (k === 'f') fold();
+  else if (k === 'F') makeRegion();   // 옛 키 Shift+F (58번째 판에서 되살림, 메인테이너). 풀기의 옛 키 Ctrl+Shift+F는 계속 들었다
   else if (k === 'e' || k === 'E') kindCmd('event', k === 'E');
   else if (k === 'm' || k === 'M') kindCmd('method', k === 'M');
   else if (k === 'r') retargetCmd();

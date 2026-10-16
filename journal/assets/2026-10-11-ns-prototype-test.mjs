@@ -657,6 +657,19 @@ await ev(`T.cmd('exCode')`);
   check('53: 고른 것을 풀면 캔버스에 포커스 테두리용 표시', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === true);
 }
 
+// 58번째 판: 접기 영역의 옛 키 Shift+F(만들기) · Ctrl+Shift+F(풀기)
+await ev(`T.cmd('exCode')`);
+{
+  const ranges = () => ev(`(() => { let k = 0; const w = l => l.forEach(n => { if (n.type === 'range') k++; ['children', 'yes', 'no', 'body'].forEach(s => n[s] && w(n[s])); }); T.doc().diagrams.forEach(d => w(d.body)); return k; })()`);
+  const before = await ranges();
+  const b = (await ev(`T.doc()`)).diagrams[0].body;
+  await ev(`T.click('${b[1].id}'); T.key('KeyF', { shift: true })`);
+  if ((await ev(`T.editing()`)) !== null) await ev(`T.type('옛 키')`);
+  check('58: Shift+F로 접기 영역을 만듦', (await ranges()) === before + 1, await ev(`T.msg()`));
+  await ev(`T.key('KeyF', { ctrl: true, shift: true })`);
+  check('58: Ctrl+Shift+F로 접기 영역을 풂', (await ranges()) === before, await ev(`T.msg()`));
+}
+
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
 ws.close(); chrome.kill(); process.exit(0);
