@@ -1,0 +1,130 @@
+<title>M19 접기 영역 색 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 후보마다 카드 하나: 같은 NS 차트를 그 색으로 그리고, 옆에 흑백으로 본 모습과 대비율을 둔다 (M13 · M17 · M18과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; min-width: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 12px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; border: 1px solid var(--line); }
+.paper figure { margin: 0; display: grid; gap: 4px; flex: none; }
+.paper figcaption { font-size: 11.5px; color: #4b5567; }
+.paper svg { display: block; max-width: none; }
+.gray svg { filter: grayscale(1); }
+.nums { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M19 · 펴진 접기 영역의 테두리 색</h1>
+    <p class="lede">53번째 판의 진회색 테두리(F0)가 마음에 들지 않는다고 하셨습니다(2026-10-17). <b>고른 표시의 파랑과 섞이지 않아야 한다</b>는 데는 동의하셨으므로, 파랑이 아닌 후보를 같은 그림에 그렸습니다. 그림마다 <b>왼쪽 아래 블록이 골라져 있습니다</b>(파랑 테두리). 두 표시가 한눈에 갈리는지 보세요. 오른쪽은 흑백으로 본 모습입니다(흑백 인쇄는 따로 검정으로 바뀌지만, 색각 이상이 있는 사람이 보는 밝기를 짐작할 수 있습니다).</p>
+  </div>
+
+  <section>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ul>
+        <li>마음에 드는 번호(F1 ~ F5). 여럿이면 순서대로</li>
+        <li>모두 아니면, F0의 어디가 마음에 들지 않는지: 너무 어두움 · 너무 무거움 · 색이 없어 밋밋함 · 그 밖에</li>
+        <li>정하시면 시각 디자인 명세의 <code>fold.edge</code> · <code>fold.band</code> · <code>fold.name</code>을 그 색으로 바꾸고 대비를 다시 재어, 프로토타입 54번째 판에 넣습니다.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 밝은 기본 테마의 색 (시각 디자인 명세 3.3절) */
+const C = { page: '#ffffff', line: '#5b77ad', proc: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6', head: '#e2efdf', ink: '#151a22', sub: '#4b5567', kw: '#1f45d6', sel: '#2c55c9' };
+const FAM = "'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace";
+const SANS = "'IBM Plex Sans KR', 'Malgun Gothic', sans-serif";
+/* 후보: 테두리 · 이름 띠 바탕 · 이름 글자 */
+const CANDS = [
+  { id: 'F0', name: '진회색 (지금, 53번째 판)', edge: '#343b48', band: '#eceef2', text: '#343b48', now: true,
+    notes: ['색이 없어 구조선 · 글자와 같은 무리로 읽힘. 고른 표시와는 가장 잘 갈림', '<span class="bad">마음에 들지 않으심</span>'] },
+  { id: 'F1', name: '청록', edge: '#0f766e', band: '#dcefec', text: '#0b5e58',
+    notes: ['파랑에서 녹색 쪽으로 비켜 선 색. 차분하고 고른 표시와 색상이 갈림', '<span class="bad">주석의 녹색(<code>#22702a</code>)과 조금 닮음</span>'] },
+  { id: 'F2', name: '주홍', edge: '#c2410c', band: '#fbe6dc', text: '#9a330a',
+    notes: ['로고의 주홍 바탕과 같은 계열. 파랑의 반대색이라 고른 표시와 가장 멀리 떨어짐', '<span class="bad">경고나 오류처럼 읽힐 수 있음</span>'] },
+  { id: 'F3', name: '자주', edge: '#9d2f7a', band: '#f4e1ec', text: '#7e2562',
+    notes: ['블록 바탕에 없는 색이라 "사람이 붙인 표시"로 읽힘', '<span class="bad">펴 보기의 보라 점선과 같은 계열</span>'] },
+  { id: 'F4', name: '호박', edge: '#a16207', band: '#f8eed5', text: '#7c4a03',
+    notes: ['따뜻하고 형광펜처럼 눈에 띔', '<span class="bad">If · Case 머리의 모래색 바탕, 숫자 · 문자열의 갈색과 닮음</span>'] },
+  { id: 'F5', name: '먹색 갈색', edge: '#5b4636', band: '#efe9e3', text: '#4a3a2d',
+    notes: ['진회색처럼 무거우나 따뜻한 기가 있어 밋밋함이 덜함', '<span class="bad">색으로는 F0과 크게 다르지 않음</span>'] },
+];
+/* WCAG 대비율 */
+const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+const cr = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+function chart(F) {
+  const W = 290, H = 26, s = [];
+  const t = (x, y, str, o = {}) => s.push(`<text x="${x}" y="${y}" font-family="${o.sans ? SANS : FAM}" font-size="${o.size || 11.5}" font-weight="${o.b ? 600 : 400}" fill="${o.c || C.ink}">${str}</text>`);
+  const r = (x, y, w, h, f) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" stroke="${C.line}"/>`);
+  let y = 0;
+  r(0, y, W, H, C.head); t(8, y + 17, 'on timer tick', { b: 1 }); y += H;
+  /* 펴진 접기 영역: 이름 띠 + 블록 둘, 둘레 2px */
+  const top = y;
+  s.push(`<rect x="0" y="${y}" width="${W}" height="18" fill="${F.band}"/>`); t(8, y + 13, '▾ 센서 읽기', { sans: 1, b: 1, size: 11, c: F.text }); y += 18;
+  r(0, y, W, H, C.proc); t(8, y + 17, 't ← read_temp(adc0)'); y += H;
+  r(0, y, W, H, C.proc); t(8, y + 17, 'h ← read_humidity(adc1)'); y += H;
+  s.push(`<rect x="1" y="${top + 1}" width="${W - 2}" height="${y - top - 2}" fill="none" stroke="${F.edge}" stroke-width="2"/>`);
+  /* If */
+  r(0, y, W, H, C.branch);
+  s.push(`<path d="M0 ${y}L${W / 2} ${y + H}L${W} ${y}" fill="none" stroke="${C.line}"/>`);
+  t(W / 2 - 34, y + 12, 't &gt; limit');
+  t(5, y + H - 4, '참', { c: C.sub, sans: 1, size: 11 }); t(W - 26, y + H - 4, '거짓', { c: C.sub, sans: 1, size: 11 }); y += H;
+  r(0, y, W / 2, H, C.proc); t(8, y + 17, 'fan_on()');
+  r(W / 2, y, W / 2, H, C.proc); t(W / 2 + 8, y + 17, 'fan_off()');
+  /* 고른 블록: 안쪽 2px 파랑 */
+  s.push(`<rect x="2" y="${y + 2}" width="${W / 2 - 4}" height="${H - 4}" fill="none" stroke="${C.sel}" stroke-width="2"/>`);
+  y += H;
+  r(0, y, W, H, C.proc); t(8, y + 17, `<tspan fill="${C.kw}">log</tspan>(t, h)`); y += H;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2}" height="${y + 2}" viewBox="-1 -1 ${W + 2} ${y + 2}"><rect x="-1" y="-1" width="${W + 2}" height="${y + 2}" fill="${C.page}"/>${s.join('')}</svg>`;
+}
+
+document.getElementById('cards').innerHTML = CANDS.map(F => {
+  const svg = chart(F);
+  const nums = `테두리 대비 ${cr(F.edge, C.proc).toFixed(2)}:1 (블록 바탕, 기준 3:1) · 이름 글자 ${cr(F.text, F.band).toFixed(2)}:1 (띠 위, 기준 4.5:1)`;
+  return `<article class="card"><header><span class="tag">${F.id}</span><h3>${F.name}</h3>${F.now ? '<span class="badge now">지금</span>' : ''}</header>
+    <div class="paper"><figure>${svg}<figcaption>색</figcaption></figure><figure class="gray">${svg}<figcaption>흑백</figcaption></figure></div>
+    <p class="nums">${nums}</p>
+    <ul>${F.notes.map(n => `<li>${n}</li>`).join('')}</ul></article>`;
+}).join('');
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
