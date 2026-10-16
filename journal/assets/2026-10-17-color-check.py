@@ -26,7 +26,7 @@ if __name__=='__main__':
     import sys
     fills={'process':'#edf0f5','branch':'#f6ebdc','loop':'#dce6f6','event':'#e2efdf','call':'#ebe7f4'}
     report('블록 바탕', fills)
-    report('구문 강조 (바탕 #edf0f5)', {'text':'#151a22','keyword':'#1f45d6','comment':'#2e8b2e','literal':'#a1531b'})
+    report('구문 강조 (53번째 판)', {'text':'#151a22','keyword':'#1f45d6','comment':'#22702a','literal':'#8a5a00','edit.select':'#2c55c9'})
 
 # 53번째 판의 문서 색: 글자와 선을 모든 바탕에 대어 본 대비 (가장 낮은 값이 기준을 넘는지)
 FILLS = {'paper':'#ffffff','process':'#edf0f5','branch':'#f6ebdc','loop':'#dce6f6','event':'#e2efdf','call':'#ebe7f4','folded':'#fbfcfe','fold.band':'#eceef2','peek.band':'#ddd4ef'}
@@ -42,4 +42,8 @@ if __name__=='__main__':
         print(f'{n:>18} {c}  {min(v):.2f} ~ {max(v):.2f}   fold.band {cr(c,FILLS["fold.band"]):.2f}  peek.band {cr(c,FILLS["peek.band"]):.2f}')
     print('== 흑백 명도 L* (0 검정 ~ 100 흰색)')
     for n,c in FILLS.items(): print(f'{n:>10} {c} L*={L_star(c):.0f}')
-    print('selection vs fold.edge', round(cr('#2c55c9','#4b5567'),2))
+    print('edit.select vs fold.edge', round(cr('#2c55c9','#343b48'),2), ' L*', round(L_star('#2c55c9')), round(L_star('#343b48')))
+    print('== UI 테마 대비 (ui.bg 위)')
+    for n,(lt,dk,bl,bd) in {'ui.text':('#1c2230','#e5e8ee','#ffffff','#1a1e26'),'ui.muted':('#5a6476','#9aa3b3','#ffffff','#1a1e26'),'ui.accent':('#2c55c9','#8ba7ff','#eef1f6','#12151b'),'ui.warn':('#b35a10','#f0a560','#eef1f6','#12151b')}.items():
+        print(f'{n:>10} 밝은 {cr(lt,bl):.2f}  어두운 {cr(dk,bd):.2f}')
+    print('edit.hover = blue.600 1px on fills', round(min(cr('#2c55c9',b) for b in FILLS.values()),2))
