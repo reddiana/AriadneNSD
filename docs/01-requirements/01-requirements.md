@@ -162,7 +162,7 @@ DIN 66261 / 원 논문 기준입니다.
 | 후위 판정 반복 (Do-While / Repeat-Until) | 본문을 먼저 실행하고 조건을 검사 | #P0 |
 | 다중 선택 (Switch/Case) | 여러 갈래 + default (아래 [[#^blk-case]]) | #P1 |
 | 횟수 반복 (For) | While의 변형 | #P1 |
-| 호출 (Call) | 같은 문서의 Method를 부른다 (아래 [[#^blk-call]]) | #P1 |
+| 호출 (Call) | Method를 부른다. 같은 문서의 Method, 이름만 적은 함수, 다른 문서의 Method (아래 [[#^blk-call]]) | #P1 |
 | 탈출 (Exit / Break / Return) | 반복·함수 탈출 | #P2 |
 | 병렬 처리 (Parallel) | 동시 실행 갈래 | #P2 |
 | 주석 블록 |  | #P2 |
@@ -173,6 +173,8 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P1 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록|상세]] ^blk-case
 - [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[02-interaction-rules#Method 머리|상세]] ^blk-method
 - [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call
+- [ ] #P1 이름을 적는 호출 블록: 부를 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 부른다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call-named
+- [ ] #P2 다른 문서의 Method 부르기: 다른 `.ns.svg` 파일의 Method를 그 파일과 함께 가리켜 둔다. 따라가면 그 파일을 열고, 그 파일을 읽을 수 있는 곳에서는 펴 본다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call-external
 
 ### 3.2 편집
 

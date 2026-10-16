@@ -86,7 +86,7 @@ updated: 2026-10-17
 | `settings` | 문서 설정: 블록 글자의 종류([[01-requirements#^lay-text-kind]]), 테마 | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 머리(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등. 제어 블록은 갈래나 본문으로 블록의 줄을 품는다. 줄은 비지 않는다 | 대상 |
-| 호출 블록 | 부르는 Method의 **id**, 인자, 결과. 이름은 갖지 않는다. 이어진 곳이 없으면 마지막에 보이던 이름을 품는다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
+| 호출 블록 | 부르는 Method의 **id**, 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 부르면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 정하지 않음 → [[01-requirements#^blk-call-named]], [[01-requirements#^blk-call-external]]). 이름은 갖지 않는다. 이어진 곳이 없으면 마지막에 보이던 이름을 품는다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
 | 접기 영역 | 한 줄 안의 이어진 블록 범위와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 딸린다([[01-requirements#^edit-fold-site]]) | 대상 |
 | `view` | 보기 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
 

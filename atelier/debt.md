@@ -21,7 +21,7 @@ updated: 2026-10-17
 
 ### 요구사항 · 범위
 
-- [ ] 부를 Method가 같은 문서에 없을 때의 호출 블록(메인테이너 inbox, 2026-10-17): CB1 그리지 않은 함수를 부르는 법, CB2 다른 문서의 Method를 가리키는지 → M18 호출 대상 시안 https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx
+- [x] (답을 받음: CB1 1번, CB2 1번, 우선순위 #P1 · #P2. 마무리 때 세션 기록으로) 부를 Method가 같은 문서에 없을 때의 호출 블록(메인테이너 inbox, 2026-10-17): CB1 그리지 않은 함수를 부르는 법, CB2 다른 문서의 Method를 가리키는지 → M18 호출 대상 시안 https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx
 - [ ] MVP 범위(5장)는 #P0만인데, 프로토타입의 중심은 그 뒤 #P1로 들어온 것(Case, 호출, 여러 다이어그램, 접기)임. 범위를 넓힐지 정하지 않음 (2026-10-11) → [[requirements-review]] Q22
 - [ ] Google Drive 연동을 Obsidian · 데스크톱과 견주어 언제 만들지 → [[0011-development-order|ADR-0011]] "이후 변경"
 
