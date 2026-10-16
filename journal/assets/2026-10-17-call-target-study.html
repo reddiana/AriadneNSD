@@ -1,0 +1,151 @@
+<title>M18 호출 대상 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 같은 장면을 작은 NS 차트로 그린다 (M13 · M17과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.paper { background: var(--paper); border-radius: 6px; padding: 14px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; border: 1px solid var(--line); }
+.paper figure { margin: 0; display: grid; gap: 6px; flex: none; }
+.paper figcaption { font-size: 12px; color: #4b5567; max-width: 300px; }
+.paper svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+.sum b { font-weight: 600; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M18 · 부를 Method가 이 문서에 없을 때</h1>
+    <p class="lede">2026-10-17 inbox에 적어 주신 것: <b>"호출할 서브루틴(다이어그램)이 없거나 다른 문서에 있을 수도 있음."</b> 지금 호출 블록은 같은 문서의 Method만 부르고, 부르던 Method가 없어지면 점선과 <code>?</code>로 "이어진 곳이 없음"을 알립니다. 두 경우를 나눠 여쭙니다. 카드마다 번호 딱지가 있습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">앞</span>
+    <h2>지금의 호출 블록 두 모습</h2>
+    <div class="paper" data-now></div>
+  </section>
+
+  <section>
+    <span class="part">CB1</span>
+    <h2>CB1. 부를 것을 그리지 않았을 때 (라이브러리 함수, 아직 그리지 않은 서브루틴)</h2>
+    <p class="q"><code>printf</code>나 <code>qsort</code>처럼 남이 만든 함수, 또는 아직 그리지 않은 서브루틴을 부르는 장면입니다. <b>같은 문서에 Method가 없는 호출 블록을 어떻게 넣고 어떻게 보이게 하는가</b>를 고르는 물음입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">CB1 · 1번</span><h3>이름을 직접 적는 호출 블록</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-cb1="typed"></div>
+        <ul><li>이름 · 인자 · 결과를 모두 직접 적습니다. 모양은 보통 호출 블록과 같습니다(실선 이중선). 남의 함수를 부르는 것은 잘못이 아니기 때문입니다.</li><li>이어진 곳이 없으니 펴 보기와 따라가기(<kbd>gd</kbd>)는 없습니다.</li><li>나중에 같은 문서에 Method를 그리면 부를 Method 바꾸기(<kbd>r</kbd>)로 잇습니다. 이으면 그때부터 이름이 머리를 따릅니다.</li><li>점선과 <code>?</code>는 지금처럼 "부르던 Method가 없어진" 때에만 씁니다.</li></ul></article>
+      <article class="card"><header><span class="tag">CB1 · 2번</span><h3>지금처럼, Method가 있어야 부른다</h3><span class="badge now">지금 프로토타입</span></header>
+        <div class="paper" data-cb1="stub"></div>
+        <ul><li>먼저 빈 Method(머리만 있는 다이어그램)를 만들고 그것을 부릅니다.</li><li>호출 블록은 늘 어딘가에 이어져 있어 규칙이 하나입니다.</li><li><span class="bad">라이브러리 함수마다 빈 다이어그램이 문서에 하나씩 늘어납니다.</span> 그림에도 그대로 저장됩니다.</li></ul></article>
+      <article class="card"><header><span class="tag">CB1 · 3번</span><h3>이름을 적되, "이어진 곳 없음"으로 그린다</h3></header>
+        <div class="paper" data-cb1="dashed"></div>
+        <ul><li>1번처럼 이름을 직접 적지만, 모양은 부르던 Method가 없어진 때와 같습니다(점선과 <code>?</code>).</li><li>아직 그리지 않은 서브루틴이 눈에 띄어 할 일 표시로 쓸 수 있습니다.</li><li><span class="bad"><code>printf</code>처럼 그릴 생각이 없는 함수도 늘 잘못된 것처럼 보입니다.</span></li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">CB2</span>
+    <h2>CB2. 부를 Method가 다른 문서(다른 <code>.ns.svg</code> 파일)에 있을 때</h2>
+    <p class="q"><code>main.ns.svg</code>에서 <code>sort.ns.svg</code> 안의 Method <code>quicksort</code>를 부르는 장면입니다. <b>어느 파일의 무엇을 부르는지를 호출 블록이 기억하는가</b>를 고르는 물음입니다. CB1을 1번으로 정한다는 전제로 그렸습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">CB2 · 1번</span><h3>파일과 Method를 가리켜 둔다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="paper" data-cb2="link"></div>
+        <ul><li>호출 블록이 "어느 파일의 어느 Method"를 기억합니다. 블록 오른쪽에 파일 이름 딱지가 작게 보입니다.</li><li>따라가기(<kbd>gd</kbd>)는 그 파일을 엽니다. 펴 보기는 그 파일을 읽을 수 있는 곳(Obsidian, 데스크톱)에서만 됩니다. 웹에서는 그 파일을 함께 열었을 때만 됩니다.</li><li><span class="bad">파일을 옮기거나 이름을 바꾸면 끊깁니다.</span> 끊기면 지금처럼 점선과 <code>?</code>로 알립니다. 그 파일의 머리 이름이 바뀌면 그 파일을 읽을 수 있을 때만 따라 바뀝니다.</li><li>Obsidian 볼트와 같은 폴더 안에서 쓰기 좋습니다. 배포 대상마다 파일을 찾는 길을 만들어야 해서 할 일이 늘어납니다.</li></ul></article>
+      <article class="card"><header><span class="tag">CB2 · 2번</span><h3>이름만 적는다</h3></header>
+        <div class="paper" data-cb2="name"></div>
+        <ul><li>CB1 · 1번의 "이름을 직접 적는 호출 블록"과 같습니다. 어느 문서인지는 기억하지 않습니다.</li><li>파일을 옮겨도 끊길 것이 없습니다. 만들 것도 가장 적습니다.</li><li><span class="bad">펴 보기와 따라가기가 없습니다.</span> 어느 파일에 있는지는 사람이 압니다(필요하면 주석으로 적음).</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>CB1</b> 부를 것을 그리지 않았을 때: 1 이름을 직접 적는 호출 블록(보통 모양) / 2 Method가 있어야 부름(지금) / 3 이름을 적되 점선과 ?로. 추천 1</li>
+        <li><b>CB2</b> 다른 문서의 Method: 1 파일과 Method를 가리켜 둠 / 2 이름만 적음. 추천 1. 어느 쪽이든 우선순위는 따로 여쭙니다</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 밝은 기본 테마의 색 (시각 디자인 명세 3.3절) */
+const C = { page: '#ffffff', line: '#5b77ad', proc: '#edf0f5', head: '#ebe7f4', call: '#ebe7f4', ink: '#151a22', sub: '#5a6476', kw: '#1f45d6', peek: '#7a5fb8' };
+const FAM = "'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace";
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const H = 28;
+/* rows: { t, kind: 'head' | 'proc' | 'call', name, pre, post, dashed, file } */
+function chart(rows, w = 300) {
+  let y = 0; const s = [];
+  rows.forEach(r => {
+    const fill = r.kind === 'head' ? C.head : r.kind === 'call' ? C.call : C.proc;
+    s.push(`<rect x="0" y="${y}" width="${w}" height="${H}" fill="${fill}" stroke="${C.line}" ${r.dashed ? 'stroke-dasharray="4 3"' : ''}/>`);
+    if (r.kind === 'call') {
+      const d = r.dashed ? 'stroke-dasharray="4 3"' : '';
+      s.push(`<path d="M7 ${y}v${H}M${w - 7} ${y}v${H}" stroke="${C.line}" fill="none" ${d}/>`);
+      const q = r.dashed ? `<tspan fill="#b42318" font-weight="600">? </tspan>` : '';
+      s.push(`<text x="15" y="${y + 18}" font-family="${FAM}" font-size="12" fill="${C.ink}" xml:space="preserve">${q}${esc(r.pre || '')}<tspan font-weight="600">${esc(r.name)}</tspan>${esc(r.post || '')}</text>`);
+      if (r.file) s.push(`<rect x="${w - 92}" y="${y + 6}" width="78" height="16" rx="3" fill="#ffffff" stroke="${C.line}"/><text x="${w - 53}" y="${y + 18}" text-anchor="middle" font-family="${FAM}" font-size="10.5" fill="${C.sub}">↗ ${esc(r.file)}</text>`);
+    } else {
+      s.push(`<text x="9" y="${y + 18}" font-family="${FAM}" font-size="12" font-weight="${r.kind === 'head' ? 600 : 400}" fill="${C.ink}" xml:space="preserve">${esc(r.t)}</text>`);
+    }
+    y += H;
+  });
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w + 2}" height="${y + 2}" viewBox="-1 -1 ${w + 2} ${y + 2}"><rect x="-1" y="-1" width="${w + 2}" height="${y + 2}" fill="${C.page}"/>${s.join('')}</svg>`;
+}
+const fig = (cap, svg) => `<figure>${svg}<figcaption>${cap}</figcaption></figure>`;
+const main = call => chart([{ t: 'main()', kind: 'head' }, { t: 'n ← read(nums)' }, call, { t: 'show(nums)' }]);
+
+document.querySelector('[data-now]').innerHTML =
+  fig('이어진 호출: 같은 문서의 Method <code>partition</code>을 부름. 이름은 머리를 따름', chart([{ kind: 'call', pre: 'p ← ', name: 'partition', post: '(nums, 0, n - 1)' }])) +
+  fig('끊긴 호출: 부르던 Method를 지웠음. 점선과 ?', chart([{ kind: 'call', pre: 'p ← ', name: 'partition', post: '(nums, 0, n - 1)', dashed: true }]));
+
+const CB1 = {
+  typed: fig('<code>qsort</code>는 C 표준 라이브러리 함수. 이름을 직접 적음', main({ kind: 'call', name: 'qsort', post: '(nums, n, 4, cmp)' })),
+  stub: fig('부르려고 만든 빈 Method <code>qsort</code>가 문서에 함께 저장됨', main({ kind: 'call', name: 'qsort', post: '(nums, n, 4, cmp)' })) +
+        fig('같은 문서의 둘째 다이어그램', chart([{ t: 'qsort(base, n, size, cmp)', kind: 'head' }, { t: '' }], 220)),
+  dashed: fig('그릴 생각이 없는 함수도 점선과 ?', main({ kind: 'call', name: 'qsort', post: '(nums, n, 4, cmp)', dashed: true })),
+};
+document.querySelectorAll('[data-cb1]').forEach(el => { el.innerHTML = CB1[el.dataset.cb1]; });
+
+const CB2 = {
+  link: fig('<code>sort.ns.svg</code>의 Method <code>quicksort</code>를 가리킴', main({ kind: 'call', name: 'quicksort', post: '(nums, 0, n - 1)', file: 'sort.ns.svg' })) +
+        fig('<code>sort.ns.svg</code>를 옮겨 끊긴 때', main({ kind: 'call', name: 'quicksort', post: '(nums, 0, n - 1)', file: 'sort.ns.svg', dashed: true })),
+  name: fig('이름만 적음. 어느 파일인지는 모름', main({ kind: 'call', name: 'quicksort', post: '(nums, 0, n - 1)' })),
+};
+document.querySelectorAll('[data-cb2]').forEach(el => { el.innerHTML = CB2[el.dataset.cb2]; });
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
