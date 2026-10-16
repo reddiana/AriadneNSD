@@ -25,7 +25,7 @@ updated: 2026-10-10
 
 | 등록소 | 쓸 이름 | 비용 | 언제 필요한가 |
 | --- | --- | --- | --- |
-| GitHub 저장소 | `ariadne-nsd` | 무료 | 지금 (이름 바꾸기) |
+| GitHub 저장소 | `AriadneNSD` (2026-10-15에 `ariadne-nsd`에서 바꿈 → [[0028-repo-name\|ADR-0028]]) | 무료 | 지금 |
 | Obsidian 플러그인 id | `ariadne-nsd` | 무료 (등록 심사) | Obsidian 플러그인을 낼 때 |
 | npm 패키지 | `ariadne-nsd` 또는 `@ariadne-nsd/…` | 무료 | 공유 코어를 패키지로 낼 때 |
 | 도메인 | `ariadnensd.com` 등 (붙임표 없이도 가능) | `.com`은 1년에 10~11달러쯤 | 자체 주소가 필요할 때 |
