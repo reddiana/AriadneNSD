@@ -53,7 +53,7 @@ updated: 2026-10-17
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^fmt-svg]]).
 - 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
 - **글꼴 조각:** 번들한 글꼴에서 그 그림에 쓰인 글자만 추려 `<style>`의 `@font-face`에 넣는다. 그림의 `font-family`는 이 글꼴 다음에 대체 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^fmt-text]]. 글꼴 조각도 같은 모델이면 같은 바이트여야 한다(3.1).
-- **종이:** 흰 바탕 사각형을 둔다. 투명하게 두지 않는다. 그림의 색은 늘 문서 팔레트의 색이다 → [[01-requirements#^fmt-color]], [[03-visual-design#2. 층과 출력]]
+- **종이:** 흰 바탕 사각형을 둔다. 투명하게 두지 않는다. 그림의 색은 늘 문서 팔레트의 색이다 → [[01-requirements#^fmt-color]], [[04-visual-design#2. 층과 출력]]
 - 그림 부분은 모델에서 생성한 결과일 뿐이며, 읽을 때 무시한다([[01-requirements#^fmt-model-source]]). 저장되는 그림은 지금 화면 그대로이고 편집 층의 표시(고른 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 
 ## 3. 모델 JSON
@@ -88,7 +88,7 @@ updated: 2026-10-17
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등. 제어 블록은 갈래나 본문으로 블록의 줄을 품는다. 줄은 비지 않는다 | 대상 |
 | 호출 블록 | 부르는 Method의 **id**, 인자, 결과. 이름은 갖지 않는다. 이어진 곳이 없으면 마지막에 보이던 이름을 품는다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
 | 접기 영역 | 한 줄 안의 이어진 블록 범위와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 딸린다([[01-requirements#^edit-fold-site]]) | 대상 |
-| `view` | 보기 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[01-interaction-rules#6. 실행 취소]] | 대상 아님 |
+| `view` | 보기 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
 
 - 블록, 다이어그램, 접기 영역은 모두 **바뀌지 않는 id**를 갖는다. 보기 상태와 호출 블록은 id로 가리킨다.
 - 화면의 확대와 위치, 고른 것은 저장하지 않는다.
@@ -117,7 +117,7 @@ JSON 텍스트에 `]]>`가 나오면 CDATA를 나눠서 쓴다([[01-requirements
 
 ## 4. 그림 부분
 
-요소의 모습(색, 선, 글자, 치수)은 [[03-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<text>`), 클래스 이름, 텍스트 외곽선 옵션([[01-requirements#^fmt-outline]])은 [[02-layout]] 설계에서 정한다.
+요소의 모습(색, 선, 글자, 치수)은 [[04-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<text>`), 클래스 이름, 텍스트 외곽선 옵션([[01-requirements#^fmt-outline]])은 [[02-layout]] 설계에서 정한다.
 
 ## 5. 버전 관리
 

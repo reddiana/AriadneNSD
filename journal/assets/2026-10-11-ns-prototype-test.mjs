@@ -640,7 +640,7 @@ await ev(`T.cmd('exQuick')`);
   check('52: 쌓이면 한 번 움직임 (j와 같음)', (await ev(selId)) === down1, { got: await ev(selId), down1 });
 }
 
-// 53번째 판: 시각 디자인 문서에 맞춘 모습 (docs/02-ux-design/03-visual-design.md)
+// 53번째 판: 시각 디자인 문서에 맞춘 모습 (docs/02-ux-design/04-visual-design.md)
 await ev(`T.cmd('exCode')`);
 {
   const b = (await ev(`T.doc()`)).diagrams[0].body;

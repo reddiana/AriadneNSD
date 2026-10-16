@@ -24,13 +24,13 @@ updated: 2026-10-14
 | Event와 Method 시안 (2026-10-11, 결정함: H3 · A1 · C1 · S2) | 이벤트 처리기와 부를 수 있는 다이어그램을 가르는 머리의 모양 | https://claude.ai/artifact/AAXhC9eSan97yNw6S2HXB8 | `journal/assets/2026-10-11-event-method-study.html` |
 | 다이어그램 배치 시안 (2026-10-11, 결정함: L4 + 순서 바꾸기) | 한 문서에 다이어그램 여러 개를 놓는 법 | https://claude.ai/artifact/NMZH1BMT42KMJAd5HcaQkW | `journal/assets/2026-10-11-diagram-layout-study.html` |
 | 호출 블록 글자 시안 (2026-10-11, 결정함: A2) | 호출 블록에 이름, 인자, 결과를 적는 법 | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
-| 호출 블록 펴 보기 시안 (2026-10-11, 결정함: Q13~Q16 → [[02-ux-design]]) | 부르는 다이어그램을 그 자리에 펴서 보여 주는 법 | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
-| UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | 고치기, 넣기, 옮기기, 고르기의 규칙을 하나로 맞추는 물음들 | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| 호출 블록 펴 보기 시안 (2026-10-11, 결정함: Q13~Q16 → [[05-ux-decisions]]) | 부르는 다이어그램을 그 자리에 펴서 보여 주는 법 | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
+| UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | 고치기, 넣기, 옮기기, 고르기의 규칙을 하나로 맞추는 물음들 | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 문자 로고 바탕 시안 (2026-10-11) | 밝은 화면과 어두운 화면 모두에서 읽히는 문자 로고 | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html` |
 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | 접기 영역의 테두리와, 펴 보인 곳에만 두는 접기 영역 | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | 같은 글자가 브라우저마다 같은 폭으로 재어지는지 재어 본 페이지 | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 | 아키텍처 전 물음 시안 (2026-10-13, 결정함: A4 1 · A6 3 · A8 1 · A8-가 1) | 저장된 그림의 색, 실행 취소의 대상 같은 물음 | https://claude.ai/artifact/Jez6xT5qB9HbdoN1aRSKSn | `journal/assets/2026-10-13-before-architecture-study.html` |
-| UX 문서 구조 시안 (2026-10-17, 답을 기다림: S 1번 · 2번 · 3번 → [[debt#정해 주세요]]) | `docs/02-ux-design`의 세 문서가 생긴 내력과 문제, 나누는 안 셋 | https://claude.ai/artifact/KWD4NzTgixXj7bdkhFiU3D | `journal/assets/2026-10-17-ux-docs-structure-study.html` |
+| UX 문서 구조 시안 (2026-10-17, 결정함: S 1번 목적별 다섯) | `docs/02-ux-design`의 세 문서가 생긴 내력과 문제, 나누는 안 셋 | https://claude.ai/artifact/KWD4NzTgixXj7bdkhFiU3D | `journal/assets/2026-10-17-ux-docs-structure-study.html` |
 
 - **시안과 스파이크 페이지는 CC BY 4.0입니다**(프로토타입은 Apache-2.0). 페이지마다 맨 아래에 안내가 있습니다 → [[0027-study-pages-cc-by|ADR-0027]]. 안내는 `journal/assets/2026-10-14-add-license-note.py`로 넣습니다. 새 시안을 만들면 이 스크립트를 한 번 돌립니다. claude.ai의 열두 페이지도 2026-10-14에 안내가 든 판으로 다시 올렸습니다.
 - **방문자에게는 claude.ai의 공개 링크로 보여 줍니다**(2026-10-14, 메인테이너: ""나"로 합시다"). 페이지마다 메인테이너가 Share 메뉴에서 "링크를 가진 누구나"로 바꿉니다. Claude는 공유 설정을 바꿀 수 없습니다. 견준 다른 길은 GitHub Pages였습니다.

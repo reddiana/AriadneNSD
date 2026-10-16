@@ -1,4 +1,4 @@
-// 시각 디자인 문서(docs/02-ux-design/03-visual-design.md)에 넣을 그림을 프로토타입에서 찍는다
+// 시각 디자인 문서(docs/02-ux-design/04-visual-design.md)에 넣을 그림을 프로토타입에서 찍는다
 // 쓰는 법: node 2026-10-16-visual-design-shots.mjs file:///…/2026-10-10-ns-prototype.html <그림을 둘 폴더>
 // 그림은 2배 해상도 PNG. 장면마다 프로토타입의 예제를 열고, 키를 눌러 상태를 만든 뒤 종이(.paper)나 화면 일부를 자른다
 import { spawn } from 'node:child_process';

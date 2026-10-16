@@ -13,7 +13,7 @@ updated: 2026-10-14
 # AriadneNSD 요구사항 명세
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항입니다. 이 문서는 **무엇을** 만드는지만 다룹니다. 요구사항 하나는 한두 줄입니다.
-그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[02-ux-design]], [[01-interaction-rules]])에, **왜** 그렇게 정했는지는 [[atelier/README#아키텍처 결정 기록 (ADR)|ADR]]에, **어떻게** 만드는지는 [[03-architecture]]와 상세 설계 문서에 있습니다.
+그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[05-ux-decisions]], [[02-interaction-rules]])에, **왜** 그렇게 정했는지는 [[atelier/README#아키텍처 결정 기록 (ADR)|ADR]]에, **어떻게** 만드는지는 [[03-architecture]]와 상세 설계 문서에 있습니다.
 
 > [!info] 읽는 법
 > - 우선순위 태그: #P0 = MVP 필수 · #P1 = 1차 확장 · #P2 = 나중에 · #P3 = 출시 뒤
@@ -167,32 +167,32 @@ DIN 66261 / 원 논문 기준입니다.
 | 병렬 처리 (Parallel) | 동시 실행 갈래 | #P2 |
 | 주석 블록 |  | #P2 |
 
-블록과 머리를 어떤 모양으로 그리는지는 설계에 있다 → [[01-interaction-rules#블록의 모양]]
+블록과 머리를 어떤 모양으로 그리는지는 설계에 있다 → [[02-interaction-rules#블록의 모양]]
 
-- [ ] #P1 Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[01-interaction-rules#Event 머리|상세]] ^blk-event
-- [ ] #P1 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[01-interaction-rules#Case 블록|상세]] ^blk-case
-- [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[01-interaction-rules#Method 머리|상세]] ^blk-method
-- [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[01-interaction-rules#호출 블록|상세]] ^blk-call
+- [ ] #P1 Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 머리|상세]] ^blk-event
+- [ ] #P1 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록|상세]] ^blk-case
+- [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[02-interaction-rules#Method 머리|상세]] ^blk-method
+- [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call
 
 ### 3.2 편집
 
-- [ ] #P0 블록 고르기, 넣기(고른 블록의 앞/뒤/안쪽), 지우기, 글자 고치기 → 상세 [[01-interaction-rules]], 키는 [[03-editor#4. 단축키]] ^edit-basic
-- [ ] #P0 실행 취소 / 다시 실행 (Undo/Redo) → 상세 [[01-interaction-rules#6. 실행 취소]] ^edit-undo
-- [ ] #P0 키보드만으로 편집 가능: 방향키로 이동, 단축키로 블록 삽입 → [[01-interaction-rules#키보드로 이동하고 넣기|상세]] ^edit-keyboard
+- [ ] #P0 블록 고르기, 넣기(고른 블록의 앞/뒤/안쪽), 지우기, 글자 고치기 → 상세 [[02-interaction-rules]], 키는 [[03-keymap]] ^edit-basic
+- [ ] #P0 실행 취소 / 다시 실행 (Undo/Redo) → 상세 [[02-interaction-rules#6. 실행 취소]] ^edit-undo
+- [ ] #P0 키보드만으로 편집 가능: 방향키로 이동, 단축키로 블록 삽입 → [[02-interaction-rules#키보드로 이동하고 넣기|상세]] ^edit-keyboard
 - [ ] #P0 여러 블록 선택 (아래 [[#여러 블록 선택 규칙]]) ^edit-multiselect
 - [ ] #P1 선택한 블록들을 제어 블록으로 감싸기 (아래 [[#감싸기 · 풀기]]) ^edit-wrap
 - [ ] #P1 제어 블록 풀기: 제어 블록만 지우고 안의 블록은 그 자리에 남기기 ^edit-unwrap
-- [ ] #P1 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[01-interaction-rules#감싸기 · 풀기|상세]] ^edit-call-inline
+- [ ] #P1 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[02-interaction-rules#감싸기 · 풀기|상세]] ^edit-call-inline
 - [ ] #P1 드래그 앤 드롭으로 블록 하나 또는 선택한 블록들을 통째로 이동 (놓을 수 있는 자리 미리 강조) ^edit-dnd
-- [ ] #P1 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[01-interaction-rules#붙여넣기|상세]] ^edit-clipboard
-- [ ] #P1 If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[01-interaction-rules#갈래 순서 바꾸기|상세]] ^edit-branch
+- [ ] #P1 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[02-interaction-rules#붙여넣기|상세]] ^edit-clipboard
+- [ ] #P1 If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[02-interaction-rules#갈래 순서 바꾸기|상세]] ^edit-branch
 - [ ] #P1 제어 블록 접기/펼치기: 제어 블록의 안쪽을 접는다. If·Case는 갈래별로 (아래 [[#접기 · 펼치기]]) ^edit-fold
 - [ ] #P1 접기 영역: 선택 영역을 접기 영역으로 만들어 접고 펼친다 (아래 [[#접기 · 펼치기]]) ^edit-fold-range
-- [ ] #P1 호출 블록 펴 보기: 호출 블록을 펴면 부르는 Method의 블록들이 그 자리에 보인다. 보기만 바뀌고 다이어그램의 내용은 바뀌지 않는다 → [[01-interaction-rules#호출 블록 펴 보기|상세]] ^edit-call-open
-- [ ] #P1 펴 보인 곳의 접기 영역: 펴 보인 호출 블록 안에서 접기 영역을 만든다. 그 호출 블록 자리에만 있고 Method의 원본은 바뀌지 않는다 → [[01-interaction-rules#펴 보인 곳의 접기 영역|상세]] ^edit-fold-site
+- [ ] #P1 호출 블록 펴 보기: 호출 블록을 펴면 부르는 Method의 블록들이 그 자리에 보인다. 보기만 바뀌고 다이어그램의 내용은 바뀌지 않는다 → [[02-interaction-rules#호출 블록 펴 보기|상세]] ^edit-call-open
+- [ ] #P1 펴 보인 곳의 접기 영역: 펴 보인 호출 블록 안에서 접기 영역을 만든다. 그 호출 블록 자리에만 있고 Method의 원본은 바뀌지 않는다 → [[02-interaction-rules#펴 보인 곳의 접기 영역|상세]] ^edit-fold-site
 - [ ] #P2 모두 접기 / 모두 펼치기 / 깊이 n까지 펼치기 ^edit-fold-all
-- [ ] #P1 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[01-interaction-rules#5. 여러 다이어그램의 배치|상세]] ^edit-multi-diagram
-- [ ] #P1 고른 블록들을 새 Method로 빼기: 고른 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 부르는 호출 블록([[#^blk-call]])이 남는다 → [[01-interaction-rules#새 Method로 빼기와 새 다이어그램|상세]] ^edit-extract
+- [ ] #P1 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치|상세]] ^edit-multi-diagram
+- [ ] #P1 고른 블록들을 새 Method로 빼기: 고른 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 부르는 호출 블록([[#^blk-call]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램|상세]] ^edit-extract
 - [ ] #P2 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 끌어다 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼) ^edit-snippets
 - [ ] #P1 도움말: 사용법과 단축키 안내 (모든 배포 대상) ^help
 
@@ -202,19 +202,19 @@ DIN 66261 / 원 논문 기준입니다.
 
 선택은 항상 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다.
 
-세부 규칙(마우스와 키보드로 고르는 법, 자동 확장의 예): [[01-interaction-rules#여러 블록 선택]]
+세부 규칙(마우스와 키보드로 고르는 법, 자동 확장의 예): [[02-interaction-rules#여러 블록 선택]]
 
 #### 감싸기 · 풀기
 
 선택한 블록들을 새 제어 블록 안에 넣는다 (IDE의 "Surround With"와 같은 기능).
 
-세부 규칙(감싸는 블록마다 들어가는 곳, 풀기, 실행 취소): [[01-interaction-rules#감싸기 · 풀기]]
+세부 규칙(감싸는 블록마다 들어가는 곳, 풀기, 실행 취소): [[02-interaction-rules#감싸기 · 풀기]]
 
 #### 접기 · 펼치기
 
 접히는 것은 두 가지다: **제어 블록의 안쪽**([[#^edit-fold]])과 **접기 영역**([[#^edit-fold-range]]). 접기 영역에는 이름을 붙일 수 있고, 접힘 상태와 이름은 파일에 함께 저장한다. 저장되는 그림은 지금 화면 그대로다. → [[0017-fold-name-in-model|ADR-0017]], [[0018-save-as-shown|ADR-0018]]
 
-세부 규칙(명령 셋, 접기 · 펴기가 듣는 곳, 이름, 펴진 모습, 실행 취소): [[01-interaction-rules#접기 · 펼치기]]
+세부 규칙(명령 셋, 접기 · 펴기가 듣는 곳, 이름, 펴진 모습, 실행 취소): [[02-interaction-rules#접기 · 펼치기]]
 
 ### 3.3 레이아웃 · 렌더링
 
@@ -222,10 +222,10 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P0 갈래 너비 자동 분배 (어느 갈래가 깊어져도 전체 직사각형 유지) ^lay-branch-width
 - [ ] #P0 확대/축소, 화면 이동 ^lay-zoom
 - [ ] #P1 한글/영문 혼용 텍스트의 정확한 폭 측정 ^lay-text-measure
-- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[0013-default-visual-style|ADR-0013]], 상세 [[03-visual-design]] ^lay-default-style
+- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[0013-default-visual-style|ADR-0013]], 상세 [[04-visual-design]] ^lay-default-style
 - [ ] #P1 블록 글자의 종류를 문서마다 하나 고른다: 문장 / C / Java / Python / Bash 등 ^lay-text-kind
 - [ ] #P1 블록 글자의 구문 강조 (키워드, 주석을 다른 색으로). 고른 종류([[#^lay-text-kind]])의 문법을 따르고, 문장이면 강조하지 않는다 ^lay-syntax
-- [ ] #P1 테마: 그림의 색을 바꾼다. 흑백 인쇄 모드를 포함한다. 테마를 바꿔도 레이아웃은 그대로다(그래서 글꼴과 선 굵기는 테마가 아니다) → 상세 [[03-visual-design#8. 테마]] ^lay-theme
+- [ ] #P1 테마: 그림의 색을 바꾼다. 흑백 인쇄 모드를 포함한다. 테마를 바꿔도 레이아웃은 그대로다(그래서 글꼴과 선 굵기는 테마가 아니다) → 상세 [[04-visual-design#8. 테마]] ^lay-theme
 - [ ] #P2 블록별 배경색 지정 ^lay-bgcolor
 
 ### 3.4 파일 형식
@@ -268,7 +268,7 @@ DIN 66261 / 원 논문 기준입니다.
 
 사용자가 문제를 쉽게, 그리고 메인테이너가 다시 일으켜 볼 수 있을 만큼 정확하게 알린다. 서버가 없으므로 자동으로 보내지 않는다. 사용자가 보낼 내용을 보고 직접 보낸다.
 
-- [ ] #P3 문제 알리기: 보고서를 만들어 보낸다. 착각이나 어설픈 보고가 이슈 목록에 쌓이지 않게 한다 → [[01-interaction-rules#8. 문제 알리기 보고서|상세]] ^rep-issue
+- [ ] #P3 문제 알리기: 보고서를 만들어 보낸다. 착각이나 어설픈 보고가 이슈 목록에 쌓이지 않게 한다 → [[02-interaction-rules#8. 문제 알리기 보고서|상세]] ^rep-issue
 - [ ] #P3 예상 못 한 오류가 나면 "이 문제를 알리시겠어요?"를 묻는다 ^rep-prompt
 
 ## 4. 비기능 요구사항

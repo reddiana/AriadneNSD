@@ -19,10 +19,9 @@ updated: 2026-10-15
 | 무엇 | 주소 | 저장소의 사본 |
 | --- | --- | --- |
 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
-| UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-ux-design]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| UX 문서 구조 시안 (2026-10-17, 답을 기다림: S) | https://claude.ai/artifact/KWD4NzTgixXj7bdkhFiU3D | `journal/assets/2026-10-17-ux-docs-structure-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
@@ -37,9 +36,9 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 2026-10-13에 다국어의 방향을 정했습니다. 화면의 글자는 영어가 기본이고 한국어를 지원하며, 언어는 설정에서 고릅니다([[01-requirements#^nfr-i18n]]). 프로토타입은 한국어로 둡니다.
 
-2026-10-13에 단축키 설계를 앞당겼습니다. Vim 키를 들이고 키 배열은 하나로 둡니다([[0025-vim-keys|ADR-0025]]). 키 표의 초안은 [[03-editor#4. 단축키]]에 있습니다.
+2026-10-13에 단축키 설계를 앞당겼습니다. Vim 키를 들이고 키 배열은 하나로 둡니다([[0025-vim-keys|ADR-0025]]). 키 표의 초안은 [[03-keymap]]에 있습니다.
 
-2026-10-12에 문서의 자리를 정리했습니다. `docs/`에는 지금의 모습만 두고(요구사항 → UX 설계 → 아키텍처 → 상세 설계), 요구사항의 세부 규칙은 UX 설계([[01-interaction-rules]])로 옮겼으며, ADR과 일하는 기록은 `atelier/`(옛 `plan/`)에 모았습니다.
+2026-10-12에 문서의 자리를 정리했습니다. `docs/`에는 지금의 모습만 두고(요구사항 → UX 설계 → 아키텍처 → 상세 설계), 요구사항의 세부 규칙은 UX 설계([[02-interaction-rules]])로 옮겼으며, ADR과 일하는 기록은 `atelier/`(옛 `plan/`)에 모았습니다.
 
 2026-10-13에 아키텍처를 가르는 물음에 답이 났고(주 사용자는 실무용, 블록 글자의 종류는 문서마다 고름, 글꼴 번들과 그림에 넣기, 저장된 그림의 색, 실행 취소의 대상), **아키텍처 설계를 프로토타입 리뷰와 나란히 진행하기로 했습니다.**
 
@@ -73,7 +72,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 제품에 대한 열린 질문은 그 문서의 미결정 절이 원본입니다. 여기에 다시 적지 않습니다.
 
 - 요구사항: [[01-requirements#6. 미결정 사항]] (블록 글자의 종류 목록, 번들하는 글꼴, Event를 일으키는 블록, 쓰이지 않는 Method, 웹 광고의 자리)
-- UX 설계의 물음: [[02-ux-design#7. 결정 모음]]
+- UX 설계의 물음: [[05-ux-decisions#1. 결정 모음]]
 - 요구사항 문서에 대한 물음(Q18, Q22, Q23): [[requirements-review#답하실 것]]
 - 아키텍처: [[03-architecture#7. 위험과 검증이 필요한 사항]] (글꼴 조각의 크기, Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), [[03-architecture#8. 확인받지 못한 제안]], 제안됨 상태의 ADR → [[atelier/README#아키텍처 결정 기록 (ADR)]]
 - 파일 형식: [[01-file-format#6. 미결정 사항]] (모델 네임스페이스 URI)
