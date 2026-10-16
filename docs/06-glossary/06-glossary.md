@@ -29,23 +29,23 @@ updated: 2026-10-17
 
 ## 블록
 
-| 용어 | 영어 | 코드 이름(안) | 뜻 |
-| --- | --- | --- | --- |
-| 블록 | block | `Block` | 다이어그램을 이루는 사각형 하나. 트리의 노드 |
-| 시퀀스 | sequence | `Sequence` | 위에서 아래로 차례로 실행되는 블록 목록 |
-| 처리 블록 | process | `ProcessBlock` | 한 단계의 명령 |
-| 제어 블록 | control block | — | 다른 블록을 안에 품는 블록 (If, Case, 반복) |
-| If 블록 (선택 블록) | if-then-else | `IfBlock` | 조건에 따라 참 · 거짓 갈래 가운데 하나를 실행 |
-| Case 블록 (다중 선택 블록) | switch/case | `CaseBlock` | 값에 따라 여러 갈래 가운데 하나를 실행. 맨 끝은 늘 default 갈래 |
-| 전위 판정 반복 | while (pre-test loop) | `WhileBlock` | 조건을 먼저 검사하는 반복 |
-| 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhileBlock` | 본문을 먼저 실행하고 조건을 검사하는 반복 |
-| 횟수 반복 | for | `ForBlock` | 정해진 횟수만큼 반복 |
-| 호출 블록 | call | `CallBlock` | 같은 문서의 Method를 부르는 블록. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 꼴로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
-| 인자 · 결과 | arguments · result | `args` · `result` | 호출 블록마다 적는 글자. 이름은 적지 않고 Method의 머리를 따른다 |
-| 결과 기호 | result symbol | — | 결과를 받는 기호 `←` 또는 `=`. 문서 설정이고 보기 상태로 다룬다(실행 취소의 대상이 아님) |
-| 갈래 | branch | `Branch` | If · Case 안의 각 경로. 시퀀스 하나를 가진다. Case의 갈래에는 갈래 이름이 있다 |
-| 조건 | condition | `condition` | If · Case · 반복 블록의 머리에 적는 판정 글자 |
-| 블록 글자 | block text | `text` | 블록에 적는 글자. 문서마다 종류(문장, C, Java …)를 고른다 → [[01-requirements#^lay-text-kind]] |
+| 용어                 | 영어                                       | 코드 이름(안)          | 뜻                                                                                                                              |
+| ------------------ | ---------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 블록                 | block                                    | `Block`           | 다이어그램을 이루는 사각형 하나. 트리의 노드                                                                                                      |
+| 시퀀스                | sequence                                 | `Sequence`        | 위에서 아래로 차례로 실행되는 블록 목록                                                                                                         |
+| 처리 블록              | process                                  | `ProcessBlock`    | 한 단계의 명령                                                                                                                       |
+| 제어 블록              | control block                            | —                 | 다른 블록을 안에 품는 블록 (If, Case, 반복)                                                                                                 |
+| If 블록 (선택 블록)      | if-then-else                             | `IfBlock`         | 조건에 따라 참 · 거짓 갈래 가운데 하나를 실행                                                                                                    |
+| Case 블록 (다중 선택 블록) | switch/case                              | `CaseBlock`       | 값에 따라 여러 갈래 가운데 하나를 실행. 맨 끝은 늘 default 갈래                                                                                      |
+| 전위 판정 반복           | while (pre-test loop)                    | `WhileBlock`      | 조건을 먼저 검사하는 반복                                                                                                                 |
+| 후위 판정 반복           | do-while / repeat-until (post-test loop) | `DoWhileBlock`    | 본문을 먼저 실행하고 조건을 검사하는 반복                                                                                                        |
+| 횟수 반복              | for                                      | `ForBlock`        | 정해진 횟수만큼 반복                                                                                                                    |
+| 호출 블록              | call                                     | `CallBlock`       | 같은 문서의 Method를 부르는 블록. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 꼴로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
+| 인자 · 결과            | arguments · result                       | `args` · `result` | 호출 블록마다 적는 글자. 이름은 적지 않고 Method의 머리를 따른다                                                                                       |
+| 결과 기호              | result symbol                            | —                 | 결과를 받는 기호 `←` 또는 `=`. 문서 설정이고 보기 상태로 다룬다(실행 취소의 대상이 아님)                                                                        |
+| 갈래                 | branch                                   | `Branch`          | If · Case 안의 각 경로. 시퀀스 하나를 가진다. Case의 갈래에는 갈래 이름이 있다                                                                           |
+| 조건                 | condition                                | `condition`       | If · Case · 반복 블록의 머리에 적는 판정 글자                                                                                                |
+| 블록 글자              | block text                               | `text`            | 블록에 적는 글자. 문서마다 종류(문장, C, Java …)를 고른다 → [[01-requirements#^lay-text-kind]]                                                    |
 
 ## 편집
 

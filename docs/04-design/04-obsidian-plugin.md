@@ -49,7 +49,7 @@ updated: 2026-10-10
 
 요구사항: [[01-requirements#^obs-insert]], [[01-requirements#^obs-insert-command]]. drawio-obsidian의 흐름을 따른다.
 
-> [!todo] 설계할 것
+> [!info] 미완성
 > - 노트 편집 화면 우클릭 메뉴에 항목 추가하는 방법
 > - 탭을 닫을 때까지 "어느 노트의 어느 커서 위치에 넣을지"를 기억하는 방법 (그사이 노트가 수정되거나 닫힌 경우 포함)
 > - 새 파일의 이름 규칙과 저장 위치 (제안: 첨부 파일 폴더 설정 따름)
@@ -61,18 +61,18 @@ updated: 2026-10-10
 
 우클릭 메뉴와 그림 갱신은 스파이크로 방법을 확인했다. → [[#1. `.ns.svg` 파일 열기]]
 
-> [!todo] 설계할 것
+> [!info] 미완성
 > - `.ns`가 빠진 `.svg`를 내용으로 감지해 메뉴를 띄우는 방법 ([[01-requirements#^obs-detect]])
 
 ## 4. 볼트 입출력
 
-> [!todo] 읽기/쓰기, 저장 시점(탭 닫을 때 / 자동 저장), 다른 곳에서 파일이 바뀌었을 때 처리
+> [!info] 미완성: 읽기/쓰기, 저장 시점(탭 닫을 때 / 자동 저장), 다른 곳에서 파일이 바뀌었을 때 처리
 
 ## 5. 테마 연동
 
 정한 것: 편집 화면(UI 테마)은 Obsidian의 밝기를 따르고, 그림(문서 팔레트)은 따르지 않는다 → [[04-visual-design#8. 테마]], [[01-requirements#^fmt-color]]
 
-> [!todo] Obsidian의 밝기 바뀜을 받아 UI 테마를 바꾸는 방법 ([[01-requirements#^obs-theme]])
+> [!info] 미완성: Obsidian의 밝기 바뀜을 받아 UI 테마를 바꾸는 방법 ([[01-requirements#^obs-theme]])
 
 > [!warning] 위험: 번들 글꼴과 wasm을 `main.js`에 실으면 플러그인이 커진다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
