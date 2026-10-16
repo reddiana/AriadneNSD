@@ -154,7 +154,7 @@ function placeSeq(kids, x, y, w, h, S, o, shown, ins = 0) {
 const rect = (x, y, w, h, fill) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${C.stroke}" stroke-width="1"/>`;
 const mono = (s, x, y, shown) => `<text x="${x}" y="${y + K.lh - 5}" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="${shown ? C.shown : C.ink}" xml:space="preserve">${esc(s)}</text>`;
 function place(n, x, y, w, h, S, o, shown) {
-  if (n.t === 'p') { o.a.push(rect(x, y, w, h, C.process), mono(n.text, x + K.padX, y + K.padY, shown)); if (n.sel) o.b.push(`<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" fill="none" stroke="${C.sel}" stroke-width="2"/>`); return; }
+  if (n.t === 'p') { o.a.push(rect(x, y, w, h, C.process), mono(n.text, x + K.padX, y + K.padY, shown)); if (n.sel) o.c.push(`<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" fill="none" stroke="${C.sel}" stroke-width="2"/>`); return; }
   if (n.t === 'call') {
     o.a.push(rect(x, y, w, h, C.call));
     for (const bx of [x + 4, x + w - 4]) o.a.push(`<line x1="${bx}" y1="${y}" x2="${bx}" y2="${y + h}" stroke="${C.stroke}" stroke-width="1"/>`);
@@ -192,9 +192,9 @@ function place(n, x, y, w, h, S, o, shown) {
   }
 }
 function draw(kids, S) {
-  const m = seq(kids, S), o = { a: [], b: [] };
+  const m = seq(kids, S), o = { a: [], b: [], c: [] };   // c: 고른 표시. 접기 영역의 테두리보다 위에 그린다
   placeSeq(kids, 1, 1, m.w, m.h, S, o, false);
-  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img"><g transform="translate(.5 .5)">${o.a.join('')}${o.b.join('')}</g></svg>` };
+  return { w: m.w, h: m.h, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${m.w + 2}" height="${m.h + 2}" viewBox="0 0 ${m.w + 2} ${m.h + 2}" role="img"><g transform="translate(.5 .5)">${o.a.join('')}${o.b.join('')}${o.c.join('')}</g></svg>` };
 }
 
 C.sel = '#2c55c9';
