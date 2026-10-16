@@ -16,12 +16,12 @@ updated: 2026-10-17
 ## 바로 가기
 프로토타입과, 메인테이너의 답을 기다리는 페이지만 여기에 둡니다. 시안과 스파이크 전체의 목록은 [[study-pages]]에 있습니다.
 
-| 무엇 | 주소 | 저장소의 사본 |
-| --- | --- | --- |
-| **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
-| UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
-| 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
-| 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
+| ID | 무엇 | 주소 | 저장소의 사본 |
+| --- | --- | --- | --- |
+| M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
+| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
+| M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
