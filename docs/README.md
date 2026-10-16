@@ -9,7 +9,7 @@ updated: 2026-10-12
 
 # AriadneNSD 문서
 
-NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포합니다.
+NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 먼저 만들고, 그 위에 Google Drive · Confluence · IDE 플러그인 · Claude skill이 붙습니다 → [[01-requirements#2. 배포 대상]].
 
 이 폴더에는 **지금의 모습**만 둡니다: 무엇을 만드는지, 사용자에게 어떻게 보이는지, 어떻게 만드는지. 거기에 이르기까지의 결정 기록(ADR)과 논의는 `atelier/`에 있습니다. → [[atelier/README|아틀리에]]
 
@@ -37,8 +37,8 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. Obsidia
 
 | 문서 | 대상 | 상태 |
 | --- | --- | --- |
-| [[01-model]] | 트리 모델, 노드 타입, 불변 조건, 편집 명령 | 작성 전 |
-| [[02-layout]] | 레이아웃 알고리즘, 텍스트 폭 측정 | 작성 전 |
+| [[01-model]] | 문서 모델(다이어그램 여럿, 보기 상태), 노드 타입, 불변 조건, 편집 명령. 짜임은 [[03-architecture#3.1 문서 모델]]에 먼저 있음 | 작성 전 |
+| [[02-layout]] | 레이아웃 알고리즘, 글자 폭(번들 글꼴), SVG 렌더링, 내보내기. 모습의 값은 [[03-visual-design]] | 작성 전 |
 | [[03-editor]] | 편집 UI, 선택, 감싸기, 단축키 | 작성 중 (단축키 표만 초안) |
 | [[04-obsidian-plugin]] | Obsidian 플러그인 셸 | 작성 전 |
 | [[05-desktop]] | 데스크톱 셸 | 작성 전 |

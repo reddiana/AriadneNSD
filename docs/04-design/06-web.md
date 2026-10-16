@@ -13,6 +13,7 @@ updated: 2026-10-07
 
 - [[01-requirements#2.3 웹 (정적 페이지)]]
 - [[01-requirements#^exp-autosave]]
+- 공유 URL, 보기 전용, Google Drive, AI 대화창: [[01-requirements#^web-share-url]], [[01-requirements#^web-view-mode]], [[01-requirements#2.4 Google Drive]], [[01-requirements#^web-ai-chat]]
 
 ## 1. 파일 열기·저장
 
@@ -25,11 +26,19 @@ updated: 2026-10-07
 
 > [!todo] 브라우저 저장소에 작성 중인 내용 보관, 복구 안내 ([[01-requirements#^web-draft]])
 
-## 3. 배포
+## 3. 공유 URL과 보기 전용
+
+> [!todo] 다이어그램을 URL에 담아 나누기 ([[01-requirements#^web-share-url]]), 고칠 수 없게 여는 모드 ([[01-requirements#^web-view-mode]])
+
+## 4. Google Drive
+
+> [!todo] 웹 위에 얹는 Drive 연동 ([[0012-google-drive-integration|ADR-0012]]): 새로 만들기 · 연결 앱으로 열기 · 저장 · 미리보기 ([[01-requirements#^gd-new]], [[01-requirements#^gd-open-with]], [[01-requirements#^gd-save]], [[01-requirements#^gd-preview]]). 확장자는 `.ns.svg` ([[0014-drive-file-extension|ADR-0014]])
+
+## 5. 배포
 
 > [!todo] 정적 호스팅 (GitHub Pages 등), 빌드 결과물 구성
 
-## 4. PWA
+## 6. PWA
 
 > [!todo] 오프라인 사용, 설치 ([[01-requirements#^web-pwa]])
 
