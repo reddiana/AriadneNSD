@@ -1,0 +1,164 @@
+<title>M17 테마 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 같은 문서를 여러 화면에서 본 모습을 작게 그린다 (M13과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a560; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-inline: 20px; }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 72ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 16px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.now { color: var(--muted); background: var(--bg); }
+.badge.yours { color: var(--accent); background: var(--accent-soft); }
+.card p { font-size: 13.5px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .card p b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.shots { display: flex; flex-wrap: wrap; gap: 12px; overflow-x: auto; }
+.shot { margin: 0; display: grid; gap: 6px; flex: none; }
+.shot figcaption { font-size: 12px; color: var(--muted); max-width: 210px; }
+.shot svg { display: block; }
+/* 편집 화면: 위 도구 막대와 캔버스 */
+.ed { border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.ed .tb { height: 22px; display: flex; gap: 6px; align-items: center; padding-inline: 8px; }
+.ed .tb i { display: block; height: 7px; width: 26px; border-radius: 3px; }
+.ed .cv { padding: 14px; }
+/* Obsidian 노트: 글줄 사이에 넣은 그림 */
+.nt { border-radius: 6px; padding: 12px; display: grid; gap: 8px; border: 1px solid var(--line); }
+.nt i { display: block; height: 7px; border-radius: 4px; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 86ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+.sum b { font-weight: 600; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M17 · 테마는 그림의 색 묶음이다</h1>
+    <p class="lede">2026-10-17 inbox에 적어 주신 뜻: <b>색의 정의는 테마에 속하고, 밝은 테마와 어두운 테마는 테마의 종류이며, 당장은 종류마다 기본 테마 하나씩만 둔다.</b> M02(NS 차트 색상 시안)처럼 그림의 색을 바꿀 수 있다는 뜻이었습니다. 시각 디자인 명세는 지금 "그림의 색은 문서 팔레트 하나, 테마는 편집 화면의 밝기"로 적고 있어 이 뜻과 다릅니다. 명세를 고치기 전에 <b>두 가지</b>를 여쭙니다. 카드마다 번호 딱지가 있습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">앞</span>
+    <h2>기본 테마 둘</h2>
+    <p class="q">같은 문서를 두 기본 테마로 그린 모습입니다. 밝은 쪽은 지금 명세의 색(53번째 판)이고, <b>어두운 쪽은 이 시안을 위해 만든 초안</b>입니다. 어두운 기본 테마의 색은 정하신 뒤에 명세에서 대비를 맞춰 정합니다.</p>
+    <div class="shots" data-intro></div>
+  </section>
+
+  <section>
+    <span class="part">TH1</span>
+    <h2>TH1. 그림의 테마는 누가 고르는가</h2>
+    <p class="q">내가 문서를 <b>어두운 기본 테마</b>로 그리고 저장했습니다. 이 파일을 내 편집 화면, 동료의 편집 화면, Obsidian의 밝은 노트와 어두운 노트에서 열면 어떻게 보여야 하는가를 고르는 물음입니다. 저장된 그림의 색은 "늘 문서의 색"으로 정하셨습니다(M13의 A4 · 1번, 요구사항 <code>^fmt-color</code>).</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">TH1 · 1번</span><h3>문서마다 고르고, 파일에 저장한다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="shots" data-th1="doc"></div>
+        <ul><li>테마는 문서의 설정입니다. 고른 테마의 색으로 그림이 저장됩니다.</li><li>누가 어디서 열어도 <b>같은 그림</b>입니다. A4 · 1번 "늘 문서의 색"과 그대로 이어집니다.</li><li>어두운 노트에 넣을 문서는 어두운 테마로 그리면 노트에 녹아듭니다.</li><li><span class="bad">밝은 노트에서는 어두운 네모로 보입니다.</span> 어느 노트에 넣을지 생각해 고르셔야 합니다.</li></ul></article>
+      <article class="card"><header><span class="tag">TH1 · 2번</span><h3>보는 사람마다 고른다 (사용자 설정)</h3></header>
+        <div class="shots" data-th1="user"></div>
+        <ul><li>테마는 편집기의 설정입니다. 내 화면에서는 내가 고른 테마로, 동료의 화면에서는 동료가 고른 테마로 보입니다.</li><li>저장되는 그림은 늘 밝은 기본 테마입니다. 그래서 노트에서는 늘 밝게 보입니다.</li><li><span class="bad">편집하며 본 그림과 저장된 그림의 색이 다릅니다.</span> 테마를 바꿔도 저장되는 그림, 인쇄, PNG는 바뀌지 않으니 "그림의 색을 바꾼다"는 요구사항이 화면에서만 이루어집니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">TH2</span>
+    <h2>TH2. 편집 화면(도구 막대, 바탕)의 색도 테마에 넣는가</h2>
+    <p class="q">편집기에는 그림 말고도 도구 막대, 캔버스의 바탕, 메뉴가 있습니다. Obsidian에서는 이것들이 Obsidian의 밝기를 따르기로 했습니다(요구사항 <code>^obs-theme</code>). <b>그림의 테마를 고르면 편집 화면의 색도 함께 바뀌는가</b>를 고르는 물음입니다. 두 카드 모두 TH1 · 1번(문서마다)을 전제로 그렸습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">TH2 · 1번</span><h3>따로 둔다</h3><span class="badge">Claude의 추천</span><span class="badge now">지금 명세</span></header>
+        <div class="shots" data-th2="apart"></div>
+        <ul><li>편집 화면은 Obsidian(데스크톱과 웹에서는 기기)의 밝기를 따릅니다. 그림은 문서의 테마를 따릅니다.</li><li>어두운 Obsidian에서 밝은 테마의 문서를 열면, 어두운 캔버스 위에 밝은 종이가 놓입니다. 지금 프로토타입이 이렇습니다.</li><li>편집 화면의 색은 "화면 색"이라 부르고 테마라고 부르지 않습니다. 테마라는 말은 그림의 색 묶음에만 씁니다.</li></ul></article>
+      <article class="card"><header><span class="tag">TH2 · 2번</span><h3>함께 바뀐다</h3></header>
+        <div class="shots" data-th2="together"></div>
+        <ul><li>테마 하나가 그림과 편집 화면의 색을 함께 정합니다. 그림과 편집 화면이 늘 어울립니다.</li><li><span class="bad">어두운 Obsidian 안에서 밝은 테마의 문서를 열면 편집기만 밝게 튑니다.</span> <code>^obs-theme</code>을 고쳐야 합니다.</li><li>문서를 열 때마다 편집 화면의 색이 바뀔 수 있습니다.</li></ul></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>TH1</b> 그림의 테마를 고르는 사람: 1 문서마다(파일에 저장) / 2 보는 사람마다(사용자 설정). 추천 1</li>
+        <li><b>TH2</b> 편집 화면의 색: 1 따로 둔다(Obsidian · 기기의 밝기를 따름) / 2 테마와 함께 바뀐다. 추천 1</li>
+      </ol>
+      <p>정하시면 요구사항 <code>^lay-theme</code>과 시각 디자인 명세의 3장 · 8장을 고칩니다. 흑백 인쇄는 테마가 아니라 인쇄할 때 고르는 방식으로 그대로 둡니다.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* 테마 둘: 밝은 기본은 시각 디자인 명세 3.3절의 색, 어두운 기본은 이 시안의 초안 */
+const LIGHT = { name: '밝은 기본 테마', page: '#ffffff', line: '#5b77ad', proc: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6', head: '#ebe7f4', ink: '#151a22', sub: '#4b5567', kw: '#1f45d6' };
+const DARK = { name: '어두운 기본 테마 (초안)', page: '#171a21', line: '#6f86b8', proc: '#232833', branch: '#3a3226', loop: '#22304a', head: '#2c2840', ink: '#e6e9ef', sub: '#a8b0bf', kw: '#8fb0ff' };
+/* 편집 화면의 색: 시각 디자인 명세 3.4절 */
+const UI_L = { bar: '#ffffff', chip: '#d4dbe6', canvas: '#eef1f6', edge: '#d4dbe6' };
+const UI_D = { bar: '#1a1e26', chip: '#2b313c', canvas: '#12151b', edge: '#2b313c' };
+const FAM = "'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace";
+
+/* 작은 NS 차트: Method 머리, 처리, While, If(두 갈래) */
+function chart(C, w = 180) {
+  const H = 22, s = [], t = (x, y, str, o = {}) => s.push(`<text x="${x}" y="${y}" font-family="${FAM}" font-size="10.5" font-weight="${o.b ? 600 : 400}" fill="${o.c || C.ink}" ${o.mid ? 'text-anchor="middle"' : ''}>${str}</text>`);
+  const r = (x, y, ww, h, f) => s.push(`<rect x="${x}" y="${y}" width="${ww}" height="${h}" fill="${f}" stroke="${C.line}"/>`);
+  let y = 0;
+  r(0, y, w, H, C.head); t(8, y + 15, 'partition(a, lo, hi)', { b: 1 }); y += H;
+  r(0, y, w, H, C.proc); t(8, y + 15, 'i ← lo'); y += H;
+  r(0, y, w, H * 4, C.loop); t(8, y + 15, `<tspan fill="${C.kw}">for</tspan> j ← lo .. hi-1`);
+  const x0 = 16, iw = w - x0;
+  r(x0, y + H, iw, H, C.branch);
+  s.push(`<path d="M${x0} ${y + H}L${x0 + iw / 2} ${y + 2 * H}L${w} ${y + H}" fill="none" stroke="${C.line}"/>`);
+  t(x0 + iw / 2, y + H + 11, 'a[j] &lt; pivot', { mid: 1 });
+  t(x0 + 4, y + 2 * H - 3, '참', { c: C.sub }); t(w - 14, y + 2 * H - 3, '거짓', { c: C.sub, mid: 1 });
+  r(x0, y + 2 * H, iw / 2, H * 2, C.proc); t(x0 + 6, y + 2 * H + 15, 'swap(a, i, j)');
+  t(x0 + 6, y + 3 * H + 15, 'i ← i + 1');
+  r(x0 + iw / 2, y + 2 * H, iw / 2, H * 2, C.proc);
+  y += H * 4;
+  r(0, y, w, H, C.proc); t(8, y + 15, `<tspan fill="${C.kw}">return</tspan> i`); y += H;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w + 2}" height="${y + 2}" viewBox="-1 -1 ${w + 2} ${y + 2}"><rect x="-1" y="-1" width="${w + 2}" height="${y + 2}" fill="${C.page}"/>${s.join('')}</svg>`;
+}
+const pageOf = C => `<div style="background:${C.page};padding:8px;border-radius:3px;display:inline-block">${chart(C)}</div>`;
+const editor = (U, C, cap) => `<figure class="shot"><div class="ed" style="border-color:${U.edge}"><div class="tb" style="background:${U.bar};border-bottom:1px solid ${U.edge}"><i style="background:${U.chip}"></i><i style="background:${U.chip}"></i><i style="background:${U.chip};width:40px"></i></div><div class="cv" style="background:${U.canvas}">${pageOf(C)}</div></div><figcaption>${cap}</figcaption></figure>`;
+const note = (dark, C, cap) => {
+  const bg = dark ? '#1e1e1e' : '#ffffff', bar = dark ? '#3a3a3a' : '#dfe3ea', bd = dark ? '#333' : '#d4dbe6';
+  return `<figure class="shot"><div class="nt" style="background:${bg};border-color:${bd}"><i style="background:${bar};width:150px"></i><i style="background:${bar};width:110px"></i>${pageOf(C)}<i style="background:${bar};width:130px"></i></div><figcaption>${cap}</figcaption></figure>`;
+};
+
+document.querySelector('[data-intro]').innerHTML =
+  `<figure class="shot">${pageOf(LIGHT)}<figcaption>${LIGHT.name}</figcaption></figure>` +
+  `<figure class="shot">${pageOf(DARK)}<figcaption>${DARK.name}</figcaption></figure>`;
+
+const TH1 = {
+  doc: editor(UI_D, DARK, '내 편집 화면 (어두운 화면)') + editor(UI_L, DARK, '동료의 편집 화면 (밝은 화면)') + note(false, DARK, '밝은 노트에 넣은 파일') + note(true, DARK, '어두운 노트에 넣은 파일'),
+  user: editor(UI_D, DARK, '내 편집 화면 (나는 어두운 테마를 고름)') + editor(UI_L, LIGHT, '동료의 편집 화면 (동료는 밝은 테마를 고름)') + note(false, LIGHT, '밝은 노트에 넣은 파일 (늘 밝은 기본)') + note(true, LIGHT, '어두운 노트에 넣은 파일 (늘 밝은 기본)'),
+};
+document.querySelectorAll('[data-th1]').forEach(el => { el.innerHTML = TH1[el.dataset.th1]; });
+
+const TH2 = {
+  apart: editor(UI_D, LIGHT, '어두운 Obsidian, 밝은 테마의 문서') + editor(UI_D, DARK, '어두운 Obsidian, 어두운 테마의 문서') + editor(UI_L, DARK, '밝은 Obsidian, 어두운 테마의 문서'),
+  together: editor(UI_L, LIGHT, '어두운 Obsidian, 밝은 테마의 문서 (편집기가 밝아짐)') + editor(UI_D, DARK, '어두운 Obsidian, 어두운 테마의 문서') + editor(UI_D, DARK, '밝은 Obsidian, 어두운 테마의 문서 (편집기가 어두워짐)'),
+};
+document.querySelectorAll('[data-th2]').forEach(el => { el.innerHTML = TH2[el.dataset.th2]; });
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
