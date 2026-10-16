@@ -58,7 +58,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .zoom { display: flex; gap: 4px; align-items: center; }
 .zoom output { min-width: 3.5em; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
 
-#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #15803d; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
+#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #d0500b; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
 
 .side { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding-block: 14px; padding-inline: 18px; min-width: 0; }
 .side h2 { font-size: 13px; font-weight: 600; margin: 18px 0 8px; letter-spacing: .02em; }
@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">54번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">55번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -208,9 +208,14 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 54번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 55번째 판)</h2>
       <ul>
-        <li><b>펴진 접기 영역은 다시 파랑, 고른 표시는 녹색입니다.</b> 53번째 판의 진회색 테두리를 52번째 판의 파랑으로 되돌리고, 둘이 섞이지 않게 고른 블록의 테두리와 글자를 고치는 칸의 테두리를 녹색으로 바꿨습니다(시안 M19의 S3).</li>
+        <li><b>고른 표시는 주황, 펴진 접기 영역의 테두리는 3px입니다.</b> 54번째 판의 녹색 고른 표시를 주황으로(시안 M19의 S1. 블록 바탕 위에서 대비 3:1을 지키려고 시안보다 조금 진함), 접기 영역의 테두리를 2px에서 3px로(시안 M11에서 고른 굵기) 바꿨습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 54번째 판)</h2>
+      <ul>
+        <li><b>펴진 접기 영역은 다시 파랑입니다.</b> 53번째 판의 진회색 테두리를 52번째 판의 파랑으로 되돌리고, 고른 표시를 녹색으로 바꿨습니다.</li>
       </ul>
 
       <h2>앞서 바뀐 것 (10-17, 53번째 판)</h2>
@@ -780,8 +785,9 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 2, rgap: 1 };
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, rgap: 1 };   // rb: 접기 영역 테두리의 굵기 (55번째 판에서 3px, M11에서 고른 굵기)
 const RIN = K.rb + K.rgap;   // 테두리 안에 겹친 테두리가 들어가는 깊이: 테두리 굵기 + 틈
+const PIN = 4;               // 펴 보인 호출 블록 안의 블록이 들어가는 깊이: 점선 아래의 흰 줄 3px + 틈 1 (접기 영역의 굵기와 상관없음)
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
 const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
 const cv = document.createElement('canvas').getContext('2d');
@@ -827,7 +833,7 @@ function measure(n) {
     const p = callParts(n), kids = shown.get(n.id);
     if (kids) {
       // 펴 보인 호출 블록: 얇은 띠 아래에 Method의 블록이 놓이고 둘레에 점선을 두른다
-      const inner = measureSeq(kids, RIN + 1);
+      const inner = measureSeq(kids, PIN);
       r = { w: Math.max(inner.w, 10 + smallW('▾ ' + p.pre) + smallW(p.name, true) + smallW(p.post) + K.padX), h: K.band + inner.h, band: K.band };
     }
     else r = { w: tsize(p.pre).w + boldW(p.name) + tsize(p.post).w + 2 * K.padX + 2 * K.bar, h: K.lh + 2 * K.padY };
@@ -895,7 +901,7 @@ function place(n, x, y, w, h, out) {
   } else if (n.type === 'call' && shown.has(n.id)) {
     const i0 = out.items.length, g0 = out.ghosts.length;
     out.items.push({ k: 'callOpen', id: n.id, x, y, w, h, band: m.band, parts: callParts(n) });
-    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, RIN + 1);
+    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, PIN);
     // 그 안에 놓인 것은 모두 펴 보인 것이다 (글자를 회색으로 그린다)
     for (let k = i0 + 1; k < out.items.length; k++) out.items[k].shown = true;
     for (let k = g0; k < out.ghosts.length; k++) out.ghosts[k].shown = true;
@@ -1008,7 +1014,7 @@ const COL = {
   // 값과 까닭은 docs/02-ux-design/04-visual-design.md (53번째 판에서 WCAG 대비를 맞춤)
   stroke: '#5b77ad', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
   ink: '#151a22', label: '#4b5567', kw: '#1f45d6', cm: '#22702a', num: '#8a5a00', str: '#8a5a00',
-  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#15803d',   // sel은 편집 층(저장되지 않음)에만 쓴다. 접기 영역의 파랑과 섞이지 않게 녹색 (54번째 판)
+  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#d0500b',   // sel은 편집 층(저장되지 않음)에만 쓴다. 접기 영역의 파랑과 섞이지 않게 주황 (55번째 판)
   edge: '#4f74d6', foldBand: '#e6ecfb', foldName: '#2c55c9',            // 접기 영역의 테두리, 이름 띠, 띠의 글자 (54번째 판에서 52번째 판의 파랑으로 되돌림)
   callEdge: '#7a5fb8', callBand: '#ddd4ef', shown: '#555e70'            // 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
 };
@@ -1124,7 +1130,7 @@ function drawSVG(lay, ui) {
         const hit = ui ? ` data-id="${g.id}" data-band="1" style="cursor:pointer"` : '';
         s.push(`<rect x="${g.x - .5}" y="${g.y - .5}" width="${g.w + 1}" height="${g.band + .5}" fill="${COL.foldBand}"${hit}/>`);
         s.push(`<line x1="${g.x}" y1="${g.y + g.band}" x2="${g.x + g.w}" y2="${g.y + g.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
-        s.push(`<rect data-edge="${g.id}" x="${g.x + .5}" y="${g.y + .5}" width="${g.w - 1}" height="${g.h - 1}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
+        s.push(`<rect data-edge="${g.id}" x="${g.x + K.rb / 2 - .5}" y="${g.y + K.rb / 2 - .5}" width="${g.w - K.rb + 1}" height="${g.h - K.rb + 1}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
         s.push(`<text x="${g.x + 10}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="12" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
         continue;
       }

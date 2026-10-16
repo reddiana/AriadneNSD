@@ -181,14 +181,14 @@ const geo = `(() => {
 })()`;
 const saved = `(() => { T.cmd('svg'); const v = document.querySelector('#svgText').value; T.cmd('closeModal'); return v; })()`;
 let g = await ev(geo);
-check('접기 영역: 굵기 2의 테두리가 영역의 맨 위부터 끝까지 두름 (선의 가운데가 정수 픽셀)', !!g.edge && g.sw === '2' && g.edge[0] === g.kid[0] + .5 && g.edge[2] === g.kid[2] - 1 && g.edge[1] === g.kid[1] - 18 + .5 && g.edge[1] + g.edge[3] === g.last[1] + g.last[3] - .5, g);
+check('접기 영역: 굵기 3의 테두리가 영역의 맨 위부터 끝까지 두름 (선의 가운데가 반 픽셀)', !!g.edge && g.sw === '3' && g.edge[0] === g.kid[0] + 1 && g.edge[2] === g.kid[2] - 2 && g.edge[1] === g.kid[1] - 18 + 1 && g.edge[1] + g.edge[3] === g.last[1] + g.last[3] - 1, g);
 check('접기 영역: 보통 블록은 테두리에 붙고(들이지 않음) 띠는 폭 전체', g.kid[0] === g.band[0] + .5 && g.kid[1] === g.band[1] + 18.5 && g.band[2] === g.kid[2] + 1, g);
-check('저장되는 그림에 테두리와 띠가 들어감', (await ev(`(v => v.includes('stroke="#4f74d6" stroke-width="2"') && v.includes('#e6ecfb'))(${saved})`)) === true);
+check('저장되는 그림에 테두리와 띠가 들어감', (await ev(`(v => v.includes('stroke="#4f74d6" stroke-width="3"') && v.includes('#e6ecfb'))(${saved})`)) === true);
 const bandX = g.band[0];
 await ev(`document.querySelector('#optRanges').click()`);
 g = await ev(geo);
 check('이름 띠를 끄면 테두리도 사라짐', g.band === null && g.edge === null && g.kid[0] === bandX + .5, g);
-check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('stroke="#4f74d6" stroke-width="2"') && !v.includes('#e6ecfb'))(${saved})`)) === true);
+check('이름 띠를 끄면 저장되는 그림에도 없음', (await ev(`(v => !v.includes('stroke="#4f74d6" stroke-width="3"') && !v.includes('#e6ecfb'))(${saved})`)) === true);
 await ev(`document.querySelector('#optRanges').click()`);
 
 // l. 호출 블록 펴 보기: 보기만 바뀌고 모델은 그대로
@@ -534,7 +534,7 @@ d = await ev(`T.doc()`);
   check('이 자리의 접기 영역을 za로 폄: 접기 영역과 같은 테두리', (await has(gid(pid[0]))) && !!e1, e1);
   const outer = await box(`rect[data-id="${gid(pid[2])}"]`);
   check('펴 보인 호출 블록: 점선이 바깥 선에서 1px 안으로 (보통 블록의 왼쪽 선 + 2가 점선 자리의 가운데)', !!outer && dash[0] === outer[0] + 2, [outer, dash]);
-  check('겹친 테두리: 양옆에 틈 1px (점선 자리 + 틈 1 + 테두리의 가운데)', !!e1 && !!dash && e1[0] - dash[0] === 2.5 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 2.5, [e1, dash]);
+  check('겹친 테두리: 양옆에 틈 1px (점선 자리 + 틈 1 + 테두리의 가운데)', !!e1 && !!dash && e1[0] - dash[0] === 3 && (dash[0] + dash[2]) - (e1[0] + e1[2]) === 3, [e1, dash]);
   await ev(`T.click('${gid(pid[0])}')`); await keys('KeyZ', 'KeyA');
   check('이 자리의 접기 영역 안에서 za: 호출 블록이 아니라 그 접기 영역이 접힘', (await has(lid)) && !(await has(gid(pid[0]))) && (await has(gid(pid[2]))), await ev(`T.msg()`));
   await ev(`T.click('${lid}')`); await keys('KeyI');
@@ -649,10 +649,10 @@ await ev(`T.cmd('exCode')`);
   check('53: 고른 표시는 바탕 없이 2px 테두리, 선의 가운데가 정수 픽셀', !!box && box[0] === 'none' && box[1] === '2' && String(box[2]).endsWith('.5'), box);
   check('53: 고른 것이 있으면 캔버스 포커스 테두리 없음', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === false);
   const file = await ev(saved);
-  check('54: 저장되는 그림에는 편집 층의 녹색이 없음 (고른 표시와 접기 영역의 색이 다름)', !file.includes('#15803d') && file.includes('#4f74d6'), file.slice(0, 200));
+  check('55: 저장되는 그림에는 편집 층의 주황이 없음 (고른 표시와 접기 영역의 색이 다름)', !file.includes('#d0500b') && file.includes('#4f74d6'), file.slice(0, 200));
   check('53: 저장 파일의 이름은 ariadne-nsd (옛 이름 없음)', file.includes('"format": "ariadne-nsd"') && file.includes('id="ariadne-nsd-model"') && !file.includes('nsdrawing'), file.slice(0, 300));
   check('53: 작은 글자는 12px 하나', !/font-size="(11|11\.5|12\.5)"/.test(file));
-  check('54: 저장되는 그림에서 2px 선은 모두 접기 영역의 테두리 색 (두르는 표시는 문서 층에 하나뿐)', [...file.matchAll(/stroke="(#[0-9a-f]{6})" stroke-width="2"/g)].every(m => m[1] === '#4f74d6') && file.includes('stroke="#4f74d6" stroke-width="2"'));
+  check('55: 저장되는 그림에서 2px 이상의 선은 모두 접기 영역의 테두리 색 (두르는 표시는 문서 층에 하나뿐)', [...file.matchAll(/stroke="(#[0-9a-f]{6})" stroke-width="[23]"/g)].every(m => m[1] === '#4f74d6') && file.includes('stroke="#4f74d6" stroke-width="3"'));
   await keys('Escape', 'Escape');
   check('53: 고른 것을 풀면 캔버스에 포커스 테두리용 표시', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === true);
 }
