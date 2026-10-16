@@ -69,7 +69,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | 가르는 것 | 펴진 접기 영역 (문서 층) | 고른 표시 (편집 층) |
 | --- | --- | --- |
 | 색 | 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500` | 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` |
-| 밝기 | L* 51 | L* 51. 흑백으로는 같음(대비 1.01:1). 그래서 색상(서로 반대색)과 모양(띠, 굵기 3px · 2px, 자리)으로 가른다. 적록 · 청황 색각 이상에서도 파랑과 주황은 갈린다 |
+| 밝기 | L* 51 | L* 51. 흑백으로는 같음(대비 1.01:1). 그래서 색상(서로 반대색)과 모양(띠, 자리)으로 가른다. 적록 · 청황 색각 이상에서도 파랑과 주황은 갈린다 |
 | 모양 | 맨 위에 이름 띠가 붙음 | 띠 없는 실선 상자 |
 | 인쇄 | 인쇄됨 | 인쇄되지 않음. 그래서 흑백 인쇄 팔레트에서 둘이 같은 검정이 되어도 문제없음 |
 
@@ -294,7 +294,7 @@ flowchart LR
 | 두드러짐 | 무엇 | 층 | 선 | 인쇄 |
 | --- | --- | --- | --- | --- |
 | 1 (가장 강함) | 글자를 고치는 칸 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` + 흰 바탕 + 커서 | — |
-| 1 | 고른 블록 · 범위 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 바탕은 칠하지 않음 | — |
+| 1 | 고른 블록 · 범위 | 편집 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 바탕은 칠하지 않음 | — |
 | 2 | 펴진 접기 영역 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 2.25pt |
 | 3 | 펴 보인 호출 블록 | 문서 | 1px 점선(6 긋고 4 띄움) <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` + 띠. 블록의 바깥 선에서 1px 안. 그 아래에 3px 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo`)을 깔아 안쪽 블록의 선을 지움 | 0.75pt |
 | 4 | 구조: 블록의 경계, 빗금 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
@@ -318,7 +318,7 @@ flowchart LR
 | 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 |
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 |
 | 마우스 올림 | 블록의 바깥 선에서 1px 안에 1px 테두리. 고른 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |
-| 블록 하나를 고름 | 블록 안쪽 2px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 블록 하나를 고름 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 고름 | 고른 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (규칙은 [[05-ux-decisions#Q4. 비울 수 없는 칸을 비웠을 때 (R2)\|Q4]]에서 정하는 중) |
@@ -369,7 +369,7 @@ flowchart LR
 설계 문서는 확대해서 보고 인쇄합니다. 100% 배율에서 곧은 선은 픽셀 격자에 맞춥니다.
 
 - 그림 전체를 반 픽셀 옮깁니다(`translate(.5 .5)`). 그러면 정수 좌표에 놓은 1px 선이 한 픽셀 줄을 꼭 채웁니다.
-- **홀수 굵기**(1px, 3px)의 선은 가운데가 반 픽셀에, **짝수 굵기**(2px)의 선은 가운데가 정수 픽셀에 오게 놓습니다. 그래서 2px 고른 표시는 블록의 경계에서 반 픽셀 안에, 3px 접기 영역 테두리는 1px 안에 가운데를 둡니다.
+- **홀수 굵기**(1px, 3px)의 선은 가운데가 반 픽셀에, **짝수 굵기**(2px)의 선은 가운데가 정수 픽셀에 오게 놓습니다. 그래서 3px인 접기 영역 테두리와 고른 표시는 블록의 경계에서 1px 안에 가운데를 둡니다.
 - 가로세로 사각형에만 `shape-rendering="crispEdges"`를 씁니다. 빗금과 곡선은 안티앨리어싱 그대로 둡니다.
 - 테두리 안의 테두리는 1px 틈을 두므로, 겹치거나 이어져도 선이 한 덩어리로 뭉개지지 않습니다.
 

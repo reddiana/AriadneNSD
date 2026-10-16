@@ -646,7 +646,7 @@ await ev(`T.cmd('exCode')`);
   const b = (await ev(`T.doc()`)).diagrams[0].body;
   await ev(`T.click('${b[1].id}')`);
   const box = await ev(`(e => e && [e.getAttribute('fill'), e.getAttribute('stroke-width'), e.getAttribute('x')])(document.querySelector('#svg rect[data-selbox]'))`);
-  check('53: 고른 표시는 바탕 없이 2px 테두리, 선의 가운데가 정수 픽셀', !!box && box[0] === 'none' && box[1] === '2' && String(box[2]).endsWith('.5'), box);
+  check('56: 고른 표시는 바탕 없이 3px 테두리, 선의 가운데가 반 픽셀', !!box && box[0] === 'none' && box[1] === '3' && Number.isInteger(+box[2]), box);
   check('53: 고른 것이 있으면 캔버스 포커스 테두리 없음', (await ev(`document.querySelector('.stage').classList.contains('nosel')`)) === false);
   const file = await ev(saved);
   check('55: 저장되는 그림에는 편집 층의 주황이 없음 (고른 표시와 접기 영역의 색이 다름)', !file.includes('#d0500b') && file.includes('#4f74d6'), file.slice(0, 200));

@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">55번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">56번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -161,6 +161,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
         <label><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label>
+        <label title="시안 M19의 S1 · S2를 견주려고 잠시 둔 선택입니다">고른 표시 <select id="optSel"><option value="#d0500b">주황 (S1)</option><option value="#c2189a">자홍 (S2)</option></select></label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
           <output id="zoomOut">100%</output>
@@ -208,7 +209,13 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 55번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 56번째 판)</h2>
+      <ul>
+        <li><b>고른 표시도 3px입니다.</b> 접기 영역의 테두리와 같은 굵기입니다.</li>
+        <li><b>고른 표시의 색을 고를 수 있습니다(잠시).</b> 캔버스 위의 "고른 표시"에서 주황(S1)과 자홍(S2)을 바꿔 가며 견주세요. 정하면 이 선택은 없앱니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 55번째 판)</h2>
       <ul>
         <li><b>고른 표시는 주황, 펴진 접기 영역의 테두리는 3px입니다.</b> 54번째 판의 녹색 고른 표시를 주황으로(시안 M19의 S1. 블록 바탕 위에서 대비 3:1을 지키려고 시안보다 조금 진함), 접기 영역의 테두리를 2px에서 3px로(시안 M11에서 고른 굵기) 바꿨습니다.</li>
       </ul>
@@ -785,7 +792,7 @@ function firstIn(list) {
 }
 
 /* ---------- 레이아웃 ---------- */
-const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, rgap: 1 };   // rb: 접기 영역 테두리의 굵기 (55번째 판에서 3px, M11에서 고른 굵기)
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, sb: 3, rgap: 1 };   // sb: 고른 표시의 굵기 (56번째 판에서 3px)   // rb: 접기 영역 테두리의 굵기 (55번째 판에서 3px, M11에서 고른 굵기)
 const RIN = K.rb + K.rgap;   // 테두리 안에 겹친 테두리가 들어가는 깊이: 테두리 굵기 + 틈
 const PIN = 4;               // 펴 보인 호출 블록 안의 블록이 들어가는 깊이: 점선 아래의 흰 줄 3px + 틈 1 (접기 영역의 굵기와 상관없음)
 const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
@@ -1152,7 +1159,7 @@ function drawSVG(lay, ui) {
       if (boxes.every(Boolean)) {
         const x1 = Math.min(...boxes.map(b => b.x)), y1 = Math.min(...boxes.map(b => b.y));
         const x2 = Math.max(...boxes.map(b => b.x + b.w)), y2 = Math.max(...boxes.map(b => b.y + b.h));
-        s.push(`<rect data-selbox="" x="${x1 + .5}" y="${y1 + .5}" width="${x2 - x1 - 1}" height="${y2 - y1 - 1}" fill="none" stroke="${COL.sel}" stroke-width="2" pointer-events="none"/>`);
+        s.push(`<rect data-selbox="" x="${x1 + K.sb / 2 - .5}" y="${y1 + K.sb / 2 - .5}" width="${x2 - x1 - K.sb + 1}" height="${y2 - y1 - K.sb + 1}" fill="none" stroke="${COL.sel}" stroke-width="${K.sb}" pointer-events="none"/>`);
       }
     }
   }
@@ -2171,6 +2178,8 @@ $('#file').addEventListener('change', ev => {
   ev.target.value = '';
 });
 $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
+// 고른 표시의 색을 견주는 임시 선택 (56번째 판). 편집 층의 색이라 저장되는 그림과 상관없다
+$('#optSel').addEventListener('change', e => { COL.sel = e.target.value; editor.style.borderColor = COL.sel; render(); });
 $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
 $('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
 
