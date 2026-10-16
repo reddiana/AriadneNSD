@@ -58,7 +58,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .zoom { display: flex; gap: 4px; align-items: center; }
 .zoom output { min-width: 3.5em; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
 
-#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #2c55c9; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
+#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #15803d; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
 
 .side { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding-block: 14px; padding-inline: 18px; min-width: 0; }
 .side h2 { font-size: 13px; font-weight: 600; margin: 18px 0 8px; letter-spacing: .02em; }
@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">53번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">54번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -208,7 +208,12 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 53번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 54번째 판)</h2>
+      <ul>
+        <li><b>펴진 접기 영역은 다시 파랑, 고른 표시는 녹색입니다.</b> 53번째 판의 진회색 테두리를 52번째 판의 파랑으로 되돌리고, 둘이 섞이지 않게 고른 블록의 테두리와 글자를 고치는 칸의 테두리를 녹색으로 바꿨습니다(시안 M19의 S3).</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 53번째 판)</h2>
       <ul>
         <li><b>색과 선을 시각 디자인 문서에 맞췄습니다.</b> 구조선 · 주석 · 숫자 · 펴 보인 글자의 색을 진하게 해 WCAG 대비를 맞췄습니다. 접기 영역의 테두리와 이름 띠는 고른 표시의 파랑과 섞이지 않게 무채색 2px로, 갈래 이름("참" · "거짓")은 키워드의 파랑과 섞이지 않게 회색으로 바꿨습니다. 고른 표시는 바탕을 칠하지 않고 테두리만 둡니다. 작은 글자는 모두 12px입니다. 고른 것이 없을 때 키보드로 캔버스에 오면 캔버스 안쪽에 테두리가 보입니다.</li>
         <li><b>저장 파일 안의 이름이 <code>ariadne-nsd</code>가 되었습니다.</b> 전에는 옛 이름 <code>nsdrawing</code>이었습니다. 전에 받은 파일도 그대로 열립니다.</li>
@@ -1003,8 +1008,8 @@ const COL = {
   // 값과 까닭은 docs/02-ux-design/04-visual-design.md (53번째 판에서 WCAG 대비를 맞춤)
   stroke: '#5b77ad', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
   ink: '#151a22', label: '#4b5567', kw: '#1f45d6', cm: '#22702a', num: '#8a5a00', str: '#8a5a00',
-  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#2c55c9',   // sel은 편집 층(저장되지 않음)에만 쓴다
-  edge: '#343b48', foldBand: '#eceef2', foldName: '#343b48',            // 접기 영역의 테두리, 이름 띠, 띠의 글자 (문서 층이라 무채색)
+  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#15803d',   // sel은 편집 층(저장되지 않음)에만 쓴다. 접기 영역의 파랑과 섞이지 않게 녹색 (54번째 판)
+  edge: '#4f74d6', foldBand: '#e6ecfb', foldName: '#2c55c9',            // 접기 영역의 테두리, 이름 띠, 띠의 글자 (54번째 판에서 52번째 판의 파랑으로 되돌림)
   callEdge: '#7a5fb8', callBand: '#ddd4ef', shown: '#555e70'            // 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
 };
 let ink = COL.ink;   // 지금 그리는 블록의 글자 색. 펴 보인 블록은 회색으로, 구문 강조 없이 그린다

@@ -64,17 +64,17 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 그림 위의 모든 표시는 **문서 층**(파일에 저장됨)과 **편집 층**(화면에만 있음) 가운데 하나에 속합니다. 사용자는 화면을 보고 언제나 "이것이 파일에 들어가는가"를 알 수 있어야 합니다. 그래서 이렇게 약속합니다.
 
 > [!important] 층의 약속
-> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 층에 하나(펴진 접기 영역, 무채색 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.700` + 이름 띠), 편집 층에 하나(고른 것 · 고치는 칸, 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600`, 띠 없음)뿐이다. 그 밖의 문서 층의 색(1px 구조선의 회청, 키워드의 파랑 글자, 1px 점선의 보라)은 두르는 표시가 아니므로 편집 층과 헷갈리지 않는다.
+> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 층에 하나(펴진 접기 영역, 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500` + 이름 띠), 편집 층에 하나(고른 것 · 고치는 칸, 녹색 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600`, 띠 없음)뿐이다. 그 밖의 문서 층의 색(1px 구조선의 회청, 키워드의 파랑 글자, 1px 점선의 보라)은 두르는 표시가 아니므로 편집 층과 헷갈리지 않는다.
 
 | 가르는 것 | 펴진 접기 영역 (문서 층) | 고른 표시 (편집 층) |
 | --- | --- | --- |
-| 색 | 무채색 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.700` | 채도 높은 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` |
-| 밝기 | L* 25 | L* 40. 화면을 흑백으로 보아도 다름 (대비 1.74:1) |
+| 색 | 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500` | 녹색 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600` |
+| 밝기 | L* 51 | L* 47. 흑백으로는 거의 같음(대비 1.15:1). 그래서 색상과 모양(띠, 자리)으로 가른다. 적록 색각 이상에서도 파랑과 녹색은 갈린다 |
 | 모양 | 맨 위에 이름 띠가 붙음 | 띠 없는 실선 상자 |
 | 인쇄 | 인쇄됨 | 인쇄되지 않음. 그래서 흑백 인쇄 팔레트에서 둘이 같은 검정이 되어도 문제없음 |
 
-- 근거: 52번째 판까지는 접기 영역의 테두리(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `#4f74d6`)와 고른 표시(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9`)가 같은 파랑이었고, 접기 영역 이름 글자는 코드에서 고른 표시의 색을 그대로 썼습니다. 고른 상자가 저장되는 테두리처럼 보였습니다.
-- 확인: 저장된 SVG에 편집 층의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600`)이 한 번도 나오지 않고, 굵기 2px의 선은 모두 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge`의 색인가. 프로토타입 시험이 확인합니다.
+- 근거: 접기 영역과 고른 표시가 같은 파랑이면 고른 상자가 저장되는 테두리처럼 보입니다(52번째 판까지 그랬음). 그래서 둘 가운데 하나는 파랑이 아니어야 하고, 접기 영역은 파랑으로 두고 고른 표시를 녹색으로 했습니다(2026-10-17). 고른 과정 → M19 접기 영역 색 시안 B · S3: https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9, 사본 `journal/assets/2026-10-17-fold-color-study.html`
+- 확인: 저장된 SVG에 편집 층의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600`)이 한 번도 나오지 않고, 굵기 2px의 선은 모두 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge`의 색인가. 프로토타입 시험이 확인합니다.
 
 ### 원칙 4. 문서는 종이다
 
@@ -138,7 +138,7 @@ flowchart LR
 | --- | --- | --- |
 | 원시 (primitive) | `ink.700 = #343b48` | 색 자체. 뜻이 없다 |
 | 의미 (semantic) | `text.primary → ink.900` | 역할. 테마가 바꾸는 곳 |
-| 구성 요소 (component) | `fold.edge → ink.700` | 한 구성 요소의 한 부분 |
+| 구성 요소 (component) | `fold.edge → blue.500` | 한 구성 요소의 한 부분 |
 
 ### 3.2 원시 팔레트
 
@@ -152,6 +152,8 @@ flowchart LR
 | `slate.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `#5b77ad` | 50 | `fill.mint` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `#e2efdf` | 93 |
 | `blue.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f45d6` | 37 | `fill.lilac` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `#ebe7f4` | 92 |
 | `blue.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | 40 | `fill.sky` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `#dce6f6` | 91 |
+| `blue.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `#4f74d6` | 51 | `fill.ice` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e6ecfb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e6ecfb` | 93 |
+| `green.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `#15803d` | 47 | | | |
 | `violet.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#7a5fb8` | 47 | `fill.lilac-strong` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `#ddd4ef` | 86 |
 | `green.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `#22702a` | 41 | `red.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `#b42318` | 40 |
 | `amber.800` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `#8a5a00` | 42 | | | |
@@ -175,9 +177,9 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.keyword` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700` | 키워드 | 5.80 ~ 7.29 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `green.700` | 주석 | 4.88 ~ 6.14 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `amber.800` | 숫자, 문자열 | 4.71 ~ 5.93 | 4.5:1 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.700` | 펴진 접기 영역의 테두리 | 8.95 ~ 11.26 | 3:1 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#eceef2;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#eceef2;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.mist` | 이름 띠 바탕 | | |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.700` | 이름 띠 글자 | 9.69 (띠 위) | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500` | 펴진 접기 영역의 테두리 | 3.48 ~ 4.37 | 3:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e6ecfb;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e6ecfb;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.ice` | 이름 띠 바탕 | | |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` | 이름 띠 글자 | 5.46 (띠 위) | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.500` | 펴 보인 호출 블록의 점선 | 4.02 ~ 5.05 | 3:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.fill` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper` | 펴 보인 호출 블록의 바탕 (안쪽 블록이 제 바탕을 칠함) | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper` | 점선 아래에 까는 3px 줄. 안쪽 블록의 바깥 선을 지워 점선이 홀로 보이게 함 | | |
@@ -207,10 +209,10 @@ flowchart LR
 
 | 토큰 | → 원시 | 역할 |
 | --- | --- | --- |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` | 고른 블록 · 범위의 테두리 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` | 마우스가 올라간 블록 (1px. 블록 바탕 위 4.53:1 이상) |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` | 글자를 고치는 칸의 테두리 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.600` | 끌어 놓을 자리의 줄 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600` | 고른 블록 · 범위의 테두리 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600` | 마우스가 올라간 블록 (1px. 블록 바탕 위 3.99:1 이상, 펴 보기의 띠 위 3.52:1) |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600` | 글자를 고치는 칸의 테두리 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `green.600` | 끌어 놓을 자리의 줄 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `red.700` | 받아들일 수 없는 입력 (종이 위 5.23 ~ 6.57:1) |
 
 ## 4. 글자
@@ -234,7 +236,7 @@ flowchart LR
 | 호출 블록 | 본문 | 블록 글꼴 | Method 이름만 굵게(600) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
 | 접힌 접기 영역의 이름 | 본문 | 블록 글꼴 | 보통. 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
 | 갈래 이름 ("참" · "거짓", Case 갈래) | 보조 | 비례폭 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` |
-| 접기 영역의 이름 띠 | 보조 | 비례폭 | 굵게(600). 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` |
+| 접기 영역의 이름 띠 | 보조 | 비례폭 | 굵게(600). 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` |
 | 펴 보기의 띠 | 보조 | 블록 글꼴 | 호출 블록처럼 Method 이름만 굵게 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` |
 | 펴 보인 블록 글자 | 본문 | 블록 글꼴 | 보통, 구문 강조 없음 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` |
 | 접힌 제어 블록 갈래 ("⋯ 블록 n개") | 보조 | 비례폭 | 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
@@ -291,12 +293,12 @@ flowchart LR
 
 | 두드러짐 | 무엇 | 층 | 선 | 인쇄 |
 | --- | --- | --- | --- | --- |
-| 1 (가장 강함) | 글자를 고치는 칸 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` + 흰 바탕 + 커서 | — |
-| 1 | 고른 블록 · 범위 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 바탕은 칠하지 않음 | — |
-| 2 | 펴진 접기 영역 | 문서 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 1.5pt |
+| 1 (가장 강함) | 글자를 고치는 칸 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` + 흰 바탕 + 커서 | — |
+| 1 | 고른 블록 · 범위 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 바탕은 칠하지 않음 | — |
+| 2 | 펴진 접기 영역 | 문서 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 1.5pt |
 | 3 | 펴 보인 호출 블록 | 문서 | 1px 점선(6 긋고 4 띄움) <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` + 띠. 블록의 바깥 선에서 1px 안. 그 아래에 3px 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo`)을 깔아 안쪽 블록의 선을 지움 | 0.75pt |
 | 4 | 구조: 블록의 경계, 빗금 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
-| — | 마우스 올림 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음) | — |
+| — | 마우스 올림 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음) | — |
 
 - 고른 표시에 바탕을 칠하지 않는 까닭: 옅은 파랑을 덮으면 블록 바탕의 색조가 흐려지고(원칙 2), 구조선의 대비가 2:1 아래로 떨어집니다(원칙 1).
 - 고른 표시를 블록 **안쪽**에 그리는 까닭: NS 차트의 블록은 서로 맞붙어 있어서, 바깥에 두르면 이웃 블록과 접기 영역의 테두리를 덮습니다.
@@ -313,16 +315,16 @@ flowchart LR
 | 접힌 제어 블록의 갈래 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
 | 펴 보인 호출 블록 | 점선 + 띠(`▾` + 호출 블록의 글자). 안의 글자는 회색이고 구문 강조 없음. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 있음 |
 | 부를 Method가 없는 호출 블록 | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
-| 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 |
+| 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 |
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 |
-| 마우스 올림 | 블록의 바깥 선에서 1px 안에 1px 테두리. 고른 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |
-| 블록 하나를 고름 | 블록 안쪽 2px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 여러 블록을 고름 | 고른 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
+| 마우스 올림 | 블록의 바깥 선에서 1px 안에 1px 테두리. 고른 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |
+| 블록 하나를 고름 | 블록 안쪽 2px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 여러 블록을 고름 | 고른 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (규칙은 [[05-ux-decisions#Q4. 비울 수 없는 칸을 비웠을 때 (R2)\|Q4]]에서 정하는 중) |
 | 고른 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
 | 끄는 중 | 끌고 있는 블록은 제자리에서 불투명도 40%. 커서 곁에 블록의 글자 첫 줄 | 편집 | | **없음** |
-| 놓을 자리 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
+| 놓을 자리 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#15803d;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
 | 놓을 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | **없음** |
 
 **겹칠 때의 규칙:**

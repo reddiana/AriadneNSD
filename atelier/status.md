@@ -22,7 +22,6 @@ updated: 2026-10-17
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M19 | 접기 영역 색 시안 (2026-10-17, 답을 기다림) | https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9 | `journal/assets/2026-10-17-fold-color-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
@@ -64,7 +63,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 - [ ] **다음 세션의 첫 일:** 메인테이너가 [[03-architecture]]를 Obsidian으로 읽고, Claude가 정해 적은 일곱 가지를 확인한다 → [[03-architecture#8. 확인받지 못한 제안]]. 하나씩 묻고, 그림이나 작은 예제를 붙인다(2026-10-14 · 15 · 16에도 넘어감)
 - [ ] 그다음: UI 프레임워크([[0010-ui-framework|ADR-0010]]) 결정, 상세 설계 [[01-model]]
 - [ ] 번들할 글꼴 고르기(어느 글꼴, 고정폭을 쓰는지, 한글을 모두 싣는지) → [[debt#정해 주세요]]
-- [ ] 메인테이너가 프로토타입 53번째 판을 써 보기. 시각 디자인의 느낌(진회색 2px 테두리, 갈래 이름의 회색과 점선 1px, 테두리만 있는 고른 표시) → [[debt#확인해 주세요]]. 그 밖에 실제 마우스 휠과 터치패드로 블록을 옮겨 다니는 느낌, `Esc` 두 번, 리뷰 1판 · 2판의 느낌, 블록 하나짜리 접기 영역이 강조 대용으로 쓸 만한지(지금은 만들면 바로 접힘), 한글을 적다가 `Esc`를 누르면 한 번에 받아들이는지
+- [ ] 메인테이너가 프로토타입 54번째 판을 써 보기. 시각 디자인의 느낌(파랑 접기 영역과 녹색 고른 표시, 갈래 이름의 회색과 점선 1px, 테두리만 있는 고른 표시) → [[debt#확인해 주세요]]. 그 밖에 실제 마우스 휠과 터치패드로 블록을 옮겨 다니는 느낌, `Esc` 두 번, 리뷰 1판 · 2판의 느낌, 블록 하나짜리 접기 영역이 강조 대용으로 쓸 만한지(지금은 만들면 바로 접힘), 한글을 적다가 `Esc`를 누르면 한 번에 받아들이는지
 - [ ] 리뷰 3판(고치기 규칙, Q1 · Q2 · Q4)을 아키텍처와 나란히 → [[prototype#리뷰 순서]]. 프로토타입의 알려진 구멍은 하나씩 본다 → [[prototype#알려진 구멍]]
 - [ ] 남은 "정해 주세요"와 "확인해 주세요"를 하나씩 → [[debt]]. 물음은 그림으로 묻는다
 - [ ] 새 UX 문서 다섯을 Obsidian에서 열어 보고 어색한 곳을 알려 주기 (메인테이너)
