@@ -63,7 +63,7 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>CB1. 부를 것을 그리지 않았을 때 (라이브러리 함수, 아직 그리지 않은 서브루틴)</h2>
     <p class="q"><code>printf</code>나 <code>qsort</code>처럼 남이 만든 함수, 또는 아직 그리지 않은 서브루틴을 부르는 장면입니다. <b>같은 문서에 Method가 없는 호출 블록을 어떻게 넣고 어떻게 보이게 하는가</b>를 고르는 물음입니다.</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">CB1 · 1번</span><h3>이름을 직접 적는 호출 블록</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card pick"><header><span class="tag">CB1 · 1번</span><h3>이름을 직접 적는 호출 블록</h3><span class="badge">Claude의 추천</span><span class="badge" style="color:var(--accent);background:var(--accent-soft)">2026-10-17에 정함</span></header>
         <div class="paper" data-cb1="typed"></div>
         <ul><li>이름 · 인자 · 결과를 모두 직접 적습니다. 모양은 보통 호출 블록과 같습니다(실선 이중선). 남의 함수를 부르는 것은 잘못이 아니기 때문입니다.</li><li>이어진 곳이 없으니 펴 보기와 따라가기(<kbd>gd</kbd>)는 없습니다.</li><li>나중에 같은 문서에 Method를 그리면 부를 Method 바꾸기(<kbd>r</kbd>)로 잇습니다. 이으면 그때부터 이름이 머리를 따릅니다.</li><li>점선과 <code>?</code>는 지금처럼 "부르던 Method가 없어진" 때에만 씁니다.</li></ul></article>
       <article class="card"><header><span class="tag">CB1 · 2번</span><h3>지금처럼, Method가 있어야 부른다</h3><span class="badge now">지금 프로토타입</span></header>
@@ -80,7 +80,7 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>CB2. 부를 Method가 다른 문서(다른 <code>.ns.svg</code> 파일)에 있을 때</h2>
     <p class="q"><code>main.ns.svg</code>에서 <code>sort.ns.svg</code> 안의 Method <code>quicksort</code>를 부르는 장면입니다. <b>어느 파일의 무엇을 부르는지를 호출 블록이 기억하는가</b>를 고르는 물음입니다. CB1을 1번으로 정한다는 전제로 그렸습니다.</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">CB2 · 1번</span><h3>파일과 Method를 가리켜 둔다</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card pick"><header><span class="tag">CB2 · 1번</span><h3>파일과 Method를 가리켜 둔다</h3><span class="badge">Claude의 추천</span><span class="badge" style="color:var(--accent);background:var(--accent-soft)">2026-10-17에 정함</span></header>
         <div class="paper" data-cb2="link"></div>
         <ul><li>호출 블록이 "어느 파일의 어느 Method"를 기억합니다. 블록 오른쪽에 파일 이름 딱지가 작게 보입니다.</li><li>따라가기(<kbd>gd</kbd>)는 그 파일을 엽니다. 펴 보기는 그 파일을 읽을 수 있는 곳(Obsidian, 데스크톱)에서만 됩니다. 웹에서는 그 파일을 함께 열었을 때만 됩니다.</li><li><span class="bad">파일을 옮기거나 이름을 바꾸면 끊깁니다.</span> 끊기면 지금처럼 점선과 <code>?</code>로 알립니다. 그 파일의 머리 이름이 바뀌면 그 파일을 읽을 수 있을 때만 따라 바뀝니다.</li><li>Obsidian 볼트와 같은 폴더 안에서 쓰기 좋습니다. 배포 대상마다 파일을 찾는 길을 만들어야 해서 할 일이 늘어납니다.</li></ul></article>
       <article class="card"><header><span class="tag">CB2 · 2번</span><h3>이름만 적는다</h3></header>
@@ -93,8 +93,8 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
     <h2>답하실 것</h2>
     <div class="sum">
       <ol>
-        <li><b>CB1</b> 부를 것을 그리지 않았을 때: 1 이름을 직접 적는 호출 블록(보통 모양) / 2 Method가 있어야 부름(지금) / 3 이름을 적되 점선과 ?로. 추천 1</li>
-        <li><b>CB2</b> 다른 문서의 Method: 1 파일과 Method를 가리켜 둠 / 2 이름만 적음. 추천 1. 어느 쪽이든 우선순위는 따로 여쭙니다</li>
+        <li><b>CB1</b> 부를 것을 그리지 않았을 때: 1 이름을 직접 적는 호출 블록(보통 모양) / 2 Method가 있어야 부름(지금) / 3 이름을 적되 점선과 ?로. 추천 1. <b>정함: 1번</b> (2026-10-17)</li>
+        <li><b>CB2</b> 다른 문서의 Method: 1 파일과 Method를 가리켜 둠 / 2 이름만 적음. 추천 1. <b>정함: 1번</b> (2026-10-17). 어느 쪽이든 우선순위는 따로 여쭙니다</li>
       </ol>
     </div>
   </section>
