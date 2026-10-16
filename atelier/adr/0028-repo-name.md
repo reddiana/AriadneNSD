@@ -12,6 +12,7 @@ superseded-by:
 
 > [!NOTE] 이후 변경
 > - 2026-10-15: 로컬 폴더도 `C:\myProject\AriadneNSD`로 바꾸기로 했다(메인테이너: "로컬 repo 디렉토리명도 바꾸려고 합니다"). 이 세션이 끝난 뒤 메인테이너가 바꾸고, Claude Code의 메모리 폴더는 Claude가 새 이름으로 복사해 두었다. 아래 표의 "로컬 폴더 · 그대로 둔다"와 후속 작업의 마지막 줄은 이것으로 바뀌었다 → [[2026-10-15-01-inbox-repo-name]]
+> - 2026-10-16: 메인테이너가 로컬 폴더를 `C:\myProject\AriadneNSD`로 바꿨다. 아래 "결정" 표의 "로컬 폴더 `ariadne-nsd` 그대로 둔다"는 이렇게 바뀌었다. 같은 날 `NOTICE`와 [[name-story]], [[names-and-registries]]에 남아 있던 옛 저장소 주소와 표기도 고쳤다 → [[2026-10-16-01-inbox-old-address]]
 
 ## 배경
 
