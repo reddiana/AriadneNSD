@@ -222,7 +222,7 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P0 갈래 너비 자동 분배 (어느 갈래가 깊어져도 전체 직사각형 유지) ^lay-branch-width
 - [ ] #P0 확대/축소, 화면 이동 ^lay-zoom
 - [ ] #P1 한글/영문 혼용 텍스트의 정확한 폭 측정 ^lay-text-measure
-- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[0013-default-visual-style|ADR-0013]] ^lay-default-style
+- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[0013-default-visual-style|ADR-0013]], 상세 [[03-visual-design]] ^lay-default-style
 - [ ] #P1 블록 글자의 종류를 문서마다 하나 고른다: 문장 / C / Java / Python / Bash 등 ^lay-text-kind
 - [ ] #P1 블록 글자의 구문 강조 (키워드, 주석을 다른 색으로). 고른 종류([[#^lay-text-kind]])의 문법을 따르고, 문장이면 강조하지 않는다 ^lay-syntax
 - [ ] #P1 테마: 글꼴, 선 굵기, 블록 종류별 색, 접기 영역의 테두리와 이름 띠의 색, 펴 보인 호출 블록의 점선과 띠의 색, 글자 색, 흑백 인쇄 모드. 테마를 바꿔도 레이아웃은 그대로 ^lay-theme
