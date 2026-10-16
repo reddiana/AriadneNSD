@@ -382,8 +382,8 @@ await keys('BracketRight', 'BracketRight', 'KeyJ');
 check('[[ ]]: 앞 · 뒤 다이어그램', atFirst === 'Method 머리' && (await ev(where)) === '처리', [atFirst, await ev(where)]);
 await ev(`T.cmd('exCode')`);
 d = await ev(`T.doc()`);
-await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('+KeyK', 'KeyC', '+KeyD');
-check('옛 한 글자 키(K, C, D)는 아무것도 넣지 않음 (W는 59번째 판에서 되살림)', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
+await ev(`T.click('${d.diagrams[0].body[0].id}')`); await keys('KeyW', '+KeyK', 'KeyC', '+KeyD');
+check('옛 한 글자 키(W, K, C, D)는 아무것도 넣지 않음 (W는 59번째 판에서 되살렸다가 60번째 판에서 다시 뺌)', (await ev(texts)) === t0 && (await ev(`T.editing()`)) === null, [await ev(texts), await ev(`T.editing()`)]);
 
 // y. Vim에 맞춘 것 (2026-10-13): ds가 호출 블록을 풀고 안쪽에서도 들음, i · cc, Ctrl+R, V, zo · zc
 await ev(`T.cmd('exQuick')`);
@@ -670,15 +670,9 @@ await ev(`T.cmd('exCode')`);
   check('58: Ctrl+Shift+F로 접기 영역을 풂', (await ranges()) === before, await ev(`T.msg()`));
 }
 
-// 59번째 판: 겹치지 않는 옛 키 w / W(While 넣기), Shift+L(갈래 이름 고치기)
+// 59번째 판: 겹치지 않는 옛 키 Shift+L(갈래 이름 고치기). w / W는 60번째 판에서 뺌
 await ev(`T.cmd('exCode')`);
 {
-  const count = t => ev(`(() => { let k = 0; const w = l => l.forEach(n => { if (n.type === '${t}') k++; Object.values(n).forEach(v => Array.isArray(v) && v.length && typeof v[0] === 'object' && w(v)); }); T.doc().diagrams.forEach(d => w(d.body)); return k; })()`);
-  const n0 = await count('while');
-  const b = (await ev(`T.doc()`)).diagrams[0].body;
-  await ev(`T.click('${b[0].id}')`); await keys('KeyW');
-  if ((await ev(`T.editing()`)) !== null) await keys('Escape');
-  check('59: w로 While을 넣음', (await count('while')) === n0 + 1, await ev(`T.msg()`));
   await ev(`T.cmd('exCase')`);
   const cs = (await ev(`T.doc()`)).diagrams[0].body.find(n => n.type === 'case');
   await ev(`T.click('${cs.c0[0].id}'); T.key('KeyL', { shift: true })`);

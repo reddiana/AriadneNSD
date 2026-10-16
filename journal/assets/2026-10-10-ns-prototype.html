@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">59번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">60번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -123,7 +123,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="ins:process" title="o (앞에: O)">처리</button>
       <button data-cmd="ins:if" title="a i (앞에: A i)">If</button>
       <button data-cmd="ins:case" title="a k (앞에: A k)">Case</button>
-      <button data-cmd="ins:while" title="a w 또는 w (앞에: A w 또는 W)">While</button>
+      <button data-cmd="ins:while" title="a w (앞에: A w)">While</button>
       <button data-cmd="ins:dowhile" title="a d (앞에: A d)">Do-While</button>
       <button data-cmd="callAsk" title="a c: Method를 부르는 블록">호출</button>
       <button data-cmd="kind:event" title="e: Event 머리 달기 · 머리를 골랐으면 Event로 바꾸기 (E: 새 Event 다이어그램)">Event</button>
@@ -208,9 +208,9 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 59번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-17, 59 · 60번째 판)</h2>
       <ul>
-        <li><b>지금 키와 겹치지 않는 옛 키를 되살렸습니다.</b> <kbd>w</kbd> / <kbd>W</kbd>는 While을 뒤 / 앞에 넣습니다(<kbd>a</kbd> <kbd>w</kbd> · <kbd>A</kbd> <kbd>w</kbd>와 같음). <kbd>Shift</kbd>+<kbd>L</kbd>은 Case 갈래의 이름을 고칩니다.</li>
+        <li><b>지금 키와 겹치지 않는 옛 키를 되살렸습니다.</b> <kbd>Shift</kbd>+<kbd>L</kbd>은 Case 갈래의 이름을 고칩니다. 59번째 판에서 함께 되살렸던 <kbd>w</kbd> / <kbd>W</kbd>(While 넣기)는 Vim의 "다음 낱말로"와 헷갈려 60번째 판에서 다시 뺐습니다.</li>
       </ul>
 
       <h2>앞서 바뀐 것 (10-17, 58번째 판)</h2>
@@ -2338,7 +2338,7 @@ const PEND_HINT = {
 };
 // 오른쪽 클릭 메뉴에 적는 키. 한 번 누르는 키가 따로 있으면 함께 적는다 (za · f)
 const VIMKEY = {
-  edit: 'i · Enter', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w · w', 'ins:dowhile': 'a d', callAsk: 'a c',
+  edit: 'i · Enter', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
   'kind:event': 'e', 'kind:method': 'm', 'newDia:event': 'E', 'newDia:method': 'M', retargetAsk: 'r', goto: 'gd',
   'wrap:while': 's w', 'wrap:dowhile': 's d', 'wrap:if': 's i', 'wrap:case': 's k', unwrap: 'd s', laneLabel: '⇧L',
   fold: 'za · f', makeRegion: 'zf · ⇧F', releaseRegion: 'zd · Ctrl+⇧F', cut: 'dd', copy: 'yy', paste: 'p', del: 'x · Del'
@@ -2448,7 +2448,6 @@ function vimKey0(ev) {
   else if (k === 'U') redo();
   else if (k === 'f') fold();
   else if (k === 'F') makeRegion();
-  else if (k === 'w' || k === 'W') insert('while', k === 'W' ? 'before' : 'after');   // 옛 키 W (59번째 판에서 되살림). a w · A w와 같다
   else if (k === 'L') laneLabel();   // 옛 키 L을 Shift+L로 (59번째 판). 소문자 l은 오른쪽 이동   // 옛 키 Shift+F (58번째 판에서 되살림, 메인테이너). 풀기의 옛 키 Ctrl+Shift+F는 계속 들었다
   else if (k === 'e' || k === 'E') kindCmd('event', k === 'E');
   else if (k === 'm' || k === 'M') kindCmd('method', k === 'M');
