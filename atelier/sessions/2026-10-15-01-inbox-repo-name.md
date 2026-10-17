@@ -24,8 +24,8 @@ date: 2026-10-15
 
 | 무엇 | 결정 | 어디에 |
 | --- | --- | --- |
-| GitHub 저장소 이름 | `AriadneNSD` (패키지 · 플러그인 id · 태그는 `ariadne-nsd` 그대로) | [[0028-repo-name\|ADR-0028]] |
-| 로컬 폴더 이름 | `C:\myProject\AriadneNSD` (세션 뒤 메인테이너가 바꿈) | [[0028-repo-name\|ADR-0028]]의 이후 변경 |
+| GitHub 저장소 이름 | `AriadneNSD` (패키지 · 플러그인 id · 태그는 `ariadne-nsd` 그대로) | [[dr-0011-repo-name\|ADR-0028]] |
+| 로컬 폴더 이름 | `C:\myProject\AriadneNSD` (세션 뒤 메인테이너가 바꿈) | [[dr-0011-repo-name\|ADR-0028]]의 이후 변경 |
 | 고른 것 풀기 | `Esc` 두 번 연속, 다이어그램 바깥의 빈 캔버스 클릭 | [[02-interaction-rules]] |
 | 마우스 휠 | 블록을 골랐으면 `j` `k`와 같고, 아니면 스크롤 | [[02-interaction-rules]], [[03-keymap]] |
 | If · Case 아래에서 `k` | 가장 왼쪽 갈래의 맨 아래 블록으로 | [[02-interaction-rules]] |

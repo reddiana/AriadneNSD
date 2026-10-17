@@ -69,7 +69,7 @@ Apache-2.0과 MIT는 소프트웨어를 생각하고 쓴 글입니다. 문서, �
 | 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, README) | CC BY 4.0 | `LICENSE-docs` |
 | 로고 | 허락하지 않음 | |
 
-근거: [[0023-license|ADR-0023]], [[0024-license-scope|ADR-0024]]
+근거: [[dr-0007-license|DR-0007]], [[dr-0008-license-scope|DR-0008]]
 
 앞으로 볼 것:
 

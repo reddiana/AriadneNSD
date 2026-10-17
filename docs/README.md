@@ -11,7 +11,7 @@ updated: 2026-10-12
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 먼저 만들고, 그 위에 Google Drive · Confluence · IDE 플러그인 · Claude skill이 붙습니다 → [[01-requirements#2. 배포 대상]].
 
-이 폴더에는 **지금의 모습**만 둡니다: 무엇을 만드는지, 사용자에게 어떻게 보이는지, 어떻게 만드는지. 거기에 이르기까지의 결정 기록(ADR)과 논의는 `atelier/`에 있습니다. → [[atelier/README|아틀리에]]
+이 폴더에는 **지금의 모습**만 둡니다: 무엇을 만드는지, 사용자에게 어떻게 보이는지, 어떻게 만드는지. 거기에 이르기까지의 결정 기록(아키텍처는 ADR, 그 밖은 DR)과 논의는 `atelier/`에 있습니다. → [[atelier/README|아틀리에]]
 
 ## 문서 지도
 
@@ -31,9 +31,9 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. 웹(정
 | [[06-glossary\|용어집]] | 이 단어가 뭘 뜻하나? | 필요할 때 추가 |
 
 > [!tip] 문서를 쓸 때의 원칙
-> - 요구사항에는 **무엇을**만 한두 줄로 쓰고, 세부 규칙은 UX 설계로, 근거는 ADR로, 만드는 방법은 설계 문서로 링크합니다.
+> - 요구사항에는 **무엇을**만 한두 줄로 쓰고, 세부 규칙은 UX 설계로, 근거는 ADR이나 DR로, 만드는 방법은 설계 문서로 링크합니다.
 > - 요구사항 항목은 블록 ID(`^edit-wrap` 등)로 가리킵니다. 예: [[01-requirements#^edit-wrap]]
-> - **왜** 그렇게 정했는지는 ADR에 있습니다. ADR은 `atelier/adr/`에 있고, 목록은 [[atelier/README#아키텍처 결정 기록 (ADR)]]에 있습니다.
+> - **왜** 그렇게 정했는지는 결정 기록에 있습니다. 아키텍처 결정은 ADR(`atelier/adr/`), 그 밖의 결정은 DR(`atelier/decisions/`)이고, 목록은 [[atelier/README#아키텍처 결정 기록 (ADR)]]과 [[atelier/README#결정 기록 (DR)]]에 있습니다.
 
 ## 상세 설계
 

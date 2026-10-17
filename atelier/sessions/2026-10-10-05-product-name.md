@@ -23,7 +23,7 @@ date: 2026-10-10
 
 | 결정 | 반영한 곳 |
 | --- | --- |
-| 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`. 확장자와 모델 접두사는 그대로 | [[0019-product-name\|ADR-0019]] 승인 |
+| 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`. 확장자와 모델 접두사는 그대로 | [[dr-0005-product-name\|ADR-0019]] 승인 |
 | GitHub 저장소와 로컬 폴더 이름도 바꾼다 | [[status]] |
 | 세션 기록과 타임라인의 본문, 프로토타입 파일에 남은 옛 이름은 고치지 않는다 | CLAUDE.md |
 

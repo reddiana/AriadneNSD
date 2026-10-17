@@ -29,7 +29,7 @@ date: 2026-10-12
 | 무엇 | 결정 | 어디에 |
 | --- | --- | --- |
 | ADR의 자리 | `atelier/adr/`. `docs/`에는 최종 결과(지금의 모습)만 둔다 | [[0001-record-architecture-decisions\|ADR-0001]] "이후 변경", CLAUDE.md, [[atelier/README]] |
-| 일하는 기록의 폴더 이름 | `plan/` → `atelier/` | CLAUDE.md, [[0024-license-scope\|ADR-0024]] "이후 변경" |
+| 일하는 기록의 폴더 이름 | `plan/` → `atelier/` | CLAUDE.md, [[dr-0008-license-scope\|ADR-0024]] "이후 변경" |
 | `ux-review` | UX 설계 [[05-ux-decisions]]과 요구사항 문서 검토 [[requirements-review]]로 나눔 | 두 문서의 머리 |
 | 요구사항과 설계 | 요구사항 하나는 한두 줄. 함께 구체화한 세부 규칙과 모양은 UX 설계에 쓴다 | [[01-requirements]], [[02-interaction-rules]], CLAUDE.md |
 | `docs/`의 순서 | 요구사항(01) → UX 설계(02) → 아키텍처(03) → 상세 설계(04) | [[docs/README]], CLAUDE.md |
@@ -73,7 +73,7 @@ inbox에서 지운 항목의 원문이 따옴표 안에 있다.
 
 ## 처리한 부채 (부채 목록에서 옮김)
 
-- [x] `plan/` 폴더의 이름을 바꿀지 → 메인테이너: "atelier/로 해주세요" (2026-10-12). Claude의 추천은 `process/`, 그다음 `workshop/` · `studio/`였음. 폴더를 `atelier/`로 바꾸고 CLAUDE.md, README들, `[[atelier/README…]]` 링크를 고침. [[0024-license-scope|ADR-0024]]에 "이후 변경"
+- [x] `plan/` 폴더의 이름을 바꿀지 → 메인테이너: "atelier/로 해주세요" (2026-10-12). Claude의 추천은 `process/`, 그다음 `workshop/` · `studio/`였음. 폴더를 `atelier/`로 바꾸고 CLAUDE.md, README들, `[[atelier/README…]]` 링크를 고침. [[dr-0008-license-scope|ADR-0024]]에 "이후 변경"
 
 ## inbox 원문 (지운 항목)
 
@@ -107,7 +107,7 @@ inbox에서 지운 항목의 원문이 따옴표 안에 있다.
 
 | 무엇 | 결정 | 어디에 |
 | --- | --- | --- |
-| 로고의 미소 | 벽화의 선처럼 거의 곧은 옅은 갈색 선, 벽화 선의 절반쯤 길이(S2). 큰 판과 둥근 판에 넣고 작은 판은 그대로 | [[logo-source#미소 (2026-10-12)]], [[0020-logo\|ADR-0020]] "이후 변경" |
+| 로고의 미소 | 벽화의 선처럼 거의 곧은 옅은 갈색 선, 벽화 선의 절반쯤 길이(S2). 큰 판과 둥근 판에 넣고 작은 판은 그대로 | [[logo-source#미소 (2026-10-12)]], [[dr-0006-logo\|ADR-0020]] "이후 변경" |
 
 - **Claude는 "좀더 미소 짓게"를 입꼬리를 올리는 것으로 풀었고, 틀렸다.** 메인테이너가 바란 것은 선의 모양을 바꾸는 것이 아니었다. 벽화의 선은 거의 곧다는 것을 메인테이너가 짚었다.
 - **Claude가 고른 것은 세 번 모두 메인테이너의 선택과 달랐다**(A가 아니라 C, C1이 아니라 곧은 선, S1이 아니라 S2). 그림을 나란히 놓아 두었기 때문에 한마디로 고칠 수 있었다.

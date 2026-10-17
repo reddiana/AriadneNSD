@@ -45,7 +45,7 @@ date: 2026-10-13
 | Method가 없어질 때 (Q21) | 지금대로. Event로 바꾸기만 막는다 | [[05-ux-decisions]] |
 | 진행 방식 | 아키텍처 설계를 프로토타입 리뷰와 나란히 | [[status]] |
 | 시안 공개 | claude.ai의 공개 링크로. 견준 길은 GitHub Pages | [[study-pages]] |
-| 시안의 라이선스 | 시안과 스파이크 페이지는 CC BY 4.0, 프로토타입과 스크립트는 Apache-2.0 | [[0027-study-pages-cc-by]] |
+| 시안의 라이선스 | 시안과 스파이크 페이지는 CC BY 4.0, 프로토타입과 스크립트는 Apache-2.0 | [[dr-0010-study-pages-cc-by]] |
 | 과정을 두는 곳 | 고른 과정은 가급적 시안 페이지에만. md에는 지금의 결과와 시안 링크 | CLAUDE.md |
 | 표 앞의 빈 줄 | md의 표 앞에는 빈 줄을 둔다 | CLAUDE.md |
 

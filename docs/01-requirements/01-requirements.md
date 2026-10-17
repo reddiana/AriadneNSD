@@ -31,7 +31,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항�
 
 ## 2. 배포 대상
 
-먼저 만드는 것은 웹 · Obsidian 플러그인 · 데스크톱 셋이다. 그 위에 얹거나 뒤에 붙는 대상이 넷 더 있다. → [[0002-three-targets-shared-core|ADR-0002]], [[0006-file-extensions|ADR-0006]], 만드는 순서는 [[0011-development-order|ADR-0011]]
+먼저 만드는 것은 웹 · Obsidian 플러그인 · 데스크톱 셋이다. 그 위에 얹거나 뒤에 붙는 대상이 넷 더 있다. → [[0002-three-targets-shared-core|ADR-0002]], [[0006-file-extensions|ADR-0006]], 만드는 순서는 [[dr-0002-development-order|DR-0002]]
 
 | 배포 대상 | 언제 | 값 | 저장하는 것 | 절 |
 | --- | --- | --- | --- | --- |
@@ -224,7 +224,7 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P0 갈래 너비 자동 분배 (어느 갈래가 깊어져도 전체 직사각형 유지) ^lay-branch-width
 - [ ] #P0 확대/축소, 화면 이동 ^lay-zoom
 - [ ] #P1 한글/영문 혼용 텍스트의 정확한 폭 측정 ^lay-text-measure
-- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[0013-default-visual-style|ADR-0013]], 상세 [[04-visual-design]] ^lay-default-style
+- [ ] #P0 기본 스타일: 옅은 단색 바탕, 가는 선, 반복·분기·호출의 머리에 옅은 색조 → [[dr-0003-default-visual-style|DR-0003]], 상세 [[04-visual-design]] ^lay-default-style
 - [ ] #P1 블록 글자의 종류를 문서마다 하나 고른다: 문장 / C / Java / Python / Bash 등 ^lay-text-kind
 - [ ] #P1 블록 글자의 구문 강조 (키워드, 주석을 다른 색으로). 고른 종류([[#^lay-text-kind]])의 문법을 따르고, 문장이면 강조하지 않는다 ^lay-syntax
 - [ ] #P1 테마: 그림의 색 묶음을 문서마다 고른다(파일에 저장). 테마에는 밝은 테마와 어두운 테마가 있고, 처음에는 종류마다 기본 테마 하나씩 둔다. 편집 화면의 색은 테마가 아니다. 흑백 인쇄 모드를 포함한다. 테마를 바꿔도 레이아웃은 그대로다(그래서 글꼴과 선 굵기는 테마가 아니다) → 상세 [[04-visual-design#8. 테마]] ^lay-theme
@@ -292,7 +292,7 @@ DIN 66261 / 원 논문 기준입니다.
 - 자동 레이아웃
 - 모델 내장 SVG 저장/불러오기
 - PNG 내보내기
-- 배포 대상: 웹 ([[0011-development-order|ADR-0011]]에서 정한 첫 번째 대상)
+- 배포 대상: 웹 ([[dr-0002-development-order|DR-0002]]에서 정한 첫 번째 대상)
 
 ## 6. 미결정 사항
 

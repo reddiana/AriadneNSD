@@ -43,7 +43,7 @@ updated: 2026-10-11
 | 자리 | 적는 법 |
 | --- | --- |
 | 글로 적을 때 (문서, 소개 글, 메뉴, 대체 글자) | `AriadneNSD` |
-| GitHub 저장소 (2026-10-15부터 → [[0028-repo-name\|ADR-0028]]) | `AriadneNSD` |
+| GitHub 저장소 (2026-10-15부터 → [[dr-0011-repo-name\|ADR-0028]]) | `AriadneNSD` |
 | 패키지, 플러그인 id, 문서 태그 | `ariadne-nsd` |
 | 문자 로고 그림 | `Ariadne’s NSD` |
 

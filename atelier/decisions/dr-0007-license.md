@@ -1,17 +1,18 @@
 ---
-title: "ADR-0023: Apache-2.0으로 공개하고 NOTICE 파일을 둔다"
+title: "DR-0007: Apache-2.0으로 공개하고 NOTICE 파일을 둔다"
 tags:
-  - adr
+  - dr
 status: 승인
 date: 2026-10-11
 supersedes:
 superseded-by:
 ---
 
-# ADR-0023: Apache-2.0으로 공개하고 NOTICE 파일을 둔다
+# DR-0007: Apache-2.0으로 공개하고 NOTICE 파일을 둔다
 
 > [!NOTE] 이후 변경
-> - 2026-10-11: 범위를 나눴다. Apache-2.0은 코드에만 적용하고, 글은 CC BY 4.0, 로고는 허락하지 않는다. 이 문서의 "지금은 저장소 전체가 Apache-2.0이다"는 지금 해당하지 않는다 → [[0024-license-scope|ADR-0024]]
+> - 2026-10-17: 아키텍처 결정 기록 DR-0007에서 결정 기록 DR-0007으로 옮겨 왔다. ADR은 아키텍처 결정만 두기로 했기 때문이다 → [[dr-0001-split-decision-records|DR-0001]]. 본문은 그대로이고, 번호와 링크만 새 것으로 고쳤다. 본문의 "이 ADR"은 이 기록을 말한다.
+> - 2026-10-11: 범위를 나눴다. Apache-2.0은 코드에만 적용하고, 글은 CC BY 4.0, 로고는 허락하지 않는다. 이 문서의 "지금은 저장소 전체가 Apache-2.0이다"는 지금 해당하지 않는다 → [[dr-0008-license-scope|DR-0008]]
 
 ## 배경
 

@@ -47,4 +47,4 @@ Drive는 외부 앱이 Drive 화면에 붙는 두 지점을 제공한다.
 
 - 좋아지는 점: 파일이 SVG라서 Drive가 썸네일과 미리보기를 별도 작업 없이 보여 준다. ([[0005-model-embedded-svg|ADR-0005]]의 이득)
 - 감수하는 점: Google Cloud 프로젝트 설정, OAuth 동의 화면, Google Workspace Marketplace 등록 절차가 필요하다.
-- 후속 작업: Drive에 저장할 확장자 결정([[01-requirements#6. 미결정 사항]]), 개발 순서에 반영([[0011-development-order|ADR-0011]]), 설계 문서 [[06-web]]에 Drive 모드 추가
+- 후속 작업: Drive에 저장할 확장자 결정([[01-requirements#6. 미결정 사항]]), 개발 순서에 반영([[dr-0002-development-order|DR-0002]]), 설계 문서 [[06-web]]에 Drive 모드 추가

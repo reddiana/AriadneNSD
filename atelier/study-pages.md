@@ -36,9 +36,9 @@ updated: 2026-10-17
 | M18 | 호출 대상 시안 (2026-10-17, 결정함: CB1 1번 이름을 적는 호출 블록 · CB2 1번 파일과 Method를 가리킴) | 부를 Method가 같은 문서에 없을 때(라이브러리 함수, 다른 파일의 Method) 호출 블록을 어떻게 하는지 | https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx | `journal/assets/2026-10-17-call-target-study.html` |
 | M19 | 접기 영역 색 시안 (2026-10-17, 결정함: B · S1 접기 영역은 파랑, 고른 표시는 주황. 처음엔 S3 녹색을 골랐다가 바꿈) | 펴진 접기 영역의 테두리 색 후보를 고른 표시의 파랑과 함께 견줌 | https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9 | `journal/assets/2026-10-17-fold-color-study.html` |
 | M20 | 아키텍처 제안 확인 (2026-10-17, 답을 기다림: A1~A7) | [[03-architecture#8. 확인받지 못한 제안]]의 일곱 가지를 대안과 나란히 그림으로. A6은 다른 문서 읽기와 설정 보관을 더한 고친 제안 | https://claude.ai/artifact/R8RJxg8V1qweiMfusMKk87 | `journal/assets/2026-10-17-architecture-proposals-study.html` |
-| M21 | 결정 기록 나누기 시안 (2026-10-17, 결정함: 파일과 번호는 그대로, [[atelier/README]]의 목록만 아키텍처 결정과 그 밖의 결정으로 나눔. 애매한 넷은 DR3 · 1번대로) | ADR은 아키텍처만 남기고 다른 결정을 같은 구조의 기록으로 나누는 법: 이름과 자리, 옮기는 ADR의 번호, 애매한 넷 | https://claude.ai/artifact/6rrnQ2NBf5kWYXkJkrC6kM | `journal/assets/2026-10-17-decision-records-study.html` |
+| M21 | 결정 기록 나누기 시안 (2026-10-17, 결정함: DR1 · DR2 · DR3 모두 1번 → [[dr-0001-split-decision-records|DR-0001]]) | ADR은 아키텍처만 남기고 다른 결정을 같은 구조의 기록으로 나누는 법: 이름과 자리, 옮기는 ADR의 번호, 애매한 넷 | https://claude.ai/artifact/6rrnQ2NBf5kWYXkJkrC6kM | `journal/assets/2026-10-17-decision-records-study.html` |
 
-- **시안과 스파이크 페이지는 CC BY 4.0입니다**(프로토타입은 Apache-2.0). 페이지마다 맨 아래에 안내가 있습니다 → [[0027-study-pages-cc-by|ADR-0027]]. 안내는 `journal/assets/2026-10-14-add-license-note.py`로 넣습니다. 새 시안을 만들면 이 스크립트를 한 번 돌립니다. claude.ai의 열두 페이지도 2026-10-14에 안내가 든 판으로 다시 올렸습니다.
+- **시안과 스파이크 페이지는 CC BY 4.0입니다**(프로토타입은 Apache-2.0). 페이지마다 맨 아래에 안내가 있습니다 → [[dr-0010-study-pages-cc-by|DR-0010]]. 안내는 `journal/assets/2026-10-14-add-license-note.py`로 넣습니다. 새 시안을 만들면 이 스크립트를 한 번 돌립니다. claude.ai의 열두 페이지도 2026-10-14에 안내가 든 판으로 다시 올렸습니다.
 - **방문자에게는 claude.ai의 공개 링크로 보여 줍니다**(2026-10-14, 메인테이너: ""나"로 합시다"). 페이지마다 메인테이너가 Share 메뉴에서 "링크를 가진 누구나"로 바꿉니다. Claude는 공유 설정을 바꿀 수 없습니다. 견준 다른 길은 GitHub Pages였습니다.
 - 공개한 페이지는 Claude가 새 판을 올리는 순간 방문자에게도 보입니다. 고치는 도중의 판도 보입니다. 새 판을 올려도 공개는 유지됩니다(2026-10-14에 게시 결과로 확인).
 - 2026-10-14에 메인테이너가 그때까지의 시안을 공개로 바꿨습니다("시안들은 이미 공개로 바꿨습니다"). 저장소 맨 위 `README.md`에는 프로토타입의 주소와 이 문서의 링크만 둡니다(2026-10-14, 대문이 길어져서 목록을 이리로 모음). 새 페이지를 만들면 Claude가 "공개로 바꿔 주세요"라고 알리고 이 표에 줄을 더합니다.

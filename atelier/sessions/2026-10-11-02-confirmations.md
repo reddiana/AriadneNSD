@@ -69,11 +69,11 @@ Claude가 MIT, GPL, 나중에, 비공개를 내놓자 메인테이너가 뜻을 
 
 > 누구나 가져다 쓰고 고치고 팔 수 있지만 AriadneNSD를 가져다 썼다고 공지하게 하고 싶어요
 
-Apache-2.0에 `NOTICE` 파일을 두는 것이 가장 가깝다고 설명했고, 그렇게 정했다 → [[0023-license|ADR-0023]]. 이어서 메인테이너가 물었다.
+Apache-2.0에 `NOTICE` 파일을 두는 것이 가장 가깝다고 설명했고, 그렇게 정했다 → [[dr-0007-license|ADR-0023]]. 이어서 메인테이너가 물었다.
 
 > 요구사항등 docs/ 하위에 있는 모든 내용들도 다 라이센서에 적용되나요?
 
-그렇다. 범위를 적지 않아 저장소 전체가 Apache-2.0이 되어 있었다. 범위를 나눴다: 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않음 → [[0024-license-scope|ADR-0024]]. `NOTICE`의 저작권자 이름은 메인테이너가 준 표기 "서세일(Seil Suh)" 그대로 적었다.
+그렇다. 범위를 적지 않아 저장소 전체가 Apache-2.0이 되어 있었다. 범위를 나눴다: 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않음 → [[dr-0008-license-scope|ADR-0024]]. `NOTICE`의 저작권자 이름은 메인테이너가 준 표기 "서세일(Seil Suh)" 그대로 적었다.
 
 ## 주홍은 실의 색이 아니었다
 
@@ -97,8 +97,8 @@ Apache-2.0에 `NOTICE` 파일을 두는 것이 가장 가깝다고 설명했고,
 | Event의 기본 이름도 영어로 ("Event 1") | [[01-requirements#^blk-event]], 프로토타입 36번째 판 |
 | 부를 Method를 바꾸는 키 `R`, 부르는 호출 블록이 있는 Method는 Event로 못 바꿈, 고른 것 없을 때의 `E` · `M`: 그대로. 종류 없는 예전 문서 규칙은 프로토타입에만 | [[debt]] |
 | 다이어그램 배치: Event 왼쪽, Method 오른쪽, 16 : 10, 같은 종류 안에서 순서 바꾸기 | [[01-requirements#^edit-multi-diagram]] |
-| Apache-2.0 + `NOTICE` | [[0023-license\|ADR-0023]], `LICENSE`, `NOTICE` |
-| 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않음 | [[0024-license-scope\|ADR-0024]], `LICENSE-docs`, `README.md` |
+| Apache-2.0 + `NOTICE` | [[dr-0007-license\|ADR-0023]], `LICENSE`, `NOTICE` |
+| 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않음 | [[dr-0008-license-scope\|ADR-0024]], `LICENSE-docs`, `README.md` |
 | 접고 펴기는 실행 취소의 대상이 아님. 접기에서 덜 정해졌던 세 곳은 지금 규칙 그대로 | [[01-requirements#접기 · 펼치기]], ADR-0018 "이후 변경" |
 | "모두 펼쳐서" 내보내기 요구사항을 없앰 | [[01-requirements]], ADR-0016 · 0018 "이후 변경" |
 | Case 갈래의 순서 바꾸기를 넣음 (#P1) | [[01-requirements#^edit-branch]] |

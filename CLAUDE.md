@@ -1,6 +1,6 @@
 # AriadneNSD
 
-NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 패키지·플러그인 id·문서 태그는 `ariadne-nsd`로 쓴다(→ [[0019-product-name|ADR-0019]]). GitHub 저장소만 `AriadneNSD`다(`https://github.com/reddiana/AriadneNSD`, 2026-10-15 → [[0028-repo-name|ADR-0028]]). 로컬 폴더도 `AriadneNSD`다(`C:\myProject\AriadneNSD`, 2026-10-15에 바꿈). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[0020-logo|ADR-0020]], 이름의 뜻은 [[name-story]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
+NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 패키지·플러그인 id·문서 태그는 `ariadne-nsd`로 쓴다(→ [[dr-0005-product-name|DR-0005]]). GitHub 저장소만 `AriadneNSD`다(`https://github.com/reddiana/AriadneNSD`, 2026-10-15 → [[dr-0011-repo-name|DR-0011]]). 로컬 폴더도 `AriadneNSD`다(`C:\myProject\AriadneNSD`, 2026-10-15에 바꿈). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[dr-0006-logo|DR-0006]], 이름의 뜻은 [[name-story]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
 
 ## 저장소 구성
 
@@ -8,7 +8,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 | --- | --- |
 | `README.md` | GitHub 방문자를 위한 첫 화면. 저장소 소개와 "Obsidian으로 보라"는 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다 |
 | `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
-| `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 부채 목록(`debt.md`), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`study-pages.md`), 세션 기록(`sessions/`), 결정 기록(`adr/`: ADR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
+| `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 부채 목록(`debt.md`), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`study-pages.md`), 세션 기록(`sessions/`), 아키텍처 결정 기록(`adr/`: ADR), 그 밖의 결정 기록(`decisions/`: DR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
 | `journal/` | 이야기하기 위한 여정 기록: 타임라인, 이야기 구성 아이디어, 스크린샷. 누구나 따라 해 볼 용기를 얻도록 쓴다 |
 | `tech-notes/` | 메인테이너에게 설명한 기술 정리 (메인테이너는 백엔드 개발자, 프론트엔드는 처음) |
 
@@ -19,7 +19,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 표 앞에는 빈 줄을 둔다. Obsidian은 표의 첫 줄 바로 앞이 글이면 표를 그리지 않는다. 콜아웃 안의 표는 `>`만 있는 줄을 앞에 둔다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.
-- `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). `atelier/adr/`의 ADR은 네 자리 번호(`0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
+- `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). `atelier/adr/`의 ADR은 네 자리 번호(`0001-…`), `atelier/decisions/`의 DR은 `dr-`와 네 자리 번호(`dr-0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
 - 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `atelier/`, `journal/`, `tech-notes/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
 - `docs/`와 `atelier/`를 나누는 기준 (2026-10-17, 메인테이너):
 	- `docs/`는 요구사항과 설계의 최종 결과다. 이력이 아니며, 개발된 애플리케이션과 동치다. 그 자체로 완결되어 다른 문서 없이 읽혀야 한다. `atelier/`로 가는 링크는 부연일 뿐이다.
@@ -27,9 +27,10 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 	- "남은 일"(확인할 것, 써 보고 볼 것, 고칠 것)은 `docs/`에 두지 않고 `atelier/`의 알맞은 문서(대개 `backlog.md`)로 옮긴다.
 	- `atelier/`는 결정 기록과 현재 상태, 남은 일, Claude와 메인테이너 사이의 협업(inbox는 메인테이너 → Claude, debt는 Claude → 메인테이너)을 둔다. 다음 세션의 Claude가 이번 세션을 이어 갈 수 있도록 적는다.
 - 문서는 공학의 순서를 따른다: 요구사항(`01-requirements`, 무엇을)이 UX 설계(`02-ux-design`, 사용자의 조작 규칙과 시각 디자인)와 아키텍처(`03-architecture`)의 입력이고, 이 둘이 상세 설계(`04-design`)의 입력이다. 검토하다 나온 "앞 문서를 고칠 것"은 `atelier/`에 작업 목록으로 두고, `docs/`에는 설계 결과만 둔다.
-- 요구사항에는 "무엇을"만 쓴다. 요구사항 하나는 한두 줄이다. 메인테이너와 Claude가 함께 구체화한 세부 규칙(어떻게 보이는가, 어떤 경우에 어떻게 움직이는가)은 요구사항이 아니라 설계다. UX 설계(`docs/02-ux-design/`: 사용자와 원칙과 공통 규칙은 `01-ux-overview`, 기능마다의 조작 규칙은 `02-interaction-rules`, 키 표는 `03-keymap`, 색 · 선 · 글자 · 치수와 그 원칙은 `04-visual-design`, 물음과 결정은 `05-ux-decisions`)에 쓰고 요구사항에서 "→ 상세"로 링크한다. 근거는 ADR(`atelier/adr/`, 템플릿 `0000-template.md`), 방법은 설계 문서로 링크한다.
+- 요구사항에는 "무엇을"만 쓴다. 요구사항 하나는 한두 줄이다. 메인테이너와 Claude가 함께 구체화한 세부 규칙(어떻게 보이는가, 어떤 경우에 어떻게 움직이는가)은 요구사항이 아니라 설계다. UX 설계(`docs/02-ux-design/`: 사용자와 원칙과 공통 규칙은 `01-ux-overview`, 기능마다의 조작 규칙은 `02-interaction-rules`, 키 표는 `03-keymap`, 색 · 선 · 글자 · 치수와 그 원칙은 `04-visual-design`, 물음과 결정은 `05-ux-decisions`)에 쓰고 요구사항에서 "→ 상세"로 링크한다. 근거는 ADR(`atelier/adr/`, 템플릿 `0000-template.md`)이나 DR(`atelier/decisions/`), 방법은 설계 문서로 링크한다.
 - 요구사항 항목은 블록 ID(`^edit-wrap` 등)로 가리킨다. 새 요구사항에도 ID를 단다.
-- 제안됨 상태의 ADR은 자유롭게 고친다. 승인된 ADR은 본문을 고치지 않는다. 결정이 바뀌면 새 ADR을 쓰고 `supersedes`/`superseded-by`로 잇는다. ADR을 추가하면 `atelier/README.md` 목록도 갱신한다.
+- 결정의 근거는 둘로 나눠 적는다(2026-10-17 → [[dr-0001-split-decision-records|DR-0001]]). 코드의 구조, 모델, 파일 형식, 기술 선택은 **ADR**(`atelier/adr/`), 그 밖의 결정(일하는 순서, 조작과 모습, 이름 · 로고 · 라이선스 등)은 **DR**(`atelier/decisions/`, 템플릿 `dr-0000-template.md`)이다. 사용자에게도 보이면서 구조도 정하는 것은 구조를 정한 쪽이 중심이면 ADR이다. DR은 형식과 아래 규칙이 ADR과 같다. 아래에서 "ADR"이라고 쓴 규칙은 DR에도 똑같이 듣는다. 조작과 화면의 작은 결정은 DR이 아니라 `docs/02-ux-design/05-ux-decisions`에 둔다.
+- 제안됨 상태의 ADR은 자유롭게 고친다. 승인된 ADR은 본문을 고치지 않는다. 결정이 바뀌면 새 ADR을 쓰고 `supersedes`/`superseded-by`로 잇는다. ADR이나 DR을 추가하면 `atelier/README.md` 목록도 갱신한다.
 - 승인된 ADR과 관련된 내용이 이후 작업으로 달라지면(예: 배포 대상이 늘어남), 그 ADR 맨 앞(제목 바로 아래)의 `> [!NOTE] 이후 변경` 콜아웃에 날짜·한 줄 설명·링크를 덧붙인다. 본문은 그대로 둔다. ADR을 읽는 사람은 우리가 논의한 과정을 모른다. "이 ADR을 쓸 때는 이랬고, 지금 모습이 다른 것은 그 뒤 이런 것이 더해지거나 바뀌어서다"를 그 ADR만 보고 알 수 있어야 한다. 그래서 요구사항이나 다른 ADR을 바꿀 때마다 영향받는 승인 ADR을 찾아 이 콜아웃을 단다.
 
 ## 함께 일하는 방식
@@ -66,7 +67,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 4. `journal/timeline.md`에 전환점을 추가한다. 메인테이너의 요청 원문을 짧게 인용한다.
 5. 메인테이너는 Claude Code 초보자다. 메인테이너가 Claude Code나 AI와 일하는 법에 대해 새로 배운 것이 있으면 `journal/learning-claude-code.md`에 추가한다.
 6. 메인테이너에게 기술을 설명했으면 `tech-notes/`에 정리한다.
-7. 결정은 `docs/`(요구사항, 설계)와 ADR(`atelier/adr/`)에 반영하고, 세션 기록과 상태 문서에는 링크만 남긴다.
+7. 결정은 `docs/`(요구사항, 설계)와 ADR(`atelier/adr/`) 또는 DR(`atelier/decisions/`)에 반영하고, 세션 기록과 상태 문서에는 링크만 남긴다.
 8. 바뀐 파일을 모두 커밋하고 push한다. 커밋하지 않은 내용은 git으로 되살릴 수 없다.
 
 **git 규칙:** 커밋은 세션 중에도 Claude가 필요하다고 판단하면 묻지 않고 한다 (예: inbox 원문을 지키려고, 결정 하나를 반영한 뒤). **push는 마무리할 때만 한다.**

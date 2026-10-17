@@ -11,7 +11,7 @@ superseded-by:
 # ADR-0014: Google Drive에서 만드는 파일은 `.ns.svg`로 저장한다
 
 > [!NOTE] 이후 변경
-> - 2026-10-10: 제품 이름이 `NSDrawing`에서 `AriadneNSD`로 바뀌었다. 본문의 "NSDrawing으로 열기"는 지금의 "AriadneNSD로 열기"다. 확장자는 그대로다 → [[0019-product-name|ADR-0019]]
+> - 2026-10-10: 제품 이름이 `NSDrawing`에서 `AriadneNSD`로 바뀌었다. 본문의 "NSDrawing으로 열기"는 지금의 "AriadneNSD로 열기"다. 확장자는 그대로다 → [[dr-0005-product-name|DR-0005]]
 
 ## 배경
 

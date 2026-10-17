@@ -81,7 +81,7 @@ Claude의 검토: **뜻이 있다. 모델에서 구분하기를 권한다.** 근
 | 예제는 프로토타입의 예제 단추로 넣는다 | 프로토타입 34번째 판 |
 | 강제 push는 마무리 때 한다 | |
 | Event와 Method를 구분한다: 낮은 아치 머리(H3), 호출 블록의 글자는 자유(A1), Method만 부름(C1), `E`는 Event · `M`은 Method(S2) | [[0021-event-and-method\|ADR-0021]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^edit-extract]], 프로토타입 35번째 판 |
-| 문자 로고를 파일 하나(시안 N1)로 바꾼다. `Ariadne`는 회갈색, 주홍은 조금 밝게 | `README.md`, [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[0020-logo\|ADR-0020]] "이후 변경", [[name-story]] |
+| 문자 로고를 파일 하나(시안 N1)로 바꾼다. `Ariadne`는 회갈색, 주홍은 조금 밝게 | `README.md`, [[logo-source#파일 하나로 바꾼 일 (2026-10-11)]], [[dr-0006-logo\|ADR-0020]] "이후 변경", [[name-story]] |
 
 ## 발견한 위험
 

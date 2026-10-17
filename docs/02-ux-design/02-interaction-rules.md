@@ -23,7 +23,7 @@ updated: 2026-10-13
 
 ### 블록의 모양
 
-요구사항: [[01-requirements#3.1 블록 종류]]. 표준의 블록은 DIN 66261 / 원 논문의 모양을 따른다. 기본 스타일의 색과 선은 [[0013-default-visual-style|ADR-0013]]에서 정했고, 값과 원칙은 [[04-visual-design]]에 있다.
+요구사항: [[01-requirements#3.1 블록 종류]]. 표준의 블록은 DIN 66261 / 원 논문의 모양을 따른다. 기본 스타일의 색과 선은 [[dr-0003-default-visual-style|DR-0003]]에서 정했고, 값과 원칙은 [[04-visual-design]]에 있다.
 
 블록마다의 모양(If 머리의 V자 빗금, While의 왼쪽 띠, 호출 블록의 세로 이중선, Event의 모자, Method의 낮은 아치 등)과 치수는 [[04-visual-design#원칙 2. 뜻은 모양이 나르고, 색은 거들기만 한다|시각 디자인의 원칙 2]]와 [[04-visual-design#5. 기하와 해부도|해부도]]에 있다. Event 머리의 모자는 [Scratch](https://scratch.mit.edu/)에서 가져온 표기이고, Method의 낮은 아치는 Event와 가르려는 것이다(→ [[0021-event-and-method|ADR-0021]]).
 

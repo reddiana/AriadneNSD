@@ -54,7 +54,7 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 
 ## 미소 (2026-10-12)
 
-입꼬리에 옅은 갈색의 짧은 선 하나가 있습니다. 벽화의 미소선과 같은 모양(거의 곧은 선)을 절반쯤으로 줄인 것이고, 색은 귀와 머리띠의 선과 같습니다. 작은 판(16~24px)에는 없습니다. 견준 안과 고른 까닭은 [로고 시안](https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD)의 "미소" 단락에 있습니다. → [[0020-logo|ADR-0020]] "이후 변경"
+입꼬리에 옅은 갈색의 짧은 선 하나가 있습니다. 벽화의 미소선과 같은 모양(거의 곧은 선)을 절반쯤으로 줄인 것이고, 색은 귀와 머리띠의 선과 같습니다. 작은 판(16~24px)에는 없습니다. 견준 안과 고른 까닭은 [로고 시안](https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD)의 "미소" 단락에 있습니다. → [[dr-0006-logo|ADR-0020]] "이후 변경"
 
 ## 문자 로고
 
@@ -62,13 +62,13 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 
 문자 로고에서만 이름을 `Ariadne’s NSD`로 적습니다 (2026-10-11, 메인테이너의 제안). 이름의 뜻과 내력은 [[name-story]]에 따로 적었습니다. "Ariadne's Thread"(아리아드네의 실)와 같은 꼴이라, 코드라는 미궁을 빠져나오는 실이라는 뜻이 전해집니다.
 
-- **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[0019-product-name|ADR-0019]]
+- **글로 적는 이름은 언제나 `AriadneNSD`입니다.** `Ariadne’s NSD`는 이 그림에서만 씁니다. 그림의 대체 글자도 `AriadneNSD`입니다. → [[dr-0005-product-name|ADR-0019]]
 - **글자:** `Ariadne`는 회갈색(`#8C8079`) GFS Didot, 소유격 `’s`는 주홍(`#DD5530`)의 기울인 글씨(Playfair Display Italic)로 조금 작게, `NSD`는 주홍의 고딕(Josefin Sans, 굵기 600)으로 자간 없이 적습니다. 주홍은 그림 로고의 바탕색에서 가져왔습니다. 두 색 모두 흰 바탕과 검은 바탕의 중간 밝기로 맞췄습니다(아래 "파일 하나로 바꾼 일"). 세 글꼴 모두 OFL 라이선스입니다.
 - **파일:** `journal/assets/2026-10-11-wordmark-n1-warm-grey.svg` 하나. 밝은 화면과 어두운 화면에 같은 파일을 씁니다. 글자를 윤곽선으로 바꿔서 글꼴이 없어도 보입니다. 윤곽선은 `journal/assets/2026-10-10-logo-wordmark.py`로 만들고, 색은 `journal/assets/2026-10-11-wordmark-variants.py`로 바꿉니다.
 - **견준 시안:** 글자 모양이 정해진 차례(W1 → W4-6b)는 [로고 시안](https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD)에, 바탕과 색(N1)은 [문자 로고 바탕 시안](https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7)에 있습니다.
 ### 파일 하나로 바꾼 일 (2026-10-11)
 
-밝은 화면용과 어두운 화면용을 따로 두면 GitHub와 Obsidian이 잘못 고를 때가 있습니다. 기술 설명은 [[theme-aware-images]]에, 겪은 일과 고른 과정은 로고 시안에 있습니다. 옛 두 파일(`2026-10-10-wordmark-light.svg`, `…-dark.svg`)은 시안 페이지가 쓰므로 남겨 두었습니다. → [[0020-logo|ADR-0020]] "이후 변경"
+밝은 화면용과 어두운 화면용을 따로 두면 GitHub와 Obsidian이 잘못 고를 때가 있습니다. 기술 설명은 [[theme-aware-images]]에, 겪은 일과 고른 과정은 로고 시안에 있습니다. 옛 두 파일(`2026-10-10-wordmark-light.svg`, `…-dark.svg`)은 시안 페이지가 쓰므로 남겨 두었습니다. → [[dr-0006-logo|ADR-0020]] "이후 변경"
 
 ## 남은 확인
 
