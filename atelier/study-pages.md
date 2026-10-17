@@ -35,6 +35,7 @@ updated: 2026-10-17
 | M17 | 테마 시안 (2026-10-17, 결정함: TH1 1번 문서마다 · TH2 1번 화면 색은 따로) | 테마를 그림의 색 묶음으로 보고, 누가 고르는지와 편집 화면의 색도 바꾸는지 | https://claude.ai/artifact/CABapWNP4NnQupcmTpwyZf | `journal/assets/2026-10-17-theme-study.html` |
 | M18 | 호출 대상 시안 (2026-10-17, 결정함: CB1 1번 이름을 적는 호출 블록 · CB2 1번 파일과 Method를 가리킴) | 부를 Method가 같은 문서에 없을 때(라이브러리 함수, 다른 파일의 Method) 호출 블록을 어떻게 하는지 | https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx | `journal/assets/2026-10-17-call-target-study.html` |
 | M19 | 접기 영역 색 시안 (2026-10-17, 결정함: B · S1 접기 영역은 파랑, 고른 표시는 주황. 처음엔 S3 녹색을 골랐다가 바꿈) | 펴진 접기 영역의 테두리 색 후보를 고른 표시의 파랑과 함께 견줌 | https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9 | `journal/assets/2026-10-17-fold-color-study.html` |
+| M20 | 아키텍처 제안 확인 (2026-10-17, 답을 기다림: A1~A7) | [[03-architecture#8. 확인받지 못한 제안]]의 일곱 가지를 대안과 나란히 그림으로. A6은 다른 문서 읽기와 설정 보관을 더한 고친 제안 | https://claude.ai/artifact/R8RJxg8V1qweiMfusMKk87 | `journal/assets/2026-10-17-architecture-proposals-study.html` |
 
 - **시안과 스파이크 페이지는 CC BY 4.0입니다**(프로토타입은 Apache-2.0). 페이지마다 맨 아래에 안내가 있습니다 → [[0027-study-pages-cc-by|ADR-0027]]. 안내는 `journal/assets/2026-10-14-add-license-note.py`로 넣습니다. 새 시안을 만들면 이 스크립트를 한 번 돌립니다. claude.ai의 열두 페이지도 2026-10-14에 안내가 든 판으로 다시 올렸습니다.
 - **방문자에게는 claude.ai의 공개 링크로 보여 줍니다**(2026-10-14, 메인테이너: ""나"로 합시다"). 페이지마다 메인테이너가 Share 메뉴에서 "링크를 가진 누구나"로 바꿉니다. Claude는 공유 설정을 바꿀 수 없습니다. 견준 다른 길은 GitHub Pages였습니다.
