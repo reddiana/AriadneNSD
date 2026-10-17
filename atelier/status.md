@@ -23,7 +23,6 @@ updated: 2026-10-17
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 | M20 | 아키텍처 제안 확인 (2026-10-17, 답을 기다림: A1~A7) | https://claude.ai/artifact/R8RJxg8V1qweiMfusMKk87 | `journal/assets/2026-10-17-architecture-proposals-study.html` |
-| M21 | 결정 기록 나누기 시안 (2026-10-17, 답을 기다림: DR1~DR3) | https://claude.ai/artifact/6rrnQ2NBf5kWYXkJkrC6kM | `journal/assets/2026-10-17-decision-records-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
