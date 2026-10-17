@@ -32,3 +32,4 @@ AriadneNSD를 만들며 배운 기술을 정리하는 곳입니다. 메인테이
 - [[browser-storage-and-api-keys]] — 브라우저 저장소와 API 키: 서버 없는 페이지에서 AI를 부르는 법, 저장소를 읽을 수 있는 것은 누구인가, CORS (2026-10-14)
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
 - [[text-width-and-bundled-fonts]] — 글자의 폭과 번들 글꼴: 폭은 글꼴 파일에 적혀 있다, 기기마다 달라지는 까닭 셋, 번들과 셈하기, 그림에 글꼴 조각 넣기, wasm (2026-10-13)
+- [[wasm-and-shell]] — wasm과 셸: JVM 바이트코드에 견준 WebAssembly, 우리가 HarfBuzz를 wasm으로 쓰는 곳, 셸은 배포 대상마다의 바깥 프로그램(저장소 어댑터에 견줌) (2026-10-17)
