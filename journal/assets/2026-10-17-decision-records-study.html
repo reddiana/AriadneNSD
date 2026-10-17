@@ -1,0 +1,191 @@
+<title>M21 결정 기록 나누기 시안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 물음마다 한 단락: 안을 카드로 나란히 놓고, 카드 안에는 바뀐 뒤의 폴더와 목록을 그린다 (M14 · M18 · M20과 같은 틀) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbeee4;
+  --box: #f5f7fb; --adr: #2c55c9; --dr: #8a4fc4; --dr-soft: #f1e8fa;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #222833; --adr: #8ba7ff; --dr: #c79bff; --dr-soft: #2e2440; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #222833; --adr: #8ba7ff; --dr: #c79bff; --dr-soft: #2e2440; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 78ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+pre.tree { margin: 0; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; overflow-x: auto; white-space: pre; }
+.a { color: var(--adr); font-weight: 600; } .d { color: var(--dr); font-weight: 600; } .c { color: var(--muted); }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 720px; }
+th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--box); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip { display: inline-block; font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 0 9px; white-space: nowrap; }
+.chip.adr { color: var(--adr); background: var(--accent-soft); }
+.chip.dr { color: var(--dr); background: var(--dr-soft); }
+.chip.q { color: var(--warn); background: var(--warn-soft); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M21 · 결정 기록 나누기</h1>
+    <p class="lede">2026-10-17 inbox: <b>"ADR은 아키텍처 관련만 하고, 동일한 구조로 다른 결정 기록을 남기도록 구성을 바꾸고 싶습니다."</b> 정할 것은 셋입니다. <b>DR1</b> 새 기록의 이름과 자리, <b>DR2</b> 옮기는 ADR의 번호, <b>DR3</b> 어느 ADR을 옮기는지(애매한 넷). 새 기록에는 ADR과 같은 템플릿(배경 · 검토한 대안 · 결정 · 결과)을 씁니다.</p>
+  </div>
+
+  <section>
+    <span class="part">앞</span>
+    <h2>지금의 ADR 28개를 나눠 보면</h2>
+    <p class="q"><span class="chip adr">ADR에 남김</span> 코드의 구조, 모델, 파일 형식, 기술 선택. <span class="chip dr">옮김</span> 이름 · 로고 · 라이선스, 일하는 순서, 모습. <span class="chip q">애매함</span> 넷은 DR3에서 묻습니다.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>번호</th><th>제목</th><th>상태</th><th>나눔</th><th>까닭</th></tr></thead>
+      <tbody>
+        <tr><td class="n">0001</td><td>ADR로 아키텍처 결정을 기록한다</td><td>승인</td><td><span class="chip adr">남김</span></td><td>"이후 변경"에 나눈 일을 적음</td></tr>
+        <tr><td class="n">0002</td><td>세 대상 배포 + 공유 코어 모노레포</td><td>승인</td><td><span class="chip adr">남김</span></td><td>코드의 구조</td></tr>
+        <tr><td class="n">0003</td><td>구현 언어 TypeScript</td><td>승인</td><td><span class="chip adr">남김</span></td><td>기술 선택</td></tr>
+        <tr><td class="n">0004</td><td>구조 편집기: 트리 모델 + 자동 레이아웃</td><td>승인</td><td><span class="chip adr">남김</span></td><td>모델</td></tr>
+        <tr><td class="n">0005</td><td>모델 내장 SVG를 저장 형식으로</td><td>승인</td><td><span class="chip adr">남김</span></td><td>파일 형식</td></tr>
+        <tr><td class="n">0006</td><td>확장자 <code>.ns</code> / <code>.ns.svg</code></td><td>승인</td><td><span class="chip q">애매함</span></td><td>사용자에게 보이는 이름이지만, 셸이 파일을 알아보는 방법을 정함</td></tr>
+        <tr><td class="n">0007</td><td>모델 직렬화 형식 JSON</td><td>승인</td><td><span class="chip adr">남김</span></td><td>파일 형식</td></tr>
+        <tr><td class="n">0008</td><td>선택은 같은 부모 아래 연속 범위</td><td>승인</td><td><span class="chip q">애매함</span></td><td>조작 규칙이지만, 편집 명령이 다루는 범위(모델의 불변 조건)를 정함</td></tr>
+        <tr><td class="n">0009</td><td>데스크톱 프레임워크</td><td>제안됨</td><td><span class="chip adr">남김</span></td><td>기술 선택</td></tr>
+        <tr><td class="n">0010</td><td>UI 프레임워크</td><td>제안됨</td><td><span class="chip adr">남김</span></td><td>기술 선택</td></tr>
+        <tr><td class="n">0011</td><td>개발 순서: 웹 → Obsidian → 데스크톱</td><td>승인</td><td><span class="chip dr">옮김</span></td><td>일하는 순서</td></tr>
+        <tr><td class="n">0012</td><td>Google Drive 연동은 웹 버전 위에</td><td>승인</td><td><span class="chip adr">남김</span></td><td>구성 요소의 자리</td></tr>
+        <tr><td class="n">0013</td><td>기본 시각 스타일, 색은 테마로 분리</td><td>승인</td><td><span class="chip q">애매함</span></td><td>모습이지만, "색은 표로 렌더러에 넘긴다"는 구조를 정함</td></tr>
+        <tr><td class="n">0014</td><td>Drive에서 만드는 파일은 <code>.ns.svg</code></td><td>승인</td><td><span class="chip adr">남김</span></td><td>파일 형식 (0006과 함께 감)</td></tr>
+        <tr><td class="n">0015</td><td>강조 영역은 굵은 테두리</td><td>폐기</td><td><span class="chip dr">옮김</span></td><td>모습</td></tr>
+        <tr><td class="n">0016</td><td>접힘 상태는 파일에 저장하지 않는다</td><td>대체됨</td><td><span class="chip adr">남김</span></td><td>파일 형식</td></tr>
+        <tr><td class="n">0017</td><td>접는 범위의 이름은 모델에 저장</td><td>승인</td><td><span class="chip adr">남김</span></td><td>모델</td></tr>
+        <tr><td class="n">0018</td><td>저장되는 그림은 지금 화면 그대로</td><td>승인</td><td><span class="chip adr">남김</span></td><td>파일 형식</td></tr>
+        <tr><td class="n">0019</td><td>제품 이름 <code>AriadneNSD</code></td><td>승인</td><td><span class="chip dr">옮김</span></td><td>이름</td></tr>
+        <tr><td class="n">0020</td><td>로고</td><td>승인</td><td><span class="chip dr">옮김</span></td><td>로고</td></tr>
+        <tr><td class="n">0021</td><td>Event와 Method를 구분한다</td><td>승인</td><td><span class="chip adr">남김</span></td><td>모델</td></tr>
+        <tr><td class="n">0022</td><td>호출 블록의 이름은 머리를 따른다</td><td>승인</td><td><span class="chip adr">남김</span></td><td>모델</td></tr>
+        <tr><td class="n">0023</td><td>Apache-2.0으로 공개</td><td>승인</td><td><span class="chip dr">옮김</span></td><td>라이선스</td></tr>
+        <tr><td class="n">0024</td><td>코드 · 글 · 로고의 라이선스</td><td>대체됨</td><td><span class="chip dr">옮김</span></td><td>라이선스</td></tr>
+        <tr><td class="n">0025</td><td>Vim 키, 키 배열은 하나</td><td>승인</td><td><span class="chip q">애매함</span></td><td>조작이지만, "키와 명령의 짝은 표 하나"라는 구조를 정함</td></tr>
+        <tr><td class="n">0026</td><td>글꼴 번들, 폭을 글꼴 파일로 셈</td><td>승인</td><td><span class="chip adr">남김</span></td><td>기술 선택</td></tr>
+        <tr><td class="n">0027</td><td>시안 페이지는 CC BY 4.0</td><td>승인</td><td><span class="chip dr">옮김</span></td><td>라이선스</td></tr>
+        <tr><td class="n">0028</td><td>저장소 이름 <code>AriadneNSD</code></td><td>승인</td><td><span class="chip dr">옮김</span></td><td>이름</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="part">DR1</span>
+    <h2>DR1. 새 기록의 이름과 자리</h2>
+    <p class="q">옮기는 것은 이름 · 로고 · 라이선스 · 일하는 순서 · 모습입니다. 제품에 관한 것과 프로젝트에 관한 것이 섞여 있습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">DR1 · 1번</span><h3>"결정 기록" (DR) 하나</h3><span class="badge">Claude의 추천</span></header>
+<pre class="tree">atelier/
+  <span class="a">adr/</span>        <span class="c">아키텍처 결정 기록 (ADR)</span>
+    0000-template.md
+    0002-three-targets-shared-core.md …
+  <span class="d">decisions/</span>  <span class="c">결정 기록 (DR)</span>
+    dr-0000-template.md
+    dr-0001-split-decision-records.md
+    dr-0002-…</pre>
+        <ul><li>아키텍처가 아닌 결정은 모두 한 줄에 둡니다. 어디에 넣을지 망설일 일이 없습니다.</li><li>목록 안에서는 ADR처럼 주제 묶음(이름 · 로고 · 라이선스, 모습, 일하는 방식)으로 나눕니다.</li><li>첫 기록 <code>DR-0001</code>은 바로 이 결정(기록을 나눈다)입니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">DR1 · 2번</span><h3>둘로: 제품 결정(PDR)과 프로젝트 결정</h3></header>
+<pre class="tree">atelier/
+  <span class="a">adr/</span>        <span class="c">아키텍처</span>
+  <span class="d">pdr/</span>        <span class="c">제품: 이름, 로고, 모습, 키</span>
+  <span class="d">project/</span>    <span class="c">프로젝트: 라이선스, 개발 순서,</span>
+              <span class="c">저장소 이름</span></pre>
+        <ul><li>"제품이 어떤가"와 "프로젝트를 어떻게 꾸리나"가 갈립니다.</li><li><span class="bad">줄이 셋이 되고, 저장소 이름이나 문자 로고처럼 양쪽에 걸친 것은 자리를 정하기 어렵습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">DR2</span>
+    <h2>DR2. 옮기는 ADR의 번호</h2>
+    <p class="q">예: ADR-0019(제품 이름)를 옮길 때. 이 번호를 가리키는 문서가 12개 있습니다(CLAUDE.md 포함). 옮길 후보 11개를 모두 합치면 문서 수십 곳을 고칩니다. 고치는 일은 스크립트로 합니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">DR2 · 1번</span><h3>새 번호를 매긴다</h3><span class="badge">Claude의 추천</span></header>
+<pre class="tree"><span class="d">decisions/dr-0004-product-name.md</span>
+  <span class="c">&gt; [!NOTE] 이후 변경</span>
+  <span class="c">&gt; 2026-10-17: ADR-0019에서 옮겨 옴</span>
+
+<span class="c">링크: [[0019-product-name|ADR-0019]]</span>
+<span class="c">  →  </span>[[dr-0004-product-name|DR-0004]]
+<span class="a">adr/</span> 목록: 0018, <span class="c">(0019 · 0020 옮김)</span>, 0021 …</pre>
+        <ul><li>DR은 0001부터 빈틈없이 이어집니다. 차례는 옛 ADR 번호 순서를 따릅니다.</li><li>세션 기록과 타임라인에 글자로 적힌 "ADR-0019"는 그때의 기록이라 그대로 둡니다. 옮긴 DR의 머리에 옛 번호를 적어 두어 찾을 수 있습니다.</li><li>ADR 쪽에는 빈 번호가 생기고, 다시 쓰지 않습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">DR2 · 2번</span><h3>번호와 파일 이름을 그대로 두고 폴더만 옮긴다</h3></header>
+<pre class="tree"><span class="d">decisions/0019-product-name.md</span>
+
+<span class="c">링크: [[0019-product-name|ADR-0019]]</span>
+<span class="c">  →  그대로 이어짐 (파일 이름만으로 거는 링크)</span>
+<span class="d">decisions/</span> 목록: 0011, 0013, 0015, 0019 …</pre>
+        <ul><li>링크가 하나도 끊기지 않습니다. 고칠 것이 가장 적습니다.</li><li><span class="bad">두 줄이 한 번호 공간을 나눠 써서, 새 결정마다 "다음 번호"를 두 폴더에서 찾아야 합니다.</span> 글자 "ADR-0019"도 남아 이름과 자리가 어긋납니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">DR2 · 3번</span><h3>옛 것은 그대로, 앞으로만 나눈다</h3></header>
+<pre class="tree"><span class="a">adr/</span>  0001 ~ 0028 그대로 (섞인 채)
+<span class="d">decisions/</span>  dr-0001부터 새 결정만</pre>
+        <ul><li>고칠 것이 없습니다.</li><li><span class="bad">ADR 목록에 아키텍처가 아닌 것이 그대로 남습니다.</span> inbox의 물음은 앞으로에만 풀립니다.</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">DR3</span>
+    <h2>DR3. 애매한 넷을 어디에 둘까</h2>
+    <p class="q">사용자에게 보이는 결정이면서 코드의 구조도 정하는 것들입니다. 추천은 "구조를 정한 쪽이 결정의 중심이면 ADR"입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">DR3 · 1번</span><h3>0006 · 0008은 ADR, 0013 · 0025는 DR</h3><span class="badge">Claude의 추천</span></header>
+<pre class="tree"><span class="a">ADR</span> 0006 확장자       <span class="c">셸이 파일을 알아보는 법</span>
+<span class="a">ADR</span> 0008 연속 범위 선택  <span class="c">모델의 불변 조건</span>
+<span class="d">DR </span> 0013 시각 스타일    <span class="c">중심은 모습. 테마 구조는</span>
+                     <span class="c">아키텍처 문서에 이미 있음</span>
+<span class="d">DR </span> 0025 Vim 키       <span class="c">중심은 조작</span></pre>
+        <ul><li>0013의 "색은 표로 넘긴다"와 0025의 "키 표 하나"는 아키텍처 문서(5장)에 이미 적혀 있어, ADR이 아니어도 사라지지 않습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">DR3 · 2번</span><h3>넷 모두 ADR에 남긴다</h3></header>
+<pre class="tree"><span class="a">ADR</span> 0006 · 0008 · 0013 · 0025</pre>
+        <ul><li>옮기는 것이 줄어듭니다(11 → 9).</li><li>ADR 목록에 모습과 키가 남습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">DR3 · 3번</span><h3>넷 모두 DR로 옮긴다</h3></header>
+<pre class="tree"><span class="d">DR </span> 0006 · 0008 · 0013 · 0025</pre>
+        <ul><li>"사용자에게 보이면 DR"이라는 금이 단순합니다.</li><li><span class="bad">0014(Drive의 확장자)가 0006을 따르므로 함께 옮겨야 하고, 모델의 불변 조건(0008)이 아키텍처 기록에서 빠집니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>DR1 · DR2 · DR3을 하나씩, 번호로.</li>
+      <li>정해지면: 새 폴더와 템플릿, <code>DR-0001</code>(이 결정), ADR-0001의 "이후 변경", 옮긴 ADR의 링크 고치기, <code>atelier/README</code>의 목록 둘, CLAUDE.md의 ADR 규칙을 함께 고칩니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
