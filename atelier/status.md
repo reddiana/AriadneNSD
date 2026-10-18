@@ -19,7 +19,7 @@ updated: 2026-10-18
 | ID | 무엇 | 주소 | 저장소의 사본 |
 | --- | --- | --- | --- |
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
-| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
@@ -79,7 +79,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 제품에 대한 열린 질문은 그 문서의 미결정 절이 원본입니다. 여기에 다시 적지 않습니다.
 
 - 요구사항: [[01-requirements#6. 미결정 사항]] (블록 글자의 종류 목록, 번들하는 글꼴, Event를 일으키는 블록, 쓰이지 않는 Method, 웹 광고의 자리)
-- UX 설계의 물음: [[05-ux-decisions#1. 결정 모음]]
+- UX 설계의 물음: [[02-interaction-rules#9. 미결정 사항]] (정한 것은 [[ux-decisions|UX 결정 모음]])
 - 요구사항 문서에 대한 물음(Q18, Q22, Q23): [[requirements-review#답하실 것]]
 - 아키텍처: [[03-architecture#7. 위험과 검증이 필요한 사항]] (글꼴 조각의 크기, Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), [[03-architecture#8. 확인받지 못한 제안]], 제안됨 상태의 ADR → [[atelier/README#아키텍처 결정 기록 (ADR)]]
 - 파일 형식: [[01-file-format#6. 미결정 사항]] (모델 네임스페이스 URI)

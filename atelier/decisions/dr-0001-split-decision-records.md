@@ -10,6 +10,9 @@ superseded-by:
 
 # DR-0001: 아키텍처가 아닌 결정은 ADR과 나눠 결정 기록(DR)으로 적는다
 
+> [!NOTE] 이후 변경
+> - 2026-10-18: 이때 범위 밖이던 `docs/02-ux-design/05-ux-decisions`(작은 UX 결정)도 `atelier/decisions/`의 UX 결정 모음으로 옮겼다. 결정의 원본은 모두 `atelier/`에 있다 → [[dr-0012-decisions-in-atelier|DR-0012]]
+
 ## 배경
 
 2026-10-07부터 결정을 ADR(아키텍처 결정 기록)로 적어 왔다 → [[0001-record-architecture-decisions|ADR-0001]]. 그런데 28개 가운데 열 개는 아키텍처가 아니었다: 개발 순서, 시각 스타일, 강조 영역의 테두리, Vim 키, 제품 이름, 로고, 라이선스 셋, 저장소 이름.

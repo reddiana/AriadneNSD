@@ -15,7 +15,7 @@ updated: 2026-10-17
 > [!abstract] 이 문서는
 > **AriadneNSD가 어떻게 보이는가**를 정한 명세입니다. 원칙, 디자인 토큰(색 · 글자 · 치수), 블록의 해부도, 상태마다의 모습, 테마, 렌더링 규칙, 접근성 검증을 담습니다.
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^fmt-color|저장되는 그림의 색]], [[01-requirements#^nfr-a11y|접근성]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
-> - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 물음과 결정은 [[05-ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
+> - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 물음과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
 > - **지금 상태:** 초안입니다. 값은 프로토타입 53번째 판과 같습니다. 2026-10-17에 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 층 구분을 고치고 빠진 명세를 채웠습니다. 프로토타입에 아직 없는 상태(마우스 올림, 끌어 놓기, 오류)는 7장에 명세만 있습니다.
 
@@ -50,14 +50,14 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | --- | --- | --- |
 | 처리 | 직사각형 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
 | If | 머리에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 갈래 이름(처음은 "참" · "거짓", 고칠 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
-| Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석. 2026-10-18, inbox) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 머리가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선. 부를 Method가 없으면 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
-- **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 번들 글꼴에 있는 글자로 쓰거나 도형으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]] (2026-10-18, M24의 E1 1번)
-- **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 머리는 여전히 블록이라 고르고 고칠 수 있습니다. → [[01-requirements#^lay-head-style]] (2026-10-18, M24의 H1 1번). 치수와 색 토큰은 정하지 않았습니다
+- **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 번들 글꼴에 있는 글자로 쓰거나 도형으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
+- **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 머리는 여전히 블록이라 고르고 고칠 수 있습니다. → [[01-requirements#^lay-head-style]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]. 치수와 색 토큰은 정하지 않았습니다
 
 - If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 머리와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 골랐습니다 → [[0021-event-and-method|ADR-0021]]
 - 확인: 흑백과 색각 이상 세 가지로 본 그림에서 모든 블록 종류가 가려지는가(10.2절). 적색맹으로 보면 If와 Event의 바탕은 거의 같은 색(ΔE 1.1)이 되지만, 모양이 다르므로 원칙은 지켜집니다.
@@ -93,7 +93,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 화면에서 눈에 띄는 순서는 "사용자가 지금 다루는 것 → 사용자가 이름을 붙여 묶은 것 → 잠시 들여다보는 것 → 구조"입니다. 두드러짐은 색의 채도, 선 굵기, 선 모양을 함께 써서 만듭니다. 같은 두드러짐의 표시가 다른 뜻을 갖지 않습니다. 선 굵기의 표는 6장에 있습니다.
 
-- 펴 보인 호출 블록이 접기 영역보다 가벼운 것은, 그것이 강조가 아니라 "다른 곳에 있는 것을 여기서 잠깐 본다"이기 때문입니다 → [[05-ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]
+- 펴 보인 호출 블록이 접기 영역보다 가벼운 것은, 그것이 강조가 아니라 "다른 곳에 있는 것을 여기서 잠깐 본다"이기 때문입니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]
 - 펴 보인 곳 안의 접기 영역은 보통 접기 영역과 **똑같이** 그립니다. 그래서 점선 상자 안에 그보다 진한 테두리가 들어갈 수 있습니다. 같은 것은 어디서나 같게 보여야 한다는 메인테이너의 결정(2026-10-13, 접기 영역 테두리 시안의 P1)이 위계보다 앞섭니다.
 - 확인: 그림을 흐리게 보았을 때(블러 테스트) 고른 것 → 접기 영역 → 나머지 순서로 보이는가.
 
@@ -324,7 +324,7 @@ flowchart LR
 | 블록 하나를 고름 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 고름 | 고른 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
-| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (규칙은 [[05-ux-decisions#Q4. 비울 수 없는 칸을 비웠을 때 (R2)\|Q4]]에서 정하는 중) |
+| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (규칙은 [[02-interaction-rules#Q4. 비울 수 없는 칸을 비웠을 때 (R2)\|Q4]]에서 정하는 중) |
 | 고른 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
 | 끄는 중 | 끌고 있는 블록은 제자리에서 불투명도 40%. 커서 곁에 블록의 글자 첫 줄 | 편집 | | **없음** |
 | 놓을 자리 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
@@ -446,7 +446,7 @@ flowchart LR
 - 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 바탕이 토큰이 아니라 코드에 적힌 값입니다.
 - 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다.
 - 테마를 고를 수 없습니다. 늘 밝은 기본 테마입니다.
-- 빈 갈래의 `∅`, 머리 모양 "제목처럼", If 갈래 이름 고치기, default 이름의 오른쪽 정렬이 없습니다(2026-10-18에 정함).
+- 빈 갈래의 `∅`, 머리 모양 "제목처럼", If 갈래 이름 고치기, default 이름의 오른쪽 정렬이 없습니다(→ [[ux-decisions#7. 2026-10-18의 결정|UX 결정 모음 7장]]).
 - 토큰의 이름은 코드에 아직 없습니다. 코드는 짧은 이름(`COL.edge` 등)을 씁니다.
 
 ## 12. 미결정 사항

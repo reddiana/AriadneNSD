@@ -30,7 +30,7 @@ date: 2026-10-12
 | --- | --- | --- |
 | ADR의 자리 | `atelier/adr/`. `docs/`에는 최종 결과(지금의 모습)만 둔다 | [[0001-record-architecture-decisions\|ADR-0001]] "이후 변경", CLAUDE.md, [[atelier/README]] |
 | 일하는 기록의 폴더 이름 | `plan/` → `atelier/` | CLAUDE.md, [[dr-0008-license-scope\|ADR-0024]] "이후 변경" |
-| `ux-review` | UX 설계 [[05-ux-decisions]]과 요구사항 문서 검토 [[requirements-review]]로 나눔 | 두 문서의 머리 |
+| `ux-review` | UX 설계 [[ux-decisions]]과 요구사항 문서 검토 [[requirements-review]]로 나눔 | 두 문서의 머리 |
 | 요구사항과 설계 | 요구사항 하나는 한두 줄. 함께 구체화한 세부 규칙과 모양은 UX 설계에 쓴다 | [[01-requirements]], [[02-interaction-rules]], CLAUDE.md |
 | `docs/`의 순서 | 요구사항(01) → UX 설계(02) → 아키텍처(03) → 상세 설계(04) | [[docs/README]], CLAUDE.md |
 | `atelier/`의 문서 | 질문 하나에 문서 하나, 한 항목은 한 곳에만. [[status]](지금) · [[backlog]](할 일) · [[debt]](메인테이너의 답) · [[prototype]](프로토타입의 상태) | CLAUDE.md "함께 일하는 방식" |
@@ -65,8 +65,8 @@ inbox에서 지운 항목의 원문이 따옴표 안에 있다.
 - [ ] inbox "1. 일하는 방식"에서 넘어온 일 (2026-10-12. 메인테이너: "inbox의 일하는 방식만 적용해주세요. 금방 다시 나갈거에요." 세션 기록은 마무리 때 쓴다. 지운 항목의 원문을 여기 적어 둔다)
 	- [x] "adr/은 plan/ 밑으로 옮깁시다. docs/는 최종 결과/모습만 있게 합시다." → `docs/03-adr/`를 `plan/adr/`로 옮김. ADR 목록은 [[atelier/README#아키텍처 결정 기록 (ADR)]]으로. [[0001-record-architecture-decisions|ADR-0001]]에 "이후 변경", CLAUDE.md와 README들 고침
 	- [x] "plan/ 이름을 재검토해주세요." → Claude가 `process/`를 추천했고, 메인테이너가 "process/도 좋은데 work라는 의미로 몇가지 더 추천해주세요", "몇가지 더 추천해주세요"라고 해 후보를 두 번 더 냄(`workshop/` · `workbench/` · `work/` · `workspace/` · `backstage/`, `studio/` · `atelier/` · `desk/` · `lab/` · `making/` · `working/` · `ops/` · `pm/` · `thread/` · `loom/`). 메인테이너: "atelier/로 해주세요" → `plan/`을 `atelier/`로 바꿈. 아래 두 줄에 적힌 `plan/…`은 지금의 `atelier/…`
-	- [x] "[[05-ux-decisions|ux-review]]는 내용을 보니 ux 설계입니다. ux 설계를 위한 입력은 [[01-requirements]]에 있습니다. 이 공학적인 방법을 고려해서 문서의 위치와 문서명, 내용을 조정해주세요." → `plan/ux-review.md`를 둘로 나눔: UX 설계 [[05-ux-decisions]](지금은 `docs/02-ux-design/`, 공통 규칙과 Q1~Q17 · Q19~Q21)과 요구사항 문서 검토 [[requirements-review]](`plan/`, Q18 · Q22 · Q23과 고칠 곳 목록). 물음의 번호는 그대로
-	- [x] "이 문서를 보는 사람이 어떤 목적의 문서인지 궁금해하겠네요. 이 문서 머리에 설명해주세요." → "이 문서"가 inbox인지 ux-review인지 몰라 둘 다 함: [[inbox]], [[05-ux-decisions]], [[requirements-review]]의 머리에 "이 문서는" 콜아웃
+	- [x] "[[ux-decisions|ux-review]]는 내용을 보니 ux 설계입니다. ux 설계를 위한 입력은 [[01-requirements]]에 있습니다. 이 공학적인 방법을 고려해서 문서의 위치와 문서명, 내용을 조정해주세요." → `plan/ux-review.md`를 둘로 나눔: UX 설계 [[ux-decisions]](지금은 `docs/02-ux-design/`, 공통 규칙과 Q1~Q17 · Q19~Q21)과 요구사항 문서 검토 [[requirements-review]](`plan/`, Q18 · Q22 · Q23과 고칠 곳 목록). 물음의 번호는 그대로
+	- [x] "이 문서를 보는 사람이 어떤 목적의 문서인지 궁금해하겠네요. 이 문서 머리에 설명해주세요." → "이 문서"가 inbox인지 ux-review인지 몰라 둘 다 함: [[inbox]], [[ux-decisions]], [[requirements-review]]의 머리에 "이 문서는" 콜아웃
 - [x] 요구사항과 설계를 나눔 (2026-10-12. 메인테이너: "01-requirements가 너무 상세합니다. 사실 상세한 내용들은 당신과 내가 협업하면서 구체화한 것인데, 이것은 설계나 분석에 해당합니다. 요구사항과 분석 또는 설계를 분리합시다.") → 세부 규칙을 [[02-interaction-rules]]로 문장 그대로 옮김. 요구사항은 429줄에서 296줄로. 블록 ID와 제목은 그대로여서 링크는 끊기지 않음. Obsidian 메뉴의 자리와 미결정 셋은 [[04-obsidian-plugin]]으로
 	- [ ] 메인테이너가 나뉜 모습을 보고 확인: 요구사항에 남긴 문장의 수준이 맞는지, 더 옮길 것(2장 배포 대상의 세부, 3.7 문제 알리기)이 있는지 → [[debt]]
 - [x] `status` · `debt`에 겹쳐 있던 내용을 정리하고 문서를 나눔 (2026-10-12. 메인테이너: "debt와 requirements-review와 status에 중복된 내용들이 있습니다. 어떻게 정리하면 좋을지 의견주세요", "문서들 구조를 변경하는 것 까지 검토해주세요", "B로 해주세요. 끝난 항목은 지워도 됩니다.") → 할 일은 [[backlog]], 프로토타입의 상태는 [[prototype]], 메인테이너의 답이 필요한 것만 [[debt]]. 끝난 항목과 "처리함"은 지움(세션 기록과 git에 있음)
