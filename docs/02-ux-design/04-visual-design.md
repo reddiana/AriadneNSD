@@ -49,8 +49,8 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | 블록 | 모양 (뜻을 나름) | 바탕 (거듦) |
 | --- | --- | --- |
 | 처리 | 직사각형 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
-| If | 머리에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 "참" · "거짓" | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
-| Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| If | 머리에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 갈래 이름(처음은 "참" · "거짓", 고칠 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석. 2026-10-18, inbox) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 머리가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선. 부를 Method가 없으면 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |

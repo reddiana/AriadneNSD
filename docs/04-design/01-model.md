@@ -105,8 +105,8 @@ type Case = {
   otherwise: Branch | null;           // default 갈래. 있으면 늘 맨 끝
 };
 
-type Branch = { id: Id; body: Seq };
-type Arm = Branch & { label: string };  // 갈래 이름 (예: 1, 'a'..'z')
+type Branch = { id: Id; label?: string; body: Seq };  // If의 갈래와 default 갈래. 이름이 없으면 편집기가 정한 글자를 보인다
+type Arm = { id: Id; label: string; body: Seq };      // Case의 갈래. 이름 (예: 1, 'a'..'z')
 
 type While   = { id: Id; kind: 'while';   text: string; body: Seq };
 type DoWhile = { id: Id; kind: 'doWhile'; text: string; body: Seq };  // Do-While과 Repeat-Until은 모양이 같고 글자만 다르다
@@ -115,7 +115,7 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 
 - 조건이나 반복의 글자는 모두 `text` 하나에 둡니다. 글자 고치기 명령이 블록 종류마다 다른 필드를 찾지 않아도 됩니다.
 - **빈 블록**은 글자가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 갈래, 새 반복의 본문은 빈 블록 하나로 채웁니다.
-- If의 갈래 이름("참" · "거짓")은 모델에 없습니다. 편집기가 저장할 때의 화면 언어로 적습니다 → [[01-requirements#^nfr-i18n]]
+- If의 갈래 이름은 고칠 수 있습니다(`label`). 고치지 않았으면 비어 있고, 편집기가 저장할 때의 화면 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#^edit-if-label]], [[01-requirements#^nfr-i18n]]. default 갈래의 이름은 고치지 않으며 늘 "default"입니다.
 - 갈래(`Branch`)에도 id가 있습니다. If와 Case는 갈래별로 접히므로, 보기 상태가 갈래를 id로 가리킵니다.
 - **Case는 모델이 편집 명령보다 넓습니다.** 모델은 default가 없는 Case와 default만 있는 Case도 담습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^ide-reverse]])가 그런 모양일 수 있기 때문입니다. 사용자가 고칠 때는 편집 명령이 더 좁은 규칙을 지킵니다: 새 Case에는 늘 default가 있고, default는 뺄 수 없고, default가 아닌 갈래는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] (2026-10-18, 메인테이너: "모델은 넓게, 명령은 좁게")
 
@@ -275,7 +275,7 @@ type Result =
 
 - 1장의 타입을 그대로 JSON으로 적습니다. `Doc.content`의 `settings` · `diagrams`가 맨 위에, `view`가 그 옆에 놓입니다.
 - 객체 키의 순서는 이 문서의 타입에 적은 순서로 고정합니다.
-- 기본값과 같아 생략하는 속성: `FoldMark.name`(없음), `Call.siteFolds`(빈 목록), `Seq.folds`(빈 목록). 그 밖에는 늘 적습니다.
+- 기본값과 같아 생략하는 속성: `FoldMark.name`(없음), `Branch.label`(없음), `Call.siteFolds`(빈 목록), `Seq.folds`(빈 목록). 그 밖에는 늘 적습니다.
 - 타입별 필드를 굳히면 JSON Schema로 [[01-file-format#3. 모델 JSON]]에 옮깁니다.
 
 ## 미결정 사항
