@@ -5,3 +5,18 @@
 body[data-slug="index"] .article-title {
   display: none;
 }
+
+// 첫 화면(README): 그림 로고와 문자 로고 사이를 GitHub에서 보는 README만큼으로.
+// Quartz는 본문의 h1 위에 큰 여백을 두므로, 로고를 담은 단락과 h1의 여백을 줄인다
+body[data-slug="index"] article {
+  p[align="center"] {
+    margin: 0.5rem 0 0;
+  }
+  h1[align="center"] {
+    margin: 0.75rem 0 1rem;
+  }
+  p[align="center"] img,
+  h1[align="center"] img {
+    margin: 0;
+  }
+}
