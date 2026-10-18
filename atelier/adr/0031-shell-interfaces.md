@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0031: 셸은 문서 파일(다른 문서 읽기 포함)과 설정 보관, 두 인터페이스를 구현한다
 
+> [!NOTE] 이후 변경
+> - 2026-10-18: 반대 방향이 더해졌다. 편집기가 셸에게 명령의 목록과 설정의 목록을 내놓고, 셸은 그것을 자기 메뉴나 그 프로그램(Obsidian, IDE)의 메뉴 · 설정 화면에 올린다 → [[0033-command-list-for-shells|ADR-0033]]
+
 ## 배경
 
 같은 편집기(`editor` + `core`)를 배포 대상마다의 셸이 감싼다([[0002-three-targets-shared-core|ADR-0002]]). 셸은 웹 · Obsidian · 데스크톱에서 그치지 않는다. 웹 위에 얹는 Google Drive, 나중의 Confluence, IDE 플러그인(VSCode, 그다음 IntelliJ)도 셸이다([[03-architecture#6. 배포 구성]]). 그래서 "셸이 무엇을 구현하면 붙는가"를 인터페이스로 적어 두어야 한다.

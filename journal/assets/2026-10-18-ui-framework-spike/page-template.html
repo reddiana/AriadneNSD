@@ -33,6 +33,7 @@ section { display: grid; gap: 14px; min-width: 0; }
 .card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
 .tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
 .badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.new { color: var(--warn); background: var(--bg); }
 .card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
 .card li b { color: var(--fg); font-weight: 600; }
 .bad { color: var(--warn); font-weight: 600; }
@@ -132,9 +133,10 @@ code { font-family: var(--mono); font-size: 12.5px; }
   <section>
     <span class="part">U1</span>
     <h2>U1. 편집기가 명령의 목록을 내놓아, 셸이 제 UI에 올리게 할까</h2>
+    <p class="q"><b>결정함 (2026-10-18): 1번.</b> → ADR-0033</p>
     <p class="q">지금 아키텍처 문서에는 "키와 명령의 짝은 표 하나"까지만 있습니다. 그 표를 셸에게 내준다는 것은 없습니다. IDE 사용자는 명령 팔레트에서 "Wrap in loop"를 찾을 수 있어야 자연스럽습니다.</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">U1 · 1번</span><h3>명령의 목록을 내놓는다</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card pick"><header><span class="tag">U1 · 1번</span><h3>명령의 목록을 내놓는다</h3><span class="badge">고름</span></header>
         <div class="fig"><svg width="420" height="250" viewBox="0 0 420 250" role="img" aria-label="명령 목록을 셸마다 다르게 올림">
           <rect class="b" x="10" y="10" width="400" height="74" rx="4"/>
           <text x="22" y="30" font-weight="600">editor: 명령의 목록</text>
@@ -191,15 +193,15 @@ code { font-family: var(--mono); font-size: 12.5px; }
         <div class="fig"><pre class="code">{{vanilla}}</pre></div>
         <ul><li><b>무엇이 바뀌면 어느 글자를 고칠지 손으로 적습니다</b>(맨 아래 <code>subscribe</code> 안). 화면 부품이 늘면 이 목록도 늘고, 하나를 빠뜨리면 그 자리만 옛 글자로 남습니다.</li><li>더 실리는 것이 없습니다. 프로토타입(M01)이 이렇게 짜여 있습니다.</li><li><span class="bad">AI 대화창처럼 목록이 늘고 줄어드는 화면은 손이 많이 갑니다.</span></li></ul>
       </article>
-      <article class="card pick"><header><span class="tag">U2 · 2번</span><h3>Svelte 5</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card"><header><span class="tag">U2 · 2번</span><h3>Svelte 5</h3><span class="badge new">처음의 추천</span></header>
         <div class="size">줄인 크기 <b>{{min1}}</b> · gzip <b>{{gz1}}</b></div>
         <div class="fig"><pre class="code">{{svelte}}</pre></div>
         <ul><li><b>HTML에 값을 적어 두면</b> 값이 바뀔 때 그 자리만 고쳐집니다. 고칠 곳의 목록을 손으로 적지 않습니다.</li><li>생김새가 HTML과 가까워 읽기 쉽습니다. Obsidian 공식 문서에 플러그인에서 쓰는 법이 있습니다.</li><li>빌드할 때 컴파일하는 단계가 하나 더 있습니다. 2024년의 5판에서 쓰는 법이 크게 바뀌어, 인터넷의 옛 예제는 다르게 생겼습니다.</li></ul>
       </article>
-      <article class="card"><header><span class="tag">U2 · 3번</span><h3>React 19</h3></header>
+      <article class="card pick"><header><span class="tag">U2 · 3번</span><h3>React 19</h3><span class="badge">Claude의 추천</span></header>
         <div class="size">줄인 크기 <b>{{min2}}</b> · gzip <b>{{gz2}}</b></div>
         <div class="fig"><pre class="code">{{react}}</pre></div>
-        <ul><li>값이 바뀌면 <b>함수 전체를 다시 부르고</b>, 앞의 결과와 견주어 다른 곳만 고칩니다. 불변 문서(ADR-0029)와 잘 맞습니다.</li><li>자료와 사례, 부품 라이브러리가 가장 많습니다. Obsidian 공식 문서에도 쓰는 법이 있습니다.</li><li><span class="bad">넷 가운데 가장 큽니다.</span> "다시 부른다"는 생각과 훅의 규칙(<code>useState</code>, <code>useEffect</code>를 부르는 순서)을 익혀야 읽힙니다.</li></ul>
+        <ul><li>값이 바뀌면 <b>함수 전체를 다시 부르고</b>, 앞의 결과와 견주어 다른 곳만 고칩니다. 불변 문서(ADR-0029)와 잘 맞습니다.</li><li><b>개발자 층이 가장 두텁습니다</b>(Svelte의 6~20배쯤). 자료와 사례, 부품 라이브러리가 가장 많고, 오픈 소스에 손을 보탤 수 있는 사람도 가장 많습니다.</li><li><b>배포 대상의 관례입니다</b>: Confluence Forge의 화면 도구(UI Kit)와 템플릿, VSCode 웹뷰의 예제가 대개 React입니다. Obsidian 공식 문서에도 쓰는 법이 있습니다.</li><li><span class="bad">넷 가운데 가장 큽니다.</span> "다시 부른다"는 생각과 훅의 규칙(<code>useState</code>, <code>useEffect</code>를 부르는 순서)을 익혀야 읽힙니다.</li></ul>
       </article>
       <article class="card"><header><span class="tag">U2 · 4번</span><h3>Preact (React의 작은 판)</h3></header>
         <div class="size">줄인 크기 <b>{{min3}}</b> · gzip <b>{{gz3}}</b></div>
@@ -234,6 +236,8 @@ code { font-family: var(--mono); font-size: 12.5px; }
         <tr><td>화면 부품이 늘 때</td><td class="bad">고칠 곳을 손으로 적음</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td></tr>
         <tr><td>메인테이너가 읽기 (프론트엔드는 처음)</td><td>길지만 그대로 읽힘</td><td class="good">HTML과 가까움</td><td>"다시 부른다"와 훅의 규칙을 익혀야 함</td><td>React와 같음</td></tr>
         <tr><td>자료와 사례</td><td>웹 표준 문서</td><td>많음 (5판 자료는 아직 적음)</td><td class="good">가장 많음</td><td>React 자료를 거의 그대로</td></tr>
+        <tr><td>개발자 층 (Stack Overflow 조사 2024 "써 봤다", npm 주간 내려받기 2025년 무렵. 대략)</td><td>모든 웹 개발자</td><td>약 6.5% · 1백만~2백만 회</td><td class="good">약 40% · 2천만~3천만 회</td><td>React와 같은 사람들이 읽을 수 있음</td></tr>
+        <tr><td>배포 대상의 관례 (Confluence Forge, VSCode 웹뷰)</td><td>—</td><td>—</td><td class="good">React가 관례</td><td>React와 비슷하나 맞지 않는 곳이 가끔</td></tr>
         <tr><td>나중에 바꾸는 비용</td><td colspan="4">둘레의 부품만 다시 짬. 다이어그램 · 키 입력 · 글자 칸은 그대로</td></tr>
       </tbody>
     </table></div>
@@ -243,8 +247,9 @@ code { font-family: var(--mono); font-size: 12.5px; }
     <h2>답하실 것</h2>
     <div class="sum">
       <ol>
-        <li><b>U1</b>: 1번 또는 2번. Claude의 추천은 <b>1번 명령의 목록을 내놓는다</b>입니다. 셸이 여섯을 넘고 그 가운데 셋(Obsidian, VSCode, IntelliJ)에 제 UI가 있습니다.</li>
-        <li><b>U2</b>: 1번 ~ 4번 가운데 하나. Claude의 추천은 <b>2번 Svelte</b>입니다. 크기가 갈라놓지 못하니, 메인테이너가 읽기 쉽고 화면 부품이 늘 때 손이 덜 가는 쪽을 골랐습니다. U1이 1번이면 프레임워크가 그리는 곳이 줄어 "프레임워크 없음"과의 차이도 작아집니다. 그래도 웹 · 데스크톱 · Confluence와 웹의 AI 대화창은 우리가 모두 그리므로 추천은 그대로입니다.</li>
+        <li><b>U1</b>: 결정함(2026-10-18) — 1번 명령의 목록을 내놓는다.</li>
+        <li><b>U2</b>: 1번 ~ 4번 가운데 하나. Claude의 추천은 <b>3번 React</b>입니다. 크기가 갈라놓지 못하니(Obsidian 플러그인 +11%쯤), 개발자 층과 배포 대상(Confluence, VSCode)의 관례를 따랐습니다. 읽으려면 훅의 규칙을 익혀야 하지만, U1이 1번이라 우리가 그리는 부품이 작아 그 부담도 작습니다.</li>
+        <li>처음에는 <b>2번 Svelte</b>를 추천했습니다(메인테이너가 읽기 쉬움을 가장 무겁게 봄). 메인테이너가 "Svelte과 React의 개발자 층은 어느 것이 두터운가요?"라고 물어, 견주지 않았던 개발자 층과 배포 대상의 관례를 더해 바꿨습니다(2026-10-18).</li>
         <li>U1은 새 ADR과 아키텍처 문서(셸의 인터페이스, ADR-0031의 이후 변경)에, U2는 <code>ADR-0010</code>을 "승인"으로 고쳐 적고, 편집기 설계(<code>03-editor</code>)의 화면 구성에 옮깁니다.</li>
       </ol>
       <ul><li>코드와 재는 스크립트는 저장소의 <code>journal/assets/2026-10-18-ui-framework-spike/</code>에 있습니다. <code>node measure.mjs &lt;node_modules가 있는 폴더&gt;</code>로 다시 잴 수 있습니다.</li></ul>
