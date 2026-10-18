@@ -1,0 +1,290 @@
+<title>M22 UI 프레임워크</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M20 · M21과 같은 틀: 물음마다 한 단락, 선택지를 카드로 나란히. 이 페이지는 같은 도구 모음을 넷으로 짠 코드와 잰 크기를 보여 준다 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a;
+  --box: #f5f7fb; --box-line: #9aa6ba; --plain: #6b4fa8; --plain-soft: #efeaf8;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --box-line: #56607a; --plain: #c3a8ff; --plain-soft: #2c2540; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --box-line: #56607a; --plain: #c3a8ff; --plain-soft: #2c2540; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.fig svg text { font-family: var(--font); fill: var(--fg); font-size: 12px; }
+.fig svg .m { fill: var(--muted); font-size: 11px; }
+.fig svg .b { fill: var(--panel); stroke: var(--box-line); stroke-width: 1; }
+.fig svg .fw { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.fig svg .fwt { fill: var(--accent); font-weight: 600; }
+.fig svg .pl { fill: var(--plain-soft); stroke: var(--plain); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.fig svg .plt { fill: var(--plain); font-weight: 600; }
+.fig svg .ns { fill: var(--panel); stroke: var(--fg); stroke-width: 1; }
+.fig svg .sel { fill: none; stroke: var(--warn); stroke-width: 2.5; }
+pre.code { margin: 0; font-family: var(--mono); font-size: 12px; line-height: 1.6; white-space: pre; color: var(--fg); }
+.size { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); }
+.size b { color: var(--fg); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+.sw.fw { background: var(--accent-soft); border: 1.5px solid var(--accent); }
+.sw.pl { background: var(--plain-soft); border: 1.5px dashed var(--plain); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13.5px; min-width: 640px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12.5px; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.bar { height: 10px; background: var(--accent); border-radius: 2px; min-width: 2px; }
+.bar.base { background: var(--box-line); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M22 · UI 프레임워크</h1>
+    <p class="lede">편집기(<code>packages/editor</code>)의 화면 부품을 무엇으로 짤지 고르는 시안입니다(<code>ADR-0010</code>, 2026-10-07부터 "제안됨"). 2026-10-17의 결정(ADR-0030)으로 <b>다이어그램은 렌더러가 그리므로</b>, 프레임워크가 맡는 곳은 도구 모음 · 메뉴 · 설정 창 같은 둘레뿐입니다. 같은 도구 모음을 넷으로 실제로 짜서 빌드하고 크기를 쟀습니다(2026-10-18).</p>
+  </div>
+
+  <section>
+    <span class="part">배경</span>
+    <h2>프레임워크가 맡는 곳과 맡지 않는 곳</h2>
+    <p class="q">어느 것을 골라도 <b>다이어그램, 고른 표시, 키 입력(Vim 키, 한글 입력), 블록 위의 글자 칸</b>은 프레임워크 없이 TypeScript로 짭니다. 가장 까다로운 곳이 프레임워크 밖에 있어서, 프레임워크를 고르는 일의 무게가 2026-10-07보다 작아졌습니다.</p>
+    <div class="legend"><span><span class="sw fw"></span>프레임워크가 맡음</span><span><span class="sw pl"></span>프레임워크 없이 TypeScript (어느 안이든 같음)</span></div>
+    <div class="fig"><svg width="760" height="330" viewBox="0 0 760 330" role="img" aria-label="편집 화면에서 프레임워크가 맡는 곳">
+      <rect class="b" x="10" y="10" width="740" height="310" rx="6"/>
+      <rect class="fw" x="20" y="20" width="720" height="34" rx="4"/>
+      <text class="fwt" x="32" y="42">도구 모음: 실행 취소 · 다시 실행 · 글자 종류 · 설정</text>
+      <rect class="pl" x="20" y="64" width="470" height="246" rx="4"/>
+      <text class="plt" x="32" y="84">다이어그램 영역</text>
+      <text class="m" x="32" y="100">렌더러가 만든 SVG를 놓음 (ADR-0030)</text>
+      <rect class="ns" x="60" y="114" width="300" height="26"/><text x="70" y="132">i ← 0</text>
+      <rect class="ns" x="60" y="140" width="300" height="26"/><text x="70" y="158">while i &lt; n</text>
+      <rect class="ns" x="80" y="166" width="280" height="26"/>
+      <rect class="sel" x="80" y="166" width="280" height="26"/>
+      <rect class="ns" x="80" y="192" width="280" height="26"/><text x="90" y="210">i ← i + 1</text>
+      <rect class="pl" x="86" y="169" width="190" height="20" rx="2"/><text class="m" x="94" y="183">print(a[i])▏ 글자 칸</text>
+      <text class="m" x="370" y="183">← 고른 표시 (편집 층)</text>
+      <text class="m" x="60" y="250">키 입력: 표준 키 + Vim 키, Esc 두 번,</text>
+      <text class="m" x="60" y="266">한글 입력 상태에서 자판의 자리로 읽기</text>
+      <rect class="fw" x="230" y="226" width="160" height="74" rx="4"/>
+      <text class="fwt" x="242" y="246">우클릭 메뉴</text>
+      <text class="m" x="242" y="264">감싸기 · 풀기 · 접기</text>
+      <text class="m" x="242" y="280">새 Method로 빼기 …</text>
+      <rect class="fw" x="500" y="64" width="240" height="118" rx="4"/>
+      <text class="fwt" x="512" y="84">설정 창</text>
+      <text class="m" x="512" y="104">화면 언어 · 화면 색</text>
+      <text class="m" x="512" y="120">블록 글자의 종류 · 결과 기호</text>
+      <text class="m" x="512" y="136">문제 알리기 보고서</text>
+      <rect class="fw" x="500" y="192" width="240" height="118" rx="4"/>
+      <text class="fwt" x="512" y="212">AI 대화창 (#P3, 웹)</text>
+      <text class="m" x="512" y="232">"퀵소트를 그려 주세요"</text>
+      <text class="m" x="512" y="248">답이 흘러 들어오는 목록, 키 입력 칸</text>
+    </svg></div>
+  </section>
+
+  <section>
+    <span class="part">U1</span>
+    <h2>U1. 둘레의 화면 부품을 무엇으로 짤까</h2>
+    <p class="q">아래 넷은 <b>모두 같은 도구 모음</b>입니다: 실행 취소 · 다시 실행(할 것이 없으면 흐리게), 블록 글자의 종류 고르기, 설정 단추를 누르면 열리는 언어 고르기(영어 ↔ 한국어로 글자가 바뀜). 편집기 본체의 흉내(<code>editor-stub.js</code>)는 넷이 함께 씁니다. 크기는 그 도구 모음과 프레임워크를 함께 빌드해 줄인 것입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">U1 · 1번</span><h3>프레임워크 없음 (TypeScript + DOM)</h3></header>
+        <div class="size">줄인 크기 <b>1.9 KB</b> · 웹으로 보낼 때(gzip) <b>0.9 KB</b></div>
+        <div class="fig"><pre class="code">// 1번: 프레임워크 없음 (TypeScript + DOM). 바뀔 때마다 무엇을 고칠지 손으로 적는다.
+import { T, KINDS, createEditor } from './editor-stub.js';
+export function mountToolbar(root, ed) {
+  root.innerHTML = `
+    &lt;button data-a="undo"&gt;&lt;/button&gt;&lt;button data-a="redo"&gt;&lt;/button&gt;
+    &lt;label&gt;&lt;span data-t="kind"&gt;&lt;/span&gt; &lt;select&gt;${KINDS.map((k) =&gt; `&lt;option&gt;${k}&lt;/option&gt;`).join('')}&lt;/select&gt;&lt;/label&gt;
+    &lt;button data-a="settings"&gt;&lt;/button&gt;
+    &lt;div class="panel" hidden&gt;&lt;span data-t="lang"&gt;&lt;/span&gt;
+      &lt;label&gt;&lt;input type="radio" name="lang" value="en"&gt;English&lt;/label&gt;
+      &lt;label&gt;&lt;input type="radio" name="lang" value="ko"&gt;한국어&lt;/label&gt;&lt;/div&gt;`;
+  const $ = (s) =&gt; root.querySelector(s);
+  const undo = $('[data-a=undo]'), redo = $('[data-a=redo]'), settings = $('[data-a=settings]');
+  const select = $('select'), panel = $('.panel');
+  undo.onclick = () =&gt; ed.undo();
+  redo.onclick = () =&gt; ed.redo();
+  select.onchange = () =&gt; ed.setKind(select.value);
+  settings.onclick = () =&gt; { panel.hidden = !panel.hidden; };
+  root.querySelectorAll('input[name=lang]').forEach((r) =&gt; (r.onchange = () =&gt; ed.setLang(r.value)));
+  return ed.subscribe((s) =&gt; {
+    const t = T[s.lang];
+    undo.textContent = t.undo; undo.disabled = !s.past.length;
+    redo.textContent = t.redo; redo.disabled = !s.future.length;
+    settings.textContent = t.settings;
+    $('[data-t=kind]').textContent = t.kind; $('[data-t=lang]').textContent = t.lang;
+    select.value = s.kind;
+    root.querySelector(`input[value=${s.lang}]`).checked = true;
+  });
+}
+mountToolbar(document.getElementById('app'), createEditor());</pre></div>
+        <ul><li><b>무엇이 바뀌면 어느 글자를 고칠지 손으로 적습니다</b>(맨 아래 <code>subscribe</code> 안). 화면 부품이 늘면 이 목록도 늘고, 하나를 빠뜨리면 그 자리만 옛 글자로 남습니다.</li><li>더 실리는 것이 없습니다. 프로토타입(M01)이 이렇게 짜여 있습니다.</li><li><span class="bad">AI 대화창처럼 목록이 늘고 줄어드는 화면은 손이 많이 갑니다.</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">U1 · 2번</span><h3>Svelte 5</h3><span class="badge">Claude의 추천</span></header>
+        <div class="size">줄인 크기 <b>57.5 KB</b> · gzip <b>21.4 KB</b></div>
+        <div class="fig"><pre class="code">&lt;!-- 2번: Svelte 5. HTML에 값을 적어 두면, 값이 바뀔 때 그 자리만 고쳐진다. --&gt;
+&lt;script&gt;
+  import { T, KINDS } from './editor-stub.js';
+  let { ed } = $props();
+  let s = $state.raw(ed.get());
+  $effect(() =&gt; ed.subscribe((v) =&gt; (s = v)));
+  let open = $state(false);
+  let t = $derived(T[s.lang]);
+&lt;/script&gt;
+
+&lt;button onclick={() =&gt; ed.undo()} disabled={!s.past.length}&gt;{t.undo}&lt;/button&gt;
+&lt;button onclick={() =&gt; ed.redo()} disabled={!s.future.length}&gt;{t.redo}&lt;/button&gt;
+&lt;label&gt;{t.kind}
+  &lt;select value={s.kind} onchange={(e) =&gt; ed.setKind(e.target.value)}&gt;
+    {#each KINDS as k}&lt;option&gt;{k}&lt;/option&gt;{/each}
+  &lt;/select&gt;
+&lt;/label&gt;
+&lt;button onclick={() =&gt; (open = !open)}&gt;{t.settings}&lt;/button&gt;
+{#if open}
+  &lt;div class="panel"&gt;{t.lang}
+    &lt;label&gt;&lt;input type="radio" checked={s.lang === 'en'} onchange={() =&gt; ed.setLang('en')}&gt;English&lt;/label&gt;
+    &lt;label&gt;&lt;input type="radio" checked={s.lang === 'ko'} onchange={() =&gt; ed.setLang('ko')}&gt;한국어&lt;/label&gt;
+  &lt;/div&gt;
+{/if}</pre></div>
+        <ul><li><b>HTML에 값을 적어 두면</b> 값이 바뀔 때 그 자리만 고쳐집니다. 고칠 곳의 목록을 손으로 적지 않습니다.</li><li>생김새가 HTML과 가까워 읽기 쉽습니다. Obsidian 공식 문서에 플러그인에서 쓰는 법이 있습니다.</li><li>빌드할 때 컴파일하는 단계가 하나 더 있습니다. 2024년의 5판에서 쓰는 법이 크게 바뀌어, 인터넷의 옛 예제는 다르게 생겼습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">U1 · 3번</span><h3>React 19</h3></header>
+        <div class="size">줄인 크기 <b>219.8 KB</b> · gzip <b>68.1 KB</b></div>
+        <div class="fig"><pre class="code">// 3번: React. 값이 바뀌면 함수 전체를 다시 부르고, 앞의 결과와 견주어 다른 곳만 고친다.
+import { useState, useSyncExternalStore } from 'react';
+import { createRoot } from 'react-dom/client';
+import { T, KINDS, createEditor } from './editor-stub.js';
+function Toolbar({ ed }) {
+  const s = useSyncExternalStore(ed.subscribe, ed.get);
+  const [open, setOpen] = useState(false);
+  const t = T[s.lang];
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; ed.undo()} disabled={!s.past.length}&gt;{t.undo}&lt;/button&gt;
+      &lt;button onClick={() =&gt; ed.redo()} disabled={!s.future.length}&gt;{t.redo}&lt;/button&gt;
+      &lt;label&gt;{t.kind}{' '}
+        &lt;select value={s.kind} onChange={(e) =&gt; ed.setKind(e.target.value)}&gt;
+          {KINDS.map((k) =&gt; &lt;option key={k}&gt;{k}&lt;/option&gt;)}
+        &lt;/select&gt;
+      &lt;/label&gt;
+      &lt;button onClick={() =&gt; setOpen(!open)}&gt;{t.settings}&lt;/button&gt;
+      {open &amp;&amp; (
+        &lt;div className="panel"&gt;{t.lang}
+          &lt;label&gt;&lt;input type="radio" checked={s.lang === 'en'} onChange={() =&gt; ed.setLang('en')} /&gt;English&lt;/label&gt;
+          &lt;label&gt;&lt;input type="radio" checked={s.lang === 'ko'} onChange={() =&gt; ed.setLang('ko')} /&gt;한국어&lt;/label&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/&gt;
+  );
+}
+createRoot(document.getElementById('app')).render(&lt;Toolbar ed={createEditor()} /&gt;);</pre></div>
+        <ul><li>값이 바뀌면 <b>함수 전체를 다시 부르고</b>, 앞의 결과와 견주어 다른 곳만 고칩니다. 불변 문서(ADR-0029)와 잘 맞습니다.</li><li>자료와 사례, 부품 라이브러리가 가장 많습니다. Obsidian 공식 문서에도 쓰는 법이 있습니다.</li><li><span class="bad">넷 가운데 가장 큽니다.</span> "다시 부른다"는 생각과 훅의 규칙(<code>useState</code>, <code>useEffect</code>를 부르는 순서)을 익혀야 읽힙니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">U1 · 4번</span><h3>Preact (React의 작은 판)</h3></header>
+        <div class="size">줄인 크기 <b>14.5 KB</b> · gzip <b>6.1 KB</b></div>
+        <div class="fig"><pre class="code">// 4번: Preact. React와 같은 쓰는 법, 작은 몸집.
+import { useState, useEffect } from 'preact/hooks';
+import { render } from 'preact';
+import { T, KINDS, createEditor } from './editor-stub.js';
+function Toolbar({ ed }) {
+  const [s, setS] = useState(ed.get()); useEffect(() =&gt; ed.subscribe(setS), []);
+  const [open, setOpen] = useState(false);
+  const t = T[s.lang];
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; ed.undo()} disabled={!s.past.length}&gt;{t.undo}&lt;/button&gt;
+      &lt;button onClick={() =&gt; ed.redo()} disabled={!s.future.length}&gt;{t.redo}&lt;/button&gt;
+      &lt;label&gt;{t.kind}{' '}
+        &lt;select value={s.kind} onChange={(e) =&gt; ed.setKind(e.target.value)}&gt;
+          {KINDS.map((k) =&gt; &lt;option key={k}&gt;{k}&lt;/option&gt;)}
+        &lt;/select&gt;
+      &lt;/label&gt;
+      &lt;button onClick={() =&gt; setOpen(!open)}&gt;{t.settings}&lt;/button&gt;
+      {open &amp;&amp; (
+        &lt;div className="panel"&gt;{t.lang}
+          &lt;label&gt;&lt;input type="radio" checked={s.lang === 'en'} onChange={() =&gt; ed.setLang('en')} /&gt;English&lt;/label&gt;
+          &lt;label&gt;&lt;input type="radio" checked={s.lang === 'ko'} onChange={() =&gt; ed.setLang('ko')} /&gt;한국어&lt;/label&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/&gt;
+  );
+}
+render(&lt;Toolbar ed={createEditor()} /&gt;, document.getElementById('app'));</pre></div>
+        <ul><li>React와 쓰는 법이 같고 몸집은 Svelte보다 작습니다.</li><li>React의 부품 라이브러리는 대개 그대로 쓸 수 있지만, 가끔 맞지 않는 것이 있습니다.</li><li>읽기 위해 익힐 것은 React와 같습니다.</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">크기</span>
+    <h2>잰 크기를 견주면</h2>
+    <p class="q">Obsidian 플러그인은 <code>main.js</code> 하나로 배포하고, 거기에는 이미 글꼴과 wasm이 들어가 <b>2 MB쯤</b> 됩니다(아키텍처 7장). Obsidian은 파일을 디스크에서 읽으므로 "줄인 크기"가, 웹은 압축해 보내므로 "gzip"이 실제로 실리는 크기입니다.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>안</th><th>줄인 크기</th><th>gzip</th><th>Obsidian <code>main.js</code>(2 MB쯤)에 더해지는 몫</th><th style="width:30%">줄인 크기 막대</th></tr></thead>
+      <tbody><tr><td>1 프레임워크 없음</td><td class="n">1.9 KB</td><td class="n">0.9 KB</td><td class="n">+0.1%</td><td><div class="bar" style="width:1.0%"></div></td></tr>
+<tr><td>2 Svelte 5.57.2</td><td class="n">57.5 KB</td><td class="n">21.4 KB</td><td class="n">+2.8%</td><td><div class="bar" style="width:26.2%"></div></td></tr>
+<tr><td>3 React 19.3.1</td><td class="n">219.8 KB</td><td class="n">68.1 KB</td><td class="n">+10.7%</td><td><div class="bar" style="width:100.0%"></div></td></tr>
+<tr><td>4 Preact 11.0.1</td><td class="n">14.5 KB</td><td class="n">6.1 KB</td><td class="n">+0.7%</td><td><div class="bar" style="width:6.6%"></div></td></tr></tbody>
+    </table></div>
+    <p class="q">React를 골라도 Obsidian 플러그인이 1할쯤 커지는 정도라, <b>크기만으로는 갈리지 않습니다.</b> 남는 기준은 읽기 쉬움, 화면 부품이 늘 때 손이 덜 가는가, 자료의 양입니다.</p>
+  </section>
+
+  <section>
+    <span class="part">기준</span>
+    <h2>기준마다 견주면</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>기준</th><th>1 없음</th><th>2 Svelte</th><th>3 React</th><th>4 Preact</th></tr></thead>
+      <tbody>
+        <tr><td>더 실리는 크기</td><td class="good">없음</td><td>작음</td><td class="bad">가장 큼</td><td class="good">아주 작음</td></tr>
+        <tr><td>다이어그램을 그리는 빠르기 (ADR-0030)</td><td colspan="4">어느 것이든 같음. 다이어그램은 렌더러가 그림</td></tr>
+        <tr><td>여러 셸에 붙이기 (웹 · Obsidian · 데스크톱 · Confluence · IDE)</td><td colspan="4">어느 것이든 같음. 셸이 준 칸(<code>div</code>) 하나에 붙임</td></tr>
+        <tr><td>화면 부품이 늘 때</td><td class="bad">고칠 곳을 손으로 적음</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td></tr>
+        <tr><td>메인테이너가 읽기 (프론트엔드는 처음)</td><td>길지만 그대로 읽힘</td><td class="good">HTML과 가까움</td><td>"다시 부른다"와 훅의 규칙을 익혀야 함</td><td>React와 같음</td></tr>
+        <tr><td>자료와 사례</td><td>웹 표준 문서</td><td>많음 (5판 자료는 아직 적음)</td><td class="good">가장 많음</td><td>React 자료를 거의 그대로</td></tr>
+        <tr><td>나중에 바꾸는 비용</td><td colspan="4">둘레의 부품만 다시 짬. 다이어그램 · 키 입력 · 글자 칸은 그대로</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>U1</b>: 1번 ~ 4번 가운데 하나. Claude의 추천은 <b>2번 Svelte</b>입니다. 크기가 갈라놓지 못하니, 메인테이너가 읽기 쉽고 화면 부품이 늘 때 손이 덜 가는 쪽을 골랐습니다.</li>
+        <li>정하면 <code>ADR-0010</code>을 "승인"으로 고쳐 결정과 까닭을 적고, 편집기 설계(<code>03-editor</code>)의 화면 구성에 옮깁니다.</li>
+      </ol>
+      <ul><li>코드와 재는 스크립트는 저장소의 <code>journal/assets/2026-10-18-ui-framework-spike/</code>에 있습니다. <code>node measure.mjs &lt;node_modules가 있는 폴더&gt;</code>로 다시 잴 수 있습니다.</li></ul>
+    </div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
