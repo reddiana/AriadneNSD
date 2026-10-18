@@ -56,6 +56,9 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
+- **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 번들 글꼴에 있는 글자로 쓰거나 도형으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]] (2026-10-18, M24의 E1 1번)
+- **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 머리는 여전히 블록이라 고르고 고칠 수 있습니다. → [[01-requirements#^lay-head-style]] (2026-10-18, M24의 H1 1번). 치수와 색 토큰은 정하지 않았습니다
+
 - If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 머리와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 골랐습니다 → [[0021-event-and-method|ADR-0021]]
 - 확인: 흑백과 색각 이상 세 가지로 본 그림에서 모든 블록 종류가 가려지는가(10.2절). 적색맹으로 보면 If와 Event의 바탕은 거의 같은 색(ΔE 1.1)이 되지만, 모양이 다르므로 원칙은 지켜집니다.
 
@@ -443,6 +446,7 @@ flowchart LR
 - 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 바탕이 토큰이 아니라 코드에 적힌 값입니다.
 - 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다.
 - 테마를 고를 수 없습니다. 늘 밝은 기본 테마입니다.
+- 빈 갈래의 `∅`, 머리 모양 "제목처럼", If 갈래 이름 고치기, default 이름의 오른쪽 정렬이 없습니다(2026-10-18에 정함).
 - 토큰의 이름은 코드에 아직 없습니다. 코드는 짧은 이름(`COL.edge` 등)을 씁니다.
 
 ## 12. 미결정 사항

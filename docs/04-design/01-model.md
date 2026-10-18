@@ -42,6 +42,7 @@ type Content = {
 type Settings = {
   textKind: TextKind;    // 블록 글자의 종류 → [[0032-token-highlighting|ADR-0032]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
+  headStyle: 'shape' | 'title';  // 머리 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^lay-head-style]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
 ```
