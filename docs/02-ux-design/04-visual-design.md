@@ -7,7 +7,7 @@ tags:
   - design
   - ux
 status: 초안
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 # UX 설계: 시각 디자인
@@ -17,7 +17,7 @@ updated: 2026-10-17
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^fmt-color|저장되는 그림의 색]], [[01-requirements#^nfr-a11y|접근성]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 물음과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. 값은 프로토타입 53번째 판과 같습니다. 2026-10-17에 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 층 구분을 고치고 빠진 명세를 채웠습니다. 프로토타입에 아직 없는 상태(마우스 올림, 끌어 놓기, 오류)는 7장에 명세만 있습니다.
+> - **지금 상태:** 초안입니다. 값은 프로토타입 60번째 판과 같습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 층 구분을 고치고 빠진 명세를 채웠습니다. 프로토타입에 아직 없는 모습(마우스 올림, 끌어 놓기, 오류, 빈 갈래의 `∅`, 머리 모양 "제목처럼", 두 키 조합의 안내 상자)은 이 문서에 명세만 있습니다(11장).
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
@@ -57,7 +57,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
 - **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 번들 글꼴에 있는 글자로 쓰거나 도형으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
-- **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 머리는 여전히 블록이라 고르고 고칠 수 있습니다. → [[01-requirements#^lay-head-style]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]. 치수와 색 토큰은 정하지 않았습니다
+- **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 바탕은 칠하지 않습니다(종이 그대로). 머리는 여전히 블록이라 고르고 고칠 수 있습니다. 글자는 4.2절, 치수는 5장에 있습니다. 문서 설정의 자리는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^lay-head-style]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
 
 - If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 머리와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 골랐습니다 → [[0021-event-and-method|ADR-0021]]
 - 확인: 흑백과 색각 이상 세 가지로 본 그림에서 모든 블록 종류가 가려지는가(10.2절). 적색맹으로 보면 If와 Event의 바탕은 거의 같은 색(ΔE 1.1)이 되지만, 모양이 다르므로 원칙은 지켜집니다.
@@ -76,7 +76,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | 모양 | 맨 위에 이름 띠가 붙음 | 띠 없는 실선 상자 |
 | 인쇄 | 인쇄됨 | 인쇄되지 않음. 그래서 흑백 인쇄 팔레트에서 둘이 같은 검정이 되어도 문제없음 |
 
-- 근거: 접기 영역과 고른 표시가 같은 파랑이면 고른 상자가 저장되는 테두리처럼 보입니다(52번째 판까지 그랬음). 그래서 둘 가운데 하나는 파랑이 아니어야 하고, 접기 영역은 파랑으로 두고 고른 표시를 주황으로 했습니다(2026-10-17). 주황은 블록 바탕 위에서 3:1을 지키려고 시안의 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e8590c;border:1px solid #8888;vertical-align:-0.1em"></span> `#e8590c`보다 조금 진한 값입니다. 고른 과정 → M19 접기 영역 색 시안 B · S1: https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9, 사본 `journal/assets/2026-10-17-fold-color-study.html`
+- 근거: 접기 영역과 고른 표시가 같은 파랑이면 고른 상자가 저장되는 테두리처럼 보입니다(52번째 판까지 그랬음). 그래서 둘 가운데 하나는 파랑이 아니어야 하고, 접기 영역은 파랑으로 두고 고른 표시를 주황으로 했습니다([[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-d]]). 주황은 블록 바탕 위에서 3:1을 지키려고 시안의 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e8590c;border:1px solid #8888;vertical-align:-0.1em"></span> `#e8590c`보다 조금 진한 값입니다. 고른 과정 → M19 접기 영역 색 시안 B · S1: https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9, 사본 `journal/assets/2026-10-17-fold-color-study.html`
 - 확인: 저장된 SVG에 편집 층의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`)이 한 번도 나오지 않고, 굵기 2px 이상의 선은 모두 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge`의 색인가. 프로토타입 시험이 확인합니다.
 
 ### 원칙 4. 문서는 종이다
@@ -94,7 +94,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 화면에서 눈에 띄는 순서는 "사용자가 지금 다루는 것 → 사용자가 이름을 붙여 묶은 것 → 잠시 들여다보는 것 → 구조"입니다. 두드러짐은 색의 채도, 선 굵기, 선 모양을 함께 써서 만듭니다. 같은 두드러짐의 표시가 다른 뜻을 갖지 않습니다. 선 굵기의 표는 6장에 있습니다.
 
 - 펴 보인 호출 블록이 접기 영역보다 가벼운 것은, 그것이 강조가 아니라 "다른 곳에 있는 것을 여기서 잠깐 본다"이기 때문입니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]
-- 펴 보인 곳 안의 접기 영역은 보통 접기 영역과 **똑같이** 그립니다. 그래서 점선 상자 안에 그보다 진한 테두리가 들어갈 수 있습니다. 같은 것은 어디서나 같게 보여야 한다는 메인테이너의 결정(2026-10-13, 접기 영역 테두리 시안의 P1)이 위계보다 앞섭니다.
+- 펴 보인 곳 안의 접기 영역은 보통 접기 영역과 **똑같이** 그립니다. 그래서 점선 상자 안에 그보다 진한 테두리가 들어갈 수 있습니다. 같은 것은 어디서나 같게 보여야 한다는 메인테이너의 결정([[ux-decisions#4.1 호출 블록 펴 보기 (R6)|P1]], 시안 M11)이 위계보다 앞섭니다.
 - 확인: 그림을 흐리게 보았을 때(블러 테스트) 고른 것 → 접기 영역 → 나머지 순서로 보이는가.
 
 ### 원칙 6. 테마는 색만 바꾸고 기하는 바꾸지 않는다
@@ -128,7 +128,7 @@ flowchart LR
 - 테마의 종이 색 사각형(밝은 기본 테마에서는 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper`) 하나. 투명하게 두지 않습니다. 어두운 뷰어에서도 원칙 4가 지켜집니다.
 - 그림 둘레 여백 24px.
 - 쓰인 글자만 추린 번들 글꼴과 대체 글꼴 목록 → [[01-requirements#^fmt-text]]
-- 기호(`▾` `▶` `⋯` `←`)는 **도형(path)으로** 그립니다. 글자로 두면 글꼴에 그 기호가 없는 뷰어에서 깨집니다. 프로토타입은 `▶`만 도형이고 나머지는 아직 글자입니다(11장).
+- 기호(`▾` `▶` `⋯` `←` `∅`)는 **도형(path)으로** 그립니다. 글자로 두면 글꼴에 그 기호가 없는 뷰어에서 깨집니다. 프로토타입은 `▶`만 도형이고 나머지는 아직 글자입니다(11장).
 - 편집 층의 표시는 하나도 들어가지 않습니다.
 
 ## 3. 디자인 토큰
@@ -176,7 +176,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `slate.500` | 블록의 경계와 빗금 | 3.56 ~ 4.48 | 3:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.900` | 블록 글자 | 13.88 ~ 17.46 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.600` | 갈래 이름("참" · "거짓", Case 갈래) | 5.97 ~ 7.51 | 4.5:1 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.500` | 접힌 제어 블록 갈래의 "⋯ 블록 n개", 접힌 접기 영역의 `▶` | 4.74 ~ 5.97 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.500` | 접힌 제어 블록 갈래의 "⋯ 블록 n개", 접힌 접기 영역의 `▶`, 빈 갈래의 `∅`, 머리 모양 "제목처럼"의 `Event` · `Method` 딱지 | 4.74 ~ 5.97 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.keyword` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700` | 키워드 | 5.80 ~ 7.29 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `green.700` | 주석 | 4.88 ~ 6.14 | 4.5:1 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `amber.800` | 숫자, 문자열 | 4.71 ~ 5.93 | 4.5:1 |
@@ -189,6 +189,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.lilac-strong` | 펴 보인 호출 블록의 띠 바탕 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.550` | 펴 보인 블록의 글자(고칠 수 없음, 구문 강조 없음) | 5.18 ~ 6.52, 띠 위 4.58 | 4.5:1 |
 
+- 구문 강조는 블록 글자를 낱말로 갈라 예약어는 `syntax.keyword`, 주석은 `syntax.comment`, 글자열과 숫자는 `syntax.literal`로 칠합니다. 그 밖의 낱말은 `text.primary`입니다. 블록 글자의 종류가 "문장"이면 칠하지 않습니다 → [[0032-token-highlighting|ADR-0032]]
 - 갈래 이름은 구문 강조의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700`)을 쓰지 않습니다. 구조의 글자가 코드의 일부처럼 보이지 않게 하려는 것입니다.
 - 펴 보인 블록의 글자는 흐리게 하되 4.5:1을 지킵니다. "고칠 수 없다"는 것은 점선과 띠가 알리고, 글자는 들여다보려고 편 것이라 읽혀야 합니다.
 
@@ -243,9 +244,12 @@ flowchart LR
 | 펴 보기의 띠 | 보조 | 블록 글꼴 | 호출 블록처럼 Method 이름만 굵게 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` |
 | 펴 보인 블록 글자 | 본문 | 블록 글꼴 | 보통, 구문 강조 없음 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` |
 | 접힌 제어 블록 갈래 ("⋯ 블록 n개") | 보조 | 비례폭 | 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
+| 빈 갈래의 `∅` | 본문 | 도형 (글자 크기에 맞춤) | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
+| 머리 모양 "제목처럼"의 이름 | 본문 | 블록 글꼴 | 굵게(600) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
+| 머리 모양 "제목처럼"의 딱지 (`Event` · `Method`) | 보조 | 비례폭 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
 
 - 한글은 획이 많아 같은 크기의 영문보다 작게 읽힙니다. 그래서 그림 안의 가장 작은 글자를 **12px(인쇄 9pt)**로 둡니다. 52번째 판까지 있던 11px(인쇄 8.25pt)은 없앴습니다.
-- 굵기는 보통(400)과 굵게(600)만 씁니다. 굵게는 이름(호출 블록의 Method 이름, 접기 영역의 이름)에만 씁니다. 이름이 없으면 기울임으로 "아직 이름이 없다"를 보입니다.
+- 굵기는 보통(400)과 굵게(600)만 씁니다. 굵게는 이름(호출 블록의 Method 이름, 접기 영역의 이름, "제목처럼" 머리의 이름)에만 씁니다. 이름이 없으면 기울임으로 "아직 이름이 없다"를 보입니다.
 
 ### 4.3 글꼴
 
@@ -275,6 +279,8 @@ flowchart LR
 | `size.label-inset` | 6px | 갈래 이름과 블록 구석 사이 |
 | `size.hat` | 16px | Event · Method 머리가 솟은 높이 |
 | `size.hat-w` | min(110px, 폭 × 0.45) | Event 모자의 폭 |
+| `size.title-tag` | 16px | 머리 모양 "제목처럼"에서 딱지 줄의 높이. 그 아래 이름 줄은 `space.line` |
+| `size.title-gap` | 6px | "제목처럼" 머리에서 이름 줄과 아랫줄 사이. 머리의 높이는 16 + 18 + 6 = 40px. 글자는 다이어그램의 왼쪽 선에 맞춥니다(`space.pad-x` 없음) |
 | `size.call-bar` | 7px | 호출 블록 세로 이중선의 안쪽 거리 |
 | `size.band` | 18px | 이름 띠의 높이 |
 | `size.fold-edge` | 3px | 펴진 접기 영역의 테두리 굵기 (M11에서 고른 굵기) |
@@ -300,7 +306,7 @@ flowchart LR
 | 1 | 고른 블록 · 범위 | 편집 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 바탕은 칠하지 않음 | — |
 | 2 | 펴진 접기 영역 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 2.25pt |
 | 3 | 펴 보인 호출 블록 | 문서 | 1px 점선(6 긋고 4 띄움) <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` + 띠. 블록의 바깥 선에서 1px 안. 그 아래에 3px 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo`)을 깔아 안쪽 블록의 선을 지움 | 0.75pt |
-| 4 | 구조: 블록의 경계, 빗금 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
+| 4 | 구조: 블록의 경계, 빗금, "제목처럼" 머리의 아랫줄 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
 | — | 마우스 올림 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음) | — |
 
 - 고른 표시에 바탕을 칠하지 않는 까닭: 옅은 파랑을 덮으면 블록 바탕의 색조가 흐려지고(원칙 2), 구조선의 대비가 2:1 아래로 떨어집니다(원칙 1).
@@ -329,6 +335,9 @@ flowchart LR
 | 끄는 중 | 끌고 있는 블록은 제자리에서 불투명도 40%. 커서 곁에 블록의 글자 첫 줄 | 편집 | | **없음** |
 | 놓을 자리 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
 | 놓을 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | **없음** |
+| 빈 갈래 | If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | **없음** |
+| 머리 모양 "제목처럼" | 모자 · 아치 없이 딱지 + 굵은 이름 + 아랫줄 1px. 고르면 머리 전체(딱지부터 아랫줄까지)를 블록 하나처럼 두름 | 문서 | `text.*`, `line.structure` | **없음** |
+| 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 캔버스 아래(상태 줄 바로 위)에 안내 상자. 왼쪽 위에 첫 키와 묶음 이름(굵게), 그 아래에 이어 누를 키(고정폭 굵게 `ui.accent`)와 명령 이름(`ui.text`)을 폭에 맞춰 여러 열로. 바탕 `ui.panel`, 테두리 1px `ui.line`, 모서리 반지름 6px. 다이어그램을 가리지 않게 캔버스 폭만큼 놓되 안쪽 여백 10px → [[03-keymap]] | 편집 (UI) | `ui.*` | **없음** |
 
 **겹칠 때의 규칙:**
 
@@ -349,7 +358,7 @@ flowchart LR
 > ![[visual-design-folded.png|330]] ![[visual-design-case.png|500]]
 
 > [!example] 편집 층: 블록 하나를 고름 · 여러 블록을 고름 · 고치는 중
-> 고른 상자는 파랑, 접기 영역의 테두리는 진회색입니다. 고른 상자가 파일에 들어가는 표시와 섞이지 않습니다.
+> 고른 상자는 주황, 펴진 접기 영역("센서 읽기")의 테두리는 파랑입니다. 고른 상자가 파일에 들어가는 표시와 섞이지 않습니다.
 >
 > ![[visual-design-select-one.png|320]] ![[visual-design-select-range.png|320]] ![[visual-design-editing.png|320]]
 
@@ -400,6 +409,7 @@ flowchart LR
 움직임은 두지 않습니다. 접기와 펴기, 펴 보기, 고르기는 바로 바뀝니다. 편집기는 키보드로 빠르게 다루는 도구라, 움직임이 입력을 기다리게 해서는 안 됩니다.
 
 - 예외 하나: 상태 줄의 알림 글자가 1.6초 동안 `ui.accent`로 보였다가 돌아옵니다. 색만 바뀌고 자리는 움직이지 않습니다.
+- 두 키 조합의 안내 상자는 0.4초를 기다렸다가 한 번에 나타나고 한 번에 사라집니다(서서히 나타나지 않음). 기다리는 것은 키를 잘 아는 사람의 화면이 깜박이지 않게 하려는 것입니다.
 - 키나 휠로 고른 블록이 화면 밖으로 나가면 캔버스가 따라 움직입니다. 이것은 바로 옮깁니다(부드러운 스크롤 없음).
 - 운영체제의 "움직임 줄이기" 설정(`prefers-reduced-motion`)을 따릅니다.
 
@@ -446,7 +456,7 @@ flowchart LR
 - 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 바탕이 토큰이 아니라 코드에 적힌 값입니다.
 - 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다.
 - 테마를 고를 수 없습니다. 늘 밝은 기본 테마입니다.
-- 빈 갈래의 `∅`, 머리 모양 "제목처럼", If 갈래 이름 고치기, default 이름의 오른쪽 정렬이 없습니다(→ [[ux-decisions#7. 2026-10-18의 결정|UX 결정 모음 7장]]).
+- 빈 갈래의 `∅`, 머리 모양 "제목처럼", If 갈래 이름 고치기, default 이름의 오른쪽 정렬, 두 키 조합의 안내 상자가 없습니다(→ [[ux-decisions#7. 2026-10-18의 결정|UX 결정 모음 7장]]).
 - 토큰의 이름은 코드에 아직 없습니다. 코드는 짧은 이름(`COL.edge` 등)을 씁니다.
 
 ## 12. 미결정 사항
