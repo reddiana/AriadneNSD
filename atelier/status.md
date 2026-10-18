@@ -63,7 +63,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 ## 이번과 다음 세션에 할 것
 
 - [ ] **이번 세션:** [[04-visual-design]] 현행화(프로토타입 60번째 판 · 그동안의 결정과 맞대 봄) → [[2026-10-18-02-pages-visual-design]]
-- [ ] **이번 세션(마무리 때):** `docs/` + `atelier/`를 GitHub Pages로 펴내기(Quartz, GitHub Actions)
+- [ ] **메인테이너, push 전에 한 번:** GitHub 저장소 Settings → Pages → Build and deployment의 Source를 **GitHub Actions**로. 그 뒤 마무리 때 push하면 `https://reddiana.github.io/AriadneNSD/`에 펴냄 → [[dr-0013-publish-docs-github-pages|DR-0013]]
 - [ ] **다음 세션의 첫 일:** 아래에서 메인테이너가 고른다 (2026-10-18 끝에 물음)
 	- If ↔ Case로 바꿀지 묻는 모양과 글자를 옮기는 법(시안) → [[backlog]]
 	- [[01-model]]의 남은 미결정(다른 문서를 가리키는 값, 블록 글자의 종류 목록, 프로토타입 파일을 열지, fall-through)

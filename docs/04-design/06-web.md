@@ -4,7 +4,7 @@ tags:
   - ariadne-nsd
   - design
 status: 작성 전
-updated: 2026-10-07
+updated: 2026-10-18
 ---
 
 # 설계: 웹 (`apps/web`)
@@ -36,7 +36,9 @@ updated: 2026-10-07
 
 ## 5. 배포
 
-> [!info] 미완성: 정적 호스팅 (GitHub Pages 등), 빌드 결과물 구성
+웹 버전은 GitHub Pages의 `https://reddiana.github.io/AriadneNSD/app/`에 놓인다. 같은 사이트에 설계 문서(`/docs/`, `/atelier/`)와 사용자 매뉴얼(`/manual/`)이 함께 있고, 한 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 올린다. 그래서 앱의 빌드는 기준 경로를 `/AriadneNSD/app/`으로 두고, 결과물을 그 워크플로의 `_site/app/`에 넣는다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
+
+> [!info] 미완성: 빌드 결과물 구성(파일 나누기, 글꼴 조각과 wasm을 어디에 두는지, 캐시)
 
 ## 6. PWA
 

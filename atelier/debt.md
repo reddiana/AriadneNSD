@@ -189,6 +189,10 @@ updated: 2026-10-18
 
 ### 문서 · 저장소 · 일하는 방식
 
+- [ ] 설계 문서를 GitHub Pages로 펴내며 Claude가 정한 것 (2026-10-18) → [[dr-0013-publish-docs-github-pages|DR-0013]]
+	- Quartz v4.5.2로 고정. 사이트 짜임은 `/` 첫 화면(`site/index.md`), `/docs/…`, `/atelier/…`, 나중에 `/app/` · `/manual/`. Quartz가 사이트 맨 위를 차지함
+	- 본문 태그(`#P0` 등)는 링크로 만들지 않음(Quartz가 두 겹 아래 폴더에서 태그 링크를 잘못 만들고, `#P0은`처럼 조사가 붙은 것도 태그로 봄). 속성의 tags는 태그 페이지가 됨
+	- `journal/` · `tech-notes/`로 가는 링크는 GitHub 파일 주소로 바꿈. 템플릿(ADR-0000, DR-0000)도 펴냄. 글꼴은 Noto Sans KR, 방문 통계 없음
 - [ ] 결정 기록을 나누며 Claude가 정한 것 (2026-10-17) → [[dr-0001-split-decision-records|DR-0001]]
 	- 승인된 기록의 본문에서도 옮긴 것을 가리키는 번호와 링크는 새 것으로 바꿈(예: 남은 ADR의 "ADR-0011" → "DR-0002"). 문장은 그대로
 	- 세션 기록 · `journal/` · 시안 페이지(HTML)에 글자로 적힌 옛 번호는 그때의 기록이라 그대로 둠. 링크는 새 파일로 이어짐
