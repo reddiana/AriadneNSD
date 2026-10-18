@@ -71,7 +71,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
 <main>
   <div>
     <h1>M22 · UI 프레임워크</h1>
-    <p class="lede">편집기(<code>packages/editor</code>)의 화면 부품을 무엇으로 짤지 고르는 시안입니다(<code>ADR-0010</code>, 2026-10-07부터 "제안됨"). 2026-10-17의 결정(ADR-0030)으로 <b>다이어그램은 렌더러가 그리므로</b>, 프레임워크가 맡는 곳은 도구 모음 · 메뉴 · 설정 창 같은 둘레뿐입니다. 같은 도구 모음을 넷으로 실제로 짜서 빌드하고 크기를 쟀습니다(2026-10-18).</p>
+    <p class="lede">편집기(<code>packages/editor</code>)의 화면 부품을 무엇으로 짤지 고르는 시안입니다(<code>ADR-0010</code>, 2026-10-07부터 "제안됨"). 2026-10-17의 결정(ADR-0030)으로 <b>다이어그램은 렌더러가 그리므로</b>, 프레임워크가 맡는 곳은 도구 모음 · 메뉴 · 설정 창 같은 둘레뿐입니다. 같은 도구 모음을 넷으로 실제로 짜서 빌드하고 크기를 쟀습니다(2026-10-18). 같은 날 메인테이너의 물음으로 <b>배포 대상마다 메뉴와 설정을 누가 그리는가</b>(U1)를 더했습니다.</p>
   </div>
 
   <section>
@@ -112,11 +112,81 @@ code { font-family: var(--mono); font-size: 12.5px; }
   </section>
 
   <section>
+    <span class="part">대상</span>
+    <h2>배포 대상마다 누가 무엇을 그리나</h2>
+    <p class="q">편집기의 화면은 모든 대상에서 브라우저 엔진 안에서 돕니다. 그래서 어느 프레임워크든 셸이 내준 칸 하나에 붙습니다. 다른 점은 <b>메뉴 · 명령 · 설정</b>입니다. Obsidian과 IDE에는 그 프로그램이 원래 가진 메뉴와 설정 화면(아래에서 "제 UI")이 있고, 사용자는 거기서 찾습니다(2026-10-18, 메인테이너: "IDE까지 고려한 것인가요?").</p>
+    <div class="tbl"><table>
+      <thead><tr><th>대상</th><th>편집기 화면이 도는 곳</th><th>메뉴 · 명령 · 설정</th><th>화면 색</th></tr></thead>
+      <tbody>
+        <tr><td>웹, Google Drive</td><td>브라우저</td><td>우리가 그림</td><td>우리 화면 색</td></tr>
+        <tr><td>데스크톱</td><td>Electron 또는 Tauri의 웹뷰</td><td>우리가 그림 (창의 메뉴 줄은 셸이 OS 메뉴로 둘 수 있음)</td><td>우리 화면 색</td></tr>
+        <tr><td>Confluence (#P2)</td><td>Forge 앱의 iframe</td><td>우리가 그림</td><td>Confluence의 밝기를 따름</td></tr>
+        <tr><td>Obsidian</td><td>Obsidian 창 (Chromium)</td><td><b>제 UI</b>: 명령 팔레트, Obsidian의 우클릭 메뉴, 플러그인 설정 탭</td><td>Obsidian 테마를 따름</td></tr>
+        <tr><td>VSCode (#P2)</td><td>웹뷰 (iframe)</td><td><b>제 UI</b>: 명령 팔레트, 확장이 등록한 우클릭 메뉴, 편집기 위 단추, VSCode 설정</td><td>VSCode 테마를 따름</td></tr>
+        <tr><td>IntelliJ (#P2)</td><td>JCEF (IntelliJ 안의 Chromium)</td><td><b>제 UI</b>: Action(메뉴 · 단축키), IntelliJ 설정</td><td>IntelliJ 테마를 따름</td></tr>
+      </tbody>
+    </table></div>
+    <p class="q">어느 대상이든 <b>다이어그램, 고른 표시, 키 입력, 블록 위의 글자 칸</b>은 우리가 그립니다. 우리가 둘레를 모두 그리는 대상은 웹 · 데스크톱 · Confluence입니다.</p>
+  </section>
+
+  <section>
     <span class="part">U1</span>
-    <h2>U1. 둘레의 화면 부품을 무엇으로 짤까</h2>
-    <p class="q">아래 넷은 <b>모두 같은 도구 모음</b>입니다: 실행 취소 · 다시 실행(할 것이 없으면 흐리게), 블록 글자의 종류 고르기, 설정 단추를 누르면 열리는 언어 고르기(영어 ↔ 한국어로 글자가 바뀜). 편집기 본체의 흉내(<code>editor-stub.js</code>)는 넷이 함께 씁니다. 크기는 그 도구 모음과 프레임워크를 함께 빌드해 줄인 것입니다.</p>
+    <h2>U1. 편집기가 명령의 목록을 내놓아, 셸이 제 UI에 올리게 할까</h2>
+    <p class="q">지금 아키텍처 문서에는 "키와 명령의 짝은 표 하나"까지만 있습니다. 그 표를 셸에게 내준다는 것은 없습니다. IDE 사용자는 명령 팔레트에서 "Wrap in loop"를 찾을 수 있어야 자연스럽습니다.</p>
     <div class="cards">
-      <article class="card"><header><span class="tag">U1 · 1번</span><h3>프레임워크 없음 (TypeScript + DOM)</h3></header>
+      <article class="card pick"><header><span class="tag">U1 · 1번</span><h3>명령의 목록을 내놓는다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig"><svg width="420" height="250" viewBox="0 0 420 250" role="img" aria-label="명령 목록을 셸마다 다르게 올림">
+          <rect class="b" x="10" y="10" width="400" height="74" rx="4"/>
+          <text x="22" y="30" font-weight="600">editor: 명령의 목록</text>
+          <text class="m" x="22" y="50">wrap-loop · "Wrap in loop" · 키 Ctrl+L · 지금 할 수 있나</text>
+          <text class="m" x="22" y="68">undo · unwrap · fold · extract-method …</text>
+          <line x1="70" y1="84" x2="70" y2="110" stroke="var(--box-line)"/><line x1="210" y1="84" x2="210" y2="110" stroke="var(--box-line)"/><line x1="350" y1="84" x2="350" y2="110" stroke="var(--box-line)"/>
+          <rect class="fw" x="10" y="110" width="120" height="130" rx="4"/>
+          <text class="fwt" x="20" y="130">웹 · 데스크톱</text>
+          <text class="m" x="20" y="150">우리 도구 모음과</text>
+          <text class="m" x="20" y="166">우클릭 메뉴를</text>
+          <text class="m" x="20" y="182">목록으로 그림</text>
+          <rect class="b" x="150" y="110" width="120" height="130" rx="4"/>
+          <text x="160" y="130" font-weight="600">Obsidian</text>
+          <text class="m" x="160" y="150">명령 팔레트에 등록</text>
+          <text class="m" x="160" y="166">Obsidian 우클릭 메뉴</text>
+          <text class="m" x="160" y="182">+ 우리 도구 모음</text>
+          <rect class="b" x="290" y="110" width="120" height="130" rx="4"/>
+          <text x="300" y="130" font-weight="600">VSCode · IntelliJ</text>
+          <text class="m" x="300" y="150">명령 팔레트 / Action</text>
+          <text class="m" x="300" y="166">IDE 우클릭 메뉴</text>
+          <text class="m" x="300" y="182">편집기 위 단추</text>
+          <text class="m" x="300" y="198">IDE 설정</text>
+        </svg></div>
+        <ul><li>메뉴 · 도구 모음 · 키 표가 <b>모두 같은 목록에서</b> 나옵니다. 명령을 하나 더하면 모든 대상의 메뉴에 함께 생깁니다.</li><li>설정도 같은 방법으로 목록(이름, 고를 값)을 내놓아, IDE와 Obsidian은 제 설정 화면에 그립니다.</li><li>셸이 할 일이 조금 늡니다: 목록을 제 UI에 올리는 코드.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">U1 · 2번</span><h3>늘 우리가 그린다</h3></header>
+        <div class="fig"><svg width="420" height="250" viewBox="0 0 420 250" role="img" aria-label="IDE 안에서도 우리 메뉴를 그림">
+          <rect class="b" x="10" y="10" width="400" height="230" rx="4"/>
+          <text x="22" y="30" font-weight="600">VSCode 창</text>
+          <rect class="b" x="22" y="40" width="376" height="24" rx="3"/>
+          <text class="m" x="32" y="56">명령 팔레트: "Wrap in loop" → 찾지 못함</text>
+          <rect class="fw" x="22" y="74" width="376" height="156" rx="3"/>
+          <text class="fwt" x="32" y="92">웹뷰: 우리 화면 전체</text>
+          <rect class="b" x="32" y="100" width="356" height="22" rx="2"/>
+          <text class="m" x="42" y="115">우리 도구 모음 · 우리 설정 단추</text>
+          <rect class="ns" x="42" y="132" width="180" height="22"/><rect class="ns" x="42" y="154" width="180" height="22"/>
+          <rect class="b" x="200" y="146" width="150" height="66" rx="3"/>
+          <text class="m" x="210" y="164">우리 우클릭 메뉴</text>
+          <text class="m" x="210" y="180">IDE 메뉴와 모양이</text>
+          <text class="m" x="210" y="196">다름</text>
+        </svg></div>
+        <ul><li>셸이 할 일이 가장 적습니다. 모든 대상에서 똑같이 보입니다.</li><li><span class="bad">IDE와 Obsidian에서 명령 팔레트로 찾을 수 없고, 메뉴와 설정의 모양이 그 프로그램과 다릅니다.</span></li><li>나중에 1번으로 바꾸려면 메뉴마다 흩어진 명령을 모아야 합니다.</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">U2</span>
+    <h2>U2. 우리가 그리는 둘레의 화면 부품을 무엇으로 짤까</h2>
+    <p class="q">U1의 1번이면 이 프레임워크는 웹 · 데스크톱 · Confluence에서 둘레 전체를, Obsidian과 IDE에서는 도구 모음과 그 대상에 없는 창(문제 알리기 보고서 등)만 그립니다. 아래 넷은 <b>모두 같은 도구 모음</b>입니다: 실행 취소 · 다시 실행(할 것이 없으면 흐리게), 블록 글자의 종류 고르기, 설정 단추를 누르면 열리는 언어 고르기(영어 ↔ 한국어로 글자가 바뀜). 편집기 본체의 흉내(<code>editor-stub.js</code>)는 넷이 함께 씁니다. 크기는 그 도구 모음과 프레임워크를 함께 빌드해 줄인 것입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">U2 · 1번</span><h3>프레임워크 없음 (TypeScript + DOM)</h3></header>
         <div class="size">줄인 크기 <b>1.9 KB</b> · 웹으로 보낼 때(gzip) <b>0.9 KB</b></div>
         <div class="fig"><pre class="code">// 1번: 프레임워크 없음 (TypeScript + DOM). 바뀔 때마다 무엇을 고칠지 손으로 적는다.
 import { T, KINDS, createEditor } from './editor-stub.js';
@@ -149,7 +219,7 @@ export function mountToolbar(root, ed) {
 mountToolbar(document.getElementById('app'), createEditor());</pre></div>
         <ul><li><b>무엇이 바뀌면 어느 글자를 고칠지 손으로 적습니다</b>(맨 아래 <code>subscribe</code> 안). 화면 부품이 늘면 이 목록도 늘고, 하나를 빠뜨리면 그 자리만 옛 글자로 남습니다.</li><li>더 실리는 것이 없습니다. 프로토타입(M01)이 이렇게 짜여 있습니다.</li><li><span class="bad">AI 대화창처럼 목록이 늘고 줄어드는 화면은 손이 많이 갑니다.</span></li></ul>
       </article>
-      <article class="card pick"><header><span class="tag">U1 · 2번</span><h3>Svelte 5</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card pick"><header><span class="tag">U2 · 2번</span><h3>Svelte 5</h3><span class="badge">Claude의 추천</span></header>
         <div class="size">줄인 크기 <b>57.5 KB</b> · gzip <b>21.4 KB</b></div>
         <div class="fig"><pre class="code">&lt;!-- 2번: Svelte 5. HTML에 값을 적어 두면, 값이 바뀔 때 그 자리만 고쳐진다. --&gt;
 &lt;script&gt;
@@ -177,7 +247,7 @@ mountToolbar(document.getElementById('app'), createEditor());</pre></div>
 {/if}</pre></div>
         <ul><li><b>HTML에 값을 적어 두면</b> 값이 바뀔 때 그 자리만 고쳐집니다. 고칠 곳의 목록을 손으로 적지 않습니다.</li><li>생김새가 HTML과 가까워 읽기 쉽습니다. Obsidian 공식 문서에 플러그인에서 쓰는 법이 있습니다.</li><li>빌드할 때 컴파일하는 단계가 하나 더 있습니다. 2024년의 5판에서 쓰는 법이 크게 바뀌어, 인터넷의 옛 예제는 다르게 생겼습니다.</li></ul>
       </article>
-      <article class="card"><header><span class="tag">U1 · 3번</span><h3>React 19</h3></header>
+      <article class="card"><header><span class="tag">U2 · 3번</span><h3>React 19</h3></header>
         <div class="size">줄인 크기 <b>219.8 KB</b> · gzip <b>68.1 KB</b></div>
         <div class="fig"><pre class="code">// 3번: React. 값이 바뀌면 함수 전체를 다시 부르고, 앞의 결과와 견주어 다른 곳만 고친다.
 import { useState, useSyncExternalStore } from 'react';
@@ -209,7 +279,7 @@ function Toolbar({ ed }) {
 createRoot(document.getElementById('app')).render(&lt;Toolbar ed={createEditor()} /&gt;);</pre></div>
         <ul><li>값이 바뀌면 <b>함수 전체를 다시 부르고</b>, 앞의 결과와 견주어 다른 곳만 고칩니다. 불변 문서(ADR-0029)와 잘 맞습니다.</li><li>자료와 사례, 부품 라이브러리가 가장 많습니다. Obsidian 공식 문서에도 쓰는 법이 있습니다.</li><li><span class="bad">넷 가운데 가장 큽니다.</span> "다시 부른다"는 생각과 훅의 규칙(<code>useState</code>, <code>useEffect</code>를 부르는 순서)을 익혀야 읽힙니다.</li></ul>
       </article>
-      <article class="card"><header><span class="tag">U1 · 4번</span><h3>Preact (React의 작은 판)</h3></header>
+      <article class="card"><header><span class="tag">U2 · 4번</span><h3>Preact (React의 작은 판)</h3></header>
         <div class="size">줄인 크기 <b>14.5 KB</b> · gzip <b>6.1 KB</b></div>
         <div class="fig"><pre class="code">// 4번: Preact. React와 같은 쓰는 법, 작은 몸집.
 import { useState, useEffect } from 'preact/hooks';
@@ -266,7 +336,9 @@ render(&lt;Toolbar ed={createEditor()} /&gt;, document.getElementById('app'));</
       <tbody>
         <tr><td>더 실리는 크기</td><td class="good">없음</td><td>작음</td><td class="bad">가장 큼</td><td class="good">아주 작음</td></tr>
         <tr><td>다이어그램을 그리는 빠르기 (ADR-0030)</td><td colspan="4">어느 것이든 같음. 다이어그램은 렌더러가 그림</td></tr>
-        <tr><td>여러 셸에 붙이기 (웹 · Obsidian · 데스크톱 · Confluence · IDE)</td><td colspan="4">어느 것이든 같음. 셸이 준 칸(<code>div</code>) 하나에 붙임</td></tr>
+        <tr><td>여러 셸에 붙이기 (웹 · Obsidian · 데스크톱 · Confluence · VSCode · IntelliJ)</td><td colspan="4">어느 것이든 같음. 모두 브라우저 엔진 안이라, 셸이 준 칸(<code>div</code>) 하나에 붙임</td></tr>
+        <tr><td>그 대상의 제 UI(명령 팔레트, 설정 화면)에 올리기</td><td colspan="4">어느 것이든 같음. 프레임워크가 아니라 U1의 명령 목록이 정함</td></tr>
+        <tr><td>그 대상의 테마 따르기</td><td colspan="4">어느 것이든 같음. 그 대상이 주는 색 변수(<code>--vscode-…</code>, Obsidian의 CSS 변수)를 화면 색 표에 옮김</td></tr>
         <tr><td>화면 부품이 늘 때</td><td class="bad">고칠 곳을 손으로 적음</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td><td class="good">값만 바꾸면 됨</td></tr>
         <tr><td>메인테이너가 읽기 (프론트엔드는 처음)</td><td>길지만 그대로 읽힘</td><td class="good">HTML과 가까움</td><td>"다시 부른다"와 훅의 규칙을 익혀야 함</td><td>React와 같음</td></tr>
         <tr><td>자료와 사례</td><td>웹 표준 문서</td><td>많음 (5판 자료는 아직 적음)</td><td class="good">가장 많음</td><td>React 자료를 거의 그대로</td></tr>
@@ -279,8 +351,9 @@ render(&lt;Toolbar ed={createEditor()} /&gt;, document.getElementById('app'));</
     <h2>답하실 것</h2>
     <div class="sum">
       <ol>
-        <li><b>U1</b>: 1번 ~ 4번 가운데 하나. Claude의 추천은 <b>2번 Svelte</b>입니다. 크기가 갈라놓지 못하니, 메인테이너가 읽기 쉽고 화면 부품이 늘 때 손이 덜 가는 쪽을 골랐습니다.</li>
-        <li>정하면 <code>ADR-0010</code>을 "승인"으로 고쳐 결정과 까닭을 적고, 편집기 설계(<code>03-editor</code>)의 화면 구성에 옮깁니다.</li>
+        <li><b>U1</b>: 1번 또는 2번. Claude의 추천은 <b>1번 명령의 목록을 내놓는다</b>입니다. 셸이 여섯을 넘고 그 가운데 셋(Obsidian, VSCode, IntelliJ)에 제 UI가 있습니다.</li>
+        <li><b>U2</b>: 1번 ~ 4번 가운데 하나. Claude의 추천은 <b>2번 Svelte</b>입니다. 크기가 갈라놓지 못하니, 메인테이너가 읽기 쉽고 화면 부품이 늘 때 손이 덜 가는 쪽을 골랐습니다. U1이 1번이면 프레임워크가 그리는 곳이 줄어 "프레임워크 없음"과의 차이도 작아집니다. 그래도 웹 · 데스크톱 · Confluence와 웹의 AI 대화창은 우리가 모두 그리므로 추천은 그대로입니다.</li>
+        <li>U1은 새 ADR과 아키텍처 문서(셸의 인터페이스, ADR-0031의 이후 변경)에, U2는 <code>ADR-0010</code>을 "승인"으로 고쳐 적고, 편집기 설계(<code>03-editor</code>)의 화면 구성에 옮깁니다.</li>
       </ol>
       <ul><li>코드와 재는 스크립트는 저장소의 <code>journal/assets/2026-10-18-ui-framework-spike/</code>에 있습니다. <code>node measure.mjs &lt;node_modules가 있는 폴더&gt;</code>로 다시 잴 수 있습니다.</li></ul>
     </div>
