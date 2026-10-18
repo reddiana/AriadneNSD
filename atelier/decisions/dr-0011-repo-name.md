@@ -60,7 +60,7 @@ superseded-by:
 - 감수하는 점: 저장소 이름과 패키지 이름이 대소문자와 붙임표에서 다르다. 옛 주소는 GitHub이 새 주소로 넘겨 주지만, 누군가 `reddiana/ariadne-nsd`라는 이름으로 새 저장소를 만들면 그 넘김이 끊긴다. 그래서 글에 적힌 주소는 새 주소로 고친다.
 - GitHub Pages로 웹 버전을 내놓으면 주소의 뒷부분도 저장소 이름을 따라 `reddiana.github.io/AriadneNSD`가 된다.
 - 후속 작업:
-	- 출처 표기 문구를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 바꾼다: README, 시안과 스파이크 페이지의 안내, 안내를 넣는 스크립트 ([[dr-0010-study-pages-cc-by|DR-0010]]의 이후 변경)
+	- 출처 표기 문구를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 바꾼다: README, 시안과 스파이크 페이지의 안내, 안내를 넣는 스크립트 ([[dr-0010-study-pages-cc-by|DR-0010]]의 이후 변경)
 	- claude.ai의 시안 페이지를 새 안내로 다시 올린다
 	- git 원격 주소를 새 주소로 바꾼다
 	- 로컬 폴더 이름은 바꾸지 않는다. 바꾸면 Claude Code의 메모리 폴더도 옮겨야 한다

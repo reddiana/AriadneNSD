@@ -67,7 +67,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | 대상 | 라이선스 |
 | --- | --- |
 | 코드 (소스 코드, 프로토타입, 스크립트) | [Apache License 2.0](LICENSE). 가져다 사용한 배포물에 [`NOTICE`](NOTICE) 파일의 글을 함께 실어 주세요 |
-| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, 이 README, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝혀 주세요 |
+| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, 이 README, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 밝혀 주세요 |
 | 로고 (그림 로고와 문자 로고의 그림 파일) | 허락하지 않습니다. 이 프로젝트를 가리키는 데에만 사용할 수 있습니다 |
 | 이름 (`AriadneNSD`) | 허락하지 않습니다. 가져다 만든 제품에 이 이름을 붙일 수 없습니다. "AriadneNSD를 가져다 사용했다"고 알리는 데에는 사용할 수 있습니다 |
 
