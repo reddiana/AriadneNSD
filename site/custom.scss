@@ -13,7 +13,7 @@ body[data-slug="index"] article {
     margin: 0.5rem 0 0;
   }
   h1[align="center"] {
-    margin: 1.5rem 0 1rem; // GitHub의 h1 위 여백(24px)과 같게
+    margin: 1.5rem 0 2.5rem; // 위는 GitHub의 h1 위 여백(24px)과 같게, 아래는 본문과 떼어 40px
     // Quartz가 제목 끝에 붙이는 링크 아이콘과 그 앞의 빈칸이 폭을 차지해 문자 로고가 왼쪽으로 밀린다
     display: flex;
     justify-content: center;
