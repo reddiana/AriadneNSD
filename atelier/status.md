@@ -22,7 +22,6 @@ updated: 2026-10-18
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M22 | UI 프레임워크 시안 · 스파이크 (2026-10-18, 결정함: U1 → ADR-0033, U2 React → [[0010-ui-framework\|ADR-0010]]) | https://claude.ai/artifact/1gXCQSyoSnPcTP3ro64d5Z | `journal/assets/2026-10-18-ui-framework-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
