@@ -169,3 +169,4 @@ updated: 2026-10-17
 - [[2026-10-17-01-inbox-theme|2026-10-17 inbox: 문서 구조 기준, 시안 ID, 색 칩, 테마, 호출 대상, 접기 영역과 고른 표시의 색, 옛 키]]
 - [[2026-10-17-02-atelier-readme|2026-10-17 아틀리에 대문과 결정 기록 나누기: 작업 공간, ADR과 DR]]
 - [[2026-10-18-01-ui-framework-model|2026-10-18 셸 · UI 프레임워크 · 모델 설계: ADR-0031~0033, React, 01-model 초안, inbox 다섯]]
+- [[2026-10-18-02-pages-visual-design|2026-10-18 설계 문서 펴내기(GitHub Pages · Quartz), 첫 화면은 README로, 시각 디자인 명세 현행화]]

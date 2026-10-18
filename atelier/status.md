@@ -32,6 +32,8 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 2026-10-18 세션에서는 셸의 인터페이스(ADR-0031), 구문 강조(ADR-0032), 명령의 목록을 셸에 내놓기(ADR-0033), UI 프레임워크 React(ADR-0010)를 정하고, 모델 초안과 inbox 다섯 항목(M23 · M24)을 처리했습니다 → [[2026-10-18-01-ui-framework-model]]
 
+같은 날 두 번째 세션에서 설계 문서(`docs/` + `atelier/`)를 GitHub Pages에 펴냈고(https://reddiana.github.io/AriadneNSD/, 첫 화면은 README로 빌드 → [[dr-0013-publish-docs-github-pages|DR-0013]]), 시각 디자인 명세를 60번째 판에 맞춰 현행화했습니다 → [[2026-10-18-02-pages-visual-design]]
+
 프로토타입으로 UX 규칙을 한 묶음씩 리뷰하는 일도 이어집니다. 52번째 판(2026-10-15)에서 `Esc` 두 번 · 빈 캔버스 클릭으로 고른 것 풀기, 블록을 골랐을 때 휠은 `j` `k`, If · Case 아래에서 `k`는 가장 왼쪽 갈래로, 고른 블록을 화면이 따라감을 넣었습니다. 리뷰 순서는 [[prototype#리뷰 순서]]에 있습니다. 요구사항과 조작 규칙을 다시 짜는 일은 리뷰가 끝난 뒤에 합니다.
 
 2026-10-15에 GitHub 저장소 이름이 `AriadneNSD`가 되었습니다(메인테이너가 바꿈 → [[dr-0011-repo-name|DR-0011]]). 로컬 폴더도 2026-10-16에 `AriadneNSD`로 바꿨습니다.
@@ -62,8 +64,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] **이번 세션:** [[04-visual-design]] 현행화(프로토타입 60번째 판 · 그동안의 결정과 맞대 봄) → [[2026-10-18-02-pages-visual-design]]
-- [ ] **메인테이너, push 전에 한 번:** GitHub 저장소 Settings → Pages → Build and deployment의 Source를 **GitHub Actions**로. 그 뒤 마무리 때 push하면 `https://reddiana.github.io/AriadneNSD/`에 펴냄 → [[dr-0013-publish-docs-github-pages|DR-0013]]
+- [ ] 펴낸 사이트(https://reddiana.github.io/AriadneNSD/)를 둘러보고 어색한 곳을 알려 주기 (메인테이너). `main`에 push할 때마다 다시 펴냄 → [[dr-0013-publish-docs-github-pages|DR-0013]]
 - [ ] **다음 세션의 첫 일:** 아래에서 메인테이너가 고른다 (2026-10-18 끝에 물음)
 	- If ↔ Case로 바꿀지 묻는 모양과 글자를 옮기는 법(시안) → [[backlog]]
 	- [[01-model]]의 남은 미결정(다른 문서를 가리키는 값, 블록 글자의 종류 목록, 프로토타입 파일을 열지, fall-through)
