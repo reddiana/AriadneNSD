@@ -22,7 +22,6 @@ updated: 2026-10-18
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[05-ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-review]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[debt#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M23 | 모델 설계의 물음 (2026-10-18, 답을 기다림: MD1 · MD2 · MD3 → [[01-model]]) | https://claude.ai/artifact/9jAXzr6fe4cjfRhcdx4z6f | `journal/assets/2026-10-18-model-questions-study.html` |
 claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 지금 단계
@@ -63,7 +62,7 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] **다음 일:** 상세 설계 [[01-model]] (2026-10-18 초안. 시안 M23의 MD1~MD3을 묻는 중). UI 프레임워크는 React로 정함([[0010-ui-framework|ADR-0010]], 2026-10-18). 시안 M20의 A1~A7은 모두 정함(2026-10-17 · 18)
+- [ ] **다음 일:** 상세 설계 [[01-model]] (2026-10-18 초안, 시안 M23의 MD1~MD3 정함). 남은 것은 그 문서의 미결정 사항. UI 프레임워크는 React로 정함([[0010-ui-framework|ADR-0010]], 2026-10-18). 시안 M20의 A1~A7은 모두 정함(2026-10-17 · 18)
 - [ ] 번들할 글꼴 고르기(어느 글꼴, 고정폭을 쓰는지, 한글을 모두 싣는지) → [[debt#정해 주세요]]
 - [ ] 메인테이너가 프로토타입 60번째 판을 써 보기. 시각 디자인의 느낌(파랑 3px 접기 영역과 주황 3px 고른 표시는 "마음에 듭니다"를 받음, 갈래 이름의 회색과 점선 1px, 테두리만 있는 고른 표시) → [[debt#확인해 주세요]]. 그 밖에 실제 마우스 휠과 터치패드로 블록을 옮겨 다니는 느낌, `Esc` 두 번, 리뷰 1판 · 2판의 느낌, 블록 하나짜리 접기 영역이 강조 대용으로 쓸 만한지(지금은 만들면 바로 접힘), 한글을 적다가 `Esc`를 누르면 한 번에 받아들이는지
 - [ ] 리뷰 3판(고치기 규칙, Q1 · Q2 · Q4)을 아키텍처와 나란히 → [[prototype#리뷰 순서]]. 프로토타입의 알려진 구멍은 하나씩 본다 → [[prototype#알려진 구멍]]
