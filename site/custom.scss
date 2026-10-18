@@ -1,21 +1,7 @@
 // Quartz의 quartz/styles/custom.scss 자리에 복사된다 (pages.yml, build.sh)
 @use "./base.scss";
 
-// 첫 화면: 로고와 문자 로고를 가운데에. 문자 로고가 제목을 대신하므로 글자 제목은 감춘다
-.home-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0 2rem;
-
-  img {
-    max-width: 100%;
-    height: auto;
-    margin: 0;
-  }
-}
-
+// 첫 화면(README): 가운데의 문자 로고가 제목을 대신하므로 글자 제목은 감춘다
 body[data-slug="index"] .article-title {
   display: none;
 }

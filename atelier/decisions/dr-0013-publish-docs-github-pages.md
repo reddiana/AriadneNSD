@@ -10,6 +10,9 @@ superseded-by:
 
 # DR-0013: 설계 문서는 GitHub Pages 한 사이트에 Quartz로 펴낸다 (docs/ + atelier/)
 
+> [!NOTE] 이후 변경
+> - 2026-10-18: 사이트 첫 화면을 따로 쓴 `site/index.md` 대신 저장소의 `README.md`로 빌드한다. 소개 글을 한 곳에만 두려고(메인테이너: "첫 화면을 최상단 README를 기반으로 만들지 않은 이유가 있을 것 같네요." → 고르는 창에서 "README를 원본으로(추천)"). GitHub에서만 맞는 안내는 `<!-- site:skip -->`로 감싸 사이트에서 뺀다. 첫 화면에는 README와 같은 로고가 들어간다 → [[2026-10-18-02-pages-visual-design]]
+
 ## 배경
 
 저장소의 문서는 Obsidian으로 쓰고 읽도록 만들었다. `[[위키링크]]`, 블록 ID, 콜아웃, Mermaid를 쓰기 때문에 GitHub에서 열면 문서 사이의 링크가 동작하지 않는다. 그래서 README는 "받아서 Obsidian으로 열어 보라"고 안내해 왔다.

@@ -1,7 +1,7 @@
 # 설계 문서를 GitHub Pages로 펴낸다 → atelier/decisions/dr-0013-publish-docs-github-pages.md
 #
 # 사이트: https://reddiana.github.io/AriadneNSD/
-#   /            첫 화면 (site/index.md)
+#   /            첫 화면 (저장소의 README.md)
 #   /docs/…      설계 문서 (docs/)
 #   /atelier/…   작업 공간 (atelier/)
 #   /app/        웹 버전 앱 (나중에)
