@@ -59,7 +59,7 @@ updated: 2026-10-17
 | [[0002-three-targets-shared-core\|0002]] | 세 대상 배포 + 공유 코어 모노레포 | 승인 |
 | [[0003-typescript\|0003]] | 구현 언어 TypeScript | 승인 |
 | [[0009-desktop-framework\|0009]] | 데스크톱 프레임워크 (Electron / Tauri) | 제안됨 |
-| [[0010-ui-framework\|0010]] | UI 프레임워크 | 제안됨 |
+| [[0010-ui-framework\|0010]] | UI 프레임워크: 둘레의 화면 부품은 React로 | 승인 |
 | [[0012-google-drive-integration\|0012]] | Google Drive 연동은 웹 버전 위에 얹는다 | 승인 |
 
 ### 편집 모델

@@ -94,7 +94,7 @@ flowchart BT
 | `core` / 레이아웃 | 문서 → 다이어그램의 자리와 블록마다의 사각형 (순수 함수) | [[02-layout]] |
 | `core` / 렌더러 | 두 단계. **장면 만들기**: 레이아웃 결과 + 테마 → 장면(그릴 사각형 · 선 · 글자의 목록, 저마다 블록 id가 붙음). 색과 모양의 판단은 모두 여기서 한다. **그리기**: 장면 → SVG 문자열 | [[02-layout]] |
 | `core` / 파일 형식 | 모델 내장 SVG 읽기 · 쓰기, 버전 변환 | [[01-file-format]] |
-| `editor` | 화면 표시, 고르기, 글자 고치기, 키보드 · 마우스 · 끌기, 메뉴와 도구 모음, 화면의 언어 | [[03-editor]] |
+| `editor` | 화면 표시, 고르기, 글자 고치기, 키보드 · 마우스 · 끌기, 메뉴와 도구 모음(React → [[0010-ui-framework\|ADR-0010]]), 화면의 언어 | [[03-editor]] |
 | `apps/obsidian` | 파일 뷰 등록, `.ns.svg` 판별, 볼트 입출력, 노트의 그림 갱신 | [[04-obsidian-plugin]] |
 | `apps/desktop` | 창, 파일 대화상자, OS 파일 연결 | [[05-desktop]] |
 | `apps/web` | 정적 페이지, 브라우저 파일 입출력, 임시 저장, 공유 URL, Drive 연동 | [[06-web]] |
@@ -273,4 +273,4 @@ sequenceDiagram
 
 ## 9. 결정 목록
 
-모든 ADR은 [[atelier/README#아키텍처 결정 기록 (ADR)]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/README#결정 기록 (DR)]]. 아직 "제안됨"인 것은 UI 프레임워크([[0010-ui-framework|ADR-0010]])와 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다.
+모든 ADR은 [[atelier/README#아키텍처 결정 기록 (ADR)]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/README#결정 기록 (DR)]]. 아직 "제안됨"인 것은 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다. UI 프레임워크는 React로 정했습니다([[0010-ui-framework|ADR-0010]], 2026-10-18).
