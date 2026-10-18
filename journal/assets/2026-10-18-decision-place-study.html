@@ -1,0 +1,121 @@
+<title>M25 결정을 한곳에</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M21 · M24와 같은 틀. 그림은 폴더 나무와 "결정 하나가 적히는 곳" */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --hl: #fff3d6;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #3a3220; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #3a3220; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 78ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+pre.tree { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; white-space: pre; }
+pre.tree .h { background: var(--hl); font-weight: 600; }
+pre.tree .m { color: var(--muted); }
+pre.tree .x { color: var(--warn); text-decoration: line-through; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--panel); border: 1px solid var(--line); }
+th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12.5px; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M25 · 결정을 한곳에</h1>
+    <p class="lede">메인테이너의 물음(2026-10-18 inbox): <b>"05-ux-decisions은 왜 DR로 이동하지 않았지요? decision들의 위치를 한 군데로 모으는 것을 어떻게 생각하세요?"</b> 지금 결정이 어디에 흩어져 있는지 먼저 보고, 모으는 안 셋을 견줍니다. <b>1번이 Claude의 추천</b>입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">지금</span>
+    <h2>지금 결정이 적히는 곳</h2>
+    <p class="q">2026-10-17에 ADR을 나눌 때(DR-0001) 옮긴 것은 <b>ADR 가운데 아키텍처가 아닌 열 개</b>뿐이었습니다. <code>05-ux-decisions</code>는 ADR이 아니라 그 범위 밖이었고, 같은 날 CLAUDE.md에 "조작과 화면의 작은 결정은 DR이 아니라 05-ux-decisions에"라고 Claude가 적었습니다. 까닭은 둘이었습니다: 작은 결정이 많아(Q1~Q23) 하나마다 DR 파일을 두기 무겁고, 열린 물음을 방문자가 <code>docs/</code>에서 보게 하려고. 그런데 오늘(2026-10-18) Claude는 MD1~MD3, E1 · H1 · K1을 05에 적지 않고 규칙 문서의 본문에 날짜 꼬리표로 적었습니다. <b>규칙이 이미 지켜지지 않고 있습니다.</b></p>
+    <div class="tbl"><table>
+      <thead><tr><th>곳</th><th>무엇</th><th>문제</th></tr></thead>
+      <tbody>
+        <tr><td><code>atelier/adr/</code></td><td>아키텍처 결정 (ADR)</td><td>—</td></tr>
+        <tr><td><code>atelier/decisions/</code></td><td>그 밖의 큰 결정 (DR)</td><td>—</td></tr>
+        <tr><td><code>docs/02-ux-design/05-ux-decisions</code></td><td>UX의 작은 결정 Q1~Q23과 까닭, 열린 물음과 추천</td><td class="bad">"docs/는 이력이 아니다"(2026-10-17)와 어긋남. 10-17 뒤의 결정은 들어오지 않음</td></tr>
+        <tr><td><code>docs/</code> 본문의 꼬리표</td><td>"(2026-10-18, 시안 M23의 MD1 1번)"</td><td class="bad">결정의 기록이 규칙 문서에 흩어짐</td></tr>
+        <tr><td>시안 페이지</td><td>견준 안과 그림, "결정함"</td><td>과정의 원본(정한 규칙대로)</td></tr>
+        <tr><td>세션 기록</td><td>그날의 결정 표</td><td>그날의 기록(정한 규칙대로)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="part">D1</span>
+    <h2>D1. 결정을 어디에 모을까</h2>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">D1 · 1번</span><h3>모두 atelier/decisions/에. 작은 결정은 모음 파일 하나</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig"><pre class="tree">atelier/
+  adr/            <span class="m">아키텍처 (그대로)</span>
+  decisions/
+    dr-0001-…     <span class="m">큰 결정 (그대로)</span>
+    <span class="h">ux-decisions.md  작은 결정 모음</span>
+      <span class="m">Q1 · Q3 · … · MD1 · E1 · U1 …</span>
+      <span class="m">한 줄씩: 날짜 · 고른 것 · 까닭 · 시안</span>
+docs/02-ux-design/
+  <span class="x">05-ux-decisions</span>  <span class="m">→ 옮김</span>
+  02-interaction-rules  <span class="m">규칙 + 미결정 절</span></pre></div>
+        <ul><li><b>결정의 원본은 atelier/ 한곳</b>: 큰 것은 ADR · DR 한 파일씩, 작은 것은 모음 파일 한 줄씩.</li><li><code>docs/</code>에는 규칙과 미결정만 남습니다. 본문의 날짜 꼬리표는 "→ UX 결정 모음 MD1" 같은 링크로 바꿉니다.</li><li>열린 물음(Q1, Q2, Q4 …)은 <code>docs/</code>의 미결정 절로 옮겨 방문자에게 그대로 보입니다.</li><li>옮기는 일: 05의 열 군데쯤을 가리키는 링크 28개(스크립트로).</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">D1 · 2번</span><h3>작은 결정도 DR 하나씩</h3></header>
+        <div class="fig"><pre class="tree">atelier/decisions/
+  dr-0001-…
+  …
+  <span class="h">dr-0012-ux-q1-edit-start</span>
+  <span class="h">dr-0013-ux-q3-esc</span>
+  <span class="h">…</span>
+  <span class="h">dr-0050-key-hint</span>   <span class="m">40개쯤</span></pre></div>
+        <ul><li>가장 한결같습니다. 결정은 모두 같은 모양입니다.</li><li><span class="bad">파일이 40개쯤 늘고, "승인된 것은 본문을 고치지 않는다"는 규칙이 자주 바뀌는 작은 결정에 무겁습니다.</span> 목록에서 큰 결정이 묻힙니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">D1 · 3번</span><h3>그대로 두고, 작은 결정은 늘 05에</h3></header>
+        <div class="fig"><pre class="tree">atelier/adr/ · decisions/   <span class="m">그대로</span>
+docs/02-ux-design/
+  <span class="h">05-ux-decisions</span>   <span class="m">MD · E · U도 여기에</span>
+  02-interaction-rules  <span class="m">꼬리표 없앰</span></pre></div>
+        <ul><li>옮길 것이 가장 적습니다. 방문자가 <code>docs/</code>만 읽어도 까닭까지 봅니다.</li><li><span class="bad">결정이 두 곳(atelier/, docs/)으로 남고, "docs/는 이력이 아니다"와 계속 어긋납니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li><b>D1</b>: 1번 ~ 3번 가운데 하나, 또는 고칠 점.</li>
+      <li>정하면 DR(일하는 방식의 결정)로 적고, CLAUDE.md의 규칙과 <code>atelier/README</code>를 고친 뒤 옮깁니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
