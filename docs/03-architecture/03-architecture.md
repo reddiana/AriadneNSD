@@ -135,28 +135,28 @@ classDiagram
     class DocumentStore
     <<interface>> DocumentStore
     DocumentStore : 이 문서 읽기 · 쓰기 · 다른 이름으로 쓰기
-    DocumentStore : 다른 문서 읽기(경로) → 없으면 null
+    DocumentStore : 경로로 다른 문서 읽기, 없으면 null
     class SettingsStore
     <<interface>> SettingsStore
     SettingsStore : 사용자 설정 읽기 · 쓰기
     class CommandRegistry
     <<interface>> CommandRegistry
-    CommandRegistry : 명령 목록(id · 표시 이름 · 키 · 활성 여부)
-    CommandRegistry : 명령 실행(id)
+    CommandRegistry : 명령 목록 — id · 표시 이름 · 키 · 활성 여부
+    CommandRegistry : id로 명령 실행
     class SettingsSchema
     <<interface>> SettingsSchema
-    SettingsSchema : 설정 목록(id · 표시 이름 · 허용 값)
+    SettingsSchema : 설정 목록 — id · 표시 이름 · 허용 값
     editor ..> DocumentStore : «use»
     editor ..> SettingsStore : «use»
-    Shell ..|> DocumentStore
-    Shell ..|> SettingsStore
+    DocumentStore <|.. Shell
+    SettingsStore <|.. Shell
     editor ..|> CommandRegistry
     editor ..|> SettingsSchema
-    Shell ..> CommandRegistry : «use»
-    Shell ..> SettingsSchema : «use»
+    CommandRegistry <.. Shell : «use»
+    SettingsSchema <.. Shell : «use»
 ```
 
-UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다이어그램이 없어 `classDiagram`의 스테레오타입으로 그림). 점선 열린 화살표(`..>`)는 **의존**(«use»), 점선 빈 삼각형(`..|>`)은 **실현**(realization: 그 인터페이스를 구현한다)입니다. 인터페이스 안의 줄은 메서드의 시그니처가 아니라 책임입니다. 시그니처는 [[03-editor#5. 셸과의 연결]]에서 정합니다.
+UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다이어그램이 없어 `classDiagram`의 스테레오타입으로 그림). 왼쪽 선은 모두 `editor`의 것, 오른쪽 선은 모두 셸의 것입니다. 점선 열린 화살표(`..>`)는 **의존**(«use»), 점선 빈 삼각형(`..|>`)은 **실현**(realization: 그 인터페이스를 구현한다)입니다. 인터페이스 안의 줄은 메서드의 시그니처가 아니라 책임입니다. 시그니처는 [[03-editor#5. 셸과의 연결]]에서 정합니다.
 
 `editor`와 셸 사이의 인터페이스는 방향이 다른 두 쌍입니다.
 
