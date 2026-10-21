@@ -172,4 +172,4 @@ updated: 2026-10-17
 - [[2026-10-18-01-ui-framework-model|2026-10-18 셸 · UI 프레임워크 · 모델 설계: ADR-0031~0033, React, 01-model 초안, inbox 다섯]]
 - [[2026-10-18-02-pages-visual-design|2026-10-18 설계 문서 펴내기(GitHub Pages · Quartz), 첫 화면은 README로, 시각 디자인 명세 현행화]]
 - [[2026-10-22-01-engineer-language-use-cases-qas|2026-10-22 이름 바꾸기(outbox · sketchbook), SW 엔지니어의 말과 UML, 유즈케이스, 품질 속성 시나리오]]
-- [[2026-10-22-02-site-mermaid|2026-10-22 사이트의 Mermaid 그림이 깨지던 것(Quartz 패치), 사이트의 문서 이름]]
+- [[2026-10-22-02-site-mermaid|2026-10-22 사이트의 Mermaid 그림이 깨지던 것(Quartz 패치), 사이트의 문서 이름, 인터페이스 그림 배치(M27)]]
