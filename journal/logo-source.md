@@ -14,7 +14,7 @@ AriadneNSD의 로고는 크노소스 궁전의 벽화 "푸른 옷의 여인들"�
 > 어떤 안들을 견주었고 왜 이것을 골랐는지는 이 문서에 적지 않고 시안 페이지에 둡니다.
 > - [로고 시안](https://claude.ai/artifact/JZBq5xrGFdfhQzcRNgmiyD) (저장소의 사본 `journal/assets/2026-10-10-logo-concepts.html`): 그림 로고의 안 A~F, 미소의 선, 문자 로고의 글자 모양이 정해진 차례, 바탕 그림을 바꾼 일
 > - [문자 로고 바탕 시안](https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7) (`journal/assets/2026-10-11-wordmark-any-background.html`): 어느 바탕에서나 읽히게 하는 안 P1~P3, N1 · N2
-> - 시안 페이지 전체의 목록은 [[study-pages]]에 있습니다.
+> - 시안 페이지 전체의 목록은 [[sketchbook]]에 있습니다.
 
 ## 바탕 그림
 

@@ -25,7 +25,7 @@ date: 2026-10-10
 | --- | --- |
 | 1-1 색인을 `docs/README.md`로 | `docs/00-index/00-index.md` → `docs/README.md`. 위키링크는 `[[docs/README\|문서 색인]]`처럼 경로로 바꿈 (README가 여러 개라서). CLAUDE.md 규칙 갱신 |
 | 1-2 1레벨 제목은 남기기 | CLAUDE.md "세션 시작 시 할 일" 3번에 규칙 추가. 구조 추천은 [[#제안 1. inbox 구조 (1-2)]] |
-| 1-3 inbox를 `plan/`으로 | `inbox.md` → `plan/inbox.md`. CLAUDE.md, [[status]], [[debt]], `plan/README.md` 갱신 |
+| 1-3 inbox를 `plan/`으로 | `inbox.md` → `plan/inbox.md`. CLAUDE.md, [[status]], [[outbox]], `plan/README.md` 갱신 |
 | 1-6 테스트를 먼저 설계 | [[status]]의 단계 계획에 반영 |
 | 4-1 편집 후 노트 갱신 | 요구사항 [[01-requirements#^obs-refresh]] (#P0) 추가 |
 | 4-2 drawio-obsidian 참고 보충 | [[01-requirements#참고 자료]] 설명 보충 |
@@ -280,4 +280,4 @@ warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the nex
 ## 다음 할 일
 
 - **다음 세션:** 요구사항 리뷰용 프로토타입 만들기. 범위는 [[status]]의 "넣음"·"더 넣음"
-- 그 밖의 할 일과 열린 질문 → [[status]], [[debt]]
+- 그 밖의 할 일과 열린 질문 → [[status]], [[outbox]]

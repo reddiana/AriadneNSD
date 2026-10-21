@@ -30,15 +30,15 @@ updated: 2026-10-13
 
 **제약**
 
-| 제약 | 근거 |
-| --- | --- |
-| 구현 언어는 TypeScript | [[0003-typescript\|ADR-0003]] |
+| 제약                                                                       | 근거                                                                                        |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| 구현 언어는 TypeScript                                                        | [[0003-typescript\|ADR-0003]]                                                             |
 | Obsidian 플러그인 · 데스크톱 · 웹 세 대상. Google Drive는 웹 위에 얹고, Confluence가 뒤에 붙는다 | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]] |
-| 개발 순서는 웹 → Obsidian → 데스크톱 | [[dr-0002-development-order\|DR-0002]] |
-| 저장 형식은 모델 내장 SVG, 모델은 JSON | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]] |
-| 웹은 서버 없는 정적 페이지 | [[01-requirements#^web-static]] |
-| 사용자는 좌표를 다루지 않는다. 구조를 고치면 그림은 자동으로 그려진다 | [[0004-structure-editor\|ADR-0004]] |
-| 글꼴을 번들하고, 글자 폭은 그 글꼴 파일로 셈한다 | [[0026-bundled-font-metrics\|ADR-0026]] |
+| 개발 순서는 웹 → Obsidian → 데스크톱                                               | [[dr-0002-development-order\|DR-0002]]                                                    |
+| 저장 형식은 모델 내장 SVG, 모델은 JSON                                               | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]]              |
+| 웹은 서버 없는 정적 페이지                                                          | [[01-requirements#^web-static]]                                                           |
+| 사용자는 좌표를 다루지 않는다. 구조를 고치면 그림은 자동으로 그려진다                                  | [[0004-structure-editor\|ADR-0004]]                                                       |
+| 글꼴을 번들하고, 글자 폭은 그 글꼴 파일로 셈한다                                             | [[0026-bundled-font-metrics\|ADR-0026]]                                                   |
 
 ## 2. 시스템 컨텍스트
 

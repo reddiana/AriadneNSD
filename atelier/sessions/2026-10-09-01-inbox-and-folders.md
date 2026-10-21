@@ -38,7 +38,7 @@ date: 2026-10-09
 
 ## 논의 흐름
 
-1. **inbox 1번 "프로젝트 구조":** 메모 페이지 이름은 `inbox.md`로 정했습니다. `collab/`은 `plan/`으로 바꿨는데, Claude가 처음 제안한 `worklog/`는 `journal/`과 비슷해 보인다는 이유로 메인테이너가 `plan`을 골랐습니다. 그래서 그 안의 `plan.md`는 `status.md`가 됐습니다. `journey/`는 `journal/`로 바꿨고, [[debt]]와 `tech-notes/`를 새로 만들었습니다.
+1. **inbox 1번 "프로젝트 구조":** 메모 페이지 이름은 `inbox.md`로 정했습니다. `collab/`은 `plan/`으로 바꿨는데, Claude가 처음 제안한 `worklog/`는 `journal/`과 비슷해 보인다는 이유로 메인테이너가 `plan`을 골랐습니다. 그래서 그 안의 `plan.md`는 `status.md`가 됐습니다. `journey/`는 `journal/`로 바꿨고, [[outbox]]와 `tech-notes/`를 새로 만들었습니다.
 2. **실수:** Claude가 inbox를 함께 검토하지 않고 혼자 요약해 옮긴 뒤 비워 버렸습니다. 원문은 커밋된 적이 없어 git으로 되살릴 수 없었고, 대화에 남아 있던 원문으로 복원했습니다.
 3. **inbox 규칙:** 합의한 항목만 지우고, 지우기 전에 원문을 세션 기록에 옮깁니다. 결정하지 못한 항목은 inbox에 남깁니다. (CLAUDE.md "세션 시작 시 할 일")
 4. **inbox 2-1 Google Drive 앱:** 웹 버전에 Drive 연동(연결 앱, 새로 만들기)을 더하는 방식에 메인테이너가 동의했습니다. → [[0012-google-drive-integration|ADR-0012]], [[01-requirements#2.4 Google Drive]]
@@ -50,7 +50,7 @@ date: 2026-10-09
 
 | 결정 | 기록 |
 | --- | --- |
-| 메모 페이지 `inbox.md`, 폴더 `plan/` · `journal/` · `tech-notes/`, 부채 목록 [[debt]] | CLAUDE.md |
+| 메모 페이지 `inbox.md`, 폴더 `plan/` · `journal/` · `tech-notes/`, 부채 목록 [[outbox]] | CLAUDE.md |
 | inbox는 합의한 항목만 지우고, 결정하지 못한 항목은 남김 | CLAUDE.md "세션 시작 시 할 일" |
 | Google Drive 연동은 웹 버전 위에 얹음 | [[0012-google-drive-integration\|ADR-0012]], [[01-requirements#2.4 Google Drive]] |
 | 무료와 유료 버전의 기능 차이는 없음. 유료는 플랫폼 통합의 편의로 가치를 냄 | 메인테이너 원칙. 유료 버전 검토 때 요구사항에 반영 |
@@ -64,4 +64,4 @@ date: 2026-10-09
 
 ## 다음 할 일
 
-→ [[status]], [[debt]], 그리고 `inbox.md`에 남은 항목(2-2 유료 버전, 3-1 Scratch, 3-3 강조하기)
+→ [[status]], [[outbox]], 그리고 `inbox.md`에 남은 항목(2-2 유료 버전, 3-1 Scratch, 3-3 강조하기)

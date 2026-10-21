@@ -45,7 +45,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐습니다. 무엇과 무엇을 견주었고 왜 그것을 골랐는지가 페이지마다 적혀 있습니다. 누구나 열어 볼 수 있습니다.
 
 - [프로토타입](https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG): 요구사항이 맞는지 써 보려고 만든 것입니다. 블록을 넣고, 감싸고, 접어 볼 수 있습니다. 제품이 아니고 버릴 코드입니다
-- 시안과 스파이크 전체의 목록: [`atelier/study-pages.md`](atelier/study-pages.md)
+- 시안과 스파이크 전체의 목록: [`atelier/sketchbook.md`](atelier/sketchbook.md)
 
 시안과 스파이크 페이지의 글과 그림은 CC BY 4.0, 프로토타입은 Apache-2.0입니다(아래 [라이선스](#라이선스)). 같은 파일이 [`journal/assets/`](journal/assets/)에 있습니다.
 
