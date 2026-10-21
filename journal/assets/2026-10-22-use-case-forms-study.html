@@ -1,0 +1,230 @@
+<title>M26 유즈케이스 형식</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M20 · M22 · M23과 같은 틀: 같은 유즈케이스 하나(UC-07)를 세 형식으로 나란히 쓴 카드, 아래에 견준 표 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --accent-soft: #e4eafb; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbeee4;
+  --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a070; --warn-soft: #3a2619; --box: #161a21; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a070; --warn-soft: #3a2619; --box: #161a21; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 40px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 13px; font-weight: 600; margin: 0; color: var(--accent); letter-spacing: .02em; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 76ch; display: grid; gap: 6px; }
+.lede b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; align-items: start; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: grid; gap: 4px; }
+.card header .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.num { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--panel); background: var(--accent); border-radius: 4px; padding: 0 7px; }
+.name { font-size: 17px; font-weight: 600; }
+.meta { font-size: 13px; color: var(--muted); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.doc { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 14px; display: grid; gap: 10px; font-size: 13.5px; min-width: 0; overflow-wrap: anywhere; }
+.doc .t { font-weight: 600; font-size: 14.5px; }
+.doc dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; }
+.doc dt { color: var(--muted); }
+.doc dd { margin: 0; }
+.doc ol, .doc ul { margin: 0; padding-left: 1.4em; display: grid; gap: 2px; }
+.doc code { font-family: var(--mono); font-size: 12.5px; }
+.gap { color: var(--warn); background: var(--warn-soft); border-radius: 3px; padding: 0 4px; font-weight: 500; }
+.gwt { font-family: var(--mono); font-size: 12.5px; display: grid; gap: 2px; }
+.gwt b { color: var(--accent); font-weight: 600; }
+.pros { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.pros b { color: var(--fg); font-weight: 600; }
+.tbl { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+thead th { font-size: 12.5px; color: var(--muted); font-weight: 600; background: var(--box); }
+tbody th { font-weight: 600; white-space: nowrap; }
+tr:last-child td, tr:last-child th { border-bottom: 0; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+</style>
+
+<main>
+  <div class="lede">
+    <h1>M26 · 유즈케이스 형식</h1>
+    <p>요구사항에 유즈케이스를 들일지, 들이면 어떤 형식으로 쓸지 고르는 시안입니다(2026-10-22, 메인테이너 inbox: "유즈케이스나 사용자스토리를 도입하는 것을 검토하고 의견 주세요").</p>
+    <p><b>같은 유즈케이스 하나</b>, "UC-07 노트에 다이어그램을 넣어 보인다"를 세 형식으로 썼습니다. 내용은 지금의 요구사항(<code>^obs-insert</code>, <code>^obs-edit-embed</code>, <code>^obs-embed</code> 등)에서 옮겼습니다. <span class="gap">주황 바탕</span>은 그 형식으로 쓰다가 드러난 <b>요구사항의 빈 곳</b>입니다.</p>
+  </div>
+
+  <section>
+    <div class="cards">
+
+      <article class="card pick">
+        <header>
+          <div class="row"><span class="num">1</span><span class="name">가벼운 유즈케이스</span><span class="badge">추천</span></div>
+          <p class="meta">기본 흐름과 예외 흐름 몇 줄, 요구사항 ID. 유즈케이스 하나에 15줄 안팎</p>
+        </header>
+        <div class="doc">
+          <p class="t">UC-07 노트에 다이어그램을 넣어 보인다</p>
+          <dl>
+            <dt>액터</dt><dd>작성자(주), 독자</dd>
+            <dt>사전 조건</dt><dd>볼트에 플러그인이 켜져 있다</dd>
+          </dl>
+          <div>
+            <h3>기본 흐름</h3>
+            <ol>
+              <li>작성자가 노트 편집 화면의 우클릭 메뉴에서 "Insert new NS diagram"을 고른다</li>
+              <li>볼트에 <code>.ns.svg</code> 파일이 생기고 노트의 커서 자리에 <code>![[…]]</code>가 들어간다</li>
+              <li>편집 탭이 열린다 → UC-03 블록을 편집한다</li>
+              <li>작성자가 저장한다 → UC-06</li>
+              <li>노트의 그림이 새 그림으로 바뀐다</li>
+              <li>독자가 노트를 열면 그림이 보인다</li>
+            </ol>
+          </div>
+          <div>
+            <h3>예외 흐름</h3>
+            <ul>
+              <li>1a. 명령 팔레트에서 실행해도 같다</li>
+              <li>5a. 노트가 이미 열려 있으면 다시 열지 않고 그림만 바뀐다</li>
+              <li>6a. 독자에게 플러그인이 없어도 그림은 보인다(편집 메뉴만 없다)</li>
+            </ul>
+          </div>
+          <dl><dt>요구사항</dt><dd><code>^obs-insert</code> <code>^obs-insert-command</code> <code>^obs-edit-embed</code> <code>^obs-embed</code> <code>^fmt-text</code></dd></dl>
+        </div>
+        <ul class="pros">
+          <li><b>흩어진 요구사항이 하나의 흐름으로</b> 이어진다. 흐름이 그대로 인수 시험의 시나리오</li>
+          <li>10개 쓰는 데 한 세션이면 된다. 요구사항이 바뀌어도 고칠 곳이 적다</li>
+          <li>"실패하면 무엇이 지켜지나"는 적지 않아 빈 곳이 덜 드러난다</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <header>
+          <div class="row"><span class="num">2</span><span class="name">자세한 유즈케이스</span></div>
+          <p class="meta">Alistair Cockburn의 "fully dressed" 양식. 유즈케이스 하나에 40줄 안팎</p>
+        </header>
+        <div class="doc">
+          <p class="t">UC-07 노트에 다이어그램을 넣어 보인다</p>
+          <dl>
+            <dt>범위</dt><dd>AriadneNSD Obsidian 플러그인</dd>
+            <dt>수준</dt><dd>사용자 목표</dd>
+            <dt>주 액터</dt><dd>작성자</dd>
+            <dt>이해관계자와 관심</dt><dd>작성자: 노트를 쓰는 흐름을 끊지 않고 그림을 넣고 고친다 · 독자: 플러그인 없이 그림을 본다 · 저장소(git): 같은 내용이면 같은 파일이라 diff가 깨끗하다</dd>
+            <dt>사전 조건</dt><dd>볼트에 플러그인이 켜져 있다</dd>
+            <dt>최소 보장</dt><dd>노트 원문과 볼트의 다른 파일은 바뀌지 않는다. <span class="gap">편집 중 오류가 나면 이미 있던 그림 파일은? (요구사항에 없음)</span></dd>
+            <dt>성공 보장</dt><dd>볼트에 유효한 <code>.ns.svg</code>가 있고, 노트에 그 파일을 가리키는 <code>![[…]]</code>가 있으며, 노트에 그림이 보인다</dd>
+            <dt>트리거</dt><dd>작성자가 노트 편집 화면의 우클릭 메뉴에서 "Insert new NS diagram"을 고른다</dd>
+          </dl>
+          <div>
+            <h3>기본 성공 시나리오</h3>
+            <ol>
+              <li>플러그인이 새 파일 이름을 정하고 볼트에 빈 다이어그램 파일을 만든다 <span class="gap">파일 이름과 폴더는? (요구사항에 없음)</span></li>
+              <li>플러그인이 노트의 커서 자리에 <code>![[…]]</code>를 넣는다</li>
+              <li>플러그인이 편집 탭을 연다</li>
+              <li>작성자가 블록을 편집한다 (UC-03 포함)</li>
+              <li>작성자가 저장한다 (UC-06 포함)</li>
+              <li>플러그인이 노트의 그림을 새 그림으로 바꾼다</li>
+              <li>독자가 노트를 열어 그림을 본다</li>
+            </ol>
+          </div>
+          <div>
+            <h3>확장</h3>
+            <ul>
+              <li>1a. 같은 이름의 파일이 있다: <span class="gap">번호를 붙이나, 묻나? (요구사항에 없음)</span></li>
+              <li>4a. 작성자가 아무것도 그리지 않고 탭을 닫는다: <span class="gap">빈 파일과 <code>![[…]]</code>를 남기나, 지우나? (요구사항에 없음)</span></li>
+              <li>6a. 노트가 이미 열려 있다: 다시 열지 않고 그림만 바꾼다</li>
+              <li>7a. 독자에게 플러그인이 없다: 그림은 보이고 편집 메뉴만 없다</li>
+            </ul>
+          </div>
+          <dl>
+            <dt>기술 변형</dt><dd>1'. 명령 팔레트에서 실행</dd>
+            <dt>빈도</dt><dd>노트에 알고리즘을 설명할 때마다</dd>
+            <dt>요구사항</dt><dd><code>^obs-insert</code> <code>^obs-insert-command</code> <code>^obs-edit-embed</code> <code>^obs-embed</code> <code>^fmt-text</code></dd>
+            <dt>열린 문제</dt><dd>위 주황 넷</dd>
+          </dl>
+        </div>
+        <ul class="pros">
+          <li><b>"실패하면 무엇이 지켜지나"(최소 보장)와 확장을 빠짐없이 묻게 되어</b> 요구사항의 빈 곳이 드러난다. 이 하나에서만 넷</li>
+          <li>성공 보장이 그대로 시험의 판정 기준이 된다</li>
+          <li>10개를 쓰려면 두세 세션. 요구사항이 바뀔 때 고칠 칸이 많다</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <header>
+          <div class="row"><span class="num">3</span><span class="name">사용자 스토리</span></div>
+          <p class="meta">"~로서 ~하고 싶다, 그래서 ~" + 인수 기준(Given / When / Then). 스토리 하나에 10줄 안팎</p>
+        </header>
+        <div class="doc">
+          <p class="t">노트에 다이어그램 넣기</p>
+          <p><b>작성자로서</b>, 노트를 쓰다가 그 자리에 NS 다이어그램을 넣고 싶다. <b>그래서</b> 알고리즘 설명을 노트의 흐름 안에서 끝낼 수 있다.</p>
+          <div>
+            <h3>인수 기준</h3>
+            <div class="gwt">
+              <span><b>Given</b> 플러그인이 켜진 볼트의 노트에서</span>
+              <span><b>When</b> 우클릭 메뉴의 "Insert new NS diagram"을 고르면</span>
+              <span><b>Then</b> 커서 자리에 <code>![[…]]</code>가 들어가고 편집 탭이 열린다</span>
+            </div>
+            <div class="gwt" style="margin-top:8px">
+              <span><b>Given</b> 노트가 열려 있고 그 그림을 편집 중일 때</span>
+              <span><b>When</b> 저장하면</span>
+              <span><b>Then</b> 노트를 다시 열지 않아도 새 그림이 보인다</span>
+            </div>
+            <div class="gwt" style="margin-top:8px">
+              <span><b>Given</b> 플러그인이 없는 볼트에서</span>
+              <span><b>When</b> 그 노트를 열면</span>
+              <span><b>Then</b> 그림이 보인다</span>
+            </div>
+          </div>
+        </div>
+        <ul class="pros">
+          <li>인수 기준이 곧 자동 시험(BDD)으로 옮기기 쉽다</li>
+          <li>스토리는 <b>일을 쪼개는 단위</b>라, 흐름 전체(만들기 → 편집 → 저장 → 보기)가 여러 스토리로 흩어진다. 기능 목록인 지금 요구사항과 크게 다르지 않다</li>
+          <li>팀이 백로그를 스프린트로 나눌 때 쓸모가 크다. 혼자 하는 지금은 얻을 것이 적다</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>나란히 견주기</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th></th><th>1 가벼운 유즈케이스</th><th>2 자세한 유즈케이스</th><th>3 사용자 스토리</th></tr></thead>
+        <tbody>
+          <tr><th>하나의 분량</th><td>15줄 안팎</td><td>40줄 안팎</td><td>10줄 안팎</td></tr>
+          <tr><th>단위</th><td>사용자의 목표 하나(흐름 전체)</td><td>사용자의 목표 하나(흐름 전체)</td><td>만들 일 한 조각</td></tr>
+          <tr><th>빈 곳 드러내기</th><td>조금(예외 흐름만)</td><td><b>많이</b>(최소 보장 · 확장을 빠짐없이 물음)</td><td>조금(인수 기준에 쓴 경우만)</td></tr>
+          <tr><th>시험으로</th><td>기본 흐름 = 시나리오</td><td>성공 보장 = 판정 기준, 확장마다 시나리오</td><td>Given / When / Then = 자동 시험</td></tr>
+          <tr><th>요구사항이 바뀌면</th><td>고칠 곳이 적다</td><td>고칠 칸이 많다</td><td>스토리를 더하거나 뺀다</td></tr>
+          <tr><th>10개를 쓰는 데</th><td>한 세션</td><td>두세 세션</td><td>한 세션(대신 스토리는 수십 개가 된다)</td></tr>
+          <tr><th>잘 맞는 곳</th><td>흐름을 보이고 MVP를 자르는 데</td><td>실패가 비싼 흐름(저장, 열기, 파일 형식)</td><td>팀의 백로그</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>고르실 것</h2>
+    <div class="sum">
+      <ol>
+        <li><b>1 가벼운 유즈케이스 (추천)</b>: 10개 안팎. 유즈케이스 다이어그램 하나와 함께 <code>docs/01-requirements/02-use-cases.md</code>에 둔다</li>
+        <li><b>2 자세한 유즈케이스</b>: 같은 10개를 fully dressed로</li>
+        <li><b>3 사용자 스토리</b></li>
+        <li><b>1과 2를 섞기</b>: 모두 1로 쓰되, 실패가 비싼 흐름(UC-02 열기, UC-06 저장, UC-07 문서에 넣어 보이기)만 2로</li>
+      </ol>
+      <p class="meta">어느 것을 골라도 주황으로 드러난 빈 곳은 요구사항 다시 짜기의 작업 목록(<code>requirements-rework</code>)으로 옮깁니다.</p>
+    </div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
