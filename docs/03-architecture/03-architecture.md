@@ -26,11 +26,14 @@ updated: 2026-10-22
 
 **품질 목표** ([[01-requirements#4. 비기능 요구사항|비기능 요구사항]])
 
-1. **정합성:** 문서는 어떤 편집 후에도 불변식(invariant)을 만족한다. [[01-requirements#^nfr-integrity]]
-2. **호환성 · 결정성:** 배포 대상들이 같은 파일을 주고받고, 같은 모델과 같은 뷰 상태는 바이트 단위로 같은 SVG가 된다. [[01-requirements#^nfr-compat]], [[01-requirements#^fmt-deterministic]]
-3. **이식성:** 저장된 그림은 플러그인도 글꼴도 없는 SVG 뷰어에서 그대로 렌더링된다. [[01-requirements#^fmt-svg]], [[01-requirements#^fmt-text]]
-4. **시험 가능성:** 도메인 로직(모델 · 레이아웃 · 렌더링)은 DOM 없이 단위 테스트할 수 있다. [[01-requirements#^nfr-test]]
-5. **성능:** 블록 500개에서 편집 응답 100ms 이내. [[01-requirements#^nfr-perf]]
+1. **정합성:** 문서는 어떤 편집 후에도 불변식(invariant)을 만족한다. [[01-requirements#^nfr-integrity]] (QA-01, QA-02)
+2. **호환성 · 결정성:** 배포 대상들이 같은 파일을 주고받고, 같은 모델과 같은 뷰 상태는 바이트 단위로 같은 SVG가 된다. [[01-requirements#^nfr-compat]], [[01-requirements#^fmt-deterministic]] (QA-03~05)
+3. **이식성:** 저장된 그림은 플러그인도 글꼴도 없는 SVG 뷰어에서 그대로 렌더링된다. [[01-requirements#^fmt-svg]], [[01-requirements#^fmt-text]] (QA-06)
+4. **시험 가능성:** 도메인 로직(모델 · 레이아웃 · 렌더링)은 DOM 없이 단위 테스트할 수 있다. [[01-requirements#^nfr-test]] (QA-14)
+5. **성능:** 블록 500개에서 편집 응답 100ms 이내. [[01-requirements#^nfr-perf]] (QA-07~09)
+6. **변경 용이성:** 새 배포 대상, 렌더링 백엔드, 블록 종류, 화면 언어를 더할 때 고치는 곳이 정해진 한 곳이다. [[0002-three-targets-shared-core|ADR-0002]], [[0030-swappable-drawing|ADR-0030]] (QA-10~13)
+
+품질 목표마다 잴 수 있는 시나리오와 합격 기준, 그것을 만족시키는 이 문서의 구조, 확인할 시험은 [[03-quality-scenarios|품질 속성 시나리오(QAS)]]에 있습니다. 구조를 바꿀 때는 그 문서에서 영향받는 시나리오를 찾아 봅니다.
 
 **제약**
 
