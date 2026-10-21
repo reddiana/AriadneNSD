@@ -1,5 +1,5 @@
 ---
-title: "ADR-0031: editor의 필요 인터페이스(포트) DocumentStore · SettingsStore를 셸이 어댑터로 구현한다"
+title: "ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다"
 tags:
   - adr
 status: 승인
@@ -8,7 +8,7 @@ supersedes:
 superseded-by:
 ---
 
-# ADR-0031: editor의 필요 인터페이스(포트) DocumentStore · SettingsStore를 셸이 어댑터로 구현한다
+# ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). 두 인터페이스에 이름(`DocumentStore`, `SettingsStore`)을 붙였다. 이 ADR은 `editor`가 요구하고 셸이 구현하는 **필요 인터페이스**, [[0033-command-list-for-shells|ADR-0033]]은 `editor`가 구현하고 셸이 쓰는 **제공 인터페이스**다. 같은 경계의 반대 방향이다 → [[03-architecture#3.2 editor와 셸의 인터페이스]]
@@ -47,7 +47,7 @@ superseded-by:
 
 **대안 A.** 메인테이너: "추천 수용." (2026-10-18)
 
-포트와 어댑터(헥사고날) 패턴으로 한다. `editor`가 필요 인터페이스(required interface, 포트) 둘을 정의하고, 셸이 어댑터로 구현해 주입한다.
+`editor`가 필요 인터페이스(required interface) 둘을 정의하고, 셸이 구현해 주입한다.
 
 1. **`DocumentStore`(문서 파일)**: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다, **다른 문서를 경로로 읽는다**. 읽지 못하면 `null`을 돌려준다.
 2. **`SettingsStore`(설정 보관)**: 사용자 설정(UI 언어, 화면 색)을 읽고 쓴다.

@@ -90,7 +90,7 @@ updated: 2026-10-17
 | --- | --- | --- |
 | [[0029-immutable-document-undo\|0029]] | 문서는 불변 객체로 다루고, undo는 이전 스냅숏으로 돌아가는 것으로 한다 | 승인 |
 | [[0030-swappable-drawing\|0030]] | 화면도 저장되는 SVG와 같은 렌더러로 그리고, 렌더링 백엔드는 교체할 수 있게 둔다 | 승인 |
-| [[0031-shell-interfaces\|0031]] | editor의 필요 인터페이스(포트) DocumentStore · SettingsStore를 셸이 어댑터로 구현한다 | 승인 |
+| [[0031-shell-interfaces\|0031]] | editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다 | 승인 |
 | [[0032-token-highlighting\|0032]] | 구문 강조는 블록 글자의 종류마다 토크나이저 하나로 한다 | 승인 |
 | [[0033-command-list-for-shells\|0033]] | editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다 | 승인 |
 
