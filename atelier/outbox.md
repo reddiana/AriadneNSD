@@ -150,6 +150,14 @@ updated: 2026-10-22
 
 ### 아키텍처 · 기술
 
+- [ ] 아키텍처 문서 · ADR · 상세 설계를 SW 엔지니어의 용어와 UML로 고치며 Claude가 정한 것 (2026-10-22, 메인테이너: "이대로 전체에 적용해 주세요") → [[03-architecture]]
+	- 인터페이스 이름 넷: `DocumentStore`, `SettingsStore`(필요 인터페이스, [[0031-shell-interfaces|ADR-0031]]), `CommandRegistry`, `SettingsSchema`(제공 인터페이스, [[0033-command-list-for-shells|ADR-0033]])
+	- ADR-0031의 결정 문장에 "포트와 어댑터(헥사고날) 패턴으로 한다"를 넣음(구조는 그대로, 패턴의 이름을 적은 것)
+	- ADR-0008의 "가장 가까운 공통 범위"에 풀이 한 문장(같은 줄에 있는 가장 가까운 조상끼리, LCA와 같은 문제)을 덧붙임
+	- ADR-0010의 "쓰는 법이 바뀌어"를 "API(runes)가 바뀌어"로 구체화
+	- 가칭 이름: [[02-layout]]의 `layout()` · `buildScene()` · `toSvg()`와 `LayoutResult` · `Scene` · `Theme`, [[01-file-format]] 열기 시퀀스의 `read()` · `deserialize()`, [[04-obsidian-plugin]]의 `SettingsStore` 구현에 Obsidian API `loadData` · `saveData`. 시그니처는 정하지 않음
+	- [[01-model]]의 제목 셋: "2. 뷰 상태", "3. 불변식", "4.4 텍스트 편집과 undo"
+
 - [ ] 아키텍처 제안 A1~A5를 확인받아 옮기며 Claude가 정한 것 (2026-10-17) → 시안 M20, [[03-architecture]]
 	- A5(메인테이너: "지금은 1번 … 나중에 2번으로 바꾸더라도 비용이 많이 발생하지 않는 아키텍처")를 이루는 구조: 렌더러를 "장면 만들기"와 "그리기"로 나누고, `editor`는 "장면을 화면에 그린다" 인터페이스 하나로만 그리며, 화면의 SVG를 뒤지지 않고 레이아웃 결과로 블록을 찾는다 → [[0030-swappable-drawing|ADR-0030]]
 	- A4 · A5를 새 ADR 0029 · 0030으로, A1 · A2 · A3은 새 ADR 없이 본문과 승인 ADR 0026 · 0022 · 0017의 "이후 변경"으로 옮김. 0029 · 0030은 "승인"으로 적음. ADR 목록에 새 묶음 "편집 엔진과 화면"
