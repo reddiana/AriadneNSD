@@ -51,6 +51,7 @@ jobs:
 
       - name: 설정과 문서 옮기기
         run: |
+          node site/patch-quartz.mjs .quartz
           cp site/quartz.config.ts site/quartz.layout.ts .quartz/
           cp site/custom.scss .quartz/quartz/styles/custom.scss
           node site/prepare-content.mjs . .quartz/content

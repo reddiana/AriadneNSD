@@ -20,6 +20,7 @@ if [ ! -d "$QUARTZ_DIR/node_modules" ]; then
   (cd "$QUARTZ_DIR" && npm ci --no-audit --no-fund)
 fi
 
+node "$REPO/site/patch-quartz.mjs" "$QUARTZ_DIR"
 cp "$REPO/site/quartz.config.ts" "$REPO/site/quartz.layout.ts" "$QUARTZ_DIR/"
 cp "$REPO/site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
 node "$REPO/site/prepare-content.mjs" "$REPO" "$QUARTZ_DIR/content"

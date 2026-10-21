@@ -24,3 +24,7 @@
 - MVP를 하기 전에 뭐가 결정되어야 하나요?
 
 # 6. 기타
+- github page에 publishing 
+  - "AriadneNSD 아키텍처 개요"에서 클래스다이어그램 머메이드가 렌더링되지 않았습니다. "Syntax error in text mermaid version 11.4.0"라고 나옵니다.
+  - 문서명들이 변경되어 있습니다. 어떤 기준인가요?
+

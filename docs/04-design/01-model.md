@@ -245,7 +245,7 @@ sequenceDiagram
             V-->>-C: 통과
             C-->>-E: { ok: true, content, touched }
             E->>+H: push(앞의 content)
-            H-->>-E:
+            H-->>-E: 넣음
             Note over E: touched로 다음 선택을 정하고 다시 그림
         end
     end
