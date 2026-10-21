@@ -27,7 +27,7 @@ updated: 2026-10-13
 ## 2. 선택
 
 > [!info] 미완성: 선택 상태와 자동 확장 → [[0008-contiguous-selection|ADR-0008]]
-> - 고른 것의 표현: 블록 id로 적는다(아키텍처 → [[03-architecture#3.1 문서 모델]]). 같은 부모 아래 이어진 범위 → [[0008-contiguous-selection|ADR-0008]]
+> - 고른 것의 표현: 블록 id로 적는다(아키텍처 → [[03-architecture#3.4 문서 모델]]). 같은 부모 아래 이어진 범위 → [[0008-contiguous-selection|ADR-0008]]
 > - 공통 범위 자동 확장 알고리즘
 > - 키보드 이동 규칙은 정함 → [[02-interaction-rules#키보드로 이동하고 넣기]]. 여기서는 그 구현
 
