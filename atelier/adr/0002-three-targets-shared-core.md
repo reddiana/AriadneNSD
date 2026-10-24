@@ -18,6 +18,7 @@ superseded-by:
 > - 2026-10-18: 플랫폼 의존 부분을 셸이 구현하는 필요 인터페이스 둘로 정했다. `DocumentStore`(문서 파일 I/O, 다른 문서 읽기를 더함)와 `SettingsStore`(사용자 설정 영속)다 → [[0031-shell-interfaces|ADR-0031]]
 > - 2026-10-18: 반대 방향으로, 편집기가 명령 레지스트리(`CommandRegistry`)와 설정 스키마(`SettingsSchema`)를 제공 인터페이스로 노출하고, 셸이 그것을 호스트 플랫폼의 메뉴 · 설정 화면에 등록하기로 했다 → [[0033-command-list-for-shells|ADR-0033]]
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[03-architecture]]
+> - 2026-10-25: "결정"의 패키지 목록을 글자 그림에서 표로 바꿨다(글은 그대로, 모양만. 메인테이너가 inbox에서 요청)
 
 ## 배경
 
@@ -45,13 +46,13 @@ NS 차트 편집기를 Obsidian 안에서도, 단독 데스크톱 앱으로도, 
 
 세 대상 모두 배포하며, 하나의 저장소에서 공유 패키지와 대상별 셸로 나눈다.
 
-```
-packages/core     모델 · 편집 명령 · 레이아웃 · 렌더러 · 파일 형식 (DOM 의존 없음)
-packages/editor   편집 UI
-apps/obsidian     Obsidian 플러그인 셸
-apps/desktop      데스크톱 셸
-apps/web          웹 셸
-```
+| 패키지 | 담는 것 |
+| --- | --- |
+| `packages/core` | 모델 · 편집 명령 · 레이아웃 · 렌더러 · 파일 형식 (DOM 의존 없음) |
+| `packages/editor` | 편집 UI |
+| `apps/obsidian` | Obsidian 플러그인 셸 |
+| `apps/desktop` | 데스크톱 셸 |
+| `apps/web` | 웹 셸 |
 
 플랫폼 의존 기능(파일 I/O, 텍스트 폭 측정)은 인터페이스(포트)로 정의하고, 셸이 어댑터 구현체를 주입한다(의존성 주입).
 
