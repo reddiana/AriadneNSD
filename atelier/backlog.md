@@ -97,6 +97,8 @@ MVP 뒤로 미뤄도 되는 것: 데스크톱 프레임워크([[0009-desktop-fra
 
 ## 출시 무렵과 그 뒤
 
+- [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
+
 - [ ] 웹 베타를 출시할 무렵: `.com` 도메인 하나를 등록한다 (메인테이너. 비어 있는지 그때 다시 확인) → [[names-and-registries]]
 - [ ] 웹 베타를 출시할 때: 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^all-donate]]
 - [ ] 나중에 검토: 유료 버전. Confluence는 요구사항에 `P2`로 올림([[01-requirements#2.5 Confluence (유료, 나중에)]]). 다른 후보: Jira(같은 Forge로 묶음), Google Workspace Marketplace

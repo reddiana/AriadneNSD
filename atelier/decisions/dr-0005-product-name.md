@@ -11,6 +11,7 @@ superseded-by:
 # DR-0005: 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`로 한다
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: 메인테이너가 도메인 `ariadnensd.com`을 Cloudflare Registrar에서 샀다(등록 2026-10-24 18:09 UTC, 만료 2027-10-24, RDAP로 확인). 사이트를 이 주소로 옮길지는 따로 정한다. 파일 속 네임스페이스 URI는 저장소 주소 그대로다([[0035-model-namespace-and-v0|ADR-0035]]) → [[names-and-registries]]
 > - 2026-10-17: 아키텍처 결정 기록 DR-0005에서 결정 기록 DR-0005으로 옮겨 왔다. ADR은 아키텍처 결정만 두기로 했기 때문이다 → [[dr-0001-split-decision-records|DR-0001]]. 본문은 그대로이고, 번호와 링크만 새 것으로 고쳤다. 본문의 "이 ADR"은 이 기록을 말한다.
 > - 2026-10-11: 문자 로고(그림)에서만 `Ariadne’s NSD`로 적는다. "Ariadne's Thread"(아리아드네의 실)를 떠올리게 하려는 것이다. 이 ADR에서 `Ariadne's NSD`를 고르지 않은 까닭(아포스트로피를 식별자에 쓸 수 없음)은 그림에는 해당하지 않는다. 글로 적는 제품 이름과 식별자는 이 ADR 그대로 `AriadneNSD` · `ariadne-nsd`다 → [[dr-0006-logo|DR-0006]]
 > - 2026-10-15: GitHub 저장소 이름만 `AriadneNSD`로 바뀌었다(주소 `https://github.com/reddiana/AriadneNSD`). 메인테이너가 바꿨다. 패키지 · 플러그인 id · 문서 태그는 이 ADR 그대로 `ariadne-nsd`다 → [[dr-0011-repo-name|DR-0011]]

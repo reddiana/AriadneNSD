@@ -28,7 +28,7 @@ updated: 2026-10-10
 | GitHub 저장소 | `AriadneNSD` (2026-10-15에 `ariadne-nsd`에서 바꿈 → [[dr-0011-repo-name\|DR-0011]]) | 무료 | 지금 |
 | Obsidian 플러그인 id | `ariadne-nsd` | 무료 (등록 심사) | Obsidian 플러그인을 낼 때 |
 | npm 패키지 | `ariadne-nsd` 또는 `@ariadne-nsd/…` | 무료 | 공유 코어를 패키지로 낼 때 |
-| 도메인 | `ariadnensd.com` 등 (붙임표 없이도 가능) | `.com`은 1년에 10~11달러쯤 | 자체 주소가 필요할 때 |
+| 도메인 | **`ariadnensd.com` (2026-10-25에 삼, Cloudflare Registrar, 만료 2027-10-24, 자동 갱신)** | `.com`은 1년에 10~11달러쯤 | 웹 버전의 제품 주소. 사이트를 옮길지는 따로 정함 |
 
 - 2026-10-10에 조회했을 때 위 이름은 모두 비어 있었습니다. 조회한 범위와 확인하지 않은 것(상표)은 [[dr-0005-product-name|DR-0005]]에 있습니다.
 - 웹 버전은 GitHub Pages에 올리면 도메인 없이 출시할 수 있습니다.
