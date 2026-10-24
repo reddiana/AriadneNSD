@@ -64,10 +64,10 @@ const config: QuartzConfig = {
         },
         keepBackground: false,
       }),
-      // 본문의 #P0 같은 태그는 태그로 읽지 않고 글자로 둔다.
-      // Quartz v4.5.2는 두 겹 아래 폴더의 문서에서 태그 링크를 잘못 만들고,
-      // "#P0은"처럼 조사가 붙은 것도 따로 태그가 된다. 속성의 tags는 그대로 태그다
-      Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false, parseTags: false }),
+      // 본문의 #P0 같은 태그도 태그 페이지로 가는 링크가 된다(메인테이너가 inbox에서 요청, 2026-10-25).
+      // 두 겹 아래 폴더에서 링크가 틀리는 Quartz v4.5.2의 버그는 patch-quartz.mjs가 고친다.
+      // "#P0은"처럼 조사가 붙으면 그것까지 태그가 되므로, 글 속의 우선순위는 `P0`처럼 코드로 쓴다(CLAUDE.md)
+      Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false, parseTags: true }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
