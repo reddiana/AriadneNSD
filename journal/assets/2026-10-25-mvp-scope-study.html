@@ -1,0 +1,232 @@
+<title>M28 MVP 범위</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M24와 같은 틀. 그림은 아래 스크립트가 그린다. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+h4 { font-size: 13.5px; font-weight: 600; margin: 0; color: var(--fg); }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 80ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.fig svg text { font-family: var(--font); font-size: 12px; }
+.figcap { font-size: 12.5px; color: var(--muted); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+th, td { border-bottom: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; }
+td.c { text-align: center; font-family: var(--mono); }
+.in { color: var(--pick); font-weight: 600; }
+.out { color: var(--muted); opacity: .6; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M28 · MVP 범위</h1>
+    <p class="lede">메인테이너의 물음 "MVP를 하기 전에 뭐가 결정되어야 하나요?"(2026-10-25)의 첫째 답입니다. 지금 요구사항의 MVP는 <b>웹에서 <code>P0</code> 항목만</b>입니다. 그런데 그 뒤 <code>P1</code>로 들어온 Case · 호출 · 여러 다이어그램 · 접기가 프로토타입의 중심이 되었습니다. 범위에 따라 MVP 전에 정하고 설계할 것의 양이 달라져서, 이것을 가장 먼저 정합니다. <b>Claude의 추천은 S1 · 2번, S2 · 1번</b>입니다. 그림의 블록 색과 선은 시각 디자인 명세의 밝은 기본 테마입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">S1</span>
+    <h2>S1. MVP에 무엇을 넣을까</h2>
+    <p class="q">세 안에 <b>같은 흐름</b>을 그렸습니다: 메뉴를 읽고, 고른 번호에 따라 커피 · 차 · 물을 내고, 그 밖의 번호면 오류를 알린 뒤 잔을 내준다. 세 안 모두 웹이고, 실행 취소 · 키보드 편집 · 자동 레이아웃 · 저장과 열기 · PNG 내보내기는 같습니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">S1 · 1번</span><h3><code>P0</code>만 (지금 적힌 그대로)</h3></header>
+        <div class="fig" data-fig="s1-1"></div>
+        <p class="figcap">Case가 없어 갈래 넷을 If 셋으로 겹칩니다. 겹칠수록 칸이 반씩 좁아집니다.</p>
+        <ul>
+          <li><b>블록:</b> 처리 · If · While · Do-While</li>
+          <li><b>편집:</b> 고르기 · 넣기 · 지우기 · 글자 고치기, 여러 블록 고르기</li>
+          <li class="good">MVP 전에 정하고 설계할 것이 가장 적어 가장 빨리 나옵니다.</li>
+          <li><span class="bad">감싸기가 없어, 이미 적은 블록을 If로 묶으려면 지우고 다시 적어야 합니다. 복사 · 붙여넣기도 없습니다.</span></li>
+          <li><span class="bad">실무 문서(코드 옆에 두는 설계)로 쓰기에는 금방 불편합니다. DR-0002의 기준 "첫 결과물을 실제로 써 볼 수 있어야 한다"에 모자랍니다.</span></li>
+        </ul>
+      </article>
+      <article class="card pick"><header><span class="tag">S1 · 2번</span><h3><code>P0</code> + 매일 쓰는 편집</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="s1-2"></div>
+        <p class="figcap">Case 블록 하나로 그립니다. 다이어그램은 문서마다 하나입니다.</p>
+        <ul>
+          <li><b>1번에 더함:</b> Case · For 블록, 감싸기 · 풀기, 복사 · 잘라내기 · 붙여넣기, 갈래 바꾸기 · 더하기 · 지우기</li>
+          <li><b>뒤로 미룸:</b> 머리(Event · Method), 호출 블록, 한 문서에 여러 다이어그램, Method로 빼기, 접기, 블록 글자의 종류와 구문 강조, 테마 고르기</li>
+          <li class="good">함수 하나를 그대로 옮겨 그릴 수 있습니다. 편집은 프로토타입에서 써 본 그대로입니다.</li>
+          <li class="good">모델과 파일 형식은 이미 전체를 담도록 설계했습니다(모델 설계). 미룬 것을 나중에 더해도 MVP로 저장한 파일은 그대로 열립니다.</li>
+          <li><span class="bad">함수 여럿을 한 문서에 둘 수 없어, 함수마다 파일을 하나씩 만듭니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S1 · 3번</span><h3>프로토타입만큼</h3></header>
+        <div class="fig" data-fig="s1-3"></div>
+        <p class="figcap">Event 머리 아래의 Case가 호출 블록으로 Method를 부릅니다. Method는 옆에 나란히 둡니다.</p>
+        <ul>
+          <li><b>2번에 더함:</b> Event · Method 머리, 호출 블록과 펴 보기, 한 문서에 여러 다이어그램, Method로 빼기 · 호출 풀기, 접기 · 접기 영역</li>
+          <li class="good">프로토타입에서 써 본 것이 모두 들어가, 메인테이너의 이상향 EasyCODE에 가장 가깝습니다.</li>
+          <li><span class="bad">MVP 전에 정할 것이 크게 늘어납니다: 접기가 듣는 곳(Q20), 머리 이름이 겹칠 때, 다른 문서를 부르는 경로, 호출 블록을 겹쳐 펼 때의 성능.</span></li>
+          <li><span class="bad">설계와 시험할 것이 늘어 MVP가 가장 늦습니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">S2</span>
+    <h2>S2. 우선순위 태그는 무엇의 순서인가</h2>
+    <p class="q">S1을 정한 뒤에 묻습니다. 요구사항은 "<code>#P0</code> = MVP 필수"라고 적는데, MVP가 아닌 Obsidian 항목 일곱 개와 데스크톱의 파일 열기에도 <code>#P0</code>이 붙어 있습니다(요구사항 다시 짜기 Q22). S1에서 2번이나 3번을 고르면, 들어가는 <code>P1</code> 항목은 어느 안이든 <code>P0</code>으로 올립니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">S2 · 1번</span><h3>기능의 우선순위만 나타낸다</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig tbl" data-fig="s2-1"></div>
+        <ul>
+          <li>배포 대상의 순서(웹 → Obsidian → 데스크톱)는 DR-0002가 정한다고 요구사항에 적습니다.</li>
+          <li><code>P0</code>은 "그 대상을 낼 때 꼭 있어야 하는 것"으로 읽습니다. MVP는 웹의 <code>P0</code>입니다.</li>
+          <li class="good">Obsidian 판을 낼 때 꼭 있어야 하는 것이 따로 보입니다.</li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S2 · 2번</span><h3><code>P0</code> = MVP로 맞춘다</h3></header>
+        <div class="fig tbl" data-fig="s2-2"></div>
+        <ul>
+          <li>Obsidian과 데스크톱의 <code>P0</code>을 <code>P1</code>로 내립니다.</li>
+          <li class="good"><code>P0</code>을 모으면 바로 MVP입니다.</li>
+          <li><span class="bad"><code>P1</code> 안에 "Obsidian 판에 꼭 있어야 함"과 "있으면 좋음"이 섞입니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>S1부터 하나씩, <b>번호</b> 또는 고칠 점(예: "2번에 Method와 호출만 더해서").</li>
+      <li>정하면 요구사항 5장(MVP 범위)과 태그를 고치고, 결정은 DR로 남깁니다. 그다음 MVP 전에 정할 것의 목록(글꼴, 파일 형식, 레이아웃 설계, 조작 규칙)을 그 범위에 맞춰 줄입니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const C = { line: '#39404d', text: '#1c2230', muted: '#5a6476', proc: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf', method: '#e4ecf7' };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const svg = (w, h, body) => `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
+  const rect = (x, y, w, h, fill) => `<rect x="${x + .5}" y="${y + .5}" width="${w}" height="${h}" fill="${fill}" stroke="${C.line}"/>`;
+  const line = (x1, y1, x2, y2) => `<line x1="${x1 + .5}" y1="${y1 + .5}" x2="${x2 + .5}" y2="${y2 + .5}" stroke="${C.line}"/>`;
+  const text = (x, y, s, o = {}) => `<text x="${x}" y="${y}" fill="${o.fill || C.text}" ${o.anchor ? `text-anchor="${o.anchor}"` : ''} ${o.w ? `font-weight="${o.w}"` : ''} ${o.size ? `font-size="${o.size}"` : ''}>${esc(s)}</text>`;
+  const R = 26;
+
+  // 블록: P(글자) · IF(조건, 참[], 거짓[]) · CASE(식, [[이름, 블록[]], …]) · WH(조건, 블록[]) · CALL(이름)
+  const P = t => ({ k: 'p', t }), CALL = t => ({ k: 'call', t });
+  const IF = (c, a, b) => ({ k: 'if', c, a, b }), CASE = (c, br) => ({ k: 'case', c, br }), WH = (c, body) => ({ k: 'wh', c, body });
+
+  function height(n, w) {
+    if (n.k === 'p' || n.k === 'call') return R;
+    if (n.k === 'if') return 40 + Math.max(seqH(n.a, w / 2), seqH(n.b, w / 2));
+    if (n.k === 'case') return 44 + Math.max(...n.br.map(([, b]) => seqH(b, w / n.br.length)));
+    if (n.k === 'wh') return R + seqH(n.body, w - 16);
+  }
+  const seqH = (list, w) => list.reduce((s, n) => s + height(n, w), 0);
+
+  // 블록 줄을 그린다. 정한 높이(h)보다 짧으면 마지막 블록을 늘린다
+  function seq(list, x, y, w, h) {
+    let s = '', yy = y;
+    list.forEach((n, i) => {
+      let nh = height(n, w);
+      if (i === list.length - 1 && h && yy + nh < y + h) nh = y + h - yy;
+      s += draw(n, x, yy, w, nh); yy += nh;
+    });
+    return s;
+  }
+  function draw(n, x, y, w, h) {
+    if (n.k === 'p') return rect(x, y, w, h, C.proc) + text(x + 8, y + 17, n.t);
+    if (n.k === 'call') return rect(x, y, w, h, C.proc) + line(x + 6, y, x + 6, y + h) + line(x + w - 6, y, x + w - 6, y + h) + text(x + 13, y + 17, n.t);
+    if (n.k === 'if') {
+      const HH = 40, half = w / 2;
+      let s = rect(x, y, w, HH, C.branch) + line(x, y, x + half, y + HH) + line(x + w, y, x + half, y + HH);
+      s += text(x + half, y + 15, n.c, { anchor: 'middle' });
+      s += text(x + 5, y + HH - 4, '참', { fill: C.muted, size: 10.5 }) + text(x + w - 5, y + HH - 4, '거짓', { fill: C.muted, size: 10.5, anchor: 'end' });
+      return s + seq(n.a, x, y + HH, half, h - HH) + seq(n.b, x + half, y + HH, half, h - HH);
+    }
+    if (n.k === 'case') {
+      const HH = 44, m = n.br.length, bw = w / m, ax = x + bw * (m - 1);
+      let s = rect(x, y, w, HH, C.branch) + line(x, y, ax, y + HH) + line(x + w, y, ax, y + HH);
+      for (let i = 1; i < m - 1; i++) { const bx = x + bw * i; s += line(bx, y + HH * (bx - x) / (ax - x), bx, y + HH); }
+      const ty = 15, lx = x + (ax - x) * ty / HH, rx = x + w - (x + w - ax) * ty / HH;
+      s += text((lx + rx) / 2, y + ty, n.c, { anchor: 'middle' });
+      n.br.forEach(([lab, body], i) => { s += text(x + bw * i + bw / 2, y + HH - 5, lab, { fill: C.muted, size: 10.5, anchor: 'middle' }); s += seq(body, x + bw * i, y + HH, bw, h - HH); });
+      return s;
+    }
+    if (n.k === 'wh') {
+      const S = 16;
+      let s = `<path d="M${x + .5} ${y + .5} H${x + w + .5} V${y + R + .5} H${x + S + .5} V${y + h + .5} H${x + .5} Z" fill="${C.loop}" stroke="${C.line}"/>`;
+      s += text(x + 8, y + 17, n.c);
+      return s + seq(n.body, x + S, y + R, w - S, h - R);
+    }
+  }
+  // 머리 (M24의 "지금 모양")
+  function head(x, w, kind, name) {
+    const p = kind === 'Event'
+      ? `<path d="M${x + .5} 22.5 Q${x + 30} 0 ${x + 60} 12 L${x + w + .5} 12 L${x + w + .5} 40.5 L${x + .5} 40.5 Z" fill="${C.event}" stroke="${C.line}"/>`
+      : `<path d="M${x + .5} 40.5 L${x + .5} 18 Q${x + w / 2} 4 ${x + w + .5} 18 L${x + w + .5} 40.5 Z" fill="${C.method}" stroke="${C.line}"/>`;
+    return p + text(x + 10, 33, name);
+  }
+  function diagram(list, w, x = 0, top = 0) { return { s: seq(list, x, top, w), h: top + seqH(list, w) }; }
+
+  const READ = P('choice ← 메뉴 읽기()'), GIVE = P('잔 내주기');
+  // 1번: If를 겹쳐서
+  const nested = [READ, IF('choice = 1', [P('커피 내리기')], [IF('choice = 2', [P('차 우리기')], [IF('choice = 3', [P('물 따르기')], [P('오류 안내')])])]), GIVE];
+  // 2번: Case
+  const flat = [READ, CASE('choice', [['1', [P('커피 내리기')]], ['2', [P('차 우리기')]], ['3', [P('물 따르기')]], ['그 밖', [P('오류 안내')]]]), GIVE];
+  // 3번: Event + 호출 + Method
+  const ev = [READ, CASE('choice', [['1', [CALL('커피 내리기')]], ['2', [CALL('차 우리기')]], ['3', [P('물 따르기')]], ['그 밖', [P('오류 안내')]]]), GIVE];
+  const me = [P('물 데우기'), WH('온도 < 92 ℃', [P('기다리기')]), P('원두에 붓기')];
+
+  const F = {};
+  { const d = diagram(nested, 520); F['s1-1'] = svg(522, d.h + 2, d.s); }
+  { const d = diagram(flat, 520); F['s1-2'] = svg(522, d.h + 2, d.s); }
+  {
+    const a = diagram(ev, 360, 0, 40), b = diagram(me, 190, 380, 40);
+    F['s1-3'] = svg(572, Math.max(a.h, b.h) + 2, head(0, 360, 'Event', '버튼을 누르면') + a.s + head(380, 190, 'Method', '커피 내리기') + b.s);
+  }
+  // S2: 표
+  const rows = [
+    ['블록 4종, 기본 편집, 저장 · 열기', 'P0', 'P0', '웹 MVP'],
+    ['Obsidian: 노트에 그림 넣기 · 편집 메뉴 등 일곱', 'P0', 'P1', 'Obsidian 판'],
+    ['데스크톱: 파일 열기', 'P0', 'P1', '데스크톱 판'],
+    ['Case · 호출 · 접기 …', 'P1', 'P1', '그 뒤'],
+  ];
+  const table = col => `<table><thead><tr><th>항목</th><th>태그</th><th>처음 들어가는 판</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="c">${r[col]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table>`;
+  F['s2-1'] = table(1); F['s2-2'] = table(2);
+
+  document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
