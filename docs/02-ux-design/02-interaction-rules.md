@@ -128,7 +128,7 @@ updated: 2026-10-13
 >
 > ![[interaction-multiselect-1.png|208]] ![[interaction-multiselect-2.png|208]]
 >
-> *주황 테두리가 고른 범위다. 그림은 프로토타입에서 찍었다(`journal/assets/2026-10-25-multiselect-shots.mjs`).*
+> *주황 테두리가 고른 범위이고, 왼쪽의 포인터는 Shift+클릭하는 자리다. 그림은 프로토타입에서 찍었다(`journal/assets/2026-10-25-multiselect-shots.mjs`).*
 
 ## 3. 편집 명령
 

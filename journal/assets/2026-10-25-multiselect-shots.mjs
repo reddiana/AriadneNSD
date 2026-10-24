@@ -59,7 +59,18 @@ await ev(`window.T = { click(id, shift) { const el = document.querySelector('#sv
 const ids = { a: 'n1', c: 'n4' };
 
 await ev(`T.click('${ids.a}')`);
+// 왼쪽 그림: 이제 Shift+클릭할 C 위에 마우스 포인터와 "Shift+클릭" 글자를 얹는다 (프로토타입의 화면이 아니라 그림의 설명)
+await ev(`(() => {
+  const b = document.querySelector('#svg [data-id="${ids.c}"]').getBoundingClientRect();
+  const m = document.createElement('div');
+  m.id = 'shot-pointer';
+  m.style.cssText = 'position:absolute;z-index:99;pointer-events:none;left:' + (b.left + scrollX + b.width * 0.42) + 'px;top:' + (b.top + scrollY + b.height * 0.2) + 'px';
+  m.innerHTML = '<svg width="18" height="26" viewBox="0 0 18 26" style="display:block"><path d="M1 1 L1 20 L5.5 15.5 L9 24 L12 22.6 L8.6 14.4 L15 14.4 Z" fill="#111" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>'
+    + '<span style="position:absolute;left:18px;top:4px;white-space:nowrap;font:600 12px system-ui,sans-serif;color:#fff;background:#3a3f4a;border-radius:4px;padding:1px 6px">Shift+클릭</span>';
+  document.body.appendChild(m);
+})()`);
 await shot('interaction-multiselect-1.png');
+await ev(`document.getElementById('shot-pointer').remove()`);
 await ev(`T.click('${ids.c}', true)`);
 await shot('interaction-multiselect-2.png');
 
