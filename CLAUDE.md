@@ -6,7 +6,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 
 | 폴더 | 용도 |
 | --- | --- |
-| `README.md` | GitHub 방문자를 위한 첫 화면이면서 펴낸 사이트(`reddiana.github.io/AriadneNSD`)의 첫 화면의 원본. 저장소 소개와 "Obsidian으로 보라"는 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸면 사이트에서 빠진다(→ [[dr-0013-publish-docs-github-pages|DR-0013]]) |
+| `README.md` | GitHub 방문자를 위한 첫 화면이면서 펴낸 사이트(`reddiana.github.io/AriadneNSD`)의 첫 화면의 원본. 저장소 소개와 읽는 법(펴낸 사이트, 또는 Obsidian)의 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸면 사이트에서 빠진다(→ [[dr-0013-publish-docs-github-pages|DR-0013]]) |
 | `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
 | `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 보낼 편지함(`outbox.md`: 메인테이너의 답을 기다리는 것), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`sketchbook.md`), 세션 기록(`sessions/`), 아키텍처 결정 기록(`adr/`: ADR), 그 밖의 결정 기록(`decisions/`: DR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
 | `journal/` | 이야기하기 위한 여정 기록: 타임라인, 이야기 구성 아이디어, 스크린샷. 누구나 따라 해 볼 용기를 얻도록 쓴다 |

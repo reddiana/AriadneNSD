@@ -16,12 +16,13 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 ## 이 저장소를 읽는 법
 
 <!-- site:skip -->
+이 저장소의 문서는 [Obsidian](https://obsidian.md/)으로 쓰고 읽도록 만들었습니다. `[[위키링크]]`, 블록 ID, 태그, 콜아웃을 쓰기 때문에 GitHub에서는 문서 사이의 링크가 동작하지 않고 일부가 글자 그대로 보입니다. 아래 두 가지 방법 가운데 하나로 읽어 주세요.
+
 > [!TIP]
-> 이 저장소의 문서는 [Obsidian](https://obsidian.md/)으로 쓰고 읽도록 만들었습니다. `[[위키링크]]`, 블록 ID, 태그, 콜아웃을 쓰기 때문에 GitHub에서는 문서 사이의 링크가 동작하지 않고 일부가 글자 그대로 보입니다.
+> **1. 웹 사이트에서 읽기 (설치 없이):** **https://reddiana.github.io/AriadneNSD/**
+> 설계 문서(`docs/`)와 작업 공간(`atelier/`)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
-> **웹에서 보기:** 설계 문서(`docs/`)와 작업 공간(`atelier/`)은 [reddiana.github.io/AriadneNSD](https://reddiana.github.io/AriadneNSD/)에서 링크를 따라 읽을 수 있습니다.
->
-> **Obsidian으로 보는 법:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요.
+> **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`)과 기술 노트(`tech-notes/`)도 함께 읽을 수 있습니다.
 <!-- /site:skip -->
 
 | 폴더                                    | 내용                                                     |
