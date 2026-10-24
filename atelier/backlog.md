@@ -97,6 +97,8 @@ MVP 뒤로 미뤄도 되는 것: 데스크톱 프레임워크([[0009-desktop-fra
 
 ## 출시 무렵과 그 뒤
 
+- [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너, 공개 출시 전) → [[names-and-registries#확인하지 않은 것]]
+
 - [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
 
 - [ ] 웹 베타를 출시할 무렵: `.com` 도메인 하나를 등록한다 (메인테이너. 비어 있는지 그때 다시 확인) → [[names-and-registries]]

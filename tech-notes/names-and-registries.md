@@ -28,6 +28,10 @@ updated: 2026-10-10
 | GitHub 저장소 | `AriadneNSD` (2026-10-15에 `ariadne-nsd`에서 바꿈 → [[dr-0011-repo-name\|DR-0011]]) | 무료 | 지금 |
 | Obsidian 플러그인 id | `ariadne-nsd` | 무료 (등록 심사) | Obsidian 플러그인을 낼 때 |
 | npm 패키지 | `ariadne-nsd` 또는 `@ariadne-nsd/…` | 무료 | 공유 코어를 패키지로 낼 때 |
+| npm 조직(scope) | **`ariadne-nsd` (2026-10-25에 만듦)**. 이제 `@ariadne-nsd/…`는 우리만 쓴다 | 무료(공개 패키지) | 패키지 없이 이름만 잡아 둠 |
+| GitHub 조직 | **`AriadneNSD` (2026-10-25에 만듦)**. GitHub 이름은 대소문자를 가리지 않아 `ariadne-nsd`가 아니라 이 모양으로 잡힘 | 무료 | 저장소를 옮길지는 컨트리뷰터가 생길 때 정함 |
+| VS Code 게시자 · Open VSX | `ariadne-nsd` (2026-10-25 조회: 비어 있음) | 무료 | IDE 플러그인을 낼 때 |
+| 그 밖에 낼 때 잡는 것 | Obsidian 플러그인 id(제출 때 심사, 비슷한 것은 `ariadne-autocomplete`뿐), JetBrains · Atlassian 판매자, Google Cloud 프로젝트 · OAuth 앱 이름, 데스크톱 앱 id(winget · Store, macOS 번들 id), 후원 페이지 | 대개 무료 | 그 배포 대상을 낼 때 |
 | 도메인 | **`ariadnensd.com` (2026-10-25에 삼, Cloudflare Registrar, 만료 2027-10-24, 자동 갱신)** | `.com`은 1년에 10~11달러쯤 | 웹 버전의 제품 주소. 사이트를 옮길지는 따로 정함 |
 
 - 2026-10-10에 조회했을 때 위 이름은 모두 비어 있었습니다. 조회한 범위와 확인하지 않은 것(상표)은 [[dr-0005-product-name|DR-0005]]에 있습니다.
@@ -38,7 +42,7 @@ updated: 2026-10-10
 
 2026-10-12에 부채 목록에서 옮긴 것입니다.
 
-- `AriadneNSD`의 상표 등록 여부는 확인하지 않음. 도메인은 등록 기록 조회만 함 (보고: 2026-10-10) → [[dr-0005-product-name|DR-0005]]
+- `AriadneNSD`의 상표 등록 여부는 확인하지 않음. 공개 출시 전에 KIPRIS(한국) · USPTO(미국) · EUIPO(유럽)에서 무료로 검색해 볼 것(2026-10-25에 추천, backlog). 도메인은 등록 기록 조회만 함 (보고: 2026-10-10) → [[dr-0005-product-name|DR-0005]]
 
 ## 더 읽을거리
 
