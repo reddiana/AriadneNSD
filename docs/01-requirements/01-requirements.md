@@ -16,7 +16,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항�
 그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[ux-decisions]], [[02-interaction-rules]])에, **왜** 그렇게 정했는지는 [[atelier/README#아키텍처 결정 기록 (ADR)|ADR]]에, **어떻게** 만드는지는 [[03-architecture]]와 상세 설계 문서에 있습니다.
 
 > [!info] 읽는 법
-> - 우선순위 태그: #P0 = MVP 필수 · #P1 = 1차 확장 · #P2 = 나중에 · #P3 = 출시 뒤
+> - 우선순위 태그: #P0 = 필수 · #P1 = 1차 확장 · #P2 = 나중에 · #P3 = 출시 뒤. 태그는 **기능의 우선순위**입니다. `P0`은 "그 배포 대상을 낼 때 꼭 있어야 하는 것"이고, 배포 대상을 내는 순서(웹 → Obsidian → 데스크톱)는 [[dr-0002-development-order|DR-0002]]가 정합니다. MVP는 웹의 `P0`입니다([[#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]).
 > - 태그를 클릭하면 해당 우선순위 항목만 모아 볼 수 있습니다.
 > - 각 요구사항은 체크박스입니다. 구현이 끝나면 체크해서 진행 상황을 관리하세요.
 > - 요구사항 끝의 "→ 상세"는 그 기능의 세부 규칙이 적힌 설계 문서로 갑니다. 2026-10-12까지는 세부 규칙도 이 문서에 있었습니다.
@@ -161,8 +161,8 @@ DIN 66261 / 원 논문 기준입니다.
 | 선택 (If-Then-Else) | 조건에 따라 참 갈래나 거짓 갈래를 실행 | #P0 |
 | 전위 판정 반복 (While) | 조건을 먼저 검사하고 본문을 반복 | #P0 |
 | 후위 판정 반복 (Do-While / Repeat-Until) | 본문을 먼저 실행하고 조건을 검사 | #P0 |
-| 다중 선택 (Switch/Case) | 여러 갈래 + default (아래 [[#^blk-case]]) | #P1 |
-| 횟수 반복 (For) | While의 변형 | #P1 |
+| 다중 선택 (Switch/Case) | 여러 갈래 + default (아래 [[#^blk-case]]) | #P0 |
+| 횟수 반복 (For) | While의 변형 | #P0 |
 | 호출 (Call) | Method를 부른다. 같은 문서의 Method, 이름만 적은 함수, 다른 문서의 Method (아래 [[#^blk-call]]) | #P1 |
 | 탈출 (Exit / Break / Return) | 반복·함수 탈출 | #P2 |
 | 병렬 처리 (Parallel) | 동시 실행 갈래 | #P2 |
@@ -171,7 +171,7 @@ DIN 66261 / 원 논문 기준입니다.
 블록과 머리를 어떤 모양으로 그리는지는 설계에 있다 → [[02-interaction-rules#블록의 모양]]
 
 - [ ] #P1 Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 머리|상세]] ^blk-event
-- [ ] #P1 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록|상세]] ^blk-case
+- [ ] #P0 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록|상세]] ^blk-case
 - [ ] #P1 Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method|ADR-0021]]) → [[02-interaction-rules#Method 머리|상세]] ^blk-method
 - [ ] #P1 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call
 - [ ] #P1 이름을 적는 호출 블록: 부를 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 부른다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록|상세]] ^blk-call-named
@@ -184,12 +184,12 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P0 키보드만으로 편집 가능: 방향키로 이동, 단축키로 블록 삽입 → [[02-interaction-rules#키보드로 이동하고 넣기|상세]] ^edit-keyboard
 - [ ] #P1 두 키를 이어 누르는 명령은 첫 키를 누르면 이어 누를 키와 그 명령을 안내한다 → [[03-keymap|상세]] ^edit-key-hint
 - [ ] #P0 여러 블록 선택 (아래 [[#여러 블록 선택 규칙]]) ^edit-multiselect
-- [ ] #P1 선택한 블록들을 제어 블록으로 감싸기 (아래 [[#감싸기 · 풀기]]) ^edit-wrap
-- [ ] #P1 제어 블록 풀기: 제어 블록만 지우고 안의 블록은 그 자리에 남기기 ^edit-unwrap
+- [ ] #P0 선택한 블록들을 제어 블록으로 감싸기 (아래 [[#감싸기 · 풀기]]) ^edit-wrap
+- [ ] #P0 제어 블록 풀기: 제어 블록만 지우고 안의 블록은 그 자리에 남기기 ^edit-unwrap
 - [ ] #P1 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[02-interaction-rules#감싸기 · 풀기|상세]] ^edit-call-inline
 - [ ] #P1 드래그 앤 드롭으로 블록 하나 또는 선택한 블록들을 통째로 이동 (놓을 수 있는 자리 미리 강조) ^edit-dnd
-- [ ] #P1 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[02-interaction-rules#붙여넣기|상세]] ^edit-clipboard
-- [ ] #P1 If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[02-interaction-rules#갈래 순서 바꾸기|상세]] ^edit-branch
+- [ ] #P0 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[02-interaction-rules#붙여넣기|상세]] ^edit-clipboard
+- [ ] #P0 If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[02-interaction-rules#갈래 순서 바꾸기|상세]] ^edit-branch
 - [ ] #P1 If 블록의 갈래 이름("참" · "거짓")을 고친다 → [[02-interaction-rules#If 블록|상세]] ^edit-if-label
 - [ ] #P1 제어 블록 접기/펼치기: 제어 블록의 안쪽을 접는다. If·Case는 갈래별로 (아래 [[#접기 · 펼치기]]) ^edit-fold
 - [ ] #P1 접기 영역: 선택 영역을 접기 영역으로 만들어 접고 펼친다 (아래 [[#접기 · 펼치기]]) ^edit-fold-range
@@ -291,15 +291,18 @@ DIN 66261 / 원 논문 기준입니다.
 
 ## 5. MVP 범위
 
-#P0 항목만 모은 범위입니다.
+웹의 `P0` 항목입니다. 제품의 뼈대(모델 → 레이아웃 → 저장되는 SVG → 편집기 → 웹)를 처음부터 끝까지 세우고, 공개해 반응을 봅니다. 함수 하나를 옮겨 그릴 수 있는 만큼을 넣습니다 → [[dr-0015-mvp-scope|DR-0015]]
 
-- 블록 4종: 처리, If, While, Do-While
+- 블록 6종: 처리, If, Case, While, Do-While, For
 - 키보드/마우스 편집 + Undo/Redo
 - 여러 블록 선택 (연속 범위, 자동 확장)
+- 감싸기 · 풀기, 복사 · 잘라내기 · 붙여넣기, 갈래 바꾸기 · 더하기 · 지우기
 - 자동 레이아웃
 - 모델 내장 SVG 저장/불러오기
 - PNG 내보내기
 - 배포 대상: 웹 ([[dr-0002-development-order|DR-0002]]에서 정한 첫 번째 대상)
+
+MVP 다음 판들로 미룬 것: Event · Method 머리, 호출 블록, 한 문서에 여러 다이어그램, Method로 빼기, 접기, 블록 글자의 종류와 구문 강조, 테마 고르기.
 
 ## 6. 미결정 사항
 
