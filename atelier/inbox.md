@@ -14,9 +14,11 @@ title: Inbox
 > 프로토타입과 답을 기다리는 페이지의 주소는 [[status#바로 가기]]에, 시안과 스파이크 전체의 목록은 [[sketchbook]]에 있습니다.
 
 # 1. 일하는 방식
-
+- github에 public으로 공개했으므로 컨트리뷰터가 생길 수도 있습니다. 어떤 것을 준비해야하나요? 요구사항이나 아키텍처는 준비가 됐고 코딩 스타일을 정의하면 좋겠습니다. 또 뭐가 있을까요?
 # 2. 배포 대상
-
+- 웹버전의 모델은 [SequenceDiagram.org - UML Sequence Diagram Online Tool](https://sequencediagram.org/) 입니다.
+- [SequenceDiagram.org - Instructions and Examples](https://sequencediagram.org/instructions.html) 처럼 한페이지짜리 사용자 가이드가 있으면 좋겠어요.
+- 웹버전의 화면 설계는 언제 할까요?
 # 3. 기능
 ## 프로토타입
 
