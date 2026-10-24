@@ -79,7 +79,18 @@ const config: QuartzConfig = {
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
-      Plugin.FolderPage(),
+      // 폴더 페이지의 목록: 폴더 먼저, 그다음 파일 이름(번호)순. 세션 기록만 최근 것이 위
+      // (기본은 고친 날짜가 최근인 것부터. 메인테이너가 inbox에서 요청, 2026-10-25)
+      Plugin.FolderPage({
+        sort: (a, b) => {
+          const slug = (f: typeof a) => f.slug ?? ""
+          const isFolder = (f: typeof a) => slug(f).endsWith("/index")
+          const name = (f: typeof a) => slug(f).replace(/\/index$/, "").split("/").pop() ?? ""
+          if (isFolder(a) !== isFolder(b)) return isFolder(a) ? -1 : 1
+          const order = name(a).localeCompare(name(b), undefined, { numeric: true, sensitivity: "base" })
+          return !isFolder(a) && slug(a).startsWith("atelier/sessions/") ? -order : order
+        },
+      }),
       Plugin.TagPage(),
       Plugin.ContentIndex({
         enableSiteMap: true,
