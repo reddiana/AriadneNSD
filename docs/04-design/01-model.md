@@ -1,5 +1,5 @@
 ---
-title: "설계: 모델"
+title: 모델
 tags:
   - ariadne-nsd
   - design
@@ -7,7 +7,7 @@ status: 작성 중
 updated: 2026-10-22
 ---
 
-# 설계: 모델 (`packages/core`)
+# 모델 (`packages/core`)
 
 문서 모델의 데이터 구조, 불변식(invariant), 편집 명령을 정의합니다. → [[0004-structure-editor|ADR-0004]]
 

@@ -10,7 +10,7 @@ status: 초안
 updated: 2026-10-17
 ---
 
-# AriadneNSD 요구사항 명세
+# 요구사항
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항입니다. 이 문서는 **무엇을** 만드는지만 다룹니다. 요구사항 하나는 한두 줄입니다.
 그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[ux-decisions]], [[02-interaction-rules]])에, **왜** 그렇게 정했는지는 [[atelier/README#아키텍처 결정 기록 (ADR)|ADR]]에, **어떻게** 만드는지는 [[03-architecture]]와 상세 설계 문서에 있습니다.

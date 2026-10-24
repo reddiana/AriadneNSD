@@ -1,5 +1,5 @@
 ---
-title: "설계: 편집기"
+title: 편집기
 tags:
   - ariadne-nsd
   - design
@@ -7,7 +7,7 @@ status: 작성 중
 updated: 2026-10-22
 ---
 
-# 설계: 편집기 (`packages/editor`)
+# 편집기 (`packages/editor`)
 
 편집 화면과 사용자 입력 처리를 정의합니다. 주변 UI 컴포넌트(도구 모음, 메뉴, 설정 창, 대화창)는 React로 구현합니다. 다이어그램 영역, 선택 오버레이, 키 입력 처리, 텍스트 입력 요소는 React 밖의 TypeScript입니다 → [[0010-ui-framework|ADR-0010]]
 

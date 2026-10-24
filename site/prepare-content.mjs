@@ -4,6 +4,9 @@
 // - docs/와 atelier/를 그대로 복사한다 (→ DR-0013).
 // - 펴내지 않는 곳(journal/, tech-notes/, 저장소 맨 위의 파일)으로 가는 위키링크는
 //   GitHub의 파일 주소로 바꾼다. 그대로 두면 사이트에서 끊긴 링크가 된다.
+// - 폴더의 README.md는 그 폴더의 첫 페이지(index.md)로 옮긴다. 그래야 사이트의 목록에서
+//   다른 문서 사이에 섞이지 않고 폴더 자리에 선다. 그리로 가는 위키링크도 함께 바꾼다.
+// - 본문이 `# 제목`으로 시작하지 않는 문서에는 제목을 넣는다. 사이트는 본문의 제목만 보여 준다(quartz.layout.ts).
 // - 사이트의 첫 화면(index.md)은 저장소 맨 위의 README.md로 만든다(README가 원본). GitHub에서만 맞는 곳
 //   (<!-- site:skip --> … <!-- /site:skip -->)은 빼고, 저장소 경로 링크와 그림 경로를 사이트에 맞게 바꾼다.
 import fs from "node:fs"
@@ -58,7 +61,12 @@ function rewriteLine(line) {
         if (!hits) return whole
         // 이름이 겹치면 Obsidian처럼 저장소 맨 위에 가까운 파일을 고른다 (예: [[README]] → README.md)
         const rel = [...hits].sort((x, y) => x.split("/").length - y.split("/").length)[0]
-        if (isPublished(rel)) return whole
+        if (isPublished(rel)) {
+          // 폴더의 README는 사이트에서 그 폴더의 첫 페이지(index)다
+          if (!rel.endsWith("/README.md")) return whole
+          const dir = rel.replace(/\/README\.md$/, "")
+          return `${bang}[[${dir}/index${m[2] ?? ""}${m[3] !== undefined ? (inner.includes("\\|") ? "\\|" : "|") + m[3] : ""}]]`
+        }
         const label = (m[3] ?? target).trim()
         rewritten++
         const url = GITHUB + rel.split("/").map(encodeURIComponent).join("/")
@@ -93,9 +101,21 @@ function copyDir(src, dst) {
     const s = path.join(src, e.name)
     const d = path.join(dst, e.name)
     if (e.isDirectory()) copyDir(s, d)
-    else if (e.name.endsWith(".md")) fs.writeFileSync(d, rewrite(fs.readFileSync(s, "utf8")))
+    else if (e.name === "README.md") fs.writeFileSync(path.join(dst, "index.md"), addHeading(rewrite(fs.readFileSync(s, "utf8")), e.name))
+    else if (e.name.endsWith(".md")) fs.writeFileSync(d, addHeading(rewrite(fs.readFileSync(s, "utf8")), e.name))
     else fs.copyFileSync(s, d)
   }
+}
+
+// 본문의 첫 줄(속성, 빈 줄, 주석 다음)이 `# 제목`이 아니면 속성의 title이나 파일 이름으로 제목을 넣는다
+function addHeading(text, fileName) {
+  const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)
+  const head = fm ? fm[0] : ""
+  const body = text.slice(head.length)
+  const first = body.split("\n").find((l) => l.trim() && !/^\s*(%%|<!--)/.test(l))
+  if (first && /^# /.test(first)) return text
+  const t = fm?.[1].match(/^title:\s*"?(.*?)"?\s*$/m)?.[1] || fileName.replace(/\.md$/, "")
+  return `${head}\n# ${t}\n${body}`
 }
 
 fs.rmSync(content, { recursive: true, force: true })
@@ -119,7 +139,10 @@ function buildHome() {
     if (/^(https?:|mailto:|#)/.test(href)) return whole
     const [p, hash = ""] = href.split("#")
     const clean = p.replace(/^\.\//, "")
-    if (isPublished(clean) && clean.endsWith(".md")) return `](./${clean.replace(/\.md$/, "")}${hash ? "#" + hash : ""})`
+    if (isPublished(clean) && clean.endsWith(".md")) {
+      const page = clean.replace(/\/README\.md$/, "/").replace(/\.md$/, "")
+      return `](./${page}${hash ? "#" + hash : ""})`
+    }
     const kind = clean.endsWith("/") ? "tree" : "blob"
     return `](${GITHUB.replace("/blob/", `/${kind}/`)}${clean}${hash ? "#" + hash : ""})`
   })

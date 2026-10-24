@@ -1,5 +1,5 @@
 ---
-title: "설계: 레이아웃 · 렌더링"
+title: 레이아웃 · 렌더링
 tags:
   - ariadne-nsd
   - design
@@ -7,7 +7,7 @@ status: 작성 전
 updated: 2026-10-22
 ---
 
-# 설계: 레이아웃 · 렌더링 (`packages/core`)
+# 레이아웃 · 렌더링 (`packages/core`)
 
 문서 모델에서 각 블록의 위치와 크기(bounding box)를 계산하고, 그 결과를 SVG로 렌더링하는 방법을 정의합니다. 모습의 값(색, 선 굵기, 글자 크기, 여백과 치수)은 디자인 토큰으로 [[04-visual-design]]에만 있고, 이 문서는 그 토큰을 쓰는 방법을 정합니다.
 

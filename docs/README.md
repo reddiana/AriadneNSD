@@ -1,5 +1,5 @@
 ---
-title: AriadneNSD 문서
+title: 문서
 aliases:
   - AriadneNSD
 tags:
@@ -7,7 +7,7 @@ tags:
 updated: 2026-10-12
 ---
 
-# AriadneNSD 문서
+# 문서
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램입니다. 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 먼저 만들고, 그 위에 Google Drive · Confluence · IDE 플러그인 · Claude skill이 붙습니다 → [[01-requirements#2. 배포 대상]].
 
