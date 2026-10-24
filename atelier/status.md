@@ -22,7 +22,7 @@ updated: 2026-10-25
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q22, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[outbox#확인해 주세요]]) | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
+claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
 
@@ -78,7 +78,6 @@ claude.ai의 페이지는 메인테이너만 열 수 있습니다(비공개).
 - [ ] 메인테이너가 프로토타입 60번째 판을 써 보기. 시각 디자인의 느낌(파랑 3px 접기 영역과 주황 3px 고른 표시는 "마음에 듭니다"를 받음, 갈래 이름의 회색과 점선 1px, 테두리만 있는 고른 표시) → [[outbox#확인해 주세요]]. 그 밖에 실제 마우스 휠과 터치패드로 블록을 옮겨 다니는 느낌, `Esc` 두 번, 리뷰 1판 · 2판의 느낌, 블록 하나짜리 접기 영역이 강조 대용으로 쓸 만한지(지금은 만들면 바로 접힘), 한글을 적다가 `Esc`를 누르면 한 번에 받아들이는지
 - [ ] 새 문서 [[02-use-cases]] · [[03-quality-attribute-scenarios]]를 Obsidian에서 읽고, 미결정(유즈케이스의 빈 곳 아홉, QAS의 제안값)을 하나씩 정하기 → [[backlog]]
 - [ ] 새 UX 문서 다섯을 Obsidian에서 열어 보고 어색한 곳을 알려 주기 (메인테이너). 시각 디자인 명세의 색 칩이 Obsidian에서 보이는지도
-- [ ] 시안 M17 · M18 · M28 · M29를 방문자에게 공개로 바꾸기 (메인테이너, claude.ai의 Share 메뉴. M19 · M30은 공개로 되어 있음)
 
 ## 열린 질문이 있는 곳
 
