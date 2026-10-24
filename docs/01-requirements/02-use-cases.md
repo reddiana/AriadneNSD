@@ -1,5 +1,5 @@
 ---
-title: AriadneNSD 유즈케이스
+title: 유즈케이스
 aliases:
   - 유즈케이스
 tags:

@@ -1,5 +1,5 @@
 ---
-title: 보낼 편지함 (outbox)
+title: Outbox
 tags:
   - ariadne-nsd
   - plan

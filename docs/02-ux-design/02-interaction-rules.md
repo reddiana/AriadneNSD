@@ -1,5 +1,5 @@
 ---
-title: "UX 설계: 조작 규칙"
+title: 조작 규칙
 aliases:
   - 조작 규칙
 tags:

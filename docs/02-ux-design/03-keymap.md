@@ -1,5 +1,5 @@
 ---
-title: "UX 설계: 단축키"
+title: 단축키
 aliases:
   - 단축키
   - keymap

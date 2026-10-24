@@ -1,5 +1,5 @@
 ---
-title: "UX 설계: 시각 디자인"
+title: 시각 디자인
 aliases:
   - 시각 디자인
 tags:

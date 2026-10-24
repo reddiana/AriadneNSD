@@ -1,5 +1,5 @@
 ---
-title: AriadneNSD 품질 속성 시나리오
+title: 품질 속성 시나리오
 aliases:
   - QAS
   - 품질 속성 시나리오

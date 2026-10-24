@@ -1,5 +1,5 @@
 ---
-title: AriadneNSD 요구사항 명세
+title: 요구사항
 aliases:
   - AriadneNSD 요구사항
   - 요구사항

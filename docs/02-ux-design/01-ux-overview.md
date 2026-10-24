@@ -1,5 +1,5 @@
 ---
-title: "UX 설계: 개요"
+title: UX 개요
 aliases:
   - UX 설계
   - UX 개요

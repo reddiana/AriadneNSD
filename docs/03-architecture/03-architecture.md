@@ -1,5 +1,5 @@
 ---
-title: AriadneNSD 아키텍처 개요
+title: 아키텍처 개요
 aliases:
   - 아키텍처
 tags:
