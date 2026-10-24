@@ -11,6 +11,7 @@ superseded-by:
 # DR-0013: 설계 문서는 GitHub Pages 한 사이트에 Quartz로 펴낸다 (docs/ + atelier/)
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: 사이트를 다듬었다(메인테이너가 inbox와 세션에서 요청). 문서 이름의 말머리를 빼고 본문 제목만 보이게 함, 왼쪽 목록과 폴더 페이지를 파일 이름(번호)순으로, 폴더의 README를 폴더 첫 페이지로, 그래프에서 태그를 뺌, 탭 아이콘을 로고의 작은 판으로(`site/icon.png`) → [[github-pages-site]], [[2026-10-25-01-site-titles-mvp]]
 > - 2026-10-18: 사이트 첫 화면을 따로 쓴 `site/index.md` 대신 저장소의 `README.md`로 빌드한다. 소개 글을 한 곳에만 두려고(메인테이너: "첫 화면을 최상단 README를 기반으로 만들지 않은 이유가 있을 것 같네요." → 고르는 창에서 "README를 원본으로(추천)"). GitHub에서만 맞는 안내는 `<!-- site:skip -->`로 감싸 사이트에서 뺀다. 첫 화면에는 README와 같은 로고가 들어간다 → [[2026-10-18-02-pages-visual-design]]
 > - 2026-10-22: 빌드 전에 받은 Quartz의 소스를 고치는 단계(`site/patch-quartz.mjs`)를 더했다. Quartz v4.5.2가 Mermaid 원문을 HTML로 다시 넣어 `<<interface>>` 같은 스테레오타입이 든 클래스 그림이 사이트에서만 깨졌기 때문(메인테이너: "클래스다이어그램 머메이드가 렌더링되지 않았습니다.") → [[2026-10-22-02-site-mermaid]]
 

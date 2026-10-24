@@ -54,6 +54,7 @@ jobs:
           node site/patch-quartz.mjs .quartz
           cp site/quartz.config.ts site/quartz.layout.ts .quartz/
           cp site/custom.scss .quartz/quartz/styles/custom.scss
+          cp site/icon.png .quartz/quartz/static/icon.png
           node site/prepare-content.mjs . .quartz/content
 
       - name: 설계 문서 빌드
