@@ -29,7 +29,7 @@ date: 2026-10-10
 | 1-6 테스트를 먼저 설계 | [[status]]의 단계 계획에 반영 |
 | 4-1 편집 후 노트 갱신 | 요구사항 [[01-requirements#^obs-refresh]] (#P0) 추가 |
 | 4-2 drawio-obsidian 참고 보충 | [[01-requirements#참고 자료]] 설명 보충 |
-| 3-4 다른 도구로 고친 그림 알림 | 요구사항 [[01-requirements#^fmt-external-edit]] 추가. 우선순위 #P1은 Claude가 임시로 정함 |
+| 3-4 다른 도구로 고친 그림 알림 | 요구사항 [[01-requirements#^fmt-external-edit]] 추가. 우선순위 `P1`은 Claude가 임시로 정함 |
 | 질문: Drive 확장자 | [[drive-app-basics#확장자와 미리보기 (`.ns` vs `.ns.svg`)]]. 답: 대체로 사라짐 → `.ns.svg` 권장 |
 | 질문: 요구사항 커밋 누락 | 아래 [[#발견한 위험]] 참고. 커밋은 됐었고, 작업 사본에서 줄이 사라져 있었음. 되살림 |
 | 질문: 내용 변경 없는 modified | `.gitattributes`로 줄 끝을 LF로 고정. [[git-line-endings]] |
@@ -113,7 +113,7 @@ date: 2026-10-10
 | 문서 링크는 위키링크 그대로 둠. 대신 `docs/README.md` 맨 위에 "Obsidian으로 보라"는 안내를 넣음 (GitHub에서도 보이는 `> [!NOTE]` 형식) | [[docs/README\|문서 색인]] |
 | 저장소 맨 위 `README.md`를 만듦: 소개, 설계 단계 안내, Obsidian으로 보는 법, 폴더 안내. 중복이라 `docs/README.md`의 안내는 뺌 | `README.md`, CLAUDE.md "저장소 구성" |
 | 처리를 마친 inbox 항목 삭제. 남은 항목: 수익 창출 버전, 웹 버전 참고 모델, Scratch의 장점 도입, 강조하기 | [[#inbox 원문 (지운 항목)]] |
-| 유료 버전: Confluence(Forge)를 요구사항 #P2로. 다른 후보는 나중에 검토 | [[01-requirements#2.5 Confluence (유료, 나중에)]], [[status]] |
+| 유료 버전: Confluence(Forge)를 요구사항 `P2`로. 다른 후보는 나중에 검토 | [[01-requirements#2.5 Confluence (유료, 나중에)]], [[status]] |
 | 웹 참고 모델: 공유 URL, 보기 모드, 도움말 #P1 | [[01-requirements#^web-share-url]], [[01-requirements#^web-view-mode]], [[01-requirements#^help]] |
 | Scratch: 이벤트 머리 #P1, 여러 처리기·블록 묶음 #P2. 지난 세션 제안의 세부가 기록되지 않아 새로 제안함 | [[01-requirements#^blk-event]], [[01-requirements#^edit-snippets]] |
 | 강조하기: 영역 강조 모양 A(EasyCODE식)/B(배경)/C(테두리)를 그려 비교하기로 함 | [[inbox]], [비교 시안](https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7) |

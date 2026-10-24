@@ -78,6 +78,6 @@ updated: 2026-10-22
 
 - [ ] 웹 베타를 출시할 무렵: `.com` 도메인 하나를 등록한다 (메인테이너. 비어 있는지 그때 다시 확인) → [[names-and-registries]]
 - [ ] 웹 베타를 출시할 때: 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^all-donate]]
-- [ ] 나중에 검토: 유료 버전. Confluence는 요구사항에 #P2로 올림([[01-requirements#2.5 Confluence (유료, 나중에)]]). 다른 후보: Jira(같은 Forge로 묶음), Google Workspace Marketplace
+- [ ] 나중에 검토: 유료 버전. Confluence는 요구사항에 `P2`로 올림([[01-requirements#2.5 Confluence (유료, 나중에)]]). 다른 후보: Jira(같은 Forge로 묶음), Google Workspace Marketplace
 - [ ] 웹 광고의 정확한 자리: 광고 네트워크를 고를 때 정책 확인 (미룸: 2026-10-10) → [[01-requirements#^web-ads]]
 - [ ] 비공개 문제 알리기 채널: 이메일 / 폼 (웹 베타 무렵 결정) → [[01-requirements#^rep-issue]]

@@ -23,7 +23,7 @@ date: 2026-10-10
 - 세션 기록 파일 이름에 그날의 순번을 넣는다: `YYYY-MM-DD-NN-주제.md`. 기존 네 파일 이름을 바꾸고 링크를 고쳤다. 규칙은 CLAUDE.md "세션 끝날 때 할 일"에 반영했다.
 - Sequence Diagram에 activation bar를 넣는다. 기존 두 그림(`drive-app-basics`, `02-architecture`)에 넣고, CLAUDE.md 문서 작성 규칙에 추가했다.
 - inbox의 "5. 질문"은 Claude에게 하는 모든 질문이다. inbox 맨 위 주석을 고쳤다.
-- 요구사항 우선순위에 #P3(언젠가, 하면 좋음)을 새로 둔다. inbox의 "#후순위"는 #P3로 적는다.
+- 요구사항 우선순위에 #P3(언젠가, 하면 좋음)을 새로 둔다. inbox의 "#후순위"는 `P3`로 적는다.
 - 웹 광고 #P3: 편집 화면을 가리지 않고, 저장·내보내기·공유 때만 보인다. 정확한 자리는 광고 네트워크 정책을 확인해 정한다 → [[01-requirements#^web-ads]]
 - Claude skill #P3: `.ns.svg` 파일과 공유 URL을 함께 내놓는다 → [[01-requirements#^skill-claude]]
 - Buy Me a Coffee #P3: 모든 무료 배포 대상에 둔다 → [[01-requirements#^all-donate]]. README 버튼은 웹 베타를 출시할 때 단다 (status에 올림)

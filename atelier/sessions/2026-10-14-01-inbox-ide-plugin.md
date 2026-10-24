@@ -80,7 +80,7 @@ date: 2026-10-14
 | README의 시안 목록 | 대문에는 프로토타입 링크와 목록 링크만. "무엇을 다루나" 설명은 목록의 칸으로 옮김 | [[sketchbook]] |
 | 쓰이지 않는 파일 | 여덟을 지움: 떨어진 문자 로고 시안 SVG 다섯, 흉상 스크립트, `.gitkeep`, 실수로 올라간 Python 캐시. `__pycache__/`를 `.gitignore`에 | 커밋 `bc17ab4` |
 | 배포 대상 갱신 | 2장의 머리와 표를 일곱 대상으로 다시 씀 | [[01-requirements#2. 배포 대상]] |
-| AI 대화창 | #P3으로 넣음. 사용자가 자기 API 키를 넣고 브라우저에 보관 | [[01-requirements#^web-ai-chat]] |
+| AI 대화창 | `P3`으로 넣음. 사용자가 자기 API 키를 넣고 브라우저에 보관 | [[01-requirements#^web-ai-chat]] |
 | IDE 플러그인 | 2.7로 넣음. 대상 #P2, 양방향 실시간 반영 #P3, 코드가 원본, VSCode 먼저 | [[01-requirements#2.7 IDE 플러그인 (나중에)]], ADR-0002 · ADR-0011의 이후 변경 |
 
 ## 처리한 부채
