@@ -1,0 +1,145 @@
+<title>M30 파일 형식의 이름</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M28과 같은 틀 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --hl: #fff1c2;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 82ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+pre { margin: 0; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 12px; line-height: 1.55; color: var(--fg); }
+pre mark { background: var(--hl); color: inherit; border-radius: 2px; padding: 0 1px; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M30 · 파일 형식의 이름</h1>
+    <p class="lede">MVP 전에 정할 것 가운데 "파일에 남아 나중에 바꾸기 어려운 것"의 마지막입니다. 저장되는 <code>.ns.svg</code> 파일 안에서 우리 모델이 든 요소는 <b>네임스페이스 URI</b>라는 이름으로 다른 프로그램의 데이터와 갈립니다. 이 이름은 모든 파일에 영원히 남습니다. 각 물음의 <b>1번이 Claude의 추천</b>입니다. 노랗게 칠한 곳이 안마다 달라지는 부분입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">N1</span>
+    <h2>N1. 네임스페이스 URI를 무엇으로 할까</h2>
+    <p class="q">URI는 <b>주소처럼 생긴 이름</b>입니다. 그 주소가 실제로 열릴 필요는 없고, 다른 누구의 이름과 겹치지만 않으면 됩니다. 그래서 보통 자기가 가진 주소를 바탕으로 짓습니다(Inkscape는 <code>http://www.inkscape.org/namespaces/inkscape</code>). 판 번호는 넣지 않습니다. 판은 <code>version</code> 속성이 따로 나르고, 판마다 이름을 바꾸면 옛 파일을 못 알아봅니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">N1 · 1번</span><h3>펴낸 사이트의 주소</h3><span class="badge">Claude의 추천</span></header>
+<pre>&lt;metadata&gt;
+  &lt;ans:document version="1"
+    xmlns:ans="<mark>https://reddiana.github.io/AriadneNSD/ns</mark>"&gt;
+    &lt;![CDATA[{ "format": "ariadne-nsd", … }]]&gt;
+  &lt;/ans:document&gt;
+&lt;/metadata&gt;</pre>
+        <ul>
+          <li class="good">이미 가진 주소입니다(GitHub Pages, DR-0013). 돈이 들지 않습니다.</li>
+          <li class="good">그 주소에 "이 파일 형식은 무엇인가"를 알리는 짧은 페이지를 두어, 파일을 연 사람이 따라와 명세를 읽게 할 수 있습니다.</li>
+          <li><span class="bad">계정 이름 <code>reddiana</code>가 들어갑니다. 나중에 저장소를 옮기거나 도메인을 사도 이 이름은 그대로 둡니다(이름일 뿐이라 동작에는 문제가 없습니다).</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 2번</span><h3>도메인을 사서</h3></header>
+<pre>&lt;ans:document version="1"
+  xmlns:ans="<mark>https://ariadnensd.com/ns</mark>"&gt;</pre>
+        <ul>
+          <li class="good">가장 깔끔하고, 계정 이름과 상관없습니다.</li>
+          <li><span class="bad">해마다 돈이 듭니다(<code>.com</code> 10~11달러). 갱신하지 않으면 남이 그 주소를 가져가, 파일 속 이름이 남의 사이트를 가리키게 됩니다.</span></li>
+          <li>도메인은 아직 사지 않았습니다(등록 기록만 조회함, 2026-10-10).</li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 3번</span><h3>저장소 주소 그대로</h3></header>
+<pre>&lt;ans:document version="1"
+  xmlns:ans="<mark>https://github.com/reddiana/AriadneNSD</mark>"&gt;</pre>
+        <ul>
+          <li>지금 가진 주소입니다.</li>
+          <li><span class="bad">그 주소는 저장소의 첫 화면이지 형식을 알리는 곳이 아닙니다. 1번과 같은 계정 이름 문제도 있습니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 4번</span><h3>주소가 아닌 이름 (URN)</h3></header>
+<pre>&lt;ans:document version="1"
+  xmlns:ans="<mark>urn:ariadne-nsd:model</mark>"&gt;</pre>
+        <ul>
+          <li class="good">어느 주소에도 매이지 않습니다.</li>
+          <li><span class="bad">URN은 IANA에 등록한 이름공간만 정식입니다. <code>ariadne-nsd</code>는 등록되지 않아 규칙에 맞지 않습니다. 따라올 페이지도 둘 수 없습니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">N2</span>
+    <h2>N2. 프로토타입이 저장한 파일을 열까</h2>
+    <p class="q">프로토타입은 버리는 코드이고, 그 파일(<code>version: 0</code>)은 이 형식의 v1이 아닙니다. 모델이 네임스페이스 없이 <code>&lt;metadata id="ariadne-nsd-model"&gt;</code>에 바로 들어 있고, 접기 영역 · 갈래 이름 · 머리의 짜임도 다릅니다(파일 형식 명세 7장).</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">N2 · 1번</span><h3>열지 않는다</h3><span class="badge">Claude의 추천</span></header>
+<pre>&lt;metadata <mark>id="ariadne-nsd-model"</mark>&gt;{ "version": <mark>0</mark>, … }&lt;/metadata&gt;
+
+→ "AriadneNSD 형식이 아닙니다. 편집할 수 없습니다."
+  (그림은 그대로 보이고, 파일은 건드리지 않음)</pre>
+        <ul>
+          <li class="good">v0을 읽는 코드와 시험을 제품에 영원히 지고 가지 않습니다.</li>
+          <li>프로토타입 파일은 메인테이너가 리뷰하며 만든 것뿐입니다. 그림으로는 어디서나 그대로 보입니다.</li>
+          <li><span class="bad">프로토타입으로 그려 둔 것을 제품에서 이어 고치려면 다시 그려야 합니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">N2 · 2번</span><h3>열어서 v1로 바꾼다</h3></header>
+<pre>v0 → v1 마이그레이션 함수
+  metadata#ariadne-nsd-model → ans:document
+  range 노드 → 줄에 붙은 마커
+  yes/no/c0 → 갈래 id …</pre>
+        <ul>
+          <li class="good">프로토타입으로 그린 것을 그대로 이어 고칩니다.</li>
+          <li><span class="bad">프로토타입은 아직 바뀌는 중이라, 판마다 달라진 v0을 모두 맞춰야 합니다. 이 코드와 시험이 제품에 남습니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">N2 · 3번</span><h3>따로 바꾸는 스크립트만</h3></header>
+<pre>node convert-v0.mjs 옛그림.ns.svg
+→ 옛그림.v1.ns.svg</pre>
+        <ul>
+          <li>제품은 열지 않고, 필요한 사람만 저장소의 스크립트로 한 번 바꿉니다.</li>
+          <li><span class="bad">스크립트도 프로토타입이 바뀔 때마다 맞춰야 합니다. 쓰는 사람이 사실상 메인테이너 한 사람입니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>N1, N2를 하나씩, <b>번호</b> 또는 고칠 점.</li>
+      <li>모델 요소의 이름(<code>ans:document</code>)과 JSON의 필드 이름은 모델 설계를 굳히며 Claude가 정하고 확인받습니다.</li>
+      <li>정하면 파일 형식 명세(2장의 예시, 6장 미결정, 7장)와 결정 기록에 옮깁니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
