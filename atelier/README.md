@@ -94,6 +94,7 @@ updated: 2026-10-17
 | [[0032-token-highlighting\|0032]] | 구문 강조는 블록 글자의 종류마다 토크나이저 하나로 한다 | 승인 |
 | [[0033-command-list-for-shells\|0033]] | editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다 | 승인 |
 | [[0034-default-block-font\|0034]] | 기본 블록 글꼴은 D2Coding 보통 굵기 하나, 한자를 뺀 나머지 문자를 싣는다 | 승인 |
+| [[0035-model-namespace-and-v0\|0035]] | 모델 네임스페이스 URI는 저장소 주소, 프로토타입의 v0 파일은 열지 않는다 | 승인 |
 
 새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0031부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 

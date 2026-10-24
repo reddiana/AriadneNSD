@@ -52,6 +52,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
   <section>
     <span class="part">N1</span>
     <h2>N1. 네임스페이스 URI를 무엇으로 할까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 3번 저장소 주소 그대로</b>(메인테이너가 고름). 접두어는 <code>ans</code>입니다. → ADR-0035</p>
     <p class="q">URI는 <b>주소처럼 생긴 이름</b>입니다. 그 주소가 실제로 열릴 필요는 없고, 다른 누구의 이름과 겹치지만 않으면 됩니다. 그래서 보통 자기가 가진 주소를 바탕으로 짓습니다(Inkscape는 <code>http://www.inkscape.org/namespaces/inkscape</code>). 판 번호는 넣지 않습니다. 판은 <code>version</code> 속성이 따로 나르고, 판마다 이름을 바꾸면 옛 파일을 못 알아봅니다.</p>
     <div class="cards">
       <article class="card pick"><header><span class="tag">N1 · 1번</span><h3>펴낸 사이트의 주소</h3><span class="badge">Claude의 추천</span></header>
@@ -98,6 +99,7 @@ code { font-family: var(--mono); font-size: 12.5px; }
   <section>
     <span class="part">N2</span>
     <h2>N2. 프로토타입이 저장한 파일을 열까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 1번 열지 않는다.</b> → ADR-0035</p>
     <p class="q">프로토타입은 버리는 코드이고, 그 파일(<code>version: 0</code>)은 이 형식의 v1이 아닙니다. 모델이 네임스페이스 없이 <code>&lt;metadata id="ariadne-nsd-model"&gt;</code>에 바로 들어 있고, 접기 영역 · 갈래 이름 · 머리의 짜임도 다릅니다(파일 형식 명세 7장).</p>
     <div class="cards">
       <article class="card pick"><header><span class="tag">N2 · 1번</span><h3>열지 않는다</h3><span class="badge">Claude의 추천</span></header>

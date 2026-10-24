@@ -62,7 +62,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="…" height="…" viewBox="…">
   <metadata>
-    <ans:document xmlns:ans="(네임스페이스 URI, 6장)" version="1"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
 { "format": "ariadne-nsd", "version": 1, … }
     ]]></ans:document>
   </metadata>
@@ -75,6 +75,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 ```
 
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^fmt-svg]]).
+- 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 판 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
 - **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^fmt-text]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1).
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^fmt-color]], [[04-visual-design#2. 층과 출력]]
@@ -175,13 +176,11 @@ sequenceDiagram
 
 ## 6. 미결정 사항
 
-- [ ] 모델 네임스페이스 URI. 저장소 주소가 정해졌으므로(2026-10-15 → [[dr-0011-repo-name|DR-0011]]) 그 주소에 기댄 URI로 정할 수 있다. 한 번 정하면 바꾸기 어렵다
 - [ ] 모델 요소 이름(`ans:document`는 안)과 필드 이름 (→ [[01-model]])
-- [ ] 프로토타입이 쓴 `version: 0` 파일을 열지 (7장)
 
 ## 7. 프로토타입과 다른 곳
 
-프로토타입(`journal/assets/2026-10-10-ns-prototype.html`)은 버리는 코드이고, 그 파일은 이 형식의 v1이 아닙니다.
+프로토타입(`journal/assets/2026-10-10-ns-prototype.html`)은 버리는 코드이고, 그 파일은 이 형식의 v1이 아닙니다. **제품은 프로토타입의 `version: 0` 파일을 열지 않습니다.** 모델 요소가 없는 파일과 같이 편집할 수 없음으로 다룹니다(1장 3) → [[0035-model-namespace-and-v0|ADR-0035]]
 
 - 모델을 `<metadata id="ariadne-nsd-model">` 안에 바로 넣는다(네임스페이스가 있는 모델 요소 없음). `version: 0`이다.
 - 머리 글자를 Method도 `event` 필드에 둔다. 갈래는 `yes` · `no` · `c0`…, 접기 영역은 블록처럼 `type: "range"`와 `children`을 가진 컨테이너 노드로 둔다(아키텍처는 "줄에 붙은 마커").

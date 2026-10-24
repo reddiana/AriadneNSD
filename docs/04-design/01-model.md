@@ -326,4 +326,3 @@ type Result =
 - [ ] 코드의 fall-through(`break` 없이 다음 갈래로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
 - [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
 - [ ] 처음에 지원할 블록 글자의 종류 목록 → [[01-requirements#6. 미결정 사항]]
-- [ ] 프로토타입이 저장한 파일(`version: 0`, 접기 영역이 블록을 품는 꼴)을 열지
