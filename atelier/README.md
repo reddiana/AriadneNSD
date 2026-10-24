@@ -176,3 +176,4 @@ updated: 2026-10-17
 - [[2026-10-18-02-pages-visual-design|2026-10-18 설계 문서 펴내기(GitHub Pages · Quartz), 첫 화면은 README로, 시각 디자인 명세 현행화]]
 - [[2026-10-22-01-engineer-language-use-cases-qas|2026-10-22 이름 바꾸기(outbox · sketchbook), SW 엔지니어의 말과 UML, 유즈케이스, 품질 속성 시나리오]]
 - [[2026-10-22-02-site-mermaid|2026-10-22 사이트의 Mermaid 그림이 깨지던 것(Quartz 패치), 사이트의 문서 이름, 인터페이스 그림 배치(M27)]]
+- [[2026-10-25-01-site-titles-mvp|2026-10-25 사이트 다듬기(문서 이름 · 목록 순서 · 파비콘 · tech-notes), MVP 범위(DR-0015) · 글꼴(ADR-0034) · 파일 형식의 이름(ADR-0035), 도메인 · npm · GitHub 조직]]
