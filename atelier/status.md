@@ -34,7 +34,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 같은 날 두 번째 세션에서 설계 문서(`docs/` + `atelier/`)를 GitHub Pages에 펴냈고(https://reddiana.github.io/AriadneNSD/, 첫 화면은 README로 빌드 → [[dr-0013-publish-docs-github-pages|DR-0013]]), 시각 디자인 명세를 60번째 판에 맞춰 현행화했습니다 → [[2026-10-18-02-pages-visual-design]]
 
-2026-10-25 세션에서는 **MVP 전에 정할 것**을 정리하고, 파일에 남아 바꾸기 어려운 것을 정했습니다: MVP 범위는 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 것([[dr-0015-mvp-scope|DR-0015]]), 기본 블록 글꼴은 D2Coding([[0034-default-block-font|ADR-0034]]), 네임스페이스 URI는 저장소 주소이고 프로토타입 파일은 열지 않음([[0035-model-namespace-and-v0|ADR-0035]]). 사이트를 다듬고(문서 이름, 목록 순서, 파비콘, `tech-notes/` 펴내기), 도메인 `ariadnensd.com`과 npm · GitHub 조직을 잡았습니다 → [[2026-10-25-01-site-titles-mvp]]
+2026-10-25 세션에서는 **MVP 전에 정할 것**을 정리하고, 파일에 남아 바꾸기 어려운 것을 정했습니다: MVP 범위는 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 것([[dr-0015-mvp-scope|DR-0015]]), 기본 블록 글꼴은 D2Coding([[0034-default-block-font|ADR-0034]]), 네임스페이스 URI는 저장소 주소이고 프로토타입 파일은 열지 않음([[0035-model-namespace-and-v0|ADR-0035]]). 사이트를 다듬고(문서 이름, 목록 순서, 파비콘, `tech-notes/` 펴내기), 도메인 `ariadnensd.com`과 npm · GitHub 조직을 잡았습니다 → [[2026-10-25-01-site-titles-mvp]]. 같은 날 두 번째 세션에서 사이트의 본문 태그(`#P0`)를 링크로 만들고 그림 둘을 손봤습니다 → [[2026-10-25-02-site-tags-figures]]
 
 2026-10-22 세션에서는 `atelier/`의 문서 이름을 바꾸고(`debt` → [[outbox]], `study-pages` → [[sketchbook]]), 아키텍처 · ADR · 상세 설계를 SW 엔지니어의 용어와 UML로 고쳐 썼습니다. 요구사항 폴더에 [[02-use-cases|유즈케이스]]([[dr-0014-light-use-cases|DR-0014]])와 [[03-quality-attribute-scenarios|품질 속성 시나리오]]를 더했습니다 → [[2026-10-22-01-engineer-language-use-cases-qas]]
 
