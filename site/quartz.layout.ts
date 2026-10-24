@@ -12,8 +12,8 @@ const explorer = () =>
   Component.Explorer({
     sortFn: (a, b) => {
       if (a.isFolder !== b.isFolder) return a.isFolder ? -1 : 1
-      // 맨 위에서는 문서(docs)가 작업 공간(atelier)보다 먼저
-      const first = ["docs", "atelier"]
+      // 맨 위에서는 문서(docs), 작업 공간(atelier), 기술 노트(tech-notes) 차례
+      const first = ["docs", "atelier", "tech-notes"]
       const ra = first.indexOf(a.slugSegment)
       const rb = first.indexOf(b.slugSegment)
       if (ra !== rb && ra >= 0 && rb >= 0) return ra - rb
