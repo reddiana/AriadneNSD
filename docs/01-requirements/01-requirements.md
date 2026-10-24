@@ -199,7 +199,7 @@ DIN 66261 / 원 논문 기준입니다.
 - [ ] #P1 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치|상세]] ^edit-multi-diagram
 - [ ] #P1 고른 블록들을 새 Method로 빼기: 고른 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 부르는 호출 블록([[#^blk-call]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램|상세]] ^edit-extract
 - [ ] #P2 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 끌어다 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼) ^edit-snippets
-- [ ] #P1 도움말: 사용법과 단축키 안내 (모든 배포 대상) ^help
+- [ ] #P1 도움말: 사용법과 단축키를 한 페이지로 안내한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상) ^help
 
 #### 여러 블록 선택 규칙
 
@@ -326,4 +326,5 @@ MVP 다음 판들로 미룬 것: Event · Method 머리, 호출 블록, 한 문�
 - [Structorizer](https://structorizer.fisch.lu) — 오픈소스 NS 차트 편집기, `.nsd` 확장자 사용
 - [drawio-obsidian](https://github.com/zapthedingbat/drawio-obsidian) — 모델 내장 SVG 저장 방식, Obsidian 노트에 그림을 넣고 편집하는 방식([[#2.1 Obsidian 플러그인]]) 참고. 편집 후 노트가 갱신되지 않는 점은 따르지 않는다([[#^obs-refresh]]).
 - [Scratch](https://scratch.mit.edu/) — 이벤트 머리 블록, 블록 묶음 참고. 하드웨어 교육에서는 Scratch 계열인 mBlock(Arduino), MakeCode(micro:bit)가 쓰인다.
+- [SequenceDiagram.org](https://sequencediagram.org/) — 메인테이너가 꼽은 웹 버전의 본보기. 설치 없이 열리는 한 페이지 편집기이고, 사용법도 [한 페이지](https://sequencediagram.org/instructions.html)에 모았다([[#^help]]).
 - [EasyCODE](https://www.easycode.de/) — 메인테이너가 꼽은 이상향. 요구사항의 상당 부분이 이 프로그램을 본떴다. ([스크린샷](https://www.easycode.de/fileadmin/_processed_/a/c/csm_easycode_struktogramm_04_6c9c584c4f.png))
