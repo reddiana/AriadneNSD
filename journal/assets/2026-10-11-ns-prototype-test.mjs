@@ -680,6 +680,30 @@ await ev(`T.cmd('exCode')`);
   await keys('Escape');
 }
 
+// 61: 목록이 떠 있는 동안 j · k로 옮긴다 (2026-10-25, 메인테이너: "a, c 하면 호출 메소드 메뉴가 나오는데 j/k 로 선택을 옮기는 것으로 합시다")
+{
+  await ev(`T.cmd('exQuick')`);
+  const qd = await ev(`T.doc()`);
+  const first = qd.diagrams[0].body[0].id, part = qd.diagrams[1].id;
+  const onIdx = () => ev(`[...document.querySelectorAll('#menu button')].findIndex(b => b.classList.contains('on'))`);
+  await ev(`T.click('${first}')`); await keys('KeyA', 'KeyC');
+  check('61: a c로 목록이 뜨고 첫 줄에 있음', (await onIdx()) === 0, await onIdx());
+  await keys('KeyJ');
+  check('61: j로 아래 줄로', (await onIdx()) === 1, await onIdx());
+  await keys('KeyK', 'KeyK');
+  const n = await ev(`document.querySelectorAll('#menu button').length`);
+  check('61: k로 위로, 첫 줄에서는 맨 끝으로 돎', (await onIdx()) === n - 1, { at: await onIdx(), n });
+  check('61: j · k를 누르는 동안 고른 블록은 그대로', (await ev(`T.doc()`)).diagrams[0].body[0].id === first);
+  await keys('Escape');
+  const toPart = cs => cs.filter(c => c.target === part).length;
+  const before = await ev(`T.calls(T.doc())`);
+  await ev(`T.click('${first}')`); await keys('KeyA', 'KeyC', 'KeyJ');
+  await ev(`T.key('Enter', { key: 'Enter' })`);
+  const after = await ev(`T.calls(T.doc())`);
+  check('61: j 뒤 Enter로 둘째 Method(partition)를 부르는 블록이 들어감', after.length === before.length + 1 && toPart(after) === toPart(before) + 1, { part, before: before.map(c => c.target), after: after.map(c => c.target) });
+  if (await ev(`T.editing()`) !== null) await ev(`T.key('Escape', { editor: true, key: 'Escape' })`);
+}
+
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
 ws.close(); chrome.kill(); process.exit(0);

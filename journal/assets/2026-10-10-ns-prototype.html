@@ -103,7 +103,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">60번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">61번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -185,7 +185,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <dt><kbd>v</kbd> <kbd>V</kbd></dt><dd>영역 고르기 시작. <kbd>j</kbd> <kbd>k</kbd>로 넓히고 <kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>s</kbd> <kbd>zf</kbd>를 누릅니다. <kbd>v</kbd>나 <kbd>Esc</kbd>로 끝냅니다. <kbd>Shift</kbd>+<kbd>↑↓</kbd>와 <kbd>Shift</kbd>+클릭도 됩니다 (같은 부모로 자동 확장)</dd>
         <dt><kbd>i</kbd> <kbd>cc</kbd> <kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). <kbd>i</kbd>는 있던 글자를 두고 커서를 맨 앞에 둡니다. <kbd>cc</kbd>는 비우고 새로 적습니다. <kbd>Enter</kbd> · <kbd>F2</kbd> · 더블클릭은 글자 전체를 고른 채로 엽니다. <kbd>Enter</kbd>와 <kbd>Esc</kbd> 어느 쪽을 눌러도 <b>적은 대로 받아들입니다</b>. 되돌리려면 <kbd>u</kbd>. 호출 블록에서는 인자와 결과만 고칩니다 (이름은 Method의 머리에서). 접힌 칸을 골랐으면 그 접기 영역의 이름을 고칩니다</dd>
         <dt><kbd>o</kbd> / <kbd>O</kbd></dt><dd>처리 블록을 고른 블록 뒤 / 앞에 넣고 바로 적습니다. 빈 블록을 골랐으면 그 자리에 적습니다</dd>
-        <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
+        <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>j</kbd> <kbd>k</kbd>(또는 <kbd>↓</kbd> <kbd>↑</kbd>)와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
         <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>고른 블록(들)을 While · Do-While · If · Case로 감싸기</dd>
         <dt><kbd>ds</kbd></dt><dd>풀기: 껍데기를 없애고 안의 것을 남깁니다. 제어 블록을 골랐으면 그 제어 블록을 벗깁니다. 그 안의 블록을 골랐으면 그것을 담은 가장 가까운 제어 블록을 벗깁니다. 호출 블록을 골랐으면 부르는 Method의 블록들로 바꿉니다 (적어 둔 인자와 결과는 사라지고, Method는 남습니다)</dd>
         <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd> 한 번. 머리는 잘라낼 수 없어서 머리에서 <kbd>dd</kbd>는 머리 떼기입니다</dd>
@@ -208,7 +208,12 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-17, 59 · 60번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-25, 61번째 판)</h2>
+      <ul>
+        <li><b>목록에서도 <kbd>j</kbd> <kbd>k</kbd>로 옮깁니다.</b> <kbd>a</kbd> <kbd>c</kbd>나 <kbd>r</kbd>로 부를 Method를 고르는 목록, 오른쪽 클릭 메뉴가 떠 있는 동안 <kbd>j</kbd>는 아래로, <kbd>k</kbd>는 위로 옮깁니다. <kbd>↓</kbd> <kbd>↑</kbd>도 그대로 듣습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 59 · 60번째 판)</h2>
       <ul>
         <li><b>지금 키와 겹치지 않는 옛 키를 되살렸습니다.</b> <kbd>Shift</kbd>+<kbd>L</kbd>은 Case 갈래의 이름을 고칩니다. 59번째 판에서 함께 되살렸던 <kbd>w</kbd> / <kbd>W</kbd>(While 넣기)는 Vim의 "다음 낱말로"와 헷갈려 60번째 판에서 다시 뺐습니다.</li>
       </ul>
@@ -1491,7 +1496,7 @@ function callCmd(shift) {
   const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'call:' + d.id, label: '호출: ' + (d.event || '(이름 없음)') }));
   items.push({ cmd: 'call:new', label: '새 Method를 만들고 호출' });
   choose(items);
-  say('부를 Method를 고르세요: ↑↓와 Enter, 숫자 키, 클릭 (Esc: 그만두기)');
+  say('부를 Method를 고르세요: j k(↓↑)와 Enter, 숫자 키, 클릭 (Esc: 그만두기)');
 }
 function insertCall(arg) {
   if (locked()) return;
@@ -2474,8 +2479,8 @@ document.addEventListener('keydown', ev => {
   const code = ev.code, ctrl = ev.ctrlKey || ev.metaKey;
   if (code !== 'Escape' && !/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(code)) escArmed = false;
   if (menuItems.length) {
-    // 메뉴가 떠 있는 동안: 위아래 방향키로 옮기고 Enter로 고른다. 고르기 메뉴는 숫자로도 고른다
-    if (code === 'ArrowDown' || code === 'ArrowUp') { menuStep(code === 'ArrowDown' ? 1 : -1); ev.preventDefault(); return; }
+    // 메뉴가 떠 있는 동안: j · k(또는 위아래 방향키)로 옮기고 Enter로 고른다. 고르기 메뉴는 숫자로도 고른다 (61번째 판, 2026-10-25)
+    if (!ctrl && (code === 'ArrowDown' || code === 'ArrowUp' || code === 'KeyJ' || code === 'KeyK')) { menuStep(code === 'ArrowDown' || code === 'KeyJ' ? 1 : -1); ev.preventDefault(); return; }
     const picked = (code === 'Enter' || code === 'NumpadEnter') && menuItems[menuAt];
     if (picked) { run(picked.cmd); ev.preventDefault(); return; }
     if (menuCmds.length || code === 'Escape') {
