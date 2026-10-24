@@ -19,6 +19,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 표 앞에는 빈 줄을 둔다. Obsidian은 표의 첫 줄 바로 앞이 글이면 표를 그리지 않는다. 콜아웃 안의 표는 `>`만 있는 줄을 앞에 둔다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.
+- 문서의 이름(속성 `title`과 본문의 `# 제목`, 둘을 같게)에는 제품 이름이나 상위 폴더 이름의 말머리를 붙이지 않는다("AriadneNSD 요구사항 명세" → "요구사항", "UX 설계: 단축키" → "단축키"). 영어 이름이 더 익숙하면 영어로 쓴다("Outbox"). 펴낸 사이트는 이 이름을 목록과 탭에 쓴다. ADR · DR의 "ADR-0001: …"은 번호가 식별자라 그대로 둔다(2026-10-25, 메인테이너).
 - `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). `atelier/adr/`의 ADR은 네 자리 번호(`0001-…`), `atelier/decisions/`의 DR은 `dr-`와 네 자리 번호(`dr-0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
 - 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `atelier/`, `journal/`, `tech-notes/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
 - `docs/`와 `atelier/`를 나누는 기준 (2026-10-17, 메인테이너):
