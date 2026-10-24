@@ -1,7 +1,6 @@
 ---
 title: "2026-10-17 아틀리에 대문과 결정 기록 나누기"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-17

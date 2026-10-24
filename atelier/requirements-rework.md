@@ -1,7 +1,6 @@
 ---
 title: 요구사항 다시 짜기
 tags:
-  - ariadne-nsd
   - plan
   - review
 status: 메인테이너의 답을 기다림

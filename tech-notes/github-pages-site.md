@@ -1,7 +1,6 @@
 ---
 title: GitHub Pages로 문서 사이트 펴내기
 tags:
-  - ariadne-nsd
   - tech-note
 date: 2026-10-18
 ---

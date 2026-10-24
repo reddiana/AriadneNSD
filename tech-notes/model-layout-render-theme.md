@@ -1,7 +1,6 @@
 ---
 title: 모양을 바꾸는 일의 크기 — 모델, 레이아웃, 그리기, 테마
 tags:
-  - ariadne-nsd
   - tech-note
 date: 2026-10-11
 ---

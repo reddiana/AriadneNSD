@@ -1,7 +1,6 @@
 ---
 title: 스케치북
 tags:
-  - ariadne-nsd
   - plan
 updated: 2026-10-22
 ---

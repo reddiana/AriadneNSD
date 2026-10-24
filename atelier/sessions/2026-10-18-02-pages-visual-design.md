@@ -1,7 +1,6 @@
 ---
 title: "2026-10-18 설계 문서 펴내기 · 시각 디자인 현행화"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-18

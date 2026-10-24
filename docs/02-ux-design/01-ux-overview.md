@@ -4,7 +4,6 @@ aliases:
   - UX 설계
   - UX 개요
 tags:
-  - ariadne-nsd
   - design
   - ux
 status: 초안

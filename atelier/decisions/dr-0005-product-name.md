@@ -11,6 +11,7 @@ superseded-by:
 # DR-0005: 제품 이름은 `AriadneNSD`, 식별자는 `ariadne-nsd`로 한다
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: 문서 태그 `ariadne-nsd`를 모든 문서에서 지웠다. Obsidian 볼트가 이 저장소 하나라 모든 문서가 이미 이 프로젝트의 것이고, 문서의 절반 남짓에만 붙어 있어 쓰이지 않았으며, 사이트에서는 거의 모든 페이지에 군더더기 딱지가 붙었다(메인테이너: "#ariadne-nsd 태그는 왜 필요한가요? 모든 문서에 다 붙어있는 것 같은데요?" → 고르는 창에서 "모든 문서에서 지움"). 아래 표의 "문서 태그"는 이제 맞지 않는다. 패키지 · 플러그인 id는 그대로 `ariadne-nsd`다 → [[2026-10-25-02-site-tags-figures]]
 > - 2026-10-25: 메인테이너가 npm 조직 `ariadne-nsd`와 GitHub 조직 `AriadneNSD`를 만들어 이름을 잡아 두었다(저장소는 옮기지 않음) → [[names-and-registries]]
 > - 2026-10-25: 메인테이너가 도메인 `ariadnensd.com`을 Cloudflare Registrar에서 샀다(등록 2026-10-24 18:09 UTC, 만료 2027-10-24, RDAP로 확인). 사이트를 이 주소로 옮길지는 따로 정한다. 파일 속 네임스페이스 URI는 저장소 주소 그대로다([[0035-model-namespace-and-v0|ADR-0035]]) → [[names-and-registries]]
 > - 2026-10-17: 아키텍처 결정 기록 DR-0005에서 결정 기록 DR-0005으로 옮겨 왔다. ADR은 아키텍처 결정만 두기로 했기 때문이다 → [[dr-0001-split-decision-records|DR-0001]]. 본문은 그대로이고, 번호와 링크만 새 것으로 고쳤다. 본문의 "이 ADR"은 이 기록을 말한다.

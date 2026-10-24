@@ -1,7 +1,6 @@
 ---
 title: "2026-10-25 사이트 다듬기, MVP 범위 · 글꼴 · 파일 형식의 이름, 이름 잡아 두기"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-25

@@ -1,7 +1,6 @@
 ---
 title: 이름을 잡아 두는 곳들
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---

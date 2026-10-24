@@ -4,7 +4,6 @@ aliases:
   - 단축키
   - keymap
 tags:
-  - ariadne-nsd
   - design
   - ux
 status: 초안

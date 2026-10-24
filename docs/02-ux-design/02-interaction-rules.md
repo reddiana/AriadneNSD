@@ -3,7 +3,6 @@ title: 조작 규칙
 aliases:
   - 조작 규칙
 tags:
-  - ariadne-nsd
   - design
   - ux
 status: 초안

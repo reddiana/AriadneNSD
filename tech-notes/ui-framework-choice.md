@@ -1,7 +1,6 @@
 ---
 title: UI 프레임워크 고르기
 tags:
-  - ariadne-nsd
   - tech-note
 date: 2026-10-18
 ---

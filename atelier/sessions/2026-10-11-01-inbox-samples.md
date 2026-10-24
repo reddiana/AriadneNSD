@@ -1,7 +1,6 @@
 ---
 title: "2026-10-11 inbox 검토: 예제 둘, 문자 로고의 색, Event와 Method"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-11

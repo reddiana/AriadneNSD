@@ -1,7 +1,6 @@
 ---
 title: 글자의 폭과 번들 글꼴 (같은 글자가 기기마다 다른 폭으로 재어지는 까닭)
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-14
 ---

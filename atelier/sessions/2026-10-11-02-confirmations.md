@@ -1,7 +1,6 @@
 ---
 title: "2026-10-11 밀린 확인을 하나씩: 호출 블록의 이름, 다이어그램 배치, 라이선스"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-11

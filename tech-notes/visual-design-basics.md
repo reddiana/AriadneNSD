@@ -1,7 +1,6 @@
 ---
 title: 시각 디자인 명세의 기초 (디자인 토큰, 대비율, 색각 이상)
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-17
 ---

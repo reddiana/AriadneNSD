@@ -1,7 +1,6 @@
 ---
 title: 오픈소스 라이선스 고르기
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-11
 ---

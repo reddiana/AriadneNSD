@@ -1,7 +1,6 @@
 ---
 title: 현재 상태
 tags:
-  - ariadne-nsd
   - plan
 updated: 2026-10-25
 ---

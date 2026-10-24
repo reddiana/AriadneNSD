@@ -1,7 +1,6 @@
 ---
 title: "2026-10-16 시각 디자인 명세, docs 정합성 검토, UX 문서를 다섯으로"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-16

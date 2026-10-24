@@ -1,7 +1,6 @@
 ---
 title: 스파이크, 프로토타입, MVP
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---

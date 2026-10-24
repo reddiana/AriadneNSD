@@ -1,7 +1,6 @@
 ---
 title: 기술 노트
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-17
 ---

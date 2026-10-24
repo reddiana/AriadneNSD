@@ -1,7 +1,6 @@
 ---
 title: 2026-10-10 inbox 검토
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-10

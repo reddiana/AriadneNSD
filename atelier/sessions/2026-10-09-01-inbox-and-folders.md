@@ -1,7 +1,6 @@
 ---
 title: "2026-10-09 inbox 도입과 폴더 정리"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-09

@@ -3,7 +3,6 @@ title: 시각 디자인
 aliases:
   - 시각 디자인
 tags:
-  - ariadne-nsd
   - design
   - ux
 status: 초안

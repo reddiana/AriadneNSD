@@ -3,7 +3,6 @@ title: "UX 결정 모음"
 aliases:
   - UX 결정 기록
 tags:
-  - ariadne-nsd
   - decision
   - ux
 updated: 2026-10-18

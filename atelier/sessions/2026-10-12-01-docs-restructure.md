@@ -1,7 +1,6 @@
 ---
 title: "2026-10-12 문서의 자리를 다시 잡다: atelier, 요구사항과 설계 나누기, 한 항목은 한 곳에"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-12

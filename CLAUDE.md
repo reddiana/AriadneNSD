@@ -1,6 +1,6 @@
 # AriadneNSD
 
-NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 패키지·플러그인 id·문서 태그는 `ariadne-nsd`로 쓴다(→ [[dr-0005-product-name|DR-0005]]). GitHub 저장소만 `AriadneNSD`다(`https://github.com/reddiana/AriadneNSD`, 2026-10-15 → [[dr-0011-repo-name|DR-0011]]). 로컬 폴더도 `AriadneNSD`다(`C:\myProject\AriadneNSD`, 2026-10-15에 바꿈). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[dr-0006-logo|DR-0006]], 이름의 뜻은 [[name-story]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
+NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `NSDrawing`이었다. 제품 이름은 `AriadneNSD`, 패키지·플러그인 id는 `ariadne-nsd`로 쓴다. 문서에 프로젝트 이름의 태그는 붙이지 않는다(볼트가 이 저장소 하나라서, 2026-10-25)(→ [[dr-0005-product-name|DR-0005]]). GitHub 저장소만 `AriadneNSD`다(`https://github.com/reddiana/AriadneNSD`, 2026-10-15 → [[dr-0011-repo-name|DR-0011]]). 로컬 폴더도 `AriadneNSD`다(`C:\myProject\AriadneNSD`, 2026-10-15에 바꿈). 글로 적을 때는 언제나 `AriadneNSD`다. `Ariadne’s NSD`는 문자 로고 그림에서만 쓰고, 그 그림의 대체 글자도 `AriadneNSD`로 둔다(→ [[dr-0006-logo|DR-0006]], 이름의 뜻은 [[name-story]]). 세션 기록과 타임라인에 남은 `NSDrawing`은 그때의 기록이므로 고치지 않는다. Obsidian 플러그인 · 데스크톱 · 웹(정적 페이지)으로 배포한다. 현재 설계 단계이며 코드는 아직 없다.
 
 ## 저장소 구성
 

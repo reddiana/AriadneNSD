@@ -3,7 +3,6 @@ title: 아키텍처 개요
 aliases:
   - 아키텍처
 tags:
-  - ariadne-nsd
   - architecture
 status: 초안
 updated: 2026-10-22

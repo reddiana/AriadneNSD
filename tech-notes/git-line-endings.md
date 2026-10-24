@@ -1,7 +1,6 @@
 ---
 title: git과 줄 끝 문자 (LF / CRLF)
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-22
 ---

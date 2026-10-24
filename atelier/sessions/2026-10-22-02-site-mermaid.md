@@ -1,7 +1,6 @@
 ---
 title: "2026-10-22 사이트의 Mermaid 그림이 깨지던 것, 사이트의 문서 이름, 인터페이스 그림 배치"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-22

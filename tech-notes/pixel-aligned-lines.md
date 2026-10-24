@@ -1,7 +1,6 @@
 ---
 title: 선을 픽셀에 맞추기 (가는 선과 굵은 선이 어긋나는 까닭)
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-13
 ---

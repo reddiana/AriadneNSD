@@ -1,7 +1,6 @@
 ---
 title: 데스크톱 앱
 tags:
-  - ariadne-nsd
   - design
 status: 작성 전
 updated: 2026-10-22

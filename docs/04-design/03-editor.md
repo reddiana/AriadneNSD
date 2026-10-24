@@ -1,7 +1,6 @@
 ---
 title: 편집기
 tags:
-  - ariadne-nsd
   - design
 status: 작성 중
 updated: 2026-10-22

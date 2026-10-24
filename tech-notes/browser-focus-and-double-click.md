@@ -1,7 +1,6 @@
 ---
 title: 브라우저의 포커스 표시와 더블클릭
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---

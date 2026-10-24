@@ -1,7 +1,6 @@
 ---
 title: "2026-10-13 아키텍처 앞에서: 정할 것을 정하고, 시안을 공개하다"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-13

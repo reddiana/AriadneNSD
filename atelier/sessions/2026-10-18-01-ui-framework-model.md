@@ -1,7 +1,6 @@
 ---
 title: "2026-10-18 셸 · UI 프레임워크 · 모델 설계"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-18

@@ -1,7 +1,6 @@
 ---
 title: "2026-10-15 inbox 검토: 저장소 이름, 고른 것 풀기, 휠, 위로 갈 때의 갈래"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-15

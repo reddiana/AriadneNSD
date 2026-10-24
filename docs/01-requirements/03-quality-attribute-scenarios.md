@@ -4,7 +4,6 @@ aliases:
   - QAS
   - 품질 속성 시나리오
 tags:
-  - ariadne-nsd
   - requirements
   - architecture
 status: 초안

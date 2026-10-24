@@ -1,7 +1,6 @@
 ---
 title: Google Drive 앱의 기초
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-10
 ---

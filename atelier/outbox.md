@@ -1,7 +1,6 @@
 ---
 title: Outbox
 tags:
-  - ariadne-nsd
   - plan
 updated: 2026-10-22
 ---

@@ -1,7 +1,6 @@
 ---
 title: wasm과 셸
 tags:
-  - ariadne-nsd
   - tech-note
 date: 2026-10-17
 ---

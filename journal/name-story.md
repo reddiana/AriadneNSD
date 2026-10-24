@@ -1,7 +1,6 @@
 ---
 title: 이름 이야기
 tags:
-  - ariadne-nsd
   - journal
 updated: 2026-10-11
 ---
@@ -44,7 +43,7 @@ updated: 2026-10-11
 | --- | --- |
 | 글로 적을 때 (문서, 소개 글, 메뉴, 대체 글자) | `AriadneNSD` |
 | GitHub 저장소 (2026-10-15부터 → [[dr-0011-repo-name\|ADR-0028]]) | `AriadneNSD` |
-| 패키지, 플러그인 id, 문서 태그 | `ariadne-nsd` |
+| 패키지, 플러그인 id | `ariadne-nsd` (문서 태그로도 썼으나 2026-10-25에 지움) |
 | 문자 로고 그림 | `Ariadne’s NSD` |
 
 이름이 두 가지로 퍼지지 않도록, `Ariadne’s NSD`는 문자 로고 그림에서만 씁니다.

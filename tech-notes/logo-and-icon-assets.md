@@ -1,7 +1,6 @@
 ---
 title: 로고와 아이콘 파일 만들기
 tags:
-  - ariadne-nsd
   - tech-notes
 updated: 2026-10-11
 ---

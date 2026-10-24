@@ -1,7 +1,6 @@
 ---
 title: 2026-10-10 제품 이름 바꾸기
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-10

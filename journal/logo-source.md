@@ -1,7 +1,6 @@
 ---
 title: 로고의 바탕 그림
 tags:
-  - ariadne-nsd
   - journal
 updated: 2026-10-14
 ---

@@ -1,7 +1,6 @@
 ---
 title: 용어집
 tags:
-  - ariadne-nsd
   - glossary
 updated: 2026-10-17
 ---

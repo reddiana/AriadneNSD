@@ -1,7 +1,6 @@
 ---
 title: "2026-10-14 inbox 검토: ADR 묶음, 대문 줄이기, IDE 플러그인과 AI 대화창"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-14

@@ -1,7 +1,6 @@
 ---
 title: "2026-10-22 이름 바꾸기 · SW 엔지니어의 말과 UML · 유즈케이스 · QAS"
 tags:
-  - ariadne-nsd
   - plan
   - session
 date: 2026-10-22
