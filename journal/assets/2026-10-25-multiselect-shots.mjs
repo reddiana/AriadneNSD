@@ -1,6 +1,6 @@
 // 조작 규칙(docs/02-ux-design/02-interaction-rules.md)의 "여러 블록 선택" 자동 확장 예시 그림을 프로토타입에서 찍는다
 // 쓰는 법: node 2026-10-25-multiselect-shots.mjs file:///…/2026-10-10-ns-prototype.html <그림을 둘 폴더>
-// 찍는 틀은 2026-10-16-visual-design-shots.mjs와 같다. 문서 A · B · While(C) · D를 넣고
+// 찍는 틀은 2026-10-16-visual-design-shots.mjs와 같다. 문서 A · B · While(C · D) · E를 넣고
 // 1) A를 고름 2) While 안의 C를 Shift+클릭 → A ~ While 전체가 골라짐
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync } from 'node:fs';
@@ -49,8 +49,8 @@ async function shot(name, sel = '.paper') {
 const P = (id, text) => ({ id, type: 'process', text });
 const doc = { diagrams: [{ id: 'g1', event: null, body: [
   P('n1', 'A'), P('n2', 'B'),
-  { id: 'n3', type: 'while', text: '조건', body: [P('n4', 'C')] },
-  P('n5', 'D'),
+  { id: 'n3', type: 'while', text: '조건', body: [P('n4', 'C'), P('n5', 'D')] },
+  P('n6', 'E'),
 ] }] };
 await ev(`localStorage.setItem('nsd-proto-doc', ${JSON.stringify(JSON.stringify({ doc, opts: { syntax: false, mono: false } }))});
   localStorage.setItem('nsd-proto-fold', '[]'); localStorage.setItem('nsd-proto-open', '[]'); location.reload();`);
