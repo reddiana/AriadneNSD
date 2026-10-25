@@ -50,6 +50,7 @@ updated: 2026-10-26
 	- 요구사항인지 Claude가 가른 것: 절의 소개, 참고 모델, MVP 범위, 미결정 사항은 ID를 매기지 않음. 절 머리글 속 문장 아홉은 요구사항으로 보고 표로 옮김([[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-gd|R-GD-05]], [[01-requirements#^r-cf|R-CF-02]], [[01-requirements#^r-ide|R-IDE-07]], [[01-requirements#^r-edit|R-EDIT-22]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-rep|R-REP-03]], 그리고 핵심 원칙 `R-CORE` · 배포 대상 `R-TGT`)
 	- 블록은 블록 종류 표와 합치며 처리 · If · While · Do-While · Case · For · 호출 … 순서로 번호를 매김(`R-BLK-01~14`)
 	- DR-0016은 같은 세션에서 다듬어 push 전에 고쳐 씀(새 DR을 따로 만들지 않음). 체크박스는 없앰(구현의 진행은 개발 때 정함)
+	- 표 밖에 남은 글은 요구사항이 아니라고 봄(절의 소개, 근거 링크, 참고 모델, MVP 범위, 미결정). 문제 알리기 절의 첫 문장 "문제를 쉽게, 그리고 메인테이너가 다시 일으켜 볼 수 있을 만큼 정확하게 알린다"는 목표처럼 읽혀 요구사항으로 볼지 (2026-10-26)
 - [ ] 사이트를 손본 것이 펴낸 사이트에서 맞는지 봐 주기 (2026-10-25 세션 05) → [[2026-10-25-05-site-journal-explorer]]
 	- 왼쪽 목록의 폴더를 펼쳐 스크롤바가 생긴 뒤, 펼친 폴더 위에서 마우스 휠이 듣는가(브라우저에서 굴려 보지 못함)
 	- `/journal/name-story` · `/journal/logo-source`의 그림이 보이는가. 왼쪽 목록의 맨 끝(til 다음)에 `journal`을 둔 것은 Claude가 정함
