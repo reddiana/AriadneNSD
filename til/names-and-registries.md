@@ -28,7 +28,7 @@ updated: 2026-10-25
 | Obsidian 플러그인 id | `ariadne-nsd` | 무료 (등록 심사) | Obsidian 플러그인을 낼 때 |
 | npm 패키지 | `ariadne-nsd` 또는 `@ariadne-nsd/…` | 무료 | 공유 코어를 패키지로 낼 때 |
 | npm 조직(scope) | **`ariadne-nsd` (2026-10-25에 만듦)**. 이제 `@ariadne-nsd/…`는 우리만 쓴다 | 무료(공개 패키지) | 패키지 없이 이름만 잡아 둠 |
-| GitHub 조직 | **`AriadneNSD` (2026-10-25에 만듦)**. 대소문자만 다른 `ariadnensd`는 함께 잡히지만, 붙임표가 든 `ariadne-nsd`는 다른 이름이라 비어 있음 | 무료 | 저장소를 옮길지는 컨트리뷰터가 생길 때 정함 |
+| GitHub 조직 | **`AriadneNSD`와 `ariadne-nsd` (둘 다 2026-10-25에 만듦)**. 대소문자만 다른 `ariadnensd`는 `AriadneNSD`와 함께 잡힌다. 붙임표가 든 `ariadne-nsd`는 다른 이름이라 따로 만들었고, 저장소 없이 소개와 URL에 공식 주소를 적은 이정표로 둔다 | 무료 | 저장소를 옮길지, 옮긴다면 어느 이름으로 갈지는 컨트리뷰터가 생길 때 정함 |
 | VS Code 게시자 · Open VSX | `ariadne-nsd` (2026-10-25 조회: 비어 있음) | 무료 | IDE 플러그인을 낼 때 |
 | 그 밖에 낼 때 잡는 것 | Obsidian 플러그인 id(제출 때 심사, 비슷한 것은 `ariadne-autocomplete`뿐), JetBrains · Atlassian 판매자, Google Cloud 프로젝트 · OAuth 앱 이름, 데스크톱 앱 id(winget · Store, macOS 번들 id), 후원 페이지 | 대개 무료 | 그 배포 대상을 낼 때 |
 | 도메인 | **`ariadnensd.com` (2026-10-25에 삼, Cloudflare Registrar, 만료 2027-10-24, 자동 갱신)** | `.com`은 1년에 10~11달러쯤 | 웹 버전의 제품 주소. 사이트를 옮길지는 따로 정함 |
@@ -45,7 +45,7 @@ updated: 2026-10-25
 4. 며칠 안에 오는 **확인 메일**을 누른다. 국제 규칙(ICANN)상 15일 안에 확인하지 않으면 도메인이 정지된다.
 5. **자동 갱신**을 켜고, 카드를 바꾸면 거기도 바꾼다.
 
-npm 조직과 GitHub 조직은 무료이고, 패키지나 저장소 없이 이름만 만들어 둘 수 있다. GitHub의 이름은 대소문자를 가리지 않아 `AriadneNSD`를 만들면 `ariadnensd`도 함께 잡힌다. 그러나 붙임표가 든 `ariadne-nsd`는 **다른 이름**이라 비어 있다(2026-10-25에 Claude가 "함께 잡힌다"고 잘못 안내했다가 바로잡음).
+npm 조직과 GitHub 조직은 무료이고, 패키지나 저장소 없이 이름만 만들어 둘 수 있다. GitHub의 이름은 대소문자를 가리지 않아 `AriadneNSD`를 만들면 `ariadnensd`도 함께 잡힌다. 그러나 붙임표가 든 `ariadne-nsd`는 **다른 이름**이다(2026-10-25에 Claude가 "함께 잡힌다"고 잘못 안내했다가 바로잡음). 그래서 같은 날 `ariadne-nsd`도 만들었다. 두 조직이 모두 살아 있어 보이면 어느 쪽이 공식인지 헷갈리므로, 하나는 저장소 없이 소개에 공식 주소만 적은 **이정표**로 둔다.
 
 ## 확인하지 않은 것
 
