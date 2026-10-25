@@ -72,6 +72,7 @@ table.t th { background: var(--box); font-weight: 600; }
   <section>
     <span class="part">S1</span>
     <h2>S1. 코드 폴더를 저장소의 어디에 둘까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 2번 모두 src/ 아래</b>(메인테이너가 고름). → ADR-0036</p>
     <p class="q">지금 저장소 맨 위에는 문서 폴더(<code>docs/ atelier/ journal/ til/ site/</code>)가 있습니다. 여기에 코드가 들어옵니다.</p>
     <div class="cards">
       <article class="card pick"><header><span class="tag">S1 · 1번</span><h3>맨 위에 apps/ 와 packages/</h3><span class="badge">Claude의 추천</span></header>
@@ -138,6 +139,7 @@ table.t th { background: var(--box); font-weight: 600; }
   <section>
     <span class="part">S2</span>
     <h2>S2. core를 몇 개의 패키지로 나눌까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 1번 패키지 하나, 안을 폴더로</b>(메인테이너가 고름). → ADR-0036</p>
     <p class="q"><code>core</code>에는 모듈이 여섯 있습니다(아키텍처 3.1: 모델, 편집 명령, 텍스트, 레이아웃, 렌더러, 파일 형식). 의존은 한 방향(모델 ← 명령, 텍스트 ← 레이아웃 ← 렌더러)이어야 합니다.</p>
     <div class="cards">
       <article class="card pick"><header><span class="tag">S2 · 1번</span><h3>패키지 하나, 안을 폴더로</h3><span class="badge">Claude의 추천</span></header>
@@ -180,6 +182,7 @@ table.t th { background: var(--box); font-weight: 600; }
   <section>
     <span class="part">S3</span>
     <h2>S3. Obsidian이 요구하는 manifest.json을 어디에 둘까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 1번 맨 위에 사본</b>(메인테이너가 고름). → ADR-0036</p>
     <p class="q">Obsidian 커뮤니티 플러그인 목록은 등록한 저장소의 <b>맨 위에 있는 <code>manifest.json</code></b>을 읽어 플러그인의 이름과 판을 알아냅니다. 플러그인 파일(<code>main.js</code> 등)은 GitHub Release에서 받아 갑니다. 그래서 모노레포라도 이 파일 하나는 저장소 맨 위에 있어야 합니다.</p>
     <div class="cards">
       <article class="card pick"><header><span class="tag">S3 · 1번</span><h3>맨 위에 사본, 스크립트가 맞춤</h3><span class="badge">Claude의 추천</span></header>

@@ -18,6 +18,7 @@ superseded-by:
 > - 2026-10-18: 플랫폼 의존 부분을 셸이 구현하는 필요 인터페이스 둘로 정했다. `DocumentStore`(문서 파일 I/O, 다른 문서 읽기를 더함)와 `SettingsStore`(사용자 설정 영속)다 → [[0031-shell-interfaces|ADR-0031]]
 > - 2026-10-18: 반대 방향으로, 편집기가 명령 레지스트리(`CommandRegistry`)와 설정 스키마(`SettingsSchema`)를 제공 인터페이스로 노출하고, 셸이 그것을 호스트 플랫폼의 메뉴 · 설정 화면에 등록하기로 했다 → [[0033-command-list-for-shells|ADR-0033]]
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[03-architecture]]
+> - 2026-10-25: 코드를 저장소의 `src/` 아래에 두기로 했다. 아래 표의 `packages/…` · `apps/…`는 `src/`에서 본 경로다. 모노레포 도구는 pnpm 워크스페이스, `core`는 패키지 하나(안을 모듈 폴더로), Obsidian의 `manifest.json` 사본은 저장소 맨 위 → [[0036-code-layout|ADR-0036]]
 > - 2026-10-25: "결정"의 패키지 목록을 글자 그림에서 표로 바꿨다(글은 그대로, 모양만. 메인테이너가 inbox에서 요청)
 
 ## 배경

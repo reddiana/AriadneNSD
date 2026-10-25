@@ -82,6 +82,8 @@ flowchart LR
 
 공통 패키지와 배포 대상별 셸(shell: 플랫폼마다 `editor`를 감싸는 호스트 애플리케이션)로 나눈 모노레포입니다. → [[0002-three-targets-shared-core|ADR-0002]]
 
+코드는 저장소의 `src/` 아래에 있고, `src/`가 pnpm 워크스페이스의 뿌리입니다. 이 장의 `packages/…` · `apps/…`는 `src/`에서 본 경로입니다. `core`는 패키지 하나이고, 아래 표의 모듈은 그 안의 폴더입니다(`src/model/` · `commands/` · `text/` · `layout/` · `render/` · `format/`). 배포 대상마다의 자리는 [[0036-code-layout|ADR-0036]]에 있습니다.
+
 ### 3.1 패키지 의존
 
 ```mermaid
@@ -171,7 +173,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 
 ### 3.3 의존 규칙
 
-- 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다.
+- 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. `core` 안의 모듈 폴더 사이도 한 방향이고, CI의 import 검사가 지킨다([[0036-code-layout|ADR-0036]]).
 - `core`와 `fonts`는 **DOM과 브라우저 API에 의존하지 않는다.** Node에서 그대로 실행하고 테스트한다.
 - 텍스트 폭은 `core`가 `fonts`의 advance 폭 테이블로 직접 계산한다. 브라우저의 텍스트 측정 API(Canvas `measureText` 등)를 쓰지 않는다. → [[0026-bundled-font-metrics|ADR-0026]]
 - 플랫폼 의존 기능은 3.2의 필요 인터페이스 두 개로만 들어온다. → [[0031-shell-interfaces|ADR-0031]]
