@@ -1,14 +1,14 @@
 ---
-title: "2026-10-25 outbox 비우기, 레이아웃 설계(M33 ~ M39)"
+title: "2026-10-25 outbox 비우기, 레이아웃 설계(M33 ~ M39, ADR-0037), 테스트 전략(M40, ADR-0038)"
 tags:
   - plan
   - session
 date: 2026-10-25
 ---
 
-# 2026-10-25 outbox 비우기, 레이아웃 설계(M33 ~ M39)
+# 2026-10-25 outbox 비우기, 레이아웃 설계(M33 ~ M39, ADR-0037), 테스트 전략(M40, ADR-0038)
 
-(← [[2026-10-25-03-inbox-structure-code-layout]]) 같은 날 네 번째 세션이다. 밀린 outbox를 비우고, 레이아웃 설계 [[02-layout]]의 1 ~ 3단계(규칙 쓰기, 시안 여섯, 스파이크 둘)를 했다. 세션 중간에 **매듭**을 지었다.
+(← [[2026-10-25-03-inbox-structure-code-layout]]) 같은 날 네 번째 세션이다. 밀린 outbox를 비우고, 레이아웃 설계 [[02-layout]]의 1 ~ 3단계(규칙 쓰기, 시안 여섯, 스파이크 둘)를 했다. 세션 중간에 **매듭**을 지었고, 그 뒤 레이아웃 4단계(ADR-0037), 테스트 전략(M40, ADR-0038, [[07-testing]]), inbox 한 항목을 하고 마무리했다.
 
 ## 시작
 
@@ -132,10 +132,16 @@ date: 2026-10-25
 - 이 컴퓨터의 기본 `python`(3.15)에는 fonttools가 없고 `py -3.14`에 있다. Node는 없다. Windows의 Python이 쓴 파일은 CRLF가 되기 쉽다(`newline='
 '`)
 
+## 결정 (매듭 뒤)
+
+- [[0037-two-pass-full-layout|ADR-0037]] 승인: 레이아웃은 두 단계의 순수 함수, 고칠 때마다 전체를 다시 셈, 폭 테이블은 구간 목록 · 없는 글자는 전각
+- [[0038-build-and-test-tools|ADR-0038]] 승인: Vite(웹) · esbuild(Obsidian), Vitest · fast-check · Playwright · dependency-cruiser, ESLint + Prettier, 시험 파일은 소스 옆(M40 T1 · T2 · T3 1번)
+- 아키텍처 3장에 `apps` · `packages`의 뜻과 `src/` 폴더 나무(inbox)
+
 ## 다음 할 일
 
-- 레이아웃 4단계: ADR 하나(제안됨) → [[status#이번과 다음 세션에 할 것]]
-- outbox의 "확인해 주세요"(세션 04에서 Claude가 정한 것) → [[outbox]]
+- 편집기 · 웹 설계(웹의 화면은 시안부터) → [[status#이번과 다음 세션에 할 것]]
+- outbox의 "확인해 주세요"(세션 04에서 Claude가 정한 것: 치수 토큰의 이름, CD1의 동작, SB1의 세부, 테스트 전략의 표들 등) → [[outbox]]
 
 ## 원문: "정해 주세요"에 있던 확인 묶음 (문서 · 저장소 · 일하는 방식)
 
