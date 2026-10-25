@@ -24,7 +24,7 @@ updated: 2026-10-25
 	- [ ] [[03-editor]], [[06-web]] (뼈대만 있음. 웹은 Chromium이 아닌 브라우저에서 저장하는 흐름 포함)
 	- [ ] 웹 버전의 화면 설계: 레이아웃 설계 다음, 편집기 설계와 함께 [[06-web]]에서. 도구 막대 · 메뉴 · 파일 열기와 저장 · 도움말의 자리를 시안으로 견준다. 본보기는 [SequenceDiagram.org](https://sequencediagram.org/) (메인테이너, inbox 2026-10-25)
 	- [ ] 컨트리뷰터를 위한 준비(메인테이너, inbox 2026-10-25): 코딩 스타일(테스트 전략의 빌드 · 테스트 도구와 함께, Prettier · ESLint 같은 도구가 강제), 이슈 · PR 템플릿, 행동 강령 `CODE_OF_CONDUCT.md`, 보안 문제를 알리는 곳 `SECURITY.md`, 기여물의 라이선스(Apache-2.0의 기본 규칙, DCO를 더할지), `good first issue` 라벨. `CONTRIBUTING.md`의 첫 판은 2026-10-25에 씀
-3. [ ] **MVP에 드는 조작 규칙의 미결정:** Q1 · Q2 · Q4 · Q5 · Q6 · Q8 · Q11 · Q12 · Q19, Q10의 남은 것(접기 Q20은 MVP 뒤). **For 블록의 조작과 모습**(아직 규칙이 없음, MVP에 들어감) → [[02-interaction-rules#9. 미결정 사항]]. 2를 쓰면서 프로토타입 리뷰로 정함 → [[prototype#리뷰 순서]]
+3. [ ] **MVP에 드는 조작 규칙의 미결정:** Q1 · Q2 · Q4 · Q5 · Q6 · Q8 · Q11 · Q12 · Q19, Q10의 남은 것(접기 Q20은 MVP 뒤). For 블록의 모양과 키는 2026-10-25에 정함(FB1 · FB2) → [[02-interaction-rules#9. 미결정 사항]]. 2를 쓰면서 프로토타입 리뷰로 정함 → [[prototype#리뷰 순서]]
 
 MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬 기능), 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]]), Google Drive, IDE 플러그인, AI 대화창, 광고, Event 블록, Obsidian에 wasm 싣기.
 

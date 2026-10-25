@@ -49,6 +49,7 @@ updated: 2026-10-25
 	- 접기 영역 끝에 넣으면 고른 것을 따름(MD1), Case 갈래를 하나까지 줄이고 If ↔ Case로 바꿀지 묻기(MD3, 묻는 모양은 미결정) → [[02-interaction-rules#Case 블록]]
 	- 글자 칸 안의 `Ctrl`+`Z`는 칸만, 칸을 연 때까지(MD2) → [[02-interaction-rules#6. 실행 취소]]
 
+- [ ] For 블록 넣기: While과 같은 모양, 머리 글자 `for …`, 넣기 `a f` · 감싸기 `s f` (2026-10-25 → [[ux-decisions#FB1. For 블록의 모양|FB1]])
 - [ ] 새 다이어그램 배치(Event 왼쪽 · Method 오른쪽, 16 : 10, 같은 종류 안에서 순서 바꾸기)를 프로토타입에 넣기. 순서를 바꾸는 방법 정하기 → [[01-requirements#^edit-multi-diagram]]
 	- 지금 프로토타입은 예전 배치(L0)임 (2026-10-11)
 - [ ] 프로토타입에 넣기: 호출 블록을 고치는 칸 둘(결과 칸, 인자 칸), 결과 기호의 문서 설정, 머리에서 괄호를 지우면 인자 지우기(2026-10-13: 기억하지 않는 것으로 바뀜. 지금 프로토타입은 인자를 남겨 그대로 보여 줌), Case 갈래 순서 바꾸기 → [[01-requirements#^blk-call]], [[01-requirements#^edit-branch]]

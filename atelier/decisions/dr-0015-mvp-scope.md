@@ -11,6 +11,7 @@ superseded-by:
 # DR-0015: MVP는 P0에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 범위로 하고, 우선순위 태그는 기능의 우선순위로 읽는다
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: For 블록의 모양과 키를 정했다(While과 같은 모양에 머리의 글자로 가름, 넣는 키 `f`). 아래 "For 블록은 아직 조작과 모습의 규칙이 없다"는 풀렸다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
 > - 2026-10-25: 글자 폭 측정([[01-requirements#^lay-text-measure]])을 `P1`에서 `P0`으로 올려 MVP에 들었다. MVP의 "같은 모델이면 같은 파일"(`^fmt-deterministic`)이 번들 글꼴의 폭 표로 재는 것을 전제로 하기 때문이다 → [[2026-10-25-04-outbox-cleanup]]
 
 ## 배경

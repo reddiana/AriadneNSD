@@ -45,6 +45,8 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 블록 종류는 색이 없어도 모양만으로 가려집니다. 흑백으로 인쇄해도, 색을 구분하지 못하는 사람이 보아도 뜻이 같아야 합니다(WCAG 1.4.1).
 
+예외는 하나, **For와 While**입니다. 둘은 같은 반복이고 NS 차트 표준도 같은 모양으로 그립니다. For는 머리의 글자(`for …`)로 가릅니다. 글자는 흑백에서도 읽히므로 WCAG 1.4.1(색에만 기대지 않음)은 지켜집니다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
+
 | 블록 | 모양 (뜻을 나름) | 바탕 (거듦) |
 | --- | --- | --- |
 | 처리 | 직사각형 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
@@ -52,7 +54,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 머리가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선. 이어진 곳을 잃은 호출 블록(Method를 지움, 머리를 뗌, 다른 문서를 찾을 수 없음)은 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
-| For | 미완성: 모양은 레이아웃 설계와 함께 정한다 → [[02-interaction-rules#For 블록]] | 미완성 |
+| For | While과 같은 모양(왼쪽 띠 안에 본문, 머리가 위). While과는 **머리의 글자로만** 가른다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
