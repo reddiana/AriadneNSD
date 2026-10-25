@@ -137,6 +137,5 @@ result = {
     'bundleAllCovered': bundle,
     'px13': examples,
 }
-json.dump(result, open(out_path, 'w', encoding='utf-8', newline='
-'), ensure_ascii=False, indent=2)
+json.dump(result, open(out_path, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=2)
 sys.stdout.reconfigure(encoding="utf-8"); print(json.dumps(result, ensure_ascii=False, indent=2))
