@@ -1,0 +1,161 @@
+<title>M40 시험과 빌드 도구</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M39와 같은 틀. 그림 대신 폴더 나무와 설정 파일을 글자로 보인다 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --hl: #fff2c9;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #3a3420; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #3a3420; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+pre { margin: 0; font-family: var(--mono); font-size: 13px; line-height: 1.55; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+pre mark { background: var(--hl); color: inherit; border-radius: 3px; padding: 0 2px; }
+pre .c { color: var(--muted); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code { font-family: var(--mono); font-size: 12.5px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 14px; min-width: 620px; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 12px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+</style>
+
+<main>
+  <div>
+    <h1>M40 · 시험과 빌드 도구</h1>
+    <p class="lede">테스트 전략을 쓰기 전에 정할 것 셋입니다. 시험의 종류와 도구 후보는 품질 속성 시나리오에서 이미 정했고(아래 표), 여기서는 <b>시험 파일을 어디에 둘지(T1)</b>, <b>코드 모양을 검사하고 맞추는 도구(T2)</b>, <b>빌드 도구(T3)</b>를 고릅니다. 백엔드(Java)에 빗댄 말을 붙였습니다. 각 물음의 <b>1번이 Claude의 추천</b>입니다.</p>
+  </div>
+
+  <section>
+    <h2>이미 정한 것 (품질 속성 시나리오 3장)</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>시험</th><th>도구</th><th>Java에 빗대면</th></tr></thead>
+      <tbody>
+        <tr><td>단위 시험, 성능 벤치마크</td><td>Vitest</td><td>JUnit, JMH</td></tr>
+        <tr><td>속성 기반 시험, 퍼징</td><td>fast-check</td><td>jqwik</td></tr>
+        <tr><td>골든 파일(저장되는 SVG를 바이트로 비교)</td><td>저장소의 기대 파일</td><td>approval test</td></tr>
+        <tr><td>브라우저 E2E, 시각 회귀</td><td>Playwright</td><td>Selenium</td></tr>
+        <tr><td>의존 방향 검사</td><td>dependency-cruiser</td><td>ArchUnit</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="part">T1</span>
+    <h2>T1. 시험 파일을 어디에 둘까</h2>
+    <p class="q">코드는 <code>src/packages/core</code> 같은 패키지에 둡니다(ADR-0036). 그 안에서 시험 파일의 자리입니다. 노란 칠이 시험 파일입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">T1 · 1번</span><h3>소스 바로 옆 (<code>*.test.ts</code>)</h3><span class="badge">Claude의 추천</span></header>
+<pre>src/packages/core/
+  src/
+    layout/
+      measure.ts
+      <mark>measure.test.ts</mark>
+      place.ts
+      <mark>place.test.ts</mark>
+    model/
+      commands.ts
+      <mark>commands.test.ts</mark>
+  <mark>golden/</mark>            <span class="c">← 골든 SVG와 그 문서</span>
+    <mark>if-nested.ns.svg</mark></pre>
+        <ul><li>TypeScript · Vitest의 흔한 관례입니다. 코드를 열면 그 시험이 바로 옆에 있어 함께 고치기 쉽습니다.</li><li>파일을 옮기거나 지울 때 시험도 함께 움직입니다.</li><li>골든 파일처럼 여러 모듈에 걸친 시험만 패키지의 <code>golden/</code>에 따로 둡니다.</li><li><span class="bad">폴더 안 파일 수가 두 배가 됩니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">T1 · 2번</span><h3>패키지마다 <code>test/</code> 폴더</h3></header>
+<pre>src/packages/core/
+  src/
+    layout/
+      measure.ts
+      place.ts
+    model/
+      commands.ts
+  <mark>test/</mark>
+    <mark>layout/</mark>
+      <mark>measure.test.ts</mark>
+      <mark>place.test.ts</mark>
+    <mark>model/</mark>
+      <mark>commands.test.ts</mark>
+    <mark>golden/</mark>
+      <mark>if-nested.ns.svg</mark></pre>
+        <ul><li>Maven · Gradle의 <code>src/main</code> · <code>src/test</code>와 같아 백엔드 개발자에게 익숙합니다.</li><li>제품 코드 폴더가 깔끔합니다.</li><li><span class="bad">폴더 나무를 두 벌 똑같이 맞춰야 하고, 파일을 옮기면 시험도 따로 옮겨야 합니다. TypeScript 쪽에서는 덜 흔합니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">T2</span>
+    <h2>T2. 코드 모양을 검사하고 맞추는 도구</h2>
+    <p class="q">린터(실수를 찾음, Java의 Checkstyle · SpotBugs)와 포매터(들여쓰기와 줄 바꿈을 맞춤, Java의 Spotless · google-java-format)입니다. 컨트리뷰터의 코딩 스타일을 사람 대신 도구가 지키게 합니다. 품질 속성 QA-13(화면 글자를 코드에 박지 않기)도 린터 규칙으로 검사할 생각입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">T2 · 1번</span><h3>ESLint + Prettier</h3><span class="badge">Claude의 추천</span></header>
+<pre><span class="c">// 저장소 맨 위</span>
+eslint.config.js      <span class="c">← 실수 검사 (typescript-eslint)</span>
+.prettierrc           <span class="c">← 모양 맞추기</span>
+
+$ pnpm lint           <span class="c">← 둘 다 돌림</span></pre>
+        <ul><li>가장 널리 쓰는 짝이라 컨트리뷰터 대부분이 이미 압니다. 편집기(VSCode 등)의 지원도 가장 넓습니다.</li><li>규칙을 직접 만들 수 있어 QA-13 같은 우리만의 검사를 넣기 쉽습니다.</li><li><span class="bad">도구가 둘이고 설정 파일도 둘입니다. Biome보다 느립니다(이 크기의 저장소에서는 몇 초).</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">T2 · 2번</span><h3>Biome 하나</h3></header>
+<pre><span class="c">// 저장소 맨 위</span>
+biome.json            <span class="c">← 검사와 모양 맞추기 둘 다</span>
+
+$ pnpm lint</pre>
+        <ul><li>도구 하나, 설정 하나입니다. Rust로 만들어 아주 빠릅니다.</li><li><span class="bad">ESLint보다 새롭고 규칙과 플러그인이 적습니다. 우리만의 규칙(QA-13)을 만드는 길이 좁습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">T3</span>
+    <h2>T3. 빌드 도구</h2>
+    <p class="q">TypeScript를 브라우저와 Obsidian이 읽는 JavaScript 파일로 묶는 도구입니다(Java의 Gradle 빌드와 jar 묶기). 웹은 개발 중에 고치면 바로 보이는 개발 서버도 필요합니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">T3 · 1번</span><h3>웹은 Vite, Obsidian은 esbuild</h3><span class="badge">Claude의 추천</span></header>
+<pre>src/apps/web/vite.config.ts        <span class="c">← 개발 서버, 빌드</span>
+src/apps/obsidian/esbuild.config.mjs <span class="c">← main.js 하나로</span></pre>
+        <ul><li>Vite는 React 웹 앱의 표준이고, Vitest가 같은 설정을 씁니다.</li><li>Obsidian은 공식 견본 플러그인이 esbuild로 <code>main.js</code> 하나를 만듭니다. 견본을 그대로 따르면 문서와 예제가 맞습니다.</li><li><span class="bad">빌드 도구가 둘입니다(다만 Vite도 안에서 esbuild를 씀).</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">T3 · 2번</span><h3>모두 Vite</h3></header>
+<pre>src/apps/web/vite.config.ts
+src/apps/obsidian/vite.config.ts   <span class="c">← 라이브러리 모드</span></pre>
+        <ul><li>도구가 하나입니다.</li><li><span class="bad">Obsidian 플러그인을 Vite로 묶는 것은 견본과 달라, 문제가 생기면 참고할 자료가 적습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>T1, T2, T3 하나씩, <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 테스트 전략 문서(<code>docs/04-design/07-testing.md</code>)를 쓰고, 도구는 ADR 하나로 남깁니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
