@@ -131,9 +131,18 @@ function rewrite(text) {
 // Obsidian은 표의 한 줄을 가리키지 못해 원본의 링크는 표로 가지만, 사이트에서는 그 줄로 간다(→ DR-0016).
 // Quartz는 앵커를 소문자로 바꿔 찾는다
 function addRowAnchor(line) {
-  return line
-    .replace(/^\| ([A-Z]+(?:-[A-Z]+)*-\d+) \|/, (_, id) => `| <span id="${id.toLowerCase()}"></span>${id} |`)
+  line = line
+    .replace(/^\| ([A-Z]+(?:-[A-Z]+)*-\d+)( +)\|/, (_, id, sp) => `| <span id="${id.toLowerCase()}"></span>${id}${sp}|`)
     .replace(/\[\[([^\]#|\\]*)#\^r-[a-z0-9-]+(\\?\|)(R-[A-Z]+-\d+)\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
+  // 표 안에서 같은 문서의 제목으로 가는 위키링크([[#감싸기 · 풀기]])를 Quartz v4.5.2는 글자 없이, 앵커를 바꾸지 않은 채로 만든다.
+  // 마크다운 링크로 바꾸고 앵커는 Quartz가 제목에 다는 모양(github-slugger: 소문자, 문장 부호 빼기, 빈칸은 -)으로 만든다
+  if (line.startsWith("|")) {
+    line = line.replace(/\[\[#(?!\^)([^\]|\\]+)(?:\\?\|([^\]]*))?\]\]/g, (_, heading, alias) => {
+      const slug = heading.trim().toLowerCase().replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, "").replace(/ /g, "-")
+      return `[${alias ?? heading}](#${slug})`
+    })
+  }
+  return line
 }
 
 function copyFile(s, d, name) {

@@ -9,7 +9,7 @@ repo = Path(sys.argv[1])
 REQ = repo / "docs/01-requirements/01-requirements.md"
 anchor, cur = {}, []
 for line in REQ.read_text(encoding="utf-8").split("\n"):
-    m = re.match(r"^\| (R-[A-Z]+-\d\d) \|", line)
+    m = re.match(r"^\| (R-[A-Z]+-\d\d) +\|", line)
     if m:
         cur.append(m.group(1))
     a = re.match(r"^\^(r-[a-z0-9-]+)$", line)
