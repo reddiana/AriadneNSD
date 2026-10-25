@@ -82,7 +82,37 @@ flowchart LR
 
 공통 패키지와 배포 대상별 셸(shell: 플랫폼마다 `editor`를 감싸는 호스트 애플리케이션)로 나눈 모노레포입니다. → [[0002-three-targets-shared-core|ADR-0002]]
 
-코드는 저장소의 `src/` 아래에 있고, `src/`가 pnpm 워크스페이스의 뿌리입니다. 이 장의 `packages/…` · `apps/…`는 `src/`에서 본 경로입니다. `core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(`model/` · `commands/` · `text/` · `layout/` · `render/` · `format/`, 저장소에서는 `src/packages/core/src/model/` …). 배포 대상마다의 자리는 [[0036-code-layout|ADR-0036]]에 있습니다.
+코드는 저장소의 `src/` 아래에 있고, `src/`가 pnpm 워크스페이스의 뿌리입니다(→ [[0036-code-layout|ADR-0036]]). `src/` 안은 두 갈래입니다.
+
+| 폴더 | 뜻 | Java에 빗대면 |
+| --- | --- | --- |
+| `packages/` | **여러 앱이 함께 쓰는 라이브러리.** 혼자서는 실행되지 않고 `apps/`가 가져다 쓴다. npm 패키지 이름은 `@ariadne-nsd/…` | Maven 멀티 모듈의 공통 라이브러리 모듈 |
+| `apps/` | **내놓는 프로그램.** 배포 대상(셸)마다 하나 | 실행 jar · war 모듈 |
+
+`apps` · `packages`라는 폴더 이름은 JavaScript 모노레포의 관례입니다. 이 장의 `packages/…` · `apps/…`는 `src/`에서 본 경로입니다.
+
+```text
+AriadneNSD/
+├─ src/                      코드 (pnpm 워크스페이스의 뿌리)
+│  ├─ package.json, pnpm-workspace.yaml, tsconfig.base.json
+│  ├─ packages/              함께 쓰는 라이브러리
+│  │  ├─ fonts/              번들 글꼴, advance 폭 테이블, 서브세팅
+│  │  ├─ core/               모델 · 명령 · 텍스트 · 레이아웃 · 렌더러 · 파일 형식 (DOM 없음)
+│  │  │  ├─ src/             model/ commands/ text/ layout/ render/ format/ (시험은 소스 옆 *.test.ts)
+│  │  │  └─ golden/          골든 파일 (저장되는 SVG의 기대값)
+│  │  └─ editor/             화면 편집기 (React)
+│  ├─ apps/                  내놓는 프로그램 (셸)
+│  │  ├─ web/                웹, MVP (Google Drive 연동도 여기, e2e/에 브라우저 시험)
+│  │  ├─ obsidian/           Obsidian 플러그인 (manifest.json의 원본)
+│  │  └─ desktop/            데스크톱
+│  └─ skills/                나중: Claude skill (셸이 아님)
+├─ manifest.json, versions.json   Obsidian이 저장소 맨 위에서 읽는 사본
+├─ docs/ atelier/ journal/ til/   글
+├─ site/                     문서 사이트 빌드
+└─ .github/workflows/        CI
+```
+
+`core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(저장소에서는 `src/packages/core/src/model/` …). 나중의 대상(Confluence, IDE 플러그인)은 만들 때 `apps/` 아래에 폴더를 더합니다. 시험 파일과 골든 파일의 자리는 [[07-testing]], 빌드 도구는 [[0038-build-and-test-tools|ADR-0038]]에 있습니다.
 
 ### 3.1 패키지 의존
 
@@ -108,7 +138,7 @@ classDiagram
     web ..> editor : «use»
 ```
 
-UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의존**(«use»: 화살표 꼬리 쪽이 머리 쪽을 import한다)입니다.
+UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의존**(«use»: 화살표 꼬리 쪽이 머리 쪽을 import한다)입니다. 아래의 `packages/*`는 라이브러리, 위의 `apps/*`는 그것을 가져다 쓰는 프로그램입니다.
 
 | 패키지 / 모듈 | 책임 | 설계 문서 |
 | --- | --- | --- |
