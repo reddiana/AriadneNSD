@@ -21,7 +21,6 @@ updated: 2026-10-25
 ### 요구사항 · 범위
 
 - [ ] Google Drive 연동을 Obsidian · 데스크톱과 견주어 언제 만들지 → [[dr-0002-development-order|DR-0002]] "이후 변경"
-- [ ] 글자 폭 측정([[01-requirements#^lay-text-measure]])을 `P1`에서 `P0`으로 올릴지 (2026-10-25 정합성 검토). MVP의 `P0`인 "같은 모델이면 같은 SVG"(`^fmt-deterministic`)와 품질 속성 QA-03이 번들 글꼴의 폭 표로 재는 것을 전제로 하고, 글꼴도 MVP 전에 정했다([[0034-default-block-font|ADR-0034]]). Claude의 추천: `P0`으로 올림
 
 ### 조작 · 키
 
