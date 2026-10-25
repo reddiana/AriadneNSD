@@ -1,7 +1,7 @@
 ---
 title: Google Drive 앱의 기초
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 

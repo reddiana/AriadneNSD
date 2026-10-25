@@ -1,7 +1,7 @@
 ---
 title: 브라우저의 포커스 표시와 더블클릭
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 

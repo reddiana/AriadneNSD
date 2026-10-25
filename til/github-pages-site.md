@@ -16,7 +16,7 @@ date: 2026-10-18
 GitHub Pages는 저장소의 파일을 **정적 웹 사이트**로 무료로 올려 주는 곳입니다. 서버 코드는 돌지 않고 HTML · CSS · JS · 그림 파일만 내줍니다. 백엔드에 견주면 Nginx가 폴더 하나를 그대로 내주는 것과 같습니다.
 
 - 주소는 `https://<계정>.github.io/<저장소>/`입니다. 우리는 `https://reddiana.github.io/AriadneNSD/`
-- **저장소 하나에 사이트 하나**입니다. 그래서 설계 문서, 웹 앱, 사용자 매뉴얼은 한 사이트를 주소로 나눠 씁니다: `/docs/…`, `/atelier/…`, `/tech-notes/…`(2026-10-25에 더함), 나중에 `/app/`, `/manual/`
+- **저장소 하나에 사이트 하나**입니다. 그래서 설계 문서, 웹 앱, 사용자 매뉴얼은 한 사이트를 주소로 나눠 씁니다: `/docs/…`, `/atelier/…`, `/til/…`(2026-10-25에 더함), 나중에 `/app/`, `/manual/`
 - 셋을 따로 올리면 나중에 올린 것이 앞의 것을 덮어씁니다. 그래서 한 빌드에서 모두 모아 한 번에 올립니다
 
 ## 정적 사이트 생성기: Quartz
@@ -117,7 +117,7 @@ Obsidian의 Mermaid는 사이트(Quartz v4.5.2가 쓰는 Mermaid 11.4.0)보다 �
 
 ```bash
 npm install mermaid@11.4.0 jsdom@25.0.1   # 아무 빈 폴더에서 한 번
-node site/check-mermaid.mjs <그 폴더> docs atelier tech-notes
+node site/check-mermaid.mjs <그 폴더> docs atelier til
 ```
 
 깨진 그림이 있으면 파일과 줄을 찍습니다. 문법만 보므로, 사이트로 옮기는 과정에서 생기는 문제(2026-10-22의 `<<interface>>`)는 잡지 못합니다.

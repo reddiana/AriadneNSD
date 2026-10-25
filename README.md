@@ -20,7 +20,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 
 > [!TIP]
 > **1. 웹 사이트에서 읽기 (설치 없이):** **https://reddiana.github.io/AriadneNSD/**
-> 설계 문서(`docs/`), 작업 공간(`atelier/`), 기술 노트(`tech-notes/`)를 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
+> 설계 문서(`docs/`), 작업 공간(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
 > **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`)도 함께 읽을 수 있습니다.
 <!-- /site:skip -->
@@ -30,7 +30,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | [`docs/`](docs/README.md)             | 애플리케이션 문서: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세          |
 | [`atelier/`](atelier/README.md)       | 작업 공간: 현재 상태, 할 일, 답을 기다리는 것, 프로토타입, 결정 기록(아키텍처는 ADR, 그 밖은 DR), 세션 기록, inbox |
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                    |
-| [`tech-notes/`](tech-notes/README.md) | 백엔드 개발자가 프론트엔드를 배우며 정리한 기술 노트                          |
+| [`til/`](til/README.md)               | Today I Learned: 백엔드 개발자가 프론트엔드를 배우며 정리한 것                  |
 
 ## 어떻게 만들고 있나
 
@@ -68,7 +68,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | 대상                                                                                | 라이선스                                                                                         |
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | 코드 (소스 코드, 프로토타입, 스크립트)                                                           | [Apache License 2.0](LICENSE). 가져다 사용한 배포물에 [`NOTICE`](NOTICE) 파일의 글을 함께 실어 주세요              |
-| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, 이 README, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 밝혀 주세요 |
+| 글 (`docs/` · `atelier/` · `journal/` · `til/`의 문서, 이 README, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 밝혀 주세요 |
 | 로고 (그림 로고와 문자 로고의 그림 파일)                                                          | 허락하지 않습니다. 이 프로젝트를 가리키는 데에만 사용할 수 있습니다                                                       |
 | 이름 (`AriadneNSD`)                                                                 | 허락하지 않습니다. 가져다 만든 제품에 이 이름을 붙일 수 없습니다. "AriadneNSD를 가져다 사용했다"고 알리는 데에는 사용할 수 있습니다            |
 

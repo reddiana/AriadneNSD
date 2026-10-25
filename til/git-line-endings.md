@@ -1,7 +1,7 @@
 ---
 title: git과 줄 끝 문자 (LF / CRLF)
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-22
 ---
 

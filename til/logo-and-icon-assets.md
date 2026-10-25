@@ -1,7 +1,7 @@
 ---
 title: 로고와 아이콘 파일 만들기
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-11
 ---
 

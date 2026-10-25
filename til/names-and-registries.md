@@ -1,7 +1,7 @@
 ---
 title: 이름을 잡아 두는 곳들
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 

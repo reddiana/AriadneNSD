@@ -1,7 +1,7 @@
 // 펴낼 문서를 Quartz의 content 폴더로 옮긴다.
 // 쓰는 법: node site/prepare-content.mjs <저장소 폴더> <Quartz의 content 폴더>
 //
-// - docs/, atelier/, tech-notes/를 그대로 복사한다 (→ DR-0013. tech-notes/는 2026-10-25에 더함).
+// - docs/, atelier/, til/을 그대로 복사한다 (→ DR-0013. til/은 2026-10-25에 더함, 그때 이름은 tech-notes/).
 // - 펴내지 않는 곳(journal/, 저장소 맨 위의 파일)으로 가는 위키링크는
 //   GitHub의 파일 주소로 바꾼다. 그대로 두면 사이트에서 끊긴 링크가 된다.
 // - 폴더의 README.md는 그 폴더의 첫 페이지(index.md)로 옮긴다. 그래야 사이트의 목록에서
@@ -19,7 +19,7 @@ if (!repoArg || !contentArg) {
 }
 const repo = path.resolve(repoArg)
 const content = path.resolve(contentArg)
-const PUBLISHED = ["docs", "atelier", "tech-notes"]
+const PUBLISHED = ["docs", "atelier", "til"]
 const GITHUB = "https://github.com/reddiana/AriadneNSD/blob/main/"
 
 // 저장소의 모든 파일: 이름(확장자 .md는 뺀 것과 붙은 것 모두) → 저장소 안의 경로

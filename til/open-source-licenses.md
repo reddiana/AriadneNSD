@@ -1,7 +1,7 @@
 ---
 title: 오픈소스 라이선스 고르기
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-11
 ---
 
@@ -65,7 +65,7 @@ Apache-2.0과 MIT는 소프트웨어를 생각하고 쓴 글입니다. 문서, �
 | 대상 | 라이선스 | 파일 |
 | --- | --- | --- |
 | 코드 (소스 코드, 프로토타입과 시안 페이지, 스크립트) | Apache-2.0 | `LICENSE`, `NOTICE` |
-| 글 (`docs/` · `atelier/` · `journal/` · `tech-notes/`의 문서, README) | CC BY 4.0 | `LICENSE-docs` |
+| 글 (`docs/` · `atelier/` · `journal/` · `til/`의 문서, README) | CC BY 4.0 | `LICENSE-docs` |
 | 로고 | 허락하지 않음 | |
 
 근거: [[dr-0007-license|DR-0007]], [[dr-0008-license-scope|DR-0008]]

@@ -1,7 +1,7 @@
 ---
 title: 사용자 의견 받기와 후원 채널
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 

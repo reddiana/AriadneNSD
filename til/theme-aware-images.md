@@ -1,7 +1,7 @@
 ---
 title: 테마에 따라 그림 바꾸기와 그 한계
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-11
 ---
 

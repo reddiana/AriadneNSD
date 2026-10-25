@@ -1,7 +1,7 @@
 ---
 title: 브라우저 저장소와 API 키 (서버 없는 페이지에서 AI를 부르는 법)
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-14
 ---
 

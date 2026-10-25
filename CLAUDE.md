@@ -11,18 +11,18 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 | `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
 | `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 보낼 편지함(`outbox.md`: 메인테이너의 답을 기다리는 것), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`sketchbook.md`), 세션 기록(`sessions/`), 아키텍처 결정 기록(`adr/`: ADR), 그 밖의 결정 기록(`decisions/`: DR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
 | `journal/` | 이야기하기 위한 여정 기록: 타임라인, 이야기 구성 아이디어, 스크린샷. 누구나 따라 해 볼 용기를 얻도록 쓴다 |
-| `tech-notes/` | 메인테이너에게 설명한 기술 정리 (메인테이너는 백엔드 개발자, 프론트엔드는 처음) |
+| `til/` | Today I Learned: 메인테이너가 Claude에게 묻고 배운 기술의 정리 (메인테이너는 백엔드 개발자, 프론트엔드는 처음). 2026-10-25까지 이름은 `tech-notes/`. 제품 고유의 기술로 읽히지 않게 바꿈 |
 
 ## 문서 작성 규칙
 
-- 이 저장소의 주인을 **메인테이너**라고 부른다 (`atelier/` · `journal/` · `tech-notes/` · CLAUDE.md). `docs/`의 "사용자"는 AriadneNSD를 쓰는 사람이다.
+- 이 저장소의 주인을 **메인테이너**라고 부른다 (`atelier/` · `journal/` · `til/` · CLAUDE.md). `docs/`의 "사용자"는 AriadneNSD를 쓰는 사람이다.
 - 메인테이너는 모든 문서를 **Obsidian**으로 읽고 편집한다. 속성(frontmatter), `[[위키링크]]`, 태그, 체크박스, 콜아웃, Mermaid를 쓴다.
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 표 앞에는 빈 줄을 둔다. Obsidian은 표의 첫 줄 바로 앞이 글이면 표를 그리지 않는다. 콜아웃 안의 표는 `>`만 있는 줄을 앞에 둔다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.
 - 문서의 이름(속성 `title`과 본문의 `# 제목`, 둘을 같게)에는 제품 이름이나 상위 폴더 이름의 말머리를 붙이지 않는다("AriadneNSD 요구사항 명세" → "요구사항", "UX 설계: 단축키" → "단축키"). 영어 이름이 더 익숙하면 영어로 쓴다("Outbox"). 펴낸 사이트는 이 이름을 목록과 탭에 쓴다. ADR · DR의 "ADR-0001: …"은 번호가 식별자라 그대로 둔다(2026-10-25, 메인테이너).
 - `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`01-requirements/01-requirements.md`, `04-design/01-model.md` …). `atelier/adr/`의 ADR은 네 자리 번호(`0001-…`), `atelier/decisions/`의 DR은 `dr-`와 네 자리 번호(`dr-0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
-- 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `atelier/`, `journal/`, `tech-notes/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
+- 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `atelier/`, `journal/`, `til/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
 - `docs/`와 `atelier/`를 나누는 기준 (2026-10-17, 메인테이너):
 	- `docs/`는 요구사항과 설계의 최종 결과다. 이력이 아니며, 개발된 애플리케이션과 동치다. 그 자체로 완결되어 다른 문서 없이 읽혀야 한다. `atelier/`로 가는 링크는 부연일 뿐이다.
 	- 미완성 · 미결정인 곳은 방문자의 이해를 위해 `docs/`에 밝혀 둔다. 아직 설계하지 않은 자리는 `> [!info] 미완성: …`, 정하지 않은 물음은 `> [!question] 미결정` 콜아웃이나 문서 끝의 "미결정 사항" 절에 쓴다. 할 일처럼 읽히는 `[!todo]`는 쓰지 않는다.
@@ -72,7 +72,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 3. `atelier/outbox.md`를 갱신한다. 메인테이너에게 결정을 요청했으나 답을 못 받은 것, Claude가 정해 놓고 확인받지 못한 것을 빠짐없이 넣는다. 메인테이너는 이런 것을 잊기 쉽다. 미룬 일은 `backlog.md`에, 프로토타입의 구멍과 시험하지 못한 곳은 `prototype.md`에, 그 밖에 답이 필요 없는 보고는 그 대상의 문서에 넣는다. 답을 받은 항목은 세션 기록에 옮긴 뒤 지운다.
 4. `journal/timeline.md`에 전환점을 추가한다. 메인테이너의 요청 원문을 짧게 인용한다.
 5. 메인테이너는 Claude Code 초보자다. 메인테이너가 Claude Code나 AI와 일하는 법에 대해 새로 배운 것이 있으면 `journal/learning-claude-code.md`에 추가한다.
-6. 메인테이너에게 기술을 설명했으면 `tech-notes/`에 정리한다.
+6. 메인테이너에게 기술을 설명했으면 `til/`에 정리한다.
 7. 결정은 `docs/`(요구사항, 설계)와 ADR(`atelier/adr/`) 또는 DR(`atelier/decisions/`)에 반영하고, 세션 기록과 상태 문서에는 링크만 남긴다.
 8. 바뀐 파일을 모두 커밋하고 push한다. 커밋하지 않은 내용은 git으로 되살릴 수 없다.
 

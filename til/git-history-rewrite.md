@@ -1,7 +1,7 @@
 ---
 title: git 기록에서 파일 지우기
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-11
 ---
 

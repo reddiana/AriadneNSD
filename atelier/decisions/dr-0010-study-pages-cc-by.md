@@ -11,6 +11,7 @@ superseded-by:
 # DR-0010: 시안과 스파이크 페이지는 글로 보아 CC BY 4.0으로 공개한다
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: `tech-notes/`의 이름이 `til/`(Today I Learned)이 되었다. 아래 표의 `tech-notes/`는 지금의 `til/`이고, 라이선스는 그대로다.
 > - 2026-10-17: 아키텍처 결정 기록 DR-0010에서 결정 기록 DR-0010으로 옮겨 왔다. ADR은 아키텍처 결정만 두기로 했기 때문이다 → [[dr-0001-split-decision-records|DR-0001]]. 본문은 그대로이고, 번호와 링크만 새 것으로 고쳤다. 본문의 "이 ADR"은 이 기록을 말한다.
 > - 2026-10-15: 저장소 이름이 바뀌어 출처 표기 문구의 주소가 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`가 되었다. README, 시안과 스파이크 페이지의 안내, 안내를 넣는 스크립트를 고쳤다 → [[dr-0011-repo-name|DR-0011]]
 

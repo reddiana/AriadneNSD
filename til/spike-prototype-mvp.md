@@ -1,7 +1,7 @@
 ---
 title: 스파이크, 프로토타입, MVP
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 

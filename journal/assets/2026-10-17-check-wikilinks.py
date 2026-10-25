@@ -1,11 +1,11 @@
 # 저장소의 위키링크([[이름#제목|글]], [[이름#^블록]], ![[그림]])가 모두 살아 있는지 본다
-# 쓰는 법: py -X utf8 journal/assets/2026-10-17-check-wikilinks.py [폴더 ...] [--sessions]   (기본: docs atelier journal tech-notes, 세션 기록은 뺌)
+# 쓰는 법: py -X utf8 journal/assets/2026-10-17-check-wikilinks.py [폴더 ...] [--sessions]   (기본: docs atelier journal til, 세션 기록은 뺌)
 # 파일 이름으로 건 링크를 찾고(README는 경로로), 제목은 Obsidian처럼 마크다운 제목의 글자 그대로 견준다
 import os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ALL = '--sessions' in sys.argv   # 세션 기록과 타임라인까지 본다 (그때의 기록이라 ADR처럼 없앤 것을 가리킬 수 있음)
-dirs = [a for a in sys.argv[1:] if not a.startswith('--')] or ['docs', 'atelier', 'journal', 'tech-notes']
+dirs = [a for a in sys.argv[1:] if not a.startswith('--')] or ['docs', 'atelier', 'journal', 'til']
 files = {}
 for base, _, names in os.walk(ROOT):
     if '.git' in base or '.obsidian' in base:

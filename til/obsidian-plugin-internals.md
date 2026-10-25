@@ -1,7 +1,7 @@
 ---
 title: Obsidian 플러그인이 파일 열기와 메뉴에 끼어드는 법
 tags:
-  - tech-notes
+  - til
 updated: 2026-10-10
 ---
 
