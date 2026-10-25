@@ -1,0 +1,184 @@
+<title>M31 문서 지도</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M28 · M30과 같은 틀 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --hl: #fff1c2;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 82ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card > ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+code { font-family: var(--mono); font-size: 12.5px; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+
+/* 문서 미리보기: Obsidian에서 읽히는 모습 */
+.doc { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 13px; line-height: 1.55; display: grid; gap: 10px; min-width: 0; overflow-x: auto; }
+.doc .h { font-weight: 600; font-size: 14.5px; }
+.doc .h4 { font-weight: 600; font-size: 13px; color: var(--fg); margin-top: 2px; }
+.doc .h4 small { font-weight: 400; color: var(--muted); }
+.doc a { color: var(--accent); text-decoration: none; }
+.doc table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+.doc th, .doc td { border: 1px solid var(--line); padding: 3px 7px; text-align: left; vertical-align: top; }
+.doc th { font-weight: 600; background: var(--panel); }
+.doc td.st { white-space: nowrap; color: var(--muted); }
+.doc ul.tree { margin: 0; padding-left: 1.1em; display: grid; gap: 2px; }
+.doc ul.tree ul { padding-left: 1.2em; margin: 2px 0 4px; display: grid; gap: 1px; }
+.doc ul.tree .q { color: var(--muted); font-size: 12px; }
+.doc .muted { color: var(--muted); font-size: 12px; }
+.doc pre.mermaid { margin: 0; background: transparent; text-align: center; }
+mark { background: var(--hl); color: inherit; border-radius: 2px; padding: 0 2px; }
+</style>
+
+<main>
+  <div>
+    <h1>M31 · 문서 지도</h1>
+    <p class="lede">inbox 요청: "<b>docs/README#문서 지도</b>를 구조를 이해하기 쉽게 만들어 주세요." 지금 지도는 열한 줄짜리 표 하나라서 폴더 여섯(<code>01</code>~<code>06</code>)이 보이지 않고, "요구사항이 UX 설계와 아키텍처의 입력"이라는 흐름이 글로만 있습니다. 상세 설계는 아래에 따로 표가 있습니다. 세 가지 모양을 실제 문서 내용으로 그렸습니다. <b>1번이 Claude의 추천</b>입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">D1</span>
+    <h2>D1. 지도를 어떤 모양으로 할까</h2>
+    <p class="q"><b>결정함 (2026-10-25): 1번 흐름 그림 + 폴더별 표</b>(메인테이너가 고름). 표의 열은 문서 · 답하는 질문 · 상태 · 바뀌는 때입니다.</p>
+    <p class="q">세 안 모두 Obsidian과 펴낸 사이트에서 그대로 그려지는 것(Mermaid, 표, 목록)만 씁니다. 미리보기는 <b>문서에 들어갈 모습</b>입니다.</p>
+    <div class="cards">
+
+      <article class="card pick"><header><span class="tag">D1 · 1번</span><h3>흐름 그림 + 폴더별 표</h3><span class="badge">Claude의 추천</span></header>
+        <div class="doc">
+          <div class="h">문서 지도</div>
+<pre class="mermaid">
+flowchart LR
+  R["01 요구사항<br/>무엇을 만드나"] --> U["02 UX 설계<br/>어떻게 보이고 움직이나"]
+  R --> A["03 아키텍처<br/>어떤 구조로"]
+  U --> D["04 상세 설계<br/>세부적으로 어떻게"]
+  A --> D
+  D --> S["05 명세<br/>파일은 정확히 어떻게"]
+  G["06 용어집"]
+</pre>
+          <div class="h4">01 요구사항 <small>무엇을 만드나?</small></div>
+          <table><tr><th>문서</th><th>답하는 질문</th><th>상태</th></tr>
+            <tr><td><a>요구사항</a></td><td>무엇을 만드나?</td><td class="st">계속 갱신</td></tr>
+            <tr><td><a>유즈케이스</a></td><td>무엇을 이루려고 기능들을 잇달아 쓰나?</td><td class="st">계속 갱신</td></tr>
+            <tr><td><a>품질 속성 시나리오</a></td><td>비기능 요구사항을 어떻게 재나?</td><td class="st">계속 갱신</td></tr></table>
+          <div class="h4">02 UX 설계 <small>어떻게 보이고 움직이나?</small></div>
+          <table><tr><th>문서</th><th>답하는 질문</th><th>상태</th></tr>
+            <tr><td><a>UX 개요</a></td><td>누구를 위해, 어떤 원칙으로?</td><td class="st">계속 갱신</td></tr>
+            <tr><td><a>조작 규칙</a></td><td>기능 하나하나가 어떻게 움직이나?</td><td class="st">계속 갱신</td></tr>
+            <tr><td colspan="3" class="muted">… 단축키, 시각 디자인</td></tr></table>
+          <div class="h4">04 상세 설계 <small>세부적으로 어떻게?</small></div>
+          <table><tr><th>문서</th><th>답하는 질문</th><th>상태</th></tr>
+            <tr><td><a>모델</a></td><td>노드 타입, 불변 조건, 편집 명령</td><td class="st"><mark>작성 중</mark></td></tr>
+            <tr><td><a>레이아웃</a></td><td>크기 계산, 배치, 글자 폭</td><td class="st">작성 전</td></tr>
+            <tr><td colspan="3" class="muted">… 편집기, Obsidian 플러그인, 데스크톱, 웹</td></tr></table>
+          <div class="muted">03 아키텍처, 05 명세, 06 용어집도 같은 모양</div>
+        </div>
+        <ul>
+          <li class="good">그림으로 순서와 입력 관계를 한눈에 보고, 표에서 문서를 찾습니다.</li>
+          <li class="good">폴더 번호(<code>01</code>~<code>06</code>)가 제목에 그대로 나와 GitHub 폴더 목록과 맞습니다.</li>
+          <li class="good">따로 있던 상세 설계 표가 지도 안으로 들어와 한 곳이 됩니다.</li>
+          <li><span class="bad">표가 여섯 개라 지금보다 깁니다.</span></li>
+        </ul>
+      </article>
+
+      <article class="card"><header><span class="tag">D1 · 2번</span><h3>폴더 나무</h3></header>
+        <div class="doc">
+          <div class="h">문서 지도</div>
+          <ul class="tree">
+            <li><b>01 요구사항</b> <span class="q">무엇을 만드나?</span>
+              <ul><li><a>요구사항</a> <span class="q">무엇을 만드나?</span></li>
+                  <li><a>유즈케이스</a> <span class="q">무엇을 이루려고 잇달아 쓰나?</span></li>
+                  <li><a>품질 속성 시나리오</a> <span class="q">비기능을 어떻게 재나?</span></li></ul></li>
+            <li><b>02 UX 설계</b> <span class="q">어떻게 보이고 움직이나? (01을 받음)</span>
+              <ul><li><a>UX 개요</a> · <a>조작 규칙</a> · <a>단축키</a> · <a>시각 디자인</a></li></ul></li>
+            <li><b>03 아키텍처</b> <span class="q">어떤 구조로? (01을 받음)</span>
+              <ul><li><a>아키텍처</a></li></ul></li>
+            <li><b>04 상세 설계</b> <span class="q">세부적으로 어떻게? (02 · 03을 받음)</span>
+              <ul><li><a>모델</a> <mark>작성 중</mark> · <a>레이아웃</a> 작성 전 · <a>편집기</a> 작성 중 · …</li></ul></li>
+            <li><b>05 명세</b> <span class="q">파일은 정확히 어떻게?</span>
+              <ul><li><a>파일 형식</a> 초안</li></ul></li>
+            <li><b>06 용어집</b></li>
+          </ul>
+        </div>
+        <ul>
+          <li class="good">짧습니다. GitHub와 Obsidian의 폴더 모양과 같아 눈에 익습니다.</li>
+          <li><span class="bad">입력 관계가 괄호 속 글로만 있어 흐름이 잘 안 보입니다.</span></li>
+          <li><span class="bad">문서마다 질문과 상태를 다 적으면 줄이 길어져 표보다 읽기 어렵습니다.</span></li>
+        </ul>
+      </article>
+
+      <article class="card"><header><span class="tag">D1 · 3번</span><h3>모든 문서를 그림 하나에</h3></header>
+        <div class="doc">
+          <div class="h">문서 지도</div>
+<pre class="mermaid">
+flowchart LR
+  subgraph F1["01 요구사항"]
+    r1["요구사항"]; r2["유즈케이스"]; r3["품질 속성 시나리오"]
+  end
+  subgraph F2["02 UX 설계"]
+    u1["UX 개요"]; u2["조작 규칙"]; u3["단축키"]; u4["시각 디자인"]
+  end
+  subgraph F3["03 아키텍처"]
+    a1["아키텍처"]
+  end
+  subgraph F4["04 상세 설계"]
+    d1["모델"]; d2["레이아웃"]; d3["편집기"]; d4["셸 셋"]
+  end
+  subgraph F5["05 명세"]
+    s1["파일 형식"]
+  end
+  F1 --> F2
+  F1 --> F3
+  F2 --> F4
+  F3 --> F4
+  F4 --> F5
+</pre>
+          <div class="muted">질문과 상태는 그림 아래 짧은 목록으로</div>
+        </div>
+        <ul>
+          <li class="good">구조 전체가 그림 한 장입니다.</li>
+          <li><span class="bad">펴낸 사이트에서는 그림 속 이름을 눌러 문서로 갈 수 없습니다(Obsidian은 설정하면 됨). 결국 링크 목록을 또 둬야 합니다.</span></li>
+          <li><span class="bad">문서가 늘수록 그림이 커지고, 휴대폰 폭에서는 글자가 작아집니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">어느 안이든</span>
+    <div class="sum">
+      <h3>어느 안을 골라도 함께 고칠 것</h3>
+      <ul>
+        <li>문서 이름의 말머리를 뺍니다: "UX 설계: 조작 규칙" → "조작 규칙"(CLAUDE.md의 이름 규칙). 폴더 이름이 그 자리를 맡습니다.</li>
+        <li>낡은 상태를 바로잡습니다: 모델은 "작성 전"이 아니라 <mark>작성 중</mark>(2026-10-18 초안), 파일 형식 명세는 초안.</li>
+        <li>"문서를 쓸 때의 원칙" 콜아웃은 지도 아래에 그대로 둡니다.</li>
+      </ul>
+    </div>
+  </section>
+</main>
