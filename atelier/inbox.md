@@ -14,7 +14,14 @@ title: Inbox
 > 프로토타입과 답을 기다리는 페이지의 주소는 [[status#바로 가기]]에, 시안과 스파이크 전체의 목록은 [[sketchbook]]에 있습니다.
 
 # 1. 일하는 방식
-
+- [[atelier/README#아키텍처 결정 기록 (ADR)]]을 atelier/adr/README로
+- [[atelier/README#결정 기록 (DR)]]을 atelier/decisions/README로
+- [[atelier/README#세션 기록 목록]]을 atelier/sessions/README로
+- [[atelier/README#구성]]에 위 문서들의 링크
+- [[docs/README#문서 지도]]를 구조를 이해하기 쉽게 만들어주세요.
+- tech-notes (기술 노트) <- "홍월이 학습한 것"이라는 느낌이 아니라 AriadenNSD의 "고유한 기술"이라는 느낌이 듭니다. 오해하기 딱 좋네요. 바꿀 후보를 추천해주세요.
+- MVP 직전입니다. src/ 구조를 어떻게 할 것인지 결정해야합니다. 배포 대상이 다양한 것을 고려합시다. 제안해주세요.
+- site/는 문서를 배포하기 위함이지요? 앱을 배포하기 위해서는 어떤 디렉토리가 필요한가요?
 # 2. 배포 대상
 
 # 3. 기능
