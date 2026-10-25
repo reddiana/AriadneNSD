@@ -20,7 +20,6 @@ updated: 2026-10-25
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M39 | 레이아웃 속도 스파이크 (2026-10-25, 답을 기다림: 잰 숫자) | https://claude.ai/artifact/SRbqzTEA12ZVKc61YcKCXd | `journal/assets/2026-10-25-layout-perf-spike.html` |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
@@ -44,7 +43,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - [ ] **다음의 첫 일: 상세 설계 [[02-layout]]**(MVP의 중심). 그다음 테스트 전략 → 편집기 · 웹 설계 → [[backlog#MVP 전에 정할 것]]. 진행 순서(2026-10-25, 메인테이너: "다음 세션에 1부터 시작해 주세요")
 	1. ✅ (2026-10-25 세션 04, 첫 판 → [[02-layout#1. 레이아웃 알고리즘]]) 프로토타입의 레이아웃 코드(`measure` · `place` · `layout`)를 읽어 지금 규칙을 글로 옮긴다: 2단계(안쪽부터 크기, 바깥부터 자리), 갈래 폭, 접기 영역의 테두리와 틈, 여러 다이어그램의 배치. 값은 [[04-visual-design]]의 토큰으로. 브라우저 측정 대신 번들 글꼴의 폭 표([[0026-bundled-font-metrics|ADR-0026]])
 	2. ✅ (2026-10-25 세션 04) 프로토타입이 대충 넘긴 곳을 시안으로 물음: For(M33), If 머리(M34), 긴 글자(M35), 짧은 갈래(M36), default 없는 Case(M37), 배치(M38), 치수 토큰. 굵은 글자는 MVP 뒤. 남은 것: D2Coding으로 크기 단계 다시 확인, 실은 범위 밖 글자의 폭(3의 스파이크와 함께)
-	3. 스파이크: ✅ D2Coding 폭 표와 서브셋 글꼴의 크기(2026-10-25 → [[02-layout#2. 텍스트 폭 측정]]). 남은 것: 블록 500개 100ms
+	3. 스파이크: ✅ D2Coding 폭 표와 서브셋 글꼴의 크기(2026-10-25 → [[02-layout#2. 텍스트 폭 측정]]). ✅ 블록 500개 100ms(M39: 중앙값 약 10ms, 느린 5% 30ms 아래 → [[02-layout#4. 성능]])
 	4. `02-layout`에 쓰고, 구조를 정한 것은 ADR로
 	- 1단계는 프로토타입의 동작이 아니라 **합의한 규칙**을 기준으로 쓰고, 프로토타입과 다른 곳을 표시한다. 프로토타입은 레이아웃 설계와 나란히, 레이아웃에 닿는 것(머리 모양 "제목처럼", Case default 오른쪽, `∅`, 새 다이어그램 배치)부터 최신으로 맞춘다. 끌어 옮기기 · 순서 바꾸기는 방법을 정한 뒤로 (2026-10-25, 메인테이너: "추천을 수용합니다") → [[prototype#정해 놓고 아직 넣지 못한 것]]
 - [ ] 레이아웃을 쓰며 MVP에 드는 조작의 미결정(For 블록 포함)을 프로토타입 리뷰로 → [[prototype#리뷰 순서]]
