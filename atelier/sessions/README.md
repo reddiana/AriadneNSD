@@ -40,3 +40,4 @@ updated: 2026-10-25
 - [[2026-10-25-02-site-tags-figures|2026-10-25 사이트의 본문 태그 링크(Quartz 패치), ADR-0002의 표, 자동 확장 예시 그림, 셸 그림을 Mermaid로]]
 - [[2026-10-25-03-inbox-structure-code-layout|2026-10-25 목록을 각 폴더로, tech-notes → til, 문서 지도(M31), 코드의 자리(M32, ADR-0036), 링크 공유 그림, 문서 전체 정합성 검토, 매듭]]
 - [[2026-10-25-04-outbox-cleanup|2026-10-25 outbox 비우기(약 45묶음), 정해 주세요 다섯, 레이아웃 설계 1 ~ 4단계(시안 M33 ~ M38, 스파이크 D2Coding · M39, ADR-0037), 매듭, 테스트 전략(M40, ADR-0038), src/ 구조]]
+- [[2026-10-25-05-site-journal-explorer|2026-10-25 사이트에 name-story · logo-source를 펴냄, 탐색기 휠 스크롤(Quartz 버그를 CSS로)]]
