@@ -63,7 +63,7 @@ sequenceDiagram
 ```
 
 
-**노트 그림 갱신 ([[01-requirements#^obs-refresh]]):** Obsidian은 노트의 그림을 `<img>`로 한 번 렌더링한 뒤, 파일이 바뀌어도 다시 로드하지 않습니다(캐시된 URL). 그래서 볼트의 `modify` 이벤트를 구독해 `.ns.svg`가 바뀌면, 열린 모든 탭에서 그 파일을 가리키는 `.internal-embed` 안의 `<img>`의 `src`를 `vault.getResourcePath(file)`(수정 시각이 쿼리로 붙어 URL이 바뀌므로 캐시를 우회)로 교체합니다. 편집기의 저장이 아니라 볼트 이벤트를 구독하므로 git pull이나 다른 도구로 바뀌어도 갱신됩니다.
+**노트 그림 갱신 ([[01-requirements#OBS-04]]):** Obsidian은 노트의 그림을 `<img>`로 한 번 렌더링한 뒤, 파일이 바뀌어도 다시 로드하지 않습니다(캐시된 URL). 그래서 볼트의 `modify` 이벤트를 구독해 `.ns.svg`가 바뀌면, 열린 모든 탭에서 그 파일을 가리키는 `.internal-embed` 안의 `<img>`의 `src`를 `vault.getResourcePath(file)`(수정 시각이 쿼리로 붙어 URL이 바뀌므로 캐시를 우회)로 교체합니다. 편집기의 저장이 아니라 볼트 이벤트를 구독하므로 git pull이나 다른 도구로 바뀌어도 갱신됩니다.
 
 ```mermaid
 sequenceDiagram
@@ -85,7 +85,7 @@ sequenceDiagram
 - 이 요구사항이 나온 까닭:
 	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. AriadneNSD는 별도 플러그인 없이 갱신되어야 한다.
 
-**그림 우클릭 메뉴 ([[01-requirements#^obs-edit-embed]]):** Obsidian의 공개 API인 `file-menu` 이벤트를 구독해 기존 컨텍스트 메뉴에 항목을 더합니다. 노트의 그림 우클릭은 `source`가 `link-context-menu`, 파일 목록 우클릭은 `file-explorer-context-menu`로 옵니다. 항목은 `setSection('system')`으로 system 구역(기본 앱에서 열기, 폴더에서 보기 …)의 맨 아래에 둡니다. 그 바로 아래가 삭제 항목이 있는 danger 구역입니다.
+**그림 우클릭 메뉴 ([[01-requirements#OBS-02]]):** Obsidian의 공개 API인 `file-menu` 이벤트를 구독해 기존 컨텍스트 메뉴에 항목을 더합니다. 노트의 그림 우클릭은 `source`가 `link-context-menu`, 파일 목록 우클릭은 `file-explorer-context-menu`로 옵니다. 항목은 `setSection('system')`으로 system 구역(기본 앱에서 열기, 폴더에서 보기 …)의 맨 아래에 둡니다. 그 바로 아래가 삭제 항목이 있는 danger 구역입니다.
 - DOM의 `contextmenu` 이벤트를 가로채면 Obsidian의 기존 메뉴가 모두 사라집니다. 그래서 `file-menu` 이벤트를 씁니다. 이 부분은 비공개 내부 API에 기대지 않습니다.
 - 같은 구역에 항목을 넣는 다른 플러그인이 있으면 우리 항목이 그 뒤로 밀릴 수 있습니다.
 - 메뉴 항목의 자리:
@@ -97,7 +97,7 @@ sequenceDiagram
 
 ## 2. 노트에 새 다이어그램 넣기 ("Insert new NS diagram")
 
-요구사항: [[01-requirements#^obs-insert]], [[01-requirements#^obs-insert-command]]. drawio-obsidian의 흐름을 따른다.
+요구사항: [[01-requirements#OBS-01]], [[01-requirements#OBS-03]]. drawio-obsidian의 흐름을 따른다.
 
 > [!info] 미완성
 > - 노트 편집 화면의 컨텍스트 메뉴에 항목을 추가하는 방법
@@ -107,12 +107,12 @@ sequenceDiagram
 
 ## 3. 삽입된 다이어그램 편집 ("Edit NS diagram")
 
-요구사항: [[01-requirements#^obs-edit-embed]], [[01-requirements#^obs-detect]]
+요구사항: [[01-requirements#OBS-02]], [[01-requirements#OBS-09]]
 
 우클릭 메뉴와 그림 갱신은 스파이크로 방법을 확인했다. → [[#1. `.ns.svg` 파일 열기]]
 
 > [!info] 미완성
-> - `.ns`가 빠진 `.svg`를 내용(모델 요소의 유무)으로 판별해 메뉴를 띄우는 방법 ([[01-requirements#^obs-detect]])
+> - `.ns`가 빠진 `.svg`를 내용(모델 요소의 유무)으로 판별해 메뉴를 띄우는 방법 ([[01-requirements#OBS-09]])
 
 ## 4. 볼트 입출력
 
@@ -122,9 +122,9 @@ sequenceDiagram
 
 ## 5. 테마 연동
 
-정한 것: 편집 화면(화면 색, 오버레이 레이어 포함)은 Obsidian의 밝기를 따르고, 그림(문서의 테마)은 따르지 않는다 → [[04-visual-design#8. 테마]], [[01-requirements#^fmt-color]]
+정한 것: 편집 화면(화면 색, 오버레이 레이어 포함)은 Obsidian의 밝기를 따르고, 그림(문서의 테마)은 따르지 않는다 → [[04-visual-design#8. 테마]], [[01-requirements#FMT-08]]
 
-> [!info] 미완성: Obsidian의 밝기 변경 이벤트를 받아 화면 색을 바꾸는 방법 ([[01-requirements#^obs-theme]])
+> [!info] 미완성: Obsidian의 밝기 변경 이벤트를 받아 화면 색을 바꾸는 방법 ([[01-requirements#OBS-10]])
 
 > [!warning] 위험: 번들 글꼴과 서브세팅 wasm을 `main.js`에 인라인하면 플러그인 번들이 커진다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 

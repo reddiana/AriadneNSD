@@ -8,6 +8,7 @@
 // - 폴더의 README.md는 그 폴더의 첫 페이지(index.md)로 옮긴다. 그래야 사이트의 목록에서
 //   다른 문서 사이에 섞이지 않고 폴더 자리에 선다. 그리로 가는 위키링크도 함께 바꾼다.
 // - 별칭에 인라인 코드나 `#`가 든 위키링크는 마크다운 링크로 바꾼다. Quartz v4.5.2는 이런 위키링크를 링크로 만들지 못한다.
+// - 첫 칸이 ID(WEB-02 등)인 표의 줄에 그 ID의 앵커를 단다(2026-10-25 → DR-0016).
 // - 본문이 `# 제목`으로 시작하지 않는 문서에는 제목을 넣는다. 사이트는 본문의 제목만 보여 준다(quartz.layout.ts).
 // - 사이트의 첫 화면(index.md)은 저장소 맨 위의 README.md로 만든다(README가 원본). GitHub에서만 맞는 곳
 //   (<!-- site:skip --> … <!-- /site:skip -->)은 빼고, 저장소 경로 링크와 그림 경로를 사이트에 맞게 바꾼다.
@@ -120,9 +121,15 @@ function rewrite(text) {
         else if (line.trim().startsWith(fence)) fence = null
         return line
       }
-      return fence ? line : rewriteLine(line)
+      return fence ? line : addRowAnchor(rewriteLine(line))
     })
     .join("\n")
+}
+
+// 첫 칸이 ID(WEB-02, QA-12 …)인 표의 줄에 그 ID의 앵커를 단다. [[01-requirements#WEB-02]]가 그 줄로 간다.
+// Quartz는 앵커를 소문자로 바꿔 찾는다(#web-02). Obsidian은 표의 줄을 가리키지 못해 문서의 첫머리를 연다(→ DR-0016)
+function addRowAnchor(line) {
+  return line.replace(/^\| ([A-Z]+-\d+) \|/, (_, id) => `| <span id="${id.toLowerCase()}"></span>${id} |`)
 }
 
 function copyFile(s, d, name) {

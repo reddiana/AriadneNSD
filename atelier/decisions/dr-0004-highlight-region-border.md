@@ -19,14 +19,14 @@ superseded-by:
 ## 배경
 
 선택한 블록들을 강조 영역으로 지정해 눈에 띄게 보여 주는 요구사항이 있다. ([[01-requirements#^edit-region]])
-강조 영역은 접을 수 있지만, 접는 방식과 이름은 선택 범위 접기([[01-requirements#^edit-fold-range]])를 따른다. 이름은 접기의 일이므로 강조 모양이 이름 자리를 마련할 필요는 없다.
+강조 영역은 접을 수 있지만, 접는 방식과 이름은 선택 범위 접기([[01-requirements#EDIT-14]])를 따른다. 이름은 접기의 일이므로 강조 모양이 이름 자리를 마련할 필요는 없다.
 
 세 가지 모양을 기본 스타일([[dr-0003-default-visual-style|DR-0003]]) 위에 그려 비교했다. → [비교 시안](https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7)
 
 ## 결정 기준
 
 - 강조를 켜고 꺼도 레이아웃이 바뀌지 않아야 한다.
-- 흑백 인쇄에서도 보여야 한다. ([[01-requirements#^lay-theme]], [[01-requirements#^exp-pdf]])
+- 흑백 인쇄에서도 보여야 한다. ([[01-requirements#LAY-08]], [[01-requirements#EXP-03]])
 - 블록 종류를 나타내는 옅은 바탕 색조([[dr-0003-default-visual-style|DR-0003]])와 섞이지 않아야 한다.
 
 ## 검토한 대안

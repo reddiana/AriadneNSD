@@ -17,11 +17,11 @@ updated: 2026-10-25
 ## 관련 요구사항
 
 - 블록 종류: [[01-requirements#3.1 블록 종류]]
-- 정합성: [[01-requirements#^nfr-integrity]]
-- 실행 취소: [[01-requirements#^edit-undo]], [[02-interaction-rules#6. 실행 취소]]
-- 감싸기 · 풀기: [[01-requirements#^edit-wrap]], [[01-requirements#^edit-unwrap]], [[01-requirements#^edit-call-inline]]
-- 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^edit-multi-diagram]], [[01-requirements#^blk-event]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^blk-call-named]], [[01-requirements#^blk-call-external]]
-- 접기 영역과 뷰 상태: [[01-requirements#^edit-fold]], [[01-requirements#^edit-fold-range]], [[01-requirements#^edit-fold-site]], [[0018-save-as-shown|ADR-0018]]
+- 정합성: [[01-requirements#NFR-01]]
+- 실행 취소: [[01-requirements#EDIT-02]], [[02-interaction-rules#6. 실행 취소]]
+- 감싸기 · 풀기: [[01-requirements#EDIT-06]], [[01-requirements#EDIT-07]], [[01-requirements#EDIT-08]]
+- 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#EDIT-18]], [[01-requirements#BLK-01]], [[01-requirements#BLK-03]], [[01-requirements#BLK-04]], [[01-requirements#BLK-05]], [[01-requirements#BLK-06]]
+- 접기 영역과 뷰 상태: [[01-requirements#EDIT-13]], [[01-requirements#EDIT-14]], [[01-requirements#EDIT-16]], [[0018-save-as-shown|ADR-0018]]
 
 ## 1. 타입
 
@@ -43,7 +43,7 @@ type Content = {
 type Settings = {
   textKind: TextKind;    // 블록 글자의 종류 → [[0032-token-highlighting|ADR-0032]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
-  headStyle: 'shape' | 'title';  // 머리 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^lay-head-style]]
+  headStyle: 'shape' | 'title';  // 머리 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#LAY-10]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
 ```
@@ -117,9 +117,9 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 
 - 조건이나 반복의 글자는 모두 `text` 필드 하나에 둡니다. 글자 고치기 명령이 블록 종류(`kind`)마다 다른 필드로 분기하지 않아도 됩니다.
 - **빈 블록**은 글자가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 갈래, 새 반복의 본문은 빈 블록 하나로 채웁니다.
-- If의 갈래 이름은 고칠 수 있습니다(`label`). 고치지 않았으면 비어 있고, 편집기가 저장할 때의 화면 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#^edit-if-label]], [[01-requirements#^nfr-i18n]]. default 갈래의 이름은 고치지 않으며 늘 "default"입니다.
+- If의 갈래 이름은 고칠 수 있습니다(`label`). 고치지 않았으면 비어 있고, 편집기가 저장할 때의 화면 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#EDIT-12]], [[01-requirements#NFR-04]]. default 갈래의 이름은 고치지 않으며 늘 "default"입니다.
 - 갈래(`Branch`)에도 id가 있습니다. If와 Case는 갈래별로 접히므로, 뷰 상태가 갈래를 id로 참조합니다.
-- **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^ide-reverse]])가 그런 모양일 수 있기 때문입니다. 사용자가 고칠 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 늘 default가 있고, default는 뺄 수 없고, default가 아닌 갈래는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
+- **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 고칠 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 늘 default가 있고, default는 뺄 수 없고, default가 아닌 갈래는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 
 > [!info] 미완성: 탈출(Exit / Break / Return), 병렬 처리, 주석 블록
 > 모두 `P2`입니다. 넣을 때 이 판별 유니온(`kind`)에 멤버를 더합니다. 병렬 처리는 Case처럼 갈래 여럿을 합성하고, 탈출과 주석은 처리 블록처럼 `text` 하나를 갖는 꼴이 될 것입니다.

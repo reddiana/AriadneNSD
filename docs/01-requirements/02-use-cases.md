@@ -14,7 +14,7 @@ updated: 2026-10-25
 
 > [!info] 읽는 법
 > - 유즈케이스는 사용자 목표 수준으로, 기본 흐름과 예외 흐름 몇 줄로 씁니다. 실패가 비싼 흐름(UC-02 열기, UC-06 저장, UC-07 노트에 넣어 보이기)만 최소 보장 · 성공 보장 · 확장까지 갖춘 자세한 형식(Cockburn의 fully dressed)으로 씁니다([[dr-0014-light-use-cases|DR-0014]]). 세부 규칙(어떤 키, 어떤 모습)은 UX 설계([[02-interaction-rules]])에 있고 여기서는 되풀이하지 않습니다.
-> - 각 유즈케이스 끝의 "요구사항"은 그 흐름이 기대는 요구사항의 블록 ID입니다. 우선순위(`P0` …)는 요구사항 쪽에 있습니다.
+> - 각 유즈케이스 끝의 "요구사항"은 그 흐름이 기대는 요구사항의 ID입니다. 우선순위(`P0` …)는 요구사항 쪽에 있습니다.
 > - 흐름의 번호에 붙은 `a`, `b`는 그 단계에서 갈라지는 예외 흐름(자세한 형식에서는 "확장")입니다(예: 3a는 3단계의 예외). `'`가 붙은 것은 같은 단계를 다른 수단으로 하는 기술 변형입니다.
 
 ## 1. 액터
@@ -95,7 +95,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1b. Obsidian 파일 탐색기의 우클릭 메뉴에서 만들면 노트에 넣지 않고 파일만 생긴다
 - 1c. Google Drive의 "새로 만들기"에서 만들면 Drive에 파일이 생긴다
 
-**요구사항:** [[01-requirements#^obs-new]], [[01-requirements#^gd-new]], [[01-requirements#^nfr-integrity]]
+**요구사항:** [[01-requirements#OBS-08]], [[01-requirements#GD-02]], [[01-requirements#NFR-01]]
 
 ### UC-02 다이어그램을 연다
 
@@ -140,7 +140,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 편집을 시작할 때마다
 
-**요구사항:** [[01-requirements#^web-file]], [[01-requirements#^dsk-file]], [[01-requirements#^dsk-open-nssvg]], [[01-requirements#^dsk-assoc]], [[01-requirements#^dsk-multi]], [[01-requirements#^obs-open]], [[01-requirements#^obs-plain-svg]], [[01-requirements#^obs-detect]], [[01-requirements#^gd-open-with]], [[01-requirements#^web-share-url]], [[01-requirements#^web-view-mode]], [[01-requirements#^fmt-model]], [[01-requirements#^fmt-model-source]], [[01-requirements#^fmt-invalid]], [[01-requirements#^fmt-external-edit]], [[01-requirements#^blk-call-external]], [[01-requirements#^nfr-compat]]
+**요구사항:** [[01-requirements#WEB-02]], [[01-requirements#DSK-01]], [[01-requirements#DSK-02]], [[01-requirements#DSK-03]], [[01-requirements#DSK-04]], [[01-requirements#OBS-05]], [[01-requirements#OBS-06]], [[01-requirements#OBS-09]], [[01-requirements#GD-01]], [[01-requirements#WEB-05]], [[01-requirements#WEB-06]], [[01-requirements#FMT-02]], [[01-requirements#FMT-05]], [[01-requirements#FMT-06]], [[01-requirements#FMT-09]], [[01-requirements#BLK-06]], [[01-requirements#NFR-02]]
 
 ### UC-03 블록을 편집한다
 
@@ -162,7 +162,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 2c. 끌어 놓기, 복사 · 붙여넣기로 블록을 옮긴다
 - 2d. If의 갈래를 바꾸거나, Case의 갈래를 더하고 빼고 순서를 바꾼다
 
-**요구사항:** [[01-requirements#^edit-basic]], [[01-requirements#^edit-undo]], [[01-requirements#^edit-keyboard]], [[01-requirements#^edit-key-hint]], [[01-requirements#^edit-multiselect]], [[01-requirements#^edit-wrap]], [[01-requirements#^edit-unwrap]], [[01-requirements#^edit-dnd]], [[01-requirements#^edit-clipboard]], [[01-requirements#^edit-branch]], [[01-requirements#^edit-if-label]], [[01-requirements#^blk-case]], [[01-requirements#^lay-autosize]], [[01-requirements#^lay-branch-width]], [[01-requirements#^nfr-integrity]], [[01-requirements#^nfr-perf]]
+**요구사항:** [[01-requirements#EDIT-01]], [[01-requirements#EDIT-02]], [[01-requirements#EDIT-03]], [[01-requirements#EDIT-04]], [[01-requirements#EDIT-05]], [[01-requirements#EDIT-06]], [[01-requirements#EDIT-07]], [[01-requirements#EDIT-09]], [[01-requirements#EDIT-10]], [[01-requirements#EDIT-11]], [[01-requirements#EDIT-12]], [[01-requirements#BLK-02]], [[01-requirements#LAY-01]], [[01-requirements#LAY-02]], [[01-requirements#NFR-01]], [[01-requirements#NFR-03]]
 
 ### UC-04 구조를 나눈다
 
@@ -184,7 +184,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 4a. 호출 블록이 부르던 Method를 지우면 그 호출 블록은 "이어진 곳 없음"이 된다
 - 4b. 다른 문서의 Method를 부른다(`P2`)
 
-**요구사항:** [[01-requirements#^edit-multi-diagram]], [[01-requirements#^edit-extract]], [[01-requirements#^edit-call-inline]], [[01-requirements#^blk-event]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^blk-call-named]], [[01-requirements#^blk-call-external]]
+**요구사항:** [[01-requirements#EDIT-18]], [[01-requirements#EDIT-19]], [[01-requirements#EDIT-08]], [[01-requirements#BLK-01]], [[01-requirements#BLK-03]], [[01-requirements#BLK-04]], [[01-requirements#BLK-05]], [[01-requirements#BLK-06]]
 
 ### UC-05 큰 다이어그램을 훑어본다
 
@@ -203,7 +203,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 2a. 모두 접기 · 모두 펴기 · 깊이 n까지 펴기(`P2`)
 - 4a. 펴 보인 호출 블록 안에서도 접기 영역을 만든다. 그 자리에만 있고 Method에는 없다
 
-**요구사항:** [[01-requirements#^lay-zoom]], [[01-requirements#^edit-fold]], [[01-requirements#^edit-fold-range]], [[01-requirements#^edit-call-open]], [[01-requirements#^edit-fold-site]], [[01-requirements#^edit-fold-all]]
+**요구사항:** [[01-requirements#LAY-03]], [[01-requirements#EDIT-13]], [[01-requirements#EDIT-14]], [[01-requirements#EDIT-15]], [[01-requirements#EDIT-16]], [[01-requirements#EDIT-17]]
 
 ### UC-06 저장한다
 
@@ -244,7 +244,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 편집하는 동안 자주. 자동 저장(`P1`)이 있으면 더 자주
 
-**요구사항:** [[01-requirements#^fmt-svg]], [[01-requirements#^fmt-model]], [[01-requirements#^fmt-deterministic]], [[01-requirements#^fmt-escape]], [[01-requirements#^fmt-text]], [[01-requirements#^fmt-color]], [[01-requirements#^web-file]], [[01-requirements#^dsk-file]], [[01-requirements#^gd-save]], [[01-requirements#^web-draft]], [[01-requirements#^exp-autosave]], [[01-requirements#^nfr-compat]]
+**요구사항:** [[01-requirements#FMT-01]], [[01-requirements#FMT-02]], [[01-requirements#FMT-03]], [[01-requirements#FMT-04]], [[01-requirements#FMT-07]], [[01-requirements#FMT-08]], [[01-requirements#WEB-02]], [[01-requirements#DSK-01]], [[01-requirements#GD-03]], [[01-requirements#WEB-03]], [[01-requirements#EXP-04]], [[01-requirements#NFR-02]]
 
 ### UC-07 노트에 다이어그램을 넣어 보인다
 
@@ -287,7 +287,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 노트에 알고리즘을 설명할 때마다
 
-**요구사항:** [[01-requirements#^obs-insert]], [[01-requirements#^obs-insert-command]], [[01-requirements#^obs-edit-embed]], [[01-requirements#^obs-refresh]], [[01-requirements#^obs-embed]], [[01-requirements#^obs-theme]], [[01-requirements#^fmt-text]]
+**요구사항:** [[01-requirements#OBS-01]], [[01-requirements#OBS-03]], [[01-requirements#OBS-02]], [[01-requirements#OBS-04]], [[01-requirements#OBS-07]], [[01-requirements#OBS-10]], [[01-requirements#FMT-07]]
 
 ### UC-08 공유하고 내보낸다
 
@@ -307,7 +307,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 3a. 저장 파일(`.ns.svg`) 그대로 GitHub · Drive · 문서 도구에 두어도 그림으로 보인다 → UC-06
 - 3b. 다른 뷰어에서도 글꼴이 똑같이 보이게 글자를 외곽선으로 바꿔 저장한다(`P1`)
 
-**요구사항:** [[01-requirements#^exp-png]], [[01-requirements#^exp-plain-svg]], [[01-requirements#^exp-pdf]], [[01-requirements#^web-share-url]], [[01-requirements#^web-view-mode]], [[01-requirements#^gd-preview]], [[01-requirements#^fmt-outline]]
+**요구사항:** [[01-requirements#EXP-01]], [[01-requirements#EXP-02]], [[01-requirements#EXP-03]], [[01-requirements#WEB-05]], [[01-requirements#WEB-06]], [[01-requirements#GD-04]], [[01-requirements#FMT-10]]
 
 ### UC-09 그림의 모양을 정한다
 
@@ -326,7 +326,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1a. 편집 화면의 밝기(밝음 · 어두움)는 문서의 테마와 따로다. 저장되는 그림은 문서의 테마를 따른다
 - 1b. 화면의 언어는 사용자의 설정이다. 그림에 적히는 글자("참", "거짓" 등)는 저장할 때의 언어를 따른다
 
-**요구사항:** [[01-requirements#^lay-theme]], [[01-requirements#^lay-text-kind]], [[01-requirements#^lay-syntax]], [[01-requirements#^lay-head-style]], [[01-requirements#^lay-default-style]], [[01-requirements#^obs-theme]], [[01-requirements#^fmt-color]], [[01-requirements#^nfr-i18n]]
+**요구사항:** [[01-requirements#LAY-08]], [[01-requirements#LAY-06]], [[01-requirements#LAY-07]], [[01-requirements#LAY-10]], [[01-requirements#LAY-05]], [[01-requirements#OBS-10]], [[01-requirements#FMT-08]], [[01-requirements#NFR-04]]
 
 ### UC-10 문제를 알린다
 
@@ -343,7 +343,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 - 1a. 예상하지 못한 오류가 나면 편집기가 먼저 "이 문제를 알리시겠어요?"를 묻는다
 
-**요구사항:** [[01-requirements#^rep-issue]], [[01-requirements#^rep-prompt]]
+**요구사항:** [[01-requirements#REP-01]], [[01-requirements#REP-02]]
 
 ## 5. 나중에 붙는 유즈케이스
 
@@ -351,11 +351,11 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 | 유즈케이스 | 요구사항 |
 | --- | --- |
-| 코드와 다이어그램을 오간다 (IDE) | [[01-requirements#^ide-reverse]], [[01-requirements#^ide-codegen]], [[01-requirements#^ide-fold-region]], [[01-requirements#^ide-live-sync]], [[01-requirements#^code-dsl]], [[01-requirements#^code-gen]], [[01-requirements#^code-parse]] |
-| 말로 다이어그램을 그린다 (AI) | [[01-requirements#^web-ai-chat]], [[01-requirements#^skill-claude]] |
-| Confluence 페이지에 넣어 보인다 | [[01-requirements#^cf-app]] (UC-07과 같은 흐름) |
-| 다른 도구의 파일을 가져온다 | [[01-requirements#^imp-structorizer]] |
-| 실행을 따라가며 본다 (교육용) | [[01-requirements#^code-anim]] |
+| 코드와 다이어그램을 오간다 (IDE) | [[01-requirements#IDE-03]], [[01-requirements#IDE-04]], [[01-requirements#IDE-05]], [[01-requirements#IDE-06]], [[01-requirements#CODE-01]], [[01-requirements#CODE-02]], [[01-requirements#CODE-03]] |
+| 말로 다이어그램을 그린다 (AI) | [[01-requirements#WEB-07]], [[01-requirements#SKILL-01]] |
+| Confluence 페이지에 넣어 보인다 | [[01-requirements#CF-01]] (UC-07과 같은 흐름) |
+| 다른 도구의 파일을 가져온다 | [[01-requirements#EXP-05]] |
+| 실행을 따라가며 본다 (교육용) | [[01-requirements#CODE-04]] |
 
 ## 6. 미결정 사항
 

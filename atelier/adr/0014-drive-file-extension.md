@@ -16,11 +16,11 @@ superseded-by:
 ## 배경
 
 [[0012-google-drive-integration|ADR-0012]]는 Drive 연동을 웹 버전 위에 얹기로 하고, Drive에 저장할 확장자를 후속 결정으로 남겼다.
-[[0006-file-extensions|ADR-0006]]에 따르면 웹 버전은 `.ns`로 저장한다. 그런데 Drive에서는 미리보기와 썸네일([[01-requirements#^gd-preview]])이 확장자에 따라 달라진다.
+[[0006-file-extensions|ADR-0006]]에 따르면 웹 버전은 `.ns`로 저장한다. 그런데 Drive에서는 미리보기와 썸네일([[01-requirements#GD-04]])이 확장자에 따라 달라진다.
 
 ## 결정 기준
 
-- Drive 미리보기와 썸네일이 별도 작업 없이 나와야 한다. ([[01-requirements#^gd-preview]])
+- Drive 미리보기와 썸네일이 별도 작업 없이 나와야 한다. ([[01-requirements#GD-04]])
 - 저장할 때마다 할 일이 늘지 않아야 한다.
 - 다른 대상(Obsidian, 데스크톱)과 파일을 쉽게 주고받을 수 있어야 한다.
 

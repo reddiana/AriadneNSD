@@ -20,9 +20,9 @@ superseded-by:
 
 ## 결정 기준
 
-- Obsidian에서 노트에 넣으면 그림으로 보여야 한다. ([[01-requirements#^obs-embed]])
-- Obsidian에서 일반 `.svg`와 NS 다이어그램을 구분할 수 있어야 한다. ([[01-requirements#^obs-plain-svg]])
-- 데스크톱에서 파일 연결이 다른 프로그램과 겹치지 않아야 한다. ([[01-requirements#^dsk-assoc]])
+- Obsidian에서 노트에 넣으면 그림으로 보여야 한다. ([[01-requirements#OBS-07]])
+- Obsidian에서 일반 `.svg`와 NS 다이어그램을 구분할 수 있어야 한다. ([[01-requirements#OBS-06]])
+- 데스크톱에서 파일 연결이 다른 프로그램과 겹치지 않아야 한다. ([[01-requirements#DSK-03]])
 - 세 대상 사이에서 파일을 쉽게 옮길 수 있어야 한다.
 
 ## 검토한 대안
@@ -42,7 +42,7 @@ superseded-by:
 - Obsidian 플러그인: `이름.ns.svg`
 - 데스크톱 · 웹: `이름.ns` (`.ns.svg`도 열 수 있음)
 - 확장자는 1차 판별에만 쓰고, 실제로 열 때는 파일 내용에 모델이 있는지 검사한다(콘텐츠 기반 판별).
-- `.ns`가 빠진 `.svg`라도 모델이 있으면 "NS 편집기로 열기" 메뉴를 제공한다. ([[01-requirements#^obs-detect]])
+- `.ns`가 빠진 `.svg`라도 모델이 있으면 "NS 편집기로 열기" 메뉴를 제공한다. ([[01-requirements#OBS-09]])
 
 ## 결과
 

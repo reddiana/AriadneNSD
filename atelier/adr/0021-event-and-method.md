@@ -13,11 +13,11 @@ superseded-by:
 > [!NOTE] 이후 변경
 > - 2026-10-11: 인자와 결과를 적는 법을 A1에서 A2로 바꿨다. 호출 블록의 이름은 Method의 머리를 따르고 호출 블록에서는 고칠 수 없으며, 인자와 결과만 적는다. 구분 자체와 H3 · C1 · S2는 그대로다 → [[0022-call-name-follows-head|ADR-0022]]
 > - 2026-10-13: 단축키에 Vim 키를 들였다. S2의 `E` · `M`과 `R`은 그대로이고(소문자 `e` `m`은 그 종류로, 대문자 `E` `M`은 새 빈 다이어그램), 그 밖의 키가 바뀌었다. 지금의 키는 [[03-keymap]]에 있다 → [[dr-0009-vim-keys|DR-0009]]
-> - 2026-10-17: 호출 블록이 부를 수 있는 것이 늘었다. 같은 문서의 Method에 더해, 이름만 적은 것(문서에 없는 라이브러리 함수 등)과 다른 문서의 Method를 부른다. C1 "Event는 부를 수 없다"는 그대로다 → [[01-requirements#^blk-call-named]], [[01-requirements#^blk-call-external]], M18 https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx
+> - 2026-10-17: 호출 블록이 부를 수 있는 것이 늘었다. 같은 문서의 Method에 더해, 이름만 적은 것(문서에 없는 라이브러리 함수 등)과 다른 문서의 Method를 부른다. C1 "Event는 부를 수 없다"는 그대로다 → [[01-requirements#BLK-05]], [[01-requirements#BLK-06]], M18 https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx
 
 ## 배경
 
-한 문서에 다이어그램을 여러 개 두고 호출 블록으로 서로를 부르게 된 뒤([[01-requirements#^edit-multi-diagram]], [[01-requirements#^blk-call]]), 머리가 있는 다이어그램은 모두 같은 모자 모양 머리([[01-requirements#^blk-event]])를 달았다. 이벤트 처리기와, 호출 블록이 부르는 Method(Sub process)를 따로 둘지는 미결정으로 남아 있었다.
+한 문서에 다이어그램을 여러 개 두고 호출 블록으로 서로를 부르게 된 뒤([[01-requirements#EDIT-18]], [[01-requirements#BLK-04]]), 머리가 있는 다이어그램은 모두 같은 모자 모양 머리([[01-requirements#BLK-01]])를 달았다. 이벤트 처리기와, 호출 블록이 부르는 Method(Sub process)를 따로 둘지는 미결정으로 남아 있었다.
 
 메인테이너가 프로토타입에 넣을 예제 둘(퀵소트, Raft 프로토콜)을 요청했고, 그 예제를 만들면서 두 가지가 드러났다.
 
@@ -77,7 +77,7 @@ superseded-by:
 
 머리 모양과 인자 표기에서는 Claude가 권한 안(H1, A2)과 다른 안을 골랐다. 구분 자체와 C1, S2는 권한 안과 같다.
 
-세부 규칙은 요구사항에 적었다 → [[01-requirements#^blk-event]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^edit-extract]]
+세부 규칙은 요구사항에 적었다 → [[01-requirements#BLK-01]], [[01-requirements#BLK-03]], [[01-requirements#BLK-04]], [[01-requirements#EDIT-19]]
 
 ## 결과
 

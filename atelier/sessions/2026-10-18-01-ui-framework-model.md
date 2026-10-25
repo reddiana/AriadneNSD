@@ -67,7 +67,7 @@ date: 2026-10-18
 | 둘레의 화면 부품은 React | [[0010-ui-framework\|ADR-0010]] 승인 |
 | 모델 초안, MD1~MD3, Case는 모델은 넓게 명령은 좁게 | [[01-model]], [[02-interaction-rules]] |
 | 결정의 원본은 모두 `atelier/`에, 작은 UX 결정은 UX 결정 모음 하나에 | [[dr-0012-decisions-in-atelier\|DR-0012]], DR-0001 이후 변경, CLAUDE.md |
-| If 갈래 이름 고치기, default 이름 오른쪽 정렬, 빈 갈래 `∅`, 머리 모양 고르기, 두 키 조합 안내 | 요구사항 `^edit-if-label` · `^lay-empty-branch` · `^lay-head-style` · `^edit-key-hint`, [[04-visual-design]], [[03-keymap]] |
+| If 갈래 이름 고치기, default 이름 오른쪽 정렬, 빈 갈래 `∅`, 머리 모양 고르기, 두 키 조합 안내 | 요구사항 `EDIT-12` · `LAY-09` · `LAY-10` · `EDIT-04`, [[04-visual-design]], [[03-keymap]] |
 
 새 시안: M22(UI 프레임워크, 크기를 잰 스파이크 포함), M23(모델 설계의 물음), M24(빈 갈래 · 머리 모양 · 키 안내), M25(결정을 한곳에) → [[sketchbook]]
 

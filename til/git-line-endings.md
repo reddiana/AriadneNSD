@@ -34,7 +34,7 @@ updated: 2026-10-22
 
 ## AriadneNSD에서 어디에 쓰나
 
-- 문서뿐 아니라 나중의 코드와 `.ns.svg` 파일도 LF로 저장됩니다. 요구사항 [[01-requirements#^fmt-deterministic]](같은 모델이면 같은 파일)과도 맞습니다. 줄 끝이 바뀌면 같은 그림이어도 git diff가 생깁니다.
+- 문서뿐 아니라 나중의 코드와 `.ns.svg` 파일도 LF로 저장됩니다. 요구사항 [[01-requirements#FMT-03]](같은 모델이면 같은 파일)과도 맞습니다. 줄 끝이 바뀌면 같은 그림이어도 git diff가 생깁니다.
 
 ## 내용은 같은데 modified로 나올 때 (2026-10-22)
 

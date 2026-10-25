@@ -22,8 +22,8 @@ superseded-by: "[[0018-save-as-shown]]"
 제어 블록, 선택 범위, 강조 영역을 접고 펼 수 있다. ([[01-requirements#접기 · 펼치기]]) 다이어그램 여러 곳이 각각 접히거나 펼쳐져 있을 수 있다.
 접힘 상태를 기억할지, 기억한다면 어디에 둘지, 저장되는 SVG 그림을 어떤 모양으로 그릴지 정해야 한다.
 
-- 같은 모델이면 같은 파일이 나와야 한다. 불필요한 git diff를 막기 위해서다. ([[01-requirements#^fmt-deterministic]], [[01-requirements#^nfr-compat]])
-- 노트에 넣은 그림은 플러그인 없이 이미지로 보인다. ([[01-requirements#^obs-embed]]) Obsidian과 GitHub은 SVG 안의 스크립트를 막으므로, 그림을 보는 사람은 접힌 칸을 펼 수 없다.
+- 같은 모델이면 같은 파일이 나와야 한다. 불필요한 git diff를 막기 위해서다. ([[01-requirements#FMT-03]], [[01-requirements#NFR-02]])
+- 노트에 넣은 그림은 플러그인 없이 이미지로 보인다. ([[01-requirements#OBS-07]]) Obsidian과 GitHub은 SVG 안의 스크립트를 막으므로, 그림을 보는 사람은 접힌 칸을 펼 수 없다.
 
 ## 결정 기준
 
