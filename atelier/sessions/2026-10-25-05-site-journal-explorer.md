@@ -32,3 +32,19 @@ inbox의 두 항목을 함께 검토했다. 원문:
 - 로컬 빌드로 확인함: 두 쪽과 그림 셋이 나오고, 그림 주소가 맞고, CSS가 들어감. 휠 스크롤은 브라우저에서 굴려 보지 못함(Quartz의 고침과 같은 내용).
 - 기록: [[dr-0013-publish-docs-github-pages|DR-0013]] "이후 변경", [[github-pages-site]], README의 한 문장, `pages.yml`의 주석, [[backlog#출시 무렵과 그 뒤]]에 "Quartz v5로 올리기".
 - 알게 된 것: Git Bash와 PowerShell의 PATH에 `node`가 없다. 이번 빌드는 Playwright가 깔아 둔 `node.exe`(v24)로 했다.
+
+## inbox: 세션 목록의 링크 두 줄
+
+메인테이너가 세션 중에 inbox에 하나 더 올렸다("inbox 하나 더 올렸습니다."). 원문:
+
+> # 6. 기타
+> - [[atelier/sessions/README#세션 기록]]이 github page publishing되면 아래 부분이 link가 안 생깁니다.
+> ```
+>     - [[2026-10-10-03-inbox-review|2026-10-10 inbox 검토: [P3](https://reddiana.github.io/AriadneNSD/tags/P3), 문제 알리기, 용어 “선택 영역”]]
+>     - [[2026-10-10-06-logo|2026-10-10 ~ 11 로고: 크노소스 벽화의 여인, 문자 로고 `Ariadne’s NSD`, 이름 이야기]]
+>   ```
+
+원인은 둘이다. Quartz v4.5.2는 위키링크의 별칭에 `#`가 있으면 위키링크로 읽지 않는다(19행의 `#P3`). 별칭에 인라인 코드가 있으면 글이 코드 앞뒤로 쪼개져 위키링크를 찾지 못한다(22행의 `` `Ariadne’s NSD` ``). 사이트 전체에서 이런 링크는 이 두 줄뿐이었다. 고르는 창에서 "원문도 빌드도 고침(추천)"을 골랐다.
+
+- 원문: 19행의 `#P3`를 규칙대로 `` `P3` ``로.
+- 빌드: `site/prepare-content.mjs`가 별칭에 인라인 코드나 `#`가 든 위키링크를 마크다운 링크(`[별칭](문서)`)로 바꿔 넘긴다. 로컬 빌드에서 두 줄이 링크가 되고 코드 표기가 그대로 보이는 것을 확인함.

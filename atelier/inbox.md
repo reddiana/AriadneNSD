@@ -27,8 +27,3 @@ title: Inbox
 # 5. 질문/요청
 
 # 6. 기타
-- [[atelier/sessions/README#세션 기록]]이 github page publishing되면 아래 부분이 link가 안 생깁니다.
-```
-    - [[2026-10-10-03-inbox-review|2026-10-10 inbox 검토: [P3](https://reddiana.github.io/AriadneNSD/tags/P3), 문제 알리기, 용어 “선택 영역”]]
-    - [[2026-10-10-06-logo|2026-10-10 ~ 11 로고: 크노소스 벽화의 여인, 문자 로고 `Ariadne’s NSD`, 이름 이야기]]
-  ```

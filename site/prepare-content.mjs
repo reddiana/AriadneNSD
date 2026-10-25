@@ -7,6 +7,7 @@
 //   GitHub의 파일 주소로 바꾼다. 그대로 두면 사이트에서 끊긴 링크가 된다.
 // - 폴더의 README.md는 그 폴더의 첫 페이지(index.md)로 옮긴다. 그래야 사이트의 목록에서
 //   다른 문서 사이에 섞이지 않고 폴더 자리에 선다. 그리로 가는 위키링크도 함께 바꾼다.
+// - 별칭에 인라인 코드나 `#`가 든 위키링크는 마크다운 링크로 바꾼다. Quartz v4.5.2는 이런 위키링크를 링크로 만들지 못한다.
 // - 본문이 `# 제목`으로 시작하지 않는 문서에는 제목을 넣는다. 사이트는 본문의 제목만 보여 준다(quartz.layout.ts).
 // - 사이트의 첫 화면(index.md)은 저장소 맨 위의 README.md로 만든다(README가 원본). GitHub에서만 맞는 곳
 //   (<!-- site:skip --> … <!-- /site:skip -->)은 빼고, 저장소 경로 링크와 그림 경로를 사이트에 맞게 바꾼다.
@@ -61,9 +62,20 @@ for (const rel of PUBLISHED_FILES) {
 const isPublished = (rel) => PUBLISHED.some((d) => rel.startsWith(d + "/")) || publishedFiles.has(rel)
 
 let rewritten = 0
+// 별칭에 인라인 코드나 `#`가 든 위키링크([[문서|`P3` …]])를 마크다운 링크([`P3` …](문서))로 바꾼다.
+// Quartz v4.5.2는 별칭에 #가 있으면 위키링크로 읽지 않고(wikilinkRegex), 인라인 코드가 있으면 글이 코드 앞뒤로
+// 쪼개져 위키링크를 찾지 못한다. 그림(![[…]])과 제목으로 가는 링크(#제목)는 지금 쓰는 곳이 없어 다루지 않는다
+function rewriteAliasLinks(line) {
+  return line.replace(/(^|[^!])\[\[([^\]#|\\\n]+)\\?\|([^\]\n]*[`#][^\]\n]*)\]\]/g, (whole, pre, target, alias) => {
+    const rel = resolve(target.trim())
+    if (!rel || !isPublished(rel)) return whole
+    return `${pre}[${alias}](${target.trim()})`
+  })
+}
+
 // 한 줄 안에서 인라인 코드(`…`)는 건드리지 않고 위키링크만 바꾼다
 function rewriteLine(line) {
-  return line
+  return rewriteAliasLinks(line)
     .split(/(`+[^`]*`+)/)
     .map((part, i) => {
       if (i % 2 === 1) return part
