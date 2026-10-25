@@ -207,3 +207,11 @@ Q7의 "풀기"가 호출 블록에 듣는 경우다. Method로 빼기의 반대�
 ### SB1. 짧은 갈래
 
 **정함 (2026-10-25): 3. 짧은 갈래의 블록들을 고르게 늘린다.** If · Case의 한 갈래가 짧아 남는 높이를 그 갈래의 블록 수로 똑같이 나눠 더한다. 한 블록만 커 보여 일이 많은 것처럼 읽히지 않게 하려는 것이다. Claude의 추천은 1번(마지막 블록을 늘림, 지금 프로토타입)이었다. 아래에 빈 칸을 두는 2번은 빈 칸이 빈 블록과 같아 보여 견주기만 했다. 나머지의 몫과 제어 블록 안으로 나누는 세부는 Claude가 정했다. 견준 안 → 시안 M36의 S1 https://claude.ai/artifact/JN9SCyvkJfRaXJ9CyaaDq6 (사본 `journal/assets/2026-10-25-short-branch-study.html`). 지금의 규칙 → [[02-layout#1.3 줄 (`Seq`)]]
+
+### CD1. default가 없는 Case
+
+**정함 (2026-10-25): 2. 빈 default 칸(`∅`)을 그려 둔다.** 코드에서 가져온 `switch`에 default가 없으면, 모델에는 갈래가 없지만(`otherwise: null`) 그림에는 빈 default 칸을 그려 보통 Case와 같은 모양으로 둔다. 코드의 뜻도 같다(default가 없으면 아무 일도 하지 않음). Claude의 추천은 1번(긴 빗금이 오른쪽 끝까지, NS 차트 표준)이었다. 그 칸을 고르고 적으면 default가 생기는 동작은 Claude가 정했다. 견준 안 → 시안 M37의 C1 https://claude.ai/artifact/NhjkFEJhd1cf6DLvxjh6Dt (사본 `journal/assets/2026-10-25-case-default-study.html`). 지금의 규칙 → [[02-interaction-rules#Case 블록]], [[02-layout#1.4 블록]]
+
+### CD2. default만 있는 Case
+
+**정함 (2026-10-25): 1. 짧은 빗금 하나.** 보통 Case의 규칙(긴 빗금은 default 칸의 왼쪽 아래로)에서 default 칸이 블록 전체이니 짧은 빗금만 남는다. 견준 안 → 시안 M37의 C2. 지금의 규칙 → [[02-layout#1.4 블록]]

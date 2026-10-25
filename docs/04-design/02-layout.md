@@ -119,8 +119,8 @@ flowchart LR
 - **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 그 블록 가운데에 `∅`를 그립니다. 크기 재기에는 영향이 없습니다(빈 블록의 크기 그대로) → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - **접힌 갈래 · 접힌 본문:** "⋯ 블록 n개" 한 줄의 크기(글자 + 2·`space.pad-x`, 글자 + 2·`space.pad-y`)로 잽니다. 자리 잡기에서는 그 갈래(본문)의 자리를 다 채웁니다.
 
-> [!question] 미결정: default가 없는 Case와 default만 있는 Case
-> 코드에서 가져온 Case는 이런 모양일 수 있습니다([[01-model#1.4 블록]]). NS 차트 표준에서 default가 없으면 긴 빗금이 오른쪽 끝까지 갑니다. 어떻게 그릴지 정하지 않았습니다.
+- **default가 없는 Case**(코드에서 가져온 것, `otherwise: null`)는 **빈 default 칸을 그려 둡니다.** 모델에는 갈래가 없지만, 레이아웃은 default 칸이 빈 블록 하나인 것처럼 재고 놓으며 칸 가운데에 `∅`를 그립니다. 그래서 보통 Case와 모양이 같습니다. 이 칸은 `LayoutResult`에 "없는 default"로 표시해 `editor`가 가릴 수 있게 합니다 → [[ux-decisions#CD1. default가 없는 Case|CD1]]
+- **default만 있는 Case**(갈래 없음)는 default 칸이 블록 전체입니다. 긴 빗금은 길이가 없어 그리지 않고, **짧은 빗금 하나**(오른쪽 위에서 왼쪽 아래로)만 남습니다 → [[ux-decisions#CD2. default만 있는 Case|CD2]]
 
 ### 1.5 머리
 
@@ -201,7 +201,6 @@ flowchart LR
 
 ## 미결정 사항
 
-- [ ] default가 없는 Case, default만 있는 Case의 모양 → 1.4
 - [ ] 여러 다이어그램: 줄 높이 후보의 범위, Event 무리와 Method 무리 사이의 넓이 → 1.7
 - [ ] 토큰이 없는 값을 토큰으로 할지, 값을 그대로 둘지: 갈래 이름 둘레 18px, If 머리 70px · Case 머리 90px, Event · Method 머리 24px, 다이어그램의 최소 폭 160px, 접힌 접기 영역의 기호 자리 20px · 4px. 모두 프로토타입의 값입니다 → [[04-visual-design#5. 기하와 해부도]]
 - [ ] 굵은 글자의 폭: 기본 블록 글꼴은 D2Coding 보통 하나라([[0034-default-block-font|ADR-0034]]), 호출 블록의 Method 이름(굵게)을 그릴 굵은 글꼴이 없습니다. 굵은 글꼴을 더 실을지, 그리는 쪽이 굵게 만든 글자(합성 굵게)를 쓰고 폭은 보통 글자와 같다고 셀지 → 1.2
