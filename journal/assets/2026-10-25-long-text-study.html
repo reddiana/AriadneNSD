@@ -1,0 +1,136 @@
+<title>M35 긴 글자</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M34와 같은 틀. 그림은 아래 스크립트가 그린다. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.gray { color: var(--muted); background: var(--bg); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M35 · 긴 글자</h1>
+    <p class="lede">블록에 적은 한 줄이 아주 길 때의 모습입니다. 그림은 같은 반복 블록 하나로, 안의 첫 블록에 긴 줄이 있습니다. 어느 안이든 사용자는 글자를 고치는 중에 <kbd>Shift</kbd>+<kbd>Enter</kbd>로 <b>직접 줄을 바꿀 수 있습니다</b>(프로토타입과 같음). 물음은 <b>사용자가 줄을 바꾸지 않았을 때</b>입니다. <b>1번이 Claude의 추천</b>입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">L1</span>
+    <h2>L1. 사용자가 줄을 바꾸지 않은 긴 줄을 어떻게 그릴까</h2>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">L1 · 1번</span><h3>폭을 늘림 (사용자가 적은 그대로)</h3><span class="badge">Claude의 추천</span><span class="badge gray">지금 프로토타입과 같음</span></header>
+        <div class="fig" data-fig="l1-1"></div>
+        <ul><li>적은 줄이 그대로 한 줄로 보입니다. 줄을 어디서 나눌지는 사용자가 정합니다(코드의 줄과 같음).</li><li>규칙이 가장 쉽고, 코드에서 가져온 글자도 원래 줄 그대로입니다.</li><li><span class="bad">아주 긴 줄 하나가 블록과 다이어그램 전체를 넓힙니다. 사용자가 직접 줄을 바꿔야 합니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">L1 · 2번</span><h3>가장 넓은 폭에서 저절로 줄 바꿈</h3></header>
+        <div class="fig" data-fig="l1-2"></div>
+        <ul><li>블록이 정해 둔 폭(그림은 글자 40자쯤, 320px)을 넘지 않습니다. 이어지는 줄은 조금 들여 써서, 사용자가 바꾼 줄과 가립니다.</li><li><span class="bad">코드가 엉뚱한 곳에서 끊깁니다(괄호 안, 연산자 앞). 저장되는 그림과 코드의 줄이 달라집니다.</span></li><li><span class="bad">가장 넓은 폭이라는 값을 하나 더 정해야 합니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">L1 · 3번</span><h3>가장 넓은 폭에서 자르고 "…"</h3></header>
+        <div class="fig" data-fig="l1-3"></div>
+        <ul><li>블록이 가장 가지런합니다.</li><li><span class="bad">저장되는 그림(인쇄, 노트에 넣은 그림)에서 뒷부분을 읽을 수 없습니다. 문서로 쓰기에 맞지 않습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>L1의 <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 레이아웃 설계(1.2)와 키 표(<kbd>Shift</kbd>+<kbd>Enter</kbd>로 줄 바꾸기, 아직 적혀 있지 않음)에 옮깁니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', loop: '#dce6f6', proc: '#edf0f5' };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const PADX = 10, PADY = 7, LINE = 18, STRIP = 22, MAXW = 320, INDENT = 16;
+  const cv = document.createElement('canvas').getContext('2d');
+  const tw = s => { cv.font = '13px "IBM Plex Mono", Consolas, monospace'; return Math.ceil(cv.measureText(s).width); };
+  const LONG = 'avg ← weighted_average(values, weights, normalize = true)';
+  const SHORT = 'count ← count + 1';
+  // 줄 나누기: 낱말 사이(빈칸)에서만. 이어지는 줄은 INDENT만큼 들임
+  function wrap(s, max) {
+    const words = s.split(' '), out = [];
+    let cur = '';
+    for (const w of words) {
+      const next = cur ? cur + ' ' + w : w, ind = out.length ? INDENT : 0;
+      if (cur && tw(next) + ind > max) { out.push(cur); cur = w; } else cur = next;
+    }
+    out.push(cur);
+    return out;
+  }
+  function clip(s, max) {
+    if (tw(s) <= max) return s;
+    let t = s;
+    while (t.length && tw(t + '…') > max) t = t.slice(0, -1);
+    return t + '…';
+  }
+  function diagram(mode) {
+    let lines;
+    if (mode === 'wrap') lines = wrap(LONG, MAXW - 2 * PADX);
+    else if (mode === 'clip') lines = [clip(LONG, MAXW - 2 * PADX)];
+    else lines = [LONG];
+    const textW = Math.max(...lines.map((l, i) => tw(l) + (i ? INDENT : 0)));
+    const bodyW = Math.max(textW + 2 * PADX, tw(SHORT) + 2 * PADX, 52);
+    const W = STRIP + bodyW, headH = LINE + 2 * PADY;
+    const h1 = lines.length * LINE + 2 * PADY, h2 = LINE + 2 * PADY;
+    const H = headH + h1 + h2;
+    let s = `<rect x=".5" y=".5" width="${W}" height="${H}" fill="${C.loop}" stroke="${C.line}"/>`;
+    s += `<text x="${PADX}" y="${PADY + 13}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">while i &lt; n</text>`;
+    s += `<rect x="${STRIP + .5}" y="${headH + .5}" width="${bodyW}" height="${h1}" fill="${C.proc}" stroke="${C.line}"/>`;
+    lines.forEach((l, i) => {
+      s += `<text x="${STRIP + PADX + (i ? INDENT : 0)}" y="${headH + PADY + 13 + i * LINE}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}" xml:space="preserve">${esc(l)}</text>`;
+    });
+    s += `<rect x="${STRIP + .5}" y="${headH + h1 + .5}" width="${bodyW}" height="${h2}" fill="${C.proc}" stroke="${C.line}"/>`;
+    s += `<text x="${STRIP + PADX}" y="${headH + h1 + PADY + 13}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">${esc(SHORT)}</text>`;
+    s += `<text x="${W + 8}" y="${H / 2 + 4}" font-family="IBM Plex Sans KR, sans-serif" font-size="11" fill="${C.muted}">폭 ${W}px</text>`;
+    return `<svg width="${W + 70}" height="${H + 2}" viewBox="0 0 ${W + 70} ${H + 2}">${s}</svg>`;
+  }
+  const draw = () => {
+    const F = { 'l1-1': diagram('grow'), 'l1-2': diagram('wrap'), 'l1-3': diagram('clip') };
+    document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+  };
+  draw();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
