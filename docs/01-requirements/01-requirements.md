@@ -189,7 +189,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 
 ### 3.1 블록 종류
 
-DIN 66261 / 원 논문 기준입니다.
+[DIN 66261](https://www.dinmedia.de/de/norm/din-66261/1255956)(1985년 독일 표준, 유료) / [원 논문](https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/1973.pdf)(Nassi · Shneiderman, "Flowchart Techniques for Structured Programming", *SIGPLAN Notices* 8(8), 1973, [ACM](https://doi.org/10.1145/953349.953350)) 기준입니다.
 
 | ID | 요구사항 | 우선순위 |
 | --- | --- | --- |
@@ -367,6 +367,8 @@ MVP 다음 판들로 미룬 것: Event · Method 머리, 호출 블록, 한 문�
 
 - [Wikipedia: Nassi–Shneiderman diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)
 - [Wikipedia (독일어): Nassi-Shneiderman-Diagramm](https://de.wikipedia.org/wiki/Nassi-Shneiderman-Diagramm) — DIN 66261 기호 규칙
+- Nassi, I. and Shneiderman, B., ["Flowchart Techniques for Structured Programming"](https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/1973.pdf), *SIGPLAN Notices* 8(8), 1973 — 원 논문 ([ACM](https://doi.org/10.1145/953349.953350))
+- [DIN 66261](https://www.dinmedia.de/de/norm/din-66261/1255956) — 1985년 독일 표준 "Sinnbilder für Struktogramme nach Nassi-Shneiderman" (유료)
 - [Ben Shneiderman의 NSD 페이지](https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/)
 - [Structorizer](https://structorizer.fisch.lu) — 오픈소스 NS 차트 편집기, `.nsd` 확장자 사용
 - [drawio-obsidian](https://github.com/zapthedingbat/drawio-obsidian) — 모델 내장 SVG 저장 방식, Obsidian 노트에 그림을 넣고 편집하는 방식([[#2.1 Obsidian 플러그인]]) 참고. 편집 후 노트가 갱신되지 않는 점은 따르지 않는다([[#^r-obs|R-OBS-04]]).
