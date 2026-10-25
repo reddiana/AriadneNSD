@@ -20,7 +20,6 @@ updated: 2026-10-25
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M35 | 긴 글자 시안 (2026-10-25, 답을 기다림: L1) | https://claude.ai/artifact/Rxe7qDL9N4oeCD8cruYe74 | `journal/assets/2026-10-25-long-text-study.html` |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
@@ -43,7 +42,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - [x] **다음 세션의 맨 처음: outbox 비우기.** (2026-10-25 세션 04에서 함: "확인해 주세요"와 "알아만 두세요"를 모두 닫음 → [[2026-10-25-04-outbox-cleanup]]) 오래된 "확인해 주세요"(2026-10-11부터)를 고르는 창으로 몰아서 묻고, "그대로"를 받은 것은 세션 기록으로 옮겨 지운다. outbox가 27,000자로 세션을 시작할 때 읽는 글의 가장 큰 몫이라서(2026-10-25, 메인테이너: "그럽시다")
 - [ ] **다음의 첫 일: 상세 설계 [[02-layout]]**(MVP의 중심). 그다음 테스트 전략 → 편집기 · 웹 설계 → [[backlog#MVP 전에 정할 것]]. 진행 순서(2026-10-25, 메인테이너: "다음 세션에 1부터 시작해 주세요")
 	1. ✅ (2026-10-25 세션 04, 첫 판 → [[02-layout#1. 레이아웃 알고리즘]]) 프로토타입의 레이아웃 코드(`measure` · `place` · `layout`)를 읽어 지금 규칙을 글로 옮긴다: 2단계(안쪽부터 크기, 바깥부터 자리), 갈래 폭, 접기 영역의 테두리와 틈, 여러 다이어그램의 배치. 값은 [[04-visual-design]]의 토큰으로. 브라우저 측정 대신 번들 글꼴의 폭 표([[0026-bundled-font-metrics|ADR-0026]])
-	2. 프로토타입이 대충 넘긴 곳을 시안으로 하나씩 묻는다: 긴 글자(폭을 늘리나, 최대 폭에서 줄 바꿈하나), If 머리의 폭(M34에서 정함: 프로토타입 그대로 + 글자 뒤 바탕), ~~For 블록의 모습~~(M33에서 정함), D2Coding으로 크기 단계 다시 확인, 실은 범위 밖 글자의 폭, default 없는 Case
+	2. 프로토타입이 대충 넘긴 곳을 시안으로 하나씩 묻는다: 긴 글자(M35에서 정함: 폭을 늘림), If 머리의 폭(M34에서 정함: 프로토타입 그대로 + 글자 뒤 바탕), ~~For 블록의 모습~~(M33에서 정함), D2Coding으로 크기 단계 다시 확인, 실은 범위 밖 글자의 폭, default 없는 Case
 	3. 스파이크: D2Coding 폭 표와 서브셋 글꼴의 크기, 블록 500개 100ms
 	4. `02-layout`에 쓰고, 구조를 정한 것은 ADR로
 	- 1단계는 프로토타입의 동작이 아니라 **합의한 규칙**을 기준으로 쓰고, 프로토타입과 다른 곳을 표시한다. 프로토타입은 레이아웃 설계와 나란히, 레이아웃에 닿는 것(머리 모양 "제목처럼", Case default 오른쪽, `∅`, 새 다이어그램 배치)부터 최신으로 맞춘다. 끌어 옮기기 · 순서 바꾸기는 방법을 정한 뒤로 (2026-10-25, 메인테이너: "추천을 수용합니다") → [[prototype#정해 놓고 아직 넣지 못한 것]]
