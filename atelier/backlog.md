@@ -91,6 +91,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## 출시 무렵과 그 뒤
 
+- [ ] AI 대화창 스파이크([[01-requirements#^web-ai-chat]], `P3`): 키를 붙여 넣고 "퀵소트를 그려 주세요"를 보내 답이 흘러 들어오는지, AI가 쓴 모델을 읽을 수 있는지 보는 작은 페이지. 파일 형식이 굳은 뒤(MVP 뒤)에 한다. 메인테이너의 API 키(Claude · ChatGPT · Grok 가운데 하나, 유료)가 있어야 한다. 지금까지는 브라우저에서 부를 길이 열려 있는지만 확인함 → [[browser-storage-and-api-keys#브라우저에서 AI 회사의 서버를 직접 부를 수 있나]] (2026-10-25, 메인테이너: MVP 뒤로)
 - [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너, 공개 출시 전) → [[names-and-registries#확인하지 않은 것]]
 
 - [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
