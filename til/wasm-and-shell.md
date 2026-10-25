@@ -1,8 +1,8 @@
 ---
 title: wasm과 셸
 tags:
-  - tech-note
-date: 2026-10-17
+  - til
+updated: 2026-10-25
 ---
 
 # wasm과 셸

@@ -5,7 +5,7 @@ aliases:
 tags:
   - requirements
 status: 초안
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
 # 유즈케이스
@@ -14,7 +14,7 @@ updated: 2026-10-22
 
 > [!info] 읽는 법
 > - 유즈케이스는 사용자 목표 수준으로, 기본 흐름과 예외 흐름 몇 줄로 씁니다. 실패가 비싼 흐름(UC-02 열기, UC-06 저장, UC-07 노트에 넣어 보이기)만 최소 보장 · 성공 보장 · 확장까지 갖춘 자세한 형식(Cockburn의 fully dressed)으로 씁니다([[dr-0014-light-use-cases|DR-0014]]). 세부 규칙(어떤 키, 어떤 모습)은 UX 설계([[02-interaction-rules]])에 있고 여기서는 되풀이하지 않습니다.
-> - 각 유즈케이스 끝의 "요구사항"은 그 흐름이 기대는 요구사항의 블록 ID입니다. 우선순위(#P0 …)는 요구사항 쪽에 있습니다.
+> - 각 유즈케이스 끝의 "요구사항"은 그 흐름이 기대는 요구사항의 블록 ID입니다. 우선순위(`P0` …)는 요구사항 쪽에 있습니다.
 > - 흐름의 번호에 붙은 `a`, `b`는 그 단계에서 갈라지는 예외 흐름(자세한 형식에서는 "확장")입니다(예: 3a는 3단계의 예외). `'`가 붙은 것은 같은 단계를 다른 수단으로 하는 기술 변형입니다.
 
 ## 1. 액터
@@ -61,20 +61,20 @@ flowchart LR
 
 ## 3. 목록
 
-MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유즈케이스의 기본 흐름이 되는지입니다.
+MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 유즈케이스의 기본 흐름이 되는지입니다.
 
 | ID | 유즈케이스 | 주 액터 | 형식 | MVP |
 | --- | --- | --- | --- | --- |
 | UC-01 | 새 다이어그램을 만든다 | 작성자 | 가볍게 | 됨 |
 | UC-02 | 다이어그램을 연다 | 작성자 | 자세히 | 됨(웹의 로컬 파일) |
 | UC-03 | 블록을 편집한다 | 작성자 | 가볍게 | 됨(블록 6종. 끌어 놓기는 아님) |
-| UC-04 | 구조를 나눈다 | 작성자 | 가볍게 | 아님(#P1) |
+| UC-04 | 구조를 나눈다 | 작성자 | 가볍게 | 아님(`P1`) |
 | UC-05 | 큰 다이어그램을 훑어본다 | 작성자 | 가볍게 | 확대 · 이동만 |
 | UC-06 | 저장한다 | 작성자 | 자세히 | 됨 |
 | UC-07 | 노트에 다이어그램을 넣어 보인다 | 작성자 | 자세히 | 아님(Obsidian) |
 | UC-08 | 공유하고 내보낸다 | 작성자 | 가볍게 | PNG 내보내기만 |
-| UC-09 | 그림의 모양을 정한다 | 작성자 | 가볍게 | 아님(#P1) |
-| UC-10 | 문제를 알린다 | 작성자 | 가볍게 | 아님(#P3) |
+| UC-09 | 그림의 모양을 정한다 | 작성자 | 가볍게 | 아님(`P1`) |
+| UC-10 | 문제를 알린다 | 작성자 | 가볍게 | 아님(`P3`) |
 
 ## 4. 유즈케이스
 
@@ -129,7 +129,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 - 1c. 공유 URL을 열면 보기 모드로 시작하고, 버튼 하나로 편집으로 넘어간다
 - 1d. 같은 파일이 이미 다른 창이나 탭에 열려 있다: 미결정(6장)
 - 3a. 모델이 없거나 깨진 파일: 편집할 수 없다고 알리고 끝난다. 그림을 거꾸로 읽어 모델을 만들지 않는다
-- 3b. 옛 형식 버전의 파일: 지금 형식으로 바꿔 읽는다. 원본이 언제 새 형식이 되는지는 미결정(6장)
+- 3b. 옛 형식 버전의 파일: 지금 형식으로 바꿔 읽는다. 원본이 언제 새 형식이 되는지는 미결정(6장). 프로토타입이 저장한 `version: 0` 파일은 바꿔 읽지 않고 3a와 같이 다룬다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 3c. 지금보다 새 형식 버전의 파일: 편집할 수 없다고 알리고 앱 업데이트를 안내한다
 - 3d. 다른 도구로 그림 부분만 고친 파일: 그림이 모델과 달라졌다고 알린다
 - 4a. 다른 문서의 Method를 부르는 호출 블록이 있는데 그 파일을 읽지 못한다: 그 호출 블록은 "이어진 곳 없음"으로 보인다
@@ -182,7 +182,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 - 2a. 거꾸로, 호출 블록을 풀어 Method의 블록들로 바꾼다
 - 3a. 부를 것이 문서에 없으면(라이브러리 함수 등) 이름을 적어 부른다
 - 4a. 호출 블록이 부르던 Method를 지우면 그 호출 블록은 "이어진 곳 없음"이 된다
-- 4b. 다른 문서의 Method를 부른다(#P2)
+- 4b. 다른 문서의 Method를 부른다(`P2`)
 
 **요구사항:** [[01-requirements#^edit-multi-diagram]], [[01-requirements#^edit-extract]], [[01-requirements#^edit-call-inline]], [[01-requirements#^blk-event]], [[01-requirements#^blk-method]], [[01-requirements#^blk-call]], [[01-requirements#^blk-call-named]], [[01-requirements#^blk-call-external]]
 
@@ -200,7 +200,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 
 **예외 흐름**
 
-- 2a. 모두 접기 · 모두 펴기 · 깊이 n까지 펴기(#P2)
+- 2a. 모두 접기 · 모두 펴기 · 깊이 n까지 펴기(`P2`)
 - 4a. 펴 보인 호출 블록 안에서도 접기 영역을 만든다. 그 자리에만 있고 Method에는 없다
 
 **요구사항:** [[01-requirements#^lay-zoom]], [[01-requirements#^edit-fold]], [[01-requirements#^edit-fold-range]], [[01-requirements#^edit-call-open]], [[01-requirements#^edit-fold-site]], [[01-requirements#^edit-fold-all]]
@@ -242,7 +242,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 
 - 3'. 웹 · 데스크톱은 디스크, Obsidian은 볼트, Drive는 Drive의 원래 파일
 
-**빈도:** 편집하는 동안 자주. 자동 저장(#P1)이 있으면 더 자주
+**빈도:** 편집하는 동안 자주. 자동 저장(`P1`)이 있으면 더 자주
 
 **요구사항:** [[01-requirements#^fmt-svg]], [[01-requirements#^fmt-model]], [[01-requirements#^fmt-deterministic]], [[01-requirements#^fmt-escape]], [[01-requirements#^fmt-text]], [[01-requirements#^fmt-color]], [[01-requirements#^web-file]], [[01-requirements#^dsk-file]], [[01-requirements#^gd-save]], [[01-requirements#^web-draft]], [[01-requirements#^exp-autosave]], [[01-requirements#^nfr-compat]]
 
@@ -305,7 +305,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 - 1a. 공유 URL을 만든다. 다이어그램 전체가 URL에 담기고, 독자는 링크만으로 연다(보기 모드)
 - 1b. 인쇄한다. 큰 다이어그램은 여러 페이지로 나뉜다
 - 3a. 저장 파일(`.ns.svg`) 그대로 GitHub · Drive · 문서 도구에 두어도 그림으로 보인다 → UC-06
-- 3b. 다른 뷰어에서도 글꼴이 똑같이 보이게 글자를 외곽선으로 바꿔 저장한다(#P2)
+- 3b. 다른 뷰어에서도 글꼴이 똑같이 보이게 글자를 외곽선으로 바꿔 저장한다(`P1`)
 
 **요구사항:** [[01-requirements#^exp-png]], [[01-requirements#^exp-plain-svg]], [[01-requirements#^exp-pdf]], [[01-requirements#^web-share-url]], [[01-requirements#^web-view-mode]], [[01-requirements#^gd-preview]], [[01-requirements#^fmt-outline]]
 
@@ -371,7 +371,6 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹, #P0)에서 그 유�
 > - 3c. 연 뒤에 파일이 다른 곳에서 바뀌었으면 덮어쓰나, 알리나, 고르게 하나?
 
 > [!question] 미결정: 노트에 넣어 보이기 (UC-07)
-> - 1. 새 파일의 이름과 둘 폴더는 어떻게 정하나? (Obsidian의 첨부 파일 설정을 따르나?)
+> - 1. 새 파일의 이름과 둘 폴더, 4a. 아무것도 그리지 않고 탭을 닫았을 때 → [[04-obsidian-plugin#미결정 사항]]
 > - 1a. 같은 이름의 파일이 있으면 번호를 붙이나, 묻나?
-> - 4a. 아무것도 그리지 않고 탭을 닫으면 빈 파일과 `![[…]]`를 남기나, 지우나?
 > - 최소 보장: 편집 중 오류가 나면 이미 있던 그림 파일은 그대로 남는가?

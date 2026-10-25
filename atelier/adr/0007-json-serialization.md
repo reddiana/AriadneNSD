@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0007: 모델 직렬화 형식 JSON
 
+> [!NOTE] 이후 변경
+> - 2026-10-25: JSON을 담는 모델 요소의 네임스페이스와 접두어(`ans`)를 정했다. 형식의 판 번호는 JSON의 `version` 필드와 모델 요소의 `version` 속성에 같은 값으로 들어간다 → [[0035-model-namespace-and-v0|ADR-0035]], [[01-file-format#2. 문서 구조]]
+
 ## 배경
 
 [[0005-model-embedded-svg|ADR-0005]]에 따라 모델을 SVG의 `<metadata>` 안에 텍스트로 넣는다. 텍스트 형식으로 JSON과 YAML을 비교했다.

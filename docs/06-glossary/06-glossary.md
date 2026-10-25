@@ -2,7 +2,7 @@
 title: 용어집
 tags:
   - glossary
-updated: 2026-10-17
+updated: 2026-10-25
 ---
 
 # 용어집
@@ -24,7 +24,7 @@ updated: 2026-10-17
 | Event | event | `kind: event`(안) | 문서 밖에서 시작되는 다이어그램(인터럽트, 타이머, 받은 메시지). 모자 모양 머리를 단다. 호출 블록으로 부를 수 없다 → [[0021-event-and-method\|ADR-0021]] |
 | Method | method | `kind: method`(안) | 호출 블록이 부르는 다이어그램. 폭 전체에 걸친 낮은 아치 머리를 단다. 머리의 첫 여는 괄호 앞까지가 이름이고, 괄호 안이 받는 것이다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 본문 | body | `body` | 다이어그램 머리 아래의 블록 목록. 반복 블록 안에서 반복되는 블록 목록도 본문이라고 한다 |
-| 문서 설정 | document settings | `settings`(안) | 문서마다 정해 파일에 저장하는 것: 블록 글자의 종류, 결과 기호 등 |
+| 문서 설정 | document settings | `settings`(안) | 문서마다 정해 파일에 저장하는 것: 블록 글자의 종류, 결과 기호, 테마, 머리 모양 등 |
 
 ## 블록
 
@@ -35,14 +35,14 @@ updated: 2026-10-17
 | 처리 블록              | process                                  | `ProcessBlock`    | 한 단계의 명령                                                                                                                       |
 | 제어 블록              | control block                            | —                 | 다른 블록을 안에 품는 블록 (If, Case, 반복)                                                                                                 |
 | If 블록 (선택 블록)      | if-then-else                             | `IfBlock`         | 조건에 따라 참 · 거짓 갈래 가운데 하나를 실행                                                                                                    |
-| Case 블록 (다중 선택 블록) | switch/case                              | `CaseBlock`       | 값에 따라 여러 갈래 가운데 하나를 실행. 맨 끝은 늘 default 갈래                                                                                      |
+| Case 블록 (다중 선택 블록) | switch/case                              | `CaseBlock`       | 값에 따라 여러 갈래 가운데 하나를 실행. 편집기로 만든 Case는 맨 끝에 default 갈래가 있다. 코드에서 가져온 것은 없을 수도 있다                                                                                      |
 | 전위 판정 반복           | while (pre-test loop)                    | `WhileBlock`      | 조건을 먼저 검사하는 반복                                                                                                                 |
 | 후위 판정 반복           | do-while / repeat-until (post-test loop) | `DoWhileBlock`    | 본문을 먼저 실행하고 조건을 검사하는 반복                                                                                                        |
 | 횟수 반복              | for                                      | `ForBlock`        | 정해진 횟수만큼 반복                                                                                                                    |
 | 호출 블록              | call                                     | `CallBlock`       | Method를 부르는 블록. 같은 문서의 Method, 이름만 적은 함수, 다른 문서의 Method를 부른다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 꼴로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 인자 · 결과            | arguments · result                       | `args` · `result` | 호출 블록마다 적는 글자. 이름은 적지 않고 Method의 머리를 따른다                                                                                       |
 | 결과 기호              | result symbol                            | —                 | 결과를 받는 기호 `←` 또는 `=`. 문서 설정이고 보기 상태로 다룬다(실행 취소의 대상이 아님)                                                                        |
-| 갈래                 | branch                                   | `Branch`          | If · Case 안의 각 경로. 시퀀스 하나를 가진다. Case의 갈래에는 갈래 이름이 있다                                                                           |
+| 갈래                 | branch                                   | `Branch`          | If · Case 안의 각 경로. 시퀀스 하나를 가진다. 갈래마다 갈래 이름이 있다(If는 처음에 "참" · "거짓", Case는 사용자가 적음)                                                                           |
 | 조건                 | condition                                | `condition`       | If · Case · 반복 블록의 머리에 적는 판정 글자                                                                                                |
 | 블록 글자              | block text                               | `text`            | 블록에 적는 글자. 문서마다 종류(문장, C, Java …)를 고른다 → [[01-requirements#^lay-text-kind]]                                                    |
 
@@ -86,7 +86,7 @@ updated: 2026-10-17
 | 모델 | model | 문서의 원본 데이터. 다이어그램들의 트리, 문서 설정, 보기 상태 |
 | 레이아웃 | layout | 모델에서 각 블록의 위치와 크기를 계산한 결과 |
 | 렌더링 | rendering | 레이아웃 결과를 SVG로 그리는 것 |
-| 모델 내장 SVG | model-embedded SVG | 그림과 모델을 함께 담은 저장 파일(`.ns.svg`). 쓰인 글자만 추린 글꼴 조각도 들어간다 → [[01-file-format]] |
+| 모델 내장 SVG | model-embedded SVG | 그림과 모델을 함께 담은 저장 파일(`.ns` / `.ns.svg`). 쓰인 글자만 추린 글꼴 조각도 들어간다 → [[01-file-format]] |
 | 글꼴 조각 | font subset | 번들한 글꼴에서 그 그림에 쓰인 글자만 추려 저장 파일에 넣은 것 → [[0026-bundled-font-metrics\|ADR-0026]] |
 | 셸 | shell | 배포 대상별로 편집기를 감싸는 껍데기 앱 (`src/apps/*` → [[0036-code-layout\|ADR-0036]]) |
 | 코어 | core | 배포 대상과 무관한 공통 로직 (`src/packages/core`) |

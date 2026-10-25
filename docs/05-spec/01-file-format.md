@@ -6,25 +6,25 @@ tags:
   - spec
 status: 초안
 format-version: 1
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
-# 파일 형식 명세 (모델 내장 SVG)
+# 파일 형식 명세
 
-배포 대상들이 주고받는 저장 파일의 형식입니다. 앱들 사이의 계약(호환성 계약)이므로, 첫 출시 뒤에는 **형식 버전이 바뀔 때만** 고칩니다.
+배포 대상들이 주고받는 저장 파일, 곧 모델을 내장한 SVG의 형식입니다. 앱들 사이의 계약(호환성 계약)이므로, 첫 출시 뒤에는 **형식 버전이 바뀔 때만** 고칩니다.
 
 - 관련 요구사항: [[01-requirements#3.4 파일 형식]]
-- 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴)
+- 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴), [[0034-default-block-font|ADR-0034]](기본 블록 글꼴), [[0035-model-namespace-and-v0|ADR-0035]](모델 네임스페이스, 프로토타입 파일)
 - 모델의 짜임은 [[03-architecture#3.4 문서 모델]]과 [[03-architecture#3.5 내용과 뷰 상태]]를 따릅니다. 필드 이름과 스키마는 [[01-model]] 설계에서 굳힙니다.
 
 > [!warning] 지금 상태
-> 아키텍처 초안(2026-10-13)에 맞춰 2026-10-17에 다시 썼습니다. 2장(문서 구조)과 3장의 짜임은 아키텍처를 따르고, **필드 이름은 안**입니다. 프로토타입이 쓰는 파일(`version: 0`)은 이 형식과 다릅니다(7장).
+> 2장(문서 구조)과 3장의 짜임은 아키텍처를 따르고, **필드 이름은 안**입니다. 프로토타입이 쓰는 파일(`version: 0`)은 이 형식과 다릅니다(7장).
 
 ## 1. 확장자와 판별
 
 | 확장자 | 쓰는 곳 |
 | --- | --- |
-| `이름.ns.svg` | Obsidian 플러그인(만드는 파일), Google Drive에서 만드는 파일([[0014-drive-file-extension\|ADR-0014]]). 데스크톱 · 웹도 연다 |
+| `이름.ns.svg` | Obsidian 플러그인(만드는 파일), Google Drive에서 만드는 파일([[0014-drive-file-extension\|ADR-0014]]), Claude skill이 내놓는 파일. 데스크톱 · 웹도 연다 |
 | `이름.ns` | 데스크톱 · 웹에서 만드는 파일. 내용은 `.ns.svg`와 같다 |
 
 1. 확장자는 1차 판별에만 쓴다.
@@ -44,7 +44,7 @@ classDiagram
     document : version
     class cdata["CDATA (모델 JSON)"]
     class styleEl["style"]
-    class fontface["@font-face (서브셋 글꼴, woff2 data URI)"]
+    class fontface["@font-face (서브셋 글꼴, data URI)"]
     class paper["rect (종이)"]
     class render["g.ans-render (그림 요소)"]
     svg *-- "1" metadata
@@ -66,7 +66,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
     ]]></ans:document>
   </metadata>
   <style>
-    @font-face { font-family: "…"; src: url(data:font/woff2;base64,…); }  /* 서브셋 글꼴 */
+    @font-face { font-family: "…"; src: url(data:font/…;base64,…); }  /* 서브셋 글꼴. 형식(TTF/woff2)은 미결정 */
   </style>
   <rect width="100%" height="100%" fill="#ffffff"/>  <!-- 종이 -->
   <g class="ans-render"> … </g>                       <!-- 모델에서 생성한 그림 -->
@@ -76,7 +76,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^fmt-svg]]).
 - 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 판 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
-- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^fmt-text]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1).
+- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^fmt-text]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식(압축하지 않은 TTF인가, woff2인가)은 [[02-layout]]에서 정한다(6장).
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^fmt-color]], [[04-visual-design#2. 층과 출력]]
 - 그림 요소는 모델에서 생성한 파생 데이터일 뿐이며, 읽을 때 무시한다(단일 원천은 모델: [[01-requirements#^fmt-model-source]]). 저장되는 그림은 지금 화면 그대로이고 오버레이 레이어의 표시(선택 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 
@@ -88,7 +88,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 {
   "format": "ariadne-nsd",
   "version": 1,
-  "settings": { "textKind": "c", "palette": "default", "headStyle": "shape" },
+  "settings": { "textKind": "c", "theme": "default", "headStyle": "shape" },
   "diagrams": [
     {
       "id": "d1",
@@ -176,6 +176,7 @@ sequenceDiagram
 ## 6. 미결정 사항
 
 - [ ] 모델 요소 이름(`ans:document`는 안)과 필드 이름 (→ [[01-model]])
+- [ ] 서브셋 글꼴의 형식: 압축하지 않은 TTF인가, woff2인가(압축기를 더 실어야 함) → [[02-layout]], [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ## 7. 프로토타입과 다른 곳
 

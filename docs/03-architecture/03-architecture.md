@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
 # 아키텍처 개요
@@ -13,7 +13,7 @@ updated: 2026-10-22
 현재 아키텍처를 한눈에 보여 주는 문서입니다. 각 결정의 근거는 ADR에 있고, 세부 설계는 설계 문서에 있습니다. → [[docs/README|문서 색인]]
 
 > [!info] 이 판은
-> 2026-10-13에 다시 쓴 초안입니다. 2026-10-07의 첫 판 뒤에 요구사항이 많이 늘었습니다(여러 다이어그램, Event와 Method, 호출 블록, Case, 접기 영역, 저장되는 뷰 상태, 다국어, 글꼴 번들). 그것을 담았습니다. 2026-10-22에 독자(SW 엔지니어)의 용어로 고쳐 쓰고 그림을 UML로 바꿨습니다. 뜻은 바꾸지 않았습니다.
+> 초안입니다. 여러 다이어그램, Event와 Method, 호출 블록, Case, 접기 영역, 저장되는 뷰 상태, 다국어, 글꼴 번들을 담고 있습니다.
 
 > [!note] 용어와 표기
 > - 이 문서와 ADR, 설계 문서는 **SW 엔지니어의 용어**로 씁니다. 블록 · 갈래 · 머리 · 접기 영역 같은 **도메인 용어**는 [[06-glossary|용어집]]을 따르고, 처음 나올 때 코드의 식별자(`Seq`, `FoldMark` …, [[01-model]])를 붙입니다.
@@ -65,15 +65,15 @@ flowchart LR
     obs <--> vault
     dsk <--> fs
     web <--> fs
-    web <-.#P1.-> drive
-    web <-.#P1.-> url
+    web <-.P1.-> drive
+    web <-.P1.-> url
     vault & fs & drive -.SVG로 렌더링.-> viewer
 ```
 
 > [!note] 범례 (UML이 아닌 컨텍스트 그림)
 > - 모양: 원 = 사람(액터), 사각형 = 시스템(AriadneNSD의 배포 대상, 외부 시스템), 원통 = 저장소.
 > - **실선 화살표** `-->`: 사용자가 그 앱을 쓴다. **실선 양방향** `<-->`: 앱이 그 저장소의 파일을 읽고 쓴다.
-> - **점선 양방향(#P1)**: 같은 읽기 · 쓰기이지만 `P1`이라 MVP 뒤에 붙는다.
+> - **점선 양방향(`P1`)**: 같은 읽기 · 쓰기이지만 `P1`이라 MVP 뒤에 붙는다.
 > - **점선 "SVG로 렌더링"**: 우리 코드 없이, 그 저장소의 파일을 외부 뷰어가 일반 SVG로 표시한다(데이터 흐름이지 호출이 아니다).
 
 오른쪽의 "외부 SVG 뷰어"가 이 제품에서 특별한 손님입니다. 우리 코드가 하나도 돌지 않는 곳에서 파일이 그림으로 열립니다. 그래서 렌더링에 필요한 것(색, 서브셋 글꼴)은 모두 파일 안에 자기 완결적으로 들어 있어야 합니다.
@@ -82,7 +82,7 @@ flowchart LR
 
 공통 패키지와 배포 대상별 셸(shell: 플랫폼마다 `editor`를 감싸는 호스트 애플리케이션)로 나눈 모노레포입니다. → [[0002-three-targets-shared-core|ADR-0002]]
 
-코드는 저장소의 `src/` 아래에 있고, `src/`가 pnpm 워크스페이스의 뿌리입니다. 이 장의 `packages/…` · `apps/…`는 `src/`에서 본 경로입니다. `core`는 패키지 하나이고, 아래 표의 모듈은 그 안의 폴더입니다(`src/model/` · `commands/` · `text/` · `layout/` · `render/` · `format/`). 배포 대상마다의 자리는 [[0036-code-layout|ADR-0036]]에 있습니다.
+코드는 저장소의 `src/` 아래에 있고, `src/`가 pnpm 워크스페이스의 뿌리입니다. 이 장의 `packages/…` · `apps/…`는 `src/`에서 본 경로입니다. `core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(`model/` · `commands/` · `text/` · `layout/` · `render/` · `format/`, 저장소에서는 `src/packages/core/src/model/` …). 배포 대상마다의 자리는 [[0036-code-layout|ADR-0036]]에 있습니다.
 
 ### 3.1 패키지 의존
 
@@ -123,6 +123,8 @@ UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의�
 | `apps/obsidian` | 파일 뷰 등록, `.ns.svg` 판별, 볼트 파일 I/O, 노트에 삽입된 그림 갱신 | [[04-obsidian-plugin]] |
 | `apps/desktop` | 창, 파일 대화상자, OS 파일 연결 | [[05-desktop]] |
 | `apps/web` | 정적 사이트, 브라우저 파일 I/O(File System Access API), 자동 임시 저장, 공유 URL, Drive 연동 | [[06-web]] |
+
+나중의 대상: `apps/confluence` · `apps/vscode` · `apps/intellij`(→ `editor`), `skills/ariadne-nsd`(셸이 아님) → [[0036-code-layout|ADR-0036]]
 
 ### 3.2 editor와 셸의 인터페이스
 
@@ -174,15 +176,18 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 ### 3.3 의존 규칙
 
 - 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. `core` 안의 모듈 폴더 사이도 한 방향이고, CI의 import 검사가 지킨다([[0036-code-layout|ADR-0036]]).
+
 - `core`와 `fonts`는 **DOM과 브라우저 API에 의존하지 않는다.** Node에서 그대로 실행하고 테스트한다.
 - 텍스트 폭은 `core`가 `fonts`의 advance 폭 테이블로 직접 계산한다. 브라우저의 텍스트 측정 API(Canvas `measureText` 등)를 쓰지 않는다. → [[0026-bundled-font-metrics|ADR-0026]]
 - 플랫폼 의존 기능은 3.2의 필요 인터페이스 두 개로만 들어온다. → [[0031-shell-interfaces|ADR-0031]]
 - `editor`는 **렌더링 백엔드 인터페이스 하나**를 통해서만 화면에 그린다. 지금의 구현체는 렌더러가 만든 SVG 문자열을 DOM에 그대로 삽입한다([[0030-swappable-drawing|ADR-0030]]). 히트 테스트(클릭한 곳이 어느 블록인가)와 선택 오버레이의 위치는 DOM을 조회하지 않고 레이아웃 결과(블록 id → bounding box 맵)로 계산한다. 그래서 화면 렌더링을 UI 프레임워크로 바꾸더라도 백엔드 구현체 하나만 교체한다.
 - `editor`는 문서에 대한 상태를 파일 밖에 영속하지 않는다. 파일 밖에 영속하는 것은 사용자 설정(UI 언어, 화면 색)뿐이다.
 
+> [!info] 미완성: core 안 모듈 폴더(model · commands · text · layout · render · format) 사이의 방향은 레이아웃 · 편집기 설계에서 정한다.
+
 ### 3.4 문서 모델
 
-모델이 2026-10-10과 11에 크게 달라졌습니다. 파일 하나가 그림 하나였던 것이, 파일 하나가 다이어그램 여러 개를 담은 문서가 됐습니다. 아래는 개념 모델이고, 타입 정의는 [[01-model#1. 타입]]에 있습니다.
+파일 하나는 다이어그램 여러 개를 담은 문서 하나입니다. 아래는 개념 모델이고, 타입 정의는 [[01-model#1. 타입]]에 있습니다.
 
 ```mermaid
 classDiagram
@@ -193,6 +198,7 @@ classDiagram
     class Settings["Settings (문서 설정)"]
     Settings : textKind 블록 글자의 종류
     Settings : theme 테마
+    Settings : headStyle 머리 모양
     class Diagram["Diagram (다이어그램)"]
     class Head["Head (머리)"]
     Head : kind event | method
@@ -247,7 +253,7 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 
 | | 내용 (`Content`) | 뷰 상태 (`View`) |
 | --- | --- | --- |
-| 무엇 | 블록, 글자, 구조, 접기 영역과 그 이름, 머리와 종류, 다이어그램의 순서, 문서 설정(블록 글자의 종류, 테마) | 어느 접기 영역과 어느 갈래가 접혀 있는지, 어느 호출 블록을 인라인으로 펴 보였는지, 이름 띠를 보이는지, 결과 기호(`←` / `=`, [[ux-decisions#Q9. 실행 취소의 대상 (R7)\|Q9]]) |
+| 무엇 | 블록, 글자, 구조, 접기 영역과 그 이름, 머리와 종류, 다이어그램의 순서, 문서 설정(블록 글자의 종류, 테마, 머리 모양) | 어느 접기 영역과 어느 갈래가 접혀 있는지, 어느 호출 블록을 인라인으로 펴 보였는지, 이름 띠를 보이는지, 결과 기호(`←` / `=`, [[ux-decisions#Q9. 실행 취소의 대상 (R7)\|Q9]]) |
 | 바꾸면 | undo 대상이다 | undo 대상이 아니다 |
 | 저장 | 파일에 저장 | 파일에 저장 (저장되는 그림은 지금 화면 그대로) |
 | dirty 표시("저장 안 됨") | 뜬다 | 뜬다 |
@@ -268,9 +274,10 @@ sequenceDiagram
     participant L as core/레이아웃
     participant R as core/렌더러
     U->>+E: 키 입력 · 클릭
-    E->>+M: execute(명령, 문서) (예: 감싸기)
-    M->>M: 불변식 검사, undo 스택에 push
-    M-->>-E: 새 문서
+    E->>+M: command(내용, 인자) (예: 감싸기)
+    M->>M: 불변식 검사
+    M-->>-E: { ok, 새 내용, touched }
+    E->>E: 앞의 내용을 undo 스택에 push
     E->>+L: layout(문서, 뷰 상태)
     L->>L: 텍스트 폭을 advance 폭 테이블로 계산
     L-->>-E: 다이어그램 위치, 블록 id → bounding box
@@ -330,17 +337,19 @@ sequenceDiagram
 
 ## 6. 배포 구성
 
-| 대상 | 셸 | 저장 확장자 | 결정 |
-| --- | --- | --- | --- |
-| 웹 | 정적 호스팅 (GitHub Pages 등) | `.ns` | [[0006-file-extensions\|ADR-0006]] |
-| Google Drive | 웹 위에 얹음 | `.ns.svg` | [[0012-google-drive-integration\|ADR-0012]], [[0014-drive-file-extension\|ADR-0014]] |
-| Obsidian 플러그인 | Obsidian 플러그인 API | `.ns.svg` | [[0006-file-extensions\|ADR-0006]] |
-| 데스크톱 | Electron 또는 Tauri | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
-| Confluence (#P2) | Forge 앱의 iframe 안에 웹 화면 | 정하지 않음 | [[01-requirements#^cf-app]] |
-| IDE 플러그인 (#P2) | VSCode 확장의 웹뷰, 그다음 IntelliJ | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
-| Claude skill (#P3) | 셸이 아님. Claude가 모델을 쓰고 웹 버전이 렌더링한다 | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]] |
+| 대상 | 셸 | 코드의 자리 | 저장 확장자 | 결정 |
+| --- | --- | --- | --- | --- |
+| 웹 (MVP) | 정적 호스팅: GitHub Pages `/app/` | `src/apps/web` | `.ns` | [[0006-file-extensions\|ADR-0006]] |
+| Google Drive | 웹 위에 얹음 | `src/apps/web` 안 | `.ns.svg` | [[0012-google-drive-integration\|ADR-0012]], [[0014-drive-file-extension\|ADR-0014]] |
+| Obsidian 플러그인 | Obsidian 플러그인 API | `src/apps/obsidian` | `.ns.svg` | [[0006-file-extensions\|ADR-0006]] |
+| 데스크톱 | Electron 또는 Tauri | `src/apps/desktop` | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
+| Confluence (`P2`) | Forge 앱의 iframe 안에 웹 화면 | `src/apps/confluence` | 페이지 안의 다이어그램(형식은 정하지 않음) | [[01-requirements#^cf-app]] |
+| IDE 플러그인 (`P2`) | VSCode 확장의 웹뷰, 그다음 IntelliJ | `src/apps/vscode`, `src/apps/intellij` | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
+| Claude skill (`P3`) | 셸이 아님. Claude가 모델을 쓰고 웹 버전이 렌더링한다 | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]] |
 
-셸이 하는 일은 3.2의 필요 인터페이스(`DocumentStore`, `SettingsStore` → [[0031-shell-interfaces|ADR-0031]])를 구현하고, 제공 인터페이스(`CommandRegistry`, `SettingsSchema` → [[0033-command-list-for-shells|ADR-0033]])를 호스트 플랫폼의 메뉴 · 설정 화면에 등록하는 것뿐입니다. 셸은 위 표의 대상마다 하나씩이고(Claude skill은 빼고), 뒤에 붙는 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델 사이의 양방향 변환(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
+코드의 자리와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 펴낸 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다.
+
+셸이 하는 일은 3.2의 필요 인터페이스(`DocumentStore`, `SettingsStore` → [[0031-shell-interfaces|ADR-0031]])를 구현하고, 제공 인터페이스(`CommandRegistry`, `SettingsSchema` → [[0033-command-list-for-shells|ADR-0033]])를 호스트 플랫폼의 메뉴 · 설정 화면에 등록하는 것뿐입니다. 셸은 위 표의 대상마다 하나씩이고(Google Drive는 웹 셸 안, Claude skill은 셸이 아님), 뒤에 붙는 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델 사이의 양방향 변환(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
 
 ## 7. 위험과 검증이 필요한 사항
 
@@ -350,8 +359,8 @@ sequenceDiagram
 > 남은 위험: Firefox와 Safari는 확인하지 못했습니다. → [[0026-bundled-font-metrics|ADR-0026]]
 
 > [!warning] 서브셋 글꼴의 크기
-> 저장되는 그림마다 쓰인 글자의 서브셋 글꼴이 들어갑니다. 글자 41종에 12 KB, 서로 다른 한글이 수백 자면 200 KB를 넘습니다. 그리고 편집기 번들에는 글꼴(187~762 KB)과 서브세팅 라이브러리(wasm, 652 KB)가 실립니다.
-> 대응 후보: 서브셋을 압축해 넣기, 한글 글리프를 추려 번들하기. → [[02-layout]]에서 결정
+> 저장되는 그림마다 쓰인 글자의 서브셋 글꼴이 들어갑니다. 글자 41종에 12 KB, 서로 다른 한글이 수백 자면 200 KB를 넘습니다. 그리고 편집기 번들에는 글꼴(D2Coding, 약 448 KB(woff2) → [[0034-default-block-font|ADR-0034]])과 서브세팅 라이브러리(wasm, 652 KB)가 실립니다.
+> 대응 후보: 서브셋을 압축해 넣기. → [[02-layout]]에서 결정
 
 > [!warning] Obsidian 플러그인에 wasm과 글꼴을 싣기
 > Obsidian 플러그인은 `main.js` 파일 하나로 배포합니다. 글꼴과 wasm을 그 안에 base64로 인라인해야 하고, 그러면 `main.js`가 2 MB쯤 됩니다. 되는지, 플러그인 로드 시간이 얼마나 느는지 확인해야 합니다. → Obsidian 셸을 만들 때 스파이크
@@ -366,13 +375,6 @@ sequenceDiagram
 > [!question] 웹의 파일 덮어쓰기 지원 범위
 > 원래 파일에 덮어쓰기(File System Access API)는 Chromium 계열에서만 됩니다. 다른 브라우저에서의 사용 흐름을 [[06-web]]에서 정합니다.
 
-## 8. 확인받지 못한 제안
-
-이 판을 쓰며 Claude가 정해 적은 일곱 가지는 모두 확인받아 본문과 ADR로 옮겼습니다. 1~5는 2026-10-17: 글꼴 패키지(3장, [[0026-bundled-font-metrics|ADR-0026]]), 호출 블록은 id로(3.4, [[0022-call-name-follows-head|ADR-0022]]), 접기 영역은 줄에 붙은 마커(3.4, [[0017-fold-name-in-model|ADR-0017]]), 불변 문서와 undo([[0029-immutable-document-undo|ADR-0029]]), 같은 렌더러와 교체 가능한 렌더링 백엔드([[0030-swappable-drawing|ADR-0030]]). 6~7은 2026-10-18: 셸의 필요 인터페이스 둘(3.2, [[0031-shell-interfaces|ADR-0031]]), 토크나이저로 구문 강조(5장, [[0032-token-highlighting|ADR-0032]]). 그림은 시안 M20에 있습니다.
-
-> [!question] 확인받지 못한 것 (2026-10-22)
-> 용어를 고치며 Claude가 인터페이스의 이름을 붙였습니다: `DocumentStore`, `SettingsStore`, `CommandRegistry`, `SettingsSchema`. 뜻은 ADR-0031 · 0033 그대로이고, 이름만 새로 붙인 것입니다.
-
-## 9. 결정 목록
+## 8. 결정 목록
 
 모든 ADR은 [[atelier/adr/README|ADR 목록]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/decisions/README|DR 목록]]. 아직 "제안됨"인 것은 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다. UI 프레임워크는 React로 정했습니다([[0010-ui-framework|ADR-0010]], 2026-10-18).

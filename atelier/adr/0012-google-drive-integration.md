@@ -10,6 +10,10 @@ superseded-by:
 
 # ADR-0012: Google Drive 연동은 웹 버전 위에 얹는다
 
+> [!NOTE] 이후 변경
+> - 2026-10-25: Drive 연동 코드는 `src/apps/web` 안에 둔다 → [[0036-code-layout|ADR-0036]]
+> - 2026-10-10: Drive에서 만드는 파일은 `.ns.svg` → [[0014-drive-file-extension|ADR-0014]]
+
 ## 배경
 
 사용자가 Google Drive에서도 NS 차트를 만들고 편집하기를 원한다. ([[01-requirements#2.4 Google Drive]])

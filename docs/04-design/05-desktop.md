@@ -3,12 +3,14 @@ title: 데스크톱 앱
 tags:
   - design
 status: 작성 전
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
-# 데스크톱 앱 (`apps/desktop`)
+# 데스크톱 앱
 
 데스크톱 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 데스크톱에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
+
+코드: `src/apps/desktop` (→ [[0036-code-layout|ADR-0036]])
 
 | 인터페이스 | 방향 | 데스크톱에서 |
 | --- | --- | --- |
@@ -34,8 +36,10 @@ updated: 2026-10-22
 
 ## 3. 배포와 업데이트
 
+정한 것: 코드는 `src/apps/desktop`, 내보내는 곳은 GitHub Release → [[0036-code-layout|ADR-0036]]
+
 > [!info] 미완성: 설치 패키지, 자동 업데이트
 
 ## 미결정 사항
 
-- [ ] 
+아직 없음.

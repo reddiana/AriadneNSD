@@ -5,7 +5,7 @@ tags:
 updated: 2026-10-11
 ---
 
-# 이름 이야기: 왜 Ariadne’s NSD인가
+# 이름 이야기
 
 이 제품의 이름은 `AriadneNSD`이고, 문자 로고에서는 `Ariadne’s NSD`라고 적습니다. "아리아드네의 NS 차트"라는 뜻이고, **"Ariadne's Thread"(아리아드네의 실)** 를 떠올리게 하려고 지은 이름입니다.
 
@@ -42,7 +42,7 @@ updated: 2026-10-11
 | 자리 | 적는 법 |
 | --- | --- |
 | 글로 적을 때 (문서, 소개 글, 메뉴, 대체 글자) | `AriadneNSD` |
-| GitHub 저장소 (2026-10-15부터 → [[dr-0011-repo-name\|ADR-0028]]) | `AriadneNSD` |
+| GitHub 저장소 (2026-10-15부터 → [[dr-0011-repo-name\|DR-0011]]) | `AriadneNSD` |
 | 패키지, 플러그인 id | `ariadne-nsd` (문서 태그로도 썼으나 2026-10-25에 지움) |
 | 문자 로고 그림 | `Ariadne’s NSD` |
 

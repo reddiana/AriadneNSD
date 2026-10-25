@@ -6,7 +6,7 @@ tags:
   - design
   - ux
 status: 초안
-updated: 2026-10-18
+updated: 2026-10-25
 ---
 
 # 시각 디자인
@@ -16,7 +16,7 @@ updated: 2026-10-18
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^fmt-color|저장되는 그림의 색]], [[01-requirements#^nfr-a11y|접근성]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 물음과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. 값은 프로토타입 60번째 판과 같습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 층 구분을 고치고 빠진 명세를 채웠습니다. 프로토타입에 아직 없는 모습(마우스 올림, 끌어 놓기, 오류, 빈 갈래의 `∅`, 머리 모양 "제목처럼", 두 키 조합의 안내 상자)은 이 문서에 명세만 있습니다(11장).
+> - **지금 상태:** 초안입니다. 값은 프로토타입 61번째 판과 같습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 층 구분을 고치고 빠진 명세를 채웠습니다. 프로토타입에 아직 없는 모습(마우스 올림, 끌어 놓기, 오류, 빈 갈래의 `∅`, 머리 모양 "제목처럼", 두 키 조합의 안내 상자)은 이 문서에 명세만 있습니다(11장).
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
@@ -51,11 +51,12 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | If | 머리에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 갈래 이름(처음은 "참" · "거짓", 고칠 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 머리가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
-| 호출 블록 | 양옆 안쪽의 세로 이중선. 부를 Method가 없으면 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
+| 호출 블록 | 양옆 안쪽의 세로 이중선. 이어진 곳을 잃은 호출 블록(Method를 지움, 머리를 뗌, 다른 문서를 찾을 수 없음)은 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
+| For | 미완성: 모양은 레이아웃 설계와 함께 정한다 → [[02-interaction-rules#For 블록]] | 미완성 |
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
-- **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 번들 글꼴에 있는 글자로 쓰거나 도형으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
+- **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 도형(path)으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^lay-empty-branch]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 고르면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 바탕은 칠하지 않습니다(종이 그대로). 머리는 여전히 블록이라 고르고 고칠 수 있습니다. 글자는 4.2절, 치수는 5장에 있습니다. 문서 설정의 자리는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^lay-head-style]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
 
 - If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 머리와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 골랐습니다 → [[0021-event-and-method|ADR-0021]]
@@ -324,7 +325,7 @@ flowchart LR
 | 접힌 접기 영역 | 한 줄 칸 + `▶` + 이름 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 있음 |
 | 접힌 제어 블록의 갈래 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
 | 펴 보인 호출 블록 | 점선 + 띠(`▾` + 호출 블록의 글자). 안의 글자는 회색이고 구문 강조 없음. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 있음 |
-| 부를 Method가 없는 호출 블록 | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
+| 이어진 곳을 잃은 호출 블록(Method를 지움, 머리를 뗌, 다른 문서를 찾을 수 없음) | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
 | 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 |
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 |
 | 마우스 올림 | 블록의 바깥 선에서 1px 안에 1px 테두리. 고른 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |

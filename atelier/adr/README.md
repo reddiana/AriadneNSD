@@ -49,6 +49,8 @@ updated: 2026-10-25
 | [[0017-fold-name-in-model\|0017]] | 접는 범위의 이름은 모델에 저장한다 | 승인 |
 | [[0018-save-as-shown\|0018]] | 저장되는 그림은 지금 화면 그대로이고, 접힘 상태도 파일에 저장한다 (0016을 대체) | 승인 |
 | [[0026-bundled-font-metrics\|0026]] | 글꼴을 번들해 텍스트 폭을 글꼴 메트릭으로 계산하고, 저장되는 SVG에는 서브셋 글꼴을 임베드한다 | 승인 |
+| [[0034-default-block-font\|0034]] | 기본 블록 글꼴은 D2Coding 보통 굵기 하나, 한자를 뺀 나머지 문자를 싣는다 | 승인 |
+| [[0035-model-namespace-and-v0\|0035]] | 모델 네임스페이스 URI는 저장소 주소, 프로토타입의 v0 파일은 열지 않는다 | 승인 |
 
 ### 편집 엔진과 화면
 
@@ -59,8 +61,6 @@ updated: 2026-10-25
 | [[0031-shell-interfaces\|0031]] | editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다 | 승인 |
 | [[0032-token-highlighting\|0032]] | 구문 강조는 블록 글자의 종류마다 토크나이저 하나로 한다 | 승인 |
 | [[0033-command-list-for-shells\|0033]] | editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다 | 승인 |
-| [[0034-default-block-font\|0034]] | 기본 블록 글꼴은 D2Coding 보통 굵기 하나, 한자를 뺀 나머지 문자를 싣는다 | 승인 |
-| [[0035-model-namespace-and-v0\|0035]] | 모델 네임스페이스 URI는 저장소 주소, 프로토타입의 v0 파일은 열지 않는다 | 승인 |
 
 새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0037부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 

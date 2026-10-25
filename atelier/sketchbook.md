@@ -2,7 +2,7 @@
 title: 스케치북
 tags:
   - plan
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
 # 스케치북
@@ -25,16 +25,16 @@ updated: 2026-10-22
 | M06 | 다이어그램 배치 시안 (2026-10-11, 결정함: L4 + 순서 바꾸기) | 한 문서에 다이어그램 여러 개를 놓는 법 | https://claude.ai/artifact/NMZH1BMT42KMJAd5HcaQkW | `journal/assets/2026-10-11-diagram-layout-study.html` |
 | M07 | 호출 블록 글자 시안 (2026-10-11, 결정함: A2) | 호출 블록에 이름, 인자, 결과를 적는 법 | https://claude.ai/artifact/TACyh94j23GHzKZMYq4252 | `journal/assets/2026-10-11-call-block-text-study.html` |
 | M08 | 호출 블록 펴 보기 시안 (2026-10-11, 결정함: Q13~Q16 → [[ux-decisions]]) | 부르는 다이어그램을 그 자리에 펴서 보여 주는 법 | https://claude.ai/artifact/SRXMaLyK5KFCbFiRw7iwwL | `journal/assets/2026-10-11-call-expand-study.html` |
-| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[ux-decisions]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q22, Q23) | 고치기, 넣기, 옮기기, 고르기의 규칙을 하나로 맞추는 물음들 | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q23) | 고치기, 넣기, 옮기기, 고르기의 규칙을 하나로 맞추는 물음들 | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M10 | 문자 로고 바탕 시안 (2026-10-11) | 밝은 화면과 어두운 화면 모두에서 읽히는 문자 로고 | https://claude.ai/artifact/VmPiuJk7cLMYDMA2ePKKs7 | `journal/assets/2026-10-11-wordmark-any-background.html` |
-| M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 1~4 → [[outbox#확인해 주세요]]) | 접기 영역의 테두리와, 펴 보인 곳에만 두는 접기 영역 | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
+| M11 | 접기 영역 테두리 시안 (2026-10-13, 결정함: T1 틈 1px · T2 가는 점선 · P1 똑같이 · P2 줄어듦. 답을 기다림: 확인 3 · 4 → [[outbox#확인해 주세요]]) | 접기 영역의 테두리와, 펴 보인 곳에만 두는 접기 영역 | https://claude.ai/artifact/PW426nxL2ScUNG5aPzxbW2 | `journal/assets/2026-10-13-fold-border-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | 같은 글자가 브라우저마다 같은 폭으로 재어지는지 재어 본 페이지 | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 | M13 | 아키텍처 전 물음 시안 (2026-10-13, 결정함: A4 1 · A6 3 · A8 1 · A8-가 1) | 저장된 그림의 색, 실행 취소의 대상 같은 물음 | https://claude.ai/artifact/Jez6xT5qB9HbdoN1aRSKSn | `journal/assets/2026-10-13-before-architecture-study.html` |
 | M14 | UX 문서 구조 시안 (2026-10-17, 결정함: S 1번 목적별 다섯) | `docs/02-ux-design`의 세 문서가 생긴 내력과 문제, 나누는 안 셋 | https://claude.ai/artifact/KWD4NzTgixXj7bdkhFiU3D | `journal/assets/2026-10-17-ux-docs-structure-study.html` |
 | M17 | 테마 시안 (2026-10-17, 결정함: TH1 1번 문서마다 · TH2 1번 화면 색은 따로) | 테마를 그림의 색 묶음으로 보고, 누가 고르는지와 편집 화면의 색도 바꾸는지 | https://claude.ai/artifact/CABapWNP4NnQupcmTpwyZf | `journal/assets/2026-10-17-theme-study.html` |
 | M18 | 호출 대상 시안 (2026-10-17, 결정함: CB1 1번 이름을 적는 호출 블록 · CB2 1번 파일과 Method를 가리킴) | 부를 Method가 같은 문서에 없을 때(라이브러리 함수, 다른 파일의 Method) 호출 블록을 어떻게 하는지 | https://claude.ai/artifact/RXopHw9gKu4hmz5GvFo6Vx | `journal/assets/2026-10-17-call-target-study.html` |
 | M19 | 접기 영역 색 시안 (2026-10-17, 결정함: B · S1 접기 영역은 파랑, 고른 표시는 주황. 처음엔 S3 녹색을 골랐다가 바꿈) | 펴진 접기 영역의 테두리 색 후보를 고른 표시의 파랑과 함께 견줌 | https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9 | `journal/assets/2026-10-17-fold-color-study.html` |
-| M20 | 아키텍처 제안 확인 (2026-10-17, 결정함: A1 · A2 · A3 · A4 1번, A5 1번이되 2번으로 바꾸기 쉽게 → ADR-0029 · 0030, A6 1번 → ADR-0031, A7 1번 → ADR-0032. 모두 정함) | [[03-architecture#8. 확인받지 못한 제안]]의 일곱 가지를 대안과 나란히 그림으로. A6은 다른 문서 읽기와 설정 보관을 더한 고친 제안 | https://claude.ai/artifact/R8RJxg8V1qweiMfusMKk87 | `journal/assets/2026-10-17-architecture-proposals-study.html` |
+| M20 | 아키텍처 제안 확인 (2026-10-17, 결정함: A1 · A2 · A3 · A4 1번, A5 1번이되 2번으로 바꾸기 쉽게 → ADR-0029 · 0030, A6 1번 → ADR-0031, A7 1번 → ADR-0032. 모두 정함) | [[03-architecture]]의 일곱 가지를 대안과 나란히 그림으로. A6은 다른 문서 읽기와 설정 보관을 더한 고친 제안 | https://claude.ai/artifact/R8RJxg8V1qweiMfusMKk87 | `journal/assets/2026-10-17-architecture-proposals-study.html` |
 | M21 | 결정 기록 나누기 시안 (2026-10-17, 결정함: DR1 · DR2 · DR3 모두 1번 → [[dr-0001-split-decision-records|DR-0001]]) | ADR은 아키텍처만 남기고 다른 결정을 같은 구조의 기록으로 나누는 법: 이름과 자리, 옮기는 ADR의 번호, 애매한 넷 | https://claude.ai/artifact/6rrnQ2NBf5kWYXkJkrC6kM | `journal/assets/2026-10-17-decision-records-study.html` |
 | M22 | UI 프레임워크 시안 · 스파이크 (2026-10-18, 결정함: U1 1번 → [[0033-command-list-for-shells\|ADR-0033]], U2 3번 React → [[0010-ui-framework\|ADR-0010]]) | 배포 대상마다 메뉴와 설정을 누가 그리는가(편집기가 명령의 목록을 내놓을지), 편집기의 둘레 화면 부품을 무엇으로 짤지. 같은 도구 모음을 프레임워크 없음 · Svelte · React · Preact로 짜서 빌드한 크기와 코드를 견줌 | https://claude.ai/artifact/1gXCQSyoSnPcTP3ro64d5Z | `journal/assets/2026-10-18-ui-framework-study.html` (코드와 재는 스크립트, 페이지를 만드는 스크립트는 `journal/assets/2026-10-18-ui-framework-spike/`) |
 | M23 | 모델 설계의 물음 (2026-10-18, 결정함: MD1 1번 · MD2 1번 · MD3 1번 + If ↔ Case로 바꿀지 묻기, Case는 모델은 넓게 명령은 좁게 → [[01-model]]) | 문서 모델을 설계하며 나온, 사용자에게 보이는 물음: 접기 영역의 끝에 넣은 블록은 안인가 밖인가, 글자 고치기의 실행 취소 단위, Case 갈래의 최소 수 | https://claude.ai/artifact/9jAXzr6fe4cjfRhcdx4z6f | `journal/assets/2026-10-18-model-questions-study.html` |

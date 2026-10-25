@@ -3,17 +3,19 @@ title: 레이아웃 · 렌더링
 tags:
   - design
 status: 작성 전
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
-# 레이아웃 · 렌더링 (`packages/core`)
+# 레이아웃 · 렌더링
 
 문서 모델에서 각 블록의 위치와 크기(bounding box)를 계산하고, 그 결과를 SVG로 렌더링하는 방법을 정의합니다. 모습의 값(색, 선 굵기, 글자 크기, 여백과 치수)은 디자인 토큰으로 [[04-visual-design]]에만 있고, 이 문서는 그 토큰을 쓰는 방법을 정합니다.
+
+코드: `src/packages/core`, 글꼴은 `src/packages/fonts` (→ [[0036-code-layout|ADR-0036]])
 
 ## 관련 요구사항
 
 - [[01-requirements#3.3 레이아웃 · 렌더링]] ([[01-requirements#^lay-autosize]] 여러 줄 글자, [[01-requirements#^lay-default-style]] → [[04-visual-design]])
-- 내보내기: [[01-requirements#^exp-png]] (#P0), [[01-requirements#^exp-pdf]], [[01-requirements#^exp-plain-svg]]
+- 내보내기: [[01-requirements#^exp-png]] (`P0`), [[01-requirements#^exp-pdf]], [[01-requirements#^exp-plain-svg]]
 - [[01-requirements#^fmt-text]], [[01-requirements#^fmt-outline]], [[01-requirements#^fmt-deterministic]]
 - [[01-requirements#^nfr-perf]], [[01-requirements#^nfr-compat]]
 
@@ -66,8 +68,10 @@ flowchart LR
 
 정한 것: 글꼴을 번들하고, 그 글꼴 파일의 글리프 advance 폭 테이블로 `core`가 계산한다. 셸이 주입하지 않는다(브라우저의 텍스트 측정 API를 쓰지 않음). 커닝을 끄고 정수 px로 올림한다 → [[0026-bundled-font-metrics|ADR-0026]]
 
+정한 것: 기본 블록 글꼴은 D2Coding 보통 하나이고, 한자를 뺀 문자를 싣는다 → [[0034-default-block-font|ADR-0034]]
+
 > [!info] 미완성: advance 폭 테이블과 서브셋 글꼴
-> - advance 폭 테이블의 형식과 크기, 번들 글꼴에 없는 글리프(fallback)의 폭
+> - advance 폭 테이블의 형식과 크기, 번들 글꼴에 없는 글리프(fallback)의 폭(한자, 이모지 등 → [[0034-default-block-font|ADR-0034]])
 > - 저장 파일에 넣을 서브셋 글꼴을 만드는 방법(서브세팅)과 크기 → [[03-architecture#7. 위험과 검증이 필요한 사항]], [[01-file-format#2. 문서 구조]]
 
 ## 3. SVG 렌더링
@@ -78,7 +82,7 @@ flowchart LR
 > - 구문 강조: 블록 글자의 종류마다 토크나이저 → [[03-architecture#5. 공통 관심사]]
 > - 그림에 적는 고정 문구("참" · "거짓" 등)의 로캘 → [[01-requirements#^nfr-i18n]]
 > - 텍스트를 외곽선 path로 변환하는 옵션 ([[01-requirements#^fmt-outline]])
-> - PNG · PDF 내보내기: 같은 SVG를 래스터화 · 인쇄용으로 변환하는 경로와 배율 ([[01-requirements#^exp-png]]는 #P0)
+> - PNG · PDF 내보내기: 같은 SVG를 래스터화 · 인쇄용으로 변환하는 경로와 배율 ([[01-requirements#^exp-png]]는 `P0`)
 
 ## 4. 성능
 
@@ -87,4 +91,5 @@ flowchart LR
 
 ## 미결정 사항
 
-- [ ]
+- [ ] 번들 글꼴에 없는 글리프(한자, 이모지 등)의 폭을 어떻게 셀지 → [[0034-default-block-font|ADR-0034]], 2장
+- [ ] 저장 파일에 넣는 서브셋 글꼴의 형식: 압축하지 않은 TTF인가, woff2인가 → [[01-file-format#6. 미결정 사항]]

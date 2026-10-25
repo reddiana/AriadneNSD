@@ -3,12 +3,14 @@ title: 웹
 tags:
   - design
 status: 작성 전
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
-# 웹 (`apps/web`)
+# 웹
 
 웹 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 웹에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다. 백엔드 서버가 없는 정적 사이트입니다([[01-requirements#^web-static]]).
+
+코드: `src/apps/web`, Google Drive 연동도 여기에 둡니다 (→ [[0036-code-layout|ADR-0036]])
 
 | 인터페이스 | 방향 | 웹에서 |
 | --- | --- | --- |
@@ -54,4 +56,4 @@ updated: 2026-10-22
 
 ## 미결정 사항
 
-- [ ] 
+아직 없음.

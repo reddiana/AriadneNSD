@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0003: 구현 언어 TypeScript
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: IDE 플러그인이 대상이 되어(2026-10-14) IntelliJ 셸의 호스트 쪽은 TypeScript 밖일 수 있다(웹뷰 안의 편집기는 그대로 TypeScript) → [[01-requirements#2.7 IDE 플러그인 (나중에)]], [[0036-code-layout|ADR-0036]]
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[03-architecture]]
 
 ## 배경

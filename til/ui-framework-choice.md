@@ -1,8 +1,8 @@
 ---
 title: UI 프레임워크 고르기
 tags:
-  - tech-note
-date: 2026-10-18
+  - til
+updated: 2026-10-18
 ---
 
 # UI 프레임워크 고르기

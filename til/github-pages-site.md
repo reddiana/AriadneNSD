@@ -1,8 +1,8 @@
 ---
 title: GitHub Pages로 문서 사이트 펴내기
 tags:
-  - tech-note
-date: 2026-10-18
+  - til
+updated: 2026-10-25
 ---
 
 # GitHub Pages로 문서 사이트 펴내기

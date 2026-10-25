@@ -3,12 +3,14 @@ title: Obsidian 플러그인
 tags:
   - design
 status: 작성 전
-updated: 2026-10-22
+updated: 2026-10-25
 ---
 
-# Obsidian 플러그인 (`apps/obsidian`)
+# Obsidian 플러그인
 
 Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스(`DocumentStore`, `SettingsStore`)를 구현하고 제공 인터페이스(`CommandRegistry`, `SettingsSchema`)를 Obsidian의 확장 지점에 등록합니다. Obsidian에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
+
+코드: `src/apps/obsidian` (→ [[0036-code-layout|ADR-0036]])
 
 | 인터페이스 | 방향 | Obsidian에서 |
 | --- | --- | --- |
@@ -80,13 +82,13 @@ sequenceDiagram
     Note over D: 브라우저가 새 URL로 그림을 다시 로드
 ```
 
-- 이 요구사항이 나온 까닭 (2026-10-12에 요구사항에서 옮김):
+- 이 요구사항이 나온 까닭:
 	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. AriadneNSD는 별도 플러그인 없이 갱신되어야 한다.
 
 **그림 우클릭 메뉴 ([[01-requirements#^obs-edit-embed]]):** Obsidian의 공개 API인 `file-menu` 이벤트를 구독해 기존 컨텍스트 메뉴에 항목을 더합니다. 노트의 그림 우클릭은 `source`가 `link-context-menu`, 파일 목록 우클릭은 `file-explorer-context-menu`로 옵니다. 항목은 `setSection('system')`으로 system 구역(기본 앱에서 열기, 폴더에서 보기 …)의 맨 아래에 둡니다. 그 바로 아래가 삭제 항목이 있는 danger 구역입니다.
-- 처음에는 DOM의 `contextmenu` 이벤트를 가로채 우리 메뉴만 띄웠는데, Obsidian의 기존 메뉴가 모두 사라졌습니다. 메인테이너의 지적으로 `file-menu` 방식으로 바꿨습니다. 이 부분은 비공개 내부 API에 기대지 않습니다.
+- DOM의 `contextmenu` 이벤트를 가로채면 Obsidian의 기존 메뉴가 모두 사라집니다. 그래서 `file-menu` 이벤트를 씁니다. 이 부분은 비공개 내부 API에 기대지 않습니다.
 - 같은 구역에 항목을 넣는 다른 플러그인이 있으면 우리 항목이 그 뒤로 밀릴 수 있습니다.
-- 메뉴 항목의 자리 (2026-10-12에 요구사항에서 옮김):
+- 메뉴 항목의 자리:
 	- Obsidian의 기존 우클릭 메뉴는 그대로 두고 이 항목만 더한다. 자리는 "이미지 삭제" 바로 위 구역의 맨 아래("파일 탐색기에서 파일 보기" 아래)다.
 	- 파일 목록에서 `.ns.svg`를 우클릭해도 같은 항목이 나온다. 자리는 "삭제" 바로 위 구역의 맨 아래("폴더에서 보기" 아래)다.
 
@@ -126,9 +128,17 @@ sequenceDiagram
 
 > [!warning] 위험: 번들 글꼴과 서브세팅 wasm을 `main.js`에 인라인하면 플러그인 번들이 커진다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
-## 미결정 사항
+## 6. 배포
 
-2026-10-12에 요구사항 2.1에서 옮긴 것입니다.
+정한 것 → [[0036-code-layout|ADR-0036]]
+
+- `manifest.json`의 원본은 `src/apps/obsidian/`에 둔다. 저장소 맨 위에 그 사본과 `versions.json`(플러그인 판 → 최소 Obsidian 판)을 둔다. Obsidian 커뮤니티 플러그인 목록이 저장소 맨 위의 `manifest.json`을 읽기 때문이다.
+- 판을 올리는 스크립트가 원본을 맨 위로 복사하고 `versions.json`을 갱신한다. 둘이 다르면 CI가 실패한다.
+- GitHub Actions가 빌드해 GitHub Release에 `main.js` · `manifest.json` · `styles.css`를 올린다. 커뮤니티 플러그인 목록은 Release에서 이 파일을 받아 간다.
+
+> [!info] 미완성: 빌드 도구(esbuild를 후보로), 판 번호 규칙, 커뮤니티 플러그인 목록에 등록하는 절차
+
+## 미결정 사항
 
 - [ ] 새 파일의 이름과 저장 위치 (제안: Obsidian의 "첨부 파일 폴더" 설정을 따르고, 이름은 `노트이름-diagram-1.ns.svg`처럼 자동 생성)
 - [ ] 아무것도 그리지 않고 탭을 닫았을 때 (제안: 파일을 지우고 노트에 삽입하지 않음)
