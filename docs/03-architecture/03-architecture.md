@@ -39,7 +39,7 @@ updated: 2026-10-22
 | 제약 | 근거 |
 | --- | --- |
 | 구현 언어는 TypeScript | [[0003-typescript\|ADR-0003]] |
-| Obsidian 플러그인 · 데스크톱 · 웹 세 대상. Google Drive는 웹 위에 얹고, Confluence가 뒤에 붙는다 | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]] |
+| 웹 · Obsidian 플러그인 · 데스크톱을 먼저 만든다. Google Drive는 웹 위에 얹고, Confluence · IDE 플러그인 · Claude skill이 뒤에 붙는다(→ 6장) | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]], [[0036-code-layout\|ADR-0036]] |
 | 개발 순서는 웹 → Obsidian → 데스크톱 | [[dr-0002-development-order\|DR-0002]] |
 | 저장 형식은 모델을 내장한 SVG, 모델의 직렬화 형식은 JSON | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]] |
 | 웹은 백엔드 서버 없는 정적 사이트 | [[01-requirements#^web-static]] |

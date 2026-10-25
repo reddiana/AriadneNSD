@@ -88,5 +88,5 @@ updated: 2026-10-17
 | 렌더링 | rendering | 레이아웃 결과를 SVG로 그리는 것 |
 | 모델 내장 SVG | model-embedded SVG | 그림과 모델을 함께 담은 저장 파일(`.ns.svg`). 쓰인 글자만 추린 글꼴 조각도 들어간다 → [[01-file-format]] |
 | 글꼴 조각 | font subset | 번들한 글꼴에서 그 그림에 쓰인 글자만 추려 저장 파일에 넣은 것 → [[0026-bundled-font-metrics\|ADR-0026]] |
-| 셸 | shell | 배포 대상별로 편집기를 감싸는 껍데기 앱 (`apps/*`) |
-| 코어 | core | 배포 대상과 무관한 공통 로직 (`packages/core`) |
+| 셸 | shell | 배포 대상별로 편집기를 감싸는 껍데기 앱 (`src/apps/*` → [[0036-code-layout\|ADR-0036]]) |
+| 코어 | core | 배포 대상과 무관한 공통 로직 (`src/packages/core`) |

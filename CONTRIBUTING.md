@@ -4,7 +4,7 @@
 
 ## 지금 할 수 있는 것
 
-- **설계 문서 읽기:** https://reddiana.github.io/AriadneNSD/ 에서 요구사항, UX 설계, 아키텍처, 상세 설계와 기술 노트를 읽을 수 있습니다. 저장소를 받아 [Obsidian](https://obsidian.md/)으로 열어도 됩니다(→ [README](README.md#이-저장소를-읽는-법)).
+- **설계 문서 읽기:** https://reddiana.github.io/AriadneNSD/ 에서 요구사항, UX 설계, 아키텍처, 상세 설계, 결정 기록과 작업 공간(`atelier/`), 배운 것(`til/`, Today I Learned)을 읽을 수 있습니다. 저장소를 받아 [Obsidian](https://obsidian.md/)으로 열어도 됩니다(→ [README](README.md#이-저장소를-읽는-법)).
 - **이슈 열기:** 물음, 제안, 문서의 틀린 곳, 시안을 보고 든 생각을 [이슈](https://github.com/reddiana/AriadneNSD/issues)로 남겨 주세요. 한국어든 영어든 괜찮습니다.
 - **문서 고치기:** 오타나 깨진 링크 같은 작은 고침은 바로 Pull Request를 보내셔도 됩니다. 결정을 바꾸는 고침은 먼저 이슈에서 이야기해 주세요. 결정의 근거는 `atelier/adr/`(ADR)와 `atelier/decisions/`(DR)에 있습니다.
 

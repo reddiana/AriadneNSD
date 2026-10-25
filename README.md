@@ -8,10 +8,10 @@
 
 NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일은 어디서나 열리는 SVG 그림이면서, 다시 열어 편집할 수 있는 원본입니다.
 
-Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 예정입니다.
+먼저 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 이 순서로 만듭니다. 그 위에 Google Drive 연동을 얹고, 나중에 Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill로 넓힐 예정입니다. 첫 출시(MVP)는 웹입니다.
 
 > [!NOTE]
-> **지금은 설계 단계입니다.** 요구사항과 아키텍처 결정을 정리하고 있으며, 코드는 아직 없습니다.
+> **지금은 설계 단계입니다.** 요구사항과 아키텍처를 정했고 상세 설계를 하고 있습니다. 코드는 아직 없습니다.
 
 ## 이 저장소를 읽는 법
 
@@ -31,6 +31,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | [`atelier/`](atelier/README.md)       | 작업 공간: 현재 상태, 할 일, 답을 기다리는 것, 프로토타입, 결정 기록(아키텍처는 ADR, 그 밖은 DR), 세션 기록, inbox |
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                    |
 | [`til/`](til/README.md)               | Today I Learned: 백엔드 개발자가 프론트엔드를 배우며 정리한 것                  |
+| [`site/`](site/)                      | 펴낸 사이트(GitHub Pages, Quartz)의 설정과 빌드 스크립트                  |
 
 ## 어떻게 만들고 있나
 
@@ -68,7 +69,7 @@ Obsidian 플러그인, 데스크톱 앱, 웹(정적 페이지)으로 배포할 �
 | 대상                                                                                | 라이선스                                                                                         |
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | 코드 (소스 코드, 프로토타입, 스크립트)                                                           | [Apache License 2.0](LICENSE). 가져다 사용한 배포물에 [`NOTICE`](NOTICE) 파일의 글을 함께 실어 주세요              |
-| 글 (`docs/` · `atelier/` · `journal/` · `til/`의 문서, 이 README, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 밝혀 주세요 |
+| 글 (`docs/` · `atelier/` · `journal/` · `til/`의 문서, 이 README와 저장소 맨 위의 문서, 시안과 스파이크 페이지) | [CC BY 4.0](LICENSE-docs). 출처를 `AriadneNSD (https://github.com/reddiana/AriadneNSD)`로 밝혀 주세요 |
 | 로고 (그림 로고와 문자 로고의 그림 파일)                                                          | 허락하지 않습니다. 이 프로젝트를 가리키는 데에만 사용할 수 있습니다                                                       |
 | 이름 (`AriadneNSD`)                                                                 | 허락하지 않습니다. 가져다 만든 제품에 이 이름을 붙일 수 없습니다. "AriadneNSD를 가져다 사용했다"고 알리는 데에는 사용할 수 있습니다            |
 

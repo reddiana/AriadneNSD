@@ -11,7 +11,7 @@ updated: 2026-10-25
 # UX 결정 모음
 
 > [!abstract] 이 문서는
-> 조작과 화면의 **작은 결정**을 물음 하나에 한 항목씩 모은 곳입니다. 무엇을 골랐고 왜인지, 처음의 추천과 달라졌으면 그 까닭을 적습니다. 큰 결정은 ADR([[atelier/README#아키텍처 결정 기록 (ADR)|목록]])과 DR([[atelier/README#결정 기록 (DR)|목록]])에 있습니다 → [[dr-0012-decisions-in-atelier|DR-0012]]
+> 조작과 화면의 **작은 결정**을 물음 하나에 한 항목씩 모은 곳입니다. 무엇을 골랐고 왜인지, 처음의 추천과 달라졌으면 그 까닭을 적습니다. 큰 결정은 ADR([[atelier/adr/README|목록]])과 DR([[atelier/decisions/README|목록]])에 있습니다 → [[dr-0012-decisions-in-atelier|DR-0012]]
 > - **지금의 규칙**은 `docs/`의 [[02-interaction-rules]](조작), [[03-keymap]](키), [[04-visual-design]](모습)에 있습니다. 이 문서는 규칙을 다시 적지 않습니다.
 > - **아직 정하지 않은 물음**은 [[02-interaction-rules#9. 미결정 사항]]이 원본입니다. 여기에는 표의 한 줄만 둡니다.
 > - 견준 안과 장면 그림은 시안 페이지에 있습니다([[sketchbook]]). 물음마다 그 시안의 ID를 적습니다.

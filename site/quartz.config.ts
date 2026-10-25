@@ -100,7 +100,8 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // 링크 미리보기 그림은 만들지 않는다 (빌드가 느리고 한글 글꼴을 따로 받아야 함)
+      // 페이지마다의 링크 미리보기 그림(CustomOgImages)은 만들지 않는다 (빌드가 느리고 한글 글꼴을 따로 받아야 함).
+      // 모든 페이지가 대표 그림 하나(site/og-image.png, make-og-image.mjs로 만듦)를 쓴다
     ],
   },
 }

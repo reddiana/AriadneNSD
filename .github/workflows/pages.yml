@@ -69,11 +69,12 @@ jobs:
           cp -r .quartz/public/. _site/
 
       # ── 웹 버전 앱 (나중에) ─────────────────────────────
-      # 앱 코드가 생기면 여기서 빌드해 _site/app/에 넣는다. 예:
+      # 앱 코드가 생기면 여기서 빌드해 _site/app/에 넣는다. 코드는 src/ 아래의 pnpm 워크스페이스다(ADR-0036). 예:
+      # - uses: pnpm/action-setup@v4
       # - name: 웹 앱 빌드
-      #   run: |
-      #     npm ci && npm run build --workspace web
-      #     mkdir -p _site/app && cp -r packages/web/dist/. _site/app/
+      #   working-directory: src
+      #   run: pnpm install --frozen-lockfile && pnpm --filter ./apps/web build
+      # - run: mkdir -p _site/app && cp -r src/apps/web/dist/. _site/app/
 
       # ── 사용자 매뉴얼 (나중에) ──────────────────────────
       # 매뉴얼이 생기면 여기서 빌드해 _site/manual/에 넣는다.
