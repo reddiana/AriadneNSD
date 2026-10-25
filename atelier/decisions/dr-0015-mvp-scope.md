@@ -12,7 +12,7 @@ superseded-by:
 
 > [!NOTE] 이후 변경
 > - 2026-10-25: For 블록의 모양과 키를 정했다(While과 같은 모양에 머리의 글자로 가름, 넣는 키 `f`). 아래 "For 블록은 아직 조작과 모습의 규칙이 없다"는 풀렸다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
-> - 2026-10-25: 글자 폭 측정([[01-requirements#LAY-04]])을 `P1`에서 `P0`으로 올려 MVP에 들었다. MVP의 "같은 모델이면 같은 파일"(`FMT-03`)이 번들 글꼴의 폭 표로 재는 것을 전제로 하기 때문이다 → [[2026-10-25-04-outbox-cleanup]]
+> - 2026-10-25: 글자 폭 측정([[01-requirements#^r-lay|R-LAY-04]])을 `P1`에서 `P0`으로 올려 MVP에 들었다. MVP의 "같은 모델이면 같은 파일"(`R-FMT-03`)이 번들 글꼴의 폭 표로 재는 것을 전제로 하기 때문이다 → [[2026-10-25-04-outbox-cleanup]]
 
 ## 배경
 
@@ -62,7 +62,7 @@ superseded-by:
 
 메인테이너가 M28에서 고르는 창으로 정했다(2026-10-25): **범위 2**(S1 · 2번)와 **태그 1**(S2 · 1번). 둘 다 Claude의 추천이었다.
 
-- MVP는 웹에서 `P0` 항목이다. 다음 항목을 `P1`에서 `P0`으로 올린다: Case 블록, For 블록, 감싸기([[01-requirements#EDIT-06]]), 풀기([[01-requirements#EDIT-07]]), 복사 · 잘라내기 · 붙여넣기([[01-requirements#EDIT-10]]), If 갈래 바꾸기 · Case 갈래 더하기 · 지우기 · 순서 바꾸기([[01-requirements#EDIT-11]]).
+- MVP는 웹에서 `P0` 항목이다. 다음 항목을 `P1`에서 `P0`으로 올린다: Case 블록, For 블록, 감싸기([[01-requirements#^r-edit|R-EDIT-06]]), 풀기([[01-requirements#^r-edit|R-EDIT-07]]), 복사 · 잘라내기 · 붙여넣기([[01-requirements#^r-edit|R-EDIT-10]]), If 갈래 바꾸기 · Case 갈래 더하기 · 지우기 · 순서 바꾸기([[01-requirements#^r-edit|R-EDIT-11]]).
 - MVP 다음 판들로 미룬다: Event · Method 머리, 호출 블록, 한 문서에 여러 다이어그램, Method로 빼기, 접기, 블록 글자의 종류와 구문 강조, 테마 고르기. 이것들의 조작 규칙은 프로토타입에서 계속 시험하고 정한다. 프로토타입은 버리는 것이고 제품 코드가 되지 않는다([[spike-prototype-mvp]]).
 - 우선순위 태그는 기능의 우선순위다. 요구사항의 "읽는 법"에 적었다.
 

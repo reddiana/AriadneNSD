@@ -19,11 +19,11 @@ GitHub는 버그용 **Issues**와 대화용 **Discussions**를 따로 두고, �
 
 ## AriadneNSD에서 어디에 쓰나
 
-- 문제 알리기([[01-requirements#REP-01]]): 공개는 Discussions + 양식, 비공개는 이메일·폼. 반복되는 문제는 FAQ 페이지로 정리.
-- 후원 링크([[01-requirements#ALL-01]]):
+- 문제 알리기([[01-requirements#^r-rep|R-REP-01]]): 공개는 Discussions + 양식, 비공개는 이메일·폼. 반복되는 문제는 FAQ 페이지로 정리.
+- 후원 링크([[01-requirements#^r-all|R-ALL-01]]):
 	- Obsidian 플러그인은 `manifest.json`의 `fundingUrl`에 주소를 적으면, 커뮤니티 플러그인 화면에 후원 버튼이 저절로 보입니다.
 	- 웹·데스크톱은 직접 화면에 둡니다.
-- 웹 광고([[01-requirements#WEB-08]]): Google AdSense 같은 광고 네트워크는 실수로 누르게 만드는 배치나 팝업 안의 광고를 정책으로 막는 경우가 많습니다. 그래서 "저장할 때만 보이는 광고"가 허용되는지 네트워크를 고를 때 확인해야 합니다.
+- 웹 광고([[01-requirements#^r-web|R-WEB-08]]): Google AdSense 같은 광고 네트워크는 실수로 누르게 만드는 배치나 팝업 안의 광고를 정책으로 막는 경우가 많습니다. 그래서 "저장할 때만 보이는 광고"가 허용되는지 네트워크를 고를 때 확인해야 합니다.
 
 ## 더 읽을거리
 

@@ -16,10 +16,10 @@ superseded-by:
 
 ## 결정 기준
 
-- 같은 모델이면 같은 SVG가 나와야 한다. 텍스트 폭 측정이 환경에 따라 달라지면 안 된다. ([[01-requirements#NFR-02]], [[03-architecture#7. 위험과 검증이 필요한 사항]])
-- 파일 대화상자, OS 파일 연결을 지원해야 한다. ([[01-requirements#DSK-01]], [[01-requirements#DSK-03]])
+- 같은 모델이면 같은 SVG가 나와야 한다. 텍스트 폭 측정이 환경에 따라 달라지면 안 된다. ([[01-requirements#^r-nfr|R-NFR-02]], [[03-architecture#7. 위험과 검증이 필요한 사항]])
+- 파일 대화상자, OS 파일 연결을 지원해야 한다. ([[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-03]])
 - 설치 파일 크기
-- 자동 업데이트 지원 ([[01-requirements#DSK-05]])
+- 자동 업데이트 지원 ([[01-requirements#^r-dsk|R-DSK-05]])
 
 ## 검토한 대안
 

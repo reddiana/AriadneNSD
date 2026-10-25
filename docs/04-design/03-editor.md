@@ -15,8 +15,8 @@ updated: 2026-10-25
 ## 관련 요구사항
 
 - [[01-requirements#3.2 편집]]
-- [[01-requirements#LAY-03]]
-- [[01-requirements#NFR-05]], [[01-requirements#NFR-04]]
+- [[01-requirements#^r-lay|R-LAY-03]]
+- [[01-requirements#^r-nfr|R-NFR-05]], [[01-requirements#^r-nfr|R-NFR-04]]
 
 ## 1. 화면 구성
 

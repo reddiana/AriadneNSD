@@ -32,19 +32,19 @@ date: 2026-10-10
 | --- | --- |
 | 개발 순서: 웹 → Obsidian → 데스크톱 | [[dr-0002-development-order\|ADR-0011]] 승인 |
 | 승인된 ADR이 나중 일로 달라지면 맨 위 `> [!NOTE] 이후 변경`에 적는다 | CLAUDE.md, ADR 템플릿, 승인 ADR 아홉 건 |
-| 한 문서에 다이어그램 여러 개(#P1), 호출 블록, 새 다이어그램으로 빼기 | [[01-requirements#EDIT-18]], [[01-requirements#BLK-04]], [[01-requirements#EDIT-19]] |
-| 호출 블록은 글자를 고치지 않고 부를 것을 목록에서 고른다. 이름은 머리에서만 고친다 | [[01-requirements#BLK-04]] |
-| 이벤트 머리의 이름은 겹치거나 비울 수 없다. 새 머리에는 기본 이름이 들어간다 | [[01-requirements#BLK-01]] |
-| 새 다이어그램 명령(`E`)은 묻지 않는다. 머리 달기는 다른 명령(`M`) | [[01-requirements#EDIT-19]] |
-| 넣기는 고른 블록 뒤(`Shift`는 앞), 빈 블록은 그 자리. 넣을 위치 모드는 없앤다 | [[01-requirements#EDIT-03]] |
-| 방향키 규칙: 좌우로 갈래 건너기, `Ctrl`+상하는 제어 블록을 한 덩어리로, `Ctrl`+좌우는 옆 갈래, 다이어그램 밖으로는 머리에서 또는 `Ctrl`+`Shift`+좌우 | [[01-requirements#EDIT-03]] |
-| 캔버스에 들어오면 첫 블록을 고른다 (캔버스 포커스 선 대신) | [[01-requirements#EDIT-03]] |
-| 붙여넣기: 고른 것 뒤에, 고른 것이 없으면 붙이지 않는다 | [[01-requirements#EDIT-10]] |
+| 한 문서에 다이어그램 여러 개(#P1), 호출 블록, 새 다이어그램으로 빼기 | [[01-requirements#^r-edit\|R-EDIT-18]], [[01-requirements#^r-blk\|R-BLK-07]], [[01-requirements#^r-edit\|R-EDIT-19]] |
+| 호출 블록은 글자를 고치지 않고 부를 것을 목록에서 고른다. 이름은 머리에서만 고친다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| 이벤트 머리의 이름은 겹치거나 비울 수 없다. 새 머리에는 기본 이름이 들어간다 | [[01-requirements#^r-blk\|R-BLK-10]] |
+| 새 다이어그램 명령(`E`)은 묻지 않는다. 머리 달기는 다른 명령(`M`) | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| 넣기는 고른 블록 뒤(`Shift`는 앞), 빈 블록은 그 자리. 넣을 위치 모드는 없앤다 | [[01-requirements#^r-edit\|R-EDIT-03]] |
+| 방향키 규칙: 좌우로 갈래 건너기, `Ctrl`+상하는 제어 블록을 한 덩어리로, `Ctrl`+좌우는 옆 갈래, 다이어그램 밖으로는 머리에서 또는 `Ctrl`+`Shift`+좌우 | [[01-requirements#^r-edit\|R-EDIT-03]] |
+| 캔버스에 들어오면 첫 블록을 고른다 (캔버스 포커스 선 대신) | [[01-requirements#^r-edit\|R-EDIT-03]] |
+| 붙여넣기: 고른 것 뒤에, 고른 것이 없으면 붙이지 않는다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | 강조 영역 요구사항을 없앤다 | [[dr-0004-highlight-region-border\|ADR-0015]] 폐기 |
 | 용어 "접기 영역" (전: 이름 붙은 영역) | [[06-glossary]] |
 | 접기 규칙 전체 (명령 셋, 갈래별 접기, 이름 띠, 중첩) | [[01-requirements#접기 · 펼치기]] |
 | 저장되는 그림은 지금 화면 그대로, 접힘 상태도 파일에 저장 | [[0018-save-as-shown\|ADR-0018]] 승인, [[0016-fold-state-outside-file\|ADR-0016]] 대체됨 |
-| Case 블록의 모양과 갈래 조작 | [[01-requirements#BLK-02]] |
+| Case 블록의 모양과 갈래 조작 | [[01-requirements#^r-blk\|R-BLK-05]] |
 
 ## 발견한 위험
 

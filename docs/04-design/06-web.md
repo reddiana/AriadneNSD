@@ -8,7 +8,7 @@ updated: 2026-10-25
 
 # 웹
 
-웹 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 웹에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다. 백엔드 서버가 없는 정적 사이트입니다([[01-requirements#WEB-01]]).
+웹 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 웹에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다. 백엔드 서버가 없는 정적 사이트입니다([[01-requirements#^r-web|R-WEB-01]]).
 
 코드: `src/apps/web`, Google Drive 연동도 여기에 둡니다 (→ [[0036-code-layout|ADR-0036]])
 
@@ -22,8 +22,8 @@ updated: 2026-10-25
 ## 관련 요구사항
 
 - [[01-requirements#2.3 웹 (정적 페이지)]]
-- [[01-requirements#EXP-04]]
-- 공유 URL, 보기 전용, Google Drive, AI 대화창: [[01-requirements#WEB-05]], [[01-requirements#WEB-06]], [[01-requirements#2.4 Google Drive]], [[01-requirements#WEB-07]]
+- [[01-requirements#^r-exp|R-EXP-04]]
+- 공유 URL, 보기 전용, Google Drive, AI 대화창: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
 
 ## 1. 파일 열기·저장
 
@@ -34,15 +34,15 @@ updated: 2026-10-25
 
 ## 2. 임시 보관
 
-> [!info] 미완성: 작성 중인 내용을 브라우저 저장소에 자동 임시 저장, 복구 안내 ([[01-requirements#WEB-03]])
+> [!info] 미완성: 작성 중인 내용을 브라우저 저장소에 자동 임시 저장, 복구 안내 ([[01-requirements#^r-web|R-WEB-03]])
 
 ## 3. 공유 URL과 보기 전용
 
-> [!info] 미완성: 문서를 압축 · 인코딩해 URL에 담아 공유하기 ([[01-requirements#WEB-05]]), 읽기 전용 모드 ([[01-requirements#WEB-06]])
+> [!info] 미완성: 문서를 압축 · 인코딩해 URL에 담아 공유하기 ([[01-requirements#^r-web|R-WEB-05]]), 읽기 전용 모드 ([[01-requirements#^r-web|R-WEB-06]])
 
 ## 4. Google Drive
 
-> [!info] 미완성: 웹 셸 위에 얹는 Drive 연동 ([[0012-google-drive-integration|ADR-0012]]): 새로 만들기 · 연결 앱으로 열기 · 저장 · 미리보기 ([[01-requirements#GD-02]], [[01-requirements#GD-01]], [[01-requirements#GD-03]], [[01-requirements#GD-04]]). 확장자는 `.ns.svg` ([[0014-drive-file-extension|ADR-0014]])
+> [!info] 미완성: 웹 셸 위에 얹는 Drive 연동 ([[0012-google-drive-integration|ADR-0012]]): 새로 만들기 · 연결 앱으로 열기 · 저장 · 미리보기 ([[01-requirements#^r-gd|R-GD-02]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-gd|R-GD-03]], [[01-requirements#^r-gd|R-GD-04]]). 확장자는 `.ns.svg` ([[0014-drive-file-extension|ADR-0014]])
 
 ## 5. 배포
 
@@ -52,7 +52,7 @@ updated: 2026-10-25
 
 ## 6. PWA
 
-> [!info] 미완성: 오프라인 사용(서비스 워커), 설치 ([[01-requirements#WEB-04]])
+> [!info] 미완성: 오프라인 사용(서비스 워커), 설치 ([[01-requirements#^r-web|R-WEB-04]])
 
 ## 미결정 사항
 

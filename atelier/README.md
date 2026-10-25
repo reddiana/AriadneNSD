@@ -37,6 +37,7 @@ updated: 2026-10-25
 | [[atelier/sessions/README\|sessions/]] | 세션 기록: 작업 세션마다 하나씩, 논의한 것, 결정한 것, 다음 할 일. 목록이 그 폴더의 첫 페이지에 있음 |
 | [[atelier/adr/README\|adr/]] | 아키텍처 결정 기록(ADR): 결정 1건이 파일 1개. 배경, 검토한 대안, 결정, 결과. 목록이 그 폴더의 첫 페이지에 있음 |
 | [[atelier/decisions/README\|decisions/]] | 결정 기록(DR): 아키텍처가 아닌 결정. ADR과 같은 형식. 목록이 그 폴더의 첫 페이지에 있음 |
+| [[requirement-changes]] | 요구사항 변경 기록: 철회한 요구사항의 원문과 까닭 (요구사항 ID는 다시 쓰지 않는다) |
 | [[requirements-rework]] | 요구사항 다시 짜기: 다시 짤 때 고칠 것의 목록 |
 
 ## 검토 문서

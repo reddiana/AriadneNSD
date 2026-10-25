@@ -25,11 +25,11 @@ updated: 2026-10-25
 
 **품질 목표** ([[01-requirements#4. 비기능 요구사항|비기능 요구사항]])
 
-1. **정합성:** 문서는 어떤 편집 후에도 불변식(invariant)을 만족한다. [[01-requirements#NFR-01]] (QA-01, QA-02)
-2. **호환성 · 결정성:** 배포 대상들이 같은 파일을 주고받고, 같은 모델과 같은 뷰 상태는 바이트 단위로 같은 SVG가 된다. [[01-requirements#NFR-02]], [[01-requirements#FMT-03]] (QA-03~05)
-3. **이식성:** 저장된 그림은 플러그인도 글꼴도 없는 SVG 뷰어에서 그대로 렌더링된다. [[01-requirements#FMT-01]], [[01-requirements#FMT-07]] (QA-06)
-4. **시험 가능성:** 도메인 로직(모델 · 레이아웃 · 렌더링)은 DOM 없이 단위 테스트할 수 있다. [[01-requirements#NFR-06]] (QA-14)
-5. **성능:** 블록 500개에서 편집 응답 100ms 이내. [[01-requirements#NFR-03]] (QA-07~09)
+1. **정합성:** 문서는 어떤 편집 후에도 불변식(invariant)을 만족한다. [[01-requirements#^r-nfr|R-NFR-01]] (QA-01, QA-02)
+2. **호환성 · 결정성:** 배포 대상들이 같은 파일을 주고받고, 같은 모델과 같은 뷰 상태는 바이트 단위로 같은 SVG가 된다. [[01-requirements#^r-nfr|R-NFR-02]], [[01-requirements#^r-fmt|R-FMT-03]] (QA-03~05)
+3. **이식성:** 저장된 그림은 플러그인도 글꼴도 없는 SVG 뷰어에서 그대로 렌더링된다. [[01-requirements#^r-fmt|R-FMT-01]], [[01-requirements#^r-fmt|R-FMT-07]] (QA-06)
+4. **시험 가능성:** 도메인 로직(모델 · 레이아웃 · 렌더링)은 DOM 없이 단위 테스트할 수 있다. [[01-requirements#^r-nfr|R-NFR-06]] (QA-14)
+5. **성능:** 블록 500개에서 편집 응답 100ms 이내. [[01-requirements#^r-nfr|R-NFR-03]] (QA-07~09)
 6. **변경 용이성:** 새 배포 대상, 렌더링 백엔드, 블록 종류, 화면 언어를 더할 때 고치는 곳이 정해진 한 곳이다. [[0002-three-targets-shared-core|ADR-0002]], [[0030-swappable-drawing|ADR-0030]] (QA-10~13)
 
 품질 목표마다 잴 수 있는 시나리오와 합격 기준, 그것을 만족시키는 이 문서의 구조, 확인할 시험은 [[03-quality-attribute-scenarios|품질 속성 시나리오(QAS)]]에 있습니다. 구조를 바꿀 때는 그 문서에서 영향받는 시나리오를 찾아 봅니다.
@@ -42,7 +42,7 @@ updated: 2026-10-25
 | 웹 · Obsidian 플러그인 · 데스크톱을 먼저 만든다. Google Drive는 웹 위에 얹고, Confluence · IDE 플러그인 · Claude skill이 뒤에 붙는다(→ 6장) | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]], [[0036-code-layout\|ADR-0036]] |
 | 개발 순서는 웹 → Obsidian → 데스크톱 | [[dr-0002-development-order\|DR-0002]] |
 | 저장 형식은 모델을 내장한 SVG, 모델의 직렬화 형식은 JSON | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]] |
-| 웹은 백엔드 서버 없는 정적 사이트 | [[01-requirements#WEB-01]] |
+| 웹은 백엔드 서버 없는 정적 사이트 | [[01-requirements#^r-web\|R-WEB-01]] |
 | 구조 편집기: 사용자는 좌표를 다루지 않는다. 트리를 고치면 자동 레이아웃이 그림을 다시 그린다 | [[0004-structure-editor\|ADR-0004]] |
 | 글꼴을 번들하고, 텍스트 폭은 그 글꼴 파일의 메트릭으로 계산한다 | [[0026-bundled-font-metrics\|ADR-0026]] |
 
@@ -199,7 +199,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 | **제공 인터페이스** (provided) | `CommandRegistry`, `SettingsSchema` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
 
 - **필요 인터페이스**는 포트와 어댑터(헥사고날) 패턴입니다. 플랫폼마다 다른 I/O를 `editor`가 인터페이스로 정의하고, 셸이 구현체를 만들어 시작할 때 주입합니다.
-	- `DocumentStore`: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다, 다른 문서를 경로로 읽는다(다른 문서의 Method 호출 → [[01-requirements#BLK-06]]). 읽지 못하면 `null`을 돌려주고, 그 호출 블록은 "이어진 곳 없음"으로 보인다. 웹은 사용자가 권한을 준 파일이나 폴더 안에서만 읽는다.
+	- `DocumentStore`: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다, 다른 문서를 경로로 읽는다(다른 문서의 Method 호출 → [[01-requirements#^r-blk|R-BLK-09]]). 읽지 못하면 `null`을 돌려주고, 그 호출 블록은 "이어진 곳 없음"으로 보인다. 웹은 사용자가 권한을 준 파일이나 폴더 안에서만 읽는다.
 	- `SettingsStore`: 사용자 설정(UI 언어, 화면 색)을 읽고 쓴다.
 - **제공 인터페이스**로 `editor`는 명령 레지스트리와 설정 스키마를 노출합니다. 셸은 이것을 자기 도구 모음 · 메뉴 · 설정 창으로 렌더링하거나, 호스트 프로그램의 확장 지점(명령 팔레트 · 컨텍스트 메뉴 · 설정 화면: Obsidian, VSCode, IntelliJ)에 등록합니다. 명령의 실행 진입점은 하나(`id`로 실행)입니다.
 
@@ -289,7 +289,7 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 | dirty 표시("저장 안 됨") | 뜬다 | 뜬다 |
 
 - 뷰 상태는 내용의 id를 참조하는 별도 구조다. 떼어 내면 "모두 펼친 그림"이 된다.
-- 인라인으로 펴 보인 호출 블록 안에서 만든 접기 영역([[01-requirements#EDIT-16]])은 그 호출 블록에 속한 **내용**이다. Method의 블록을 id로 참조한다.
+- 인라인으로 펴 보인 호출 블록 안에서 만든 접기 영역([[01-requirements#^r-edit|R-EDIT-16]])은 그 호출 블록에 속한 **내용**이다. Method의 블록을 id로 참조한다.
 - 화면의 줌과 스크롤 위치, 선택은 파일에 저장하지 않는다. `editor`의 메모리 상태다.
 
 ## 4. 주요 흐름
@@ -345,8 +345,8 @@ sequenceDiagram
     S-->>-E: 완료
 ```
 
-- **저장되는 그림의 색은 문서의 테마다.** 편집 화면이 어두워도 같다. 화면의 그림(문서 레이어)도 같은 테마로 렌더링하므로 화면용과 저장용은 같은 렌더링 결과다. 화면 색을 따르는 것은 `editor`가 덧그리는 오버레이 레이어뿐이다. → [[01-requirements#FMT-08]], [[04-visual-design#2. 층과 출력]]
-- 편집기가 그림에 적는 고정 문구("참", "거짓", "블록 n개")는 **저장 시점의 UI 언어**로 적는다. → [[01-requirements#NFR-04]]
+- **저장되는 그림의 색은 문서의 테마다.** 편집 화면이 어두워도 같다. 화면의 그림(문서 레이어)도 같은 테마로 렌더링하므로 화면용과 저장용은 같은 렌더링 결과다. 화면 색을 따르는 것은 `editor`가 덧그리는 오버레이 레이어뿐이다. → [[01-requirements#^r-fmt|R-FMT-08]], [[04-visual-design#2. 층과 출력]]
+- 편집기가 그림에 적는 고정 문구("참", "거짓", "블록 n개")는 **저장 시점의 UI 언어**로 적는다. → [[01-requirements#^r-nfr|R-NFR-04]]
 - 서브세팅은 결정적이다: 같은 글자 집합에서 늘 같은 바이트가 나온다. 그래서 같은 문서는 어디서 저장해도 같은 파일이 된다.
 - **열기:** SVG에서 모델 JSON만 역직렬화한다. 그림 요소와 서브셋 글꼴은 읽지 않고, 그림은 모델에서 다시 렌더링한다. 옛 스키마 버전이면 버전별 마이그레이션을 차례로 적용한다. 모델이 없거나 깨졌으면 편집할 수 없다고 알리고 원본 파일은 건드리지 않는다.
 - 자세한 형식은 [[01-file-format]]에 있다.
@@ -360,10 +360,10 @@ sequenceDiagram
 | 결정적 출력 | 레이아웃과 렌더러는 순수 함수다. 폭은 글꼴 메트릭으로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정한다. 현재 시각, 기기 정보, 난수를 쓰지 않는다 |
 | 텍스트 측정 | 글꼴을 번들하고, 그 글꼴 파일의 advance 폭으로 `core`가 계산한다. 커닝과 합자를 끈다. 편집기가 그림에 적는 기호는 번들 글꼴에 있는 글리프만 쓰거나 도형으로 그린다. 저장되는 그림에는 쓰인 글자만 남긴 서브셋 글꼴을 넣는다. → [[0026-bundled-font-metrics\|ADR-0026]] |
 | 색과 테마 | 색은 "디자인 토큰 이름 → 값"의 맵으로 렌더러에 넘긴다. 테마(그림의 색, 문서 레이어)와 화면 색(편집 화면, 오버레이 레이어)은 다른 맵이다. 테마는 색만 바꾸고 레이아웃에는 영향이 없다(글꼴과 선 굵기는 테마가 아님). → [[dr-0003-default-visual-style\|DR-0003]], [[04-visual-design#3. 디자인 토큰]] |
-| 블록 글자의 종류 | 문서마다 하나를 고른다(문장 / C / Java / Python / Bash 등). 종류마다 토크나이저를 하나씩 두고 구문 강조에만 쓴다. 예약어 · 문자열 리터럴 · 주석 · 숫자만 분류하고 파싱은 하지 않는다. 편집기는 글자의 의미를 검사하지 않는다. → [[01-requirements#LAY-06]], [[0032-token-highlighting\|ADR-0032]] |
+| 블록 글자의 종류 | 문서마다 하나를 고른다(문장 / C / Java / Python / Bash 등). 종류마다 토크나이저를 하나씩 두고 구문 강조에만 쓴다. 예약어 · 문자열 리터럴 · 주석 · 숫자만 분류하고 파싱은 하지 않는다. 편집기는 글자의 의미를 검사하지 않는다. → [[01-requirements#^r-lay\|R-LAY-06]], [[0032-token-highlighting\|ADR-0032]] |
 | 다국어 | UI 문자열은 `editor`가, 그림에 적는 고정 문구는 `core`가 각각 한 곳(메시지 카탈로그)에서 관리한다. 기본 로캘은 영어이고 한국어를 지원하며, 로캘을 더할 수 있게 둔다 |
 | 키 입력 | 키맵은 하나이고 표준 키 위에 Vim 키를 더한다. 키 바인딩은 표 하나에 둔다. 메뉴와 도구 모음도 같은 명령 레지스트리에서 생성한다. → [[dr-0009-vim-keys\|DR-0009]], [[03-keymap]], [[0033-command-list-for-shells\|ADR-0033]] |
-| 오류 처리 | 깨진 파일은 "편집 불가" 안내로 끝내고, 원본 파일은 덮어쓰지 않는다. 예상하지 못한 예외는 문제 알리기 보고서에 담는다. → [[01-requirements#REP-01]] |
+| 오류 처리 | 깨진 파일은 "편집 불가" 안내로 끝내고, 원본 파일은 덮어쓰지 않는다. 예상하지 못한 예외는 문제 알리기 보고서에 담는다. → [[01-requirements#^r-rep\|R-REP-01]] |
 
 ## 6. 배포 구성
 
@@ -373,7 +373,7 @@ sequenceDiagram
 | Google Drive | 웹 위에 얹음 | `src/apps/web` 안 | `.ns.svg` | [[0012-google-drive-integration\|ADR-0012]], [[0014-drive-file-extension\|ADR-0014]] |
 | Obsidian 플러그인 | Obsidian 플러그인 API | `src/apps/obsidian` | `.ns.svg` | [[0006-file-extensions\|ADR-0006]] |
 | 데스크톱 | Electron 또는 Tauri | `src/apps/desktop` | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
-| Confluence (`P2`) | Forge 앱의 iframe 안에 웹 화면 | `src/apps/confluence` | 페이지 안의 다이어그램(형식은 정하지 않음) | [[01-requirements#CF-01]] |
+| Confluence (`P2`) | Forge 앱의 iframe 안에 웹 화면 | `src/apps/confluence` | 페이지 안의 다이어그램(형식은 정하지 않음) | [[01-requirements#^r-cf\|R-CF-01]] |
 | IDE 플러그인 (`P2`) | VSCode 확장의 웹뷰, 그다음 IntelliJ | `src/apps/vscode`, `src/apps/intellij` | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
 | Claude skill (`P3`) | 셸이 아님. Claude가 모델을 쓰고 웹 버전이 렌더링한다 | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]] |
 

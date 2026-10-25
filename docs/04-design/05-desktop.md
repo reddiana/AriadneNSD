@@ -24,7 +24,7 @@ updated: 2026-10-25
 ## 관련 요구사항
 
 - [[01-requirements#2.2 데스크톱 애플리케이션]]
-- [[01-requirements#EXP-04]]
+- [[01-requirements#^r-exp|R-EXP-04]]
 
 ## 1. 창과 파일 관리
 

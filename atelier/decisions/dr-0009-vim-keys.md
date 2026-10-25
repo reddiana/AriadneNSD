@@ -28,7 +28,7 @@ Claude가 들일 키의 표와 정할 것 넷을 냈고, 메인테이너가 넷 
 
 편집기에는 이미 Vim의 세 모드와 같은 상태가 있다: 블록을 고른 상태(Normal), 글자를 고치는 중(Insert), 영역을 고르는 중(Visual). 그래서 모드를 새로 만들지 않고 키만 얹을 수 있다.
 
-관련 요구사항: [[01-requirements#EDIT-03]], [[01-requirements#NFR-05]]
+관련 요구사항: [[01-requirements#^r-edit|R-EDIT-03]], [[01-requirements#^r-nfr|R-NFR-05]]
 
 ## 결정 기준
 

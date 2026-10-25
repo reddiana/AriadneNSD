@@ -21,7 +21,7 @@ superseded-by:
 
 ## 결정 기준
 
-- 플러그인이 없어도 어디서나 그림으로 보여야 한다. ([[01-requirements#OBS-07]], [[01-requirements#FMT-01]])
+- 플러그인이 없어도 어디서나 그림으로 보여야 한다. ([[01-requirements#^r-obs-2|R-OBS-07]], [[01-requirements#^r-fmt|R-FMT-01]])
 - 같은 파일을 다시 열어 편집할 수 있어야 한다.
 - 파일 하나로 관리되어야 한다 (그림과 원본이 따로 놀지 않도록).
 

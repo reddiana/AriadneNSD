@@ -26,9 +26,9 @@ date: 2026-10-10
 | 1-2 1레벨 제목은 남기기 | CLAUDE.md "세션 시작 시 할 일" 3번에 규칙 추가. 구조 추천은 [[#제안 1. inbox 구조 (1-2)]] |
 | 1-3 inbox를 `plan/`으로 | `inbox.md` → `plan/inbox.md`. CLAUDE.md, [[status]], [[outbox]], `plan/README.md` 갱신 |
 | 1-6 테스트를 먼저 설계 | [[status]]의 단계 계획에 반영 |
-| 4-1 편집 후 노트 갱신 | 요구사항 [[01-requirements#OBS-04]] (#P0) 추가 |
+| 4-1 편집 후 노트 갱신 | 요구사항 [[01-requirements#^r-obs\|R-OBS-04]] (#P0) 추가 |
 | 4-2 drawio-obsidian 참고 보충 | [[01-requirements#참고 자료]] 설명 보충 |
-| 3-4 다른 도구로 고친 그림 알림 | 요구사항 [[01-requirements#FMT-09]] 추가. 우선순위 `P1`은 Claude가 임시로 정함 |
+| 3-4 다른 도구로 고친 그림 알림 | 요구사항 [[01-requirements#^r-fmt\|R-FMT-09]] 추가. 우선순위 `P1`은 Claude가 임시로 정함 |
 | 질문: Drive 확장자 | [[drive-app-basics#확장자와 미리보기 (`.ns` vs `.ns.svg`)]]. 답: 대체로 사라짐 → `.ns.svg` 권장 |
 | 질문: 요구사항 커밋 누락 | 아래 [[#발견한 위험]] 참고. 커밋은 됐었고, 작업 사본에서 줄이 사라져 있었음. 되살림 |
 | 질문: 내용 변경 없는 modified | `.gitattributes`로 줄 끝을 LF로 고정. [[git-line-endings]] |
@@ -106,15 +106,15 @@ date: 2026-10-10
 | 제안 1 inbox 구조 수용. inbox를 새 구조로 옮김(항목 글은 그대로) | CLAUDE.md "세션 시작 시 할 일" 3번, [[inbox]] |
 | 제안 2 요구사항 리뷰용 MVP는 버릴 프로토타입 | [[status]] |
 | 제안 3 아키텍처 설계 시작 조건 세 가지 | [[status]] |
-| 제안 4 접기/펼치기, 선택 범위는 "영역"으로 묶음 | [[01-requirements#EDIT-13]], [[01-requirements#영역]], 용어집 |
+| 제안 4 접기/펼치기, 선택 범위는 "영역"으로 묶음 | [[01-requirements#^r-edit\|R-EDIT-13]], [[01-requirements#영역]], 용어집 |
 | Drive에서 만드는 파일은 `.ns.svg` | [[0014-drive-file-extension\|ADR-0014]] |
 | `.obsidian/`은 git에서 제외 | `.gitignore` |
 | 문서 링크는 위키링크 그대로 둠. 대신 `docs/README.md` 맨 위에 "Obsidian으로 보라"는 안내를 넣음 (GitHub에서도 보이는 `> [!NOTE]` 형식) | [[docs/README\|문서 색인]] |
 | 저장소 맨 위 `README.md`를 만듦: 소개, 설계 단계 안내, Obsidian으로 보는 법, 폴더 안내. 중복이라 `docs/README.md`의 안내는 뺌 | `README.md`, CLAUDE.md "저장소 구성" |
 | 처리를 마친 inbox 항목 삭제. 남은 항목: 수익 창출 버전, 웹 버전 참고 모델, Scratch의 장점 도입, 강조하기 | [[#inbox 원문 (지운 항목)]] |
 | 유료 버전: Confluence(Forge)를 요구사항 `P2`로. 다른 후보는 나중에 검토 | [[01-requirements#2.5 Confluence (유료, 나중에)]], [[status]] |
-| 웹 참고 모델: 공유 URL, 보기 모드, 도움말 #P1 | [[01-requirements#WEB-05]], [[01-requirements#WEB-06]], [[01-requirements#EDIT-21]] |
-| Scratch: 이벤트 머리 #P1, 여러 처리기·블록 묶음 #P2. 지난 세션 제안의 세부가 기록되지 않아 새로 제안함 | [[01-requirements#BLK-01]], [[01-requirements#EDIT-20]] |
+| 웹 참고 모델: 공유 URL, 보기 모드, 도움말 #P1 | [[01-requirements#^r-web\|R-WEB-05]], [[01-requirements#^r-web\|R-WEB-06]], [[01-requirements#^r-edit\|R-EDIT-21]] |
+| Scratch: 이벤트 머리 #P1, 여러 처리기·블록 묶음 #P2. 지난 세션 제안의 세부가 기록되지 않아 새로 제안함 | [[01-requirements#^r-blk\|R-BLK-10]], [[01-requirements#^r-edit\|R-EDIT-20]] |
 | 강조하기: 영역 강조 모양 A(EasyCODE식)/B(배경)/C(테두리)를 그려 비교하기로 함 | [[inbox]], [비교 시안](https://claude.ai/artifact/MGnGUbUZ2gRbfGLmfqvTy7) |
 | **바로잡음:** 강조 영역과 접기/펼치기는 별도 요구사항이다. 제안 4에서 Claude가 둘을 "영역" 하나로 합쳤던 것을 나눔. "강조 영역은 접고 펼 수 있다"는 강조 영역 요구사항에 넣음 | [[01-requirements#접기 · 펼치기]], [[01-requirements#강조 영역]] |
 | **바로잡음:** 이름은 접기 쪽 요구사항이다(접었을 때 무엇이 접혔는지 알리려고 필요). 강조 영역에서 뺌. 그 결과 시안 A의 장점(펼쳐도 이름이 보임)은 근거를 잃음. Claude가 A를 추천하며 든 "접기 전후 일관성"과 "EasyCODE의 방식"도 근거가 아니었음 | [[01-requirements#접기 · 펼치기]] |
@@ -122,7 +122,7 @@ date: 2026-10-10
 | 강조 영역은 굵은 테두리(시안 C). Claude는 처음에 A를 추천했으나, 이름이 접기의 일로 정리되면서 C로 추천을 바꿈 | [[dr-0004-highlight-region-border\|ADR-0015]] |
 | 강조 영역은 중첩하지 않음 ("강조 영역을 중첩할 계획은 없습니다.") | [[01-requirements#강조 영역]] |
 | 강조 영역은 일부만 겹칠 수 없고, 맞붙는 것은 허용(구분되어 보여야 함). 겹치는 범위를 강조하면 기존 영역을 넓힘(Claude 추천 수용). 여러 영역에 걸치면 합치고 맨 앞 영역의 이름을 씀(Claude가 정한 세부). 맞닿기만 하면 합치지 않고 각각 유지(메인테이너 제안) | [[01-requirements#강조 영역]] |
-| 접힘 상태는 파일 밖(편집기)에 기억, 저장 그림은 펼친 모양(D). Claude가 함께 제안한 "그림에도 접어 두기"는 채택하지 않고, 대신 메인테이너가 "지금 화면의 접힘 그대로 PNG 내보내기"를 제안: "프리젠테이션 용도나 문서 삽입 용도로 사용할 때 요긴할 것 같습니다. 설명하는 부분을 집중할 수 있을테니까요." | [[0016-fold-state-outside-file\|ADR-0016]], [[01-requirements#^exp-png-folded]] |
+| 접힘 상태는 파일 밖(편집기)에 기억, 저장 그림은 펼친 모양(D). Claude가 함께 제안한 "그림에도 접어 두기"는 채택하지 않고, 대신 메인테이너가 "지금 화면의 접힘 그대로 PNG 내보내기"를 제안: "프리젠테이션 용도나 문서 삽입 용도로 사용할 때 요긴할 것 같습니다. 설명하는 부분을 집중할 수 있을테니까요." | [[0016-fold-state-outside-file\|ADR-0016]], [[requirement-changes#^r-before-ids\|exp-png-folded]] |
 | 접는 범위의 이름은 모델에 저장 ("모델에 저장합시다"). 강조하지 않은 범위에는 "이름 붙은 범위"가 모델에 생김 | [[0017-fold-name-in-model\|ADR-0017]] |
 | 용어 정리: 요구사항 리뷰용은 "프로토타입", MVP는 개발을 거친 첫 출시만 뜻함. MVP를 낼 배포 대상은 ADR-0011에 달림 | [[status]] |
 | 제안 5 호칭은 공식 용어 **메인테이너**. 후보(메인테이너, 프로덕트 오너, 프로젝트 오너) 중 선택. `plan/` · `journal/` · `tech-notes/` · CLAUDE.md의 "사용자"를 바꿈. 일반 사용자를 뜻하는 곳과 이 논의 본문은 그대로 둠 | CLAUDE.md "문서 작성 규칙" |
@@ -271,7 +271,7 @@ warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the nex
 - **Claude의 추천 근거 부풀림:** 시안 A를 추천하며 "접기 전후 일관성"(사실이 아님)과 "EasyCODE의 방식"(근거가 아님)을 이유로 들었습니다. 메인테이너가 따져 물어 바로잡았습니다.
 - **제안의 세부를 기록하지 않으면 잃는다:** 2026-10-09에 드린 Scratch 제안(A·B·C)의 세부가 세션 기록에 없어서, 이번에 새로 제안했습니다. 제안은 결정을 기다리는 동안에도 세션 기록에 적어 둡니다.
 - **이름 붙은 범위:** 접기 이름을 모델에 두기로 하면서 모델이 블록 트리 외에 "범위"를 다루게 됐습니다. 블록을 지우거나 옮길 때의 규칙을 모델 설계에서 정해야 합니다. → [[0017-fold-name-in-model|ADR-0017]]
-- **커밋된 요구사항이 작업 사본에서 사라져 있었습니다.** 지난 세션 커밋(`0a8d9d1`)에는 `LAY-05`, `LAY-07`, 미결정 사항 두 줄이 들어 있었는데, 작업 사본에는 그 이전 내용이 있었습니다. 원인은 확실하지 않습니다. Obsidian이 파일을 열어 둔 채 예전 내용을 다시 저장했을 가능성이 있습니다. 그래서 "커밋이 안 됐다"고 보였던 것입니다. 이번에 되살렸습니다.
+- **커밋된 요구사항이 작업 사본에서 사라져 있었습니다.** 지난 세션 커밋(`0a8d9d1`)에는 `R-LAY-05`, `R-LAY-07`, 미결정 사항 두 줄이 들어 있었는데, 작업 사본에는 그 이전 내용이 있었습니다. 원인은 확실하지 않습니다. Obsidian이 파일을 열어 둔 채 예전 내용을 다시 저장했을 가능성이 있습니다. 그래서 "커밋이 안 됐다"고 보였던 것입니다. 이번에 되살렸습니다.
 - **`README.md` 위키링크는 GitHub에서 링크로 보이지 않습니다.** → 해결: 링크는 그대로 두고, 저장소 맨 위 `README.md`에 "Obsidian으로 보라"는 안내를 둠
 - `.obsidian/` 폴더가 git에 올라가지 않은 채 남아 있었습니다. → 해결: `.gitignore`로 제외
 - 승인된 [[0001-record-architecture-decisions|ADR-0001]]의 색인 링크 한 곳을 고쳤습니다. 결정 내용이 아니라 파일 이동에 따른 링크 수정이라 고쳤습니다 (Obsidian에서 이름을 바꿨어도 자동으로 고쳐졌을 부분).

@@ -74,5 +74,5 @@ flowchart LR
 
 > [!tip] 문서를 쓸 때의 원칙
 > - 요구사항에는 **무엇을**만 한두 줄로 쓰고, 세부 규칙은 UX 설계로, 근거는 ADR이나 DR로, 만드는 방법은 설계 문서로 링크합니다.
-> - 요구사항 항목은 ID(`EDIT-06` 등)로 가리킵니다. 예: [[01-requirements#EDIT-06]]
+> - 요구사항 항목은 ID(`R-EDIT-06` 등)로 가리킵니다. 예: [[01-requirements#^r-edit|R-EDIT-06]]
 > - **왜** 그렇게 정했는지는 결정 기록에 있습니다. 아키텍처 결정은 ADR(`atelier/adr/`), 그 밖의 결정은 DR(`atelier/decisions/`)이고, 목록은 [[atelier/adr/README|ADR 목록]]과 [[atelier/decisions/README|DR 목록]]에 있습니다.

@@ -14,10 +14,10 @@ updated: 2026-10-25
 
 ## 관련 요구사항
 
-- [[01-requirements#3.3 레이아웃 · 렌더링]] ([[01-requirements#LAY-01]] 여러 줄 글자, [[01-requirements#LAY-05]] → [[04-visual-design]])
-- 내보내기: [[01-requirements#EXP-01]] (`P0`), [[01-requirements#EXP-03]], [[01-requirements#EXP-02]]
-- [[01-requirements#FMT-07]], [[01-requirements#FMT-10]], [[01-requirements#FMT-03]]
-- [[01-requirements#NFR-03]], [[01-requirements#NFR-02]]
+- [[01-requirements#3.3 레이아웃 · 렌더링]] ([[01-requirements#^r-lay|R-LAY-01]] 여러 줄 글자, [[01-requirements#^r-lay|R-LAY-05]] → [[04-visual-design]])
+- 내보내기: [[01-requirements#^r-exp|R-EXP-01]] (`P0`), [[01-requirements#^r-exp|R-EXP-03]], [[01-requirements#^r-exp|R-EXP-02]]
+- [[01-requirements#^r-fmt|R-FMT-07]], [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-fmt|R-FMT-03]]
+- [[01-requirements#^r-nfr|R-NFR-03]], [[01-requirements#^r-nfr|R-NFR-02]]
 
 ## 렌더링 파이프라인
 
@@ -50,13 +50,13 @@ flowchart LR
 > - **점선 화살표**: 보조 입력(메트릭, 테마), 또는 `editor`가 결과를 소비하는 곳.
 > - 함수 이름(`layout`, `buildScene`, `toSvg`)은 단계를 가리키려고 붙인 가칭입니다. 시그니처는 정하지 않았습니다.
 
-- 세 단계는 모두 순수 함수입니다. 같은 입력이면 같은 출력이 나옵니다(결정적 출력 → [[01-requirements#FMT-03]]).
+- 세 단계는 모두 순수 함수입니다. 같은 입력이면 같은 출력이 나옵니다(결정적 출력 → [[01-requirements#^r-fmt|R-FMT-03]]).
 - 색과 모양의 판단은 모두 씬 빌드(`buildScene`)에서 합니다. SVG 출력(`toSvg`)은 씬을 문자열로 옮길 뿐입니다. 그래서 출력 단계만 교체할 수 있습니다(렌더링 백엔드 → [[0030-swappable-drawing|ADR-0030]]).
 - `editor`는 히트 테스트와 선택 오버레이의 위치를 SVG DOM이 아니라 `LayoutResult`로 계산합니다 → [[03-architecture#3.3 의존 규칙]]
 
 ## 1. 레이아웃 알고리즘
 
-관련 요구사항: [[01-requirements#LAY-01]], [[01-requirements#LAY-02]], [[01-requirements#EDIT-18]]
+관련 요구사항: [[01-requirements#^r-lay|R-LAY-01]], [[01-requirements#^r-lay|R-LAY-02]], [[01-requirements#^r-edit|R-EDIT-18]]
 
 이 장의 값은 모두 [[04-visual-design#5. 기하와 해부도]]의 토큰입니다.
 
@@ -69,8 +69,8 @@ flowchart LR
 | 크기 재기 (`measure`) | 안쪽부터 (상향식) | 블록마다 내용이 들어가는 **가장 작은** 폭과 높이를 잰다 | 블록 id → 최소 크기 |
 | 자리 잡기 (`place`) | 바깥부터 (하향식) | 부모가 정한 자리(x, y)와 **실제** 폭 · 높이를 자식에게 나눠 준다 | 블록 id → bounding box |
 
-- 크기 재기는 자식의 최소 크기만 보고 부모의 최소 크기를 정합니다. 자리 잡기는 부모가 받은 폭을 자식에게 나눕니다. 그래서 어느 갈래가 깊어져도 전체가 직사각형으로 남습니다([[01-requirements#LAY-02]]).
-- 모든 좌표와 크기는 **정수 px**입니다. 나누어 떨어지지 않는 폭은 반올림하고, 마지막 자식이 나머지를 받습니다. 그래서 같은 모델이면 같은 좌표가 나옵니다([[01-requirements#FMT-03]]).
+- 크기 재기는 자식의 최소 크기만 보고 부모의 최소 크기를 정합니다. 자리 잡기는 부모가 받은 폭을 자식에게 나눕니다. 그래서 어느 갈래가 깊어져도 전체가 직사각형으로 남습니다([[01-requirements#^r-lay|R-LAY-02]]).
+- 모든 좌표와 크기는 **정수 px**입니다. 나누어 떨어지지 않는 폭은 반올림하고, 마지막 자식이 나머지를 받습니다. 그래서 같은 모델이면 같은 좌표가 나옵니다([[01-requirements#^r-fmt|R-FMT-03]]).
 - 접힌 것, 펴 보인 호출 블록, 이름 띠를 보이는지는 뷰 상태([[01-model#2. 뷰 상태]])에서 읽습니다. 뷰 상태가 가리키는 id가 없으면 무시합니다.
 
 `LayoutResult`에 담는 것:
@@ -201,7 +201,7 @@ D2Coding(unitsPerEm 1000)의 글자 폭은 **두 가지뿐**입니다: 반각 50
 한글은 이 저장소의 `docs/`에서 자주 쓰는 순서로 골랐습니다. 잰 스크립트: `journal/assets/2026-10-25-d2coding-metrics-spike.py`(결과 `…-spike.json`)
 
 > [!question] 미결정: 서브셋 글꼴의 형식
-> woff2는 TTF의 절반쯤입니다. 다만 woff2는 압축기(brotli)의 판에 따라 바이트가 달라질 수 있어, "같은 모델이면 같은 파일"([[01-requirements#FMT-03]])을 지키려면 압축기의 판을 고정해야 합니다. SVG를 읽는 다른 도구가 woff2를 읽는지도 봐야 합니다 → [[01-file-format#6. 미결정 사항]]
+> woff2는 TTF의 절반쯤입니다. 다만 woff2는 압축기(brotli)의 판에 따라 바이트가 달라질 수 있어, "같은 모델이면 같은 파일"([[01-requirements#^r-fmt|R-FMT-03]])을 지키려면 압축기의 판을 고정해야 합니다. SVG를 읽는 다른 도구가 woff2를 읽는지도 봐야 합니다 → [[01-file-format#6. 미결정 사항]]
 
 ## 3. SVG 렌더링
 
@@ -209,9 +209,9 @@ D2Coding(unitsPerEm 1000)의 글자 폭은 **두 가지뿐**입니다: 반각 50
 > - SVG 요소 구성과 클래스 이름 → [[01-file-format#4. 그림 부분]]에 반영
 > - 디자인 토큰 맵을 렌더러에 넘기는 방식. 문서 레이어는 테마, 오버레이 레이어는 `editor`가 화면 색으로 덧그림 → [[04-visual-design#2. 층과 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
 > - 구문 강조: 블록 글자의 종류마다 토크나이저 → [[03-architecture#5. 공통 관심사]]
-> - 그림에 적는 고정 문구("참" · "거짓" 등)의 로캘 → [[01-requirements#NFR-04]]
-> - 텍스트를 외곽선 path로 변환하는 옵션 ([[01-requirements#FMT-10]])
-> - PNG · PDF 내보내기: 같은 SVG를 래스터화 · 인쇄용으로 변환하는 경로와 배율 ([[01-requirements#EXP-01]]은 `P0`)
+> - 그림에 적는 고정 문구("참" · "거짓" 등)의 로캘 → [[01-requirements#^r-nfr|R-NFR-04]]
+> - 텍스트를 외곽선 path로 변환하는 옵션 ([[01-requirements#^r-fmt|R-FMT-10]])
+> - PNG · PDF 내보내기: 같은 SVG를 래스터화 · 인쇄용으로 변환하는 경로와 배율 ([[01-requirements#^r-exp|R-EXP-01]]은 `P0`)
 
 ## 4. 성능
 

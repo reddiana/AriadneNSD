@@ -32,7 +32,7 @@ updated: 2026-10-10
 
 [[status]]의 스파이크: **"Obsidian에서 `.ns.svg`만 편집기로 열 수 있는가?"**
 
-- 위험: Obsidian 플러그인은 확장자 단위로 파일을 맡습니다. `.ns.svg`의 확장자는 Obsidian 입장에서 `svg`일 수 있고, 그러면 일반 `.svg` 그림까지 가로채거나 아예 맡지 못할 수 있습니다. → [[01-requirements#OBS-05]], [[01-requirements#OBS-06]]
+- 위험: Obsidian 플러그인은 확장자 단위로 파일을 맡습니다. `.ns.svg`의 확장자는 Obsidian 입장에서 `svg`일 수 있고, 그러면 일반 `.svg` 그림까지 가로채거나 아예 맡지 못할 수 있습니다. → [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]]
 - 답이 "안 된다"면 확장자 결정([[0006-file-extensions|ADR-0006]])을 다시 봐야 합니다. 그래서 설계를 깊이 하기 **전에** 확인하려는 것입니다.
 - 산출물: 몇십 줄짜리 실험 플러그인과, 결과를 적은 짧은 기록. 플러그인 코드는 본 개발에 쓰지 않습니다.
 

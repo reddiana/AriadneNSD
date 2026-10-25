@@ -15,7 +15,7 @@ superseded-by:
 
 ## 배경
 
-블록 글자의 종류(문장 / C / Java / Python / Bash 등)는 문서마다 하나 고르고([[01-requirements#LAY-06]]), 그 종류에 맞춰 구문 강조를 한다([[01-requirements#LAY-07]]). 블록 하나의 글자는 코드 한 조각이라 문법상 완전하지 않다. While 블록의 `i < n`이 그런 예다. [[03-architecture]]의 초안(2026-10-13)에 Claude가 "종류마다 토크나이저 하나"라고 적었고, 2026-10-17에 시안 M20의 A7로 물었다.
+블록 글자의 종류(문장 / C / Java / Python / Bash 등)는 문서마다 하나 고르고([[01-requirements#^r-lay|R-LAY-06]]), 그 종류에 맞춰 구문 강조를 한다([[01-requirements#^r-lay|R-LAY-07]]). 블록 하나의 글자는 코드 한 조각이라 문법상 완전하지 않다. While 블록의 `i < n`이 그런 예다. [[03-architecture]]의 초안(2026-10-13)에 Claude가 "종류마다 토크나이저 하나"라고 적었고, 2026-10-17에 시안 M20의 A7로 물었다.
 
 ## 결정 기준
 

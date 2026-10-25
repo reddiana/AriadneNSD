@@ -19,8 +19,8 @@ superseded-by:
 
 ## 결정 기준
 
-- 같은 모델이면 항상 같은 텍스트가 나와야 한다. ([[01-requirements#FMT-03]])
-- 블록 텍스트에 어떤 내용이 들어가도 안전해야 한다. ([[01-requirements#FMT-04]])
+- 같은 모델이면 항상 같은 텍스트가 나와야 한다. ([[01-requirements#^r-fmt|R-FMT-03]])
+- 블록 텍스트에 어떤 내용이 들어가도 안전해야 한다. ([[01-requirements#^r-fmt|R-FMT-04]])
 - SVG 안에서 공백이 바뀌어도 깨지지 않아야 한다.
 - 의존성이 적어야 한다 (Obsidian 플러그인 번들 크기).
 - 사람이 읽을 수 있고 git diff가 가능해야 한다.

@@ -14,7 +14,7 @@ AriadneNSD를 어떻게 시험하는지 정합니다: 층마다 무엇을 시험
 
 ## 관련 요구사항
 
-- [[01-requirements#NFR-06]] (`core`는 DOM 없이 시험), [[01-requirements#FMT-03]] (같은 모델이면 같은 파일), [[01-requirements#NFR-01]], [[01-requirements#NFR-03]]
+- [[01-requirements#^r-nfr|R-NFR-06]] (`core`는 DOM 없이 시험), [[01-requirements#^r-fmt|R-FMT-03]] (같은 모델이면 같은 파일), [[01-requirements#^r-nfr|R-NFR-01]], [[01-requirements#^r-nfr|R-NFR-03]]
 - 품질 속성 시나리오 QA-01 ~ QA-17 → [[03-quality-attribute-scenarios]]
 - 유즈케이스 → [[02-use-cases]]
 
@@ -39,7 +39,7 @@ AriadneNSD를 어떻게 시험하는지 정합니다: 층마다 무엇을 시험
 
 ## 2. 골든 파일
 
-저장되는 그림이 바뀌지 않았는지를 바이트로 확인합니다. "같은 모델이면 같은 파일"([[01-requirements#FMT-03]])의 직접 증거입니다.
+저장되는 그림이 바뀌지 않았는지를 바이트로 확인합니다. "같은 모델이면 같은 파일"([[01-requirements#^r-fmt|R-FMT-03]])의 직접 증거입니다.
 
 - **자리:** `src/packages/core/golden/`. 한 사례가 파일 하나(`이름.ns.svg`)입니다. 모델이 그림 안에 들어 있으므로([[0005-model-embedded-svg|ADR-0005]]) 입력과 기대 출력이 한 파일입니다.
 - **시험:** 파일을 열어 모델을 읽고 → 레이아웃 → 저장한 바이트가 원래 파일과 같은가(QA-04: 열고 바로 저장하면 그대로). 같은 시험을 모든 커밋에서 돌립니다.

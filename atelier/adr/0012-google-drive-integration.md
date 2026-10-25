@@ -27,7 +27,7 @@ Drive는 외부 앱이 Drive 화면에 붙는 두 지점을 제공한다.
 ## 결정 기준
 
 - 편집 기능을 다시 만들지 않아야 한다. ([[0002-three-targets-shared-core|ADR-0002]]의 공유 코어)
-- 서버를 운영하지 않아야 한다. ([[01-requirements#WEB-01]])
+- 서버를 운영하지 않아야 한다. ([[01-requirements#^r-web|R-WEB-01]])
 - 사용자 Drive 전체가 아니라 필요한 파일에만 접근해야 한다.
 
 ## 검토한 대안
