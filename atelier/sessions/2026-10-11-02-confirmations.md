@@ -98,7 +98,7 @@ Apache-2.0에 `NOTICE` 파일을 두는 것이 가장 가깝다고 설명했고,
 | 다이어그램 배치: Event 왼쪽, Method 오른쪽, 16 : 10, 같은 종류 안에서 순서 바꾸기 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | Apache-2.0 + `NOTICE` | [[dr-0007-license\|ADR-0023]], `LICENSE`, `NOTICE` |
 | 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않음 | [[dr-0008-license-scope\|ADR-0024]], `LICENSE-docs`, `README.md` |
-| 접고 펴기는 실행 취소의 대상이 아님. 접기에서 덜 정해졌던 세 곳은 지금 규칙 그대로 | [[01-requirements#접기 · 펼치기]], ADR-0018 "이후 변경" |
+| 접고 펴기는 실행 취소의 대상이 아님. 접기에서 덜 정해졌던 세 곳은 지금 규칙 그대로 | [[01-requirements#^r-edit\|R-EDIT-13]], ADR-0018 "이후 변경" |
 | "모두 펼쳐서" 내보내기 요구사항을 없앰 | [[01-requirements]], ADR-0016 · 0018 "이후 변경" |
 | Case 갈래의 순서 바꾸기를 넣음 (#P1) | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | 이름이 겹친 머리가 든 파일은 그대로 열고 겹친다고 알림 | [[01-requirements#^r-blk\|R-BLK-10]] |

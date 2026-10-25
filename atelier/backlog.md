@@ -50,7 +50,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 - [ ] 2026-10-11에 정한 것을 뒤따르는 문서에 반영
 	- [ ] 코드를 쓰기 시작할 때: 소스 파일 머리의 라이선스 표시, 쓰는 라이브러리의 라이선스 확인 → [[dr-0007-license|DR-0007]]
-- [ ] 2026-10-10에 바뀐 모델을 뒤따르는 문서에 반영: 여러 다이어그램, 호출 블록, Case, 접기 영역, 보기 상태 → [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#접기 · 펼치기]], [[0018-save-as-shown|ADR-0018]]
+- [ ] 2026-10-10에 바뀐 모델을 뒤따르는 문서에 반영: 여러 다이어그램, 호출 블록, Case, 접기 영역, 보기 상태 → [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#^r-edit|R-EDIT-13]], [[0018-save-as-shown|ADR-0018]]
 	- [ ] [[01-file-format]]: 저장되는 그림의 배치 (다이어그램 여러 개, 보기 상태의 자리는 2026-10-17에 반영된 것을 확인함)
 	- [ ] 설계 [[02-layout]]에 반영 (나란히 놓기 → 위 "MVP 전에 정할 것"). [[01-model]]은 2026-10-18에 반영함
 - [ ] ADR-0021의 후속: 파일 형식에 종류(Event / Method) 넣기(모델은 2026-10-18에 넣음). 미결정으로 남긴 것: Event를 일으키는 블록, 쓰이지 않는 Method 알려 주기 (미룸: 2026-10-11) → [[01-requirements#6. 미결정 사항]]

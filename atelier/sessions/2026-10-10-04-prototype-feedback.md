@@ -42,7 +42,7 @@ date: 2026-10-10
 | 붙여넣기: 고른 것 뒤에, 고른 것이 없으면 붙이지 않는다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | 강조 영역 요구사항을 없앤다 | [[dr-0004-highlight-region-border\|ADR-0015]] 폐기 |
 | 용어 "접기 영역" (전: 이름 붙은 영역) | [[06-glossary]] |
-| 접기 규칙 전체 (명령 셋, 갈래별 접기, 이름 띠, 중첩) | [[01-requirements#접기 · 펼치기]] |
+| 접기 규칙 전체 (명령 셋, 갈래별 접기, 이름 띠, 중첩) | [[01-requirements#^r-edit\|R-EDIT-13]] |
 | 저장되는 그림은 지금 화면 그대로, 접힘 상태도 파일에 저장 | [[0018-save-as-shown\|ADR-0018]] 승인, [[0016-fold-state-outside-file\|ADR-0016]] 대체됨 |
 | Case 블록의 모양과 갈래 조작 | [[01-requirements#^r-blk\|R-BLK-05]] |
 
