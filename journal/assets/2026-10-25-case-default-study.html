@@ -1,0 +1,147 @@
+<title>M37 default 없는 Case</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M36과 같은 틀. 그림은 아래 스크립트가 그린다. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card.ref { border-style: dashed; }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.gray { color: var(--muted); background: var(--bg); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M37 · default 없는 Case</h1>
+    <p class="lede">편집기로 만드는 Case에는 늘 default가 있습니다. 그런데 <b>코드에서 가져온</b> <code>switch</code>는 default가 없거나 default만 있을 수 있습니다(모델은 둘 다 담음). 이것을 어떻게 그릴지 고릅니다. 프로토타입에는 이런 Case가 없어 "참고"로 보통 Case를 그렸습니다. <b>각 물음의 1번이 Claude의 추천</b>입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">참고</span>
+    <h2>보통 Case (default 있음)</h2>
+    <div class="cards">
+      <article class="card ref"><header><span class="tag">참고</span><h3>지금 규칙</h3><span class="badge gray">비교용</span></header>
+        <div class="fig" data-fig="ref"></div>
+        <ul><li>긴 빗금은 왼쪽 위에서 default 칸의 왼쪽 아래로, 짧은 빗금은 오른쪽 위에서 같은 점으로 갑니다. 갈래 이름은 칸의 왼쪽, default만 오른쪽.</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">C1</span>
+    <h2>C1. default가 없는 Case</h2>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">C1 · 1번</span><h3>긴 빗금이 오른쪽 아래 끝까지</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="c1-1"></div>
+        <ul><li>NS 차트 표준에서 default가 없을 때의 그림입니다. 짧은 빗금이 없어 "default 없음"이 모양으로 보입니다.</li><li>보통 Case의 규칙(긴 빗금은 default 칸의 왼쪽 아래로)에서 default 칸이 없을 뿐이라, 따로 규칙이 늘지 않습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">C1 · 2번</span><h3>빈 default 칸을 그려 둠</h3></header>
+        <div class="fig" data-fig="c1-2"></div>
+        <ul><li>보통 Case와 모양이 같습니다. 코드의 뜻도 같습니다(default가 없으면 아무 일도 하지 않음).</li><li><span class="bad">모델에 없는 갈래가 그림에 보입니다. 그 칸을 고르거나 글자를 적으면 어떻게 되는지 따로 정해야 합니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">C2</span>
+    <h2>C2. default만 있는 Case</h2>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">C2 · 1번</span><h3>짧은 빗금 하나 (오른쪽 위에서 왼쪽 아래로)</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="c2-1"></div>
+        <ul><li>같은 규칙에서 나옵니다: default 칸이 블록 전체이니, 긴 빗금은 길이가 없고 짧은 빗금만 남습니다.</li><li>If의 머리와 다른 모양이라 헷갈리지 않습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">C2 · 2번</span><h3>빗금 없이 머리와 default 이름만</h3></header>
+        <div class="fig" data-fig="c2-2"></div>
+        <ul><li>가장 단순합니다.</li><li><span class="bad">빗금이 없어 Case인지 알아보기 어렵습니다. 처리 블록 둘이 쌓인 것처럼 보입니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>C1, C2 하나씩, <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 레이아웃 설계(1.4)와 시각 디자인의 모양 표에 옮깁니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const C = { line: '#5b77ad', text: '#151a22', muted: '#4b5567', branch: '#f6ebdc', proc: '#edf0f5' };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const PADX = 10, PADY = 7, ROW = 32, HEAD = 60, CW = 110;
+  const mono = (x, y, s) => `<text x="${x}" y="${y}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">${esc(s)}</text>`;
+  const lab = (x, y, s, end) => `<text x="${x}" y="${y}" ${end ? 'text-anchor="end"' : ''} font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="${C.muted}">${esc(s)}</text>`;
+  // arms: [이름, 블록 글자], dflt: 블록 글자 | null | 'empty'(빈 칸) , style: 'std' | 'noDiag'
+  function caseBlock(arms, dflt, style) {
+    const cols = arms.length + (dflt ? 1 : 0), W = cols * CW, H = HEAD + ROW;
+    const xd = dflt ? arms.length * CW : W;   // default 칸의 왼쪽(없으면 오른쪽 끝)
+    let s = `<rect x=".5" y=".5" width="${W}" height="${HEAD}" fill="${C.branch}" stroke="${C.line}"/>`;
+    if (style !== 'noDiag') {
+      if (xd > 0) s += `<line x1=".5" y1=".5" x2="${xd + .5}" y2="${HEAD + .5}" stroke="${C.line}"/>`;
+      if (xd < W) s += `<line x1="${W + .5}" y1=".5" x2="${xd + .5}" y2="${HEAD + .5}" stroke="${C.line}"/>`;
+    }
+    // 갈래 사이의 세로선: 긴 빗금에서 내려옴
+    for (let i = 1; i < arms.length; i++) { const bx = i * CW, yy = HEAD * bx / xd; s += `<line x1="${bx + .5}" y1="${yy + .5}" x2="${bx + .5}" y2="${HEAD + .5}" stroke="${C.line}"/>`; }
+    const cx = xd > 0 && xd < W ? xd : W / 2;
+    s += `<text x="${Math.min(Math.max(cx, 40), W - 40)}" y="${PADY + 13}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">key</text>`;
+    arms.forEach(([n, t], i) => {
+      s += lab(i * CW + 6, HEAD - 4, n);
+      s += `<rect x="${i * CW + .5}" y="${HEAD + .5}" width="${CW}" height="${ROW}" fill="${C.proc}" stroke="${C.line}"/>` + mono(i * CW + PADX, HEAD + 21, t);
+    });
+    if (dflt) {
+      s += lab(W - 6, HEAD - 4, 'default', true);
+      s += `<rect x="${xd + .5}" y="${HEAD + .5}" width="${W - xd}" height="${ROW}" fill="${C.proc}" stroke="${C.line}"/>`;
+      if (dflt === 'empty') s += `<text x="${xd + (W - xd) / 2}" y="${HEAD + 21}" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="14" fill="${C.muted}">∅</text>`;
+      else s += mono(xd + PADX, HEAD + 21, dflt);
+    }
+    return `<svg width="${W + 2}" height="${H + 2}" viewBox="0 0 ${W + 2} ${H + 2}">${s}</svg>`;
+  }
+  const A = [["'a'", 'add()'], ["'d'", 'del()'], ["'q'", 'quit()']];
+  const F = {
+    'ref': caseBlock(A, 'help()', 'std'),
+    'c1-1': caseBlock(A, null, 'std'),
+    'c1-2': caseBlock(A, 'empty', 'std'),
+    'c2-1': caseBlock([], 'help()', 'std'),
+    'c2-2': caseBlock([], 'help()', 'noDiag'),
+  };
+  document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
