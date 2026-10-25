@@ -133,3 +133,12 @@ node site/check-mermaid.mjs <그 폴더> docs atelier til
 ## 목록의 순서
 
 Quartz는 기본으로 왼쪽 목록을 **제목**순, 폴더 페이지의 목록을 **고친 날짜**순으로 놓습니다. 우리 문서는 파일 이름의 번호가 읽는 순서라, 두 곳 모두 파일 이름순으로 바꿨습니다(`site/quartz.layout.ts`의 `sortFn`, `site/quartz.config.ts`의 `FolderPage({ sort })`). 세션 기록만 최근 것이 위입니다. 폴더의 `README.md`는 빌드 때 그 폴더의 첫 페이지(`index.md`)로 옮겨, 목록 중간이 아니라 폴더 자리에 섭니다.
+
+## 링크를 공유하면 보이는 그림 (`og:image`)
+
+2026-10-25에 메인테이너가 사이트 주소를 페이스북에 올렸더니, 미리보기에 우리 로고가 아니라 Quartz의 그림이 나왔습니다(메인테이너: "우리는 로고도 있는데!!").
+
+- 페이스북 · 카카오톡 · 슬랙 같은 곳은 링크를 받으면 그 페이지의 `<meta property="og:image" …>`(Open Graph)를 읽어 미리보기 그림으로 씁니다.
+- Quartz는 모든 페이지의 `og:image`를 `static/og-image.png`로 적는데, 그 자리에 Quartz의 기본 그림이 들어 있었습니다.
+- 로고와 문자 로고로 1200×630 그림(`site/og-image.png`)을 만들고(`site/make-og-image.mjs`), 빌드가 그 자리에 복사하게 했습니다. 1200×630은 페이스북이 추천하는 크기입니다.
+- **페이스북은 한 번 읽은 미리보기를 오래 기억합니다.** 그림을 바꾼 뒤에는 [공유 디버거](https://developers.facebook.com/tools/debug/)에 주소를 넣고 "다시 스크랩"을 눌러야 새 그림이 나옵니다. 백엔드로 치면 CDN 캐시를 손으로 비우는 것(purge)입니다.

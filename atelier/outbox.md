@@ -44,6 +44,11 @@ updated: 2026-10-25
 
 ### 문서 · 저장소 · 일하는 방식
 
+- [ ] 2026-10-25 세션 03에서 Claude가 정한 것 → [[2026-10-25-03-inbox-structure-code-layout]]
+	- [[0036-code-layout|ADR-0036]]의 세부: 워크스페이스 도구 pnpm, 패키지 이름 `@ariadne-nsd/fonts` · `core` · `editor`, 나중의 Claude skill 자리 `src/skills/ariadne-nsd`(셸이 아니라 `apps/` 밖), Google Drive는 `src/apps/web` 안. M32의 배포 대상 표(코드의 자리와 내보내는 곳)
+	- [[til/README|TIL]] 목록의 주제 여섯과 노트를 나눈 것(브라우저, 그림과 글자, 설계와 기술 선택, 배포 대상, git과 GitHub, 오픈소스 운영)
+	- 문서 지도(M31)의 표의 열: 문서 · 답하는 질문 · 상태 · 바뀌는 때. "상태"는 각 문서 속성의 값
+	- 링크 공유 그림(`site/og-image.png`)의 모양: 크림 바탕(`#F7F1EA`)에 왼쪽 로고, 오른쪽 문자 로고, 다른 글자 없음
 - [ ] 2026-10-25 문서 전체 정합성 검토에서 Claude가 고친 것 가운데 뜻에 닿는 것 → [[2026-10-25-03-inbox-structure-code-layout]]
 	- 요구사항의 문구: `^nfr-compat` "세 배포 대상" → "배포 대상들이 만든 파일(`.ns`, `.ns.svg`)", `^nfr-a11y` "고대비 테마" → "고대비 화면", 2.5의 "네 번째 배포 대상" → "뒤에 붙는 배포 대상(셸)"
 	- For 블록은 MVP에 들지만 조작과 모습의 규칙이 없어 [[02-interaction-rules]] · [[04-visual-design]] · [[03-keymap]]에 "미완성"으로 밝힘
