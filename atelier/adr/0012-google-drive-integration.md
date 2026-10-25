@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0012: Google Drive 연동은 웹 버전 위에 얹는다
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: 만드는 때는 세 대상(웹 · Obsidian · 데스크톱)을 모두 만든 뒤로 정했다 → [[dr-0002-development-order|DR-0002]]
 > - 2026-10-25: Drive 연동 코드는 `src/apps/web` 안에 둔다 → [[0036-code-layout|ADR-0036]]
 > - 2026-10-10: Drive에서 만드는 파일은 `.ns.svg` → [[0014-drive-file-extension|ADR-0014]]
 

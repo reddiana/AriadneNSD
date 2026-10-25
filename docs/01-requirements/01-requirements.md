@@ -38,7 +38,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항�
 | 웹 (정적 페이지) | 처음 (MVP) | 무료 | `.ns` | [[#2.3 웹 (정적 페이지)\|2.3]] |
 | Obsidian 플러그인 | 처음 | 무료 | `.ns.svg` | [[#2.1 Obsidian 플러그인\|2.1]] |
 | 데스크톱 애플리케이션 | 처음 | 무료 | `.ns` | [[#2.2 데스크톱 애플리케이션\|2.2]] |
-| Google Drive | 웹 위에 얹음 (`P1`) | 무료 | `.ns.svg` | [[#2.4 Google Drive\|2.4]] |
+| Google Drive | 처음 셋 다음, 웹 위에 얹음 (`P1`) | 무료 | `.ns.svg` | [[#2.4 Google Drive\|2.4]] |
 | Confluence | 나중에 (`P2`) | 유료 | 페이지 안의 다이어그램 | [[#2.5 Confluence (유료, 나중에)\|2.5]] |
 | IDE 플러그인 (VSCode, IntelliJ) | 나중에 (`P2`) | 무료 | 소스 코드 (코드가 원본) | [[#2.7 IDE 플러그인 (나중에)\|2.7]] |
 | Claude skill | 나중에 (`P3`) | 무료 | `.ns.svg`와 공유 URL | [[#2.6 Claude skill (나중에)\|2.6]] |

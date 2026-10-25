@@ -36,6 +36,8 @@ date: 2026-10-25
 
 4. **AI 대화창 스파이크는 MVP 뒤로.** `P3`이고 MVP에 없으며, AI가 우리 형식으로 쓰는지는 파일 형식이 굳은 뒤에 봐야 뜻이 있다. 메인테이너가 추천("MVP 뒤로 미룸")을 골랐다. outbox에서 빼 [[backlog#출시 무렵과 그 뒤]]로 옮겼다.
 
+5. **Google Drive 연동은 세 대상을 모두 만든 뒤.** Claude가 자리 셋(웹 바로 다음 · Obsidian 다음 · 셋 다 만든 뒤)을 표로 견주고, Google 심사가 있다는 것을 덧붙였다. Claude의 추천은 "MVP 반응을 보고 정함"이었으나 메인테이너는 **"셋 다 만든 뒤"**를 골랐다. 순서는 웹 → Obsidian → 데스크톱 → Drive. [[dr-0002-development-order|DR-0002]] · [[0012-google-drive-integration|ADR-0012]]에 "이후 변경", 요구사항 2장 표의 "언제"와 README의 문장을 고쳤다.
+
 ### 원문: "정해 주세요"에 있던 확인 묶음 (문서 · 저장소 · 일하는 방식)
 
 - [ ] 2026-10-25 세션 03에서 Claude가 정한 것 → [[2026-10-25-03-inbox-structure-code-layout]]

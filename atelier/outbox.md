@@ -20,7 +20,6 @@ updated: 2026-10-25
 
 ### 요구사항 · 범위
 
-- [ ] Google Drive 연동을 Obsidian · 데스크톱과 견주어 언제 만들지 → [[dr-0002-development-order|DR-0002]] "이후 변경"
 
 ### 조작 · 키
 
