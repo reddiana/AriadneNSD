@@ -1,0 +1,121 @@
+{
+  "font": "D2Coding / Version 1.3.2; Build 20180524",
+  "unitsPerEm": 1000,
+  "coveredCodepoints": 12824,
+  "perRange": {
+    "ASCII": {
+      "covered": 95,
+      "size": 95
+    },
+    "Latin-1": {
+      "covered": 96,
+      "size": 96
+    },
+    "Latin Ext-A": {
+      "covered": 128,
+      "size": 128
+    },
+    "Latin Ext-B": {
+      "covered": 64,
+      "size": 208
+    },
+    "Greek": {
+      "covered": 110,
+      "size": 144
+    },
+    "Cyrillic": {
+      "covered": 182,
+      "size": 256
+    },
+    "General Punct": {
+      "covered": 63,
+      "size": 112
+    },
+    "Arrows": {
+      "covered": 112,
+      "size": 112
+    },
+    "Math Ops": {
+      "covered": 187,
+      "size": 256
+    },
+    "Box Drawing": {
+      "covered": 128,
+      "size": 128
+    },
+    "Geometric": {
+      "covered": 96,
+      "size": 96
+    },
+    "CJK Symbols": {
+      "covered": 27,
+      "size": 64
+    },
+    "Hiragana": {
+      "covered": 83,
+      "size": 96
+    },
+    "Katakana": {
+      "covered": 87,
+      "size": 96
+    },
+    "Hangul Jamo Compat": {
+      "covered": 94,
+      "size": 96
+    },
+    "Hangul Syllables": {
+      "covered": 11172,
+      "size": 11172
+    },
+    "Fullwidth": {
+      "covered": 100,
+      "size": 240
+    }
+  },
+  "advanceWidths": {
+    "500": 1262,
+    "1000": 11562
+  },
+  "runsAll": 62,
+  "runsNonDefault": 50,
+  "widthTableJsonBytes": 817,
+  "boldDifferentAdvance": 0,
+  "boldMissing": 0,
+  "hasGlyph": {
+    "0x4e00": true,
+    "0x5927": true,
+    "0x6f22": true,
+    "0x5b57": true,
+    "0x1f600": false,
+    "0x2705": false,
+    "0x1f680": false
+  },
+  "subsetSizes": {
+    "영어만 (ASCII)": {
+      "ttf": 9576,
+      "woff2": 5228
+    },
+    "한글 100자 + ASCII (작은 다이어그램)": {
+      "ttf": 22988,
+      "woff2": 11796
+    },
+    "한글 300자 + ASCII (보통)": {
+      "ttf": 50656,
+      "woff2": 23304
+    },
+    "한글 800자 + ASCII (아주 많음)": {
+      "ttf": 114152,
+      "woff2": 46356
+    }
+  },
+  "bundleAllCovered": {
+    "ttf": 1335408,
+    "woff2": 327432
+  },
+  "px13": {
+    "n > 0": 33,
+    "a[j] <= pivot && j < hi": 150,
+    "합계 ← 합계 + 값": 104,
+    "i ← i + 1": 59
+  }
+}

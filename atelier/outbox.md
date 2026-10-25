@@ -50,6 +50,7 @@ updated: 2026-10-25
 	- `LayoutResult`에 블록의 상자와 따로 **누르는 자리**(제어 블록은 머리만, 접기 영역 · 펴 보기는 띠만, 갈래 이름 줄)를 담는다. 프로토타입이 하던 대로
 	- 빈 글자도 한 줄 높이로 잰다
 	- 프로토타입에 숫자로만 있던 값 여덟에 토큰 이름을 붙여 시각 디자인 명세의 치수 표에 옮김(값은 그대로): `size.if-head-extra` 70 · `size.case-head-extra` 90 · `size.label-room` 18 · `size.hat-room` 24 · `size.diagram-min-w` 160 · `size.band-text-x` 10 · `size.fold-icon-room` 20 · `size.fold-extra-h` 4 → [[04-visual-design#5. 기하와 해부도]]
+	- D2Coding 스파이크에서 정한 것: 폭 테이블을 "기본 폭이 아닌 구간"의 목록으로 적어 `core`에 싣는다(약 0.8 KB). **테이블에 없는 글자(한자, 이모지 등)는 전각으로 센다**(넓게 세면 글자가 블록 밖으로 나가지 않음) → [[02-layout#2.1 advance 폭 테이블]]
 	- default가 없는 Case의 빈 default 칸(CD1)에서의 동작: 빈 블록처럼 고를 수 있고, 글자를 적거나 블록을 넣으면 그때 default 갈래가 생긴다(실행 취소 한 번). 지우기 · 잘라내기는 아무 일도 하지 않는다. 레이아웃은 그 칸을 "없는 default"로 표시해 넘긴다 → [[02-interaction-rules#Case 블록]]
 	- 짧은 갈래를 고르게 늘릴 때(SB1)의 세부: 나머지 px은 마지막 블록이 받는다. 제어 블록이 더 받은 높이는 머리가 아니라 안쪽 줄에 가서 다시 나뉜다(If · Case는 갈래마다, 반복은 본문). 글자는 늘어난 블록의 위쪽에 둔다
 
