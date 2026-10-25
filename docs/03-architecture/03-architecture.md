@@ -373,4 +373,4 @@ sequenceDiagram
 
 ## 9. 결정 목록
 
-모든 ADR은 [[atelier/README#아키텍처 결정 기록 (ADR)]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/README#결정 기록 (DR)]]. 아직 "제안됨"인 것은 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다. UI 프레임워크는 React로 정했습니다([[0010-ui-framework|ADR-0010]], 2026-10-18).
+모든 ADR은 [[atelier/adr/README|ADR 목록]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/decisions/README|DR 목록]]. 아직 "제안됨"인 것은 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다. UI 프레임워크는 React로 정했습니다([[0010-ui-framework|ADR-0010]], 2026-10-18).
