@@ -1,0 +1,206 @@
+<title>M39 레이아웃 속도 스파이크</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M38과 같은 틀. 재기는 아래 스크립트가 한다 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 32px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 76ch; }
+.lede b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+button { font: inherit; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 6px; padding: 8px 18px; cursor: pointer; justify-self: start; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible { outline: 3px solid var(--pick); outline-offset: 2px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 560px; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 12px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 600; }
+.ok { color: var(--pick); font-weight: 600; }
+.over { color: var(--warn); font-weight: 600; }
+pre { margin: 0; font-family: var(--mono); font-size: 12.5px; white-space: pre-wrap; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 10px; }
+.fig { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow: auto; max-height: 360px; }
+.fig svg { display: block; }
+code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<main>
+  <div>
+    <h1>M39 · 레이아웃 속도 스파이크</h1>
+    <p class="lede">품질 목표는 <b>블록 500개인 문서를 고친 뒤 100ms 안에 다시 그리기</b>입니다(QA, <code>^nfr-perf</code>). 레이아웃 설계의 두 단계(크기 재기 · 자리 잡기)와 그림 만들기(장면 → SVG 글자)를 이 페이지에서 그대로 돌려, <b>홍월님의 브라우저에서</b> 걸리는 시간을 잽니다. 매번 문서 전체를 처음부터 다시 셉니다(가장 느린 경우). 아래 단추를 누르고, 끝나면 맨 아래의 결과 글을 복사해 알려 주세요.</p>
+  </div>
+
+  <section class="panel">
+    <h2>재기</h2>
+    <button id="run" type="button">재기 시작</button>
+    <p id="state" class="lede">아직 재지 않았습니다. 10초쯤 걸립니다.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>블록 수</th><th>레이아웃 (중앙값)</th><th>장면 + SVG 글자</th><th>화면에 넣기</th><th>합계</th><th>합계 (느린 5%)</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="6">—</td></tr></tbody>
+    </table></div>
+    <pre id="report">결과가 여기에 나옵니다.</pre>
+  </section>
+
+  <section class="panel">
+    <h2>잰 문서 (블록 500개)</h2>
+    <p class="lede">If · Case · 반복 · 호출이 다섯 겹까지 섞인 문서를 늘 같은 순서로 만듭니다(난수의 씨앗이 고정). 줄여서 보입니다.</p>
+    <div class="fig" id="fig"></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // 치수 토큰 (시각 디자인 5장)
+  const T = { padX: 10, padY: 7, line: 18, minW: 52, strip: 22, ifLab: 16, caseLab: 28, ifExtra: 70, caseExtra: 90, labelRoom: 18, bar: 7 };
+  const C = { line: '#5b77ad', text: '#151a22', proc: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6', call: '#ebe7f4', muted: '#4b5567' };
+  // 폭 테이블: D2Coding은 반각 500 · 전각 1000 (2026-10-25 스파이크). 여기서는 U+1100 아래를 반각으로 친다
+  const adv = cp => cp < 0x1100 ? 500 : 1000;
+  function textW(s) { let u = 0; for (const ch of s) u += adv(ch.codePointAt(0)); return Math.ceil(u * 13 / 1000); }
+  function textBox(s) { const lines = s.split('\n'); let w = 0; for (const l of lines) w = Math.max(w, textW(l)); return { w, h: lines.length * T.line }; }
+
+  // 씨앗이 고정된 난수 (mulberry32)
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const WORDS = ['count ← count + 1', 'sum ← sum + a[i]', '합계 ← 합계 + 값', 'swap(a, lo, j)', 'send(buf, len)', 'i ← i + 1', 'x ← 0', 'log("done")'];
+  const CONDS = ['n > 0', 'a[j] <= pivot', 'flag', '버튼이 눌림', 'len < MAX'];
+  function makeDoc(target, seed) {
+    const r = rng(seed); let made = 0;
+    function seq(depth, room) {
+      const out = []; const n = 1 + Math.floor(r() * 4);
+      for (let i = 0; i < n && made < target; i++) out.push(block(depth));
+      if (!out.length) { made++; out.push({ k: 'p', t: '' }); }
+      return out;
+    }
+    function block(depth) {
+      made++;
+      const x = r();
+      if (depth < 5 && x < 0.14) return { k: 'if', t: CONDS[Math.floor(r() * CONDS.length)], yes: seq(depth + 1), no: seq(depth + 1) };
+      if (depth < 5 && x < 0.2) { const arms = 2 + Math.floor(r() * 2); return { k: 'case', t: 'key', arms: Array.from({ length: arms }, (_, i) => ({ l: "'" + 'abcd'[i] + "'", b: seq(depth + 1) })), dflt: seq(depth + 1) }; }
+      if (depth < 5 && x < 0.3) return { k: 'loop', t: 'while ' + CONDS[Math.floor(r() * CONDS.length)], body: seq(depth + 1) };
+      if (x < 0.4) return { k: 'call', t: 'p ← partition(a, lo, hi)' };
+      return { k: 'p', t: WORDS[Math.floor(r() * WORDS.length)] };
+    }
+    const body = [];
+    while (made < target) body.push(block(0));
+    return { body, count: made };
+  }
+
+  // 1단계: 크기 재기 (안쪽부터)
+  function measure(n, M) {
+    let r;
+    if (n.k === 'p') { const t = textBox(n.t); r = { w: Math.max(T.minW, t.w + 2 * T.padX), h: t.h + 2 * T.padY }; }
+    else if (n.k === 'call') { const t = textBox(n.t); r = { w: t.w + 2 * T.padX + 2 * T.bar, h: T.line + 2 * T.padY }; }
+    else if (n.k === 'loop') { const t = textBox(n.t), b = mSeq(n.body, M); r = { w: Math.max(t.w + 2 * T.padX, T.strip + b.w), h: t.h + 2 * T.padY + b.h, headH: t.h + 2 * T.padY }; }
+    else if (n.k === 'if') { const t = textBox(n.t), y = mSeq(n.yes, M), o = mSeq(n.no, M), headH = t.h + 2 * T.padY + T.ifLab; r = { w: Math.max(t.w + 2 * T.padX + T.ifExtra, y.w + o.w), h: headH + Math.max(y.h, o.h), headH, yw: y.w, nw: o.w }; }
+    else { const t = textBox(n.t), lanes = [...n.arms.map(a => ({ s: mSeq(a.b, M), l: a.l })), { s: mSeq(n.dflt, M), l: 'default' }];
+      const lws = lanes.map(x => Math.max(x.s.w, textW(x.l) + T.labelRoom)), sum = lws.reduce((a, b) => a + b, 0), headH = 18 + 2 * T.padY + T.caseLab;
+      r = { w: Math.max(textW(n.t) + 2 * T.padX + T.caseExtra, sum), h: headH + Math.max(...lanes.map(x => x.s.h)), headH, lws, sum }; }
+    M.set(n, r); return r;
+  }
+  function mSeq(list, M) { let w = 0, h = 0; for (const c of list) { const m = measure(c, M); w = Math.max(w, m.w); h += m.h; } return { w, h }; }
+  // 2단계: 자리 잡기 (바깥부터). 남는 높이는 블록 수로 고르게 나눈다(SB1)
+  function pSeq(list, x, y, w, h, M, out) {
+    let min = 0; for (const c of list) min += M.get(c).h;
+    const extra = h - min, each = Math.floor(extra / list.length); let cy = y;
+    list.forEach((c, i) => { const ch = M.get(c).h + each + (i === list.length - 1 ? extra - each * list.length : 0); place(c, x, cy, w, ch, M, out); cy += ch; });
+  }
+  function place(n, x, y, w, h, M, out) {
+    const m = M.get(n);
+    out.push({ n, x, y, w, h });
+    if (n.k === 'loop') pSeq(n.body, x + T.strip, y + m.headH, w - T.strip, h - m.headH, M, out);
+    else if (n.k === 'if') { const extra = w - (m.yw + m.nw), yW = Math.round(m.yw + extra * m.yw / (m.yw + m.nw)); n._sx = x + yW;
+      pSeq(n.yes, x, y + m.headH, yW, h - m.headH, M, out); pSeq(n.no, x + yW, y + m.headH, w - yW, h - m.headH, M, out); }
+    else if (n.k === 'case') { const lists = [...n.arms.map(a => a.b), n.dflt], extra = w - m.sum; let lx = x; n._xs = [];
+      lists.forEach((l, i) => { const lw = i === lists.length - 1 ? x + w - lx : Math.round(m.lws[i] + extra * m.lws[i] / m.sum); n._xs.push(lx); pSeq(l, lx, y + m.headH, lw, h - m.headH, M, out); lx += lw; }); }
+  }
+  function layout(doc) {
+    const M = new Map(), out = [];
+    const b = mSeq(doc.body, M), W = Math.max(b.w, 160);
+    pSeq(doc.body, 24, 24, W, b.h, M, out);
+    return { M, boxes: out, W: W + 48, H: b.h + 48 };
+  }
+  // 그림: 장면(그릴 것의 목록) → SVG 글자
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function scene(lay) {
+    const items = [];
+    for (const { n, x, y, w, h } of lay.boxes) {
+      const m = lay.M.get(n);
+      if (n.k === 'p') items.push(['rect', x, y, w, h, C.proc], ['text', x + T.padX, y + T.padY + 13, n.t]);
+      else if (n.k === 'call') items.push(['rect', x, y, w, h, C.call], ['line', x + T.bar, y, x + T.bar, y + h], ['line', x + w - T.bar, y, x + w - T.bar, y + h], ['text', x + T.padX + T.bar, y + T.padY + 13, n.t]);
+      else if (n.k === 'loop') items.push(['rect', x, y, w, h, C.loop], ['text', x + T.padX, y + T.padY + 13, n.t]);
+      else if (n.k === 'if') items.push(['rect', x, y, w, m.headH, C.branch], ['path', `M${x} ${y}L${n._sx} ${y + m.headH}L${x + w} ${y}`], ['text', n._sx - textW(n.t) / 2, y + T.padY + 13, n.t]);
+      else { const xd = n._xs[n._xs.length - 1]; items.push(['rect', x, y, w, m.headH, C.branch], ['path', `M${x} ${y}L${xd} ${y + m.headH}L${x + w} ${y}`], ['text', xd - 12, y + T.padY + 13, n.t]); }
+    }
+    return items;
+  }
+  function toSvg(items, W, H) {
+    const s = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g transform="translate(.5 .5)" font-family="IBM Plex Mono, monospace" font-size="13">`];
+    for (const it of items) {
+      if (it[0] === 'rect') s.push(`<rect x="${it[1]}" y="${it[2]}" width="${it[3]}" height="${it[4]}" fill="${it[5]}" stroke="${C.line}"/>`);
+      else if (it[0] === 'line') s.push(`<line x1="${it[1]}" y1="${it[2]}" x2="${it[3]}" y2="${it[4]}" stroke="${C.line}"/>`);
+      else if (it[0] === 'path') s.push(`<path d="${it[1]}" fill="none" stroke="${C.line}"/>`);
+      else s.push(`<text x="${it[1]}" y="${it[2]}" fill="${C.text}" xml:space="preserve">${esc(it[3])}</text>`);
+    }
+    s.push('</g></svg>');
+    return s.join('');
+  }
+
+  const median = a => { const b = [...a].sort((x, y) => x - y); return b[Math.floor(b.length / 2)]; };
+  const p95 = a => { const b = [...a].sort((x, y) => x - y); return b[Math.min(b.length - 1, Math.floor(b.length * 0.95))]; };
+  const fmt = v => v.toFixed(1) + ' ms';
+  const sink = document.createElement('div'); sink.style.cssText = 'position:absolute;left:-99999px;top:0;';
+  document.body.appendChild(sink);
+
+  function measureOne(doc, runs) {
+    const L = [], S = [], D = [], A = [];
+    for (let i = 0; i < runs + 5; i++) {
+      const t0 = performance.now();
+      const lay = layout(doc);
+      const t1 = performance.now();
+      const svg = toSvg(scene(lay), lay.W, lay.H);
+      const t2 = performance.now();
+      sink.innerHTML = svg; sink.firstChild.getBBox();   // 화면에 넣고 브라우저가 모양을 셈하게 한다
+      const t3 = performance.now();
+      if (i >= 5) { L.push(t1 - t0); S.push(t2 - t1); D.push(t3 - t2); A.push(t3 - t0); }
+    }
+    return { L: median(L), S: median(S), D: median(D), A: median(A), A95: p95(A) };
+  }
+
+  const fig = document.getElementById('fig');
+  { const d = makeDoc(500, 7), lay = layout(d); const svg = toSvg(scene(lay), lay.W, lay.H); fig.innerHTML = svg; const el = fig.firstChild; el.setAttribute('width', Math.round(lay.W * 0.35)); el.setAttribute('height', Math.round(lay.H * 0.35)); }
+
+  const btn = document.getElementById('run'), rows = document.getElementById('rows'), state = document.getElementById('state'), report = document.getElementById('report');
+  btn.addEventListener('click', async () => {
+    btn.disabled = true; rows.innerHTML = ''; const lines = [];
+    for (const n of [500, 1000, 2000]) {
+      state.textContent = `블록 ${n}개를 재는 중…`;
+      await new Promise(r => setTimeout(r, 30));
+      const doc = makeDoc(n, 7), res = measureOne(doc, n > 1000 ? 15 : 30);
+      const cls = res.A <= 100 ? 'ok' : 'over';
+      rows.insertAdjacentHTML('beforeend', `<tr><td>${doc.count}</td><td>${fmt(res.L)}</td><td>${fmt(res.S)}</td><td>${fmt(res.D)}</td><td class="${cls}">${fmt(res.A)}</td><td>${fmt(res.A95)}</td></tr>`);
+      lines.push(`블록 ${doc.count}: 레이아웃 ${fmt(res.L)} / 장면+SVG ${fmt(res.S)} / 화면 ${fmt(res.D)} / 합계 ${fmt(res.A)} (느린 5% ${fmt(res.A95)})`);
+    }
+    state.textContent = '끝났습니다. 아래 결과 글을 복사해 알려 주세요.';
+    report.textContent = `M39 결과 (${new Date().toISOString().slice(0, 10)})\n브라우저: ${navigator.userAgent}\n` + lines.join('\n');
+    btn.disabled = false;
+  });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 스파이크입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A spike from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
