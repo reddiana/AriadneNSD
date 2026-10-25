@@ -27,6 +27,7 @@ updated: 2026-10-25
 | [[0010-ui-framework\|0010]] | UI 프레임워크: 둘레의 화면 부품은 React로 | 승인 |
 | [[0012-google-drive-integration\|0012]] | Google Drive 연동은 웹 버전 위에 얹는다 | 승인 |
 | [[0036-code-layout\|0036]] | 코드는 `src/` 아래의 pnpm 모노레포로 두고, `core`는 패키지 하나, Obsidian의 `manifest.json` 사본은 저장소 맨 위에 둔다 | 승인 |
+| [[0038-build-and-test-tools\|0038]] | 빌드는 Vite(웹) · esbuild(Obsidian), 시험은 Vitest · fast-check · Playwright, 코드 검사는 ESLint + Prettier, 시험 파일은 소스 옆 | 승인 |
 
 ### 편집 모델
 
@@ -63,7 +64,7 @@ updated: 2026-10-25
 | [[0033-command-list-for-shells\|0033]] | editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다 | 승인 |
 | [[0037-two-pass-full-layout\|0037]] | 레이아웃은 두 단계의 순수 함수로 하고, 고칠 때마다 문서 전체를 다시 센다. 폭 테이블은 구간 목록, 없는 글자는 전각 | 승인 |
 
-새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0038부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
+새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0039부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
 상태(ADR · DR 같음): **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**
 

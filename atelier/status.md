@@ -20,7 +20,6 @@ updated: 2026-10-25
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
-| M40 | 시험과 빌드 도구 시안 (2026-10-25, 답을 기다림: T1 · T2 · T3) | https://claude.ai/artifact/L3vJp6CtYa4qzkCisFkJew | `journal/assets/2026-10-25-test-tools-study.html` |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
@@ -41,7 +40,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 ## 이번과 다음 세션에 할 것
 
 - [ ] **다음의 첫 일: 레이아웃 설계의 4단계.** ✅ [[0037-two-pass-full-layout|ADR-0037]] 승인(2026-10-25 세션 04). 레이아웃 설계 1 ~ 4단계 끝. 담은 것: 레이아웃은 두 단계(크기 재기 → 자리 잡기)의 순수 함수, 고칠 때마다 문서 전체를 다시 셈(증분 없음, M39), 폭 테이블은 "기본 폭이 아닌 구간"의 목록이고 테이블에 없는 글자는 전각. 1~3단계는 2026-10-25 세션 04에서 마침 → [[2026-10-25-04-outbox-cleanup]], [[02-layout]]
-- [ ] 그다음: 테스트 전략 → 편집기 · 웹 설계 → [[backlog#MVP 전에 정할 것]]. 레이아웃에 남은 미결정은 서브셋 글꼴의 형식(TTF · woff2) 하나 → [[02-layout#미결정 사항]]
+- [ ] 그다음: ✅ 테스트 전략 초안(2026-10-25 → [[07-testing]], [[0038-build-and-test-tools|ADR-0038]]) → **편집기 · 웹 설계** → [[backlog#MVP 전에 정할 것]]. 레이아웃에 남은 미결정은 서브셋 글꼴의 형식(TTF · woff2) 하나 → [[02-layout#미결정 사항]]
 - [ ] MVP에 드는 조작의 미결정을 프로토타입 리뷰로 → [[prototype#리뷰 순서]]. 프로토타입에 오늘 정한 레이아웃 규칙(For, 조건 글자 뒤 바탕, 짧은 갈래 고르게, 새 배치) 넣기 → [[prototype#정해 놓고 아직 넣지 못한 것]]
 - [ ] 남은 "정해 주세요"(조작의 미결정 Q들, Q10의 세부, 프로토타입 질문 넷, 이름이 겹친 머리의 표시, Firefox로 글자 폭 스파이크 열기)와 세션 04의 "확인해 주세요" → [[outbox]]. 물음은 그림으로 묻는다
 - [ ] 그 밖에 메인테이너가 고를 것 (2026-10-18 끝에 물음)

@@ -8,6 +8,9 @@ supersedes:
 superseded-by:
 ---
 
+
+> [!NOTE] 이후 변경
+> - 2026-10-25: 시험 코드의 자리를 정했다: 시험 파일은 소스 옆 `*.test.ts`, 골든 파일은 패키지마다 `golden/`, 브라우저 시험은 `src/apps/web/e2e/` → [[0038-build-and-test-tools|ADR-0038]]
 # ADR-0036: 코드는 src/ 아래의 pnpm 모노레포로 두고, core는 패키지 하나, Obsidian의 manifest.json 사본은 저장소 맨 위에 둔다
 
 ## 배경
