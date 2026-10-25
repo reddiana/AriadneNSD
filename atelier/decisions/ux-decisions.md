@@ -215,3 +215,7 @@ Q7의 "풀기"가 호출 블록에 듣는 경우다. Method로 빼기의 반대�
 ### CD2. default만 있는 Case
 
 **정함 (2026-10-25): 1. 짧은 빗금 하나.** 보통 Case의 규칙(긴 빗금은 default 칸의 왼쪽 아래로)에서 default 칸이 블록 전체이니 짧은 빗금만 남는다. 견준 안 → 시안 M37의 C2. 지금의 규칙 → [[02-layout#1.4 블록]]
+
+### DA1. Event 무리와 Method 무리 사이
+
+**정함 (2026-10-25): 1. 두 배(88px, `space.kind-gap`).** 다이어그램 사이(44px)와 한눈에 갈리면서 그림이 많이 넓어지지 않는다. 시안의 그림은 Claude가 정한 줄 높이 셈(4px씩 올리며 16 : 10에 가장 가까운 것, 같으면 낮은 것, 두 무리가 같은 줄 높이)으로 그렸고 메인테이너가 그 그림을 보고 골랐다. 견준 안 → 시안 M38 https://claude.ai/artifact/NyrNMU8fdW9CMekCXX3fpt (사본 `journal/assets/2026-10-25-diagram-arrange-study.html`). 지금의 규칙 → [[02-layout#1.7 여러 다이어그램의 배치]]

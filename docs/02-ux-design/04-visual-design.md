@@ -300,6 +300,7 @@ flowchart LR
 | `size.peek-halo` | 3px | 펴 보기 점선 아래에 까는 흰 줄의 굵기 |
 | `size.text-halo` | 3px | If · Case 조건 글자 둘레에 까는 바탕색 테두리의 두께(글자 바깥으로) |
 | `space.diagram` | 44px | 다이어그램 사이 |
+| `space.kind-gap` | 88px (= 2 × `space.diagram`) | Event 무리와 Method 무리 사이 → [[ux-decisions#DA1. Event 무리와 Method 무리 사이|DA1]] |
 | `size.column-min` | 420px | 여러 다이어그램을 줄로 놓을 때 한 줄의 가장 좁은 폭 |
 | `space.paper` | 24px | 그림 둘레의 여백 |
 
