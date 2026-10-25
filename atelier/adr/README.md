@@ -61,7 +61,7 @@ updated: 2026-10-25
 | [[0031-shell-interfaces\|0031]] | editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다 | 승인 |
 | [[0032-token-highlighting\|0032]] | 구문 강조는 블록 글자의 종류마다 토크나이저 하나로 한다 | 승인 |
 | [[0033-command-list-for-shells\|0033]] | editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다 | 승인 |
-| [[0037-two-pass-full-layout\|0037]] | 레이아웃은 두 단계의 순수 함수로 하고, 고칠 때마다 문서 전체를 다시 센다. 폭 테이블은 구간 목록, 없는 글자는 전각 | 제안됨 |
+| [[0037-two-pass-full-layout\|0037]] | 레이아웃은 두 단계의 순수 함수로 하고, 고칠 때마다 문서 전체를 다시 센다. 폭 테이블은 구간 목록, 없는 글자는 전각 | 승인 |
 
 새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0038부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
