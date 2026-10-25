@@ -46,6 +46,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 ### 배포 대상
 
 - [[obsidian-plugin-internals]] — Obsidian 플러그인이 파일 열기와 메뉴에 끼어드는 법 (2026-10-10)
+- [[obsidian-links-and-anchors]] — Obsidian 링크의 앵커: 제목과 블록 ID, 블록 ID는 숨고 표의 한 줄에는 달 수 없다, 사이트에서는 줄마다 id (2026-10-26)
 - [[drive-app-basics]] — Google Drive 앱의 기초 (2026-10-09, 시퀀스 다이어그램·client secret 추가 2026-10-10)
 - [[build-output-and-releases]] — 앱은 어디로 내보내나: 빌드 결과를 커밋하지 않는 까닭, GitHub Releases, Obsidian이 저장소 맨 위의 `manifest.json`을 읽는 까닭 (2026-10-25)
 

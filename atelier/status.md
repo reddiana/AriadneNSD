@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # 현재 상태
@@ -30,6 +30,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - MVP는 웹의 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 범위입니다 → [[dr-0015-mvp-scope|DR-0015]]. MVP 전에 정할 것은 [[backlog#MVP 전에 정할 것]]
 - 코드의 자리는 정했고(`src/` 아래의 pnpm 워크스페이스 → [[0036-code-layout|ADR-0036]]) 코드는 아직 없습니다
 - 프로토타입은 **61번째 판**입니다 → [[prototype]]
+- 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
 - 설계 문서는 https://reddiana.github.io/AriadneNSD/ 에 펴내고 있습니다(`docs/` · `atelier/` · `til/`, `journal/`에서는 이름 이야기와 로고의 출처 두 문서 → [[dr-0013-publish-docs-github-pages|DR-0013]])
 
 큰 순서: 요구사항 → 요구사항 리뷰용 프로토타입 → 아키텍처 → 상세 설계 → **테스트 설계와 테스트 코드** → 개발 → MVP(첫 출시, [[01-requirements#5. MVP 범위]]). 아키텍처와 상세 설계는 프로토타입 리뷰와 나란히 갑니다(2026-10-13, 메인테이너: "병행 진행").
