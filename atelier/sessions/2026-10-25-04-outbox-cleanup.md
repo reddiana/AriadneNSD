@@ -32,6 +32,8 @@ date: 2026-10-25
 
 2. **GitHub 조직 `ariadne-nsd`도 만듦.** 메인테이너가 고르는 창 대신 글로 물었다: "GitHub 조직 `ariadne-nsd`을 만들어두는게 좋을까요?" "둘 다 만들면 사람들이 혼란스러워하지 않을까요?" Claude의 답: 저장소 없이 소개에 공식 주소를 적은 빈 이정표로 두면 헷갈림은 작고, 남이 가져가는 쪽이 더 헷갈린다. 메인테이너: "만들기". 메인테이너가 만들었고("내가 제대로 만들었나요?"), Claude가 GitHub의 공개 API로 확인했다. 처음에는 소개와 URL이 비어 있어 다시 안내했고, 두 번째에 이정표가 붙었다(소개 "This is a placeholder. AriadneNSD lives at github.com/reddiana/AriadneNSD", URL은 공식 저장소, 저장소 0개). [[names-and-registries]]를 고치고 outbox에서 닫았다.
 
+3. **데스크톱 프레임워크(ADR-0009)는 데스크톱을 설계할 때 정함.** Claude가 Electron과 Tauri를 표로 견주어 글로 먼저 설명했다. 저장되는 파일은 어느 쪽이든 같고, 데스크톱은 셋째 순서이며 MVP(웹)에 닿지 않는다. 메인테이너가 추천("데스크톱 때 정함")을 골랐다. outbox에서 빼 [[backlog#뒤의 배포 대상을 설계할 때]]로 옮겼고, ADR은 "제안됨" 그대로 둔다.
+
 ### 원문: "정해 주세요"에 있던 확인 묶음 (문서 · 저장소 · 일하는 방식)
 
 - [ ] 2026-10-25 세션 03에서 Claude가 정한 것 → [[2026-10-25-03-inbox-structure-code-layout]]
