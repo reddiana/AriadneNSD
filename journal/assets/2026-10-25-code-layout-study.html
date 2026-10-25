@@ -1,0 +1,230 @@
+<title>M32 코드의 자리</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M28 · M30 · M31과 같은 틀 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --hl: #fff1c2; --later: #8a93a3;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; --later: #6c7585; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --hl: #4a3f12; --later: #6c7585; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 82ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card > ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+code { font-family: var(--mono); font-size: 12.5px; }
+pre { margin: 0; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--fg); }
+pre mark { background: var(--hl); color: inherit; border-radius: 2px; padding: 0 1px; }
+pre .c { color: var(--muted); }
+pre .l { color: var(--later); }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 96ch; }
+.sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+.wrap { overflow-x: auto; }
+table.t { border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+table.t th, table.t td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+table.t th { background: var(--box); font-weight: 600; }
+</style>
+
+<main>
+  <div>
+    <h1>M32 · 코드의 자리</h1>
+    <p class="lede">inbox 요청: "MVP 직전입니다. <b>src/ 구조</b>를 어떻게 할 것인지 결정해야 합니다. 배포 대상이 다양한 것을 고려합시다." 큰 틀은 이미 정해져 있습니다. 공통 패키지 <code>packages/fonts · core · editor</code>와 대상마다의 셸 <code>apps/*</code>를 한 저장소에 두는 모노레포입니다(ADR-0002, 아키텍처 3.1). 그래서 여기서는 그 틀을 <b>저장소의 어디에, 얼마나 잘게, 무엇과 함께</b> 둘지를 묻습니다. 각 물음의 <b>1번이 Claude의 추천</b>입니다. 노랗게 칠한 곳이 안마다 다릅니다. 흐린 글자는 나중에 만들 대상이 들어갈 자리입니다(지금은 폴더를 만들지 않습니다).</p>
+  </div>
+
+  <section>
+    <span class="part">먼저 · 배포 대상 일곱이 각각 어디로 가나</span>
+    <div class="wrap"><table class="t">
+      <tr><th>배포 대상</th><th>코드의 자리</th><th>빌드 결과</th><th>내보내는 곳</th></tr>
+      <tr><td>웹 (MVP)</td><td><code>apps/web</code></td><td>정적 파일 (Vite)</td><td>펴낸 사이트의 <code>/app/</code>(DR-0013에서 정함). 문서 사이트와 한 워크플로에서</td></tr>
+      <tr><td>Google Drive (<code>P1</code>)</td><td><code>apps/web</code> 안 (웹 위에 얹음, ADR-0012)</td><td>웹과 같음</td><td>웹과 같음 + Google 등록</td></tr>
+      <tr><td>Obsidian 플러그인</td><td><code>apps/obsidian</code></td><td><code>main.js</code> 하나 + <code>manifest.json</code> + <code>styles.css</code> (esbuild)</td><td>GitHub Release, 커뮤니티 플러그인 목록 (S3)</td></tr>
+      <tr><td>데스크톱</td><td><code>apps/desktop</code></td><td>설치 파일 (Electron 또는 Tauri, ADR-0009 아직 제안됨)</td><td>GitHub Release</td></tr>
+      <tr><td class="l">Confluence (<code>P2</code>)</td><td><code>apps/confluence</code></td><td>Forge 앱</td><td>Atlassian Marketplace</td></tr>
+      <tr><td>IDE 플러그인 (<code>P2</code>)</td><td><code>apps/vscode</code>, <code>apps/intellij</code></td><td>VSCode 확장(.vsix), IntelliJ 플러그인(Gradle · Kotlin, 웹뷰에 편집기 번들)</td><td>각 마켓플레이스</td></tr>
+      <tr><td>Claude skill (<code>P3</code>)</td><td><code>skills/ariadne-nsd</code> (셸이 아님)</td><td>SKILL.md와 예제</td><td>저장소에서 받아 감</td></tr>
+    </table></div>
+    <p class="q">빌드 결과(<code>dist/</code>)는 저장소에 넣지 않습니다(<code>.gitignore</code>). GitHub Actions가 빌드해 위 "내보내는 곳"으로 보냅니다. 패키지 이름은 2026-10-25에 잡아 둔 npm 조직으로 <code>@ariadne-nsd/core</code>처럼 씁니다.</p>
+  </section>
+
+  <section>
+    <span class="part">S1</span>
+    <h2>S1. 코드 폴더를 저장소의 어디에 둘까</h2>
+    <p class="q">지금 저장소 맨 위에는 문서 폴더(<code>docs/ atelier/ journal/ til/ site/</code>)가 있습니다. 여기에 코드가 들어옵니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">S1 · 1번</span><h3>맨 위에 apps/ 와 packages/</h3><span class="badge">Claude의 추천</span></header>
+<pre>AriadneNSD/
+├─ <mark>apps/</mark>
+│  ├─ web/            <span class="c">웹 → /app/</span>
+│  ├─ obsidian/       <span class="c">Obsidian 플러그인</span>
+│  ├─ desktop/        <span class="c">데스크톱</span>
+│  └─ <span class="l">vscode/ intellij/ confluence/</span>
+├─ <mark>packages/</mark>
+│  ├─ fonts/          <span class="c">D2Coding, 폭 표, 서브세팅</span>
+│  ├─ core/           <span class="c">DOM 없음</span>
+│  └─ editor/         <span class="c">React 편집 화면</span>
+├─ <span class="l">skills/ariadne-nsd/</span>
+├─ docs/ atelier/ journal/ til/
+├─ site/              <span class="c">문서 사이트 빌드</span>
+├─ package.json       <span class="c">작업 공간의 뿌리</span>
+├─ pnpm-workspace.yaml
+├─ tsconfig.base.json
+└─ .github/workflows/ <span class="c">pages · release</span></pre>
+        <ul>
+          <li class="good">ADR-0002와 아키텍처 문서의 이름(<code>packages/core</code>, <code>apps/web</code>)이 경로와 그대로 맞습니다. 문서를 고칠 곳이 없습니다.</li>
+          <li class="good">TypeScript 모노레포의 흔한 모양입니다(Vite, Vue, Babel 등). 새로 오는 기여자에게 익숙합니다.</li>
+          <li><span class="bad">맨 위의 폴더가 아홉 개로 늘어 문서와 코드가 섞여 보입니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S1 · 2번</span><h3>코드는 모두 src/ 아래</h3></header>
+<pre>AriadneNSD/
+├─ <mark>src/</mark>
+│  ├─ apps/
+│  │  ├─ web/ obsidian/ desktop/
+│  │  └─ <span class="l">vscode/ intellij/ confluence/</span>
+│  ├─ packages/
+│  │  └─ fonts/ core/ editor/
+│  ├─ <mark>package.json</mark>
+│  └─ <mark>pnpm-workspace.yaml</mark>
+├─ docs/ atelier/ journal/ til/
+├─ site/
+└─ .github/workflows/</pre>
+        <ul>
+          <li class="good">맨 위에서 "글은 여기, 코드는 <code>src/</code>"가 한눈에 갈립니다. Maven · Gradle의 <code>src/</code>와 비슷해 백엔드 개발자에게 익숙합니다.</li>
+          <li><span class="bad">한 겹 깊어져 경로가 깁니다(<code>src/packages/core/src/layout/…</code>, <code>src</code>가 두 번).</span></li>
+          <li><span class="bad">명령은 늘 <code>src/</code>에서 실행해야 하고, 도구와 GitHub의 안내 대부분이 맨 위의 <code>package.json</code>을 기대합니다.</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S1 · 3번</span><h3>코드는 다른 저장소</h3></header>
+<pre><mark>AriadneNSD/</mark>          <span class="c">글만 (지금 그대로)</span>
+├─ docs/ atelier/ journal/ til/
+└─ site/
+
+<mark>AriadneNSD-app/</mark>      <span class="c">코드만</span>
+├─ apps/ …
+├─ packages/ …
+└─ package.json</pre>
+        <ul>
+          <li class="good">두 저장소 모두 깔끔하고, 코드의 이슈와 문서의 이슈가 갈립니다.</li>
+          <li><span class="bad">한 변경이 설계와 코드를 함께 바꿀 때 커밋이 둘로 갈라집니다. "문서 = 개발된 애플리케이션"(CLAUDE.md)을 지키기 어렵습니다.</span></li>
+          <li><span class="bad">저장소 이름이 둘이 되고, 펴낸 사이트(<code>/app/</code>)에 앱을 함께 올리려면 저장소를 건너 빌드해야 합니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">S2</span>
+    <h2>S2. core를 몇 개의 패키지로 나눌까</h2>
+    <p class="q"><code>core</code>에는 모듈이 여섯 있습니다(아키텍처 3.1: 모델, 편집 명령, 텍스트, 레이아웃, 렌더러, 파일 형식). 의존은 한 방향(모델 ← 명령, 텍스트 ← 레이아웃 ← 렌더러)이어야 합니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">S2 · 1번</span><h3>패키지 하나, 안을 폴더로</h3><span class="badge">Claude의 추천</span></header>
+<pre>packages/core/
+├─ package.json       <span class="c">@ariadne-nsd/core</span>
+└─ src/
+   ├─ model/          <span class="c">불변 객체, 불변식</span>
+   ├─ commands/       <span class="c">편집 명령</span>
+   ├─ text/           <span class="c">폭, 토크나이저, 문구</span>
+   ├─ layout/         <span class="c">순수 함수</span>
+   ├─ render/         <span class="c">씬 빌드 → SVG</span>
+   ├─ format/         <span class="c">직렬화, 마이그레이션</span>
+   └─ index.ts        <span class="c">밖에 내놓는 것만</span>
+<mark>+ 폴더 사이의 import 방향을 검사 도구로 막음</mark></pre>
+        <ul>
+          <li class="good">빌드 · 판 번호 · 설정이 하나라 단순합니다. MVP 단계에서 패키지 수를 늘리면 관리할 것만 늡니다.</li>
+          <li class="good">의존 방향은 검사 도구(예: dependency-cruiser)를 CI에 넣어 지킵니다. 어기면 빌드가 실패합니다.</li>
+          <li>나중에 따로 내놓을 필요가 생기면(예: 레이아웃만 쓰는 CLI) 그때 폴더 하나를 패키지로 떼어 냅니다.</li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S2 · 2번</span><h3>모듈마다 패키지</h3></header>
+<pre>packages/
+├─ fonts/
+├─ <mark>model/</mark>      <span class="c">@ariadne-nsd/model</span>
+├─ <mark>commands/</mark>
+├─ <mark>text/</mark>
+├─ <mark>layout/</mark>
+├─ <mark>render/</mark>
+├─ <mark>format/</mark>
+└─ editor/</pre>
+        <ul>
+          <li class="good">의존 방향을 패키지 의존(<code>package.json</code>)이 강제합니다. 검사 도구가 필요 없습니다.</li>
+          <li><span class="bad"><code>package.json</code> · 빌드 설정 · 판 번호가 여섯 벌이 되고, 빌드 순서를 관리해야 합니다.</span></li>
+          <li><span class="bad">경계를 아직 써 보지 않았는데 굳힙니다. 모듈 사이를 옮기는 리팩터링이 패키지를 건너는 일이 됩니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">S3</span>
+    <h2>S3. Obsidian이 요구하는 manifest.json을 어디에 둘까</h2>
+    <p class="q">Obsidian 커뮤니티 플러그인 목록은 등록한 저장소의 <b>맨 위에 있는 <code>manifest.json</code></b>을 읽어 플러그인의 이름과 판을 알아냅니다. 플러그인 파일(<code>main.js</code> 등)은 GitHub Release에서 받아 갑니다. 그래서 모노레포라도 이 파일 하나는 저장소 맨 위에 있어야 합니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">S3 · 1번</span><h3>맨 위에 사본, 스크립트가 맞춤</h3><span class="badge">Claude의 추천</span></header>
+<pre>AriadneNSD/
+├─ <mark>manifest.json</mark>      <span class="c">Obsidian이 읽는 사본</span>
+├─ <mark>versions.json</mark>      <span class="c">판 ↔ 최소 Obsidian 판</span>
+└─ apps/obsidian/
+   └─ manifest.json   <span class="c">원본</span>
+
+<span class="c">판을 올리는 스크립트가 원본을 맨 위로 복사.
+CI는 둘이 다르면 실패.</span></pre>
+        <ul>
+          <li class="good">저장소 하나, 이슈 하나. 플러그인 화면의 "저장소" 링크가 이 저장소로 옵니다.</li>
+          <li class="good">많은 모노레포 플러그인이 쓰는 방법입니다.</li>
+          <li><span class="bad">맨 위에 파일 두 개가 더 생기고, 처음 보는 사람은 "왜 여기에?" 하고 볼 수 있습니다(README에 한 줄 적음).</span></li>
+        </ul>
+      </article>
+      <article class="card"><header><span class="tag">S3 · 2번</span><h3>플러그인만 다른 저장소로 내보냄</h3></header>
+<pre>AriadneNSD/
+└─ apps/obsidian/manifest.json
+
+<mark>AriadneNSD-obsidian/</mark>  <span class="c">CI가 빌드 결과만 밀어 넣음</span>
+├─ manifest.json
+├─ versions.json
+└─ README.md</pre>
+        <ul>
+          <li class="good">이 저장소의 맨 위가 깔끔합니다.</li>
+          <li><span class="bad">저장소가 둘이 되고, Obsidian 사용자의 이슈는 저쪽에 쌓입니다.</span></li>
+          <li><span class="bad">CI가 다른 저장소에 쓸 권한(토큰)을 가져야 합니다.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">묻지 않고 따르는 것</span>
+    <div class="sum">
+      <h3>이미 정했거나, 뒤의 결정을 따라가는 것</h3>
+      <ul>
+        <li><b>pnpm 워크스페이스</b>로 묶습니다(ADR-0002의 후속 작업에 적힌 후보). 웹 · 편집기는 Vite, Obsidian은 esbuild로 빌드합니다(Obsidian 플러그인 견본이 쓰는 도구).</li>
+        <li><code>apps/desktop</code>의 안쪽 모양은 ADR-0009(Electron 또는 Tauri)를 정할 때 따라 정해집니다. Tauri면 그 안에 Rust 폴더(<code>src-tauri/</code>)가 생깁니다.</li>
+        <li>시험 코드를 어디에 둘지(소스 옆 <code>*.test.ts</code> 또는 <code>test/</code> 폴더, 그림 비교용 기준 SVG의 자리)는 다음 일인 <b>테스트 전략</b>에서 정합니다.</li>
+        <li>프로토타입(<code>journal/assets/2026-10-10-ns-prototype.html</code>)은 버리는 것이라 코드 폴더로 옮기지 않습니다.</li>
+        <li>정한 것은 새 ADR(코드의 배치)로 남기고, ADR-0002에 "이후 변경"을 답니다.</li>
+      </ul>
+    </div>
+  </section>
+</main>
