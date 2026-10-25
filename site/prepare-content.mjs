@@ -2,6 +2,7 @@
 // 쓰는 법: node site/prepare-content.mjs <저장소 폴더> <Quartz의 content 폴더>
 //
 // - docs/, atelier/, til/을 그대로 복사한다 (→ DR-0013. til/은 2026-10-25에 더함, 그때 이름은 tech-notes/).
+// - journal/에서는 PUBLISHED_FILES의 문서만, 그 문서가 싣는 그림(![[…]])과 함께 복사한다(2026-10-25).
 // - 펴내지 않는 곳(journal/, 저장소 맨 위의 파일)으로 가는 위키링크는
 //   GitHub의 파일 주소로 바꾼다. 그대로 두면 사이트에서 끊긴 링크가 된다.
 // - 폴더의 README.md는 그 폴더의 첫 페이지(index.md)로 옮긴다. 그래야 사이트의 목록에서
@@ -20,6 +21,8 @@ if (!repoArg || !contentArg) {
 const repo = path.resolve(repoArg)
 const content = path.resolve(contentArg)
 const PUBLISHED = ["docs", "atelier", "til"]
+// 폴더째 펴내지 않는 곳에서 펴내는 문서
+const PUBLISHED_FILES = ["journal/name-story.md", "journal/logo-source.md"]
 const GITHUB = "https://github.com/reddiana/AriadneNSD/blob/main/"
 
 // 저장소의 모든 파일: 이름(확장자 .md는 뺀 것과 붙은 것 모두) → 저장소 안의 경로
@@ -42,7 +45,20 @@ for (const rel of walk(repo)) {
     if (!byName.get(k).includes(rel)) byName.get(k).push(rel)
   }
 }
-const isPublished = (rel) => PUBLISHED.some((d) => rel.startsWith(d + "/"))
+// 이름이 겹치면 Obsidian처럼 저장소 맨 위에 가까운 파일을 고른다 (예: [[README]] → README.md)
+const resolve = (target) => {
+  const hits = byName.get(target)
+  return hits && [...hits].sort((x, y) => x.split("/").length - y.split("/").length)[0]
+}
+// PUBLISHED_FILES와 그 문서가 싣는 그림
+const publishedFiles = new Set(PUBLISHED_FILES)
+for (const rel of PUBLISHED_FILES) {
+  for (const m of fs.readFileSync(path.join(repo, rel), "utf8").matchAll(/!\[\[([^\]|#\\]+)/g)) {
+    const hit = resolve(m[1].trim())
+    if (hit) publishedFiles.add(hit)
+  }
+}
+const isPublished = (rel) => PUBLISHED.some((d) => rel.startsWith(d + "/")) || publishedFiles.has(rel)
 
 let rewritten = 0
 // 한 줄 안에서 인라인 코드(`…`)는 건드리지 않고 위키링크만 바꾼다
@@ -57,10 +73,12 @@ function rewriteLine(line) {
         if (!m) return whole
         const target = m[1].trim()
         if (!target) return whole
-        const hits = byName.get(target)
-        if (!hits) return whole
-        // 이름이 겹치면 Obsidian처럼 저장소 맨 위에 가까운 파일을 고른다 (예: [[README]] → README.md)
-        const rel = [...hits].sort((x, y) => x.split("/").length - y.split("/").length)[0]
+        const rel = resolve(target)
+        if (!rel) return whole
+        // 폴더째 펴내지 않는 곳의 그림은 경로를 다 적는다. 이름만 두면 Quartz가 크기(|160)가 붙은 그림의 주소를 틀리게 만든다
+        if (bang && publishedFiles.has(rel)) {
+          return `![[${rel}${m[2] ?? ""}${m[3] !== undefined ? (inner.includes("\\|") ? "\\|" : "|") + m[3] : ""}]]`
+        }
         if (isPublished(rel)) {
           // 폴더의 README는 사이트에서 그 폴더의 첫 페이지(index)다
           if (!rel.endsWith("/README.md")) return whole
@@ -95,6 +113,11 @@ function rewrite(text) {
     .join("\n")
 }
 
+function copyFile(s, d, name) {
+  if (name.endsWith(".md")) fs.writeFileSync(d, addHeading(rewrite(fs.readFileSync(s, "utf8")), name))
+  else fs.copyFileSync(s, d)
+}
+
 function copyDir(src, dst) {
   fs.mkdirSync(dst, { recursive: true })
   for (const e of fs.readdirSync(src, { withFileTypes: true })) {
@@ -102,8 +125,7 @@ function copyDir(src, dst) {
     const d = path.join(dst, e.name)
     if (e.isDirectory()) copyDir(s, d)
     else if (e.name === "README.md") fs.writeFileSync(path.join(dst, "index.md"), addHeading(rewrite(fs.readFileSync(s, "utf8")), e.name))
-    else if (e.name.endsWith(".md")) fs.writeFileSync(d, addHeading(rewrite(fs.readFileSync(s, "utf8")), e.name))
-    else fs.copyFileSync(s, d)
+    else copyFile(s, d, e.name)
   }
 }
 
@@ -121,6 +143,11 @@ function addHeading(text, fileName) {
 fs.rmSync(content, { recursive: true, force: true })
 fs.mkdirSync(content, { recursive: true })
 for (const d of PUBLISHED) copyDir(path.join(repo, d), path.join(content, d))
+for (const rel of publishedFiles) {
+  const d = path.join(content, rel)
+  fs.mkdirSync(path.dirname(d), { recursive: true })
+  copyFile(path.join(repo, rel), d, rel.split("/").at(-1))
+}
 buildHome()
 
 // README.md → index.md
@@ -149,4 +176,4 @@ function buildHome() {
   fs.writeFileSync(path.join(content, "index.md"), `---\ntitle: AriadneNSD\n---\n\n${md}`)
 }
 
-console.log(`content 준비: ${PUBLISHED.join(", ")} 복사, 펴내지 않는 곳으로 가는 링크 ${rewritten}개를 GitHub 주소로 바꿈`)
+console.log(`content 준비: ${PUBLISHED.join(", ")} 복사, 그 밖의 파일 ${publishedFiles.size}개, 펴내지 않는 곳으로 가는 링크 ${rewritten}개를 GitHub 주소로 바꿈`)

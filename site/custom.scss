@@ -26,3 +26,13 @@ body[data-slug="index"] article {
     margin: 0;
   }
 }
+
+// 왼쪽 목록: 펼친 폴더 위에서 마우스 휠이 듣지 않던 것을 고친다.
+// Quartz v4.5.2는 안쪽 목록마다 overscroll-behavior: contain을 붙여서, 굴린 휠이 스크롤되는 바깥 목록으로 넘어가지 못한다.
+// Quartz v5.0.0의 고침(#2283)과 같게 바깥 목록(.explorer-ul)에만 남긴다. v5로 올리면 이 블록을 지운다.
+.explorer-content ul {
+  overscroll-behavior: auto;
+  &.explorer-ul {
+    overscroll-behavior: contain;
+  }
+}

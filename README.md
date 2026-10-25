@@ -22,7 +22,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 > **1. 웹 사이트에서 읽기 (설치 없이):** **https://reddiana.github.io/AriadneNSD/**
 > 설계 문서(`docs/`), 작업 공간(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
-> **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`)도 함께 읽을 수 있습니다.
+> **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`의 대부분)도 함께 읽을 수 있습니다.
 <!-- /site:skip -->
 
 | 폴더                                    | 내용                                                     |
