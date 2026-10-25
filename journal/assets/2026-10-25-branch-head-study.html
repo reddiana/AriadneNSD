@@ -30,10 +30,12 @@ section { display: grid; gap: 14px; min-width: 0; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
 .card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
 .card.ref { border-style: dashed; }
+.card.no { opacity: .78; }
 .card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
 .tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
 .badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
 .badge.gray { color: var(--muted); background: var(--bg); }
+.badge.warn { color: var(--warn); background: var(--bg); }
 .card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
 .card li b { color: var(--fg); font-weight: 600; }
 .bad { color: var(--warn); font-weight: 600; }
@@ -47,17 +49,38 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
 <main>
   <div>
     <h1>M34 · If 머리의 폭과 높이</h1>
-    <p class="lede">If와 Case의 조건 글자는 <b>빗금과 겹치면 안 됩니다</b>(시각 디자인에서 정함). 겹치지 않게 하는 길은 둘입니다: 머리를 <b>넓히거나</b>, <b>높이거나</b>. 갈래가 넓으면 아무 일도 없고, 물음은 <b>갈래가 좁은데 조건이 길 때</b>입니다. 그림마다 짧은 조건(<code>n &gt; 0</code>)과 긴 조건을 나란히 그렸습니다. 같은 셈이 Case에도 듣습니다. <b>1번이 Claude의 추천</b>입니다.</p>
+    <p class="lede">If와 Case의 조건 글자와 빗금이 만나는 곳의 모습입니다. 갈래가 넓으면 아무 일도 없고, 물음은 <b>갈래가 좁은데 조건이 길 때</b>입니다. 그림마다 짧은 조건(<code>n &gt; 0</code>)과 긴 조건을 나란히 그렸습니다. 같은 셈이 Case에도 듣습니다. 각 물음의 <b>1번이 Claude의 추천</b>입니다.</p>
   </div>
+
+  <section>
+    <span class="part">B2</span>
+    <h2>B2. 프로토타입의 폭과 높이를 지키면서, 겹치는 곳을 어떻게 할까</h2>
+    <p class="q">B1의 답(메인테이너): <b>"지금 프로토타입이 좋습니다. 1번은 너무 넓네요. 2번, 3번은 단연코 반대입니다."</b> 그래서 머리의 폭(글자 + 70px)과 높이(한 줄이면 48px)는 프로토타입 그대로 둡니다. 남은 물음은 긴 조건이 빗금과 <b>겹치는 곳의 모습</b>입니다. 시각 디자인 명세의 "글자는 빗금과 겹치지 않아야 한다"는 이 답에 따라 고칩니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">B2 · 1번</span><h3>글자 뒤에 바탕을 깔아 빗금을 가림</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="b2-1"></div>
+        <ul><li>겹치는 곳에서만 빗금이 글자 둘레에서 끊깁니다. 글자는 늘 깨끗하게 읽힙니다.</li><li>폭과 높이는 프로토타입 그대로입니다. 짧은 조건은 아무것도 달라지지 않습니다.</li><li>지도와 도면에서 선 위의 이름을 이렇게 씁니다. 바탕은 머리의 색(<code>block.branch</code>)이라 테마를 바꿔도 맞습니다.</li><li><span class="bad">빗금이 중간에 끊겨 보입니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">B2 · 2번</span><h3>겹쳐도 그대로 둠</h3></header>
+        <div class="fig" data-fig="b2-2"></div>
+        <ul><li>지금 프로토타입 그대로입니다. 그리는 규칙이 가장 쉽습니다.</li><li><span class="bad">빗금이 글자를 가로질러 몇 글자가 읽기 어렵습니다. 인쇄하면 더 그렇습니다.</span></li></ul>
+      </article>
+      <article class="card no"><header><span class="tag">B2 · 3번</span><h3>긴 조건은 두 줄로</h3><span class="badge warn">이것만으로는 안 풀림</span></header>
+        <div class="fig" data-fig="b2-3"></div>
+        <ul><li>줄을 바꾸면 글자가 좁아지지만, 머리가 한 줄만큼 높아지고 글자의 아래 끝도 내려갑니다.</li><li><span class="bad">빗금 사이는 아래로 갈수록 좁아지므로, 프로토타입 폭에서는 여전히 겹칩니다. 1번이나 2번과 함께 써야 합니다. 긴 글자를 줄 바꿀지는 다음 물음입니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
 
   <section>
     <span class="part">B1</span>
     <h2>B1. 갈래가 좁고 조건이 길 때, 넓힐까 높일까</h2>
+    <p class="q"><b>1번을 골랐다가 되돌림 (2026-10-25).</b> 메인테이너: "지금 프로토타입이 좋습니다. 1번은 너무 넓네요. 2번, 3번은 단연코 반대입니다." → B2로 이어집니다.</p>
     <p class="q">두 빗금 사이의 폭은 머리 위에서 내려갈수록 줄어듭니다. 글자의 아래 끝에서 그 폭이 글자보다 넓으면 겹치지 않습니다. 그래서 머리를 넓게 하면 낮아도 되고, 좁게 하면 높아야 합니다. 안마다 "머리의 폭을 글자 폭의 몇 배까지 넓히는가"가 다릅니다(글자 폭 = 조건 글자 + 양옆 여백).</p>
     <div class="cards">
-      <article class="card pick"><header><span class="tag">B1 · 1번</span><h3>머리 높이를 늘 같게, 폭을 넓힘 (약 2.1배)</h3><span class="badge">Claude의 추천</span></header>
+      <article class="card"><header><span class="tag">B1 · 1번</span><h3>머리 높이를 늘 같게, 폭을 넓힘 (약 2.1배)</h3></header>
         <div class="fig" data-fig="b1-1"></div>
-        <ul><li>조건이 한 줄이면 <b>머리 높이가 언제나 같습니다</b>(48px). 여러 If가 나란히 있어도 고릅니다.</li><li>규칙이 가장 쉽습니다: "머리가 낮게 들어가지 않으면 넓힌다".</li><li><span class="bad">조건이 아주 길면 블록이 넓어집니다(40자면 약 700px). 3번 물음(긴 글자의 줄 바꿈)과 함께 보아야 합니다.</span></li></ul>
+        <ul><li>조건이 한 줄이면 머리 높이가 언제나 같습니다(48px).</li><li><span class="bad">조건이 길면 블록이 넓어집니다(40자면 약 700px).</span></li></ul>
       </article>
       <article class="card"><header><span class="tag">B1 · 2번</span><h3>1.5배까지 넓히고, 모자라면 높임</h3></header>
         <div class="fig" data-fig="b1-2"></div>
@@ -65,11 +88,11 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
       </article>
       <article class="card"><header><span class="tag">B1 · 3번</span><h3>거의 넓히지 않고(1.25배), 높임</h3></header>
         <div class="fig" data-fig="b1-3"></div>
-        <ul><li>그림의 폭이 가장 좁습니다. 다이어그램 여럿을 옆으로 놓기 좋습니다.</li><li><span class="bad">머리가 아주 높아집니다(125px). 빗금이 가팔라 V자가 좁고 깊은 골이 되고, 조건과 갈래가 멀어집니다.</span></li></ul>
+        <ul><li>그림의 폭이 가장 좁습니다.</li><li><span class="bad">머리가 아주 높아집니다(125px).</span></li></ul>
       </article>
       <article class="card ref"><header><span class="tag">참고</span><h3>지금 프로토타입</h3><span class="badge gray">비교용</span></header>
         <div class="fig" data-fig="b1-0"></div>
-        <ul><li>머리 폭은 글자 + 70px, 높이는 늘 48px입니다.</li><li><span class="bad">긴 조건이 빗금과 겹칩니다.</span></li></ul>
+        <ul><li>머리 폭은 글자 + 70px, 높이는 늘 48px입니다.</li><li><span class="bad">긴 조건이 빗금과 겹칩니다(빨간 동그라미).</span></li></ul>
       </article>
     </div>
   </section>
@@ -77,8 +100,8 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
   <section>
     <h2>답하실 것</h2>
     <div class="sum"><ol>
-      <li>B1의 <b>번호</b> 또는 고칠 점.</li>
-      <li>정하면 레이아웃 설계(1.4)와 시각 디자인(5장)에 옮기고, 프로토타입 할 일에 넣습니다. 조건이 여러 줄일 때도 같은 셈을 씁니다.</li>
+      <li>B2의 <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 레이아웃 설계(1.4)와 시각 디자인(5장의 배치 규칙)에 옮기고, 프로토타입 할 일에 넣습니다.</li>
     </ol></div>
   </section>
 </main>
@@ -88,50 +111,49 @@ code, kbd { font-family: var(--mono); font-size: 12.5px; }
   const C = { line: '#5b77ad', text: '#151a22', muted: '#4b5567', branch: '#f6ebdc', proc: '#edf0f5', bad: '#c2410c' };
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const PADX = 10, PADY = 7, LINE = 18, LABEL = 16, ROW = 32;
-  const BASE = LINE + 2 * PADY + LABEL;            // 한 줄 조건의 머리 높이 48
-  const D = PADY + LINE;                            // 머리 위에서 글자 아래 끝까지 25
   const cv = document.createElement('canvas').getContext('2d');
   const tw = s => { cv.font = '13px "IBM Plex Mono", Consolas, monospace'; return Math.ceil(cv.measureText(s).width); };
-  // If 하나를 그린다. k: 머리 폭을 글자 폭의 몇 배까지 넓히는가. proto: 프로토타입 규칙
-  function ifBlock(x, y, cond, k, proto) {
-    const t = tw(cond), g = t + 2 * PADX;
-    const lanes = ['x ← 1', 'x ← 0'].map(s => tw(s) + 2 * PADX);
-    const laneSum = lanes[0] + lanes[1];
+  // If 하나. o.k: 머리 폭을 글자 폭의 몇 배까지 넓히나(B1). o.proto: 프로토타입의 폭(글자 + 70). o.halo: 글자 뒤 바탕. o.mark: 겹침 표시
+  function ifBlock(x, y, lines, o) {
+    const t = Math.max(...lines.map(tw)), g = t + 2 * PADX, th = lines.length * LINE;
+    const base = th + 2 * PADY + LABEL, D = PADY + th;
+    const lanes = ['x ← 1', 'x ← 0'].map(s => tw(s) + 2 * PADX), laneSum = lanes[0] + lanes[1];
     let w, H;
-    if (proto) { w = Math.max(t + 2 * PADX + 70, laneSum); H = BASE; }
-    else {
-      w = Math.max(laneSum, Math.ceil(k * g));
-      H = Math.max(BASE, Math.ceil(D * w / (w - g)));
-    }
+    if (o.proto) { w = Math.max(g + 70, laneSum); H = base; }
+    else { w = Math.max(laneSum, Math.ceil(o.k * g)); H = Math.max(base, Math.ceil(D * w / (w - g))); }
     const sx = x + Math.round(w * lanes[0] / laneSum);
     let s = `<rect x="${x + .5}" y="${y + .5}" width="${w}" height="${H}" fill="${C.branch}" stroke="${C.line}"/>`;
     s += `<path d="M${x + .5} ${y + .5} L${sx + .5} ${y + H + .5} L${x + w + .5} ${y + .5}" fill="none" stroke="${C.line}"/>`;
-    // 글자: 꼭짓점 위 가운데, 글자 아래 끝의 빗금 사이 안으로 민다
     const xl = x + (sx - x) * D / H, xr = x + w - (x + w - sx) * D / H;
     let tx = sx - t / 2;
-    if (!proto) tx = Math.min(Math.max(tx, xl + PADX), xr - PADX - t);
-    else tx = Math.min(Math.max(tx, x + PADX), x + w - PADX - t);
-    s += `<text x="${tx}" y="${y + PADY + 13}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}" xml:space="preserve">${esc(cond)}</text>`;
-    const overlap = proto && (xr - xl) < g;
-    if (overlap) s += `<circle cx="${xl + 2}" cy="${y + D - 4}" r="9" fill="none" stroke="${C.bad}" stroke-width="1.5"/><circle cx="${xr - 2}" cy="${y + D - 4}" r="9" fill="none" stroke="${C.bad}" stroke-width="1.5"/>`;
+    tx = o.proto ? Math.min(Math.max(tx, x + PADX), x + w - PADX - t) : Math.min(Math.max(tx, xl + PADX), xr - PADX - t);
+    const halo = o.halo ? ` stroke="${C.branch}" stroke-width="6" stroke-linejoin="round" paint-order="stroke"` : '';
+    lines.forEach((ln, i) => {
+      s += `<text x="${tx}" y="${y + PADY + 13 + i * LINE}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}" xml:space="preserve"${halo}>${esc(ln)}</text>`;
+    });
+    if (o.mark && (xr - xl) < g) s += `<circle cx="${xl + 2}" cy="${y + D - 4}" r="9" fill="none" stroke="${C.bad}" stroke-width="1.5"/><circle cx="${xr - 2}" cy="${y + D - 4}" r="9" fill="none" stroke="${C.bad}" stroke-width="1.5"/>`;
     s += `<text x="${x + 6}" y="${y + H - 4}" font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="${C.muted}">참</text>`;
     s += `<text x="${x + w - 6}" y="${y + H - 4}" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="${C.muted}">거짓</text>`;
     s += `<rect x="${x + .5}" y="${y + H + .5}" width="${sx - x}" height="${ROW}" fill="${C.proc}" stroke="${C.line}"/>`;
     s += `<rect x="${sx + .5}" y="${y + H + .5}" width="${x + w - sx}" height="${ROW}" fill="${C.proc}" stroke="${C.line}"/>`;
     s += `<text x="${x + PADX}" y="${y + H + 21}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">x ← 1</text>`;
     s += `<text x="${sx + PADX}" y="${y + H + 21}" font-family="IBM Plex Mono, monospace" font-size="13" fill="${C.text}">x ← 0</text>`;
-    // 치수: 머리 높이
     s += `<text x="${x + w + 8}" y="${y + H / 2 + 4}" font-family="IBM Plex Sans KR, sans-serif" font-size="11" fill="${C.muted}">${H}px</text>`;
     return { s, w: w + 44, h: H + ROW };
   }
-  function pair(k, proto) {
-    const a = ifBlock(0, 0, 'n > 0', k, proto);
-    const b = ifBlock(a.w + 10, 0, 'a[j] <= pivot && j < hi', k, proto);
+  function pair(o, longLines) {
+    const a = ifBlock(0, 0, ['n > 0'], o);
+    const b = ifBlock(a.w + 10, 0, longLines || ['a[j] <= pivot && j < hi'], o);
     const W = a.w + 10 + b.w, Hh = Math.max(a.h, b.h);
     return `<svg width="${W}" height="${Hh + 2}" viewBox="0 0 ${W} ${Hh + 2}">${a.s}${b.s}</svg>`;
   }
   const draw = () => {
-    const F = { 'b1-1': pair(2.09), 'b1-2': pair(1.5), 'b1-3': pair(1.25), 'b1-0': pair(0, true) };
+    const F = {
+      'b2-1': pair({ proto: true, halo: true }),
+      'b2-2': pair({ proto: true }),
+      'b2-3': pair({ proto: true, mark: true }, ['a[j] <= pivot &&', 'j < hi']),
+      'b1-1': pair({ k: 2.09 }), 'b1-2': pair({ k: 1.5 }), 'b1-3': pair({ k: 1.25 }), 'b1-0': pair({ proto: true, mark: true }),
+    };
     document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
   };
   draw();
