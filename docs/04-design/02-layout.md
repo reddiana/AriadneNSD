@@ -58,7 +58,7 @@ flowchart LR
 
 관련 요구사항: [[01-requirements#^lay-autosize]], [[01-requirements#^lay-branch-width]], [[01-requirements#^edit-multi-diagram]]
 
-이 장의 값은 모두 [[04-visual-design#5. 기하와 해부도]]의 토큰입니다. 토큰이 아직 없는 값은 프로토타입의 값을 적고 "토큰 없음"이라고 표시했습니다(→ 미결정 사항).
+이 장의 값은 모두 [[04-visual-design#5. 기하와 해부도]]의 토큰입니다.
 
 ### 1.1 두 단계
 
@@ -112,9 +112,9 @@ flowchart LR
 
 - **반복:** 본문은 `size.loop-strip`만큼 오른쪽에 놓입니다. While과 For는 머리가 위, Do-While은 머리가 아래입니다. For는 While과 크기 셈도 그림도 같습니다([[ux-decisions#FB1. For 블록의 모양|FB1]]).
 - **If · Case의 갈래 폭:** 자리 잡기에서 받은 폭이 갈래들의 최소 폭의 합보다 크면, 남는 폭을 **최소 폭에 비례해** 나눠 줍니다. 마지막 갈래가 나머지를 받습니다.
-- **If의 머리:** 높이는 조건 글자 + 2·`space.pad-y` + `size.if-label`(갈래 이름 줄)이고, 최소 폭은 `tw` + 2·`space.pad-x` + 70px(토큰 없음)입니다. 빗금의 꼭짓점은 참 갈래와 거짓 갈래의 경계 위에 있습니다. 조건 글자는 꼭짓점 위 가운데에 두되 블록 밖으로 나가지 않게 밉니다.
+- **If의 머리:** 높이는 조건 글자 + 2·`space.pad-y` + `size.if-label`(갈래 이름 줄)이고, 최소 폭은 `tw` + 2·`space.pad-x` + `size.if-head-extra`입니다. 빗금의 꼭짓점은 참 갈래와 거짓 갈래의 경계 위에 있습니다. 조건 글자는 꼭짓점 위 가운데에 두되 블록 밖으로 나가지 않게 밉니다.
 - **조건 글자와 빗금:** 머리를 글자에 맞춰 넓히거나 높이지 않습니다. 조건이 길면 빗금이 글자에 닿을 수 있고, 그리는 단계에서 글자 뒤에 머리 바탕색의 테두리(`size.text-halo`)를 깔아 가립니다. 레이아웃의 셈에는 영향이 없습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]], [[04-visual-design#5. 기하와 해부도|배치 규칙]]
-- **Case의 머리:** 높이는 조건 글자 + 2·`space.pad-y` + `size.case-label`이고, 최소 폭은 `tw` + 2·`space.pad-x` + 90px(토큰 없음)입니다. 긴 빗금은 왼쪽 위에서 default 갈래의 왼쪽 아래로, 짧은 빗금은 오른쪽 위에서 같은 점으로 갑니다. 갈래 사이의 세로선은 긴 빗금에서 내려옵니다. 갈래마다 최소 폭은 max(그 갈래 줄의 폭, 갈래 이름의 폭 + 18px(토큰 없음))입니다.
+- **Case의 머리:** 높이는 조건 글자 + 2·`space.pad-y` + `size.case-label`이고, 최소 폭은 `tw` + 2·`space.pad-x` + `size.case-head-extra`입니다. 긴 빗금은 왼쪽 위에서 default 갈래의 왼쪽 아래로, 짧은 빗금은 오른쪽 위에서 같은 점으로 갑니다. 갈래 사이의 세로선은 긴 빗금에서 내려옵니다. 갈래마다 최소 폭은 max(그 갈래 줄의 폭, 갈래 이름의 폭 + `size.label-room`)입니다.
 - **갈래 이름:** If는 "참"을 왼쪽 아래 구석에, "거짓"을 오른쪽 아래 구석에 둡니다. Case는 갈래 이름을 칸의 왼쪽에, default의 이름만 오른쪽에 붙입니다([[ux-decisions#Q25. Case의 default 이름의 자리|Q25]]). 구석과의 거리는 `size.label-inset`입니다.
 - **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 그 블록 가운데에 `∅`를 그립니다. 크기 재기에는 영향이 없습니다(빈 블록의 크기 그대로) → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - **접힌 갈래 · 접힌 본문:** "⋯ 블록 n개" 한 줄의 크기(글자 + 2·`space.pad-x`, 글자 + 2·`space.pad-y`)로 잽니다. 자리 잡기에서는 그 갈래(본문)의 자리를 다 채웁니다.
@@ -126,10 +126,10 @@ flowchart LR
 
 | 머리 모양 | 높이 | 최소 폭 |
 | --- | --- | --- |
-| 모양 그대로 (`headStyle: 'shape'`) | `size.hat` + `th` + 2·`space.pad-y` | `tw` + 2·`space.pad-x` + 24px(토큰 없음) |
+| 모양 그대로 (`headStyle: 'shape'`) | `size.hat` + `th` + 2·`space.pad-y` | `tw` + 2·`space.pad-x` + `size.hat-room` |
 | 제목처럼 (`headStyle: 'title'`) | `size.title-tag` + `space.line` + `size.title-gap` = 40px | 딱지와 이름 가운데 넓은 것. 글자는 다이어그램의 왼쪽 선에 맞추므로 `space.pad-x`를 더하지 않음 |
 
-- 다이어그램의 폭은 max(본문의 폭, 머리의 최소 폭, 160px(토큰 없음))입니다. 머리와 본문이 같은 폭을 받습니다.
+- 다이어그램의 폭은 max(본문의 폭, 머리의 최소 폭, `size.diagram-min-w`)입니다. 머리와 본문이 같은 폭을 받습니다.
 - 머리가 없는 다이어그램은 본문만 있습니다.
 - Event의 모자는 왼쪽에 `size.hat-w` 폭으로, Method의 아치는 폭 전체에 걸쳐 솟습니다.
 
@@ -139,9 +139,9 @@ flowchart LR
 
 | 무엇 | 최소 폭 | 최소 높이 | 안쪽 줄의 들임 |
 | --- | --- | --- | --- |
-| 펴진 접기 영역 | max(안쪽 줄의 폭, 띠 글자의 폭 + 여백) | `size.band` + 안쪽 줄의 높이 | `size.nest-inset` |
-| 펴 보인 호출 블록 | max(안쪽 줄의 폭, 띠 글자의 폭 + 여백) | `size.band` + 안쪽 줄의 높이 | `size.peek-inset` |
-| 접힌 접기 영역 | 이름의 폭 + 2·`space.pad-x` + 기호 자리 20px(토큰 없음) | 이름의 높이 + 2·`space.pad-y` + 4px(토큰 없음) | — |
+| 펴진 접기 영역 | max(안쪽 줄의 폭, 띠 글자의 폭 + `size.band-text-x` + `space.pad-x`) | `size.band` + 안쪽 줄의 높이 | `size.nest-inset` |
+| 펴 보인 호출 블록 | max(안쪽 줄의 폭, 띠 글자의 폭 + `size.band-text-x` + `space.pad-x`) | `size.band` + 안쪽 줄의 높이 | `size.peek-inset` |
+| 접힌 접기 영역 | 이름의 폭 + 2·`space.pad-x` + `size.fold-icon-room` | 이름의 높이 + 2·`space.pad-y` + `size.fold-extra-h` | — |
 
 - **들임은 테두리가 있는 자식에만** 줍니다. 안쪽 줄의 보통 블록은 테두리에 붙고(양옆과 아래로 들이지 않음), 테두리가 있는 자식만 양옆과 아래에서 들임만큼 들어갑니다. 그래서 테두리가 겹쳐도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]]
 - **이어진 테두리:** 한 줄에서 테두리가 있는 것 둘이 맞붙으면 그 사이를 띄워 `size.nest-gap`(1px)의 빈 줄이 보이게 합니다. 맞붙은 블록은 경계선 한 줄을 나눠 쓰므로, 높이에는 경계선 1px + 틈 1px = 2px을 더합니다.
@@ -202,7 +202,6 @@ flowchart LR
 ## 미결정 사항
 
 - [ ] 여러 다이어그램: 줄 높이 후보의 범위, Event 무리와 Method 무리 사이의 넓이 → 1.7
-- [ ] 토큰이 없는 값을 토큰으로 할지, 값을 그대로 둘지: 갈래 이름 둘레 18px, If 머리 70px · Case 머리 90px, Event · Method 머리 24px, 다이어그램의 최소 폭 160px, 접힌 접기 영역의 기호 자리 20px · 4px. 모두 프로토타입의 값입니다 → [[04-visual-design#5. 기하와 해부도]]
 - [ ] 굵은 글자: 기본 블록 글꼴은 D2Coding 보통 하나입니다. 굵게 쓰는 곳(호출 블록의 Method 이름, 접기 영역의 이름 띠, "제목처럼" 머리의 이름)은 MVP 뒤로 미뤘으므로([[0034-default-block-font|ADR-0034]]), 그것들을 넣을 때 굵은 글꼴을 더 실을지, 그리는 쪽이 굵게 만든 글자(합성 굵게)로 그릴지 정합니다. 고정폭이라 굵어도 폭은 같다고 셉니다 → 1.2
 - [ ] 번들 글꼴에 없는 글리프(한자, 이모지 등)의 폭을 어떻게 셀지 → [[0034-default-block-font|ADR-0034]], 2장
 - [ ] 저장 파일에 넣는 서브셋 글꼴의 형식: 압축하지 않은 TTF인가, woff2인가 → [[01-file-format#6. 미결정 사항]]

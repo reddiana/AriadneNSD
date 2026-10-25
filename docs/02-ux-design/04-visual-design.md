@@ -280,13 +280,19 @@ flowchart LR
 | `size.block-min-w` | 52px | 블록의 가장 좁은 폭 |
 | `size.loop-strip` | 22px | 반복 블록 왼쪽 띠의 폭 |
 | `size.if-label` / `size.case-label` | 16 / 28px | If · Case 머리 아래 갈래 이름 줄 |
+| `size.if-head-extra` / `size.case-head-extra` | 70 / 90px | If · Case 머리의 최소 폭에서 조건 글자와 양옆 여백에 더하는 폭(빗금이 지나갈 자리) |
+| `size.label-room` | 18px | Case 갈래 하나의 최소 폭에서 갈래 이름의 폭에 더하는 여유 |
 | `size.label-inset` | 6px | 갈래 이름과 블록 구석 사이 |
 | `size.hat` | 16px | Event · Method 머리가 솟은 높이 |
 | `size.hat-w` | min(110px, 폭 × 0.45) | Event 모자의 폭 |
+| `size.hat-room` | 24px | 머리 모양 그대로일 때 머리의 최소 폭에서 이름과 양옆 여백에 더하는 폭 |
+| `size.diagram-min-w` | 160px | 다이어그램의 가장 좁은 폭 |
 | `size.title-tag` | 16px | 머리 모양 "제목처럼"에서 딱지 줄의 높이. 그 아래 이름 줄은 `space.line` |
 | `size.title-gap` | 6px | "제목처럼" 머리에서 이름 줄과 아랫줄 사이. 머리의 높이는 16 + 18 + 6 = 40px. 글자는 다이어그램의 왼쪽 선에 맞춥니다(`space.pad-x` 없음) |
 | `size.call-bar` | 7px | 호출 블록 세로 이중선의 안쪽 거리 |
 | `size.band` | 18px | 이름 띠의 높이 |
+| `size.band-text-x` | 10px | 이름 띠 · 펴 보기 띠의 글자가 왼쪽 끝에서 떨어진 거리 |
+| `size.fold-icon-room` / `size.fold-extra-h` | 20 / 4px | 접힌 접기 영역 칸에서 이름 앞 기호(`▸`)의 자리, 높이에 더하는 여유 |
 | `size.fold-edge` | 3px | 펴진 접기 영역의 테두리 굵기 (M11에서 고른 굵기) |
 | `size.nest-gap` | 1px | 테두리 안에 테두리가 들어갈 때의 틈 |
 | `size.nest-inset` | 4px (= `size.fold-edge` + `size.nest-gap`) | 접기 영역 안에 겹친 테두리가 들어가는 깊이 |
