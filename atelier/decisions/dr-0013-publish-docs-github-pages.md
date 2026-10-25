@@ -11,6 +11,7 @@ superseded-by:
 # DR-0013: 설계 문서는 GitHub Pages 한 사이트에 Quartz로 펴낸다 (docs/ + atelier/)
 
 > [!NOTE] 이후 변경
+> - 2026-10-25: 링크를 공유할 때 보이는 대표 그림(`og:image`)을 Quartz의 기본 그림에서 로고와 문자 로고로 바꿨다(메인테이너: "대표이미지가 Quartz로 나옵니다. 우리는 로고도 있는데!!"). `site/make-og-image.mjs`로 만든 `site/og-image.png`를 빌드가 복사한다
 > - 2026-10-25: `tech-notes/`의 이름이 `til/`(Today I Learned)이 되었다. 제품 고유의 기술로 읽혀서다(메인테이너). 사이트 주소도 `/til/…`이다. 아래 글의 `tech-notes/`는 지금의 `til/`이다 → [[til/README|Today I Learned]]
 > - 2026-10-25: 본문의 `#P0` 같은 태그도 사이트에서 태그 페이지로 가는 링크가 된다(메인테이너: "Quartz 퍼블리싱 페이지는 #P0 같은 태그는 링크를 안 만드나요?"). 두 겹 아래 폴더에서 링크가 사이트 밖으로 나가던 Quartz의 버그는 `site/patch-quartz.mjs`가 고치고, 조사가 붙는 문제는 글 속의 우선순위를 코드 표기(`` `P2` ``)로 쓰는 규칙(CLAUDE.md)으로 피한다. 아래 결정의 "글자로 둔다"는 이제 맞지 않는다 → [[github-pages-site]]
 > - 2026-10-25: `tech-notes/`도 펴낸다(메인테이너: "tech-notes도 github page에 publish해주세요"). 사이트 주소는 `/tech-notes/…`이고, 왼쪽 목록에서 `docs/` · `atelier/` 다음에 둔다. `journal/`은 여전히 펴내지 않는다 → [[github-pages-site]]

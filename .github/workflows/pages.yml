@@ -56,6 +56,7 @@ jobs:
           cp site/quartz.config.ts site/quartz.layout.ts .quartz/
           cp site/custom.scss .quartz/quartz/styles/custom.scss
           cp site/icon.png .quartz/quartz/static/icon.png
+          cp site/og-image.png .quartz/quartz/static/og-image.png   # 링크 공유의 대표 그림 (site/make-og-image.mjs로 만듦)
           node site/prepare-content.mjs . .quartz/content
 
       - name: 설계 문서 빌드

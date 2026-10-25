@@ -24,6 +24,7 @@ node "$REPO/site/patch-quartz.mjs" "$QUARTZ_DIR"
 cp "$REPO/site/quartz.config.ts" "$REPO/site/quartz.layout.ts" "$QUARTZ_DIR/"
 cp "$REPO/site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
 cp "$REPO/site/icon.png" "$QUARTZ_DIR/quartz/static/icon.png"   # 탭 아이콘 (site/make-icon.mjs로 만듦)
+cp "$REPO/site/og-image.png" "$QUARTZ_DIR/quartz/static/og-image.png"   # 링크 공유의 대표 그림 (site/make-og-image.mjs로 만듦)
 node "$REPO/site/prepare-content.mjs" "$REPO" "$QUARTZ_DIR/content"
 
 cd "$QUARTZ_DIR"
