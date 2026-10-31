@@ -8,6 +8,17 @@
 
 NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일은 어디서나 열리는 SVG 그림이면서, 다시 열어 편집할 수 있는 원본입니다.
 
+<p align="center">
+  <img src="journal/assets/2026-10-31-readme-dijkstra.png" width="350" alt="NS 차트 예: 다익스트라 최단 경로">
+  &nbsp;&nbsp;
+  <img src="journal/assets/2026-10-31-readme-merge-sort.png" width="340" alt="NS 차트 예: 병합 정렬">
+</p>
+<p align="center"><sub>프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
+
+> [!TIP]
+> **프로토타입을 브라우저에서 바로 써 볼 수 있습니다:** [AriadneNSD 프로토타입](https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG)
+> 요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.
+
 먼저 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 이 순서로 만듭니다. 그다음 웹 위에 Google Drive 연동을 얹고, 나중에 Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill로 넓힐 예정입니다. 첫 출시(MVP)는 웹입니다.
 
 > [!NOTE]

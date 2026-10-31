@@ -18,7 +18,7 @@ const M41 = [
       ['while', 'pq', [
         'd, u = heappop(pq)',
         ['if', 'd > dist[u]', ['continue'], ['']],
-        ['while', 'for v, w in graph[u]', [
+        ['for', 'for v, w in graph[u]', [
           ['if', 'dist[u] + w < dist[v]',
             ['dist[v] = dist[u] + w', 'prev[v] = u', 'heappush(pq, (dist[v], v))'],
             ['']]
@@ -46,20 +46,18 @@ const M41 = [
       'return False'
     ], 'method']
   ]},
-  { no: 7, name: '병합 정렬', note: '코드식 · 다이어그램 하나. 자기 자신을 두 번 부르고(재귀), 합치는 부분은 이름 붙은 영역으로 묶음', mono: true, list: [
+  { no: 7, name: '병합 정렬', note: '코드식 · 다이어그램 하나. 자기 자신을 두 번 부름(재귀)', mono: true, list: [
     ['merge_sort(a, lo, hi)', [
       ['if', 'hi - lo < 2', ['return'], ['']],
-      'mid = (lo + hi) // 2',
+      'mid = (lo + hi) >> 1',
       ['call', 'merge_sort(a, lo, hi)', 'a, lo, mid'],
       ['call', 'merge_sort(a, lo, hi)', 'a, mid, hi'],
-      ['range', '합치기', [
-        'i, j, tmp = lo, mid, []',
-        ['while', 'i < mid and j < hi', [
-          ['if', 'a[i] <= a[j]', ['tmp.append(a[i])', 'i += 1'], ['tmp.append(a[j])', 'j += 1']]
-        ]],
-        'tmp += a[i:mid] + a[j:hi]',
-        'a[lo:hi] = tmp'
-      ], true]
+      'i, j, tmp = lo, mid, []',
+      ['while', 'i < mid and j < hi', [
+        ['if', 'a[i] <= a[j]', ['tmp.append(a[i])', 'i += 1'], ['tmp.append(a[j])', 'j += 1']]
+      ]],
+      'tmp += a[i:mid] + a[j:hi]',
+      'a[lo:hi] = tmp'
     ], 'method']
   ]},
   { no: 8, name: '이진 탐색 (한 장)', note: '2번에서 main을 빼고 이진 탐색만. 가장 작고 깔끔함', mono: true, list: [
@@ -153,18 +151,6 @@ function m41Load(c) {
   if (c.raft) loadRaftExample(); else loadDiagrams(c.list, c.mono, c.name);
   selectOne(null); render();
 }
-// 빈 갈래의 ∅ (E1: If · Case의 갈래에 빈 블록 하나만 있으면 가운데에, text.muted, 도형으로). 프로토타입에는 아직 없어 이 시안에서만 그린다
-function m41Empty(lay) {
-  const s = [];
-  for (const it of lay.items) {
-    if (it.k !== 'process' || it.text) continue;
-    const e = idx.get(it.id);
-    if (!e || !e.parent || !multi(e.parent) || e.list.length !== 1) continue;
-    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, r = 3.5;
-    s.push(`<g fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"><circle cx="${cx}" cy="${cy}" r="${r}"/><path d="M ${cx - r - 1} ${cy + r + 1} L ${cx + r + 1} ${cy - r - 1}"/></g>`);
-  }
-  return s.join('');
-}
 function m41Gallery() {
   const g = $('#m41cards');
   for (const c of M41) {
@@ -174,7 +160,7 @@ function m41Gallery() {
     const card = document.createElement('section');
     card.className = 'm41card';
     card.innerHTML = `<h2><span class="m41tag">${c.no}</span>${c.name}</h2><p>${c.note}</p>` +
-      `<div class="m41fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lay.W} ${lay.H}" width="${lay.W}" style="max-width:100%;height:auto;background:#fff">${drawSVG(lay, false)}${m41Empty(lay)}</svg></div>` +
+      `<div class="m41fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lay.W} ${lay.H}" width="${lay.W}" style="max-width:100%;height:auto;background:#fff">${drawSVG(lay, false)}</svg></div>` +
       `<button type="button">${c.no}번을 편집기에서 열기</button>`;
     card.querySelector('button').onclick = () => { $('#m41').hidden = true; m41Load(c); stage.focus({ preventScroll: true }); };
     g.appendChild(card);
@@ -183,13 +169,24 @@ function m41Gallery() {
   $('#m41back').onclick = () => { $('#m41').hidden = false; };
 }
 m41Gallery();
+{
+  const m = /shot=(\d+)/.exec(location.hash);
+  const c = m && M41.find(x => x.no === +m[1]);
+  if (c) {
+    m41Load(c);
+    const lay = layout();
+    document.body.innerHTML = `<svg id="shot" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lay.W} ${lay.H}" width="${lay.W}" height="${lay.H}" style="display:block;background:#fff">${drawSVG(lay, false)}</svg>`;
+    document.body.style.cssText = 'margin:0;background:#fff';
+    window.SHOT = { w: lay.W, h: lay.H };
+  }
+}
 """
 
 OVERLAY = """
 <div id="m41">
   <header>
     <h1>M41 README 그림 후보</h1>
-    <p>저장소 첫 화면(README)의 소개 아래에 넣을 다이어그램 그림의 후보입니다. 그림은 프로토타입(M01)의 그리는 코드로 그렸고, 고른 것을 2배 해상도 PNG로 찍어 넣습니다. 번호로 골라 주세요. 글자를 바꾸거나 두 후보를 섞으셔도 됩니다. 5 ~ 8번은 “알고리즘이 좋고, 한 곳에서만 쓰이는 Method는 별로”를 받고 더한 것입니다(다이어그램이 하나이거나, Method가 두 곳 이상에서 불림). 프로토타입에 For 블록이 아직 없어 for 반복은 While로 그렸습니다. 빈 갈래의 ∅(E1)는 프로토타입에 아직 없어 이 시안의 그림에만 더했습니다(편집기에서 열면 보이지 않음).</p>
+    <p>저장소 첫 화면(README)의 소개 아래에 넣을 다이어그램 그림의 후보입니다. 그림은 프로토타입(M01)의 그리는 코드로 그렸고, 고른 것을 2배 해상도 PNG로 찍어 넣습니다. 번호로 골라 주세요. 글자를 바꾸거나 두 후보를 섞으셔도 됩니다. 5 ~ 8번은 “알고리즘이 좋고, 한 곳에서만 쓰이는 Method는 별로”를 받고 더한 것입니다(다이어그램이 하나이거나, Method가 두 곳 이상에서 불림).  5번의 안쪽 반복은 62번째 판의 For 블록으로 그렸습니다.</p>
   </header>
   <div id="m41cards"></div>
 </div>
