@@ -52,7 +52,7 @@ body[data-slug="index"] article {
     background: none;
     padding: 0;
     img {
-      margin: 0;
+      margin: 4px 0; // 위아래 줄과 조금만 띄운다 (Quartz는 그림 위아래에 1rem을 둔다)
       vertical-align: middle;
       border-radius: 16px;
     }

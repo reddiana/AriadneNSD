@@ -16,10 +16,8 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 <p align="center"><sub>프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
 
 > [!TIP]
-> **프로토타입을 브라우저에서 바로 써 볼 수 있습니다:**
->
-> <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG" target="_blank" rel="noopener"><img src="journal/assets/2026-10-31-readme-prototype-button.svg" height="32" alt="AriadneNSD 프로토타입" align="absmiddle"></a>
->
+> **프로토타입을 브라우저에서 바로 써 볼 수 있습니다:**<br>
+> <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG" target="_blank" rel="noopener"><img src="journal/assets/2026-10-31-readme-prototype-button.svg" height="32" alt="AriadneNSD 프로토타입" align="absmiddle"></a><br>
 > 프로토타입은 요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.
 
 먼저 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 이 순서로 만듭니다. 그다음 웹 위에 Google Drive 연동을 얹고, 나중에 Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill로 넓힐 예정입니다. 첫 출시(MVP)는 웹입니다.
@@ -60,7 +58,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐습니다. 무엇과 무엇을 견주었고 왜 그것을 골랐는지가 페이지마다 적혀 있습니다. 누구나 열어 볼 수 있습니다.
 
-- [프로토타입](https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG): 요구사항이 맞는지 써 보려고 만든 것입니다. 블록을 넣고, 감싸고, 접어 볼 수 있습니다. 제품이 아니고 버릴 코드입니다
+- <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG" target="_blank" rel="noopener">프로토타입</a>: 요구사항이 맞는지 써 보려고 만든 것입니다. 블록을 넣고, 감싸고, 접어 볼 수 있습니다. 제품이 아니고 버릴 코드입니다
 - 시안과 스파이크 전체의 목록: [`atelier/sketchbook.md`](atelier/sketchbook.md)
 
 시안과 스파이크 페이지의 글과 그림은 CC BY 4.0, 프로토타입은 Apache-2.0입니다(아래 [라이선스](#라이선스)). 같은 파일이 [`journal/assets/`](journal/assets/)에 있습니다.
