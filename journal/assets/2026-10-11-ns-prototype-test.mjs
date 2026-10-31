@@ -813,7 +813,7 @@ await ev(`T.cmd('exCode')`);
   check('62: Event는 왼쪽, Method는 오른쪽, 사이는 88px 넘게', mL - evR >= 87, { evR, mL });
   const vb = (await ev(`document.querySelector('#svg').getAttribute('viewBox')`)).split(' ').map(Number);
   check('62: 그림의 가로 : 세로가 16 : 10 가까이', vb[2] / vb[3] > 1.2 && vb[2] / vb[3] < 2.1, vb);
-  check('62: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '62번째 판', await ev(`document.querySelector('#edition').textContent`));
+  check('63: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '63번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
 // 62번째 판: M41의 예제 일곱 ("더 보기…")
@@ -828,6 +828,30 @@ await ev(`T.cmd('exCode')`);
     const calls = await ev(`T.calls(T.doc()).every(c => !!c.target)`);
     check(`62: 예제 ${no}: 다이어그램 ${want[no]}개, 호출은 모두 이어짐`, d.diagrams.length === want[no] && calls, { n: d.diagrams.length, calls });
   }
+}
+
+// 63번째 판: 주소 끝의 이름으로 예제 열기 (#dijkstra, #merge-sort)
+{
+  const waitMsg = async re => { for (let i = 0; i < 20; i++) { const m = await ev(`T.msg()`); if (re.test(m)) return m; await sleep(100); } return await ev(`T.msg()`); };
+  await ev(`location.hash = 'dijkstra'`);
+  let m = await waitMsg(/5번/);
+  let d = await ev(`T.doc()`);
+  check('63: #dijkstra로 5번 예제가 제목처럼으로 열림', /5번 예제/.test(m) && d.diagrams.length === 1 && d.settings?.headStyle === 'title', { m, n: d.diagrams.length, s: d.settings });
+  await ev(`location.hash = 'merge-sort'`);
+  m = await waitMsg(/7번/);
+  d = await ev(`T.doc()`);
+  check('63: #merge-sort로 7번 예제가 열림', /7번 예제/.test(m) && d.diagrams.length === 1 && d.settings?.headStyle === 'title', { m, s: d.settings });
+  const before = JSON.stringify(await ev(`T.doc()`));
+  await ev(`location.hash = 'nothing-here'`);
+  await sleep(300);
+  check('63: 모르는 이름이면 문서를 그대로 둠', JSON.stringify(await ev(`T.doc()`)) === before);
+  // 처음 열 때 주소에 이름이 있으면 지난 상태 대신 그 예제
+  await send('Page.navigate', { url: page.split('#')[0] + (page.includes('?') ? '&' : '?') + 'h=1#dijkstra' });
+  await sleep(2500);
+  await ev(HELPERS);
+  m = await ev(`T.msg()`);
+  d = await ev(`T.doc()`);
+  check('63: 주소에 #dijkstra를 달고 열면 그 예제로 시작', /5번 예제/.test(m) && d.settings?.headStyle === 'title' && (await ev(`document.querySelector('#optHead').value`)) === 'title', { m, s: d.settings });
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);
