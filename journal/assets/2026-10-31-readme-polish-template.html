@@ -52,6 +52,12 @@ section { display: grid; gap: 14px; }
 .cta span.btn { display: inline-flex; align-items: center; gap: 8px; background: var(--s-sec); color: var(--s-bg); font-weight: 700; font-size: 13px; padding: 8px 18px; border-radius: 999px; }
 .cta span.btn small { font-weight: 400; opacity: .85; font-size: 11px; }
 .cta.top { margin: 0 0 12px; }
+/* M41의 카드 버튼: 옅은 채움, 가는 테두리, 모서리 6px, 보통 굵기 */
+.cta span.m41 { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 400; }
+.cta span.m41.blue { background: #e4eafb; border: 1px solid #d4dbe6; color: #1c2230; }
+.site-dark .cta span.m41.blue { background: #232c45; border-color: #2b313c; color: #e5e8ee; }
+.cta span.m41.site { background: color-mix(in srgb, var(--s-sec) 12%, var(--s-bg)); border: 1px solid color-mix(in srgb, var(--s-sec) 30%, var(--s-bg)); color: var(--s-dark); }
+.cta span.m41 b { font-weight: 600; }
 
 .note { font-size: .9rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; max-width: 80ch; }
 </style>
@@ -78,7 +84,7 @@ section { display: grid; gap: 14px; }
         <p class="why">밝은 테마에서는 바탕(#faf8f8)과 흰 그림의 경계가 흐릿하게 어긋나고, 어두운 테마에서는 흰 네모가 떠 보입니다.</p>
       </div>
       <div class="opt">
-        <h3><span class="num">가2</span> 종이 카드 <span class="rec">추천</span></h3>
+        <h3><span class="num">가2</span> 종이 카드 <span class="rec">골랐음</span></h3>
         <div class="scene b-card">{{IMGS}}</div>
         <p class="why">흰 바탕에 여백·옅은 테두리·둥근 모서리·그림자를 주어 "종이 한 장"으로 보이게 합니다. 두 테마 모두 일부러 둔 흰색으로 읽힙니다. NS 차트의 색은 그대로입니다.</p>
       </div>
@@ -114,6 +120,30 @@ section { display: grid; gap: 14px; }
       </div>
     </div>
     <p class="note">버튼을 GitHub에서도 같은 모양으로 보이게 하려면 버튼을 SVG 그림으로 만들어 링크로 감쌉니다(GitHub은 README의 꾸밈을 지우기 때문). 그림 버튼 하나를 밝은·어두운 화면에 함께 쓰도록 짙은 남색 바탕에 흰 글자로 만듭니다.</p>
+  </section>
+  <section>
+    <div>
+      <h2>(나) 다시: M41의 버튼처럼</h2>
+      <p class="lead">M41 후보 카드의 버튼(옅은 채움, 가는 테두리, 모서리 6px, 보통 굵기)을 옮겼습니다. 앞의 나2·나3보다 조용합니다. 그림 바탕은 고른 가2입니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">나4</span> M41의 색 그대로, 그림 아래</h3>
+        <div class="scene b-card">{{IMGS}}<div class="cta"><span class="m41 blue">프로토타입에서 <b>써 보기</b> →</span></div><div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">M41과 똑같은 파란 기운의 버튼입니다. 사이트의 남색·청록과는 색이 조금 따로 놉니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나5</span> 사이트의 색으로, 그림 아래 <span class="rec">추천</span></h3>
+        <div class="scene b-card">{{IMGS}}<div class="cta"><span class="m41 site">프로토타입에서 <b>써 보기</b> →</span></div><div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">모양은 M41, 색은 사이트의 남색(링크 색)을 옅게 씁니다. 페이지와 어울리면서 버튼으로 보입니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나6</span> 사이트의 색으로, 맨 위</h3>
+        <div class="scene b-card"><div class="cta top"><span class="m41 site">프로토타입에서 <b>써 보기</b> →</span></div>{{IMGS}}<div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다.</div></div>
+        <p class="why">나5를 문자 로고 바로 아래로 올렸습니다. 조용한 버튼이라 맨 위에 두어도 광고처럼 보이지 않습니다.</p>
+      </div>
+    </div>
+    <p class="note">사이트에서는 README의 링크에 버튼 꾸밈을 입힙니다(<code>site/custom.scss</code>). GitHub에서는 꾸밈이 지워지므로, 같은 모양을 보이려면 버튼을 SVG 그림으로 만들어 링크로 감쌉니다.</p>
   </section>
 </main>
 
