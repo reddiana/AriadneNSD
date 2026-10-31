@@ -26,6 +26,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 - [[keyboard-keys-and-ime]] — 키보드 입력 읽기: 글자(`key`)와 자리(`code`), 한글 입력기와 조합, 두 번 누르는 키, 브라우저가 가져가는 키 (2026-10-13)
 - [[browser-storage-and-api-keys]] — 브라우저 저장소와 API 키: 서버 없는 페이지에서 AI를 부르는 법, 저장소를 읽을 수 있는 것은 누구인가, CORS (2026-10-14)
 - [[theme-aware-images]] — 테마에 따라 그림 바꾸기와 그 한계: `prefers-color-scheme`은 운영체제를 본다, GitHub의 스크립트, 브라우저 콘솔로 페이지 상태 읽기 (2026-10-11)
+- [[viewport-meta]] — 휴대폰이 페이지를 980px로 그리는 까닭: `viewport` 메타 태그 한 줄이 없으면 좁은 화면 CSS가 듣지 않는다 (2026-11-01)
 
 ### 그림과 글자
 
