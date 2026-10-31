@@ -122,6 +122,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <button data-cmd="exCase">Case</button>
       <button data-cmd="exQuick" title="다이어그램 둘: quicksort와 partition">퀵소트</button>
       <button data-cmd="exRaft" title="다이어그램 열: 이벤트 처리기 일곱과 Method 셋">Raft</button>
+      <select id="exMore" title="README 그림 후보(시안 M41)의 예제"><option value="">더 보기…</option></select>
     </div>
     <div class="grp">
       <span class="lbl" title="고른 블록 뒤에 넣습니다. Shift를 누른 채 클릭하면 앞에 넣습니다">뒤에 넣기</span>
@@ -222,6 +223,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       <h2>이번에 바뀐 것 (10-31, 62번째 판)</h2>
       <ul>
         <li><b>2026-10-18 · 10-25에 정하고 넣지 못한 것을 모두 넣었습니다.</b></li>
+        <li><b>예제를 더했습니다:</b> 위 "예제"의 "더 보기…"에서 자판기, 이진 탐색, 엘리베이터, 다익스트라, 미로 찾기, 병합 정렬, 이진 탐색(한 장)을 고릅니다(시안 M41의 후보들).</li>
         <li><b>For 블록:</b> While과 같은 모양이고 머리의 글자로 가릅니다. 넣기 <kbd>a</kbd> <kbd>f</kbd> · <kbd>A</kbd> <kbd>f</kbd>, 감싸기 <kbd>s</kbd> <kbd>f</kbd>. <kbd>f</kbd>만 누르면 그대로 접기 · 펴기입니다.</li>
         <li><b>빈 갈래의 ∅:</b> If · Case의 갈래에 빈 블록 하나만 있으면 가운데에 ∅가 보입니다.</li>
         <li><b>If 갈래의 이름을 고칩니다:</b> <kbd>Shift</kbd>+<kbd>L</kbd>이나 갈래 이름 더블클릭. 비우면 "참" · "거짓"으로 돌아갑니다.</li>
@@ -2282,6 +2284,150 @@ function loadRaftExample() {
     ], 'method']
   ], false, 'Raft 예제: 이벤트 처리기 일곱과 Method 셋');
 }
+
+// 시안 M41(README 그림 후보)의 예제. 번호는 M41의 번호 (62번째 판, 2026-10-31)
+const MORE = [
+  { no: 5, name: '다익스트라 최단 경로', note: '코드식 · 다이어그램 하나 · 겹친 While · If 둘. 교과서 알고리즘 가운데 크기와 모양이 NS 차트에 잘 맞음', mono: true, list: [
+    ['dijkstra(graph, s)', [
+      'dist = {v: INF for v in graph}',
+      'dist[s] = 0',
+      'pq = [(0, s)]',
+      ['while', 'pq', [
+        'd, u = heappop(pq)',
+        ['if', 'd > dist[u]', ['continue'], ['']],
+        ['for', 'for v, w in graph[u]', [
+          ['if', 'dist[u] + w < dist[v]',
+            ['dist[v] = dist[u] + w', 'prev[v] = u', 'heappush(pq, (dist[v], v))'],
+            ['']]
+        ]]
+      ]],
+      'return dist, prev'
+    ], 'method']
+  ]},
+  { no: 6, name: '미로 찾기 (아리아드네의 실)', note: '코드식 · Event 하나와 Method 하나. solve는 main과 자기 자신, 두 곳에서 불림(재귀). 실을 풀고 감는 되추적이 제품 이름의 이야기와 이어짐', mono: true, list: [
+    ['main()', [
+      'maze = read_maze()',
+      ['call', 'solve(maze, p)', 'maze, maze.entrance', 'found'],
+      ['if', 'found', ['draw_thread(path)'], ['print("출구 없음")']]
+    ]],
+    ['solve(maze, p)', [
+      ['if', 'p == maze.exit', ['return True'], ['']],
+      ['if', 'maze.wall(p) or p in visited', ['return False'], ['']],
+      'visited.add(p)',
+      'path.append(p)    # 실을 푼다',
+      ['while', 'for d in (N, E, S, W)', [
+        ['call', 'solve(maze, p)', 'maze, p + d', 'ok'],
+        ['if', 'ok', ['return True'], ['']]
+      ]],
+      'path.pop()        # 실을 감는다',
+      'return False'
+    ], 'method']
+  ]},
+  { no: 7, name: '병합 정렬', note: '코드식 · 다이어그램 하나. 자기 자신을 두 번 부름(재귀)', mono: true, list: [
+    ['merge_sort(a, lo, hi)', [
+      ['if', 'hi - lo < 2', ['return'], ['']],
+      'mid = (lo + hi) >> 1',
+      ['call', 'merge_sort(a, lo, hi)', 'a, lo, mid'],
+      ['call', 'merge_sort(a, lo, hi)', 'a, mid, hi'],
+      'i, j, tmp = lo, mid, []',
+      ['while', 'i < mid and j < hi', [
+        ['if', 'a[i] <= a[j]', ['tmp.append(a[i])', 'i += 1'], ['tmp.append(a[j])', 'j += 1']]
+      ]],
+      'tmp += a[i:mid] + a[j:hi]',
+      'a[lo:hi] = tmp'
+    ], 'method']
+  ]},
+  { no: 8, name: '이진 탐색 (한 장)', note: '2번에서 main을 빼고 이진 탐색만. 가장 작고 깔끔함', mono: true, list: [
+    ['binary_search(a, key)', [
+      'lo, hi = 0, len(a) - 1',
+      ['while', 'lo <= hi', [
+        'mid = (lo + hi) // 2',
+        ['if', 'a[mid] == key', ['return mid'], [
+          ['if', 'a[mid] < key', ['lo = mid + 1'], ['hi = mid - 1']]
+        ]]
+      ]],
+      'return -1'
+    ], 'method']
+  ]},
+  { no: 1, name: '자판기', note: '문장식 · Event 둘과 Method 하나 · Case · If · While · 호출. 누구나 아는 장면이라 처음 보는 사람도 읽힘', mono: false, list: [
+    ['동전이 들어오면', [
+      '동전의 종류를 알아본다',
+      ['if', '받는 동전인가?',
+        ['잔액에 동전의 값을 더한다', '잔액을 화면에 보인다', ['call', '살 수 있는 음료에 불을 켠다']],
+        ['동전을 반환구로 돌려보낸다']]
+    ]],
+    ['음료 버튼을 누르면', [
+      ['case', '고른 음료', [
+        ['커피', ['값 = 1,200원']],
+        ['녹차', ['값 = 1,000원']],
+        ['생수', ['값 = 800원']],
+        ['default', ['알림음을 낸다', '끝낸다']]
+      ]],
+      ['if', '잔액 ≥ 값?',
+        ['음료를 내보낸다', '잔액에서 값을 뺀다',
+          ['while', '잔액 > 0', ['가장 큰 동전으로 거스름을 낸다', '잔액에서 그 동전의 값을 뺀다']],
+          '화면을 처음으로 되돌린다'],
+        ['"잔액이 모자랍니다"를 보인다']]
+    ]],
+    ['살 수 있는 음료에 불을 켠다', [
+      ['while', '버튼마다', [
+        ['if', '값 ≤ 잔액이고 재고가 있는가?', ['버튼의 불을 켠다'], ['버튼의 불을 끈다']]
+      ]]
+    ], 'method']
+  ]},
+  { no: 2, name: '이진 탐색', note: '코드식(C) · Event 하나와 Method 하나 · Do-While · While · 겹친 If · 결과를 받는 호출. 개발자에게 익숙하고 작음', mono: true, list: [
+    ['main()', [
+      'int a[] = {2, 3, 5, 7, 11, 13, 17};',
+      ['dowhile', 'key != 0', [
+        'key = read_int();',
+        ['call', 'binary_search(a, n, key)', 'a, 7, key', 'i'],
+        ['if', 'i >= 0', ['printf("%d번째\\n", i);'], ['printf("없음\\n");']]
+      ]]
+    ]],
+    ['binary_search(a, n, key)', [
+      'lo = 0;',
+      'hi = n - 1;',
+      ['while', 'lo <= hi', [
+        'mid = lo + (hi - lo) / 2;',
+        ['if', 'a[mid] == key', ['return mid;'], [
+          ['if', 'a[mid] < key', ['lo = mid + 1;'], ['hi = mid - 1;']]
+        ]]
+      ]],
+      'return -1;'
+    ], 'method']
+  ]},
+  { no: 3, name: '엘리베이터', note: '문장식 · Event 둘과 Method 하나 · 갈래 넷의 Case · 이름 붙은 영역 · While · 호출 둘. 가장 넓고 볼거리가 많음', mono: false, list: [
+    ['층 버튼이 눌리면', [
+      '눌린 층을 요청 목록에 더한다',
+      '버튼에 불을 켠다',
+      ['if', '엘리베이터가 서 있는가?', [['call', '다음 행선지를 정한다']], ['']]
+    ]],
+    ['제어 주기마다 (100ms)', [
+      ['case', '상태', [
+        ['올라감', [['if', '행선지에 닿았는가?', ['멈춘다', '상태 = 문 열림'], ['한 층 올라간다']]]],
+        ['내려감', [['if', '행선지에 닿았는가?', ['멈춘다', '상태 = 문 열림'], ['한 층 내려간다']]]],
+        ['문 열림', [
+          ['range', '문 열고 닫기', ['문을 연다', '3초 기다린다',
+            ['while', '문 사이에 사람이 있는 동안', ['1초 더 기다린다']], '문을 닫는다'], true],
+          '이 층의 요청을 지운다',
+          ['call', '다음 행선지를 정한다']]],
+        ['서 있음', ['']]
+      ]]
+    ]],
+    ['다음 행선지를 정한다', [
+      ['if', '요청 목록이 비었는가?', ['상태 = 서 있음'], [
+        '진행 방향에서 가장 가까운 요청을 고른다',
+        ['if', '행선지 > 지금 층?', ['상태 = 올라감'], ['상태 = 내려감']]
+      ]]
+    ], 'method']
+  ]},
+];
+function loadMore(no) {
+  const c = MORE.find(x => x.no === +no);
+  if (c) loadDiagrams(c.list, c.mono, `M41 ${c.no}번 예제: ${c.name}`);
+}
+[...MORE].sort((x, y) => x.no - y.no).forEach(c => { const o = document.createElement('option'); o.value = c.no; o.textContent = `${c.no}. ${c.name}`; $('#exMore').appendChild(o); });
+$('#exMore').addEventListener('change', e => { const v = e.target.value; e.target.value = ''; if (v) { if (editing) commitEdit(false); loadMore(v); stage.focus({ preventScroll: true }); } });
 
 /* ---------- 저장 (이 브라우저에만) ---------- */
 function save() { try { localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc, opts })); } catch (e) {} }

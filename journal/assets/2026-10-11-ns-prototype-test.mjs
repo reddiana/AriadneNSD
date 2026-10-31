@@ -816,6 +816,20 @@ await ev(`T.cmd('exCode')`);
   check('62: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '62번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
+// 62번째 판: M41의 예제 일곱 ("더 보기…")
+{
+  const opts = await ev(`[...document.querySelectorAll('#exMore option')].map(o => o.value).filter(Boolean)`);
+  check('62: 더 보기에 예제 일곱', opts.join() === '1,2,3,5,6,7,8', opts);
+  const want = { 1: 3, 2: 2, 3: 3, 5: 1, 6: 2, 7: 1, 8: 1 };
+  for (const no of opts) {
+    await ev(`{ const o = document.querySelector('#exMore'); o.value = '${no}'; o.dispatchEvent(new Event('change')); }`);
+    const d = await ev(`T.doc()`);
+    const linked = T => T;
+    const calls = await ev(`T.calls(T.doc()).every(c => !!c.target)`);
+    check(`62: 예제 ${no}: 다이어그램 ${want[no]}개, 호출은 모두 이어짐`, d.diagrams.length === want[no] && calls, { n: d.diagrams.length, calls });
+  }
+}
+
 check('스크립트 오류 없음', errors.length === 0, errors);
 console.log(results.filter(r => r.ok).length + ' / ' + results.length + ' 통과');
 ws.close(); chrome.kill(); process.exit(0);
