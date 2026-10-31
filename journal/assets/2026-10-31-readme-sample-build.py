@@ -174,6 +174,8 @@ m41Gallery();
   const c = m && M41.find(x => x.no === +m[1]);
   if (c) {
     m41Load(c);
+    // #shot=번호&title: 머리 모양 "제목처럼"으로 찍는다 (README 그림, 2026-10-31)
+    if (/[&#]title(&|$)/.test(location.hash)) doc.settings = { headStyle: 'title' };
     const lay = layout();
     document.body.innerHTML = `<svg id="shot" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lay.W} ${lay.H}" width="${lay.W}" height="${lay.H}" style="display:block;background:#fff">${drawSVG(lay, false)}</svg>`;
     document.body.style.cssText = 'margin:0;background:#fff';

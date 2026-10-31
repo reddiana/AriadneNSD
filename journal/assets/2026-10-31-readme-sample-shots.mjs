@@ -1,5 +1,5 @@
 // README 첫 화면의 다이어그램 그림을 M41 시안(프로토타입의 그리는 코드)에서 2배 해상도 PNG로 찍는다
-// 쓰는 법: node 2026-10-31-readme-sample-shots.mjs file:///…/2026-10-31-readme-sample-study.html <그림을 둘 폴더> 5 7
+// 쓰는 법: [TITLE=1] node 2026-10-31-readme-sample-shots.mjs file:///…/2026-10-31-readme-sample-study.html <그림을 둘 폴더> 5 7
 // 시안 주소에 #shot=번호를 붙이면 그 후보의 그림만 흰 바탕에 그린다. 웹 글꼴을 기다리느라 스크립트가 늦을 수 있어 넉넉히 기다린다
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync } from 'node:fs';
@@ -29,11 +29,12 @@ const ev = async expr => { const r = await send('Runtime.evaluate', { expression
 
 await send('Page.enable'); await send('Runtime.enable');
 for (const no of nos) {
-  await send('Page.navigate', { url: `${page}#shot=${no}` });
-  await send('Page.reload', { ignoreCache: true });
+  // 찍을 때마다 새 문서로 연다 (# 뒤만 바꾸면 앞 상태가 남는다)
+  await send('Page.navigate', { url: `${page}?n=${no}-${Date.now()}#shot=${no}${process.env.TITLE ? '&title' : ''}` });
   let size = null;
   for (let i = 0; i < 40 && !size; i++) { await sleep(250); size = await ev('window.SHOT || null'); }
   if (!size) throw new Error('no shot ' + no);
+  console.log(no, await ev(`location.hash + ' ' + (document.querySelector('#shot text')?.textContent || '')`));
   await ev('document.fonts.ready.then(() => true)');
   await send('Emulation.setDeviceMetricsOverride', { width: size.w, height: size.h, deviceScaleFactor: 2, mobile: false });
   await sleep(300);
