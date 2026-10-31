@@ -18,6 +18,7 @@ updated: 2026-10-25
 | [[dr-0001-split-decision-records\|0001]] | 아키텍처가 아닌 결정은 ADR과 나눠 결정 기록(DR)으로 적는다 | 승인 | |
 | [[dr-0012-decisions-in-atelier\|0012]] | 결정의 원본은 모두 `atelier/`에. 작은 UX 결정은 UX 결정 모음 하나에 | 승인 | |
 | [[dr-0016-requirement-ids\|0016]] | 요구사항은 모두 `R-` ID(`R-WEB-02`)를 받아 표에, ID는 불변, 철회한 것은 변경 기록으로 | 승인 | |
+| [[dr-0017-code-language-and-commits\|0017]] | 코드의 주석은 영어, 커밋은 Conventional Commits에 한국어 본문, 코딩 가이드는 `docs/07-coding-guide` | 승인 | |
 
 ### 일하는 순서
 
@@ -52,6 +53,6 @@ updated: 2026-10-25
 | [[dr-0010-study-pages-cc-by\|0010]] | 시안과 스파이크 페이지는 글로 보아 CC BY 4.0으로 공개한다 (프로토타입과 스크립트는 Apache-2.0 그대로) | 승인 | ADR-0027 |
 | [[dr-0011-repo-name\|0011]] | GitHub 저장소 이름은 `AriadneNSD`로 한다 (패키지 · 플러그인 id는 `ariadne-nsd` 그대로) | 승인 | ADR-0028 |
 
-새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0017부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
+새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0018부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
 상태(ADR · DR 같음): **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**
