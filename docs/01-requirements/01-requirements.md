@@ -239,6 +239,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-EDIT-21 | 도움말: 사용법과 단축키를 한 페이지로 안내한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상)                                | #P0  |
 | R-EDIT-22 | 여러 블록 선택은 언제나 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다 → [[0008-contiguous-selection\|ADR-0008]]                                                                      | #P0  |
 | R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]]                                                                                                        | #P1  |
+| R-EDIT-24 | 명령 찾기: 명령 이름의 일부를 쳐서 명령을 찾아 실행한다(VS Code의 Command Palette, IntelliJ의 Find Action). 찾은 명령마다 같은 일을 하는 키를 함께 보인다 → 상세 [[02-interaction-rules#명령 찾기\|명령 찾기]] | #P0 |
 
 ^r-edit
 
@@ -350,6 +351,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 - 작성 중인 내용의 임시 보관, 자동 저장 · 최근 파일 ([[#^r-web|R-WEB-03]], [[#^r-exp|R-EXP-04]])
 - PNG 내보내기
 - 도움말 ([[#^r-edit|R-EDIT-21]])
+- 명령 찾기 ([[#^r-edit|R-EDIT-24]])
 - 배포 대상: 웹 ([[dr-0002-development-order|DR-0002]]에서 정한 첫 번째 대상)
 
 MVP 다음 판들로 미룬 것: Event · Method 머리, 호출 블록, 한 문서에 여러 다이어그램, Method로 빼기, 접기, 블록 글자의 종류와 구문 강조, 테마 고르기.

@@ -274,7 +274,7 @@ MVP에 드는 조작의 미결정을 한 번에 정했다(메인테이너: "mvp 
 
 ## 11. 웹 화면 (2026-11-01)
 
-웹 버전(MVP)의 화면을 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)에서 하나씩 묻고 있다. 남은 물음(W3 · W3-b · W4 · W5)은 [[06-web#미결정 사항]]에 있다.
+웹 버전(MVP)의 화면을 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)에서 하나씩 물어 W1 ~ W6을 모두 정했다(2026-11-01).
 
 ### W1. 웹 화면의 배치
 
@@ -299,4 +299,8 @@ MVP에 드는 조작의 미결정을 한 번에 정했다(메인테이너: "mvp 
 ### W5. 설정
 
 **정함 (2026-11-01): 2번 문서 설정(다이어그램 메뉴)과 환경 설정(파일 메뉴)을 창 둘로 나눔.** Claude의 추천은 1번(VS Code · IntelliJ처럼 창 하나에 "사용자 · 이 문서" 탭)이었다. 메인테이너는 값이 어디에 저장되는지가 창으로 갈리는 2번을 골랐다. 환경 설정의 키 `Ctrl`+`,`(VS Code와 같음)는 Claude가 붙였다. 지금의 규칙 → [[06-web#7. 화면 배치]]
+
+### W6. 명령 찾기
+
+**정함 (2026-11-01): 둔다, MVP에 넣음.** 메인테이너가 "VSCode나 IntelliJ 같은 IDE를 참고해봅시다"라고 해 Claude가 IDE의 Command Palette · Find Action을 새 물음으로 더했다. 요구사항에 없어 [[01-requirements#^r-edit|R-EDIT-24]]를 `P0`으로 더했다 → [[dr-0015-mvp-scope|DR-0015]]의 이후 변경. 키 `Ctrl`+`Shift`+`P` · `F1`(VS Code와 같음), 고른 것에 듣지 않는 명령은 흐리게, 최근 명령이 위, Obsidian은 Obsidian의 명령 팔레트로는 Claude가 정했다. 지금의 규칙 → [[02-interaction-rules#명령 찾기]]
 

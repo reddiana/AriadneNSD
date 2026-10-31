@@ -95,6 +95,7 @@ updated: 2026-11-01
 	- **다이어그램 › 문서 설정…**: 파일에 저장되는 것(블록 글자의 종류, 머리 모양, 결과 기호, 테마). 바꾸면 실행 취소의 대상이고, 파일을 받은 다른 사람에게도 같게 보인다. 모델의 `settings` → [[01-model]]
 	- **파일 › 환경 설정…**(`Ctrl`+`,`): 나에게만, 이 브라우저에 남는 것(화면 언어, 자동 저장, 키 안내, 고정폭 글꼴). 셸의 `SettingsStore`
 	- **보기** 메뉴: 확대 · 축소, 접기 영역 보기처럼 그 자리에서 켜고 끄는 보기 상태
+- **명령 찾기**([[01-requirements#^r-edit|R-EDIT-24]]): `Ctrl`+`Shift`+`P` · `F1`로 편집 화면 위쪽 가운데에 여는 창. 규칙 → [[02-interaction-rules#명령 찾기]], [[ux-decisions#W6. 명령 찾기|W6]]
 - **도움말**([[01-requirements#^r-edit|R-EDIT-21]]): 도움말 메뉴에 "사용법"(새 탭으로 여는 한 페이지, 펴낸 사이트의 `/manual/`. 본보기는 SequenceDiagram.org의 Instructions), "단축키 한눈에"(`?` 키로 편집 화면 위에 키 표 겹창, `Esc`로 닫음), "이 판에서 바뀐 것", "AriadneNSD에 대하여". VS Code · IntelliJ도 문서는 브라우저로, 단축키는 따로 한 장으로 보인다 → [[ux-decisions#W4. 도움말|W4]]
 - **캔버스**가 나머지를 모두 쓴다. 노트북 브라우저(1366 × 657)에서 다이어그램에 남는 칸은 1366 × 593(세로 90%)이다.
 - **좁은 화면**(폭 860px 이하): 메뉴는 ☰ 하나로 접고, 블록 아이콘 줄은 남긴다. 되돌리기 · 다시 · 감싸기 · 도움말은 화면 아래 줄로 내린다 → [[ux-decisions#MB1. 좁은 화면|MB1]]
@@ -103,7 +104,4 @@ updated: 2026-11-01
 
 ## 미결정 사항
 
-아래 물음의 견준 안은 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)에 있습니다.
-
-> [!question] 미결정
-> - **W6. 명령 찾기 창:** VS Code의 Command Palette · IntelliJ의 Find Action처럼 명령 이름을 쳐서 찾는 창(`Ctrl`+`Shift`+`P`)을 둘지. 요구사항에 없어, 둔다면 요구사항을 더한다.
+아직 없음. 웹 화면의 물음(W1 ~ W6)은 2026-11-01에 모두 정했습니다 → [[ux-decisions#11. 웹 화면 (2026-11-01)]]
