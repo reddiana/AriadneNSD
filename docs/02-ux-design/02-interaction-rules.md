@@ -373,7 +373,7 @@ updated: 2026-11-01
 
 ## 8. 문제 알리기 보고서
 
-요구사항: [[01-requirements#^r-rep|R-REP-01]]
+요구사항: [[01-requirements#^r-rep|R-REP-01]], [[01-requirements#^r-rep|R-REP-04]]
 
 - 보내기 전에 도움말·자주 묻는 질문을 먼저 보여 준다
 - 공개: GitHub Discussions에 올린다. 양식으로 거른다 (재현 단계 필수, "도움말을 확인했음" 체크). 이슈는 메인테이너가 진짜 버그만 골라 만든다

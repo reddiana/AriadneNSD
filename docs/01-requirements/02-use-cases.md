@@ -344,7 +344,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 - 1a. 예상하지 못한 오류가 나면 편집기가 먼저 "이 문제를 알리시겠어요?"를 묻는다
 
-**요구사항:** [[01-requirements#^r-rep|R-REP-01]], [[01-requirements#^r-rep|R-REP-02]]
+**요구사항:** [[01-requirements#^r-rep|R-REP-01]], [[01-requirements#^r-rep|R-REP-02]], [[01-requirements#^r-rep|R-REP-04]]
 
 ## 5. 나중에 붙는 유즈케이스
 
