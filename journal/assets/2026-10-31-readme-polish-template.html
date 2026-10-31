@@ -58,6 +58,12 @@ section { display: grid; gap: 14px; }
 .site-dark .cta span.m41.blue { background: #232c45; border-color: #2b313c; color: #e5e8ee; }
 .cta span.m41.site { background: color-mix(in srgb, var(--s-sec) 12%, var(--s-bg)); border: 1px solid color-mix(in srgb, var(--s-sec) 30%, var(--s-bg)); color: var(--s-dark); }
 .cta span.m41 b { font-weight: 600; }
+/* 나7: 그림마다 작은 버튼(M41의 "N번을 편집기에서 열기"처럼) */
+.figs { display: flex; justify-content: center; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
+.figs figure { width: 44%; margin: 0; display: grid; gap: 6px; justify-items: center; }
+.figs img { width: 100%; height: auto; display: block; background: #fff; padding: 6px; border: 1px solid var(--s-line); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); box-sizing: border-box; }
+.site-dark .figs img { border-color: #000; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.figs .m41.small { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 11px; background: color-mix(in srgb, var(--s-sec) 12%, var(--s-bg)); border: 1px solid color-mix(in srgb, var(--s-sec) 30%, var(--s-bg)); color: var(--s-dark); }
 
 .note { font-size: .9rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; max-width: 80ch; }
 </style>
@@ -144,6 +150,20 @@ section { display: grid; gap: 14px; }
       </div>
     </div>
     <p class="note">사이트에서는 README의 링크에 버튼 꾸밈을 입힙니다(<code>site/custom.scss</code>). GitHub에서는 꾸밈이 지워지므로, 같은 모양을 보이려면 버튼을 SVG 그림으로 만들어 링크로 감쌉니다.</p>
+  </section>
+  <section>
+    <div>
+      <h2>(나) 나5에 더해: 그림마다 작은 버튼</h2>
+      <p class="lead">M41의 "N번을 편집기에서 열기"처럼, 그림마다 그 차트를 프로토타입에서 바로 여는 작은 버튼을 답니다. 아래의 큰 버튼(나5)은 빈 편집기로 갑니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">나7</span> 나5 + 그림마다 "이 차트 열기"</h3>
+        <div class="scene b-card">{{HEAD}}<div class="figs"><figure><img src="{{DIJ}}" alt="다익스트라 최단 경로"><span class="m41 small">이 차트 열기 →</span></figure><figure><img src="{{MER}}" alt="병합 정렬"><span class="m41 small">이 차트 열기 →</span></figure></div><p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p><div class="cta"><span class="m41 site">프로토타입에서 <b>써 보기</b> →</span></div><div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">그림을 보고 궁금한 사람은 그 차트를 바로 열어 고쳐 볼 수 있습니다. 작은 버튼은 그림 바로 아래 가운데에 둡니다.</p>
+      </div>
+    </div>
+    <p class="note">작은 버튼이 그 차트를 열려면 프로토타입이 링크 끝의 이름(<code>#dijkstra</code>, <code>#merge-sort</code>)을 읽어 그 예제를 여는 기능이 필요합니다. 반영할 때 프로토타입에 넣습니다. GitHub에서는 버튼을 SVG 그림으로 만들어 링크로 감쌉니다.</p>
   </section>
 </main>
 

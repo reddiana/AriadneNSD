@@ -11,5 +11,6 @@ imgs = (f'<img class="word" src="{word}" alt="AriadneNSD">'
         '<p>NS 차트(Nassi-Shneiderman Diagram) 편집기입니다. 블록을 고르고 감싸는 <b>구조 편집</b>으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다.</p>'
         f'<div class="imgs"><img src="{dij}" alt="다익스트라 최단 경로"><img src="{mer}" alt="병합 정렬"></div>'
         '<p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p>')
+head = imgs.split('<div class="imgs">')[0]
 t = (here / "2026-10-31-readme-polish-template.html").read_text(encoding="utf-8")
-(here / "2026-10-31-readme-polish-study.html").write_text(t.replace("{{IMGS}}", imgs), encoding="utf-8")
+(here / "2026-10-31-readme-polish-study.html").write_text(t.replace("{{IMGS}}", imgs).replace("{{HEAD}}", head).replace("{{DIJ}}", dij).replace("{{MER}}", mer), encoding="utf-8")
