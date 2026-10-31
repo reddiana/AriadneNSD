@@ -12,7 +12,7 @@ superseded-by:
 
 ## 배경
 
-저장되는 파일에서 모델 JSON은 `<metadata>` 안의 모델 요소에 든다([[0005-model-embedded-svg|ADR-0005]], [[01-file-format#2. 문서 구조]]). 이 요소는 네임스페이스 URI로 다른 프로그램의 데이터와 갈린다. URI는 모든 파일에 영원히 남아 나중에 바꾸기 어렵다. 그래서 MVP 전에 정한다([[backlog#MVP 전에 정할 것]]).
+저장되는 파일에서 모델 JSON은 `<metadata>` 안의 모델 요소에 든다([[0005-model-embedded-svg|ADR-0005]], [[01-file-format#2. 문서 구조]]). 이 요소는 네임스페이스 URI로 다른 프로그램의 데이터와 갈린다. URI는 모든 파일에 영원히 남아 나중에 바꾸기 어렵다. 그래서 MVP 전에 정한다([[backlog#MVP 개발]]).
 
 프로토타입(버리는 코드)이 저장한 파일은 `version: 0`이고 짜임이 다르다([[01-file-format#7. 프로토타입과 다른 곳]]). 제품이 이것을 열지도 함께 정한다.
 

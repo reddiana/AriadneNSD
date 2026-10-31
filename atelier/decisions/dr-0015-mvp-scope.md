@@ -75,5 +75,5 @@ superseded-by:
 - 감수하는 점: 메인테이너가 프로토타입에서 아끼던 호출과 여러 다이어그램은 MVP에 없다. 함수마다 파일 하나다.
 - 후속 작업:
 	- 요구사항 5장과 태그를 고침 → [[01-requirements#5. MVP 범위]], 유즈케이스 목록의 MVP 열 → [[02-use-cases#3. 목록]]
-	- For 블록은 아직 조작과 모습의 규칙이 없다([[requirements-rework]]). MVP 전에 정한다 → [[backlog#MVP 전에 정할 것]]
-	- MVP 전에 정할 것의 목록을 이 범위에 맞춰 줄인다 → [[backlog#MVP 전에 정할 것]]
+	- For 블록은 아직 조작과 모습의 규칙이 없다([[requirements-rework]]). MVP 전에 정한다 → [[backlog#MVP 개발]]
+	- MVP 전에 정할 것의 목록을 이 범위에 맞춰 줄인다 → [[backlog#MVP 개발]]

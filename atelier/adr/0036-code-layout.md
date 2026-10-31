@@ -101,7 +101,7 @@ AriadneNSD/
 - 좋아지는 점: 글과 코드가 맨 위에서 갈린다. 배포 대상이 늘어도 `src/apps/` 아래에 폴더 하나씩 더하면 된다. 설계와 코드를 한 커밋으로 바꾼다.
 - 감수하는 점: 경로가 한 겹 깊다(`src/packages/core/src/layout/…`). 패키지 명령은 `src/`에서 실행하고, 워크플로에는 `working-directory: src`를 적는다. 맨 위에 Obsidian용 파일 둘이 있다(README에 까닭을 한 줄 적는다).
 - 후속 작업:
-	- 빌드 도구(웹 · 편집기는 Vite, Obsidian은 esbuild를 후보로)와 import 검사 도구는 테스트 전략의 "빌드 · 테스트 도구 ADR"에서 정한다 → [[backlog#MVP 전에 정할 것]]
+	- 빌드 도구(웹 · 편집기는 Vite, Obsidian은 esbuild를 후보로)와 import 검사 도구는 테스트 전략의 "빌드 · 테스트 도구 ADR"에서 정한다 → [[backlog#MVP 개발]]
 	- 시험 코드의 자리(소스 옆 `*.test.ts` 또는 `test/`, 골든 SVG의 자리)는 테스트 전략에서 정한다
 	- `src/apps/desktop`의 안쪽 모양은 [[0009-desktop-framework|ADR-0009]]를 따른다(Tauri면 `src-tauri/`가 생긴다)
 	- 코드를 처음 넣을 때 CLAUDE.md와 `README.md`의 저장소 구성 표에 `src/`를 더한다
