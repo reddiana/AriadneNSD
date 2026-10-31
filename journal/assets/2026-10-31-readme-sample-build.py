@@ -160,8 +160,8 @@ function m41Empty(lay) {
     if (it.k !== 'process' || it.text) continue;
     const e = idx.get(it.id);
     if (!e || !e.parent || !multi(e.parent) || e.list.length !== 1) continue;
-    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, r = 5;
-    s.push(`<g fill="none" stroke="#5a6476" stroke-width="1.3" stroke-linecap="round"><circle cx="${cx}" cy="${cy}" r="${r}"/><path d="M ${cx - r - 1.5} ${cy + r + 1.5} L ${cx + r + 1.5} ${cy - r - 1.5}"/></g>`);
+    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, r = 3.5;
+    s.push(`<g fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"><circle cx="${cx}" cy="${cy}" r="${r}"/><path d="M ${cx - r - 1} ${cy + r + 1} L ${cx + r + 1} ${cy - r - 1}"/></g>`);
   }
   return s.join('');
 }
