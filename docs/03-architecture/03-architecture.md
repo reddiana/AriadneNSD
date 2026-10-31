@@ -420,17 +420,17 @@ sequenceDiagram
 
 사용자에게 배포되는 코드와 데이터입니다. 제품의 라이선스(Apache-2.0)와 함께 배포할 수 있는지가 기준이라 라이선스를 함께 적습니다.
 
-| 영역 | 기술 | 쓰는 곳 | 라이선스 | 근거 | MVP |
-| --- | --- | --- | --- | --- | --- |
-| 언어 | TypeScript | 모든 패키지와 앱 | Apache-2.0 | [[0003-typescript\|ADR-0003]] | ✓ |
-| UI 프레임워크 | React (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] | ✓ |
-| 글꼴 | D2Coding 보통(400), 한자를 뺀 문자 | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] | ✓ |
-| 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs`의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) | ✓ |
-| 압축 | JS zlib 라이브러리(후보: `fflate`), 버전과 압축 수준을 고정 | `packages/fonts`. 서브셋 글꼴을 WOFF로 | MIT | [[0039-woff-subset-font\|ADR-0039]] | ✓ |
-| 웹 플랫폼 API | File System Access API(`showOpenFilePicker` · `showSaveFilePicker`, 파일 핸들), IndexedDB, BroadcastChannel, Clipboard API | `apps/web`: 열기 · 저장, 로컬 백업 · 최근 파일, 같은 파일을 연 다른 탭, 복사 · 붙여넣기 | (브라우저) | [[06-web]], [[0031-shell-interfaces\|ADR-0031]] | ✓ |
-| Obsidian | Obsidian 플러그인 API(`obsidian` 패키지) | `apps/obsidian` | MIT | [[04-obsidian-plugin]] | |
-| 데스크톱 | Tauri 또는 Electron (미정) | `apps/desktop` | — | [[0009-desktop-framework\|ADR-0009]] (제안됨) | |
-| Google Drive | Google Drive API(`drive.file` 범위) | `apps/web` 안 | — | [[0012-google-drive-integration\|ADR-0012]] | |
+| 영역 | 기술 | 쓰는 곳 | 라이선스 | 근거 |
+| --- | --- | --- | --- | --- |
+| 언어 | TypeScript | 모든 패키지와 앱 | Apache-2.0 | [[0003-typescript\|ADR-0003]] |
+| UI 프레임워크 | React (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] |
+| 글꼴 | D2Coding 보통(400), 한자를 뺀 문자 | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] |
+| 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs`의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) |
+| 압축 | JS zlib 라이브러리(후보: `fflate`), 버전과 압축 수준을 고정 | `packages/fonts`. 서브셋 글꼴을 WOFF로 | MIT | [[0039-woff-subset-font\|ADR-0039]] |
+| 웹 플랫폼 API | File System Access API(`showOpenFilePicker` · `showSaveFilePicker`, 파일 핸들), IndexedDB, BroadcastChannel, Clipboard API | `apps/web`: 열기 · 저장, 로컬 백업 · 최근 파일, 같은 파일을 연 다른 탭, 복사 · 붙여넣기 | (브라우저) | [[06-web]], [[0031-shell-interfaces\|ADR-0031]] |
+| Obsidian | Obsidian 플러그인 API(`obsidian` 패키지) | `apps/obsidian` | MIT | [[04-obsidian-plugin]] |
+| 데스크톱 | Tauri 또는 Electron (미정) | `apps/desktop` | — | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
+| Google Drive | Google Drive API(`drive.file` 범위) | `apps/web` 안 | — | [[0012-google-drive-integration\|ADR-0012]] |
 
 라이브러리 없이 직접 만드는 것: 문서 모델과 실행 취소(불변 문서 → [[0029-immutable-document-undo\|ADR-0029]]), JSON 직렬화([[0007-json-serialization\|ADR-0007]]), 레이아웃([[0037-two-pass-full-layout\|ADR-0037]]), SVG 렌더링([[0030-swappable-drawing\|ADR-0030]]), 구문 강조의 토크나이저([[0032-token-highlighting\|ADR-0032]]), 메시지 카탈로그(5장의 다국어). 모두 `core` 또는 `editor` 안에 있습니다. `core`는 브라우저 API와 DOM에 기대지 않습니다(3.3).
 
