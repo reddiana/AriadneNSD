@@ -20,7 +20,7 @@ updated: 2026-10-25
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
-> - 그림은 모두 프로토타입에서 찍거나 스크립트로 그린 것이고, 언제든 다시 만들 수 있습니다: `journal/assets/2026-10-16-visual-design-shots.mjs`(화면), `2026-10-17-visual-anatomy.py`(해부도), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산)
+> - 그림은 모두 프로토타입에서 찍거나 스크립트로 그린 것이고, 언제든 다시 만들 수 있습니다: `journal/assets/2026-11-01-docs-shots.mjs`(화면, 프로토타입 65번째 판에서 2026-11-01에 다시 찍음. 그 전은 `2026-10-16-visual-design-shots.mjs`로 60번째 판에서), `2026-10-17-visual-anatomy.py`(해부도), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산)
 > - **용어.**
 > 	- **대비율**은 WCAG 2.2의 contrast ratio(상대 휘도의 비)입니다. 글자는 4.5:1(AA, 1.4.3), 뜻을 가진 선과 도형은 3:1(1.4.11)이 기준입니다.
 > 	- **테마**는 그림의 색 묶음입니다. 문서마다 선택하고 파일과 함께 갑니다. 밝은 테마와 어두운 테마가 있습니다. **화면 색**은 툴바 · 캔버스 바탕 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
@@ -60,6 +60,8 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 - **빈 갈래:** If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 글자를 적으면 사라집니다. 기호는 도형(path)으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^r-lay|R-LAY-09]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 선택하면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 바탕은 칠하지 않습니다(종이 그대로). 머리는 여전히 블록이라 선택하고 고칠 수 있습니다. 글자는 4.2절, 치수는 5장에 있습니다. 문서 설정의 자리는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
+
+  ![[visual-design-head-title.png|420]]
 
 - If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 머리와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 선택했습니다 → [[0021-event-and-method|ADR-0021]]
 - 확인: 흑백과 색각 이상 세 가지로 본 그림에서 모든 블록 종류가 가려지는가(10.2절). 적색맹으로 보면 If와 Event의 바탕은 거의 같은 색(ΔE 1.1)이 되지만, 모양이 다르므로 원칙은 지켜집니다.
@@ -340,12 +342,14 @@ flowchart LR
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 갈래 이름을 선택함 | 머리 아래쪽의 갈래 이름 칸(높이 20px) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#갈래 이름 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (규칙은 [[ux-decisions#Q4. 비울 수 없는 칸 (R2)\|Q4]]에서 정하는 중) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%. 커서 곁에 블록의 글자 첫 줄 | 편집 | | **없음** |
 | 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
+| 블록 위에 드롭 (감싸기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리 + 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | **없음** |
 | 빈 갈래 | If · Case의 갈래에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | **없음** |
 | 머리 모양 "제목처럼" | 모자 · 아치 없이 딱지 + 굵은 이름 + 아랫줄 1px. 선택하면 머리 전체(딱지부터 아랫줄까지)를 블록 하나처럼 두름 | 문서 | `text.*`, `line.structure` | **없음** |
@@ -374,8 +378,11 @@ flowchart LR
 >
 > ![[visual-design-select-one.png|320]] ![[visual-design-select-range.png|320]] ![[visual-design-editing.png|320]]
 
-> [!example] 선택한 것이 없을 때의 키보드 포커스
-> ![[visual-design-focus-none.png|480]]
+> [!example] 갈래 이름을 선택함 · 선택한 것이 없을 때의 키보드 포커스
+> ![[interaction-branch-label.png|480]] ![[visual-design-focus-none.png|380]]
+
+> [!example] 키 힌트 (`a`를 누르고 0.4초 뒤)
+> ![[visual-design-key-hint.png|720]]
 
 ## 8. 테마
 
