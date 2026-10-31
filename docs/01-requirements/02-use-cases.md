@@ -95,7 +95,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1b. Obsidian 파일 탐색기의 컨텍스트 메뉴에서 만들면 노트에 넣지 않고 파일만 생긴다
 - 1c. Google Drive의 "새로 만들기"에서 만들면 Drive에 파일이 생긴다
 
-**요구사항:** [[01-requirements#^r-obs-2|R-OBS-08]], [[01-requirements#^r-gd|R-GD-02]], [[01-requirements#^r-nfr|R-NFR-01]]
+**요구사항:** [[01-requirements#^r-all|R-ALL-03]], [[01-requirements#^r-obs-2|R-OBS-08]], [[01-requirements#^r-gd|R-GD-02]], [[01-requirements#^r-nfr|R-NFR-01]]
 
 ### UC-02 다이어그램을 연다
 

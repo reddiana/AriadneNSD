@@ -15,7 +15,7 @@ superseded-by:
 > - 2026-10-25: 글자 폭 측정([[01-requirements#^r-lay|R-LAY-04]])을 `P1`에서 `P0`으로 올려 MVP에 들었다. MVP의 "같은 모델이면 같은 파일"([[01-requirements#^r-fmt|R-FMT-03]])이 번들 글꼴의 폭 표로 재는 것을 전제로 하기 때문이다 → [[2026-10-25-04-outbox-cleanup]]
 > - 2026-11-01: 끌어 놓기([[01-requirements#^r-edit|R-EDIT-09]]), 도움말([[01-requirements#^r-edit|R-EDIT-21]]), 작성 중인 내용의 임시 보관([[01-requirements#^r-web|R-WEB-03]]), 자동 저장 · 최근 파일([[01-requirements#^r-exp|R-EXP-04]])을 `P1`에서 `P0`으로 올려 MVP에 넣었다. 처음 써 보는 사람이 바로 아쉬워할 것(그린 것이 사라짐, 쓰는 법을 모름, 마우스로 옮길 수 없음)이라서다(메인테이너: "넷을 포함합시다") → [[2026-10-31-03-prototype-64]]
 > - 2026-11-01: 명령 찾기([[01-requirements#^r-edit|R-EDIT-24]])를 새 요구사항으로 더해 `P0`으로 넣었다. 웹 화면 설계에서 VS Code · IntelliJ를 참고해 정했다 → [[ux-decisions#W6. 명령 찾기|W6]]
-> - 2026-11-01: docs/ 검토에서 MVP 설계가 이미 쓰는 키 힌트([[01-requirements#^r-edit|R-EDIT-04]]), If 갈래 이름 고치기([[01-requirements#^r-edit|R-EDIT-12]]), 빈 갈래 기호([[01-requirements#^r-lay|R-LAY-09]])를 `P0`으로 올리고, 새 문서 만들기([[01-requirements#^r-all|R-ALL-03]])를 `P0`으로 더했다. 비기능 요구사항에도 우선순위를 달았다(고대비 화면만 `P1`) → [[2026-10-31-03-prototype-64]]
+> - 2026-11-01: docs/ 검토에서 MVP 설계가 이미 쓰는 키 힌트([[01-requirements#^r-edit|R-EDIT-04]]), If 갈래 이름 고치기([[01-requirements#^r-edit|R-EDIT-12]]), 빈 갈래 기호([[01-requirements#^r-lay|R-LAY-09]])를 `P0`으로 올리고, 새 문서 만들기([[01-requirements#^r-all|R-ALL-03]])를 `P0`으로 더했다. 비기능 요구사항에도 우선순위를 달았다. 접근성([[01-requirements#^r-nfr|R-NFR-05]])은 둘로 나눠 키보드 전용 조작은 `P0`에 두고, 고대비 화면은 새 [[01-requirements#^r-nfr|R-NFR-07]]로 옮겨 `P1`로 했다 → [[2026-10-31-03-prototype-64]]
 
 ## 배경
 
