@@ -23,7 +23,7 @@ updated: 2026-11-01
 
 ### 조작 · 키
 
-- [ ] 웹 화면의 남은 물음 W5(설정) · W6(명령 찾기 창). 2026-11-01 넷째 판에서 VS Code · IntelliJ를 참고해 다시 그림 → 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX, [[06-web#미결정 사항]] (2026-11-01)
+- [ ] 웹 화면의 남은 물음 W6(명령 찾기 창). 2026-11-01 넷째 판에서 VS Code · IntelliJ를 참고해 다시 그림 → 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX, [[06-web#미결정 사항]] (2026-11-01)
 
 - [ ] 조작의 물음([[02-interaction-rules#9. 미결정 사항]])과 [[requirements-rework]]의 물음에 답하기 (2026-10-11). 남은 것: Q20(MVP 뒤), Q18 · Q23 (Q18 · Q23은 [[requirements-rework]]에 있음). MVP에 드는 것(Q1 · Q2 · Q4~Q6 · Q8 · Q10의 세부 · Q11 · Q12 · Q19)은 2026-11-01에 정함 → [[ux-decisions#10. 2026-11-01의 결정]]
 - [ ] 프로토타입을 만들며 생긴 질문 가운데 남은 것에 답하기 (질문: 2026-10-10) → [[2026-10-10-02-prototype#만들며 생긴 질문 (메인테이너의 답을 기다림)]]
