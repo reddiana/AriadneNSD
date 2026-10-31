@@ -1,0 +1,130 @@
+<title>M42 README 첫 화면 다듬기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 위에 테마 고르개, 아래로 물음 둘. 물음마다 번호 딱지를 단 선택지 카드가 나란히(좁으면 쌓임).
+   카드 안의 장면은 펴낸 사이트(Quartz)의 색을 그대로 쓴다. */
+:root {
+  --bg: #f3f1ee; --fg: #2b2b2b; --muted: #6b6560; --line: #d9d4ce; --tag: #284b63; --tag-fg: #fff; --pick: #84a59d;
+  --sans: "IBM Plex Sans KR", "Noto Sans KR", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1d1c1f; --fg: #e8e6e3; --muted: #a39d97; --line: #3a373b; --tag: #7b97aa; --tag-fg: #111; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #1d1c1f; --fg: #e8e6e3; --muted: #a39d97; --line: #3a373b; --tag: #7b97aa; --tag-fg: #111; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; }
+main { max-width: 1180px; margin: 0 auto; display: grid; gap: 36px; }
+h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.15rem; margin: 0 0 4px; }
+p { margin: 0; }
+.lead { color: var(--muted); max-width: 70ch; }
+.bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.bar button { font: inherit; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+.bar button[aria-pressed="true"] { background: var(--tag); color: var(--tag-fg); border-color: var(--tag); }
+.bar button:focus-visible { outline: 2px solid var(--pick); outline-offset: 2px; }
+section { display: grid; gap: 14px; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.opt { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt h3 { margin: 0; font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+.num { display: inline-grid; place-items: center; min-width: 2.2em; height: 1.6em; padding: 0 6px; border-radius: 6px; background: var(--tag); color: var(--tag-fg); font-size: .85rem; font-weight: 700; }
+.opt .why { color: var(--muted); font-size: .9rem; }
+.rec { font-size: .8rem; border: 1px solid var(--pick); color: var(--fg); border-radius: 999px; padding: 0 8px; }
+
+/* 장면: 펴낸 사이트의 색 */
+.scene { --s-bg: #faf8f8; --s-fg: #4e4e4e; --s-dark: #2b2b2b; --s-line: #e5e5e5; --s-sec: #284b63; --s-ter: #84a59d; --s-hl: rgba(143,159,169,.15);
+  background: var(--s-bg); color: var(--s-fg); border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px; font-size: 12px; line-height: 1.55; overflow: hidden; }
+.site-dark .scene { --s-bg: #161618; --s-fg: #d4d4d4; --s-dark: #ebebec; --s-line: #393639; --s-sec: #7b97aa; }
+.scene .word { display: block; margin: 0 auto 12px; width: 170px; }
+.site-dark .scene .word { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+.scene .imgs { display: flex; justify-content: center; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
+.scene .imgs img { width: 44%; height: auto; display: block; }
+.scene .cap { text-align: center; font-size: 10px; color: var(--s-fg); opacity: .8; margin-bottom: 10px; }
+.scene .callout { border-left: 3px solid var(--s-ter); background: color-mix(in srgb, var(--s-ter) 12%, transparent); border-radius: 4px; padding: 6px 10px; margin-top: 8px; }
+.scene .callout b { color: var(--s-dark); }
+.scene a { color: var(--s-sec); font-weight: 600; text-decoration: none; background: var(--s-hl); padding: 0 2px; border-radius: 3px; }
+
+/* 그림 바탕의 안 */
+.b-card .imgs img { background: #fff; padding: 6px; border: 1px solid var(--s-line); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); box-sizing: border-box; }
+.site-dark .b-card .imgs img { border-color: #000; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.b-melt .imgs img { mix-blend-mode: multiply; }
+.site-dark .b-melt .imgs img { mix-blend-mode: normal; background: #fff; padding: 6px; border-radius: 8px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+
+/* 프로토타입 버튼 */
+.cta { display: flex; justify-content: center; margin: 12px 0 6px; }
+.cta span.btn { display: inline-flex; align-items: center; gap: 8px; background: var(--s-sec); color: var(--s-bg); font-weight: 700; font-size: 13px; padding: 8px 18px; border-radius: 999px; }
+.cta span.btn small { font-weight: 400; opacity: .85; font-size: 11px; }
+.cta.top { margin: 0 0 12px; }
+
+.note { font-size: .9rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; max-width: 80ch; }
+</style>
+
+<main>
+  <header style="display:grid;gap:8px">
+    <h1>M42 README 첫 화면 다듬기</h1>
+    <p class="lead">펴낸 사이트의 첫 화면에서 (가) 예제 그림의 하얀 바탕, (나) 프로토타입 링크가 눈에 안 띄는 것을 고칩니다. 장면은 사이트의 색 그대로입니다. 테마를 바꿔 보세요.</p>
+    <div class="bar" role="group" aria-label="사이트 테마">
+      <button id="t-light" aria-pressed="true">사이트 밝은 테마</button>
+      <button id="t-dark" aria-pressed="false">사이트 어두운 테마</button>
+    </div>
+  </header>
+
+  <section>
+    <div>
+      <h2>(가) 예제 그림의 바탕</h2>
+      <p class="lead">그림은 바탕이 흰 PNG입니다. 프로토타입이 흰 종이 위에 그리므로, 그림 자체는 그대로 두고 둘레만 바꿉니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">가1</span> 지금</h3>
+        <div class="scene b-now">{{IMGS}}</div>
+        <p class="why">밝은 테마에서는 바탕(#faf8f8)과 흰 그림의 경계가 흐릿하게 어긋나고, 어두운 테마에서는 흰 네모가 떠 보입니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">가2</span> 종이 카드 <span class="rec">추천</span></h3>
+        <div class="scene b-card">{{IMGS}}</div>
+        <p class="why">흰 바탕에 여백·옅은 테두리·둥근 모서리·그림자를 주어 "종이 한 장"으로 보이게 합니다. 두 테마 모두 일부러 둔 흰색으로 읽힙니다. NS 차트의 색은 그대로입니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">가3</span> 밝은 테마는 녹이고, 어두운 테마는 카드</h3>
+        <div class="scene b-melt">{{IMGS}}</div>
+        <p class="why">밝은 테마에서는 흰색이 페이지 바탕색이 되어 그림이 페이지에 바로 그려진 듯 보입니다. 어두운 테마에서는 녹일 수 없어(차트 색이 뒤집힘) 카드로 둡니다. 두 테마의 모습이 달라집니다.</p>
+      </div>
+    </div>
+    <p class="note">사이트에서만 듣는 꾸밈입니다(<code>site/custom.scss</code>). GitHub의 README는 꾸밈을 지우므로 그대로 보이는데, GitHub의 밝은 화면은 바탕이 흰색이라 문제가 적습니다.</p>
+  </section>
+
+  <section>
+    <div>
+      <h2>(나) 프로토타입 링크</h2>
+      <p class="lead">지금은 그림 아래 TIP 콜아웃의 한 줄입니다. 장면의 그림 바탕은 가2(카드)로 두었습니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">나1</span> 지금</h3>
+        <div class="scene b-card">{{IMGS}}<div class="callout"><b>프로토타입을 브라우저에서 바로 써 볼 수 있습니다:</b> <a>AriadneNSD 프로토타입</a><br>요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다.</div></div>
+        <p class="why">링크가 문장 끝의 작은 글자라 콜아웃 안에서 묻힙니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나2</span> 그림 바로 아래 버튼 <span class="rec">추천</span></h3>
+        <div class="scene b-card">{{IMGS}}<div class="cta"><span class="btn">▶ 프로토타입 써 보기 <small>브라우저에서 바로</small></span></div><div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">그림을 본 눈이 바로 버튼으로 갑니다. "이걸로 그렸다 → 써 보기"가 이어집니다. 콜아웃에는 주의만 남깁니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나3</span> 맨 위, 문자 로고 바로 아래 버튼</h3>
+        <div class="scene b-card"><div class="cta top"><span class="btn">▶ 프로토타입 써 보기 <small>브라우저에서 바로</small></span></div>{{IMGS}}<div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다.</div></div>
+        <p class="why">페이지를 열자마자 보입니다. 다만 무엇인지 설명(소개 문장, 그림)보다 먼저 나와 광고처럼 읽힐 수 있습니다.</p>
+      </div>
+    </div>
+    <p class="note">버튼을 GitHub에서도 같은 모양으로 보이게 하려면 버튼을 SVG 그림으로 만들어 링크로 감쌉니다(GitHub은 README의 꾸밈을 지우기 때문). 그림 버튼 하나를 밝은·어두운 화면에 함께 쓰도록 짙은 남색 바탕에 흰 글자로 만듭니다.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  const L = document.getElementById("t-light"), D = document.getElementById("t-dark");
+  function set(dark) {
+    document.body.classList.toggle("site-dark", dark);
+    L.setAttribute("aria-pressed", String(!dark)); D.setAttribute("aria-pressed", String(dark));
+  }
+  L.addEventListener("click", () => set(false));
+  D.addEventListener("click", () => set(true));
+})();
+</script>
