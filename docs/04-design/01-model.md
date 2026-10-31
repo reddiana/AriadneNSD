@@ -22,7 +22,7 @@ updated: 2026-11-01
 - 감싸기 · 풀기: [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-08]]
 - 이동 · 붙여넣기 · 분기: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]]
 - 새 Method로 빼기: [[01-requirements#^r-edit|R-EDIT-19]]
-- 문서 설정(블록 텍스트의 종류, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-10]]
+- 문서 설정(블록 텍스트의 언어, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-10]]
 - 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
 - 접기 영역과 뷰 상태: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-16]], [[0018-save-as-shown|ADR-0018]]
 
@@ -44,7 +44,7 @@ type Content = {
 };
 
 type Settings = {
-  textKind: TextKind;    // 블록 텍스트의 종류 → [[0032-token-highlighting|ADR-0032]]
+  textKind: TextKind;    // 블록 텍스트의 언어 → [[0032-token-highlighting|ADR-0032]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
   headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
 };
@@ -142,13 +142,13 @@ type CallTarget =
   | { kind: 'local'; diagram: Id }                                   // 같은 문서의 Method
   | { kind: 'named'; name: string }                                  // 이름을 적어 부름
   | { kind: 'external'; file: string; diagram: Id; lastName: string } // 다른 문서의 Method
-  | { kind: 'lost'; lastName: string; file?: string };               // 이어진 곳을 잃음
+  | { kind: 'lost'; lastName: string; file?: string };               // 참조 대상을 잃음
 ```
 
 - 같은 문서의 Method는 **id로만** 참조합니다. 표시할 이름은 그 Method의 헤더에서 조회합니다. → [[0022-call-name-follows-head|ADR-0022]]
 - 참조하던 Method가 없어지면(다이어그램을 삭제함, 헤더를 제거함) 그 명령이 호출 블록을 `lost`로 바꾸고 보이던 이름을 `lastName`에 보존합니다. 그래서 `local`은 언제나 존재하는 Method를 참조합니다(불변식 6). 상태 전이는 아래 그림과 같습니다.
 - `named`는 처음부터 이름만 적은 것입니다. 참조를 잃은 것(`lost`, 점선과 `?`)과 모양이 다르므로 variant를 나눕니다.
-- 다른 문서의 Method(`external`)는 그 파일을 읽을 수 없을 수 있으므로(`DocumentStore`가 `null`을 돌려줌 → [[03-architecture#3.2 editor와 셸의 인터페이스]]) 마지막에 본 이름(`lastName`)을 캐시해 둡니다. `file`에 무엇을 적는지(상대 경로 등)는 정하지 않았습니다 → 미결정 사항
+- 다른 문서의 Method(`external`)는 그 파일을 읽을 수 없을 수 있으므로(`DocumentStore`가 `null`을 반환함 → [[03-architecture#3.2 editor와 셸의 인터페이스]]) 마지막에 본 이름(`lastName`)을 캐시해 둡니다. `file`에 무엇을 적는지(상대 경로 등)는 정하지 않았습니다 → 미결정 사항
 - 결과 기호(`←` / `=`)는 호출 블록마다가 아니라 문서마다 하나이고, 뷰 상태에 있습니다(2장).
 
 ```mermaid
@@ -163,7 +163,7 @@ stateDiagram-v2
     external --> local : 호출할 것 바꾸기
 ```
 
-UML 상태 다이어그램입니다. 상태는 `CallTarget.kind`이고, 화살표 위의 글은 전이를 일으키는 편집 명령입니다. "호출할 것 바꾸기"는 어느 상태에서든 `target`을 새로 정하므로 어느 상태로든 갈 수 있으나, 그림에는 `local`로 가는 것만 그렸습니다. 헤더 이름 편집은 전이가 아닙니다(id로 참조하므로 `local` 그대로). `external`의 파일을 읽지 못하는 것도 전이가 아닙니다. 모델은 `external` 그대로이고 화면에만 "이어진 곳 없음"으로 보입니다.
+UML 상태 다이어그램입니다. 상태는 `CallTarget.kind`이고, 화살표 위의 글은 전이를 일으키는 편집 명령입니다. "호출할 것 바꾸기"는 어느 상태에서든 `target`을 새로 정하므로 어느 상태로든 갈 수 있으나, 그림에는 `local`로 가는 것만 그렸습니다. 헤더 이름 편집은 전이가 아닙니다(id로 참조하므로 `local` 그대로). `external`의 파일을 읽지 못하는 것도 전이가 아닙니다. 모델은 `external` 그대로이고 화면에만 "참조 대상 없음"으로 보입니다.
 
 ### 1.6 펴 보인 곳의 접기 영역
 
@@ -222,13 +222,13 @@ type Path = Id[];      // [바깥 호출 블록 id, 그 안에서 편 호출 블
 | 6 | `local` 호출 블록이 가리키는 다이어그램은 있고, 그 헤더는 Method다 |
 | 7 | 헤더도 내용도 없는 다이어그램(헤더가 없고 본문이 빈 블록 하나)은 문서에 다이어그램이 그것 하나일 때만 있다 |
 
-- 7은 "헤더도 내용도 없는 다이어그램은 저절로 사라진다"([[02-interaction-rules#5. 여러 다이어그램의 배치]])를 불변식으로 적은 것입니다. 명령이 끝날 때 그런 다이어그램을 삭제해 정규화합니다.
+- 7은 "헤더도 내용도 없는 다이어그램은 자동으로 사라진다"([[02-interaction-rules#5. 여러 다이어그램의 배치]])를 불변식으로 적은 것입니다. 명령이 끝날 때 그런 다이어그램을 삭제해 정규화합니다.
 - **헤더 이름의 규칙**(유일함, 비지 않음)은 불변식이 아닙니다. 다른 도구나 손으로 수정한 파일에는 이름이 겹친 헤더가 있을 수 있고, 그런 파일도 열어야 하기 때문입니다([[02-interaction-rules#Event 헤더]]). 이름을 바꾸는 명령이 사전 조건 검증으로 겹치는 이름을 거부할 뿐이고, 겹친 헤더는 화면에 표시해 알립니다.
 - 파일을 열 때 1~7을 위반하면 "편집할 수 없다"고 알리고 원본은 건드리지 않습니다. 자동 복구하지 않습니다.
 
 ## 4. 편집 명령
 
-명령은 모두 **문서의 내용을 받아 새 내용을 돌려주는 순수 함수**입니다(커맨드 패턴). 실행 흐름은 아래 시퀀스 다이어그램과 같습니다.
+명령은 모두 **문서의 내용을 받아 새 내용을 반환하는 순수 함수**입니다(커맨드 패턴). 실행 흐름은 아래 시퀀스 다이어그램과 같습니다.
 
 ```mermaid
 sequenceDiagram
@@ -291,7 +291,7 @@ type Result =
 | | 헤더 이름 편집 | 겹치거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 · 풀기 · 이름 편집 | [[02-interaction-rules#접기 · 펼치기]]. 펴 보인 곳이면 `SiteFold`로 |
-| 문서 설정 | 블록 텍스트의 종류, 테마, 헤더 모양 | |
+| 문서 설정 | 블록 텍스트의 언어, 테마, 헤더 모양 | |
 
 ### 4.2 보기 명령
 
@@ -330,4 +330,4 @@ type Result =
 - [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1
 - [ ] 코드의 fall-through(`break` 없이 다음 분기로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
 - [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
-- [ ] 처음에 지원할 블록 텍스트의 종류 목록 → [[01-requirements#6. 미결정 사항]]
+- [ ] 처음에 지원할 블록 텍스트의 언어 목록 → [[01-requirements#6. 미결정 사항]]

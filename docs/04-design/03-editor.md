@@ -81,7 +81,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 `Shift`+클릭과 `Shift`+`↑` `↓`는 같은 함수를 씁니다 → [[0008-contiguous-selection|ADR-0008]], [[02-interaction-rules#여러 블록 선택]]
 
 1. 처음 선택한 블록 `a`와 새로 가리킨 블록 `b`의 조상 목록(자기부터 다이어그램까지, 블록과 줄이 번갈아)을 구합니다.
-2. 두 목록이 처음 갈라지는 곳 바로 위의 **같은 줄**을 찾습니다.
+2. 두 목록이 처음 엇갈리는 곳 바로 위의 **같은 줄**을 찾습니다.
 3. 그 줄 안에서 `a` 쪽 조상과 `b` 쪽 조상이 범위의 두 끝입니다(`anchor`, `focus`).
 4. 둘이 다른 다이어그램이면 넓히지 않고 `b`만 선택합니다.
 
@@ -94,7 +94,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 
 ### 2.3 명령 뒤의 선택
 
-편집 명령은 `touched`(새로 생기거나 바뀐 노드의 id)를 돌려줍니다 → [[01-model#4. 편집 명령]]. `editor`는 명령의 종류와 `touched`로 다음 선택을 정합니다. 규칙은 [[02-interaction-rules#키보드로 이동하고 삽입하기]]에 있습니다.
+편집 명령은 `touched`(새로 생기거나 바뀐 노드의 id)를 반환합니다 → [[01-model#4. 편집 명령]]. `editor`는 명령의 종류와 `touched`로 다음 선택을 정합니다. 규칙은 [[02-interaction-rules#키보드로 이동하고 삽입하기]]에 있습니다.
 
 | 명령 | 다음 선택 |
 | --- | --- |
@@ -151,7 +151,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 마우스가 무엇을 가리키는지는 DOM이 아니라 `LayoutResult`로 계산합니다(→ [[03-architecture#3.3 의존 규칙]]).
 
 - 마우스 좌표를 문서 좌표로 바꿉니다(스크롤, 확대 배율, 캔버스의 여백을 뺌).
-- 상자는 [[02-layout]]이 `LayoutResult`에 담는 **누르는 자리**입니다. 제어 블록은 헤더만, 펴진 접기 영역과 펴 보인 호출 블록은 띠만, 분기 라벨은 그 칸의 라벨 줄입니다 → [[02-layout#1.1 두 단계]]
+- 상자는 [[02-layout]]이 `LayoutResult`에 담는 **클릭 영역**입니다. 제어 블록은 헤더만, 펴진 접기 영역과 펴 보인 호출 블록은 띠만, 분기 라벨은 그 칸의 라벨 줄입니다 → [[02-layout#1.1 두 단계]]
 - 그 점을 담는 **가장 안쪽** 상자를 찾습니다. 상자의 종류: 블록, 헤더, 분기 라벨 칸, 접힌 칸, 이름 띠, 펼침 삼각형, 펴 보인 블록. 펼침 삼각형과 분기 라벨 칸처럼 작은 상자가 그 아래 블록보다 먼저입니다.
 - 블록 500개까지는 모든 상자를 차례로 보아도 1ms 안쪽이라, 공간 색인(R-tree 등)은 두지 않습니다.
 
@@ -170,8 +170,8 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 복사 · 잘라내기는 시스템 클립보드에 둘을 함께 씁니다:
 	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게)
-	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 맞춤 형식)
-- 붙여넣기는 맞춤 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
+	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식)
+- 붙여넣기는 사용자 정의 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
 - 브라우저가 시스템 클립보드를 막으면(권한 거절, 지원하지 않음) 편집기 안의 클립보드(메모리)를 씁니다. 그때 다른 탭과는 나누지 못합니다.
 - 붙여넣은 블록은 모두 새 id를 받습니다 → [[01-model#4.1 내용을 바꾸는 명령]]
 
@@ -199,7 +199,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 ```ts
 type CommandSpec = {
   id: string;                         // 'block.insert.if', 'edit.cut', 'view.fold.toggle' …
-  title: Message | ((ctx: CommandContext) => Message);  // 화면 언어마다의 이름 (R-NFR-04). 형편에 따라 바뀌면 함수
+  title: Message | ((ctx: CommandContext) => Message);  // 화면 언어마다의 이름 (R-NFR-04). 상황에 따라 바뀌면 함수
   keys: string[];                     // 키 표의 키 ('a i', 'Ctrl+X') — 표시용. 디스패치는 4장의 키 표
   menu?: { menu: MenuId; group: number; order: number };  // 메뉴 바의 자리
   toolbar?: { group: number; order: number; icon: IconId };
@@ -212,7 +212,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
 ```
 
-- 이름이 형편에 따라 바뀌는 예: 원래 파일에 쓸 수 없는 브라우저(`store.canWriteInPlace`가 false)에서는 "저장"을 "내려받기"로 부릅니다 → [[06-web#1. 파일 열기·저장]]
+- 이름이 상황에 따라 바뀌는 예: 원래 파일에 쓸 수 없는 브라우저(`store.canWriteInPlace`가 false)에서는 "저장"을 "내려받기"로 부릅니다 → [[06-web#1. 파일 열기·저장]]
 - 명령의 대부분은 `editor`가 만듭니다. 문서를 바꾸는 명령(새로 · 열기 · 최근 파일)은 셸이 만들어 같은 목록에 더합니다 → 6.1
 
 ### 5.1 메뉴 구성
@@ -281,7 +281,7 @@ interface SettingsStore {
 interface CommandRegistry {
   list(): CommandSpec[];
   run(id: string, args?: unknown): void;
-  register(spec: CommandSpec): () => void;       // 셸의 명령을 더한다 (새로 · 열기 · 최근 파일). 돌려받은 함수로 뺀다
+  register(spec: CommandSpec): () => void;       // 셸의 명령을 추가한다 (새로 · 열기 · 최근 파일). 반환된 함수로 뺀다
   onChange(listener: () => void): () => void;    // "적용되는가"가 바뀌었을 때 (셸이 메뉴를 다시 그림)
 }
 interface SettingsSchema {
@@ -304,10 +304,10 @@ type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: nu
 ```
 
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(그려야 할 때 기다리지 않게).
-- 오류는 던지지 않고 값(`WriteResult`, `null`)으로 돌려줍니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
+- 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]
-- 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 형편이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
+- 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 상황이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
 
 ### 6.1 새로 · 열기 · 최근 파일
 
@@ -326,7 +326,7 @@ sequenceDiagram
     participant F as 브라우저 파일 · IndexedDB
     U->>+S: 파일 ▸ 열기
     S->>+F: 파일 선택 창
-    F-->>-S: 파일 손잡이 · 텍스트
+    F-->>-S: 파일 핸들 · 텍스트
     S->>S: DocumentStore를 만든다
     S->>+E: open({ store, text })
     E-->>-S: onStatus(name, dirty: false)
