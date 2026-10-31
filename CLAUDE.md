@@ -6,12 +6,12 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 
 | 폴더 | 용도 |
 | --- | --- |
-| `README.md` | GitHub 방문자를 위한 첫 화면이면서 펴낸 사이트(`reddiana.github.io/AriadneNSD`)의 첫 화면의 원본. 저장소 소개와 읽는 법(펴낸 사이트, 또는 Obsidian)의 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸면 사이트에서 빠진다(→ [[dr-0013-publish-docs-github-pages|DR-0013]]) |
+| `README.md` | GitHub 방문자를 위한 첫 화면이면서 배포한 사이트(`reddiana.github.io/AriadneNSD`)의 첫 화면의 원본. 저장소 소개와 읽는 법(배포한 사이트, 또는 Obsidian)의 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸면 사이트에서 빠진다(→ [[dr-0013-publish-docs-github-pages|DR-0013]]) |
 | `CONTRIBUTING.md` | 기여하려는 사람을 위한 안내. 지금은 설계 단계의 기여(읽기, 이슈, 문서 고침)만. 코딩 스타일과 도구는 개발 전에 더한다 |
 | `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세. 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
 | `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 보낼 편지함(`outbox.md`: 메인테이너의 답을 기다리는 것), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`sketchbook.md`), 세션 기록(`sessions/`), 요구사항 변경 기록(`requirement-changes.md`: 철회한 요구사항), 아키텍처 결정 기록(`adr/`: ADR), 그 밖의 결정 기록(`decisions/`: DR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |
 | `journal/` | 이야기하기 위한 여정 기록: 타임라인, 이야기 구성 아이디어, 스크린샷. 누구나 따라 해 볼 용기를 얻도록 쓴다 |
-| `site/` | 펴낸 사이트(GitHub Pages, Quartz)의 설정과 빌드 스크립트. 빌드는 `.github/workflows/pages.yml` (→ [[dr-0013-publish-docs-github-pages\|DR-0013]]) |
+| `site/` | 배포한 사이트(GitHub Pages, Quartz)의 설정과 빌드 스크립트. 빌드는 `.github/workflows/pages.yml` (→ [[dr-0013-publish-docs-github-pages\|DR-0013]]) |
 | `til/` | Today I Learned: 메인테이너가 Claude에게 묻고 배운 기술의 정리 (메인테이너는 백엔드 개발자, 프론트엔드는 처음). 2026-10-25까지 이름은 `tech-notes/`. 제품 고유의 기술로 읽히지 않게 바꿈 |
 
 ## 문서 작성 규칙
@@ -21,7 +21,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 - Mermaid Sequence Diagram에는 activation bar(`->>+` · `-->>-`, `activate`/`deactivate`)를 넣는다. 누가 언제 일하고 있는지 보여서 이해에 도움이 된다.
 - 표 앞에는 빈 줄을 둔다. Obsidian은 표의 첫 줄 바로 앞이 글이면 표를 그리지 않는다. 콜아웃 안의 표는 `>`만 있는 줄을 앞에 둔다.
 - 문서는 한국어, 파일 이름은 영어 kebab-case.
-- 문서의 이름(속성 `title`과 본문의 `# 제목`, 둘을 같게)에는 제품 이름이나 상위 폴더 이름의 말머리를 붙이지 않는다("AriadneNSD 요구사항 명세" → "요구사항", "UX 설계: 단축키" → "단축키"). 영어 이름이 더 익숙하면 영어로 쓴다("Outbox"). 펴낸 사이트는 이 이름을 목록과 탭에 쓴다. ADR · DR의 "ADR-0001: …"은 번호가 식별자라 그대로 둔다(2026-10-25, 메인테이너).
+- 문서의 이름(속성 `title`과 본문의 `# 제목`, 둘을 같게)에는 제품 이름이나 상위 폴더 이름의 말머리를 붙이지 않는다("AriadneNSD 요구사항 명세" → "요구사항", "UX 설계: 단축키" → "단축키"). 영어 이름이 더 익숙하면 영어로 쓴다("Outbox"). 배포한 사이트는 이 이름을 목록과 탭에 쓴다. ADR · DR의 "ADR-0001: …"은 번호가 식별자라 그대로 둔다(2026-10-25, 메인테이너).
 - `docs/` 아래는 색인 `docs/README.md`를 빼고 모두 폴더이며, 읽는 순서대로 두 자리 번호를 붙인다. 문서 하나짜리 항목도 같은 이름의 폴더로 감싼다 (`03-architecture/03-architecture.md`, `06-glossary/06-glossary.md`). 문서가 여럿인 폴더는 안에서 다시 번호를 붙인다 (`01-requirements/02-use-cases.md`, `04-design/01-model.md` …). `atelier/adr/`의 ADR은 네 자리 번호(`0001-…`), `atelier/decisions/`의 DR은 `dr-`와 네 자리 번호(`dr-0001-…`)를 쓴다. 새 문서는 순서에 맞는 다음 번호로 만든다.
 - 위키링크는 파일 이름만으로 건다. 그래서 `docs/`, `atelier/`, `journal/`, `til/` 전체에서 파일 이름이 겹치지 않게 한다 (`README.md` 제외). `README.md`는 경로로 건다: `[[docs/README|문서 색인]]`.
 - `docs/`와 `atelier/`를 나누는 기준 (2026-10-17, 메인테이너):
