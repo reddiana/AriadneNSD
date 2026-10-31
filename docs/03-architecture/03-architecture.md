@@ -179,6 +179,10 @@ classDiagram
     class SettingsSchema
     <<interface>> SettingsSchema
     SettingsSchema : 설정 목록 — id · 표시 이름 · 허용 값 · 범위 user · document
+    class EditorHandle
+    <<interface>> EditorHandle
+    EditorHandle : 문서 바꾸기 · 저장 · 직렬화
+    EditorHandle : 문서 상태 알림 — 이름 · 저장 안 됨 · 읽기 전용
     editor ..> DocumentStore : «use»
     editor ..> SettingsStore : «use»
     DocumentStore <|.. Shell
@@ -187,6 +191,8 @@ classDiagram
     editor ..|> SettingsSchema
     CommandRegistry <.. Shell : «use»
     SettingsSchema <.. Shell : «use»
+    editor ..|> EditorHandle
+    EditorHandle <.. Shell : «use»
 ```
 
 UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다이어그램이 없어 `classDiagram`의 스테레오타입으로 그림). 왼쪽 선은 모두 `editor`의 것, 오른쪽 선은 모두 셸의 것입니다. 점선 열린 화살표(`..>`)는 **의존**(«use»), 점선 빈 삼각형(`..|>`)은 **실현**(realization: 그 인터페이스를 구현한다)입니다. 인터페이스 안의 줄은 메서드의 시그니처가 아니라 책임입니다. 시그니처는 [[03-editor#6. 셸과의 연결]]에서 정합니다.
@@ -196,12 +202,13 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 | 방향 | 인터페이스 | 정의 | 구현 | 사용 | 결정 |
 | --- | --- | --- | --- | --- | --- |
 | **필요 인터페이스** (required, 포트) | `DocumentStore`, `SettingsStore` | `editor` | 셸 (어댑터) | `editor` | [[0031-shell-interfaces\|ADR-0031]] |
-| **제공 인터페이스** (provided) | `CommandRegistry`, `SettingsSchema` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
+| **제공 인터페이스** (provided) | `CommandRegistry`, `SettingsSchema`, `EditorHandle` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
 
 - **필요 인터페이스**는 포트와 어댑터(헥사고날) 패턴입니다. 플랫폼마다 다른 I/O를 `editor`가 인터페이스로 정의하고, 셸이 구현체를 만들어 시작할 때 주입합니다.
 	- `DocumentStore`: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다, 다른 문서를 경로로 읽는다(다른 문서의 Method 호출 → [[01-requirements#^r-blk|R-BLK-09]]). 읽지 못하면 `null`을 돌려주고, 그 호출 블록은 "이어진 곳 없음"으로 보인다. 웹은 사용자가 권한을 준 파일이나 폴더 안에서만 읽는다.
 	- `SettingsStore`: 사용자 설정(화면 언어, 자동 저장, 키 힌트 등 → [[06-web#7. 화면 배치]]의 환경 설정)을 읽고 쓴다.
-- **제공 인터페이스**로 `editor`는 명령 레지스트리와 설정 스키마를 노출합니다. 셸은 이것을 자기 툴바 · 메뉴 · 설정 창으로 렌더링하거나, 호스트 프로그램의 확장 지점(명령 팔레트 · 컨텍스트 메뉴 · 설정 화면: Obsidian, VSCode, IntelliJ)에 등록합니다. 명령의 실행 진입점은 하나(`id`로 실행)입니다.
+- **제공 인터페이스**로 `editor`는 명령 레지스트리와 설정 스키마를 노출합니다. 셸은 이것을 자기 툴바 · 메뉴 · 설정 창으로 렌더링하거나, 호스트 프로그램의 확장 지점(명령 팔레트 · 컨텍스트 메뉴 · 설정 화면: Obsidian, VSCode, IntelliJ)에 등록합니다. 명령의 실행 진입점은 하나(`id`로 실행)입니다. 셸도 자기 명령(새로 · 열기 · 최근 파일)을 같은 목록에 더합니다.
+	- `EditorHandle`: 셸이 `editor`를 만들면 받는 손잡이입니다. 문서를 바꾸고(`open`), 저장하고, 문서의 상태(이름 · 저장 안 됨 · 읽기 전용)를 알립니다. `editor`는 문서 하나만 알고, 어떤 파일을 열지와 자동 저장 · 임시 보관의 타이머는 셸이 맡습니다 → [[03-editor#6.1 새로 · 열기 · 최근 파일]], [[03-editor#6.3 자동 저장과 임시 보관은 셸이 맡는다]]
 
 ### 3.3 의존 규칙
 

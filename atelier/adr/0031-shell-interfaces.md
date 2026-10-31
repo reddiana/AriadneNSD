@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-01: `DocumentStore`는 문서 하나의 읽기 · 쓰기로 남고, 어떤 파일을 열지(새로 · 열기 · 최근 파일)와 자동 저장 · 임시 보관의 타이머는 셸이 맡는 것으로 정했다. 셸은 `editor`를 만들 때 문서와 함께 화면 밝기 · UI 글꼴(`Appearance`)을 넘긴다. 설정이 아니라 호스트의 형편이라 `SettingsStore`에 넣지 않았다 → [[03-editor#6.1 새로 · 열기 · 최근 파일]], [[03-editor#6.3 자동 저장과 임시 보관은 셸이 맡는다]]
 > - 2026-11-01: 두 인터페이스에 구체적인 시그니처가 생겼다(`WriteResult`, `canWriteInPlace`, `readOther` 등) → [[03-editor#6. 셸과의 연결]]. 웹 셸은 파일 밖에 임시 보관과 최근 파일을 브라우저의 IndexedDB에 둔다 → [[06-web#2. 임시 보관과 자동 저장]]
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). 두 인터페이스에 이름(`DocumentStore`, `SettingsStore`)을 붙였다. 이 ADR은 `editor`가 요구하고 셸이 구현하는 **필요 인터페이스**, [[0033-command-list-for-shells|ADR-0033]]은 `editor`가 구현하고 셸이 쓰는 **제공 인터페이스**다. 같은 경계의 반대 방향이다 → [[03-architecture#3.2 editor와 셸의 인터페이스]]
 > - 2026-10-18: 반대 방향이 더해졌다. `editor`가 제공 인터페이스로 명령 레지스트리와 설정 스키마를 노출하고, 셸은 그것을 자기 메뉴나 호스트 프로그램(Obsidian, IDE)의 메뉴 · 설정 화면에 등록한다 → [[0033-command-list-for-shells|ADR-0033]]

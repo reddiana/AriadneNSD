@@ -60,6 +60,7 @@ type EditorState = {
   lastSelected: Id | null;        // 선택한 것을 푼 뒤 이동 키를 누르면 여기서 시작
   editing: Editing | null;        // 인라인 에디터가 열려 있으면
   dirty: boolean;                 // 마지막 저장 뒤 내용이나 뷰 상태가 바뀌었는가 (저장 안 됨 표시 ●)
+  readOnly: boolean;              // 보기만 함 (웹: 같은 파일을 다른 탭이 고치고 있을 때) → 6.4
   zoom: number;                   // 줌 배율 0.4 ~ 3
   layout: LayoutResult;           // 마지막으로 센 결과. 히트 테스트와 오버레이 레이어가 쓴다
 };
@@ -198,16 +199,21 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 ```ts
 type CommandSpec = {
   id: string;                         // 'block.insert.if', 'edit.cut', 'view.fold.toggle' …
-  title: Message;                     // 화면 언어마다의 이름 (R-NFR-04)
+  title: Message | ((ctx: CommandContext) => Message);  // 화면 언어마다의 이름 (R-NFR-04). 형편에 따라 바뀌면 함수
   keys: string[];                     // 키 표의 키 ('a i', 'Ctrl+X') — 표시용. 디스패치는 4장의 키 표
   menu?: { menu: MenuId; group: number; order: number };  // 메뉴 바의 자리
   toolbar?: { group: number; order: number; icon: IconId };
   context?: SelectionKind[];          // 컨텍스트 메뉴에 보일 선택의 종류
-  when(state: EditorState): true | Reason;   // 듣는가, 아니면 까닭
-  run(state: EditorState, args?: unknown): void;
+  edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 듣지 않는다 → 6.4
+  when(ctx: CommandContext): true | Reason;   // 듣는가, 아니면 까닭
+  run(ctx: CommandContext, args?: unknown): void | Promise<void>;
 };
+type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
 type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
 ```
+
+- 이름이 형편에 따라 바뀌는 예: 원래 파일에 쓸 수 없는 브라우저(`store.canWriteInPlace`가 false)에서는 "저장"을 "내려받기"로 부릅니다 → [[06-web#1. 파일 열기·저장]]
+- 명령의 대부분은 `editor`가 만듭니다. 문서를 바꾸는 명령(새로 · 열기 · 최근 파일)은 셸이 만들어 같은 목록에 더합니다 → 6.1
 
 ### 5.1 메뉴 구성
 
@@ -235,12 +241,28 @@ type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
 | 방향 | 인터페이스 | 정의 | 구현 | 사용 | 결정 |
 | --- | --- | --- | --- | --- | --- |
 | 필요 인터페이스 (required, 포트) | `DocumentStore`, `SettingsStore` | `editor` | 셸 (어댑터) | `editor` | [[0031-shell-interfaces\|ADR-0031]] |
-| 제공 인터페이스 (provided) | `CommandRegistry`, `SettingsSchema` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
+| 제공 인터페이스 (provided) | `CommandRegistry`, `SettingsSchema`, `EditorHandle` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
 
 ```ts
-// 필요 인터페이스: 셸이 구현해 시작할 때 넘긴다
+// 시작: 셸이 editor를 만든다
+function createEditor(options: {
+  host: HTMLElement;                             // editor가 그릴 자리
+  settings: SettingsStore;
+  appearance: Appearance;                        // 화면 밝기와 UI 글꼴 (호스트에서 받음)
+  doc: OpenedDocument;                           // 처음 보일 문서
+}): EditorHandle;
+
+type OpenedDocument = {
+  store: DocumentStore;                          // 이 문서의 읽기 · 쓰기
+  text: string | null;                           // .ns.svg · .ns 글자. null이면 새 문서 (R-ALL-03)
+  readOnly?: boolean;                            // 보기만 함 → 6.4
+  restored?: string;                             // 임시 보관에서 되살린 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
+};
+type Appearance = { scheme: 'light' | 'dark'; uiFont: string };
+
+// 필요 인터페이스: 셸이 구현해 넘긴다
 interface DocumentStore {
-  readonly name: string;                         // 파일 이름 (화면의 "예제.ns.svg")
+  readonly name: string;                         // 파일 이름 (화면의 "예제.ns.svg"). 다른 이름으로 저장하면 바뀐다
   readonly canWriteInPlace: boolean;             // 원래 파일에 쓸 수 있는가 (웹의 Firefox · Safari는 false)
   read(): Promise<string>;                       // .ns.svg 글자
   write(svg: string): Promise<WriteResult>;      // 원래 자리에. 못 쓰면 셸이 내려받기 등으로 대신한다
@@ -259,21 +281,87 @@ interface SettingsStore {
 interface CommandRegistry {
   list(): CommandSpec[];
   run(id: string, args?: unknown): void;
+  register(spec: CommandSpec): () => void;       // 셸의 명령을 더한다 (새로 · 열기 · 최근 파일). 돌려받은 함수로 뺀다
   onChange(listener: () => void): () => void;    // "듣는가"가 바뀌었을 때 (셸이 메뉴를 다시 그림)
 }
 interface SettingsSchema {
   list(): SettingSpec[];                         // id · 표시 이름 · 허용 값 · 기본값 · 범위('user' | 'document')
 }
+interface EditorHandle {
+  readonly commands: CommandRegistry;
+  readonly settingsSchema: SettingsSchema;
+  open(doc: OpenedDocument): void;               // 문서를 바꾼다. undo · 선택은 비운다
+  status(): DocStatus;
+  onStatus(listener: (s: DocStatus) => void): () => void;  // 상태가 바뀔 때마다 (셸이 이름 · ● · 임시 보관을 다룸)
+  serialize(): string;                           // 지금 문서의 .ns.svg 글자 (저장 · 자동 저장에 씀)
+  snapshot(): string;                            // 지금 문서의 모델 JSON (임시 보관에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
+  save(): Promise<WriteResult>;                  // "저장" 명령과 같음: serialize → store.write → 성공하면 dirty를 끈다
+  setReadOnly(readOnly: boolean): void;
+  setAppearance(a: Appearance): void;            // 호스트의 밝기가 바뀌었을 때
+  dispose(): void;
+}
+type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름
 ```
 
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(그려야 할 때 기다리지 않게).
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 돌려줍니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]
-- 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]
+- 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 형편이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
+
+### 6.1 새로 · 열기 · 최근 파일
+
+`editor`는 문서 하나만 압니다. 어떤 파일을 열지, 최근 파일을 어디에 기억할지, 창이나 탭을 몇 개 둘지는 셸이 정합니다(웹은 늘 하나 → [[06-web#7. 화면 배치]], 데스크톱은 탭마다 `editor` 하나).
+
+- 새로 · 열기 · 최근 파일 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
+- 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 부릅니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
+- 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 임시 보관이 있어 묻지 않고 바꿔도 내용을 잃지 않지만, 원래 파일에는 들어가지 않았음을 알립니다.
+- 열 수 없는 글자(모델이 없는 SVG, 더 새 판의 형식)를 받으면 `open`은 문서를 바꾸지 않고 까닭을 상태 표시줄에 보입니다 → [[01-file-format]]
+
+```mermaid
+sequenceDiagram
+    actor U as 사용자
+    participant S as 셸 (웹)
+    participant E as editor
+    participant F as 브라우저 파일 · IndexedDB
+    U->>+S: 파일 ▸ 열기
+    S->>+F: 파일 선택 창
+    F-->>-S: 파일 손잡이 · 글자
+    S->>S: DocumentStore를 만든다
+    S->>+E: open({ store, text })
+    E-->>-S: onStatus(name, dirty: false)
+    S->>F: 최근 파일에 더함
+    S-->>-U: 메뉴 바에 파일 이름
+```
+
+### 6.2 editor가 셸에 알리는 것
+
+셸은 `onStatus`로 문서의 상태를 받습니다. 내용이나 뷰 상태가 바뀔 때마다, 저장한 뒤, 읽기 전용이 바뀔 때 옵니다.
+
+| 셸이 하는 일 | 쓰는 것 |
+| --- | --- |
+| 파일 이름과 저장 안 됨 표시(`●`), 창 제목 | `name`, `dirty` |
+| 브라우저 탭이나 창을 닫을 때 묻기 | `status().dirty` |
+| 임시 보관 (웹) | `revision`이 바뀌면 `snapshot()` |
+| 자동 저장 | `dirty`가 켜지면 `save()` |
+
+### 6.3 자동 저장과 임시 보관은 셸이 맡는다
+
+타이머는 셸에 둡니다. 언제 어디에 쓸지가 대상마다 다르기 때문입니다(웹은 원래 파일에 쓸 수 있는 브라우저에서만, Obsidian은 Obsidian의 저장 규칙). `editor`는 "바뀌었다"를 알리고 `save()` · `snapshot()`을 내줄 뿐입니다.
+
+- 웹의 자동 저장: `dirty`가 켜진 뒤 2초 동안 더 바뀌지 않으면 `save()`. 저장하는 사이에 또 바뀌면 끝난 뒤 다시 2초를 기다립니다 → [[06-web#2. 임시 보관과 자동 저장]]
+- 웹의 임시 보관: `revision`이 바뀌면 0.5초 안의 것을 모아 `snapshot()`을 IndexedDB에 씁니다. `save()`가 성공하면 그 칸을 지웁니다.
+- 되살리기: 셸이 시작할 때 임시 보관 칸을 찾으면 묻고, 되살리기로 하면 `open({ store, text, restored })`로 엽니다. 그 문서는 `dirty`로 열립니다.
+- 임시 보관이 `serialize()`가 아니라 `snapshot()`을 쓰는 까닭: 저장 글자는 서브셋 글꼴을 만들어 넣어 무겁고([[02-layout#2.2 서브셋 글꼴의 크기]]), 임시 보관은 고칠 때마다 씁니다.
+
+### 6.4 읽기 전용
+
+`readOnly`이면 `edits: true`인 명령이 모두 "보기만 하는 중"이라는 까닭으로 듣지 않습니다. 선택 · 이동 · 복사 · 줌 · 접기와 펴기(뷰 상태)는 됩니다. 뷰 상태는 바뀌어도 `dirty`를 켜지 않습니다(저장할 수 없으므로).
+
+- 웹: 같은 파일을 다른 탭이 고치고 있으면 셸이 `setReadOnly(true)`를 부릅니다. 그 탭이 닫히면 `false`로 돌리고 알립니다 → [[06-web#2. 임시 보관과 자동 저장]]
+- 상태 표시줄에 "보기만 하는 중"과 그 까닭을 둡니다.
 
 ## 미결정 사항
 
-- [ ] 화면 밝기 · UI 글꼴을 호스트에서 받는 길: `SettingsStore`로 넘길지, 인터페이스를 더할지 → 6장, [[03-architecture#3.3 의존 규칙]]
 - [ ] 펴 보인 블록의 화면 id(`경로/id`)를 모델의 `Path`와 어떻게 맞출지(글자로 이을지, 배열로 둘지) → 2장
 - [ ] 맥에서 `Alt`(`Option`)+방향키, `Ctrl`+`Shift`+`P`가 운영체제 · 브라우저와 겹치는지 → 4장

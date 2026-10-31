@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0033: editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-01: 제공 인터페이스에 `EditorHandle`(문서 바꾸기 · 저장 · 직렬화 · 상태 알림)을 더했다. 셸도 자기 명령(새로 · 열기 · 최근 파일)을 `CommandRegistry.register`로 같은 목록에 더한다. 명령의 이름은 형편에 따라 바뀔 수 있다(내려받는 브라우저에서 "저장" → "내려받기") → [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: 명령 하나의 항목(`CommandSpec`)을 정했다 → [[03-editor#5. 명령 목록과 메뉴]]. 명령 목록은 웹 · 데스크톱의 메뉴 바와 커맨드 팔레트에도 쓰인다([[ux-decisions#W1. 웹 화면의 배치|W1]], [[ux-decisions#W6. 명령 찾기|W6]]). `SettingsSchema`의 설정에 범위(`user` · `document`)가 생겼다([[ux-decisions#W5. 설정|W5]])
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). 두 인터페이스에 이름(`CommandRegistry`, `SettingsSchema`)을 붙였다. 이 ADR은 `editor`가 구현하고 셸이 쓰는 **제공 인터페이스**, [[0031-shell-interfaces|ADR-0031]]은 `editor`가 요구하고 셸이 구현하는 **필요 인터페이스**다. 같은 경계의 반대 방향이다 → [[03-architecture#3.2 editor와 셸의 인터페이스]]
 
