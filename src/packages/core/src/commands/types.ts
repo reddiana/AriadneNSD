@@ -41,6 +41,7 @@ export type Reason = {
  * The reasons a command can refuse. The editor maps each code to a message in its catalog.
  * - `askConvertIfToCase`: a branch was inserted on an If. The editor asks whether to convert
  *   the If to a Case and, if so, runs `convertIfToCase` (UX MD3).
+ * - `intoItself`: blocks were dropped inside one of themselves (`moveTo`).
  */
 export type ReasonCode =
   | 'notFound'
@@ -62,7 +63,8 @@ export type ReasonCode =
   | 'emptyLabel'
   | 'defaultLabelFixed'
   | 'notConvertible'
-  | 'emptyClip';
+  | 'emptyClip'
+  | 'intoItself';
 
 /**
  * A note returned with a successful command.

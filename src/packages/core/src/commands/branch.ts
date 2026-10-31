@@ -148,6 +148,35 @@ export function convertIfToCase(content: Content, args: ConvertArgs): Result {
   );
 }
 
+/** Arguments of `addDefaultBranch`. */
+export type AddDefaultBranchArgs = WithIds & {
+  /** The Case without a default branch. */
+  readonly block: Id;
+};
+
+/**
+ * Gives a Case without a default branch an empty default branch (UX CD1). The editor runs this
+ * when the user types into or inserts on the drawn empty default cell, together with that edit as
+ * one undo step. Touched: the new branch, then its empty block.
+ */
+export function addDefaultBranch(content: Content, args: AddDefaultBranchArgs): Result {
+  const entry = indexContent(content).blocks.get(args.block);
+  if (entry === undefined) {
+    return fail('notFound', args.block);
+  }
+  const block = entry.block;
+  if (block.kind !== 'case' || block.otherwise !== null) {
+    return fail('wrongKind', args.block);
+  }
+  const ids = idsFor(content, args);
+  const otherwise: Branch = { id: ids.next('branch'), body: emptySeq(ids) };
+  const [first] = otherwise.body.blocks;
+  return done(
+    replaceBlock(content, entry, () => ({ ...block, otherwise })),
+    first === undefined ? [otherwise.id] : [otherwise.id, first.id],
+  );
+}
+
 type FoundBranch = { readonly entry: BranchEntry; readonly owner: BlockEntry };
 
 function findBranch(content: Content, branch: Id): FoundBranch | Result {

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { convertCaseToIf, convertIfToCase, deleteBranch, insertBranch } from './branch';
+import {
+  addDefaultBranch,
+  convertCaseToIf,
+  convertIfToCase,
+  deleteBranch,
+  insertBranch,
+} from './branch';
 import {
   arm,
   blockOf,
@@ -119,5 +125,25 @@ describe('If and Case conversion (UX MD3)', () => {
     );
     expect(result.touched).toEqual(['r3']);
     expectRefused(convertIfToCase, contentOf([proc('b1')]), { block: 'b1' }, 'wrongKind');
+  });
+});
+
+describe('the missing default branch (UX CD1)', () => {
+  it('UX CD1: gives a Case without a default an empty default branch', () => {
+    const content = contentOf([caseBlock('b1', [arm('r1', '1', [proc('b2')])], null)]);
+    const result = runOk(addDefaultBranch, content, { block: 'b1' });
+    expect(blockOf(result.content, 'b1')).toEqual(
+      caseBlock('b1', [arm('r1', '1', [proc('b2')])], branch('r2', [empty('b3')])),
+    );
+    expect(result.touched).toEqual(['r2', 'b3']);
+  });
+
+  it('UX CD1: refuses a Case that has a default, other blocks and unknown ids', () => {
+    const withDefault = contentOf([
+      caseBlock('b1', [arm('r1', '1', [proc('b2')])], branch('r2', [proc('b3')])),
+    ]);
+    expectRefused(addDefaultBranch, withDefault, { block: 'b1' }, 'wrongKind');
+    expectRefused(addDefaultBranch, contentOf([proc('b1')]), { block: 'b1' }, 'wrongKind');
+    expectRefused(addDefaultBranch, contentOf([proc('b1')]), { block: 'b9' }, 'notFound');
   });
 });

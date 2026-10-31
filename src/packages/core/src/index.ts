@@ -84,12 +84,25 @@ export type { EditTextArgs } from './commands/edit-text';
 export { editText } from './commands/edit-text';
 export type { MoveArgs, MoveBranchArgs } from './commands/move';
 export { move, moveBranch } from './commands/move';
+export type { MoveToArgs } from './commands/move-to';
+export { moveTo } from './commands/move-to';
 export type { UnwrapArgs, WrapArgs } from './commands/wrap';
 export { unwrap, wrap } from './commands/wrap';
 export type { CopyArgs, CopyResult, CutResult, PasteArgs } from './commands/clipboard';
 export { copy, cut, paste } from './commands/clipboard';
-export type { ConvertArgs, DeleteBranchArgs, InsertBranchArgs } from './commands/branch';
-export { convertCaseToIf, convertIfToCase, deleteBranch, insertBranch } from './commands/branch';
+export type {
+  AddDefaultBranchArgs,
+  ConvertArgs,
+  DeleteBranchArgs,
+  InsertBranchArgs,
+} from './commands/branch';
+export {
+  addDefaultBranch,
+  convertCaseToIf,
+  convertIfToCase,
+  deleteBranch,
+  insertBranch,
+} from './commands/branch';
 export { createContent, createDoc, defaultSettings } from './commands/new-document';
 
 // File format (docs/05-spec/01-file-format.md).

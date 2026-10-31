@@ -1,0 +1,448 @@
+// Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
+import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
+import { createDoc, openSvgFile, parseModelJson } from '@ariadne-nsd/core';
+
+import { editorCommands } from './commands/editor-commands';
+import { createRegistry } from './commands/registry';
+import type {
+  Appearance,
+  ChromeState,
+  CommandContext,
+  DocStatus,
+  DocumentStore,
+  EditorHandle,
+  OpenedDocument,
+  SaveFonts,
+  SettingSpec,
+  SettingsSchema,
+  SettingsStore,
+  ToolbarBlockKind,
+  WriteResult,
+} from './contracts';
+import { CanvasView } from './dom/canvas-view';
+import { installStyles } from './dom/styles';
+import { createSystemClipboard } from './dom/system-clipboard';
+import type { EditorMessage } from './i18n/messages';
+import { formatMessage } from './i18n/messages';
+import { keyBindings } from './input/keys';
+import { indexDoc } from './model/doc-index';
+import { cachedFonts, serializeDocument, snapshotDocument } from './save/serialize';
+import type { ClipboardPort, Timers } from './session/session';
+import { EditorSession } from './session/session';
+import type { Selection } from './state/selection';
+import { selectBlock } from './state/selection';
+
+/** What `createEditor` takes (03-editor 6, with the additions marked). */
+export type EditorOptions = {
+  /** Where the editor draws. The editor fills it. */
+  readonly host: HTMLElement;
+  readonly settings: SettingsStore;
+  readonly appearance: Appearance;
+  /** The document to show first. */
+  readonly doc: OpenedDocument;
+  /** Addition: the subsetter and the TTF for saved files, loaded on the first save. */
+  readonly fonts: SaveFonts;
+  /** Addition: the screen language when the setting `ui.locale` is not set. Default English. */
+  readonly locale?: Locale;
+  /** Addition: the URL of the block font's WOFF2 for the screen (`@font-face`). */
+  readonly screenFontUrl?: string;
+  /** Addition: the clipboard; by default the system clipboard with a fallback in memory. */
+  readonly clipboard?: ClipboardPort;
+  /** Addition: unexpected errors, for the problem report (R-REP-01). Default: nowhere. */
+  readonly log?: (text: string, detail?: unknown) => void;
+};
+
+/** The setting ids the editor reads (03-editor 6, UX W5). */
+export const settingIds = {
+  locale: 'ui.locale',
+  keyHint: 'editor.keyHint',
+  autoSave: 'file.autoSave',
+} as const;
+
+/** The settings the editor knows. `file.autoSave` is used by the web shell. */
+export const settingSpecs: ReadonlyArray<SettingSpec> = [
+  {
+    id: settingIds.locale,
+    title: 'setting.uiLocale',
+    values: ['en', 'ko'],
+    valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko'],
+    defaultValue: 'en',
+    scope: 'user',
+  },
+  {
+    id: settingIds.keyHint,
+    title: 'setting.keyHint',
+    values: [true, false],
+    defaultValue: true,
+    scope: 'user',
+  },
+  {
+    id: settingIds.autoSave,
+    title: 'setting.autoSave',
+    values: [true, false],
+    defaultValue: true,
+    scope: 'user',
+  },
+];
+
+/** A document read from an `OpenedDocument`, or why it cannot be edited. */
+export type ReadDocument =
+  | {
+      readonly ok: true;
+      readonly doc: Doc;
+      readonly kept: KeptSettings;
+      readonly isDirty: boolean;
+      readonly selection: Selection | null;
+    }
+  | { readonly ok: false; readonly message: EditorMessage; readonly detail: string };
+
+/**
+ * Reads what to open: the local backup first (dirty), a new document for `text: null` (its empty
+ * block selected, UX OP1), otherwise the file (nothing selected).
+ */
+export function readDocument(opened: OpenedDocument): ReadDocument {
+  if (opened.restored !== undefined) {
+    const result = parseModelJson(opened.restored);
+    return result.ok
+      ? { ok: true, ...result.value, isDirty: true, selection: null }
+      : { ok: false, message: openMessage(result.reason), detail: result.detail };
+  }
+  if (opened.text === null) {
+    const doc = createDoc();
+    const first = doc.content.diagrams[0]?.body.blocks[0];
+    return {
+      ok: true,
+      doc,
+      kept: {},
+      isDirty: false,
+      selection: first === undefined ? null : selectBlock(indexDoc(doc.content), first.id),
+    };
+  }
+  const result = openSvgFile(opened.text);
+  return result.ok
+    ? { ok: true, ...result.value, isDirty: false, selection: null }
+    : { ok: false, message: openMessage(result.reason), detail: result.detail };
+}
+
+function openMessage(reason: 'noModel' | 'prototype' | 'damaged' | 'newerVersion'): EditorMessage {
+  switch (reason) {
+    case 'noModel':
+      return 'notice.openNoModel';
+    case 'prototype':
+      return 'notice.openPrototype';
+    case 'damaged':
+      return 'notice.openDamaged';
+    case 'newerVersion':
+      return 'notice.openNewerVersion';
+  }
+}
+
+const browserTimers: Timers = {
+  set: (callback, milliseconds) => setTimeout(callback, milliseconds),
+  clear: (handle) => {
+    clearTimeout(handle as ReturnType<typeof setTimeout>);
+  },
+};
+
+const documentSettingIds = {
+  headStyle: 'document.headStyle',
+  textKind: 'document.textKind',
+  theme: 'document.theme',
+} as const;
+
+/**
+ * Makes an editor in `host` and shows `doc` (03-editor 6). A file that cannot be opened is not
+ * edited: the editor shows a new document, view only, so the original is never overwritten, and
+ * says why in the status bar.
+ */
+export function createEditor(options: EditorOptions): EditorHandle {
+  const { settings } = options;
+  const log = options.log ?? (() => undefined);
+  const locale = (): Locale => {
+    const chosen = settings.get<string>(settingIds.locale);
+    return chosen === 'ko' || chosen === 'en' ? chosen : (options.locale ?? 'en');
+  };
+  const clipboard = options.clipboard ?? createSystemClipboard(log);
+  const fonts = cachedFonts(options.fonts);
+  let store: DocumentStore = options.doc.store;
+
+  const first = readDocument(options.doc);
+  const session = new EditorSession(
+    first.ok ? first.doc : createDoc(),
+    {
+      locale,
+      clipboard,
+      timers: browserTimers,
+      isKeyHintEnabled: () => settings.get<boolean>(settingIds.keyHint) !== false,
+      log,
+      keyBindings,
+    },
+    first.ok
+      ? {
+          kept: first.kept,
+          selection: first.selection,
+          isDirty: first.isDirty,
+          readOnly: options.doc.readOnly ?? false,
+        }
+      : { kept: {}, selection: null, isDirty: false, readOnly: true },
+  );
+  if (!first.ok) {
+    log(`Could not open ${store.name}`, first.detail);
+    session.notify(first.message, 'warn');
+  }
+
+  const context = (): CommandContext => ({ state: session.state, store, settings });
+  let view: CanvasView | null = null;
+  const registry = createRegistry({
+    context,
+    keyBindings,
+    refuse: (reason) => {
+      session.notifyMessage(reason, 'warn');
+    },
+    beforeRun: () => {
+      if (session.state.editing !== null && view !== null) {
+        session.commitEditing(view.editorText());
+      }
+    },
+    onError: (error, id) => {
+      log(`Command ${id} threw`, error);
+      session.notify('notice.internalError', 'warn');
+    },
+  });
+  session.runCommand = (id, args) => {
+    registry.run(id, args);
+  };
+
+  // Status for the shell (03-editor 6.2).
+  const status = (): DocStatus => ({
+    name: store.name,
+    dirty: session.state.dirty,
+    readOnly: session.state.readOnly,
+    revision: session.state.revision,
+  });
+  const statusListeners = new Set<(s: DocStatus) => void>();
+  let lastStatus = status();
+  const emitStatus = (): void => {
+    const next = status();
+    if (
+      next.name !== lastStatus.name ||
+      next.dirty !== lastStatus.dirty ||
+      next.readOnly !== lastStatus.readOnly ||
+      next.revision !== lastStatus.revision
+    ) {
+      lastStatus = next;
+      for (const listener of [...statusListeners]) {
+        listener(next);
+      }
+    }
+  };
+  const chromeListeners = new Set<() => void>();
+  const changeListeners = new Set<(state: typeof session.state) => void>();
+  session.subscribe((state) => {
+    emitStatus();
+    registry.changed();
+    for (const listener of [...chromeListeners]) {
+      listener();
+    }
+    for (const listener of [...changeListeners]) {
+      listener(state);
+    }
+  });
+
+  // Saving (03-editor 6, 6.3).
+  const serialize = async (): Promise<{ readonly svg: string; readonly doc: Doc }> => {
+    const source = { doc: session.state.doc, kept: session.kept, rendering: session.rendering };
+    return { svg: await serializeDocument(source, fonts), doc: source.doc };
+  };
+  const tellWrite = (result: WriteResult, isQuiet: boolean): void => {
+    if (result.ok) {
+      if (!isQuiet) {
+        session.notify({ key: 'notice.saved', params: { name: result.name } });
+      }
+      return;
+    }
+    switch (result.reason) {
+      case 'cancelled':
+        return;
+      case 'denied':
+        session.notify('notice.saveDenied', 'warn');
+        return;
+      case 'failed':
+        log('Saving failed', result.detail);
+        session.notify('notice.saveFailed', 'warn');
+        return;
+    }
+  };
+  const save = async (): Promise<WriteResult> => {
+    if (session.state.readOnly) {
+      return { ok: false, reason: 'denied', detail: 'view only' };
+    }
+    const saved = await serialize();
+    const result = await store.write(saved.svg);
+    if (result.ok) {
+      session.markSaved(saved.doc);
+    }
+    tellWrite(result, true);
+    emitStatus();
+    return result;
+  };
+  const saveAs = async (): Promise<WriteResult> => {
+    const saved = await serialize();
+    const result = await store.writeAs(saved.svg, store.name);
+    if (result.ok && !session.state.readOnly) {
+      session.markSaved(saved.doc);
+    }
+    tellWrite(result, false);
+    emitStatus();
+    return result;
+  };
+
+  for (const spec of editorCommands({
+    session,
+    clipboard,
+    locale,
+    save,
+    saveAs,
+    zoomTo: (zoom) => {
+      view?.zoomTo(zoom);
+    },
+  })) {
+    registry.register(spec);
+  }
+
+  installStyles(options.host.ownerDocument, options.screenFontUrl ?? null);
+  view = new CanvasView({
+    host: options.host,
+    session,
+    run: (id, args) => {
+      registry.run(id, args);
+    },
+    locale,
+    appearance: options.appearance,
+  });
+
+  const stopSettings = settings.onChange((key) => {
+    if (key === settingIds.locale) {
+      session.rerender();
+    }
+  });
+
+  const settingsSchema: SettingsSchema = { list: () => settingSpecs };
+
+  const handle: EditorHandle = {
+    commands: registry,
+    settingsSchema,
+    open: (opened) => {
+      const read = readDocument(opened);
+      if (!read.ok) {
+        log(`Could not open ${opened.store.name}`, read.detail);
+        session.notify(read.message, 'warn');
+        return false;
+      }
+      store = opened.store;
+      session.load(read.doc, {
+        kept: read.kept,
+        selection: read.selection,
+        isDirty: read.isDirty,
+        readOnly: opened.readOnly ?? false,
+      });
+      emitStatus();
+      return true;
+    },
+    status,
+    onStatus: (listener) => {
+      statusListeners.add(listener);
+      return () => {
+        statusListeners.delete(listener);
+      };
+    },
+    state: () => session.state,
+    onChange: (listener) => {
+      changeListeners.add(listener);
+      return () => {
+        changeListeners.delete(listener);
+      };
+    },
+    chromeState: (): ChromeState => session.chrome(),
+    onChromeState: (listener) => {
+      chromeListeners.add(listener);
+      return () => {
+        chromeListeners.delete(listener);
+      };
+    },
+    serialize: async () => (await serialize()).svg,
+    snapshot: () => snapshotDocument({ doc: session.state.doc, kept: session.kept }),
+    save,
+    setReadOnly: (readOnly) => {
+      session.setReadOnly(readOnly);
+      emitStatus();
+    },
+    setAppearance: (appearance) => {
+      view?.setAppearance(appearance);
+    },
+    documentSetting: (id) => {
+      const current = session.state.doc.content.settings;
+      switch (id) {
+        case documentSettingIds.headStyle:
+          return current.headStyle;
+        case documentSettingIds.textKind:
+          return current.textKind;
+        case documentSettingIds.theme:
+          return current.theme;
+        default:
+          return undefined;
+      }
+    },
+    setDocumentSetting: (id, value) => {
+      const content = session.state.doc.content;
+      const next = changedSettings(content.settings, id, value);
+      if (session.state.readOnly) {
+        session.notify('reason.readOnly', 'warn');
+        return;
+      }
+      const isSame =
+        next !== null &&
+        next.headStyle === content.settings.headStyle &&
+        next.textKind === content.settings.textKind &&
+        next.theme === content.settings.theme;
+      if (next !== null && !isSame) {
+        // Document settings are content: undoable (UX W5, Q9).
+        session.apply({ ...content, settings: next }, { selection: session.state.selection });
+      }
+    },
+    startBlockDrag: (kind: ToolbarBlockKind, event: PointerEvent) => {
+      view?.startNewBlockDrag(
+        { kind: 'new', blockKind: kind },
+        formatMessage(locale(), `command.block.insert.${kind}`),
+        event,
+      );
+    },
+    focus: () => {
+      view?.focus();
+    },
+    dispose: () => {
+      stopSettings();
+      view?.dispose();
+      view = null;
+      session.dispose();
+      statusListeners.clear();
+      chromeListeners.clear();
+      changeListeners.clear();
+    },
+  };
+  return handle;
+}
+
+/** The settings with one document setting changed, or `null` if the value is not allowed. */
+function changedSettings(settings: Settings, id: string, value: unknown): Settings | null {
+  switch (id) {
+    case documentSettingIds.headStyle:
+      return value === 'shape' || value === 'title' ? { ...settings, headStyle: value } : null;
+    case documentSettingIds.theme:
+      return value === 'default' ? { ...settings, theme: value } : null;
+    case documentSettingIds.textKind:
+      return value === 'plain' ? { ...settings, textKind: value } : null;
+    default:
+      return null;
+  }
+}
