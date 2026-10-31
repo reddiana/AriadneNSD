@@ -89,7 +89,7 @@ updated: 2026-10-25
 
 - [[01-requirements#^r-obs-3|R-OBS-10]]이 "저장되는 SVG의 색상은 테마 설정을 따름"이라고 적는데, 6장에는 저장된 SVG의 색이 미결정으로 남아 있다 → [[01-requirements#^r-obs-3|R-OBS-10]]에서 그 말을 빼고 미결정을 가리킨다
 - 접기 영역 풀기 설명이 제어 블록 풀기를 [[01-requirements#^r-edit|R-EDIT-06]]으로 가리킨다 → [[01-requirements#^r-edit|R-EDIT-07]]
-- [[01-requirements#^r-edit|R-EDIT-01]]의 "텍스트 수정(더블클릭 또는 F2)"에 `Enter`가 빠져 있다 ([[02-interaction-rules#Q1. 고치기를 시작하는 방법 (R1)|Q1]]의 답에 따라)
+- [[01-requirements#^r-edit|R-EDIT-01]]의 "텍스트 수정(더블클릭 또는 F2)"에 `Enter`가 빠져 있다 ([[ux-decisions#Q1 · Q2. 고치기를 시작하는 방법과 더블클릭|Q1]]의 답에 따라)
 - "이벤트 머리"와 "Event 머리", "선택한 블록"과 "고른 블록"이 섞여 있다 → 하나로 맞춘다 ("Event 머리", "고른 블록". 용어집의 "선택 영역"은 그대로)
 
 독립 검토가 찾은 모순도 함께 고칩니다.

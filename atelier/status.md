@@ -18,7 +18,7 @@ updated: 2026-10-31
 | ID | 무엇 | 주소 | 저장소의 사본 |
 | --- | --- | --- | --- |
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
-| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q1 · Q2 · Q4~Q6 · Q8 · Q11 · Q12 · Q19 · Q20 · [[requirements-rework]] Q18, Q23) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항|조작의 미결정]] Q20(MVP 뒤) · [[requirements-rework]] Q18, Q23. MVP에 드는 물음은 M43에서 정함) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
@@ -28,6 +28,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 - 요구사항 · UX 설계 · 아키텍처는 초안이 있고, 상세 설계는 문서 모델 [[01-model]], 레이아웃 [[02-layout]](규칙 · 스파이크 · [[0037-two-pass-full-layout|ADR-0037]]까지), 테스트 전략 [[07-testing]](초안, 도구 [[0038-build-and-test-tools|ADR-0038]])이 있고, 편집기 [[03-editor]]는 뼈대입니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP는 웹의 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 범위입니다 → [[dr-0015-mvp-scope|DR-0015]]. MVP 전에 정할 것은 [[backlog#MVP 전에 정할 것]]
+- MVP에 드는 조작 규칙의 미결정은 2026-11-01에 모두 정했습니다(시안 M43 → [[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입에는 아직 넣지 않았습니다 → [[prototype#정해 놓고 아직 넣지 못한 것]]
 - 코드의 자리는 정했고(`src/` 아래의 pnpm 워크스페이스 → [[0036-code-layout|ADR-0036]]) 코드는 아직 없습니다
 - 프로토타입은 **64번째 판**입니다(2026-10-31: 62번째 판에서 그때까지 정한 것을 모두 넣고, 63번째 판에서 주소로 예제 열기, 64번째 판에서 inbox 다섯: 머리 모양 기억 · 처음엔 Raft · 열면 고른 것 없음 · 좁은 화면) → [[prototype]]
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]

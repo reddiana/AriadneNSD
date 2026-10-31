@@ -44,7 +44,9 @@ def card(tag, title, body, figs, pick=False, now=False, ref=False):
 def cap(text):
     return f'<p class="cap">{text}</p>'
 
+DONE = {'Q1 · Q2': 'Q1 확인, Q2 1번 더블클릭은 어디서나 고치기', 'Q4': '1번 고치기 전의 이름으로', 'Q6': '1번 Alt+방향키 하나', 'Q10 · Q5': 'a 1번 · b 1번 · c 1번(Q5 포함)', 'Q8': '1번 지금대로', 'Q11': '2번 세 겹 그대로', 'Q12': '1번 갈래 지우기', 'Q19': '1번 바뀐 것 · 다음 블록'}
 def section(qid, title, q, cards, note=''):
+    q = f'<b>결정함 (2026-11-01): {DONE[qid]}.</b> ' + q if qid in DONE else q
     return (f'<section id="{re.sub(r"[^a-z0-9]+", "-", qid.lower()).strip("-")}"><span class="part">{qid}</span><h2>{title}</h2><p class="q">{q}</p>'
             f'<div class="cards">{"".join(cards)}</div>{note}</section>')
 
