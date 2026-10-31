@@ -66,7 +66,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
     ]]></ans:document>
   </metadata>
   <style>
-    @font-face { font-family: "…"; src: url(data:font/…;base64,…); }  /* 서브셋 글꼴. 형식(TTF/woff2)은 미결정 */
+    @font-face { font-family: "…"; src: url(data:font/woff;base64,…); }  /* 서브셋 글꼴 (WOFF) */
   </style>
   <rect width="100%" height="100%" fill="#ffffff"/>  <!-- 종이 -->
   <g class="ans-render"> … </g>                       <!-- 모델에서 생성한 그림 -->
@@ -76,7 +76,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^r-fmt|R-FMT-01]]).
 - 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 판 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 모델 요소의 이름은 `ans:document`다. 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
-- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식(압축하지 않은 TTF인가, woff2인가)은 [[02-layout]]에서 정한다(6장).
+- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식은 **WOFF**(`font/woff`)다. 압축은 판을 고정한 JS zlib 라이브러리로 한다 → [[0039-woff-subset-font|ADR-0039]]
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^r-fmt|R-FMT-08]], [[04-visual-design#2. 레이어와 출력]]
 - 그림 요소는 모델에서 생성한 파생 데이터일 뿐이며, 읽을 때 무시한다(단일 원천은 모델: [[01-requirements#^r-fmt|R-FMT-05]]). 저장되는 그림은 지금 화면 그대로이고 오버레이 레이어의 표시(선택 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 
@@ -180,7 +180,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 - 객체 키의 순서는 스키마에 정한 순서로 고정한다.
 - 기본값과 같은 속성을 생략할지는 스키마에서 속성마다 정하고, 늘 그대로 따른다.
 - `view`의 목록(`folded`, `opened`)은 id를 문서 순서(다이어그램 순서, 그 안의 깊이 우선 순서)로 늘어놓는다. 접고 편 차례에 따라 달라지지 않는다.
-- 서브셋 글꼴은 글자를 코드 포인트 순으로 서브세팅하고, 같은 버전의 서브세팅 도구로 만든다.
+- 서브셋 글꼴은 글자를 코드 포인트 순으로 서브세팅하고, 같은 버전의 서브세팅 도구와 같은 버전 · 같은 수준의 압축 라이브러리로 만든다.
 - 그림 안의 글자 가운데 편집기가 적는 고정 문구("참" · "거짓", "⋯ 블록 n개")는 저장 시점의 UI 언어를 따른다([[01-requirements#^r-nfr|R-NFR-04]]). 그래서 같은 모델이라도 UI 언어가 다르면 그림 요소가 달라진다. 이것은 이 규칙의 예외이고, 모델 JSON은 언제나 같다.
 
 ### 3.2 CDATA 이스케이프
@@ -230,7 +230,6 @@ sequenceDiagram
 
 ## 6. 미결정 사항
 
-- [ ] 서브셋 글꼴의 형식: 압축하지 않은 TTF인가, woff2인가(압축기를 더 실어야 함) → [[02-layout]], [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ## 7. 프로토타입과 다른 곳
 
