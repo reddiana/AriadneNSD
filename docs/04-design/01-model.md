@@ -49,7 +49,10 @@ type Settings = {
   headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
+type ThemeId = string;   // 테마의 이름. v1 형식은 'default' 하나. 모르는 이름은 기본 테마로 그린다
 ```
+
+- `TextKind`는 유니온이라 파일에 적힌 모르는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 되돌려 적습니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 모르는 이름도 그대로 담습니다.
 
 - 내용과 뷰 상태를 처음부터 나눠 둡니다. undo 스택에는 `content`의 스냅숏만 쌓입니다.
 - 화면의 줌 · 스크롤 위치, 선택, UI 언어는 모델에 없습니다. `editor`의 메모리 상태입니다.
@@ -188,7 +191,8 @@ type Id = string;  // 예: "d1"(다이어그램), "b17"(블록), "r3"(분기), "
 ```
 
 - 문서 안에서 유일합니다. 종류마다 접두사를 붙이고 뒤는 정수입니다.
-- 새 id는 **문서에서 가장 큰 수 + 1**로 발급합니다(UUID · 시각 · 난수를 쓰지 않음). 같은 문서에 같은 명령을 하면 같은 id가 나오므로 결정적입니다(테스트하기 쉽고 파일이 늘 같음).
+- 새 id는 **문서에서 그 접두사로 쓴 가장 큰 수 + 1**로 발급합니다(UUID · 시각 · 난수를 쓰지 않음). 같은 문서에 같은 명령을 하면 같은 id가 나오므로 결정적입니다(테스트하기 쉽고 파일이 늘 같음).
+- id 생성기(`createIdGenerator(content, alsoAvoid)`)는 명령의 인자로 받습니다. `alsoAvoid`는 내용에는 없지만 다시 쓰면 안 되는 id입니다. `editor`는 뷰 상태가 가리키는 id를 여기에 넣어, undo로 사라진 블록의 접힘이 새 블록에 옮겨 붙지 않게 합니다(2장의 약한 참조). 인자를 주지 않으면 명령이 내용만으로 만듭니다.
 - 붙여넣기, 호출 블록 풀기, 다른 문서에서 가져오기처럼 블록이 복사되어 들어오면 새 id로 다시 매깁니다. 복사본 안의 접기 영역의 `first` · `last`도 새 id로 매핑합니다.
 
 ## 2. 뷰 상태
@@ -260,9 +264,22 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 ```ts
 type Command<A> = (content: Content, args: A) => Result;
 type Result =
-  | { ok: true; content: Content; touched: Id[] }   // touched: 새로 생기거나 바뀐 노드의 id. 명령 뒤의 선택을 editor가 정하는 데 쓴다
+  | { ok: true; content: Content; touched: Id[]; note?: Note }  // touched: 새로 생기거나 바뀐 노드의 id. 명령 뒤의 선택을 editor가 정하는 데 쓴다
   | { ok: false; reason: Reason };                   // 사전 조건 불만족. 아무것도 바꾸지 않고 이유를 알린다 ("막지 않고 알린다")
+type Reason = { code: ReasonCode; node?: Id };       // node: 이유가 가리키는 노드. editor가 code를 카탈로그의 문장으로 바꾼다
+type Note = { kind: 'offerConvertCaseToIf' | 'checkCondition'; node: Id };  // 성공한 뒤 editor가 알리거나 물을 것
+type Target =                                        // 명령이 적용되는 곳. editor가 선택을 이것으로 바꿔 넘긴다
+  | { kind: 'blocks'; first: Id; last: Id }          // 한 줄 안의 연속 범위 (순서는 아무래도 됨). 줄은 따로 적지 않고 블록에서 찾는다
+  | { kind: 'fold'; fold: Id }                       // 접기 영역 전체. 그 곁에 삽입한 블록은 영역 밖 (4.3)
+  | { kind: 'diagramEnd'; diagram: Id };             // 선택한 것이 없을 때: 그 다이어그램의 끝에 삽입
 ```
+
+- **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 돌려줍니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
+- **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 돌려줄 뿐이고, `editor`가 앞의 내용을 쌓습니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
+- 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
+- 명령 안에서 줄(`Seq`)은 따로 id가 없으므로 그 주인(다이어그램 · 분기 · 반복 블록)의 id로 가리킵니다.
 
 - 명령 하나가 undo 한 단계입니다. 감싸기, 풀기, 새 Method로 빼기처럼 여러 노드를 바꾸는 명령도 원자적으로 한 단계입니다.
 - 명령이 끝나면 불변식을 검사합니다. 위반하면 그것은 명령의 버그이므로, 새 내용을 버리고(롤백) 문제 알리기 보고서의 로그에 남깁니다.
@@ -275,15 +292,19 @@ type Result =
 | --- | --- | --- |
 | 블록 | 삽입 (앞 · 뒤 · 빈 블록 자리) | [[02-interaction-rules#키보드로 이동하고 삽입하기]] |
 | | 삭제 | 줄이 비게 되면 빈 블록 하나를 남긴다 |
-| | 텍스트 편집 | 블록의 `text`, 호출 블록의 `args` · `result`, 헤더, 분기 라벨, 접기 영역 이름 |
-| | 이동 · 드래그 앤 드롭 | [[02-interaction-rules#이동\|이동]] |
-| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다 |
-| | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]] |
+| | 복사 · 잘라내기 | 복사(`copy`)는 내용을 바꾸지 않으므로 명령이 아니라, 범위의 블록(과 범위 안의 접기 영역)을 클립으로 돌려주는 함수다. 잘라내기(`cut`)는 삭제의 결과에 그 클립을 더해 돌려준다 |
+| | 텍스트 편집 | 블록의 `text`, 호출 블록의 `args` · `result`, 헤더, 분기 라벨, 접기 영역 이름. If의 분기 라벨을 비우면 `label`을 지워 기본 라벨("참" · "거짓")로 돌아간다. Case의 분기 라벨은 비울 수 없고(`emptyLabel`), default의 라벨은 편집하지 않는다(`defaultLabelFixed`) |
+| | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 자리를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 앞 · 뒤로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
+| | 드래그 앤 드롭으로 이동 (`moveTo`) | 블록을 문서의 아무 블록 곁으로 옮긴다. id는 그대로이고 이웃 제어 블록 안으로도 들어간다. 빈 줄에는 빈 블록을 남기고, 놓은 곳이 빈 블록이면 그것을 바꾼다. 제자리에 놓으면 바뀌는 것이 없고, 자기 안쪽에 놓으면 `intoItself`로 거절한다 |
+| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 이 문서에 없는 Method를 부르던 호출 블록은 `lost`가 된다(불변식 6) |
+| | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
 | | 풀기 (호출 블록) | Method의 블록을 새 id로 깊은 복사해 그 자리에 인라인한다. 이 자리의 접기 영역은 보통 접기 영역이 된다. `lost`이면 풀 수 없다 |
 | | 새 Method로 빼기 | 선택한 블록이 새 Method의 본문이 되고, 그 자리에 `local` 호출 블록이 남는다 |
-| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삽입하지도 삭제하지도 않는다 |
-| | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. 텍스트를 옮기는 법은 미결정 |
+| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 늘 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
+| | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 그려 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
+| | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 자리)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
+| | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |
 | 호출 | 호출할 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다 |
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다 |
 | | 삭제 | 이 Method를 호출하던 호출 블록을 `lost`로 바꾼다 |
@@ -292,6 +313,7 @@ type Result =
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 · 풀기 · 이름 편집 | [[02-interaction-rules#접기 · 펼치기]]. 펴 보인 곳이면 `SiteFold`로 |
 | 문서 설정 | 블록 텍스트의 언어, 테마, 헤더 모양 | |
+| 문서 | 새 문서 | 헤더 없는 다이어그램 하나와 빈 블록 하나. 설정은 `textKind: 'plain'`, `theme: 'default'`, 헤더 모양은 사용자가 마지막에 고른 것(없으면 `'title'` → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼\|HS1]]). 뷰 상태는 이름 띠 켬, 결과 기호 `←` |
 
 ### 4.2 보기 명령
 
@@ -308,6 +330,13 @@ type Result =
 ### 4.3 규칙 F: 접기 영역의 범위가 줄 밖으로 나갈 때
 
 블록을 삭제하거나 줄 밖으로 이동하면, 그 블록을 `first`나 `last`로 가리키던 접기 영역은 **남은 블록으로 줄어듭니다**. 범위 안의 블록이 모두 나가면 접기 영역은 사라집니다. 범위의 처음과 끝 **사이**에 삽입한 블록은 범위에 포함됩니다. 펴 보인 곳의 접기 영역과 같은 규칙입니다([[02-interaction-rules#펴 보인 곳의 접기 영역]]).
+
+이동 · 감싸기 · 풀기 때의 접기 영역:
+
+- **이동(`move`):** 접기 영역은 제어 블록처럼 다룹니다. 영역 끝의 블록은 먼저 영역 밖으로 나가고, 이동하는 블록 곁의 영역은 통째로 건너뜁니다.
+- **드래그 앤 드롭으로 이동(`moveTo`) · 잘라내기 · 붙여넣기:** 범위 안에 온전히 든 접기 영역은 블록과 함께 갑니다.
+- **감싸기:** 범위 안의 접기 영역은 블록과 함께 새 제어 블록 안으로 들어갑니다. 범위와 똑같은 접기 영역은 밖에 남아, 이제 새 제어 블록 하나를 묶습니다.
+- **풀기:** 안의 접기 영역은 블록과 함께 밖으로 나옵니다.
 
 범위의 **바로 앞이나 바로 뒤**에 삽입한 블록은 **선택한 것을 따릅니다**. 영역 안의 블록을 선택해 삽입했으면 영역에 묶고(겹친 영역이면 그 블록을 담은 영역 모두), 영역 전체(이름 띠, 접힌 칸)를 선택해 삽입했으면 묶지 않습니다. 삽입 명령은 선택을 인자로 받아 `first` · `last`를 갱신합니다. → [[ux-decisions#MD1. 접기 영역의 끝에 넣은 블록|MD1]]
 
@@ -327,7 +356,7 @@ type Result =
 
 ## 미결정 사항
 
-- [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1
+- [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1. 정할 때까지 MVP는 프로토타입처럼 조건 텍스트를 그대로 둔다
 - [ ] 코드의 fall-through(`break` 없이 다음 분기로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
 - [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
 - [ ] 처음에 지원할 블록 텍스트의 언어 목록 → [[01-requirements#6. 미결정 사항]]

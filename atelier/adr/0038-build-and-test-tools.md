@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0038: 빌드는 Vite(웹) · esbuild(Obsidian), 시험은 Vitest · fast-check · Playwright, 코드 검사는 ESLint + Prettier로 하고, 시험 파일은 소스 옆에 둔다
 
+> [!NOTE] 이후 변경
+> - 2026-11-01: 코드의 뼈대를 만들며 버전을 정했다: TypeScript 6.0.3(7은 typescript-eslint가 아직 받지 않음), Node 24 이상(CI도 24), pnpm 12.16.1, Vite 8, Vitest 5, Playwright 1.64, ESLint 10. `editor`의 화면 테스트에는 가짜 DOM으로 happy-dom, React 컴포넌트에는 `@testing-library/react`를 더했다. CI는 웹의 첫 내려받기 크기 예산(540 KB)도 본다 → [[03-architecture#8.2 개발 도구]], [[07-testing#4. 도구와 CI]], [[07-coding-guide#1. 도구가 강제하는 것]]
+
 > [!info] 누가 무엇을 정했나
 > 시험 파일의 자리(T1), 코드 검사 도구(T2), 빌드 도구(T3)는 메인테이너가 시안 M40에서 골랐다(2026-10-25: "T1: 1 / T2: 1 / T3: 1", 모두 Claude의 추천). 시험 도구(Vitest, fast-check, Playwright, dependency-cruiser)는 품질 속성 시나리오에서 Claude가 후보로 적었고(2026-10-22), 2026-10-25에 확인을 받았다.
 

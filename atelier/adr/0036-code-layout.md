@@ -10,6 +10,7 @@ superseded-by:
 
 
 > [!NOTE] 이후 변경
+> - 2026-11-01: 뼈대를 만들었다: `packages/core` · `packages/fonts` · `packages/editor`와 `apps/web`. 개발을 시작하는 법은 `src/README.md`에 있다. `core`의 `.ns.svg` 골든 테스트는 Node의 파일 읽기를 쓰므로 `src/`가 아니라 `packages/core/node/`에 둔다 → [[07-testing#2. 골든 파일]]
 > - 2026-10-25: 시험 코드의 자리를 정했다: 시험 파일은 소스 옆 `*.test.ts`, 골든 파일은 패키지마다 `golden/`, 브라우저 시험은 `src/apps/web/e2e/` → [[0038-build-and-test-tools|ADR-0038]]
 # ADR-0036: 코드는 src/ 아래의 pnpm 모노레포로 두고, core는 패키지 하나, Obsidian의 manifest.json 사본은 저장소 맨 위에 둔다
 

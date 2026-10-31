@@ -396,7 +396,7 @@ sequenceDiagram
 > 남은 위험: Firefox와 Safari는 확인하지 못했습니다. → [[0026-bundled-font-metrics|ADR-0026]]
 
 > [!warning] 서브셋 글꼴의 크기
-> 저장되는 그림마다 쓰인 문자의 서브셋 글꼴이 들어갑니다. D2Coding으로 측정하면(2026-10-25) 영어만이면 10 KB, 한글 300자면 51 KB, 800자면 114 KB(압축하지 않은 TTF)이고, woff2로 압축하면 그 절반쯤입니다. 편집기 번들에는 글꼴(D2Coding, 327 KB(woff2))과 서브세팅 라이브러리(wasm, 652 KB)가 실립니다.
+> 저장되는 그림마다 쓰인 문자의 서브셋 글꼴이 들어갑니다. D2Coding으로 측정하면(2026-10-25) 영어만이면 10 KB, 한글 300자면 51 KB, 800자면 114 KB(압축하지 않은 TTF)이고, woff2로 압축하면 그 절반쯤입니다. 웹 버전은 처음 열 때 화면 글꼴(woff2, 328 KB)을 받고, 처음 저장할 때 서브세팅 라이브러리(wasm, 667 KB)와 서브셋을 떠낼 TTF(1.34 MB)를 받습니다(2026-11-01 빌드 → [[06-web#5. 배포]]).
 > 대응: 서브셋을 WOFF로 압축해 포함한다(TTF의 절반쯤, 압축 라이브러리의 버전을 고정) → [[0039-woff-subset-font|ADR-0039]], [[02-layout#2.2 서브셋 글꼴의 크기]]
 
 > [!warning] Obsidian 플러그인에 wasm과 글꼴을 싣기
@@ -414,7 +414,7 @@ sequenceDiagram
 
 ## 8. 기술 스택
 
-제품에 쓰는 언어 · 라이브러리 · 플랫폼 API와 개발 도구입니다. 고른 이유는 각 ADR에 있습니다. 패키지의 정확한 버전은 코드를 만들 때 `src/pnpm-lock.yaml`에 고정하고, 이 표에는 주요 버전만 적습니다.
+제품에 쓰는 언어 · 라이브러리 · 플랫폼 API와 개발 도구입니다. 고른 이유는 각 ADR에 있습니다. 패키지의 정확한 버전은 `src/pnpm-lock.yaml`에 고정되어 있고, 이 표에는 `package.json`에 적은 버전을 적습니다. 저장 파일의 바이트에 영향을 주는 것(`harfbuzzjs`, `fflate`)과 TypeScript는 범위 없이 정확한 버전입니다.
 
 ### 8.1 제품에 들어가는 것
 
@@ -422,11 +422,11 @@ sequenceDiagram
 
 | 영역 | 기술 | 쓰는 곳 | 라이선스 | 근거 |
 | --- | --- | --- | --- | --- |
-| 언어 | TypeScript | 모든 패키지와 앱 | Apache-2.0 | [[0003-typescript\|ADR-0003]] |
-| UI 프레임워크 | React (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] |
-| 글꼴 | D2Coding 보통(400), 한자를 뺀 문자 | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] |
-| 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs`의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) |
-| 압축 | JS zlib 라이브러리(후보: `fflate`), 버전과 압축 수준을 고정 | `packages/fonts`. 서브셋 글꼴을 WOFF로 | MIT | [[0039-woff-subset-font\|ADR-0039]] |
+| 언어 | TypeScript 6.0.3 | 모든 패키지와 앱 | Apache-2.0 | [[0003-typescript\|ADR-0003]] |
+| UI 프레임워크 | React 19 (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] |
+| 글꼴 | D2Coding 1.4.0 보통(400), 한자를 뺀 문자([[02-layout#2.1 advance 폭 테이블]]) | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] |
+| 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs` 1.6.3의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) |
+| 압축 | `fflate` 0.8.3 (zlib, 압축 수준 9 · 메모리 수준 8로 고정) | `packages/fonts`. 서브셋 글꼴을 WOFF로 | MIT | [[0039-woff-subset-font\|ADR-0039]] |
 | 웹 플랫폼 API | File System Access API(`showOpenFilePicker` · `showSaveFilePicker`, 파일 핸들), IndexedDB, BroadcastChannel, Clipboard API | `apps/web`: 열기 · 저장, 로컬 백업 · 최근 파일, 같은 파일을 연 다른 탭, 복사 · 붙여넣기 | (브라우저) | [[06-web]], [[0031-shell-interfaces\|ADR-0031]] |
 | Obsidian | Obsidian 플러그인 API(`obsidian` 패키지) | `apps/obsidian` | MIT | [[04-obsidian-plugin]] |
 | 데스크톱 | Tauri 또는 Electron (미정) | `apps/desktop` | — | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
@@ -440,17 +440,18 @@ sequenceDiagram
 
 | 할 일 | 도구 | 자리 | 근거 |
 | --- | --- | --- | --- |
-| 런타임 | Node.js | 개발 PC와 CI | (버전은 아래 미결정) |
-| 패키지 관리 · 워크스페이스 | pnpm 12 (`package.json`의 `packageManager`에 고정) | `src/` | [[0036-code-layout\|ADR-0036]], [[0038-build-and-test-tools\|ADR-0038]] |
-| 타입 검사 | TypeScript(`tsc --noEmit`) | 패키지마다 | [[0038-build-and-test-tools\|ADR-0038]] |
-| 웹 빌드 · 개발 서버 | Vite | `src/apps/web` | 〃 |
+| 런타임 | Node.js 24 이상(`package.json`의 `engines`), CI는 Node 24 | 개발 PC와 CI | [[0038-build-and-test-tools\|ADR-0038]] |
+| 패키지 관리 · 워크스페이스 | pnpm 12 (`package.json`의 `packageManager`에 12.16.1로 고정) | `src/` | [[0036-code-layout\|ADR-0036]], [[0038-build-and-test-tools\|ADR-0038]] |
+| 타입 검사 | TypeScript 6.0.3(`tsc --noEmit`). 7은 typescript-eslint가 아직 받지 않아 6에 머묾 | 패키지마다 | [[0038-build-and-test-tools\|ADR-0038]] |
+| 웹 빌드 · 개발 서버 | Vite 8 (`@vitejs/plugin-react`) | `src/apps/web` | 〃 |
 | Obsidian 빌드 | esbuild (Obsidian 공식 견본 플러그인의 설정) | `src/apps/obsidian` | 〃 |
-| 단위 테스트 · 벤치마크 | Vitest | 소스 옆 `*.test.ts`, `*.bench.ts` | 〃 |
-| 속성 기반 테스트 · 퍼징 | fast-check (Vitest 안에서) | 소스 옆 | 〃 |
+| 단위 테스트 · 벤치마크 | Vitest 5 | 소스 옆 `*.test.ts`, `*.bench.ts` | 〃 |
+| 속성 기반 테스트 · 퍼징 | fast-check 4 (Vitest 안에서) | 소스 옆 | 〃 |
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
-| 브라우저 E2E · 시각 회귀 | Playwright | `src/apps/web/e2e/` | 〃 |
-| 의존 방향 검사 | dependency-cruiser | 저장소 맨 위 설정 | 〃 |
-| 린트 · 포맷 | ESLint(typescript-eslint) + Prettier | 저장소 맨 위 설정 | 〃 |
+| `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#1. 계층마다 무엇을 테스트하나]] |
+| 브라우저 E2E · 시각 회귀 | Playwright 1.64 | `src/apps/web/e2e/` | 〃 |
+| 의존 방향 검사 | dependency-cruiser 18 | 저장소 맨 위 설정 | 〃 |
+| 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | 저장소 맨 위 설정 | 〃 |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 
 ### 8.3 문서와 저장소의 도구
@@ -464,9 +465,7 @@ sequenceDiagram
 | 문서 검사 훅 · 스파이크 스크립트 | Python 3 | `.claude/hooks/doc-check.py`, `journal/assets/` |
 
 > [!question] 미결정
-> - Node.js의 버전: 코드 뼈대를 만들 때 LTS 버전 하나로 정해 `package.json`의 `engines`와 CI에 적습니다. 메인테이너의 PC는 Node 26입니다.
 > - 데스크톱 프레임워크(Tauri / Electron) → [[0009-desktop-framework|ADR-0009]]
-> - PNG 내보내기의 경로(SVG를 래스터화하는 방법) → [[02-layout#3. SVG 렌더링]]의 미완성
 
 ## 9. 결정 목록
 

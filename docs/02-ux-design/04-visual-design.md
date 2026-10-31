@@ -174,6 +174,7 @@ flowchart LR
 
 | 의미 · 구성 요소 토큰 | → 원시 | 역할 | 대비율 | 기준 |
 | --- | --- | --- | --- | --- |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `paper` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper` | 종이(그림 전체의 배경). 저장되는 그림에도 칠함 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.slate` | 처리 블록 배경 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sand` | If · Case 헤더 배경 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sky` | 반복 블록의 띠와 헤더 | | |
@@ -267,6 +268,7 @@ flowchart LR
 | 화면 | 배포 대상의 기본 글꼴 | 배포 대상 (Obsidian이면 Obsidian의 글꼴) |
 
 - **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 싣고 한자는 싣지 않습니다 → [[0034-default-block-font|ADR-0034]]
+- 번들한 글꼴 파일 안의 이름(패밀리 이름)은 `AriadneNSD Block`입니다. "D2Coding"은 OFL의 예약 글꼴 이름(Reserved Font Name)이라, 문자를 추려 고친 글꼴에는 쓸 수 없습니다. 그림의 `font-family`는 이 이름 다음에 폴백 글꼴 목록을 적습니다 → [[01-file-format#2. 문서 구조]]
 - 블록 텍스트의 언어가 없는 MVP에서는 글꼴이 하나뿐입니다. 위 표의 "비례폭" 자리(분기 라벨 등)도 D2Coding으로 그립니다. 비례폭 글꼴은 블록 텍스트의 언어에 "일반 텍스트"가 들어올 때 정합니다.
 - 프로토타입은 IBM Plex Mono · IBM Plex Sans KR을 씁니다.
 - 블록 텍스트의 공백은 그대로 둡니다(`white-space: pre`). 코드의 들여쓰기가 그림에서도 보여야 합니다.
@@ -286,8 +288,8 @@ flowchart LR
 | `size.loop-strip` | 22px | 반복 블록 왼쪽 띠의 폭 |
 | `size.if-label` / `size.case-label` | 16 / 28px | If · Case 헤더 아래 분기 라벨 줄 |
 | `size.if-head-extra` / `size.case-head-extra` | 70 / 90px | If · Case 헤더의 최소 폭에서 조건 텍스트와 양옆 여백에 더하는 폭(빗금이 지나갈 자리) |
-| `size.label-room` | 18px | Case 분기 하나의 최소 폭에서 분기 라벨의 폭에 더하는 여유 |
-| `size.label-inset` | 6px | 분기 라벨과 블록 구석 사이 |
+| `size.label-room` | 18px | If · Case 분기 하나의 최소 폭에서 분기 라벨의 폭에 더하는 여유 |
+| `size.label-inset` | 6px | 분기 라벨과 칸의 구석 사이(왼쪽에 붙는 라벨은 왼쪽 구석, "거짓"과 default 라벨은 오른쪽 구석에서) |
 | `size.hat` | 16px | Event · Method 헤더가 솟은 높이 |
 | `size.hat-w` | min(110px, 폭 × 0.45) | Event 모자의 폭 |
 | `size.hat-room` | 24px | 헤더 모양 그대로일 때 헤더의 최소 폭에서 이름과 양옆 여백에 더하는 폭 |
@@ -312,6 +314,8 @@ flowchart LR
 **배치 규칙:**
 
 - 블록은 서로 맞붙습니다(NS 차트의 표기). 블록 사이에 틈을 두지 않습니다.
+- 텍스트의 기준선은 그 줄(`space.line` 18px)의 아래 끝에서 5px 위입니다. If · Case 헤더의 조건 텍스트는 블록 텍스트보다 2px 더 위에 둡니다. 분기 라벨의 기준선은 헤더의 아래 끝에서 5px 위입니다(프로토타입의 그림과 같음).
+- 빈 분기의 `∅`는 지름 7px의 원과 빗금이고 선은 1.1px입니다. 빗금은 원 밖으로 양쪽 1px씩 나갑니다 → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - If · Case 헤더의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 헤더의 폭과 높이는 늘리지 않으므로(폭은 텍스트 + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **헤더의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
 - 펴진 접기 영역의 안쪽 블록은 테두리에 붙습니다. 테두리 안에 다른 테두리(겹친 접기 영역, 펴 보인 호출 블록)가 들어가면 `size.nest-gap`만큼 띄웁니다. 겹치거나 이어져도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]]
 

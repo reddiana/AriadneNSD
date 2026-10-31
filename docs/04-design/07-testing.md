@@ -29,7 +29,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 계층마다 무엇을 
 | `core` · 레이아웃 | 단위, 속성 기반 | Node | [[02-layout]]의 규칙: 블록은 맞붙고 겹치지 않는다, 부모가 자식을 담는다, 같은 입력이면 같은 좌표, 분기 폭과 짧은 분기의 분배 |
 | `core` · 그림과 파일 | 골든 파일, 퍼징 | Node | 저장되는 SVG를 바이트로 비교(QA-03 · 04 · 05, 2장). 깨진 파일을 열어도 죽지 않는다(QA-02) |
 | `core` · 속도 | 벤치마크 | Node (Vitest bench) | 블록 500개 문서에서 명령 → 레이아웃 → SVG 문자열(QA-07의 `core` 몫, 목표의 절반 50ms) |
-| `editor` | 명령 테스트 | Node + 가짜 DOM | 키 입력 → 명령 → 문서. 키 표([[03-keymap]])의 두 키 조합, 선택과 이동, 텍스트 편집의 실행 취소 단위 |
+| `editor` | 명령 테스트, 화면 테스트 | Node + 가짜 DOM(happy-dom), React 컴포넌트는 `@testing-library/react` | 키 입력 → 명령 → 문서. 키 표([[03-keymap]])의 두 키 조합, 선택과 이동, 텍스트 편집의 실행 취소 단위 |
 | `editor` · 순수 함수 | 단위, 속성 기반 | Node | 이동 · 자동 확장 · 히트 테스트 · 드롭 위치 계산. DOM 없이 `Doc`과 `LayoutResult`만 받는다([[03-editor#2.2 이동]]) |
 | 셸 사이의 약속 | 계약 테스트 | Node | 가짜 `DocumentStore` · `SettingsStore`로 `editor`가 셸 없이 실행된다(QA-10, QA-17). `WriteResult`의 `cancelled` · `denied` · `failed`, `canWriteInPlace = false`인 셸([[03-editor#6. 셸과의 연결]]) |
 | 웹 셸 | E2E, 시각 회귀 | 브라우저 (Playwright, Chromium) | 인수 테스트의 몇 흐름(3장). 키보드만으로(QA-15). 화면과 저장된 그림이 같다(QA-06) |
@@ -46,8 +46,11 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 계층마다 무엇을 
 - **자리:** `src/packages/core/golden/`. 한 사례가 파일 하나(`이름.ns.svg`)입니다. 모델이 그림 안에 들어 있으므로([[0005-model-embedded-svg|ADR-0005]]) 입력과 기대 출력이 한 파일입니다.
 - **테스트:** 파일을 열어 모델을 읽고 → 레이아웃 → 저장한 바이트가 원래 파일과 같은가(QA-04: 열고 바로 저장하면 그대로). 같은 테스트를 모든 커밋에서 돌립니다.
 - **사례:** 블록 종류마다 하나, 오늘 정한 레이아웃 규칙마다 하나(긴 조건과 빗금, 짧은 분기, default 없는 Case, 여러 다이어그램의 배치, 접기 영역, 펴 보기), 한글 · 영어 섞인 텍스트, 옛 형식 버전의 파일(QA-05)
+- **바이트 그대로:** 골든 파일은 git이 줄 끝을 바꾸지 않도록 텍스트로 다루지 않습니다(`.gitattributes`의 `src/packages/core/golden/** -text`).
+- **그림만의 골든:** 레이아웃 · 렌더러의 그림은 `golden/render/*.svg`에 따로 둡니다(모델과 글꼴 없이 그림만이라, GitHub에서 그림으로 보임).
 - **바꿀 때:** 그림이 바뀌는 것이 의도한 변경이면 갱신 명령으로 기대 파일을 다시 쓰고, 같은 커밋에 넣습니다. GitHub의 Pull Request는 SVG를 그림으로 보여 주므로, 리뷰어는 바뀌기 전과 뒤의 그림을 보고 판단합니다. 의도하지 않은 변경이면 테스트가 실패한 것이 맞습니다.
-- 갱신 명령의 이름은 개발을 시작할 때 정합니다.
+- 갱신 명령: `.ns.svg` 골든은 `pnpm --filter @ariadne-nsd/core golden:update`(다시 쓴 뒤 같은 테스트를 한 번 더 돌림), 그림만의 골든은 Vitest의 스냅숏 갱신(`pnpm --filter @ariadne-nsd/core exec vitest run -u`)입니다. 둘 다 `src/`에서 실행합니다.
+- `.ns.svg` 골든의 테스트는 Node의 서브세팅(`node:fs`)을 쓰므로 `core`의 `src/` 밖(`packages/core/node/golden.test.ts`)에 둡니다. `core`의 코드는 Node 내장 모듈을 쓰지 않습니다([[07-coding-guide#1.5 dependency-cruiser]]).
 
 ## 3. MVP의 인수 테스트
 
@@ -79,15 +82,16 @@ MVP(웹, [[dr-0015-mvp-scope|DR-0015]])를 내놓기 전에 모두 지나야 하
 
 | 언제 | 무엇을 | 걸리는 시간(목표) |
 | --- | --- | --- |
-| Pull Request와 `main`에 push할 때마다 | 코드 검사(ESLint, Prettier) → 타입 검사 → 의존 방향 → `core` · `editor` 테스트(단위 · 속성 · 골든 · 계약) → 빌드와 크기 예산 → 웹 E2E(Chromium) | 10분 안 |
+| Pull Request와 `main`에 push할 때마다 | `pnpm check`(타입 검사 → ESLint → Prettier → 의존 방향 → 단위 · 속성 · 골든 · 계약 테스트) → 웹 빌드와 크기 예산(첫 내려받기 540 KB, [[06-web#5. 배포]]) → 웹 E2E(Chromium) | 10분 안 |
 | 매일 밤 | 긴 퍼징, 벤치마크 기록(느려지면 알림) | — |
 | 출시 전 | 기준 기기에서 성능, 수동 점검표(AT-08 · AT-10) | — |
 
 - 테스트가 하나라도 실패하면 `main`에 합치지 않습니다.
+- CI는 `.github/workflows/ci.yml`이고 Node 24, `pnpm install --frozen-lockfile`로 돕니다. E2E가 실패하면 Playwright 보고서를 7일 남깁니다.
+- 벤치마크는 `pnpm test`에 들지 않습니다. `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 따로 돌립니다(`*.bench.ts`).
 - 지금 있는 문서 사이트의 빌드(`.github/workflows/pages.yml`)와는 따로 둡니다.
 
 ## 미결정 사항
 
-- [ ] `editor`의 명령 테스트에 쓸 가짜 DOM: happy-dom인가 jsdom인가 (개발을 시작할 때 둘을 비교)
 - [ ] 테스트가 코드의 얼마를 지나야 하는지(커버리지)의 목표를 둘지
 - [ ] Obsidian 플러그인을 자동으로 테스트할 길이 있는지(Obsidian 셸을 설계할 때) → [[04-obsidian-plugin]]

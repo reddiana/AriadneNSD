@@ -39,7 +39,8 @@ updated: 2026-11-01
 ### 1.1 줌과 팬
 
 - 캔버스는 브라우저의 스크롤 영역(`overflow: auto`)이고, 팬은 그 스크롤입니다(휠, 터치패드, 스크롤바). 따로 손(팬) 도구를 두지 않습니다.
-- 줌은 40% ~ 300%, 10% 단위입니다. 문서 · 오버레이 레이어와 인라인 에디터를 감싼 요소에 배율을 곱하고, 줌한 뒤 마우스 아래(키로 했으면 선택한 것)가 제자리에 남도록 스크롤을 맞춥니다. 줌은 뷰 상태라 파일에도 실행 취소에도 들어가지 않습니다(그 브라우저의 환경 설정에도 남기지 않음).
+- 줌은 40% ~ 300%, 10% 단위입니다(키는 [[03-keymap]]). 문서 · 오버레이 레이어와 인라인 에디터를 감싼 요소에 배율을 곱하고(CSS `scale`), 줌한 뒤 기준점이 제자리에 남도록 스크롤을 맞춥니다. 기준점은 `Ctrl`+휠이면 마우스 아래, 키 · 메뉴로 했으면 선택한 것(없으면 화면 가운데)입니다. `Ctrl`+휠은 한 칸에 10%입니다.
+- 블록을 선택한 채 굴리는 휠은 50px마다 `↑` `↓` 한 번입니다(줄 단위 · 페이지 단위의 휠은 px로 바꿔 셈). 줌은 뷰 상태라 파일에도 실행 취소에도 들어가지 않습니다(그 브라우저의 환경 설정에도 남기지 않음).
 - 선택한 것이 화면 밖으로 나가면 가장 가까운 쪽으로만 스크롤합니다(`scrollIntoView({ block: 'nearest' })`와 같음). 줌 중에는 배율을 곱한 상자로 계산합니다.
 
 ### 1.2 다시 그리기
@@ -55,7 +56,7 @@ updated: 2026-11-01
 ```ts
 type EditorState = {
   doc: Doc;                       // 내용 + 뷰 상태 → [[01-model]]
-  undo: Content[]; redo: Content[]; // 내용의 스냅숏만. 뷰 상태는 넣지 않는다 → [[01-model#4.4 텍스트 편집과 undo]]
+  undo: Content[]; redo: Content[]; // 내용의 스냅숏만. 뷰 상태는 넣지 않는다 → [[01-model#4.4 텍스트 편집과 undo]]. 500단계까지
   selection: Selection | null;
   lastSelected: Id | null;        // 선택한 것을 푼 뒤 이동 키를 누르면 여기서 시작
   editing: Editing | null;        // 인라인 에디터가 열려 있으면
@@ -63,15 +64,22 @@ type EditorState = {
   readOnly: boolean;              // 보기만 함 (웹: 같은 파일을 다른 탭이 편집하고 있을 때) → 6.4
   zoom: number;                   // 줌 배율 0.4 ~ 3
   layout: LayoutResult;           // 마지막으로 센 결과. 히트 테스트와 오버레이 레이어가 쓴다
+  revision: number;               // 내용이나 뷰 상태가 바뀔 때마다 1씩 오름 (DocStatus.revision)
+  mode: 'normal' | 'visual';      // visual: v로 영역을 선택하는 중 → [[03-keymap]]
+  pendingKeys: string | null;     // 두 키 조합의 첫 키를 받고 둘째를 기다리는 중
 };
 
 type Selection =
   | { kind: 'blocks'; seq: SeqRef; anchor: Id; focus: Id }   // 같은 줄 안의 연속 범위 → ADR-0008
   | { kind: 'head'; diagram: Id }
   | { kind: 'branchLabel'; branch: Id }                      // 분기 라벨 (If · Case) → 조작 규칙 "분기 라벨 선택"
-  | { kind: 'fold'; fold: Id };                              // 접기 영역 전체 (이름 띠나 접힌 칸)
+  | { kind: 'fold'; fold: Id }                               // 접기 영역 전체 (이름 띠나 접힌 칸)
+  | { kind: 'missingDefault'; block: Id };                   // default가 없는 Case에 그려 둔 빈 default 칸 (UX CD1)
 type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가진 노드(다이어그램 · 블록 · 분기)와 자리
 ```
+
+- `missingDefault`를 선택하고 텍스트를 적거나 블록을 삽입하면, `editor`가 `addDefaultBranch`와 그 편집을 undo 한 단계로 실행합니다 → [[01-model#4.1 내용을 바꾸는 명령]], [[ux-decisions#CD1. default가 없는 Case|CD1]]
+- 상태 밖에, 세션은 연 파일에서 모델이 담지 못한 설정 값(모르는 `textKind`)을 따로 쥐고 있다가 저장할 때 되돌려 적습니다 → [[01-file-format#3.3 노드별 필드]]
 
 - 선택은 언제나 **id**로 적습니다. 내용이 바뀌어 id가 사라지면 그 선택은 풀립니다(`null`). 위치(몇 번째)로 적지 않는 이유는 undo · 이동 뒤에도 같은 것을 가리키게 하려는 것입니다.
 - 펴 보인 블록(호출 블록 안에 보이는 Method의 블록)은 `경로/id`로 적습니다(예: `b4/b17`). 모델의 id가 아니라 화면에만 있는 id입니다 → [[01-model#2. 뷰 상태]]
@@ -172,7 +180,8 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게)
 	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식)
 - 붙여넣기는 사용자 정의 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
-- 브라우저가 시스템 클립보드를 막으면(권한 거절, 지원하지 않음) 편집기 안의 클립보드(메모리)를 씁니다. 그때 다른 탭과는 나누지 못합니다.
+- 브라우저가 시스템 클립보드를 막으면(권한 거절, 지원하지 않음) 편집기 안의 클립보드(메모리)를 씁니다. 그때 다른 탭과는 나누지 못하고, 그렇다고 상태 표시줄에 알립니다.
+- 분기 라벨을 선택했을 때의 복사 · 잘라내기 · 감싸기는 아직 정하지 않아([[02-interaction-rules#분기 라벨을 선택했을 때의 복사 · 감싸기 · 접기]]) "분기 라벨에서는 아직 되지 않습니다"라고 알립니다.
 - 붙여넣은 블록은 모두 새 id를 받습니다 → [[01-model#4.1 내용을 바꾸는 명령]]
 
 ### 3.4 텍스트 편집
@@ -190,6 +199,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 인라인 에디터 · 입력 상자 · 메뉴에 포커스가 있으면 편집 키를 처리하지 않습니다(그 요소가 키를 받음).
 - **키 시퀀스**(두 키 조합: `dd` `za` `a` + 종류 …): 첫 키를 받으면 "대기 중"이 되고, 둘째 키를 기다리는 시간에 끝은 없습니다. 0.4초가 지나면 키 힌트(이어 누를 키의 목록)를 띄웁니다. 맞지 않는 키나 `Esc`는 대기를 끝냅니다 → [[ux-decisions#K1. 두 키 조합의 안내|K1]]
 - 키 표는 데이터(`{ keys: 'd d', command: 'cut' }` 목록) 하나이고, 컨텍스트 메뉴 · 커맨드 팔레트 · 도움말의 키 표가 같은 데이터를 보입니다.
+- `Backspace`는 `Delete`와 같습니다.
 - `Alt`+방향키(이동), `Ctrl`+`Shift`+`P`(커맨드 팔레트)처럼 브라우저 · 운영체제가 먼저 가져가는 키는 셸마다 확인해 두고, 가져가면 다른 키를 함께 둡니다(예: 맥의 `Option`).
 
 ## 5. 명령 목록과 메뉴
@@ -198,22 +208,28 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 ```ts
 type CommandSpec = {
-  id: string;                         // 'block.insert.if', 'edit.cut', 'view.fold.toggle' …
+  id: string;                         // 'block.insert.if', 'edit.cut', 'view.zoom.in' …
   title: Message | ((ctx: CommandContext) => Message);  // 화면 언어마다의 이름 (R-NFR-04). 상황에 따라 바뀌면 함수
-  keys: string[];                     // 키 표의 키 ('a i', 'Ctrl+X') — 표시용. 디스패치는 4장의 키 표
-  menu?: { menu: MenuId; group: number; order: number };  // 메뉴 바의 자리
-  toolbar?: { group: number; order: number; icon: IconId };
+  keys: string[];                     // 키 표의 키 ('a i', 'Ctrl+X') — 표시용. editor의 명령은 4장의 키 표가 채운다
+  menu?: MenuPlace;                   // 메뉴 바의 자리
+  toolbar?: { group: number; order: number; icon: string };  // icon: 툴바 아이콘의 id ('file.save', 'block.if' …)
   context?: SelectionKind[];          // 컨텍스트 메뉴에 보일 선택의 종류
   edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 적용되지 않는다 → 6.4
-  when(ctx: CommandContext): true | Reason;   // 적용되는가, 아니면 이유
+  when(ctx: CommandContext): true | Message;   // 적용되는가, 아니면 이유
   run(ctx: CommandContext, args?: unknown): void | Promise<void>;
+  checked?(ctx: CommandContext): boolean;      // 체크 표시가 있는 메뉴 항목 ("접기 영역 보기 ✓")
 };
-type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
+type MenuPlace = { menu: MenuId; group: number; order: number; submenu?: SubmenuId };  // 같은 group이 가로줄 사이의 한 묶음
 type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
+type SubmenuId = 'recent' | 'export' | 'insert' | 'insertBefore' | 'wrap';  // 최근 파일 ▸ · 내보내기 ▸ · 삽입 ▸ · 앞에 삽입 ▸ · 감싸기 ▸
+type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
 ```
 
+- 메뉴 · 커맨드 팔레트의 흐린 항목(`when`이 이유를 돌려줌)도 누를 수 있습니다. 누르면 실행하지 않고 그 이유를 상태 표시줄에 알립니다("막지 않고 알린다" → [[01-ux-overview#2. UX 원칙]]).
+- UI의 한 부분을 여는 명령(환경 설정 · 커맨드 팔레트 · 문서 설정 · 사용법 · 단축키 목록 · 이 버전에서 바뀐 것 · AriadneNSD에 대하여)은 그 UI(`editor`의 React 주변 UI)가 직접 등록합니다. 메뉴의 `group`을 90으로 두어 같은 메뉴의 다른 묶음 뒤에 옵니다. 키(`Ctrl`+`,` · `Ctrl`+`Shift`+`P` · `F1` · `?`)는 4장의 키 표가 이 명령 id로 보냅니다.
+
 - 이름이 상황에 따라 바뀌는 예: 원래 파일에 쓸 수 없는 브라우저(`store.canWriteInPlace`가 false)에서는 "저장"을 "내려받기"로 부릅니다 → [[06-web#1. 파일 열기·저장]]
-- 명령의 대부분은 `editor`가 만듭니다. 문서를 바꾸는 명령(새로 · 열기 · 최근 파일)은 셸이 만들어 같은 목록에 더합니다 → 6.1
+- 명령의 대부분은 `editor`가 만듭니다. 저장 · 다른 이름으로 저장도 `editor`의 명령이고(`DocumentStore`를 거쳐 셸에 닿음), 셸은 새로 · 열기 · 최근 파일 · 내보내기만 만들어 같은 목록에 더합니다 → 6.1
 
 ### 5.1 메뉴 구성
 
@@ -232,7 +248,7 @@ type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
 
 ### 5.2 툴바
 
-[[06-web#7. 화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 여섯 ／ 감싸기 ▾ · 확대 ▾. 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
+[[06-web#7. 화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 여섯 ／ 감싸기 ▾ · 확대 ▾. "확대 ▾" 버튼에는 글자 대신 지금 배율(`100%`)을 적습니다. 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
 
 ## 6. 셸과의 연결
 
@@ -250,6 +266,11 @@ function createEditor(options: {
   settings: SettingsStore;
   appearance: Appearance;                        // 화면 밝기와 UI 글꼴 (호스트에서 받음)
   doc: OpenedDocument;                           // 처음 보일 문서
+  fonts: SaveFonts;                              // 저장 파일의 서브셋 글꼴을 만들 것. 처음 저장할 때 한 번 부른다
+  locale?: Locale;                               // 환경 설정에 화면 언어가 없을 때의 언어. 없으면 영어
+  screenFontUrl?: string;                        // 화면에 쓸 블록 글꼴(woff2)의 주소
+  clipboard?: ClipboardPort;                     // 없으면 시스템 클립보드(막히면 메모리)
+  log?: (text: string, detail?: unknown) => void; // 예상하지 못한 오류 → 문제 알리기 보고서의 로그 (R-REP-01)
 }): EditorHandle;
 
 type OpenedDocument = {
@@ -259,6 +280,7 @@ type OpenedDocument = {
   restored?: string;                             // 로컬 백업에서 복원한 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
 };
 type Appearance = { scheme: 'light' | 'dark'; uiFont: string };
+type SaveFonts = () => Promise<{ subsetter: Subsetter; ttf: Uint8Array }>;  // 웹: hb-subset wasm과 번들 TTF를 받아 온다
 
 // 필요 인터페이스: 셸이 구현해 넘긴다
 interface DocumentStore {
@@ -279,44 +301,67 @@ interface SettingsStore {
 
 // 제공 인터페이스: editor가 만들어 셸에 건넨다
 interface CommandRegistry {
-  list(): CommandSpec[];
-  run(id: string, args?: unknown): void;
-  register(spec: CommandSpec): () => void;       // 셸의 명령을 추가한다 (새로 · 열기 · 최근 파일). 반환된 함수로 뺀다
+  list(): CommandSpec[];                         // 키 표의 키를 채운 명령 전부
+  run(id: string, args?: unknown): void;         // 적용되지 않으면 이유를 상태 표시줄에
+  register(spec: CommandSpec): () => void;       // 셸의 명령을 추가한다 (새로 · 열기 · 최근 파일 · 내보내기). 반환된 함수로 뺀다
   onChange(listener: () => void): () => void;    // "적용되는가"가 바뀌었을 때 (셸이 메뉴를 다시 그림)
+  context(): CommandContext;                     // when · title · checked를 지금 계산할 때 넘길 것
 }
 interface SettingsSchema {
-  list(): SettingSpec[];                         // id · 표시 이름 · 허용 값 · 기본값 · 범위('user' | 'document')
+  list(): SettingSpec[];                         // id · 표시 이름 · 허용 값(과 그 표시 이름) · 기본값 · 범위('user' | 'document')
 }
 interface EditorHandle {
   readonly commands: CommandRegistry;
   readonly settingsSchema: SettingsSchema;
-  open(doc: OpenedDocument): void;               // 문서를 바꾼다. undo · 선택은 비운다
+  open(doc: OpenedDocument): boolean;            // 문서를 바꾼다. undo · 선택은 비운다. 열 수 없으면 false (문서는 그대로)
   status(): DocStatus;
   onStatus(listener: (s: DocStatus) => void): () => void;  // 상태가 바뀔 때마다 (셸이 이름 · ● · 로컬 백업을 다룸)
-  serialize(): string;                           // 지금 문서의 .ns.svg 문자열 (저장 · 자동 저장에 씀)
+  state(): EditorState;                          // 주변 UI가 읽는 상태 전부
+  onChange(listener: (state: EditorState) => void): () => void;  // 선택 · 문서 · 줌 · 편집 … 무엇이든 바뀌었을 때
+  chromeState(): ChromeState;                    // 상태 표시줄과 키 힌트가 보일 것
+  onChromeState(listener: () => void): () => void;
+  serialize(): Promise<string>;                  // 지금 문서의 .ns.svg 문자열 (저장 · 자동 저장). 서브셋 글꼴을 만들므로 비동기
   snapshot(): string;                            // 지금 문서의 모델 JSON (로컬 백업에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
   save(): Promise<WriteResult>;                  // "저장" 명령과 같음: serialize → store.write → 성공하면 dirty를 끈다
   setReadOnly(readOnly: boolean): void;
   setAppearance(a: Appearance): void;            // 호스트의 밝기가 바뀌었을 때
+  documentSetting(id: string): unknown;          // 문서 설정(scope: 'document')의 지금 값
+  setDocumentSetting(id: string, value: unknown): void;  // 문서 설정을 바꾼다. 내용에 드는 것이면 undo 대상 (W5)
+  startBlockDrag(kind: ToolbarBlockKind, event: PointerEvent): void;  // 툴바의 블록 아이콘에서 드래그를 시작 (4px 넘게 움직인 뒤)
+  focus(): void;                                 // 키보드 포커스를 다이어그램에 (모달을 닫은 뒤)
   dispose(): void;
 }
 type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름
+type ChromeState = {
+  selection: Message | null;                     // 선택한 것 ("If 블록", "블록 3개")
+  notice: Notice | null;                         // 상태 표시줄의 알림 { id, message, level: 'info' | 'warn' }
+  question: Question | null;                     // 상태 표시줄의 물음과 버튼 (If ↔ Case → MD3)
+  pendingKeys: string | null;                    // 둘째 키를 기다리는 첫 키
+  mode: 'normal' | 'editing' | 'visual';
+  isKeyHintShown: boolean;                       // 첫 키 뒤 0.4초가 지났고 설정이 켜져 있다 (K1)
+  keyHintTitle: Message | null;                  // 키 힌트의 제목 ("뒤에 삽입")
+  zoom: number;
+};
+type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 ```
 
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(그려야 할 때 기다리지 않게).
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]
+- `Message`는 카탈로그의 키(와 값)이거나, 셸이 자기 카탈로그로 만든 문자열입니다 → [[07-coding-guide#8. 화면의 문자열]]
+- 처음 문서(`doc`)를 열 수 없으면 `editor`는 새 문서를 **읽기 전용**으로 보이고 이유를 상태 표시줄에 알립니다. 열 수 없는 파일 위에 편집한 내용을 쓰지 않게 하려는 것입니다.
+- 저장이 성공해도 알리지 않습니다(자동 저장이 자주 하므로). 실패(`denied` · `failed`)와 "다른 이름으로 저장"의 성공만 상태 표시줄에 알립니다.
 - 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 상황이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
 
 ### 6.1 새로 · 열기 · 최근 파일
 
 `editor`는 문서 하나만 압니다. 어떤 파일을 열지, 최근 파일을 어디에 기억할지, 창이나 탭을 몇 개 둘지는 셸이 정합니다(웹은 늘 하나 → [[06-web#7. 화면 배치]], 데스크톱은 탭마다 `editor` 하나).
 
-- 새로 · 열기 · 최근 파일 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
+- 새로 · 열기 · 최근 파일 · 내보내기(PNG) 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
 - 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 호출합니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
 - 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어 묻지 않고 바꿔도 내용을 잃지 않지만, 원래 파일에는 들어가지 않았음을 알립니다.
-- 열 수 없는 텍스트(모델이 없는 SVG, 더 새 버전의 형식)를 받으면 `open`은 문서를 바꾸지 않고 이유를 상태 표시줄에 보입니다 → [[01-file-format]]
+- 열 수 없는 텍스트(모델이 없는 SVG, 프로토타입의 파일, 깨진 파일, 더 새 버전의 형식)를 받으면 `open`은 문서를 바꾸지 않고 `false`를 돌려주며 이유를 상태 표시줄에 보입니다 → [[01-file-format#1. 확장자와 판별]]
 
 ```mermaid
 sequenceDiagram

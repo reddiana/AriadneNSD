@@ -46,9 +46,11 @@ updated: 2026-11-01
 
 Prettier가 정하는 모양은 사람이 따로 맞추지 않습니다. 리뷰에서도 모양은 말하지 않습니다.
 
+Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소의 문서 규칙을 따름), 골든 파일(`**/golden/`, 바이트가 곧 기대값), 스크립트가 만든 글꼴(`packages/fonts/assets/`), `pnpm-lock.yaml`, 빌드 · 테스트의 산출물(`dist/` · `coverage/` · `test-results/` · `playwright-report/`).
+
 ### 1.3 TypeScript
 
-`tsconfig.base.json`의 컴파일러 옵션입니다. 모든 패키지가 이것을 이어받습니다.
+`tsconfig.base.json`의 컴파일러 옵션입니다. 모든 패키지가 이것을 이어받습니다. TypeScript는 6.0.3으로 고정합니다(7은 typescript-eslint가 아직 받지 않음).
 
 | 옵션 | 값 | 이유 |
 | --- | --- | --- |
@@ -59,6 +61,8 @@ Prettier가 정하는 모양은 사람이 따로 맞추지 않습니다. 리뷰�
 | `verbatimModuleSyntax` | true | 타입만 가져올 때 `import type`을 강제 |
 | `target` · `module` · `moduleResolution` | `ES2022` · `ESNext` · `Bundler` | Vite · esbuild로 묶음 |
 | `lib` | `core` · `fonts`: `["ES2022"]`(DOM 없음), `editor` · 앱: `["ES2022", "DOM", "DOM.Iterable"]` | `core`가 DOM에 기대지 못하게(QA-14 → [[03-architecture#3.3 의존 규칙]]) |
+| `types` | `[]` (패키지가 필요한 것만 더함. 예: Node 쪽 코드의 `@types/node`) | 쓰지 않는 전역 타입이 새어 들지 않게 |
+| `isolatedModules` · `esModuleInterop` · `skipLibCheck` · `forceConsistentCasingInFileNames` · `resolveJsonModule` · `noEmit` | true | 묶는 것은 Vite · esbuild가 하고 `tsc`는 검사만 |
 
 ### 1.4 ESLint
 
@@ -66,17 +70,21 @@ Prettier가 정하는 모양은 사람이 따로 맞추지 않습니다. 리뷰�
 
 | 규칙 | 설정 | 이유 |
 | --- | --- | --- |
+| `@typescript-eslint/consistent-type-definitions` | error, `type` | 4장: `type`이 기본. 셸이 구현하는 계약만 `interface`로 쓰고, 그 줄에 이유를 단 끄는 주석을 둔다 |
+| `@typescript-eslint/array-type` | error, 보통은 `T[]`, 읽기 전용은 `ReadonlyArray<T>` | 모델의 필드가 한눈에 읽기 전용으로 보이게(4장) |
 | `@typescript-eslint/no-explicit-any` | error | 모르는 값은 `unknown`으로 받고 좁힌다 |
 | `@typescript-eslint/switch-exhaustiveness-check` | error | 블록 종류(`kind`) 유니온을 빠짐없이 다룸. 새 종류를 추가하면 다룰 곳을 컴파일러가 알려 줌(QA-12) |
 | `@typescript-eslint/no-floating-promises` | error | 기다리지 않은 Promise가 오류를 삼키지 않게 |
 | `@typescript-eslint/consistent-type-imports` | error | `verbatimModuleSyntax`와 짝 |
 | `@typescript-eslint/no-non-null-assertion` | error | `x!` 대신 검사하고 좁힌다 |
 | `eqeqeq` | error | |
-| `no-console` | error (테스트와 `scripts/`는 끔) | 로그는 문제 알리기 보고서의 로그로 → [[02-interaction-rules#8. 문제 알리기 보고서]] |
-| `no-restricted-syntax` | `export default` 금지 | 이름 있는 내보내기만(3.2) |
+| `no-console` | error (테스트 · 벤치마크 · E2E · `scripts/`는 끔) | 로그는 문제 알리기 보고서의 로그로 → [[02-interaction-rules#8. 문제 알리기 보고서]] |
+| `no-restricted-syntax` | `export default` 금지. 도구의 설정 파일(`*.config.*`, `.dependency-cruiser.cjs`)만 허용 | 이름 있는 내보내기만(3.2). 설정 파일은 도구가 기본 내보내기를 요구한다 |
 | `react-hooks/rules-of-hooks` · `exhaustive-deps` | error · warn | `editor`와 앱의 React 코드만 |
 
 규칙을 끄는 주석(`// eslint-disable-next-line …`)은 그 줄에만, 이유를 함께 적습니다: `// eslint-disable-next-line no-console -- dev-only timing log`.
+
+검사하지 않는 곳: `node_modules/`, 빌드 · 테스트의 산출물, `packages/fonts/assets/`. JavaScript 파일(`*.js` · `*.cjs` · `*.mjs`, 설정과 스크립트)은 타입 정보를 쓰는 규칙을 끄고 Node의 전역으로 검사합니다.
 
 ### 1.5 dependency-cruiser
 
@@ -85,15 +93,17 @@ Prettier가 정하는 모양은 사람이 따로 맞추지 않습니다. 리뷰�
 | 규칙 | 금지하는 것 |
 | --- | --- |
 | `core-is-pure` | `packages/core`가 `editor` · `apps/*` · `react` · 브라우저 전용 모듈을 가져오는 것 |
+| `core-no-node-builtins` | `packages/core/src`의 코드(테스트 · 벤치마크 말고)가 Node 내장 모듈(`node:fs` 등)을 가져오는 것. `core`는 브라우저에서도 돈다 |
 | `fonts-is-data` | `packages/fonts`가 다른 우리 패키지를 가져오는 것 |
 | `editor-no-shell` | `packages/editor`가 `apps/*`를 가져오는 것 |
 | `apps-independent` | 앱이 다른 앱을 가져오는 것 |
 | `no-circular` | 모든 순환 의존 |
 | `no-deep-import` | 다른 패키지의 `src/` 안쪽을 직접 가져오는 것(그 패키지의 `index.ts`로만) |
+| `no-unresolvable` | 찾을 수 없는 모듈을 가져오는 것. 모든 가져오기가 실제 경로로 풀려야 위 규칙들이 그 경로를 본다 |
 
 ### 1.6 테스트 도구
 
-파일의 자리와 이름은 [[07-testing]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다.
+파일의 자리와 이름은 [[07-testing]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 돌고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 적습니다.
 
 ## 2. 이름 짓기
 
@@ -157,13 +167,14 @@ export function wrap(content: Content, args: WrapArgs): Result {
 
 ## 8. 화면의 문자열
 
-- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 그림에 적는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그입니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#5. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
+- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 그림에 적는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그, 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 넘깁니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#5. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
 - 개발자에게만 보이는 문자열(예외 메시지, 로그)은 영어로 직접 씁니다.
 
 ## 9. React
 
 - React는 `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트)에만 씁니다. 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript입니다 → [[0010-ui-framework|ADR-0010]]
 - 함수 컴포넌트와 훅만 씁니다. 컴포넌트는 편집기 상태를 구독하고, 명령은 `CommandRegistry`로 실행합니다. 상태 관리 라이브러리는 쓰지 않습니다.
+- CSS는 `editor` 안의 TypeScript 문자열(`styles.ts`)로 두고 `<style>` 요소로 넣습니다. CSS 파일이나 CSS-in-JS 라이브러리를 쓰지 않아, 어느 셸(Vite, Obsidian 플러그인, 테스트)에서도 CSS 로더 없이 같게 동작합니다. 색은 화면 색 토큰([[04-visual-design#3.4 화면 색]])을 CSS 변수로 둡니다.
 
 ## 10. 테스트
 
@@ -200,7 +211,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 - 제품에 들어가는 라이브러리(`dependencies`)를 더하려면 먼저 [[03-architecture#8.1 제품에 들어가는 것]]에 라이선스와 함께 올리고, 기술 선택이면 ADR을 씁니다. 라이선스는 Apache-2.0과 함께 배포할 수 있어야 합니다(MIT, BSD, Apache-2.0, OFL 등).
 - 개발 도구(`devDependencies`)는 [[03-architecture#8.2 개발 도구]]에 올립니다.
-- 버전은 `pnpm-lock.yaml`로 고정합니다. 저장 파일의 바이트에 영향을 주는 라이브러리(서브세팅, 압축)는 범위 없이 정확한 버전으로 적습니다(`"fflate": "0.8.2"`) → [[0039-woff-subset-font|ADR-0039]]
+- 버전은 `pnpm-lock.yaml`로 고정합니다. 저장 파일의 바이트에 영향을 주는 라이브러리(서브세팅, 압축)는 범위 없이 정확한 버전으로 적습니다(`"fflate": "0.8.3"`) → [[0039-woff-subset-font|ADR-0039]]
 
 ## 미결정 사항
 
