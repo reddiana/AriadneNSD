@@ -95,7 +95,7 @@ sequenceDiagram
 > [!warning] 남은 위험
 > 가로채기(`setViewState` 몽키 패치), 노트 그림 갱신에 쓰는 `.internal-embed`의 `src` 속성과 `<img>` DOM 구조는 Obsidian의 비공개 내부 API입니다. Obsidian이 업데이트되면 깨질 수 있습니다. 본 구현에서는 이 부분을 한 모듈에 격리하고, Obsidian 새 버전마다 돌릴 회귀 테스트 목록을 둡니다.
 
-## 2. 노트에 새 다이어그램 넣기 ("Insert new NS diagram")
+## 2. 노트에 새 다이어그램 삽입 ("Insert new NS diagram")
 
 요구사항: [[01-requirements#^r-obs|R-OBS-01]], [[01-requirements#^r-obs|R-OBS-03]]. drawio-obsidian의 흐름을 따른다.
 

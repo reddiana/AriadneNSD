@@ -62,7 +62,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 - **머리 모양 "제목처럼":** 문서 설정에서 머리 모양을 "제목처럼"으로 선택하면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 글자 `Event` · `Method` 딱지를, 아래에 가는 줄 하나를 둡니다. 바탕은 칠하지 않습니다(종이 그대로). 머리는 여전히 블록이라 선택하고 고칠 수 있습니다. 글자는 4.2절, 치수는 5장에 있습니다. 문서 설정의 자리는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
 
   > [!example] 머리 모양 설정: "모자 · 아치"(왼쪽)와 "제목처럼"(오른쪽)
-  > 같은 퀵소트입니다. 이 문서의 다른 그림은 모두 "모자 · 아치"로 그렸습니다. 새 문서의 처음 값과 고르는 법은 [[02-interaction-rules#머리 모양]]에 있습니다.
+  > 같은 퀵소트입니다. 이 문서의 다른 그림은 모두 "모자 · 아치"로 그렸습니다. 새 문서의 처음 값과 고르는 법은 [[02-interaction-rules#헤더 모양]]에 있습니다.
   >
   > ![[visual-design-head-shape.png|380]] ![[visual-design-head-title.png|380]]
 
@@ -226,7 +226,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | 드래그할 때의 드롭 위치의 줄 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `red.700` | 받아들일 수 없는 입력 (종이 위 5.23 ~ 6.57:1) |
 
-## 4. 글자
+## 4. 타이포그래피
 
 ### 4.1 크기 단계
 
@@ -237,7 +237,7 @@ flowchart LR
 | 본문 | 13px / 18px | 9.75pt |
 | 보조 | 12px | 9pt |
 
-### 4.2 글자의 역할
+### 4.2 텍스트의 역할
 
 그림 안의 글자는 모두 아래 표의 한 줄에 해당합니다. "블록 글꼴"은 4.3절에서 문서가 선택한 글꼴(고정폭 또는 비례폭), "비례폭"은 언제나 비례폭입니다.
 
@@ -345,10 +345,10 @@ flowchart LR
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | **없음** |
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 갈래 이름을 선택함 | 머리 아래쪽의 갈래 이름 칸(높이 20px) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#갈래 이름 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 갈래 이름을 선택함 | 머리 아래쪽의 갈래 이름 칸(높이 20px) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 글자를 고치는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 고치기 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
-| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (머리 이름이 겹칠 때 → [[02-interaction-rules#Event 머리]]) |
+| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 까닭을 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (머리 이름이 겹칠 때 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 글자 첫 줄 | 편집 | | **없음** |
 | 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | **없음** |

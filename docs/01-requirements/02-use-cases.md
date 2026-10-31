@@ -247,7 +247,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **요구사항:** [[01-requirements#^r-fmt|R-FMT-01]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-03]], [[01-requirements#^r-fmt|R-FMT-04]], [[01-requirements#^r-fmt|R-FMT-07]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-gd|R-GD-03]], [[01-requirements#^r-web|R-WEB-03]], [[01-requirements#^r-exp|R-EXP-04]], [[01-requirements#^r-nfr|R-NFR-02]]
 
-### UC-07 노트에 다이어그램을 넣어 보인다
+### UC-07 노트에 다이어그램을 삽입해 보인다
 
 > [!abstract] 자세한 형식
 > 실패가 비싼 흐름이라 자세한 형식으로 씁니다([[dr-0014-light-use-cases|DR-0014]]).
