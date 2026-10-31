@@ -44,3 +44,71 @@ body[data-slug="index"] article {
   fill: color-mix(in srgb, var(--tertiary) 22%, var(--light)) !important;
   stroke: var(--tertiary) !important;
 }
+
+// 첫 화면(README): 예제 그림 둘과 그 아래의 "프로토타입 편집기에서 열기" (시안 M42의 가2 · 나8).
+// GitHub에서 그림마다 버튼을 달려고 README는 표를 쓴다. 사이트에서는 표의 선을 지우고, 좁으면 쌓이게 한다
+body[data-slug="index"] article {
+  .table-container:has(img[src*="readme-open-button"]) {
+    overflow: visible;
+  }
+  table:has(img[src*="readme-open-button"]) {
+    margin: 1rem auto 0.25rem;
+    padding: 0;
+    display: block;
+    tbody,
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+      border: 0;
+    }
+    td {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; // 버튼은 그림의 왼쪽 아래 (M41처럼)
+      gap: 8px;
+      padding: 0;
+      min-width: 0;
+      br {
+        display: none;
+      }
+    }
+    img {
+      margin: 0;
+    }
+    a {
+      line-height: 0;
+      background: none;
+      padding: 0;
+    }
+  }
+  // 그림 바탕: 흰 종이 한 장처럼 (가2). 차트의 색은 그대로 둔다
+  img[src*="readme-dijkstra"],
+  img[src*="readme-merge-sort"] {
+    box-sizing: border-box;
+    background: #fff;
+    padding: 8px;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  // 인용절의 채운 버튼(나11): 글 줄에 맞춰 앉힌다
+  .callout a:has(img[src*="readme-prototype-button"]) {
+    background: none;
+    padding: 0;
+    img {
+      margin: 0 0 0 4px;
+      vertical-align: middle;
+      border-radius: 16px;
+    }
+  }
+}
+:root[saved-theme="dark"] body[data-slug="index"] article {
+  img[src*="readme-dijkstra"],
+  img[src*="readme-merge-sort"] {
+    border-color: #000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
