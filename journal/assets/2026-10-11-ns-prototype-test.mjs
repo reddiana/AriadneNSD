@@ -38,7 +38,7 @@ await sleep(2500);
 // 페이지 안에서 쓸 도우미: 키 누르기, 블록 고르기, 문서 읽기
 const HELPERS = `
 window.T = {
-  key(code, o = {}) { (o.editor ? document.querySelector('#editor') : document).dispatchEvent(new KeyboardEvent('keydown', { code, key: o.key || code, shiftKey: !!o.shift, ctrlKey: !!o.ctrl, bubbles: true, cancelable: true })); },
+  key(code, o = {}) { (o.editor ? document.querySelector('#editor') : document).dispatchEvent(new KeyboardEvent('keydown', { code, key: o.key || code, shiftKey: !!o.shift, ctrlKey: !!o.ctrl, altKey: !!o.alt, bubbles: true, cancelable: true })); },
   click(id) { const el = document.querySelector('#svg [data-id="' + id + '"]'); if (!el) throw new Error('no element ' + id); el.dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true })); },
   cmd(c) { document.querySelector('button[data-cmd="' + c + '"]').click(); },
   doc() { return JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; },
@@ -376,7 +376,7 @@ await keys('Escape');
 check('고른 상태의 Esc: 고른 것을 풀지 않음', (await ev(where)) === '처리', await ev(where));
 await ev(`T.click('${hd}')`); await keys('KeyI');
 await ev(`T.type('')`);
-check('머리 이름을 비움: 칸이 다시 열림', (await ev(`T.editing()`)) === '', await ev(`T.msg()`));
+check('머리 이름을 비움: 고치기 전 이름으로 돌아가고 칸은 닫힘 (65번째 판부터, Q4)', (await ev(`T.editing()`)) === null && /비울 수 없어/.test(await ev(`T.msg()`)), await ev(`T.msg()`));
 await ev(`T.key('Escape', { editor: true, key: 'Escape' })`);
 check('다시 열린 칸에서 Esc: 그만두기 (갇히지 않음)', (await ev(`T.editing()`)) === null && (await ev(`T.doc().diagrams[0].event`)) === 'TIM2 인터럽트 (1ms)', await ev(`T.doc().diagrams[0].event`));
 await ev(`T.cmd('exQuick')`);
@@ -489,7 +489,9 @@ const if1 = d.diagrams[0].body[1], if2 = d.diagrams[0].body[1].yes[1];
 await ev(`T.click('${if2.yes[1].id}')`); await keys('KeyJ');
 check('안쪽 If의 참 갈래 끝에서 j: 거짓 갈래가 아니라 바깥 If의 다음 블록으로', (await ev(where)) === '처리  ·  접기 영역: 센서 읽기', await ev(where));
 await ev(`T.click('${if1.no[0].id}')`); await keys('KeyK');
-check('거짓 갈래의 처음에서 k: 참 갈래가 아니라 그 If로', (await ev(where)) === 'If', await ev(where));
+check('거짓 갈래의 처음에서 k: 참 갈래가 아니라 그 갈래 이름으로 (65번째 판부터, Q10-b)', (await ev(where)).includes('갈래 이름 "거짓"'), await ev(where));
+await keys('KeyK');
+check('거짓 갈래 이름에서 k: 그 If로', (await ev(where)) === 'If', await ev(where));
 await ev(`T.click('${if1.no[0].id}')`); await keys('KeyJ');
 check('거짓 갈래의 끝에서 j: If의 다음 블록으로', (await ev(where)) === '처리  ·  접기 영역: 센서 읽기', await ev(where));
 await ev(`T.click('${if1.yes[0].id}')`); await keys('KeyJ');
@@ -780,17 +782,17 @@ await ev(`T.cmd('exCode')`);
   let cs = findType(kd.diagrams[0].body, 'case');
   const h0 = await H(cs.c0[0].id), h1 = await H(cs.c0[1].id);
   check('62: 짧은 갈래의 블록들이 고르게 늘어남 (SB1)', Math.abs(h0 - h1) <= 1 && h0 > 32, [h0, h1]);
-  await ev(`T.click('${cs.c2[0].id}')`); await keys('Minus');
+  await ev(`document.querySelector('#svg [data-id="${cs.id}"][data-label="2"]').dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true }))`); await keys('KeyX');
   kd = await ev(`T.doc()`); cs = findType(kd.diagrams[0].body, 'case');
   check('62: 갈래가 둘 남으면 묻지 않음', cs.labels.length === 3 && (await ev(`document.querySelector('#menu').hidden`)), cs.labels);
-  await ev(`T.click('${cs.c1[0].id}')`); await keys('Minus');
+  await ev(`document.querySelector('#svg [data-id="${cs.id}"][data-label="1"]').dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true }))`); await keys('KeyX');
   check('62: 갈래가 하나만 남으면 If로 바꿀지 물음', !(await ev(`document.querySelector('#menu').hidden`)) && (await ev(`document.querySelector('#menu').textContent`)).includes('If로 바꾸기'), await ev(`document.querySelector('#menu').textContent`));
   await ev(`T.key('Enter', { key: 'Enter' })`);
   kd = await ev(`T.doc()`);
   const ifn = findType(kd.diagrams[0].body, 'if');
   check('62: If로 바뀜 (조건은 Case의 글자, 참 갈래 이름은 갈래 이름)', !findType(kd.diagrams[0].body, 'case') && ifn && ifn.text === 'cmd' && ifn.labels?.[0] === 'CMD_START' && ifn.yes[0].text === 'motor_on();', ifn);
-  await ev(`T.click('${ifn.id}')`); await keys('+Equal');
-  check('62: If에서 +: Case로 바꿀지 물음', (await ev(`document.querySelector('#menu').textContent`)).includes('Case로 바꾸고'), await ev(`document.querySelector('#menu').textContent`));
+  await ev(`document.querySelector('#svg [data-id="${ifn.id}"][data-label="0"]').dispatchEvent(new MouseEvent('mousedown', { button: 0, detail: 1, bubbles: true, cancelable: true }))`); await keys('KeyO');
+  check('62: If의 갈래 이름에서 o: Case로 바꿀지 물음 (65번째 판부터 + 대신)', (await ev(`document.querySelector('#menu').textContent`)).includes('Case로 바꾸고'), await ev(`document.querySelector('#menu').textContent`));
   await ev(`T.key('Digit1')`);
   check('62: Case로 바뀌고 새 갈래 이름 칸이 열림', (await ev(`T.editing()`)) === '2', await ev(`T.editing()`));
   await ev(`T.type('CMD_PAUSE')`);
@@ -815,7 +817,7 @@ await ev(`T.cmd('exCode')`);
   check('62: Event는 왼쪽, Method는 오른쪽, 사이는 88px 넘게', mL - evR >= 87, { evR, mL });
   const vb = (await ev(`document.querySelector('#svg').getAttribute('viewBox')`)).split(' ').map(Number);
   check('62: 그림의 가로 : 세로가 16 : 10 가까이', vb[2] / vb[3] > 1.2 && vb[2] / vb[3] < 2.1, vb);
-  check('64: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '64번째 판', await ev(`document.querySelector('#edition').textContent`));
+  check('65: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '65번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
 // 62번째 판: M41의 예제 일곱 ("더 보기…")
@@ -917,6 +919,92 @@ await ev(`T.cmd('exCode')`);
   await send('Emulation.clearDeviceMetricsOverride');
   await sleep(300);
   check('64: 넓은 화면에선 펴고 접는 단추가 없음', !(await ev(vis('button[data-cmd="toggleMenu"]'))) && (await ev(vis('.bar .grp'))));
+}
+
+// 65번째 판: 2026-11-01에 정한 MVP 조작 (UX 결정 10장, 시안 M43)
+{
+  await send('Emulation.setFocusEmulationEnabled', { enabled: true });
+  const where = () => ev(`document.querySelector('#where').textContent`);
+  const D = () => ev(`T.doc()`);
+  const foldList = () => ev(`JSON.parse(localStorage.getItem('nsd-proto-fold') || '[]')`);
+  const down = (sel, detail = 1, type = 'mousedown') => ev(`document.querySelector('#svg ${sel}').dispatchEvent(new MouseEvent('${type}', { button: ${type === 'contextmenu' ? 2 : 0}, detail: ${detail}, bubbles: true, cancelable: true, clientX: 300, clientY: 300 }))`);
+  const esc = () => ev(`document.querySelector('#editor').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true }))`);
+  // Q2 더블클릭은 고치기, 세모로 접고 펴기
+  await ev(`T.cmd('exCode')`);
+  await down('[data-id="n14"]'); await down('[data-id="n14"]', 2);
+  check('65: 접힌 칸을 더블클릭하면 이름을 고침 (펴지 않음)', (await ev(`T.editing()`)) === '로그 남기기' && (await foldList()).includes('n14'), await ev(`T.editing()`));
+  await esc();
+  await down('[data-id="n14"][data-tri]');
+  check('65: 접힌 칸의 세모를 누르면 폄', !(await foldList()).includes('n14'));
+  await down('[data-id="n14"][data-tri]');
+  check('65: 이름 띠의 세모를 누르면 접음', (await foldList()).includes('n14'));
+  await down('[data-id="n9"][data-band]'); await down('[data-id="n9"][data-band]', 2);
+  check('65: 이름 띠를 더블클릭하면 이름을 고침 (접지 않음)', (await ev(`T.editing()`)) === '센서 읽기' && !(await foldList()).includes('n9'), await ev(`T.editing()`));
+  await esc();
+  await ev(`T.cmd('svg')`);
+  const out = await ev(`document.querySelector('#svgText').value`);
+  await ev(`T.cmd('closeModal')`);
+  check('65: 저장되는 그림에는 세모가 없음', !out.includes('▾') && !out.includes('data-tri') && !/l 6 4.5 l -6 4.5/.test(out));
+  // Q4 머리의 이름을 비우면 고치기 전 이름으로
+  await ev(`T.cmd('exQuick')`);
+  await ev(`T.click('g18'); T.key('Enter', { key: 'Enter' })`);
+  await ev(`T.type('')`);
+  let d = await D();
+  check('65: 머리의 이름을 비우면 고치기 전 이름으로, 칸은 닫힘', (await ev(`T.editing()`)) === null && d.diagrams[1].event === 'partition(a, lo, hi)' && /비울 수 없어/.test(await ev(`T.msg()`)), { e: await ev(`T.editing()`), n: d.diagrams[1].event });
+  // Q6 옮기기
+  await ev(`T.click('n7'); T.key('ArrowUp', { alt: true })`);
+  d = await D();
+  check('65: Alt+↑로 블록을 위로', d.diagrams[1].body[0].id === 'n7' && d.diagrams[1].body[1].id === 'n6', d.diagrams[1].body.map(n => n.id));
+  await ev(`T.key('KeyJ', { alt: true, key: 'j' })`);
+  d = await D();
+  check('65: Alt+j로 블록을 아래로', d.diagrams[1].body[0].id === 'n6' && d.diagrams[1].body[1].id === 'n7', d.diagrams[1].body.map(n => n.id));
+  await ev(`T.click('n11'); T.key('ArrowUp', { alt: true })`);
+  d = await D();
+  const wb = d.diagrams[1].body.find(n => n.id === 'n9').body;
+  check('65: 줄의 처음에서 Alt+↑: 제어 블록 밖으로', wb[0].id === 'n11' && wb[1].id === 'n10' && wb[1].yes[0].id === 'n12', wb.map(n => n.id));
+  await ev(`T.key('KeyZ', { ctrl: true })`);
+  await ev(`T.click('g18'); T.key('ArrowUp', { alt: true })`);
+  d = await D();
+  check('65: 머리에서 Alt+↑: 다이어그램 순서', d.diagrams[0].id === 'g18', d.diagrams.map(x => x.id));
+  await ev(`T.key('KeyZ', { ctrl: true })`);
+  await ev(`T.cmd('exCase')`);
+  await ev(`T.click('n5'); T.key('ArrowLeft', { alt: true })`);
+  let cs = (await D()).diagrams[0].body[1];
+  check('65: 갈래 안의 블록에서 Alt+←: 갈래를 맞바꿈 (이름도 따라감)', cs.labels[0] === 'CMD_STOP' && cs.c0[0].text === 'motor_off();' && cs.c1[0].text === 'motor_on();', cs.labels);
+  await ev(`T.click('n12'); T.key('ArrowLeft', { alt: true })`);
+  check('65: default 갈래는 옮기지 않음', (await D()).diagrams[0].body[1].labels[3] === 'default' && /default/.test(await ev(`T.msg()`)));
+  // Q10 갈래 이름 고르기, o O x
+  await ev(`T.cmd('exCase')`);
+  await ev(`T.click('n3'); T.key('ArrowUp')`);
+  check('65: 갈래의 첫 블록에서 ↑: 갈래 이름', (await where()).includes('갈래 이름 "CMD_START"'), await where());
+  await ev(`T.key('KeyL', { key: 'l' })`);
+  check('65: 갈래 이름에서 l: 옆 갈래 이름', (await where()).includes('갈래 이름 "CMD_STOP"'), await where());
+  await ev(`T.key('KeyJ', { key: 'j' })`);
+  check('65: 갈래 이름에서 j: 그 갈래의 첫 블록', !(await where()).includes('갈래 이름') && (await D()).diagrams[0].body[1].c1[0].text === 'motor_off();', await where());
+  await ev(`T.key('KeyK', { key: 'k' })`); await ev(`T.key('KeyO', { key: 'O', shift: true })`);
+  check('65: 갈래 이름에서 O: 앞에 갈래를 넣고 이름 칸이 열림', (await ev(`T.editing()`)) === '4' && (await D()).diagrams[0].body[1].labels.length === 5, await ev(`T.editing()`));
+  await ev(`T.type('CMD_NEW')`);
+  cs = (await D()).diagrams[0].body[1];
+  check('65: 새 갈래는 고른 갈래 앞, 고른 채로 남음', cs.labels.join() === 'CMD_START,CMD_NEW,CMD_STOP,CMD_SPEED,default' && (await where()).includes('"CMD_NEW"'), { l: cs.labels, w: await where() });
+  await ev(`T.key('KeyX', { key: 'x' })`);
+  cs = (await D()).diagrams[0].body[1];
+  check('65: 갈래 이름에서 x: 갈래 지우기, 다음 갈래 이름을 고름', cs.labels.join() === 'CMD_START,CMD_STOP,CMD_SPEED,default' && (await where()).includes('"CMD_STOP"'), { l: cs.labels, w: await where() });
+  await ev(`T.key('KeyK', { key: 'k' })`);
+  check('65: 갈래 이름에서 k: Case를 고름', !(await where()).includes('갈래 이름'), await where());
+  await ev(`T.key('Equal', { key: '+', shift: true })`);
+  check('65: +는 갈래를 넣지 않고 안내', (await D()).diagrams[0].body[1].labels.length === 4 && /o · O/.test(await ev(`T.msg()`)));
+  await down('[data-id="n2"][data-label="3"]');
+  await ev(`T.key('KeyX', { key: 'x' })`);
+  check('65: default 갈래는 지우지 않음', (await D()).diagrams[0].body[1].labels.length === 4 && /default/.test(await ev(`T.msg()`)));
+  await down('[data-id="n2"][data-label="0"]', 1, 'contextmenu');
+  check('65: 갈래 이름의 오른쪽 클릭 메뉴에 "이 갈래 지우기"', (await ev(`document.querySelector('#menu').textContent`)).includes('이 갈래 지우기'), await ev(`document.querySelector('#menu').textContent`));
+  await ev(`T.key('Escape', { key: 'Escape' })`);
+  await ev(`T.cmd('exQuick')`);
+  await ev(`T.click('n2'); T.key('KeyK', { key: 'k' })`);
+  check('65: If의 참 갈래 첫 블록에서 k: 갈래 이름 "참"', (await where()).includes('If의 갈래 이름 "참"'), await where());
+  await ev(`T.key('KeyI', { key: 'i' })`);
+  check('65: If의 갈래 이름에서 i: 이름 고치기', (await ev(`T.editing()`)) === '참', await ev(`T.editing()`));
+  await esc();
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);

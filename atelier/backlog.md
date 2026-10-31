@@ -23,7 +23,7 @@ updated: 2026-10-25
 	- [ ] [[03-editor]], [[06-web]] (뼈대만 있음. 웹은 Chromium이 아닌 브라우저에서 저장하는 흐름 포함)
 	- [ ] 웹 버전의 화면 설계: 레이아웃 설계 다음, 편집기 설계와 함께 [[06-web]]에서. 도구 막대 · 메뉴 · 파일 열기와 저장 · 도움말의 자리를 시안으로 견준다. 본보기는 [SequenceDiagram.org](https://sequencediagram.org/) (메인테이너, inbox 2026-10-25)
 	- [ ] 컨트리뷰터를 위한 준비(메인테이너, inbox 2026-10-25): 코딩 스타일(ESLint + Prettier로 정함 → [[0038-build-and-test-tools|ADR-0038]]. `CONTRIBUTING.md`에 설정과 시험 돌리는 법을 더함), 이슈 · PR 템플릿, 행동 강령 `CODE_OF_CONDUCT.md`, 보안 문제를 알리는 곳 `SECURITY.md`, 기여물의 라이선스(Apache-2.0의 기본 규칙, DCO를 더할지), `good first issue` 라벨. `CONTRIBUTING.md`의 첫 판은 2026-10-25에 씀
-3. [x] ~~**MVP에 드는 조작 규칙의 미결정**~~ → 2026-11-01에 시안 M43으로 모두 정함([[ux-decisions#10. 2026-11-01의 결정]]). 남은 것은 프로토타입에 넣기([[prototype#정해 놓고 아직 넣지 못한 것]]). 접기 Q20과 If ↔ Case로 바꾸는 모양은 MVP 뒤
+3. [x] ~~**MVP에 드는 조작 규칙의 미결정**~~ → 2026-11-01에 시안 M43으로 모두 정함([[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입 65번째 판에 넣음. 접기 Q20과 If ↔ Case로 바꾸는 모양은 MVP 뒤
 
 MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬 기능), 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]]), Google Drive, IDE 플러그인, AI 대화창, 광고, Event 블록, Obsidian에 wasm 싣기.
 

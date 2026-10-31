@@ -28,9 +28,9 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 - 요구사항 · UX 설계 · 아키텍처는 초안이 있고, 상세 설계는 문서 모델 [[01-model]], 레이아웃 [[02-layout]](규칙 · 스파이크 · [[0037-two-pass-full-layout|ADR-0037]]까지), 테스트 전략 [[07-testing]](초안, 도구 [[0038-build-and-test-tools|ADR-0038]])이 있고, 편집기 [[03-editor]]는 뼈대입니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP는 웹의 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 범위입니다 → [[dr-0015-mvp-scope|DR-0015]]. MVP 전에 정할 것은 [[backlog#MVP 전에 정할 것]]
-- MVP에 드는 조작 규칙의 미결정은 2026-11-01에 모두 정했습니다(시안 M43 → [[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입에는 아직 넣지 않았습니다 → [[prototype#정해 놓고 아직 넣지 못한 것]]
+- MVP에 드는 조작 규칙의 미결정은 2026-11-01에 모두 정했습니다(시안 M43 → [[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입 65번째 판에 넣었습니다 → [[prototype]]
 - 코드의 자리는 정했고(`src/` 아래의 pnpm 워크스페이스 → [[0036-code-layout|ADR-0036]]) 코드는 아직 없습니다
-- 프로토타입은 **64번째 판**입니다(2026-10-31: 62번째 판에서 그때까지 정한 것을 모두 넣고, 63번째 판에서 주소로 예제 열기, 64번째 판에서 inbox 다섯: 머리 모양 기억 · 처음엔 Raft · 열면 고른 것 없음 · 좁은 화면) → [[prototype]]
+- 프로토타입은 **65번째 판**입니다(2026-11-01: MVP 조작 물음에서 정한 것을 넣음. 64번째 판은 inbox 다섯: 머리 모양 기억 · 처음엔 Raft · 열면 고른 것 없음 · 좁은 화면) → [[prototype]]
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
 - 설계 문서는 https://reddiana.github.io/AriadneNSD/ 에 펴내고 있습니다(`docs/` · `atelier/` · `til/`, `journal/`에서는 이름 이야기와 로고의 출처 두 문서 → [[dr-0013-publish-docs-github-pages|DR-0013]])
 
