@@ -142,3 +142,13 @@ Quartz는 기본으로 왼쪽 목록을 **제목**순, 폴더 페이지의 목�
 - Quartz는 모든 페이지의 `og:image`를 `static/og-image.png`로 적는데, 그 자리에 Quartz의 기본 그림이 들어 있었습니다.
 - 로고와 문자 로고로 1200×630 그림(`site/og-image.png`)을 만들고(`site/make-og-image.mjs`), 빌드가 그 자리에 복사하게 했습니다. 1200×630은 페이스북이 추천하는 크기입니다.
 - **페이스북은 한 번 읽은 미리보기를 오래 기억합니다.** 그림을 바꾼 뒤에는 [공유 디버거](https://developers.facebook.com/tools/debug/)에 주소를 넣고 "다시 스크랩"을 눌러야 새 그림이 나옵니다. 백엔드로 치면 CDN 캐시를 손으로 비우는 것(purge)입니다.
+
+## GitHub의 README가 지우는 HTML
+
+README에 HTML을 쓰면 GitHub는 보안 때문에 일부를 지우고 보여 줍니다(2026-10-31, 프로토타입 버튼을 만들며).
+
+- **지우는 것:** `style` 속성(색 · 여백 · flex), `class`, `target="_blank"`(새 창), `<script>`, `<style>`. 그래서 GitHub에서는 꾸밈이 사라지고, 링크는 같은 창에서 열립니다.
+- **남기는 것:** `align`, `width` · `height`, `<img>`, `<a href>`, `<table>`, `<br>`, `<sub>` 같은 옛 HTML 속성과 태그.
+- **같은 모양을 어디서나 보이려면 그림으로.** 버튼을 SVG 그림으로 만들어 `<a>`로 감싸면 GitHub · 사이트 · Obsidian에서 같게 보입니다. `<img>`로 넣은 SVG는 웹 글꼴을 불러오지 못하므로, 글자를 글꼴의 모양 그대로 선(path)으로 바꿔 넣습니다(`journal/assets/2026-10-31-readme-buttons.py`).
+- **사이트(Quartz)는 지우지 않습니다.** 그래서 `style` · `target`은 사이트에서는 듣고, 사이트에만 맞는 꾸밈은 `site/custom.scss`에 둡니다.
+- **인용 상자 안의 줄바꿈.** 빈 줄(`>`만 있는 줄)로 나누면 단락이 되어 단락마다 여백이 붙습니다. 줄만 바꾸려면 줄 끝에 `<br>`을 씁니다.
