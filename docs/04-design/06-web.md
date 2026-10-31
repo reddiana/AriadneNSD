@@ -54,7 +54,7 @@ updated: 2026-11-01
 
 둘은 다른 일이다. 정한 과정 → [[ux-decisions#W3-b. 임시 보관과 자동 저장|W3-b]]
 
-| | 임시 보관 ([[01-requirements#^r-web|R-WEB-03]]) | 자동 저장 ([[01-requirements#^r-exp|R-EXP-04]]) |
+| | 임시 보관 ([[01-requirements#^r-web\|R-WEB-03]]) | 자동 저장 ([[01-requirements#^r-exp\|R-EXP-04]]) |
 | --- | --- | --- |
 | 어디에 | 그 브라우저의 저장소 | 원래 파일 |
 | 언제 | 고칠 때마다, 늘 | 고치고 2초 뒤. **기본으로 켬**, 설정에서 끔 |

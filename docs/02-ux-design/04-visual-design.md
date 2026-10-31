@@ -54,7 +54,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | Case | 머리에 긴 빗금과 짧은 빗금, 갈래마다 세로선과 갈래 이름. 갈래 이름은 칸의 왼쪽에 붙이고, **default 갈래의 이름만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]). 코드에서 가져와 default가 없으면 빈 default 칸(`∅`)을 그려 두고, default만 있으면 짧은 빗금 하나만 그린다(→ [[ux-decisions#CD1. default가 없는 Case\|CD1]] · [[ux-decisions#CD2. default만 있는 Case\|CD2]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 머리가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선. 이어진 곳을 잃은 호출 블록(Method를 지움, 머리를 뗌, 다른 문서를 찾을 수 없음)은 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
-| For | While과 같은 모양(왼쪽 띠 안에 본문, 머리가 위). While과는 **머리의 글자로만** 가른다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
+| For | While과 같은 모양(왼쪽 띠 안에 본문, 머리가 위). While과는 **머리의 글자로만** 가른다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | Event 머리 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 머리 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("부르는 것과 불리는 것"이라 같은 색) |
 
@@ -302,7 +302,7 @@ flowchart LR
 | `size.peek-halo` | 3px | 펴 보기 점선 아래에 까는 흰 줄의 굵기 |
 | `size.text-halo` | 3px | If · Case 조건 글자 둘레에 까는 바탕색 테두리의 두께(글자 바깥으로) |
 | `space.diagram` | 44px | 다이어그램 사이 |
-| `space.kind-gap` | 88px (= 2 × `space.diagram`) | Event 무리와 Method 무리 사이 → [[ux-decisions#DA1. Event 무리와 Method 무리 사이|DA1]] |
+| `space.kind-gap` | 88px (= 2 × `space.diagram`) | Event 무리와 Method 무리 사이 → [[ux-decisions#DA1. Event 무리와 Method 무리 사이\|DA1]] |
 | `size.column-min` | 420px | 여러 다이어그램을 줄로 놓을 때 한 줄의 가장 좁은 폭 |
 | `space.paper` | 24px | 그림 둘레의 여백 |
 
