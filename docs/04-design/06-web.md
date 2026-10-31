@@ -84,7 +84,8 @@ updated: 2026-11-01
 아래 물음의 견준 안은 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)에 있습니다.
 
 > [!question] 미결정
-> - **W3. 파일 이름과 저장 상태의 자리:** 메뉴 막대 오른쪽(데스크톱의 창 제목 자리), 또는 아래 상태 줄. 최근 파일([[01-requirements#^r-exp|R-EXP-04]])은 파일 메뉴의 "최근 파일 ▸".
+> - **W3. 파일 이름과 저장 상태의 자리:** 캔버스 위 편집기 탭(VS Code · IntelliJ처럼, 저장 안 됐으면 `●`), 메뉴 막대 오른쪽(데스크톱의 창 제목 자리), 또는 아래 상태 줄. 최근 파일([[01-requirements#^r-exp|R-EXP-04]])은 파일 메뉴의 "최근 파일 ▸".
 > - **W3-b. 임시 보관과 자동 저장:** 임시 보관([[01-requirements#^r-web|R-WEB-03]])은 늘 한다. 원래 파일에 자동 저장([[01-requirements#^r-exp|R-EXP-04]])을 기본으로 켤지 끌지. 원래 파일에 쓸 수 있는 것은 Chromium 계열뿐이다.
 > - **W4. 도움말([[01-requirements#^r-edit|R-EDIT-21]])의 모양:** 새 탭으로 여는 한 페이지 사용법과 `?` 키의 단축키 겹창, 또는 오른쪽 접는 패널.
-> - **W5. 설정의 자리:** 문서 설정(파일에 저장)과 환경 설정(이 브라우저)을 창 둘로 나눌지, 한 창의 탭 둘로 할지.
+> - **W5. 설정의 자리:** 문서 설정(파일에 저장)과 환경 설정(이 브라우저)을 창 둘로 나눌지, 한 창의 탭 둘("사용자 · 이 문서", VS Code의 "User · Workspace"처럼)로 할지.
+> - **W6. 명령 찾기 창:** VS Code의 Command Palette · IntelliJ의 Find Action처럼 명령 이름을 쳐서 찾는 창(`Ctrl`+`Shift`+`P`)을 둘지. 요구사항에 없어, 둔다면 요구사항을 더한다.

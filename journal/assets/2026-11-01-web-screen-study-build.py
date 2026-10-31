@@ -200,14 +200,15 @@ def dsvg(name, extra=''):
         extra = f'<rect x="{e["x"]+1}" y="{e["y"]+1}" width="{e["w"]-2}" height="{e["h"]-2}" fill="none" stroke="#d0500b" stroke-width="2" rx="2"/>' + extra
     return s.replace('</svg>', extra + '</svg>')
 
-def base(cv_inner, menus_on=None, fn='예제.ns.svg · <b class="ok">✓ 저장됨</b>', status=None, right=None, block_on=None, cursor=None):
+def base(cv_inner, menus_on=None, fn='예제.ns.svg · <b class="ok">✓ 저장됨</b>', status=None, right=None, block_on=None, cursor=None, tabs=None):
     menus = ''.join(f'<span class="{"on" if m == menus_on else ""}">{m}</span>' for m in ['파일', '편집', '다이어그램', '보기', '도움말'])
     bb = ''.join(f'<span class="bb{" on" if k == block_on else ""}" title="{t}">{bi(k)}</span>' for k, t in BLOCKS)
     tools = ''.join(ic(k, 16) for k in ['new', 'open', 'save', 'export']) + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['undo', 'redo']) + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['cut', 'copy', 'paste']) + '<i class="sep"></i>' + bb + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['wrap', 'zoom'])
     fnspan = f'<span class="fn">{fn}</span>' if fn else ''
     st = f'<div class="pst">{status}</div>' if status else ''
     main = f'<div class="cv">{cv_inner}</div>' + (f'<div class="side">{right}</div>' if right else '')
-    return f'''<div class="scr b"><div class="mbar"><b>AriadneNSD</b>{menus}{fnspan}</div><div class="tbar t2">{tools}</div><div class="pmain">{main}</div>{st}</div>'''
+    tb = f'<div class="etabs">{tabs}</div>' if tabs else ''
+    return f'''<div class="scr b"><div class="mbar"><b>AriadneNSD</b>{menus}{fnspan}</div><div class="tbar t2">{tools}</div>{tb}<div class="pmain">{main}</div>{st}</div>'''
 
 def menu_at(left, title_rows, top=0, w=118):
     return flyout('', title_rows, f'left:{left}px;top:{top}px;width:{w}px').replace('<div class="ft"></div>', '')
@@ -231,14 +232,21 @@ W2 = [
 FILE_ROWS = [('새로', 'Ctrl+N'), ('열기…', 'Ctrl+O'), ('최근 파일', '▸'), ('', ''), ('저장', 'Ctrl+S'), ('다른 이름으로 저장…', 'Ctrl+Shift+S'), ('내보내기', '▸ PNG'), ('', ''), ('환경 설정…', '')]
 RECENT = flyout('', [('예제.ns.svg', '방금'), ('quicksort.ns.svg', '어제'), ('uart.ns.svg', '10-28')], 'left:120px;top:24px;width:96px').replace('<div class="ft"></div>', '')
 W3 = [
- card('W3 · 1번', '메뉴 막대 오른쪽에 파일 이름과 저장 상태', [
+ card('W3 · 1번', '캔버스 위 편집기 탭 (VS Code · IntelliJ처럼)', [
+   '도구 모음 아래, 캔버스 바로 위에 <b>탭</b> 하나: 파일 이름과 저장 상태(저장 안 됐으면 <b>●</b>, 저장됐으면 <b>×</b> 닫기). VS Code와 IntelliJ의 편집기 탭과 같습니다. 브라우저 탭 제목에도 같은 것(<code>● 예제.ns.svg – AriadneNSD</code>).',
+   'MVP의 웹은 문서 하나라 탭도 하나입니다. 데스크톱 버전에서 여러 파일을 탭으로 여는 것(R-DSK-04)으로 그대로 이어집니다.',
+   '파일 메뉴: 새로 · 열기 · <b>최근 파일 ▸</b>(VS Code의 Open Recent) · 저장 · 다른 이름으로 저장 · 내보내기 · 환경 설정. 그림은 최근 파일을 연 모습.',
+   '아래 상태 줄에는 고른 것과 알림(IDE의 상태 줄처럼).',
+   '<span class="bad">탭 줄만큼(약 28px) 그림이 낮아집니다(세로 90% → 86%).</span>'],
+   base(f'<div class="paper">{DG}</div>' + menu_at(0, FILE_ROWS, w=120) + RECENT, menus_on='파일', fn='', tabs='<span class="et on">● 예제.ns.svg</span>', status='처리 · 고른 것 1개'), '', '', pick=True),
+ card('W3 · 2번', '메뉴 막대 오른쪽에 파일 이름과 저장 상태', [
    '메뉴 막대 오른쪽에 <b>파일 이름</b>과 <b>저장 상태</b>(✓ 저장됨 / ● 저장 안 됨). 브라우저 탭 제목에도 같은 것(<code>● 예제.ns.svg – AriadneNSD</code>).',
    '파일 메뉴: 새로 · 열기 · <b>최근 파일 ▸</b> · 저장 · 다른 이름으로 저장 · 내보내기(PNG) · 환경 설정. 그림은 최근 파일을 연 모습.',
    '아래 상태 줄에는 고른 것과 알림만 둡니다(지금 프로토타입처럼).',
    'Structorizer와 데스크톱 프로그램 대부분이 창 제목에 파일 이름을 둡니다. 웹에는 창 제목이 없으니 메뉴 막대 오른쪽이 그 자리입니다.'],
-   base(f'<div class="paper">{DG}</div>' + menu_at(0, FILE_ROWS, w=120) + RECENT, menus_on='파일', fn='예제.ns.svg · <b class="dirty">● 저장 안 됨</b>', status='처리 · 고른 것 1개'), '', '', pick=True),
- card('W3 · 2번', '아래 상태 줄 왼쪽에 파일 이름과 저장 상태', [
-   'VS Code처럼 화면 맨 아래 상태 줄 왼쪽에 파일 이름과 저장 상태, 오른쪽에 고른 것.',
+   base(f'<div class="paper">{DG}</div>' + menu_at(0, FILE_ROWS, w=120) + RECENT, menus_on='파일', fn='예제.ns.svg · <b class="dirty">● 저장 안 됨</b>', status='처리 · 고른 것 1개'), '', ''),
+ card('W3 · 3번', '아래 상태 줄 왼쪽에 파일 이름과 저장 상태', [
+   '화면 맨 아래 상태 줄 왼쪽에 파일 이름과 저장 상태, 오른쪽에 고른 것.',
    '<span class="bad">눈이 위쪽(메뉴 · 도구 모음)과 그림에 가 있어 저장 안 됨을 놓치기 쉽습니다.</span>'],
    base(f'<div class="paper">{DG}</div>', fn='', status='예제.ns.svg · <b class="dirty">● 저장 안 됨</b> <span style="margin-left:auto">처리 · 고른 것 1개</span>'), '', ''),
 ]
@@ -259,10 +267,10 @@ W3B = [
    '<b>임시 보관</b>(R-WEB-03): 고칠 때마다 그 브라우저에 담아 둡니다. 새로 고치거나 탭을 닫았다 열면 "지난번 내용을 되살릴까요?"를 묻습니다.',
    '<b>자동 저장</b>(R-EXP-04): 파일을 열거나 한 번 저장해 쓰기 권한을 받은 파일이면, 고치고 2초 뒤에 원래 파일에 저장합니다. 환경 설정에서 끌 수 있습니다. Chromium 계열(Chrome · Edge)에서만 됩니다.',
    '그 밖의 브라우저(Firefox · Safari)는 원래 파일에 쓸 수 없어 자동 저장이 없고, 저장은 내려받기입니다. 임시 보관은 됩니다.',
-   'Google Docs · Excalidraw처럼 "저장을 잊어도 안전"합니다.'],
+   '<b>IntelliJ</b>와 같습니다(저장 단추를 누를 일이 거의 없음). Google Docs · Excalidraw도 이렇습니다.'],
    autosave_fig(1), '', '', pick=True),
  card('W3-b · 2번', '임시 보관은 늘, 자동 저장은 기본 끔', [
-   '원래 파일에는 사용자가 저장할 때만 씁니다(VS Code의 기본값). 자동 저장은 환경 설정에서 켭니다.',
+   '원래 파일에는 사용자가 저장할 때만 씁니다. <b>VS Code</b>의 기본값(<code>files.autoSave: off</code>)과 같습니다. 자동 저장은 환경 설정에서 켭니다.',
    '파일이 뜻하지 않게 바뀌는 일이 없습니다. 임시 보관이 있어 내용을 잃지는 않습니다.',
    '<span class="bad">저장했다고 믿고 탭을 닫으면, 다른 기기 · 다른 브라우저에서는 고친 것이 없습니다.</span>'],
    autosave_fig(2), '', ''),
@@ -274,6 +282,7 @@ W4 = [
  card('W4 · 1번', '도움말 메뉴: 사용법은 새 탭의 한 페이지, 단축키는 <kbd>?</kbd> 겹창', [
    '<b>사용법</b>: SequenceDiagram.org의 Instructions처럼 사용법과 단축키를 다 적은 <b>한 페이지</b>를 새 탭으로 엽니다(펴낸 사이트의 <code>/manual/</code>). 검색 엔진에도 걸리고, 링크로 나눌 수 있습니다.',
    '<b>단축키 한눈에</b>: <kbd>?</kbd>를 누르면 편집 화면 위에 키 표 겹창(그림). GitHub · Gmail과 같은 키입니다. <kbd>Esc</kbd>로 닫습니다.',
+   'IDE도 이렇습니다: VS Code와 IntelliJ의 도움말 메뉴는 문서를 브라우저로 열고, 단축키는 따로 한 장(Keyboard Shortcuts Reference · Keymap Reference)으로 보입니다.',
    '그림은 도움말 메뉴와 단축키 겹창을 한 장에 함께 그렸습니다(실제로는 하나씩 뜸).'],
    base(f'<div class="paper">{DG}</div>' + menu_at(150, HELP_ROWS, w=110) + KEYS, menus_on='도움말'), '', '', pick=True),
  card('W4 · 2번', '오른쪽 접는 패널 (지금 프로토타입처럼)', [
@@ -286,17 +295,31 @@ W4 = [
 DOCSET = '<div class="modal w"><b>문서 설정 (이 파일에 저장)</b><div class="frm"><span>블록 글자</span><i>C ▾</i><span>머리 모양</span><i>제목처럼 ▾</i><span>결과 기호</span><i>← ▾</i><span>테마</span><i>밝은 기본 ▾</i></div><small>실행 취소의 대상 · 파일과 함께 다른 사람에게 감</small></div>'
 PREF = '<div class="modal w" style="left:250px"><b>환경 설정 (이 브라우저에)</b><div class="frm"><span>화면 언어</span><i>한국어 ▾</i><span>자동 저장</span><i>☑ 켬</i><span>키 안내</span><i>☑ 켬</i><span>고정폭 글꼴</span><i>☑ 켬</i></div><small>나에게만 · 파일에 들어가지 않음</small></div>'
 W5 = [
- card('W5 · 1번', '문서 설정과 환경 설정을 나눔', [
+ card('W5 · 2번', '문서 설정과 환경 설정을 창 둘로 나눔', [
    '<b>다이어그램 › 문서 설정…</b>: 이 파일에 저장되는 것(블록 글자의 종류, 머리 모양, 결과 기호, 테마). 파일을 받은 다른 사람에게도 같게 보입니다.',
    '<b>파일 › 환경 설정…</b>: 나에게만, 이 브라우저에 남는 것(화면 언어, 자동 저장, 키 안내, 고정폭 글꼴).',
    '<b>보기</b> 메뉴: 확대 · 축소, 접기 영역 보기처럼 그 자리에서 켜고 끄는 것.',
    '모델의 구분(문서의 <code>settings</code>와 셸의 <code>SettingsStore</code>)과 같습니다. 지금 프로토타입은 이 둘이 캔버스 위 한 줄에 섞여 있습니다.'],
-   base(f'<div class="paper">{DG}</div>' + DOCSET + PREF), '', '', pick=True),
- card('W5 · 2번', '설정 창 하나에 탭 둘(문서 · 나)', [
-   '톱니 아이콘 하나로 설정 창을 열고, 창 안의 탭으로 "이 문서"와 "나"를 가릅니다.',
-   '찾는 곳이 하나입니다.',
-   '<span class="bad">같은 창 안에서 어떤 값은 파일과 함께 가고 어떤 값은 안 가서 헷갈리기 쉽습니다.</span>'],
-   base(f'<div class="paper">{DG}</div>' + DOCSET.replace('문서 설정 (이 파일에 저장)', '설정 · [이 문서] 나')), '', ''),
+   base(f'<div class="paper">{DG}</div>' + DOCSET + PREF), '', ''),
+]
+W5.insert(0, card('W5 · 1번', '설정 창 하나, 탭 둘 "사용자 · 이 문서" (VS Code · IntelliJ처럼)', [
+   '파일 › 설정…(<kbd>Ctrl</kbd>+<kbd>,</kbd>, VS Code와 같은 키) 하나로 엽니다. 창 위의 탭으로 <b>사용자</b>(나에게만, 이 브라우저: 화면 언어 · 자동 저장 · 키 안내 · 고정폭 글꼴)와 <b>이 문서</b>(파일에 저장: 블록 글자 · 머리 모양 · 결과 기호 · 테마)를 가릅니다.',
+   'VS Code의 "User · Workspace" 탭, IntelliJ의 설정 창(프로젝트에만 듣는 값에 표시)과 같습니다. 개발자에게 익숙한 모양입니다.',
+   '탭 이름과 창 아래 한 줄이 "어디에 저장되는지"를 말해 줍니다. 찾는 곳이 하나입니다.',
+   '<b>보기</b> 메뉴: 확대 · 축소, 접기 영역 보기처럼 그 자리에서 켜고 끄는 것.'],
+   base(f'<div class="paper">{DG}</div>' + DOCSET.replace('<b>문서 설정 (이 파일에 저장)</b>', '<b>설정</b> <span class="mt">사용자 | <u>이 문서</u></span>').replace('실행 취소의 대상 · 파일과 함께 다른 사람에게 감', '이 문서: 파일에 저장 · 파일과 함께 다른 사람에게 감')), '', '', pick=True))
+PALETTE = '<div class="modal" style="left:150px;top:4px;width:240px"><div class="pin">&gt; 감싸</div>' + ''.join(f'<div class="fr{" hl" if i == 0 else ""}"><span>{a}</span><kbd>{b}</kbd></div>' for i, (a, b) in enumerate([('While로 감싸기', 's w'), ('If로 감싸기', 's i'), ('Case로 감싸기', 's k'), ('For로 감싸기', 's f'), ('Do-While로 감싸기', 's d'), ('풀기 (감싼 것 벗기기)', 'd s')])) + '<small>명령 이름을 치면 찾음 · Enter로 실행 · 키도 함께 보여 익힘</small></div>'
+W6 = [
+ card('W6 · 1번', '명령 찾기 창 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (VS Code의 Command Palette · IntelliJ의 Find Action)', [
+   '명령 이름 일부를 치면 명령을 찾아 실행합니다(그림: "감싸"). 줄마다 같은 일을 하는 키가 보여, 쓰다 보면 키를 익힙니다.',
+   '메뉴 · 도구 모음과 같은 명령 목록(ADR-0033)에서 나오므로 따로 만들 것이 적습니다. Obsidian 플러그인은 Obsidian의 명령 팔레트에 같은 명령을 올립니다.',
+   '<kbd>F1</kbd>도 같은 창을 엽니다(VS Code와 같음). 그러면 W4의 "사용법"은 도움말 메뉴에서만 엽니다.',
+   '<span class="bad">요구사항에 없는 기능입니다. 넣으면 요구사항을 하나 더합니다(MVP에 넣을지도 함께).</span>'],
+   base(f'<div class="paper">{DG}</div>' + PALETTE), '', '', pick=True),
+ card('W6 · 2번', '명령 찾기 창 없음', [
+   '명령은 메뉴 · 도구 모음 · 오른쪽 클릭 메뉴 · 키로만 씁니다. Structorizer와 같습니다.',
+   '<span class="bad">메뉴 깊이 있는 명령은 메뉴를 하나씩 열어 찾아야 합니다.</span>'],
+   base(f'<div class="paper">{DG}</div>'), '', ''),
 ]
 
 def section(qid, title, q, cs):
@@ -306,6 +329,7 @@ MORE = ''.join([
   section('W3', 'W3. 파일 이름과 저장 상태의 자리, 최근 파일', 'MVP에 더한 "최근 파일"(R-EXP-04)이 어디에 있고, 저장했는지를 어디서 보는가.', W3),
   section('W3-b', 'W3-b. 임시 보관과 자동 저장', 'MVP에 더한 둘(R-WEB-03 임시 보관, R-EXP-04 자동 저장)이 어떻게 움직이는가. 그림은 메뉴 막대 오른쪽과 상태 줄의 글만 다릅니다.', W3B),
   section('W4', 'W4. 도움말', 'MVP에 더한 도움말(R-EDIT-21)을 어디에, 어떤 모양으로. 본보기는 SequenceDiagram.org의 한 페이지 Instructions입니다(메인테이너, 2026-10-25).', W4),
+  section('W6', 'W6. 명령 찾기 창 (IDE에서 가져온 물음)', 'VS Code와 IntelliJ에서 가장 많이 쓰이는 것 가운데 하나입니다. 요구사항에 없어 새로 묻습니다.', W6),
   section('W5', 'W5. 설정', '지금 프로토타입의 캔버스 위 설정 줄(구문 강조 · 고정폭 · 접기 영역 보기 · 머리 모양 · 결과 기호 · 키 안내)을 어디로 옮기는가.', W5),
 ])
 
@@ -441,6 +465,14 @@ code, kbd {{ font-family: var(--mono); font-size: 12.5px; }}
 .b .side b {{ color: var(--ui-fg); }}
 .b .side p {{ margin: 3px 0; }}
 .pst {{ display: flex; gap: 6px; }}
+.etabs {{ height: 14px; background: #f3f5f9; border-bottom: 1px solid var(--ui-line); display: flex; align-items: flex-end; padding: 0 6px; }}
+.et {{ background: var(--ui-bg); border: 1px solid var(--ui-line); border-bottom: 0; border-radius: 2px 2px 0 0; padding: 1px 8px; font-size: 6.8px; }}
+.et.on {{ background: #fff; border-top: 1.5px solid var(--ui-acc); }}
+.modal .pin {{ border: 1px solid var(--ui-acc); border-radius: 2px; padding: 2px 4px; font-family: var(--mono); }}
+.modal .fr {{ display: flex; justify-content: space-between; padding: 1px 3px; }}
+.modal .fr.hl {{ background: var(--ui-acc-soft); }}
+.mt {{ font-weight: 400; margin-left: 8px; color: var(--ui-muted); }}
+.mt u {{ color: var(--ui-acc); text-decoration: none; border-bottom: 1px solid var(--ui-acc); }}
 .modal {{ position: absolute; z-index: 4; left: 150px; top: 60px; width: 200px; background: #fff; border: 1px solid var(--ui-line); border-radius: 4px; box-shadow: 0 8px 20px rgba(0,0,0,.2); padding: 7px 9px; display: grid; gap: 5px; }}
 .modal.w {{ left: 20px; top: 50px; width: 210px; }}
 .modal .kg {{ display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }}
@@ -454,6 +486,7 @@ code, kbd {{ font-family: var(--mono); font-size: 12.5px; }}
   <div>
     <h1>M44 · 웹 화면 배치</h1>
     <p class="lede"><b>둘째 판 (2026-11-01):</b> 메인테이너가 Structorizer를 참고하자고 했습니다("structorizer의 아이콘바에 블록들이 있는 것이 편해보입니다", "우리의 웹버전은 데스크톱버전과 거의 유사하니까요"). 그래서 모든 안의 도구 모음에 <b>블록 모양 아이콘</b>을 넣고, Structorizer식 배치를 1번으로 더했습니다. 첫 판의 "위 메뉴 막대 + 아이콘 도구 모음"은 1번에 합쳤습니다.</p>
+    <p class="lede"><b>넷째 판 (2026-11-01):</b> 메인테이너: "VSCode나 IntelliJ 같은 IDE를 참고해봅시다". W3에 IDE의 편집기 탭을 1번으로 더하고, W3-b · W4에 IDE의 모습을 적고, W5의 추천을 IDE식(설정 창 하나에 범위 탭)으로 바꾸고, IDE의 명령 찾기 창을 W6으로 더했습니다.</p>
     <p class="lede">웹 버전(MVP)의 화면을 설계합니다. 이 시안은 첫 물음 <b>W1. 화면 전체의 배치</b>만 묻습니다. 배치가 정해지면 같은 그림 위에서 블록 넣기의 자리(W2), 파일 이름 · 저장 상태 · 최근 파일(W3), 도움말(W4), 설정(W5)을 차례로 묻습니다. 그림 속 다이어그램은 프로토타입이 그린 그림 그대로이고, 화면은 노트북 브라우저의 보이는 칸(1366 × 657)을 절반으로 줄여 그렸습니다. 오른쪽 작은 그림은 휴대폰(폭 390px)입니다.</p>
   </div>
   <section>
@@ -468,7 +501,7 @@ code, kbd {{ font-family: var(--mono); font-size: 12.5px; }}
   <section>
     <h2>답하실 것</h2>
     <div class="sum"><ol>
-      <li>W2 · W3 · W3-b · W4 · W5를 하나씩, <b>번호</b> 또는 고칠 점. (W1은 정함)</li>
+      <li>W3 · W3-b · W4 · W5 · W6을 하나씩, <b>번호</b> 또는 고칠 점. (W1 · W2는 정함)</li>
       <li>정하면 웹 설계([[06-web]])에 화면 배치로 적고, 프로토타입에 넣어 써 봅니다.</li>
     </ol></div>
   </section>
