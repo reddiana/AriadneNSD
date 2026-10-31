@@ -42,4 +42,5 @@ updated: 2026-11-01
 
 ## 미결정 사항
 
-아직 없음.
+- [ ] 프레임워크: Electron 또는 Tauri → [[0009-desktop-framework|ADR-0009]](제안됨). 텍스트 폭은 `core`가 번들 글꼴로 계산하므로 저장되는 파일은 웹뷰 엔진과 상관없이 같습니다. 남은 것은 WebKit 웹뷰(macOS, Linux)가 그린 글자가 계산한 폭과 맞는지입니다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
+- [ ] 지원할 운영체제의 범위(Windows만, 또는 macOS · Linux도)

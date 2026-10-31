@@ -132,6 +132,7 @@ sequenceDiagram
 
 정한 것 → [[0036-code-layout|ADR-0036]]
 
+- 플러그인 id는 `ariadne-nsd`, 이름은 `AriadneNSD`다. 이름에 설명을 붙여 보여야 하는 곳에서는 `AriadneNSD: NS Diagram Editor`로 적는다 → [[dr-0005-product-name|DR-0005]]
 - `manifest.json`의 원본은 `src/apps/obsidian/`에 둔다. 저장소 맨 위에 그 사본과 `versions.json`(플러그인 버전 → 최소 Obsidian 버전)을 둔다. Obsidian 커뮤니티 플러그인 목록이 저장소 맨 위의 `manifest.json`을 읽기 때문이다.
 - 버전을 올리는 스크립트가 원본을 맨 위로 복사하고 `versions.json`을 갱신한다. 둘이 다르면 CI가 실패한다.
 - GitHub Actions가 빌드해 GitHub Release에 `main.js` · `manifest.json` · `styles.css`를 올린다. 커뮤니티 플러그인 목록은 Release에서 이 파일을 받아 간다.

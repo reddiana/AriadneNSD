@@ -40,7 +40,7 @@ updated: 2026-11-01
 | --- | --- |
 | 구현 언어는 TypeScript | [[0003-typescript\|ADR-0003]] |
 | 웹 · Obsidian 플러그인 · 데스크톱을 먼저 만든다. Google Drive는 웹 위에 얹고, Confluence · IDE 플러그인 · Claude skill이 뒤에 붙는다(→ 6장) | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]], [[0036-code-layout\|ADR-0036]] |
-| 개발 순서는 웹 → Obsidian → 데스크톱 | [[dr-0002-development-order\|DR-0002]] |
+| 개발 순서는 웹 → Obsidian → 데스크톱. Google Drive 연동은 이 셋을 모두 만든 뒤에 만든다 | [[dr-0002-development-order\|DR-0002]] |
 | 저장 형식은 모델을 내장한 SVG, 모델의 직렬화 형식은 JSON | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]] |
 | 웹은 백엔드 서버 없는 정적 사이트 | [[01-requirements#^r-web\|R-WEB-01]] |
 | 구조 편집기: 사용자는 좌표를 다루지 않는다. 트리를 편집하면 자동 레이아웃이 그림을 다시 그린다 | [[0004-structure-editor\|ADR-0004]] |
@@ -384,7 +384,14 @@ sequenceDiagram
 | IDE 플러그인 (`P2`) | VSCode 확장의 웹뷰, 그다음 IntelliJ | `src/apps/vscode`, `src/apps/intellij` | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
 | Claude skill (`P3`) | 셸이 아님. Claude가 모델을 쓰고 웹 버전이 렌더링한다 | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]] |
 
-코드의 자리와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 배포한 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다.
+코드의 자리와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 배포한 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다. 빌드 결과(`dist/`)는 저장소에 넣지 않고, GitHub Actions가 빌드해 그곳으로 보냅니다.
+
+**Google Drive**는 따로 된 셸이 아니라 웹 셸에 더하는 연동 모듈입니다(→ [[0012-google-drive-integration|ADR-0012]], [[0014-drive-file-extension|ADR-0014]]).
+
+- 같은 정적 페이지가 Drive에서 파일 ID를 받아 열리면 Drive 모드로 동작합니다. 서버는 여전히 없습니다.
+- 권한은 `drive.file` 범위(앱이 만들었거나 사용자가 AriadneNSD로 연 파일에만 접근)만 요청합니다.
+- "AriadneNSD로 열기"는 `.ns`와 `.ns.svg`를 모두 엽니다. 실제 판별은 다른 대상과 같이 모델 요소가 있는지로 합니다([[01-file-format#1. 확장자와 판별]]).
+- Drive의 "새로 만들기"로 만드는 파일은 `.ns.svg`입니다. Drive의 미리보기와 썸네일이 SVG로 그려 주기 때문입니다. 이미 있는 파일을 열어 저장할 때는 파일 이름을 바꾸지 않습니다.
 
 셸이 하는 일은 3.2의 필요 인터페이스(`DocumentStore`, `SettingsStore` → [[0031-shell-interfaces|ADR-0031]])를 구현하고, 제공 인터페이스(`CommandRegistry`, `SettingsSchema` → [[0033-command-list-for-shells|ADR-0033]])를 호스트 플랫폼의 메뉴 · 설정 화면에 등록하는 것뿐입니다. 셸은 위 표의 대상마다 하나씩이고(Google Drive는 웹 셸 안, Claude skill은 셸이 아님), 뒤에 붙는 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델 사이의 양방향 변환(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
 
@@ -422,7 +429,7 @@ sequenceDiagram
 
 | 영역 | 기술 | 쓰는 곳 | 라이선스 | 근거 |
 | --- | --- | --- | --- | --- |
-| 언어 | TypeScript 6.0.3 | 모든 패키지와 앱 | Apache-2.0 | [[0003-typescript\|ADR-0003]] |
+| 언어 | TypeScript 6.0.3 | 모든 패키지와 앱. 나중의 IntelliJ 셸은 호스트 쪽 코드가 TypeScript 밖일 수 있다(웹뷰 안의 편집기는 TypeScript) | Apache-2.0 | [[0003-typescript\|ADR-0003]] |
 | UI 프레임워크 | React 19 (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] |
 | 글꼴 | D2Coding 1.4.0 보통(400), 한자를 뺀 문자([[02-layout#2.1 advance 폭 테이블]]) | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] |
 | 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs` 1.6.3의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) |
