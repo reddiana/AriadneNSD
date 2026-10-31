@@ -7,10 +7,11 @@
   "exports": {
     ".": "./src/index.ts",
     "./node": "./node/index.ts",
+    "./browser": "./browser/index.ts",
     "./assets/*": "./assets/*"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p node/tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p node/tsconfig.json && tsc --noEmit -p browser/tsconfig.json",
     "test": "vitest run",
     "build:fonts": "py -3.14 -I scripts/build-fonts.py"
   },
@@ -18,5 +19,9 @@
     "@types/node": "^26.6.6",
     "typescript": "6.0.3",
     "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "harfbuzzjs": "1.6.3"
   }
 }
