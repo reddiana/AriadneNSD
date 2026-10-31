@@ -29,3 +29,73 @@ export type {
 } from './model/types';
 export type { IdGenerator, IdKind } from './model/id';
 export { contentIds, createIdGenerator, parseId } from './model/id';
+
+// Text, layout and rendering (02-layout).
+export type { DrawingMessageKey, Locale } from './i18n/messages';
+export { drawingMessage } from './i18n/messages';
+export type { TextSize } from './text/measure-text';
+export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
+export { geometry } from './layout/geometry';
+export type { LayoutOptions } from './layout/layout';
+export { layout } from './layout/layout';
+export type {
+  Box,
+  BranchLabel,
+  CaseColumn,
+  DiagramLayout,
+  HitRegion,
+  LayoutNode,
+  LayoutResult,
+  PlacedText,
+} from './layout/types';
+export type { Point, Scene, SceneElement, TextRun } from './render/scene';
+export { buildScene, drawingFontFamily } from './render/build-scene';
+export type { ColorToken, Theme } from './render/theme';
+export { defaultTheme, themeFor } from './render/theme';
+export type { RenderedSvg } from './render/to-svg';
+export { toSvg } from './render/to-svg';
+export { usedCodePoints } from './render/used-code-points';
+export type { Rendering } from './render/render-doc';
+export { renderDoc } from './render/render-doc';
+
+// Invariants and editing commands (01-model 3, 4).
+export type { Violation } from './model/invariants';
+export { assertInvariants, checkInvariants } from './model/invariants';
+export type {
+  Clip,
+  Command,
+  FailResult,
+  NewBlockKind,
+  Note,
+  OkResult,
+  Reason,
+  ReasonCode,
+  Result,
+  Side,
+  Target,
+  WithIds,
+  WrapKind,
+} from './commands/types';
+export type { InsertBlockArgs } from './commands/insert';
+export { insertBlock } from './commands/insert';
+export type { DeleteBlocksArgs } from './commands/delete';
+export { deleteBlocks } from './commands/delete';
+export type { EditTextArgs } from './commands/edit-text';
+export { editText } from './commands/edit-text';
+export type { MoveArgs, MoveBranchArgs } from './commands/move';
+export { move, moveBranch } from './commands/move';
+export type { UnwrapArgs, WrapArgs } from './commands/wrap';
+export { unwrap, wrap } from './commands/wrap';
+export type { CopyArgs, CopyResult, CutResult, PasteArgs } from './commands/clipboard';
+export { copy, cut, paste } from './commands/clipboard';
+export type { ConvertArgs, DeleteBranchArgs, InsertBranchArgs } from './commands/branch';
+export { convertCaseToIf, convertIfToCase, deleteBranch, insertBranch } from './commands/branch';
+export { createContent, createDoc, defaultSettings } from './commands/new-document';
+
+// File format (docs/05-spec/01-file-format.md).
+export type { KeptSettings, LoadedDoc } from './format/model-json';
+export { currentFormatVersion, serializeModelJson } from './format/model-json';
+export type { ContentCheck, OpenFailureReason, OpenResult } from './format/parse-model';
+export { invariantCheck, parseModel, parseModelJson } from './format/parse-model';
+export type { Drawing, EmbeddedFont, SvgFileParts } from './format/svg-file';
+export { assembleSvgFile, openSvgFile } from './format/svg-file';
