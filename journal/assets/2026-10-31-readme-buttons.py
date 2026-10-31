@@ -1,4 +1,4 @@
-# README의 버튼 그림 둘을 만든다 (시안 M42의 나8 작은 버튼 · 나11 채운 버튼).
+# README의 버튼 그림을 만든다 (시안 M42의 나11 채운 버튼. 나8의 작은 버튼은 2026-10-31에 뺐음).
 # 글자는 Pretendard(SIL OFL 1.1)의 글꼴 모양을 선(path)으로 옮겨, GitHub · 사이트 · Obsidian 어디서나 같은 모양이 되게 한다.
 # 쓰는 법: python journal/assets/2026-10-31-readme-buttons.py   (fonttools가 필요: pip install fonttools)
 import pathlib
@@ -39,7 +39,5 @@ def button(name, text, font_file, size, pad_x, h, radius, fill, stroke, ink, pla
     (here / name).write_text("".join(parts) + "\n", encoding="utf-8")
     print(name, w, h)
 
-# 작은 버튼(M41의 모양, 사이트의 남색 #284b63을 옅게): 그림마다 왼쪽 아래
-button("2026-10-31-readme-open-button.svg", "프로토타입 편집기에서 열기", "Pretendard-Medium.ttf", 13, 12, 28, 6, "#e1e3e6", "#bbc4cb", "#2b2b2b")
 # 채운 버튼(나2의 모양): 인용절의 링크 자리
 button("2026-10-31-readme-prototype-button.svg", "AriadneNSD 프로토타입", "Pretendard-Bold.ttf", 14, 16, 32, 16, "#284b63", None, "#faf8f8", play=True)

@@ -8,18 +8,11 @@
 
 NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일은 어디서나 열리는 SVG 그림이면서, 다시 열어 편집할 수 있는 원본입니다.
 
-<table align="center">
-  <tr>
-    <td valign="top">
-      <img src="journal/assets/2026-10-31-readme-dijkstra.png" width="300" alt="NS 차트 예: 다익스트라 최단 경로"><br>
-      <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG#dijkstra"><img src="journal/assets/2026-10-31-readme-open-button.svg" height="28" alt="프로토타입 편집기에서 열기"></a>
-    </td>
-    <td valign="top">
-      <img src="journal/assets/2026-10-31-readme-merge-sort.png" width="291" alt="NS 차트 예: 병합 정렬"><br>
-      <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG#merge-sort"><img src="journal/assets/2026-10-31-readme-open-button.svg" height="28" alt="프로토타입 편집기에서 열기"></a>
-    </td>
-  </tr>
-</table>
+<p align="center" style="display:flex;justify-content:center;align-items:flex-start;gap:16px;flex-wrap:wrap">
+  <img src="journal/assets/2026-10-31-readme-dijkstra.png" width="300" alt="NS 차트 예: 다익스트라 최단 경로">
+  &nbsp;&nbsp;
+  <img src="journal/assets/2026-10-31-readme-merge-sort.png" width="291" alt="NS 차트 예: 병합 정렬">
+</p>
 <p align="center"><sub>프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
 
 > [!TIP]
