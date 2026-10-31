@@ -1,0 +1,243 @@
+// The editor's surrounding UI as one component for the shells (ADR-0010: React only around the
+// diagram). It lays out menu bar, toolbar, canvas, status bar (06-web 7) and opens the palette,
+// the key hint and the modals. All data comes from the engine's handle (ADR-0033).
+
+import type { Locale } from '@ariadne-nsd/core';
+import type { ReactElement } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { uiCommandIds } from './command-ids';
+import type { MessageFormatter } from './command-view';
+import { defaultFormatter } from './command-view';
+import { CommandPalette } from './command-palette';
+import type { Appearance, CommandSpec, EditorHandle, MenuPlace, SettingsStore } from './engine-api';
+import { KeyHint } from './key-hint';
+import { MenuBar } from './menu-bar';
+import type { UiMessageKey } from './messages';
+import { uiMessage } from './messages';
+import {
+  AboutModal,
+  DocumentSettingsModal,
+  PreferencesModal,
+  ShortcutsModal,
+  WhatsNewModal,
+} from './modals';
+import { StatusBar } from './status-bar';
+import { chromeCss } from './styles';
+import { BottomBar, Toolbar } from './toolbar';
+import type { Chrome } from './use-engine';
+import { ChromeContext, textOf } from './use-engine';
+
+/** How many recently run commands the palette puts first. */
+const recentLimit = 8;
+
+export type EditorAppProps = {
+  /** The engine, from `createEditor`. */
+  readonly handle: EditorHandle;
+  /** The element the engine draws in (the `host` given to `createEditor`). It is moved into the canvas slot. */
+  readonly canvas: HTMLElement;
+  /** The screen language of the UI (preferences "화면 언어"). */
+  readonly locale: Locale;
+  /** The host's brightness and UI font (03-editor 6). */
+  readonly appearance: Appearance;
+  /** The user settings, for File › Preferences…. */
+  readonly settings: SettingsStore;
+  /** Turns engine messages (command titles, reasons, notices) into text. Default: see `defaultFormatter`. */
+  readonly formatMessage?: MessageFormatter;
+  /** Where Help › User Guide opens in a new tab (06-web 7: the site's `/manual/`). */
+  readonly manualUrl?: string;
+};
+
+type Popup = 'palette' | 'shortcuts' | 'preferences' | 'documentSettings' | 'about' | 'whatsNew';
+
+type UiCommand = {
+  readonly id: string;
+  readonly title: UiMessageKey;
+  readonly keys: ReadonlyArray<string>;
+  readonly menu: MenuPlace;
+  readonly open: Popup | 'manual';
+};
+
+// Group 90 puts these after the engine's own groups of the same menu (03-editor 5.1).
+const uiCommands: ReadonlyArray<UiCommand> = [
+  {
+    id: uiCommandIds.preferences,
+    title: 'cmd.preferences',
+    keys: ['Ctrl+,'],
+    menu: { menu: 'file', group: 90, order: 0 },
+    open: 'preferences',
+  },
+  {
+    id: uiCommandIds.commandPalette,
+    title: 'cmd.commandPalette',
+    keys: ['Ctrl+Shift+P', 'F1'],
+    menu: { menu: 'edit', group: 90, order: 0 },
+    open: 'palette',
+  },
+  {
+    id: uiCommandIds.documentSettings,
+    title: 'cmd.documentSettings',
+    keys: [],
+    menu: { menu: 'diagram', group: 90, order: 0 },
+    open: 'documentSettings',
+  },
+  {
+    id: uiCommandIds.manual,
+    title: 'cmd.manual',
+    keys: [],
+    menu: { menu: 'help', group: 0, order: 0 },
+    open: 'manual',
+  },
+  {
+    id: uiCommandIds.shortcuts,
+    title: 'cmd.shortcuts',
+    keys: ['?'],
+    menu: { menu: 'help', group: 0, order: 1 },
+    open: 'shortcuts',
+  },
+  {
+    id: uiCommandIds.whatsNew,
+    title: 'cmd.whatsNew',
+    keys: [],
+    menu: { menu: 'help', group: 1, order: 0 },
+    open: 'whatsNew',
+  },
+  {
+    id: uiCommandIds.about,
+    title: 'cmd.about',
+    keys: [],
+    menu: { menu: 'help', group: 1, order: 1 },
+    open: 'about',
+  },
+];
+
+/** Puts the engine's element into the canvas slot, and takes it out again on unmount. */
+function useMountedCanvas(canvas: HTMLElement) {
+  const slotRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const slot = slotRef.current;
+    if (!slot) return;
+    slot.appendChild(canvas);
+    return () => {
+      if (canvas.parentNode === slot) slot.removeChild(canvas);
+    };
+  }, [canvas]);
+  return slotRef;
+}
+
+/**
+ * The whole editor screen: menu bar, toolbar, the engine's canvas, status bar, and the popups.
+ * Shells render this once per document view.
+ */
+export function EditorApp({
+  handle,
+  canvas,
+  locale,
+  appearance,
+  settings,
+  formatMessage,
+  manualUrl = 'manual/',
+}: EditorAppProps): ReactElement {
+  const [popup, setPopup] = useState<Popup | null>(null);
+  const [recent, setRecent] = useState<ReadonlyArray<string>>([]);
+  const slotRef = useMountedCanvas(canvas);
+
+  const openPopup = useCallback((next: Popup) => {
+    setPopup(next);
+  }, []);
+
+  const closePopup = useCallback(() => {
+    setPopup(null);
+    // Give the keys back to the diagram, so `j` `k` work again.
+    handle.focus();
+  }, [handle]);
+
+  // The UI's own commands join the registry so that menus, palette and keys see them (ADR-0033).
+  useEffect(() => {
+    const unregister = uiCommands.map((command) => {
+      const spec: CommandSpec = {
+        id: command.id,
+        // Finished text in the screen language: formatMessage shows it as it is.
+        title: () => uiMessage(locale, command.title),
+        keys: command.keys,
+        menu: command.menu,
+        edits: false,
+        when: () => true,
+        run: () => {
+          if (command.open === 'manual') window.open(manualUrl, '_blank', 'noopener');
+          else openPopup(command.open);
+        },
+      };
+      return handle.commands.register(spec);
+    });
+    return () => {
+      for (const remove of unregister) remove();
+    };
+  }, [handle, locale, manualUrl, openPopup]);
+
+  const chrome = useMemo<Chrome>(
+    () => ({
+      handle,
+      locale,
+      format: formatMessage ?? defaultFormatter(locale),
+      text: textOf(locale),
+      run: (id) => {
+        setRecent((previous) =>
+          [id, ...previous.filter((other) => other !== id)].slice(0, recentLimit),
+        );
+        handle.commands.run(id);
+      },
+    }),
+    [handle, locale, formatMessage],
+  );
+
+  function popupContent(): ReactElement | null {
+    switch (popup) {
+      case null:
+        return null;
+      case 'palette':
+        return <CommandPalette recent={recent} onClose={closePopup} />;
+      case 'shortcuts':
+        return <ShortcutsModal onClose={closePopup} />;
+      case 'preferences':
+        return <PreferencesModal settings={settings} onClose={closePopup} />;
+      case 'documentSettings':
+        return <DocumentSettingsModal onClose={closePopup} />;
+      case 'about':
+        return <AboutModal onClose={closePopup} />;
+      case 'whatsNew':
+        return <WhatsNewModal onClose={closePopup} />;
+    }
+  }
+
+  const content = popupContent();
+  return (
+    <ChromeContext.Provider value={chrome}>
+      <div
+        className="ans-app"
+        data-scheme={appearance.scheme}
+        lang={locale}
+        style={{ ['--ans-ui-font' as string]: appearance.uiFont }}
+      >
+        <style>{chromeCss}</style>
+        <MenuBar />
+        <Toolbar />
+        <div className="ans-canvas" ref={slotRef} />
+        <KeyHint />
+        <StatusBar />
+        <BottomBar />
+        {content && (
+          <div
+            className="ans-backdrop"
+            data-kind={popup}
+            onPointerDown={(event) => {
+              if (event.target === event.currentTarget) closePopup();
+            }}
+          >
+            {content}
+          </div>
+        )}
+      </div>
+    </ChromeContext.Provider>
+  );
+}
