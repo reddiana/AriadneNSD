@@ -16,7 +16,7 @@ updated: 2026-10-25
 | --- | --- | --- |
 | `DocumentStore` | 필요 (셸이 구현) | 로컬 파일 시스템 I/O. 다른 문서도 디스크에서 경로로 읽는다 |
 | `SettingsStore` | 필요 (셸이 구현) | 설정 파일 |
-| `CommandRegistry` | 제공 (셸이 사용) | 우리 도구 모음과 컨텍스트 메뉴 |
+| `CommandRegistry` | 제공 (셸이 사용) | 우리 툴바와 컨텍스트 메뉴 |
 | `SettingsSchema` | 제공 (셸이 사용) | 우리 설정 창 |
 
 프레임워크(Electron 또는 Tauri)는 [[0009-desktop-framework|ADR-0009]]에서 정합니다. 그 전까지 이 문서의 나머지는 작성하지 않습니다.
