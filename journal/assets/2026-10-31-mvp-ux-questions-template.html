@@ -1,0 +1,71 @@
+<title>M43 MVP 전 조작 물음</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M37과 같은 틀. 그림은 프로토타입 64번째 판이 그린 SVG를 그대로 옮겼다(만드는 스크립트 2026-10-31-mvp-ux-questions-build.py) */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb; --paper: #ffffff;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --paper: #ffffff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; --paper: #ffffff; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 52px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+.lede, .q { color: var(--muted); max-width: 84ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; scroll-margin-top: 16px; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card.ref { border-style: dashed; }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.badge.gray { color: var(--muted); background: var(--bg); }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 4px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.cap { font-size: 12.5px; color: var(--muted); margin-bottom: -4px; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.fig svg { display: block; }
+.note { font-size: 13.5px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; max-width: 90ch; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.toc a { font-family: var(--mono); font-size: 12.5px; text-decoration: none; border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 2px 10px; }
+.menu { width: max-content; background: #ffffff; border: 1px solid #d4dbe6; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.12); padding: 4px; font-size: 13px; color: #1c2230; }
+.mrow { display: flex; justify-content: space-between; gap: 24px; padding: 5px 10px; border-radius: 4px; }
+.mrow kbd { color: #5a6476; border: 0; background: none; }
+.mrow.hl { box-shadow: inset 0 0 0 2px #2c55c9; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--bg); white-space: nowrap; }
+</style>
+<main>
+  <div>
+    <h1>M43 · MVP 전에 정할 조작 물음</h1>
+    <p class="lede">MVP(웹의 첫 출시)에 드는 조작 규칙 가운데 <b>아직 정하지 않은 것</b>을 모았습니다. 2026-10-11의 UX 규칙 시안 M09에서 물었던 것을 <b>프로토타입 64번째 판</b>에 맞춰 다시 썼습니다. 그림은 모두 64번째 판이 그린 것이고, 아직 없는 동작은 그 결과를 모델로 만들어 그렸습니다. 초록 테두리 카드가 Claude의 추천, "지금 64번째 판" 딱지가 지금 프로토타입의 동작입니다. 접기 · 펴기가 듣는 곳(Q20)은 MVP 뒤의 일이라 뺐습니다.</p>
+  </div>
+  <nav class="toc"><a href="#q1-q2">Q1 · Q2 더블클릭</a><a href="#q4">Q4 빈 이름</a><a href="#q6">Q6 옮기기</a><a href="#q10-q5">Q10 · Q5 갈래</a><a href="#q8">Q8 담은 것</a><a href="#q11">Q11 좌우</a><a href="#q12">Q12 빼기</a><a href="#q19">Q19 명령 뒤</a></nav>
+<!--SECTIONS-->
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>물음마다 <b>번호</b>(예: "Q2 1번"), 또는 고칠 점. Q10은 a · b · c 셋입니다.</li>
+      <li>정하면 조작 규칙(02-interaction-rules)과 키 표(03-keymap)에 옮기고, 까닭은 UX 결정 모음에 적습니다. 프로토타입 다음 판에 넣습니다.</li>
+    </ol></div>
+  </section>
+</main>
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
