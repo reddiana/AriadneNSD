@@ -36,16 +36,20 @@ const HELPERS = `window.T = {
 };`;
 const keys = async (...ks) => { for (const k of ks) await ev(`T.key('${k.replace(/^\+/, '')}', { shift: ${k.startsWith('+')} })`); };
 async function shot(dir, name, sel = '.paper', pad = 0, clip = null) {
+  // 종이만 찍을 때는 캔버스 위에 붙어 다니는 설정 줄(.opts, position: sticky)을 숨기고 캔버스를 맨 위로 올린다.
+  // 그러지 않으면 캔버스가 스크롤된 만큼 설정 줄이 종이의 윗부분(머리)을 가린 채 찍힌다
+  const paperOnly = sel === '.paper';
+  await ev(`(() => { const o = document.querySelector('.opts'); if (o) o.style.visibility = ${paperOnly ? "'hidden'" : "''"}; const st = document.querySelector('.stage'); if (st && ${paperOnly}) { st.scrollTop = 0; st.scrollLeft = 0; } })()`);
   await sleep(300);
   const r = await ev(`(() => { const b = document.querySelector('${sel}').getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, w: b.width, h: b.height }; })()`);
   const c = { x: r.x - pad, y: r.y - pad, width: (clip?.w ?? r.w) + 2 * pad, height: (clip?.h ?? r.h) + 2 * pad, scale: 1 };
-  const res = await send('Page.captureScreenshot', { format: 'png', clip: c, captureBeyondViewport: true });
+  const res = await send('Page.captureScreenshot', { format: 'png', clip: c });   // captureBeyondViewport를 켜면 찍는 순간 배치가 다시 계산되어 자리가 밀린다(머리가 잘림)
   writeFileSync(join(dir, name), Buffer.from(res.data, 'base64'));
   console.log('saved', name, Math.round(c.width), 'x', Math.round(c.height));
 }
 
 await send('Page.enable'); await send('Runtime.enable');
-await send('Emulation.setDeviceMetricsOverride', { width: 1600, height: 1100, deviceScaleFactor: 2, mobile: false });
+await send('Emulation.setDeviceMetricsOverride', { width: 1600, height: 1400, deviceScaleFactor: 2, mobile: false });
 await send('Page.navigate', { url: page }); await sleep(3000);
 await ev(`localStorage.clear()`);
 await send('Page.navigate', { url: page + '?shots' }); await sleep(3000);

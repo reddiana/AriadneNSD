@@ -39,7 +39,7 @@ await ev(`window.T = {
 async function shot(name, sel = '.paper') {
   await sleep(300);
   const r = await ev(`(() => { const b = document.querySelector('${sel}').getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, w: b.width, h: b.height }; })()`);
-  const res = await send('Page.captureScreenshot', { format: 'png', clip: { x: r.x, y: r.y, width: r.w, height: r.h, scale: 1 }, captureBeyondViewport: true });
+  const res = await send('Page.captureScreenshot', { format: 'png', clip: { x: r.x, y: r.y, width: r.w, height: r.h, scale: 1 } });   // captureBeyondViewport를 끔(2026-11-01): 찍는 순간 배치가 다시 계산되어 자리가 밀렸다
   writeFileSync(join(outDir, name), Buffer.from(res.data, 'base64'));
   console.log('saved', name, Math.round(r.w), 'x', Math.round(r.h));
 }
