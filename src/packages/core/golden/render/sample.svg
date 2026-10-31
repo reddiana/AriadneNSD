@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="259" height="462" viewBox="0 0 259 462">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Block', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="211" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">i ← 0</text>
+<text x="34" y="62" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 0</text>
+<rect x="24" y="74" width="211" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="94" font-size="13" fill="#151a22" xml:space="preserve">i &lt; n</text>
+<rect x="46" y="106" width="189" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 106 L183 154 L235 106" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="183" y="124" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &gt; 0</text>
+<text x="52" y="149" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="229" y="149" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="154" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="174" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + a[i]</text>
+<rect x="183" y="154" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="209" cy="170" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M204.5 174.5 L213.5 165.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="186" width="189" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="206" font-size="13" fill="#151a22" xml:space="preserve">i ← i + 1</text>
+<rect x="24" y="218" width="211" height="60" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 218 L175 278 L235 218" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M109 251.77 L109 278" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="175" y="236" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">mode</text>
+<text x="30" y="273" font-size="12" fill="#4b5567" xml:space="preserve">1</text>
+<text x="115" y="273" font-size="12" fill="#4b5567" xml:space="preserve">'a'..'z'</text>
+<text x="229" y="273" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">default</text>
+<rect x="24" y="278" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="298" font-size="13" fill="#151a22" xml:space="preserve">출력(합계)</text>
+<rect x="109" y="278" width="66" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="142" cy="294" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M137.5 298.5 L146.5 289.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="175" y="278" width="60" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="185" y="298" font-size="13" fill="#151a22" xml:space="preserve">error</text>
+<rect x="24" y="310" width="211" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="362" font-size="13" fill="#151a22" xml:space="preserve">retry &gt; 0</text>
+<rect x="46" y="310" width="189" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="330" font-size="13" fill="#151a22" xml:space="preserve">retry ← retry - 1</text>
+<rect x="24" y="374" width="211" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="394" font-size="13" fill="#151a22" xml:space="preserve">k ← 1 .. 10</text>
+<rect x="46" y="406" width="189" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="426" font-size="13" fill="#151a22" xml:space="preserve">print(k)</text>
+</g>
+</svg>

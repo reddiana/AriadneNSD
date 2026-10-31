@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="140" viewBox="0 0 208 140">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Block', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="60" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M184 24 L24 84" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="44" y="42" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">key</text>
+<text x="178" y="79" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">default</text>
+<rect x="24" y="84" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="104" font-size="13" fill="#151a22" xml:space="preserve">run()</text>
+</g>
+</svg>

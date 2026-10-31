@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="162" viewBox="0 0 208 162">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Block', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">n ← 0</text>
+<rect x="24" y="56" width="160" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="76" font-size="13" fill="#151a22" xml:space="preserve">여러 줄의</text>
+<text x="34" y="94" font-size="13" fill="#151a22" xml:space="preserve">처리 블록</text>
+<rect x="24" y="106" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+</g>
+</svg>
