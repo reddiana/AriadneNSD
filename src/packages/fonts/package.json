@@ -1,0 +1,22 @@
+{
+  "name": "@ariadne-nsd/fonts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "OFL-1.1 AND Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./node/index.ts",
+    "./assets/*": "./assets/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p node/tsconfig.json",
+    "test": "vitest run",
+    "build:fonts": "py -3.14 -I scripts/build-fonts.py"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

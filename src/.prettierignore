@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+pnpm-lock.yaml
+packages/fonts/assets/
+**/golden/
+# Markdown follows the repository document style (Obsidian), not Prettier.
+*.md
