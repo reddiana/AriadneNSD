@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200" height="100" viewBox="0 0 200 100">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "shape"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "a"
+        },
+        {
+          "id": "b2",
+          "kind": "while",
+          "text": "w",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "process",
+              "text": "b"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "c"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b2",
+          "name": "setup"
+        },
+        {
+          "id": "f2",
+          "first": "b4",
+          "last": "b4"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [
+      "b2",
+      "f1",
+      "f2"
+    ],
+    "opened": [],
+    "bands": false,
+    "resultSymbol": "="
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render"></g>
+</svg>
