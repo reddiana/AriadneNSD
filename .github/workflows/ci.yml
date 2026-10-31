@@ -2,8 +2,8 @@
 #
 # pnpm check: 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트(골든 파일 포함)
 # 그다음 웹 앱을 빌드해 첫 내려받기의 크기 예산을 보고(apps/web/scripts/check-size.mjs),
-# Chromium으로 E2E를 돌린다(apps/web/e2e/).
-# 문서 사이트의 빌드(pages.yml)와는 따로 돈다.
+# Chromium으로 E2E를 실행한다(apps/web/e2e/).
+# 문서 사이트의 빌드(pages.yml)와는 따로 실행된다.
 
 name: CI
 
