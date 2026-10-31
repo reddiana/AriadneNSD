@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>M01 AriadneNSD 프로토타입</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,16 +100,30 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .modal textarea { width: 100%; min-height: 320px; font-family: var(--mono); font-size: 12px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; resize: vertical; }
 .modal .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
+.narrow { display: none; }
 @media (max-width: 860px) {
-  .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(360px, 1fr) auto; }
+  /* 64번째 판: 화면은 다이어그램에게. 도구 모음 · 설정 · 안내는 "메뉴" · "안내"로 편다 (UX 결정 MB1) */
+  .bar { padding-block: 6px; padding-inline: 12px; }
+  .brand { flex: 1 1 0; min-width: 0; }
+  .narrow { display: inline-block; }
+  .narrow[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .app:not(.menu-open) .bar .grp, .app:not(.menu-open) .opts { display: none; }
+  .bar .grp { flex-basis: 100%; }
+  .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .app:not(.help-open) .side { display: none; }
+  .app.help-open .main { grid-template-rows: minmax(0, 1fr) minmax(0, 45%); }
   .side { border-left: 0; border-top: 1px solid var(--line); }
+  .stage { padding: 12px; }
+  .status { padding-inline: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">63번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">64번째 판</b></span></div>
+    <button class="narrow" data-cmd="toggleMenu" aria-expanded="false" title="도구 모음과 설정을 펴고 접습니다">메뉴</button>
+    <button class="narrow" data-cmd="toggleHelp" aria-expanded="false" title="써 보는 법과 바뀐 것을 펴고 접습니다">안내</button>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -220,7 +235,14 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 0.4초 안에 둘째 키를 누르지 않으면 캔버스 아래에 이어 누를 키의 안내가 뜹니다(캔버스 위의 "키 안내"로 끔). 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-31, 63번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-31, 64번째 판)</h2>
+      <ul>
+        <li><b>머리 모양을 기억합니다.</b> 마지막으로 고른 머리 모양으로 새 문서와 예제가 열립니다. 고른 적이 없으면 "제목처럼"입니다. 파일을 열면 그 파일의 모양 그대로입니다.</li>
+        <li><b>처음 방문하면 Raft 예제</b>가 열립니다.</li>
+        <li><b>열면 고른 블록이 없습니다.</b> 화면이 열릴 때, 예제나 파일을 열 때 그림이 고른 테두리 없이 보입니다. 이동 키를 누르거나 블록을 누르면 고릅니다. <kbd>Tab</kbd>으로 캔버스에 들어오면 지금처럼 첫 블록을 고릅니다.</li>
+        <li><b>좁은 화면(폭 860px 이하):</b> 도구 모음 · 설정 · 이 안내를 접어 두고 다이어그램에 화면을 줍니다. 위의 "메뉴" · "안내" 단추로 폅니다.</li>
+      </ul>
+      <h2>63번째 판 (10-31)</h2>
       <ul>
         <li><b>주소로 예제 열기:</b> 주소 끝에 <code>#dijkstra</code>나 <code>#merge-sort</code>를 붙여 열면 그 예제가 머리 모양 "제목처럼"으로 열립니다. 저장소 첫 화면(README)의 "프로토타입 편집기에서 열기"가 이 주소로 옵니다.</li>
       </ul>
@@ -2129,7 +2151,7 @@ function loadExample(kind) {
   normalize();
   folded = new Set([body[3].id]); asked = new Set();
   opts.mono = code; $('#optMono').checked = code;
-  selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); render(); save(); saveFold();
   say(code ? '코드식 예제: C 코드를 그대로 적은 모양' : '문장식 예제: 같은 로직을 한국어 문장으로 적은 모양');
 }
 
@@ -2151,7 +2173,7 @@ function loadCaseExample() {
   normalize();
   folded = new Set(); asked = new Set();
   opts.mono = true; $('#optMono').checked = true;
-  selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); render(); save(); saveFold();
   say('Case 예제: 갈래가 넷인 다중 선택');
 }
 
@@ -2170,7 +2192,7 @@ function loadDiagrams(list, mono, msg) {
   normalize();
   folded = new Set(); asked = new Set();
   opts.mono = mono; $('#optMono').checked = mono;
-  selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); render(); save(); saveFold();
   say(msg);
 }
 
@@ -2433,6 +2455,14 @@ function loadMore(no) {
 [...MORE].sort((x, y) => x.no - y.no).forEach(c => { const o = document.createElement('option'); o.value = c.no; o.textContent = `${c.no}. ${c.name}`; $('#exMore').appendChild(o); });
 $('#exMore').addEventListener('change', e => { const v = e.target.value; e.target.value = ''; if (v) { if (editing) commitEdit(false); loadMore(v); stage.focus({ preventScroll: true }); } });
 
+/* ---------- 머리 모양의 기억 (64번째 판, UX 결정 HS1) ---------- */
+// 사용자가 마지막으로 고른 머리 모양(사용자 설정, opts.headPref). 고른 적이 없으면 "제목처럼". 새 문서와 예제가 이 모양으로 시작한다
+const headPref = () => opts.headPref === 'shape' ? 'shape' : 'title';
+function applyHeadPref() {
+  if (headPref() === 'title') doc.settings = { ...(doc.settings || {}), headStyle: 'title' };
+  else if (doc.settings) { delete doc.settings.headStyle; if (!Object.keys(doc.settings).length) delete doc.settings; }
+}
+
 /* ---------- 저장 (이 브라우저에만) ---------- */
 function save() { try { localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc, opts })); } catch (e) {} }
 function saveFold() { try { localStorage.setItem('nsd-proto-fold', JSON.stringify([...folded])); localStorage.setItem('nsd-proto-open', JSON.stringify([...opened])); } catch (e) {} }
@@ -2450,6 +2480,12 @@ function restore() {
   } catch (e) { return false; }
 }
 
+/* ---------- 좁은 화면에서 펴고 접기 (64번째 판, UX 결정 MB1) ---------- */
+function togglePane(cls, cmd) {
+  const on = $('.app').classList.toggle(cls);
+  $(`button[data-cmd="${cmd}"]`).setAttribute('aria-expanded', on);
+}
+
 /* ---------- 상태 줄 ---------- */
 let sayTimer;
 function say(text, warn) {
@@ -2463,9 +2499,10 @@ function say(text, warn) {
 
 /* ---------- 입력 ---------- */
 const COMMANDS = {
-  new: () => { pushUndo(); doc = { diagrams: [newDia()] }; folded = new Set(); opened = new Set(); asked = new Set(); normalize(); selectOne(doc.diagrams[0].body[0].id); render(); save(); say('새 문서'); },
+  new: () => { pushUndo(); doc = { diagrams: [newDia()] }; applyHeadPref(); folded = new Set(); opened = new Set(); asked = new Set(); normalize(); selectOne(doc.diagrams[0].body[0].id); render(); save(); say('새 문서'); },
   open: () => $('#file').click(),
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
+  toggleMenu: () => togglePane('menu-open', 'toggleMenu'), toggleHelp: () => togglePane('help-open', 'toggleHelp'),
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   callAsk: () => callCmd(false), retargetAsk: retargetCmd, goto: gotoTarget,
   toIf, toCase, keep: () => { askOn = null; say('그대로 둡니다'); },
@@ -2520,7 +2557,7 @@ $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked
 $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
 $('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
 // 머리 모양은 문서 설정이라 실행 취소의 대상이다. 키 안내는 사용자 설정(이 브라우저)
-$('#optHead').addEventListener('change', e => { const v = e.target.value; apply(() => { if (v === 'title') doc.settings = { ...(doc.settings || {}), headStyle: 'title' }; else if (doc.settings) { delete doc.settings.headStyle; if (!Object.keys(doc.settings).length) delete doc.settings; } }); say(v === 'title' ? '머리 모양: 제목처럼' : '머리 모양: 모자 · 아치'); });
+$('#optHead').addEventListener('change', e => { const v = e.target.value; opts.headPref = v; apply(() => { if (v === 'title') doc.settings = { ...(doc.settings || {}), headStyle: 'title' }; else if (doc.settings) { delete doc.settings.headStyle; if (!Object.keys(doc.settings).length) delete doc.settings; } }); say(v === 'title' ? '머리 모양: 제목처럼' : '머리 모양: 모자 · 아치'); });
 $('#optSym').addEventListener('change', e => { opts.resultSym = e.target.value; render(); save(); say('결과 기호: ' + resultSym()); });
 $('#optKeyHint').addEventListener('change', e => { opts.keyHint = e.target.checked; showMode(); save(); });
 
@@ -2617,12 +2654,16 @@ function choose(items, at = 0) {
   placeMenu(o.left + (b ? b.x * zoom : 24), o.top + (b ? (b.y + b.h) * zoom + 4 : 24));
 }
 function hideMenu() { menu.hidden = true; menuCmds = []; menuItems = []; menuAt = -1; }
-// 키보드로 캔버스에 들어오면 첫 블록을 고른다 (캔버스 둘레의 포커스 선 대신). 마우스로 누른 때는 누른 곳을 따른다
-let pressing = false;
+// 키보드(Tab)로 캔버스에 들어오면 첫 블록을 고른다 (캔버스 둘레의 포커스 선 대신). 마우스로 누른 때는 누른 곳을 따른다
+// 64번째 판: 화면이 열릴 때 · 예제나 파일을 열 때 · 단추를 누른 뒤처럼 스크립트가 포커스를 옮길 때는 고르지 않는다 (UX 결정 OP1)
+let pressing = false, tabbing = false;
 stage.addEventListener('mousedown', () => { pressing = true; }, true);
 document.addEventListener('mouseup', () => { pressing = false; });
+document.addEventListener('keydown', ev => { tabbing = ev.key === 'Tab'; }, true);
+document.addEventListener('mousedown', () => { tabbing = false; }, true);
 stage.addEventListener('focus', () => {
-  if (sel || pressing || editing) return;
+  const byTab = tabbing; tabbing = false;
+  if (sel || pressing || editing || !byTab) return;
   selectOne(visibleOrder(activeDia())[0]); render();
 });
 // 다이어그램 바깥의 빈 캔버스를 누르면 고른 것을 푼다 (스크롤 막대와 위쪽 설정 줄은 빼고)
@@ -2886,8 +2927,8 @@ window.addEventListener('hashchange', () => { if (openFromHash()) stage.focus({ 
 /* ---------- 시작 ---------- */
 const restored = restore();
 if (openFromHash()) {}
-else if (!restored) loadExample('code');
-else { render(); say('지난번 상태를 되살렸습니다. 처음 예제는 "코드식"을 누르세요'); }
+else if (!restored) loadRaftExample();   // 64번째 판: 처음 방문하면 Raft 예제
+else { render(); say('지난번 상태를 되살렸습니다. 처음 예제는 "Raft"를 누르세요'); }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => render());
 stage.focus({ preventScroll: true });
 })();

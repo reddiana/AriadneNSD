@@ -802,6 +802,8 @@ await ev(`T.cmd('exCode')`);
 
   // 머리 모양 제목처럼 (H1), 다이어그램 배치 (1.7)
   await ev(`T.cmd('exQuick')`);
+  // 64번째 판부터 예제는 기억한 머리 모양(처음엔 제목처럼)으로 열린다. 모자 · 아치로 바꾼 뒤 제목처럼을 고른다
+  await ev(`{ const o = document.querySelector('#optHead'); o.value = 'shape'; o.dispatchEvent(new Event('change')); }`);
   await ev(`{ const o = document.querySelector('#optHead'); o.value = 'title'; o.dispatchEvent(new Event('change')); }`);
   check('62: 제목처럼: 문서 설정에 들어감', (await ev(`T.doc()`)).settings?.headStyle === 'title', (await ev(`T.doc()`)).settings);
   check('62: 제목처럼: Method 딱지와 굵은 이름', (await sv()).includes('>Method</text>') && (await sv()).includes('font-weight="600">quicksort'));
@@ -813,7 +815,7 @@ await ev(`T.cmd('exCode')`);
   check('62: Event는 왼쪽, Method는 오른쪽, 사이는 88px 넘게', mL - evR >= 87, { evR, mL });
   const vb = (await ev(`document.querySelector('#svg').getAttribute('viewBox')`)).split(' ').map(Number);
   check('62: 그림의 가로 : 세로가 16 : 10 가까이', vb[2] / vb[3] > 1.2 && vb[2] / vb[3] < 2.1, vb);
-  check('63: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '63번째 판', await ev(`document.querySelector('#edition').textContent`));
+  check('64: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '64번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
 // 62번째 판: M41의 예제 일곱 ("더 보기…")
@@ -852,6 +854,69 @@ await ev(`T.cmd('exCode')`);
   m = await ev(`T.msg()`);
   d = await ev(`T.doc()`);
   check('63: 주소에 #dijkstra를 달고 열면 그 예제로 시작', /5번 예제/.test(m) && d.settings?.headStyle === 'title' && (await ev(`document.querySelector('#optHead').value`)) === 'title', { m, s: d.settings });
+}
+
+// 64번째 판: 머리 모양의 기억(HS1), 처음 방문은 Raft, 열면 고른 것 없음(OP1), 좁은 화면(MB1)
+{
+  const fresh = async (q, clear) => {
+    if (clear) await ev(`localStorage.clear()`);
+    await send('Page.navigate', { url: page.split('#')[0] + (page.includes('?') ? '&' : '?') + q });
+    await sleep(2500);
+    await ev(HELPERS);
+  };
+  const noSel = `document.querySelector('#stage').classList.contains('nosel')`;
+  await fresh('v=64a', true);
+  let d = await ev(`T.doc()`);
+  check('64: 처음 방문하면 Raft 예제', /Raft/.test(await ev(`T.msg()`)) && d.diagrams.length === 10, { m: await ev(`T.msg()`), n: d.diagrams.length });
+  check('64: 고른 적이 없으면 머리 모양은 제목처럼', d.settings?.headStyle === 'title' && (await ev(`document.querySelector('#optHead').value`)) === 'title', d.settings);
+  check('64: 화면이 열리면 고른 블록이 없음', await ev(noSel));
+  await ev(`T.cmd('exQuick')`);
+  check('64: 예제 단추를 눌러도 고른 블록이 없음', await ev(noSel));
+  await ev(`T.key('ArrowDown')`);
+  check('64: 이동 키를 누르면 첫 블록을 고름', !(await ev(noSel)));
+  // Tab으로 캔버스에 들어오면 첫 블록을 고른다
+  await send('Emulation.setFocusEmulationEnabled', { enabled: true });   // 헤드리스는 창에 포커스가 없어 focus 이벤트가 오지 않는다
+  await ev(`T.cmd('exCase')`);
+  await ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', code: 'Tab', bubbles: true })); document.querySelector('#optKeyHint').focus(); document.querySelector('#stage').focus();`);
+  check('64: Tab으로 들어오면 첫 블록을 고름', !(await ev(noSel)), await ev(`({ active: document.activeElement?.id || document.activeElement?.tagName, hasFocus: document.hasFocus() })`));
+  // 모자 · 아치를 고르면 기억해 새 문서 · 예제 · 다시 열기에 씀
+  await ev(`{ const o = document.querySelector('#optHead'); o.value = 'shape'; o.dispatchEvent(new Event('change')); }`);
+  await ev(`T.cmd('exRaft')`);
+  check('64: 모자 · 아치를 고르면 예제도 모자 · 아치', !(await ev(`T.doc()`)).settings?.headStyle);
+  await ev(`T.cmd('new')`);
+  check('64: 새 문서도 모자 · 아치', !(await ev(`T.doc()`)).settings?.headStyle);
+  await fresh('v=64b', false);
+  await ev(`T.cmd('exQuick')`);
+  check('64: 다시 열어도 기억함', !(await ev(`T.doc()`)).settings?.headStyle && (await ev(`document.querySelector('#optHead').value`)) === 'shape');
+  check('64: 되살린 뒤에도 고른 블록이 없음', await ev(noSel));
+  // 파일을 열면 파일의 머리 모양, 기억은 그대로
+  await ev(`{ const o = document.querySelector('#optHead'); o.value = 'title'; o.dispatchEvent(new Event('change')); }`);
+  await ev(`window.__f = document.querySelector('#svgText') && (T.cmd('svg'), document.querySelector('#svgText').value)`);
+  await ev(`document.querySelector('#modal').hidden = true`);
+  await ev(`{ const o = document.querySelector('#optHead'); o.value = 'shape'; o.dispatchEvent(new Event('change')); }`);
+  const fileHead = await ev(`(() => { const f = new File([window.__f], 'a.ns.svg', { type: 'image/svg+xml' }); const dt = new DataTransfer(); dt.items.add(f); const i = document.querySelector('#file'); i.files = dt.files; i.dispatchEvent(new Event('change')); return true; })()`);
+  await sleep(400);
+  check('64: 파일을 열면 파일의 머리 모양(제목처럼)', fileHead && (await ev(`T.doc()`)).settings?.headStyle === 'title', (await ev(`T.doc()`)).settings);
+  check('64: 파일을 열어도 고른 블록이 없음', await ev(noSel));
+  await ev(`T.cmd('exRaft')`);
+  check('64: 파일을 열어도 기억은 그대로(모자 · 아치)', !(await ev(`T.doc()`)).settings?.headStyle);
+  // 좁은 화면
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 800, deviceScaleFactor: 2, mobile: true });
+  await sleep(400);
+  const vis = sel => `(() => { const e = document.querySelector('${sel}'); return !!e && getComputedStyle(e).display !== 'none'; })()`;
+  const stageH = async () => ev(`document.querySelector('#stage').getBoundingClientRect().height`);
+  check('64: 좁은 화면: 도구 모음 · 설정 · 안내는 접혀 있음', !(await ev(vis('.bar .grp'))) && !(await ev(vis('.opts'))) && !(await ev(vis('.side'))) && (await ev(vis('button[data-cmd="toggleMenu"]'))), { grp: await ev(vis('.bar .grp')), opts: await ev(vis('.opts')), side: await ev(vis('.side')), btn: await ev(vis('button[data-cmd="toggleMenu"]')), w: await ev('innerWidth') });
+  check('64: 좁은 화면: 다이어그램이 화면 대부분', (await stageH()) > 800 * 0.8, await stageH());
+  await shot('64-narrow.png');
+  await ev(`T.cmd('toggleMenu')`);
+  check('64: 메뉴를 누르면 도구 모음과 설정이 보임', (await ev(vis('.bar .grp'))) && (await ev(vis('.opts'))) && (await ev(`document.querySelector('button[data-cmd="toggleMenu"]').getAttribute('aria-expanded')`)) === 'true');
+  await shot('64-narrow-menu.png');
+  await ev(`T.cmd('toggleMenu')`); await ev(`T.cmd('toggleHelp')`);
+  check('64: 안내를 누르면 안내가 아래에 보임', (await ev(vis('.side'))) && (await stageH()) > 250, await stageH());
+  await shot('64-narrow-help.png');
+  await send('Emulation.clearDeviceMetricsOverride');
+  await sleep(300);
+  check('64: 넓은 화면에선 펴고 접는 단추가 없음', !(await ev(vis('button[data-cmd="toggleMenu"]'))) && (await ev(vis('.bar .grp'))));
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);
