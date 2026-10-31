@@ -115,14 +115,12 @@ check('머리에서 M: Method로', (await ev(`T.doc().diagrams.find(x => x.id ==
 await ev(`T.key('KeyE')`);
 check('머리에서 E: 다시 Event로', (await ev(`T.doc().diagrams.find(x => x.id === '${eDia.id}').kind`)) === 'event');
 
-// f. 받는 것이 없는 Method를 부르는 호출 블록: 결과만 적는다. 이름과 인자는 못 고친다
+// f. 받는 것이 없는 Method를 부르는 호출 블록: 결과 칸 하나만 열린다. 이름은 칸이 아니다 (62번째 판: 칸 둘)
 await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
-check('호출 블록에서 Enter: 한 줄이 열리고 맨 앞(결과 자리)에 커서', (await ev(`T.editing()`)) === 'Method 1' && (await ev(`T.picked()`)) === '', await ev(`T.editing()`));
-await ev(`T.type('n = Other')`);
-check('이름을 바꿔 적으면 받아들이지 않음', (await ev(`T.editing()`)) === 'n = Other' && (await ev(`T.msg()`)).includes('고칠 수 없습니다'), await ev(`T.msg()`));
-await ev(`T.type('Method 1(3)')`);
-check('받는 것이 없는 Method에 인자를 적으면 받아들이지 않음', (await ev(`T.editing()`)) === 'Method 1(3)' && (await ev(`T.msg()`)).includes('받는 것이 없는'), await ev(`T.msg()`));
-await ev(`T.type('n = Method 1')`);
+check('62: 받는 것이 없는 호출 블록에서 Enter: 결과 칸이 빈 채로 열림', (await ev(`T.editing()`)) === '' && (await ev(`T.msg()`)).includes('결과 칸'), [await ev(`T.editing()`), await ev(`T.msg()`)]);
+await ev(`T.key('Tab', { editor: true, key: 'Tab' })`);
+check('62: 받는 것이 없으면 Tab으로 인자 칸에 가지 않음', (await ev(`T.msg()`)).includes('결과 칸만'), await ev(`T.msg()`));
+await ev(`T.type('n')`);
 s = await ev(`T.sum()`);
 check('결과만 적음: n ← Method 1', s.calls.join() === 'n ← Method 1 -> Method 1', s);
 
@@ -135,18 +133,27 @@ await ev(`T.type('count_up(n)')`);
 s = await ev(`T.sum()`);
 check('머리를 count_up(n)으로: 호출 블록 모두 이름이 바뀌고 인자가 채워짐', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|count_up(n) -> count_up(n)', s);
 await ev(`T.click('${callId}'); T.key('KeyA'); T.key('KeyC'); T.key('Digit1')`);
-check('C로 넣은 호출: 받는 것이 있으면 인자를 고른 채로 열림', (await ev(`T.editing()`)) === 'count_up(n)' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
-await ev(`T.type('count_up(5)')`);
+check('62: C로 넣은 호출: 받는 것이 있으면 인자 칸이 고른 채로 열림', (await ev(`T.editing()`)) === 'n' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
+await ev(`T.type('5')`);
 s = await ev(`T.sum()`);
 check('인자를 적음', s.calls.join('|') === 'n ← count_up(n) -> count_up(n)|count_up(5) -> count_up(n)|count_up(n) -> count_up(n)', s);
 await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
-check('호출 블록에서 Enter: 인자를 고른 채로 열림', (await ev(`T.editing()`)) === 'n ← count_up(n)' && (await ev(`T.picked()`)) === 'n', [await ev(`T.editing()`), await ev(`T.picked()`)]);
-await ev(`T.type('total = count_up(n + 1);')`);
+check('62: 호출 블록에서 Enter: 인자 칸에서 시작', (await ev(`T.editing()`)) === 'n' && (await ev(`T.msg()`)).includes('인자 칸'), [await ev(`T.editing()`), await ev(`T.msg()`)]);
+await ev(`document.querySelector('#editor').value = 'n + 1'; T.key('Tab', { editor: true, key: 'Tab' })`);
+check('62: Tab으로 결과 칸으로 (결과 칸의 글자만 보임)', (await ev(`T.editing()`)) === 'n' && (await ev(`T.msg()`)).includes('결과 칸'), [await ev(`T.editing()`), await ev(`T.msg()`)]);
+await ev(`T.type('total')`);
 s = await ev(`T.sum()`);
-check('인자와 결과를 고침 (= 와 ; 로 적어도 됨)', s.calls[0] === 'total ← count_up(n + 1) -> count_up(n)', s);
+check('62: 두 칸을 한꺼번에 받아들임', s.calls[0] === 'total ← count_up(n + 1) -> count_up(n)', s);
 await ev(`T.key('KeyZ', { ctrl: true })`);
 s = await ev(`T.sum()`);
 check('되돌리면 고치기 전으로', s.calls[0] === 'n ← count_up(n) -> count_up(n)', s);
+await ev(`T.click('${callId}'); T.key('Enter', { key: 'Enter' })`);
+await ev(`T.type('')`);
+s = await ev(`T.sum()`);
+check('62: 인자 칸을 비우면 머리의 괄호 안 글자가 다시 들어감', s.calls[0] === 'n ← count_up(n) -> count_up(n)', s);
+await ev(`{ const o = document.querySelector('#optSym'); o.value = '='; o.dispatchEvent(new Event('change')); }`);
+check('62: 결과 기호를 = 로: 그림에 n = count_up(n)', (await ev(`T.svg().includes('n = <tspan font-weight="600">count_up</tspan>(n)')`)) === true);
+await ev(`const o = document.querySelector('#optSym'); o.value = '←'; o.dispatchEvent(new Event('change'))`);
 
 // h. R로 부를 Method 바꾸기: 새 Method를 만들고 호출. 이름만 바뀌고 인자는 남는다
 d = await ev(`T.doc()`);
@@ -702,6 +709,111 @@ await ev(`T.cmd('exCode')`);
   const after = await ev(`T.calls(T.doc())`);
   check('61: j 뒤 Enter로 둘째 Method(partition)를 부르는 블록이 들어감', after.length === before.length + 1 && toPart(after) === toPart(before) + 1, { part, before: before.map(c => c.target), after: after.map(c => c.target) });
   if (await ev(`T.editing()`) !== null) await ev(`T.key('Escape', { editor: true, key: 'Escape' })`);
+}
+
+// 62번째 판 (2026-10-31): 2026-10-18 · 10-25에 정하고 넣지 못한 것
+{
+  const sv = () => ev(`T.svg()`);
+  const findType = (list, t) => { for (const n of list) { if (n.type === t) return n; for (const k of ['yes', 'no', 'body', 'children', 'c0', 'c1', 'c2', 'c3']) if (Array.isArray(n[k])) { const f = findType(n[k], t); if (f) return f; } } return null; };
+  const H = id => ev(`+document.querySelector('#svg rect[data-id="${id}"]').getAttribute('height')`);
+  const box = () => ev(`(() => { const b = document.querySelector('#keyhint'); return { hidden: b.hidden, text: b.textContent }; })()`);
+
+  // 빈 갈래의 ∅, 조건 글자 뒤 바탕
+  await ev(`T.cmd('exCode')`);
+  check('62: 빈 갈래에 ∅ (원 반지름 3.5)', (await sv()).includes('r="3.5"'));
+  check('62: 조건 글자 뒤에 머리 바탕색 테두리 (BH1)', (await sv()).includes('stroke-width="6" stroke-linejoin="round" paint-order="stroke"'));
+
+  // For: a f로 넣고 s f로 감싼다
+  let cd = await ev(`T.doc()`);
+  const firstId = cd.diagrams[0].body[0].id;
+  await ev(`T.click('${firstId}')`); await keys('KeyA', 'KeyF');
+  await ev(`T.type('for i in range(3)')`);
+  cd = await ev(`T.doc()`);
+  check('62: a f로 For를 넣음', cd.diagrams[0].body[1].type === 'for' && cd.diagrams[0].body[1].text === 'for i in range(3)', cd.diagrams[0].body[1]);
+  await ev(`T.click('${firstId}')`); await keys('KeyS', 'KeyF');
+  await ev(`T.type('for k in ks')`);
+  cd = await ev(`T.doc()`);
+  check('62: s f로 For로 감쌈', cd.diagrams[0].body[0].type === 'for' && cd.diagrams[0].body[0].body[0].id === firstId, cd.diagrams[0].body[0]);
+
+  // MD1: 펴진 접기 영역 안의 마지막 블록 뒤에 넣으면 영역 안에
+  const ranges = cd.diagrams[0].body.filter(n => n.type === 'range');
+  let rg = null;
+  for (const r of ranges) if (await ev(`!!document.querySelector('#svg [data-id="${r.children.at(-1).id}"]')`)) { rg = r; break; }
+  const lastIn = rg.children[rg.children.length - 1].id;
+  await ev(`T.click('${lastIn}')`); await keys('KeyO');
+  await ev(`T.type('로그를 닫는다')`);
+  cd = await ev(`T.doc()`);
+  const rg2 = cd.diagrams[0].body.find(n => n.id === rg.id);
+  check('62: MD1 접기 영역 안의 블록 뒤에 넣으면 영역 안에', rg2.children.length === rg.children.length + 1 && rg2.children.at(-1).text === '로그를 닫는다', rg2.children.map(c => c.text));
+
+  // If 갈래 이름 (Q24)
+  const iff = findType(cd.diagrams[0].body, 'if');
+  await ev(`T.click('${iff.yes[0].id}')`); await keys('+KeyL');
+  check('62: Shift+L로 If 갈래 이름 칸이 "참"으로 열림', (await ev(`T.editing()`)) === '참', await ev(`T.editing()`));
+  await ev(`T.type('눌림')`);
+  cd = await ev(`T.doc()`);
+  check('62: If 갈래 이름을 고침', findType(cd.diagrams[0].body, 'if').labels?.[0] === '눌림' && (await sv()).includes('>눌림</text>'), findType(cd.diagrams[0].body, 'if').labels);
+  await ev(`T.click('${iff.yes[0].id}')`); await keys('+KeyL');
+  await ev(`T.type('')`);
+  cd = await ev(`T.doc()`);
+  check('62: 비우면 "참"으로 돌아가고 모델에 남지 않음', !findType(cd.diagrams[0].body, 'if').labels && (await sv()).includes('>참</text>'), findType(cd.diagrams[0].body, 'if'));
+
+  // 키 안내 상자 (K1)
+  await ev(`T.click('${firstId}')`); await keys('KeyA');
+  check('62: 첫 키 바로 뒤에는 안내가 없음', (await box()).hidden, await box());
+  await sleep(550);
+  check('62: 0.4초 뒤 안내 상자 (For가 보임)', !(await box()).hidden && (await box()).text.includes('For'), await box());
+  await keys('Escape');
+  check('62: Esc로 그만두면 안내도 닫힘', (await box()).hidden, await box());
+  await ev(`{ const o = document.querySelector('#optKeyHint'); o.checked = false; o.dispatchEvent(new Event('change')); }`);
+  await ev(`T.click('${firstId}')`); await keys('KeyZ'); await sleep(550);
+  check('62: 키 안내를 끄면 뜨지 않음', (await box()).hidden, await box());
+  await keys('Escape');
+  await ev(`{ const o = document.querySelector('#optKeyHint'); o.checked = true; o.dispatchEvent(new Event('change')); }`);
+
+  // Case: 갈래 이름 자리 (Q25), 짧은 갈래 (SB1), 갈래를 하나까지 줄이면 If로 바꿀지 (MD3)
+  await ev(`T.cmd('exCase')`);
+  const svgCase = await sv();
+  check('62: default 이름은 오른쪽', /<text[^>]*text-anchor="end"[^>]*>default<\/text>/.test(svgCase));
+  check('62: 갈래 이름은 왼쪽', /<text(?![^>]*text-anchor)[^>]*>CMD_START<\/text>/.test(svgCase));
+  let kd = await ev(`T.doc()`);
+  let cs = findType(kd.diagrams[0].body, 'case');
+  const h0 = await H(cs.c0[0].id), h1 = await H(cs.c0[1].id);
+  check('62: 짧은 갈래의 블록들이 고르게 늘어남 (SB1)', Math.abs(h0 - h1) <= 1 && h0 > 32, [h0, h1]);
+  await ev(`T.click('${cs.c2[0].id}')`); await keys('Minus');
+  kd = await ev(`T.doc()`); cs = findType(kd.diagrams[0].body, 'case');
+  check('62: 갈래가 둘 남으면 묻지 않음', cs.labels.length === 3 && (await ev(`document.querySelector('#menu').hidden`)), cs.labels);
+  await ev(`T.click('${cs.c1[0].id}')`); await keys('Minus');
+  check('62: 갈래가 하나만 남으면 If로 바꿀지 물음', !(await ev(`document.querySelector('#menu').hidden`)) && (await ev(`document.querySelector('#menu').textContent`)).includes('If로 바꾸기'), await ev(`document.querySelector('#menu').textContent`));
+  await ev(`T.key('Enter', { key: 'Enter' })`);
+  kd = await ev(`T.doc()`);
+  const ifn = findType(kd.diagrams[0].body, 'if');
+  check('62: If로 바뀜 (조건은 Case의 글자, 참 갈래 이름은 갈래 이름)', !findType(kd.diagrams[0].body, 'case') && ifn && ifn.text === 'cmd' && ifn.labels?.[0] === 'CMD_START' && ifn.yes[0].text === 'motor_on();', ifn);
+  await ev(`T.click('${ifn.id}')`); await keys('+Equal');
+  check('62: If에서 +: Case로 바꿀지 물음', (await ev(`document.querySelector('#menu').textContent`)).includes('Case로 바꾸고'), await ev(`document.querySelector('#menu').textContent`));
+  await ev(`T.key('Digit1')`);
+  check('62: Case로 바뀌고 새 갈래 이름 칸이 열림', (await ev(`T.editing()`)) === '2', await ev(`T.editing()`));
+  await ev(`T.type('CMD_PAUSE')`);
+  kd = await ev(`T.doc()`); cs = findType(kd.diagrams[0].body, 'case');
+  check('62: Case의 갈래: 참 갈래 · 새 갈래 · default', !!cs && cs.labels.join() === 'CMD_START,CMD_PAUSE,default' && cs.c0[0].text === 'motor_on();', cs && cs.labels);
+  await ev(`T.key('KeyZ', { ctrl: true })`); await ev(`T.key('KeyZ', { ctrl: true })`);
+  kd = await ev(`T.doc()`);
+  check('62: 되돌리기 두 번으로 바꾸기 전 If로', findType(kd.diagrams[0].body, 'if')?.id === ifn.id && !findType(kd.diagrams[0].body, 'case'), kd.diagrams[0].body.map(n => n.type));
+
+  // 머리 모양 제목처럼 (H1), 다이어그램 배치 (1.7)
+  await ev(`T.cmd('exQuick')`);
+  await ev(`{ const o = document.querySelector('#optHead'); o.value = 'title'; o.dispatchEvent(new Event('change')); }`);
+  check('62: 제목처럼: 문서 설정에 들어감', (await ev(`T.doc()`)).settings?.headStyle === 'title', (await ev(`T.doc()`)).settings);
+  check('62: 제목처럼: Method 딱지와 굵은 이름', (await sv()).includes('>Method</text>') && (await sv()).includes('font-weight="600">quicksort'));
+  await ev(`T.key('KeyZ', { ctrl: true })`);
+  check('62: 제목처럼은 실행 취소의 대상', !(await ev(`T.doc()`)).settings && (await ev(`document.querySelector('#optHead').value`)) === 'shape');
+  await ev(`T.cmd('exRaft')`);
+  const xs = await ev(`(() => { const d = JSON.parse(localStorage.getItem('nsd-proto-doc')).doc; return d.diagrams.map(g => { const b = document.querySelector('#svg [data-id="' + g.id + '"]').getBBox(); return { m: g.kind === 'method', x: b.x, r: b.x + b.width }; }); })()`);
+  const evR = Math.max(...xs.filter(x => !x.m).map(x => x.r)), mL = Math.min(...xs.filter(x => x.m).map(x => x.x));
+  check('62: Event는 왼쪽, Method는 오른쪽, 사이는 88px 넘게', mL - evR >= 87, { evR, mL });
+  const vb = (await ev(`document.querySelector('#svg').getAttribute('viewBox')`)).split(' ').map(Number);
+  check('62: 그림의 가로 : 세로가 16 : 10 가까이', vb[2] / vb[3] > 1.2 && vb[2] / vb[3] < 2.1, vb);
+  check('62: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '62번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);

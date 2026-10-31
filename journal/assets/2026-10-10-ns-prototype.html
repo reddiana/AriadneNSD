@@ -83,7 +83,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .keyhint[hidden] { display: none; }
 .keyhint .kt { display: block; margin-bottom: 6px; }
 .keyhint .kg { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px 16px; }
-.keyhint kbd { font-family: var(--mono); font-weight: 600; color: var(--accent); margin-right: 6px; }
+.keyhint kbd { all: unset; font-family: var(--mono); font-weight: 600; color: var(--accent); margin-right: 8px; }
 
 .menu { position: fixed; z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; min-width: 210px; }
 .menu button { display: flex; width: 100%; justify-content: space-between; gap: 16px; border: 0; border-radius: 4px; text-align: left; padding: 5px 10px; }
@@ -108,7 +108,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">61번째 판</b></span></div>
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">62번째 판</b></span></div>
     <div class="grp">
       <button data-cmd="new" title="빈 다이어그램">새로</button>
       <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
@@ -169,6 +169,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
         <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
         <label><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label>
         <label title="문서 설정: 파일에 저장되고 실행 취소의 대상입니다">머리 모양 <select id="optHead"><option value="shape">모자 · 아치</option><option value="title">제목처럼</option></select></label>
+        <label title="문서 설정: 파일에 저장됩니다. 보기 상태라 실행 취소의 대상이 아닙니다">결과 기호 <select id="optSym"><option value="←">←</option><option value="=">=</option></select></label>
         <label title="사용자 설정: 두 번 누르는 키의 첫 키 뒤 0.4초가 지나면 이어 누를 키를 보입니다"><input type="checkbox" id="optKeyHint" checked> 키 안내</label>
         <div class="zoom">
           <button data-cmd="zoomOut" aria-label="축소">−</button>
@@ -218,7 +219,23 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 0.4초 안에 둘째 키를 누르지 않으면 캔버스 아래에 이어 누를 키의 안내가 뜹니다(캔버스 위의 "키 안내"로 끔). 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (10-25, 61번째 판)</h2>
+      <h2>이번에 바뀐 것 (10-31, 62번째 판)</h2>
+      <ul>
+        <li><b>2026-10-18 · 10-25에 정하고 넣지 못한 것을 모두 넣었습니다.</b></li>
+        <li><b>For 블록:</b> While과 같은 모양이고 머리의 글자로 가릅니다. 넣기 <kbd>a</kbd> <kbd>f</kbd> · <kbd>A</kbd> <kbd>f</kbd>, 감싸기 <kbd>s</kbd> <kbd>f</kbd>. <kbd>f</kbd>만 누르면 그대로 접기 · 펴기입니다.</li>
+        <li><b>빈 갈래의 ∅:</b> If · Case의 갈래에 빈 블록 하나만 있으면 가운데에 ∅가 보입니다.</li>
+        <li><b>If 갈래의 이름을 고칩니다:</b> <kbd>Shift</kbd>+<kbd>L</kbd>이나 갈래 이름 더블클릭. 비우면 "참" · "거짓"으로 돌아갑니다.</li>
+        <li><b>Case ↔ If:</b> Case의 갈래가 하나만 남으면 If로 바꿀지, If에서 <kbd>+</kbd>를 누르면 Case로 바꿀지 묻습니다. 묻는 모양과 글자를 옮기는 법은 아직 정하지 않아 임시입니다(조건은 그대로, 갈래 이름은 참 갈래로).</li>
+        <li><b>Case 갈래 이름:</b> 칸의 왼쪽에, default만 오른쪽에 붙습니다.</li>
+        <li><b>조건 글자 뒤 바탕:</b> 긴 조건이 빗금에 닿으면 글자 둘레에서 빗금이 끊깁니다.</li>
+        <li><b>짧은 갈래:</b> 남는 높이를 그 갈래의 블록들이 고르게 나눠 받습니다.</li>
+        <li><b>머리 모양 "제목처럼":</b> 캔버스 위 "머리 모양"에서 고릅니다. 문서 설정이라 파일에 저장되고 되돌릴 수 있습니다.</li>
+        <li><b>두 키 안내:</b> 두 번 누르는 키의 첫 키 뒤 0.4초가 지나면 캔버스 아래에 이어 누를 키가 보입니다. "키 안내"로 끕니다.</li>
+        <li><b>여러 다이어그램의 배치:</b> Event(와 머리 없는 것)는 왼쪽, Method는 오른쪽에 모아 놓고 두 무리 사이를 88px 띄웁니다. 그림 전체가 16 : 10에 가깝게 줄을 나눕니다.</li>
+        <li><b>호출 블록을 고치는 칸이 둘입니다:</b> 이름 뒤의 인자 칸에서 시작하고 <kbd>Tab</kbd>으로 이름 앞의 결과 칸과 오갑니다. 이름은 칸이 아닙니다. 결과 기호(← / =)는 캔버스 위 "결과 기호"에서 고릅니다. Method의 머리에서 괄호를 지우면 그 Method를 부르는 호출 블록의 인자도 지워집니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-25, 61번째 판)</h2>
       <ul>
         <li><b>목록에서도 <kbd>j</kbd> <kbd>k</kbd>로 옮깁니다.</b> <kbd>a</kbd> <kbd>c</kbd>나 <kbd>r</kbd>로 부를 Method를 고르는 목록, 오른쪽 클릭 메뉴가 떠 있는 동안 <kbd>j</kbd>는 아래로, <kbd>k</kbd>는 위로 옮깁니다. <kbd>↓</kbd> <kbd>↑</kbd>도 그대로 듣습니다.</li>
       </ul>
@@ -575,8 +592,9 @@ function normalize() {
       return;
     }
     n.name = headName(t.event);
-    // 넘겨주는 것이 비어 있으면 머리의 괄호 안 글자를 채운다
-    if (!n.args) n.args = headParams(t.event);
+    // 받는 것이 없는 Method(괄호 없음)면 인자를 지운다. 넘겨주는 것이 비어 있으면 머리의 괄호 안 글자를 채운다 (62번째 판)
+    if (!headParens(t.event)) n.args = '';
+    else if (!n.args) n.args = headParams(t.event);
   });
   // 이 자리의 접기 영역은 그 호출 블록이 없어지거나, 묶어 둔 블록이 모두 없어지면 사라진다
   if (doc.sfolds) {
@@ -846,10 +864,11 @@ function smallW(text, bold) { cv.font = `${bold ? '600 ' : ''}12px ${fam()}`; re
 // 호출 블록의 글자: 결과 ← 이름(인자). 이름은 굵게 그린다. 이어진 곳이 없으면 앞에 "?"
 function callParts(n) {
   const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
-  const res = n.result ? n.result + ' ← ' : '';
+  const res = n.result ? n.result + ` ${resultSym()} ` : '';
   return { res, pre: (alive ? '' : '? ') + res, name: (alive ? headName(t.event) : n.name) || '(이름 없음)',
     post: n.args || (alive && headParens(t.event)) ? '(' + (n.args || '') + ')' : '' };
 }
+function resultSym() { return opts.resultSym === '=' ? '=' : '←'; }
 const callLine = n => { const p = callParts(n); return p.res + p.name + p.post; };
 const callText = n => { const p = callParts(n); return p.pre + p.name + p.post; };
 // 제어 블록의 접히는 부분: If는 갈래마다, 반복문은 안쪽 하나. 접힘 열쇠는 If가 "id:갈래", 반복문이 id
@@ -1015,7 +1034,8 @@ function place(n, x, y, w, h, out) {
 function layout() {
   M = new Map(); L = new Map(); T = new Map();
   const out = { items: [], regions: [], ghosts: [] };
-  // 순서대로 위에서 아래로 쌓다가, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘긴다 (^edit-multi-diagram)
+  // 두 무리(왼쪽: Event와 머리 없는 것, 오른쪽: Method)를 각각 위에서 아래로 쌓다가 줄 높이를 넘으면 오른쪽 새 줄로 넘긴다.
+  // 줄 높이는 그림 전체가 16 : 10에 가장 가까워지는 것을 4px씩 올려 보며 고른다 (62번째 판, 상세 설계 레이아웃 1.7, DA1)
   const boxes = doc.diagrams.map(d => {
     const bm = measureSeq(d.body);
     let W = Math.max(bm.w, 160), eh = 0;
@@ -1044,10 +1064,31 @@ function layout() {
     }
     return { d, bm, W, eh, H: eh + bm.h, gut, cols };
   });
-  const top = 24, limit = Math.max(K.colMin, ...boxes.map(b => b.H));
-  let X = 24, Y = top, colW = 0, bottom = 0;
-  for (const b of boxes) {
-    if (Y > top && Y + b.H > top + limit) { X += colW + K.gap; Y = top; colW = 0; }
+  const top = 24, left = 24, kindGap = 2 * K.gap;
+  const groups = [boxes.filter(b => !isMethod(b.d)), boxes.filter(b => isMethod(b.d))];
+  const stack = (group, limit) => {
+    let X = 0, Y = 0, colW = 0, bottom = 0;
+    const pos = [];
+    for (const b of group) {
+      if (Y > 0 && Y + b.H > limit) { X += colW + K.gap; Y = 0; colW = 0; }
+      pos.push({ b, x: X, y: Y });
+      colW = Math.max(colW, b.W + b.gut); bottom = Math.max(bottom, Y + b.H);
+      Y += b.H + K.gap;
+    }
+    return { w: group.length ? X + colW : 0, h: bottom, pos };
+  };
+  const tall = g => g.reduce((a, b) => a + b.H, 0) + Math.max(0, g.length - 1) * K.gap;
+  const h0 = Math.max(K.colMin, ...boxes.map(b => b.H)), h1 = Math.max(h0, ...groups.map(tall));
+  let best = null;
+  for (let lim = h0; ; lim += 4) {
+    const [A, B] = groups.map(g => stack(g, lim));
+    const W = A.w + B.w + (A.w && B.w ? kindGap : 0), H = Math.max(A.h, B.h), score = Math.abs(W / H - 1.6);
+    if (!best || score < best.score - 1e-9) best = { score, A, B, W, H };
+    if (lim >= h1) break;
+  }
+  const placed = [...best.A.pos.map(p => ({ ...p, x: left + p.x })), ...best.B.pos.map(p => ({ ...p, x: left + best.A.w + (best.A.w ? kindGap : 0) + p.x }))];
+  for (const { b, x: X, y: py } of placed) {
+    const Y = top + py;
     const d = b.d, DX = X + b.gut, g0 = out.ghosts.length;
     if (d.event != null) {
       const title = titleHead(), top0 = title ? TITLE.tag : K.hat;
@@ -1057,11 +1098,8 @@ function layout() {
     }
     placeSeq(d.body, DX, Y + b.eh, b.W, b.bm.h, out);
     out.ghosts.slice(g0).forEach(g => { g.left = DX; g.cols = b.cols; });
-    colW = Math.max(colW, b.W + b.gut);
-    bottom = Math.max(bottom, Y + b.H);
-    Y += b.H + K.gap;
   }
-  out.W = X + colW + 24; out.H = bottom + 24;
+  out.W = left + best.W + 24; out.H = top + best.H + 24;
   return out;
 }
 
@@ -1238,6 +1276,7 @@ function render() {
   svg.innerHTML = drawSVG(lay, true);
   $('#zoomOut').textContent = Math.round(zoom * 100) + '%';
   $('#optHead').value = titleHead() ? 'title' : 'shape';
+  $('#optSym').value = resultSym();
   $('#where').textContent = describeSel();
   $('.stage').classList.toggle('nosel', !sel);
   showMode();
@@ -1268,7 +1307,7 @@ function describeSel0() {
 function modelJSON() {
   // 그림이 화면 그대로이므로, 그 화면을 만든 보기 상태(접힘, 이름 띠)도 모델과 함께 넣는다. 같은 내용이면 같은 파일이 나오도록 순서를 맞춘다
   const view = { folded: [...folded].filter(id => idx.has(String(id).split(':')[0])).sort(), bands: opts.showRegions !== false,
-    opened: [...opened].filter(id => id.split('>').every(k => idx.has(k))).sort() };
+    opened: [...opened].filter(id => id.split('>').every(k => idx.has(k))).sort(), ...(resultSym() === '=' ? { resultSym: '=' } : {}) };
   return JSON.stringify({ format: 'ariadne-nsd', version: 0, ...(doc.settings ? { settings: doc.settings } : {}), diagrams: doc.diagrams, ...(doc.sfolds ? { siteFolds: doc.sfolds } : {}), view }, null, 2);
 }
 function exportSVG() {
@@ -1313,6 +1352,7 @@ function importSVG(text) {
   folded = new Set(m.view && Array.isArray(m.view.folded) ? m.view.folded : []);
   opened = new Set(m.view && Array.isArray(m.view.opened) ? m.view.opened : []);
   if (m.view && typeof m.view.bands === 'boolean') { opts.showRegions = m.view.bands; $('#optRanges').checked = m.view.bands; }
+  opts.resultSym = m.view && m.view.resultSym === '=' ? '=' : '←';
   normalize(); render(); save(); saveFold(); say('파일을 열었습니다. 저장할 때의 접힘 그대로 열립니다');
 }
 async function download() {
@@ -1372,16 +1412,28 @@ function startEdit(id, o = {}) {
   if (how === 'start') editor.setSelectionRange(0, 0);
   else if (how === 'clear' && !(n && n.type === 'call')) { editor.value = ''; growEditor(); }
   if (n && n.type === 'call') {
-    // 한 줄로 고친다. 이름은 잠겨 있고 인자(괄호 안)와 결과(← 앞)만 바뀐다. 인자가 있으면 인자를, 없으면 맨 앞(결과 자리)을 고른 채로 연다
-    const p = callParts(n), at = (p.res + p.name).length;
-    if (p.post && how === 'start') editor.setSelectionRange(at + 1, at + 1);
-    else if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
-    say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (' + endHint() + ')' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (' + endHint() + ')');
+    // 칸이 둘이다: 이름 앞의 결과 칸, 이름 뒤의 인자 칸. 인자 칸에서 시작하고 Tab으로 오간다. 받는 것이 없는 Method면 결과 칸 하나 (62번째 판)
+    const params = headParens(dia(n.target).event);
+    editing.call = { res: n.result || '', args: n.args || '', params, field: params ? 'args' : 'res', box };
+    callField(how);
   }
   if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (' + endHint() + ')');
   else if (o.naming) say('접은 영역의 이름을 적으세요. Enter나 Esc는 기본 이름 그대로 둡니다');
 }
 const endHint = () => 'Enter · Esc: 정하기';
+function callField(how) {
+  // 호출 블록의 칸 하나를 연다: 글자 칸을 그 칸의 자리에 옮기고 그 칸의 글자만 넣는다
+  const c = editing.call, n = idx.get(editing.id).node, p = callParts(n), b = c.box;
+  const x0 = b.x + K.padX + K.bar - 2;
+  const x = c.field === 'res' ? x0 : x0 + tsize(p.pre).w + boldW(p.name) + tsize('(').w;
+  editor.value = how === 'clear' ? '' : c[c.field];
+  editor.style.left = (x * zoom) + 'px';
+  editor.style.width = Math.max(90, Math.min(260, tsize(editor.value).w + 40)) * zoom + 'px';
+  growEditor();
+  if (how === 'start') editor.setSelectionRange(0, 0); else editor.select();
+  const other = c.params ? (c.field === 'args' ? ' · Tab: 결과 칸' : ' · Tab: 인자 칸') : '';
+  say((c.field === 'args' ? `인자 칸: ${p.name}( … )` : `결과 칸: … ${resultSym()} ${p.name}`) + other + ' · 이름은 머리에서 고칩니다 (' + endHint() + ')');
+}
 function growEditor() {
   const lines = editor.value.split('\n').length;
   editor.style.height = Math.max(+editor.dataset.minh, (lines * K.lh + 2 * K.padY) * zoom) + 'px';
@@ -1431,18 +1483,16 @@ function commitEdit(cancel) {
     const g0 = idx.get(e.id)?.node, g = g0 && g0.local ? siteFold(g0) : g0;
     if (g) g.name = (cancel || v === e.orig || v.trim() === '') ? null : v;
     say(g && g.name ? `"${g.name}"(으)로 접었습니다` : '기본 이름으로 접었습니다');
-  } else if (idx.get(e.id)?.node.type === 'call') {
-    const n = idx.get(e.id).node, t = n.target != null ? dia(n.target) : null;
-    if (!cancel && v !== e.orig && isMethod(t)) {
-      const p = parseCall(v, headName(t.event));
-      const bad = !p ? '이름은 호출 블록에서 고칠 수 없습니다. Method의 머리에서 고치거나 r로 다른 Method를 고르세요'
-        : p.args && !headParens(t.event) ? '받는 것이 없는 Method입니다. 넘겨주려면 먼저 머리에 괄호를 붙이세요: 이름(받는 것)' : '';
-      if (bad) {
-        render(); startEdit(e.id, { fresh: e.fresh, retry: true }); editor.value = v; growEditor();
-        return say(bad + ' (Esc: 그만두기)', true);
+  } else if (e.call) {
+    // 두 칸의 글자를 한꺼번에 받아들인다. 한 줄로 적고, 받는 것이 있는 Method의 인자를 비우면 머리의 괄호 안 글자가 다시 들어간다
+    const n = idx.get(e.id)?.node, t = n && n.target != null ? dia(n.target) : null, c = e.call;
+    c[c.field] = v;
+    if (n && !cancel && isMethod(t)) {
+      const res = oneLine(c.res), args = c.params ? (oneLine(c.args) || headParams(t.event)) : '';
+      if (res !== (n.result || '') || args !== (n.args || '')) {
+        if (!e.fresh) pushUndo();
+        n.args = args; n.result = res;
       }
-      if (!e.fresh) pushUndo();
-      n.args = p.args; n.result = p.result;
     }
   } else if (!cancel && v !== e.orig) {
     // 이름이 겹치는지는 Method면 괄호 앞의 이름만으로 견준다
@@ -1456,6 +1506,7 @@ function commitEdit(cancel) {
     if (!e.fresh) pushUndo();
     // 호출 블록의 이름은 머리를 따르므로 따로 고칠 것이 없다
     setText(e.id, v);
+    if (e.keptArgs && headParens(v)) { const c = idx.get(e.keptArgs.call)?.node; if (c && !c.args) c.args = e.keptArgs.args; }
   }
   normalize(); render(); save();
   stage.focus({ preventScroll: true });
@@ -1464,7 +1515,16 @@ editor.addEventListener('input', growEditor);
 editor.addEventListener('keydown', ev => {
   ev.stopPropagation();
   if (ev.isComposing || ev.keyCode === 229) return;
-  if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commitEdit(false); }
+  if (ev.key === 'Tab' && editing?.call) {
+    // 호출 블록: 결과 칸과 인자 칸을 오간다
+    ev.preventDefault();
+    const c = editing.call;
+    if (!c.params) return say('받는 것이 없는 Method라 결과 칸만 있습니다');
+    c[c.field] = editor.value; c.field = c.field === 'args' ? 'res' : 'args';
+    return callField('');
+  }
+  if (ev.key === 'Enter' && editing?.call) { ev.preventDefault(); commitEdit(false); }   // 호출 블록의 칸은 한 줄이다
+  else if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commitEdit(false); }
   // Esc도 적은 대로 받아들이고 나간다 (ADR-0025). 받아들이지 못해 다시 연 칸에서만 그만두기다
   else if (ev.key === 'Escape') { ev.preventDefault(); commitEdit(!!editing?.retry); }
 });
@@ -1600,13 +1660,14 @@ function retarget(arg) {
   const d = arg === 'new' ? newDia('', null, 'method') : dia(arg);
   if (!d) return;
   if (d.id === n.target) return say('그대로 둡니다');
+  const kept = { call: n.id, args: n.args };
   apply(() => {
     // 이름만 바뀐다. 적어 둔 인자와 결과는 남는다
     n.target = d.id;
     if (arg === 'new') doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
   });
-  if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); }
-  else { selectOne(n.id); render(); say('부를 Method를 바꿨습니다. 인자와 결과는 그대로입니다'); }
+  if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); if (editing) editing.keptArgs = kept; }
+  else { selectOne(n.id); render(); say(headParens(d.event) ? '부를 Method를 바꿨습니다. 인자와 결과는 그대로입니다' : '부를 Method를 바꿨습니다. 받는 것이 없는 Method라 인자는 지웠습니다'); }
 }
 function gotoTarget() {
   const r = needSel();
@@ -2310,6 +2371,7 @@ $('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; re
 $('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
 // 머리 모양은 문서 설정이라 실행 취소의 대상이다. 키 안내는 사용자 설정(이 브라우저)
 $('#optHead').addEventListener('change', e => { const v = e.target.value; apply(() => { if (v === 'title') doc.settings = { ...(doc.settings || {}), headStyle: 'title' }; else if (doc.settings) { delete doc.settings.headStyle; if (!Object.keys(doc.settings).length) delete doc.settings; } }); say(v === 'title' ? '머리 모양: 제목처럼' : '머리 모양: 모자 · 아치'); });
+$('#optSym').addEventListener('change', e => { opts.resultSym = e.target.value; render(); save(); say('결과 기호: ' + resultSym()); });
 $('#optKeyHint').addEventListener('change', e => { opts.keyHint = e.target.checked; showMode(); save(); });
 
 svg.addEventListener('mousedown', ev => {
