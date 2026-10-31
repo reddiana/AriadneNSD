@@ -114,13 +114,14 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .m41tag { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--panel); font-size: 14px; }
 .m41fig { overflow-x: auto; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
 .m41card button, #m41back { margin-top: 10px; font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--accent-soft); color: var(--fg); cursor: pointer; }
+.m41sep { font-size: 16px; color: var(--muted); margin: 16px 0 0; border-top: 1px solid var(--line); padding-top: 16px; }
 #m41back { position: fixed; right: 16px; bottom: 16px; z-index: 40; margin: 0; }
 </style>
 
 <div id="m41">
   <header>
     <h1>M41 README 그림 후보</h1>
-    <p>저장소 첫 화면(README)의 소개 아래에 넣을 다이어그램 그림의 후보입니다. 그림은 프로토타입(M01)의 그리는 코드로 그렸고, 고른 것을 2배 해상도 PNG로 찍어 넣습니다. 번호로 골라 주세요. 글자를 바꾸거나 두 후보를 섞으셔도 됩니다.</p>
+    <p>저장소 첫 화면(README)의 소개 아래에 넣을 다이어그램 그림의 후보입니다. 그림은 프로토타입(M01)의 그리는 코드로 그렸고, 고른 것을 2배 해상도 PNG로 찍어 넣습니다. 번호로 골라 주세요. 글자를 바꾸거나 두 후보를 섞으셔도 됩니다. 5 ~ 8번은 “알고리즘이 좋고, 한 곳에서만 쓰이는 Method는 별로”를 받고 더한 것입니다(다이어그램이 하나이거나, Method가 두 곳 이상에서 불림). 프로토타입에 For 블록이 아직 없어 for 반복은 While로 그렸습니다.</p>
   </header>
   <div id="m41cards"></div>
 </div>
@@ -2545,6 +2546,71 @@ stage.focus({ preventScroll: true });
 
 /* ---------- M41: README 그림 후보 ---------- */
 const M41 = [
+  { no: 5, name: '다익스트라 최단 경로', note: '코드식 · 다이어그램 하나 · 겹친 While · If 둘. 교과서 알고리즘 가운데 크기와 모양이 NS 차트에 잘 맞음', mono: true, list: [
+    ['dijkstra(graph, s)', [
+      'dist = {v: INF for v in graph}',
+      'dist[s] = 0',
+      'pq = [(0, s)]',
+      ['while', 'pq', [
+        'd, u = heappop(pq)',
+        ['if', 'd > dist[u]', ['continue'], ['']],
+        ['while', 'for v, w in graph[u]', [
+          ['if', 'dist[u] + w < dist[v]',
+            ['dist[v] = dist[u] + w', 'prev[v] = u', 'heappush(pq, (dist[v], v))'],
+            ['']]
+        ]]
+      ]],
+      'return dist, prev'
+    ], 'method']
+  ]},
+  { no: 6, name: '미로 찾기 (아리아드네의 실)', note: '코드식 · Event 하나와 Method 하나. solve는 main과 자기 자신, 두 곳에서 불림(재귀). 실을 풀고 감는 되추적이 제품 이름의 이야기와 이어짐', mono: true, list: [
+    ['main()', [
+      'maze = read_maze()',
+      ['call', 'solve(maze, p)', 'maze, maze.entrance', 'found'],
+      ['if', 'found', ['draw_thread(path)'], ['print("출구 없음")']]
+    ]],
+    ['solve(maze, p)', [
+      ['if', 'p == maze.exit', ['return True'], ['']],
+      ['if', 'maze.wall(p) or p in visited', ['return False'], ['']],
+      'visited.add(p)',
+      'path.append(p)    # 실을 푼다',
+      ['while', 'for d in (N, E, S, W)', [
+        ['call', 'solve(maze, p)', 'maze, p + d', 'ok'],
+        ['if', 'ok', ['return True'], ['']]
+      ]],
+      'path.pop()        # 실을 감는다',
+      'return False'
+    ], 'method']
+  ]},
+  { no: 7, name: '병합 정렬', note: '코드식 · 다이어그램 하나. 자기 자신을 두 번 부르고(재귀), 합치는 부분은 이름 붙은 영역으로 묶음', mono: true, list: [
+    ['merge_sort(a, lo, hi)', [
+      ['if', 'hi - lo < 2', ['return'], ['']],
+      'mid = (lo + hi) // 2',
+      ['call', 'merge_sort(a, lo, hi)', 'a, lo, mid'],
+      ['call', 'merge_sort(a, lo, hi)', 'a, mid, hi'],
+      ['range', '합치기', [
+        'i, j, tmp = lo, mid, []',
+        ['while', 'i < mid and j < hi', [
+          ['if', 'a[i] <= a[j]', ['tmp.append(a[i])', 'i += 1'], ['tmp.append(a[j])', 'j += 1']]
+        ]],
+        'tmp += a[i:mid] + a[j:hi]',
+        'a[lo:hi] = tmp'
+      ], true]
+    ], 'method']
+  ]},
+  { no: 8, name: '이진 탐색 (한 장)', note: '2번에서 main을 빼고 이진 탐색만. 가장 작고 깔끔함', mono: true, list: [
+    ['binary_search(a, key)', [
+      'lo, hi = 0, len(a) - 1',
+      ['while', 'lo <= hi', [
+        'mid = (lo + hi) // 2',
+        ['if', 'a[mid] == key', ['return mid'], [
+          ['if', 'a[mid] < key', ['lo = mid + 1'], ['hi = mid - 1']]
+        ]]
+      ]],
+      'return -1'
+    ], 'method']
+  ]},
+  { sep: '앞서 본 후보 (첫 판)' },
   { no: 1, name: '자판기', note: '문장식 · Event 둘과 Method 하나 · Case · If · While · 호출. 누구나 아는 장면이라 처음 보는 사람도 읽힘', mono: false, list: [
     ['동전이 들어오면', [
       '동전의 종류를 알아본다',
@@ -2626,6 +2692,7 @@ function m41Load(c) {
 function m41Gallery() {
   const g = $('#m41cards');
   for (const c of M41) {
+    if (c.sep) { const h = document.createElement('h2'); h.className = 'm41sep'; h.textContent = c.sep; g.appendChild(h); continue; }
     m41Load(c);
     const lay = layout();
     const card = document.createElement('section');
