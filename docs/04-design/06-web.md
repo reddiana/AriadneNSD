@@ -91,6 +91,7 @@ updated: 2026-11-01
 - 저장 안 된 채 브라우저 탭을 닫으려 하면 묻는다(브라우저의 "나가시겠습니까?"). 임시 보관이 있어 내용을 잃지는 않는다.
 - **최근 파일**([[01-requirements#^r-exp|R-EXP-04]])은 파일 메뉴의 "최근 파일 ▸"에 둔다.
 - **상태 줄**에는 고른 것과 알림만 둔다.
+- **도움말**([[01-requirements#^r-edit|R-EDIT-21]]): 도움말 메뉴에 "사용법"(새 탭으로 여는 한 페이지, 펴낸 사이트의 `/manual/`. 본보기는 SequenceDiagram.org의 Instructions), "단축키 한눈에"(`?` 키로 편집 화면 위에 키 표 겹창, `Esc`로 닫음), "이 판에서 바뀐 것", "AriadneNSD에 대하여". VS Code · IntelliJ도 문서는 브라우저로, 단축키는 따로 한 장으로 보인다 → [[ux-decisions#W4. 도움말|W4]]
 - **캔버스**가 나머지를 모두 쓴다. 노트북 브라우저(1366 × 657)에서 다이어그램에 남는 칸은 1366 × 593(세로 90%)이다.
 - **좁은 화면**(폭 860px 이하): 메뉴는 ☰ 하나로 접고, 블록 아이콘 줄은 남긴다. 되돌리기 · 다시 · 감싸기 · 도움말은 화면 아래 줄로 내린다 → [[ux-decisions#MB1. 좁은 화면|MB1]]
 
@@ -101,6 +102,5 @@ updated: 2026-11-01
 아래 물음의 견준 안은 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)에 있습니다.
 
 > [!question] 미결정
-> - **W4. 도움말([[01-requirements#^r-edit|R-EDIT-21]])의 모양:** 새 탭으로 여는 한 페이지 사용법과 `?` 키의 단축키 겹창, 또는 오른쪽 접는 패널.
 > - **W5. 설정의 자리:** 문서 설정(파일에 저장)과 환경 설정(이 브라우저)을 창 둘로 나눌지, 한 창의 탭 둘("사용자 · 이 문서", VS Code의 "User · Workspace"처럼)로 할지.
 > - **W6. 명령 찾기 창:** VS Code의 Command Palette · IntelliJ의 Find Action처럼 명령 이름을 쳐서 찾는 창(`Ctrl`+`Shift`+`P`)을 둘지. 요구사항에 없어, 둔다면 요구사항을 더한다.
