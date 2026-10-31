@@ -1,0 +1,131 @@
+<title>M45 서브셋 글꼴 형식</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 한 단 읽기 페이지: 물음 → 크기 막대 → 선택지 카드 셋 → 공통 사실 */
+:root {
+  --bg: #f7f8f6; --fg: #1d2420; --muted: #5d6862; --line: #d5dbd6; --card: #ffffff;
+  --ttf: #9aa59f; --woff: #2f7d5b; --woff2: #6b5bb5; --tag: #1d2420; --tagfg: #ffffff;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161a18; --fg: #e4e9e5; --muted: #9aa5a0; --line: #2f3633; --card: #1e2321;
+  --ttf: #6f7a74; --woff: #4fb388; --woff2: #9a8ae0; --tag: #e4e9e5; --tagfg: #161a18; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161a18; --fg: #e4e9e5; --muted: #9aa5a0; --line: #2f3633; --card: #1e2321;
+  --ttf: #6f7a74; --woff: #4fb388; --woff2: #9a8ae0; --tag: #e4e9e5; --tagfg: #161a18; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+h1 { font-size: 26px; margin: 0; text-wrap: balance; font-weight: 600; }
+h2 { font-size: 18px; margin: 0 0 10px; font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.muted { color: var(--muted); }
+code, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 6px; }
+.chart { display: grid; gap: 16px; }
+.row h3 { font-size: 14px; font-weight: 600; margin: 0 0 6px; }
+.bar { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 10px; font-size: 13px; }
+.bar .track { position: relative; height: 18px; }
+.bar .fill { height: 100%; border-radius: 2px; }
+.bar .v { position: absolute; top: 0; font-family: var(--mono); font-size: 12px; line-height: 18px; padding-left: 6px; white-space: nowrap; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--woff); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt h3 { margin: 0; font-size: 16px; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--woff); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); }
+.opt dd { margin: 0; }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 65ch; }
+.note { border-left: 3px solid var(--line); padding-left: 12px; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M45 · 2026-11-01 · 파일 형식</div>
+    <h1>M45 저장 파일에 넣는 서브셋 글꼴의 형식</h1>
+    <p>저장한 <code>.ns.svg</code>는 AriadneNSD가 없는 곳(GitHub, 브라우저, 노트)에서도 같은 모습으로 보이도록, 그림에 쓰인 글자만 추린 D2Coding 글꼴을 파일 안에 넣습니다. 그 글꼴을 어떤 형식으로 넣을지를 묻습니다. 파일 형식에 남아 공개한 뒤에는 바꾸기 어렵습니다.</p>
+  </header>
+
+  <section>
+    <h2>문서에 쓰인 글자 수에 따른 서브셋 글꼴의 크기</h2>
+    <div class="legend" style="margin-bottom:12px">
+      <span><i style="background:var(--ttf)"></i>1 · TTF (압축 없음)</span>
+      <span><i style="background:var(--woff)"></i>2 · WOFF</span>
+      <span><i style="background:var(--woff2)"></i>3 · woff2</span>
+    </div>
+    <div class="chart" id="chart"></div>
+    <p class="muted" style="margin-top:12px;font-size:13px">2026-11-01에 fontTools로 잰 값(커닝 · 합자 · 힌팅 없음). 파일 안에는 base64로 넣으므로 실제로 늘어나는 크기는 이 값의 1.33배입니다. 스크립트: <code>journal/assets/2026-10-25-d2coding-metrics-spike.py</code>에 WOFF를 더해 돌림.</p>
+  </section>
+
+  <section>
+    <h2>선택지</h2>
+    <div class="opts">
+      <div class="opt">
+        <div class="head"><span class="tag">1</span><h3>TTF (압축 없음)</h3></div>
+        <dl>
+          <dt>크기</dt><dd>가장 큼. 한글 300자면 51 KB</dd>
+          <dt>더 실을 것</dt><dd>없음. 서브세팅 도구가 바로 내놓는 형식</dd>
+          <dt>같은 파일</dt><dd>지킴. 압축이 없어 따질 것이 없음</dd>
+        </dl>
+      </div>
+      <div class="opt rec">
+        <div class="head"><span class="tag">2</span><h3>WOFF</h3><span class="star">★ 추천</span></div>
+        <dl>
+          <dt>크기</dt><dd>TTF의 절반쯤. 한글 300자면 29 KB</dd>
+          <dt>더 실을 것</dt><dd>작은 JS 압축 라이브러리(zlib) 하나와 WOFF 머리를 쓰는 짧은 코드</dd>
+          <dt>같은 파일</dt><dd>라이브러리의 판을 고정하면 지킴. 브라우저에 든 압축기는 브라우저마다 바이트가 다를 수 있어 쓰지 않음</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>woff2</h3></div>
+        <dl>
+          <dt>크기</dt><dd>가장 작음. 한글 300자면 23 KB</dd>
+          <dt>더 실을 것</dt><dd>woff2 인코더(brotli 압축기)를 wasm으로. 크기는 재지 않았으나 수백 KB로 짐작</dd>
+          <dt>같은 파일</dt><dd>인코더의 판을 고정하면 지킴</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:10px">
+    <h2>추천하는 까닭</h2>
+    <ul>
+      <li>2번은 3번과 6 KB(한글 300자)밖에 차이 나지 않는데, 편집기에 더 싣는 코드는 훨씬 작습니다. 웹 버전은 처음 열 때 받는 크기가 중요합니다.</li>
+      <li>1번은 가장 단순하지만, 글자가 많은 그림은 2번의 두 배가 됩니다. 노트에 그림을 여러 장 넣으면 쌓입니다.</li>
+    </ul>
+  </section>
+
+  <section style="display:grid;gap:10px">
+    <h2>셋이 같은 것</h2>
+    <ul>
+      <li>그림을 보는 쪽: 브라우저(GitHub의 그림, Obsidian, 메일을 브라우저로 볼 때)는 셋 다 읽습니다. 제가 아는 한, 브라우저가 아닌 그림 도구는 파일 안에 넣은 글꼴을 셋 모두 대개 읽지 않고 그 컴퓨터의 글꼴로 그립니다.</li>
+      <li>git에서 볼 때: 글자 하나를 더 쓰면 글꼴 덩어리가 통째로 바뀌는 것은 셋이 같습니다.</li>
+      <li>편집기 안의 글꼴은 이 물음과 따로입니다. 편집기에 싣는 글꼴 전체는 이미 woff2(327 KB)로 정했습니다.</li>
+    </ul>
+    <p class="note muted">관련 문서: <code>docs/04-design/02-layout.md</code> 2.2 서브셋 글꼴의 크기, <code>docs/05-spec/01-file-format.md</code> 6장, ADR-0026</p>
+  </section>
+</div>
+
+<script>
+const rows = [
+  ['영어만 (ASCII 95자)', 9576, 6888, 5228],
+  ['한글 100자 + ASCII (작은 다이어그램)', 23140, 15092, 11868],
+  ['한글 300자 + ASCII (보통)', 50688, 29352, 23412],
+  ['한글 800자 + ASCII (아주 많음)', 118276, 60640, 47832],
+];
+const max = 120000, kb = b => (b / 1024).toFixed(1) + ' KB';
+const names = [['1 TTF', 'ttf'], ['2 WOFF', 'woff'], ['3 woff2', 'woff2']];
+document.getElementById('chart').innerHTML = rows.map(([label, ...v]) =>
+  `<div class="row"><h3>${label}</h3>` + v.map((b, i) => {
+    const w = (b / max * 100).toFixed(1);
+    return `<div class="bar"><span class="muted">${names[i][0]}</span><div class="track"><div class="fill" style="width:${w}%;background:var(--${names[i][1]})"></div><span class="v" style="left:${w}%">${kb(b)}</span></div></div>`;
+  }).join('') + '</div>').join('');
+</script>
