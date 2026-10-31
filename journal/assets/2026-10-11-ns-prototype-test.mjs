@@ -817,7 +817,7 @@ await ev(`T.cmd('exCode')`);
   check('62: Event는 왼쪽, Method는 오른쪽, 사이는 88px 넘게', mL - evR >= 87, { evR, mL });
   const vb = (await ev(`document.querySelector('#svg').getAttribute('viewBox')`)).split(' ').map(Number);
   check('62: 그림의 가로 : 세로가 16 : 10 가까이', vb[2] / vb[3] > 1.2 && vb[2] / vb[3] < 2.1, vb);
-  check('65: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '65번째 판', await ev(`document.querySelector('#edition').textContent`));
+  check('66: 판 번호', (await ev(`document.querySelector('#edition').textContent`)) === '66번째 판', await ev(`document.querySelector('#edition').textContent`));
 }
 
 // 62번째 판: M41의 예제 일곱 ("더 보기…")
@@ -880,7 +880,7 @@ await ev(`T.cmd('exCode')`);
   await send('Emulation.setFocusEmulationEnabled', { enabled: true });   // 헤드리스는 창에 포커스가 없어 focus 이벤트가 오지 않는다
   await ev(`T.cmd('exCase')`);
   await ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', code: 'Tab', bubbles: true })); document.querySelector('#optKeyHint').focus(); document.querySelector('#stage').focus();`);
-  check('64: Tab으로 들어오면 첫 블록을 고름', !(await ev(noSel)), await ev(`({ active: document.activeElement?.id || document.activeElement?.tagName, hasFocus: document.hasFocus() })`));
+  check('64 → 66: Tab으로 들어와도 블록을 선택하지 않음 (조작 규칙대로)', await ev(noSel), await ev(`({ active: document.activeElement?.id || document.activeElement?.tagName, hasFocus: document.hasFocus() })`));
   // 모자 · 아치를 고르면 기억해 새 문서 · 예제 · 다시 열기에 씀
   await ev(`{ const o = document.querySelector('#optHead'); o.value = 'shape'; o.dispatchEvent(new Event('change')); }`);
   await ev(`T.cmd('exRaft')`);
@@ -907,18 +907,20 @@ await ev(`T.cmd('exCode')`);
   await sleep(400);
   const vis = sel => `(() => { const e = document.querySelector('${sel}'); return !!e && getComputedStyle(e).display !== 'none'; })()`;
   const stageH = async () => ev(`document.querySelector('#stage').getBoundingClientRect().height`);
-  check('64: 좁은 화면: 도구 모음 · 설정 · 안내는 접혀 있음', !(await ev(vis('.bar .grp'))) && !(await ev(vis('.opts'))) && !(await ev(vis('.side'))) && (await ev(vis('button[data-cmd="toggleMenu"]'))), { grp: await ev(vis('.bar .grp')), opts: await ev(vis('.opts')), side: await ev(vis('.side')), btn: await ev(vis('button[data-cmd="toggleMenu"]')), w: await ev('innerWidth') });
-  check('64: 좁은 화면: 다이어그램이 화면 대부분', (await stageH()) > 800 * 0.8, await stageH());
+  // 66번째 판부터: 메뉴 바의 메뉴는 ☰로 접히고, 툴바(블록 아이콘)는 남음
+  check('64: 좁은 화면: 메뉴 · 안내는 접혀 있고 ☰가 보임', !(await ev(vis('.menus'))) && !(await ev(vis('.side'))) && (await ev(vis('button[data-cmd="toggleMenu"]'))) && (await ev(vis('.tbar .bi'))), { menus: await ev(vis('.menus')), side: await ev(vis('.side')), w: await ev('innerWidth') });
+  check('64: 좁은 화면: 다이어그램이 화면 대부분', (await stageH()) > 800 * 0.75, await stageH());
   await shot('64-narrow.png');
   await ev(`T.cmd('toggleMenu')`);
-  check('64: 메뉴를 누르면 도구 모음과 설정이 보임', (await ev(vis('.bar .grp'))) && (await ev(vis('.opts'))) && (await ev(`document.querySelector('button[data-cmd="toggleMenu"]').getAttribute('aria-expanded')`)) === 'true');
+  check('64: ☰를 누르면 메뉴가 보임', (await ev(vis('.menus'))) && (await ev(`document.querySelector('button[data-cmd="toggleMenu"]').getAttribute('aria-expanded')`)) === 'true');
   await shot('64-narrow-menu.png');
   await ev(`T.cmd('toggleMenu')`); await ev(`T.cmd('toggleHelp')`);
-  check('64: 안내를 누르면 안내가 아래에 보임', (await ev(vis('.side'))) && (await stageH()) > 250, await stageH());
+  check('64: 사용법을 누르면 안내가 아래에 보임', (await ev(vis('.side'))) && (await stageH()) > 250, await stageH());
   await shot('64-narrow-help.png');
+  await ev(`T.cmd('toggleHelp')`);
   await send('Emulation.clearDeviceMetricsOverride');
   await sleep(300);
-  check('64: 넓은 화면에선 펴고 접는 단추가 없음', !(await ev(vis('button[data-cmd="toggleMenu"]'))) && (await ev(vis('.bar .grp'))));
+  check('64: 넓은 화면에선 ☰가 없고 메뉴가 보임', !(await ev(vis('button[data-cmd="toggleMenu"]'))) && (await ev(vis('.menus'))));
 }
 
 // 65번째 판: 2026-11-01에 정한 MVP 조작 (UX 결정 10장, 시안 M43)
@@ -1005,6 +1007,64 @@ await ev(`T.cmd('exCode')`);
   await ev(`T.key('KeyI', { key: 'i' })`);
   check('65: If의 갈래 이름에서 i: 이름 고치기', (await ev(`T.editing()`)) === '참', await ev(`T.editing()`));
   await esc();
+}
+
+
+// 66번째 판: 정한 웹 화면 (06-web 7장, W1 ~ W6)
+{
+  const vis = sel => `(() => { const e = document.querySelector('${sel}'); return !!e && !e.hidden && getComputedStyle(e).display !== 'none'; })()`;
+  const D = () => ev(`T.doc()`);
+  const kd = (code, o = {}) => ev(`document.dispatchEvent(new KeyboardEvent('keydown', { code: '${code}', key: '${o.key || code}', ctrlKey: ${!!o.ctrl}, shiftKey: ${!!o.shift}, bubbles: true, cancelable: true }))`);
+  await ev(`T.cmd('exQuick')`);
+  check('66: 메뉴 바의 메뉴 다섯', (await ev(`[...document.querySelectorAll('.menus .mt')].map(b => b.textContent).join()`)) === '파일,편집,다이어그램,보기,도움말');
+  check('66: 툴바에 블록 아이콘 여섯', (await ev(`document.querySelectorAll('.tbar .bi').length`)) === 6);
+  await ev(`document.querySelector('.mt[data-open="help"]').click()`);
+  check('66: 메뉴를 누르면 펼쳐짐', await ev(vis('.mm[data-menu="help"] .dd')));
+  await ev(`document.body.click()`);
+  check('66: 바깥을 누르면 닫힘', !(await ev(vis('.mm[data-menu="help"] .dd'))));
+  // 블록 아이콘: 누르면 뒤에, Ctrl+클릭은 감싸기
+  await ev(`T.click('n7')`);
+  await ev(`document.querySelector('.tbar .bi[data-cmd="ins:while"]').dispatchEvent(new MouseEvent('click', { bubbles: true, ctrlKey: true }))`);
+  let d = await D();
+  check('66: 블록 아이콘을 Ctrl+클릭하면 감쌈', d.diagrams[1].body[1].type === 'while' && d.diagrams[1].body[1].body[0].id === 'n7', d.diagrams[1].body.map(n => n.type));
+  await ev(`T.cmd('closeModals')`); await kd('Escape', { key: 'Escape' });
+  await ev(`document.querySelector('#editor').hidden || document.querySelector('#editor').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true }))`);
+  // 파일 이름과 ●
+  check('66: 고치면 파일 이름 옆에 ●', (await ev(`document.querySelector('#fname').textContent`)).includes('●') && (await ev('document.title')).startsWith('● '), await ev(`document.querySelector('#fname').textContent`));
+  await ev(`T.cmd('exQuick')`);
+  check('66: 예제를 열면 ●가 없음', !(await ev(`document.querySelector('#fname').textContent`)).includes('●'));
+  // 커맨드 팔레트
+  await ev(`T.click('n7')`);
+  await kd('KeyP', { key: 'P', ctrl: true, shift: true });
+  check('66: Ctrl+Shift+P로 커맨드 팔레트', await ev(vis('#palette')));
+  await ev(`{ const i = document.querySelector('#palIn'); i.value = 'If로 감싸'; i.dispatchEvent(new Event('input')); }`);
+  check('66: 팔레트에서 찾음', (await ev(`document.querySelector('#palList').textContent`)).includes('If로 감싸기'), await ev(`document.querySelector('#palList').textContent`));
+  await ev(`document.querySelector('#palIn').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true }))`);
+  await ev(`document.querySelector('#editor').hidden || document.querySelector('#editor').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true }))`);
+  d = await D();
+  check('66: 팔레트에서 Enter로 실행', !(await ev(vis('#palette'))) && d.diagrams[1].body[1].type === 'if', d.diagrams[1].body.map(n => n.type));
+  await kd('F1', { key: 'F1' });
+  check('66: F1도 커맨드 팔레트', await ev(vis('#palette')));
+  await ev(`document.querySelector('#palIn').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true }))`);
+  check('66: Esc로 팔레트를 닫음', !(await ev(vis('#palette'))));
+  // ? · Ctrl+, · 문서 설정
+  await kd('Slash', { key: '?', shift: true });
+  check('66: ?로 단축키 모달', (await ev(vis('#keysModal'))) && (await ev(`document.querySelector('#keysBody').textContent`)).includes('gg'));
+  await kd('Escape', { key: 'Escape' });
+  check('66: Esc로 모달을 닫음', !(await ev(vis('#keysModal'))));
+  await kd('Comma', { key: ',', ctrl: true });
+  check('66: Ctrl+,로 환경 설정', (await ev(vis('#prefsModal'))) && (await ev(`!!document.querySelector('#prefsModal #optKeyHint')`)));
+  await kd('Escape', { key: 'Escape' });
+  await ev(`T.cmd('docset')`);
+  check('66: 문서 설정에 머리 모양과 결과 기호', (await ev(vis('#docsetModal'))) && (await ev(`!!document.querySelector('#docsetModal #optHead') && !!document.querySelector('#docsetModal #optSym')`)));
+  await ev(`T.cmd('closeModals')`);
+  // Tab으로 들어와도 선택하지 않음
+  await ev(`T.cmd('exCase')`);
+  await send('Emulation.setFocusEmulationEnabled', { enabled: true });
+  await ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', code: 'Tab', bubbles: true })); document.querySelector('#palIn').focus(); document.querySelector('#stage').focus();`);
+  check('66: Tab으로 들어와도 블록을 선택하지 않음 (포커스 테두리만)', await ev(`document.querySelector('#stage').classList.contains('nosel')`));
+  await ev(`T.key('ArrowDown')`);
+  check('66: 그 뒤 이동 키를 누르면 첫 블록', !(await ev(`document.querySelector('#stage').classList.contains('nosel')`)));
 }
 
 check('스크립트 오류 없음', errors.length === 0, errors);

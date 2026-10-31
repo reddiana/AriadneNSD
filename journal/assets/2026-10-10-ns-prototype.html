@@ -49,7 +49,9 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); o
 select { background: var(--panel); }
 kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--bg); white-space: nowrap; }
 
-.main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 0; }
+.app.help-open .main { grid-template-columns: minmax(0, 1fr) 340px; }
+.app:not(.help-open) .side { display: none; }
 .stage { position: relative; overflow: auto; min-width: 0; background-color: var(--bg); background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 18px 18px; padding: 20px; outline: none; }
 .stage.nosel:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .paper { position: relative; display: inline-block; background: var(--paper); border-radius: 4px; box-shadow: 0 1px 3px rgba(20,30,60,.12), 0 6px 20px rgba(20,30,60,.06); }
@@ -100,18 +102,55 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 .modal textarea { width: 100%; min-height: 320px; font-family: var(--mono); font-size: 12px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; resize: vertical; }
 .modal .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
+/* 66번째 판: 정한 웹 화면 (06-web 7장) — 메뉴 바, 툴바, 메뉴, 모달, 커맨드 팔레트 */
+.bar { display: block; padding: 0; }
+.mbar { display: flex; align-items: center; gap: 4px 14px; padding: 4px 12px; border-bottom: 1px solid var(--line); }
+.mbar .brand { flex-direction: row; align-items: baseline; gap: 8px; }
+.menus { display: flex; gap: 2px; }
+.mm { position: relative; }
+.mt { border: 0; background: none; padding: 3px 9px; }
+.mt[aria-expanded="true"], .mt:hover { background: var(--accent-soft); }
+.dd { position: absolute; z-index: 25; top: 100%; left: 0; min-width: 230px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; }
+.dd button { display: flex; width: 100%; justify-content: space-between; gap: 16px; border: 0; border-radius: 4px; text-align: left; padding: 4px 10px; }
+.dd button span { color: var(--muted); font-family: var(--mono); font-size: 11.5px; }
+.dd hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+.dd .chk { display: flex; gap: 6px; align-items: center; padding: 4px 10px; font-size: 13px; }
+.dd .sub { position: relative; padding: 4px 10px; font-size: 13px; cursor: default; }
+.dd .sub .dd2 { display: none; position: absolute; left: 100%; top: -4px; min-width: 190px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; }
+.dd .sub:hover .dd2, .dd .sub:focus-within .dd2 { display: block; }
+.dd .sub select { margin: 4px 10px; }
+.fname { margin-left: auto; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.fname .dot { color: var(--warn); }
+.tbar { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; padding: 4px 12px; position: relative; }
+.tb { border: 1px solid transparent; background: none; padding: 3px 5px; display: inline-flex; align-items: center; gap: 2px; color: var(--fg); }
+.tb:hover { border-color: var(--line); background: var(--accent-soft); }
+.tb.bi svg { display: block; }
+.sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+.tbar > .dd { top: 100%; left: auto; }
+.zoom output { min-width: 3.2em; }
+.modal .box.small { width: min(420px, 100%); grid-template-rows: auto; gap: 12px; }
+.modal .box label { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.modal h3 small { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 8px; }
+.keysbody { overflow: auto; max-height: 60vh; }
+.keysbody .keys { grid-template-columns: 9em minmax(0, 1fr); }
+.palette { position: fixed; z-index: 35; top: 64px; left: 50%; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 32px rgba(0,0,0,.25); padding: 8px; }
+.palette input { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--accent); border-radius: 5px; background: var(--bg); color: var(--fg); }
+#palList { max-height: 50vh; overflow: auto; margin-top: 6px; }
+#palList div { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 13.5px; }
+#palList div.on { background: var(--accent-soft); }
+#palList div span { color: var(--muted); font-family: var(--mono); font-size: 11.5px; }
 .narrow { display: none; }
 @media (max-width: 860px) {
   /* 64번째 판: 화면은 다이어그램에게. 도구 모음 · 설정 · 안내는 "메뉴" · "안내"로 편다 (UX 결정 MB1) */
   .bar { padding-block: 6px; padding-inline: 12px; }
-  .brand { flex: 1 1 0; min-width: 0; }
+  .mbar .brand { flex: 1 1 0; min-width: 0; }
   .narrow { display: inline-block; }
   .narrow[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
-  .app:not(.menu-open) .bar .grp, .app:not(.menu-open) .opts { display: none; }
-  .bar .grp { flex-basis: 100%; }
+  .app:not(.menu-open) .menus { display: none; }
+  .app.menu-open .menus { flex-direction: column; position: absolute; z-index: 26; top: 40px; left: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+  .wide-only, .fname { display: none; }
   .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
-  .app:not(.help-open) .side { display: none; }
-  .app.help-open .main { grid-template-rows: minmax(0, 1fr) minmax(0, 45%); }
+  .app.help-open .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 45%); }
   .side { border-left: 0; border-top: 1px solid var(--line); }
   .stage { padding: 12px; }
   .status { padding-inline: 12px; }
@@ -121,78 +160,17 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 
 <div class="app">
   <header class="bar">
-    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">65번째 판</b></span></div>
-    <button class="narrow" data-cmd="toggleMenu" aria-expanded="false" title="도구 모음과 설정을 펴고 접습니다">메뉴</button>
-    <button class="narrow" data-cmd="toggleHelp" aria-expanded="false" title="써 보는 법과 바뀐 것을 펴고 접습니다">안내</button>
-    <div class="grp">
-      <button data-cmd="new" title="빈 다이어그램">새로</button>
-      <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
-      <button data-cmd="svg" title="저장될 SVG 내용 보기">SVG 보기</button>
-      <button data-cmd="download" title=".ns.svg 받기">받기</button>
+    <div class="mbar">
+      <button class="narrow tb" data-cmd="toggleMenu" aria-expanded="false" title="메뉴"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16 M4 12h16 M4 17h16"/></svg></button>
+      <div class="brand"><b>AriadneNSD</b><span>프로토타입 · <b id="edition">66번째 판</b></span></div>
+      <nav class="menus"><div class="mm" data-menu="file"><button class="mt" data-open="file">파일</button><div class="dd" hidden><button data-cmd="new">새로<span></span></button><button data-cmd="open">열기…<span></span></button><hr><div class="sub">예제 ▸<div class="dd2"><button data-cmd="exCode">코드식<span></span></button><button data-cmd="exText">문장식<span></span></button><button data-cmd="exCase">Case<span></span></button><button data-cmd="exQuick">퀵소트<span></span></button><button data-cmd="exRaft">Raft<span></span></button><select id="exMore" title="README 그림 후보(시안 M41)의 예제"><option value="">더 보기…</option></select></div></div><hr><button data-cmd="download">저장 (받기)<span>Ctrl+S</span></button><button data-cmd="svg">SVG 보기<span></span></button><hr><button data-cmd="prefs">환경 설정…<span>Ctrl+,</span></button></div></div><div class="mm" data-menu="edit"><button class="mt" data-open="edit">편집</button><div class="dd" hidden><button data-cmd="undo">실행 취소<span>u · Ctrl+Z</span></button><button data-cmd="redo">다시 하기<span>U · Ctrl+Y</span></button><hr><button data-cmd="cut">잘라내기<span>dd · Ctrl+X</span></button><button data-cmd="copy">복사<span>yy · Ctrl+C</span></button><button data-cmd="paste">붙여넣기<span>p · Ctrl+V</span></button><button data-cmd="del">지우기<span>x · Del</span></button><hr><button data-cmd="edit">글자 고치기<span>i · Enter</span></button><hr><button data-cmd="moveUp">위로 옮기기<span>Alt+↑</span></button><button data-cmd="moveDown">아래로 옮기기<span>Alt+↓</span></button><button data-cmd="moveLeft">갈래를 왼쪽으로<span>Alt+←</span></button><button data-cmd="moveRight">갈래를 오른쪽으로<span>Alt+→</span></button><hr><button data-cmd="palette">커맨드 팔레트…<span>Ctrl+Shift+P</span></button></div></div><div class="mm" data-menu="diagram"><button class="mt" data-open="diagram">다이어그램</button><div class="dd" hidden><button data-cmd="ins:process">처리 넣기<span>o</span></button><button data-cmd="ins:if">If 넣기<span>a i</span></button><button data-cmd="ins:case">Case 넣기<span>a k</span></button><button data-cmd="ins:while">While 넣기<span>a w</span></button><button data-cmd="ins:for">For 넣기<span>a f</span></button><button data-cmd="ins:dowhile">Do-While 넣기<span>a d</span></button><button data-cmd="callAsk">호출 블록 넣기<span>a c</span></button><hr><button data-cmd="wrap:if">If로 감싸기<span>s i</span></button><button data-cmd="wrap:case">Case로 감싸기<span>s k</span></button><button data-cmd="wrap:while">While로 감싸기<span>s w</span></button><button data-cmd="wrap:for">For로 감싸기<span>s f</span></button><button data-cmd="wrap:dowhile">Do-While로 감싸기<span>s d</span></button><button data-cmd="unwrap">풀기<span>ds</span></button><hr><button data-cmd="kind:event">Event<span>e</span></button><button data-cmd="kind:method">Method (새 Method로 빼기)<span>m</span></button><hr><button data-cmd="docset">문서 설정…<span></span></button></div></div><div class="mm" data-menu="view"><button class="mt" data-open="view">보기</button><div class="dd" hidden><button data-cmd="fold">접기 · 펴기<span>za · f</span></button><button data-cmd="makeRegion">접기 영역 만들기<span>zf</span></button><button data-cmd="releaseRegion">접기 영역 풀기<span>zd</span></button><hr><label class="chk"><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label><hr><button data-cmd="zoomIn">확대<span>Ctrl+휠</span></button><button data-cmd="zoomOut">축소<span>Ctrl+휠</span></button></div></div><div class="mm" data-menu="help"><button class="mt" data-open="help">도움말</button><div class="dd" hidden><button data-cmd="toggleHelp">사용법 (이 프로토타입)<span></span></button><button data-cmd="keysModal">단축키 한눈에<span>?</span></button><button data-cmd="whatsNew">이 판에서 바뀐 것<span></span></button><hr><button data-cmd="about">AriadneNSD에 대하여<span></span></button></div></div></nav>
+      <span class="fname" id="fname" title="파일 이름 · ● 저장 안 됨">이름 없음.ns.svg</span>
     </div>
-    <div class="grp">
-      <span class="lbl">예제</span>
-      <button data-cmd="exCode">코드식</button>
-      <button data-cmd="exText">문장식</button>
-      <button data-cmd="exCase">Case</button>
-      <button data-cmd="exQuick" title="다이어그램 둘: quicksort와 partition">퀵소트</button>
-      <button data-cmd="exRaft" title="다이어그램 열: 이벤트 처리기 일곱과 Method 셋">Raft</button>
-      <select id="exMore" title="README 그림 후보(시안 M41)의 예제"><option value="">더 보기…</option></select>
-    </div>
-    <div class="grp">
-      <span class="lbl" title="고른 블록 뒤에 넣습니다. Shift를 누른 채 클릭하면 앞에 넣습니다">뒤에 넣기</span>
-      <button data-cmd="ins:process" title="o (앞에: O)">처리</button>
-      <button data-cmd="ins:if" title="a i (앞에: A i)">If</button>
-      <button data-cmd="ins:case" title="a k (앞에: A k)">Case</button>
-      <button data-cmd="ins:while" title="a w (앞에: A w)">While</button>
-      <button data-cmd="ins:for" title="a f (앞에: A f)">For</button>
-      <button data-cmd="ins:dowhile" title="a d (앞에: A d)">Do-While</button>
-      <button data-cmd="callAsk" title="a c: Method를 부르는 블록">호출</button>
-      <button data-cmd="kind:event" title="e: Event 머리 달기 · 머리를 골랐으면 Event로 바꾸기 (E: 새 Event 다이어그램)">Event</button>
-      <button data-cmd="kind:method" title="m: 고른 블록을 새 Method로 빼기 · Method 머리 달기 · 머리를 골랐으면 Method로 바꾸기 (M: 새 Method 다이어그램)">Method</button>
-    </div>
-    <div class="grp">
-      <span class="lbl">감싸기</span>
-      <button data-cmd="wrap:while" title="s w">While</button>
-      <button data-cmd="wrap:for" title="s f">For</button>
-      <button data-cmd="wrap:dowhile" title="s d">Do-While</button>
-      <button data-cmd="wrap:if" title="s i">If</button>
-      <button data-cmd="wrap:case" title="s k">Case</button>
-      <button data-cmd="unwrap" title="ds: 제어 블록은 벗기고, 호출 블록은 Method의 블록들로 바꿉니다">풀기</button>
-    </div>
-    <div class="grp">
-      <span class="lbl">보기</span>
-      <button data-cmd="fold" title="za 또는 f">접기·펴기</button>
-      <button data-cmd="makeRegion" title="zf 또는 Shift+F">접기 영역 만들기</button>
-      <button data-cmd="releaseRegion" title="zd 또는 Ctrl+Shift+F">접기 영역 풀기</button>
-    </div>
-    <div class="grp">
-      <button data-cmd="undo" title="u (Ctrl+Z)">↶ 되돌리기</button>
-      <button data-cmd="redo" title="U (Ctrl+Y)">↷ 다시</button>
-      <button data-cmd="del" title="Delete">지우기</button>
-    </div>
-    <div class="grp">
-      <button data-cmd="cut" title="dd (Ctrl+X)">잘라내기</button>
-      <button data-cmd="copy" title="yy (Ctrl+C)">복사</button>
-      <button data-cmd="paste" title="p (Ctrl+V): 고른 블록 뒤에 붙입니다. 앞에는 P">붙여넣기</button>
-    </div>
+    <div class="tbar"><button class="tb" data-cmd="new" title="새로"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg></button><button class="tb" data-cmd="open" title="열기"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3z"/></svg></button><button class="tb" data-cmd="download" title="저장 (받기) Ctrl+S"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z M8 4v5h7V4 M8 20v-6h8v6"/></svg></button><button class="tb" data-cmd="svg" title="SVG 보기"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12 M7 8l5-5 5 5 M5 15v5h14v-5"/></svg></button><i class="sep"></i><button class="tb" data-cmd="undo" title="실행 취소 u"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4 12l5 5 M4 12h11a5 5 0 0 1 0 10h-2"/></svg></button><button class="tb" data-cmd="redo" title="다시 하기 U"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7l5 5-5 5 M20 12H9a5 5 0 0 0 0 10h2"/></svg></button><i class="sep wide-only"></i><button class="tb wide-only" data-cmd="cut" title="잘라내기 dd"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9 15L18 4 M15 15L6 4"/></svg></button><button class="tb wide-only" data-cmd="copy" title="복사 yy"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8h11v12H8z M5 16V4h11"/></svg></button><button class="tb wide-only" data-cmd="paste" title="붙여넣기 p"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h10v16H7z M9 3h6v4H9z"/></svg></button><i class="sep"></i><button class="tb bi" data-cmd="ins:process" title="처리: 선택한 것 뒤에 넣기 (o) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/></svg></button><button class="tb bi" data-cmd="ins:if" title="If: 선택한 것 뒤에 넣기 (a i) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/><rect x=".5" y=".5" width="21" height="7" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1"/><path d="M.5 .5 L11.0 7.5 L21.5 .5 M11.0 7.5 V15.5" fill="none" stroke="#5b77ad" stroke-width="1"/></svg></button><button class="tb bi" data-cmd="ins:case" title="Case: 선택한 것 뒤에 넣기 (a k) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/><rect x=".5" y=".5" width="21" height="7" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1"/><path d="M.5 .5 L15.84 7.5 L21.5 .5 M5.279999999999999 7.5 V15.5 M10.559999999999999 7.5 V15.5 M15.84 7.5 V15.5" fill="none" stroke="#5b77ad" stroke-width="1"/></svg></button><button class="tb bi" data-cmd="ins:while" title="While: 선택한 것 뒤에 넣기 (a w) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/><rect x="5.5" y="5.5" width="16" height="10" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/></svg></button><button class="tb bi" data-cmd="ins:for" title="For: 선택한 것 뒤에 넣기 (a f) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/><rect x="5.5" y="5.5" width="16" height="10" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/><path d="M2 2.5 h3 M2 4 h3" stroke="#5b77ad" stroke-width=".8"/></svg></button><button class="tb bi" data-cmd="ins:dowhile" title="Do-While: 선택한 것 뒤에 넣기 (a d) · Shift+클릭: 앞에 · Ctrl+클릭: 감싸기"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect x=".5" y=".5" width="21" height="15" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/><rect x="5.5" y=".5" width="16" height="10" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/></svg></button><i class="sep"></i><button class="tb" data-open="wrapdd" title="감싸기 · 풀기"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z M8 9h8v6H8z"/></svg>▾</button><div class="dd" id="wrapdd" hidden><button data-cmd="wrap:if">If로 감싸기<span>s i</span></button><button data-cmd="wrap:case">Case로 감싸기<span>s k</span></button><button data-cmd="wrap:while">While로 감싸기<span>s w</span></button><button data-cmd="wrap:for">For로 감싸기<span>s f</span></button><button data-cmd="wrap:dowhile">Do-While로 감싸기<span>s d</span></button><button data-cmd="unwrap">풀기<span>ds</span></button></div><i class="sep wide-only"></i><span class="zoom wide-only"><button class="tb" data-cmd="zoomOut" title="축소"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="M15 15l5 5 M8 10h4"/></svg></button><output id="zoomOut">100%</output><button class="tb" data-cmd="zoomIn" title="확대"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="M15 15l5 5 M8 10h4 M10 8v4"/></svg></button></span></div>
   </header>
 
   <div class="main">
     <section class="stage" id="stage" tabindex="0" aria-label="다이어그램">
-      <div class="opts">
-        <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
-        <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
-        <label><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label>
-        <label title="문서 설정: 파일에 저장되고 실행 취소의 대상입니다">머리 모양 <select id="optHead"><option value="shape">모자 · 아치</option><option value="title">제목처럼</option></select></label>
-        <label title="문서 설정: 파일에 저장됩니다. 보기 상태라 실행 취소의 대상이 아닙니다">결과 기호 <select id="optSym"><option value="←">←</option><option value="=">=</option></select></label>
-        <label title="사용자 설정: 두 번 누르는 키의 첫 키 뒤 0.4초가 지나면 이어 누를 키를 보입니다"><input type="checkbox" id="optKeyHint" checked> 키 안내</label>
-        <div class="zoom">
-          <button data-cmd="zoomOut" aria-label="축소">−</button>
-          <output id="zoomOut">100%</output>
-          <button data-cmd="zoomIn" aria-label="확대">+</button>
-        </div>
-      </div>
       <div class="paper" id="paper">
         <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
         <textarea id="editor" hidden spellcheck="false"></textarea>
@@ -236,7 +214,16 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
       </dl>
       <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 0.4초 안에 둘째 키를 누르지 않으면 캔버스 아래에 이어 누를 키의 안내가 뜹니다(캔버스 위의 "키 안내"로 끔). 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
 
-      <h2>이번에 바뀐 것 (11-01, 65번째 판)</h2>
+      <h2 id="whatsnew">이번에 바뀐 것 (11-01, 66번째 판)</h2>
+      <ul>
+        <li><b>정한 웹 화면으로 바꿨습니다</b>(06-web 7장, 시안 M44). 위에 메뉴 바(파일 · 편집 · 다이어그램 · 보기 · 도움말)와 툴바 한 줄. 이 안내 패널은 도움말 › 사용법으로 엽니다.</li>
+        <li><b>툴바의 블록 아이콘:</b> 누르면 선택한 것 뒤에 넣고, <kbd>Shift</kbd>+클릭은 앞에, <kbd>Ctrl</kbd>+클릭은 감쌉니다. 드래그해 넣기는 다음 판입니다.</li>
+        <li><b>설정은 모달 둘:</b> 다이어그램 › 문서 설정…(머리 모양 · 결과 기호), 파일 › 환경 설정…(<kbd>Ctrl</kbd>+<kbd>,</kbd>: 구문 강조 · 고정폭 · 키 힌트). 접기 영역 보기는 보기 메뉴에.</li>
+        <li><b>커맨드 팔레트</b> <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> · <kbd>F1</kbd>, <b>단축키 한눈에</b> <kbd>?</kbd>, <b>저장(받기)</b> <kbd>Ctrl</kbd>+<kbd>S</kbd>.</li>
+        <li><b>파일 이름과 ●:</b> 메뉴 바 오른쪽과 브라우저 탭 제목. 받거나 연 뒤에 고치면 ●가 붙습니다.</li>
+        <li><b><kbd>Tab</kbd>으로 캔버스에 들어오면</b> 포커스 테두리만 보이고, 이동 키를 누르면 첫 블록을 선택합니다(조작 규칙대로).</li>
+      </ul>
+      <h2>65번째 판 (11-01)</h2>
       <ul>
         <li><b>더블클릭은 어디서나 글자 고치기입니다.</b> 접힌 칸과 이름 띠를 더블클릭하면 이름을 고칩니다. 접고 펴려면 칸 앞의 세모(▸ ▾)를 한 번 누르거나 <kbd>za</kbd>를 씁니다. 이름이 없는 "⋯ 블록 n개" 줄은 더블클릭해도 펴집니다. 세모는 저장되는 그림에 들어가지 않습니다.</li>
         <li><b>머리의 이름을 비우면</b> 고치기 전의 이름으로 돌아갑니다(칸이 다시 열리지 않음).</li>
@@ -432,6 +419,25 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line)
 <div class="menu" id="menu" hidden></div>
 <input type="file" id="file" accept=".svg,.ns,image/svg+xml" hidden>
 
+<div class="modal" id="docsetModal" hidden><div class="box small" role="dialog" aria-modal="true">
+  <h3>문서 설정 <small>이 파일에 저장 · 파일과 함께 다른 사람에게 감</small></h3>
+  <label title="실행 취소의 대상입니다">머리 모양 <select id="optHead"><option value="shape">모자 · 아치</option><option value="title">제목처럼</option></select></label>
+  <label title="보기 상태라 실행 취소의 대상이 아닙니다">결과 기호 <select id="optSym"><option value="←">←</option><option value="=">=</option></select></label>
+  <div class="row"><button data-cmd="closeModals">닫기</button></div>
+</div></div>
+<div class="modal" id="prefsModal" hidden><div class="box small" role="dialog" aria-modal="true">
+  <h3>환경 설정 <small>나에게만 · 이 브라우저에 남음</small></h3>
+  <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
+  <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
+  <label title="두 번 누르는 키의 첫 키 뒤 0.4초가 지나면 이어 누를 키를 보입니다"><input type="checkbox" id="optKeyHint" checked> 키 힌트</label>
+  <div class="row"><button data-cmd="closeModals">닫기</button></div>
+</div></div>
+<div class="modal" id="keysModal" hidden><div class="box" role="dialog" aria-modal="true">
+  <h3>단축키 한눈에 <small>Esc로 닫기 · 전체 설명은 도움말 › 사용법</small></h3>
+  <div id="keysBody" class="keysbody"></div>
+  <div class="row"><button data-cmd="closeModals">닫기</button></div>
+</div></div>
+<div class="palette" id="palette" hidden><input id="palIn" placeholder="명령 이름을 치세요 (예: 감싸)" autocomplete="off"><div id="palList"></div></div>
 <div class="modal" id="modal" hidden>
   <div class="box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <h3 id="mTitle">저장될 .ns.svg 내용</h3>
@@ -1327,6 +1333,7 @@ function render() {
   svg.setAttribute('height', lay.H * zoom);
   svg.innerHTML = drawSVG(lay, true);
   $('#zoomOut').textContent = Math.round(zoom * 100) + '%';
+  if (typeof showName === 'function' && savedSnap !== null) showName();
   $('#optHead').value = titleHead() ? 'title' : 'shape';
   $('#optSym').value = resultSym();
   $('#where').textContent = describeSel();
@@ -1417,12 +1424,12 @@ function importSVG(text) {
   opened = new Set(m.view && Array.isArray(m.view.opened) ? m.view.opened : []);
   if (m.view && typeof m.view.bands === 'boolean') { opts.showRegions = m.view.bands; $('#optRanges').checked = m.view.bands; }
   opts.resultSym = m.view && m.view.resultSym === '=' ? '=' : '←';
-  normalize(); render(); save(); saveFold(); say('파일을 열었습니다. 저장할 때의 접힘 그대로 열립니다');
+  normalize(); markSaved(lastOpenName || docName); render(); save(); saveFold(); say('파일을 열었습니다. 저장할 때의 접힘 그대로 열립니다');
 }
 async function download() {
   const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
   if (dl) {
-    try { await dl.save({ filename: 'diagram.ns.svg', data: exportSVG() }); say('받았습니다'); }
+    try { await dl.save({ filename: docName, data: exportSVG() }); markSaved(); say('받았습니다'); }
     catch (e) { say(e && e.code === 'declined' ? '받기를 그만뒀습니다' : '받기가 막혔습니다. "SVG 보기"에서 복사하세요', e && e.code !== 'declined'); }
     return;
   }
@@ -1430,7 +1437,7 @@ async function download() {
     const blob = new Blob([exportSVG()], { type: 'image/svg+xml' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'diagram.ns.svg';
+    a.download = docName; markSaved();
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
     say('받기를 시작했습니다. 아무 일도 없으면 "SVG 보기"에서 복사하세요');
@@ -2317,7 +2324,7 @@ function loadExample(kind) {
   normalize();
   folded = new Set([body[3].id]); asked = new Set();
   opts.mono = code; $('#optMono').checked = code;
-  applyHeadPref(); selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); markSaved('예제.ns.svg'); render(); save(); saveFold();
   say(code ? '코드식 예제: C 코드를 그대로 적은 모양' : '문장식 예제: 같은 로직을 한국어 문장으로 적은 모양');
 }
 
@@ -2339,7 +2346,7 @@ function loadCaseExample() {
   normalize();
   folded = new Set(); asked = new Set();
   opts.mono = true; $('#optMono').checked = true;
-  applyHeadPref(); selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); markSaved('예제.ns.svg'); render(); save(); saveFold();
   say('Case 예제: 갈래가 넷인 다중 선택');
 }
 
@@ -2358,7 +2365,7 @@ function loadDiagrams(list, mono, msg) {
   normalize();
   folded = new Set(); asked = new Set();
   opts.mono = mono; $('#optMono').checked = mono;
-  applyHeadPref(); selectOne(null); render(); save(); saveFold();
+  applyHeadPref(); selectOne(null); markSaved('예제.ns.svg'); render(); save(); saveFold();
   say(msg);
 }
 
@@ -2649,7 +2656,48 @@ function restore() {
 /* ---------- 좁은 화면에서 펴고 접기 (64번째 판, UX 결정 MB1) ---------- */
 function togglePane(cls, cmd) {
   const on = $('.app').classList.toggle(cls);
-  $(`button[data-cmd="${cmd}"]`).setAttribute('aria-expanded', on);
+  document.querySelectorAll(`button[data-cmd="${cmd}"]`).forEach(b => b.setAttribute('aria-expanded', on));
+}
+/* ---------- 66번째 판: 메뉴 · 모달 · 커맨드 팔레트 · 파일 이름 ---------- */
+function closeMenus() { document.querySelectorAll('.dd').forEach(d => { d.hidden = true; }); document.querySelectorAll('[data-open]').forEach(b => b.setAttribute('aria-expanded', 'false')); }
+function openModal(id) { closeMenus(); closeModals(); $('#' + id).hidden = false; }
+function closeModals() { ['docsetModal', 'prefsModal', 'keysModal'].forEach(id => { $('#' + id).hidden = true; }); $('#palette').hidden = true; }
+const anyModal = () => ['docsetModal', 'prefsModal', 'keysModal'].some(id => !$('#' + id).hidden) || !$('#palette').hidden;
+function keysModal() { if (!$('#keysBody').firstChild) $('#keysBody').appendChild($('.side .keys').cloneNode(true)); openModal('keysModal'); }
+// 커맨드 팔레트: 메뉴의 항목(명령 이름과 키)을 그대로 목록으로 쓴다 (명령 목록 하나 → ADR-0033)
+let palAt = 0, palItems = [];
+const PALETTE_SKIP = new Set(['palette', 'toggleMenu', 'closeModals']);
+function paletteItems() {
+  const seen = new Set(), out = [];
+  document.querySelectorAll('.menus .dd button[data-cmd]').forEach(b => {
+    const cmd = b.dataset.cmd; if (seen.has(cmd) || PALETTE_SKIP.has(cmd)) return; seen.add(cmd);
+    out.push({ cmd, label: b.childNodes[0].textContent.trim(), key: b.querySelector('span')?.textContent || '' });
+  });
+  return out;
+}
+function drawPalette() {
+  const q = $('#palIn').value.trim().toLowerCase();
+  palItems = paletteItems().filter(x => !q || x.label.toLowerCase().includes(q));
+  palAt = Math.min(palAt, Math.max(palItems.length - 1, 0));
+  $('#palList').innerHTML = palItems.map((x, i) => `<div data-i="${i}" class="${i === palAt ? 'on' : ''}">${esc(x.label)}<span>${esc(x.key)}</span></div>`).join('') || '<div>맞는 명령이 없습니다</div>';
+}
+function palette() { closeMenus(); closeModals(); $('#palette').hidden = false; $('#palIn').value = ''; palAt = 0; drawPalette(); $('#palIn').focus(); }
+function palRun(i) { const x = palItems[i]; $('#palette').hidden = true; if (x) { run(x.cmd); } stage.focus({ preventScroll: true }); }
+$('#palIn').addEventListener('input', () => { palAt = 0; drawPalette(); });
+$('#palIn').addEventListener('keydown', ev => {
+  ev.stopPropagation();
+  if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { palAt = (palAt + (ev.key === 'ArrowDown' ? 1 : -1) + palItems.length) % Math.max(palItems.length, 1); drawPalette(); ev.preventDefault(); }
+  else if (ev.key === 'Enter') { ev.preventDefault(); palRun(palAt); }
+  else if (ev.key === 'Escape') { ev.preventDefault(); $('#palette').hidden = true; stage.focus({ preventScroll: true }); }
+});
+$('#palList').addEventListener('mousedown', ev => { const d = ev.target.closest('[data-i]'); if (d) { ev.preventDefault(); palRun(+d.dataset.i); } });
+// 파일 이름과 저장 안 됨 ● (W3): 마지막으로 받거나(저장) 연 뒤 내용 · 보기 상태가 바뀌었으면 ●
+let docName = '이름 없음.ns.svg', savedSnap = null, lastOpenName = null;
+function markSaved(name) { if (name) docName = name; savedSnap = JSON.stringify(doc); showName(); }
+function showName() {
+  const dirty = savedSnap !== null && savedSnap !== JSON.stringify(doc);
+  $('#fname').innerHTML = esc(docName) + (dirty ? ' <span class="dot">●</span>' : '');
+  document.title = (dirty ? '● ' : '') + docName + ' – AriadneNSD';
 }
 
 /* ---------- 상태 줄 ---------- */
@@ -2668,10 +2716,13 @@ const COMMANDS = {
   laneAfter: () => lsel && laneInsert(idx.get(lsel.id).node, lsel.i, false), laneBefore: () => lsel && laneInsert(idx.get(lsel.id).node, lsel.i, true),
   laneDel: () => lsel && laneDelete(idx.get(lsel.id).node, lsel.i),
   moveUp: () => moveCmd('ArrowUp'), moveDown: () => moveCmd('ArrowDown'), moveLeft: () => moveCmd('ArrowLeft'), moveRight: () => moveCmd('ArrowRight'),
-  new: () => { pushUndo(); doc = { diagrams: [newDia()] }; applyHeadPref(); folded = new Set(); opened = new Set(); asked = new Set(); normalize(); selectOne(doc.diagrams[0].body[0].id); render(); save(); say('새 문서'); },
+  new: () => { pushUndo(); doc = { diagrams: [newDia()] }; applyHeadPref(); markSaved('이름 없음.ns.svg'); folded = new Set(); opened = new Set(); asked = new Set(); normalize(); selectOne(doc.diagrams[0].body[0].id); render(); save(); say('새 문서'); },
   open: () => $('#file').click(),
   svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
   toggleMenu: () => togglePane('menu-open', 'toggleMenu'), toggleHelp: () => togglePane('help-open', 'toggleHelp'),
+  palette, keysModal, docset: () => openModal('docsetModal'), prefs: () => openModal('prefsModal'), closeModals: () => { closeModals(); stage.focus({ preventScroll: true }); },
+  whatsNew: () => { if (!$('.app').classList.contains('help-open')) togglePane('help-open', 'toggleHelp'); $('#whatsnew')?.scrollIntoView({ block: 'start' }); },
+  about: () => say('AriadneNSD — Nassi-Shneiderman 차트 편집기. 이것은 요구사항 점검용 프로토타입(버리는 코드)입니다'),
   download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
   callAsk: () => callCmd(false), retargetAsk: retargetCmd, goto: gotoTarget,
   toIf, toCase, keep: () => { askOn = null; say('그대로 둡니다'); },
@@ -2712,7 +2763,20 @@ function run(cmd, shift) {
   else COMMANDS[name]?.();
 }
 document.addEventListener('click', ev => {
-  const b = ev.target.closest('button[data-cmd]');
+  const op = ev.target.closest('[data-open]');
+  if (op) {
+    const id = op.dataset.open, dd = id === 'wrapdd' ? $('#wrapdd') : op.parentNode.querySelector('.dd'), was = !dd.hidden;
+    closeMenus(); if (!was) { dd.hidden = false; op.setAttribute('aria-expanded', 'true'); }
+    return;
+  }
+  if (!ev.target.closest('.dd')) closeMenus();
+  const b0 = ev.target.closest('button[data-cmd]');
+  if (b0 && (ev.ctrlKey || ev.metaKey) && b0.dataset.cmd.startsWith('ins:') && b0.dataset.cmd !== 'ins:process') {
+    // 블록 아이콘의 Ctrl+클릭은 감싸기 (W2). 처리는 감쌀 수 없어 넣기와 같다
+    closeMenus(); run('wrap:' + b0.dataset.cmd.slice(4)); stage.focus({ preventScroll: true }); return;
+  }
+  const b = b0;
+  if (b) closeMenus();
   if (!b) { if (!ev.target.closest('.menu')) hideMenu(); return; }
   run(b.dataset.cmd, ev.shiftKey);
   if (!b.closest('.modal') && !editing && $('#modal').hidden) stage.focus({ preventScroll: true });
@@ -2720,7 +2784,7 @@ document.addEventListener('click', ev => {
 $('#file').addEventListener('change', ev => {
   const f = ev.target.files[0];
   if (!f) return;
-  f.text().then(importSVG);
+  lastOpenName = f.name; f.text().then(importSVG);
   ev.target.value = '';
 });
 $('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
@@ -2859,8 +2923,8 @@ document.addEventListener('keydown', ev => { tabbing = ev.key === 'Tab'; }, true
 document.addEventListener('mousedown', () => { tabbing = false; }, true);
 stage.addEventListener('focus', () => {
   const byTab = tabbing; tabbing = false;
-  if (sel || pressing || editing || !byTab) return;
-  selectOne(visibleOrder(activeDia())[0]); render();
+  // 66번째 판: Tab으로 들어와도 선택하지 않는다. 포커스 테두리만 보이고 이동 키를 누르면 첫 블록 (조작 규칙)
+  void byTab; render();
 });
 // 다이어그램 바깥의 빈 캔버스를 누르면 고른 것을 푼다 (스크롤 막대와 위쪽 설정 줄은 빼고)
 stage.addEventListener('mousedown', ev => {
@@ -3067,6 +3131,11 @@ document.addEventListener('keydown', ev => {
   const tag = ev.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
   if (!$('#modal').hidden) { if (ev.key === 'Escape') run('closeModal'); return; }
+  if (anyModal()) { if (ev.key === 'Escape') { closeModals(); stage.focus({ preventScroll: true }); ev.preventDefault(); } return; }
+  if (((ev.ctrlKey || ev.metaKey) && ev.shiftKey && ev.code === 'KeyP') || ev.code === 'F1') { ev.preventDefault(); return palette(); }
+  if ((ev.ctrlKey || ev.metaKey) && ev.code === 'Comma') { ev.preventDefault(); return openModal('prefsModal'); }
+  if ((ev.ctrlKey || ev.metaKey) && ev.code === 'KeyS') { ev.preventDefault(); return run('download'); }
+  if (!ev.ctrlKey && !ev.metaKey && !ev.altKey && ev.key === '?' && !pend) { ev.preventDefault(); return keysModal(); }
   if (tag === 'BUTTON' && (ev.key === 'Enter' || ev.key === ' ')) return;
   const code = ev.code, ctrl = ev.ctrlKey || ev.metaKey;
   if (code !== 'Escape' && !/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(code)) escArmed = false;
@@ -3127,6 +3196,7 @@ const restored = restore();
 if (openFromHash()) {}
 else if (!restored) loadRaftExample();   // 64번째 판: 처음 방문하면 Raft 예제
 else { render(); say('지난번 상태를 되살렸습니다. 처음 예제는 "Raft"를 누르세요'); }
+if (savedSnap === null) markSaved();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => render());
 stage.focus({ preventScroll: true });
 })();

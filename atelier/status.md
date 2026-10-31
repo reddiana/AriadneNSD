@@ -30,7 +30,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - MVP는 웹의 `P0`에 매일 쓰는 편집(Case · For · 감싸기 · 복사 · 갈래)을 더한 범위입니다 → [[dr-0015-mvp-scope|DR-0015]]. 2026-11-01에 드래그 앤 드롭 · 도움말 · 임시 보관 · 자동 저장과 최근 파일을 더했습니다. MVP 전에 정할 것은 [[backlog#MVP 전에 정할 것]]
 - MVP에 드는 조작 규칙의 미결정은 2026-11-01에 모두 정했습니다(시안 M43 → [[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입 65번째 판에 넣었습니다 → [[prototype]]
 - 코드의 자리는 정했고(`src/` 아래의 pnpm 워크스페이스 → [[0036-code-layout|ADR-0036]]) 코드는 아직 없습니다
-- 프로토타입은 **65번째 판**입니다(2026-11-01: MVP 조작 물음에서 정한 것을 넣음. 64번째 판은 inbox 다섯: 머리 모양 기억 · 처음엔 Raft · 열면 고른 것 없음 · 좁은 화면) → [[prototype]]
+- 프로토타입은 **66번째 판**입니다(2026-11-01: 65번째 판에서 MVP 조작, 66번째 판에서 정한 웹 화면 — 메뉴 바 · 블록 아이콘 툴바 · 커맨드 팔레트 · 설정 모달) → [[prototype]]
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
 - 설계 문서는 https://reddiana.github.io/AriadneNSD/ 에 펴내고 있습니다(`docs/` · `atelier/` · `til/`, `journal/`에서는 이름 이야기와 로고의 출처 두 문서 → [[dr-0013-publish-docs-github-pages|DR-0013]])
 

@@ -41,7 +41,10 @@ async function shot(dir, name, sel = '.paper', pad = 0, clip = null) {
   const paperOnly = sel === '.paper';
   await ev(`(() => { const o = document.querySelector('.opts'); if (o) o.style.visibility = ${paperOnly ? "'hidden'" : "''"}; const st = document.querySelector('.stage'); if (st && ${paperOnly}) { st.scrollTop = 0; st.scrollLeft = 0; } })()`);
   await sleep(300);
-  const r = await ev(`(() => { const b = document.querySelector('${sel}').getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, w: b.width, h: b.height }; })()`);
+  // 다이어그램 그림은 종이(.paper)가 아니라 다이어그램이 그려진 자리(#svg 안의 그림 묶음)만 여백 10px을 두고 자른다 (종이의 여백 · 둥근 모서리 · 바깥 바탕이 들어가지 않게)
+  const target = paperOnly ? '#svg > g' : sel, p0 = paperOnly ? 10 : pad;
+  const r0 = await ev(`(() => { const b = document.querySelector('${target}').getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, w: b.width, h: b.height }; })()`);
+  const r = paperOnly ? { x: r0.x - p0 + pad, y: r0.y - p0 + pad, w: r0.w + 2 * p0 - 2 * pad, h: r0.h + 2 * p0 - 2 * pad } : r0;
   const c = { x: r.x - pad, y: r.y - pad, width: (clip?.w ?? r.w) + 2 * pad, height: (clip?.h ?? r.h) + 2 * pad, scale: 1 };
   const res = await send('Page.captureScreenshot', { format: 'png', clip: c });   // captureBeyondViewport를 켜면 찍는 순간 배치가 다시 계산되어 자리가 밀린다(머리가 잘림)
   writeFileSync(join(dir, name), Buffer.from(res.data, 'base64'));
@@ -55,6 +58,11 @@ await ev(`localStorage.clear()`);
 await send('Page.navigate', { url: page + '?shots' }); await sleep(3000);
 await ev(HELPERS);
 await ev(`T.head('shape')`);
+// 웹 글꼴이 다 내려온 뒤에 찍는다 (그 전에 센 레이아웃은 글자 폭이 달라 글자가 상자 밖으로 나간다)
+await send('Runtime.evaluate', { expression: 'document.fonts.ready.then(() => true)', awaitPromise: true }); await sleep(800);
+// 글꼴을 한 번 쓰게 해 두고(예제를 열어 그림), 내려오기를 기다린 뒤 다시 연다
+await ev(`T.cmd('exCase')`); await sleep(3000);
+await send('Runtime.evaluate', { expression: 'document.fonts.ready.then(() => true)', awaitPromise: true });
 
 // 1. 블록의 모양과 구문 강조: 코드식 예제, 아무것도 선택하지 않음 (빈 갈래의 ∅, 조건 글자 뒤 바탕이 보임)
 await ev(`T.cmd('exCode')`); await ev(`T.clear()`);
@@ -93,11 +101,13 @@ await shot(UX, 'visual-design-editing.png');
 await ev(`T.key('Escape', { editor: true, key: 'Escape' })`); await ev(`T.clear()`);
 // 6. 편집 화면 전체: 밝은 화면과 어두운 화면 (프로토타입의 화면. 제품의 화면 배치는 06-web)
 await ev(`T.cmd('exCode')`); await ev(`T.click(T.doc().diagrams[0].body[1].id)`);
+await send('Emulation.setDeviceMetricsOverride', { width: 1600, height: 900, deviceScaleFactor: 2, mobile: false }); await sleep(500);   // 화면 그림은 노트북 크기로
 await ev(`document.documentElement.dataset.theme = 'light'`);
 await shot(UX, 'visual-design-screen-light.png', '.app');
 await ev(`document.documentElement.dataset.theme = 'dark'`);
 await shot(UX, 'visual-design-screen-dark.png', '.app');
 await ev(`document.documentElement.dataset.theme = 'light'`);
+await send('Emulation.setDeviceMetricsOverride', { width: 1600, height: 1400, deviceScaleFactor: 2, mobile: false }); await sleep(500);
 // 7. 색각 이상과 흑백
 await ev(`T.cmd('exQuick')`); await ev(`T.clear()`);
 for (const [type, name] of [['achromatopsia', 'grayscale'], ['deuteranopia', 'deuteranopia'], ['protanopia', 'protanopia'], ['tritanopia', 'tritanopia']]) {
@@ -110,8 +120,10 @@ await ev(`T.cmd('exCode')`); await ev(`T.clear()`);
 await ev(`document.querySelector('.stage').focus({ focusVisible: true }); { const st = document.createElement('style'); st.id = 'shot-focus'; st.textContent = '.stage.nosel { box-shadow: inset 0 0 0 2px var(--accent) }'; document.head.appendChild(st); }`);  // 스크립트로 옮긴 포커스는 :focus-visible이 되지 않아, 같은 모습을 씌운다
 await shot(UX, 'visual-design-focus-none.png', '.stage', 0, { w: 560, h: 360 });
 await ev(`document.querySelector('.stage').blur(); document.getElementById('shot-focus').remove()`);
-// 9. 새로: 머리 모양 "제목처럼" (퀵소트, Method 딱지와 굵은 이름)
-await ev(`T.cmd('exQuick')`); await ev(`T.head('title')`); await ev(`T.clear()`);
+// 9. 머리 모양 설정의 견줌: 같은 퀵소트를 "모자 · 아치"와 "제목처럼"으로 (다른 그림은 모두 모자 · 아치)
+await ev(`T.cmd('exQuick')`); await ev(`T.clear()`);
+await shot(UX, 'visual-design-head-shape.png');
+await ev(`T.head('title')`); await ev(`T.clear()`);
 await shot(UX, 'visual-design-head-title.png');
 await ev(`T.head('shape')`);
 // 10. 새로: 갈래 이름 선택 (Case의 CMD_STOP)
