@@ -237,7 +237,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-EDIT-18 | 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치\|상세]]                                                      | P1   |
 | R-EDIT-19 | 선택한 블록들을 새 Method로 빼기: 선택한 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 호출하는 호출 블록([[#^r-blk\|R-BLK-07]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램\|상세]] | P1   |
 | R-EDIT-20 | 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 드래그해 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼)                                                                                               | P2   |
-| R-EDIT-21 | 도움말: 사용법을 한 페이지로 안내하고, 단축키 목록을 볼 수 있게 한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상) → [[06-web#7. 화면 배치\|상세]] | P0   |
+| R-EDIT-21 | 도움말: 사용법을 한 페이지로 안내하고, 단축키 목록을 볼 수 있게 한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상) → [[05-screen-layout\|상세]] | P0   |
 | R-EDIT-22 | 여러 블록 선택은 언제나 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다 → [[0008-contiguous-selection\|ADR-0008]] → [[02-interaction-rules#여러 블록 선택\|상세]] | P0   |
 | R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]]                                                                                                        | P1   |
 | R-EDIT-24 | 커맨드 팔레트: 명령 이름의 일부를 쳐서 명령을 찾아 실행한다(VS Code의 Command Palette, IntelliJ의 Find Action). 찾은 명령마다 같은 일을 하는 키를 함께 보인다 → 상세 [[02-interaction-rules#커맨드 팔레트\|커맨드 팔레트]] | P0  |

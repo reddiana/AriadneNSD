@@ -181,7 +181,7 @@ updated: 2026-11-01
 
 ### 블록 아이콘으로 삽입 · 감싸기
 
-요구사항: [[01-requirements#^r-edit|R-EDIT-01]], [[01-requirements#^r-edit|R-EDIT-06]]. 아이콘의 자리는 [[06-web#7. 화면 배치]]. 정한 과정 → [[ux-decisions#W2. 블록 아이콘을 쓰는 법|W2]]
+요구사항: [[01-requirements#^r-edit|R-EDIT-01]], [[01-requirements#^r-edit|R-EDIT-06]]. 아이콘의 자리는 [[05-screen-layout|화면 배치]]. 정한 과정 → [[ux-decisions#W2. 블록 아이콘을 쓰는 법|W2]]
 
 툴바의 블록 아이콘(처리 · If · Case · While · For · Do-While)은 **누르면 삽입**, 감싸기는 따로 한다.
 

@@ -1,8 +1,8 @@
-// 웹 화면 배치(docs/04-design/06-web.md 7장)의 주석 단 스크린숏을 MVP 화면에서 찍는다 (2026-11-01)
+// 화면 배치(docs/02-ux-design/05-screen-layout.md)의 주석 단 스크린숏을 MVP 화면에서 찍는다 (2026-11-01)
 // 실제 화면 위에 부분마다 색 테두리와 번호 딱지(①②③…)를 얹는다. 테두리의 자리는 그 부분의 DOM 위치
 // (getBoundingClientRect)에서 읽으므로, 화면이 바뀌어도 다시 찍기만 하면 맞는다.
 // 쓰는 법: src/에서 `pnpm build` 뒤
-//   node journal/assets/2026-11-01-web-layout-annotated.mjs [src/apps/web/dist] [docs/04-design/assets]
+//   node journal/assets/2026-11-01-web-layout-annotated.mjs [src/apps/web/dist] [docs/02-ux-design/assets]
 // 빌드한 앱을 이 스크립트가 띄우는 작은 정적 서버로 연다. Playwright는 src/apps/web의 것을 쓴다.
 // 찍는 것: 노트북 브라우저(1366 × 657)와 휴대폰(390 × 844), 둘 다 한국어 화면, 2배 해상도
 import { createReadStream, existsSync, statSync } from 'node:fs';
@@ -16,7 +16,7 @@ const root = join(here, '..', '..');
 const require = createRequire(join(root, 'src', 'apps', 'web', 'package.json'));
 const { chromium } = require('@playwright/test');
 
-const [dist = join(root, 'src', 'apps', 'web', 'dist'), out = join(root, 'docs', '04-design', 'assets')] =
+const [dist = join(root, 'src', 'apps', 'web', 'dist'), out = join(root, 'docs', '02-ux-design', 'assets')] =
   process.argv.slice(2);
 
 // --- 빌드한 앱을 띄우는 정적 서버 ---

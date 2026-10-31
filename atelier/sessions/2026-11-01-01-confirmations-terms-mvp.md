@@ -80,7 +80,7 @@ outbox에서 옮긴 항목의 원문:
 - 끝의 숫자: 단위 테스트 369개(core 195, editor 114, web 43, fonts 17), E2E 33개(인수 테스트 AT-01 ~ AT-17), `pnpm check` 통과. 블록 500개를 그리는 데 2ms가 안 됨, 첫 내려받기 450 KB(gzip)
 - 글꼴 이름: OFL의 Reserved Font Name 때문에 "AriadneNSD Block"으로. 메인테이너: "'D2Coding'이 아니라 'AriadneNSD Block'이 된 이유가 무엇인가요?" → OFL 3항 원문으로 설명, outbox 확인으로
 - 개발 중 메인테이너의 요청:
-	- [[06-web#7. 화면 배치]]의 텍스트 그림 → "텍스트 그림을 이래서 나는 싫어합니다. 좋은 방법 없을까요?" → Mermaid로 바꾸고 CLAUDE.md에 텍스트 그림 금지 규칙. 이어서 "Mermaid는 화면배치를 더 알아보기 힘드네요" → 실제 MVP 화면에 번호 딱지를 얹은 주석 단 스크린숏으로
+	- [[05-screen-layout|화면 배치]]의 텍스트 그림 → "텍스트 그림을 이래서 나는 싫어합니다. 좋은 방법 없을까요?" → Mermaid로 바꾸고 CLAUDE.md에 텍스트 그림 금지 규칙. 이어서 "Mermaid는 화면배치를 더 알아보기 힘드네요" → 실제 MVP 화면에 번호 딱지를 얹은 주석 단 스크린숏으로
 	- "src/README.md 의 용어들을 고쳐주세요. '뿌리' 같은거 안 쓰기로 했잖아요." → 고침(화면 문자열의 "고치기"도)
 	- "ADR은 과정입니다. 문서들에 최종 결과가 있어야합니다." → src/README에 폴더 구성을 결과로 직접 적음
 	- "mvp 코딩 끝나면 REAME의 'AriadneNSD 프로토타입'을 MVP로 바꿔주세요." → README 버튼을 MVP(`/app/`)로
