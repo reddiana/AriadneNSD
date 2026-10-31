@@ -36,3 +36,11 @@ body[data-slug="index"] article {
     overscroll-behavior: contain;
   }
 }
+
+// 시퀀스 다이어그램의 활성 막대: Mermaid의 기본색(secondary, 짙은 남색)이 너무 진해서 꽤 연하게.
+// 색 변수(--tertiary, --light)가 테마마다 바뀌므로 밝은 테마와 어두운 테마에 함께 듣는다.
+// Mermaid가 그림 안에 넣는 스타일보다 앞서도록 !important를 쓴다.
+.mermaid svg rect:is(.activation0, .activation1, .activation2) {
+  fill: color-mix(in srgb, var(--tertiary) 22%, var(--light)) !important;
+  stroke: var(--tertiary) !important;
+}
