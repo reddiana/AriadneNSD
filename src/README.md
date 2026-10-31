@@ -1,6 +1,6 @@
 # 코드
 
-AriadneNSD의 코드입니다. pnpm 워크스페이스이고, 이 폴더(`src/`)가 그 루트입니다. 코드를 쓰는 규칙은 [코딩 가이드](../docs/07-coding-guide/07-coding-guide.md)에 있습니다. 이렇게 나눈 이유와 정한 과정은 [ADR-0036](../atelier/adr/0036-code-layout.md)에 있습니다.
+AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 루트이고, 모든 명령은 여기서 실행합니다. 코드를 쓰기 전에 [코딩 가이드](../docs/07-coding-guide/07-coding-guide.md)를 읽습니다.
 
 ## 폴더 구성
 
@@ -36,7 +36,7 @@ AriadneNSD의 코드입니다. pnpm 워크스페이스이고, 이 폴더(`src/`)
 | `apps/web/e2e/` | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`) |
 | `apps/web/scripts/` | 빌드 크기 예산 검사 |
 
-단위 테스트는 소스 옆의 `*.test.ts`, 벤치마크는 `*.bench.ts`입니다.
+단위 테스트는 소스 옆의 `*.test.ts`, 벤치마크는 `*.bench.ts`입니다. 이렇게 나눈 이유와 정한 과정은 [ADR-0036](../atelier/adr/0036-code-layout.md)에 있습니다.
 
 ## 준비
 
@@ -50,8 +50,6 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 ```
 
 ## 자주 쓰는 명령
-
-모두 `src/`에서 실행합니다.
 
 | 명령                                              | 하는 일                                                        |
 | ----------------------------------------------- | ----------------------------------------------------------- |

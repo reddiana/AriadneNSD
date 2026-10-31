@@ -24,11 +24,13 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 지금 단계
 
-**상세 설계를 마치고 MVP 개발을 시작합니다. 시작 전에 정할 것은 2026-11-01에 모두 정했습니다.**
+**MVP(웹)의 코드를 만들었습니다(2026-11-01). 다음은 배포를 확인하고 메인테이너가 써 보는 것입니다.**
+
+- MVP: https://reddiana.github.io/AriadneNSD/app/ (push 뒤 GitHub Pages가 빌드). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
 
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
-- 코드의 자리(`src/` 아래 pnpm 모노레포 → [[0036-code-layout|ADR-0036]])와 도구([[0038-build-and-test-tools|ADR-0038]])는 정했고, 코드는 아직 없습니다. 개발의 순서는 [[backlog#MVP 개발]]
+- 테스트: 단위 369개, E2E 33개(인수 테스트 AT-01 ~ AT-17), `pnpm check` · CI. 남은 구멍은 [[backlog#MVP 개발]]
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]
 - 문서 검사 훅이 Claude가 고친 문서의 표와 링크를 검사합니다(`.claude/hooks/doc-check.py`)
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
@@ -41,11 +43,10 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] **다음의 첫 일: MVP 코딩 시작.** 코드의 뼈대(모노레포 · 빌드 · 시험 · CI), 그다음 `core`의 모델 → 불변식 · 편집 명령 → 직렬화 → 레이아웃 → SVG 렌더러 → [[backlog#MVP 개발]]
-- [ ] 메인테이너가 확인할 것: 파일에 남는 이름(공개 뒤에는 바꾸기 어려움), 편집기와 셸의 경계, 편집기 · 웹 초안의 세부 → [[outbox#확인해 주세요]]
-- [ ] 남은 "정해 주세요"(프로토타입 질문 넷, 이름이 겹친 머리의 표시, Firefox로 글자 폭 스파이크 열기) → [[outbox]]
-- [ ] 메인테이너가 프로토타입 66번째 판을 써 보기. 64번째 판의 좁은 화면은 실제 휴대폰에서 → [[prototype]]
-- [ ] 새 문서 [[02-use-cases]] · [[03-quality-attribute-scenarios]]를 Obsidian에서 읽고, 미결정을 하나씩 정하기 → [[backlog]]
+- [ ] **다음의 첫 일: push한 CI · Pages가 통과했는지 보고, MVP를 열어 보기** → [[backlog#MVP 개발]]
+- [ ] 메인테이너가 MVP를 써 보기(Chrome · Edge, 그리고 Firefox · Safari · 휴대폰)
+- [ ] 메인테이너가 확인할 것: 저장 파일의 글꼴 이름 "AriadneNSD Block", MVP에서 Claude가 정한 것 → [[outbox#확인해 주세요]]
+- [ ] 남은 "정해 주세요"(프로토타입 질문 셋, 이름이 겹친 헤더의 표시, Firefox로 글자 폭 스파이크 열기) → [[outbox]]
 
 ## 열린 질문이 있는 곳
 
