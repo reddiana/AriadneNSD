@@ -320,9 +320,10 @@ type Result =
 모델과 JSON 사이의 직렬화 · 역직렬화입니다. 모양은 [[01-file-format#3. 모델 JSON]]에 있습니다.
 
 - 1장의 타입을 그대로 JSON으로 매핑합니다. `Doc.content`의 `settings` · `diagrams`가 맨 위에, `view`가 그 옆에 놓입니다.
+- 다른 곳은 줄(`Seq`) 하나입니다. 줄은 언제나 한 주인의 하나뿐인 본문이라 파일에서는 객체를 두지 않고, `blocks`를 주인의 `body`에, `folds`를 주인의 `folds`에 펼쳐 둡니다.
 - 객체 키의 순서는 이 문서의 타입에 적은 순서로 고정합니다(결정적 출력).
-- 기본값과 같아 생략하는 필드: `FoldMark.name`(없음), `Branch.label`(없음), `Call.siteFolds`(빈 목록), `Seq.folds`(빈 목록). 그 밖에는 늘 적습니다.
-- 타입별 필드를 굳히면 JSON Schema로 [[01-file-format#3. 모델 JSON]]에 옮깁니다.
+- 생략하는 필드: `Diagram.head`(머리 없음), `FoldMark.name`(없음), `Branch.label`(없음), `Case.otherwise`(없음), `Call.siteFolds`(빈 목록), `Seq.folds`(빈 목록). 그 밖에는 늘 적습니다.
+- 노드별 필드의 표와 예는 [[01-file-format#3.3 노드별 필드]]에 있습니다.
 
 ## 미결정 사항
 

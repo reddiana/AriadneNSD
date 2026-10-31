@@ -75,20 +75,20 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^r-fmt|R-FMT-01]]).
 - 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 판 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
-- 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
+- 모델 요소의 이름은 `ans:document`다. 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다.
 - **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 글자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식(압축하지 않은 TTF인가, woff2인가)은 [[02-layout]]에서 정한다(6장).
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^r-fmt|R-FMT-08]], [[04-visual-design#2. 레이어와 출력]]
 - 그림 요소는 모델에서 생성한 파생 데이터일 뿐이며, 읽을 때 무시한다(단일 원천은 모델: [[01-requirements#^r-fmt|R-FMT-05]]). 저장되는 그림은 지금 화면 그대로이고 오버레이 레이어의 표시(선택 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 
 ## 3. 모델 JSON
 
-맨 위의 짜임은 아래와 같습니다. 필드 이름은 안입니다.
+맨 위의 짜임은 아래와 같습니다.
 
 ```json
 {
   "format": "ariadne-nsd",
   "version": 1,
-  "settings": { "textKind": "c", "theme": "default", "headStyle": "shape" },
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape" },
   "diagrams": [
     {
       "id": "d1",
@@ -116,7 +116,61 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 
 - 블록, 다이어그램, 접기 영역은 모두 **안정 id**(문서가 바뀌어도 유지되는 식별자)를 갖는다. 뷰 상태와 호출 블록은 id로 참조한다.
 - 화면의 줌과 스크롤 위치, 선택은 저장하지 않는다.
-- 노드 타입별 필드, 필수 · 선택, 기본값은 [[01-model]] 설계가 굳으면 JSON Schema로 이 장에 적는다.
+- 노드별 필드는 3.3에 있다.
+
+### 3.3 노드별 필드
+
+필드는 표의 순서대로 적는다(3.1의 키 순서). "생략"은 그 값일 때 키를 적지 않는다는 뜻이다. 타입은 [[01-model#1. 타입]]과 같고, 다른 곳은 줄(`Seq`) 하나다(아래 표 뒤).
+
+| 노드 | 필드 (순서대로) | 생략 |
+| --- | --- | --- |
+| 문서 | `format`(늘 `"ariadne-nsd"`) · `version` · `settings` · `diagrams` · `view` | 없음 |
+| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) | 없음 |
+| 다이어그램 | `id` · `head` · `body` · `folds` | `head`는 머리가 없으면, `folds`는 비면 |
+| `head` | `kind`(`"event"` \| `"method"`) · `text` | 없음 |
+| 처리 | `id` · `kind: "process"` · `text` | 없음 (빈 블록은 `text: ""`) |
+| If | `id` · `kind: "if"` · `text` · `yes` · `no` | 없음 |
+| Case | `id` · `kind: "case"` · `text` · `arms` · `otherwise` | `otherwise`는 default 갈래가 없으면 |
+| 갈래 (`yes` · `no` · `otherwise`) | `id` · `label` · `body` · `folds` | `label`은 고치지 않았으면, `folds`는 비면 |
+| Case의 갈래 (`arms`의 원소) | `id` · `label` · `body` · `folds` | `folds`는 비면 |
+| While · Do-While · For | `id` · `kind`(`"while"` \| `"doWhile"` \| `"for"`) · `text` · `body` · `folds` | `folds`는 비면 |
+| 호출 | `id` · `kind: "call"` · `target` · `args` · `result` · `siteFolds` | `siteFolds`는 비면 |
+| `target` | `kind` 다음에 그 종류의 필드 ([[01-model#1.5 호출 블록]]) | 없음 |
+| 접기 영역 (`folds`의 원소) | `id` · `first` · `last` · `name` | `name`은 없으면 |
+| 펴 보인 곳의 접기 영역 | `id` · `via` · `first` · `last` · `name` | `name`은 없으면 |
+| `view` | `folded` · `opened` · `bands` · `resultSymbol`(`"←"` \| `"="`) | 없음 (빈 목록도 적음) |
+
+- **줄(`Seq`)은 따로 객체를 두지 않는다.** 줄은 언제나 한 주인(다이어그램 · 갈래 · 반복 블록)의 하나뿐인 본문이라, 블록의 배열을 주인의 `body`에, 그 줄의 접기 영역을 주인의 `folds`에 둔다. 그래서 파일이 한 겹 얕고, 접기 영역이 없는 문서에는 `folds`가 보이지 않는다.
+- **id**는 종류마다의 접두사와 정수다: 다이어그램 `d`, 블록 `b`, 갈래 `r`, 접기 영역 `f`(펴 보인 곳의 것도) → [[01-model#1.7 id]]
+- **`textKind`**: v1에서 쓰는 값은 `"plain"` 하나다(블록 글자의 종류는 MVP 뒤 → [[dr-0015-mvp-scope|DR-0015]]). 모르는 값을 만나면 `"plain"`으로 보이고, 저장할 때는 받은 값 그대로 적는다.
+- **`theme`**: v1에서 쓰는 값은 `"default"` 하나다. 모르는 값은 기본 테마로 그리고, 값은 그대로 둔다.
+- 머리 · 호출 블록 · 여러 다이어그램 · 접기 영역은 MVP 뒤의 기능이지만 v1 형식에 들어 있다. 그 기능을 낼 때 뜻이 바뀌면(예: `external.file`에 무엇을 적는지 → [[01-model#미결정 사항]]) 판을 올리고 마이그레이션을 둔다(5장).
+
+작은 예입니다. 처리 블록 하나와 If 하나가 든, 머리 없는 다이어그램입니다.
+
+```json
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape" },
+  "diagrams": [
+    {
+      "id": "d1",
+      "body": [
+        { "id": "b1", "kind": "process", "text": "x = read()" },
+        {
+          "id": "b2", "kind": "if", "text": "x > 0",
+          "yes": { "id": "r1", "body": [ { "id": "b3", "kind": "process", "text": "print(x)" } ] },
+          "no": { "id": "r2", "body": [ { "id": "b4", "kind": "process", "text": "" } ] }
+        }
+      ]
+    }
+  ],
+  "view": { "folded": [], "opened": [], "bands": true, "resultSymbol": "←" }
+}
+```
+
+(예는 읽기 좋게 줄을 줄였습니다. 실제 파일은 3.1대로 2칸 들여쓰기로 한 키에 한 줄입니다.)
 
 ### 3.1 출력 규칙
 
@@ -157,8 +211,8 @@ sequenceDiagram
     participant S as 셸 (DocumentStore)
     participant E as editor
     participant F as core/파일 형식
-    E->>+S: read()
-    S-->>-E: SVG 문자열
+    S->>S: 파일을 읽는다
+    S->>+E: open({ store, text: SVG 문자열 })
     E->>+F: deserialize(SVG 문자열)
     F->>F: XML 파싱, metadata 안의 모델 요소 찾기
     alt 모델 요소 없음 · JSON 손상
@@ -170,12 +224,12 @@ sequenceDiagram
         F->>F: 불변식 검사
         F-->>-E: 문서(내용 + 뷰 상태)
     end
+    E-->>-S: onStatus (열렸으면 파일 이름, 아니면 까닭)
 ```
 
 
 ## 6. 미결정 사항
 
-- [ ] 모델 요소 이름(`ans:document`는 안)과 필드 이름 (→ [[01-model]])
 - [ ] 서브셋 글꼴의 형식: 압축하지 않은 TTF인가, woff2인가(압축기를 더 실어야 함) → [[02-layout]], [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ## 7. 프로토타입과 다른 곳
