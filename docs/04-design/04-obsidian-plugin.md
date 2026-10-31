@@ -3,7 +3,7 @@ title: Obsidian 플러그인
 tags:
   - design
 status: 작성 전
-updated: 2026-10-25
+updated: 2026-11-01
 ---
 
 # Obsidian 플러그인

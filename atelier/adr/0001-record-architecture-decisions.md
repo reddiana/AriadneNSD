@@ -46,7 +46,7 @@ superseded-by:
 - 파일 이름: `NNNN-영어-슬러그.md`, 본문은 한국어
 - 상태: 제안됨 → 승인 → 대체됨 / 폐기
 - 승인된 ADR은 고치지 않는다. 결정이 바뀌면 새 ADR을 쓰고 `supersedes` / `superseded-by`로 잇는다.
-- 목록은 [[docs/README#아키텍처 결정 기록 (ADR)]]에서 관리한다.
+- 목록은 [[atelier/adr/README|ADR 목록]]에서 관리한다.
 
 ## 결과
 

@@ -6,7 +6,7 @@ tags:
   - spec
 status: 초안
 format-version: 1
-updated: 2026-10-25
+updated: 2026-11-01
 ---
 
 # 파일 형식 명세
@@ -110,7 +110,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 | `settings` | 문서 설정: 블록 글자의 종류([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 머리 모양([[01-requirements#^r-lay\|R-LAY-10]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 머리(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등(`kind`로 판별하는 유니온). 제어 블록은 갈래나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
-| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 부르면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 정하지 않음 → [[01-requirements#^r-blk\|R-BLK-08]], [[01-requirements#^r-blk\|R-BLK-09]]). 이름 문자열을 복사해 갖지 않는다. 참조 대상이 없으면(dangling) 마지막에 보이던 이름을 보존한다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
+| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 부르면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]]에 있고, `external.file`에 무엇을 적는지만 정하지 않음 → [[01-requirements#^r-blk\|R-BLK-08]], [[01-requirements#^r-blk\|R-BLK-09]]). 이름 문자열을 복사해 갖지 않는다. 참조 대상이 없으면(dangling) 마지막에 보이던 이름을 보존한다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
 | 접기 영역 | 한 줄 안의 연속된 블록 범위(처음 · 끝 블록의 id)와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 속한다([[01-requirements#^r-edit\|R-EDIT-16]]) | 대상 |
 | `view` | 뷰 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
 

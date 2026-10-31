@@ -7,7 +7,7 @@ tags:
   - design
   - ux
 status: 초안
-updated: 2026-10-25
+updated: 2026-11-01
 ---
 
 # UX 개요

@@ -3,7 +3,7 @@ title: 모델
 tags:
   - design
 status: 작성 중
-updated: 2026-10-25
+updated: 2026-11-01
 ---
 
 # 모델
@@ -20,6 +20,9 @@ updated: 2026-10-25
 - 정합성: [[01-requirements#^r-nfr|R-NFR-01]]
 - 실행 취소: [[01-requirements#^r-edit|R-EDIT-02]], [[02-interaction-rules#6. 실행 취소]]
 - 감싸기 · 풀기: [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-08]]
+- 옮기기 · 붙여넣기 · 갈래: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]]
+- 새 Method로 빼기: [[01-requirements#^r-edit|R-EDIT-19]]
+- 문서 설정(블록 글자의 종류, 머리 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-10]]
 - 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
 - 접기 영역과 뷰 상태: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-16]], [[0018-save-as-shown|ADR-0018]]
 
@@ -119,7 +122,7 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 - **빈 블록**은 글자가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 갈래, 새 반복의 본문은 빈 블록 하나로 채웁니다.
 - If의 갈래 이름은 고칠 수 있습니다(`label`). 고치지 않았으면 비어 있고, 편집기가 저장할 때의 화면 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]]. default 갈래의 이름은 고치지 않으며 늘 "default"입니다.
 - 갈래(`Branch`)에도 id가 있습니다. If와 Case는 갈래별로 접히므로, 뷰 상태가 갈래를 id로 참조합니다.
-- **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 고칠 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 늘 default가 있고, default는 뺄 수 없고, default가 아닌 갈래는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
+- **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 고칠 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 늘 default가 있고, default는 지울 수 없고, default가 아닌 갈래는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 
 > [!info] 미완성: 탈출(Exit / Break / Return), 병렬 처리, 주석 블록
 > 모두 `P2`입니다. 넣을 때 이 판별 유니온(`kind`)에 멤버를 더합니다. 병렬 처리는 Case처럼 갈래 여럿을 합성하고, 탈출과 주석은 처리 블록처럼 `text` 하나를 갖는 꼴이 될 것입니다.
@@ -263,7 +266,7 @@ type Result =
 
 - 명령 하나가 undo 한 단계입니다. 감싸기, 풀기, 새 Method로 빼기처럼 여러 노드를 바꾸는 명령도 원자적으로 한 단계입니다.
 - 명령이 끝나면 불변식을 검사합니다. 위반하면 그것은 명령의 버그이므로, 새 내용을 버리고(롤백) 문제 알리기 보고서의 로그에 남깁니다.
-- 명령이 끝난 뒤의 선택은 `editor`가 정합니다(`touched`를 보고) → [[02-interaction-rules#키보드로 이동하고 넣기|명령 뒤의 선택]]
+- 명령이 끝난 뒤의 선택은 `editor`가 정합니다(`touched`를 보고) → [[02-interaction-rules#키보드로 이동하고 넣기|명령 뒤의 선택]], [[03-editor#2.3 명령 뒤의 선택]]
 - 명령의 표시 이름과 키 바인딩, 메뉴는 명령 레지스트리(`CommandRegistry`) 하나에서 생성됩니다 → [[0033-command-list-for-shells|ADR-0033]]
 
 ### 4.1 내용을 바꾸는 명령
@@ -310,7 +313,7 @@ type Result =
 
 ### 4.4 텍스트 편집과 undo
 
-인라인 에디터(텍스트 입력 요소)을 열고 닫을 때까지가 **명령 하나, undo 한 단계**입니다. 칸을 닫을 때 `editor`가 글자 고치기 명령을 한 번 실행합니다. 글자가 처음과 같으면 실행하지 않습니다. 칸이 열려 있는 동안의 되돌리기는 그 입력 요소의 자체 undo가 맡고 모델은 모릅니다 → [[02-interaction-rules#6. 실행 취소]] → [[ux-decisions#MD2. 글자 고치기의 실행 취소 단위|MD2]]
+인라인 에디터(텍스트 입력 요소)를 열고 닫을 때까지가 **명령 하나, undo 한 단계**입니다. 칸을 닫을 때 `editor`가 글자 고치기 명령을 한 번 실행합니다. 글자가 처음과 같으면 실행하지 않습니다. 칸이 열려 있는 동안의 되돌리기는 그 입력 요소의 자체 undo가 맡고 모델은 모릅니다 → [[02-interaction-rules#6. 실행 취소]] → [[ux-decisions#MD2. 글자 고치기의 실행 취소 단위|MD2]]
 
 ## 5. 직렬화
 

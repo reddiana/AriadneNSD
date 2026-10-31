@@ -5,7 +5,7 @@ aliases:
 tags:
   - requirements
 status: 초안
-updated: 2026-10-25
+updated: 2026-11-01
 ---
 
 # 유즈케이스
@@ -73,7 +73,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 | UC-06 | 저장한다 | 작성자 | 자세히 | 됨 |
 | UC-07 | 노트에 다이어그램을 넣어 보인다 | 작성자 | 자세히 | 아님(Obsidian) |
 | UC-08 | 공유하고 내보낸다 | 작성자 | 가볍게 | PNG 내보내기만 |
-| UC-09 | 그림의 모양을 정한다 | 작성자 | 가볍게 | 아님(`P1`) |
+| UC-09 | 그림의 모양을 정한다 | 작성자 | 가볍게 | 아님(`P1`). 기본 스타일만 MVP |
 | UC-10 | 문제를 알린다 | 작성자 | 가볍게 | 아님(`P3`) |
 
 ## 4. 유즈케이스
@@ -140,7 +140,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 편집을 시작할 때마다
 
-**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-blk|R-BLK-09]], [[01-requirements#^r-nfr|R-NFR-02]]
+**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-blk|R-BLK-09]], [[01-requirements#^r-nfr|R-NFR-02]]
 
 ### UC-03 블록을 편집한다
 
@@ -161,8 +161,9 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 2b. 키보드만으로도 1~4를 모두 할 수 있다
 - 2c. 드래그 앤 드롭, 복사 · 붙여넣기로 블록을 옮긴다
 - 2d. If의 갈래를 바꾸거나, Case의 갈래를 더하고 빼고 순서를 바꾼다
+- 2e. 쓰는 법이나 키를 모르면 도움말을 연다(→ [[01-requirements#^r-edit|R-EDIT-21]])
 
-**요구사항:** [[01-requirements#^r-edit|R-EDIT-01]], [[01-requirements#^r-edit|R-EDIT-02]], [[01-requirements#^r-edit|R-EDIT-03]], [[01-requirements#^r-edit|R-EDIT-04]], [[01-requirements#^r-edit|R-EDIT-05]], [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]], [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#^r-lay|R-LAY-01]], [[01-requirements#^r-lay|R-LAY-02]], [[01-requirements#^r-nfr|R-NFR-01]], [[01-requirements#^r-nfr|R-NFR-03]]
+**요구사항:** [[01-requirements#^r-edit|R-EDIT-01]], [[01-requirements#^r-edit|R-EDIT-02]], [[01-requirements#^r-edit|R-EDIT-03]], [[01-requirements#^r-edit|R-EDIT-04]], [[01-requirements#^r-edit|R-EDIT-05]], [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]], [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-edit|R-EDIT-21]], [[01-requirements#^r-edit|R-EDIT-22]], [[01-requirements#^r-edit|R-EDIT-24]], [[01-requirements#^r-blk|R-BLK-01]], [[01-requirements#^r-blk|R-BLK-02]], [[01-requirements#^r-blk|R-BLK-03]], [[01-requirements#^r-blk|R-BLK-04]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#^r-blk|R-BLK-06]], [[01-requirements#^r-lay|R-LAY-01]], [[01-requirements#^r-lay|R-LAY-02]], [[01-requirements#^r-nfr|R-NFR-01]], [[01-requirements#^r-nfr|R-NFR-03]]
 
 ### UC-04 구조를 나눈다
 
@@ -282,7 +283,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **기술 변형**
 
-- 트리거'. 명령 팔레트에서 실행한다
+- 트리거'. Obsidian의 명령 팔레트(Command palette)에서 실행한다
 - 3'. 이미 넣은 그림의 컨텍스트 메뉴에서 "Edit NS diagram"을 선택하면 3부터 시작한다
 
 **빈도:** 노트에 알고리즘을 설명할 때마다
