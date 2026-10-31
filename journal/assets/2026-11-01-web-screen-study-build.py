@@ -96,8 +96,8 @@ def card(tag, title, body, scr, ph, room, pick=False, ref=False, now=False):
     badges = ('<span class="badge">Claude의 추천</span>' if pick else '') + ('<span class="badge gray">지금 프로토타입</span>' if now else '')
     li = ''.join(f'<li>{b}</li>' for b in body)
     return f'''<article class="card{" pick" if pick else ""}{" ref" if ref else ""}"><header><span class="tag">{tag}</span><h3>{title}</h3>{badges}</header>
-<div class="row"><div class="fig wide">{scr}</div><div class="fig narrow">{ph}</div></div>
-<p class="room">{room}</p><ul>{li}</ul></article>'''
+<div class="row">{f'<div class="fig wide">{scr}</div>' if ph else f'<div class="figs">{scr}</div>'}{f'<div class="fig narrow">{ph}</div>' if ph else ''}</div>
+{f'<p class="room">{room}</p>' if room else ''}<ul>{li}</ul></article>'''
 
 # ---------- 블록 모양 아이콘 (시각 디자인의 블록 색 그대로 줄임) ----------
 C = {'line': '#5b77ad', 'p': '#edf0f5', 'if': '#f6ebdc', 'loop': '#dce6f6'}
@@ -189,6 +189,125 @@ cards = [
    '블록 넣기 단추는 글자("처리", "If" …)입니다. 예제 단추와 안내 패널은 제품에 없습니다.'],
    screen_d(), phone('d'), '다이어그램에 남는 칸: <b>1026 × 487</b> (가로 75% · 세로 74%)', ref=True, now=True),
 ]
+
+# ---------- W2 ~ W5: W1 · 1번(메뉴 막대 + 블록 아이콘 도구 모음) 위에 그린다 ----------
+def dsvg(name, extra=''):
+    v = S[name]; s = v['svg'].replace(' id="svg"', '')
+    s = re.sub(r' data-[a-z]+="[^"]*"', '', s)
+    s = re.sub(r'width="[^"]+" height="[^"]+"', 'class="dg"', s, count=1)
+    e = v.get('editor')
+    if e:
+        extra = f'<rect x="{e["x"]+1}" y="{e["y"]+1}" width="{e["w"]-2}" height="{e["h"]-2}" fill="none" stroke="#d0500b" stroke-width="2" rx="2"/>' + extra
+    return s.replace('</svg>', extra + '</svg>')
+
+def base(cv_inner, menus_on=None, fn='예제.ns.svg · <b class="ok">✓ 저장됨</b>', status=None, right=None, block_on=None, cursor=None):
+    menus = ''.join(f'<span class="{"on" if m == menus_on else ""}">{m}</span>' for m in ['파일', '편집', '다이어그램', '보기', '도움말'])
+    bb = ''.join(f'<span class="bb{" on" if k == block_on else ""}" title="{t}">{bi(k)}</span>' for k, t in BLOCKS)
+    tools = ''.join(ic(k, 16) for k in ['new', 'open', 'save', 'export']) + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['undo', 'redo']) + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['cut', 'copy', 'paste']) + '<i class="sep"></i>' + bb + '<i class="sep"></i>' + ''.join(ic(k, 16) for k in ['wrap', 'zoom'])
+    fnspan = f'<span class="fn">{fn}</span>' if fn else ''
+    st = f'<div class="pst">{status}</div>' if status else ''
+    main = f'<div class="cv">{cv_inner}</div>' + (f'<div class="side">{right}</div>' if right else '')
+    return f'''<div class="scr b"><div class="mbar"><b>AriadneNSD</b>{menus}{fnspan}</div><div class="tbar t2">{tools}</div><div class="pmain">{main}</div>{st}</div>'''
+
+def menu_at(left, title_rows, top=0, w=118):
+    return flyout('', title_rows, f'left:{left}px;top:{top}px;width:{w}px').replace('<div class="ft"></div>', '')
+
+DROP = '<path d="M24 104 H475 M24 100 V108 M475 100 V108" stroke="#d0500b" stroke-width="2" fill="none"/>'
+GHOST = '<g opacity=".9"><rect x="250" y="112" width="70" height="26" rx="2" fill="#f6ebdc" stroke="#5b77ad"/><text x="262" y="129" font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="#151a22">If</text><path d="M246 106 l0 14 l4 -4 l3 6 l2 -1 l-3 -6 l5 0 z" fill="#1c2230" stroke="#fff" stroke-width=".8"/></g>'
+W2 = [
+ card('W2 · 1번', '누르면 고른 블록 뒤에, 끌어다 놓으면 그 자리에', [
+   '블록을 고르고 아이콘을 누르면 고른 블록 <b>뒤에</b> 넣고(<kbd>Shift</kbd>+클릭은 앞에), 바로 조건을 적게 합니다(그림 ①: <code>tick++;</code>를 고르고 If).',
+   '아이콘을 끌어 다이어그램 위에 놓으면 그 자리에 넣습니다. 끄는 동안 놓을 자리에 주황 가로줄이 보입니다(그림 ②). 블록을 옮기는 끌어 놓기(MVP에 더함)와 같은 규칙과 모습입니다.',
+   '고른 것이 없을 때 아이콘을 누르면 지금 다이어그램의 맨 끝에 넣습니다.',
+   'Scratch처럼 "끌어서 쌓는" 손에 익은 사람도, 키보드를 쓰는 사람도 같은 아이콘을 씁니다.'],
+   '<p class="cap">① 누른 결과</p>' + base(f'<div class="paper">{dsvg("w2-click")}</div>', block_on='if') + '<p class="cap">② 끌어 놓는 중</p>' + base(f'<div class="paper">{dsvg("w2-sel", DROP + GHOST)}</div>', block_on='if'), '', '', pick=True),
+ card('W2 · 2번', '누르기만 (끌어다 놓기 없음)', [
+   '아이콘은 누르기만 합니다. 결과는 1번의 ①과 같습니다.',
+   '끌어 놓기는 이미 있는 블록을 옮길 때만 씁니다.',
+   '<span class="bad">아이콘을 끌어 보는 사람(처음 온 사람의 흔한 손)에게 아무 일도 일어나지 않습니다.</span>'],
+   base(f'<div class="paper">{dsvg("w2-click")}</div>', block_on='if'), '', ''),
+]
+
+FILE_ROWS = [('새로', 'Ctrl+N'), ('열기…', 'Ctrl+O'), ('최근 파일', '▸'), ('', ''), ('저장', 'Ctrl+S'), ('다른 이름으로 저장…', 'Ctrl+Shift+S'), ('내보내기', '▸ PNG'), ('', ''), ('환경 설정…', '')]
+RECENT = flyout('', [('예제.ns.svg', '방금'), ('quicksort.ns.svg', '어제'), ('uart.ns.svg', '10-28')], 'left:120px;top:24px;width:96px').replace('<div class="ft"></div>', '')
+W3 = [
+ card('W3 · 1번', '메뉴 막대 오른쪽에 파일 이름과 저장 상태', [
+   '메뉴 막대 오른쪽에 <b>파일 이름</b>과 <b>저장 상태</b>(✓ 저장됨 / ● 저장 안 됨). 브라우저 탭 제목에도 같은 것(<code>● 예제.ns.svg – AriadneNSD</code>).',
+   '파일 메뉴: 새로 · 열기 · <b>최근 파일 ▸</b> · 저장 · 다른 이름으로 저장 · 내보내기(PNG) · 환경 설정. 그림은 최근 파일을 연 모습.',
+   '아래 상태 줄에는 고른 것과 알림만 둡니다(지금 프로토타입처럼).',
+   'Structorizer와 데스크톱 프로그램 대부분이 창 제목에 파일 이름을 둡니다. 웹에는 창 제목이 없으니 메뉴 막대 오른쪽이 그 자리입니다.'],
+   base(f'<div class="paper">{DG}</div>' + menu_at(0, FILE_ROWS, w=120) + RECENT, menus_on='파일', fn='예제.ns.svg · <b class="dirty">● 저장 안 됨</b>', status='처리 · 고른 것 1개'), '', '', pick=True),
+ card('W3 · 2번', '아래 상태 줄 왼쪽에 파일 이름과 저장 상태', [
+   'VS Code처럼 화면 맨 아래 상태 줄 왼쪽에 파일 이름과 저장 상태, 오른쪽에 고른 것.',
+   '<span class="bad">눈이 위쪽(메뉴 · 도구 모음)과 그림에 가 있어 저장 안 됨을 놓치기 쉽습니다.</span>'],
+   base(f'<div class="paper">{DG}</div>', fn='', status='예제.ns.svg · <b class="dirty">● 저장 안 됨</b> <span style="margin-left:auto">처리 · 고른 것 1개</span>'), '', ''),
+]
+
+def autosave_fig(kind):
+    if kind == 1:
+        st = '임시 보관됨 · 예제.ns.svg에 자동 저장 켬'
+        fn = '예제.ns.svg · <b class="ok">✓ 자동 저장됨 · 2초 전</b>'
+    elif kind == 2:
+        st = '임시 보관됨 (새로 고쳐도 남음)'
+        fn = '예제.ns.svg · <b class="dirty">● 저장 안 됨</b> · 임시 보관됨'
+    else:
+        st = '임시 보관됨'
+        fn = '예제.ns.svg · <b class="ok">✓ 저장됨</b>'
+    return base(f'<div class="paper">{DG}</div>', fn=fn, status=st)
+W3B = [
+ card('W3-b · 1번', '임시 보관은 늘, 원래 파일에도 자동 저장 (기본 켬)', [
+   '<b>임시 보관</b>(R-WEB-03): 고칠 때마다 그 브라우저에 담아 둡니다. 새로 고치거나 탭을 닫았다 열면 "지난번 내용을 되살릴까요?"를 묻습니다.',
+   '<b>자동 저장</b>(R-EXP-04): 파일을 열거나 한 번 저장해 쓰기 권한을 받은 파일이면, 고치고 2초 뒤에 원래 파일에 저장합니다. 환경 설정에서 끌 수 있습니다. Chromium 계열(Chrome · Edge)에서만 됩니다.',
+   '그 밖의 브라우저(Firefox · Safari)는 원래 파일에 쓸 수 없어 자동 저장이 없고, 저장은 내려받기입니다. 임시 보관은 됩니다.',
+   'Google Docs · Excalidraw처럼 "저장을 잊어도 안전"합니다.'],
+   autosave_fig(1), '', '', pick=True),
+ card('W3-b · 2번', '임시 보관은 늘, 자동 저장은 기본 끔', [
+   '원래 파일에는 사용자가 저장할 때만 씁니다(VS Code의 기본값). 자동 저장은 환경 설정에서 켭니다.',
+   '파일이 뜻하지 않게 바뀌는 일이 없습니다. 임시 보관이 있어 내용을 잃지는 않습니다.',
+   '<span class="bad">저장했다고 믿고 탭을 닫으면, 다른 기기 · 다른 브라우저에서는 고친 것이 없습니다.</span>'],
+   autosave_fig(2), '', ''),
+]
+
+HELP_ROWS = [('사용법 (새 탭)', 'F1'), ('단축키 한눈에', '?'), ('이 판에서 바뀐 것', ''), ('', ''), ('문제 알리기…', ''), ('AriadneNSD에 대하여', '')]
+KEYS = '<div class="modal" style="left:270px;top:120px"><b>단축키</b><div class="kg">' + ''.join(f'<span><kbd>{k}</kbd> {t}</span>' for k, t in [('h j k l', '이동'), ('o / O', '처리 뒤 / 앞'), ('a + 종류', '블록 넣기'), ('s + 종류', '감싸기'), ('ds', '풀기'), ('i Enter', '고치기'), ('dd yy p', '잘라 · 복사 · 붙이기'), ('u U', '되돌리기 · 다시'), ('Alt+↑↓', '옮기기'), ('x', '지우기')]) + '</div><small>Esc로 닫기 · 전체는 도움말 › 사용법</small></div>'
+W4 = [
+ card('W4 · 1번', '도움말 메뉴: 사용법은 새 탭의 한 페이지, 단축키는 <kbd>?</kbd> 겹창', [
+   '<b>사용법</b>: SequenceDiagram.org의 Instructions처럼 사용법과 단축키를 다 적은 <b>한 페이지</b>를 새 탭으로 엽니다(펴낸 사이트의 <code>/manual/</code>). 검색 엔진에도 걸리고, 링크로 나눌 수 있습니다.',
+   '<b>단축키 한눈에</b>: <kbd>?</kbd>를 누르면 편집 화면 위에 키 표 겹창(그림). GitHub · Gmail과 같은 키입니다. <kbd>Esc</kbd>로 닫습니다.',
+   '그림은 도움말 메뉴와 단축키 겹창을 한 장에 함께 그렸습니다(실제로는 하나씩 뜸).'],
+   base(f'<div class="paper">{DG}</div>' + menu_at(150, HELP_ROWS, w=110) + KEYS, menus_on='도움말'), '', '', pick=True),
+ card('W4 · 2번', '오른쪽 접는 패널 (지금 프로토타입처럼)', [
+   '오른쪽에 도움말 패널(키 표와 사용법). 도움말 단추로 펴고 접습니다.',
+   '쓰면서 옆에 두고 볼 수 있습니다.',
+   '<span class="bad">펴 두면 다이어그램 칸이 그만큼(약 300px) 좁아집니다. 긴 사용법을 좁은 패널에서 읽기 어렵습니다.</span>'],
+   base(f'<div class="paper">{DG}</div>', right='<b>도움말</b><p>h j k l 이동</p><p>o / O 처리 넣기</p><p>a + 종류 블록 넣기</p><p>…</p><p>사용법 전체 ›</p>'), '', ''),
+]
+
+DOCSET = '<div class="modal w"><b>문서 설정 (이 파일에 저장)</b><div class="frm"><span>블록 글자</span><i>C ▾</i><span>머리 모양</span><i>제목처럼 ▾</i><span>결과 기호</span><i>← ▾</i><span>테마</span><i>밝은 기본 ▾</i></div><small>실행 취소의 대상 · 파일과 함께 다른 사람에게 감</small></div>'
+PREF = '<div class="modal w" style="left:250px"><b>환경 설정 (이 브라우저에)</b><div class="frm"><span>화면 언어</span><i>한국어 ▾</i><span>자동 저장</span><i>☑ 켬</i><span>키 안내</span><i>☑ 켬</i><span>고정폭 글꼴</span><i>☑ 켬</i></div><small>나에게만 · 파일에 들어가지 않음</small></div>'
+W5 = [
+ card('W5 · 1번', '문서 설정과 환경 설정을 나눔', [
+   '<b>다이어그램 › 문서 설정…</b>: 이 파일에 저장되는 것(블록 글자의 종류, 머리 모양, 결과 기호, 테마). 파일을 받은 다른 사람에게도 같게 보입니다.',
+   '<b>파일 › 환경 설정…</b>: 나에게만, 이 브라우저에 남는 것(화면 언어, 자동 저장, 키 안내, 고정폭 글꼴).',
+   '<b>보기</b> 메뉴: 확대 · 축소, 접기 영역 보기처럼 그 자리에서 켜고 끄는 것.',
+   '모델의 구분(문서의 <code>settings</code>와 셸의 <code>SettingsStore</code>)과 같습니다. 지금 프로토타입은 이 둘이 캔버스 위 한 줄에 섞여 있습니다.'],
+   base(f'<div class="paper">{DG}</div>' + DOCSET + PREF), '', '', pick=True),
+ card('W5 · 2번', '설정 창 하나에 탭 둘(문서 · 나)', [
+   '톱니 아이콘 하나로 설정 창을 열고, 창 안의 탭으로 "이 문서"와 "나"를 가릅니다.',
+   '찾는 곳이 하나입니다.',
+   '<span class="bad">같은 창 안에서 어떤 값은 파일과 함께 가고 어떤 값은 안 가서 헷갈리기 쉽습니다.</span>'],
+   base(f'<div class="paper">{DG}</div>' + DOCSET.replace('문서 설정 (이 파일에 저장)', '설정 · [이 문서] 나')), '', ''),
+]
+
+def section(qid, title, q, cs):
+    return f'<section id="{qid.lower()}"><span class="part">{qid}</span><h2>{title}</h2><p class="q">{q}</p><div class="cards two">{"".join(cs)}</div></section>'
+MORE = ''.join([
+  section('W2', 'W2. 블록 아이콘을 쓰는 법', '도구 모음의 블록 아이콘을 누를 때와 끌 때 무엇을 하는가.', W2),
+  section('W3', 'W3. 파일 이름과 저장 상태의 자리, 최근 파일', 'MVP에 더한 "최근 파일"(R-EXP-04)이 어디에 있고, 저장했는지를 어디서 보는가.', W3),
+  section('W3-b', 'W3-b. 임시 보관과 자동 저장', 'MVP에 더한 둘(R-WEB-03 임시 보관, R-EXP-04 자동 저장)이 어떻게 움직이는가. 그림은 메뉴 막대 오른쪽과 상태 줄의 글만 다릅니다.', W3B),
+  section('W4', 'W4. 도움말', 'MVP에 더한 도움말(R-EDIT-21)을 어디에, 어떤 모양으로. 본보기는 SequenceDiagram.org의 한 페이지 Instructions입니다(메인테이너, 2026-10-25).', W4),
+  section('W5', 'W5. 설정', '지금 프로토타입의 캔버스 위 설정 줄(구문 강조 · 고정폭 · 접기 영역 보기 · 머리 모양 · 결과 기호 · 키 안내)을 어디로 옮기는가.', W5),
+])
 
 page = f'''<title>M44 웹 화면 배치</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -311,6 +430,24 @@ code, kbd {{ font-family: var(--mono); font-size: 12.5px; }}
 .legend .lt {{ font-size: 13px; color: var(--muted); width: 100%; }}
 .legend .li {{ display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; }}
 .legend em {{ font-style: normal; }}
+.cards.two {{ grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); }}
+.figs {{ display: grid; gap: 6px; }}
+.figs .scr, .card .row > .figs .scr {{ width: 560px; height: 300px; border: 1px solid #b9c3d3; }}
+.cap {{ font-size: 12.5px; color: var(--muted); margin: 0; }}
+.mbar .ok {{ color: #1d7a46; font-weight: 600; }}
+.mbar .dirty, .pst .dirty {{ color: #b35a10; font-weight: 600; }}
+.bb.on {{ outline: 1.5px solid var(--ui-acc); outline-offset: 1px; border-radius: 1px; }}
+.b .side {{ width: 120px; background: #fff; border-left: 1px solid var(--ui-line); padding: 6px; color: var(--ui-muted); }}
+.b .side b {{ color: var(--ui-fg); }}
+.b .side p {{ margin: 3px 0; }}
+.pst {{ display: flex; gap: 6px; }}
+.modal {{ position: absolute; z-index: 4; left: 150px; top: 60px; width: 200px; background: #fff; border: 1px solid var(--ui-line); border-radius: 4px; box-shadow: 0 8px 20px rgba(0,0,0,.2); padding: 7px 9px; display: grid; gap: 5px; }}
+.modal.w {{ left: 20px; top: 50px; width: 210px; }}
+.modal .kg {{ display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }}
+.modal kbd {{ font-size: 6.5px; font-weight: 600; color: var(--ui-acc); }}
+.modal small {{ color: var(--ui-muted); font-size: 6px; }}
+.modal .frm {{ display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; align-items: center; }}
+.modal .frm i {{ font-style: normal; border: 1px solid var(--ui-line); border-radius: 2px; padding: 0 4px; }}
 .pst {{ height: 15px; background: #fff; border-top: 1px solid var(--ui-line); padding: 2px 8px; color: var(--ui-muted); }}
 </style>
 <main>
@@ -322,16 +459,17 @@ code, kbd {{ font-family: var(--mono); font-size: 12.5px; }}
   <section>
     <span class="part">W1</span>
     <h2>W1. 화면 전체의 배치</h2>
-    <p class="q">본보기는 둘입니다. <a href="https://structorizer.fisch.lu/">Structorizer</a>(데스크톱 NS 차트 편집기)는 맨 위에 메뉴 막대, 그 아래 도구 모음에 블록 모양을 줄인 아이콘(Instruction · IF · CASE · FOR · WHILE · REPEAT …)이 나란히 있고, 블록을 고르고 아이콘을 누르면 그 자리에 들어갑니다. <a href="https://sequencediagram.org/">SequenceDiagram.org</a>는 왼쪽 끝에 작은 아이콘이 세로로 늘어서고 누르면 메뉴가 펼쳐집니다. 둘 다 Claude의 기억이고 안내서에서 화면 배치를 확인하지 못했습니다. 명령은 모두 한 목록(명령 레지스트리, ADR-0033)에서 나오므로, 어느 안이든 메뉴 · 아이콘 · 오른쪽 클릭 메뉴가 같은 명령을 보여 줍니다. 판단 기준은 UX 원칙의 <b>"화면은 다이어그램에게"</b>(MB1), <b>"키보드만으로 모두"</b>, 그리고 처음 온 사람이 명령을 찾을 수 있는가입니다.</p>
+    <p class="q"><b>결정함 (2026-11-01): 1번 메뉴 막대 + 블록 아이콘 도구 모음.</b> 아래 W2 ~ W5는 이 배치 위에 그렸습니다. 본보기는 둘입니다. <a href="https://structorizer.fisch.lu/">Structorizer</a>(데스크톱 NS 차트 편집기)는 맨 위에 메뉴 막대, 그 아래 도구 모음에 블록 모양을 줄인 아이콘(Instruction · IF · CASE · FOR · WHILE · REPEAT …)이 나란히 있고, 블록을 고르고 아이콘을 누르면 그 자리에 들어갑니다. <a href="https://sequencediagram.org/">SequenceDiagram.org</a>는 왼쪽 끝에 작은 아이콘이 세로로 늘어서고 누르면 메뉴가 펼쳐집니다. 둘 다 Claude의 기억이고 안내서에서 화면 배치를 확인하지 못했습니다. 명령은 모두 한 목록(명령 레지스트리, ADR-0033)에서 나오므로, 어느 안이든 메뉴 · 아이콘 · 오른쪽 클릭 메뉴가 같은 명령을 보여 줍니다. 판단 기준은 UX 원칙의 <b>"화면은 다이어그램에게"</b>(MB1), <b>"키보드만으로 모두"</b>, 그리고 처음 온 사람이 명령을 찾을 수 있는가입니다.</p>
     <div class="legend"><span class="lt">블록 아이콘 (실제 크기, 아래 화면 그림에서는 절반)</span>{"".join(f'<span class="li">{bi(k, 30, 22)}<em>{t}</em></span>' for k, t in BLOCKS)}</div>
     <div class="cards">{"".join(cards)}</div>
     <p class="note">어느 안이든 공통: 오른쪽 클릭 메뉴는 지금처럼 있고, 메뉴에는 명령 이름 옆에 키가 보입니다. 화면 아래의 상태 줄(고른 것, 알림)은 W3에서 함께 묻습니다. 광고(R-WEB-08, MVP 밖)는 저장 · 내보내기 때만 보이므로 이 배치에 자리를 두지 않습니다.</p>
   </section>
+  {MORE}
   <section>
     <h2>답하실 것</h2>
     <div class="sum"><ol>
-      <li>W1의 <b>번호</b>, 또는 고칠 점(섞기도 됩니다. 예: "1번인데 파일 이름은 위에 줄로").</li>
-      <li>정하면 같은 배치 위에 W2(블록 아이콘을 누를 때와 끌어 놓을 때의 동작) 그림을 그려 이어서 묻습니다.</li>
+      <li>W2 · W3 · W3-b · W4 · W5를 하나씩, <b>번호</b> 또는 고칠 점. (W1은 정함)</li>
+      <li>정하면 웹 설계([[06-web]])에 화면 배치로 적고, 프로토타입에 넣어 써 봅니다.</li>
     </ol></div>
   </section>
 </main>

@@ -106,6 +106,9 @@ await scene('q10-case', 'exCase', [], ['[data-id="n2"][data-label="1"]']);
 await scene('q10-if', 'exQuick', [], ['[data-id="n1"][data-label="0"]']);
 await scene('q10-pass', 'exCase', [], ['[data-id="n2"][data-label="0"]']);
 
+// M44 W2: 블록 아이콘을 누른 결과(고른 블록 뒤에 If). 65번째 판에서 뽑아 64번째 판의 그림 묶음에 더했다(Q4의 그림은 64번째 판의 동작이라 다시 뽑지 않음)
+await scene('w2-sel', 'exCode', [`T.click('n1')`]);
+await scene('w2-click', 'exCode', [`T.click('n1')`, `T.keys('ai')`]);
 writeFileSync(outFile, JSON.stringify(S));
 console.log(Object.entries(S).map(([k, v]) => `${k}: ${v.msg}${v.editor ? ' [editor "' + v.editor.value + '"]' : ''} marks ${v.marks.length}`).join('\n'));
 if (errors.length) console.log('ERR', errors);
