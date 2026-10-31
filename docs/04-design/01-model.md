@@ -279,8 +279,8 @@ type Result =
 | | 풀기 (제어 블록) | 내용이 있는 갈래를 순서대로 이어 붙인다 |
 | | 풀기 (호출 블록) | Method의 블록을 새 id로 깊은 복사해 그 자리에 인라인한다. 이 자리의 접기 영역은 보통 접기 영역이 된다. `lost`이면 풀 수 없다 |
 | | 새 Method로 빼기 | 고른 블록이 새 Method의 본문이 되고, 그 자리에 `local` 호출 블록이 남는다 |
-| 갈래 | 갈래 넣기 · 지우기 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#갈래 순서 바꾸기]]. default가 아닌 갈래는 하나까지 줄인다. default는 넣지도 지우지도 않는다 |
-| | If를 Case로 · Case를 If로 바꾸기 | 갈래가 하나만 남은 Case, `+`를 누른 If에서 바꿀지 묻는다. 글자를 옮기는 법은 미결정 |
+| 갈래 | 갈래 넣기 · 지우기 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#옮기기]], [[02-interaction-rules#갈래 이름 고르기]]. default가 아닌 갈래는 하나까지 줄인다. default는 넣지도 지우지도 않는다 |
+| | If를 Case로 · Case를 If로 바꾸기 | 갈래가 하나만 남은 Case, 갈래를 넣으려 한 If(갈래 이름을 고르고 넣기)에서 바꿀지 묻는다. 글자를 옮기는 법은 미결정 |
 | 호출 | 부를 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다 |
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다 |
 | | 지우기 | 이 Method를 부르던 호출 블록을 `lost`로 바꾼다 |

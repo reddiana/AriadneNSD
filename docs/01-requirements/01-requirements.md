@@ -197,13 +197,13 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-BLK-02 | 선택(If-Then-Else) 블록: 조건에 따라 참 갈래나 거짓 갈래를 실행 | #P0 |
 | R-BLK-03 | 전위 판정 반복(While) 블록: 조건을 먼저 검사하고 본문을 반복 | #P0 |
 | R-BLK-04 | 후위 판정 반복(Do-While / Repeat-Until) 블록: 본문을 먼저 실행하고 조건을 검사 | #P0 |
-| R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록\|상세]] | #P0 |
+| R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 갈래 여러 개와 default 갈래 → [[02-interaction-rules#Case 블록\|[[02-interaction-rules#옮기기|상세]] | #P0 |
 | R-BLK-06 | 횟수 반복(For) 블록: While의 변형 | #P0 |
-| R-BLK-07 | 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]] | #P1 |
-| R-BLK-08 | 이름을 적는 호출 블록: 부를 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 부른다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]] | #P1 |
-| R-BLK-09 | 다른 문서의 Method 부르기: 다른 `.ns.svg` 파일의 Method를 그 파일과 함께 가리켜 둔다. 따라가면 그 파일을 열고, 그 파일을 읽을 수 있는 곳에서는 펴 본다 → [[02-interaction-rules#호출 블록\|상세]] | #P2 |
-| R-BLK-10 | Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 머리\|상세]] | #P1 |
-| R-BLK-11 | Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 머리\|상세]] | #P1 |
+| R-BLK-07 | 호출 블록: 같은 문서의 Method를 부른다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|[[02-interaction-rules#옮기기|상세]] | #P1 |
+| R-BLK-08 | 이름을 적는 호출 블록: 부를 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 부른다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|[[02-interaction-rules#옮기기|상세]] | #P1 |
+| R-BLK-09 | 다른 문서의 Method 부르기: 다른 `.ns.svg` 파일의 Method를 그 파일과 함께 가리켜 둔다. 따라가면 그 파일을 열고, 그 파일을 읽을 수 있는 곳에서는 펴 본다 → [[02-interaction-rules#호출 블록\|[[02-interaction-rules#옮기기|상세]] | #P2 |
+| R-BLK-10 | Event 머리(이벤트 머리): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 머리. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 머리\|[[02-interaction-rules#옮기기|상세]] | #P1 |
+| R-BLK-11 | Method 머리: 호출 블록이 부르는 다이어그램(Method, Sub process)의 머리. Event 머리와 다른 모양으로 그려 가른다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 머리\|[[02-interaction-rules#옮기기|상세]] | #P1 |
 | R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | #P2 |
 | R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 갈래 | #P2 |
 | R-BLK-14 | 주석 블록 | #P2 |
@@ -218,23 +218,23 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
 | R-EDIT-01 | 블록 고르기, 넣기(고른 블록의 앞/뒤/안쪽), 지우기, 글자 고치기 → 상세 [[02-interaction-rules]], 키는 [[03-keymap]]                                                                        | #P0  |
 | R-EDIT-02 | 실행 취소 / 다시 실행 (Undo/Redo) → 상세 [[02-interaction-rules#6. 실행 취소]]                                                                                              | #P0  |
-| R-EDIT-03 | 키보드만으로 편집 가능: 방향키로 이동, 단축키로 블록 삽입 → [[02-interaction-rules#키보드로 이동하고 넣기\|상세]]                                                                                 | #P0  |
-| R-EDIT-04 | 두 키를 이어 누르는 명령은 첫 키를 누르면 이어 누를 키와 그 명령을 안내한다 → [[03-keymap\|상세]]                                                                                              | #P1  |
-| R-EDIT-05 | 여러 블록 선택. 고를 수 있는 범위는 [[#^r-edit\|R-EDIT-22]] → [[02-interaction-rules#여러 블록 선택\|상세]] | #P0 |
-| R-EDIT-06 | 선택한 블록들을 새 제어 블록 안에 넣어 감싸기 (IDE의 "Surround With"와 같은 기능) → [[02-interaction-rules#감싸기 · 풀기\|상세]] | #P0 |
+| R-EDIT-03 | 키보드만으로 편집 가능: 방향키로 이동, 단축키로 블록 삽입 → [[02-interaction-rules#키보드로 이동하고 넣기\|[[02-interaction-rules#옮기기|상세]]                                                                                 | #P0  |
+| R-EDIT-04 | 두 키를 이어 누르는 명령은 첫 키를 누르면 이어 누를 키와 그 명령을 안내한다 → [[03-keymap\|[[02-interaction-rules#옮기기|상세]]                                                                                              | #P1  |
+| R-EDIT-05 | 여러 블록 선택. 고를 수 있는 범위는 [[#^r-edit\|R-EDIT-22]] → [[02-interaction-rules#여러 블록 선택\|[[02-interaction-rules#옮기기|상세]] | #P0 |
+| R-EDIT-06 | 선택한 블록들을 새 제어 블록 안에 넣어 감싸기 (IDE의 "Surround With"와 같은 기능) → [[02-interaction-rules#감싸기 · 풀기\|[[02-interaction-rules#옮기기|상세]] | #P0 |
 | R-EDIT-07 | 제어 블록 풀기: 제어 블록만 지우고 안의 블록은 그 자리에 남기기                                                                                                                         | #P0  |
-| R-EDIT-08 | 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[02-interaction-rules#감싸기 · 풀기\|상세]]                                                                | #P1  |
+| R-EDIT-08 | 호출 블록 풀기: 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대) → [[02-interaction-rules#감싸기 · 풀기\|[[02-interaction-rules#옮기기|상세]]                                                                | #P1  |
 | R-EDIT-09 | 드래그 앤 드롭으로 블록 하나 또는 선택한 블록들을 통째로 이동 (놓을 수 있는 자리 미리 강조)                                                                                                        | #P0  |
-| R-EDIT-10 | 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[02-interaction-rules#붙여넣기\|상세]]                                                                                              | #P0  |
-| R-EDIT-11 | If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[02-interaction-rules#갈래 순서 바꾸기\|상세]]                                                                             | #P0  |
-| R-EDIT-12 | If 블록의 갈래 이름("참" · "거짓")을 고친다 → [[02-interaction-rules#If 블록\|상세]]                                                                                            | #P1  |
-| R-EDIT-13 | 제어 블록 접기/펼치기: 제어 블록의 안쪽을 접는다. If·Case는 갈래별로 → [[02-interaction-rules#접기 · 펼치기\|상세]] | #P1 |
-| R-EDIT-14 | 접기 영역: 선택 영역을 접기 영역으로 만들어 접고 펼친다. 이름은 [[#^r-edit\|R-EDIT-23]], 파일에 저장하는 것은 [[#^r-fmt\|R-FMT-11]] → [[02-interaction-rules#접기 · 펼치기\|상세]] | #P1 |
-| R-EDIT-15 | 호출 블록 펴 보기: 호출 블록을 펴면 부르는 Method의 블록들이 그 자리에 보인다. 보기만 바뀌고 다이어그램의 내용은 바뀌지 않는다 → [[02-interaction-rules#호출 블록 펴 보기\|상세]]                                        | #P1  |
-| R-EDIT-16 | 펴 보인 곳의 접기 영역: 펴 보인 호출 블록 안에서 접기 영역을 만든다. 그 호출 블록 자리에만 있고 Method의 원본은 바뀌지 않는다 → [[02-interaction-rules#펴 보인 곳의 접기 영역\|상세]]                                    | #P1  |
+| R-EDIT-10 | 복사 / 잘라내기 / 붙여넣기 (하위 트리 통째로) → [[02-interaction-rules#붙여넣기\|[[02-interaction-rules#옮기기|상세]]                                                                                              | #P0  |
+| R-EDIT-11 | If 블록의 참/거짓 갈래 바꾸기, Case 갈래 추가·삭제·순서 바꾸기 → [[02-interaction-rules#옮기기|상세]]\|상세]]                                                                             | #P0  |
+| R-EDIT-12 | If 블록의 갈래 이름("참" · "거짓")을 고친다 → [[02-interaction-rules#If 블록\|[[02-interaction-rules#옮기기|상세]]                                                                                            | #P1  |
+| R-EDIT-13 | 제어 블록 접기/펼치기: 제어 블록의 안쪽을 접는다. If·Case는 갈래별로 → [[02-interaction-rules#접기 · 펼치기\|[[02-interaction-rules#옮기기|상세]] | #P1 |
+| R-EDIT-14 | 접기 영역: 선택 영역을 접기 영역으로 만들어 접고 펼친다. 이름은 [[#^r-edit\|R-EDIT-23]], 파일에 저장하는 것은 [[#^r-fmt\|R-FMT-11]] → [[02-interaction-rules#접기 · 펼치기\|[[02-interaction-rules#옮기기|상세]] | #P1 |
+| R-EDIT-15 | 호출 블록 펴 보기: 호출 블록을 펴면 부르는 Method의 블록들이 그 자리에 보인다. 보기만 바뀌고 다이어그램의 내용은 바뀌지 않는다 → [[02-interaction-rules#호출 블록 펴 보기\|[[02-interaction-rules#옮기기|상세]]                                        | #P1  |
+| R-EDIT-16 | 펴 보인 곳의 접기 영역: 펴 보인 호출 블록 안에서 접기 영역을 만든다. 그 호출 블록 자리에만 있고 Method의 원본은 바뀌지 않는다 → [[02-interaction-rules#펴 보인 곳의 접기 영역\|[[02-interaction-rules#옮기기|상세]]                                    | #P1  |
 | R-EDIT-17 | 모두 접기 / 모두 펼치기 / 깊이 n까지 펼치기                                                                                                                                   | #P2  |
-| R-EDIT-18 | 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치\|상세]]                                                      | #P1  |
-| R-EDIT-19 | 고른 블록들을 새 Method로 빼기: 고른 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 부르는 호출 블록([[#^r-blk\|R-BLK-07]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램\|상세]] | #P1  |
+| R-EDIT-18 | 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치\|[[02-interaction-rules#옮기기|상세]]                                                      | #P1  |
+| R-EDIT-19 | 고른 블록들을 새 Method로 빼기: 고른 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 부르는 호출 블록([[#^r-blk\|R-BLK-07]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램\|[[02-interaction-rules#옮기기|상세]] | #P1  |
 | R-EDIT-20 | 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 끌어다 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼)                                                                                               | #P2  |
 | R-EDIT-21 | 도움말: 사용법과 단축키를 한 페이지로 안내한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상)                                | #P0  |
 | R-EDIT-22 | 여러 블록 선택은 언제나 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다 → [[0008-contiguous-selection\|ADR-0008]]                                                                      | #P0  |
@@ -316,7 +316,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 
 | ID | 요구사항 | 우선순위 |
 | --- | --- | --- |
-| R-REP-01 | 문제 알리기: 보고서를 만들어 보낸다. 착각이나 어설픈 보고가 이슈 목록에 쌓이지 않게 한다 → [[02-interaction-rules#8. 문제 알리기 보고서\|상세]] | #P3 |
+| R-REP-01 | 문제 알리기: 보고서를 만들어 보낸다. 착각이나 어설픈 보고가 이슈 목록에 쌓이지 않게 한다 → [[02-interaction-rules#8. 문제 알리기 보고서\|[[02-interaction-rules#옮기기|상세]] | #P3 |
 | R-REP-02 | 예상 못 한 오류가 나면 "이 문제를 알리시겠어요?"를 묻는다 | #P3 |
 | R-REP-03 | 보고서를 자동으로 보내지 않는다(서버가 없다). 사용자가 보낼 내용을 보고 직접 보낸다 | #P3 |
 
