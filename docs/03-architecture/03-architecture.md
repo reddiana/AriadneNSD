@@ -98,11 +98,11 @@ AriadneNSD/
 │  ├─ packages/              함께 쓰는 라이브러리
 │  │  ├─ fonts/              번들 글꼴, advance 폭 테이블, 서브세팅
 │  │  ├─ core/               모델 · 명령 · 텍스트 · 레이아웃 · 렌더러 · 파일 형식 (DOM 없음)
-│  │  │  ├─ src/             model/ commands/ text/ layout/ render/ format/ (시험은 소스 옆 *.test.ts)
+│  │  │  ├─ src/             model/ commands/ text/ layout/ render/ format/ (테스트는 소스 옆 *.test.ts)
 │  │  │  └─ golden/          골든 파일 (저장되는 SVG의 기대값)
 │  │  └─ editor/             화면 편집기 (주변 UI만 React → ADR-0010)
 │  ├─ apps/                  내놓는 프로그램 (셸)
-│  │  ├─ web/                웹, MVP (Google Drive 연동도 여기, e2e/에 브라우저 시험)
+│  │  ├─ web/                웹, MVP (Google Drive 연동도 여기, e2e/에 브라우저 테스트)
 │  │  ├─ obsidian/           Obsidian 플러그인 (manifest.json의 원본)
 │  │  └─ desktop/            데스크톱
 │  └─ skills/                나중: Claude skill (셸이 아님)

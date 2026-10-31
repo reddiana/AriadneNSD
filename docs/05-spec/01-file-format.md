@@ -97,7 +97,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
     }
   ],
   "view": {
-    "folded": [ … 접힌 접기 영역 · 갈래의 id … ],
+    "folded": [ … 접힌 접기 영역 · 분기의 id … ],
     "opened": [ … 인라인으로 펴 보인 호출 블록의 경로 … ],
     "bands": true,
     "resultSymbol": "←"

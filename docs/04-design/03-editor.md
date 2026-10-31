@@ -60,7 +60,7 @@ type EditorState = {
   lastSelected: Id | null;        // 선택한 것을 푼 뒤 이동 키를 누르면 여기서 시작
   editing: Editing | null;        // 인라인 에디터가 열려 있으면
   dirty: boolean;                 // 마지막 저장 뒤 내용이나 뷰 상태가 바뀌었는가 (저장 안 됨 표시 ●)
-  readOnly: boolean;              // 보기만 함 (웹: 같은 파일을 다른 탭이 고치고 있을 때) → 6.4
+  readOnly: boolean;              // 보기만 함 (웹: 같은 파일을 다른 탭이 편집하고 있을 때) → 6.4
   zoom: number;                   // 줌 배율 0.4 ~ 3
   layout: LayoutResult;           // 마지막으로 센 결과. 히트 테스트와 오버레이 레이어가 쓴다
 };
@@ -68,9 +68,9 @@ type EditorState = {
 type Selection =
   | { kind: 'blocks'; seq: SeqRef; anchor: Id; focus: Id }   // 같은 줄 안의 연속 범위 → ADR-0008
   | { kind: 'head'; diagram: Id }
-  | { kind: 'branchLabel'; branch: Id }                      // 갈래 이름 (If · Case) → 조작 규칙 "갈래 이름 선택"
+  | { kind: 'branchLabel'; branch: Id }                      // 분기 라벨 (If · Case) → 조작 규칙 "분기 라벨 선택"
   | { kind: 'fold'; fold: Id };                              // 접기 영역 전체 (이름 띠나 접힌 칸)
-type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가진 노드(다이어그램 · 블록 · 갈래)와 자리
+type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가진 노드(다이어그램 · 블록 · 분기)와 자리
 ```
 
 - 선택은 언제나 **id**로 적습니다. 내용이 바뀌어 id가 사라지면 그 선택은 풀립니다(`null`). 위치(몇 번째)로 적지 않는 이유는 undo · 이동 뒤에도 같은 것을 가리키게 하려는 것입니다.
@@ -204,8 +204,8 @@ type CommandSpec = {
   menu?: { menu: MenuId; group: number; order: number };  // 메뉴 바의 자리
   toolbar?: { group: number; order: number; icon: IconId };
   context?: SelectionKind[];          // 컨텍스트 메뉴에 보일 선택의 종류
-  edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 듣지 않는다 → 6.4
-  when(ctx: CommandContext): true | Reason;   // 듣는가, 아니면 까닭
+  edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 적용되지 않는다 → 6.4
+  when(ctx: CommandContext): true | Reason;   // 적용되는가, 아니면 이유
   run(ctx: CommandContext, args?: unknown): void | Promise<void>;
 };
 type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
@@ -254,9 +254,9 @@ function createEditor(options: {
 
 type OpenedDocument = {
   store: DocumentStore;                          // 이 문서의 읽기 · 쓰기
-  text: string | null;                           // .ns.svg · .ns 글자. null이면 새 문서 (R-ALL-03)
+  text: string | null;                           // .ns.svg · .ns 문자열. null이면 새 문서 (R-ALL-03)
   readOnly?: boolean;                            // 보기만 함 → 6.4
-  restored?: string;                             // 임시 보관에서 되살린 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
+  restored?: string;                             // 로컬 백업에서 복원한 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
 };
 type Appearance = { scheme: 'light' | 'dark'; uiFont: string };
 
@@ -264,7 +264,7 @@ type Appearance = { scheme: 'light' | 'dark'; uiFont: string };
 interface DocumentStore {
   readonly name: string;                         // 파일 이름 (화면의 "예제.ns.svg"). 다른 이름으로 저장하면 바뀐다
   readonly canWriteInPlace: boolean;             // 원래 파일에 쓸 수 있는가 (웹의 Firefox · Safari는 false)
-  read(): Promise<string>;                       // .ns.svg 글자
+  read(): Promise<string>;                       // .ns.svg 문자열
   write(svg: string): Promise<WriteResult>;      // 원래 자리에. 못 쓰면 셸이 내려받기 등으로 대신한다
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
   readOther(path: string): Promise<string | null>; // 다른 문서 (R-BLK-09). 읽지 못하면 null
@@ -282,7 +282,7 @@ interface CommandRegistry {
   list(): CommandSpec[];
   run(id: string, args?: unknown): void;
   register(spec: CommandSpec): () => void;       // 셸의 명령을 더한다 (새로 · 열기 · 최근 파일). 돌려받은 함수로 뺀다
-  onChange(listener: () => void): () => void;    // "듣는가"가 바뀌었을 때 (셸이 메뉴를 다시 그림)
+  onChange(listener: () => void): () => void;    // "적용되는가"가 바뀌었을 때 (셸이 메뉴를 다시 그림)
 }
 interface SettingsSchema {
   list(): SettingSpec[];                         // id · 표시 이름 · 허용 값 · 기본값 · 범위('user' | 'document')
@@ -292,9 +292,9 @@ interface EditorHandle {
   readonly settingsSchema: SettingsSchema;
   open(doc: OpenedDocument): void;               // 문서를 바꾼다. undo · 선택은 비운다
   status(): DocStatus;
-  onStatus(listener: (s: DocStatus) => void): () => void;  // 상태가 바뀔 때마다 (셸이 이름 · ● · 임시 보관을 다룸)
-  serialize(): string;                           // 지금 문서의 .ns.svg 글자 (저장 · 자동 저장에 씀)
-  snapshot(): string;                            // 지금 문서의 모델 JSON (임시 보관에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
+  onStatus(listener: (s: DocStatus) => void): () => void;  // 상태가 바뀔 때마다 (셸이 이름 · ● · 로컬 백업을 다룸)
+  serialize(): string;                           // 지금 문서의 .ns.svg 문자열 (저장 · 자동 저장에 씀)
+  snapshot(): string;                            // 지금 문서의 모델 JSON (로컬 백업에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
   save(): Promise<WriteResult>;                  // "저장" 명령과 같음: serialize → store.write → 성공하면 dirty를 끈다
   setReadOnly(readOnly: boolean): void;
   setAppearance(a: Appearance): void;            // 호스트의 밝기가 바뀌었을 때

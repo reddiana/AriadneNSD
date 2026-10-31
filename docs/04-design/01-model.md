@@ -44,9 +44,9 @@ type Content = {
 };
 
 type Settings = {
-  textKind: TextKind;    // 블록 글자의 종류 → [[0032-token-highlighting|ADR-0032]]
+  textKind: TextKind;    // 블록 텍스트의 종류 → [[0032-token-highlighting|ADR-0032]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
-  headStyle: 'shape' | 'title';  // 머리 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
+  headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
 ```
@@ -59,13 +59,13 @@ type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원
 ```ts
 type Diagram = {
   id: Id;
-  head: Head | null;   // null이면 머리 없음: 종류가 없고 호출할 수 없다
+  head: Head | null;   // null이면 헤더 없음: 종류가 없고 호출할 수 없다
   body: Seq;
 };
 
 type Head = {
   kind: 'event' | 'method';
-  text: string;        // Event는 글자 전체가 이름. Method는 첫 '(' 앞이 이름, 괄호 안이 받는 것
+  text: string;        // Event는 텍스트 전체가 이름. Method는 첫 '(' 앞이 이름, 괄호 안이 받는 것
 };
 ```
 
@@ -85,7 +85,7 @@ type FoldMark = {
   id: Id;
   first: Id;             // 묶은 범위의 처음 블록
   last: Id;              // 끝 블록 (처음과 같을 수 있음)
-  name?: string;         // 없으면 기본 이름("첫 블록의 글자 외 n개")을 보인다
+  name?: string;         // 없으면 기본 이름("첫 블록의 텍스트 외 n개")을 보인다
 };
 ```
 
@@ -101,20 +101,20 @@ type Process = { id: Id; kind: 'process'; text: string };
 
 type If = {
   id: Id; kind: 'if'; text: string;   // 조건
-  yes: Branch; no: Branch;            // 참 갈래, 거짓 갈래
+  yes: Branch; no: Branch;            // 참 분기, 거짓 분기
 };
 
 type Case = {
   id: Id; kind: 'case'; text: string; // 견줄 값
-  arms: Arm[];                        // default가 아닌 갈래들. 순서가 있다
-  otherwise: Branch | null;           // default 갈래. 있으면 늘 맨 끝
+  arms: Arm[];                        // default가 아닌 분기들. 순서가 있다
+  otherwise: Branch | null;           // default 분기. 있으면 늘 맨 끝
 };
 
-type Branch = { id: Id; label?: string; body: Seq };  // If의 갈래와 default 갈래. 이름이 없으면 편집기가 정한 글자를 보인다
-type Arm = { id: Id; label: string; body: Seq };      // Case의 갈래. 이름 (예: 1, 'a'..'z')
+type Branch = { id: Id; label?: string; body: Seq };  // If의 분기와 default 분기. 라벨이 없으면 편집기가 정한 텍스트를 보인다
+type Arm = { id: Id; label: string; body: Seq };      // Case의 분기. 라벨 (예: 1, 'a'..'z')
 
 type While   = { id: Id; kind: 'while';   text: string; body: Seq };
-type DoWhile = { id: Id; kind: 'doWhile'; text: string; body: Seq };  // Do-While과 Repeat-Until은 모양이 같고 글자만 다르다
+type DoWhile = { id: Id; kind: 'doWhile'; text: string; body: Seq };  // Do-While과 Repeat-Until은 모양이 같고 텍스트만 다르다
 type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 ```
 
@@ -184,7 +184,7 @@ type SiteFold = {
 ### 1.7 id
 
 ```ts
-type Id = string;  // 예: "d1"(다이어그램), "b17"(블록), "r3"(갈래), "f2"(접기 영역)
+type Id = string;  // 예: "d1"(다이어그램), "b17"(블록), "r3"(분기), "f2"(접기 영역)
 ```
 
 - 문서 안에서 유일합니다. 종류마다 접두사를 붙이고 뒤는 정수입니다.
@@ -195,7 +195,7 @@ type Id = string;  // 예: "d1"(다이어그램), "b17"(블록), "r3"(갈래), "
 
 ```ts
 type View = {
-  folded: Id[];        // 접힌 것: 접기 영역(FoldMark · SiteFold), 갈래(If · Case), 반복 블록(본문)
+  folded: Id[];        // 접힌 것: 접기 영역(FoldMark · SiteFold), 분기(If · Case), 반복 블록(본문)
   opened: Path[];      // 인라인으로 펴 보인 호출 블록. 중첩해 편 것은 경로로 적는다
   bands: boolean;      // 이름 띠를 보이는가
   resultSymbol: '←' | '=';
@@ -261,7 +261,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 type Command<A> = (content: Content, args: A) => Result;
 type Result =
   | { ok: true; content: Content; touched: Id[] }   // touched: 새로 생기거나 바뀐 노드의 id. 명령 뒤의 선택을 editor가 정하는 데 쓴다
-  | { ok: false; reason: Reason };                   // 사전 조건 불만족. 아무것도 바꾸지 않고 까닭을 알린다 ("막지 않고 알린다")
+  | { ok: false; reason: Reason };                   // 사전 조건 불만족. 아무것도 바꾸지 않고 이유를 알린다 ("막지 않고 알린다")
 ```
 
 - 명령 하나가 undo 한 단계입니다. 감싸기, 풀기, 새 Method로 빼기처럼 여러 노드를 바꾸는 명령도 원자적으로 한 단계입니다.
