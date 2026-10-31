@@ -65,6 +65,7 @@ const config: QuartzConfig = {
         keepBackground: false,
       }),
       // 본문의 #P0 같은 태그도 태그 페이지로 가는 링크가 된다(메인테이너가 inbox에서 요청, 2026-10-25).
+      // 2026-11-01부터 요구사항의 우선순위는 태그가 아니라 글자(P0)다. 지난 기록에 남은 태그를 위해 그대로 켜 둔다.
       // 두 겹 아래 폴더에서 링크가 틀리는 Quartz v4.5.2의 버그는 patch-quartz.mjs가 고친다.
       // "#P0은"처럼 조사가 붙으면 그것까지 태그가 되므로, 글 속의 우선순위는 `P0`처럼 코드로 쓴다(CLAUDE.md)
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false, parseTags: true }),
