@@ -62,6 +62,10 @@ section { display: grid; gap: 14px; }
 .figs { display: flex; justify-content: center; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
 .figs figure { width: 44%; margin: 0; display: grid; gap: 6px; justify-items: center; }
 .figs img { width: 100%; height: auto; display: block; background: #fff; padding: 6px; border: 1px solid var(--s-line); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); box-sizing: border-box; }
+/* 나9~나11: 인용절 안의 링크만 눈에 띄게 */
+.scene a.l-color { color: var(--s-sec); background: none; padding: 0; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--s-sec) 45%, transparent); }
+.scene a.l-soft { display: inline-block; font-weight: 600; padding: 2px 10px; border-radius: 6px; background: color-mix(in srgb, var(--s-sec) 12%, var(--s-bg)); border: 1px solid color-mix(in srgb, var(--s-sec) 30%, var(--s-bg)); color: var(--s-dark); }
+.scene a.l-fill { display: inline-block; font-weight: 700; padding: 2px 12px; border-radius: 999px; background: var(--s-sec); color: var(--s-bg); }
 .figs.left figure { justify-items: start; }
 .figs.left .m41.small { padding: 4px 10px; }
 .site-dark .figs img { border-color: #000; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
@@ -179,6 +183,30 @@ section { display: grid; gap: 14px; }
         <p class="why">큰 버튼은 인용절 아래에 둡니다(2026-10-31, 메인테이너). 작은 버튼은 그 차트를 열고, 큰 버튼은 빈 편집기로 갑니다. 조용한 버튼 둘 위에 눈에 띄는 버튼 하나라 어디를 누를지 헷갈리지 않습니다.</p>
       </div>
     </div>
+  </section>
+  <section>
+    <div>
+      <h2>(나) 다시: 인용절은 나1 그대로, 링크만 눈에 띄게</h2>
+      <p class="lead">큰 버튼 없이 나1의 인용절을 둡니다. 그림 왼쪽 아래의 작은 버튼은 나8과 같습니다. 인용절 안의 링크만 바꿉니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">나9</span> 색과 굵은 밑줄</h3>
+        <div class="scene b-card">{{HEAD}}<div class="figs left"><figure><img src="{{DIJ}}" alt="다익스트라 최단 경로"><span class="m41 small">프로토타입 편집기에서 열기</span></figure><figure><img src="{{MER}}" alt="병합 정렬"><span class="m41 small">프로토타입 편집기에서 열기</span></figure></div><p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p><div class="callout"><b>프로토타입을 브라우저에서 바로 써 볼 수 있습니다:</b> <a class="l-color">AriadneNSD 프로토타입 →</a><br>프로토타입은 요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">링크 색(남색)을 굵게, 두꺼운 밑줄을 답니다. 가장 조용하지만 글 속에서 분명히 링크로 보입니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나10</span> 그 자리에 작은 버튼 <span class="rec">추천</span></h3>
+        <div class="scene b-card">{{HEAD}}<div class="figs left"><figure><img src="{{DIJ}}" alt="다익스트라 최단 경로"><span class="m41 small">프로토타입 편집기에서 열기</span></figure><figure><img src="{{MER}}" alt="병합 정렬"><span class="m41 small">프로토타입 편집기에서 열기</span></figure></div><p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p><div class="callout"><b>프로토타입을 브라우저에서 바로 써 볼 수 있습니다:</b> <a class="l-soft">AriadneNSD 프로토타입 열기 →</a><br>프로토타입은 요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">그림 아래의 작은 버튼과 같은 모양입니다. 페이지의 버튼이 한 가지 모양으로 맞습니다.</p>
+      </div>
+      <div class="opt">
+        <h3><span class="num">나11</span> 그 자리에 채운 버튼</h3>
+        <div class="scene b-card">{{HEAD}}<div class="figs left"><figure><img src="{{DIJ}}" alt="다익스트라 최단 경로"><span class="m41 small">프로토타입 편집기에서 열기</span></figure><figure><img src="{{MER}}" alt="병합 정렬"><span class="m41 small">프로토타입 편집기에서 열기</span></figure></div><p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p><div class="callout"><b>프로토타입을 브라우저에서 바로 써 볼 수 있습니다:</b> <a class="l-fill">▶ AriadneNSD 프로토타입</a><br>프로토타입은 요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">나2처럼 채운 둥근 버튼을 문장 끝에 둡니다. 가장 눈에 띄지만 인용절 안에서 조금 무겁습니다.</p>
+      </div>
+    </div>
+    <p class="note">사이트에서는 이 링크에만 꾸밈을 입힙니다. GitHub에서는 꾸밈이 지워져 보통 링크로 보이므로, 나10·나11의 모양을 GitHub에서도 보이려면 버튼을 SVG 그림으로 만들어 넣습니다(나9는 GitHub에서 굵은 글씨까지만).</p>
   </section>
 </main>
 
