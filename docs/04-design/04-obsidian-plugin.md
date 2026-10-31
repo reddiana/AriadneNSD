@@ -34,7 +34,7 @@ Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architect
 | 파일 목록에서 `.ns.svg`를 열면 편집기 뷰로 열림 | 됨 | 아래 "가로채기" |
 | 일반 `.svg`는 기본 이미지 뷰로 열림 | 됨 | 가로채기 조건을 `.ns.svg`로 한정 |
 | 노트의 `![[이름.ns.svg]]`가 그림으로 보임 (읽기·편집 모드) | 됨 | Obsidian 기본 동작. 플러그인이 할 일 없음 |
-| 편집기에서 저장하면 노트를 다시 열지 않아도 그림이 바뀜 | 처음엔 안 됨 → 고쳐서 됨 | 아래 "노트 그림 갱신" |
+| 편집기에서 저장하면 노트를 다시 열지 않아도 그림이 바뀜 | 처음엔 안 됨 → 수정해서 됨 | 아래 "노트 그림 갱신" |
 | 노트의 `.ns.svg` 그림 컨텍스트 메뉴에 "Edit NS diagram" | 됨 | 아래 "그림 컨텍스트 메뉴" |
 
 **확장자 등록만으로는 안 된다.** `registerExtensions(["ns.svg"])`는 오류 없이 등록되지만 효과가 없습니다. Obsidian은 `a.ns.svg`의 확장자를 마지막 점 뒤의 `svg`로 보고, `svg`에 등록된 이미지 뷰 타입(`image`)으로 엽니다.
@@ -82,7 +82,7 @@ sequenceDiagram
     Note over D: 브라우저가 새 URL로 그림을 다시 로드
 ```
 
-- 이 요구사항이 나온 까닭:
+- 이 요구사항이 나온 이유:
 	- drawio-obsidian은 편집을 마쳐도 노트를 다시 열어야 바뀐 그림이 보인다. 사용자는 이 때문에 [obsidian-refresh-any-view](https://github.com/mnaoumov/obsidian-refresh-any-view) 플러그인을 따로 쓰고 있다. AriadneNSD는 별도 플러그인 없이 갱신되어야 한다.
 
 **그림 컨텍스트 메뉴 ([[01-requirements#^r-obs|R-OBS-02]]):** Obsidian의 공개 API인 `file-menu` 이벤트를 구독해 기존 컨텍스트 메뉴에 항목을 더합니다. 노트의 그림 우클릭은 `source`가 `link-context-menu`, 파일 목록 우클릭은 `file-explorer-context-menu`로 옵니다. 항목은 `setSection('system')`으로 system 구역(기본 앱에서 열기, 폴더에서 보기 …)의 맨 아래에 둡니다. 그 바로 아래가 삭제 항목이 있는 danger 구역입니다.
@@ -132,15 +132,15 @@ sequenceDiagram
 
 정한 것 → [[0036-code-layout|ADR-0036]]
 
-- `manifest.json`의 원본은 `src/apps/obsidian/`에 둔다. 저장소 맨 위에 그 사본과 `versions.json`(플러그인 판 → 최소 Obsidian 판)을 둔다. Obsidian 커뮤니티 플러그인 목록이 저장소 맨 위의 `manifest.json`을 읽기 때문이다.
-- 판을 올리는 스크립트가 원본을 맨 위로 복사하고 `versions.json`을 갱신한다. 둘이 다르면 CI가 실패한다.
+- `manifest.json`의 원본은 `src/apps/obsidian/`에 둔다. 저장소 맨 위에 그 사본과 `versions.json`(플러그인 버전 → 최소 Obsidian 버전)을 둔다. Obsidian 커뮤니티 플러그인 목록이 저장소 맨 위의 `manifest.json`을 읽기 때문이다.
+- 버전을 올리는 스크립트가 원본을 맨 위로 복사하고 `versions.json`을 갱신한다. 둘이 다르면 CI가 실패한다.
 - GitHub Actions가 빌드해 GitHub Release에 `main.js` · `manifest.json` · `styles.css`를 올린다. 커뮤니티 플러그인 목록은 Release에서 이 파일을 받아 간다.
 
-> [!info] 미완성: 빌드 도구(esbuild를 후보로), 판 번호 규칙, 커뮤니티 플러그인 목록에 등록하는 절차
+> [!info] 미완성: 빌드 도구(esbuild를 후보로), 버전 번호 규칙, 커뮤니티 플러그인 목록에 등록하는 절차
 
 ## 미결정 사항
 
 - [ ] 새 파일의 이름과 저장 위치 (제안: Obsidian의 "첨부 파일 폴더" 설정을 따르고, 이름은 `노트이름-diagram-1.ns.svg`처럼 자동 생성)
-- [ ] 아무것도 그리지 않고 탭을 닫았을 때 (제안: 파일을 지우고 노트에 삽입하지 않음)
+- [ ] 아무것도 그리지 않고 탭을 닫았을 때 (제안: 파일을 삭제하고 노트에 삽입하지 않음)
 - [ ] 편집 중 저장 시점 (탭을 닫을 때만 / 편집할 때마다 자동 저장)
 
