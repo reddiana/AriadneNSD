@@ -1,0 +1,104 @@
+/* The web page around the editor (06-web 7): the editor fills the window. Colours follow
+   prefers-color-scheme, like the appearance the shell gives the editor (03-editor 6). */
+:root {
+  --web-bg: #eef1f6;
+  --web-panel: #ffffff;
+  --web-text: #1c2230;
+  --web-line: #d4dbe6;
+  --web-warn: #b35a10;
+  --web-accent: #2c55c9;
+  --web-shadow: rgba(20, 30, 60, 0.18);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --web-bg: #12151b;
+    --web-panel: #1a1e26;
+    --web-text: #e5e8ee;
+    --web-line: #2b313c;
+    --web-warn: #f0a560;
+    --web-accent: #8ba7ff;
+    --web-shadow: rgba(0, 0, 0, 0.5);
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--web-bg);
+  color: var(--web-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    'Malgun Gothic',
+    'Apple SD Gothic Neo',
+    sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.ans-web-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.ans-web-notices {
+  position: fixed;
+  right: 16px;
+  bottom: 36px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: min(480px, calc(100vw - 32px));
+}
+
+.ans-web-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--web-panel);
+  border: 1px solid var(--web-line);
+  border-left: 3px solid var(--web-accent);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px var(--web-shadow);
+}
+
+.ans-web-notice-warn {
+  border-left-color: var(--web-warn);
+}
+
+.ans-web-notice span {
+  flex: 1;
+}
+
+.ans-web-notice button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.ans-web-drop {
+  position: fixed;
+  inset: 8px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--web-accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--web-bg) 80%, transparent);
+  font-size: 16px;
+  pointer-events: none;
+}
