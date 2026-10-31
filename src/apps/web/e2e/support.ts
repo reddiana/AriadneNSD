@@ -191,11 +191,17 @@ export function drawnText(page: Page, text: string): Locator {
 
 /** The middle of a drawn text, in page coordinates. */
 export async function middleOf(locator: Locator): Promise<{ x: number; y: number }> {
-  const box = await locator.boundingBox();
-  if (box === null) {
-    throw new Error('The element is not on the screen');
+  // The document layer is redrawn after each edit, so wait until the element is there
+  // and its box is stable before reading it.
+  await locator.waitFor({ state: 'visible' });
+  for (let tries = 0; tries < 20; tries += 1) {
+    const box = await locator.boundingBox();
+    if (box !== null) {
+      return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+    }
+    await locator.page().waitForTimeout(50);
   }
-  return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  throw new Error('The element is not on the screen');
 }
 
 /** Presses keys one after another (`'a'`, `'i'`, `'Control+S'` …). */
