@@ -1,2 +1,5 @@
 # 모든 텍스트 파일을 LF로 저장한다 (Obsidian과 Claude Code가 LF로 쓴다)
 * text=auto eol=lf
+
+# 골든 파일은 바이트로 비교한다(docs/04-design/07-testing.md 2장). 줄 끝을 바꾸지 않게 텍스트로 다루지 않는다
+src/packages/core/golden/** -text

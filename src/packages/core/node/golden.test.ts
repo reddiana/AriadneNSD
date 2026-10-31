@@ -1,40 +1,47 @@
 // Golden files (07-testing 2): one `.ns.svg` per case in packages/core/golden/, the input and the
-// expected output in one file. Update them with `pnpm --filter @ariadne-nsd/core exec vitest run
-// src/format -u` and commit the change with the code that caused it.
+// expected output in one file, compared byte for byte (R-FMT-03, QA-03, QA-04). Each file is what
+// saving writes: the drawing from renderDoc, the model, and the block font subset.
 //
-// Until the renderer is joined in, the drawing is an empty placeholder and only the model part is
-// compared. The integration step replaces `placeholderDrawing` with layout and rendering.
-import { describe, expect, it } from 'vitest';
+// Update them after an intended change to the drawing or the file format, and commit the new
+// files with the code that changed them:
+//   pnpm --filter @ariadne-nsd/core golden:update
+// It rewrites the files first, then runs this test again: the reopen test reads the files on disk,
+// which the update writes only when its run ends.
+//
+// This test lives outside src/ because it uses the Node font subsetter (node:fs), which core's
+// own code must not use (.dependency-cruiser.cjs, core-no-node-builtins).
+import { readdir, readFile } from 'node:fs/promises';
 
-import type { Block, Doc, Seq } from '../model/types';
-import type { KeptSettings } from './model-json';
-import type { Drawing } from './svg-file';
-import { assembleSvgFile, openSvgFile } from './svg-file';
+import { blockFont } from '@ariadne-nsd/fonts';
+import type { Subsetter } from '@ariadne-nsd/fonts';
+import { createNodeSubsetter, readFontFile } from '@ariadne-nsd/fonts/node';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-declare global {
-  // Vite's import.meta.glob, which Vitest provides. Merging into ImportMeta needs an interface.
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface ImportMeta {
-    glob: (
-      pattern: string,
-      options: { query: '?raw'; import: 'default'; eager: true },
-    ) => Record<string, string>;
-  }
-}
+import type { Block, Doc, KeptSettings, Locale, Seq } from '../src/index';
+import { assembleSvgFile, openSvgFile, renderDoc } from '../src/index';
 
-const goldenFiles = import.meta.glob('../../golden/*.ns.svg', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
+const goldenDirectory = new URL('../golden/', import.meta.url);
+
+let subsetter: Subsetter;
+let ttf: Uint8Array;
+
+beforeAll(async () => {
+  subsetter = await createNodeSubsetter();
+  ttf = await readFontFile(blockFont.files.ttf);
 });
 
-const placeholderDrawing: Drawing = {
-  width: 200,
-  height: 100,
-  viewBox: '0 0 200 100',
-  paper: '#ffffff',
-  content: '<g class="ans-render"></g>',
-};
+/** What saving writes for a document (the same steps as the editor's serializeDocument). */
+function save(doc: Doc, kept: KeptSettings | undefined, locale: Locale): string {
+  const rendering = renderDoc(doc, { locale });
+  return assembleSvgFile({
+    doc,
+    ...(kept === undefined ? {} : { kept }),
+    drawing: rendering.svg,
+    fonts: [
+      { family: blockFont.familyName, woff: subsetter.subsetToWoff(ttf, rendering.codePoints) },
+    ],
+  });
+}
 
 const seq = (...blocks: Block[]): Seq => ({ blocks, folds: [] });
 const process = (id: string, text: string): Block => ({ id, kind: 'process', text });
@@ -49,6 +56,8 @@ const cases: ReadonlyArray<{
   readonly name: string;
   readonly doc: Doc;
   readonly kept?: KeptSettings;
+  /** The language of the drawing's fixed words. English when left out. */
+  readonly locale?: Locale;
 }> = [
   { name: 'process', doc: oneDiagram(process('b1', 'x = read()')) },
   { name: 'empty-block', doc: oneDiagram(process('b1', '')) },
@@ -174,36 +183,77 @@ const cases: ReadonlyArray<{
     },
     kept: { textKind: 'cobol' },
   },
+  {
+    name: 'korean-fixed-words',
+    // Branch labels left empty, so the drawing writes the fixed words of the locale.
+    doc: oneDiagram(
+      {
+        id: 'b1',
+        kind: 'if',
+        text: '맞나?',
+        yes: { id: 'r1', body: seq(process('b2', '')) },
+        no: { id: 'r2', body: seq(process('b3', '')) },
+      },
+      {
+        id: 'b4',
+        kind: 'case',
+        text: 'k',
+        arms: [{ id: 'r3', label: '1', body: seq(process('b5', '')) }],
+        otherwise: { id: 'r4', body: seq(process('b6', '')) },
+      },
+    ),
+    locale: 'ko',
+  },
 ];
 
-const metadataOf = (file: string): string =>
-  file.slice(file.indexOf('<metadata>'), file.indexOf('</metadata>'));
+const localeOf = (name: string): Locale =>
+  cases.find((goldenCase) => goldenCase.name === name)?.locale ?? 'en';
+
+const suffix = '.ns.svg';
+
+/** The case names of the golden files on disk, sorted. */
+async function goldenNames(): Promise<ReadonlyArray<string>> {
+  const files = await readdir(goldenDirectory);
+  return files
+    .filter((file) => file.endsWith(suffix))
+    .map((file) => file.slice(0, -suffix.length))
+    .sort();
+}
 
 describe('golden files', () => {
-  for (const { name, doc, kept } of cases) {
+  for (const { name, doc, kept, locale } of cases) {
     it(`R-FMT-03: ${name} is saved as the golden file`, async () => {
-      const file = assembleSvgFile({
-        doc,
-        ...(kept === undefined ? {} : { kept }),
-        drawing: placeholderDrawing,
-        fonts: [],
-      });
-      await expect(file).toMatchFileSnapshot(`../../golden/${name}.ns.svg`);
+      await expect(save(doc, kept, locale ?? 'en')).toMatchFileSnapshot(`../golden/${name}.ns.svg`);
     });
   }
 
-  it('finds the golden files', () => {
-    expect(Object.keys(goldenFiles).length).toBeGreaterThanOrEqual(cases.length);
+  it('every golden file has a case', async () => {
+    expect(await goldenNames()).toEqual(cases.map((goldenCase) => goldenCase.name).sort());
   });
 
-  for (const [path, file] of Object.entries(goldenFiles)) {
-    it(`QA-04: ${path} opens and saves to the same model part`, () => {
-      const opened = openSvgFile(file);
+  it('QA-04: every golden file opens and saves to the same bytes', async () => {
+    for (const name of await goldenNames()) {
+      const file = `${name}${suffix}`;
+      const bytes = await readFile(new URL(file, goldenDirectory));
+      const opened = openSvgFile(bytes.toString('utf8'));
       if (!opened.ok) {
-        throw new Error(opened.detail);
+        throw new Error(`${file}: ${opened.detail}`);
       }
-      const saved = assembleSvgFile({ ...opened.value, drawing: placeholderDrawing, fonts: [] });
-      expect(metadataOf(saved)).toBe(metadataOf(file));
-    });
-  }
+      const saved = save(opened.value.doc, opened.value.kept, localeOf(name));
+      expect(Buffer.from(saved, 'utf8').equals(bytes), file).toBe(true);
+    }
+  });
+});
+
+describe('saved file size', () => {
+  it('QA-09: 100 blocks with 300 different Hangul syllables save to 300 KB or less', () => {
+    const syllables = Array.from({ length: 300 }, (_, index) =>
+      String.fromCodePoint(0xac00 + index * 37),
+    );
+    const blocks = Array.from({ length: 100 }, (_, index) =>
+      process(`b${String(index + 1)}`, syllables.slice(index * 3, index * 3 + 3).join('')),
+    );
+    const file = save(oneDiagram(...blocks), undefined, 'en');
+    expect(Buffer.byteLength(file, 'utf8')).toBeLessThanOrEqual(300 * 1024);
+  });
 });

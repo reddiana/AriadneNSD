@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200" height="100" viewBox="0 0 200 100">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="80" viewBox="0 0 208 80">
   <metadata>
     <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
 {
@@ -31,7 +31,11 @@
     ]]></ans:document>
   </metadata>
   <style>
+    @font-face { font-family: "AriadneNSD Block"; src: url(data:font/woff;base64,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); }
   </style>
   <rect width="100%" height="100%" fill="#ffffff"/>
-  <g class="ans-render"></g>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Block', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">x = read()</text>
+</g>
 </svg>

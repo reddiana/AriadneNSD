@@ -6,12 +6,13 @@
 #   /atelier/…   작업 공간 (atelier/)
 #   /til/…       Today I Learned (til/)
 #   /journal/…   이름 이야기와 로고의 출처 두 문서만 (journal/name-story.md, logo-source.md)
-#   /app/        웹 버전 앱 (나중에)
+#   /app/        웹 버전 앱 (src/apps/web)
 #   /manual/     사용자 매뉴얼 (나중에)
 #
 # GitHub Pages는 저장소 하나에 사이트 하나다. 그래서 앱과 매뉴얼이 생기면 따로 올리지 않고
 # 이 워크플로가 모두 빌드해 _site/ 한 폴더로 모은 뒤 한 번에 올린다.
-# 같은 빌드를 로컬에서 해 보려면: bash site/build.sh --serve
+# main에 push할 때마다 돈다(paths로 거르지 않는다). 그래서 문서가 바뀌어도, 코드(src/)가 바뀌어도 다시 올린다.
+# 같은 빌드를 로컬에서 해 보려면: bash site/build.sh (문서만 보며 고칠 때는 --serve)
 
 name: Pages
 
@@ -69,13 +70,30 @@ jobs:
           mkdir -p _site
           cp -r .quartz/public/. _site/
 
-      # ── 웹 버전 앱 (나중에) ─────────────────────────────
-      # 앱 코드가 생기면 여기서 빌드해 _site/app/에 넣는다. 코드는 src/ 아래의 pnpm 워크스페이스다(ADR-0036). 예:
-      # - uses: pnpm/action-setup@v4
-      # - name: 웹 앱 빌드
-      #   working-directory: src
-      #   run: pnpm install --frozen-lockfile && pnpm --filter ./apps/web build
-      # - run: mkdir -p _site/app && cp -r src/apps/web/dist/. _site/app/
+      # ── 웹 버전 앱 ──────────────────────────────────────
+      # 코드는 src/ 아래의 pnpm 워크스페이스다(ADR-0036). Vite의 base가 './'라서
+      # 산출물은 상대 경로로 서로를 가리키고, /AriadneNSD/app/ 아래에서 그대로 돈다.
+      # pnpm의 버전은 src/package.json의 packageManager에서 읽는다
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: src/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: src/pnpm-lock.yaml
+
+      - name: 웹 앱 빌드
+        working-directory: src
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @ariadne-nsd/web build
+
+      - name: 웹 앱 넣기
+        run: |
+          mkdir -p _site/app
+          cp -r src/apps/web/dist/. _site/app/
 
       # ── 사용자 매뉴얼 (나중에) ──────────────────────────
       # 매뉴얼이 생기면 여기서 빌드해 _site/manual/에 넣는다.

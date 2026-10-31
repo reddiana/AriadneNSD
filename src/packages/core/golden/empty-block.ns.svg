@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200" height="100" viewBox="0 0 200 100">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="80" viewBox="0 0 208 80">
   <metadata>
     <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
 {
@@ -31,7 +31,10 @@
     ]]></ans:document>
   </metadata>
   <style>
+    @font-face { font-family: "AriadneNSD Block"; src: url(data:font/woff;base64,d09GRgABAAAAAARwAAsAAAAAB4QAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAEsAAABgatNsrmNtYXAAAAFUAAAABAAAAAQAAAAAZ2FzcAAAAVgAAAAQAAAAEAAXAAlnbHlmAAABaAAAAAEAAAABAAAAAGhlYWQAAAFsAAAANgAAADY67EFKaGhlYQAAAaQAAAAfAAAAJAblAr9obXR4AAABxAAAAAQAAAAEAfQAAGxvY2EAAAHIAAAABAAAAAQAAAAAbWF4cAAAAcwAAAAbAAAAIAArAYBuYW1lAAAB6AAAAm8AAAWqs15u9HBvc3QAAARYAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBjQQ5BnhxuDwHwiYg/5nMSxgbgeq4WAAq2PiY9oGpBQYGAENfxNKAAAAAAAAAAADAAgAAgAQAAH//wADAAAAAAABAAAAAQo9es3bbF8PPPUgCwPoAAAAANGm5a0AAAAA5uYN6f+B/wkDvwOJAAAACAACAAAAAAAAeNpjYGRgYA76L8UQwPzif+P/3cz7QSIogBEAogoGqQAB9AAAAAAAAHjaY2BkYADiLwxSDF0MPGAeAjAzMAIAJtUBrAB42p1Tu24TURA99ppHAkQoUroUVygFIFhiAymSKsGgGAWCcIQCBdLGLywna2ttEyhoKan5Bb4ACSigMXwBH8EHUKXgnNm7ygNLkOhqd8+dO3fmzJlZABcxQoBcYYL4U+Gqxzm4wqTHeUwFex4HiIN3HhcwHzz3+BQWgzmPTyPM//b4DHr5tx6fxaV83eMJPMtn8ScxypU9PodSbtrj87iMXx5fwHs89ngKC5g1PM04s8CXmdGHj2+wBPd97sfMz01Dg6/fPu8RvcCAq4c+FnGDq0vcQIwmUcyTbbRRM0uf75DWBC1s8F6bFod73s+hStQk2kVEnwYtqcfhCHVahsR14oR4wEjyraKCNX7Xff6DkdcORbhGyxO73addPg5FMtOTVZPWktWQ0O8VT2vch+hwf7TqXVshvSO8tNjyTeiR3tohvyG2LL8YqVKHMkq4Q1xn/JiqOPagwe+QNUsDxw6tEolh2yru8jShpUcG0kY67dCqnHWrLObOmbpinsbdtyvua6KhsWjyVkQ0tDh9XDGbeDssW9URo8Y8e0j+Zdby1BRp4TqZRlTC4ZEx7WgmcN8Ypuer1kcx1x1Z5VE1m84fGDf1psG1xAzL7MpdxnWmibTTW/zSLv2tVjofkdehZfuBqZ/OiTqnCqRRyjJT/t/ZwrEKrFDBLjvaMQUO9mrcRN3iM291r9CvTU+xKtFW4j9W5HceN8fm0Y0s09GpOK6/8p+c3fFyS8seJ0xeLftLNMM1myxFLuI2lUvRwn/2QbO4zaUuZ1Gz2df/lPjpl+f+P6+uq96WMVVlW+Qlj3Vm3WDGCja5r/C8hvAPtTDrjQB42mNgZgCD/xUMVkCKEcJDAAAoAAG2AAA=); }
   </style>
   <rect width="100%" height="100%" fill="#ffffff"/>
-  <g class="ans-render"></g>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Block', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+</g>
 </svg>
