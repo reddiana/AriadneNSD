@@ -62,6 +62,8 @@ section { display: grid; gap: 14px; }
 .figs { display: flex; justify-content: center; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
 .figs figure { width: 44%; margin: 0; display: grid; gap: 6px; justify-items: center; }
 .figs img { width: 100%; height: auto; display: block; background: #fff; padding: 6px; border: 1px solid var(--s-line); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); box-sizing: border-box; }
+.figs.left figure { justify-items: start; }
+.figs.left .m41.small { padding: 4px 10px; }
 .site-dark .figs img { border-color: #000; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
 .figs .m41.small { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 11px; background: color-mix(in srgb, var(--s-sec) 12%, var(--s-bg)); border: 1px solid color-mix(in srgb, var(--s-sec) 30%, var(--s-bg)); color: var(--s-dark); }
 
@@ -164,6 +166,19 @@ section { display: grid; gap: 14px; }
       </div>
     </div>
     <p class="note">작은 버튼이 그 차트를 열려면 프로토타입이 링크 끝의 이름(<code>#dijkstra</code>, <code>#merge-sort</code>)을 읽어 그 예제를 여는 기능이 필요합니다. 반영할 때 프로토타입에 넣습니다. GitHub에서는 버튼을 SVG 그림으로 만들어 링크로 감쌉니다.</p>
+  </section>
+  <section>
+    <div>
+      <h2>(나) 다시: 작은 버튼은 M41처럼 왼쪽 아래, 큰 버튼은 나2</h2>
+      <p class="lead">M41의 카드처럼 그림 바로 아래 왼쪽에 "편집기에서 열기"를 둡니다. 아래 큰 버튼은 나2(채운 둥근 버튼)입니다.</p>
+    </div>
+    <div class="opts">
+      <div class="opt">
+        <h3><span class="num">나8</span> 왼쪽 아래 작은 버튼 + 나2</h3>
+        <div class="scene b-card">{{HEAD}}<div class="figs left"><figure><img src="{{DIJ}}" alt="다익스트라 최단 경로"><span class="m41 small">편집기에서 열기</span></figure><figure><img src="{{MER}}" alt="병합 정렬"><span class="m41 small">편집기에서 열기</span></figure></div><p class="cap">프로토타입으로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</p><div class="cta"><span class="btn">▶ 프로토타입 써 보기 <small>브라우저에서 바로</small></span></div><div class="callout">요구사항을 점검하려고 만든 버리는 코드라, 모양과 키가 제품과 다를 수 있습니다. 오른쪽의 "쓰는 법"에 키가 있습니다.</div></div>
+        <p class="why">작은 버튼은 그 차트를 열고, 큰 버튼은 빈 편집기로 갑니다. 조용한 버튼 둘 위에 눈에 띄는 버튼 하나라 어디를 누를지 헷갈리지 않습니다.</p>
+      </div>
+    </div>
   </section>
 </main>
 
