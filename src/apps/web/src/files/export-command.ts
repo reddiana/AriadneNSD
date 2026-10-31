@@ -3,7 +3,6 @@
 
 import type { EditorHandle } from '../editor-contract';
 import type { ShellMessageKey } from '../shell/messages';
-import type { NoticeBoard } from '../shell/notices';
 import { defaultPngScale, svgToPng } from './export-png';
 import { download } from './file-fallback';
 import { pngFileName } from './file-name';
@@ -20,14 +19,15 @@ export function pngScaleOf(args: unknown): number {
   return defaultPngScale;
 }
 
-/** Draws the saved SVG to a PNG and saves it. Reports the result as a shell notice. */
+/** Draws the saved SVG to a PNG and saves it. Reports the result in the status bar. */
 export async function exportPng(
   editor: EditorHandle,
   documentName: string,
   args: unknown,
   host: {
     readonly canWriteInPlace: boolean;
-    readonly notices: NoticeBoard;
+    /** Tells the user in the status bar. */
+    readonly notify: (text: string, level: 'info' | 'warn') => void;
     readonly text: (key: ShellMessageKey, values?: Readonly<Record<string, string>>) => string;
     readonly log: (detail: string) => void;
   },
@@ -45,9 +45,9 @@ export async function exportPng(
     } else {
       await writeToHandle(handle, png);
     }
-    host.notices.show(host.text('notice.exported', { name: handle?.name ?? name }), 'info');
+    host.notify(host.text('notice.exported', { name: handle?.name ?? name }), 'info');
   } catch (error) {
     host.log(`PNG export failed: ${String(error)}`);
-    host.notices.show(host.text('notice.exportFailed'), 'warn');
+    host.notify(host.text('notice.exportFailed'), 'warn');
   }
 }

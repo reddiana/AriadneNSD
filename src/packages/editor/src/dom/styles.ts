@@ -38,6 +38,11 @@ export function editorCss(screenFontUrl: string | null): string {
 .ans-sizer { position: relative; }
 .ans-stage { position: absolute; left: ${String(canvasMargin)}px; top: ${String(canvasMargin)}px; transform-origin: 0 0; }
 .ans-document, .ans-overlay { position: absolute; left: 0; top: 0; }
+/* "The document is paper" (04-visual-design principle 4): a shadow round the paper on screen. */
+.ans-document {
+  border-radius: 4px; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(20, 30, 60, 0.12), 0 6px 20px rgba(20, 30, 60, 0.06);
+}
 .ans-document svg { display: block; }
 .ans-overlay { pointer-events: none; overflow: visible; }
 .ans-inline-editor {

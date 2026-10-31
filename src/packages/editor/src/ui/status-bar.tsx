@@ -6,22 +6,32 @@ import { useEffect, useState } from 'react';
 
 import { useChrome, useChromeState, useDocStatus } from './use-engine';
 
-/** How long a notice stays before it fades from the status bar. */
+/** How long an `info` notice stays before it fades from the status bar. */
 const noticeMilliseconds = 6000;
 
-/** Hides a notice some seconds after it appeared. A new notice (new id) shows again. */
-function useVisibleNotice(id: number | null): boolean {
+/**
+ * Hides an `info` notice some seconds after it appeared; a `warn` notice stays until it is closed
+ * or another notice comes (06-web: the shell's warnings are told here too). A new notice (new id)
+ * shows again. Returns whether it shows and a function that closes it.
+ */
+function useVisibleNotice(
+  id: number | null,
+  level: 'info' | 'warn' | null,
+): readonly [boolean, () => void] {
   const [hiddenId, setHiddenId] = useState<number | null>(null);
   useEffect(() => {
-    if (id === null) return;
+    if (id === null || level !== 'info') return;
     const timer = setTimeout(() => {
       setHiddenId(id);
     }, noticeMilliseconds);
     return () => {
       clearTimeout(timer);
     };
-  }, [id]);
-  return id !== null && id !== hiddenId;
+  }, [id, level]);
+  const close = (): void => {
+    setHiddenId(id);
+  };
+  return [id !== null && id !== hiddenId, close] as const;
 }
 
 /** The status bar at the bottom of the editor. */
@@ -29,7 +39,10 @@ export function StatusBar(): ReactElement {
   const { handle, format, text } = useChrome();
   const state = useChromeState(handle);
   const status = useDocStatus(handle);
-  const isNoticeVisible = useVisibleNotice(state.notice?.id ?? null);
+  const [isNoticeVisible, closeNotice] = useVisibleNotice(
+    state.notice?.id ?? null,
+    state.notice?.level ?? null,
+  );
   const { question, notice } = state;
 
   return (
@@ -65,9 +78,26 @@ export function StatusBar(): ReactElement {
       ) : (
         notice &&
         isNoticeVisible && (
-          <span className="ans-notice" data-level={notice.level} key={notice.id}>
-            {format(notice.message)}
-          </span>
+          <>
+            <span
+              className="ans-notice"
+              data-level={notice.level}
+              key={notice.id}
+              title={format(notice.message)}
+            >
+              {format(notice.message)}
+            </span>
+            {notice.level === 'warn' && (
+              <button
+                type="button"
+                className="ans-notice-close"
+                aria-label={text('notice.close')}
+                onClick={closeNotice}
+              >
+                ✕
+              </button>
+            )}
+          </>
         )
       )}
       {state.mode !== 'normal' && (

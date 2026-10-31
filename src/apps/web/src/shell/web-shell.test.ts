@@ -11,7 +11,6 @@ import type {
 import type { BrowserDb } from '../storage/browser-db';
 import { memoryDb } from '../storage/browser-db';
 import { createSettingsStore } from '../storage/settings-store';
-import { createNoticeBoard } from './notices';
 import type { Clock } from './timers';
 import { createWebShell, shellCommandIds } from './web-shell';
 
@@ -30,9 +29,11 @@ const savedFile = assembleSvgFile({
 });
 
 /** An editor that only keeps the status, enough to drive the shell. */
-function fakeEditor(): EditorHandle & {
+function fakeEditor(answer: boolean): EditorHandle & {
   edit: () => void;
   opened: OpenedDocument[];
+  /** The status bar messages the shell sent, oldest first. */
+  notices: string[];
   commands: { register: (spec: CommandSpec) => () => void; specs: Map<string, CommandSpec> };
 } {
   let doc: OpenedDocument | null = null;
@@ -46,8 +47,15 @@ function fakeEditor(): EditorHandle & {
     }
   };
   const opened: OpenedDocument[] = [];
+  const notices: string[] = [];
   return {
     opened,
+    notices,
+    notify: (message) => {
+      notices.push(typeof message === 'string' ? message : message.key);
+    },
+    confirm: () => Promise.resolve(answer),
+    prompt: (_message, value) => Promise.resolve(value),
     commands: {
       specs,
       register(spec) {
@@ -128,7 +136,6 @@ async function settle(): Promise<void> {
 function setup(options: { db?: BrowserDb; confirm?: boolean } = {}) {
   const db = options.db ?? memoryDb();
   const clock = manualClock();
-  const notices = createNoticeBoard(() => undefined);
   const titles: string[] = [];
   let keys = 0;
   const shell = createWebShell({
@@ -136,7 +143,6 @@ function setup(options: { db?: BrowserDb; confirm?: boolean } = {}) {
     settings: createSettingsStore(null, () => undefined),
     locale: 'en',
     canWriteInPlace: false,
-    notices,
     channel: null,
     tabId: 'tab',
     wait: () => Promise.resolve(),
@@ -146,14 +152,12 @@ function setup(options: { db?: BrowserDb; confirm?: boolean } = {}) {
       return `key-${String(keys)}`;
     },
     now: () => 1000,
-    confirm: () => options.confirm ?? true,
-    prompt: (_text, value) => value,
     setTitle: (title) => titles.push(title),
     log: () => undefined,
   });
-  const editor = fakeEditor();
+  const editor = fakeEditor(options.confirm ?? true);
   editor.open(shell.initialDocument());
-  return { shell, editor, db, clock, notices, titles };
+  return { shell, editor, db, clock, titles };
 }
 
 describe('web shell', () => {
@@ -175,12 +179,12 @@ describe('web shell', () => {
   });
 
   it('R-WEB-02: an SVG without a model does not replace the document, and says why', async () => {
-    const { shell, editor, notices } = setup();
+    const { shell, editor } = setup();
     await shell.start(editor);
     const before = editor.opened.length;
     await shell.openFile(new File(['<svg xmlns="http://www.w3.org/2000/svg"/>'], 'plain.svg'));
     expect(editor.opened.length).toBe(before);
-    expect(notices.list().at(-1)?.text).toBe(
+    expect(editor.notices.at(-1)).toBe(
       '“plain.svg” has no AriadneNSD model in it, so it cannot be edited.',
     );
   });
@@ -232,12 +236,12 @@ describe('web shell', () => {
   });
 
   it('03-editor 6.1: switching away from unsaved edits keeps them in the backup and says so', async () => {
-    const { shell, editor, db, notices } = setup();
+    const { shell, editor, db } = setup();
     await shell.start(editor);
     editor.edit();
     await shell.newDocument();
     await settle();
     expect(await db.backups()).toHaveLength(1);
-    expect(notices.list().at(-1)?.text).toContain('were not saved to the file');
+    expect(editor.notices.at(-1)).toContain('were not saved to the file');
   });
 });

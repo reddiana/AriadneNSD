@@ -8,6 +8,8 @@ import type {
   Appearance,
   ChromeState,
   CommandContext,
+  ContextMenuRequest,
+  Dialog,
   DocStatus,
   DocumentStore,
   EditorHandle,
@@ -22,7 +24,7 @@ import type {
 import { CanvasView } from './dom/canvas-view';
 import { installStyles } from './dom/styles';
 import { createSystemClipboard } from './dom/system-clipboard';
-import type { EditorMessage } from './i18n/messages';
+import type { EditorMessage, Message } from './i18n/messages';
 import { formatMessage } from './i18n/messages';
 import { keyBindings } from './input/keys';
 import { indexDoc } from './model/doc-index';
@@ -238,16 +240,51 @@ export function createEditor(options: EditorOptions): EditorHandle {
   };
   const chromeListeners = new Set<() => void>();
   const changeListeners = new Set<(state: typeof session.state) => void>();
-  session.subscribe((state) => {
-    emitStatus();
-    registry.changed();
+  const emitChrome = (): void => {
     for (const listener of [...chromeListeners]) {
       listener();
     }
+  };
+  session.subscribe((state) => {
+    emitStatus();
+    registry.changed();
+    emitChrome();
     for (const listener of [...changeListeners]) {
       listener(state);
     }
   });
+
+  // Dialogs a shell asks for (restore?, a file name). One at a time; a new one cancels the old.
+  let dialog: Dialog | null = null;
+  let nextDialogId = 1;
+  const ask = (
+    message: Message,
+    input: string | null,
+    buttons: { readonly confirm?: Message; readonly cancel?: Message },
+  ): Promise<string | null> => {
+    dialog?.answer(null);
+    return new Promise((resolve) => {
+      const id = nextDialogId++;
+      dialog = {
+        id,
+        message,
+        input,
+        confirm: buttons.confirm ?? 'choice.ok',
+        cancel: buttons.cancel ?? 'choice.cancel',
+        answer: (value) => {
+          if (dialog?.id !== id) {
+            return;
+          }
+          dialog = null;
+          emitChrome();
+          view?.focus();
+          resolve(value);
+        },
+      };
+      emitChrome();
+    });
+  };
+  const contextMenuListeners = new Set<(request: ContextMenuRequest) => void>();
 
   // Saving (03-editor 6, 6.3).
   const serialize = async (): Promise<{ readonly svg: string; readonly doc: Doc }> => {
@@ -317,6 +354,11 @@ export function createEditor(options: EditorOptions): EditorHandle {
     run: (id, args) => {
       registry.run(id, args);
     },
+    contextMenu: (request) => {
+      for (const listener of [...contextMenuListeners]) {
+        listener(request);
+      }
+    },
     locale,
     appearance: options.appearance,
   });
@@ -363,7 +405,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
         changeListeners.delete(listener);
       };
     },
-    chromeState: (): ChromeState => session.chrome(),
+    chromeState: (): ChromeState => ({ ...session.chrome(), dialog }),
     onChromeState: (listener) => {
       chromeListeners.add(listener);
       return () => {
@@ -420,7 +462,20 @@ export function createEditor(options: EditorOptions): EditorHandle {
     focus: () => {
       view?.focus();
     },
+    notify: (value, level = 'info') => {
+      session.notifyMessage(value, level);
+    },
+    confirm: async (value, buttons = {}) => (await ask(value, null, buttons)) !== null,
+    prompt: (value, initial) => ask(value, initial, {}),
+    onContextMenu: (listener) => {
+      contextMenuListeners.add(listener);
+      return () => {
+        contextMenuListeners.delete(listener);
+      };
+    },
     dispose: () => {
+      dialog?.answer(null);
+      contextMenuListeners.clear();
       stopSettings();
       view?.dispose();
       view = null;

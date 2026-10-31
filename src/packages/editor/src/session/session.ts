@@ -266,8 +266,8 @@ export class EditorSession {
     this.questionValue = null;
   }
 
-  /** The status bar's content. */
-  chrome(): ChromeState {
+  /** The status bar's content. Dialogs are the editor's (`createEditor`), not the session's. */
+  chrome(): Omit<ChromeState, 'dialog'> {
     const { editing, mode, pendingKeys, zoom } = this.current;
     return {
       selection: this.describeSelection(),

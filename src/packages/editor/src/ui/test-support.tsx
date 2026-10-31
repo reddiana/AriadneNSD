@@ -8,6 +8,7 @@ import type {
   CommandContext,
   CommandRegistry,
   CommandSpec,
+  ContextMenuRequest,
   DocStatus,
   EditorHandle,
   SettingSpec,
@@ -16,8 +17,8 @@ import type {
 
 type Listener = () => void;
 
-// The fake registry's commands ignore their context.
-const noContext = {} as CommandContext;
+// The fake registry's commands ignore their context; the context menu reads the selection.
+const noContext = { state: { selection: { kind: 'blocks' } } } as unknown as CommandContext;
 
 /** A command spec with defaults for the fields a test does not care about. */
 export function spec(fields: Partial<CommandSpec> & Pick<CommandSpec, 'id'>): CommandSpec {
@@ -40,6 +41,8 @@ export type FakeEngine = {
   setChrome(state: Partial<ChromeState>): void;
   /** Tells the UI that "applies now" may have changed. */
   changeCommands(): void;
+  /** The engine asks for the context menu (a right click on a block). */
+  openContextMenu(request: ContextMenuRequest): void;
 };
 
 export function fakeEngine(
@@ -63,7 +66,10 @@ export function fakeEngine(
     isKeyHintShown: false,
     keyHintTitle: null,
     zoom: 1,
+    dialog: null,
   };
+
+  const contextMenuListeners = new Set<(request: ContextMenuRequest) => void>();
 
   const commands: CommandRegistry = {
     list: () => registered,
@@ -110,6 +116,10 @@ export function fakeEngine(
       drags.push(kind);
     },
     focus: () => undefined,
+    onContextMenu: (listener) => {
+      contextMenuListeners.add(listener);
+      return () => contextMenuListeners.delete(listener);
+    },
   };
 
   return {
@@ -123,6 +133,9 @@ export function fakeEngine(
     setChrome: (next) => {
       chrome = { ...chrome, ...next };
       for (const listener of chromeListeners) listener();
+    },
+    openContextMenu: (request) => {
+      for (const listener of contextMenuListeners) listener(request);
     },
     changeCommands: () => {
       for (const listener of commandListeners) listener();

@@ -1,5 +1,7 @@
 // The web shell's screen strings (R-NFR-04). English is the default; Korean is supported.
-// The editor's own strings live in the editor's catalog; these are only what the shell shows.
+// Only what the shell alone shows lives here (coding guide 8): file messages, local backup,
+// tabs. The keys follow the editor catalog's rules (`area.name`, `{name}` placeholders). Command
+// titles are the editor catalog's (`command.file.new` …): the shell passes those keys as they are.
 
 import type { Locale } from '@ariadne-nsd/core';
 
@@ -7,13 +9,9 @@ import type { Locale } from '@ariadne-nsd/core';
 export type ShellLocale = Locale;
 
 const english = {
-  'file.new': 'New',
-  'file.open': 'Open…',
-  'file.recent': 'Open Recent',
   'file.recent.empty': 'No recent files',
   'file.recent.browserCopy': 'browser copy',
   'file.recent.missing': 'The file was moved or deleted.',
-  'file.exportPng': 'Export as PNG',
   'file.untitled': 'Untitled',
   'notice.downloadInstead':
     'This browser cannot write to the original file, so saving downloads a copy to your Downloads folder.',
@@ -35,23 +33,18 @@ const english = {
   'open.damaged': '“{name}” is damaged and cannot be edited. The file was not changed.',
   'open.newerVersion':
     '“{name}” was saved by a newer version of AriadneNSD. Reload the page and open it again.',
-  'notice.close': 'Close',
+  'choice.restore': 'Restore',
+  'choice.discard': 'Discard',
   'drop.hint': 'Drop a .ns.svg or .ns file to open it',
-  loading: 'Loading…',
-  beforeUnload: 'You have unsaved changes.',
 } as const;
 
 /** The key of a shell screen string. */
 export type ShellMessageKey = keyof typeof english;
 
 const korean: Record<ShellMessageKey, string> = {
-  'file.new': '새로 만들기',
-  'file.open': '열기…',
-  'file.recent': '최근 파일',
   'file.recent.empty': '최근 파일 없음',
   'file.recent.browserCopy': '브라우저 사본',
   'file.recent.missing': '파일이 이동되었거나 삭제되었습니다.',
-  'file.exportPng': 'PNG로 내보내기',
   'file.untitled': '제목 없음',
   'notice.downloadInstead':
     '이 브라우저는 원래 파일에 쓸 수 없어 내려받습니다(브라우저의 내려받기 폴더).',
@@ -73,10 +66,9 @@ const korean: Record<ShellMessageKey, string> = {
   'open.damaged': '“{name}”이(가) 손상되어 편집할 수 없습니다. 파일은 바꾸지 않았습니다.',
   'open.newerVersion':
     '“{name}”은(는) 더 새 버전의 AriadneNSD가 저장한 파일입니다. 페이지를 새로 고친 뒤 다시 여세요.',
-  'notice.close': '닫기',
+  'choice.restore': '복원',
+  'choice.discard': '버리기',
   'drop.hint': '.ns.svg · .ns 파일을 놓으면 엽니다',
-  loading: '불러오는 중…',
-  beforeUnload: '저장하지 않은 내용이 있습니다.',
 };
 
 const catalogs: Record<ShellLocale, Record<ShellMessageKey, string>> = { en: english, ko: korean };

@@ -27,7 +27,7 @@ export type StoreHost = {
   /** Firefox and Safari: called before every download; the shell tells the user once (06-web 1). */
   readonly downloading: () => void;
   /** Firefox and Safari "save as": asks for a name, or `null` when the user cancelled. */
-  readonly askDownloadName: (suggestedName: string) => string | null;
+  readonly askDownloadName: (suggestedName: string) => Promise<string | null>;
   readonly log: (detail: string) => void;
 };
 
@@ -129,7 +129,7 @@ export class WebDocumentStore implements DocumentStore {
   async writeAs(svg: string, suggestedName: string): Promise<WriteResult> {
     const name = documentFileName(suggestedName, this.#host.untitledName);
     if (!this.canWriteInPlace) {
-      const chosen = this.#host.askDownloadName(name);
+      const chosen = await this.#host.askDownloadName(name);
       if (chosen === null) {
         return { ok: false, reason: 'cancelled' };
       }

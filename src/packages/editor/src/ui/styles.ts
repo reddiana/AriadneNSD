@@ -20,7 +20,11 @@ export const chromeCss = `
 .ans-app *, .ans-app *::before, .ans-app *::after { box-sizing: border-box; }
 .ans-app button { font: inherit; color: inherit; }
 .ans-app kbd { font-family: inherit; font-size: 12px; color: var(--ui-muted); }
-.ans-app :focus-visible { outline: 2px solid var(--ui-accent); outline-offset: -2px; }
+/* The diagram shows its own focus (the selection, or an inner ring when nothing is selected,
+   04-visual-design 7.1), and the inline editor has its border: no outline on those two. */
+.ans-app :where(:focus-visible:not(.ans-canvas, .ans-inline-editor)) {
+  outline: 2px solid var(--ui-accent); outline-offset: -2px;
+}
 
 .ans-menubar {
   display: flex; align-items: center; gap: 2px; height: 30px; padding: 0 8px;
@@ -89,8 +93,12 @@ export const chromeCss = `
   overflow: hidden;
 }
 .ans-selection { color: var(--ui-muted); }
-.ans-notice { overflow: hidden; text-overflow: ellipsis; }
+.ans-notice { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .ans-notice[data-level='warn'] { color: var(--ui-warn); }
+.ans-notice-close {
+  background: none; border: 0; border-radius: 4px; padding: 0 4px; color: var(--ui-muted);
+}
+.ans-notice-close:hover { background: var(--ui-accent-soft); }
 .ans-question { display: flex; align-items: center; gap: 6px; }
 .ans-question button {
   padding: 1px 8px; border: 1px solid var(--ui-line); border-radius: 4px; background: var(--ui-bg);
@@ -159,6 +167,24 @@ export const chromeCss = `
 .ans-palette .ans-reason { color: var(--ui-muted); font-size: 12px; }
 .ans-palette kbd { margin-left: 6px; }
 .ans-palette .ans-empty { color: var(--ui-muted); padding: 10px 14px; }
+
+.ans-context-menu { position: fixed; z-index: 25; }
+.ans-context-menu > .ans-dropdown { top: 0; left: 0; margin: 0; }
+
+.ans-backdrop[data-kind='dialog'] .ans-modal { width: min(460px, 100%); }
+.ans-dialog { display: grid; gap: 10px; margin: 0; }
+.ans-dialog p { margin: 0; white-space: normal; }
+.ans-dialog input {
+  font: inherit; color: inherit; background: var(--ui-bg); border: 1px solid var(--ui-line);
+  border-radius: 4px; padding: 4px 8px;
+}
+.ans-dialog-buttons { display: flex; justify-content: flex-end; gap: 8px; }
+.ans-dialog-buttons button {
+  padding: 3px 12px; border: 1px solid var(--ui-line); border-radius: 4px; background: var(--ui-bg);
+}
+.ans-dialog-buttons button[data-default='true'] {
+  border-color: var(--ui-accent); background: var(--ui-accent); color: var(--ui-panel);
+}
 
 /* Narrow screens (06-web 7, UX MB1): the menus fold into one button, undo · redo · wrap ·
    help move to a bar at the bottom, the block icons stay. */

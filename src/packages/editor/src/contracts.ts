@@ -197,7 +197,27 @@ export type ChromeState = {
   readonly keyHintTitle: Message | null;
   /** The zoom, 0.4 ~ 3. */
   readonly zoom: number;
+  /** A dialog a shell asked for (`confirm`, `prompt`), or `null`. The UI shows it as a modal. */
+  readonly dialog: Dialog | null;
 };
+
+/**
+ * A modal question from a shell ("Restore last time's changes?", "File name to download:").
+ * Addition to 03-editor 6: the shell asks through the editor's UI instead of `window.confirm`.
+ */
+export type Dialog = {
+  readonly id: number;
+  readonly message: Message;
+  /** `null` for a yes/no question; otherwise a text box that starts with this value. */
+  readonly input: string | null;
+  readonly confirm: Message;
+  readonly cancel: Message;
+  /** The user's answer: the text (or `''` for a yes/no question), or `null` when cancelled. */
+  answer(value: string | null): void;
+};
+
+/** Where the context menu opens, in page (client) coordinates. */
+export type ContextMenuRequest = { readonly x: number; readonly y: number };
 
 /** The block kinds of the toolbar's block icons. */
 export type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
@@ -237,5 +257,19 @@ export interface EditorHandle {
   startBlockDrag(kind: ToolbarBlockKind, event: PointerEvent): void;
   /** Gives the keyboard focus to the diagram (after a dialog closes). */
   focus(): void;
+  /**
+   * Addition: shows a shell's message in the status bar (06-web 7: the status bar is the one
+   * place for notices). `warn` stays until the next notice or until closed.
+   */
+  notify(message: Message, level?: Notice['level']): void;
+  /** Addition: asks a yes/no question in a modal. Resolves `true` for the confirm button. */
+  confirm(
+    message: Message,
+    buttons?: { readonly confirm?: Message; readonly cancel?: Message },
+  ): Promise<boolean>;
+  /** Addition: asks for a text in a modal. Resolves `null` when cancelled. */
+  prompt(message: Message, value: string): Promise<string | null>;
+  /** Addition: the diagram asks for the context menu (right click, Shift+F10). */
+  onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;
   dispose(): void;
 }

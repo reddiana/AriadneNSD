@@ -42,7 +42,7 @@ function host(canWriteInPlace: boolean, written: Written[]): StoreHost {
     newKey: () => 'new-key',
     written: (item) => written.push(item),
     downloading: () => undefined,
-    askDownloadName: (name) => `renamed-${name}`,
+    askDownloadName: (name) => Promise.resolve(`renamed-${name}`),
     log: () => undefined,
   };
 }

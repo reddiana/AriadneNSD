@@ -2,11 +2,11 @@
 // About and What's New (06-web 7, UX W4 · W5). Esc or the backdrop closes them.
 
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 
 import { editorVersion } from '../version';
 import type { CommandView } from './command-view';
-import type { SettingSpec, SettingsStore } from './engine-api';
+import type { Dialog, SettingSpec, SettingsStore } from './engine-api';
 import { displayKey, splitKeys } from './keys';
 import { menuOrder } from './menu-model';
 import type { Chrome } from './use-engine';
@@ -251,6 +251,63 @@ export function WhatsNewModal({ onClose }: { readonly onClose: () => void }): Re
   return (
     <Modal title={text('whatsNew.title')} onClose={onClose}>
       <p>{text('whatsNew.body')}</p>
+    </Modal>
+  );
+}
+
+/**
+ * A shell's question (03-editor 6 addition): "Restore last time's changes?" or a file name.
+ * Enter answers with the confirm button, Esc and the close button cancel.
+ */
+export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactElement {
+  const { format, text } = useChrome();
+  const [value, setValue] = useState(dialog.input ?? '');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    } else {
+      confirmRef.current?.focus();
+    }
+  }, []);
+  const accept = (): void => {
+    dialog.answer(dialog.input === null ? '' : value);
+  };
+  const cancel = (): void => {
+    dialog.answer(null);
+  };
+  return (
+    <Modal title={text('dialog.label')} onClose={cancel}>
+      <form
+        className="ans-dialog"
+        onSubmit={(event) => {
+          event.preventDefault();
+          accept();
+        }}
+      >
+        <p>{format(dialog.message)}</p>
+        {dialog.input !== null && (
+          <input
+            ref={inputRef}
+            type="text"
+            aria-label={format(dialog.message)}
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value);
+            }}
+          />
+        )}
+        <div className="ans-dialog-buttons">
+          <button type="button" onClick={cancel}>
+            {format(dialog.cancel)}
+          </button>
+          <button type="submit" ref={confirmRef} data-default="true">
+            {format(dialog.confirm)}
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 }

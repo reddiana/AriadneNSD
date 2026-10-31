@@ -23,6 +23,8 @@ export type {
   ToolbarPlace,
 } from '../contracts';
 export type { Message } from '../i18n/messages';
+export type { SelectionKind } from '../state/selection';
+export type { ContextMenuRequest, Dialog } from '../contracts';
 
 /** The members of the engine's handle that the UI uses. */
 export type EditorHandle = Pick<
@@ -37,4 +39,5 @@ export type EditorHandle = Pick<
   | 'setDocumentSetting'
   | 'startBlockDrag'
   | 'focus'
+  | 'onContextMenu'
 >;

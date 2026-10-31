@@ -27,6 +27,8 @@ type DropdownProps = {
   readonly onDone: () => void;
   /** Move focus into the first item when it opens (opened by keyboard). */
   readonly isFocusedOnOpen?: boolean;
+  /** `j` / `k` move like ↓ / ↑ (the context menu, 03-keymap UX K2). */
+  readonly hasVimKeys?: boolean;
 };
 
 function menuItems(list: HTMLElement): HTMLElement[] {
@@ -44,6 +46,7 @@ export function Dropdown({
   onClose,
   onDone,
   isFocusedOnOpen = false,
+  hasVimKeys = false,
 }: DropdownProps): ReactElement {
   const { run } = useChrome();
   const listRef = useRef<HTMLUListElement>(null);
@@ -60,10 +63,12 @@ export function Dropdown({
     const buttons = menuItems(list);
     const current = buttons.indexOf(document.activeElement as HTMLElement);
     if (current === -1) return; // the key belongs to a submenu below
-    switch (event.key) {
+    const vimArrows: Readonly<Record<string, string>> = { j: 'ArrowDown', k: 'ArrowUp' };
+    const key = (hasVimKeys ? vimArrows[event.key] : undefined) ?? event.key;
+    switch (key) {
       case 'ArrowDown':
       case 'ArrowUp': {
-        const step = event.key === 'ArrowDown' ? 1 : -1;
+        const step = key === 'ArrowDown' ? 1 : -1;
         buttons[(current + step + buttons.length) % buttons.length]?.focus();
         break;
       }
@@ -159,6 +164,7 @@ export function Dropdown({
                   items={item.items}
                   label={item.title}
                   isFocusedOnOpen={isSubmenuFocused}
+                  hasVimKeys={hasVimKeys}
                   onClose={() => {
                     setOpenSubmenu(null);
                     if (listRef.current) menuItems(listRef.current)[index]?.focus();

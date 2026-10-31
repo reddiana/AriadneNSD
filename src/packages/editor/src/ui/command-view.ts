@@ -5,7 +5,14 @@ import type { Locale } from '@ariadne-nsd/core';
 
 import { formatMessage, isMessageKey } from '../i18n/messages';
 
-import type { CommandRegistry, CommandSpec, MenuPlace, Message, ToolbarPlace } from './engine-api';
+import type {
+  CommandRegistry,
+  CommandSpec,
+  MenuPlace,
+  Message,
+  SelectionKind,
+  ToolbarPlace,
+} from './engine-api';
 import { isUiMessageKey, uiMessage } from './messages';
 
 /** Turns an engine message (or a key of the UI's catalog, or finished text) into screen text. */
@@ -31,6 +38,8 @@ export type CommandView = {
   readonly keys: ReadonlyArray<string>;
   readonly menu: MenuPlace | null;
   readonly toolbar: ToolbarPlace | null;
+  /** The kinds of selection the context menu shows it for; empty when it is not there. */
+  readonly context: ReadonlyArray<SelectionKind>;
   readonly isEnabled: boolean;
   /** Why it does not apply now, or `null` when it does. */
   readonly reason: string | null;
@@ -53,6 +62,7 @@ export function viewCommand(
     keys: spec.keys,
     menu: spec.menu ?? null,
     toolbar: spec.toolbar ?? null,
+    context: spec.context ?? [],
     isEnabled: applies === true,
     reason: applies === true ? null : format(applies),
     checked: spec.checked ? spec.checked(ctx) : null,

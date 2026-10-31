@@ -138,6 +138,7 @@ describe('command palette', () => {
       keys: [],
       menu: null,
       toolbar: null,
+      context: [],
       isEnabled: true,
       reason: null,
       checked: null,
@@ -329,5 +330,113 @@ describe('canvas slot', () => {
     renderApp(fakeEngine(editCommands));
     const canvas = screen.getByTestId('engine-canvas');
     expect(canvas.parentElement?.className).toBe('ans-canvas');
+  });
+});
+
+describe('context menu', () => {
+  const contextCommands = [
+    ...editCommands.map((command) =>
+      command.id === 'edit.cut' || command.id === 'block.insert.if'
+        ? { ...command, context: ['blocks' as const] }
+        : command,
+    ),
+  ];
+
+  it('03-editor 5: lists the commands for the selection in menu order, with submenus', () => {
+    const engine = fakeEngine(contextCommands);
+    renderApp(engine);
+    act(() => {
+      engine.openContextMenu({ x: 40, y: 50 });
+    });
+    const menu = screen.getByRole('menu', { name: 'Context menu' });
+    const [cut, insert, ...others] = within(menu).getAllByRole('menuitem');
+    if (cut === undefined || insert === undefined) throw new Error('two items expected');
+    expect(others).toEqual([]);
+    expect(cut.textContent).toContain('Cut');
+    expect(insert.textContent).toContain('Insert');
+    // Opened from the keyboard or the mouse, the first item has the focus; j moves down.
+    expect(document.activeElement).toBe(cut);
+    fireEvent.keyDown(cut, { key: 'j' });
+    expect(document.activeElement).toBe(insert);
+    fireEvent.click(cut);
+    expect(engine.ran).toEqual(['edit.cut']);
+    expect(screen.queryByRole('menu', { name: 'Context menu' })).toBeNull();
+  });
+
+  it('closes on Esc', () => {
+    const engine = fakeEngine(contextCommands);
+    renderApp(engine);
+    act(() => {
+      engine.openContextMenu({ x: 40, y: 50 });
+    });
+    const [first] = screen.getAllByRole('menuitem');
+    if (first === undefined) throw new Error('an item expected');
+    fireEvent.keyDown(first, { key: 'Escape' });
+    expect(screen.queryByRole('menu', { name: 'Context menu' })).toBeNull();
+  });
+});
+
+describe('dialogs and notices from the shell', () => {
+  it('06-web 2: a dialog asks in a modal; the confirm button answers', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    const answers: (string | null)[] = [];
+    act(() => {
+      engine.setChrome({
+        dialog: {
+          id: 1,
+          message: 'Restore them?',
+          input: null,
+          confirm: 'Restore',
+          cancel: 'Discard',
+          answer: (value) => answers.push(value),
+        },
+      });
+    });
+    expect(screen.getByRole('dialog').textContent).toContain('Restore them?');
+    fireEvent.click(screen.getByRole('button', { name: 'Restore' }));
+    expect(answers).toEqual(['']);
+  });
+
+  it('06-web 1: a text dialog answers the typed text, Esc cancels', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    const answers: (string | null)[] = [];
+    act(() => {
+      engine.setChrome({
+        dialog: {
+          id: 2,
+          message: 'File name:',
+          input: 'a.ns.svg',
+          confirm: 'choice.ok',
+          cancel: 'choice.cancel',
+          answer: (value) => answers.push(value),
+        },
+      });
+    });
+    const box = screen.getByRole('textbox');
+    fireEvent.change(box, { target: { value: 'b.ns.svg' } });
+    fireEvent.click(screen.getByRole('button', { name: 'OK' }));
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(answers).toEqual(['b.ns.svg', null]);
+  });
+
+  it('06-web 7: a warning stays in the status bar until it is closed', () => {
+    vi.useFakeTimers();
+    try {
+      const engine = fakeEngine(editCommands);
+      renderApp(engine);
+      act(() => {
+        engine.setChrome({ notice: { id: 7, message: 'Saved as a copy.', level: 'warn' } });
+      });
+      act(() => {
+        vi.advanceTimersByTime(20_000);
+      });
+      expect(screen.getByText('Saved as a copy.')).toBeTruthy();
+      fireEvent.click(screen.getByRole('button', { name: 'Close the message' }));
+      expect(screen.queryByText('Saved as a copy.')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

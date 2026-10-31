@@ -4,7 +4,7 @@
 import type { Box, Id, Locale, RenderedSvg } from '@ariadne-nsd/core';
 
 import { runDrop } from '../commands/drop-command';
-import type { Appearance } from '../contracts';
+import type { Appearance, ContextMenuRequest } from '../contracts';
 import { formatMessage } from '../i18n/messages';
 import type { DragSource, Drop } from '../input/drop';
 import { findDrop } from '../input/drop';
@@ -27,6 +27,8 @@ export type ViewOptions = {
   readonly run: (id: string, args?: unknown) => void;
   readonly locale: () => Locale;
   readonly appearance: Appearance;
+  /** Opens the context menu at a page point (the UI draws it). */
+  readonly contextMenu: (request: ContextMenuRequest) => void;
 };
 
 /** A press of the primary button that may become a click or a drag. */
@@ -56,6 +58,17 @@ export const dragThreshold = 4;
 export const autoScrollEdge = 32;
 
 const svgNamespace = 'http://www.w3.org/2000/svg';
+
+/**
+ * The keys that still run their command while the inline editor is open: they do not type
+ * anything, so the text is accepted first (like a click elsewhere) and the command runs.
+ */
+const editingKeys: ReadonlyMap<string, string> = new Map([
+  ['Ctrl+S', 'file.save'],
+  ['Ctrl+Shift+S', 'file.saveAs'],
+  ['Ctrl+Shift+P', 'edit.commandPalette'],
+  ['F1', 'edit.commandPalette'],
+]);
 
 function drawingMarkup(svg: RenderedSvg): string {
   return `<svg xmlns="${svgNamespace}" width="${String(svg.width)}" height="${String(svg.height)}" viewBox="${svg.viewBox}"><rect width="100%" height="100%" fill="${svg.paper}"/>${svg.content}</svg>`;
@@ -111,7 +124,12 @@ export class CanvasView {
     options.host.append(this.canvas);
     this.setAppearance(options.appearance);
     this.listen();
-    this.unsubscribe = options.session.subscribe(() => {
+    this.unsubscribe = options.session.subscribe((state) => {
+      // The inline editor opens at once, not at the next frame: keys typed right after `a i`
+      // must go into the text, not run as commands on the diagram.
+      if (state.editing !== this.shownEditing) {
+        this.syncEditor(state.editing);
+      }
       this.schedule();
     });
     this.draw();
@@ -126,8 +144,12 @@ export class CanvasView {
     return this.editor.value;
   }
 
-  /** Gives the keyboard focus to the diagram. */
+  /** Gives the keyboard focus to the diagram, or to the inline editor while it is open. */
   focus(): void {
+    if (this.session.state.editing !== null && this.shownEditing !== null) {
+      this.editor.focus({ preventScroll: true });
+      return;
+    }
     this.canvas.focus({ preventScroll: true });
   }
 
@@ -370,6 +392,13 @@ export class CanvasView {
       { signal },
     );
     canvas.addEventListener(
+      'contextmenu',
+      (event) => {
+        this.onContextMenu(event);
+      },
+      { signal },
+    );
+    canvas.addEventListener(
       'dblclick',
       (event) => {
         this.onDoubleClick(event);
@@ -399,6 +428,15 @@ export class CanvasView {
           this.commitEditor(true);
         } else if (event.key === 'Tab') {
           event.preventDefault();
+        } else {
+          // Save, the palette and help keys still work while typing: accept the text, then run.
+          const stroke = strokeOf(event);
+          const id = stroke === null || isComposing ? undefined : editingKeys.get(stroke);
+          if (id !== undefined) {
+            event.preventDefault();
+            this.commitEditor(true);
+            this.options.run(id);
+          }
         }
       },
       { signal },
@@ -437,10 +475,59 @@ export class CanvasView {
       }
       return;
     }
+    if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+      // The context menu from the keyboard opens at the selection (or the canvas corner).
+      event.preventDefault();
+      this.openContextMenuAtSelection();
+      return;
+    }
     const stroke = strokeOf(event);
     if (stroke !== null && this.session.handleKey(stroke)) {
       event.preventDefault();
     }
+  }
+
+  /**
+   * Right click: selects what is under the pointer unless it is inside the selection, then asks
+   * for the context menu (03-editor 5: `CommandSpec.context`). The empty canvas has no menu.
+   */
+  private onContextMenu(event: MouseEvent): void {
+    event.preventDefault();
+    if (this.drag !== null) {
+      return;
+    }
+    if (this.session.state.editing !== null) {
+      this.commitEditor(false);
+    }
+    this.focus();
+    const state = this.session.state;
+    const index = this.session.index();
+    const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
+    if (hit === null) {
+      this.session.select(null);
+      return;
+    }
+    const selected = selectedBlocks(index, state.selection);
+    const isInSelection =
+      hit.kind === 'block' && ancestorsOf(index, hit.block).some((id) => selected.includes(id));
+    if (!isInSelection) {
+      this.session.select(selectionOfHit(index, hit));
+    }
+    this.options.contextMenu({ x: event.clientX, y: event.clientY });
+  }
+
+  private openContextMenuAtSelection(): void {
+    const state = this.session.state;
+    const box = selectionBox(state.layout, this.session.index(), state.selection);
+    if (box === null) {
+      return;
+    }
+    const rect = this.stage.getBoundingClientRect();
+    const zoom = state.zoom;
+    this.options.contextMenu({
+      x: rect.left + (box.x + Math.min(box.width, 24)) * zoom,
+      y: rect.top + (box.y + box.height) * zoom,
+    });
   }
 
   private onPointerDown(event: PointerEvent): void {

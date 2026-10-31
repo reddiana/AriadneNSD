@@ -74,14 +74,13 @@ test.describe('download flow (no File System Access)', () => {
     await command(page, 'block.insert.while').click();
     // The backup is written 0.5 s after the last edit.
     await page.waitForTimeout(1000);
-    // First the browser's "leave site?" (the document is unsaved), then "restore?".
-    const messages: string[] = [];
+    // The browser's "leave site?" (the document is unsaved), then the editor's "restore?".
     page.on('dialog', (dialog) => {
-      messages.push(dialog.message());
       void dialog.accept();
     });
     await page.reload();
-    await expect.poll(() => messages.some((text) => text.includes('Restore them?'))).toBe(true);
+    await expect(page.getByRole('dialog')).toContainText('Restore them?');
+    await page.getByRole('button', { name: 'Restore' }).click();
     await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
     await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
   });

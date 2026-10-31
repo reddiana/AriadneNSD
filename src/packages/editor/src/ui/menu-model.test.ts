@@ -10,6 +10,7 @@ function view(id: string, menu: CommandView['menu']): CommandView {
     keys: [],
     menu,
     toolbar: null,
+    context: [],
     isEnabled: true,
     reason: null,
     checked: null,

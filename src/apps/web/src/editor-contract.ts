@@ -94,4 +94,13 @@ export type EditorHandle = {
   save(): Promise<WriteResult>;
   setReadOnly(readOnly: boolean): void;
   setAppearance(appearance: Appearance): void;
+  /** Shows a message in the editor's status bar (the one place for notices, 06-web 7). */
+  notify(message: Message, level?: 'info' | 'warn'): void;
+  /** Asks a yes/no question in the editor's modal. */
+  confirm(
+    message: Message,
+    buttons?: { readonly confirm?: Message; readonly cancel?: Message },
+  ): Promise<boolean>;
+  /** Asks for a text in the editor's modal; `null` when cancelled. */
+  prompt(message: Message, value: string): Promise<string | null>;
 };

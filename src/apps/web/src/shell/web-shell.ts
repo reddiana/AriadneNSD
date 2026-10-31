@@ -26,7 +26,6 @@ import type { BrowserDb } from '../storage/browser-db';
 import type { RecentFile } from '../storage/recent-files';
 import type { ShellMessageKey } from './messages';
 import { shellMessage } from './messages';
-import type { NoticeBoard } from './notices';
 import type { Channel } from './tab-lock';
 import { createTabLock } from './tab-lock';
 import type { Autosave, AutosaveOutcome, Clock, Debounce } from './timers';
@@ -57,7 +56,6 @@ export type WebShellOptions = {
   readonly settings: SettingsStore;
   readonly locale: Locale;
   readonly canWriteInPlace: boolean;
-  readonly notices: NoticeBoard;
   /** Tabs of this site tell each other which file they edit (06-web 2). `null`: no such API. */
   readonly channel: Channel | null;
   readonly tabId: string;
@@ -65,10 +63,6 @@ export type WebShellOptions = {
   readonly clock: Clock;
   readonly newKey: () => string;
   readonly now: () => number;
-  /** "Restore last time's changes?" — `window.confirm` in the browser. */
-  readonly confirm: (text: string) => boolean;
-  /** Asks for a file name — `window.prompt` in the browser. */
-  readonly prompt: (text: string, value: string) => string | null;
   /** Sets the browser tab title. */
   readonly setTitle: (title: string) => void;
   readonly log: (detail: string) => void;
@@ -96,13 +90,19 @@ export type WebShell = {
 
 /** Creates the web shell. */
 export function createWebShell(options: WebShellOptions): WebShell {
-  const { db, settings, notices } = options;
+  const { db, settings } = options;
   let locale = options.locale;
   const text = (key: ShellMessageKey, values?: Readonly<Record<string, string>>): string =>
     shellMessage(locale, key, values);
   const untitledName = documentFileName('', text('file.untitled'));
 
   let editor: EditorHandle | null = null;
+  /** Tells the user in the editor's status bar (06-web 7: one place for notices). */
+  const notices = {
+    show: (message: string, level: 'info' | 'warn'): void => {
+      editor?.notify(message, level);
+    },
+  };
   let store: WebDocumentStore = newStore(options.newKey(), untitledName, { kind: 'none' });
   let recent: ReadonlyArray<RecentFile> = [];
   const missingKeys = new Set<string>();
@@ -136,7 +136,10 @@ export function createWebShell(options: WebShellOptions): WebShell {
           void onWritten(written);
         },
         downloading: noticeDownloadOnce,
-        askDownloadName: (suggested) => options.prompt(text('notice.askName'), suggested),
+        askDownloadName: (suggested) =>
+          editor === null
+            ? Promise.resolve(null)
+            : editor.prompt(text('notice.askName'), suggested),
         log: options.log,
       },
       key,
@@ -346,10 +349,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     }
     const key = knownKey ?? (await keyOf(origin, name));
     const saved = await db.backup(key);
-    const restored =
-      saved !== undefined && options.confirm(text('notice.restore', { name }))
-        ? saved.snapshot
-        : undefined;
+    const restored = saved !== undefined && (await askRestore(name)) ? saved.snapshot : undefined;
     if (saved !== undefined && restored === undefined) {
       await db.deleteBackup(key);
     }
@@ -370,7 +370,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     if (editor === null) {
       return;
     }
-    leaveCurrent();
+    const leaving = leaveCurrent();
     store = next;
     const isOwner = await lock.claim(next.key);
     isReadOnly = !isOwner;
@@ -383,23 +383,29 @@ export function createWebShell(options: WebShellOptions): WebShell {
       ...(isReadOnly ? { readOnly: true } : {}),
       ...(restored === undefined ? {} : { restored }),
     });
+    // Told after `open`, which empties the status bar.
     if (isReadOnly) {
       notices.show(text('notice.otherTab'), 'warn');
+    } else if (leaving !== null) {
+      notices.show(leaving, 'info');
     }
     onStatus(editor.status());
   }
 
-  /** Before another document replaces this one: keep its edits in the backup and say so. */
-  function leaveCurrent(): void {
+  /**
+   * Before another document replaces this one: keeps its edits in the backup. Returns what to
+   * tell the user when they were not saved to the file, or `null`.
+   */
+  function leaveCurrent(): string | null {
     if (editor === null) {
-      return;
+      return null;
     }
     const status = editor.status();
     backup.flush();
-    if (status.dirty && !status.readOnly) {
-      notices.show(text('notice.notSavedToFile', { name: status.name }), 'info');
-    }
     lock.release();
+    return status.dirty && !status.readOnly
+      ? text('notice.notSavedToFile', { name: status.name })
+      : null;
   }
 
   async function newDocument(): Promise<void> {
@@ -489,7 +495,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     return [
       {
         id: shellCommandIds.newDocument,
-        title: text('file.new'),
+        title: 'command.file.new',
         keys: [],
         menu: { menu: 'file', group: 1, order: 1 },
         toolbar: { group: 1, order: 1, icon: 'file.new' },
@@ -499,7 +505,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       },
       {
         id: shellCommandIds.open,
-        title: text('file.open'),
+        title: 'command.file.open',
         keys: [],
         menu: { menu: 'file', group: 1, order: 2 },
         toolbar: { group: 1, order: 2, icon: 'file.open' },
@@ -509,7 +515,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       },
       {
         id: shellCommandIds.exportPng,
-        title: text('file.exportPng'),
+        title: 'command.file.export.png',
         keys: [],
         menu: { menu: 'file', group: 3, order: 1, submenu: 'export' },
         toolbar: { group: 1, order: 4, icon: 'file.export' },
@@ -521,7 +527,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
           }
           await exportPng(editor, store.name, args, {
             canWriteInPlace: options.canWriteInPlace,
-            notices,
+            notify: notices.show,
             text,
             log: options.log,
           });
@@ -544,6 +550,17 @@ export function createWebShell(options: WebShellOptions): WebShell {
     await restoreLastBackup();
   }
 
+  /** "Restore last time's changes?" in the editor's modal. */
+  async function askRestore(name: string): Promise<boolean> {
+    if (editor === null) {
+      return false;
+    }
+    return editor.confirm(text('notice.restore', { name }), {
+      confirm: text('choice.restore'),
+      cancel: text('choice.discard'),
+    });
+  }
+
   /** "Restore last time's changes?" for the newest backup (06-web 2, R-WEB-03). */
   async function restoreLastBackup(): Promise<void> {
     const backups = [...(await db.backups())].sort((a, b) => b.savedAt - a.savedAt);
@@ -551,7 +568,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     if (last === undefined) {
       return;
     }
-    if (!options.confirm(text('notice.restore', { name: last.name }))) {
+    if (!(await askRestore(last.name))) {
       await db.deleteBackup(last.key);
       return;
     }

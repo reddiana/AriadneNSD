@@ -169,4 +169,95 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
     expect(textarea?.style.display).toBe('none');
     expect(host.querySelector('.ans-overlay')?.innerHTML).toContain('stroke-width="3"');
   });
+
+  it("03-editor 3.4: a new block's text editor takes the keys at once, not a frame later", () => {
+    const { handle, host } = make();
+    handle.commands.run('block.insert.if');
+    expect(document.activeElement).toBe(host.querySelector('textarea'));
+  });
+
+  it('03-editor 3.4: Ctrl+S while typing accepts the text and saves it', async () => {
+    const { handle, host, store } = make();
+    host
+      .querySelector('.ans-canvas')
+      ?.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyI', bubbles: true }));
+    await tick();
+    const textarea = host.querySelector('textarea');
+    if (textarea !== null) {
+      textarea.value = 'typed';
+      textarea.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 's', code: 'KeyS', ctrlKey: true, bubbles: true }),
+      );
+    }
+    await tick();
+    expect(handle.state().editing).toBeNull();
+    expect(store.written).toHaveLength(1);
+    expect(store.written[0]).toContain('"text": "typed"');
+    expect(handle.status().dirty).toBe(false);
+  });
+
+  it('03-editor 5: a right click on a block selects it and asks for the context menu', () => {
+    const { handle, host } = make();
+    const requests: { x: number; y: number }[] = [];
+    handle.onContextMenu((request) => requests.push(request));
+    handle.commands.run('select.clear');
+    const canvas = host.querySelector('.ans-canvas');
+    const box = handle.state().layout.boxes.get('b1');
+    const stage = host.querySelector('.ans-stage')?.getBoundingClientRect();
+    if (box === undefined || stage === undefined) {
+      throw new Error('no block b1 on the stage');
+    }
+    canvas?.dispatchEvent(
+      new MouseEvent('contextmenu', {
+        clientX: stage.left + box.x + 4,
+        clientY: stage.top + box.y + 4,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    expect(handle.state().selection).toMatchObject({ kind: 'blocks', anchor: 'b1' });
+    expect(requests).toHaveLength(1);
+  });
+});
+
+describe('the shell asks through the editor (03-editor 6 additions)', () => {
+  it('06-web 7: a shell message shows in the status bar', () => {
+    const { handle } = make();
+    handle.notify('Downloaded instead.', 'warn');
+    expect(handle.chromeState().notice).toMatchObject({
+      message: 'Downloaded instead.',
+      level: 'warn',
+    });
+  });
+
+  it('06-web 2: confirm shows a dialog and resolves with the answer', async () => {
+    const { handle } = make();
+    const answer = handle.confirm('Restore them?', { confirm: 'Restore' });
+    const dialog = handle.chromeState().dialog;
+    expect(dialog).toMatchObject({ message: 'Restore them?', input: null, confirm: 'Restore' });
+    dialog?.answer('');
+    expect(await answer).toBe(true);
+    expect(handle.chromeState().dialog).toBeNull();
+  });
+
+  it('06-web 1: prompt resolves with the typed text, or null when cancelled', async () => {
+    const { handle } = make();
+    const named = handle.prompt('File name:', 'a.ns.svg');
+    expect(handle.chromeState().dialog?.input).toBe('a.ns.svg');
+    handle.chromeState().dialog?.answer('b.ns.svg');
+    expect(await named).toBe('b.ns.svg');
+    const cancelled = handle.prompt('File name:', 'a.ns.svg');
+    handle.chromeState().dialog?.answer(null);
+    expect(await cancelled).toBeNull();
+  });
+
+  it('a second dialog cancels the first', async () => {
+    const { handle } = make();
+    const first = handle.confirm('First?');
+    const second = handle.confirm('Second?');
+    expect(await first).toBe(false);
+    expect(handle.chromeState().dialog?.message).toBe('Second?');
+    handle.chromeState().dialog?.answer('');
+    expect(await second).toBe(true);
+  });
 });

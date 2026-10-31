@@ -10,7 +10,6 @@ import { createSaveFonts } from './fonts/save-font';
 import { loadBlockFont } from './fonts/screen-font';
 import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
 import { createListeners } from './shell/listeners';
-import { createNoticeBoard } from './shell/notices';
 import { watchFileDrops, watchPageExit } from './shell/page-events';
 import { browserClock } from './shell/timers';
 import { createWebShell } from './shell/web-shell';
@@ -48,24 +47,18 @@ const settings = createSettingsStore(browserLocalStorage(), log, window);
 let locale = screenLocale(settings.get(localeSettingKey), navigator.language);
 document.documentElement.lang = locale;
 const db = await openBrowserDb(log);
-const notices = createNoticeBoard((callback, milliseconds) => {
-  setTimeout(callback, milliseconds);
-});
 
 const shell = createWebShell({
   db,
   settings,
   locale,
   canWriteInPlace: hasFileSystemAccess(),
-  notices,
   channel: 'BroadcastChannel' in window ? new BroadcastChannel('ariadne-nsd-documents') : null,
   tabId: crypto.randomUUID(),
   wait: (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
   clock: browserClock,
   newKey: () => crypto.randomUUID(),
   now: () => Date.now(),
-  confirm: (text) => window.confirm(text),
-  prompt: (text, value) => window.prompt(text, value),
   setTitle: (title) => {
     document.title = title;
   },
@@ -103,7 +96,6 @@ function render(): void {
         canvas={canvas}
         locale={locale}
         settings={settings}
-        notices={notices}
         appearance={appearance.current}
         onAppearance={appearanceChanged.add}
         onDragState={dragging.add}
@@ -125,6 +117,8 @@ settings.onChange((key) => {
 });
 
 await shell.start(editor);
+// The keys go to the diagram from the start, so a keyboard-only user can begin (R-NFR-05).
+editor.focus();
 watchFileDrops(shell, dragging.emit);
 watchPageExit(shell);
 await blockFontLoading;

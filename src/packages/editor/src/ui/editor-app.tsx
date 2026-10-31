@@ -10,13 +10,22 @@ import { uiCommandIds } from './command-ids';
 import type { MessageFormatter } from './command-view';
 import { defaultFormatter } from './command-view';
 import { CommandPalette } from './command-palette';
-import type { Appearance, CommandSpec, EditorHandle, MenuPlace, SettingsStore } from './engine-api';
+import { ContextMenu } from './context-menu';
+import type {
+  Appearance,
+  CommandSpec,
+  ContextMenuRequest,
+  EditorHandle,
+  MenuPlace,
+  SettingsStore,
+} from './engine-api';
 import { KeyHint } from './key-hint';
 import { MenuBar } from './menu-bar';
 import type { UiMessageKey } from './messages';
 import { uiMessage } from './messages';
 import {
   AboutModal,
+  DialogModal,
   DocumentSettingsModal,
   PreferencesModal,
   ShortcutsModal,
@@ -26,7 +35,7 @@ import { StatusBar } from './status-bar';
 import { chromeCss } from './styles';
 import { BottomBar, Toolbar } from './toolbar';
 import type { Chrome } from './use-engine';
-import { ChromeContext, textOf } from './use-engine';
+import { ChromeContext, textOf, useChromeState } from './use-engine';
 
 /** How many recently run commands the palette puts first. */
 const recentLimit = 8;
@@ -140,7 +149,23 @@ export function EditorApp({
 }: EditorAppProps): ReactElement {
   const [popup, setPopup] = useState<Popup | null>(null);
   const [recent, setRecent] = useState<ReadonlyArray<string>>([]);
+  const [contextMenu, setContextMenu] = useState<
+    (ContextMenuRequest & { readonly key: number }) | null
+  >(null);
   const slotRef = useMountedCanvas(canvas);
+  const { dialog } = useChromeState(handle);
+
+  useEffect(
+    () =>
+      handle.onContextMenu((request) => {
+        setContextMenu((previous) => ({ ...request, key: (previous?.key ?? 0) + 1 }));
+      }),
+    [handle],
+  );
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+    handle.focus();
+  }, [handle]);
 
   const openPopup = useCallback((next: Popup) => {
     setPopup(next);
@@ -185,6 +210,9 @@ export function EditorApp({
         setRecent((previous) =>
           [id, ...previous.filter((other) => other !== id)].slice(0, recentLimit),
         );
+        // The keys go back to the diagram, so `j` `k` work after a click on the toolbar or a
+        // menu. A popup or the inline editor the command opens takes the focus after this.
+        handle.focus();
         handle.commands.run(id);
       },
     }),
@@ -226,7 +254,15 @@ export function EditorApp({
         <KeyHint />
         <StatusBar />
         <BottomBar />
-        {content && (
+        {contextMenu && (
+          <ContextMenu key={contextMenu.key} request={contextMenu} onClose={closeContextMenu} />
+        )}
+        {dialog && (
+          <div className="ans-backdrop" data-kind="dialog">
+            <DialogModal key={dialog.id} dialog={dialog} />
+          </div>
+        )}
+        {!dialog && content && (
           <div
             className="ans-backdrop"
             data-kind={popup}
