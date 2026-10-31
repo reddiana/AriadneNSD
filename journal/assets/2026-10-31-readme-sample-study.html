@@ -1,0 +1,2644 @@
+<title>M41 README 그림 후보</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 화면 구성: 위 도구 모음 · 가운데 캔버스(종이 한 장) · 오른쪽 안내 패널. 그림 색은 기본 스타일 C로 고정 */
+:root {
+  --bg: #eef1f6;
+  --panel: #ffffff;
+  --fg: #1c2230;
+  --muted: #5a6476;
+  --line: #d4dbe6;
+  --accent: #2c55c9;
+  --accent-soft: #e4eafb;
+  --warn: #b35a10;
+  --paper: #ffffff;
+  --dots: #d3d9e4;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c;
+    --accent: #8ba7ff; --accent-soft: #232c45; --warn: #f0a560; --paper: #ffffff; --dots: #262c37;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c;
+  --accent: #8ba7ff; --accent-soft: #232c45; --warn: #f0a560; --paper: #ffffff; --dots: #262c37;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 14px; }
+* { box-sizing: border-box; }
+.app { height: 100%; display: grid; grid-template-rows: auto 1fr auto; }
+
+.bar { background: var(--panel); border-bottom: 1px solid var(--line); padding-block: 8px; padding-inline: 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.brand { display: flex; flex-direction: column; line-height: 1.2; margin-right: 6px; }
+.brand b { font-weight: 600; font-size: 15px; letter-spacing: .01em; }
+.brand span { font-size: 11px; color: var(--muted); }
+.brand span b { font-size: 11px; font-weight: 600; color: var(--accent); }
+.grp { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.lbl { font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-right: 2px; }
+button, select { font: inherit; font-size: 13px; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 5px; padding: 4px 9px; cursor: pointer; }
+button:hover { background: var(--accent-soft); border-color: var(--accent); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+select { background: var(--panel); }
+kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--bg); white-space: nowrap; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
+.stage { position: relative; overflow: auto; min-width: 0; background-color: var(--bg); background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 18px 18px; padding: 20px; outline: none; }
+.stage.nosel:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.paper { position: relative; display: inline-block; background: var(--paper); border-radius: 4px; box-shadow: 0 1px 3px rgba(20,30,60,.12), 0 6px 20px rgba(20,30,60,.06); }
+.paper svg { display: block; user-select: none; }
+.opts { position: sticky; top: 0; left: 0; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-bottom: 14px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; width: fit-content; max-width: 100%; font-size: 13px; }
+.opts label { display: flex; gap: 5px; align-items: center; cursor: pointer; }
+.zoom { display: flex; gap: 4px; align-items: center; }
+.zoom output { min-width: 3.5em; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+
+#editor { position: absolute; z-index: 2; resize: none; overflow: hidden; border: 2px solid #d0500b; border-radius: 2px; background: #ffffff; color: #151a22; outline: none; line-height: 18px; white-space: pre; }
+
+.side { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding-block: 14px; padding-inline: 18px; min-width: 0; }
+.side h2 { font-size: 13px; font-weight: 600; margin: 18px 0 8px; letter-spacing: .02em; }
+.side h2:first-child { margin-top: 0; }
+.side p, .side li { font-size: 13px; line-height: 1.6; }
+.side p { margin: 0 0 8px; color: var(--muted); }
+.keys { display: grid; grid-template-columns: 6.2em minmax(0, 1fr); gap: 5px 10px; font-size: 12.5px; align-items: baseline; }
+.keys dt { text-align: right; }
+.keys dd { margin: 0; color: var(--muted); }
+.qs { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; }
+.qs li::marker { color: var(--accent); font-weight: 600; }
+.qs b { font-weight: 600; }
+.qs .ref { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.note { border-left: 3px solid var(--warn); padding: 6px 10px; background: var(--bg); border-radius: 0 4px 4px 0; font-size: 12.5px; color: var(--fg) !important; }
+
+.status { background: var(--panel); border-top: 1px solid var(--line); padding-block: 6px; padding-inline: 16px; font-size: 12.5px; color: var(--muted); min-height: 30px; display: flex; gap: 14px; align-items: center; }
+.status .msg { color: var(--fg); }
+.status .msg.flash { color: var(--accent); font-weight: 500; }
+.status .mode { font-family: var(--mono); color: var(--accent); font-weight: 500; }
+.status .where { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.menu { position: fixed; z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; min-width: 210px; }
+.menu button { display: flex; width: 100%; justify-content: space-between; gap: 16px; border: 0; border-radius: 4px; text-align: left; padding: 5px 10px; }
+.menu button span { color: var(--muted); font-family: var(--mono); font-size: 11.5px; }
+.menu button.on { box-shadow: inset 0 0 0 2px #2c55c9; }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+
+.modal[hidden] { display: none; }
+.modal { position: fixed; inset: 0; z-index: 30; background: rgba(10,14,22,.45); display: grid; place-items: center; padding: 16px; }
+.modal .box { background: var(--panel); border-radius: 8px; padding: 16px; width: min(860px, 100%); max-height: 90%; display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; min-height: 0; }
+.modal h3 { margin: 0; font-size: 15px; }
+.modal p { margin: 0; color: var(--muted); font-size: 13px; }
+.modal textarea { width: 100%; min-height: 320px; font-family: var(--mono); font-size: 12px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; resize: vertical; }
+.modal .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(360px, 1fr) auto; }
+  .side { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+
+<style>
+#m41 { position: fixed; inset: 0; z-index: 50; overflow: auto; background: var(--bg); color: var(--fg); padding: 24px 16px 48px; font-family: var(--font); }
+#m41 header { max-width: 1100px; margin: 0 auto 16px; }
+#m41 h1 { font-size: 22px; margin: 0 0 6px; }
+#m41 header p { color: var(--muted); margin: 0; line-height: 1.6; }
+#m41cards { max-width: 1100px; margin: 0 auto; display: grid; gap: 20px; }
+.m41card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.m41card h2 { font-size: 17px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+.m41card p { color: var(--muted); margin: 0 0 12px; line-height: 1.5; }
+.m41tag { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--panel); font-size: 14px; }
+.m41fig { overflow-x: auto; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
+.m41card button, #m41back { margin-top: 10px; font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--accent-soft); color: var(--fg); cursor: pointer; }
+#m41back { position: fixed; right: 16px; bottom: 16px; z-index: 40; margin: 0; }
+</style>
+
+<div id="m41">
+  <header>
+    <h1>M41 README 그림 후보</h1>
+    <p>저장소 첫 화면(README)의 소개 아래에 넣을 다이어그램 그림의 후보입니다. 그림은 프로토타입(M01)의 그리는 코드로 그렸고, 고른 것을 2배 해상도 PNG로 찍어 넣습니다. 번호로 골라 주세요. 글자를 바꾸거나 두 후보를 섞으셔도 됩니다.</p>
+  </header>
+  <div id="m41cards"></div>
+</div>
+<button id="m41back" type="button">← 후보 목록</button>
+<div class="app">
+  <header class="bar">
+    <div class="brand"><b>AriadneNSD</b><span>요구사항 점검용 프로토타입 · 버리는 코드 · <b id="edition">61번째 판</b></span></div>
+    <div class="grp">
+      <button data-cmd="new" title="빈 다이어그램">새로</button>
+      <button data-cmd="open" title=".ns.svg 파일 열기">열기</button>
+      <button data-cmd="svg" title="저장될 SVG 내용 보기">SVG 보기</button>
+      <button data-cmd="download" title=".ns.svg 받기">받기</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">예제</span>
+      <button data-cmd="exCode">코드식</button>
+      <button data-cmd="exText">문장식</button>
+      <button data-cmd="exCase">Case</button>
+      <button data-cmd="exQuick" title="다이어그램 둘: quicksort와 partition">퀵소트</button>
+      <button data-cmd="exRaft" title="다이어그램 열: 이벤트 처리기 일곱과 Method 셋">Raft</button>
+    </div>
+    <div class="grp">
+      <span class="lbl" title="고른 블록 뒤에 넣습니다. Shift를 누른 채 클릭하면 앞에 넣습니다">뒤에 넣기</span>
+      <button data-cmd="ins:process" title="o (앞에: O)">처리</button>
+      <button data-cmd="ins:if" title="a i (앞에: A i)">If</button>
+      <button data-cmd="ins:case" title="a k (앞에: A k)">Case</button>
+      <button data-cmd="ins:while" title="a w (앞에: A w)">While</button>
+      <button data-cmd="ins:dowhile" title="a d (앞에: A d)">Do-While</button>
+      <button data-cmd="callAsk" title="a c: Method를 부르는 블록">호출</button>
+      <button data-cmd="kind:event" title="e: Event 머리 달기 · 머리를 골랐으면 Event로 바꾸기 (E: 새 Event 다이어그램)">Event</button>
+      <button data-cmd="kind:method" title="m: 고른 블록을 새 Method로 빼기 · Method 머리 달기 · 머리를 골랐으면 Method로 바꾸기 (M: 새 Method 다이어그램)">Method</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">감싸기</span>
+      <button data-cmd="wrap:while" title="s w">While</button>
+      <button data-cmd="wrap:dowhile" title="s d">Do-While</button>
+      <button data-cmd="wrap:if" title="s i">If</button>
+      <button data-cmd="wrap:case" title="s k">Case</button>
+      <button data-cmd="unwrap" title="ds: 제어 블록은 벗기고, 호출 블록은 Method의 블록들로 바꿉니다">풀기</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">보기</span>
+      <button data-cmd="fold" title="za 또는 f">접기·펴기</button>
+      <button data-cmd="makeRegion" title="zf 또는 Shift+F">접기 영역 만들기</button>
+      <button data-cmd="releaseRegion" title="zd 또는 Ctrl+Shift+F">접기 영역 풀기</button>
+    </div>
+    <div class="grp">
+      <button data-cmd="undo" title="u (Ctrl+Z)">↶ 되돌리기</button>
+      <button data-cmd="redo" title="U (Ctrl+Y)">↷ 다시</button>
+      <button data-cmd="del" title="Delete">지우기</button>
+    </div>
+    <div class="grp">
+      <button data-cmd="cut" title="dd (Ctrl+X)">잘라내기</button>
+      <button data-cmd="copy" title="yy (Ctrl+C)">복사</button>
+      <button data-cmd="paste" title="p (Ctrl+V): 고른 블록 뒤에 붙입니다. 앞에는 P">붙여넣기</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="stage" id="stage" tabindex="0" aria-label="다이어그램">
+      <div class="opts">
+        <label><input type="checkbox" id="optSyntax" checked> 구문 강조</label>
+        <label><input type="checkbox" id="optMono" checked> 고정폭 글꼴</label>
+        <label><input type="checkbox" id="optRanges" checked> 접기 영역 보기</label>
+        <div class="zoom">
+          <button data-cmd="zoomOut" aria-label="축소">−</button>
+          <output id="zoomOut">100%</output>
+          <button data-cmd="zoomIn" aria-label="확대">+</button>
+        </div>
+      </div>
+      <div class="paper" id="paper">
+        <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+        <textarea id="editor" hidden spellcheck="false"></textarea>
+      </div>
+    </section>
+
+    <aside class="side">
+      <h2>써 보는 법</h2>
+      <p>블록을 클릭해 고르고 키보드로 다룹니다. 오른쪽 클릭하면 메뉴가 나옵니다. 고친 내용은 이 브라우저에 남습니다.</p>
+      <dl class="keys">
+        <dt><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></dt><dd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd>와 같습니다. 위·아래는 그림 순서대로 움직입니다 (다이어그램 안에서만). 다만 If · Case의 옆 갈래로는 넘어가지 않습니다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로 갑니다. If · Case 아래 블록에서 위로는 가장 왼쪽 갈래의 맨 아래 블록으로 들어갑니다. 좌우는 If · Case 안에서 옆 갈래의 첫 블록으로 갑니다. 맨 왼쪽 갈래에서 왼쪽은 위쪽 바깥 블록, 맨 오른쪽 갈래에서 오른쪽은 아래쪽 바깥 블록입니다. 머리에서 좌우는 옆 다이어그램입니다</dd>
+        <dt><kbd>{</kbd> <kbd>}</kbd></dt><dd>제어 블록을 안쪽까지 한 덩어리로 보고 위·아래 블록으로. 제어 블록 안으로 들어가지 않고 제어 블록 전체를 고릅니다 (<kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>와 같음)</dd>
+        <dt><kbd>gg</kbd> / <kbd>G</kbd></dt><dd>이 다이어그램의 머리(없으면 첫 블록) / 마지막 블록</dd>
+        <dt><kbd>[[</kbd> / <kbd>]]</kbd></dt><dd>앞 / 뒤 다이어그램 (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>와 같음)</dd>
+        <dt><kbd>gd</kbd></dt><dd>호출 블록에서: 부르는 Method로. 펴 보인 블록에서는 원래 블록으로</dd>
+        <dt><kbd>v</kbd> <kbd>V</kbd></dt><dd>영역 고르기 시작. <kbd>j</kbd> <kbd>k</kbd>로 넓히고 <kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>s</kbd> <kbd>zf</kbd>를 누릅니다. <kbd>v</kbd>나 <kbd>Esc</kbd>로 끝냅니다. <kbd>Shift</kbd>+<kbd>↑↓</kbd>와 <kbd>Shift</kbd>+클릭도 됩니다 (같은 부모로 자동 확장)</dd>
+        <dt><kbd>i</kbd> <kbd>cc</kbd> <kbd>Enter</kbd> <kbd>F2</kbd> 더블클릭</dt><dd>글자 고치기 (줄바꿈은 <kbd>Shift</kbd>+<kbd>Enter</kbd>). <kbd>i</kbd>는 있던 글자를 두고 커서를 맨 앞에 둡니다. <kbd>cc</kbd>는 비우고 새로 적습니다. <kbd>Enter</kbd> · <kbd>F2</kbd> · 더블클릭은 글자 전체를 고른 채로 엽니다. <kbd>Enter</kbd>와 <kbd>Esc</kbd> 어느 쪽을 눌러도 <b>적은 대로 받아들입니다</b>. 되돌리려면 <kbd>u</kbd>. 호출 블록에서는 인자와 결과만 고칩니다 (이름은 Method의 머리에서). 접힌 칸을 골랐으면 그 접기 영역의 이름을 고칩니다</dd>
+        <dt><kbd>o</kbd> / <kbd>O</kbd></dt><dd>처리 블록을 고른 블록 뒤 / 앞에 넣고 바로 적습니다. 빈 블록을 골랐으면 그 자리에 적습니다</dd>
+        <dt><kbd>a</kbd> / <kbd>A</kbd> 다음 <kbd>i</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>k</kbd> <kbd>c</kbd></dt><dd>If · While · Do-While · Case · 호출 블록을 뒤(<kbd>a</kbd>) / 앞(<kbd>A</kbd>)에 넣습니다. 호출 블록은 부를 Method를 <kbd>j</kbd> <kbd>k</kbd>(또는 <kbd>↓</kbd> <kbd>↑</kbd>)와 <kbd>Enter</kbd>, 또는 숫자 키로 고릅니다</dd>
+        <dt><kbd>s</kbd> 다음 <kbd>w</kbd> <kbd>d</kbd> <kbd>i</kbd> <kbd>k</kbd></dt><dd>고른 블록(들)을 While · Do-While · If · Case로 감싸기</dd>
+        <dt><kbd>ds</kbd></dt><dd>풀기: 껍데기를 없애고 안의 것을 남깁니다. 제어 블록을 골랐으면 그 제어 블록을 벗깁니다. 그 안의 블록을 골랐으면 그것을 담은 가장 가까운 제어 블록을 벗깁니다. 호출 블록을 골랐으면 부르는 Method의 블록들로 바꿉니다 (적어 둔 인자와 결과는 사라지고, Method는 남습니다)</dd>
+        <dt><kbd>yy</kbd> / <kbd>dd</kbd></dt><dd>복사 / 잘라내기 (<kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>X</kbd>와 같음). 영역 고르기(<kbd>v</kbd>) 중에는 <kbd>y</kbd> / <kbd>d</kbd> 한 번. 머리는 잘라낼 수 없어서 머리에서 <kbd>dd</kbd>는 머리 떼기입니다</dd>
+        <dt><kbd>p</kbd> / <kbd>P</kbd></dt><dd>고른 블록 뒤 / 앞에 붙이기 (<kbd>Ctrl</kbd>+<kbd>V</kbd>는 뒤에). <kbd>ddp</kbd>는 블록을 한 칸 아래로 옮깁니다</dd>
+        <dt><kbd>x</kbd> <kbd>Delete</kbd></dt><dd>복사 없이 지우기. 머리를 고르고 누르면 머리 떼기. <kbd>Shift</kbd>+<kbd>Delete</kbd>는 다이어그램 지우기 (글자 키는 없습니다)</dd>
+        <dt><kbd>u</kbd> / <kbd>U</kbd></dt><dd>되돌리기 / 다시 (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd>와 같음). <kbd>Ctrl</kbd>+<kbd>R</kbd>도 다시 하기입니다</dd>
+        <dt><kbd>za</kbd> 또는 <kbd>f</kbd></dt><dd>접기 · 펴기. 제어 블록 하나를 골랐으면 그 제어 블록을 접습니다: If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 줄입니다. 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 폅니다. 블록이 하나뿐인 곳은 접지 않습니다. 접힌 것은 더블클릭으로도 펴고, 이름 띠를 더블클릭하면 접힙니다. 호출 블록 하나를 골랐으면 펴 봅니다: 부르는 Method의 블록이 그 자리에 회색 글자로 보이고, 다시 누르면 접힙니다. 펴 보인 안쪽의 블록을 고르고 눌러도 그 호출 블록이 접힙니다</dd>
+        <dt><kbd>zo</kbd> / <kbd>zc</kbd></dt><dd>펴기만 / 접기만</dd>
+        <dt><kbd>zR</kbd> / <kbd>zM</kbd></dt><dd>문서 전체에서 모두 펴기 / 모두 접기. 모두 접기는 접기 영역, 제어 블록의 안쪽(블록이 둘 이상인 곳), 펴 보인 호출 블록을 접습니다. 모두 펴기는 접힌 것만 펴고 호출 블록은 펴 보이지 않습니다</dd>
+        <dt><kbd>zf</kbd></dt><dd>접기 영역 만들기: 고른 블록들을 접기 영역으로 묶고, 바로 접으면서 이름을 묻습니다. 블록 하나만 골라도 됩니다. 접기 영역 안에 또 만들 수 있습니다. 펴 보인 블록을 골랐으면 그 호출 블록 자리에만 생깁니다</dd>
+        <dt><kbd>zd</kbd></dt><dd>접기 영역 풀기: 고른 것을 온전히 담는 가장 작은 접기 영역을 없앱니다. 블록은 그대로 남습니다</dd>
+        <dt><kbd>e</kbd></dt><dd><b>Event</b>. 머리 없는 다이어그램에서는 Event 머리(모자)를 달고, 머리를 고르고 누르면 Event 머리로 바꿉니다. 대문자 <kbd>E</kbd>는 새 빈 Event 다이어그램</dd>
+        <dt><kbd>m</kbd></dt><dd><b>Method</b>. 블록을 고르고 누르면 그 블록을 새 Method로 뺍니다 (그 자리에는 호출 블록). 머리 없는 다이어그램에서는 Method 머리(낮은 아치)를 달고, 머리를 고르고 누르면 Method 머리로 바꿉니다. 대문자 <kbd>M</kbd>은 새 빈 Method 다이어그램</dd>
+        <dt><kbd>r</kbd></dt><dd>호출 블록에서: 부를 Method 바꾸기</dd>
+        <dt><kbd>+</kbd> / <kbd>-</kbd></dt><dd>Case 안에서: 지금 갈래 뒤에 갈래 넣기 / 지금 갈래 빼기. 갈래 이름은 더블클릭해서 고칩니다 (키는 아직 없습니다). default 갈래는 늘 맨 끝에 있고 뺄 수 없습니다</dd>
+        <dt><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></dt><dd>If · Case 안에서: 옆 갈래로. 그 밖에서는 위·아래 블록으로</dd>
+        <dt>휠</dt><dd>블록을 골랐으면 <kbd>j</kbd> <kbd>k</kbd>와 같습니다 (한 칸에 한 블록). 고르지 않았으면 캔버스를 스크롤합니다</dd>
+        <dt><kbd>Esc</kbd> <kbd>Esc</kbd></dt><dd>두 번 연속 누르면 고른 것을 풉니다. 다이어그램 바깥의 빈 캔버스를 눌러도 됩니다. 풀린 뒤 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다</dd>
+        <dt><kbd>Ctrl</kbd>+휠</dt><dd>확대·축소</dd>
+      </dl>
+      <p>대문자는 <kbd>Shift</kbd>와 함께 누릅니다. 글자는 자판의 자리로 읽어서 한글 입력 상태에서도 같습니다. 두 번 누르는 키는 첫 키를 누르면 상태 줄 왼쪽에 그 키가 보이고, 맞지 않는 키나 <kbd>Esc</kbd>를 누르면 그만둡니다.</p>
+
+      <h2>이번에 바뀐 것 (10-25, 61번째 판)</h2>
+      <ul>
+        <li><b>목록에서도 <kbd>j</kbd> <kbd>k</kbd>로 옮깁니다.</b> <kbd>a</kbd> <kbd>c</kbd>나 <kbd>r</kbd>로 부를 Method를 고르는 목록, 오른쪽 클릭 메뉴가 떠 있는 동안 <kbd>j</kbd>는 아래로, <kbd>k</kbd>는 위로 옮깁니다. <kbd>↓</kbd> <kbd>↑</kbd>도 그대로 듣습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 59 · 60번째 판)</h2>
+      <ul>
+        <li><b>지금 키와 겹치지 않는 옛 키를 되살렸습니다.</b> <kbd>Shift</kbd>+<kbd>L</kbd>은 Case 갈래의 이름을 고칩니다. 59번째 판에서 함께 되살렸던 <kbd>w</kbd> / <kbd>W</kbd>(While 넣기)는 Vim의 "다음 낱말로"와 헷갈려 60번째 판에서 다시 뺐습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 58번째 판)</h2>
+      <ul>
+        <li><b>접기 영역의 옛 키를 되살렸습니다.</b> 만들기 <kbd>Shift</kbd>+<kbd>F</kbd>, 풀기 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>. <kbd>zf</kbd> · <kbd>zd</kbd>도 그대로 듣습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 57번째 판)</h2>
+      <ul>
+        <li><b>고른 표시는 주황 3px로 정했습니다.</b> 56번째 판에 잠시 두었던 색 고르기(주황 · 자홍)를 없앴습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 56번째 판)</h2>
+      <ul>
+        <li><b>고른 표시도 3px입니다.</b> 접기 영역의 테두리와 같은 굵기입니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 55번째 판)</h2>
+      <ul>
+        <li><b>고른 표시는 주황, 펴진 접기 영역의 테두리는 3px입니다.</b> 54번째 판의 녹색 고른 표시를 주황으로(시안 M19의 S1. 블록 바탕 위에서 대비 3:1을 지키려고 시안보다 조금 진함), 접기 영역의 테두리를 2px에서 3px로(시안 M11에서 고른 굵기) 바꿨습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 54번째 판)</h2>
+      <ul>
+        <li><b>펴진 접기 영역은 다시 파랑입니다.</b> 53번째 판의 진회색 테두리를 52번째 판의 파랑으로 되돌리고, 고른 표시를 녹색으로 바꿨습니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-17, 53번째 판)</h2>
+      <ul>
+        <li><b>색과 선을 시각 디자인 문서에 맞췄습니다.</b> 구조선 · 주석 · 숫자 · 펴 보인 글자의 색을 진하게 해 WCAG 대비를 맞췄습니다. 접기 영역의 테두리와 이름 띠는 고른 표시의 파랑과 섞이지 않게 무채색 2px로, 갈래 이름("참" · "거짓")은 키워드의 파랑과 섞이지 않게 회색으로 바꿨습니다. 고른 표시는 바탕을 칠하지 않고 테두리만 둡니다. 작은 글자는 모두 12px입니다. 고른 것이 없을 때 키보드로 캔버스에 오면 캔버스 안쪽에 테두리가 보입니다.</li>
+        <li><b>저장 파일 안의 이름이 <code>ariadne-nsd</code>가 되었습니다.</b> 전에는 옛 이름 <code>nsdrawing</code>이었습니다. 전에 받은 파일도 그대로 열립니다.</li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-15, 52번째 판)</h2>
+      <ul>
+        <li><b>고른 것을 풀 수 있습니다.</b> <kbd>Esc</kbd>를 두 번 연속 누르거나, 다이어그램 바깥의 빈 캔버스를 누릅니다. 한 번만 누르면 상태 줄에 안내가 뜹니다. 글자를 고치다 누른 <kbd>Esc</kbd>(받아들이기)는 세지 않습니다. 풀린 뒤 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다.</li>
+        <li><b>휠로 블록을 옮겨 다닙니다.</b> 블록을 골랐으면 휠 한 칸이 <kbd>j</kbd> · <kbd>k</kbd> 한 번과 같습니다(<kbd>v</kbd> 영역 고르기 중에는 영역을 넓힙니다). 고르지 않았으면 전처럼 캔버스를 스크롤합니다. 가로 휠과 <kbd>Shift</kbd>+휠은 늘 스크롤입니다.</li>
+        <li><b>If · Case 아래 블록에서 <kbd>k</kbd>는 가장 왼쪽 갈래의 맨 아래 블록으로 갑니다.</b> 전에는 가장 오른쪽 갈래로 갔습니다. 그 블록이 또 If · Case이면 그 안의 가장 왼쪽 갈래로 더 들어갑니다. 갈래가 접혀 있으면 접힌 칸으로 갑니다.</li>
+        <li><b>키나 휠로 고른 블록이 화면 밖으로 나가면 캔버스가 따라 움직입니다.</b></li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-13)</h2>
+      <ul>
+        <li><b>단축키가 Vim 키로 바뀌었습니다.</b> 방향키, <kbd>Enter</kbd>, <kbd>F2</kbd>, <kbd>Delete</kbd>, <kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>Z</kbd> <kbd>Y</kbd>는 그대로이고, 한 글자 키가 위의 표대로 바뀌었습니다. 키 배열은 하나입니다 (끄고 켜는 스위치는 없앴습니다).</li>
+        <li><b>자리를 옮긴 키.</b> 넣기 <kbd>P</kbd> <kbd>I</kbd> <kbd>K</kbd> <kbd>W</kbd> <kbd>D</kbd> <kbd>C</kbd> → <kbd>o</kbd>와 <kbd>a</kbd> + 종류. 풀기 <kbd>U</kbd> → <kbd>ds</kbd>. 따라가기 <kbd>G</kbd> → <kbd>gd</kbd>. 접기 영역 만들기 · 풀기 <kbd>Shift</kbd>+<kbd>F</kbd> · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> → <kbd>zf</kbd> · <kbd>zd</kbd>. 갈래 이름 고치기 <kbd>L</kbd> → 더블클릭.</li>
+        <li><b>고치다 누른 <kbd>Esc</kbd>는 적은 대로 받아들입니다.</b> 전에는 그만두기였습니다. 되돌리려면 <kbd>u</kbd>. 겹친 머리 이름처럼 받아들일 수 없어 다시 열린 칸에서만 <kbd>Esc</kbd>가 그만두기입니다.</li>
+        <li><b>블록을 고른 상태의 <kbd>Esc</kbd>는 아무 일도 하지 않습니다.</b> 전에는 고른 것을 풀었습니다.</li>
+        <li><b>앞에 붙이기가 생겼습니다.</b> <kbd>P</kbd>.</li>
+        <li><b>위·아래로는 옆 갈래로 넘어가지 않습니다.</b> If · Case의 갈래 끝에서 <kbd>j</kbd>는 그 If · Case의 다음 블록으로, 갈래의 처음에서 <kbd>k</kbd>는 그 If · Case로 갑니다. 옆 갈래로는 <kbd>h</kbd> <kbd>l</kbd>로 갑니다.</li>
+        <li><b>"접기 영역 이름 띠 보기"를 "접기 영역 보기"로 부릅니다.</b> 꺼 둔 채로 영역을 넓히다 막히면, 꺼져 있어서 경계가 안 보인다고 알려 줍니다.</li>
+        <li><b><kbd>x</kbd>는 <kbd>Delete</kbd>와 같습니다.</b> 복사 없이 지웁니다. <kbd>dd</kbd>는 잘라내기입니다(붙일 수 있음). 머리에서는 <kbd>x</kbd>도 <kbd>dd</kbd>도 머리 떼기입니다.</li>
+        <li><b>펴 보인 호출 블록은 안쪽에서도 접습니다.</b> 펴 보인 블록을 고르고 <kbd>za</kbd>를 누르면 그것을 담은 가장 가까운 펴 보인 호출 블록이 접힙니다. 접기 영역과 같습니다.</li>
+        <li><b><kbd>ds</kbd>가 호출 블록도 풉니다.</b> 호출 블록을 고르고 누르면 부르는 Method의 블록들로 바뀝니다. 글자는 Method에 적힌 그대로 복사되고, 호출 블록에 적어 둔 인자와 결과는 사라집니다. Method는 남습니다. 이어진 곳이 없는 호출 블록은 풀 수 없습니다.</li>
+        <li><b><kbd>ds</kbd>는 안쪽에서도 듣습니다.</b> 제어 블록 안의 블록을 고르고 누르면 그것을 담은 가장 가까운 제어 블록이 벗겨집니다.</li>
+        <li><b><kbd>i</kbd>는 글자를 지우지 않습니다.</b> 커서를 맨 앞에 두고 엽니다. 비우고 새로 적으려면 <kbd>cc</kbd>.</li>
+        <li><b>더한 키.</b> <kbd>Ctrl</kbd>+<kbd>R</kbd> 다시 하기, <kbd>V</kbd> 영역 고르기, <kbd>zo</kbd> 펴기, <kbd>zc</kbd> 접기, <kbd>zR</kbd> 모두 펴기, <kbd>zM</kbd> 모두 접기.</li>
+        <li><b>상태 줄 왼쪽의 표시.</b> 먼저 누른 키와 <code>-- 영역 --</code> · <code>-- 고치기 --</code>가 보입니다.</li>
+        <li><b>메뉴의 글자를 한국어로 되돌렸습니다 (51번째 판).</b> 50번째 판에서 영어로 바꿨던 것입니다. 제품은 영어를 기본으로 하고 한국어를 지원하지만, 이 프로토타입은 한국어로 둡니다.</li>
+        <li><b>오른쪽 클릭 메뉴에 한 번 누르는 키도 함께 적습니다 (49번째 판).</b> 접기 · 펴기는 <kbd>za</kbd> · <kbd>f</kbd>, 지우기는 <kbd>x</kbd> · <kbd>Del</kbd>, 글자 고치기는 <kbd>i</kbd> · <kbd>Enter</kbd>.</li>
+        <li><b>펴 보인 호출 블록의 점선이 1px 안으로 들어갑니다 (48번째 판).</b> 바깥의 가는 선은 다른 블록처럼 그대로 있고, 점선은 그 안쪽에 있습니다.</li>
+        <li><b>지금 보는 판의 번호가 왼쪽 위 이름 아래에 보입니다 (47번째 판).</b></li>
+        <li><b>블록 하나도 접기 영역으로 만들 수 있습니다 (47번째 판).</b> 블록 하나를 고르고 <kbd>zf</kbd>를 누릅니다. 눈에 띄게 하고 싶은 블록에 굵은 테두리와 이름을 붙이는 데 씁니다.</li>
+        <li><b>펴진 접기 영역은 굵은 테두리로 보입니다 (46번째 판).</b> 왼쪽 막대를 없애고 영역의 둘레를 굵은 실선으로 두릅니다. 보통 블록은 테두리에 붙고, 겹친 접기 영역과 이어진 접기 영역 사이에는 1px의 틈이 있습니다. 이름 띠는 그대로입니다.</li>
+        <li><b>펴 보인 호출 블록은 가는 점선으로 두릅니다 (46번째 판).</b> 강조가 아니라서 접기 영역보다 가볍게 그립니다.</li>
+        <li><b>펴 보인 곳에만 있는 접기 영역 (46번째 판).</b> 펴 보인 블록을 고르고 <kbd>zf</kbd>를 누르면 그 호출 블록 자리에만 접기 영역이 생깁니다. Method의 원본과, 같은 Method를 부르는 다른 호출 블록에는 생기지 않습니다. <kbd>za</kbd>로 접고 펴고, <kbd>zd</kbd>로 풀고, <kbd>i</kbd>나 <kbd>Enter</kbd>로 이름을 고칩니다. Method에 원래 있던 접기 영역은 여기서 풀 수 없습니다. 호출 블록을 <kbd>ds</kbd>로 풀면 보통 접기 영역이 되어 함께 들어옵니다.</li>
+      </ul>
+
+      <p class="note">아래의 "앞서 바뀐 것"과 "만들며 생긴 질문"은 그때의 기록이라 옛 키로 적혀 있습니다.</p>
+      <h2>앞서 바뀐 것 (10-11)</h2>
+      <ul>
+        <li><b>호출 블록을 펴 봅니다.</b> 호출 블록을 고르고 <kbd>F</kbd>를 누르면 부르는 Method의 블록이 그 자리에 보입니다. 보기만 바뀌고 내용은 그대로입니다. 펴 보인 블록은 글자가 회색이고, 고를 수 있지만 고칠 수 없습니다. <kbd>G</kbd>를 누르면 원래 블록으로 갑니다. 펴 보인 안쪽의 호출 블록도 펼 수 있고, 같은 Method를 세 겹째 펴면 알려 줍니다. 펴짐은 접힘처럼 파일에 함께 들어가고 <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다.</li>
+        <li><b>펴진 접기 영역은 왼쪽 막대와 이름 띠로 보입니다.</b> 영역 둘레의 가는 파란 선을 없애고, 왼쪽에 영역의 끝까지 내려가는 막대를 그립니다. 안의 블록은 막대만큼 들어갑니다. "접기 영역 보기"를 끄면 띠와 막대가 함께 사라집니다.</li>
+        <li><b>Event와 Method를 구분합니다.</b> 밖에서 시작되는 것(인터럽트, 타이머, 받은 메시지)은 Event이고 모자 머리를 씁니다. 불려서 도는 것은 Method이고 낮은 아치 머리를 씁니다. <kbd>E</kbd>는 Event, <kbd>M</kbd>은 Method입니다.</li>
+        <li><b>호출 블록은 Method만 부릅니다.</b> 두 Event가 같은 일을 하면 그 일을 Method로 빼서 둘 다 부르세요. 부르는 호출 블록이 있는 Method는 Event로 바꿀 수 없습니다.</li>
+        <li><b>호출 블록의 이름은 Method의 머리를 따릅니다 (둘째 판).</b> 호출 블록은 <code>p ← partition(a, lo, hi)</code>처럼 "결과 ← 이름(인자)"로 보입니다. 굵은 이름은 머리를 따라 저절로 바뀌고 호출 블록에서는 고칠 수 없습니다. <kbd>Enter</kbd>로 인자와 결과만 고칩니다(<code>p = …</code>라고 적어도 됩니다). 부를 Method는 <kbd>R</kbd>로 바꾸며, 적어 둔 인자와 결과는 남습니다.</li>
+        <li><b>Method 머리의 괄호.</b> 머리 글자에서 첫 여는 괄호 앞까지가 이름이고, 괄호 안은 받는 것입니다. 괄호가 없으면 받는 것이 없는 Method이고, 호출 블록에는 이름만 보입니다. 이름이 겹치는지는 이름만으로 견줍니다. 새 Event의 기본 이름은 "Event 1"입니다.</li>
+        <li><b>블록을 새 다이어그램으로 빼는 키가 <kbd>E</kbd>에서 <kbd>M</kbd>으로 바뀌었습니다.</b> 새 빈 다이어그램은 <kbd>Shift</kbd>+<kbd>E</kbd>(Event)나 <kbd>Shift</kbd>+<kbd>M</kbd>(Method)입니다.</li>
+        <li><b>예제 둘을 더했습니다.</b> "퀵소트"는 코드식으로 적은 Method 둘(quicksort, partition)이고, 서로를 호출 블록으로 부릅니다. "Raft"는 문장식으로 적은 Raft 합의 프로토콜의 한 노드입니다: 이벤트 처리기 일곱과, 호출 블록으로 부르는 Method 셋.</li>
+        <li><b>화면의 이름을 AriadneNSD로 바꿨습니다.</b></li>
+      </ul>
+
+      <h2>앞서 바뀐 것 (10-10 네 번째 판)</h2>
+      <ul>
+        <li><b>Case(다중 선택) 블록.</b> <kbd>K</kbd>로 넣고, 위의 "Case" 예제로 볼 수 있습니다. 갈래는 <kbd>+</kbd>로 넣고 <kbd>-</kbd>로 빼며, 갈래 이름은 <kbd>L</kbd>이나 더블클릭으로 고칩니다. 접기와 방향키는 If와 같은 규칙을 따릅니다.</li>
+        <li><b>"이름 붙은 영역"을 "접기 영역"으로 부릅니다.</b> 블록 여러 개를 골라 접을 때 생기는 묶음입니다. 펴도 남아 있고, <kbd>U</kbd>로 풉니다.</li>
+        <li><b>강조 영역을 없앴습니다.</b> 접기 영역과 함께 있으니 혼란스러워서, 지금은 접기·펼치기만 남겼습니다. 예제의 "센서 읽기"와 "로그 남기기"는 접기 영역입니다.</li>
+        <li><b>펴진 접기 영역은 이름 띠로 보입니다.</b> 영역 맨 위에 이름이 적힌 얇은 줄이 붙습니다. 띠를 더블클릭하면 접히고, 띠를 고르고 <kbd>Enter</kbd>를 누르면 이름을 고칩니다.</li>
+        <li><b>저장되는 그림은 지금 화면 그대로입니다.</b> 접힌 곳은 접힌 채로, 이름 띠도 보이는 대로 저장됩니다. 접힘 상태도 파일에 함께 들어가서, 다시 열면 저장할 때의 모양으로 열립니다. "SVG 보기"로 확인해 보세요.</li>
+        <li><b>제어 블록의 <kbd>F</kbd>는 접기 영역을 만들지 않습니다.</b> If는 갈래별로, 반복문은 안쪽을 "⋯ 블록 n개" 줄로 접습니다. 접힌 줄에는 이름을 붙이지 않습니다. 접힌 줄은 방향키와 클릭으로 고를 수 있습니다.</li>
+        <li><b>접기 영역 키 세 개.</b> <kbd>Shift</kbd>+<kbd>F</kbd>로 만들고, <kbd>F</kbd>로 접고 펴고, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>로 풉니다. <kbd>U</kbd>는 제어 블록 풀기로만 씁니다. <kbd>F</kbd>와 풀기는 고른 것을 온전히 담는 가장 작은 접기 영역에 듣습니다. 펴진 영역은 이름 띠과 이름표로 보입니다.</li>
+        <li><b>메뉴에서 <kbd>↑</kbd> <kbd>↓</kbd>와 <kbd>Enter</kbd>.</b> 숫자 키도 그대로 됩니다. 오른쪽 클릭 메뉴에서도 됩니다.</li>
+        <li><b>다이어그램 배치.</b> 순서대로 위에서 아래로 쌓고, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘어갑니다. 작은 다이어그램 여러 개가 한 줄에 모입니다.</li>
+        <li><b><kbd>E</kbd>가 묻지 않습니다.</b> 블록을 고르고 누르면 바로 새 다이어그램으로 뺍니다. 머리가 없는 다이어그램에서도 같습니다. 머리 달기는 <kbd>M</kbd>으로 옮겼습니다.</li>
+        <li><b>방향키는 다이어그램 안에서만.</b> 옆 다이어그램으로는 머리에서 <kbd>←</kbd> <kbd>→</kbd>, 또는 어디서든 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd>.</li>
+        <li><b><kbd>Ctrl</kbd>+방향키.</b> <kbd>↑</kbd> <kbd>↓</kbd>는 제어 블록을 한 덩어리로 보고 위·아래 블록으로, <kbd>←</kbd> <kbd>→</kbd>는 If의 옆 갈래로 갑니다.</li>
+        <li><b>호출 블록은 부를 것을 고릅니다.</b> <kbd>Enter</kbd>나 더블클릭을 하면 글자를 고치지 않고 목록에서 고릅니다. 이름은 그 다이어그램의 머리에서 바꿉니다.</li>
+        <li><b>이벤트 머리의 이름은 겹치거나 비울 수 없습니다.</b> 그러면 고치던 칸이 다시 열립니다. 새 머리에는 "Event 1" 같은 이름이 미리 들어가 있고, 바로 치면 바뀝니다.</li>
+        <li><b>접힌 영역을 더블클릭하면 폅니다.</b> 이름은 고르고 <kbd>Enter</kbd>로 고칩니다.</li>
+      </ul>
+      <h2>세 번째 판에서 바뀐 것</h2>
+      <ul class="qs">
+        <li><b>한 문서에 다이어그램 여러 개.</b> 머리에서 <kbd>←</kbd> <kbd>→</kbd>를 누르면 옆 다이어그램으로 갑니다.</li>
+        <li><b><kbd>E</kbd>로 새 다이어그램.</b> 고른 블록을 새 다이어그램으로 빼면 그 자리에 호출 블록이 남습니다. 머리 떼기는 머리를 고르고 <kbd>Delete</kbd>입니다.</li>
+        <li><b>호출 블록.</b> 양옆에 세로 이중선이 있는 블록입니다. 부르는 다이어그램의 머리 글자를 보여 줍니다. <kbd>C</kbd>로 넣고 <kbd>G</kbd>로 따라갑니다.</li>
+      </ul>
+      <h2>두 번째 판에서 바뀐 것</h2>
+      <ul class="qs">
+        <li><b>넣기 위치를 고르지 않습니다.</b> 늘 고른 블록 뒤에 넣고, <kbd>Shift</kbd>를 누르면 앞에 넣습니다. <kbd>O</kbd>와 "안쪽에"는 없앴습니다. 제어 블록 안에 넣으려면 안쪽 블록을 고르고 넣으세요. 빈 블록을 골랐으면 그 자리에 들어갑니다.</li>
+        <li><b>잘라내기 · 복사 · 붙여넣기.</b> 고른 블록(들) 뒤에 붙습니다. 이 페이지 안에서만 됩니다.</li>
+        <li><b><kbd>←</kbd> <kbd>→</kbd>로 If의 갈래를 건넙니다.</b> 갈래 안의 제어 블록에서도 <kbd>→</kbd>는 건너편으로 갑니다. 안으로 들어가려면 <kbd>↓</kbd>를 누르세요.</li>
+        <li><b>블록 하나는 접지 않습니다.</b> 제어 블록 하나는 전처럼 접힙니다.</li>
+        <li>화면 글자의 "범위"를 "영역"으로 바꿨습니다.</li>
+      </ul>
+
+      <h2>만들며 생긴 질문</h2>
+      <p>요구사항에 답이 없어서 프로토타입에서 임시로 정한 것들입니다. 써 보고 맞는지 알려 주세요.</p>
+      <ol class="qs">
+        <li><b>펼친 뒤에도 접기 영역이 남습니다.</b> 이름을 모델에 두니(ADR-0017) 펼쳐도 영역이 남아 있습니다. 답을 받음: 펴진 영역은 맨 위의 이름 띠로 보여 줍니다. 없애는 방법은 "접기 영역 풀기"(<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>)입니다. <span class="ref">^edit-fold-range</span></li>
+        <li><b>기본 이름을 고른 경우.</b> 처음 접을 때 Enter·Esc로 기본 이름을 고르면, "이미 물어봤음"을 파일에 남겨야 다음에 묻지 않습니다. 그래서 이름 없이도 영역이 저장됩니다. <span class="ref">^edit-fold-range</span></li>
+        <li><b>안쪽 깊은 곳에 강조 영역이 있으면?</b> While 안에 강조 영역이 있을 때 그 While을 포함해 강조하면, 넓힐 수도(부모가 다름) 새로 만들 수도(중첩 금지) 없습니다. 지금은 거절합니다. <span class="ref">^edit-region</span></li>
+        <li><b>짧은 갈래의 빈 공간.</b> If의 두 갈래 높이가 다르면, 짧은 쪽 마지막 블록을 늘려 채웠습니다. 빈 칸을 따로 그리는 방법도 있습니다. <span class="ref">^lay-branch-width</span></li>
+        <li><b>넣기 단축키.</b> 뒤에 넣기가 기본이고 <kbd>Shift</kbd>를 누르면 앞에 넣습니다 (위치를 고르던 방식은 헷갈려서 없앰). 브라우저가 Alt·Ctrl 조합을 많이 가져가서, 감싸기는 <kbd>S</kbd> 다음 글자를 누르는 두 번 누르기로 했습니다. <span class="ref">^edit-keyboard</span></li>
+        <li><b>고른 상태에서 바로 타자를 치면?</b> 엑셀처럼 바로 글자 고치기로 들어갈까요? 지금은 단축키로 쓰여서 아무 일도 없습니다. <span class="ref">^edit-basic</span></li>
+        <li><b>처리 블록 하나 접기.</b> 답을 받음: 막았습니다. 블록 하나만 고르고 <kbd>F</kbd>를 누르면 접지 않습니다. <span class="ref">^edit-fold-range</span></li>
+        <li><b>접기는 되돌리기 대상이 아닙니다.</b> 접고 펴는 것은 <kbd>Ctrl</kbd>+<kbd>Z</kbd>로 되돌리지 않습니다. 이제 접힘이 파일에 저장되므로, 되돌리기에 넣을지 다시 정해야 합니다. 단, 처음 접을 때 영역이 생기는 것은 되돌립니다. <span class="ref">^edit-undo</span></li>
+        <li><b>이벤트 머리 위치.</b> 머리는 다이어그램마다 맨 위 하나뿐이라 고르고 지울 수만 있고, 옮기거나 감쌀 수 없습니다. 머리 "뒤에" 넣으면 본문 맨 앞에 들어갑니다. <span class="ref">^blk-event</span></li>
+        <li><b>블록 글자: 코드인가 문장인가.</b> 예제 두 개로 같은 로직을 비교해 보세요. 문장식에서는 구문 강조가 거의 하는 일이 없습니다. <span class="ref">미결정 사항</span></li>
+        <li><b>Method 다이어그램의 머리.</b> 답을 받음: Event와 Method를 구분하고, Method는 낮은 아치 머리로 그립니다. <span class="ref">^blk-method</span></li>
+        <li><b>호출 블록의 글자.</b> 답을 받음: 이름은 Method의 머리를 따르고, 호출 블록에는 인자와 결과만 적습니다. <span class="ref">^blk-call</span></li>
+        <li><b>부르던 다이어그램을 지우면?</b> 호출 블록은 글자만 남고 이중선이 점선으로 바뀌며 앞에 "?"가 붙습니다. <span class="ref">^blk-call</span></li>
+        <li><b>머리도 내용도 없는 다이어그램은 저절로 사라집니다.</b> 다이어그램을 통째로 지우는 것은 머리를 고르고 <kbd>Shift</kbd>+<kbd>Delete</kbd>입니다. <span class="ref">^edit-multi-diagram</span></li>
+      </ol>
+
+      <h2>이 프로토타입에 없는 것</h2>
+      <p>블록: For, 탈출(Break·Return), 병렬 처리(Parallel), 주석. 요구사항에는 있고 이 프로토타입에만 없습니다.</p>
+      <p>그 밖: Obsidian · 데스크톱 · Drive, 테마, PNG 내보내기, 정확한 텍스트 폭, 드래그. 이 코드는 아키텍처 설계 전에 버립니다.</p>
+      <p class="note">"받기"를 누르면 claude.ai가 저장할지 한 번 묻습니다. 받은 <code>diagram.ns.svg</code>를 "열기"로 다시 열어 보세요. 저장소의 <code>journal/assets/2026-10-10-ns-prototype.html</code>을 브라우저로 직접 열어도 됩니다.</p>
+      <p>그림은 어두운 테마에서도 흰 종이에 그립니다. 저장되는 SVG의 색이 정해지지 않았기 때문입니다 (ADR-0013 열린 질문).</p>
+    </aside>
+  </div>
+
+  <footer class="status" aria-live="polite">
+    <span class="mode" id="mode"></span>
+    <span class="msg" id="msg">블록을 클릭해 보세요.</span>
+    <span class="where" id="where"></span>
+  </footer>
+</div>
+
+<div class="menu" id="menu" hidden></div>
+<input type="file" id="file" accept=".svg,.ns,image/svg+xml" hidden>
+
+<div class="modal" id="modal" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h3 id="mTitle">저장될 .ns.svg 내용</h3>
+    <p>그림 부분은 지금 화면 그대로이고(접힌 곳은 접힌 채), 모델(JSON)은 <code>&lt;metadata&gt;</code> 안에 있습니다. 접힘 상태는 모델의 <code>view</code>에 들어갑니다.</p>
+    <textarea id="svgText" readonly spellcheck="false"></textarea>
+    <div class="row">
+      <button data-cmd="copySvg">복사</button>
+      <button data-cmd="download">받기</button>
+      <button data-cmd="closeModal">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const svg = $('#svg'), stage = $('#stage'), editor = $('#editor'), menu = $('#menu');
+
+/* ---------- 모델 ---------- */
+let uid = 1;
+const nid = () => 'n' + (uid++);
+const P = (text = '') => ({ id: nid(), type: 'process', text });
+function mk(type, text = '') {
+  if (type === 'process') return P(text);
+  if (type === 'if') return { id: nid(), type, text, yes: [P()], no: [P()] };
+  if (type === 'case') return { id: nid(), type, text, labels: ['1', '2', 'default'], c0: [P()], c1: [P()], c2: [P()] };
+  return { id: nid(), type, text, body: [P()] };
+}
+const SLOTS = { if: ['yes', 'no'], while: ['body'], dowhile: ['body'], range: ['children'] };
+const isCtrl = n => n.type === 'if' || n.type === 'case' || n.type === 'while' || n.type === 'dowhile';
+// 갈래가 나란히 놓이는 제어 블록
+const multi = n => n.type === 'if' || n.type === 'case';
+// 블록이 가진 갈래(자식 목록)의 이름들. Case는 갈래 수가 정해져 있지 않다
+const slots = n => n.type === 'case' ? n.labels.map((_, i) => 'c' + i) : (SLOTS[n.type] ?? []);
+const isHL = n => n.type === 'range' && n.highlight;
+// 문서 = 다이어그램 여러 개. 다이어그램의 id는 머리를 고를 때의 id로도 쓴다
+// 머리가 있는 다이어그램은 Event(밖에서 시작됨)이거나 Method(호출 블록이 부름)다
+const newDia = (event = null, body, kind) => ({ id: 'g' + (uid++), event, ...(event != null ? { kind: kind === 'method' ? 'method' : 'event' } : {}), body: body || [P()] });
+const isMethod = d => !!d && d.event != null && d.kind === 'method';
+const kindName = d => isMethod(d) ? 'Method' : 'Event';
+const callersOf = d => { let k = 0; eachNode(n => { if (n.type === 'call' && n.target === d.id) k++; }); return k; };
+// Method의 머리 글자: 첫 여는 괄호 앞까지가 이름, 괄호 안은 받는 것이다. 괄호가 없으면 글자 전체가 이름이다 (ADR-0022)
+const headName = t => { const s = String(t ?? '').trim(), i = s.indexOf('('); return (i > 0 ? s.slice(0, i) : s).trim(); };
+const headParens = t => String(t ?? '').trim().indexOf('(') > 0;
+const headParams = t => { const s = String(t ?? '').trim(), i = s.indexOf('('); if (i <= 0) return ''; const j = s.lastIndexOf(')'); return s.slice(i + 1, j > i ? j : s.length).trim(); };
+// 이름이 겹치는지 견줄 때 쓰는 글자: Method는 괄호 앞의 이름만, Event는 글자 전체
+const nameKey = d => isMethod(d) ? headName(d.event) : String(d.event ?? '').trim();
+const oneLine = v => String(v ?? '').replace(/\s*\n\s*/g, ' ').trim();
+// 호출 블록에 적은 한 줄("결과 ← 이름(인자)")에서 결과와 인자를 가려낸다. 이름이 없으면 null
+function parseCall(v, name) {
+  const s = oneLine(v).replace(/;$/, '').trim();
+  if (!name) return null;
+  let i = -1;
+  for (let from = 0; ;) {
+    const k = s.indexOf(name, from);
+    if (k < 0) break;
+    if (i < 0) i = k;
+    const pre = s.slice(0, k).trim();
+    if (!pre || /(←|<-|:=|=)$/.test(pre)) { i = k; break; }
+    from = k + 1;
+  }
+  if (i < 0) return null;
+  const result = s.slice(0, i).trim().replace(/\s*(←|<-|:=|=)$/, '').trim();
+  const post = s.slice(i + name.length).trim();
+  return { result, args: post.startsWith('(') && post.endsWith(')') ? post.slice(1, -1).trim() : post };
+}
+// 예전 문서의 자유 글자에서 이름을 찾지 못했을 때: "결과 = 무엇(인자)" 꼴이면 가르고, 아니면 통째로 인자에 둔다
+function looseCall(v) {
+  const s = oneLine(v).replace(/;$/, '').trim();
+  const m = /^(?:(.*?)\s*(?:←|<-|:=|=)\s*)?[^()=←]*\((.*)\)$/.exec(s);
+  return m ? { result: (m[1] || '').trim(), args: m[2].trim() } : { result: '', args: s };
+}
+const isHead = id => typeof id === 'string' && id[0] === 'g';
+const dia = id => doc.diagrams.find(d => d.id === id);
+const diaOf = id => isHead(id) ? dia(id) : idx.get(id)?.dia;
+const eachNode = fn => { const walk = list => list.forEach(n => { fn(n); slots(n).forEach(s => walk(n[s])); }); doc.diagrams.forEach(d => walk(d.body)); };
+const allBlocks = () => doc.diagrams.reduce((a, d) => a + countBlocks(d.body), 0);
+let lastDia = null;
+const activeDia = () => (sel && diaOf(sel.anchor)) || dia(lastDia) || doc.diagrams[0];
+
+let doc = { diagrams: [newDia()] };
+let asked = new Set();           // 이름을 이미 물어본 접힌 부분 (보기 상태, 이 화면에서만 기억)
+let folded = new Set();          // 접힌 접기 영역의 id. 저장할 때 모델의 view에 함께 넣는다
+let opened = new Set();          // 펴 보인 호출 블록. 어느 경로로 펴 보였는지까지 담은 id("바깥 호출>안쪽 호출")라서 겹마다 따로 기억한다. 접힘처럼 보기 상태다
+let shown = new Map();           // 펴 보인 호출 블록 → 그 자리에 보여 줄 Method 블록의 사본. 모델이 아니며 reindex 때마다 새로 만든다
+let sel = null;                  // { root, anchor, focus } — anchor·focus는 같은 목록 안
+let undoStack = [], redoStack = [];
+let idx = new Map();
+let editing = null;
+let zoom = 1;
+const opts = { syntax: true, mono: true, showRegions: true };
+let exporting = false;
+// 펴져 있는 접기 영역을 화면에 어떻게 보여 줄지. 저장되는 그림에는 넣지 않는다
+const regionView = () => exporting || opts.showRegions === false ? 'off' : 'band';
+
+// 펴 보인 블록의 id는 "호출 블록 id>원래 블록 id"다 (겹치면 더 길어진다). rid는 원래 블록의 id
+const isShown = id => typeof id === 'string' && id.includes('>');
+const shownCopy = (list, pre) => list.map(n => {
+  const c = { ...n, id: pre + '>' + n.id, rid: n.id };
+  slots(n).forEach(s => { c[s] = shownCopy(n[s], pre); });
+  return c;
+});
+// 접힘은 원래 블록의 것을 따른다: 펴 보인 쪽은 Method에 저장된 접힘 그대로 보인다
+const fid = n => n.rid || n.id;
+const isFd = n => folded.has(fid(n));
+// 펴 보인 자리에서 만든 접기 영역: 그 호출 블록 자리에만 있고 Method의 원본에는 없다.
+// 문서의 sfolds에 { id, pre(펴 보인 경로), rids(묶은 원래 블록의 id), name }으로 둔다. 사본을 만들 때마다 그 자리에 끼워 넣는다
+const sitePre = id => id.slice(0, id.lastIndexOf('>'));
+const siteFold = g => (doc.sfolds || []).find(f => f.id === g.local && f.pre === sitePre(g.id));
+function localFolds(copy, pre) {
+  (doc.sfolds || []).filter(f => f.pre === pre).forEach(f => {
+    // 묶어 둔 블록 가운데 지금 남아 있는 것의 처음부터 끝까지를 묶는다. Method가 바뀌어 블록이 지워졌으면 줄어들고, 사이에 든 블록은 함께 묶인다
+    const find = list => {
+      const at = list.map((c, i) => f.rids.includes(c.local || c.rid) ? i : -1).filter(i => i >= 0);
+      if (at.length) return { list, lo: at[0], hi: at[at.length - 1] };
+      for (const c of list) for (const sl of slots(c)) { const r = find(c[sl]); if (r) return r; }
+      return null;
+    };
+    const r = find(copy);
+    if (!r) return;
+    const g = { id: pre + '>' + f.id, type: 'range', local: f.id, children: [] };
+    if ('name' in f) g.name = f.name;
+    g.children = r.list.splice(r.lo, r.hi - r.lo + 1);
+    r.list.splice(r.lo, 0, g);
+  });
+  return copy;
+}
+function reindex() {
+  idx = new Map(); shown = new Map();
+  const walk = (list, parent, slot, d) => list.forEach((n, i) => {
+    idx.set(n.id, { node: n, list, index: i, parent, slot, dia: d });
+    slots(n).forEach(s => walk(n[s], n, s, d));
+    // 펴 보인 호출 블록: 부르는 Method의 블록을 사본으로 만들어 그 아래에 단다. 사본도 고를 수 있도록 색인에 넣는다
+    if (n.type === 'call' && opened.has(n.id) && isMethod(dia(n.target))) {
+      const copy = localFolds(shownCopy(dia(n.target).body, n.id), n.id);
+      shown.set(n.id, copy);
+      walk(copy, n, 'shown', d);
+    }
+  });
+  doc.diagrams.forEach(d => walk(d.body, null, 'body', d));
+}
+function normalize() {
+  // 빈 영역은 없애고, 빈 갈래는 빈 처리 블록으로 채운다 (^nfr-integrity)
+  const fix = (list, mustFill) => {
+    for (let i = list.length - 1; i >= 0; i--) {
+      const n = list[i];
+      slots(n).forEach(s => fix(n[s], n.type !== 'range'));
+      delete n.foldNames;   // 접힌 줄의 이름은 없앤 기능이다
+      if (n.type === 'range' && n.highlight) {
+        // 강조 영역은 없앤 기능이다: 이름이 있으면 접기 영역으로 남기고, 없으면 푼다
+        delete n.highlight;
+        if (!('name' in n)) { list.splice(i, 1, ...n.children); folded.delete(n.id); continue; }
+      }
+      if (n.type === 'range' && n.children.length === 0) { list.splice(i, 1); folded.delete(n.id); }
+    }
+    if (mustFill && list.length === 0) list.push(P());
+  };
+  doc.diagrams.forEach(d => fix(d.body, true));
+  // 머리도 내용도 없는 다이어그램은 없앤다 (하나는 남긴다)
+  const keep = doc.diagrams.filter(d => d.event != null || !(d.body.length === 1 && d.body[0].type === 'process' && !d.body[0].text));
+  doc.diagrams = keep.length ? keep : [doc.diagrams[0]];
+  // 머리가 있으면 종류가 있다: Event 아니면 Method
+  doc.diagrams.forEach(d => { if (d.event == null) delete d.kind; else if (d.kind !== 'method') d.kind = 'event'; });
+  // 머리의 이름은 비울 수 없다: 이름이 없으면 "Event n"이나 "Method n"을 붙인다
+  doc.diagrams.forEach(d => {
+    if (d.event == null || d.event.trim()) return;
+    const base = isMethod(d) ? 'Method ' : 'Event ';
+    let k = 1;
+    while (doc.diagrams.some(x => x.event != null && nameKey(x) === base + k)) k++;
+    d.event = base + k;
+  });
+  // 호출 블록은 Method만 부른다. 이름은 글자로 갖지 않고 부르는 Method의 머리를 따른다. 인자와 결과만 갖는다 (ADR-0022).
+  // name은 부르던 Method가 없어졌을 때(지워짐, 머리를 뗌) 보여 줄 마지막 이름이다
+  eachNode(n => {
+    if (n.type !== 'call') return;
+    const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
+    if ('text' in n) {
+      // 예전 문서: 호출 블록에 자유롭게 적은 글자가 있다
+      const old = String(n.text ?? '');
+      delete n.text;
+      if (!alive) { if (n.name == null) n.name = oneLine(old); }
+      else { const p = parseCall(old, headName(t.event)) || looseCall(old); n.args = p.args; n.result = p.result; }
+    }
+    n.args = oneLine(n.args); n.result = oneLine(n.result);
+    if (!alive) {
+      n.target = null; n.name = n.name || '';
+      // 이어진 곳이 끊기면 펴짐도 풀린다
+      [...opened].forEach(k => { if (k.split('>').includes(n.id)) opened.delete(k); });
+      return;
+    }
+    n.name = headName(t.event);
+    // 넘겨주는 것이 비어 있으면 머리의 괄호 안 글자를 채운다
+    if (!n.args) n.args = headParams(t.event);
+  });
+  // 이 자리의 접기 영역은 그 호출 블록이 없어지거나, 묶어 둔 블록이 모두 없어지면 사라진다
+  if (doc.sfolds) {
+    const real = new Map();
+    eachNode(n => real.set(n.id, n));
+    for (let again = true; again;) {
+      const live = doc.sfolds.filter(f => {
+        const path = f.pre.split('>'), last = real.get(path[path.length - 1]);
+        return path.every(id => real.has(id)) && last.type === 'call' && isMethod(dia(last.target)) &&
+          f.rids.some(id => real.has(id) || doc.sfolds.some(o => o !== f && o.pre === f.pre && o.id === id));
+      });
+      again = live.length !== doc.sfolds.length;
+      doc.sfolds = live;
+    }
+    if (!doc.sfolds.length) delete doc.sfolds;
+  }
+  reindex();
+}
+function fixUid() {
+  let max = 0;
+  const see = id => { const k = parseInt(String(id).replace(/\D/g, ''), 10); if (k > max) max = k; };
+  doc.diagrams.forEach(d => see(d.id));
+  eachNode(n => see(n.id));
+  (doc.sfolds || []).forEach(f => see(f.id));
+  uid = max + 1;
+}
+const countBlocks = list => list.reduce((a, n) =>
+  a + (n.type === 'range' ? 0 : 1) + slots(n).reduce((b, s) => b + countBlocks(n[s]), 0), 0);
+function firstText(n) {
+  if (n.type === 'range') return n.name || firstText(n.children[0]);
+  const t = (n.text || '').split('\n')[0];
+  if (!t) return '(빈 블록)';
+  return t.length > 22 ? t.slice(0, 21) + '…' : t;
+}
+function defaultName(g) {
+  const k = g.children.length - 1;
+  return k > 0 ? `${firstText(g.children[0])} 외 ${k}개` : firstText(g.children[0]);
+}
+const foldLabel = g => g.name || defaultName(g);
+
+/* ---------- 되돌리기 ---------- */
+const snap = () => JSON.stringify(doc);
+function pushUndo() { undoStack.push(snap()); if (undoStack.length > 300) undoStack.shift(); redoStack = []; }
+function apply(fn) { pushUndo(); fn(); normalize(); fixSel(); render(); save(); }
+function undo() {
+  if (!undoStack.length) return say('되돌릴 것이 없습니다');
+  redoStack.push(snap()); doc = JSON.parse(undoStack.pop());
+  normalize(); fixSel(); render(); save(); say('되돌렸습니다');
+}
+function redo() {
+  if (!redoStack.length) return say('다시 할 것이 없습니다');
+  undoStack.push(snap()); doc = JSON.parse(redoStack.pop());
+  normalize(); fixSel(); render(); save(); say('다시 했습니다');
+}
+
+/* ---------- 선택 ---------- */
+const exists = id => isHead(id) ? !!dia(id) && dia(id).event != null : idx.has(id);
+function fixSel() {
+  if (!sel) return;
+  if (!exists(sel.anchor) || !exists(sel.focus)) { sel = null; return; }
+  if (!isHead(sel.anchor) && idx.get(sel.anchor).list !== idx.get(sel.focus).list) sel.focus = sel.anchor;
+  if (!exists(sel.root)) sel.root = sel.anchor;
+}
+const selectOne = id => { sel = id ? { root: id, anchor: id, focus: id } : null; };
+// 고른 것을 푼다. 마지막에 골랐던 블록을 기억해 두었다가 이동 키를 누르면 거기서 다시 시작한다
+let lastSel = null;
+function clearSel() { if (sel) lastSel = sel.focus; sel = null; visual = false; pend = ''; }
+function selRange() {
+  if (!sel) return null;
+  if (isHead(sel.anchor)) return { event: true, dia: dia(sel.anchor) };
+  const a = idx.get(sel.anchor), f = idx.get(sel.focus);
+  if (!a || !f) return null;
+  const lo = Math.min(a.index, f.index), hi = Math.max(a.index, f.index);
+  return { list: a.list, lo, hi, items: a.list.slice(lo, hi + 1), parent: a.parent };
+}
+function ancestors(id) {
+  const out = [];
+  let e = idx.get(id);
+  while (e) { out.push(e.node.id); e = e.parent ? idx.get(e.parent.id) : null; }
+  return out;
+}
+function selectTo(id) {
+  // Shift+클릭: 두 블록을 함께 담는 가장 가까운 같은 부모 영역으로 넓힌다 (ADR-0008)
+  if (!sel || isHead(sel.root) || isHead(id)) return selectOne(id);
+  const A = ancestors(sel.root), C = ancestors(id);
+  for (const x of A) {
+    const lx = idx.get(x).list;
+    const y = C.find(c => idx.get(c).list === lx);
+    if (y) { sel = { root: sel.root, anchor: x, focus: y }; return; }
+  }
+}
+function visibleOrder(only) {
+  const out = [];
+  const walk = list => list.forEach(n => {
+    if (n.type === 'range') { if (isFd(n)) out.push(n.id); else walk(n.children); return; }
+    out.push(n.id);
+    if (shown.has(n.id)) walk(shown.get(n.id));
+    slots(n).forEach(s => { if (laneFolded(n, s)) out.push(n[s][0].id); else walk(n[s]); });
+  });
+  (only ? [only] : doc.diagrams).forEach(d => { if (d.event != null) out.push(d.id); walk(d.body); });
+  return out;
+}
+function orderPos(order, id) {
+  let i = order.indexOf(id);
+  if (i < 0) i = order.findIndex(o => !isHead(o) && ancestors(o).includes(id));
+  return i;
+}
+function move(key, shift, ctrl) {
+  if (!sel) {
+    const all = visibleOrder();
+    pickId(all.includes(lastSel) ? lastSel : all[0]); render(); return showSel();
+  }
+  const side = key === 'ArrowLeft' || key === 'ArrowRight', fwd = key === 'ArrowDown' || key === 'ArrowRight';
+  const here = diaOf(sel.focus);
+  // 방향키는 다이어그램 안에서만 움직인다. 옆 다이어그램으로는 머리에서 좌우, 또는 Ctrl+Shift+좌우
+  const order = visibleOrder(here);
+  const cur = laneHome(sel.focus), i = orderPos(order, cur);
+  const inLane = cur !== sel.focus || (!!idx.get(cur)?.parent && laneFolded(idx.get(cur).parent, idx.get(cur).slot));
+  const step = () => order[i + (fwd ? 1 : -1)];
+  const neighbour = () => {
+    const d = doc.diagrams[doc.diagrams.indexOf(here) + (fwd ? 1 : -1)];
+    if (!d) say('그쪽에는 다이어그램이 없습니다');
+    return d ? (d.event != null ? d.id : firstIn(d.body)) : null;
+  };
+  let next = null;
+  if (ctrl && shift) { if (side) next = neighbour(); }
+  else if (ctrl && side) {
+    // 가장 가까운 If의 옆 갈래로. If 안이 아니면 위아래와 같다
+    let inIf = false;
+    for (let c = isHead(cur) ? null : container(cur); c; c = container(c.node.id)) {
+      if (!multi(c.node)) continue;
+      inIf = true;
+      const side2 = slots(c.node)[slots(c.node).indexOf(c.slot) + (fwd ? 1 : -1)];
+      if (side2) { next = enter(c.node, side2); break; }
+    }
+    if (!inIf) next = step();
+  } else if (ctrl) {
+    // 제어 블록을 안쪽까지 한 덩어리로 보고, 같은 줄의 위·아래 블록으로 간다 (제어 블록 안으로 들어가지 않는다)
+    if (isHead(cur)) next = step();
+    else if (inLane) next = fwd ? nextOf(idx.get(cur).parent.id) : idx.get(cur).parent.id;
+    else next = fwd ? nextOf(cur) : prevOf(cur);
+  } else if (shift && inLane) return say('접힌 갈래에서는 영역을 넓히지 않습니다');
+  else if (shift && !isHead(sel.anchor)) {
+    const f = idx.get(sel.focus);
+    const j = f.index + (key === 'ArrowDown' ? 1 : -1);
+    if (j >= 0 && j < f.list.length) sel.focus = f.list[j].id;
+    else say('같은 부모 안에서만 영역을 넓힐 수 있습니다' + (opts.showRegions === false ? '. "접기 영역 보기"가 꺼져 있어 접기 영역의 경계가 보이지 않습니다. 켜면 어디까지가 같은 부모인지 보입니다' : ''));
+    return render();
+  }
+  else if (!side) {
+    // 위·아래로는 옆 갈래로 넘어가지 않는다: 갈래의 끝에서 아래로는 그 If · Case의 다음 블록으로, 갈래의 처음에서 위로는 그 If · Case로
+    next = step();
+    for (let m; next && (m = crossed(cur, next)); )
+      next = fwd ? order.slice(orderPos(order, m.id) + 1).find(id => !ancestors(id).includes(m.id)) : m.id;
+    // 아래에서 위로 If · Case에 들어가면 가장 왼쪽 갈래의 맨 아래 블록으로 (가장 바깥 것부터)
+    if (!fwd && next && !isHead(next) && !isHead(cur)) {
+      const outer = ancestors(next).slice(1).reverse().find(id => multi(idx.get(id).node) && !ancestors(cur).includes(id));
+      if (outer) next = bottomOf(idx.get(outer).node);
+    }
+  }
+  else if (isHead(cur)) next = neighbour();   // 머리에서 좌우: 옆 다이어그램으로
+  else if (key === 'ArrowLeft') {
+    const c = container(cur), ls = c && multi(c.node) ? slots(c.node) : null, k = ls ? ls.indexOf(c.slot) : -1;
+    if (k > 0) next = enter(c.node, ls[k - 1]);                                      // 왼쪽 옆 갈래
+    else next = c ? c.node.id : null;                                                // 위쪽 바깥 블록
+  } else {
+    const c = container(cur), ls = c && multi(c.node) ? slots(c.node) : null, k = ls ? ls.indexOf(c.slot) : -1;
+    if (ls && k < ls.length - 1) next = enter(c.node, ls[k + 1]);                    // 오른쪽 옆 갈래
+    else if (ls)                                                                     // 아래쪽 바깥 블록
+      next = order.slice(orderPos(order, c.node.id) + 1).find(id => !ancestors(id).includes(c.node.id));
+    else {
+      const cand = order[i + 1];
+      if (cand && !isHead(cand) && ancestors(cand).includes(cur)) next = cand;
+    }
+  }
+  if (next) { pickId(next); render(); showSel(); }
+}
+// 고른 블록이 화면 밖에 있으면 캔버스를 그쪽으로 움직인다
+function showSel() { svg.querySelector('[data-selbox]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+// 아래에서 위로 들어갈 때 닿는 맨 아래 블록. If · Case는 가장 왼쪽 갈래로 들어간다
+function bottomOf(n) {
+  if (n.type === 'range') return isFd(n) ? n.id : bottomOf(n.children[n.children.length - 1]);
+  const sl = shown.get(n.id);
+  if (sl && sl.length) return bottomOf(sl[sl.length - 1]);
+  const ss = slots(n);
+  if (!ss.length) return n.id;
+  const s = multi(n) ? ss[0] : ss[ss.length - 1];
+  return laneFolded(n, s) ? n[s][0].id : bottomOf(n[s][n[s].length - 1]);
+}
+// 이 블록이 If · Case m의 어느 갈래에 있는가 (안에 없으면 null)
+function laneIn(id, m) {
+  for (let e = idx.get(id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.id === m.id) return e.slot;
+  return null;
+}
+// a에서 b로 가면 어떤 If · Case의 다른 갈래로 넘어가는가. 넘어가면 그 If · Case, 아니면 null
+function crossed(a, b) {
+  if (isHead(a) || isHead(b)) return null;
+  for (const id of ancestors(a).slice(1)) {
+    const m = idx.get(id).node;
+    if (!multi(m)) continue;
+    const lb = laneIn(b, m);
+    if (lb != null && lb !== laneIn(a, m)) return m;
+  }
+  return null;
+}
+function nextOf(id) {
+  // 바로 아래 블록: 뒤 형제, 없으면 담고 있는 제어 블록의 아래 블록
+  let e = idx.get(id);
+  while (e.index === e.list.length - 1 && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
+  if (e.index === e.list.length - 1) return e.parent ? nextOf(e.parent.id) : null;
+  let p = e.list[e.index + 1];
+  while (p.type === 'range' && !isFd(p)) p = p.children[0];
+  return p.id;
+}
+function prevOf(id) {
+  // 바로 위 블록: 앞 형제, 없으면 담고 있는 제어 블록, 그것도 없으면 머리
+  let e = idx.get(id);
+  while (e.index === 0 && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
+  if (e.index === 0) return e.parent ? e.parent.id : (e.dia.event != null ? e.dia.id : null);
+  let p = e.list[e.index - 1];
+  while (p.type === 'range' && !isFd(p)) p = p.children[p.children.length - 1];
+  return p.id;
+}
+function container(id) {
+  // 영역은 건너뛰고, 이 블록을 담은 제어 블록과 갈래를 찾는다
+  let e = idx.get(id);
+  while (e && e.parent && e.parent.type === 'range') e = idx.get(e.parent.id);
+  return e && e.parent ? { node: e.parent, slot: e.slot } : null;
+}
+const enter = (node, slot) => laneFolded(node, slot) ? node[slot][0].id : firstIn(node[slot]);
+// 접힌 갈래 안의 블록이면 그 갈래의 첫 블록(이동할 때 그 갈래를 대표한다)
+function laneHome(id) {
+  const e = idx.get(id);
+  return e && e.parent && laneFolded(e.parent, e.slot) ? e.list[0].id : id;
+}
+function pickId(id) {
+  // 접힌 갈래로 가면 갈래 전체를 고른다
+  const e = idx.get(id);
+  if (e && laneHome(id) === id && e.parent && laneFolded(e.parent, e.slot))
+    sel = { root: id, anchor: id, focus: e.list[e.list.length - 1].id };
+  else selectOne(id);
+}
+function firstIn(list) {
+  let n = list[0];
+  while (n.type === 'range' && !isFd(n)) n = n.children[0];
+  return n.id;
+}
+
+/* ---------- 레이아웃 ---------- */
+const K = { padX: 10, padY: 7, lh: 18, strip: 22, ifLab: 16, hat: 16, minW: 52, bar: 7, gap: 44, colMin: 420, band: 18, caseLab: 28, rb: 3, sb: 3, rgap: 1 };   // sb: 고른 표시의 굵기 (56번째 판에서 3px)   // rb: 접기 영역 테두리의 굵기 (55번째 판에서 3px, M11에서 고른 굵기)
+const RIN = K.rb + K.rgap;   // 테두리 안에 겹친 테두리가 들어가는 깊이: 테두리 굵기 + 틈
+const PIN = 4;               // 펴 보인 호출 블록 안의 블록이 들어가는 깊이: 점선 아래의 흰 줄 3px + 틈 1 (접기 영역의 굵기와 상관없음)
+const FAM_MONO = "IBM Plex Mono, IBM Plex Sans KR, Consolas, Malgun Gothic, monospace";
+const FAM_SANS = "IBM Plex Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
+const cv = document.createElement('canvas').getContext('2d');
+const fam = () => opts.mono ? FAM_MONO : FAM_SANS;
+function tsize(text) {
+  cv.font = `13px ${fam()}`;
+  const lines = String(text ?? '').split('\n');
+  let w = 0;
+  lines.forEach(l => { w = Math.max(w, cv.measureText(l).width); });
+  return { w: Math.ceil(w), h: lines.length * K.lh, lines };
+}
+function tagW(text) { cv.font = `600 12px ${FAM_SANS}`; return Math.ceil(cv.measureText(String(text)).width); }
+function boldW(text) { cv.font = `600 13px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
+function smallW(text, bold) { cv.font = `${bold ? '600 ' : ''}12px ${fam()}`; return Math.ceil(cv.measureText(String(text)).width); }
+// 호출 블록의 글자: 결과 ← 이름(인자). 이름은 굵게 그린다. 이어진 곳이 없으면 앞에 "?"
+function callParts(n) {
+  const t = n.target != null ? dia(n.target) : null, alive = isMethod(t);
+  const res = n.result ? n.result + ' ← ' : '';
+  return { res, pre: (alive ? '' : '? ') + res, name: (alive ? headName(t.event) : n.name) || '(이름 없음)',
+    post: n.args || (alive && headParens(t.event)) ? '(' + (n.args || '') + ')' : '' };
+}
+const callLine = n => { const p = callParts(n); return p.res + p.name + p.post; };
+const callText = n => { const p = callParts(n); return p.pre + p.name + p.post; };
+// 제어 블록의 접히는 부분: If는 갈래마다, 반복문은 안쪽 하나. 접힘 열쇠는 If가 "id:갈래", 반복문이 id
+const partKey = (n, slot) => multi(n) ? fid(n) + ':' + slot : fid(n);
+const laneKey = partKey;
+const laneFolded = (n, slot) => isCtrl(n) && folded.has(partKey(n, slot));
+// 접힌 부분의 이름은 모델(제어 블록의 foldNames)에 둔다. 이름을 고칠 때의 id는 "제어 블록 id:갈래"
+const partId = (n, slot) => n.id + ':' + slot;
+const isPart = id => typeof id === 'string' && id.includes(':');
+const partName = () => '';   // 접힌 줄에는 이름을 붙이지 않는다
+const foldRowText = (n, slot) => (partName(n, slot) ? partName(n, slot) + '   ' : '') + `⋯ 블록 ${countBlocks(n[slot])}개`;
+const foldRowSize = (n, slot) => { const t = tsize(foldRowText(n, slot)); return { w: t.w + 2 * K.padX, h: t.h + 2 * K.padY }; };
+let M, L, T;
+// 테두리를 두르는 것: 펴진 접기 영역("접기 영역 보기"를 켰을 때)과 펴 보인 호출 블록
+const boxed = n => n.type === 'range' ? !isFd(n) && regionView() === 'band' : n.type === 'call' && shown.has(n.id);
+function measure(n) {
+  let r;
+  if (n.type === 'process') {
+    const t = tsize(n.text);
+    r = { w: Math.max(K.minW, t.w + 2 * K.padX), h: t.h + 2 * K.padY };
+  } else if (n.type === 'call') {
+    const p = callParts(n), kids = shown.get(n.id);
+    if (kids) {
+      // 펴 보인 호출 블록: 얇은 띠 아래에 Method의 블록이 놓이고 둘레에 점선을 두른다
+      const inner = measureSeq(kids, PIN);
+      r = { w: Math.max(inner.w, 10 + smallW('▾ ' + p.pre) + smallW(p.name, true) + smallW(p.post) + K.padX), h: K.band + inner.h, band: K.band };
+    }
+    else r = { w: tsize(p.pre).w + boldW(p.name) + tsize(p.post).w + 2 * K.padX + 2 * K.bar, h: K.lh + 2 * K.padY };
+  } else if (n.type === 'range') {
+    if (isFd(n)) { const t = tsize(foldLabel(n)); r = { w: t.w + 2 * K.padX + 20, h: t.h + 2 * K.padY + 4 }; }
+    else {
+      // 펴진 접기 영역: 맨 위 이름 띠와 둘레의 굵은 테두리. 보통 블록은 테두리에 붙고, 겹친 테두리만 틈을 두고 들어간다. 띠를 끄면 테두리도 없다
+      const band = regionView() === 'band';
+      r = measureSeq(n.children, band ? RIN : 0);
+      if (band) r = { w: Math.max(r.w, tagW('▾ ' + foldLabel(n)) + 10 + K.padX), h: r.h + K.band, band: K.band };
+    }
+  } else {
+    const t = tsize(n.text);
+    if (n.type === 'case') {
+      // 갈래마다 폭을 재고, 갈래 이름이 들어갈 만큼은 넓힌다
+      const headH = t.h + 2 * K.padY + K.caseLab, lws = [], lhs = [];
+      slots(n).forEach((sl, i) => {
+        const mm = laneFolded(n, sl) ? foldRowSize(n, sl) : measureSeq(n[sl]);
+        lws.push(Math.max(mm.w, tagW(n.labels[i]) + 18)); lhs.push(mm.h);
+      });
+      const sum = lws.reduce((a, b) => a + b, 0);
+      r = { w: Math.max(t.w + 2 * K.padX + 90, sum), h: headH + Math.max(...lhs), headH, lws, sum };
+    } else if (n.type === 'if') {
+      const headH = t.h + 2 * K.padY + K.ifLab, headW = t.w + 2 * K.padX + 70;
+      const y = laneFolded(n, 'yes') ? foldRowSize(n, 'yes') : measureSeq(n.yes);
+      const no = laneFolded(n, 'no') ? foldRowSize(n, 'no') : measureSeq(n.no);
+      r = { w: Math.max(headW, y.w + no.w), h: headH + Math.max(y.h, no.h), headH, yw: y.w, nw: no.w };
+    } else {
+      const headH = t.h + 2 * K.padY;
+      const inner = isFd(n) ? foldRowSize(n, 'body') : measureSeq(n.body);
+      r = { w: Math.max(t.w + 2 * K.padX, K.strip + inner.w), h: headH + inner.h, headH };
+    }
+  }
+  M.set(n.id, r);
+  return r;
+}
+// ins: 이 목록이 테두리 안에 있을 때, 그 안의 테두리가 양옆과 맨 아래에서 들어가는 깊이. 이어진 테두리 사이에는 틈을 둔다
+function measureSeq(list, ins = 0) {
+  let w = 0, h = 0;
+  list.forEach((c, i) => {
+    const m = measure(c), b = boxed(c);
+    w = Math.max(w, m.w + (b ? 2 * ins : 0)); h += m.h;
+    if (b && i > 0 && boxed(list[i - 1])) h += K.rgap + 1;
+    if (b && i === list.length - 1) h += ins;
+  });
+  return { w, h };
+}
+function placeSeq(list, x, y, w, h, out, ins = 0) {
+  let cy = y;
+  list.forEach((c, i) => {
+    const b = boxed(c), d = b ? ins : 0;
+    if (b && i > 0 && boxed(list[i - 1])) cy += K.rgap + 1;
+    const ch = i === list.length - 1 ? (y + h - cy - d) : M.get(c.id).h;
+    place(c, x + d, cy, w - 2 * d, ch, out);
+    cy += ch;
+  });
+}
+function place(n, x, y, w, h, out) {
+  const m = M.get(n.id);
+  L.set(n.id, { x, y, w, h });
+  const fd = isFd(n);
+  if (n.type === 'process') {
+    out.items.push({ k: 'process', id: n.id, x, y, w, h, text: n.text });
+    T.set(n.id, { x, y, w, h: m.h });
+  } else if (n.type === 'call' && shown.has(n.id)) {
+    const i0 = out.items.length, g0 = out.ghosts.length;
+    out.items.push({ k: 'callOpen', id: n.id, x, y, w, h, band: m.band, parts: callParts(n) });
+    placeSeq(shown.get(n.id), x, y + m.band, w, h - m.band, out, PIN);
+    // 그 안에 놓인 것은 모두 펴 보인 것이다 (글자를 회색으로 그린다)
+    for (let k = i0 + 1; k < out.items.length; k++) out.items[k].shown = true;
+    for (let k = g0; k < out.ghosts.length; k++) out.ghosts[k].shown = true;
+    T.set(n.id, { x, y, w, h: m.band });
+  } else if (n.type === 'call') {
+    out.items.push({ k: 'call', id: n.id, x, y, w, h, text: callText(n), parts: callParts(n), linked: n.target != null });
+    T.set(n.id, { x, y, w, h: m.h });
+  } else if (n.type === 'range') {
+    if (fd) { out.items.push({ k: 'rangeFold', id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name }); T.set(n.id, { x, y, w, h: m.h }); }
+    else placeSeq(n.children, x, y + (m.band || 0), w, h - (m.band || 0), out, m.band ? RIN : 0);
+    // 펴져 있는 접기 영역의 자리를 적어 둔다 (이름 띠를 그릴 곳)
+    if (!fd && regionView() !== 'off') {
+      let depth = 0;
+      for (let e = idx.get(n.id); e && e.parent; e = idx.get(e.parent.id)) if (e.parent.type === 'range') depth++;
+      out.ghosts.push({ id: n.id, x, y, w, h, text: foldLabel(n), named: !!n.name, depth, band: m.band || 0 });
+      if (m.band) T.set(n.id, { x, y, w, h: m.band });
+    }
+  } else if (n.type === 'case') {
+    const hh = m.headH, by = y + hh, bh = h - hh, extra = w - m.sum, ls = slots(n), xs = [];
+    let lx = x;
+    ls.forEach((slot, i) => { const lw = i === ls.length - 1 ? x + w - lx : Math.round(m.lws[i] + extra * m.lws[i] / m.sum); xs.push([lx, lw]); lx += lw; });
+    out.items.push({ k: 'caseHead', id: n.id, x, y, w, h: hh, xs, labels: n.labels, text: n.text });
+    ls.forEach((slot, i) => {
+      const [bx, lw] = xs[i];
+      if (laneFolded(n, slot)) {
+        out.items.push({ k: 'foldRow', pid: n.id, slot, x: bx, y: by, w: lw, h: bh, text: foldRowText(n, slot), named: false });
+        n[slot].forEach(c => L.set(c.id, { x: bx, y: by, w: lw, h: bh }));
+      }
+      else placeSeq(n[slot], bx, by, lw, bh, out);
+      T.set(n.id + '#' + i, { x: bx, y: y + hh - 20, w: lw, h: 20 });   // 갈래 이름을 고치는 자리
+    });
+    T.set(n.id, { x, y, w, h: hh - 20 });
+  } else if (n.type === 'if') {
+    const hh = m.headH, by = y + hh, bh = h - hh;
+    const extra = w - (m.yw + m.nw);
+    const yW = Math.round(m.yw + extra * m.yw / (m.yw + m.nw));
+    out.items.push({ k: 'ifHead', id: n.id, x, y, w, h: hh, sx: x + yW, text: n.text });
+    [['yes', x, yW], ['no', x + yW, w - yW]].forEach(([slot, lx, lw]) => {
+      if (laneFolded(n, slot)) {
+        out.items.push({ k: 'foldRow', pid: n.id, slot, x: lx, y: by, w: lw, h: bh, text: foldRowText(n, slot), named: !!partName(n, slot) });
+        n[slot].forEach(c => L.set(c.id, { x: lx, y: by, w: lw, h: bh }));
+        T.set(partId(n, slot), { x: lx, y: by, w: lw, h: bh });
+      }
+      else placeSeq(n[slot], lx, by, lw, bh, out);
+    });
+    T.set(n.id, { x, y, w, h: hh });
+  } else {
+    const hh = m.headH, bottom = n.type === 'dowhile';
+    out.items.push({ k: 'loop', id: n.id, x, y, w, h, headH: hh, bottom, text: n.text });
+    const iy = bottom ? y : y + hh, ih = h - hh;
+    if (fd) {
+      const box = { x: x + K.strip, y: iy, w: w - K.strip, h: ih };
+      out.items.push({ k: 'foldRow', pid: n.id, slot: 'body', ...box, text: foldRowText(n, 'body'), named: !!partName(n, 'body') });
+      n.body.forEach(c => L.set(c.id, box));
+      T.set(partId(n, 'body'), box);
+    }
+    else placeSeq(n.body, x + K.strip, iy, w - K.strip, ih, out);
+    T.set(n.id, { x, y: bottom ? y + h - hh : y, w, h: hh });
+  }
+}
+function layout() {
+  M = new Map(); L = new Map(); T = new Map();
+  const out = { items: [], regions: [], ghosts: [] };
+  // 순서대로 위에서 아래로 쌓다가, 가장 큰 다이어그램의 높이를 넘으면 오른쪽 새 줄로 넘긴다 (^edit-multi-diagram)
+  const boxes = doc.diagrams.map(d => {
+    const bm = measureSeq(d.body);
+    let W = Math.max(bm.w, 160), eh = 0;
+    if (d.event != null) {
+      const et = tsize(d.event || ' ');
+      W = Math.max(W, et.w + 2 * K.padX + 24);
+      eh = K.hat + et.h + 2 * K.padY;
+    }
+    // "왼쪽 여백에 이름": 다이어그램 왼쪽에 이름과 괄호선을 그릴 자리를 둔다
+    let gut = 0, cols = 0;
+    if (regionView() === 'gutter') {
+      let wmax = 0;
+      const walk = (list, depth) => list.forEach(n => {
+        if (n.type !== 'range') return slots(n).forEach(sl => walk(n[sl], depth));
+        if (folded.has(n.id)) return;
+        wmax = Math.max(wmax, tagW(foldLabel(n))); cols = Math.max(cols, depth + 1);
+        walk(n.children, depth + 1);
+      });
+      walk(d.body, 0);
+      if (cols) gut = wmax + cols * 10 + 14;
+    }
+    return { d, bm, W, eh, H: eh + bm.h, gut, cols };
+  });
+  const top = 24, limit = Math.max(K.colMin, ...boxes.map(b => b.H));
+  let X = 24, Y = top, colW = 0, bottom = 0;
+  for (const b of boxes) {
+    if (Y > top && Y + b.H > top + limit) { X += colW + K.gap; Y = top; colW = 0; }
+    const d = b.d, DX = X + b.gut, g0 = out.ghosts.length;
+    if (d.event != null) {
+      out.items.push({ k: 'event', id: d.id, x: DX, y: Y, w: b.W, h: b.eh, text: d.event, method: isMethod(d) });
+      L.set(d.id, { x: DX, y: Y, w: b.W, h: b.eh });
+      T.set(d.id, { x: DX, y: Y + K.hat, w: b.W, h: b.eh - K.hat });
+    }
+    placeSeq(d.body, DX, Y + b.eh, b.W, b.bm.h, out);
+    out.ghosts.slice(g0).forEach(g => { g.left = DX; g.cols = b.cols; });
+    colW = Math.max(colW, b.W + b.gut);
+    bottom = Math.max(bottom, Y + b.H);
+    Y += b.H + K.gap;
+  }
+  out.W = X + colW + 24; out.H = bottom + 24;
+  return out;
+}
+
+/* ---------- 그리기 (기본 스타일 C, ADR-0013) ---------- */
+const COL = {
+  // 값과 까닭은 docs/02-ux-design/04-visual-design.md (53번째 판에서 WCAG 대비를 맞춤)
+  stroke: '#5b77ad', process: '#edf0f5', if: '#f6ebdc', loop: '#dce6f6', event: '#e2efdf',
+  ink: '#151a22', label: '#4b5567', kw: '#1f45d6', cm: '#22702a', num: '#8a5a00', str: '#8a5a00',
+  call: '#ebe7f4', muted: '#5a6476', fold: '#fbfcfe', sel: '#d0500b',   // sel은 편집 층(저장되지 않음)에만 쓴다. 접기 영역의 파랑과 섞이지 않게 주황 (55번째 판)
+  edge: '#4f74d6', foldBand: '#e6ecfb', foldName: '#2c55c9',            // 접기 영역의 테두리, 이름 띠, 띠의 글자 (54번째 판에서 52번째 판의 파랑으로 되돌림)
+  callEdge: '#7a5fb8', callBand: '#ddd4ef', shown: '#555e70'            // 펴 보인 호출 블록의 점선과 띠, 펴 보인 블록의 글자
+};
+let ink = COL.ink;   // 지금 그리는 블록의 글자 색. 펴 보인 블록은 회색으로, 구문 강조 없이 그린다
+const KW = new Set(('if else while for do return break continue switch case default true false null NULL ' +
+  'int void char long short unsigned signed float double bool const static volatile struct sizeof ' +
+  'uint8_t uint16_t uint32_t int8_t int16_t int32_t and or not').split(' '));
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function tokens(line) {
+  if (!opts.syntax || ink !== COL.ink) return [[line, '']];
+  const re = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|(\b(?:0x[0-9a-fA-F]+|\d+(?:\.\d+)?f?)\b)|([A-Za-z_]\w*)/g;
+  const out = [];
+  let last = 0, m;
+  while ((m = re.exec(line))) {
+    if (m.index > last) out.push([line.slice(last, m.index), '']);
+    out.push([m[0], m[1] ? 'cm' : m[2] ? 'str' : m[3] ? 'num' : KW.has(m[0]) ? 'kw' : '']);
+    last = m.index + m[0].length;
+  }
+  if (last < line.length) out.push([line.slice(last), '']);
+  return out;
+}
+function txt(text, x, y, anchor, extra = '') {
+  return String(text ?? '').split('\n').map((ln, i) =>
+    `<text x="${x}" y="${y + (i + 1) * K.lh - 5}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${fam()}" font-size="13" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none"${extra}>` +
+    tokens(ln).map(([s, c]) => c ? `<tspan fill="${COL[c]}">${esc(s)}</tspan>` : esc(s)).join('') + `</text>`).join('');
+}
+function callTxt(p, x, y) {
+  const part = ln => tokens(ln).map(([s, c]) => c ? `<tspan fill="${COL[c]}">${esc(s)}</tspan>` : esc(s)).join('');
+  return `<text x="${x}" y="${y + K.lh - 5}" font-family="${fam()}" font-size="13" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">` +
+    part(p.pre) + `<tspan font-weight="600">${esc(p.name)}</tspan>` + part(p.post) + `</text>`;
+}
+const rect = (x, y, w, h, fill, attr = '') =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${COL.stroke}" stroke-width="1" shape-rendering="crispEdges"${attr}/>`;
+function drawSVG(lay, ui) {
+  const s = [], over = [];
+  const da = id => ui ? ` data-id="${id}"` : '';
+  for (const it of lay.items) {
+    ink = it.shown ? COL.shown : COL.ink;
+    if (it.k === 'process') {
+      s.push(rect(it.x, it.y, it.w, it.h, COL.process, da(it.id)));
+      s.push(txt(it.text, it.x + K.padX, it.y + K.padY));
+    } else if (it.k === 'event') {
+      const { x, y, w, h } = it, bw = Math.min(110, w * 0.45), top = y + K.hat;
+      // Event 머리는 왼쪽에 솟은 모자, Method 머리는 폭 전체에 걸친 낮은 아치 (호출 블록과 같은 색)
+      if (it.method) s.push(`<path d="M ${x} ${top} C ${x + w * 0.2} ${y + 1}, ${x + w * 0.8} ${y + 1}, ${x + w} ${top} L ${x + w} ${y + h} L ${x} ${y + h} Z" fill="${COL.call}" stroke="${COL.stroke}" stroke-width="1"${da(it.id)}/>`);
+      else s.push(`<path d="M ${x} ${top} C ${x + 22} ${y - 2}, ${x + bw - 22} ${y - 2}, ${x + bw} ${top} L ${x + w} ${top} L ${x + w} ${y + h} L ${x} ${y + h} Z" fill="${COL.event}" stroke="${COL.stroke}" stroke-width="1"${da(it.id)}/>`);
+      s.push(txt(it.text, x + K.padX, top + K.padY));
+    } else if (it.k === 'call') {
+      // 호출 블록: 양옆 세로 이중선 (NS 차트의 서브루틴 호출 표기). 이어진 곳이 없으면 점선
+      const dash = it.linked ? '' : ' stroke-dasharray="3 3"';
+      s.push(rect(it.x, it.y, it.w, it.h, COL.call, da(it.id)));
+      for (const bx of [it.x + K.bar, it.x + it.w - K.bar])
+        s.push(`<line x1="${bx}" y1="${it.y}" x2="${bx}" y2="${it.y + it.h}" stroke="${COL.stroke}" stroke-width="1"${dash} pointer-events="none"/>`);
+      s.push(callTxt(it.parts, it.x + K.padX + K.bar, it.y + K.padY));
+    } else if (it.k === 'callOpen') {
+      // 펴 보인 호출 블록: 맨 위 얇은 띠에 호출 블록의 글자를 적고, 둘레에 가는 점선을 두른다. 강조가 아니라서 접기 영역의 굵은 실선보다 가볍다.
+      // 점선은 블록의 바깥 선에서 1px 안으로 들어간다: 바깥의 가는 선은 다른 블록처럼 그대로 두고, 그 안쪽 자리를 흰 줄로 비워 가운데에 점선을 긋는다
+      const p = it.parts, e = `x="${it.x + 2}" y="${it.y + 2}" width="${it.w - 4}" height="${it.h - 4}" fill="none" pointer-events="none"`;
+      s.push(rect(it.x, it.y, it.w, it.h, '#ffffff', ' pointer-events="none"'));
+      s.push(`<rect x="${it.x + .5}" y="${it.y + .5}" width="${it.w - 1}" height="${it.band - .5}" fill="${COL.callBand}"${da(it.id)}/>`);
+      s.push(`<line x1="${it.x}" y1="${it.y + it.band}" x2="${it.x + it.w}" y2="${it.y + it.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      s.push(`<text x="${it.x + 10}" y="${it.y + it.band - 5}" font-family="${fam()}" font-size="12" fill="${ink}" xml:space="preserve" style="white-space:pre" pointer-events="none">▾ ${esc(p.pre)}<tspan font-weight="600">${esc(p.name)}</tspan>${esc(p.post)}</text>`);
+      over.push(`<rect data-dash="${it.id}" ${e} stroke="#ffffff" stroke-width="3"/>`, `<rect ${e} stroke="${COL.callEdge}" stroke-width="1" stroke-dasharray="6 4"/>`);
+    } else if (it.k === 'loop') {
+      s.push(rect(it.x, it.y, it.w, it.h, COL.loop, da(it.id)));
+      s.push(txt(it.text, it.x + K.padX, (it.bottom ? it.y + it.h - it.headH : it.y) + K.padY));
+    } else if (it.k === 'ifHead') {
+      const { x, y, w, h, sx } = it, t = tsize(it.text);
+      s.push(rect(x, y, w, h, COL.if, da(it.id)));
+      s.push(`<path d="M ${x} ${y} L ${sx} ${y + h} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      const cx = Math.min(Math.max(sx, x + t.w / 2 + K.padX), x + w - t.w / 2 - K.padX);
+      s.push(txt(it.text, cx, y + K.padY - 2, 'middle'));
+      s.push(`<text x="${x + 6}" y="${y + h - 5}" font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">참</text>`);
+      s.push(`<text x="${x + w - 6}" y="${y + h - 5}" text-anchor="end" font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">거짓</text>`);
+    } else if (it.k === 'caseHead') {
+      // NS 차트의 Case 머리: 왼쪽 위에서 default 갈래의 왼쪽 아래로 긴 빗금, 오른쪽 위에서 같은 점으로 짧은 빗금.
+      // 갈래 사이의 세로선은 빗금에서 아래로 내려온다. 갈래 이름은 빗금 아래 오른쪽 구석(default는 왼쪽 구석)에 적는다
+      const { x, y, w, h, xs } = it, t = tsize(it.text), xd = xs[xs.length - 1][0];
+      s.push(rect(x, y, w, h, COL.if, da(it.id)));
+      s.push(`<path d="M ${x} ${y} L ${xd} ${y + h} L ${x + w} ${y}" fill="none" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      for (let i = 1; i < xs.length - 1; i++) {
+        const bx = xs[i][0], yy = y + h * (bx - x) / (xd - x);
+        s.push(`<line x1="${bx}" y1="${yy}" x2="${bx}" y2="${y + h}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+      }
+      const cx = Math.min(Math.max(xd, x + t.w / 2 + K.padX), x + w - t.w / 2 - K.padX);
+      s.push(txt(it.text, cx, y + K.padY - 2, 'middle'));
+      xs.forEach(([bx, lw], i) => {
+        const dflt = i === xs.length - 1;
+        if (ui) s.push(`<rect x="${bx}" y="${y + h - 20}" width="${lw}" height="20" fill="#ffffff" fill-opacity="0" data-id="${it.id}" data-label="${i}" style="cursor:text"/>`);
+        s.push(`<text x="${dflt ? bx + 6 : bx + lw - 5}" y="${y + h - 5}"${dflt ? '' : ' text-anchor="end"'} font-family="${FAM_SANS}" font-size="12" fill="${COL.label}" pointer-events="none">${esc(it.labels[i])}</text>`);
+      });
+    } else if (it.k === 'foldRow') {
+      s.push(rect(it.x, it.y, it.w, it.h, COL.fold, ui ? ` data-id="${it.pid}" data-unfold="1"${it.slot ? ` data-slot="${it.slot}"` : ''}` : ''));
+      s.push(`<text x="${it.x + K.padX}" y="${it.y + K.padY + K.lh - 5}" font-family="${FAM_SANS}" font-size="12"${it.named ? '' : ' font-style="italic"'} fill="${it.named ? COL.ink : COL.muted}" xml:space="preserve" style="white-space:pre" pointer-events="none">${esc(it.text)}</text>`);
+    } else if (it.k === 'rangeFold') {
+      const { x, y, w, h } = it;
+      s.push(rect(x, y, w, h, COL.fold, da(it.id)));
+      s.push(`<path d="M ${x + 8} ${y + K.padY + 4} l 6 4.5 l -6 4.5 z" fill="${COL.muted}" pointer-events="none"/>`);
+      s.push(txt(it.text, x + K.padX + 12, y + K.padY, null, it.named ? '' : ` font-style="italic"`));
+    }
+  }
+  ink = COL.ink;
+  s.push(...over);
+  {
+    // 이름 띠는 저장되는 그림에도 그린다 (화면 그대로 저장)
+    const view = regionView(), c = COL.foldName, used = new Map();
+    const tag = (x, y, text, anchor) => `<text x="${x}" y="${y}"${anchor ? ` text-anchor="${anchor}"` : ''} font-family="${FAM_SANS}" font-size="12" font-weight="600" fill="${c}" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" pointer-events="none">${esc(text)}</text>`;
+    for (const g of lay.ghosts) {
+      const d = 2.5 + (g.depth || 0) * 4;
+      if (view === 'band') {
+        // 이름 띠: 영역 맨 위에 이름 줄을 하나 더한다. 블록 글자와 겹치지 않지만 그림이 그만큼 길어진다
+        // 테두리: 영역의 둘레를 굵은 실선으로 두른다. 겹치거나 이어져도 상자가 따로 보인다. 누르는 곳은 띠다
+        const hit = ui ? ` data-id="${g.id}" data-band="1" style="cursor:pointer"` : '';
+        s.push(`<rect x="${g.x - .5}" y="${g.y - .5}" width="${g.w + 1}" height="${g.band + .5}" fill="${COL.foldBand}"${hit}/>`);
+        s.push(`<line x1="${g.x}" y1="${g.y + g.band}" x2="${g.x + g.w}" y2="${g.y + g.band}" stroke="${COL.stroke}" stroke-width="1" pointer-events="none"/>`);
+        s.push(`<rect data-edge="${g.id}" x="${g.x + K.rb / 2 - .5}" y="${g.y + K.rb / 2 - .5}" width="${g.w - K.rb + 1}" height="${g.h - K.rb + 1}" fill="none" stroke="${COL.edge}" stroke-width="${K.rb}" pointer-events="none"/>`);
+        s.push(`<text x="${g.x + 10}" y="${g.y + g.band - 5}" font-family="${FAM_SANS}" font-size="12" font-weight="600"${g.named ? '' : ' font-style="italic"'} fill="${c}" pointer-events="none">▾ ${esc(g.text)}</text>`);
+        continue;
+      }
+      s.push(`<rect x="${g.x + d}" y="${g.y + d}" width="${g.w - 2 * d}" height="${g.h - 2 * d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="5 3"${view === 'gutter' ? ' stroke-opacity="0.55"' : ''} pointer-events="none"/>`);
+      if (view === 'corner') s.push(tag(g.x + g.w - 6 - d, g.y + 13 + d, g.text, 'end'));
+      if (view === 'gutter') {
+        // 왼쪽 여백: 다이어그램 밖에 괄호선과 이름. 블록 글자와 겹치지 않고 그림 크기도 그대로다. 바깥 영역일수록 왼쪽 줄
+        const bx = g.left - 7 - (g.cols - 1 - g.depth) * 10;
+        s.push(`<path d="M ${bx + 5} ${g.y + 3} H ${bx} V ${g.y + g.h - 3} H ${bx + 5}" fill="none" stroke="${c}" stroke-width="1.5" pointer-events="none"/>`);
+        if (g.x > g.left + 1) s.push(`<line x1="${bx + 5}" y1="${g.y + 3}" x2="${g.x + d}" y2="${g.y + 3}" stroke="${c}" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" pointer-events="none"/>`);
+        const key = g.left + ':' + g.y, k = used.get(key) || 0;
+        used.set(key, k + 1);
+        s.push(tag(g.left - 7 - g.cols * 10, g.y + 13 + k * 14, g.text, 'end'));
+      }
+    }
+    const r = ui ? selRange() : null;
+    if (r) {
+      const boxes = r.event ? [L.get(r.dia.id)] : r.items.map(n => L.get(n.id));
+      if (boxes.every(Boolean)) {
+        const x1 = Math.min(...boxes.map(b => b.x)), y1 = Math.min(...boxes.map(b => b.y));
+        const x2 = Math.max(...boxes.map(b => b.x + b.w)), y2 = Math.max(...boxes.map(b => b.y + b.h));
+        s.push(`<rect data-selbox="" x="${x1 + K.sb / 2 - .5}" y="${y1 + K.sb / 2 - .5}" width="${x2 - x1 - K.sb + 1}" height="${y2 - y1 - K.sb + 1}" fill="none" stroke="${COL.sel}" stroke-width="${K.sb}" pointer-events="none"/>`);
+      }
+    }
+  }
+  // 그림 전체를 반 픽셀 옮긴다: 가는 선(1px)과 굵은 테두리(3px)가 같은 픽셀 줄에서 시작해 바깥 선이 곧다
+  return '<g transform="translate(.5 .5)">\n' + s.join('\n') + '\n</g>';
+}
+function render() {
+  const lay = layout();
+  svg.setAttribute('viewBox', `0 0 ${lay.W} ${lay.H}`);
+  svg.setAttribute('width', lay.W * zoom);
+  svg.setAttribute('height', lay.H * zoom);
+  svg.innerHTML = drawSVG(lay, true);
+  $('#zoomOut').textContent = Math.round(zoom * 100) + '%';
+  $('#where').textContent = describeSel();
+  $('.stage').classList.toggle('nosel', !sel);
+  showMode();
+  if (sel && diaOf(sel.anchor)) lastDia = diaOf(sel.anchor).id;
+}
+function describeSel() {
+  const base = describeSel0(), r = selRange();
+  if (!r || r.event) return base;
+  const chain = [];
+  for (let e = idx.get(r.items[0].id); e; e = e.parent ? idx.get(e.parent.id) : null) if (e.node.type === 'range') chain.unshift(foldLabel(e.node));
+  return chain.length ? base + '  ·  접기 영역: ' + chain.join(' › ') : base;
+}
+function describeSel0() {
+  const r = selRange();
+  if (!r) return `다이어그램 ${doc.diagrams.length}개 · 블록 ${allBlocks()}개`;
+  if (r.event) return kindName(r.dia) + ' 머리';
+  const names = { process: '처리', if: 'If', case: 'Case', while: 'While', dowhile: 'Do-While', call: '호출' };
+  if (r.items.length === 1) {
+    const n = r.items[0], pre = isShown(n.id) ? '펴 보인 ' : '';
+    if (n.type === 'range') return pre + '접기 영역' + (isFd(n) ? ' (접힘)' : '');
+    return pre + names[n.type] + (shown.has(n.id) ? ' (펴 보임)' : '');
+  }
+  if (r.parent && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return `접힌 부분 (블록 ${countBlocks(r.list)}개)`;
+  return `${r.items.length}개 고름`;
+}
+
+/* ---------- 파일 (.ns.svg) ---------- */
+function modelJSON() {
+  // 그림이 화면 그대로이므로, 그 화면을 만든 보기 상태(접힘, 이름 띠)도 모델과 함께 넣는다. 같은 내용이면 같은 파일이 나오도록 순서를 맞춘다
+  const view = { folded: [...folded].filter(id => idx.has(String(id).split(':')[0])).sort(), bands: opts.showRegions !== false,
+    opened: [...opened].filter(id => id.split('>').every(k => idx.has(k))).sort() };
+  return JSON.stringify({ format: 'ariadne-nsd', version: 0, diagrams: doc.diagrams, ...(doc.sfolds ? { siteFolds: doc.sfolds } : {}), view }, null, 2);
+}
+function exportSVG() {
+  // 저장되는 그림은 지금 화면 그대로다: 접힌 곳은 접힌 채, 이름 띠도 보이는 대로 (선택 테두리만 뺀다)
+  const lay = layout();
+  const body = drawSVG(lay, false);
+  const json = modelJSON().split(']]>').join(']]]]><![CDATA[>');   // ^fmt-escape
+  return `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="${lay.W}" height="${lay.H}" viewBox="0 0 ${lay.W} ${lay.H}">\n` +
+    `<metadata id="ariadne-nsd-model"><![CDATA[${json}]]></metadata>\n` +
+    `<rect x="0" y="0" width="${lay.W}" height="${lay.H}" fill="#ffffff"/>\n${body}\n</svg>\n`;
+}
+function toDoc(m) {
+  // 다이어그램이 하나뿐이던 예전 모양({ event, body })도 받는다
+  if (m && Array.isArray(m.diagrams) && m.diagrams.length && m.diagrams.every(d => Array.isArray(d.body)))
+  {
+    const ds = m.diagrams.map((d, i) => ({ id: isHead(d.id) ? d.id : 'g9' + i, event: d.event ?? null, ...(d.kind ? { kind: d.kind } : {}), body: d.body }));
+    // 종류가 없던 예전 문서: 호출 블록이 부르는 다이어그램은 Method, 나머지는 Event로 본다
+    const called = new Set();
+    const walk = list => list.forEach(n => { if (n.type === 'call' && n.target != null) called.add(n.target); slots(n).forEach(sl => walk(n[sl] || [])); });
+    ds.forEach(d => walk(d.body));
+    ds.forEach(d => { if (d.event != null && !d.kind) d.kind = called.has(d.id) ? 'method' : 'event'; });
+    const sf = m.siteFolds || m.sfolds;
+    return { diagrams: ds, ...(Array.isArray(sf) && sf.every(f => f && typeof f.pre === 'string' && Array.isArray(f.rids)) ? { sfolds: sf } : {}) };
+  }
+  if (m && Array.isArray(m.body)) return { diagrams: [{ id: 'g0', event: m.event ?? null, body: m.body }] };
+  return null;
+}
+function importSVG(text) {
+  const d = new DOMParser().parseFromString(text, 'image/svg+xml');
+  const md = d.getElementById('ariadne-nsd-model') || d.getElementById('nsdrawing-model') || d.querySelector('metadata');   // 52번째 판까지는 옛 이름(nsdrawing)으로 저장했다
+  if (!md) return say('모델이 없는 SVG라서 편집할 수 없습니다 (그림을 거꾸로 읽지 않습니다)', true);
+  let m;
+  try { m = JSON.parse(md.textContent); } catch (e) { return say('모델이 손상되어 열 수 없습니다', true); }
+  const loaded = toDoc(m);
+  if (!loaded) return say('AriadneNSD 모델이 아닙니다', true);
+  pushUndo();
+  doc = loaded;
+  fixUid(); selectOne(null); asked = new Set();
+  // 저장할 때의 화면 그대로 연다
+  folded = new Set(m.view && Array.isArray(m.view.folded) ? m.view.folded : []);
+  opened = new Set(m.view && Array.isArray(m.view.opened) ? m.view.opened : []);
+  if (m.view && typeof m.view.bands === 'boolean') { opts.showRegions = m.view.bands; $('#optRanges').checked = m.view.bands; }
+  normalize(); render(); save(); saveFold(); say('파일을 열었습니다. 저장할 때의 접힘 그대로 열립니다');
+}
+async function download() {
+  const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
+  if (dl) {
+    try { await dl.save({ filename: 'diagram.ns.svg', data: exportSVG() }); say('받았습니다'); }
+    catch (e) { say(e && e.code === 'declined' ? '받기를 그만뒀습니다' : '받기가 막혔습니다. "SVG 보기"에서 복사하세요', e && e.code !== 'declined'); }
+    return;
+  }
+  try {
+    const blob = new Blob([exportSVG()], { type: 'image/svg+xml' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'diagram.ns.svg';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    say('받기를 시작했습니다. 아무 일도 없으면 "SVG 보기"에서 복사하세요');
+  } catch (e) { say('받기가 막혔습니다. "SVG 보기"에서 복사하세요', true); }
+}
+
+/* ---------- 글자 고치기 ---------- */
+const isLabel = id => typeof id === 'string' && id.includes('#');
+function currentText(id) {
+  if (isHead(id)) return dia(id)?.event ?? '';
+  if (isLabel(id)) { const [a, i] = id.split('#'); return idx.get(a)?.node.labels[+i] ?? ''; }
+  if (isPart(id)) { const [a, slot] = id.split(':'); const p = idx.get(a)?.node; return p ? partName(p, slot) : ''; }
+  const n = idx.get(id)?.node;
+  if (!n) return '';
+  return n.type === 'range' ? foldLabel(n) : n.type === 'call' ? callLine(n) : n.text;
+}
+function startEdit(id, o = {}) {
+  if (!id) return;
+  if (isShown(id) && !idx.get(id)?.node.local) return void locked();   // 이 자리에서 만든 접기 영역의 이름은 고칠 수 있다
+  const n = isHead(id) ? null : idx.get(id)?.node;
+  if (n && n.type === 'range' && !folded.has(n.id) && !T.get(id)) return say('접기 영역의 이름은 이름 띠나 접힌 칸에서 고칩니다. "접기 영역 보기"를 켜세요');
+  if (n && n.type === 'call' && n.target == null) return say('이어진 Method가 없습니다. r로 부를 Method를 고르세요');
+  const box = T.get(id);
+  if (!box) return;
+  const orig = currentText(id);
+  editing = { id, orig, naming: !!o.naming, fresh: !!o.fresh, retry: !!o.retry };
+  showMode();
+  editor.value = orig;
+  editor.style.left = (box.x * zoom) + 'px';
+  editor.style.top = (box.y * zoom) + 'px';
+  editor.style.width = Math.max(box.w * zoom, 140) + 'px';
+  editor.style.fontFamily = fam();
+  editor.style.fontSize = (13 * zoom) + 'px';
+  editor.style.lineHeight = (K.lh * zoom) + 'px';
+  editor.style.padding = `${(K.padY - 2) * zoom}px ${(K.padX - 2) * zoom}px`;
+  editor.dataset.minh = box.h * zoom;
+  editor.hidden = false;
+  growEditor();
+  editor.focus();
+  editor.select();
+  // i로 들어오면 있던 글자를 두고 커서만 맨 앞에 둔다. cc로 들어오면 비우고 새로 적는다 (호출 블록은 이름을 지울 수 없어 인자를 고른 채로)
+  const how = editHow;
+  if (how === 'start') editor.setSelectionRange(0, 0);
+  else if (how === 'clear' && !(n && n.type === 'call')) { editor.value = ''; growEditor(); }
+  if (n && n.type === 'call') {
+    // 한 줄로 고친다. 이름은 잠겨 있고 인자(괄호 안)와 결과(← 앞)만 바뀐다. 인자가 있으면 인자를, 없으면 맨 앞(결과 자리)을 고른 채로 연다
+    const p = callParts(n), at = (p.res + p.name).length;
+    if (p.post && how === 'start') editor.setSelectionRange(at + 1, at + 1);
+    else if (p.post) editor.setSelectionRange(at + 1, orig.length - 1); else editor.setSelectionRange(0, 0);
+    say(p.post ? '인자와 결과를 고칩니다: 결과 ← 이름(인자). 이름은 머리에서 고칩니다 (' + endHint() + ')' : '결과를 받으려면 맨 앞에 "결과 ← "를 적으세요. 이름은 머리에서 고칩니다 (' + endHint() + ')');
+  }
+  if (isPart(id)) say('접힌 부분의 이름을 적으세요. 비워 두면 "⋯ 블록 n개"만 보입니다 (' + endHint() + ')');
+  else if (o.naming) say('접은 영역의 이름을 적으세요. Enter나 Esc는 기본 이름 그대로 둡니다');
+}
+const endHint = () => 'Enter · Esc: 정하기';
+function growEditor() {
+  const lines = editor.value.split('\n').length;
+  editor.style.height = Math.max(+editor.dataset.minh, (lines * K.lh + 2 * K.padY) * zoom) + 'px';
+}
+function setText(id, v) {
+  if (isHead(id)) { const d = dia(id); if (d) d.event = v; return; }
+  const n = idx.get(id)?.node;
+  if (!n) return;
+  if (n.type === 'range') (n.local ? siteFold(n) : n).name = v.trim() === '' ? null : v;
+  else n.text = v;
+}
+function commitEdit(cancel) {
+  const e = editing;
+  if (!e) return;
+  editing = null;
+  editor.hidden = true;
+  const v = editor.value;
+  if (isLabel(e.id)) {
+    const [a, i] = e.id.split('#'), p = idx.get(a)?.node;
+    if (p && !cancel && v.trim() && v !== e.orig) { pushUndo(); p.labels[+i] = v.trim(); }
+  } else if (isPart(e.id)) {
+    // 제어 블록의 접힌 부분에 붙이는 이름. 이름이 있을 때만 모델에 남긴다. 물어봤다는 것은 보기 상태로만 기억한다
+    const [a, slot] = e.id.split(':'), p = idx.get(a)?.node;
+    asked.add(e.id);
+    if (p) {
+      const old = partName(p, slot), name = cancel ? old : v.trim() ? v : '';
+      if (name !== old) {
+        pushUndo();
+        const names = { ...(p.foldNames || {}) };
+        if (name) names[slot] = name; else delete names[slot];
+        if (Object.keys(names).length) p.foldNames = names; else delete p.foldNames;
+      }
+      say(name ? `"${name}"(이)라고 이름 붙였습니다` : '이름 없이 둡니다');
+    }
+  } else if (e.naming) {
+    // 처음 접을 때: 치지 않고 Enter·Esc → 기본 이름. 이름을 물어봤다는 표시로 name 키는 남는다
+    const g0 = idx.get(e.id)?.node, g = g0 && g0.local ? siteFold(g0) : g0;
+    if (g) g.name = (cancel || v === e.orig || v.trim() === '') ? null : v;
+    say(g && g.name ? `"${g.name}"(으)로 접었습니다` : '기본 이름으로 접었습니다');
+  } else if (idx.get(e.id)?.node.type === 'call') {
+    const n = idx.get(e.id).node, t = n.target != null ? dia(n.target) : null;
+    if (!cancel && v !== e.orig && isMethod(t)) {
+      const p = parseCall(v, headName(t.event));
+      const bad = !p ? '이름은 호출 블록에서 고칠 수 없습니다. Method의 머리에서 고치거나 r로 다른 Method를 고르세요'
+        : p.args && !headParens(t.event) ? '받는 것이 없는 Method입니다. 넘겨주려면 먼저 머리에 괄호를 붙이세요: 이름(받는 것)' : '';
+      if (bad) {
+        render(); startEdit(e.id, { fresh: e.fresh, retry: true }); editor.value = v; growEditor();
+        return say(bad + ' (Esc: 그만두기)', true);
+      }
+      if (!e.fresh) pushUndo();
+      n.args = p.args; n.result = p.result;
+    }
+  } else if (!cancel && v !== e.orig) {
+    // 이름이 겹치는지는 Method면 괄호 앞의 이름만으로 견준다
+    const d0 = isHead(e.id) ? dia(e.id) : null, key = d0 ? (isMethod(d0) ? headName(v) : v.trim()) : '';
+    const dup = !!d0 && doc.diagrams.some(d => d.id !== e.id && d.event != null && nameKey(d) === key);
+    if (d0 && (dup || !key)) {
+      // 머리의 이름은 비우거나 겹칠 수 없다: 고치던 칸을 다시 연다
+      render(); startEdit(e.id, { fresh: e.fresh, retry: true }); editor.value = v; growEditor();
+      return say(dup ? '같은 이름의 머리가 이미 있습니다. 다른 이름을 적으세요 (Esc: 그만두기)' : '머리의 이름은 비울 수 없습니다 (Esc: 그만두기)', true);
+    }
+    if (!e.fresh) pushUndo();
+    // 호출 블록의 이름은 머리를 따르므로 따로 고칠 것이 없다
+    setText(e.id, v);
+  }
+  normalize(); render(); save();
+  stage.focus({ preventScroll: true });
+}
+editor.addEventListener('input', growEditor);
+editor.addEventListener('keydown', ev => {
+  ev.stopPropagation();
+  if (ev.isComposing || ev.keyCode === 229) return;
+  if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commitEdit(false); }
+  // Esc도 적은 대로 받아들이고 나간다 (ADR-0025). 받아들이지 못해 다시 연 칸에서만 그만두기다
+  else if (ev.key === 'Escape') { ev.preventDefault(); commitEdit(!!editing?.retry); }
+});
+editor.addEventListener('blur', () => commitEdit(false));
+
+/* ---------- 명령 ---------- */
+const needSel = () => { const r = selRange(); if (!r) say('먼저 블록을 고르세요'); return r; };
+// 펴 보인 블록을 골랐는가. 펴 보인 블록은 보기일 뿐이라, 내용을 바꾸는 명령은 아무 일도 하지 않고 알려 준다
+const shownSel = () => !!sel && isShown(sel.anchor);
+function locked() {
+  if (!shownSel()) return false;
+  say('펴 보인 블록은 고칠 수 없습니다. gd로 원래 블록으로 갑니다');
+  return true;
+}
+function insert(kind, pos) {
+  if (locked()) return;
+  const r = selRange();
+  if (r && r.event && pos === 'before') return say('머리 앞에는 넣을 수 없습니다');
+  // 빈 처리 블록 하나를 골랐으면 그 자리를 쓴다: 처리는 바로 적고, 제어 블록은 그 자리에 바꿔 넣는다
+  const blank = r && !r.event && r.items.length === 1 && r.items[0].type === 'process' && !r.items[0].text ? r.items[0] : null;
+  if (blank && kind === 'process') { startEdit(blank.id); return say('빈 블록에 바로 적습니다'); }
+  const node = mk(kind);
+  apply(() => put(r, [node], pos));
+  selectOne(node.id); render();
+  startEdit(node.id, { fresh: true });
+}
+function put(r, nodes, pos) {
+  // 고른 곳 뒤(또는 앞)에 넣는다. 머리를 골랐으면 본문 맨 앞, 고른 것이 없으면 맨 끝, 빈 블록을 골랐으면 그 자리
+  if (!r || r.event) {
+    const d = r ? r.dia : activeDia();
+    if (d.body.length === 1 && d.body[0].type === 'process' && !d.body[0].text) d.body.splice(0, 1, ...nodes);
+    else d.body.splice(r ? 0 : d.body.length, 0, ...nodes);
+    return;
+  }
+  if (r.parent && isCtrl(r.parent)) folded.delete(partKey(r.parent, idx.get(r.items[0].id).slot));
+  const one = r.items.length === 1 ? r.items[0] : null;
+  if (one && one.type === 'process' && !one.text) r.list.splice(r.lo, 1, ...nodes);
+  else if (pos === 'before') r.list.splice(r.lo, 0, ...nodes);
+  else r.list.splice(r.hi + 1, 0, ...nodes);
+}
+
+/* ---------- 여러 다이어그램 · 호출 블록 ---------- */
+function attachHead(d, kind) {
+  apply(() => { d.event = ''; d.kind = kind; });
+  selectOne(d.id); render();
+  startEdit(d.id, { fresh: true });
+}
+function kindCmd(kind, shift) {
+  // E = Event, M = Method. Shift와 함께면 그 종류의 새 빈 다이어그램.
+  // 블록을 골랐으면: M은 그 블록을 새 Method로 뺀다 (E는 하지 않는다. 빼면 호출 블록이 남는데 Event는 부를 수 없다)
+  // 머리를 골랐으면 그 머리의 종류를 바꾸고, 머리 없는 다이어그램이면 그 종류의 머리를 단다
+  const label = kind === 'method' ? 'Method' : 'Event';
+  if (shift) return addDiagram(false, kind);
+  const r = selRange();
+  if (r && !r.event && locked()) return;
+  if (r && !r.event) {
+    if (kind === 'method') return addDiagram(true, 'method');
+    return say('블록을 새 다이어그램으로 빼려면 m을 누르세요 (Method로 빠집니다). 새 빈 Event는 대문자 E');
+  }
+  const d = r ? r.dia : activeDia();
+  if (d.event == null) return attachHead(d, kind);
+  if (!r) return say(`머리를 고르고 누르면 ${label} 머리로 바꿉니다. 새 빈 ${label}는 대문자 ${kind === 'method' ? 'M' : 'E'}`);
+  if (d.kind === kind) return say(`이미 ${label} 머리입니다. 글자는 i나 Enter로 고칩니다`);
+  const k = kind === 'event' ? callersOf(d) : 0;
+  if (k) return say(`이 Method를 부르는 호출 블록이 ${k}개 있어 Event로 바꿀 수 없습니다`, true);
+  apply(() => { d.kind = kind; });
+  selectOne(d.id); render();
+  say(`${label} 머리로 바꿨습니다`);
+}
+function addDiagram(extract, kind = 'event') {
+  const r = extract ? selRange() : null;
+  if (extract && (!r || r.event)) return say('먼저 뺄 블록을 고르세요');
+  const host = activeDia();
+  const d = newDia('', null, extract ? 'method' : kind);
+  apply(() => {
+    if (r) d.body = r.list.splice(r.lo, r.hi - r.lo + 1, { id: nid(), type: 'call', target: d.id, args: '', result: '' });
+    doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
+  });
+  selectOne(d.id); render();
+  startEdit(d.id, { fresh: true });
+  say(r ? '새 Method로 뺐습니다. 이름을 적으세요 (Enter·Esc: 지금 이름 그대로). 원래 자리에는 호출 블록이 남았습니다' : `새 ${kindName(d)} 다이어그램입니다. 이름을 적으세요 (Enter·Esc: 지금 이름 그대로)`);
+}
+let callPos = 'after';
+function callCmd(shift) {
+  if (locked()) return;
+  callPos = shift ? 'before' : 'after';
+  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'call:' + d.id, label: '호출: ' + (d.event || '(이름 없음)') }));
+  items.push({ cmd: 'call:new', label: '새 Method를 만들고 호출' });
+  choose(items);
+  say('부를 Method를 고르세요: j k(↓↑)와 Enter, 숫자 키, 클릭 (Esc: 그만두기)');
+}
+function insertCall(arg) {
+  if (locked()) return;
+  const r = selRange();
+  if (r && r.event && callPos === 'before') return say('머리 앞에는 넣을 수 없습니다');
+  const host = activeDia();
+  const d = arg === 'new' ? newDia('', null, 'method') : dia(arg);
+  if (!d) return;
+  const node = { id: nid(), type: 'call', target: d.id, args: '', result: '' };
+  apply(() => {
+    put(r, [node], callPos);
+    if (arg === 'new') doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
+  });
+  if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); }
+  else {
+    selectOne(node.id); render();
+    // 받는 것이 있는 Method면 바로 인자를 적게 한다 (머리의 괄호 안 글자가 미리 들어 있다)
+    if (headParams(d.event)) startEdit(node.id, { fresh: true });
+  }
+}
+function retargetCmd() {
+  // R: 고른 호출 블록이 부를 Method를 바꾼다. 인자와 결과는 Enter로 고친다
+  const r = needSel();
+  if (!r || locked()) return;
+  const n = !r.event && r.items.length === 1 ? r.items[0] : null;
+  if (!n || n.type !== 'call') return say('호출 블록을 고르고 누르면 부를 Method를 바꿉니다');
+  retargetAsk(n.id);
+}
+function retargetAsk(id) {
+  selectOne(id); render();
+  const n = idx.get(id).node;
+  const items = doc.diagrams.filter(isMethod).map(d => ({ cmd: 'retarget:' + d.id, label: (d.id === n.target ? '지금: ' : '호출: ') + (d.event || '(이름 없음)') }));
+  items.push({ cmd: 'retarget:new', label: '새 Method를 만들고 호출' });
+  choose(items, Math.max(0, items.findIndex(i => i.cmd === 'retarget:' + n.target)));
+  say('부를 Method를 고르세요. 적어 둔 인자와 결과는 남습니다 (Esc: 그만두기)');
+}
+function retarget(arg) {
+  if (locked()) return;
+  const r = selRange();
+  const n = r && !r.event && r.items.length === 1 && r.items[0].type === 'call' ? r.items[0] : null;
+  if (!n) return;
+  const host = activeDia();
+  const d = arg === 'new' ? newDia('', null, 'method') : dia(arg);
+  if (!d) return;
+  if (d.id === n.target) return say('그대로 둡니다');
+  apply(() => {
+    // 이름만 바뀐다. 적어 둔 인자와 결과는 남는다
+    n.target = d.id;
+    if (arg === 'new') doc.diagrams.splice(doc.diagrams.indexOf(host) + 1, 0, d);
+  });
+  if (arg === 'new') { selectOne(d.id); render(); startEdit(d.id, { fresh: true }); }
+  else { selectOne(n.id); render(); say('부를 Method를 바꿨습니다. 인자와 결과는 그대로입니다'); }
+}
+function gotoTarget() {
+  const r = needSel();
+  if (!r) return;
+  if (shownSel()) {
+    // 펴 보인 블록에서는 그 Method 다이어그램의 원래 블록으로 간다
+    // 이 자리에서 만든 접기 영역은 원본에 없으므로 그 안의 첫 블록과 마지막 블록으로 간다
+    const end = (n, last) => n.local ? end(n.children[last ? n.children.length - 1 : 0], last) : n.rid;
+    const a = end(r.items[0], false);
+    sel = { root: a, anchor: a, focus: end(r.items[r.items.length - 1], true) };
+    fixSel(); render();
+    return say(`${nameKey(diaOf(sel.anchor))}의 원래 블록입니다. 여기서 고칩니다`);
+  }
+  const n = !r.event && r.items.length === 1 ? r.items[0] : null;
+  if (!n || n.type !== 'call') return say('호출 블록을 고르고 누르면 부르는 Method로 갑니다');
+  if (n.target == null) return say('이어진 Method가 없습니다');
+  selectOne(n.target); render();
+}
+function delDiagram() {
+  const d = activeDia();
+  if (doc.diagrams.length < 2) return say('다이어그램이 하나뿐이라 지우지 않습니다');
+  apply(() => { doc.diagrams.splice(doc.diagrams.indexOf(d), 1); });
+  selectOne(null); render();
+  say('다이어그램을 지웠습니다. 이것을 부르던 호출 블록이 있었다면 글자만 남습니다');
+}
+
+/* ---------- 복사 · 잘라내기 · 붙여넣기 (이 페이지 안에서만) ---------- */
+let clip = null;
+function copy(cut) {
+  const r = needSel();
+  if (!r) return;
+  if (r.event) return say('머리는 복사할 수 없습니다');
+  if (cut && locked()) return;
+  // 펴 보인 블록을 복사하면 원래 블록이 복사된다 (붙이면 보통 블록)
+  clip = JSON.stringify(shownSel() ? r.items.flatMap(function orig(n) { return n.local ? n.children.flatMap(orig) : [idx.get(n.rid).node]; }) : r.items);
+  if (cut) del();
+  say((cut ? '잘라냈습니다' : '복사했습니다') + '. p를 누르면 고른 블록 뒤에, P는 앞에 붙습니다');
+}
+function reId(list, plain) {
+  // 붙여 넣을 사본에 새 id를 준다. 강조 영역 안에 붙일 때는 사본의 강조를 뗀다 (중첩 금지)
+  const out = [];
+  list.forEach(n => {
+    slots(n).forEach(s => { n[s] = reId(n[s], plain); });
+    if (plain && isHL(n)) {
+      if (!('name' in n)) { out.push(...n.children); return; }
+      n.highlight = false;
+    }
+    n.id = nid();
+    out.push(n);
+  });
+  return out;
+}
+function paste(pos = 'after') {
+  if (locked()) return;
+  if (!clip) return say('붙일 것이 없습니다. 먼저 yy나 dd를 누르세요');
+  const r = selRange();
+  if (!r) return say('붙일 자리를 먼저 고르세요. 고른 블록 뒤에 붙습니다');
+  if (r.event && pos === 'before') return say('머리 앞에는 붙일 수 없습니다');
+  const at = r && !r.event ? r : null;
+  const inHL = !!(at && at.parent) && ancestors(at.parent.id).some(id => isHL(idx.get(id).node));
+  const nodes = reId(JSON.parse(clip), inHL);
+  apply(() => put(r, nodes, pos));
+  sel = { root: nodes[0].id, anchor: nodes[0].id, focus: nodes[nodes.length - 1].id };
+  render();
+  say(inHL ? '붙였습니다. 강조 영역 안이라 사본의 강조는 뗐습니다' : '붙였습니다');
+}
+function del(whole) {
+  const r = needSel();
+  if (!r || locked()) return;
+  if (r.event && whole) return delDiagram();
+  if (r.event) { apply(() => { r.dia.event = null; }); selectOne(null); render(); return say('머리를 뗐습니다. 이것을 부르던 호출 블록이 있었다면 글자만 남습니다'); }
+  const list = r.list, lo = r.lo, parent = r.parent;
+  const next = list[r.hi + 1] || list[lo - 1];
+  apply(() => { list.splice(lo, r.hi - lo + 1); });
+  if (next && idx.has(next.id)) selectOne(next.id);
+  else if (list.length && idx.has(list[Math.min(lo, list.length - 1)].id)) selectOne(list[Math.min(lo, list.length - 1)].id);
+  else selectOne(parent && idx.has(parent.id) ? parent.id : null);
+  render();
+}
+function wrap(kind) {
+  const r = needSel();
+  if (!r || locked()) return;
+  if (r.event) return say('머리는 감쌀 수 없습니다');
+  const node = mk(kind);
+  apply(() => {
+    const items = r.list.splice(r.lo, r.hi - r.lo + 1);
+    if (kind === 'if') node.yes = items; else if (kind === 'case') node.c0 = items; else node.body = items;
+    r.list.splice(r.lo, 0, node);
+  });
+  selectOne(node.id); render();
+  startEdit(node.id, { fresh: true });
+}
+const emptyBranch = b => b.every(n => n.type === 'process' && !n.text.trim());
+function unwrap() {
+  // ds: 껍데기를 없애고 안의 것을 남긴다. 제어 블록은 벗기고, 호출 블록은 부르는 Method의 블록들로 바꾼다.
+  // 그 밖의 것을 골랐으면 그것을 담은 가장 가까운 제어 블록을 벗긴다 (vim-surround처럼 안쪽에서도 듣는다). 접기 영역 풀기는 zd
+  const r = needSel();
+  if (!r || locked()) return;
+  if (r.event) return say('머리는 풀 수 없습니다');
+  const one = r.items.length === 1 ? r.items[0] : null;
+  if (one && one.type === 'call') return inlineCall(one);
+  const t = one && isCtrl(one) ? one : container(r.items[0].id)?.node;
+  if (!t) return say('벗길 제어 블록이 없습니다. 접기 영역을 풀려면 zd');
+  const inner = t !== one, keep = sel;
+  let content;
+  apply(() => {
+    const e = idx.get(t.id);
+    if (multi(t)) content = slots(t).map(sl => t[sl]).filter(b => !emptyBranch(b)).flat();   // 내용 있는 갈래만 이어 붙임
+    else content = emptyBranch(t.body) ? [] : t.body;
+    e.list.splice(e.index, 1, ...content);
+    folded.delete(t.id); slots(t).forEach(sl => folded.delete(t.id + ':' + sl));
+  });
+  if (inner) { sel = keep; fixSel(); }   // 안쪽에서 벗겼으면 고른 것은 그대로 둔다
+  else if (content.length) sel = { root: content[0].id, anchor: content[0].id, focus: content[content.length - 1].id };
+  render();
+  say(inner ? '고른 블록을 담고 있던 제어 블록을 벗겼습니다. 안의 블록은 그 자리에 남았습니다' : '풀었습니다. 안의 블록은 그 자리에 남았습니다');
+}
+function inlineCall(n) {
+  // 호출 블록을 부르는 Method의 블록들로 바꾼다 (Method로 빼기의 반대). 글자는 그대로 복사하고, 적어 둔 인자와 결과는 사라진다. Method는 남는다
+  const t = n.target != null ? dia(n.target) : null;
+  if (!isMethod(t)) return say('이어진 Method가 없어 풀 수 없습니다');
+  // 이 자리에서 만든 접기 영역은 보통 접기 영역이 되어 함께 들어온다
+  const plain = list => list.map(c => { const { rid, local, ...o } = c; slots(c).forEach(sl => { o[sl] = plain(c[sl]); }); return o; });
+  const nodes = reId(JSON.parse(JSON.stringify(plain(localFolds(shownCopy(t.body, n.id), n.id)))), false);
+  apply(() => {
+    const e = idx.get(n.id);
+    e.list.splice(e.index, 1, ...nodes);
+    [...opened].forEach(k => { if (k.split('>').includes(n.id)) opened.delete(k); });
+  });
+  sel = { root: nodes[0].id, anchor: nodes[0].id, focus: nodes[nodes.length - 1].id };
+  fixSel(); saveFold(); render();
+  say(`호출 블록을 ${headName(t.event)}의 블록들로 바꿨습니다. 적어 둔 인자와 결과는 사라졌고, Method는 그대로 남아 있습니다 (u로 되돌리기)`);
+}
+function caseAt() {
+  // 고른 곳이 속한 가장 가까운 Case와 그 갈래 번호. Case 자체를 골랐으면 번호는 -1
+  const r = selRange();
+  if (!r || r.event) return null;
+  if (r.items.length === 1 && r.items[0].type === 'case') return { node: r.items[0], index: -1 };
+  for (let c = container(r.items[0].id); c; c = container(c.node.id)) if (c.node.type === 'case') return { node: c.node, index: +c.slot.slice(1) };
+  return null;
+}
+function laneAdd() {
+  if (locked()) return;
+  const c = caseAt();
+  if (!c) return say('Case나 Case 안의 블록을 고르고 누르세요');
+  const t = c.node, cnt = t.labels.length, at = c.index < 0 ? cnt - 1 : Math.min(c.index + 1, cnt - 1);   // default는 늘 맨 끝
+  apply(() => {
+    for (let i = cnt - 1; i >= at; i--) t['c' + (i + 1)] = t['c' + i];
+    t['c' + at] = [P()];
+    t.labels.splice(at, 0, String(cnt));
+    [...folded].forEach(k => { if (String(k).startsWith(t.id + ':')) folded.delete(k); });
+  });
+  selectOne(t['c' + at][0].id); render();
+  startEdit(t.id + '#' + at);
+  say('갈래를 넣었습니다. 갈래 이름을 적으세요');
+}
+function laneRemove() {
+  if (locked()) return;
+  const c = caseAt();
+  if (!c) return say('Case 안의 블록을 고르고 누르세요');
+  const t = c.node, cnt = t.labels.length;
+  if (c.index < 0) return say('뺄 갈래 안의 블록을 고르세요');
+  if (c.index === cnt - 1) return say('default 갈래는 뺄 수 없습니다');
+  if (cnt <= 2) return say('갈래가 하나뿐이라 뺄 수 없습니다. Case를 없애려면 지우거나(Delete) 푸세요(ds)');
+  apply(() => {
+    for (let i = c.index; i < cnt - 1; i++) t['c' + i] = t['c' + (i + 1)];
+    delete t['c' + (cnt - 1)];
+    t.labels.splice(c.index, 1);
+    [...folded].forEach(k => { if (String(k).startsWith(t.id + ':')) folded.delete(k); });
+  });
+  selectOne(t.id); render();
+  say('갈래를 뺐습니다. 안의 블록도 함께 지워졌습니다 (u로 되돌리기)');
+}
+function laneLabel() {
+  if (locked()) return;
+  const c = caseAt();
+  if (!c || c.index < 0) return say('이름을 고칠 갈래 안의 블록을 고르세요. 갈래 이름을 더블클릭해도 됩니다');
+  startEdit(c.node.id + '#' + c.index);
+}
+function regionOf(r) {
+  // 고른 것을 온전히 담는 가장 작은 접기 영역. 접기 영역 자체를 골랐으면 그것
+  if (r.items.length === 1 && r.items[0].type === 'range') return r.items[0];
+  for (let e = idx.get(r.items[0].id); e.parent; e = idx.get(e.parent.id)) {
+    if (e.slot === 'shown') return null;   // 펴 보인 자리에서는 그 자리 안의 접기 영역만 본다
+    if (e.parent.type === 'range') return e.parent;
+  }
+  return null;
+}
+function releaseRegion() {
+  // Ctrl+Shift+F: 고른 것을 온전히 담는 가장 작은 접기 영역을 푼다 (접혔든 펴졌든). 블록은 그대로 남는다
+  const r = needSel();
+  if (!r) return;
+  const site = shownSel(), g = r.event ? null : regionOf(r);
+  if (site && g && !g.local) return say('Method에 있는 접기 영역은 여기서 풀 수 없습니다. gd로 원래 블록으로 갑니다');
+  if (!g) return say(site ? '고른 곳을 담은, 이 자리에서 만든 접기 영역이 없습니다' : '고른 곳을 담은 접기 영역이 없습니다');
+  if (g.local) {
+    const f = siteFold(g), kids = g.children, own = r.items[0] === g, keep = sel;
+    apply(() => {
+      // 이것을 묶고 있던 바깥 접기 영역은 이것이 묶던 블록을 대신 묶는다
+      doc.sfolds.forEach(o => { if (o.pre === f.pre) o.rids = o.rids.flatMap(x => x === f.id ? f.rids : [x]); });
+      doc.sfolds = doc.sfolds.filter(o => o !== f);
+      folded.delete(g.id);
+    });
+    sel = own ? { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id } : keep;
+    fixSel(); render();
+    return say(`이 자리의 접기 영역 "${g.name || '이름 없음'}"을(를) 풀었습니다. 블록과 Method는 그대로입니다`);
+  }
+  const kids = g.children, own = r.items[0] === g, keep = sel;
+  apply(() => { const e = idx.get(g.id); e.list.splice(e.index, 1, ...kids); folded.delete(g.id); });
+  sel = own ? { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id } : keep;
+  fixSel(); render();
+  say(`접기 영역 "${g.name || '이름 없음'}"을(를) 풀었습니다. 블록은 그대로입니다`);
+}
+function makeRegion() {
+  // zf: 고른 블록들을 접기 영역으로 만든다. 만들면서 바로 접고 이름을 묻는다
+  const r = needSel();
+  if (!r) return;
+  if (r.event) return say('머리는 접기 영역에 넣을 수 없습니다');
+  const one = r.items.length === 1 ? r.items[0] : null;
+  if (one && one.type === 'range') return say('이미 접기 영역입니다');
+  if (r.parent && laneFolded(r.parent, idx.get(r.items[0].id).slot)) return say('접힌 갈래는 먼저 펴세요 (za)');
+  if (r.parent && r.parent.type === 'range' && r.lo === 0 && r.hi === r.list.length - 1) return say('같은 범위의 접기 영역이 이미 있습니다');
+  if (shownSel()) {
+    // 펴 보인 자리에서는 Method를 바꾸지 않고, 이 호출 블록 자리에만 있는 접기 영역을 만든다
+    const pre = sitePre(r.items[0].id), f = { id: nid(), pre, rids: r.items.map(n => n.local || n.rid) };
+    apply(() => { (doc.sfolds = doc.sfolds || []).push(f); });
+    const made = idx.get(pre + '>' + f.id)?.node;
+    if (!made) return;
+    selectOne(made.id);
+    foldRange(made, true);
+    return say('이 자리에만 있는 접기 영역입니다. Method의 원본은 그대로입니다. 이름을 적으세요 (Enter나 Esc는 기본 이름)');
+  }
+  const g = { id: nid(), type: 'range', children: [] };
+  apply(() => { g.children = r.list.splice(r.lo, r.hi - r.lo + 1); r.list.splice(r.lo, 0, g); });
+  selectOne(g.id);
+  foldRange(g, true);
+}
+function foldRange(g, fresh) {
+  const ask = !('name' in g);
+  if (ask && !fresh) pushUndo();
+  folded.add(g.id); saveFold(); render();
+  if (ask) startEdit(g.id, { naming: true, fresh: true });
+}
+function askPart() {}   // 접을 때 이름을 묻지 않는다
+const NTH = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+function toggleCall(n) {
+  // 호출 블록 펴 보기: 부르는 Method의 블록을 그 자리에 보여 준다. 보기만 바뀌고 모델은 그대로라서 되돌리기에 넣지 않는다
+  const t = n.target != null ? dia(n.target) : null;
+  if (!isMethod(t)) return say('이어진 Method가 없어 펼 수 없습니다');
+  const open = opened.has(n.id);
+  if (open) opened.delete(n.id); else opened.add(n.id);
+  saveFold(); reindex(); fixSel(); render();
+  if (open) return say('접었습니다');
+  // 같은 Method가 이 겹의 사슬에 몇 번째로 펴졌는지 센다. 다이어그램 자신이 첫 번째, 펴 보인 조상 호출마다 하나씩
+  let k = idx.get(n.id).dia.id === t.id ? 2 : 1;
+  for (let e = idx.get(n.id); e && e.parent; e = idx.get(e.parent.id)) if (e.slot === 'shown' && e.parent.target === t.id) k++;
+  if (k >= 3) return say(`${headName(t.event)}을(를) ${NTH[k] || k} 겹째 폈습니다. 자기를 부르는 Method는 끝없이 펼 수 있습니다.`, true);
+  say('펴 보였습니다. 보기만 바뀌고 내용은 그대로입니다. 접으려면 za를 다시 누르세요');
+}
+function fold() {
+  // F: 제어 블록(갈래)을 골랐으면 그것을, 그 밖에는 고른 것을 온전히 담는 가장 작은 접기 영역을 접거나 편다
+  const r = needSel();
+  if (!r) return;
+  if (r.event) return say('머리는 접을 수 없습니다');
+  const many = list => countBlocks(list) >= 2;
+  const t = r.items.length === 1 ? r.items[0] : null;
+  // 호출 블록 하나를 골랐으면 펴 보거나 접는다. 펴 보인 안쪽의 호출 블록도 된다
+  if (t && t.type === 'call') return toggleCall(t);
+  const toggleRegion = g => {
+    selectOne(g.id);
+    if (folded.has(g.id)) { folded.delete(g.id); saveFold(); render(); return say('폈습니다'); }
+    foldRange(g, false);
+  };
+  if (shownSel()) {
+    // 펴 보인 안쪽에서는 가장 가까운 것을 접는다: 이 자리에서 만든 접기 영역, 없으면 그것을 담은 펴 보인 호출 블록
+    if (t && t.local) return toggleRegion(t);
+    for (let e = idx.get(sel.anchor); e && e.parent; e = idx.get(e.parent.id)) {
+      if (e.slot === 'shown') { selectOne(e.parent.id); return toggleCall(e.parent); }
+      if (e.parent.local) return toggleRegion(e.parent);
+    }
+    return;
+  }
+  if (t && t.type === 'range') return toggleRegion(t);
+  if (t && isCtrl(t)) {
+    // 제어 블록은 갈래별로 접는다. 갈래 전체가 접기 영역 하나이면 그 접기 영역을 접고, 아니면 "⋯ 블록 n개" 줄로 접는다
+    const parts = slots(t).map(sl => {
+      const g = t[sl].length === 1 && t[sl][0].type === 'range' ? t[sl][0] : null;
+      if (g) folded.delete(partKey(t, sl));
+      return { key: g ? g.id : partKey(t, sl), ok: !!g || many(t[sl]) };
+    }).filter(p => p.ok || folded.has(p.key));
+    if (parts.length) {
+      const open = parts.some(p => folded.has(p.key));
+      parts.forEach(p => open ? folded.delete(p.key) : folded.add(p.key));
+      saveFold(); render();
+      return say(open ? '폈습니다' : '접었습니다. 펴려면 za를 다시 누르거나 접힌 곳을 더블클릭');
+    }
+  }
+  if (r.parent && laneFolded(r.parent, idx.get(r.items[0].id).slot)) {
+    folded.delete(partKey(r.parent, idx.get(r.items[0].id).slot)); saveFold(); render();
+    return say('폈습니다');
+  }
+  if (r.parent && isCtrl(r.parent) && r.lo === 0 && r.hi === r.list.length - 1 && many(r.items)) {
+    // 갈래(또는 반복문 안)의 블록을 모두 골랐으면 그 갈래를 접는다
+    const p = r.parent, slot = idx.get(r.items[0].id).slot;
+    folded.add(partKey(p, slot));
+    saveFold(); render();
+    say(multi(p) ? '이 갈래를 접었습니다. 펴려면 za를 다시 누르거나 접힌 줄을 더블클릭' : '접었습니다. 머리만 남습니다');
+    return askPart(p, slot);
+  }
+  const g = regionOf(r);
+  if (!g) return say('고른 곳을 담은 접기 영역이 없습니다. zf로 접기 영역을 만드세요');
+  toggleRegion(g);
+}
+function hasHLInside(n) {
+  return slots(n).some(s => n[s].some(c => isHL(c) || hasHLInside(c)));
+}
+function region() {
+  const r = needSel();
+  if (!r) return;
+  if (r.event) return say('머리는 강조할 수 없습니다');
+  for (let p = r.parent; p; p = idx.get(p.id)?.parent)
+    if (isHL(p)) return say('강조 영역 안에는 강조 영역을 만들 수 없습니다', true);
+  if (r.items.length === 1 && isHL(r.items[0])) return say('이미 강조 영역입니다. 지우려면 Shift+H');
+  if (r.items.some(it => !isHL(it) && hasHLInside(it)))
+    return say('안쪽 깊은 곳에 강조 영역이 있어 만들 수 없습니다 (질문 3)', true);
+  const hs = r.items.filter(isHL);
+  let g;
+  apply(() => {
+    const items = r.list.splice(r.lo, r.hi - r.lo + 1);
+    if (!hs.length) {
+      if (items.length === 1 && items[0].type === 'range') { g = items[0]; g.highlight = true; }
+      else g = { id: nid(), type: 'range', highlight: true, children: items };
+    } else {
+      g = hs[0];   // 합칠 때는 맨 앞 영역의 이름을 쓴다
+      g.children = items.flatMap(it => isHL(it) ? it.children : [it]);
+      hs.forEach(h => folded.delete(h.id));
+    }
+    r.list.splice(r.lo, 0, g);
+  });
+  selectOne(g.id); render();
+  say(hs.length > 1 ? `강조 영역 ${hs.length}개를 하나로 합쳤습니다` : hs.length ? '기존 강조 영역을 넓혔습니다' : '강조 영역을 만들었습니다');
+}
+function unregion() {
+  const r = needSel();
+  if (!r || r.event) return;
+  let g = r.items.length === 1 && isHL(r.items[0]) ? r.items[0] : null;
+  for (let p = r.parent; !g && p; p = idx.get(p.id)?.parent) if (isHL(p)) g = p;
+  if (!g) { const hs = r.items.filter(isHL); if (hs.length === 1) g = hs[0]; }
+  if (!g) return say('고른 곳에 강조 영역이 없습니다');
+  const kids = g.children, named = 'name' in g;
+  apply(() => {
+    if (named) g.highlight = false;
+    else { const e = idx.get(g.id); e.list.splice(e.index, 1, ...g.children); folded.delete(g.id); }
+  });
+  if (!named) sel = { root: kids[0].id, anchor: kids[0].id, focus: kids[kids.length - 1].id };
+  render();
+  say(named ? '강조를 지웠습니다. 이름 붙은 영역은 남았습니다' : '강조를 지웠습니다. 블록은 그대로입니다');
+}
+function setZoom(z) { zoom = Math.min(3, Math.max(0.4, Math.round(z * 10) / 10)); render(); }
+
+/* ---------- 예제 ---------- */
+function build(spec) {
+  // 짧은 표기로 예제를 만든다: 문자열 = 처리, [type, text, ...]
+  const b = s => {
+    if (typeof s === 'string') return P(s);
+    const [type, a, x, y] = s;
+    if (type === 'if') return { id: nid(), type, text: a, yes: x.map(b), no: y.map(b) };
+    if (type === 'case') { const o = { id: nid(), type, text: a, labels: x.map(l => l[0]) }; x.forEach((l, i) => { o['c' + i] = l[1].map(b); }); return o; }
+    if (type === 'call') return { id: nid(), type, target: null, to: a, args: x ?? '', result: y ?? '' };   // ['call', 부를 Method의 머리 글자, 인자, 결과]
+    if (type === 'range') return { id: nid(), type, highlight: !!y, ...(a !== undefined ? { name: a } : {}), children: x.map(b) };
+    return { id: nid(), type, text: a, body: x.map(b) };
+  };
+  return spec.map(b);
+}
+function loadExample(kind) {
+  uid = 1;
+  const code = kind === 'code';
+  const body = code ? build([
+    'tick++;',
+    ['if', 'btn_read(BTN1) == PRESSED',
+      ['debounce_cnt++;',
+        ['if', 'debounce_cnt >= 20', ['led_toggle(LED1);  // 누름 확정', 'debounce_cnt = 0;'], ['']]],
+      ['debounce_cnt = 0;']],
+    ['range', '센서 읽기', ['adc_start(CH0);', ['while', '!adc_done()', ['wait_us(10);']], 'temp = adc_value() * 0.1f;'], true],
+    ['range', '로그 남기기', ['log_buf[log_i] = temp;', 'log_i = (log_i + 1) % LOG_SIZE;'], true],
+    ['dowhile', 'uart_busy()', ['uart_flush();']],
+    'return;'
+  ]) : build([
+    '틱 수를 하나 늘린다',
+    ['if', '버튼이 눌렸는가?',
+      ['눌린 시간을 센다',
+        ['if', '20ms 넘게 눌렸는가?', ['LED를 켜거나 끈다\n(누름이 확정됨)', '눌린 시간을 0으로 되돌린다'], ['']]],
+      ['눌린 시간을 0으로 되돌린다']],
+    ['range', '센서 읽기', ['온도 센서 변환을 시작한다', ['while', '변환이 끝날 때까지', ['10µs 기다린다']], '온도 값을 읽는다'], true],
+    ['range', '로그 남기기', ['온도를 로그에 적는다', '로그 위치를 다음 칸으로 옮긴다'], true],
+    ['dowhile', 'UART가 바쁜 동안', ['UART 버퍼를 비운다']],
+    '끝낸다'
+  ]);
+  if (undoStack.length || allBlocks() > 1) pushUndo();
+  doc = { diagrams: [newDia(code ? 'TIM2 인터럽트 (1ms)' : '타이머가 1ms마다 울리면', body)] };
+  opened = new Set();
+  normalize();
+  folded = new Set([body[3].id]); asked = new Set();
+  opts.mono = code; $('#optMono').checked = code;
+  selectOne(null); render(); save(); saveFold();
+  say(code ? '코드식 예제: C 코드를 그대로 적은 모양' : '문장식 예제: 같은 로직을 한국어 문장으로 적은 모양');
+}
+
+function loadCaseExample() {
+  uid = 1;
+  const body = build([
+    'cmd = uart_read();',
+    ['case', 'cmd', [
+      ['CMD_START', ['motor_on();', 'state = RUN;']],
+      ['CMD_STOP', ['motor_off();', ['if', 'brake_enabled', ['brake_on();'], ['']], 'state = IDLE;']],
+      ['CMD_SPEED', ['speed = uart_read();', 'pwm_set(speed);']],
+      ['default', ['error_cnt++;']]
+    ]],
+    'uart_write(ACK);'
+  ]);
+  if (undoStack.length || allBlocks() > 1) pushUndo();
+  doc = { diagrams: [newDia('UART 수신 인터럽트', body)] };
+  opened = new Set();
+  normalize();
+  folded = new Set(); asked = new Set();
+  opts.mono = true; $('#optMono').checked = true;
+  selectOne(null); render(); save(); saveFold();
+  say('Case 예제: 갈래가 넷인 다중 선택');
+}
+
+// 다이어그램 여러 개짜리 예제: [머리 글자, 본문, 종류] 목록. ['call', 머리 글자, 인자, 결과]는 그 머리의 Method에 잇는다
+function loadDiagrams(list, mono, msg) {
+  uid = 1;
+  const bodies = list.map(([, spec]) => build(spec));
+  if (undoStack.length || allBlocks() > 1) pushUndo();
+  doc = { diagrams: list.map(([event, , kind], i) => newDia(event, bodies[i], kind)) };
+  eachNode(n => {
+    if (n.type !== 'call') return;
+    n.target = doc.diagrams.find(d => d.event === n.to)?.id ?? null;
+    delete n.to;
+  });
+  opened = new Set();
+  normalize();
+  folded = new Set(); asked = new Set();
+  opts.mono = mono; $('#optMono').checked = mono;
+  selectOne(null); render(); save(); saveFold();
+  say(msg);
+}
+
+function loadQuickExample() {
+  loadDiagrams([
+    ['quicksort(a, lo, hi)', [
+      ['if', 'lo < hi',
+        [['call', 'partition(a, lo, hi)', 'a, lo, hi', 'p'],
+          ['call', 'quicksort(a, lo, hi)', 'a, lo, p - 1'],
+          ['call', 'quicksort(a, lo, hi)', 'a, p + 1, hi']],
+        ['']]
+    ], 'method'],
+    ['partition(a, lo, hi)', [
+      'pivot = a[hi];',
+      'i = lo - 1;',
+      'j = lo;',
+      ['while', 'j < hi', [
+        ['if', 'a[j] <= pivot', ['i++;', 'swap(a[i], a[j]);'], ['']],
+        'j++;'
+      ]],
+      'swap(a[i + 1], a[hi]);',
+      'return i + 1;'
+    ], 'method']
+  ], true, '퀵소트 예제: Method 둘이 서로를 부릅니다 (Lomuto 분할)');
+}
+
+function loadRaftExample() {
+  const down = () => ['call', '팔로워로 물러난다'];
+  const apply = () => ['call', '커밋된 항목을 상태 기계에 적용한다'];
+  const send = () => ['call', '모든 피어에게 로그를 보낸다'];
+  loadDiagrams([
+    ['선거 타이머가 끝나면', [
+      ['if', '내가 리더인가?', [''], [
+        '후보가 된다',
+        '임기를 하나 올린다',
+        '나에게 투표한다\n(받은 표 = 1)',
+        '선거 타이머를 무작위 시간으로 다시 맞춘다',
+        '모든 피어에게 투표 요청을 보낸다\n(임기, 내 마지막 항목의 번호와 임기)'
+      ]]
+    ]],
+    ['투표 요청을 받으면', [
+      ['if', '요청의 임기 > 내 임기?', [down()], ['']],
+      ['if', '요청의 임기 < 내 임기?',
+        ['거절한다고 답한다'],
+        [['if', '이번 임기에 아직 투표하지 않았거나\n이미 이 후보에게 투표했는가?',
+          [['if', '후보의 로그가 내 로그만큼 최신인가?',
+            ['이 후보에게 투표했다고 적어 둔다', '선거 타이머를 다시 맞춘다', '투표한다고 답한다'],
+            ['거절한다고 답한다']]],
+          ['거절한다고 답한다']]]]
+    ]],
+    ['투표 응답을 받으면', [
+      ['if', '응답의 임기 > 내 임기?', [down()], [
+        ['if', '나는 아직 후보이고\n이번 임기의 찬성표인가?', [
+          '받은 표를 하나 늘린다',
+          ['if', '받은 표가 과반인가?', [
+            '리더가 된다',
+            '피어마다 다음에 보낼 번호를\n내 마지막 번호 + 1로 둔다',
+            send()
+          ], ['']]
+        ], ['']]
+      ]]
+    ]],
+    ['하트비트 타이머가 끝나면', [
+      ['if', '내가 리더인가?', [send()], ['']]
+    ]],
+    ['클라이언트 요청을 받으면', [
+      ['if', '내가 리더인가?',
+        ['명령을 이번 임기의 새 항목으로\n로그에 붙인다', send()],
+        ['리더의 주소를 알려 준다']]
+    ]],
+    ['로그 복제 요청을 받으면', [
+      ['if', '요청의 임기 < 내 임기?',
+        ['실패라고 답한다\n(내 임기를 함께)'],
+        [
+          ['if', '요청의 임기 > 내 임기\n또는 내가 후보인가?', [down()], ['']],
+          '선거 타이머를 다시 맞춘다',
+          ['if', '앞 항목의 번호와 임기가 내 로그와 맞는가?', [
+            '내 로그와 어긋나는 항목부터 뒤를 지운다',
+            '새 항목을 로그에 붙인다',
+            ['if', '리더의 커밋 번호 > 내 커밋 번호?',
+              ['커밋 번호를 올린다\n(리더의 커밋 번호와 내 마지막 번호 중 작은 쪽)', apply()],
+              ['']],
+            '성공이라고 답한다'
+          ], ['실패라고 답한다']]
+        ]]
+    ]],
+    ['로그 복제 응답을 받으면', [
+      ['if', '응답의 임기 > 내 임기?', [down()], [
+        ['if', '성공인가?', [
+          '그 피어의 맞춘 번호와 다음 번호를 올린다',
+          ['if', '과반이 가진 이번 임기의 항목 가운데\n아직 커밋하지 않은 것이 있는가?',
+            ['커밋 번호를 거기까지 올린다', apply()],
+            ['']]
+        ], ['그 피어의 다음 번호를 하나 줄인다\n(다음 하트비트 때 다시 보낸다)']]
+      ]]
+    ]],
+    ['모든 피어에게 로그를 보낸다', [
+      ['while', '아직 보내지 않은 피어가 있는 동안', [
+        '그 피어에게 보낼 항목을 고른다\n(다음 번호부터 끝까지, 없으면 빈 하트비트)',
+        '로그 복제 요청을 보낸다\n(임기, 앞 항목의 번호와 임기, 항목들, 커밋 번호)'
+      ]]
+    ], 'method'],
+    ['커밋된 항목을 상태 기계에 적용한다', [
+      ['while', '적용한 번호 < 커밋 번호', [
+        '적용한 번호를 하나 올린다',
+        '그 항목의 명령을 상태 기계에 적용한다',
+        ['if', '내가 리더인가?', ['클라이언트에게 결과를 답한다'], ['']]
+      ]]
+    ], 'method'],
+    ['팔로워로 물러난다', [
+      ['if', '상대의 임기 > 내 임기?',
+        ['내 임기를 상대의 임기로 올린다', '이번 임기의 투표 기록을 지운다'],
+        ['']],
+      '팔로워가 된다'
+    ], 'method']
+  ], false, 'Raft 예제: 이벤트 처리기 일곱과 Method 셋');
+}
+
+/* ---------- 저장 (이 브라우저에만) ---------- */
+function save() { try { localStorage.setItem('nsd-proto-doc', JSON.stringify({ doc, opts })); } catch (e) {} }
+function saveFold() { try { localStorage.setItem('nsd-proto-fold', JSON.stringify([...folded])); localStorage.setItem('nsd-proto-open', JSON.stringify([...opened])); } catch (e) {} }
+function restore() {
+  try {
+    const s = JSON.parse(localStorage.getItem('nsd-proto-doc') || 'null');
+    const d = s && toDoc(s.doc);
+    if (!d) return false;
+    doc = d; Object.assign(opts, s.opts || {});
+    folded = new Set(JSON.parse(localStorage.getItem('nsd-proto-fold') || '[]'));
+    opened = new Set(JSON.parse(localStorage.getItem('nsd-proto-open') || '[]'));
+    fixUid(); normalize();
+    $('#optSyntax').checked = opts.syntax; $('#optMono').checked = opts.mono; $('#optRanges').checked = opts.showRegions !== false;
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ---------- 상태 줄 ---------- */
+let sayTimer;
+function say(text, warn) {
+  const m = $('#msg');
+  m.textContent = text;
+  m.classList.add('flash');
+  m.style.color = warn ? 'var(--warn)' : '';
+  clearTimeout(sayTimer);
+  sayTimer = setTimeout(() => m.classList.remove('flash'), 1600);
+}
+
+/* ---------- 입력 ---------- */
+const COMMANDS = {
+  new: () => { pushUndo(); doc = { diagrams: [newDia()] }; folded = new Set(); opened = new Set(); asked = new Set(); normalize(); selectOne(doc.diagrams[0].body[0].id); render(); save(); say('새 문서'); },
+  open: () => $('#file').click(),
+  svg: () => { $('#svgText').value = exportSVG(); $('#modal').hidden = false; $('#svgText').focus(); },
+  download, exCode: () => loadExample('code'), exText: () => loadExample('text'),
+  callAsk: () => callCmd(false), retargetAsk: retargetCmd, goto: gotoTarget,
+  delDia: delDiagram, unwrap, fold, makeRegion, releaseRegion, laneAdd, laneRemove, laneLabel, exCase: loadCaseExample, exQuick: loadQuickExample, exRaft: loadRaftExample, undo, redo, del: () => del(false),
+  copy: () => copy(false), cut: () => copy(true), paste: () => paste(),
+  zoomIn: () => setZoom(zoom + 0.1), zoomOut: () => setZoom(zoom - 0.1),
+  closeModal: () => { $('#modal').hidden = true; stage.focus({ preventScroll: true }); },
+  copySvg: () => {
+    const ta = $('#svgText');
+    navigator.clipboard?.writeText(ta.value).then(() => say('복사했습니다'), () => { ta.select(); say('선택해 두었습니다. Ctrl+C로 복사하세요'); })
+      ?? (ta.select(), say('선택해 두었습니다. Ctrl+C로 복사하세요'));
+  },
+  edit: () => {
+    const r = needSel();
+    if (!r) return;
+    if (r.event) return startEdit(r.dia.id);
+    if (!(r.items.length === 1 && r.items[0].local) && locked()) return;
+    // 접힌 부분을 골랐으면 그 부분의 이름을 고친다
+    const slot = idx.get(r.items[0].id).slot;
+    if (r.parent && laneFolded(r.parent, slot)) return say('접힌 줄에는 고칠 글자가 없습니다. 펴려면 za나 더블클릭');
+    startEdit(sel.focus);
+  }
+};
+function run(cmd, shift) {
+  hideMenu();
+  pend = ''; visual = false;
+  if (editing) commitEdit(false);
+  const [name, arg] = cmd.split(':');
+  if (name === 'ins') insert(arg, shift ? 'before' : 'after');
+  else if (name === 'call') insertCall(arg);
+  else if (name === 'retarget') retarget(arg);
+  else if (name === 'callAsk') callCmd(shift);
+  else if (name === 'kind') kindCmd(arg, shift);
+  else if (name === 'newDia') addDiagram(false, arg);
+  else if (name === 'head') attachHead(activeDia(), arg);
+  else if (name === 'wrap') wrap(arg);
+  else COMMANDS[name]?.();
+}
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('button[data-cmd]');
+  if (!b) { if (!ev.target.closest('.menu')) hideMenu(); return; }
+  run(b.dataset.cmd, ev.shiftKey);
+  if (!b.closest('.modal') && !editing && $('#modal').hidden) stage.focus({ preventScroll: true });
+});
+$('#file').addEventListener('change', ev => {
+  const f = ev.target.files[0];
+  if (!f) return;
+  f.text().then(importSVG);
+  ev.target.value = '';
+});
+$('#optSyntax').addEventListener('change', e => { opts.syntax = e.target.checked; render(); save(); });
+$('#optMono').addEventListener('change', e => { opts.mono = e.target.checked; render(); save(); });
+$('#optRanges').addEventListener('change', e => { opts.showRegions = e.target.checked; render(); save(); });
+
+svg.addEventListener('mousedown', ev => {
+  if (ev.button !== 0) return;
+  if (editing) commitEdit(false);
+  pend = ''; visual = false; escArmed = false;
+  const t = ev.target.closest('[data-id]');
+  if (!t) { clearSel(); render(); return; }
+  // 더블클릭은 두 번째 누름에서 처리한다. 첫 누름에서 그림을 다시 그리기 때문에 dblclick 이벤트는 사라진 요소를 가리켜 믿을 수 없다
+  if (ev.detail >= 2) { ev.preventDefault(); return dbl(t.dataset); }
+  const lane = t.dataset.slot && idx.get(t.dataset.id)?.node[t.dataset.slot];
+  if (lane) pickId(lane[0].id);
+  else if (ev.shiftKey) selectTo(t.dataset.id); else selectOne(t.dataset.id);
+  render();
+  stage.focus({ preventScroll: true });
+  ev.preventDefault();
+});
+function dbl(d) {
+  const dn = idx.get(d.id)?.node;
+  // 펴 보인 블록은 고르기만 한다
+  if (isShown(d.id) && !(dn && dn.local)) { const lane = d.slot && dn && dn[d.slot]; if (lane) pickId(lane[0].id); else selectOne(d.id); render(); return void locked(); }
+  // Case 머리의 갈래 이름을 더블클릭하면 그 이름을 고친다
+  if (d.label != null && dn && dn.type === 'case') { selectOne(dn.id); render(); return startEdit(dn.id + '#' + d.label); }
+  // 이름 띠를 더블클릭하면 그 접기 영역을 접는다
+  if (d.band && dn && dn.type === 'range') { selectOne(dn.id); foldRange(dn, false); return say('접었습니다. 펴려면 접힌 칸을 더블클릭하거나 za'); }
+  if (d.unfold || (dn && dn.type === 'range' && folded.has(dn.id))) {
+    folded.delete(d.slot ? partKey(dn, d.slot) : d.id); saveFold(); selectOne(d.id); render();
+    return say(d.unfold ? '폈습니다' : '폈습니다. 이름은 접은 칸을 고르고 i나 Enter로 고칩니다');
+  }
+  selectOne(d.id); render(); startEdit(d.id);
+}
+svg.addEventListener('contextmenu', ev => {
+  const t = ev.target.closest('[data-id]');
+  if (!t) return;
+  ev.preventDefault();
+  const r = selRange();
+  const inSel = r && (r.event ? t.dataset.id === r.dia.id : r.items.some(n => n.id === t.dataset.id));
+  if (!inSel) { selectOne(t.dataset.id); render(); }
+  showMenu(ev.clientX, ev.clientY);
+});
+function showMenu(x, y) {
+  const it = (cmd, label, key) => ({ cmd, label, key: VIMKEY[cmd] ?? key });
+  const r = selRange(), d = activeDia();
+  const one = r && !r.event && r.items.length === 1 ? r.items[0] : null;
+  const fresh = [it('newDia:event', '새 빈 Event 다이어그램', '⇧E'), it('newDia:method', '새 빈 Method 다이어그램', '⇧M')];
+  menuCmds = [];
+  menuItems = r && r.event
+    ? [it('edit', '글자 고치기', 'Enter'), it('ins:process', '본문 맨 앞에 처리 넣기', 'P'), null,
+       it('kind:event', 'Event 머리로 바꾸기', 'E'), it('kind:method', 'Method 머리로 바꾸기', 'M'), ...fresh, null,
+       it('del', '머리 떼기', 'Del'), ...(doc.diagrams.length > 1 ? [it('delDia', '다이어그램 지우기', '⇧Del')] : [])]
+    : [it('edit', one && one.type === 'call' ? '인자와 결과 고치기' : '글자 고치기', 'Enter'), ...(one && one.type === 'call' ? [it('retargetAsk', '부를 Method 바꾸기…', 'R'), it('goto', shownSel() ? '원래 블록으로 가기' : '부르는 Method로 가기', 'G'), ...(one.target != null ? [it('fold', shown.has(one.id) ? '접기' : '펴 보기', 'F')] : [])] : []), null,
+       it('ins:process', '뒤에 처리 넣기', 'P'), it('ins:if', '뒤에 If 넣기', 'I'), it('ins:case', '뒤에 Case 넣기', 'K'), it('ins:while', '뒤에 While 넣기', 'W'), it('ins:dowhile', '뒤에 Do-While 넣기', 'D'), it('callAsk', '뒤에 호출 넣기…', 'C'), null,
+       it('kind:method', '새 Method로 빼기 (그 자리에는 호출 블록)', 'M'),
+       ...(d.event == null ? [it('head:event', '이 다이어그램에 Event 머리 달기', ''), it('head:method', '이 다이어그램에 Method 머리 달기', '')] : []), ...fresh, null,
+       it('wrap:while', 'While로 감싸기', 'S W'), it('wrap:dowhile', 'Do-While로 감싸기', 'S D'), it('wrap:if', 'If로 감싸기', 'S I'), it('wrap:case', 'Case로 감싸기', 'S K'), it('unwrap', one && one.type === 'call' ? '풀기: Method의 블록들로 바꾸기' : '풀기: 제어 블록 벗기기', 'U'), null,
+       ...(caseAt() ? [it('laneAdd', 'Case: 갈래 넣기', '+'), it('laneRemove', 'Case: 이 갈래 빼기', '-'), it('laneLabel', 'Case: 갈래 이름 고치기', 'L'), null] : []),
+       it('fold', '접기 · 펴기', 'F'), it('makeRegion', '접기 영역 만들기', '⇧F'), it('releaseRegion', '접기 영역 풀기', 'Ctrl+⇧F'), null,
+       it('cut', '잘라내기', 'Ctrl+X'), it('copy', '복사', 'Ctrl+C'), it('paste', '뒤에 붙여넣기', 'Ctrl+V'), it('del', '지우기', 'Del')];
+  menuAt = -1;
+  drawMenu();
+  placeMenu(x, y);
+}
+function drawMenu() {
+  menu.innerHTML = menuItems.map((i, k) => i
+    ? `<button data-cmd="${i.cmd}"${k === menuAt ? ' class="on"' : ''}>${esc(i.label)}<span>${esc(i.key || '')}</span></button>` : '<hr>').join('');
+}
+function menuStep(d) {
+  // 위아래 방향키로 고를 줄을 옮긴다. 끝에서는 반대쪽 끝으로 돈다
+  const n = menuItems.length;
+  if (!n) return;
+  let k = menuAt < 0 && d < 0 ? 0 : menuAt;
+  do { k = (k + d + n) % n; } while (!menuItems[k]);
+  menuAt = k;
+  drawMenu();
+}
+function placeMenu(x, y) {
+  menu.hidden = false;
+  const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  menu.style.left = Math.max(8, Math.min(x, innerWidth - mw - 8)) + 'px';
+  menu.style.top = Math.max(8, Math.min(y, innerHeight - mh - 8)) + 'px';
+}
+let menuCmds = [], menuItems = [], menuAt = -1;
+function choose(items, at = 0) {
+  // 고를 것을 고른 블록 바로 아래에 띄운다. 위아래 방향키와 Enter, 또는 숫자 키로 고른다
+  menuCmds = items.map(i => i.cmd);
+  menuItems = items.map((i, k) => ({ ...i, key: String(k + 1) }));
+  menuAt = at;
+  drawMenu();
+  const r = selRange();
+  const b = r ? L.get(r.event ? r.dia.id : r.items[r.items.length - 1].id) : null;
+  const o = svg.getBoundingClientRect ? svg.getBoundingClientRect() : { left: 0, top: 0 };
+  placeMenu(o.left + (b ? b.x * zoom : 24), o.top + (b ? (b.y + b.h) * zoom + 4 : 24));
+}
+function hideMenu() { menu.hidden = true; menuCmds = []; menuItems = []; menuAt = -1; }
+// 키보드로 캔버스에 들어오면 첫 블록을 고른다 (캔버스 둘레의 포커스 선 대신). 마우스로 누른 때는 누른 곳을 따른다
+let pressing = false;
+stage.addEventListener('mousedown', () => { pressing = true; }, true);
+document.addEventListener('mouseup', () => { pressing = false; });
+stage.addEventListener('focus', () => {
+  if (sel || pressing || editing) return;
+  selectOne(visibleOrder(activeDia())[0]); render();
+});
+// 다이어그램 바깥의 빈 캔버스를 누르면 고른 것을 푼다 (스크롤 막대와 위쪽 설정 줄은 빼고)
+stage.addEventListener('mousedown', ev => {
+  if (ev.button !== 0 || ev.target !== stage) return;
+  if (ev.offsetX >= stage.clientWidth || ev.offsetY >= stage.clientHeight) return;
+  if (editing) commitEdit(false);
+  escArmed = false;
+  clearSel(); hideMenu(); render(); showMode();
+});
+// 휠: 블록을 고른 상태에서는 위아래 이동(j · k)과 같고, 고르지 않았으면 캔버스를 스크롤한다. Ctrl+휠은 확대·축소
+let wheelSum = 0;
+const WHEEL_STEP = 50;   // 휠 한 칸(보통 100px)은 한 번, 터치패드의 작은 움직임은 이만큼 쌓여야 한 번
+stage.addEventListener('wheel', ev => {
+  if (ev.ctrlKey) { ev.preventDefault(); return setZoom(zoom * (ev.deltaY < 0 ? 1.1 : 0.9)); }
+  if (!sel || editing || !$('#modal').hidden || ev.shiftKey || !ev.deltaY || Math.abs(ev.deltaX) > Math.abs(ev.deltaY)) return;
+  ev.preventDefault();
+  hideMenu(); pend = ''; escArmed = false;
+  const dy = ev.deltaY * (ev.deltaMode === 1 ? 40 : ev.deltaMode === 2 ? 400 : 1);
+  if (Math.sign(dy) !== Math.sign(wheelSum)) wheelSum = 0;
+  wheelSum += dy;
+  if (Math.abs(wheelSum) < WHEEL_STEP) return;
+  const down = wheelSum > 0;
+  wheelSum = 0;
+  move(down ? 'ArrowDown' : 'ArrowUp', visual);
+  showMode();
+}, { passive: false });
+
+/* ---------- 단축키: 표준 키 위에 Vim 키 (ADR-0025) ---------- */
+// 한 글자 키는 이 표로 읽는다. 표준 키(방향키, Enter, F2, Delete, Ctrl 조합)는 그대로 듣는다.
+// 글자는 자판의 자리(code)로 읽으므로 한글 입력 상태에서도 같다
+let pend = '';        // 두 번 누르기에서 먼저 누른 키
+let editHow = '';     // 고치기를 어떻게 시작하는가: 'start'(i) · 'clear'(cc) · ''(Enter, F2: 전체를 고름)
+let visual = false;   // v로 시작한 영역 고르기
+let escArmed = false; // 고른 상태에서 Esc를 한 번 눌렀다 (다른 키를 누르거나 마우스를 쓰면 지운다)
+const KINDS = { i: 'if', w: 'while', d: 'dowhile', k: 'case' };
+const PEND_HINT = {
+  a: 'a 뒤에 넣기: i If · w While · d Do-While · k Case · c 호출',
+  A: 'A 앞에 넣기: i If · w While · d Do-While · k Case · c 호출',
+  s: 's 감싸기: w While · d Do-While · i If · k Case',
+  d: 'd: d 잘라내기 · s 풀기(제어 블록 벗기기, 호출 블록을 Method의 블록들로)', y: 'y: y 복사', c: 'c: c 글자를 비우고 새로 적기',
+  z: 'z: a 접기·펴기 · o 펴기 · c 접기 · R 모두 펴기 · M 모두 접기 · f 접기 영역 만들기 · d 접기 영역 풀기',
+  g: 'g: g 다이어그램의 처음 · d 부르는 Method로', '[': '[: [ 앞 다이어그램', ']': ']: ] 뒤 다이어그램'
+};
+// 오른쪽 클릭 메뉴에 적는 키. 한 번 누르는 키가 따로 있으면 함께 적는다 (za · f)
+const VIMKEY = {
+  edit: 'i · Enter', 'ins:process': 'o', 'ins:if': 'a i', 'ins:case': 'a k', 'ins:while': 'a w', 'ins:dowhile': 'a d', callAsk: 'a c',
+  'kind:event': 'e', 'kind:method': 'm', 'newDia:event': 'E', 'newDia:method': 'M', retargetAsk: 'r', goto: 'gd',
+  'wrap:while': 's w', 'wrap:dowhile': 's d', 'wrap:if': 's i', 'wrap:case': 's k', unwrap: 'd s', laneLabel: '⇧L',
+  fold: 'za · f', makeRegion: 'zf · ⇧F', releaseRegion: 'zd · Ctrl+⇧F', cut: 'dd', copy: 'yy', paste: 'p', del: 'x · Del'
+};
+function showMode() { $('#mode').textContent = editing ? '-- 고치기 --' : pend ? pend : visual ? '-- 영역 --' : ''; }
+function vimName(ev) {
+  const c = ev.code, sh = ev.shiftKey;
+  if (/^Key[A-Z]$/.test(c)) return sh ? c[3] : c[3].toLowerCase();
+  if (c === 'BracketLeft') return sh ? '{' : '[';
+  if (c === 'BracketRight') return sh ? '}' : ']';
+  if (c === 'Equal' || c === 'NumpadAdd') return '+';
+  if (c === 'Minus' || c === 'NumpadSubtract') return '-';
+  if (c === 'Escape') return 'Esc';
+  return '';
+}
+function edge(last) {
+  // gg · G: 이 다이어그램에서 보이는 첫 것(머리가 있으면 머리)과 마지막 것
+  const o = visibleOrder(activeDia());
+  if (o.length) { pickId(o[last ? o.length - 1 : 0]); render(); }
+}
+function foldTo(open) {
+  // zo · zc: za가 듣는 것을 펴기만 / 접기만 한다. 반대쪽으로 움직였으면 되돌린다
+  const level = () => opened.size - folded.size, before = level();
+  fold();
+  const d = level() - before;
+  if (d !== 0 && (d > 0) !== open) { if (editing) commitEdit(true); fold(); say(open ? '이미 펴져 있습니다' : '이미 접혀 있습니다'); }
+}
+function foldAll(open) {
+  // zR · zM: 문서 전체에서 모두 펴기 / 모두 접기. 보기만 바뀌므로 되돌리기에 넣지 않는다
+  if (open) {
+    if (!folded.size) return say('접힌 곳이 없습니다');
+    folded = new Set();
+  } else {
+    // 접기 영역은 모두, 제어 블록의 안쪽은 za로 접을 수 있는 것만(블록이 둘 이상) 접는다. 펴 보인 호출 블록도 접는다
+    eachNode(n => {
+      if (n.type === 'range') folded.add(n.id);
+      else if (isCtrl(n)) slots(n).forEach(sl => {
+        const one = n[sl].length === 1 && n[sl][0].type === 'range';
+        if (!one && countBlocks(n[sl]) >= 2) folded.add(partKey(n, sl));
+      });
+    });
+    opened = new Set();
+  }
+  saveFold(); reindex(); fixSel();
+  if (!open && sel && !isHead(sel.anchor)) {
+    // 고른 것이 접힌 접기 영역 안으로 숨었으면 가장 바깥의 그 접기 영역을 고른다
+    let top = null;
+    for (const id of ancestors(sel.anchor)) if (idx.get(id).node.type === 'range') top = id;
+    if (top) selectOne(top);
+  }
+  render();
+  say(open ? '모두 폈습니다. 호출 블록은 펴 보이지 않습니다 (za로 하나씩)' : '모두 접었습니다. 펴 보인 호출 블록도 접었습니다');
+}
+function vimKey(ev) { const done = vimKey0(ev); showMode(); return done; }
+function vimKey0(ev) {
+  const c = ev.code;
+  // 조합 키와 한/영 키만 누른 것은 먼저 누른 키를 지우지 않는다
+  if (/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(c)) return false;
+  let k = vimName(ev);
+  if (visual && (c === 'ArrowDown' || c === 'ArrowUp')) k = c === 'ArrowDown' ? 'j' : 'k';
+  const p = pend;
+  pend = '';
+  if (p) {
+    // 두 번 누르기의 둘째 키. 맞는 것이 없으면 그만두고, 누른 키는 버린다
+    const seq = p + k, at = p === 'a' || p === 'A';
+    if (at && KINDS[k]) insert(KINDS[k], p === 'A' ? 'before' : 'after');
+    else if (at && k === 'c') callCmd(p === 'A');
+    else if (p === 's' && KINDS[k]) wrap(KINDS[k]);
+    else if (seq === 'dd') { const r = selRange(); if (r && r.event) del(false); else copy(true); }   // 머리는 잘라낼 수 없으므로 Delete와 같다(머리 떼기)
+    else if (seq === 'ds') unwrap();
+    else if (seq === 'yy') copy(false);
+    else if (seq === 'za') fold();
+    else if (seq === 'zo' || seq === 'zc') foldTo(seq === 'zo');
+    else if (seq === 'zR' || seq === 'zM') foldAll(seq === 'zR');
+    else if (seq === 'cc') { editHow = 'clear'; run('edit'); editHow = ''; }
+    else if (seq === 'zf') makeRegion();
+    else if (seq === 'zd') releaseRegion();
+    else if (seq === 'gg') edge(false);
+    else if (seq === 'gd') gotoTarget();
+    else if (seq === '[[') move('ArrowLeft', true, true);
+    else if (seq === ']]') move('ArrowRight', true, true);
+    else say(k && k !== 'Esc' ? `${p}${k}: 없는 키입니다` : '그만뒀습니다');
+    visual = false;
+    return true;
+  }
+  if (!k) { visual = false; return false; }   // Enter, F2, Delete, 방향키 들은 지금 키 그대로
+  if (visual) {
+    if (k === 'j' || k === 'k') { move(k === 'j' ? 'ArrowDown' : 'ArrowUp', true); return true; }
+    if (k === 'v' || k === 'V' || k === 'Esc') { visual = false; if (sel) selectOne(sel.focus); render(); return true; }
+    if (k === 'y' || k === 'd') { copy(k === 'd'); visual = false; return true; }
+    if (k === 'x') { del(false); visual = false; return true; }
+    if (k === 's' || k === 'z') { pend = k; say(PEND_HINT[k]); return true; }
+    visual = false;
+  }
+  if (PEND_HINT[k]) { pend = k; say(PEND_HINT[k]); }
+  else if (k === 'h' || k === 'j' || k === 'k' || k === 'l') move({ h: 'ArrowLeft', j: 'ArrowDown', k: 'ArrowUp', l: 'ArrowRight' }[k], false);
+  else if (k === '{' || k === '}') move(k === '{' ? 'ArrowUp' : 'ArrowDown', false, true);
+  else if (k === 'G') edge(true);
+  else if (k === 'v' || k === 'V') {
+    if (!sel || isHead(sel.anchor)) say('영역은 블록에서 시작합니다. 먼저 블록을 고르세요');
+    else { visual = true; say('영역 고르기: j k로 넓히고 y 복사 · d 잘라내기 · x 지우기 · s 감싸기 · zf 접기 영역. v나 Esc로 끝'); }
+  }
+  else if (k === 'i') { editHow = 'start'; run('edit'); editHow = ''; }
+  else if (k === 'o' || k === 'O') insert('process', k === 'O' ? 'before' : 'after');
+  else if (k === 'p' || k === 'P') paste(k === 'P' ? 'before' : 'after');
+  else if (k === 'u') undo();
+  else if (k === 'U') redo();
+  else if (k === 'f') fold();
+  else if (k === 'F') makeRegion();
+  else if (k === 'L') laneLabel();   // 옛 키 L을 Shift+L로 (59번째 판). 소문자 l은 오른쪽 이동   // 옛 키 Shift+F (58번째 판에서 되살림, 메인테이너). 풀기의 옛 키 Ctrl+Shift+F는 계속 들었다
+  else if (k === 'e' || k === 'E') kindCmd('event', k === 'E');
+  else if (k === 'm' || k === 'M') kindCmd('method', k === 'M');
+  else if (k === 'r') retargetCmd();
+  else if (k === 'x') del(false);   // x는 Delete와 같다: 복사 없이 지우기, 머리에서는 머리 떼기
+  else if (k === '+') laneAdd();
+  else if (k === '-') laneRemove();
+  else if (k === 'Esc') {
+    // Esc를 두 번 연속 누르면 고른 것을 푼다. 한 번만 누르면 안내만 띄운다
+    if (!sel) {}
+    else if (escArmed) { escArmed = false; clearSel(); render(); say('고른 것을 풀었습니다. 이동 키를 누르면 마지막에 골랐던 블록부터 다시 고릅니다'); }
+    else { escArmed = true; say('한 번 더 Esc를 누르면 고른 것을 풉니다'); }
+  }
+  else say(`${k}: Vim 키에 없는 키입니다`);
+  return true;
+}
+
+document.addEventListener('keydown', ev => {
+  if (editing) return;
+  const tag = ev.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (!$('#modal').hidden) { if (ev.key === 'Escape') run('closeModal'); return; }
+  if (tag === 'BUTTON' && (ev.key === 'Enter' || ev.key === ' ')) return;
+  const code = ev.code, ctrl = ev.ctrlKey || ev.metaKey;
+  if (code !== 'Escape' && !/^(Shift|Control|Alt|Meta|OS)(Left|Right)$|^CapsLock$|^Lang\d$/.test(code)) escArmed = false;
+  if (menuItems.length) {
+    // 메뉴가 떠 있는 동안: j · k(또는 위아래 방향키)로 옮기고 Enter로 고른다. 고르기 메뉴는 숫자로도 고른다 (61번째 판, 2026-10-25)
+    if (!ctrl && (code === 'ArrowDown' || code === 'ArrowUp' || code === 'KeyJ' || code === 'KeyK')) { menuStep(code === 'ArrowDown' || code === 'KeyJ' ? 1 : -1); ev.preventDefault(); return; }
+    const picked = (code === 'Enter' || code === 'NumpadEnter') && menuItems[menuAt];
+    if (picked) { run(picked.cmd); ev.preventDefault(); return; }
+    if (menuCmds.length || code === 'Escape') {
+      const k = /^(Digit|Numpad)([1-9])$/.exec(code);
+      const cmd = k && menuCmds[+k[2] - 1];
+      hideMenu();
+      if (cmd) run(cmd); else say('그만뒀습니다');
+      ev.preventDefault();
+      return;
+    }
+    hideMenu();
+  }
+  let handled = true;
+  if (ctrl) {
+    if (code === 'KeyZ' && !ev.shiftKey) undo();
+    else if (code === 'KeyY' || (code === 'KeyZ' && ev.shiftKey) || (code === 'KeyR' && !ev.shiftKey)) redo();   // Ctrl+R은 Vim의 다시 하기. 잡지 않으면 페이지가 새로 고쳐진다
+    else if (code === 'KeyC') copy(false);
+    else if (code === 'KeyX') copy(true);
+    else if (code === 'KeyV') paste();
+    else if (code === 'KeyF' && ev.shiftKey) releaseRegion();
+    else if (code.startsWith('Arrow')) move(code, ev.shiftKey, true);
+    else handled = false;
+    if (handled) { pend = ''; visual = false; showMode(); }
+  } else if (ev.altKey) handled = false;
+  else if (vimKey(ev)) {}
+  else if (code.startsWith('Arrow')) move(code, ev.shiftKey);
+  else if (code === 'Enter' || code === 'NumpadEnter' || code === 'F2') run('edit');
+  else if (code === 'Delete' || code === 'Backspace') del(ev.shiftKey);
+  else handled = false;
+  if (handled) ev.preventDefault();
+});
+
+/* ---------- 시작 ---------- */
+if (!restore()) loadExample('code');
+else { render(); say('지난번 상태를 되살렸습니다. 처음 예제는 "코드식"을 누르세요'); }
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => render());
+stage.focus({ preventScroll: true });
+
+/* ---------- M41: README 그림 후보 ---------- */
+const M41 = [
+  { no: 1, name: '자판기', note: '문장식 · Event 둘과 Method 하나 · Case · If · While · 호출. 누구나 아는 장면이라 처음 보는 사람도 읽힘', mono: false, list: [
+    ['동전이 들어오면', [
+      '동전의 종류를 알아본다',
+      ['if', '받는 동전인가?',
+        ['잔액에 동전의 값을 더한다', '잔액을 화면에 보인다', ['call', '살 수 있는 음료에 불을 켠다']],
+        ['동전을 반환구로 돌려보낸다']]
+    ]],
+    ['음료 버튼을 누르면', [
+      ['case', '고른 음료', [
+        ['커피', ['값 = 1,200원']],
+        ['녹차', ['값 = 1,000원']],
+        ['생수', ['값 = 800원']],
+        ['default', ['알림음을 낸다', '끝낸다']]
+      ]],
+      ['if', '잔액 ≥ 값?',
+        ['음료를 내보낸다', '잔액에서 값을 뺀다',
+          ['while', '잔액 > 0', ['가장 큰 동전으로 거스름을 낸다', '잔액에서 그 동전의 값을 뺀다']],
+          '화면을 처음으로 되돌린다'],
+        ['"잔액이 모자랍니다"를 보인다']]
+    ]],
+    ['살 수 있는 음료에 불을 켠다', [
+      ['while', '버튼마다', [
+        ['if', '값 ≤ 잔액이고 재고가 있는가?', ['버튼의 불을 켠다'], ['버튼의 불을 끈다']]
+      ]]
+    ], 'method']
+  ]},
+  { no: 2, name: '이진 탐색', note: '코드식(C) · Event 하나와 Method 하나 · Do-While · While · 겹친 If · 결과를 받는 호출. 개발자에게 익숙하고 작음', mono: true, list: [
+    ['main()', [
+      'int a[] = {2, 3, 5, 7, 11, 13, 17};',
+      ['dowhile', 'key != 0', [
+        'key = read_int();',
+        ['call', 'binary_search(a, n, key)', 'a, 7, key', 'i'],
+        ['if', 'i >= 0', ['printf("%d번째\\n", i);'], ['printf("없음\\n");']]
+      ]]
+    ]],
+    ['binary_search(a, n, key)', [
+      'lo = 0;',
+      'hi = n - 1;',
+      ['while', 'lo <= hi', [
+        'mid = lo + (hi - lo) / 2;',
+        ['if', 'a[mid] == key', ['return mid;'], [
+          ['if', 'a[mid] < key', ['lo = mid + 1;'], ['hi = mid - 1;']]
+        ]]
+      ]],
+      'return -1;'
+    ], 'method']
+  ]},
+  { no: 3, name: '엘리베이터', note: '문장식 · Event 둘과 Method 하나 · 갈래 넷의 Case · 이름 붙은 영역 · While · 호출 둘. 가장 넓고 볼거리가 많음', mono: false, list: [
+    ['층 버튼이 눌리면', [
+      '눌린 층을 요청 목록에 더한다',
+      '버튼에 불을 켠다',
+      ['if', '엘리베이터가 서 있는가?', [['call', '다음 행선지를 정한다']], ['']]
+    ]],
+    ['제어 주기마다 (100ms)', [
+      ['case', '상태', [
+        ['올라감', [['if', '행선지에 닿았는가?', ['멈춘다', '상태 = 문 열림'], ['한 층 올라간다']]]],
+        ['내려감', [['if', '행선지에 닿았는가?', ['멈춘다', '상태 = 문 열림'], ['한 층 내려간다']]]],
+        ['문 열림', [
+          ['range', '문 열고 닫기', ['문을 연다', '3초 기다린다',
+            ['while', '문 사이에 사람이 있는 동안', ['1초 더 기다린다']], '문을 닫는다'], true],
+          '이 층의 요청을 지운다',
+          ['call', '다음 행선지를 정한다']]],
+        ['서 있음', ['']]
+      ]]
+    ]],
+    ['다음 행선지를 정한다', [
+      ['if', '요청 목록이 비었는가?', ['상태 = 서 있음'], [
+        '진행 방향에서 가장 가까운 요청을 고른다',
+        ['if', '행선지 > 지금 층?', ['상태 = 올라감'], ['상태 = 내려감']]
+      ]]
+    ], 'method']
+  ]},
+  { no: 4, name: 'Raft (지금 프로토타입의 예제)', note: '참고: 프로토타입에 이미 있는 다이어그램 열 개. README에는 크지만 "실제 쓰임새"로는 가장 그럴듯함', raft: true }
+];
+function m41Load(c) {
+  if (c.raft) loadRaftExample(); else loadDiagrams(c.list, c.mono, c.name);
+  selectOne(null); render();
+}
+function m41Gallery() {
+  const g = $('#m41cards');
+  for (const c of M41) {
+    m41Load(c);
+    const lay = layout();
+    const card = document.createElement('section');
+    card.className = 'm41card';
+    card.innerHTML = `<h2><span class="m41tag">${c.no}</span>${c.name}</h2><p>${c.note}</p>` +
+      `<div class="m41fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lay.W} ${lay.H}" width="${lay.W}" style="max-width:100%;height:auto;background:#fff">${drawSVG(lay, false)}</svg></div>` +
+      `<button type="button">${c.no}번을 편집기에서 열기</button>`;
+    card.querySelector('button').onclick = () => { $('#m41').hidden = true; m41Load(c); stage.focus({ preventScroll: true }); };
+    g.appendChild(card);
+  }
+  m41Load(M41[0]);
+  $('#m41back').onclick = () => { $('#m41').hidden = false; };
+}
+m41Gallery();
+})();
+</script>
