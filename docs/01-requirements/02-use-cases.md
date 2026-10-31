@@ -15,7 +15,7 @@ updated: 2026-11-01
 > [!info] 읽는 법
 > - 유즈케이스는 사용자 목표 수준으로, 기본 흐름과 예외 흐름 몇 줄로 씁니다. 실패가 비싼 흐름(UC-02 열기, UC-06 저장, UC-07 노트에 삽입해 보이기)만 최소 보장 · 성공 보장 · 확장까지 갖춘 자세한 형식(Cockburn의 fully dressed)으로 씁니다([[dr-0014-light-use-cases|DR-0014]]). 세부 규칙(어떤 키, 어떤 모습)은 UX 설계([[02-interaction-rules]])에 있고 여기서는 되풀이하지 않습니다.
 > - 각 유즈케이스 끝의 "요구사항"은 그 흐름이 기대는 요구사항의 ID입니다. 우선순위(`P0` …)는 요구사항 쪽에 있습니다.
-> - 흐름의 번호에 붙은 `a`, `b`는 그 단계에서 갈라지는 예외 흐름(자세한 형식에서는 "확장")입니다(예: 3a는 3단계의 예외). `'`가 붙은 것은 같은 단계를 다른 수단으로 하는 기술 변형입니다.
+> - 흐름의 번호에 붙은 `a`, `b`는 그 단계에서 분기하는 예외 흐름(자세한 형식에서는 "확장")입니다(예: 3a는 3단계의 예외). `'`가 붙은 것은 같은 단계를 다른 수단으로 하는 기술 변형입니다.
 
 ## 1. 액터
 
@@ -132,7 +132,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 3b. 옛 형식 버전의 파일: 지금 형식으로 바꿔 읽는다. 원본이 언제 새 형식이 되는지는 미결정(6장). 프로토타입이 저장한 `version: 0` 파일은 바꿔 읽지 않고 3a와 같이 다룬다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 3c. 지금보다 새 형식 버전의 파일: 편집할 수 없다고 알리고 앱 업데이트를 안내한다
 - 3d. 다른 도구로 그림 부분만 수정한 파일: 그림이 모델과 달라졌다고 알린다
-- 4a. 다른 문서의 Method를 호출하는 호출 블록이 있는데 그 파일을 읽지 못한다: 그 호출 블록은 "이어진 곳 없음"으로 보인다
+- 4a. 다른 문서의 Method를 호출하는 호출 블록이 있는데 그 파일을 읽지 못한다: 그 호출 블록은 "참조 대상 없음"으로 보인다
 
 **기술 변형**
 
@@ -151,7 +151,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 1. 작성자가 블록을 하나 또는 여럿 선택한다.
 2. 작성자가 블록을 삽입하거나, 삭제하거나, 텍스트를 편집하거나, 제어 블록으로 감싸거나 푼다.
-3. 편집기가 그림을 다시 그린다. 블록의 크기와 분기의 너비는 텍스트에 맞춰 저절로 정해진다.
+3. 편집기가 그림을 다시 그린다. 블록의 크기와 분기의 너비는 텍스트에 맞춰 자동으로 정해진다.
 4. 작성자가 마음에 들지 않으면 실행 취소한다.
 
 **예외 흐름**
@@ -160,7 +160,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 2a. 구조가 깨지는 편집(예: 반복의 본문을 비우기)은 일어나지 않는다. 빈 분기는 빈 블록으로 채워진다
 - 2b. 키보드만으로도 1~4를 모두 할 수 있다
 - 2c. 드래그 앤 드롭, 복사 · 붙여넣기로 블록을 이동한다
-- 2d. If의 분기를 바꾸거나, Case의 분기를 더하고 빼고 순서를 바꾼다
+- 2d. If의 분기를 바꾸거나, Case의 분기를 추가하고 빼고 순서를 바꾼다
 - 2e. 쓰는 법이나 키를 모르면 도움말을 연다(→ [[01-requirements#^r-edit|R-EDIT-21]])
 
 **요구사항:** [[01-requirements#^r-edit|R-EDIT-01]], [[01-requirements#^r-edit|R-EDIT-02]], [[01-requirements#^r-edit|R-EDIT-03]], [[01-requirements#^r-edit|R-EDIT-04]], [[01-requirements#^r-edit|R-EDIT-05]], [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]], [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-edit|R-EDIT-21]], [[01-requirements#^r-edit|R-EDIT-22]], [[01-requirements#^r-edit|R-EDIT-24]], [[01-requirements#^r-blk|R-BLK-01]], [[01-requirements#^r-blk|R-BLK-02]], [[01-requirements#^r-blk|R-BLK-03]], [[01-requirements#^r-blk|R-BLK-04]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#^r-blk|R-BLK-06]], [[01-requirements#^r-lay|R-LAY-01]], [[01-requirements#^r-lay|R-LAY-02]], [[01-requirements#^r-nfr|R-NFR-01]], [[01-requirements#^r-nfr|R-NFR-03]]
@@ -182,7 +182,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1a. 처음부터 Event나 Method 다이어그램을 새로 만들어 나란히 둔다
 - 2a. 거꾸로, 호출 블록을 풀어 Method의 블록들로 바꾼다
 - 3a. 호출할 것이 문서에 없으면(라이브러리 함수 등) 이름을 적어 호출한다
-- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 "이어진 곳 없음"이 된다
+- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 "참조 대상 없음"이 된다
 - 4b. 다른 문서의 Method를 호출한다(`P2`)
 
 **요구사항:** [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-edit|R-EDIT-19]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
@@ -318,7 +318,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 **기본 흐름**
 
 1. 작성자가 문서의 테마(그림의 색 묶음)를 선택한다.
-2. 작성자가 블록 텍스트의 종류(문장 / C / Java / Python / Bash 등)를 선택하면, 블록 텍스트가 그 문법으로 강조된다.
+2. 작성자가 블록 텍스트의 언어(일반 텍스트 / C / Java / Python / Bash 등)를 선택하면, 블록 텍스트가 그 문법으로 강조된다.
 3. 작성자가 Event · Method 헤더의 모양을 선택한다.
 4. 선택한 것은 문서에 저장되어, 누가 어디서 열어도 같은 모양이다.
 
