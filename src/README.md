@@ -15,26 +15,26 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 
 패키지 안의 폴더입니다.
 
-| 폴더 | 무엇 |
-| --- | --- |
-| `packages/core/src/model/` | 모델 타입, id 생성기, 불변식 검사 |
-| `packages/core/src/commands/` | 편집 명령(순수 함수) |
-| `packages/core/src/text/` · `layout/` · `render/` | 텍스트 폭, 두 단계 레이아웃, 씬 빌드와 SVG 문자열 |
-| `packages/core/src/format/` | 모델 JSON, SVG 파일의 조립과 열기 |
-| `packages/core/src/i18n/` | 그림에 적는 고정 문구(참 · 거짓 …) |
-| `packages/core/golden/` | 골든 파일(`.ns.svg` 하나가 입력이자 기대 출력), `golden/render/`는 그림만의 골든 |
-| `packages/core/node/` | Node에서만 실행되는 테스트(골든 파일은 Node의 서브세터를 씀) |
-| `packages/fonts/assets/` | 만들어 둔 글꼴 파일과 라이선스(`OFL.txt`) |
-| `packages/fonts/src/` · `browser/` · `node/` | 폭 테이블과 서브세팅, 브라우저용 · Node용 로더 |
-| `packages/fonts/scripts/` | 글꼴을 다시 만드는 스크립트(아래) |
-| `packages/editor/src/session/` · `state/` · `navigation/` | 편집 세션, 선택, 이동 규칙 |
-| `packages/editor/src/input/` · `dom/` · `clipboard/` | 키 표와 키 해석, 히트 테스트 · 드롭, 화면 레이어, 클립보드 |
-| `packages/editor/src/commands/` · `save/` · `i18n/` | 명령 목록, 저장 파일 만들기, 화면 문자열 |
-| `packages/editor/src/ui/` | 메뉴 바, 툴바, 상태 표시줄, 커맨드 팔레트, 모달, 컨텍스트 메뉴(React) |
-| `packages/editor/src/contracts.ts` | 셸과의 계약(`EditorHandle`, `DocumentStore` …) |
-| `apps/web/src/shell/` · `files/` · `storage/` · `fonts/` | 웹 셸, 파일 I/O · PNG 내보내기, IndexedDB · 설정, 글꼴 로딩 |
-| `apps/web/e2e/` | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`) |
-| `apps/web/scripts/` | 빌드 크기 예산 검사 |
+| 폴더                                                        | 무엇                                                         |
+| --------------------------------------------------------- | ---------------------------------------------------------- |
+| `packages/core/src/model/`                                | 모델 타입, id 생성기, 불변식 검사                                      |
+| `packages/core/src/commands/`                             | 편집 명령(순수 함수)                                               |
+| `packages/core/src/text/` · `layout/` · `render/`         | 텍스트 폭, 두 단계 레이아웃, 씬 빌드와 SVG 문자열                            |
+| `packages/core/src/format/`                               | 모델 JSON, SVG 파일의 조립과 열기                                    |
+| `packages/core/src/i18n/`                                 | 그림에 적는 고정 문구(참 · 거짓 …)                                     |
+| `packages/core/golden/`                                   | 골든 파일(`.ns.svg` 하나가 입력이자 기대 출력), `golden/render/`는 그림만의 골든 |
+| `packages/core/node/`                                     | Node에서만 실행되는 테스트(골든 파일은 Node의 서브세터를 씀)                     |
+| `packages/fonts/assets/`                                  | 만들어 둔 글꼴 파일과 라이선스(`OFL.txt`)                               |
+| `packages/fonts/src/` · `browser/` · `node/`              | 폭 테이블과 서브세팅, 브라우저용 · Node용 로더                              |
+| `packages/fonts/scripts/`                                 | 글꼴을 다시 만드는 스크립트(아래)                                        |
+| `packages/editor/src/session/` · `state/` · `navigation/` | 편집 세션, 선택, 이동 규칙                                           |
+| `packages/editor/src/input/` · `dom/` · `clipboard/`      | 키 표와 키 해석, 히트 테스트 · 드롭, 화면 레이어, 클립보드                       |
+| `packages/editor/src/commands/` · `save/` · `i18n/`       | 명령 목록, 저장 파일 만들기, 화면 문자열                                   |
+| `packages/editor/src/ui/`                                 | 메뉴 바, 툴바, 상태 표시줄, 커맨드 팔레트, 모달, 컨텍스트 메뉴(React)              |
+| `packages/editor/src/contracts.ts`                        | 셸과의 계약(`EditorHandle`, `DocumentStore` …)                  |
+| `apps/web/src/shell/` · `files/` · `storage/` · `fonts/`  | 웹 셸, 파일 I/O · PNG 내보내기, IndexedDB · 설정, 글꼴 로딩              |
+| `apps/web/e2e/`                                           | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`)                     |
+| `apps/web/scripts/`                                       | 번들 사이즈 체크(bundle size budget)                                                |
 
 단위 테스트는 소스 옆의 `*.test.ts`, 벤치마크는 `*.bench.ts`입니다. 이렇게 나눈 이유와 정한 과정은 [ADR-0036](../atelier/adr/0036-code-layout.md)에 있습니다.
 

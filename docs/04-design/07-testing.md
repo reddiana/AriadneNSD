@@ -76,13 +76,16 @@ MVP(웹, [[dr-0015-mvp-scope|DR-0015]])를 내놓기 전에 모두 지나야 하
 | AT-16 | 커맨드 팔레트에서 명령을 찾아 실행한다 | 웹 | E2E |
 | AT-17 | `?`로 단축키 목록을 열고, 도움말 메뉴에서 사용법을 연다 | 웹 | E2E |
 
+- 웹에서 하는 인수 테스트(E2E)는 `src/apps/web/e2e/acceptance.spec.ts`에 있습니다. 테스트 이름이 AT ID로 시작하고(`AT-04: …`), 한 ID에 테스트가 여럿인 것도 있습니다(AT-02 · AT-04 · AT-07 · AT-14). 빌드한 앱을 Chromium으로 엽니다(`pnpm e2e`).
+- AT-05 · AT-08 · AT-10 · AT-14는 Chromium에서 확인되는 부분만 E2E입니다(AT-10 · AT-14는 테스트 이름에 `(Chromium part)`). 기준 기기의 성능, 다른 뷰어, Firefox · Safari는 사람이 점검표로 봅니다(4장의 출시 전).
+
 ## 4. 도구와 CI
 
 도구는 [[0038-build-and-test-tools|ADR-0038]]에 있습니다. CI(GitHub Actions)는 이렇게 실행됩니다.
 
 | 언제 | 무엇을 | 걸리는 시간(목표) |
 | --- | --- | --- |
-| Pull Request와 `main`에 push할 때마다 | `pnpm check`(타입 검사 → ESLint → Prettier → 의존 방향 → 단위 · 속성 · 골든 · 계약 테스트) → 웹 빌드와 크기 예산(첫 내려받기 540 KB, [[06-web#5. 배포]]) → 웹 E2E(Chromium) | 10분 안 |
+| Pull Request와 `main`에 push할 때마다 | `pnpm check`(타입 검사 → ESLint → Prettier → 의존 방향 → 단위 · 속성 · 골든 · 계약 테스트) → 웹 빌드와 번들 사이즈 체크(bundle size budget, 첫 내려받기 540 KB, [[06-web#5. 배포]]) → 웹 E2E(Chromium) | 10분 안 |
 | 매일 밤 | 긴 퍼징, 벤치마크 기록(느려지면 알림) | — |
 | 출시 전 | 기준 기기에서 성능, 수동 점검표(AT-08 · AT-10) | — |
 

@@ -35,6 +35,13 @@ updated: 2026-11-01
 - 문서 레이어와 오버레이 레이어는 같은 좌표계(문서 좌표, px)를 씁니다. 오버레이 레이어는 문서 레이어 위에 같은 크기로 겹친 SVG이고, 저장할 때는 문서 레이어만 씁니다. 그래서 "편집 중에만 뜨는 표시는 저장되는 그림에 넣지 않는다"([[0018-save-as-shown|ADR-0018]])가 구조로 지켜집니다.
 - 화면 색(라이트 · 다크)은 오버레이 · 인라인 에디터 · 팝업 레이어에만 적용됩니다. 문서 레이어는 문서의 테마로 그립니다 → [[04-visual-design#2. 레이어와 출력]]
 - 오버레이 레이어의 색과 굵기는 시각 디자인의 편집 레이어 토큰(`edit.*`)을 씁니다 → [[04-visual-design#7.1 상태 표]]
+- 문서 레이어의 둘레에는 화면에서만 그림자를 두릅니다(모서리 반지름 4px, CSS `box-shadow`). 저장 파일에는 들어가지 않습니다 → [[04-visual-design#원칙 4. 문서는 종이다]]
+
+**컨텍스트 메뉴**(팝업 레이어)는 블록 위의 오른쪽 클릭, `Shift`+`F10`, 메뉴 키(`ContextMenu`)로 엽니다. 규칙 → [[02-interaction-rules#컨텍스트 메뉴]]
+
+- 항목은 명령 목록에서 `CommandSpec.context`에 지금 선택의 종류(`Selection.kind`)가 든 명령입니다(5장). 순서와 하위 메뉴(삽입 ▸ · 감싸기 ▸)는 메뉴 바(5.1)를 따르고, 메뉴마다 묶음 사이에 가로줄을 둡니다.
+- 다이어그램(React 밖)이 오른쪽 클릭 · 키를 받아 선택을 정한 뒤 `onContextMenu`로 열 자리(페이지 좌표)를 알리고, 주변 UI(React)가 메뉴를 그립니다(6장). `Shift`+`F10` · 메뉴 키의 자리는 선택한 것의 왼쪽 아래입니다.
+- 창 밖으로 나갈 자리면 왼쪽 · 위로 당겨 창 안에 둡니다. 닫으면 키보드 포커스가 다이어그램으로 돌아갑니다.
 
 ### 1.1 줌과 팬
 
@@ -190,6 +197,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 칸을 열고 닫을 때까지가 명령 하나입니다. 닫을 때 텍스트 편집 명령을 한 번 `run`합니다. 처음과 같으면 실행하지 않습니다 → [[01-model#4.4 텍스트 편집과 undo]]
 - 비울 수 없는 칸을 비우면 기본 텍스트로 되돌리고 닫습니다. 헤더의 이름이 겹칠 때만 칸을 다시 엽니다 → [[02-interaction-rules#텍스트 편집]]
 - 한글 입력(IME) 조합 중의 `Enter`(`isComposing`)는 받아들이기로 보지 않습니다.
+- 편집하는 중에도 듣는 키가 넷 있습니다: `Ctrl`+`S`(저장), `Ctrl`+`Shift`+`S`(다른 이름으로 저장), `Ctrl`+`Shift`+`P` · `F1`(커맨드 팔레트). 글자를 넣지 않는 키라서, 다른 곳을 클릭한 것처럼 텍스트를 먼저 받아들인 뒤 그 명령을 실행합니다. IME 조합 중에는 듣지 않습니다. 그 밖의 키는 인라인 에디터가 받습니다(4장) → [[03-keymap]]
 
 ## 4. 단축키
 
@@ -328,7 +336,11 @@ interface EditorHandle {
   documentSetting(id: string): unknown;          // 문서 설정(scope: 'document')의 지금 값
   setDocumentSetting(id: string, value: unknown): void;  // 문서 설정을 바꾼다. 내용에 드는 것이면 undo 대상 (W5)
   startBlockDrag(kind: ToolbarBlockKind, event: PointerEvent): void;  // 툴바의 블록 아이콘에서 드래그를 시작 (4px 넘게 움직인 뒤)
-  focus(): void;                                 // 키보드 포커스를 다이어그램에 (모달을 닫은 뒤)
+  focus(): void;                                 // 키보드 포커스를 다이어그램에, 편집 중이면 인라인 에디터에 (모달을 닫은 뒤)
+  notify(message: Message, level?: 'info' | 'warn'): void;  // 셸의 알림을 상태 표시줄에 (알림은 이곳 하나 → 06-web 7)
+  confirm(message: Message, buttons?: { confirm?: Message; cancel?: Message }): Promise<boolean>;  // 모달로 예/아니오를 묻는다. 확인 버튼이면 true
+  prompt(message: Message, value: string): Promise<string | null>;  // 모달로 글자를 묻는다 (value로 시작). 취소하면 null
+  onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;  // 다이어그램이 컨텍스트 메뉴를 청했다 (오른쪽 클릭, Shift+F10 → 1장)
   dispose(): void;
 }
 type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름
@@ -341,7 +353,17 @@ type ChromeState = {
   isKeyHintShown: boolean;                       // 첫 키 뒤 0.4초가 지났고 설정이 켜져 있다 (K1)
   keyHintTitle: Message | null;                  // 키 힌트의 제목 ("뒤에 삽입")
   zoom: number;
+  dialog: Dialog | null;                         // 셸이 청한 모달(confirm · prompt). 주변 UI가 모달로 보인다
 };
+type Dialog = {
+  id: number;
+  message: Message;
+  input: string | null;                          // null이면 예/아니오 물음, 아니면 이 값으로 시작하는 입력 칸
+  confirm: Message;                              // 확인 버튼의 이름 ("복원")
+  cancel: Message;                               // 취소 버튼의 이름 ("버리기")
+  answer(value: string | null): void;            // 사용자의 답: 입력한 글자(예/아니오면 ''), 취소면 null
+};
+type ContextMenuRequest = { x: number; y: number };  // 컨텍스트 메뉴를 열 자리 (페이지 좌표)
 type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 ```
 
@@ -352,6 +374,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - `Message`는 카탈로그의 키(와 값)이거나, 셸이 자기 카탈로그로 만든 문자열입니다 → [[07-coding-guide#8. 화면의 문자열]]
 - 처음 문서(`doc`)를 열 수 없으면 `editor`는 새 문서를 **읽기 전용**으로 보이고 이유를 상태 표시줄에 알립니다. 열 수 없는 파일 위에 편집한 내용을 쓰지 않게 하려는 것입니다.
 - 저장이 성공해도 알리지 않습니다(자동 저장이 자주 하므로). 실패(`denied` · `failed`)와 "다른 이름으로 저장"의 성공만 상태 표시줄에 알립니다.
+- 알림 · 확인 · 입력은 셸도 `editor`의 것을 씁니다. 셸은 자기 토스트나 브라우저의 `window.confirm` · `window.prompt`를 두지 않고 `notify` · `confirm` · `prompt`를 부릅니다. 그래서 알림은 상태 표시줄 한 곳에 모이고(`info`는 6초 뒤 사라지고 `warn`은 다음 알림이나 `✕`까지 남음 → [[06-web#7. 화면 배치]]), 물음은 다른 모달과 같은 모습입니다. 웹 셸을 만드는 옵션에도 알림판 · `confirm` · `prompt`가 없습니다. 웹의 예: "지난번 내용을 복원할까요?"(복원 / 버리기), 내려받을 파일 이름 → [[06-web#2. 로컬 백업과 자동 저장]]
 - 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 상황이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
 
 ### 6.1 새로 · 열기 · 최근 파일

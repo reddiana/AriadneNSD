@@ -1,7 +1,7 @@
 # 코드(src/)를 검사한다 → docs/04-design/07-testing.md 4장, docs/07-coding-guide 1장
 #
 # pnpm check: 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트(골든 파일 포함)
-# 그다음 웹 앱을 빌드해 첫 내려받기의 크기 예산을 보고(apps/web/scripts/check-size.mjs),
+# 그다음 웹 앱을 빌드해 첫 내려받기의 번들 사이즈 체크(bundle size budget)를 하고(apps/web/scripts/check-size.mjs),
 # Chromium으로 E2E를 실행한다(apps/web/e2e/).
 # 문서 사이트의 빌드(pages.yml)와는 따로 실행된다.
 
@@ -48,8 +48,8 @@ jobs:
       - name: 웹 앱 빌드
         run: pnpm --filter @ariadne-nsd/web build
 
-      # 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴, gzip)이 예산 안인가 (QA-09)
-      - name: 크기 예산
+      # 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴, gzip)이 한도 안인가 (QA-09)
+      - name: 번들 사이즈 체크
         run: node apps/web/scripts/check-size.mjs
 
       - name: Playwright 브라우저 받기
