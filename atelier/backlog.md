@@ -25,6 +25,10 @@ updated: 2026-10-25
 	- [ ] 컨트리뷰터를 위한 준비(메인테이너, inbox 2026-10-25): 코딩 스타일(ESLint + Prettier로 정함 → [[0038-build-and-test-tools|ADR-0038]]. `CONTRIBUTING.md`에 설정과 시험 돌리는 법을 더함), 이슈 · PR 템플릿, 행동 강령 `CODE_OF_CONDUCT.md`, 보안 문제를 알리는 곳 `SECURITY.md`, 기여물의 라이선스(Apache-2.0의 기본 규칙, DCO를 더할지), `good first issue` 라벨. `CONTRIBUTING.md`의 첫 판은 2026-10-25에 씀
 3. [x] ~~**MVP에 드는 조작 규칙의 미결정**~~ → 2026-11-01에 시안 M43으로 모두 정함([[ux-decisions#10. 2026-11-01의 결정]]). 프로토타입 65번째 판에 넣음. 접기 Q20과 If ↔ Case로 바꾸는 모양은 MVP 뒤
 
+4. [ ] **2026-11-01에 MVP에 더한 넷의 설계** → [[dr-0015-mvp-scope|DR-0015]]의 이후 변경
+	- [ ] 끌어 놓기의 규칙: 놓는 자리, 옆 제어 블록 안으로 놓기, 놓을 수 없는 곳 → [[02-interaction-rules#7. 끌어 놓기]]. 프로토타입에 넣어 써 보고 정함(모습은 이미 있음 → [[04-visual-design#7.1 상태 표]])
+	- [ ] 도움말 페이지의 자리와 내용, 임시 보관 · 자동 저장 · 최근 파일의 흐름: 웹 화면 설계(위 2)와 [[06-web]]에서 함께
+
 MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬 기능), 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]]), Google Drive, IDE 플러그인, AI 대화창, 광고, Event 블록, Obsidian에 wasm 싣기.
 
 ## 요구사항과 UX 설계

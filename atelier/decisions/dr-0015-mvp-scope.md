@@ -13,6 +13,7 @@ superseded-by:
 > [!NOTE] 이후 변경
 > - 2026-10-25: For 블록의 모양과 키를 정했다(While과 같은 모양에 머리의 글자로 가름, 넣는 키 `f`). 아래 "For 블록은 아직 조작과 모습의 규칙이 없다"는 풀렸다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
 > - 2026-10-25: 글자 폭 측정([[01-requirements#^r-lay|R-LAY-04]])을 `P1`에서 `P0`으로 올려 MVP에 들었다. MVP의 "같은 모델이면 같은 파일"([[01-requirements#^r-fmt|R-FMT-03]])이 번들 글꼴의 폭 표로 재는 것을 전제로 하기 때문이다 → [[2026-10-25-04-outbox-cleanup]]
+> - 2026-11-01: 끌어 놓기([[01-requirements#^r-edit|R-EDIT-09]]), 도움말([[01-requirements#^r-edit|R-EDIT-21]]), 작성 중인 내용의 임시 보관([[01-requirements#^r-web|R-WEB-03]]), 자동 저장 · 최근 파일([[01-requirements#^r-exp|R-EXP-04]])을 `P1`에서 `P0`으로 올려 MVP에 넣었다. 처음 써 보는 사람이 바로 아쉬워할 것(그린 것이 사라짐, 쓰는 법을 모름, 마우스로 옮길 수 없음)이라서다(메인테이너: "넷을 포함합시다") → [[2026-10-31-03-prototype-64]]
 
 ## 배경
 

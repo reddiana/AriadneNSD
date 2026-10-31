@@ -67,7 +67,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 | --- | --- | --- | --- | --- |
 | UC-01 | 새 다이어그램을 만든다 | 작성자 | 가볍게 | 됨 |
 | UC-02 | 다이어그램을 연다 | 작성자 | 자세히 | 됨(웹의 로컬 파일) |
-| UC-03 | 블록을 편집한다 | 작성자 | 가볍게 | 됨(블록 6종. 끌어 놓기는 아님) |
+| UC-03 | 블록을 편집한다 | 작성자 | 가볍게 | 됨(블록 6종, 끌어 놓기 포함) |
 | UC-04 | 구조를 나눈다 | 작성자 | 가볍게 | 아님(`P1`) |
 | UC-05 | 큰 다이어그램을 훑어본다 | 작성자 | 가볍게 | 확대 · 이동만 |
 | UC-06 | 저장한다 | 작성자 | 자세히 | 됨 |
@@ -242,7 +242,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 - 3'. 웹 · 데스크톱은 디스크, Obsidian은 볼트, Drive는 Drive의 원래 파일
 
-**빈도:** 편집하는 동안 자주. 자동 저장(`P1`)이 있으면 더 자주
+**빈도:** 편집하는 동안 자주. 자동 저장이 있어 더 자주
 
 **요구사항:** [[01-requirements#^r-fmt|R-FMT-01]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-03]], [[01-requirements#^r-fmt|R-FMT-04]], [[01-requirements#^r-fmt|R-FMT-07]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-gd|R-GD-03]], [[01-requirements#^r-web|R-WEB-03]], [[01-requirements#^r-exp|R-EXP-04]], [[01-requirements#^r-nfr|R-NFR-02]]
 
