@@ -1,4 +1,4 @@
-// Golden files (07-testing 2): one `.ns.svg` per case in packages/core/golden/, the input and the
+// Golden files (07-testing 3): one `.ns.svg` per case in packages/core/golden/, the input and the
 // expected output in one file, compared byte for byte (R-FMT-03, QA-03, QA-04). Each file is what
 // saving writes: the drawing from renderDoc, the model, and the block font subset.
 //

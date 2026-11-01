@@ -234,7 +234,7 @@ MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 - 스파이크는 이 문서의 두 단계(1.1)와 분기 폭 · 짧은 분기의 규칙을 그대로 실행했습니다. 접기 영역의 테두리, 펴 보기, 구문 강조, 클릭 영역은 넣지 않았습니다.
 - 기준 기기(4년 된 보급형 노트북)에서는 아직 측정하지 않았습니다. 그래도 500개에서 느린 5%가 목표의 3분의 1 아래라 여유가 있습니다.
 - 펴 보인 호출 블록 때문에 그려지는 블록이 2,000개가 되어도 중앙값은 50ms 아래였습니다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
-- 제품 코드의 벤치마크는 `src/packages/core/src/render/render.bench.ts`이고 `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 돌립니다 → [[07-testing#4. 도구와 CI]]
+- 제품 코드의 벤치마크는 `src/packages/core/src/render/render.bench.ts`이고 `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 돌립니다 → [[07-testing#5. 도구와 CI]]
 
 ## 미결정 사항
 

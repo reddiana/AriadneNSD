@@ -37,7 +37,7 @@ API 응답 시간을 볼 때와 같다. 평균은 몇 번의 느린 요청(GC, �
 
 - M39에서 블록 500개 문서를 다시 세고 그리는 데 중앙값 약 10ms, 느린 5%는 16 ~ 29ms였다. 목표(100ms)의 3분의 1 아래라, 바뀐 곳만 다시 세는 복잡한 방법(증분 레이아웃)은 하지 않기로 했다 → [[02-layout#4. 성능]]
 - 시간의 대부분은 계산이 아니라 만든 SVG를 화면(DOM)에 넣는 단계였다. 빨라져야 할 때 손볼 곳이 어디인지도 숫자가 알려 준다
-- MVP(2026-11-01)에서는 같은 재기를 자동 시험으로 돌린다. 레이아웃과 SVG 만들기는 Vitest 벤치마크(`src/packages/core/src/render/render.bench.ts`)가, 브라우저에서 키를 누르고 그려지기까지는 E2E 인수 테스트 AT-05(블록 500개, 100ms 안)가 잰다 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]], [[07-testing#3. MVP의 인수 테스트]]
+- MVP(2026-11-01)에서는 같은 재기를 자동 시험으로 돌린다. 레이아웃과 SVG 만들기는 Vitest 벤치마크(`src/packages/core/src/render/render.bench.ts`)가, 브라우저에서 키를 누르고 그려지기까지는 E2E 인수 테스트 AT-05(블록 500개, 100ms 안)가 잰다 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]], [[07-testing#4. MVP의 인수 테스트]]
 
 ## 더 읽을거리
 

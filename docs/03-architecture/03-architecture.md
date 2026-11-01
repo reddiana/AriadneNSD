@@ -455,7 +455,7 @@ sequenceDiagram
 | 단위 테스트 · 벤치마크 | Vitest 5 | 소스 옆 `*.test.ts`, `*.bench.ts` | 〃 |
 | 속성 기반 테스트 · 퍼징 | fast-check 4 (Vitest 안에서) | 소스 옆 | 〃 |
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
-| `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#1. 계층마다 무엇을 테스트하나]] |
+| `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#2. 계층마다 무엇을 테스트하나]] |
 | 브라우저 E2E · 시각 회귀 | Playwright 1.64 | `src/apps/web/e2e/` | 〃 |
 | 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | 〃 |
 | 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |

@@ -1,4 +1,4 @@
-// The size budget of the web build (QA-09, 07-testing 4): what a first visit downloads, gzipped.
+// The size budget of the web build (QA-09, 07-testing 5): what a first visit downloads, gzipped.
 // Run after `pnpm --filter @ariadne-nsd/web build`:  node apps/web/scripts/check-size.mjs
 //
 // A first visit downloads index.html, the files it links (the entry script and the stylesheet),

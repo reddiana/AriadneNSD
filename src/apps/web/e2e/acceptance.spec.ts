@@ -1,4 +1,4 @@
-// The MVP acceptance tests AT-01 ~ AT-17 (07-testing 3) in the browser, against the production
+// The MVP acceptance tests AT-01 ~ AT-17 (07-testing 4) in the browser, against the production
 // build. Each test name starts with its AT id. AT-05, AT-08 and AT-10 also have a part for people
 // (the reference device, other viewers, Firefox and Safari); the browser part is checked here.
 import { readFile } from 'node:fs/promises';

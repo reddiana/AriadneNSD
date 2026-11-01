@@ -1,4 +1,4 @@
-// Property-based tests (07-testing 1, QA-01): any sequence of commands keeps the invariants,
+// Property-based tests (07-testing 2, QA-01): any sequence of commands keeps the invariants,
 // never changes its input, and undo (going back to a kept snapshot) gives the same document.
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';

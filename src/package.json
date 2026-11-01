@@ -7,7 +7,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm test",
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm test && pnpm test-list:check",
+    "test-list": "node scripts/test-list.mjs",
+    "test-list:check": "node scripts/test-list.mjs --check",
     "typecheck": "pnpm -r --parallel typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",

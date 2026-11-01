@@ -66,7 +66,7 @@ test('UX EX3: the toolbar\'s "Examples" opens the examples modal', async ({ page
   expect(await command(page, 'file.new').count()).toBeGreaterThan(0);
 });
 
-test("05-screen-layout: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
+test("BUG-02: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
   page,
 }) => {
   await openApp(page);
@@ -82,9 +82,7 @@ test("05-screen-layout: the toolbar's dropdown opens over the canvas, not inside
   expect(isOnTop).toBe(true);
 });
 
-test('05-screen-layout: a diagram larger than the window scrolls in the canvas', async ({
-  page,
-}) => {
+test('BUG-01: a diagram larger than the window scrolls in the canvas', async ({ page }) => {
   await page.setViewportSize({ width: 1000, height: 600 });
   await openApp(page);
   await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();

@@ -20,7 +20,7 @@ import {
 const en = { locale: 'en' } as const;
 const ko = { locale: 'ko' } as const;
 
-/** A standalone SVG for the golden files, so GitHub shows them as pictures (07-testing 2). */
+/** A standalone SVG for the golden files, so GitHub shows them as pictures (07-testing 3). */
 function standalone(svg: RenderedSvg): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="${String(svg.width)}" height="${String(svg.height)}" viewBox="${svg.viewBox}">`,
@@ -190,7 +190,7 @@ describe('render: headers (visual design principle 2)', () => {
   });
 });
 
-describe('render: golden files (07-testing 2)', () => {
+describe('render: golden files (07-testing 3)', () => {
   const cases: ReadonlyArray<readonly [string, Doc]> = [
     [
       'process',
