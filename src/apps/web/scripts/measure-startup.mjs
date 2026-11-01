@@ -8,6 +8,7 @@
 //   modal    the welcome modal's cards are on the screen (first visit)
 //   thumbs   all ten thumbnails are drawn (first visit)
 //   font     the block font is loaded (html[data-ready])
+/* global document, window, MutationObserver -- these run in the page */
 import { chromium } from '@playwright/test';
 
 const url = process.argv[2] ?? 'http://localhost:4173/';

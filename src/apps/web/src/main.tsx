@@ -39,6 +39,12 @@ function describe(value: unknown): string {
   }
 }
 
+/** Where the start has got to, for the boot screen in index.html (it shows it on a failure). */
+function bootStep(step: string): void {
+  document.documentElement.dataset.bootStep = step;
+}
+
+bootStep('settings');
 const root = document.getElementById('root');
 if (root === null) {
   throw new Error('Missing #root element in index.html');
@@ -47,7 +53,9 @@ if (root === null) {
 const settings = createSettingsStore(browserLocalStorage(), log, window);
 let locale = screenLocale(settings.get(localeSettingKey), navigator.language);
 document.documentElement.lang = locale;
+bootStep('database');
 const db = await openBrowserDb(log);
+bootStep('editor');
 
 const shell = createWebShell({
   db,
@@ -109,6 +117,7 @@ const examplesHost: ExamplesHost = {
   },
 };
 
+bootStep('render');
 const reactRoot = createRoot(root);
 function render(): void {
   reactRoot.render(
@@ -139,6 +148,7 @@ settings.onChange((key) => {
   render();
 });
 
+bootStep('start');
 await shell.start(editor);
 // The keys go to the diagram from the start, so a keyboard-only user can begin (R-NFR-05).
 // On the first visit the examples modal has them instead, so Esc closes it (UX EX2).
@@ -147,7 +157,9 @@ if (!examplesHost.isFirstVisit) {
 }
 watchFileDrops(shell, dragging.emit);
 watchPageExit(shell);
+bootStep('font');
 await blockFontLoading;
+bootStep('ready');
 document.documentElement.dataset.ready = 'true';
 let isPreloading = false;
 editor.onStatus((status) => {

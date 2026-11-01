@@ -4,9 +4,70 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AriadneNSD</title>
+    <style>
+      .ans-boot {
+        font:
+          15px/1.6 system-ui,
+          sans-serif;
+        color: #444;
+        padding: 24px 16px;
+        max-width: 40em;
+      }
+      .ans-boot pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 13px;
+        color: #a40000;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="ans-boot" id="ans-boot">
+        <p id="ans-boot-text">AriadneNSD 불러오는 중… · Loading…</p>
+      </div>
+    </div>
+    <script>
+      // Before the app draws itself (it replaces #root), say what is happening. If something
+      // fails or hangs at start, the screen shows it instead of staying empty (inbox 2026-11-01:
+      // the MVP did not appear on an Android phone). main.tsx sets data-boot-step as it goes.
+      (function () {
+        var errors = [];
+        function show(extra) {
+          var box = document.getElementById('ans-boot');
+          if (box === null) return;
+          var step = document.documentElement.getAttribute('data-boot-step') || 'script';
+          box.innerHTML =
+            '<p>AriadneNSD를 시작하지 못했습니다. 이 화면을 찍어 알려 주세요.<br>' +
+            'AriadneNSD could not start. Please send a screenshot of this page.</p><pre></pre>';
+          box.querySelector('pre').textContent =
+            'step: ' +
+            step +
+            '\n' +
+            extra +
+            '\n' +
+            errors.join('\n') +
+            '\n\n' +
+            navigator.userAgent;
+        }
+        window.addEventListener(
+          'error',
+          function (event) {
+            errors.push('error: ' + (event.message || (event.target && event.target.src) || event));
+            show('');
+          },
+          true,
+        );
+        window.addEventListener('unhandledrejection', function (event) {
+          var reason = event.reason;
+          errors.push('rejection: ' + ((reason && (reason.stack || reason.message)) || reason));
+          show('');
+        });
+        setTimeout(function () {
+          show('still loading after 15 s');
+        }, 15000);
+      })();
+    </script>
     <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>

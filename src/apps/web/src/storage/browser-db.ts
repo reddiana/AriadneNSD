@@ -120,9 +120,23 @@ export function memoryDb(): BrowserDb {
   };
 }
 
+/**
+ * How long opening may take before the page goes on with memory. The page is drawn only after the
+ * database opens, so an open that never answers (blocked by another tab, or a browser that hangs)
+ * must not keep the screen empty (inbox 2026-11-01: the MVP did not appear on an Android phone).
+ */
+const openTimeoutMs = 3000;
+
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`indexedDB.open did not answer in ${String(openTimeoutMs)} ms`));
+    }, openTimeoutMs);
     const opening = indexedDB.open(databaseName, databaseVersion);
+    opening.onblocked = () => {
+      clearTimeout(timer);
+      reject(new Error('indexedDB.open is blocked by another tab'));
+    };
     opening.onupgradeneeded = () => {
       const database = opening.result;
       for (const store of [recentStore, backupStore]) {
@@ -132,9 +146,11 @@ function openDatabase(): Promise<IDBDatabase> {
       }
     };
     opening.onsuccess = () => {
+      clearTimeout(timer);
       resolve(opening.result);
     };
     opening.onerror = () => {
+      clearTimeout(timer);
       reject(opening.error ?? new Error('indexedDB.open failed'));
     };
   });
