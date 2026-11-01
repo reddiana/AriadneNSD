@@ -42,6 +42,14 @@ export type Reason = {
  * - `askConvertIfToCase`: a branch was inserted on an If. The editor asks whether to convert
  *   the If to a Case and, if so, runs `convertIfToCase` (UX MD3).
  * - `intoItself`: blocks were dropped inside one of themselves (`moveTo`).
+ * - `noHead`: the diagram has no header, so it has no name to edit (`editHead`).
+ * - `emptyHeadName`: a header name would be empty (interaction rules "Event 헤더").
+ * - `duplicateHeadName`: a header name would equal another header's name, Events and Methods
+ *   together, case sensitive, ignoring surrounding spaces (R-BLK-11).
+ * - `methodHasCallers`: a Method that call blocks call cannot become an Event (R-BLK-11).
+ * - `lastDiagram`: the only diagram of the document cannot be deleted (invariant 1).
+ * - `lostTarget`: a call block that lost its target cannot be edited (interaction rules
+ *   "호출 블록"); choose a new target first.
  */
 export type ReasonCode =
   | 'notFound'
@@ -64,7 +72,13 @@ export type ReasonCode =
   | 'defaultLabelFixed'
   | 'notConvertible'
   | 'emptyClip'
-  | 'intoItself';
+  | 'intoItself'
+  | 'noHead'
+  | 'emptyHeadName'
+  | 'duplicateHeadName'
+  | 'methodHasCallers'
+  | 'lastDiagram'
+  | 'lostTarget';
 
 /**
  * A note returned with a successful command.
@@ -95,7 +109,7 @@ export type Target =
 /** Where to insert relative to the target. */
 export type Side = 'after' | 'before';
 
-/** The block kinds the MVP commands can make. Call blocks come later. */
+/** The block kinds `insertBlock` can make. Call blocks are inserted with `insertCall`. */
 export type NewBlockKind = 'process' | 'if' | 'case' | 'while' | 'doWhile' | 'for';
 
 /** The control block kinds a selection can be wrapped in (R-EDIT-06). */

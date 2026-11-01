@@ -159,7 +159,11 @@ describe('render: headers (visual design principle 2)', () => {
     content: {
       settings: { textKind: 'plain', theme: 'default', headStyle },
       diagrams: [
-        { id: 'd1', head: { kind, text: 'tick' }, body: { blocks: [process('b1', 'x')], folds: [] } },
+        {
+          id: 'd1',
+          head: { kind, text: 'tick' },
+          body: { blocks: [process('b1', 'x')], folds: [] },
+        },
       ],
     },
   });

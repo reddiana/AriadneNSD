@@ -2,7 +2,21 @@
 import { expect } from 'vitest';
 
 import { checkInvariants } from '../model/invariants';
-import type { Arm, Block, Branch, Case, Content, FoldMark, Id, If, Seq } from '../model/types';
+import type {
+  Arm,
+  Block,
+  Branch,
+  Call,
+  CallTarget,
+  Case,
+  Content,
+  Diagram,
+  FoldMark,
+  Head,
+  Id,
+  If,
+  Seq,
+} from '../model/types';
 import { indexContent } from './tree';
 import type { OkResult, Result } from './types';
 
@@ -51,6 +65,48 @@ export const contentOf = (body: Seq | ReadonlyArray<Block>): Content => ({
   settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
   diagrams: [{ id: 'd1', head: null, body: 'blocks' in body ? body : seq(body) }],
 });
+
+/** An Event header. */
+export const event = (text: string): Head => ({ kind: 'event', text });
+
+/** A Method header. */
+export const method = (text: string): Head => ({ kind: 'method', text });
+
+/** A diagram. */
+export const diagram = (id: Id, head: Head | null, body: Seq | ReadonlyArray<Block>): Diagram => ({
+  id,
+  head,
+  body: 'blocks' in body ? body : seq(body),
+});
+
+/** A content with these diagrams and the settings of `contentOf`. */
+export const contentWith = (...diagrams: ReadonlyArray<Diagram>): Content => ({
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+  diagrams,
+});
+
+/** A call block. A string target is a Method of the same document. */
+export const call = (id: Id, target: Id | CallTarget, args = '', result = ''): Call => ({
+  id,
+  kind: 'call',
+  target: typeof target === 'string' ? { kind: 'local', diagram: target } : target,
+  args,
+  result,
+  siteFolds: [],
+});
+
+/** The diagram ids of a content, in order. */
+export const diagramIds = (content: Content): ReadonlyArray<Id> =>
+  content.diagrams.map((d) => d.id);
+
+/** The diagram with this id. */
+export function diagramOf(content: Content, id: Id): Diagram {
+  const found = content.diagrams.find((d) => d.id === id);
+  if (found === undefined) {
+    throw new Error(`no diagram ${id}`);
+  }
+  return found;
+}
 
 /** The block ids of the sequence owned by `owner`. */
 export function idsIn(content: Content, owner: Id): ReadonlyArray<Id> {

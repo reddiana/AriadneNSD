@@ -210,25 +210,24 @@ function arrange(measures: ReadonlyArray<DiagramMeasure>): Stacked {
   const lowest = Math.max(geometry['size.column-min'], tallest);
   const highest = Math.max(lowest, oneColumn(left), oneColumn(right));
 
-  let best: { score: number; a: Stacked; b: Stacked; width: number; height: number } | null = null;
-  for (let limit = lowest; ; limit += 4) {
+  const tryLimit = (limit: number) => {
     const a = stack(left, limit, heightOf);
     const b = stack(right, limit, heightOf);
     const gap = a.width > 0 && b.width > 0 ? geometry['space.kind-gap'] : 0;
     const width = a.width + gap + b.width;
     const height = Math.max(a.height, b.height);
     const score = height === 0 ? 0 : Math.abs(width / height - 1.6);
-    if (best === null || score < best.score - 1e-9) {
-      best = { score, a, b, width, height };
-    }
-    if (limit >= highest) {
-      break;
+    return { score, a, b, width, height };
+  };
+  let best = tryLimit(lowest);
+  for (let limit = lowest + 4; limit <= highest + 3; limit += 4) {
+    const candidate = tryLimit(limit);
+    if (candidate.score < best.score - 1e-9) {
+      best = candidate;
     }
   }
-  if (best === null) {
-    return { width: 0, height: 0, placed: [] };
-  }
-  const shift = best.a.width + (best.a.width > 0 && best.b.width > 0 ? geometry['space.kind-gap'] : 0);
+  const shift =
+    best.a.width + (best.a.width > 0 && best.b.width > 0 ? geometry['space.kind-gap'] : 0);
   return {
     width: best.width,
     height: best.height,

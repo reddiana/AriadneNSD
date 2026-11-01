@@ -1,7 +1,7 @@
 // Finding and replacing nodes in the immutable content tree.
 // Every sequence has exactly one owner with an id: a diagram (its body), a loop block (its body)
 // or a branch (its body). So a sequence is named by its owner's id alone.
-import type { Arm, Block, Branch, Case, Content, Diagram, Id, If, Seq } from '../model/types';
+import type { Arm, Block, Branch, Call, Case, Content, Diagram, Id, If, Seq } from '../model/types';
 
 /** Where a block sits. */
 export type BlockEntry = {
@@ -211,4 +211,51 @@ export function isEmptySeq(seq: Seq): boolean {
 /** Whether a block holds other blocks. */
 export function isControlBlock(block: Block): boolean {
   return block.kind !== 'process' && block.kind !== 'call';
+}
+
+/**
+ * Returns a content in which every call block is replaced by `update(call)`, in every diagram.
+ * Unchanged subtrees are shared with the old content (ADR-0029).
+ */
+export function mapCalls(content: Content, update: (call: Call) => Call): Content {
+  const inCalls = (seq: Seq): Seq => {
+    const blocks = seq.blocks.map(callsInBlock);
+    return sameItems(blocks, seq.blocks) ? seq : { ...seq, blocks };
+  };
+  const callsInBlock = (block: Block): Block => {
+    if (block.kind === 'call') {
+      return update(block);
+    }
+    const branch = <B extends Branch | Arm>(b: B): B => {
+      const body = inCalls(b.body);
+      return body === b.body ? b : { ...b, body };
+    };
+    switch (block.kind) {
+      case 'process':
+        return block;
+      case 'if': {
+        const yes = branch(block.yes);
+        const no = branch(block.no);
+        return yes === block.yes && no === block.no ? block : { ...block, yes, no };
+      }
+      case 'case': {
+        const arms = block.arms.map(branch);
+        const otherwise = block.otherwise === null ? null : branch(block.otherwise);
+        return sameItems(arms, block.arms) && otherwise === block.otherwise
+          ? block
+          : { ...block, arms, otherwise };
+      }
+      case 'while':
+      case 'doWhile':
+      case 'for': {
+        const body = inCalls(block.body);
+        return body === block.body ? block : { ...block, body };
+      }
+    }
+  };
+  const diagrams = content.diagrams.map((diagram) => {
+    const body = inCalls(diagram.body);
+    return body === diagram.body ? diagram : { ...diagram, body };
+  });
+  return sameItems(diagrams, content.diagrams) ? content : { ...content, diagrams };
 }

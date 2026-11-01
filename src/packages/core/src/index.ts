@@ -29,6 +29,7 @@ export type {
 } from './model/types';
 export type { IdGenerator, IdKind } from './model/id';
 export { contentIds, createIdGenerator, parseId } from './model/id';
+export { headName, headParams } from './model/head';
 
 // Text, layout and rendering (02-layout).
 export type { DrawingMessageKey, Locale } from './i18n/messages';
@@ -37,7 +38,7 @@ export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
 export { geometry } from './layout/geometry';
 export type { LayoutOptions } from './layout/layout';
-export { layout } from './layout/layout';
+export { headLabel, layout } from './layout/layout';
 export type {
   Box,
   BranchLabel,
@@ -48,7 +49,7 @@ export type {
   LayoutResult,
   PlacedText,
 } from './layout/types';
-export type { Point, Scene, SceneElement, TextRun } from './render/scene';
+export type { PathSegment, Point, Scene, SceneElement, TextRun } from './render/scene';
 export { buildScene, drawingFontFamily } from './render/build-scene';
 export type { ColorToken, Theme } from './render/theme';
 export { defaultTheme, themeFor } from './render/theme';
@@ -103,6 +104,31 @@ export {
   deleteBranch,
   insertBranch,
 } from './commands/branch';
+export type {
+  DeleteDiagramArgs,
+  EditHeadArgs,
+  HeadKind,
+  MoveDiagramArgs,
+  NewDiagramArgs,
+  SetHeadArgs,
+  SetSettingsArgs,
+} from './commands/diagram';
+export {
+  defaultHeadName,
+  deleteDiagram,
+  editHead,
+  moveDiagram,
+  newDiagram,
+  setHead,
+  setSettings,
+} from './commands/diagram';
+export type {
+  EditCallArgs,
+  InsertCallArgs,
+  NewMethodAndCallArgs,
+  SetCallTargetArgs,
+} from './commands/call';
+export { editCall, insertCall, newMethodAndCall, setCallTarget } from './commands/call';
 export { createContent, createDoc, defaultSettings } from './commands/new-document';
 
 // File format (docs/05-spec/01-file-format.md).

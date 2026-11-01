@@ -405,7 +405,10 @@ describe('layout: several diagrams (02-layout 1.7)', () => {
   it('wraps a long group into columns so the picture is closest to 16 : 10', () => {
     const doc = diagramsDoc(
       'title',
-      Array.from({ length: 12 }, (_, index) => [`d${String(index + 1)}`, event(`e${String(index)}`), 'x'] as const),
+      Array.from(
+        { length: 12 },
+        (_, index) => [`d${String(index + 1)}`, event(`e${String(index)}`), 'x'] as const,
+      ),
     );
     const result = layout(doc, en);
     const xs = new Set(result.diagrams.map((diagram) => diagram.box.x));
