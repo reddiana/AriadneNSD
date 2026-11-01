@@ -200,11 +200,11 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-BLK-04 | 후위 판정 반복(Do-While / Repeat-Until) 블록: 본문을 먼저 실행하고 조건을 검사 | P0  |
 | R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 분기 여러 개와 default 분기 → [[02-interaction-rules#Case 블록\|상세]] | P0  |
 | R-BLK-06 | 횟수 반복(For) 블록: While의 변형 | P0  |
-| R-BLK-07 | 호출 블록: 같은 문서의 Method를 호출한다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
+| R-BLK-07 | 호출 블록: 같은 문서의 Method를 호출한다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]] | P0  |
 | R-BLK-08 | 이름을 적는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
 | R-BLK-09 | 다른 문서의 Method 호출: 다른 `.ns.svg` 파일의 Method를 그 파일과 함께 가리켜 둔다. 따라가면 그 파일을 열고, 그 파일을 읽을 수 있는 곳에서는 펴 본다 → [[02-interaction-rules#호출 블록\|상세]] | P2  |
-| R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P1  |
-| R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]] | P1  |
+| R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P0  |
+| R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]] | P0  |
 | R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | P2  |
 | R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기 | P2  |
 | R-BLK-14 | 주석 블록 | P2  |
@@ -234,13 +234,14 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-EDIT-15 | 호출 블록 펴 보기: 호출 블록을 펴면 호출하는 Method의 블록들이 그 자리에 보인다. 보기만 바뀌고 다이어그램의 내용은 바뀌지 않는다 → [[02-interaction-rules#호출 블록 펴 보기\|상세]]                                        | P1   |
 | R-EDIT-16 | 펴 보인 곳의 접기 영역: 펴 보인 호출 블록 안에서 접기 영역을 만든다. 그 호출 블록 자리에만 있고 Method의 원본은 바뀌지 않는다 → [[02-interaction-rules#펴 보인 곳의 접기 영역\|상세]]                                    | P1   |
 | R-EDIT-17 | 모두 접기 / 모두 펼치기 / 깊이 n까지 펼치기                                                                                                                                   | P2   |
-| R-EDIT-18 | 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치\|상세]]                                                      | P1   |
+| R-EDIT-18 | 한 문서에 여러 다이어그램: Event(이벤트 처리기)와 Method 여러 개를 한 화면에 나란히 둔다 → [[02-interaction-rules#5. 여러 다이어그램의 배치\|상세]]                                                      | P0  |
 | R-EDIT-19 | 선택한 블록들을 새 Method로 빼기: 선택한 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 호출하는 호출 블록([[#^r-blk\|R-BLK-07]])이 남는다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램\|상세]] | P1   |
 | R-EDIT-20 | 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 드래그해 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼)                                                                                               | P2   |
 | R-EDIT-21 | 도움말: 사용법을 한 페이지로 안내하고, 단축키 목록을 볼 수 있게 한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상) → [[05-screen-layout\|상세]] | P0   |
 | R-EDIT-22 | 여러 블록 선택은 언제나 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다 → [[0008-contiguous-selection\|ADR-0008]] → [[02-interaction-rules#여러 블록 선택\|상세]] | P0   |
 | R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]]                                                                                                        | P1   |
 | R-EDIT-24 | 커맨드 팔레트: 명령 이름의 일부를 쳐서 명령을 찾아 실행한다(VS Code의 Command Palette, IntelliJ의 Find Action). 찾은 명령마다 같은 일을 하는 키를 함께 보인다 → 상세 [[02-interaction-rules#커맨드 팔레트\|커맨드 팔레트]] | P0  |
+| R-EDIT-25 | 예제: 만들어 둔 예제 다이어그램을 골라 연다. 처음 온 사람에게는 예제를 볼지 묻는다 → [[05-screen-layout\|상세]] | P0  |
 
 ^r-edit
 
@@ -257,7 +258,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-LAY-07 | 블록 텍스트의 구문 강조 (키워드, 주석을 다른 색으로). 선택한 언어([[#^r-lay\|R-LAY-06]])의 문법을 따르고, 일반 텍스트면 강조하지 않는다 | P1  |
 | R-LAY-08 | 테마: 그림의 색 묶음을 문서마다 선택한다(파일에 저장). 테마에는 밝은 테마와 어두운 테마가 있고, 처음에는 종류마다 기본 테마 하나씩 둔다. 편집 화면의 색은 테마가 아니다. 흑백 인쇄 모드를 포함한다. 테마를 바꿔도 레이아웃은 그대로다(그래서 글꼴과 선 굵기는 테마가 아니다) → 상세 [[04-visual-design#8. 테마]] | P1  |
 | R-LAY-09 | If · Case의 빈 분기는 비어 있음을 기호로 보인다 → 상세 [[04-visual-design#원칙 2. 뜻은 모양이 나르고, 색은 거들기만 한다\|모양 표]] | P0  |
-| R-LAY-10 | Event · Method 헤더의 모양을 문서마다 선택한다: 헤더 블록의 모양 그대로, 또는 모양 없이 다이어그램의 제목처럼 → 상세 [[04-visual-design#원칙 2. 뜻은 모양이 나르고, 색은 거들기만 한다\|모양 표]] | P1  |
+| R-LAY-10 | Event · Method 헤더의 모양을 문서마다 선택한다: 헤더 블록의 모양 그대로, 또는 모양 없이 다이어그램의 제목처럼 → 상세 [[04-visual-design#원칙 2. 뜻은 모양이 나르고, 색은 거들기만 한다\|모양 표]] | P0  |
 | R-LAY-11 | 블록별 배경색 지정 | P2  |
 
 ^r-lay
@@ -359,11 +360,13 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 - 작성 중인 내용의 로컬 백업, 자동 저장 · 최근 파일 ([[#^r-web|R-WEB-03]], [[#^r-exp|R-EXP-04]])
 - PNG 내보내기 ([[#^r-exp|R-EXP-01]])
 - 도움말 ([[#^r-edit|R-EDIT-21]])
+- 예제 ([[#^r-edit|R-EDIT-25]])
+- Event · Method 헤더와 그 모양 고르기, 같은 문서의 Method를 부르는 호출 블록, 한 문서에 여러 다이어그램 ([[#^r-blk|R-BLK-10]], [[#^r-blk|R-BLK-11]], [[#^r-lay|R-LAY-10]], [[#^r-blk|R-BLK-07]], [[#^r-edit|R-EDIT-18]]). 예제가 쓰기 때문이다
 - 커맨드 팔레트 ([[#^r-edit|R-EDIT-24]])
 - 비기능 요구사항 가운데 `P0`인 것 ([[#^r-nfr|R-NFR-01]] ~ [[#^r-nfr|R-NFR-06]]. 다국어는 영어와 한국어, 접근성은 키보드 전용 조작)
 - 배포 대상: 웹 ([[#^r-tgt|R-TGT-01]], [[dr-0002-development-order|DR-0002]]에서 정한 첫 번째 대상)
 
-MVP 다음 버전들로 미룬 것: Event · Method 헤더, 호출 블록, 한 문서에 여러 다이어그램, Method로 빼기, 접기, 블록 텍스트의 언어와 구문 강조, 테마 선택.
+MVP 다음 버전들로 미룬 것: 이름을 적는 호출 블록과 다른 문서의 Method 호출, 호출 블록 펴 보기 · 풀기, Method로 빼기, 접기, 블록 텍스트의 언어와 구문 강조, 테마 선택.
 
 ## 6. 미결정 사항
 
