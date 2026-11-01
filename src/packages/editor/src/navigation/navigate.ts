@@ -1,6 +1,6 @@
 // Keyboard navigation (03-editor 2.2, interaction rules "키보드로 이동하고 삽입하기").
 // The rules are functions over the drawn order of one diagram. They use the document only, not
-// the DOM, so they are tested in Node. The MVP draws everything unfolded and has no headers.
+// the DOM, so they are tested in Node. The MVP draws everything unfolded.
 import type { Block, Id } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
@@ -27,7 +27,7 @@ export type Navigation =
   | { readonly kind: 'branch'; readonly direction: 'left' | 'right' }
   /** `[[` `]]`, Ctrl+Shift+Left / Right: the previous or next diagram. */
   | { readonly kind: 'diagram'; readonly direction: 'previous' | 'next' }
-  /** `gg` `G`: the first or last block of this diagram. */
+  /** `gg` `G`: the header (or first block) or the last block of this diagram. */
   | { readonly kind: 'edge'; readonly end: 'first' | 'last' };
 
 /** Why the selection did not move, when the user should be told. */
@@ -42,7 +42,8 @@ const stay: NavigationResult = { kind: 'stay' };
 
 /**
  * Where a navigation key goes from the selection. With nothing selected, any navigation key
- * selects the last selected block again, or the first block (interaction rules 2).
+ * selects the last selected block (or header) again, or the top of the first diagram drawn: its
+ * header, or its first block when it has none (interaction rules 2).
  */
 export function navigate(
   index: DocIndex,
@@ -51,9 +52,16 @@ export function navigate(
   navigation: Navigation,
 ): NavigationResult {
   if (selection === null) {
-    const start = lastSelected !== null && index.blocks.has(lastSelected) ? lastSelected : null;
-    const first = start ?? firstBlockOf(index, index.content.diagrams[0]?.id ?? null);
-    return first === null ? stay : select(index, first);
+    if (lastSelected !== null && index.blocks.has(lastSelected)) {
+      return select(index, lastSelected);
+    }
+    if (lastSelected !== null && hasHead(index, lastSelected)) {
+      return selectHead(lastSelected);
+    }
+    return topOf(index, drawnDiagrams(index)[0] ?? null);
+  }
+  if (selection.kind === 'head') {
+    return fromHead(index, selection.diagram, navigation);
   }
   switch (navigation.kind) {
     case 'step':
@@ -67,14 +75,84 @@ export function navigate(
       return block === null ? stay : sideBranch(index, block, navigation.direction);
     }
     case 'diagram':
-      return neighbourDiagram(index, selection, navigation.direction);
+      return neighbourDiagram(index, diagramOf(index, selection), navigation.direction);
     case 'edge': {
       const diagram = diagramOf(index, selection);
-      const order = diagram === null ? [] : visibleOrder(index, diagram);
-      const id = navigation.end === 'first' ? order[0] : order.at(-1);
-      return id === undefined ? stay : select(index, id);
+      if (navigation.end === 'first') {
+        return topOf(index, diagram);
+      }
+      const last = diagram === null ? undefined : visibleOrder(index, diagram).at(-1);
+      return last === undefined ? stay : select(index, last);
     }
   }
+}
+
+/**
+ * A navigation key on a diagram's header (interaction rules 2): Down goes to the first block,
+ * Left and Right to the side diagram's header (or first block). Up stays: the arrow keys leave
+ * a diagram only sideways from its header.
+ */
+function fromHead(index: DocIndex, diagram: Id, navigation: Navigation): NavigationResult {
+  switch (navigation.kind) {
+    case 'step':
+      switch (navigation.direction) {
+        case 'up':
+          return stay;
+        case 'down':
+          return firstOf(index, diagram);
+        case 'left':
+          return neighbourDiagram(index, diagram, 'previous');
+        case 'right':
+          return neighbourDiagram(index, diagram, 'next');
+      }
+      return stay;
+    case 'unit':
+      return navigation.direction === 'down' ? firstOf(index, diagram) : stay;
+    case 'branch':
+      return stay;
+    case 'diagram':
+      return neighbourDiagram(index, diagram, navigation.direction);
+    case 'edge': {
+      if (navigation.end === 'first') {
+        return selectHead(diagram);
+      }
+      const last = visibleOrder(index, diagram).at(-1);
+      return last === undefined ? stay : select(index, last);
+    }
+  }
+}
+
+/** Whether a diagram exists and has a header. */
+function hasHead(index: DocIndex, diagram: Id): boolean {
+  return (index.diagrams.get(diagram)?.head ?? null) !== null;
+}
+
+function selectHead(diagram: Id): NavigationResult {
+  return { kind: 'select', selection: { kind: 'head', diagram } };
+}
+
+/** The top of a diagram: its header, or its first block when it has none. */
+function topOf(index: DocIndex, diagram: Id | null): NavigationResult {
+  if (diagram === null) {
+    return stay;
+  }
+  return hasHead(index, diagram) ? selectHead(diagram) : firstOf(index, diagram);
+}
+
+function firstOf(index: DocIndex, diagram: Id): NavigationResult {
+  const first = firstBlockOf(index, diagram);
+  return first === null ? stay : select(index, first);
+}
+
+/**
+ * The diagrams in the order they are drawn (02-layout 1.7): Events and diagrams without a
+ * header, then Methods, each group in document order. "The side diagram" follows this order.
+ */
+export function drawnDiagrams(index: DocIndex): ReadonlyArray<Id> {
+  const diagrams = index.content.diagrams;
+  const methods = diagrams.filter((d) => d.head?.kind === 'method');
+  const others = diagrams.filter((d) => d.head?.kind !== 'method');
+  return [...others, ...methods].map((d) => d.id);
 }
 
 function select(index: DocIndex, id: Id): NavigationResult {
@@ -137,10 +215,12 @@ function stepUp(index: DocIndex, current: Id): NavigationResult {
   if (seq.branch !== null && seq.seq.blocks[0]?.id === current) {
     return selectLabel(seq.branch);
   }
-  const order = visibleOrder(index, placeOf(index, current).diagram);
+  const diagram = placeOf(index, current).diagram;
+  const order = visibleOrder(index, diagram);
   const previous = order[order.indexOf(current) - 1];
   if (previous === undefined) {
-    return stay;
+    // From the first block, Up selects the diagram's header (interaction rules 2).
+    return hasHead(index, diagram) ? selectHead(diagram) : stay;
   }
   // Coming up into an If or Case from below lands in its leftmost branch's bottom block.
   const mine = ancestorsOf(index, current);
@@ -307,16 +387,16 @@ function sideBranch(index: DocIndex, current: Id, direction: 'left' | 'right'): 
   return direction === 'right' ? stepDown(index, current) : stepUp(index, current);
 }
 
+/** The side diagram's header, or its first block when it has none (interaction rules 2). */
 function neighbourDiagram(
   index: DocIndex,
-  selection: Selection,
+  diagram: Id | null,
   direction: 'previous' | 'next',
 ): NavigationResult {
-  const diagrams = index.content.diagrams;
-  const here = diagrams.findIndex((diagram) => diagram.id === diagramOf(index, selection));
-  const there = diagrams[here + (direction === 'next' ? 1 : -1)];
-  const first = there?.body.blocks[0];
-  return first === undefined ? { kind: 'stay', reason: 'noDiagramThere' } : select(index, first.id);
+  const order = drawnDiagrams(index);
+  const here = diagram === null ? -1 : order.indexOf(diagram);
+  const there = here < 0 ? undefined : order[here + (direction === 'next' ? 1 : -1)];
+  return there === undefined ? { kind: 'stay', reason: 'noDiagramThere' } : topOf(index, there);
 }
 
 function firstOfBranch(index: DocIndex, branch: Id): NavigationResult {

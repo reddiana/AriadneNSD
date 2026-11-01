@@ -1,6 +1,7 @@
 // The overlay layer (03-editor 1): the selection, the hover, the drop place and the dragged
 // blocks, drawn as one SVG over the document layer. Never saved (ADR-0018). Pure: a string.
 import type { Box, Id, LayoutResult } from '@ariadne-nsd/core';
+import { geometry } from '@ariadne-nsd/core';
 
 import type { Drop } from '../input/drop';
 import { union } from '../input/drop';
@@ -62,6 +63,8 @@ export function selectionBox(
         )?.box ?? null
       );
     case 'head':
+      // The whole header, like a block (visual design 7.1).
+      return layout.diagrams.find((diagram) => diagram.id === selection.diagram)?.head ?? null;
     case 'fold':
       return null;
   }
@@ -69,7 +72,8 @@ export function selectionBox(
 
 /**
  * The box the inline editor covers for a field: a process block's box, a control block's
- * header, a branch label row, the empty default cell.
+ * header, a branch label row, the empty default cell, the name line of a diagram's header, the
+ * inside of a call block's bars.
  */
 export function fieldBox(layout: LayoutResult, field: EditField): Box | null {
   switch (field.kind) {
@@ -92,7 +96,41 @@ export function fieldBox(layout: LayoutResult, field: EditField): Box | null {
           (region) => region.kind === 'missingDefault' && region.blockId === field.block,
         )?.box ?? null
       );
+    case 'head': {
+      const node = layout.nodes.find((n) => n.kind === 'diagramHead' && n.id === field.diagram);
+      return node?.kind === 'diagramHead' ? headTextBox(node.box, node.style) : null;
+    }
+    case 'call': {
+      const node = layout.nodes.find((n) => n.kind === 'call' && n.id === field.block);
+      if (node?.kind !== 'call') {
+        return null;
+      }
+      const bar = geometry['size.call-bar'];
+      return { ...node.box, x: node.box.x + bar, width: node.box.width - 2 * bar };
+    }
   }
+}
+
+/**
+ * Where a header's text is, as an inline editor box (whose padding is `space.pad-*`). A title
+ * header writes its name at the diagram's left edge under the label; a hat or arch writes it
+ * under the curve (02-layout 1.5).
+ */
+function headTextBox(head: Box, style: 'shape' | 'title'): Box {
+  if (style === 'title') {
+    const padX = geometry['space.pad-x'];
+    const padY = geometry['space.pad-y'];
+    const tag = geometry['size.title-tag'];
+    const textHeight = head.height - tag - geometry['size.title-gap'];
+    return {
+      x: head.x - padX,
+      y: head.y + tag - padY,
+      width: head.width + padX,
+      height: textHeight + 2 * padY,
+    };
+  }
+  const hat = geometry['size.hat'];
+  return { ...head, y: head.y + hat, height: head.height - hat };
 }
 
 /** A rectangle whose stroke of `width` lies `inset` px inside the box edge. */

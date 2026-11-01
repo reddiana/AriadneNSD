@@ -16,7 +16,7 @@ updated: 2026-11-01
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐이고, MVP 뒤의 기능(접기, 펴 보기, 헤더)의 모습은 MVP에 없습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
+> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐이고, MVP 뒤의 기능(접기, 펴 보기)의 모습은 MVP에 없습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
@@ -346,7 +346,7 @@ flowchart LR
 | 접힌 접기 영역 | 한 줄 칸 + 이름. 편집할 때는 이름 앞에 펼침 삼각형 `▸`(편집 레이어, 저장되지 않음) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 없음 (MVP 뒤) |
 | 접힌 제어 블록의 분기 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 없음 (MVP 뒤) |
 | 펴 보인 호출 블록 | 점선 + 띠(호출 블록의 텍스트. 편집할 때는 앞에 펼침 삼각형 `▾`, 편집 레이어). 안의 텍스트는 회색이고 구문 강조 없음. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 없음 (MVP 뒤) |
-| 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함, 다른 문서를 찾을 수 없음) | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 렌더러에만 있음 (호출 블록은 MVP 뒤) |
+| 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함, 다른 문서를 찾을 수 없음) | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
 | 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 없음 (MVP 뒤) |
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 없음 (MVP 뒤) |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | 있음 |
@@ -354,14 +354,14 @@ flowchart LR
 | 분기 라벨을 선택함 | 헤더 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 텍스트를 편집하는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
-| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | **없음** (헤더 이름이 겹칠 때 → [[02-interaction-rules#Event 헤더]], MVP 뒤) |
+| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄 | 편집 | | 있음 |
 | 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 블록 위에 드롭 (감싸기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리 + 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
 | 빈 분기 | If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
-| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름 | 문서 | `text.*`, `line.structure` | 없음 (MVP 뒤) |
+| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름 | 문서 | `text.*`, `line.structure` | 있음 |
 | 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 캔버스 아래(상태 표시줄 바로 위)에 키 힌트. 왼쪽 위에 첫 키와 묶음 이름(굵게), 그 아래에 이어 누를 키(고정폭 굵게 `ui.accent`)와 명령 이름(`ui.text`)을 폭에 맞춰 여러 열로. 배경 `ui.panel`, 테두리 1px `ui.line`, 모서리 반지름 6px. 다이어그램을 가리지 않게 캔버스 폭만큼 놓되 안쪽 여백 10px → [[03-keymap]] | 편집 (UI) | `ui.*` | 있음 |
 
 **겹칠 때의 규칙:**

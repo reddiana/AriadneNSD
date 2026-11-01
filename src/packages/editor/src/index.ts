@@ -5,7 +5,14 @@ export * from './ui';
 
 // The editor engine (03-editor): making an editor and the contracts with the shell (6).
 export type { EditorOptions, ReadDocument } from './create-editor';
-export { createEditor, readDocument, settingIds, settingSpecs } from './create-editor';
+export {
+  createEditor,
+  documentSettingIds,
+  readDocument,
+  rememberedHeadStyle,
+  settingIds,
+  settingSpecs,
+} from './create-editor';
 export type {
   Appearance,
   ChromeState,
@@ -19,6 +26,8 @@ export type {
   MenuPlace,
   Notice,
   OpenedDocument,
+  Picker,
+  PickerItem,
   Question,
   SaveFonts,
   SettingSpec,

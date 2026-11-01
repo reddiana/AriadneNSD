@@ -195,7 +195,8 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 인라인 에디터는 `<textarea>` 하나를 다시 씁니다. 편집할 상자의 자리(`LayoutResult`)에 배율을 곱해 놓고, 블록 글꼴과 같은 글꼴 · 크기로 둡니다.
 - 칸을 열고 닫을 때까지가 명령 하나입니다. 닫을 때 텍스트 편집 명령을 한 번 `run`합니다. 처음과 같으면 실행하지 않습니다 → [[01-model#4.4 텍스트 편집과 undo]]
-- 비울 수 없는 칸을 비우면 기본 텍스트로 되돌리고 닫습니다. 헤더의 이름이 겹칠 때만 칸을 다시 엽니다 → [[02-interaction-rules#텍스트 편집]]
+- 비울 수 없는 칸을 비우면 기본 텍스트로 되돌리고 닫습니다. 헤더의 이름이 겹칠 때만 칸을 다시 엽니다 → [[02-interaction-rules#텍스트 편집]]. 다시 연 칸은 테두리를 `edit.error`로 그리고(→ [[04-visual-design#7.1 상태 표]]), 그 칸의 `Esc`만 편집 전의 이름으로 되돌리고 닫습니다.
+- 호출 블록의 칸(인자 · 결과)도 같은 `<textarea>`를 씁니다. 자리는 세로 이중선의 안쪽이고, 빈 칸에는 칸의 이름("인자" · "결과")을 흐리게 보입니다. `Tab`으로 칸을 바꾸면 적은 것을 기억해 두고, 닫을 때 두 칸을 `editCall` 한 번으로 실행합니다. 그래서 두 칸을 고쳐도 실행 취소 한 단계입니다 → [[02-interaction-rules#호출 블록]]
 - 한글 입력(IME) 조합 중의 `Enter`(`isComposing`)는 받아들이기로 보지 않습니다.
 - 편집하는 중에도 듣는 키가 넷 있습니다: `Ctrl`+`S`(저장), `Ctrl`+`Shift`+`S`(다른 이름으로 저장), `Ctrl`+`Shift`+`P` · `F1`(커맨드 팔레트). 글자를 넣지 않는 키라서, 다른 곳을 클릭한 것처럼 텍스트를 먼저 받아들인 뒤 그 명령을 실행합니다. IME 조합 중에는 듣지 않습니다. 그 밖의 키는 인라인 에디터가 받습니다(4장) → [[03-keymap]]
 
@@ -248,11 +249,13 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- |
 | 파일 | 새로 · 열기… · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG) ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 · 앞에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 문서 설정… |
+| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
-- MVP 밖의 명령(Event · Method · 호출 블록 · Method로 빼기)은 그 기능이 들어올 때 다이어그램 메뉴에 더합니다. 접기는 MVP 밖이지만 보기 메뉴의 자리를 먼저 정해 둡니다.
+- "Event 헤더" · "Method 헤더"는 선택한 것에 따라 이름이 바뀝니다: 헤더 없는 다이어그램에서는 "… 헤더 달기", 헤더에서는 "…로 바꾸기", 헤더가 있는 다이어그램의 블록에서는 "새 Method로 빼기"입니다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]. 새 Method로 빼기는 MVP 밖이라 흐리게 보이고, 누르면 아직 되지 않는다고 알립니다.
+- "호출…" · "호출할 Method 바꾸기…"는 고르는 목록(`ChromeState.picker`, 6장)을 엽니다. 목록은 문서의 Method 전부(그려진 순서)와 "새 Method를 만들고 호출"입니다.
+- 접기는 MVP 밖이지만 보기 메뉴의 자리를 먼저 정해 둡니다.
 - 메뉴 항목 옆에는 키를 적습니다. 키가 둘이면(`dd`와 `Ctrl`+`X`) 표준 키를 적고, Vim 키는 커맨드 팔레트와 단축키 목록에서 보입니다.
 
 ### 5.2 툴바
@@ -356,6 +359,15 @@ type ChromeState = {
   keyHintTitle: Message | null;                  // 키 힌트의 제목 ("뒤에 삽입")
   zoom: number;
   dialog: Dialog | null;                         // 셸이 청한 모달(confirm · prompt). 주변 UI가 모달로 보인다
+  picker: Picker | null;                         // 고르는 목록(호출할 Method). 주변 UI가 컨텍스트 메뉴처럼 보인다
+};
+type Picker = {
+  id: number;
+  title: Message;                                // 무엇을 고르나 ("호출할 Method")
+  items: { title: Message; isLiteral: boolean }[];  // isLiteral: 사용자가 적은 텍스트(헤더)라 카탈로그에서 찾지 않음
+  x: number; y: number;                          // 열 자리 (페이지 좌표). 선택한 것의 왼쪽 아래, 없으면 캔버스의 왼쪽 위
+  active: number;                                // 처음 가리키는 줄 (지금 호출하는 Method)
+  choose(index: number | null): void;            // 고른 줄. 닫으면 null
 };
 type Dialog = {
   id: number;
@@ -372,6 +384,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(그려야 할 때 기다리지 않게).
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
+- 문서 설정의 헤더 모양(`document.headStyle`)을 바꾸면 `editor`가 그 값을 사용자 설정 `editor.headStyle`에도 적고, 새 문서(`text: null`)는 그 값으로 시작합니다(없으면 `'title'`). 파일을 열 때는 파일의 값을 따르고 이 사용자 설정은 바꾸지 않습니다. 환경 설정 창에는 보이지 않는 값입니다 → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼|HS1]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]
 - `Message`는 카탈로그의 키(와 값)이거나, 셸이 자기 카탈로그로 만든 문자열입니다 → [[07-coding-guide#8. 화면의 문자열]]
 - 처음 문서(`doc`)를 열 수 없으면 `editor`는 새 문서를 **읽기 전용**으로 보이고 이유를 상태 표시줄에 알립니다. 열 수 없는 파일 위에 편집한 내용을 쓰지 않게 하려는 것입니다.

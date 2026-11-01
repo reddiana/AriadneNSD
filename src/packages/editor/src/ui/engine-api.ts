@@ -24,7 +24,7 @@ export type {
 } from '../contracts';
 export type { Message } from '../i18n/messages';
 export type { SelectionKind } from '../state/selection';
-export type { ContextMenuRequest, Dialog } from '../contracts';
+export type { ContextMenuRequest, Dialog, Picker, PickerItem } from '../contracts';
 
 /** The members of the engine's handle that the UI uses. */
 export type EditorHandle = Pick<

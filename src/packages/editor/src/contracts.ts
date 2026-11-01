@@ -205,6 +205,36 @@ export type ChromeState = {
   readonly zoom: number;
   /** A dialog a shell asked for (`confirm`, `prompt`), or `null`. The UI shows it as a modal. */
   readonly dialog: Dialog | null;
+  /**
+   * Addition: a list to choose one item from, such as the Methods a call block can call
+   * (interaction rules "호출 블록"), or `null`. The UI shows it like a context menu.
+   */
+  readonly picker: Picker | null;
+};
+
+/**
+ * A list the editor asks the user to choose from (addition to 03-editor 6). `j` `k` and the
+ * arrow keys move, Enter or a digit chooses, Esc closes (03-keymap, UX K2).
+ */
+export type Picker = {
+  readonly id: number;
+  /** What is chosen ("Method to call"). */
+  readonly title: Message;
+  readonly items: ReadonlyArray<PickerItem>;
+  /** Where the list opens, in page (client) coordinates. */
+  readonly x: number;
+  readonly y: number;
+  /** The item that starts active, such as the Method a call block calls now. */
+  readonly active: number;
+  /** The user's answer: the index of the chosen item, or `null` when the list was closed. */
+  choose(index: number | null): void;
+};
+
+/** One item of a `Picker`. */
+export type PickerItem = {
+  readonly title: Message;
+  /** The title is the user's own text (a header), shown as it is, never looked up. */
+  readonly isLiteral: boolean;
 };
 
 /**

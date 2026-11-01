@@ -170,6 +170,7 @@ export const chromeCss = `
 
 .ans-context-menu { position: fixed; z-index: 25; }
 .ans-context-menu > .ans-dropdown { top: 0; left: 0; margin: 0; }
+.ans-picker-title { padding: 4px 8px 6px; color: var(--ui-muted); font-size: 12px; }
 
 .ans-backdrop[data-kind='dialog'] .ans-modal { width: min(460px, 100%); }
 .ans-backdrop[data-kind='examples'] .ans-modal { width: min(1000px, 100%); }

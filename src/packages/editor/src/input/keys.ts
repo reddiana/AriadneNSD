@@ -20,7 +20,7 @@ export type KeyBinding = {
   readonly isDisplayOnly?: boolean;
 };
 
-/** The block kind letters after `a`, `A` and `s` (03-keymap; `c` call blocks come later). */
+/** The block kind letters after `a`, `A` and `s` (03-keymap). `c` (call) only inserts. */
 export const kindLetters = [
   ['i', 'if'],
   ['k', 'case'],
@@ -29,11 +29,15 @@ export const kindLetters = [
   ['d', 'doWhile'],
 ] as const;
 
-const insertBindings: ReadonlyArray<KeyBinding> = kindLetters.flatMap(([letter, kind]) => [
-  { keys: `a ${letter}`, command: `block.insert.${kind}` },
-  { keys: `A ${letter}`, command: `block.insertBefore.${kind}` },
-  { keys: `s ${letter}`, command: `block.wrap.${kind}` },
-]);
+const insertBindings: ReadonlyArray<KeyBinding> = [
+  ...kindLetters.flatMap(([letter, kind]) => [
+    { keys: `a ${letter}`, command: `block.insert.${kind}` },
+    { keys: `A ${letter}`, command: `block.insertBefore.${kind}` },
+    { keys: `s ${letter}`, command: `block.wrap.${kind}` },
+  ]),
+  { keys: 'a c', command: 'block.insert.call' },
+  { keys: 'A c', command: 'block.insertBefore.call' },
+];
 
 const visualWrapBindings: ReadonlyArray<KeyBinding> = kindLetters.map(([letter, kind]) => ({
   keys: `s ${letter}`,
@@ -81,7 +85,14 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'o', command: 'block.insert.process' },
   { keys: 'O', command: 'block.insertBefore.process' },
   ...insertBindings,
-  // Move blocks and branches.
+  // Headers and diagrams (interaction rules "새 Method로 빼기와 새 다이어그램").
+  { keys: 'e', command: 'diagram.event' },
+  { keys: 'm', command: 'diagram.method' },
+  { keys: 'E', command: 'diagram.newEvent' },
+  { keys: 'M', command: 'diagram.newMethod' },
+  { keys: 'Shift+Delete', command: 'diagram.delete' },
+  { keys: 'Shift+Backspace', command: 'diagram.delete' },
+  // Move blocks, branches and (on a header) diagrams.
   { keys: 'Alt+h', command: 'edit.move.left' },
   { keys: 'Alt+ArrowLeft', command: 'edit.move.left' },
   { keys: 'Alt+j', command: 'edit.move.down' },
@@ -90,7 +101,8 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'Alt+ArrowUp', command: 'edit.move.up' },
   { keys: 'Alt+l', command: 'edit.move.right' },
   { keys: 'Alt+ArrowRight', command: 'edit.move.right' },
-  // Clipboard and delete.
+  // Clipboard and delete. On a header, dd removes the header (03-keymap).
+  { keys: 'd d', command: 'diagram.removeHead', selection: 'head' },
   { keys: 'y y', command: 'edit.copy' },
   { keys: 'Ctrl+C', command: 'edit.copy' },
   { keys: 'd d', command: 'edit.cut' },
@@ -98,6 +110,9 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'p', command: 'edit.paste' },
   { keys: 'Ctrl+V', command: 'edit.paste' },
   { keys: 'P', command: 'edit.pasteBefore' },
+  { keys: 'x', command: 'diagram.removeHead', selection: 'head' },
+  { keys: 'Delete', command: 'diagram.removeHead', selection: 'head' },
+  { keys: 'Backspace', command: 'diagram.removeHead', selection: 'head' },
   { keys: 'x', command: 'branch.delete', selection: 'branchLabel' },
   { keys: 'Delete', command: 'branch.delete', selection: 'branchLabel' },
   { keys: 'Backspace', command: 'branch.delete', selection: 'branchLabel' },

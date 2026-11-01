@@ -21,7 +21,9 @@ export type Hit =
       readonly box: Box;
     }
   /** The empty default cell of a Case without a default (UX CD1). */
-  | { readonly kind: 'missingDefault'; readonly block: Id; readonly box: Box };
+  | { readonly kind: 'missingDefault'; readonly block: Id; readonly box: Box }
+  /** The header of a diagram (Event or Method). */
+  | { readonly kind: 'diagramHead'; readonly diagram: Id; readonly box: Box };
 
 /** Whether a box holds a point. Edges count as inside. */
 export function contains(box: Box, point: Point): boolean {
@@ -67,6 +69,9 @@ export function hitTest(layout: LayoutResult, index: DocIndex, point: Point): Hi
       case 'missingDefault':
         best = { kind: 'missingDefault', block: region.blockId, box: region.box };
         break;
+      case 'diagramHead':
+        best = { kind: 'diagramHead', diagram: region.diagramId, box: region.box };
+        break;
     }
   }
   if (best !== null) {
@@ -96,5 +101,7 @@ export function selectionOfHit(index: DocIndex, hit: Hit): Selection {
         : { kind: 'branchLabel', branch: hit.branch };
     case 'missingDefault':
       return { kind: 'missingDefault', block: hit.block };
+    case 'diagramHead':
+      return { kind: 'head', diagram: hit.diagram };
   }
 }

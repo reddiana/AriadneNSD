@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
+import type { Doc } from '@ariadne-nsd/core';
 import { openSvgFile } from '@ariadne-nsd/core';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import type { EditorHandle, OpenedDocument, SaveFonts } from './contracts';
-import { createEditor } from './create-editor';
+import { createEditor, settingIds } from './create-editor';
 import { memoryClipboard, memorySettings, memoryStore } from './engine-test-support';
 
 const fakeFonts: SaveFonts = () =>
@@ -17,12 +18,16 @@ const fakeFonts: SaveFonts = () =>
 
 const handles: EditorHandle[] = [];
 
-function make(doc: Partial<OpenedDocument> = {}, store = memoryStore()) {
+function make(
+  doc: Partial<OpenedDocument> = {},
+  store = memoryStore(),
+  settings = memorySettings(),
+) {
   const host = document.createElement('div');
   document.body.append(host);
   const handle = createEditor({
     host,
-    settings: memorySettings(),
+    settings,
     appearance: { scheme: 'light', uiFont: 'sans-serif' },
     doc: { store, text: null, ...doc },
     fonts: fakeFonts,
@@ -259,5 +264,136 @@ describe('the shell asks through the editor (03-editor 6 additions)', () => {
     expect(handle.chromeState().dialog?.message).toBe('Second?');
     handle.chromeState().dialog?.answer('');
     expect(await second).toBe(true);
+  });
+});
+
+describe('the header shape (R-LAY-10, UX HS1)', () => {
+  it('UX HS1: the shape chosen last is remembered and new documents start with it', () => {
+    const values: Record<string, unknown> = {};
+    const settings = memorySettings(values);
+    const { handle } = make({}, memoryStore(), settings);
+    expect(handle.documentSetting('document.headStyle')).toBe('title');
+    expect(
+      handle.settingsSchema.list().find((spec) => spec.id === 'document.headStyle'),
+    ).toMatchObject({ scope: 'document', values: ['title', 'shape'] });
+    handle.setDocumentSetting('document.headStyle', 'shape');
+    expect(values[settingIds.headStyle]).toBe('shape');
+    handle.open({ store: memoryStore(), text: null });
+    expect(handle.documentSetting('document.headStyle')).toBe('shape');
+    const second = make({}, memoryStore(), settings).handle;
+    expect(second.documentSetting('document.headStyle')).toBe('shape');
+  });
+
+  it('UX HS1: opening a file keeps its own shape and does not change the remembered one', async () => {
+    const values: Record<string, unknown> = { [settingIds.headStyle]: 'title' };
+    const { handle } = make({}, memoryStore(), memorySettings(values));
+    handle.setDocumentSetting('document.headStyle', 'shape');
+    const svg = await handle.serialize();
+    values[settingIds.headStyle] = 'title';
+    expect(handle.open({ store: memoryStore(), text: svg })).toBe(true);
+    expect(handle.documentSetting('document.headStyle')).toBe('shape');
+    expect(values[settingIds.headStyle]).toBe('title');
+  });
+});
+
+describe('the picker (interaction rules "호출 블록")', () => {
+  it('R-BLK-07: inserting a call block asks in the chrome state; the answer inserts', async () => {
+    const { handle } = make();
+    // A new Method takes the place of the blank diagram (invariant 7); its first block, then a c.
+    handle.commands.run('diagram.newMethod');
+    handle.commands.run('select.down');
+    expect(handle.chromeState().picker).toBeNull();
+    handle.commands.run('block.insert.call');
+    const asked = handle.chromeState().picker;
+    expect(asked?.items.map((item) => item.title)).toEqual(['Method 1', 'picker.newMethod']);
+    asked?.choose(0);
+    await tick();
+    expect(handle.chromeState().picker).toBeNull();
+    const calls = handle
+      .state()
+      .doc.content.diagrams.flatMap((d) => d.body.blocks)
+      .filter((b) => b.kind === 'call');
+    expect(calls).toHaveLength(1);
+  });
+});
+
+describe('the inline editor on headers and call blocks (03-editor 3.4)', () => {
+  const twoEvents = (): Doc => ({
+    content: {
+      settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+      diagrams: [
+        {
+          id: 'd1',
+          head: { kind: 'event', text: 'a' },
+          body: {
+            blocks: [
+              {
+                id: 'b1',
+                kind: 'call',
+                target: { kind: 'local', diagram: 'd2' },
+                args: 'x',
+                result: '',
+                siteFolds: [],
+              },
+            ],
+            folds: [],
+          },
+        },
+        {
+          id: 'd2',
+          head: { kind: 'method', text: 'b(x)' },
+          body: { blocks: [{ id: 'b2', kind: 'process', text: 'p' }], folds: [] },
+        },
+      ],
+    },
+    view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
+  });
+  const key = (target: Element | null, init: KeyboardEventInit): void => {
+    target?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, ...init }));
+  };
+
+  it('interaction rules "Event 헤더": a clashing name reopens the field; Esc there puts it back', async () => {
+    const { handle, host } = make({ doc: twoEvents() });
+    const canvas = host.querySelector('.ans-canvas');
+    key(canvas, { code: 'KeyJ' });
+    expect(handle.state().selection).toEqual({ kind: 'head', diagram: 'd1' });
+    key(canvas, { key: 'Enter', code: 'Enter' });
+    await tick();
+    const textarea = host.querySelector('textarea');
+    if (textarea === null) throw new Error('no inline editor');
+    textarea.value = 'b';
+    key(textarea, { key: 'Enter' });
+    await tick();
+    expect(handle.state().editing?.isRejected).toBe(true);
+    expect(textarea.classList.contains('ans-is-rejected')).toBe(true);
+    expect(textarea.style.display).toBe('block');
+    key(textarea, { key: 'Escape' });
+    await tick();
+    expect(handle.state().editing).toBeNull();
+    expect(handle.state().doc.content.diagrams[0]?.head?.text).toBe('a');
+  });
+
+  it('03-keymap: Tab moves between the arguments and the result of a call block', async () => {
+    const { handle, host } = make({ doc: twoEvents() });
+    const canvas = host.querySelector('.ans-canvas');
+    key(canvas, { code: 'KeyJ' });
+    key(canvas, { code: 'KeyJ' });
+    key(canvas, { key: 'Enter', code: 'Enter' });
+    await tick();
+    const textarea = host.querySelector('textarea');
+    if (textarea === null) throw new Error('no inline editor');
+    expect(textarea.placeholder).toBe('Arguments');
+    textarea.value = 'list';
+    key(textarea, { key: 'Tab' });
+    await tick();
+    expect(textarea.placeholder).toBe('Result');
+    textarea.value = 'r';
+    key(textarea, { key: 'Enter' });
+    await tick();
+    expect(handle.state().doc.content.diagrams[0]?.body.blocks[0]).toMatchObject({
+      args: 'list',
+      result: 'r',
+    });
+    expect(handle.state().undo).toHaveLength(1);
   });
 });

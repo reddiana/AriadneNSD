@@ -5,7 +5,8 @@ import type { ClipboardData } from './clipboard/clip-format';
 import { editorCommands } from './commands/editor-commands';
 import type { EditorRegistry } from './commands/registry';
 import { createRegistry } from './commands/registry';
-import type { DocumentStore, SettingsStore, WriteResult } from './contracts';
+import type { DocumentStore, PickerItem, SettingsStore, WriteResult } from './contracts';
+import type { EditorMessage } from './i18n/messages';
 import { keyBindings } from './input/keys';
 import type { ClipboardPort, LoadOptions } from './session/session';
 import { EditorSession } from './session/session';
@@ -139,8 +140,19 @@ export function memorySettings(values: Record<string, unknown> = {}): SettingsSt
   };
 }
 
+/** A list the engine asked to choose from, waiting for the test's answer. */
+export type TestPicker = {
+  readonly title: EditorMessage;
+  readonly items: ReadonlyArray<PickerItem>;
+  readonly active: number;
+  /** Answers with an item's index, or `null` to close the list. */
+  choose(index: number | null): void;
+};
+
 /** A session with the editor's commands, and no DOM. */
 export type TestEngine = {
+  /** The list waiting for an answer, or `null`. */
+  readonly picker: () => TestPicker | null;
   readonly session: EditorSession;
   readonly registry: EditorRegistry;
   readonly clipboard: ReturnType<typeof memoryClipboard>;
@@ -162,6 +174,7 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
   const logs: string[] = [];
   const store = memoryStore();
   const settings = memorySettings();
+  let picker: TestPicker | null = null;
   const session = new EditorSession(
     docOf(content),
     {
@@ -199,10 +212,23 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
     zoomTo: (zoom) => {
       session.setZoom(zoom);
     },
+    pick: (title, items, active) =>
+      new Promise((resolve) => {
+        picker = {
+          title,
+          items,
+          active,
+          choose: (index) => {
+            picker = null;
+            resolve(index);
+          },
+        };
+      }),
   })) {
     registry.register(spec);
   }
   return {
+    picker: () => picker,
     session,
     registry,
     clipboard,

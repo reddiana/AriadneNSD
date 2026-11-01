@@ -2,6 +2,8 @@
 // The shell adds new · open · recent files, and the UI the palette, dialogs and help.
 import type {
   Content,
+  Diagram,
+  HeadKind,
   Id,
   IdGenerator,
   Locale,
@@ -19,11 +21,19 @@ import {
   cut,
   deleteBlocks,
   deleteBranch,
+  deleteDiagram,
+  headParams,
   insertBlock,
   insertBranch,
+  insertCall,
   move,
   moveBranch,
+  moveDiagram,
+  newDiagram,
+  newMethodAndCall,
   paste,
+  setCallTarget,
+  setHead,
   unwrap,
   wrap,
 } from '@ariadne-nsd/core';
@@ -33,6 +43,7 @@ import type {
   CommandContext,
   CommandSpec,
   MenuPlace,
+  PickerItem,
   ToolbarPlace,
   WriteResult,
 } from '../contracts';
@@ -48,7 +59,7 @@ import {
   seqOfBlock,
 } from '../model/doc-index';
 import type { Navigation } from '../navigation/navigate';
-import { navigate } from '../navigation/navigate';
+import { drawnDiagrams, navigate } from '../navigation/navigate';
 import type { After, ClipboardPort, EditorSession } from '../session/session';
 import type { Caret, EditField, EditorState } from '../state/editor-state';
 import { zoomRange } from '../state/editor-state';
@@ -71,6 +82,15 @@ export type CommandDeps = {
   readonly saveAs: () => Promise<WriteResult>;
   /** Sets the zoom, keeping the selection (or the middle) in place on the screen. */
   readonly zoomTo: (zoom: number) => void;
+  /**
+   * Asks the user to choose one item of a list, such as the Method to call. Resolves the index,
+   * or `null` when the list was closed. `active` is the item that starts active.
+   */
+  readonly pick: (
+    title: EditorMessage,
+    items: ReadonlyArray<PickerItem>,
+    active: number,
+  ) => Promise<number | null>;
 };
 
 /** The block kinds in toolbar and menu order (06-web 7). */
@@ -222,28 +242,94 @@ function currentDiagram(index: DocIndex, state: EditorState): Id | null {
     if (place !== undefined) {
       return place.diagram;
     }
+    if (index.diagrams.has(last)) {
+      // A header was selected last.
+      return last;
+    }
   }
   return diagramOf(index, state.selection) ?? index.content.diagrams[0]?.id ?? null;
 }
 
-/** The field the text edit commands open for the selection, or why there is none. */
-function fieldOfSelection(index: DocIndex, selection: Selection | null): Found<EditField> {
+/**
+ * The field the text edit commands open for the selection, or why there is none. `blockField`
+ * gives a block's field: its text, or a call block's first field.
+ */
+function fieldOfSelection(
+  index: DocIndex,
+  selection: Selection | null,
+  blockField: (block: Id) => EditField,
+): Found<EditField> {
   if (selection === null) {
     return { reason: 'reason.nothingSelected' };
   }
   switch (selection.kind) {
     case 'blocks': {
       const block = oneBlock(index, selection);
-      return 'value' in block ? { value: { kind: 'block', block: block.value } } : block;
+      return 'value' in block ? { value: blockField(block.value) } : block;
     }
     case 'branchLabel':
       return { value: { kind: 'branchLabel', branch: selection.branch } };
     case 'missingDefault':
       return { value: { kind: 'missingDefault', block: selection.block } };
     case 'head':
+      return { value: { kind: 'head', diagram: selection.diagram } };
     case 'fold':
       return { reason: 'reason.unsupported' };
   }
+}
+
+/** What the Event or Method command does on a selection (interaction rules "새 Method로 빼기"). */
+type HeadAction =
+  | { readonly kind: 'add'; readonly diagram: Id }
+  | { readonly kind: 'change'; readonly diagram: Id }
+  | { readonly kind: 'extract' };
+
+/**
+ * The Event or Method command's action: on a header it changes the kind; in a diagram without
+ * a header it gives it one; on blocks of a diagram with a header the Method command extracts
+ * them into a new Method, and the Event command does nothing (an Event cannot be called).
+ * In a diagram without a header both commands give it a header, even on blocks: extracting is
+ * not in the MVP, and this is the only way to give that diagram a header.
+ */
+function headAction(
+  index: DocIndex,
+  selection: Selection | null,
+  kind: HeadKind,
+): Found<HeadAction> {
+  if (selection === null) {
+    return { reason: 'reason.nothingSelected' };
+  }
+  if (selection.kind === 'head') {
+    return { value: { kind: 'change', diagram: selection.diagram } };
+  }
+  const diagram = diagramOf(index, selection);
+  if (diagram === null) {
+    return { reason: 'reason.unsupported' };
+  }
+  if ((index.diagrams.get(diagram)?.head ?? null) === null) {
+    return { value: { kind: 'add', diagram } };
+  }
+  return kind === 'method'
+    ? { value: { kind: 'extract' } }
+    : { reason: 'reason.eventNotExtracted' };
+}
+
+/** The Methods of the document in drawn order: the list a call block's target is chosen from. */
+function methodsOf(index: DocIndex): ReadonlyArray<Diagram> {
+  return drawnDiagrams(index).flatMap((id) => {
+    const diagram = index.diagrams.get(id);
+    return diagram?.head?.kind === 'method' ? [diagram] : [];
+  });
+}
+
+/** The selection after a header or diagram command: the header, its name being edited or not. */
+function afterHead(diagram: Id, isEditing: boolean): After {
+  return isEditing
+    ? {
+        selection: { kind: 'head', diagram },
+        edit: { field: { kind: 'head', diagram }, caret: 'selectAll' },
+      }
+    : { selection: { kind: 'head', diagram } };
 }
 
 /** Makes the editor's commands. */
@@ -251,6 +337,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
   const { session } = deps;
   const index = (): DocIndex => session.index();
   const content = (): Content => session.state.doc.content;
+  const blockField = (block: Id): EditField => session.blockField(block);
 
   /** Puts the result of `op` into the empty default branch made for a Case (UX CD1). */
   const intoMissingDefault = (
@@ -292,7 +379,10 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       if (selection?.kind === 'branchLabel') {
         return kind === 'process' ? true : 'reason.notOnBranchLabel';
       }
-      if (selection?.kind === 'head' || selection?.kind === 'fold') {
+      if (selection?.kind === 'head') {
+        return 'reason.notOnHead';
+      }
+      if (selection?.kind === 'fold') {
         return 'reason.unsupported';
       }
       return true;
@@ -393,6 +483,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     const selection = state.selection;
     if (selection?.kind === 'branchLabel') {
       return 'reason.undecidedOnBranchLabel';
+    }
+    if (selection?.kind === 'head') {
+      return 'reason.notOnHead';
     }
     if (selection?.kind === 'missingDefault') {
       return 'reason.noDefaultToDelete';
@@ -649,8 +742,13 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const deleteSpec = spec('edit.delete', {
     edits: true,
-    when: blocksOnly,
+    // On a header, Delete removes the header (03-keymap).
+    when: (state) => (state.selection?.kind === 'head' ? true : blocksOnly(state)),
     run: (state) => {
+      if (state.selection?.kind === 'head') {
+        session.runCommand('diagram.removeHead');
+        return;
+      }
       const target = targetOf(state.selection);
       if (target === null) {
         return;
@@ -679,11 +777,22 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
             ? true
             : 'reason.branchMovesSideways';
         }
-        return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
+        return selection?.kind === 'blocks' || selection?.kind === 'head'
+          ? true
+          : 'reason.nothingSelected';
       },
       run: (state) => {
         const selection = state.selection;
         const keep = (): After => ({ selection });
+        if (selection?.kind === 'head') {
+          // On a header the diagram moves among its kind (UX Q6): up and left go earlier.
+          const way = direction === 'up' || direction === 'left' ? 'up' : 'down';
+          session.commit(
+            moveDiagram(content(), { diagram: selection.diagram, direction: way }),
+            keep,
+          );
+          return;
+        }
         if (selection?.kind === 'branchLabel') {
           if (direction === 'left' || direction === 'right') {
             session.commit(moveBranch(content(), { branch: selection.branch, direction }), keep);
@@ -696,7 +805,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         }
       },
       menu: { menu: 'edit', group: 4, order },
-      context: ['blocks', 'branchLabel'],
+      context: ['blocks', 'branchLabel', 'head'],
     });
 
   // Text editing.
@@ -704,7 +813,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     spec(id, {
       edits: true,
       when: (state) => {
-        const field = fieldOfSelection(index(), state.selection);
+        const field = fieldOfSelection(index(), state.selection, blockField);
         if ('reason' in field) {
           return field.reason;
         }
@@ -712,7 +821,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         return 'reason' in found ? found.reason : true;
       },
       run: (state) => {
-        const field = fieldOfSelection(index(), state.selection);
+        const field = fieldOfSelection(index(), state.selection, blockField);
         if ('value' in field) {
           const started = session.startEditing(field.value, caret);
           if (started !== true) {
@@ -721,7 +830,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         }
       },
       ...(menu === undefined ? {} : { menu }),
-      context: ['blocks', 'branchLabel', 'missingDefault'],
+      context: ['blocks', 'branchLabel', 'missingDefault', 'head'],
     });
 
   const branchLabelSpec = spec('edit.branchLabel', {
@@ -842,6 +951,280 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       menu: { menu: 'view', group: 4, order },
     });
 
+  // Call blocks (R-BLK-07, interaction rules "호출 블록").
+
+  /** Asks which Method to call: every Method, then "New Method, and call it" (last). */
+  const pickMethod = async (
+    current: Id | null,
+  ): Promise<{ readonly method: Diagram | null } | null> => {
+    const methods = methodsOf(index());
+    const items: PickerItem[] = [
+      ...methods.map((m) => ({ title: m.head?.text ?? '', isLiteral: true })),
+      { title: 'picker.newMethod', isLiteral: false },
+    ];
+    const active = Math.max(
+      0,
+      methods.findIndex((m) => m.id === current),
+    );
+    const chosen = await deps.pick('picker.callTarget', items, active);
+    if (chosen === null) {
+      return null;
+    }
+    // The document may have become view only while the list was open.
+    if (session.state.readOnly) {
+      session.notify('reason.readOnly', 'warn');
+      return null;
+    }
+    return { method: methods[chosen] ?? null };
+  };
+
+  /** After inserting a call block: select it and type its arguments (or result) at once. */
+  const afterCall = (method: Diagram, call: Id, made: Content): After => {
+    const receives = method.head !== null && headParams(method.head) !== null;
+    return {
+      selection: selectBlock(indexDoc(made), call),
+      edit: {
+        field: { kind: 'call', block: call, part: receives ? 'args' : 'result' },
+        caret: 'end',
+      },
+    };
+  };
+
+  const runInsertCall = async (side: Side): Promise<void> => {
+    const selection = session.state.selection;
+    const picked = await pickMethod(null);
+    if (picked === null) {
+      return;
+    }
+    const { method } = picked;
+    const op = (made: Content, target: Target, ids: IdGenerator): Result =>
+      method === null
+        ? newMethodAndCall(made, { target, side, ids })
+        : insertCall(made, { target, side, diagram: method.id, ids });
+    const after = (ok: {
+      readonly content: Content;
+      readonly touched: ReadonlyArray<Id>;
+    }): After => {
+      const [first, second] = ok.touched;
+      if (method === null) {
+        // A new Method: its name is written now, and the call block follows it (ADR-0022).
+        return first === undefined ? { selection: null } : afterHead(first, true);
+      }
+      return first === undefined
+        ? { selection: null }
+        : afterCall(method, second ?? first, ok.content);
+    };
+    if (selection?.kind === 'missingDefault') {
+      intoMissingDefault(
+        selection.block,
+        (made, empty, ids) => op(made, { kind: 'blocks', first: empty, last: empty }, ids),
+        after,
+      );
+      return;
+    }
+    const diagram = currentDiagram(index(), { ...session.state, selection });
+    const target: Target | null =
+      targetOf(selection) ?? (diagram === null ? null : { kind: 'diagramEnd', diagram });
+    if (target === null) {
+      session.notify('reason.nothingSelected', 'warn');
+      return;
+    }
+    session.commit(op(content(), target, session.ids()), after);
+  };
+
+  const insertCallSpecs: ReadonlyArray<CommandSpec> = [
+    spec('block.insert.call', {
+      edits: true,
+      when: (state) =>
+        state.selection?.kind === 'branchLabel'
+          ? 'reason.notOnBranchLabel'
+          : insertWhen('process')(state),
+      run: () => runInsertCall('after'),
+      menu: { menu: 'diagram', group: 1, order: 7, submenu: 'insert' },
+      context: ['blocks', 'missingDefault'],
+    }),
+    spec('block.insertBefore.call', {
+      edits: true,
+      when: (state) =>
+        state.selection?.kind === 'branchLabel'
+          ? 'reason.notOnBranchLabel'
+          : insertWhen('process')(state),
+      run: () => runInsertCall('before'),
+      menu: { menu: 'diagram', group: 1, order: 17, submenu: 'insertBefore' },
+    }),
+  ];
+
+  /** The one selected call block, or why there is none. */
+  const selectedCall = (state: EditorState): Found<Id> => {
+    const block = oneBlock(index(), state.selection);
+    if ('reason' in block) {
+      return block.reason === 'reason.nothingSelected' ? { reason: 'reason.selectCall' } : block;
+    }
+    return index().blocks.get(block.value)?.block.kind === 'call'
+      ? block
+      : { reason: 'reason.selectCall' };
+  };
+
+  const setTargetSpec = spec('call.setTarget', {
+    edits: true,
+    when: (state) => appliesIf(selectedCall(state)),
+    run: async (state) => {
+      const found = selectedCall(state);
+      if (!('value' in found)) {
+        return;
+      }
+      const call = found.value;
+      const block = index().blocks.get(call)?.block;
+      const current =
+        block?.kind === 'call' && block.target.kind === 'local' ? block.target.diagram : null;
+      const picked = await pickMethod(current);
+      if (picked === null) {
+        return;
+      }
+      const keep = (): After => ({ selection: session.state.selection });
+      if (picked.method !== null) {
+        session.commit(setCallTarget(content(), { block: call, diagram: picked.method.id }), keep);
+        return;
+      }
+      // A new Method to call: made and chosen in one undo step, then its name is written.
+      const made = newDiagram(content(), { kind: 'method', ids: session.ids() });
+      const [diagram] = made.ok ? made.touched : [];
+      if (!made.ok || diagram === undefined) {
+        if (!made.ok) {
+          session.refuse(made.reason);
+        }
+        return;
+      }
+      session.commit(setCallTarget(made.content, { block: call, diagram }), () =>
+        afterHead(diagram, true),
+      );
+    },
+    menu: { menu: 'diagram', group: 4, order: 1 },
+    context: ['blocks'],
+  });
+
+  // Headers and diagrams (R-BLK-10, R-BLK-11, R-EDIT-18).
+  const headKindSpec = (kind: HeadKind, order: number): CommandSpec => {
+    const id = `diagram.${kind}`;
+    return spec(id, {
+      edits: true,
+      title: (ctx) => {
+        const action = headAction(index(), ctx.state.selection, kind);
+        if (!('value' in action)) {
+          return commandTitle(id);
+        }
+        switch (action.value.kind) {
+          case 'add':
+            return commandTitle(`${id}.add`);
+          case 'change':
+            return commandTitle(`${id}.change`);
+          case 'extract':
+            return commandTitle(`${id}.extract`);
+        }
+      },
+      when: (state) => {
+        const action = headAction(index(), state.selection, kind);
+        if ('reason' in action) {
+          return action.reason;
+        }
+        return action.value.kind === 'extract' ? 'reason.extractNotYet' : true;
+      },
+      run: (state) => {
+        const action = headAction(index(), state.selection, kind);
+        if (!('value' in action) || action.value.kind === 'extract') {
+          return;
+        }
+        const { diagram } = action.value;
+        // A new header opens its name for typing, the default name selected (R-BLK-10).
+        const isNew = action.value.kind === 'add';
+        session.commit(setHead(content(), { diagram, kind }), () => afterHead(diagram, isNew));
+      },
+      menu: { menu: 'diagram', group: 5, order },
+      context: ['blocks', 'head'],
+    });
+  };
+
+  const removeHeadSpec = spec('diagram.removeHead', {
+    edits: true,
+    when: (state) => (state.selection?.kind === 'head' ? true : 'reason.selectHead'),
+    run: (state) => {
+      if (state.selection?.kind !== 'head') {
+        return;
+      }
+      const diagram = state.selection.diagram;
+      session.commit(setHead(content(), { diagram, kind: null }), (ok) => {
+        // The first block of the diagram, unless the diagram went with its header (invariant 7).
+        const first = ok.content.diagrams.find((d) => d.id === diagram)?.body.blocks[0];
+        return {
+          selection: first === undefined ? null : selectBlock(indexDoc(ok.content), first.id),
+        };
+      });
+    },
+    menu: { menu: 'diagram', group: 5, order: 3 },
+    context: ['head'],
+  });
+
+  const newDiagramSpec = (kind: HeadKind, id: string, order: number): CommandSpec =>
+    spec(id, {
+      edits: true,
+      when: always,
+      run: () => {
+        session.commit(newDiagram(content(), { kind, ids: session.ids() }), (ok) => {
+          const [diagram] = ok.touched;
+          return diagram === undefined ? { selection: null } : afterHead(diagram, true);
+        });
+      },
+      menu: { menu: 'diagram', group: 6, order },
+    });
+
+  const deleteDiagramSpec = spec('diagram.delete', {
+    edits: true,
+    when: (state) => {
+      if (diagramOf(index(), state.selection) === null) {
+        return 'reason.nothingSelected';
+      }
+      return index().content.diagrams.length > 1 ? true : 'reason.lastDiagram';
+    },
+    run: (state) => {
+      const ix = index();
+      const diagram = diagramOf(ix, state.selection);
+      if (diagram === null) {
+        return;
+      }
+      // Next, the side diagram after it in drawn order, or the one before (its header).
+      const order = drawnDiagrams(ix);
+      const at = order.indexOf(diagram);
+      const next = order[at + 1] ?? order[at - 1] ?? null;
+      const isApplied = session.commit(deleteDiagram(content(), { diagram }), (ok) => {
+        const there = next === null ? undefined : ok.content.diagrams.find((d) => d.id === next);
+        if (there === undefined) {
+          return { selection: null };
+        }
+        const first = there.body.blocks[0];
+        if (there.head !== null) {
+          return { selection: { kind: 'head', diagram: there.id } };
+        }
+        return {
+          selection: first === undefined ? null : selectBlock(indexDoc(ok.content), first.id),
+        };
+      });
+      if (isApplied) {
+        session.notify('notice.diagramDeleted');
+      }
+    },
+    menu: { menu: 'diagram', group: 6, order: 3 },
+    context: ['head'],
+  });
+
+  const diagramSpecs: ReadonlyArray<CommandSpec> = [
+    headKindSpec('event', 1),
+    headKindSpec('method', 2),
+    removeHeadSpec,
+    newDiagramSpec('event', 'diagram.newEvent', 1),
+    newDiagramSpec('method', 'diagram.newMethod', 2),
+    deleteDiagramSpec,
+  ];
+
   // File.
   const fileSpecs: ReadonlyArray<CommandSpec> = [
     spec('file.save', {
@@ -883,6 +1266,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     moveSpec('left', 3),
     moveSpec('right', 4),
     ...insertSpecs,
+    ...insertCallSpecs,
     ...wrapSpecs,
     unwrapSpec,
     branchInsertSpec('after', 'branch.insert', 1),
@@ -890,6 +1274,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     branchDeleteSpec,
     convertIfSpec,
     convertCaseSpec,
+    setTargetSpec,
+    ...diagramSpecs,
     ...selectionSpecs,
     zoomSpec('view.zoom.in', 1, (zoom) => zoom + zoomRange.step),
     zoomSpec('view.zoom.out', 2, (zoom) => zoom - zoomRange.step),

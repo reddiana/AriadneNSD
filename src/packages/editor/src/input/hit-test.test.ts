@@ -16,7 +16,8 @@ import {
 import { indexDoc } from '../model/doc-index';
 import { selectBlock, selectRange } from '../state/selection';
 import { findDrop, zoneOf } from './drop';
-import { hitTest } from './hit-test';
+import { fieldBox, selectionBox } from '../dom/overlay';
+import { hitTest, selectionOfHit } from './hit-test';
 
 const content = contentOf([
   proc('p1', 'first'),
@@ -165,5 +166,43 @@ describe('drop place (03-editor 3.2)', () => {
     const point = cell === undefined ? { x: -1, y: -1 } : middle(cell.box);
     const drop = findDrop(result, index, point, { kind: 'new', blockKind: 'process' }, null);
     expect(drop?.action).toMatchObject({ kind: 'intoMissingDefault', caseBlock: 'k1' });
+  });
+});
+
+describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
+  const headed: typeof content = {
+    ...content,
+    diagrams: content.diagrams.map((d) => ({ ...d, head: { kind: 'method', text: 'f(a)' } })),
+  };
+  const headedIndex = indexDoc(headed);
+  const headedLayout = layout(docOf(headed), { locale: 'en' });
+  const head = headedLayout.diagrams[0]?.head ?? { x: -1, y: -1, width: 0, height: 0 };
+
+  it('R-BLK-10: a click on the header hits the header and selects it', () => {
+    const hit = hitTest(headedLayout, headedIndex, middle(head));
+    expect(hit).toMatchObject({ kind: 'diagramHead', diagram: 'd1' });
+    expect(hit === null ? null : selectionOfHit(headedIndex, hit)).toEqual({
+      kind: 'head',
+      diagram: 'd1',
+    });
+  });
+
+  it('visual design 7.1: the selected header is outlined whole; nothing drops on it', () => {
+    expect(selectionBox(headedLayout, headedIndex, { kind: 'head', diagram: 'd1' })).toEqual(head);
+    const drop = findDrop(
+      headedLayout,
+      headedIndex,
+      middle(head),
+      { kind: 'new', blockKind: 'process' },
+      null,
+    );
+    expect(drop).toBeNull();
+  });
+
+  it('03-editor 3.4: the header name field lies inside the header', () => {
+    const box = fieldBox(headedLayout, { kind: 'head', diagram: 'd1' });
+    expect(box).not.toBeNull();
+    expect(box?.y).toBeGreaterThan(head.y);
+    expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(head.y + head.height + 7);
   });
 });

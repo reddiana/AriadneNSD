@@ -440,3 +440,57 @@ describe('dialogs and notices from the shell', () => {
     }
   });
 });
+
+describe('picker (interaction rules "호출 블록")', () => {
+  const pickerOf = (answers: (number | null)[]) => ({
+    id: 1,
+    title: 'picker.callTarget',
+    items: [
+      { title: 'sort(xs)', isLiteral: true },
+      { title: 'merge(a, b)', isLiteral: true },
+      { title: 'picker.newMethod', isLiteral: false },
+    ],
+    x: 40,
+    y: 50,
+    active: 1,
+    choose: (index: number | null) => answers.push(index),
+  });
+
+  it('R-BLK-07: lists the Methods and "new Method"; j k move from the active one, Enter chooses', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    const answers: (number | null)[] = [];
+    act(() => {
+      engine.setChrome({ picker: pickerOf(answers) });
+    });
+    const menu = screen.getByRole('menu', { name: 'Method to call' });
+    const items = within(menu).getAllByRole('menuitem');
+    expect(items.map((item) => item.textContent)).toEqual([
+      'sort(xs)1',
+      'merge(a, b)2',
+      'New Method, and call it3',
+    ]);
+    expect(document.activeElement).toBe(items[1]);
+    fireEvent.keyDown(menu, { key: 'j' });
+    expect(document.activeElement).toBe(items[2]);
+    fireEvent.keyDown(menu, { key: 'j' });
+    expect(document.activeElement).toBe(items[0]);
+    const [first] = items;
+    if (first === undefined) throw new Error('an item expected');
+    fireEvent.click(first);
+    expect(answers).toEqual([0]);
+  });
+
+  it('03-keymap: a digit chooses at once, Esc closes', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    const answers: (number | null)[] = [];
+    act(() => {
+      engine.setChrome({ picker: pickerOf(answers) });
+    });
+    const menu = screen.getByRole('menu', { name: 'Method to call' });
+    fireEvent.keyDown(menu, { key: '3' });
+    fireEvent.keyDown(menu, { key: 'Escape' });
+    expect(answers).toEqual([2, null]);
+  });
+});

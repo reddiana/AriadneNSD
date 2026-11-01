@@ -1,8 +1,10 @@
 // The editing session: the state, undo, notices, the inline editor's text flow and the key
 // reader, without the DOM. The DOM view and the commands drive it; tests drive it in Node.
 import type {
+  Block,
   Content,
   Doc,
+  Id,
   IdGenerator,
   KeptSettings,
   Locale,
@@ -17,7 +19,11 @@ import {
   checkInvariants,
   createIdGenerator,
   drawingMessage,
+  editCall,
+  editHead,
   editText,
+  headName,
+  headParams,
   renderDoc,
 } from '@ariadne-nsd/core';
 
@@ -29,7 +35,7 @@ import type { KeyBinding } from '../input/keys';
 import { readKey } from '../input/keys';
 import type { DocIndex } from '../model/doc-index';
 import { indexDoc, isEmptyBlock } from '../model/doc-index';
-import type { Caret, EditField, EditorState } from '../state/editor-state';
+import type { CallPart, Caret, EditField, EditorState } from '../state/editor-state';
 import { clampZoom, stepHistory, withContent, withSelection } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import { selectBlock, selectedBlocks, validSelection } from '../state/selection';
@@ -266,8 +272,8 @@ export class EditorSession {
     this.questionValue = null;
   }
 
-  /** The status bar's content. Dialogs are the editor's (`createEditor`), not the session's. */
-  chrome(): Omit<ChromeState, 'dialog'> {
+  /** The status bar's content. Dialogs and pickers are the editor's (`createEditor`). */
+  chrome(): Omit<ChromeState, 'dialog' | 'picker'> {
     const { editing, mode, pendingKeys, zoom } = this.current;
     return {
       selection: this.describeSelection(),
@@ -304,7 +310,14 @@ export class EditorSession {
         return message('selection.branchLabel', { label: this.labelText(selection.branch) });
       case 'missingDefault':
         return 'selection.missingDefault';
-      case 'head':
+      case 'head': {
+        const head = index.diagrams.get(selection.diagram)?.head ?? null;
+        if (head === null) {
+          return null;
+        }
+        const key = head.kind === 'event' ? 'selection.eventHead' : 'selection.methodHead';
+        return message(key, { name: headName(head) });
+      }
       case 'fold':
         return null;
     }
@@ -473,6 +486,30 @@ export class EditorSession {
 
   // The inline editor (03-editor 3.4).
 
+  /**
+   * The fields of a call block, in `Tab` order (interaction rules "호출 블록"): the arguments,
+   * then the result. A call to a Method that receives nothing has the result only.
+   */
+  callParts(block: Block): ReadonlyArray<CallPart> {
+    if (block.kind !== 'call' || block.target.kind !== 'local') {
+      return ['args', 'result'];
+    }
+    const head = this.index().diagrams.get(block.target.diagram)?.head ?? null;
+    return head !== null && headParams(head) !== null ? ['args', 'result'] : ['result'];
+  }
+
+  /**
+   * The field the text edit commands open on a block: its text, or for a call block its first
+   * field (the arguments, or the result when the Method receives nothing).
+   */
+  blockField(id: Id): EditField {
+    const block = this.index().blocks.get(id)?.block;
+    if (block?.kind !== 'call') {
+      return { kind: 'block', block: id };
+    }
+    return { kind: 'call', block: id, part: this.callParts(block)[0] ?? 'result' };
+  }
+
   /** The text a field opens with, or why it cannot be edited. */
   fieldText(field: EditField): { readonly text: string } | { readonly reason: EditorMessage } {
     const index = this.index();
@@ -496,6 +533,26 @@ export class EditorSession {
       }
       case 'missingDefault':
         return index.blocks.has(field.block) ? { text: '' } : { reason: 'reason.notFound' };
+      case 'head': {
+        const diagram = index.diagrams.get(field.diagram);
+        if (diagram === undefined) {
+          return { reason: 'reason.notFound' };
+        }
+        return diagram.head === null ? { reason: 'reason.noHead' } : { text: diagram.head.text };
+      }
+      case 'call': {
+        const block = index.blocks.get(field.block)?.block;
+        if (block === undefined) {
+          return { reason: 'reason.notFound' };
+        }
+        if (block.kind !== 'call') {
+          return { reason: 'reason.wrongKind' };
+        }
+        if (block.target.kind === 'lost') {
+          return { reason: 'reason.lostTarget' };
+        }
+        return { text: field.part === 'args' ? block.args : block.result };
+      }
     }
   }
 
@@ -509,6 +566,7 @@ export class EditorSession {
       return found.reason;
     }
     this.clearPending();
+    const call = field.kind === 'call' ? this.index().blocks.get(field.block)?.block : undefined;
     this.setState({
       ...this.current,
       mode: 'normal',
@@ -517,7 +575,33 @@ export class EditorSession {
         initial: found.text,
         text: caret === 'clear' ? '' : found.text,
         caret: caret === 'clear' ? 'end' : caret,
+        ...(call?.kind === 'call' ? { call: { args: call.args, result: call.result } } : {}),
       },
+    });
+    return true;
+  }
+
+  /**
+   * `Tab` in a call block: keeps what was typed and moves to the other field (interaction rules
+   * "호출 블록"). Returns `false` when there is no other field (a Method receiving nothing).
+   */
+  switchCallPart(text: string): boolean {
+    const editing = this.current.editing;
+    if (editing?.field.kind !== 'call' || editing.call === undefined) {
+      return false;
+    }
+    const field = editing.field;
+    const block = this.index().blocks.get(field.block)?.block;
+    const other: CallPart = field.part === 'args' ? 'result' : 'args';
+    if (block === undefined || !this.callParts(block).includes(other)) {
+      return false;
+    }
+    const call =
+      field.part === 'args' ? { ...editing.call, args: text } : { ...editing.call, result: text };
+    const next = other === 'args' ? call.args : call.result;
+    this.setState({
+      ...this.current,
+      editing: { field: { ...field, part: other }, initial: next, text: next, caret: 'end', call },
     });
     return true;
   }
@@ -532,11 +616,21 @@ export class EditorSession {
       return;
     }
     this.setState({ ...this.current, editing: null });
-    if (text === editing.initial || this.current.readOnly) {
+    if (this.current.readOnly) {
       return;
     }
     const field = editing.field;
     const keep = (): After => ({ selection: this.current.selection });
+    if (field.kind === 'call') {
+      // Both fields in one command: one undo step. The same texts change nothing (UX MD2).
+      const typed = editing.call ?? { args: '', result: '' };
+      const call = field.part === 'args' ? { ...typed, args: text } : { ...typed, result: text };
+      this.commit(editCall(this.current.doc.content, { block: field.block, ...call }), keep);
+      return;
+    }
+    if (text === editing.initial) {
+      return;
+    }
     switch (field.kind) {
       case 'block':
         this.commit(editText(this.current.doc.content, { node: field.block, text }), keep);
@@ -558,6 +652,21 @@ export class EditorSession {
         }
         const written = editText(made.content, { node: empty, text });
         this.commit(written, (ok) => ({ selection: selectBlock(indexDoc(ok.content), empty) }));
+        return;
+      }
+      case 'head': {
+        const result = editHead(this.current.doc.content, { diagram: field.diagram, text });
+        if (!result.ok && result.reason.code === 'duplicateHeadName') {
+          // A clashing name is not taken: the field opens again with it (interaction rules
+          // "Event 헤더"). An empty name puts the old one back, so the refusal alone does that.
+          this.refuse(result.reason);
+          this.setState({
+            ...this.current,
+            editing: { field, initial: editing.initial, text, caret: 'end', isRejected: true },
+          });
+          return;
+        }
+        this.commit(result, keep);
         return;
       }
     }

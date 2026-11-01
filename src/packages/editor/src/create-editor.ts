@@ -1,6 +1,6 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
-import { createDoc, openSvgFile, parseModelJson } from '@ariadne-nsd/core';
+import { createDoc, openSvgFile, parseModelJson, setSettings } from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -14,6 +14,8 @@ import type {
   DocumentStore,
   EditorHandle,
   OpenedDocument,
+  Picker,
+  PickerItem,
   SaveFonts,
   SettingSpec,
   SettingsSchema,
@@ -54,11 +56,23 @@ export type EditorOptions = {
   readonly log?: (text: string, detail?: unknown) => void;
 };
 
-/** The setting ids the editor reads (03-editor 6, UX W5). */
+/**
+ * The setting ids the editor reads (03-editor 6, UX W5). `headStyle` is the header shape the
+ * user chose last (UX HS1): the editor writes it when a document's header shape is changed, and
+ * a new document starts with it. It is remembered, not shown in the preferences.
+ */
 export const settingIds = {
   locale: 'ui.locale',
   keyHint: 'editor.keyHint',
   autoSave: 'file.autoSave',
+  headStyle: 'editor.headStyle',
+} as const;
+
+/** The document setting ids (scope `document`): the model's `settings` (UX W5). */
+export const documentSettingIds = {
+  headStyle: 'document.headStyle',
+  textKind: 'document.textKind',
+  theme: 'document.theme',
 } as const;
 
 /** The settings the editor knows. `file.autoSave` is used by the web shell. */
@@ -85,7 +99,20 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     defaultValue: true,
     scope: 'user',
   },
+  {
+    id: documentSettingIds.headStyle,
+    title: 'setting.headStyle',
+    values: ['title', 'shape'],
+    valueTitles: ['setting.headStyle.title', 'setting.headStyle.shape'],
+    defaultValue: 'title',
+    scope: 'document',
+  },
 ];
+
+/** The header shape a new document starts with: the one chosen last, or "title" (UX HS1). */
+export function rememberedHeadStyle(settings: SettingsStore): Settings['headStyle'] {
+  return settings.get<string>(settingIds.headStyle) === 'shape' ? 'shape' : 'title';
+}
 
 /** A document read from an `OpenedDocument`, or why it cannot be edited. */
 export type ReadDocument =
@@ -100,10 +127,13 @@ export type ReadDocument =
 
 /**
  * Reads what to open: the local backup first (dirty), then a ready-made document (an example,
- * clean, nothing selected), a new document for `text: null` (its empty block selected, UX OP1),
- * otherwise the file (nothing selected).
+ * clean, nothing selected), a new document for `text: null` (its empty block selected, UX OP1)
+ * with the header shape `headStyle` (UX HS1), otherwise the file (nothing selected).
  */
-export function readDocument(opened: OpenedDocument): ReadDocument {
+export function readDocument(
+  opened: OpenedDocument,
+  headStyle: Settings['headStyle'] = 'title',
+): ReadDocument {
   if (opened.restored !== undefined) {
     const result = parseModelJson(opened.restored);
     return result.ok
@@ -114,7 +144,7 @@ export function readDocument(opened: OpenedDocument): ReadDocument {
     return { ok: true, doc: opened.doc, kept: {}, isDirty: false, selection: null };
   }
   if (opened.text === null) {
-    const doc = createDoc();
+    const doc = createDoc({ headStyle });
     const first = doc.content.diagrams[0]?.body.blocks[0];
     return {
       ok: true,
@@ -150,12 +180,6 @@ const browserTimers: Timers = {
   },
 };
 
-const documentSettingIds = {
-  headStyle: 'document.headStyle',
-  textKind: 'document.textKind',
-  theme: 'document.theme',
-} as const;
-
 /**
  * Makes an editor in `host` and shows `doc` (03-editor 6). A file that cannot be opened is not
  * edited: the editor shows a new document, view only, so the original is never overwritten, and
@@ -172,9 +196,9 @@ export function createEditor(options: EditorOptions): EditorHandle {
   const fonts = cachedFonts(options.fonts);
   let store: DocumentStore = options.doc.store;
 
-  const first = readDocument(options.doc);
+  const first = readDocument(options.doc, rememberedHeadStyle(settings));
   const session = new EditorSession(
-    first.ok ? first.doc : createDoc(),
+    first.ok ? first.doc : createDoc({ headStyle: rememberedHeadStyle(settings) }),
     {
       locale,
       clipboard,
@@ -290,6 +314,39 @@ export function createEditor(options: EditorOptions): EditorHandle {
   };
   const contextMenuListeners = new Set<(request: ContextMenuRequest) => void>();
 
+  // A list to choose from (the Method to call). One at a time; a new one closes the old.
+  let picker: Picker | null = null;
+  let nextPickerId = 1;
+  const pick = (
+    title: EditorMessage,
+    items: ReadonlyArray<PickerItem>,
+    active: number,
+  ): Promise<number | null> => {
+    picker?.choose(null);
+    const at = view?.selectionAnchor() ?? view?.canvasAnchor() ?? { x: 0, y: 0 };
+    return new Promise((resolve) => {
+      const id = nextPickerId++;
+      picker = {
+        id,
+        title,
+        items,
+        x: at.x,
+        y: at.y,
+        active,
+        choose: (index) => {
+          if (picker?.id !== id) {
+            return;
+          }
+          picker = null;
+          emitChrome();
+          view?.focus();
+          resolve(index !== null && index >= 0 && index < items.length ? index : null);
+        },
+      };
+      emitChrome();
+    });
+  };
+
   // Saving (03-editor 6, 6.3).
   const serialize = async (): Promise<{ readonly svg: string; readonly doc: Doc }> => {
     const source = { doc: session.state.doc, kept: session.kept, rendering: session.rendering };
@@ -347,6 +404,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
     zoomTo: (zoom) => {
       view?.zoomTo(zoom);
     },
+    pick,
   })) {
     registry.register(spec);
   }
@@ -379,7 +437,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
     commands: registry,
     settingsSchema,
     open: (opened) => {
-      const read = readDocument(opened);
+      picker?.choose(null);
+      const read = readDocument(opened, rememberedHeadStyle(settings));
       if (!read.ok) {
         log(`Could not open ${opened.store.name}`, read.detail);
         session.notify(read.message, 'warn');
@@ -409,7 +468,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
         changeListeners.delete(listener);
       };
     },
-    chromeState: (): ChromeState => ({ ...session.chrome(), dialog }),
+    chromeState: (): ChromeState => ({ ...session.chrome(), dialog, picker }),
     onChromeState: (listener) => {
       chromeListeners.add(listener);
       return () => {
@@ -446,14 +505,16 @@ export function createEditor(options: EditorOptions): EditorHandle {
         session.notify('reason.readOnly', 'warn');
         return;
       }
-      const isSame =
-        next !== null &&
-        next.headStyle === content.settings.headStyle &&
-        next.textKind === content.settings.textKind &&
-        next.theme === content.settings.theme;
-      if (next !== null && !isSame) {
-        // Document settings are content: undoable (UX W5, Q9).
-        session.apply({ ...content, settings: next }, { selection: session.state.selection });
+      if (next === null) {
+        return;
+      }
+      // Document settings are content: undoable (UX W5, Q9).
+      const isApplied = session.commit(setSettings(content, next), () => ({
+        selection: session.state.selection,
+      }));
+      if (isApplied && id === documentSettingIds.headStyle) {
+        // The shape chosen last is the one new documents start with (UX HS1).
+        settings.set(settingIds.headStyle, next.headStyle);
       }
     },
     startBlockDrag: (kind: ToolbarBlockKind, event: PointerEvent) => {
@@ -479,6 +540,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
     },
     dispose: () => {
       dialog?.answer(null);
+      picker?.choose(null);
       contextMenuListeners.clear();
       stopSettings();
       view?.dispose();

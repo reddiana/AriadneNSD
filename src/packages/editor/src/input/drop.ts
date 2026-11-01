@@ -73,7 +73,8 @@ export function findDrop(
   selection: Selection | null,
 ): Drop | null {
   const hit = hitTest(layout, index, point);
-  if (hit === null) {
+  // Nothing is dropped on a diagram's header: blocks go into its body.
+  if (hit === null || hit.kind === 'diagramHead') {
     return null;
   }
   // A branch label row counts as the header of its If or Case.

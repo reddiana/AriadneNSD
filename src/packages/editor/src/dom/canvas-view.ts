@@ -234,6 +234,9 @@ export class CanvasView {
     style.height = `${String(box.height)}px`;
     style.textAlign = this.isCentered(editing.field) ? 'center' : 'left';
     style.display = 'block';
+    // A refused header name is drawn as an input that cannot be accepted (visual design 7.1).
+    this.editor.classList.toggle('ans-is-rejected', editing.isRejected === true);
+    this.editor.placeholder = this.placeholderOf(editing.field);
     this.editor.value = editing.text;
     this.editor.dataset.minHeight = String(box.height);
     this.editor.focus({ preventScroll: true });
@@ -250,6 +253,15 @@ export class CanvasView {
     }
     this.fitEditor();
     this.scrollIntoView(box);
+  }
+
+  /** A call block's field says which one it is while empty: "Arguments", "Result". */
+  private placeholderOf(field: EditField): string {
+    if (field.kind !== 'call') {
+      return '';
+    }
+    const key = field.part === 'args' ? 'field.callArgs' : 'field.callResult';
+    return formatMessage(this.options.locale(), key);
   }
 
   /** If and Case conditions are drawn centered; other text starts at the left. */
@@ -425,9 +437,20 @@ export class CanvasView {
           this.commitEditor(true);
         } else if (event.key === 'Escape' && !isComposing) {
           event.preventDefault();
-          this.commitEditor(true);
+          if (this.session.state.editing?.isRejected === true) {
+            // Only in a field opened again for a clashing name, Esc puts the old name back
+            // (interaction rules "Event 헤더", UX Q3).
+            this.focus();
+            this.session.cancelEditing();
+          } else {
+            this.commitEditor(true);
+          }
         } else if (event.key === 'Tab') {
           event.preventDefault();
+          // Tab goes to the other field of a call block (03-keymap).
+          if (!isComposing) {
+            this.session.switchCallPart(this.editor.value);
+          }
         } else {
           // Save, the palette and help keys still work while typing: accept the text, then run.
           const stroke = strokeOf(event);
@@ -517,17 +540,34 @@ export class CanvasView {
   }
 
   private openContextMenuAtSelection(): void {
+    const at = this.selectionAnchor();
+    if (at !== null) {
+      this.options.contextMenu(at);
+    }
+  }
+
+  /**
+   * The page point just under the selection's left end, where menus opened from the keyboard
+   * appear (03-editor 1). `null` when nothing is selected.
+   */
+  selectionAnchor(): Point | null {
     const state = this.session.state;
     const box = selectionBox(state.layout, this.session.index(), state.selection);
     if (box === null) {
-      return;
+      return null;
     }
     const rect = this.stage.getBoundingClientRect();
     const zoom = state.zoom;
-    this.options.contextMenu({
+    return {
       x: rect.left + (box.x + Math.min(box.width, 24)) * zoom,
       y: rect.top + (box.y + box.height) * zoom,
-    });
+    };
+  }
+
+  /** The page point near the canvas's top left corner, for a menu when nothing is selected. */
+  canvasAnchor(): Point {
+    const rect = this.canvas.getBoundingClientRect();
+    return { x: rect.left + canvasMargin, y: rect.top + canvasMargin };
   }
 
   private onPointerDown(event: PointerEvent): void {
@@ -617,7 +657,10 @@ export class CanvasView {
     let field: EditField;
     switch (hit.kind) {
       case 'block':
-        field = { kind: 'block', block: hit.block };
+        field = this.session.blockField(hit.block);
+        break;
+      case 'diagramHead':
+        field = { kind: 'head', diagram: hit.diagram };
         break;
       case 'branchLabel':
         field =

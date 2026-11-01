@@ -7,7 +7,8 @@
 // - A refusal is `reason.<code>`: core's `ReasonCode`s and the editor's own (`reason.readOnly`).
 // - Status bar messages are `notice.*`, questions `question.*` with buttons `choice.*`, what is
 //   selected `selection.*`, the mode `mode.*`, settings `setting.<id>`, the key hint groups
-//   `keyHint.<first key>`, the drag label `drag.*`.
+//   `keyHint.<first key>`, the drag label `drag.*`, the list of Methods to call `picker.*`, the
+//   names of the call block's fields `field.*`.
 // - Placeholders are `{name}`; the values come in `params`.
 // - The UI keeps its own strings (menus, dialogs) in `ui/messages.ts`. A key lives in one
 //   catalog only; the UI formats a key with its catalog first, then with `formatMessage`.
@@ -51,6 +52,20 @@ const english = {
   'command.block.insertBefore.while': 'Insert While Before',
   'command.block.insertBefore.for': 'Insert For Before',
   'command.block.insertBefore.doWhile': 'Insert Do-While Before',
+  'command.block.insert.call': 'Insert Call…',
+  'command.block.insertBefore.call': 'Insert Call Before…',
+  'command.call.setTarget': 'Change Called Method…',
+  'command.diagram.event': 'Event Header',
+  'command.diagram.event.add': 'Add Event Header',
+  'command.diagram.event.change': 'Change to Event',
+  'command.diagram.method': 'Method Header',
+  'command.diagram.method.add': 'Add Method Header',
+  'command.diagram.method.change': 'Change to Method',
+  'command.diagram.method.extract': 'Extract into New Method',
+  'command.diagram.removeHead': 'Remove Header',
+  'command.diagram.newEvent': 'New Event Diagram',
+  'command.diagram.newMethod': 'New Method Diagram',
+  'command.diagram.delete': 'Delete Diagram',
   'command.block.wrap.if': 'Wrap in If',
   'command.block.wrap.case': 'Wrap in Case',
   'command.block.wrap.while': 'Wrap in While',
@@ -107,6 +122,13 @@ const english = {
   'reason.notConvertible': 'Only a Case with one branch and a default can become an If.',
   'reason.emptyClip': 'There is nothing to paste.',
   'reason.intoItself': 'Blocks cannot be dropped inside themselves.',
+  'reason.noHead': 'This diagram has no header. Add an Event or Method header first.',
+  'reason.emptyHeadName': 'A header name cannot be empty. The name was put back.',
+  'reason.duplicateHeadName': 'Another header already has this name. Write another name.',
+  'reason.methodHasCallers': 'Call blocks call this Method, so it cannot become an Event.',
+  'reason.lastDiagram': 'This is the only diagram, so it cannot be deleted.',
+  'reason.lostTarget':
+    'This call block lost the Method it called. Choose the Method to call first.',
   // Refusals: the editor's own.
   'reason.readOnly': 'View only: this document cannot be changed here.',
   'reason.nothingSelected': 'Select a block first.',
@@ -123,6 +145,12 @@ const english = {
   'reason.notIf': 'Select an If block.',
   'reason.editing': 'Finish editing the text first.',
   'reason.branchMovesSideways': 'Branches move left or right.',
+  'reason.selectHead': 'Select a header first.',
+  'reason.selectCall': 'Select a call block.',
+  'reason.notOnHead': 'This does not work on a header. Select a block.',
+  'reason.extractNotYet': 'Extracting blocks into a new Method is not supported yet.',
+  'reason.eventNotExtracted':
+    'An Event cannot be called, so blocks are not extracted into one. Select the header to change its kind.',
 
   // Status bar notices.
   'notice.escAgain': 'Press Esc again to clear the selection.',
@@ -151,6 +179,7 @@ const english = {
   'notice.internalError': 'Something went wrong; the document was left as it was.',
   'notice.clipboardLocal':
     'The system clipboard is not available, so the blocks were kept in this tab only.',
+  'notice.diagramDeleted': 'Deleted the diagram. Undo brings it back.',
 
   // Questions in the status bar (UX MD3).
   'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',
@@ -174,6 +203,16 @@ const english = {
   'selection.blocks': '{count} blocks',
   'selection.branchLabel': 'Branch label "{label}"',
   'selection.missingDefault': 'Empty default branch',
+  'selection.eventHead': 'Event header "{name}"',
+  'selection.methodHead': 'Method header "{name}"',
+
+  // The list of Methods to call (interaction rules "호출 블록").
+  'picker.callTarget': 'Method to call',
+  'picker.newMethod': 'New Method, and call it',
+
+  // The two fields of a call block, shown in the empty inline editor.
+  'field.callArgs': 'Arguments',
+  'field.callResult': 'Result',
 
   // Modes in the status bar (visual design 7.1).
   'mode.editing': '-- EDIT --',
@@ -203,6 +242,9 @@ const english = {
   'setting.uiLocale.ko': '한국어',
   'setting.keyHint': 'Show the key hint',
   'setting.autoSave': 'Save automatically',
+  'setting.headStyle': 'Header shape',
+  'setting.headStyle.title': 'Like a title',
+  'setting.headStyle.shape': 'Hat · arch',
 } as const;
 
 /** The keys of the editor's messages. */
@@ -243,6 +285,20 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.block.insertBefore.while': '앞에 While 삽입',
   'command.block.insertBefore.for': '앞에 For 삽입',
   'command.block.insertBefore.doWhile': '앞에 Do-While 삽입',
+  'command.block.insert.call': '호출 삽입…',
+  'command.block.insertBefore.call': '앞에 호출 삽입…',
+  'command.call.setTarget': '호출할 Method 바꾸기…',
+  'command.diagram.event': 'Event 헤더',
+  'command.diagram.event.add': 'Event 헤더 달기',
+  'command.diagram.event.change': 'Event로 바꾸기',
+  'command.diagram.method': 'Method 헤더',
+  'command.diagram.method.add': 'Method 헤더 달기',
+  'command.diagram.method.change': 'Method로 바꾸기',
+  'command.diagram.method.extract': '새 Method로 빼기',
+  'command.diagram.removeHead': '헤더 제거',
+  'command.diagram.newEvent': '새 Event 다이어그램',
+  'command.diagram.newMethod': '새 Method 다이어그램',
+  'command.diagram.delete': '다이어그램 삭제',
   'command.block.wrap.if': 'If로 감싸기',
   'command.block.wrap.case': 'Case로 감싸기',
   'command.block.wrap.while': 'While로 감싸기',
@@ -294,6 +350,13 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.notConvertible': '분기 하나와 default만 있는 Case만 If로 바꿀 수 있습니다.',
   'reason.emptyClip': '붙여넣을 것이 없습니다.',
   'reason.intoItself': '블록을 자기 안에 놓을 수 없습니다.',
+  'reason.noHead': '헤더가 없는 다이어그램입니다. 먼저 Event나 Method 헤더를 다세요.',
+  'reason.emptyHeadName': '헤더의 이름은 비울 수 없어 원래 이름으로 되돌렸습니다.',
+  'reason.duplicateHeadName': '같은 이름의 헤더가 이미 있습니다. 다른 이름을 적으세요.',
+  'reason.methodHasCallers': '이 Method를 호출하는 호출 블록이 있어 Event로 바꿀 수 없습니다.',
+  'reason.lastDiagram': '하나뿐인 다이어그램이라 삭제할 수 없습니다.',
+  'reason.lostTarget':
+    '호출하던 Method를 잃은 호출 블록이라 편집할 수 없습니다. 먼저 호출할 Method를 선택하세요.',
   'reason.readOnly': '보기만 하는 중: 이 문서는 여기서 바꿀 수 없습니다.',
   'reason.nothingSelected': '먼저 블록을 선택하세요.',
   'reason.selectOneBlock': '블록 하나를 선택하세요.',
@@ -308,6 +371,12 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.notIf': 'If 블록을 선택하세요.',
   'reason.editing': '먼저 텍스트 편집을 끝내세요.',
   'reason.branchMovesSideways': '분기는 왼쪽 · 오른쪽으로만 이동합니다.',
+  'reason.selectHead': '먼저 헤더를 선택하세요.',
+  'reason.selectCall': '호출 블록을 선택하세요.',
+  'reason.notOnHead': '헤더에서는 되지 않습니다. 블록을 선택하세요.',
+  'reason.extractNotYet': '새 Method로 빼기는 아직 지원하지 않습니다.',
+  'reason.eventNotExtracted':
+    'Event는 호출할 수 없어 블록을 Event로 빼지 않습니다. 종류를 바꾸려면 헤더를 선택하세요.',
   'notice.escAgain': '한 번 더 Esc를 누르면 선택한 것을 풉니다.',
   'notice.selectionCleared':
     '선택한 것을 풀었습니다. 이동 키를 누르면 마지막에 선택했던 블록부터 다시 선택합니다.',
@@ -335,6 +404,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
     '더 새 버전의 AriadneNSD가 만든 파일입니다. 편집하려면 앱을 업데이트하세요.',
   'notice.internalError': '문제가 생겨 문서를 그대로 두었습니다.',
   'notice.clipboardLocal': '시스템 클립보드를 쓸 수 없어 이 탭 안에만 복사했습니다.',
+  'notice.diagramDeleted': '다이어그램을 삭제했습니다. 실행 취소로 되돌릴 수 있습니다.',
   'question.convertIfToCase': 'If에는 분기를 더할 수 없습니다. Case로 바꿀까요?',
   'question.convertCaseToIf': '분기가 하나만 남았습니다. If로 바꿀까요?',
   'choice.convertToCase': 'Case로 바꾸기',
@@ -354,6 +424,12 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'selection.blocks': '블록 {count}개',
   'selection.branchLabel': '분기 라벨 "{label}"',
   'selection.missingDefault': '빈 default 분기',
+  'selection.eventHead': 'Event 헤더 "{name}"',
+  'selection.methodHead': 'Method 헤더 "{name}"',
+  'picker.callTarget': '호출할 Method',
+  'picker.newMethod': '새 Method를 만들고 호출',
+  'field.callArgs': '인자',
+  'field.callResult': '결과',
   'mode.editing': '-- 편집 --',
   'mode.visual': '-- 영역 --',
   'keyHint.a': '뒤에 삽입',
@@ -375,6 +451,9 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'setting.uiLocale.ko': '한국어',
   'setting.keyHint': '키 힌트 보이기',
   'setting.autoSave': '자동 저장',
+  'setting.headStyle': '헤더 모양',
+  'setting.headStyle.title': '제목처럼',
+  'setting.headStyle.shape': '모자 · 아치',
 };
 
 const catalogs: Readonly<Record<Locale, Readonly<Record<MessageKey, string>>>> = {

@@ -67,6 +67,7 @@ export function fakeEngine(
     keyHintTitle: null,
     zoom: 1,
     dialog: null,
+    picker: null,
   };
 
   const contextMenuListeners = new Set<(request: ContextMenuRequest) => void>();

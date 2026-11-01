@@ -10,7 +10,17 @@ export type EditField =
   /** The label of an If or Case branch (R-EDIT-12). */
   | { readonly kind: 'branchLabel'; readonly branch: Id }
   /** The empty default cell of a Case without a default: typing makes the branch (UX CD1). */
-  | { readonly kind: 'missingDefault'; readonly block: Id };
+  | { readonly kind: 'missingDefault'; readonly block: Id }
+  /** The text of a diagram's header: the name, and a Method's parameters (R-BLK-10, R-BLK-11). */
+  | { readonly kind: 'head'; readonly diagram: Id }
+  /**
+   * One of the two fields of a call block: the arguments after the name, or the result before
+   * it (interaction rules "호출 블록"). `Tab` goes to the other one.
+   */
+  | { readonly kind: 'call'; readonly block: Id; readonly part: CallPart };
+
+/** The fields of a call block. */
+export type CallPart = 'args' | 'result';
 
 /** Where the caret starts (03-keymap): all selected (`Enter` `F2`), at the start (`i`), at the end. */
 export type Caret = 'selectAll' | 'start' | 'end';
@@ -23,6 +33,17 @@ export type Editing = {
   /** The text the field opens with: `initial`, or `''` for "clear and type" (`cc`). */
   readonly text: string;
   readonly caret: Caret;
+  /**
+   * A call block's two fields as typed so far. Both are written back in one command when the
+   * editor closes, so editing them is one undo step (UX MD2).
+   */
+  readonly call?: { readonly args: string; readonly result: string };
+  /**
+   * The field opened again because its header name was refused (a clash). `Esc` there puts the
+   * name back (UX Q3), and the field is drawn as an input that cannot be accepted (visual design
+   * 7.1).
+   */
+  readonly isRejected?: boolean;
 };
 
 /** The editor's state (03-editor 2). Immutable: every change makes a new object. */
@@ -32,7 +53,10 @@ export type EditorState = {
   readonly undo: ReadonlyArray<Content>;
   readonly redo: ReadonlyArray<Content>;
   readonly selection: Selection | null;
-  /** After the selection is cleared, a move key starts here (interaction rules 2). */
+  /**
+   * After the selection is cleared, a move key starts here (interaction rules 2): a block, or a
+   * diagram whose header was selected.
+   */
   readonly lastSelected: Id | null;
   readonly editing: Editing | null;
   /** Changed since the last save (the unsaved mark ●). */
@@ -73,8 +97,10 @@ function rememberedBlock(selection: Selection | null): Id | null {
       return selection.focus;
     case 'missingDefault':
       return selection.block;
-    case 'branchLabel':
     case 'head':
+      // A move key after clearing starts at this header again.
+      return selection.diagram;
+    case 'branchLabel':
     case 'fold':
       return null;
   }

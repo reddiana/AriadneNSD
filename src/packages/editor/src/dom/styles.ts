@@ -52,6 +52,8 @@ export function editorCss(screenFontUrl: string | null): string {
   font: 13px/18px "${blockFont.familyName}", D2Coding, Consolas, "Malgun Gothic", monospace;
   padding: ${String(padY - 2)}px ${String(padX - 2)}px;
 }
+.ans-inline-editor.ans-is-rejected { border-color: ${editColors['edit.error']}; }
+.ans-inline-editor::placeholder { color: #5a6476; }
 .ans-drag-label {
   position: fixed; z-index: 10; pointer-events: none; padding: 2px 6px; border-radius: 4px;
   background: var(--ans-ui-panel); color: var(--ans-ui-text); border: 1px solid var(--ans-ui-line);

@@ -1,7 +1,7 @@
 // The web app's entry: builds the shell and the editor and puts them on the page (06-web).
 
 import type { ExamplesHost } from '@ariadne-nsd/editor';
-import { createEditor, examples } from '@ariadne-nsd/editor';
+import { createEditor, examples, rememberedHeadStyle } from '@ariadne-nsd/editor';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -97,7 +97,11 @@ const examplesHost: ExamplesHost = {
     if (example === undefined) {
       return;
     }
-    void shell.openDocument(example.build('title'), `${example.name[locale]}.ns.svg`);
+    // In the header shape the user chose last (UX HS1).
+    void shell.openDocument(
+      example.build(rememberedHeadStyle(settings)),
+      `${example.name[locale]}.ns.svg`,
+    );
   },
   isFirstVisit: settings.get(welcomedKey) !== true,
   onWelcomed: () => {

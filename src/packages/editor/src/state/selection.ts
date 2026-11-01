@@ -11,7 +11,8 @@ export type SeqRef = { readonly owner: Id; readonly slot: string };
 /**
  * A selection (03-editor 2).
  * - `blocks`: a contiguous range in one sequence (ADR-0008); `anchor` is where it started.
- * - `head`, `fold`: kept from the design; not made by the MVP (no headers, no folding).
+ * - `head`: the header of a diagram (Event or Method).
+ * - `fold`: kept from the design; not made by the MVP (no folding).
  * - `branchLabel`: the label of an If or Case branch.
  * - `missingDefault`: the empty default cell drawn for a Case without a default (UX CD1).
  *   An addition to 03-editor 2, which does not list it.
@@ -65,7 +66,7 @@ export function validSelection(index: DocIndex, selection: Selection | null): Se
         : selectRange(index, selection.anchor, selection.focus);
     }
     case 'head':
-      return index.diagrams.has(selection.diagram) ? selection : null;
+      return (index.diagrams.get(selection.diagram)?.head ?? null) !== null ? selection : null;
     case 'branchLabel':
       return index.branches.has(selection.branch) ? selection : null;
     case 'fold':

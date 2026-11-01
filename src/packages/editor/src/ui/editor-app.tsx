@@ -24,6 +24,7 @@ import type { ExamplesMode } from './examples-modal';
 import { ExamplesModal } from './examples-modal';
 import { KeyHint } from './key-hint';
 import { MenuBar } from './menu-bar';
+import { PickerMenu } from './picker-menu';
 import type { UiMessageKey } from './messages';
 import { uiMessage } from './messages';
 import {
@@ -178,7 +179,7 @@ export function EditorApp({
     (ContextMenuRequest & { readonly key: number }) | null
   >(null);
   const slotRef = useMountedCanvas(canvas);
-  const { dialog } = useChromeState(handle);
+  const { dialog, picker } = useChromeState(handle);
 
   useEffect(
     () =>
@@ -344,6 +345,7 @@ export function EditorApp({
         {contextMenu && (
           <ContextMenu key={contextMenu.key} request={contextMenu} onClose={closeContextMenu} />
         )}
+        {picker && <PickerMenu key={picker.id} picker={picker} />}
         {dialog && (
           <div className="ans-backdrop" data-kind="dialog">
             <DialogModal key={dialog.id} dialog={dialog} />
