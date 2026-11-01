@@ -12,7 +12,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
   <img src="journal/assets/2026-11-02-readme-dijkstra.ns.svg" width="300" hspace="8" alt="NS 차트 예: 다익스트라 최단 경로">
   <img src="journal/assets/2026-11-02-readme-merge-sort.ns.svg" width="286" hspace="8" alt="NS 차트 예: 병합 정렬">
 </p>
-<p align="center"><sub>MVP의 예제를 저장한 파일(<code>.ns.svg</code>) 그대로입니다: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
+<p align="center"><sub>MVP로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
 
 > [!TIP]
 > **MVP를 브라우저에서 바로 써 볼 수 있습니다:**<br>
