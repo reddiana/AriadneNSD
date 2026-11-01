@@ -89,7 +89,7 @@ footer a, a { color: inherit; }
   </section>
 
   <section class="q">
-    <h2><span class="badge">E1</span> 모달의 격자</h2>
+    <h2><span class="badge">E1</span> 모달의 격자 <span class="rec">정함: 1번 (2026-11-01)</span></h2>
     <p>예제는 열 개이고, 4×3 격자는 열두 칸입니다. 남는 두 칸을 어떻게 쓸지 두 안을 견줍니다.</p>
     <ul>
       <li><b>1번 (추천):</b> 4×3. 남는 두 칸에 "빈 문서로 시작"과 "파일 열기…"를 같은 카드로 둡니다. 말씀하신 4×3 그대로이고, 처음 온 사람이 할 수 있는 일 셋(예제 · 빈 문서 · 내 파일)이 한 격자에 모입니다.</li>
@@ -109,7 +109,25 @@ footer a, a { color: inherit; }
             <p>예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.</p>
           </header>
           <div class="grid g4" id="grid1"></div>
-          <div class="foot"><span>예제는 도움말 › 예제와 툴바의 "예제"에도 있습니다</span><span><kbd>Esc</kbd> 닫기</span></div>
+          <div class="foot"><span>예제는 도움말 › 예제…와 툴바의 "예제 ▾"에도 있습니다</span><span><kbd>Esc</kbd> 닫기</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="option" aria-labelledby="o1m">
+    <h2 id="o1m"><span class="badge">1</span> 도움말 › 예제…로 열 때 <span class="rec">정함 (2026-11-01)</span></h2>
+    <p class="note">메인테이너: "도움말>예제를 클릭해도 이 모달이 뜨면 좋겠네요." 그래서 도움말 › 예제는 하위 메뉴가 아니라 이 모달을 여는 항목 하나입니다. 환영 인사는 처음 한 번만 하고, 메뉴에서 열면 할 일과 지금 문서가 어떻게 되는지를 적습니다. "빈 문서로 시작" 카드는 "빈 문서"가 됩니다.</p>
+    <div class="stage">
+      <div class="chrome"><span>파일</span><span>편집</span><span>다이어그램</span><span>보기</span><span>도움말</span></div>
+      <div class="scrim">
+        <div class="modal" role="dialog" aria-label="예제 열기 (메뉴에서)">
+          <header>
+            <h3>예제 열기</h3>
+            <p>예제는 새 문서로 열립니다. 지금 문서는 닫히고, 저장하지 않은 내용은 임시 보관에 남습니다.</p>
+          </header>
+          <div class="grid g4" id="grid1m"></div>
+          <div class="foot"><span>툴바의 "예제 ▾"에서도 고를 수 있습니다</span><span><kbd>Esc</kbd> 닫기</span></div>
         </div>
       </div>
     </div>
@@ -134,19 +152,18 @@ footer a, a { color: inherit; }
   </section>
 
   <section class="option" aria-labelledby="o3">
-    <h2 id="o3">도움말 › 예제와 툴바 (정한 대로)</h2>
-    <p class="note">메뉴는 모두 같은 레벨, 툴바는 오른쪽 끝의 "예제 ▾" 드롭다운입니다. 둘 다 순서가 모달과 같습니다. 툴바의 위치는 화면 배치(05-screen-layout)의 툴바 오른쪽 끝, 확대 · 축소 옆입니다.</p>
+    <h2 id="o3">도움말 › 예제…와 툴바</h2>
+    <p class="note">도움말 › 예제…는 위의 모달을 엽니다. 툴바는 오른쪽 끝의 "예제 ▾" 드롭다운이고 순서가 모달과 같습니다. 툴바의 위치는 화면 배치(05-screen-layout)의 툴바 오른쪽 끝, 확대 · 축소 옆입니다.</p>
     <div class="pair">
       <div>
         <div class="menu" aria-label="도움말 메뉴">
           <div>사용법</div>
           <div>단축키 목록<span class="no">?</span></div>
-          <div class="on">예제 ▸</div>
+          <div class="on">예제…</div>
           <hr>
           <div>이 버전에서 바뀐 것</div>
           <div>AriadneNSD에 대하여</div>
         </div>
-        <div class="menu sub" id="menuList" aria-label="예제 하위 메뉴"></div>
       </div>
       <div>
         <div class="toolbar" aria-label="툴바"><span class="tb">↶</span><span class="tb">↷</span><span class="tb">처리</span><span class="tb">If</span><span class="tb">Case</span><span class="tb">While</span><span class="tb">For</span><span class="tb">Do-While</span><span class="tb">− 100% +</span><span class="tb ex">예제 ▾</span></div>
@@ -181,11 +198,14 @@ const card = (img, name, what, no) => {
     + (img ? `<span class="what">${what}</span>` : '');
   return b;
 };
-const g1 = document.getElementById('grid1'), g2 = document.getElementById('grid2');
-EX.forEach(([f, n, w], i) => { g1.append(card(f, n, w, i + 1)); g2.append(card(f, n, w, i + 1)); });
+const g1 = document.getElementById('grid1'), g1m = document.getElementById('grid1m'), g2 = document.getElementById('grid2');
+EX.forEach(([f, n, w], i) => { g1.append(card(f, n, w, i + 1)); g1m.append(card(f, n, w, i + 1)); g2.append(card(f, n, w, i + 1)); });
 const blank = card(null, '빈 문서로 시작', '+'); blank.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">다시 묻지 않습니다</span>');
 const open = card(null, '파일 열기…', '↥'); open.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">.ns.svg · .ns</span>');
 g1.append(blank, open);
-const ml = document.getElementById('menuList'), dl = document.getElementById('ddList');
-EX.forEach(([, n]) => { ml.insertAdjacentHTML('beforeend', `<div>${n}</div>`); dl.insertAdjacentHTML('beforeend', `<div>${n}</div>`); });
+const blankM = card(null, '빈 문서', '+'); blankM.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">새 문서</span>');
+const openM = card(null, '파일 열기…', '↥'); openM.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">.ns.svg · .ns</span>');
+g1m.append(blankM, openM);
+const dl = document.getElementById('ddList');
+EX.forEach(([, n]) => { dl.insertAdjacentHTML('beforeend', `<div>${n}</div>`); });
 </script>
