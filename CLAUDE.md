@@ -7,7 +7,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 2026-10-10까지의 이름은 `N
 | 폴더 | 용도 |
 | --- | --- |
 | `README.md` | GitHub 방문자를 위한 첫 화면이면서 배포한 사이트(`reddiana.github.io/AriadneNSD`)의 첫 화면의 원본. 저장소 소개와 읽는 법(배포한 사이트, 또는 Obsidian)의 안내. GitHub에서 읽히도록 위키링크 대신 일반 마크다운 링크를 쓴다. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸면 사이트에서 빠진다(→ [[dr-0013-publish-docs-github-pages|DR-0013]]) |
-| `CONTRIBUTING.md` | 기여하려는 사람을 위한 안내. 지금은 설계 단계의 기여(읽기, 이슈, 문서 고침)만. 코딩 스타일과 도구는 개발 전에 더한다 |
+| `CONTRIBUTING.md` | 기여하려는 사람을 위한 안내. 지금은 MVP 써 보기와 버그 알리기, 설계 읽기, 이슈, 문서 고침. 코드 Pull Request는 아직 받지 않는다. 개발 환경은 `src/README.md`, 코드 규칙은 [[07-coding-guide]]를 가리킨다 |
 | `docs/` | 애플리케이션 문서. **최종 결과(지금의 모습)만** 둔다: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세, 용어집, 코딩 가이드(코드를 쓰기 전에 읽는다). 시작점은 `docs/README.md` (GitHub에서 폴더를 열면 바로 보이도록) |
 | `src/` | 코드. pnpm 모노레포(`packages/core` · `packages/fonts` · `packages/editor`, `apps/web`) → [[0036-code-layout\|ADR-0036]]. 개발을 시작하는 법은 `src/README.md`, 규칙은 [[07-coding-guide\|코딩 가이드]]. 설계(`docs/`)와 코드가 다르면 둘 중 하나가 틀린 것이다 |
 | `atelier/` | 작업 공간(지금 하는 일과 그 기록): 현재 상태(`status.md`), 할 일 목록(`backlog.md`), 보낼 편지함(`outbox.md`: 메인테이너의 답을 기다리는 것), 프로토타입의 상태(`prototype.md`), 시안과 스파이크의 목록(`sketchbook.md`), 세션 기록(`sessions/`), 요구사항 변경 기록(`requirement-changes.md`: 철회한 요구사항), 아키텍처 결정 기록(`adr/`: ADR), 그 밖의 결정 기록(`decisions/`: DR), inbox(`inbox.md`: 세션 사이에 메인테이너가 생각을 적어 두는 페이지) |

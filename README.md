@@ -23,7 +23,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 먼저 웹(정적 페이지), Obsidian 플러그인, 데스크톱 앱을 이 순서로 만듭니다. 그다음 웹 위에 Google Drive 연동을 얹고, 나중에 Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill로 넓힐 예정입니다. 첫 출시(MVP)는 웹입니다.
 
 > [!NOTE]
-> **지금은 설계 단계입니다.** 요구사항과 아키텍처를 정했고 상세 설계를 하고 있습니다. 코드는 아직 없습니다.
+> **지금은 첫 출시(MVP)인 웹 버전을 개발하고 있습니다.** 요구사항 · 아키텍처 · 상세 설계를 바탕으로 코드를 [`src/`](src/README.md)에서 만들고 있고, 만든 것은 위의 MVP 주소에 올라갑니다. Obsidian 플러그인과 데스크톱 앱은 아직 설계 단계입니다.
 
 ## 이 저장소를 읽는 법
 
