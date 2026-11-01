@@ -53,7 +53,15 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     expect(from('b1', step('down'))).toBe('c');
     expect(from('d', step('down'))).toBe('f');
     expect(from('e', step('down'))).toBe('f');
-    expect(from('g', step('down'))).toBe('stay');
+  });
+
+  it('UX ND1: Down with nothing below selects the block holding this one; at the top, it stays', () => {
+    expect(from('g', step('down'))).toBe('w1');
+    // From the While, Down goes into its body again, as from any control block.
+    expect(from('w1', step('down'))).toBe('g');
+    const flat = indexDoc(contentOf([proc('x'), proc('y')]));
+    const last = navigate(flat, selectBlock(flat, 'y'), null, step('down'));
+    expect(last.kind).toBe('stay');
   });
 
   it('R-EDIT-03 (UX Q10): Up from the first block of a branch selects its label, then the If', () => {

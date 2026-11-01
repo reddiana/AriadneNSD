@@ -242,7 +242,12 @@ function stepDown(index: DocIndex, current: Id): NavigationResult {
     }
     next = firstAfter(index, order, crossing.id);
   }
-  return next === undefined ? stay : select(index, next);
+  if (next !== undefined) {
+    return select(index, next);
+  }
+  // Nothing below: the block that holds this one is selected (UX ND1). At the top level, stay.
+  const parent = ancestorsOf(index, current)[1];
+  return parent === undefined ? stay : select(index, parent);
 }
 
 function stepLeft(index: DocIndex, current: Id): NavigationResult {
