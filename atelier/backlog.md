@@ -93,6 +93,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## 뒤따르는 문서에 반영
 
+- [ ] 시안 여덟 개(2026-10-22 interface-diagram, 10-25 code-layout · docs-map, 10-31 readme-polish(틀 포함) · readme-sample, 11-01 example-picker · subset-font-format)에 CC BY 안내가 없다. `journal/assets/2026-10-14-add-license-note.py`를 돌리고 claude.ai의 판도 다시 올린다. 만드는 스크립트가 있는 것은 스크립트에도 넣는다 → [[dr-0010-study-pages-cc-by|DR-0010]] (2026-11-02에 발견)
 - [ ] 2026-10-11에 정한 것을 뒤따르는 문서에 반영
 	- [ ] 소스 파일 머리의 라이선스 표시: 코드는 2026-11-01에 생겼고, 아직 어느 파일에도 없다. 쓰는 라이브러리의 라이선스는 [[03-architecture#8.1 제품에 들어가는 것]]에 적어 확인함 → [[dr-0007-license|DR-0007]]
 - [ ] 2026-10-10에 바뀐 모델을 뒤따르는 문서에 반영: 여러 다이어그램, 호출 블록, Case, 접기 영역, 보기 상태 → [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-05]], [[01-requirements#^r-edit|R-EDIT-13]], [[0018-save-as-shown|ADR-0018]]
