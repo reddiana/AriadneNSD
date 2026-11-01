@@ -188,7 +188,13 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
   });
 
   it('visual design 7.1: the selected header is outlined whole; nothing drops on it', () => {
-    expect(selectionBox(headedLayout, headedIndex, { kind: 'head', diagram: 'd1' })).toEqual(head);
+    // Like a title, the outline stands 4px outside so it does not cover the letters.
+    expect(selectionBox(headedLayout, headedIndex, { kind: 'head', diagram: 'd1' })).toEqual({
+      x: head.x - 4,
+      y: head.y - 4,
+      width: head.width + 8,
+      height: head.height + 4,
+    });
     const drop = findDrop(
       headedLayout,
       headedIndex,
