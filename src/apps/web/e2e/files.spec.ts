@@ -8,6 +8,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 async function openApp(page: Page): Promise<void> {
+  // The first visit's examples modal would cover the editor (UX EX2).
+  await page.addInitScript(() => {
+    localStorage.setItem('ariadne-nsd.setting.examples.welcomed', 'true');
+  });
   await page.goto('./');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
 }

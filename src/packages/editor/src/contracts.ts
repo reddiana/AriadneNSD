@@ -1,5 +1,6 @@
 // The interfaces between the editor and a shell (03-editor 6, ADR-0031, ADR-0033).
 // Required interfaces (ports) are implemented by the shell; provided ones by the editor.
+import type { Doc } from '@ariadne-nsd/core';
 import type { Subsetter } from '@ariadne-nsd/fonts';
 
 import type { Message } from './i18n/messages';
@@ -52,6 +53,11 @@ export type OpenedDocument = {
   readonly readOnly?: boolean;
   /** Model JSON from the local backup (`snapshot()`); opened instead of `text`, as dirty. */
   readonly restored?: string;
+  /**
+   * A ready-made document opened as a new, unsaved-but-clean document instead of `text`: an
+   * example (R-EDIT-25). Nothing is selected (UX OP1).
+   */
+  readonly doc?: Doc;
 };
 
 /** The screen brightness and UI font from the host (03-editor 6). */

@@ -5,7 +5,13 @@
 import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import { blockIconCommand, blockKindOfIcon, uiCommandIds, zoomCommandIds } from './command-ids';
+import {
+  blockIconCommand,
+  blockKindOfIcon,
+  exampleCommandPrefix,
+  uiCommandIds,
+  zoomCommandIds,
+} from './command-ids';
 import type { CommandView } from './command-view';
 import { byPlace, groupRuns } from './command-view';
 import type { DropdownItem } from './dropdown';
@@ -262,6 +268,12 @@ export function Toolbar(): ReactElement {
         label={text('toolbar.zoom')}
         caption={`${String(Math.round(zoomLevel * 100))}%`}
         commands={zoom}
+      />
+      <DropdownButton
+        icon="examples"
+        label={text('toolbar.examples')}
+        commands={commands.filter((command) => command.id.startsWith(exampleCommandPrefix))}
+        className="ans-wide-only"
       />
     </div>
   );

@@ -3,6 +3,8 @@
 // They are the members the shell calls, written after 03-editor 6, so the editor's own types
 // (which have more members) can be passed wherever these are expected.
 
+import type { Doc } from '@ariadne-nsd/core';
+
 /** A screen string. The shell passes plain text (from its own catalog). */
 export type Message =
   string | { readonly key: string; readonly params?: Readonly<Record<string, string | number>> };
@@ -45,6 +47,8 @@ export type OpenedDocument = {
   readonly readOnly?: boolean;
   /** A local backup's snapshot (model JSON). Opened instead of `text`, as dirty (03-editor 6.3). */
   readonly restored?: string;
+  /** A ready-made document (an example, R-EDIT-25), opened new and clean instead of `text`. */
+  readonly doc?: Doc;
 };
 
 /** The document's state (03-editor 6.2). */

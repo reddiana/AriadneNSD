@@ -1,6 +1,7 @@
 // The web app's entry: builds the shell and the editor and puts them on the page (06-web).
 
-import { createEditor } from '@ariadne-nsd/editor';
+import type { ExamplesHost } from '@ariadne-nsd/editor';
+import { createEditor, examples } from '@ariadne-nsd/editor';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -87,6 +88,23 @@ const editor = createEditor({
   },
 });
 
+// The examples (R-EDIT-25): open as a new document named after the example; the welcome shows
+// once per browser (UX EX2).
+const welcomedKey = 'examples.welcomed';
+const examplesHost: ExamplesHost = {
+  open: (id) => {
+    const example = examples.find((item) => item.id === id);
+    if (example === undefined) {
+      return;
+    }
+    void shell.openDocument(example.build('title'), `${example.name[locale]}.ns.svg`);
+  },
+  isFirstVisit: settings.get(welcomedKey) !== true,
+  onWelcomed: () => {
+    settings.set(welcomedKey, true);
+  },
+};
+
 const reactRoot = createRoot(root);
 function render(): void {
   reactRoot.render(
@@ -99,6 +117,7 @@ function render(): void {
         appearance={appearance.current}
         onAppearance={appearanceChanged.add}
         onDragState={dragging.add}
+        examples={examplesHost}
       />
     </StrictMode>,
   );
@@ -118,7 +137,10 @@ settings.onChange((key) => {
 
 await shell.start(editor);
 // The keys go to the diagram from the start, so a keyboard-only user can begin (R-NFR-05).
-editor.focus();
+// On the first visit the examples modal has them instead, so Esc closes it (UX EX2).
+if (!examplesHost.isFirstVisit) {
+  editor.focus();
+}
 watchFileDrops(shell, dragging.emit);
 watchPageExit(shell);
 await blockFontLoading;

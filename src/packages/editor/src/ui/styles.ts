@@ -172,6 +172,28 @@ export const chromeCss = `
 .ans-context-menu > .ans-dropdown { top: 0; left: 0; margin: 0; }
 
 .ans-backdrop[data-kind='dialog'] .ans-modal { width: min(460px, 100%); }
+.ans-backdrop[data-kind='examples'] .ans-modal { width: min(1000px, 100%); }
+.ans-example-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.ans-example-card {
+  display: grid; gap: 4px; align-content: start; text-align: left; font: inherit; color: inherit;
+  background: none; border: 1px solid var(--ui-line); border-radius: 8px; padding: 6px; min-width: 0;
+  cursor: pointer;
+}
+.ans-example-card:hover, .ans-example-card:focus-visible {
+  border-color: var(--ui-accent); outline: none; box-shadow: 0 0 0 2px var(--ui-accent-soft);
+}
+.ans-example-thumb {
+  aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  background: #ffffff; border: 1px solid var(--ui-line); border-radius: 4px;
+}
+.ans-example-thumb svg { width: 92%; height: 92%; }
+.ans-example-plain { background: var(--ui-accent-soft); color: var(--ui-accent); font-size: 30px; }
+.ans-example-name { font-weight: 600; display: flex; gap: 6px; align-items: baseline; }
+.ans-example-no { color: var(--ui-muted); font-weight: 400; font-size: 12px; }
+.ans-example-what { color: var(--ui-muted); font-size: 12px; }
+@media (max-width: 760px) {
+  .ans-example-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .ans-dialog { display: grid; gap: 10px; margin: 0; }
 .ans-dialog p { margin: 0; white-space: normal; }
 .ans-dialog input {

@@ -56,4 +56,8 @@ export const uiCommandIds = {
   manual: 'help.manual',
   whatsNew: 'help.whatsNew',
   about: 'help.about',
+  examples: 'help.examples',
 } as const;
+
+/** The prefix of the commands that open one example (palette, toolbar "예제 ▾"): `example.<id>`. */
+export const exampleCommandPrefix = 'example.';

@@ -6,10 +6,11 @@ import type { Locale } from '@ariadne-nsd/core';
 import type { ReactElement } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { uiCommandIds } from './command-ids';
+import { exampleCommandPrefix, uiCommandIds } from './command-ids';
 import type { MessageFormatter } from './command-view';
 import { defaultFormatter } from './command-view';
 import { CommandPalette } from './command-palette';
+import { examples as exampleList } from '../examples/examples';
 import { ContextMenu } from './context-menu';
 import type {
   Appearance,
@@ -19,6 +20,8 @@ import type {
   MenuPlace,
   SettingsStore,
 } from './engine-api';
+import type { ExamplesMode } from './examples-modal';
+import { ExamplesModal } from './examples-modal';
 import { KeyHint } from './key-hint';
 import { MenuBar } from './menu-bar';
 import type { UiMessageKey } from './messages';
@@ -55,9 +58,25 @@ export type EditorAppProps = {
   readonly formatMessage?: MessageFormatter;
   /** Where Help › User Guide opens in a new tab (06-web 7: the site's `/manual/`). */
   readonly manualUrl?: string;
+  /**
+   * The examples (R-EDIT-25): how the shell opens one as a new document, and whether to welcome
+   * a first-time visitor with the examples modal. Without it there are no examples.
+   */
+  readonly examples?: ExamplesHost;
 };
 
-type Popup = 'palette' | 'shortcuts' | 'preferences' | 'documentSettings' | 'about' | 'whatsNew';
+/** What the shell does for the examples (05-screen-layout "예제", UX EX2 · EX3). */
+export type ExamplesHost = {
+  /** Opens the example with this id as a new document. */
+  readonly open: (id: string) => void;
+  /** Show the welcome once, now. */
+  readonly isFirstVisit: boolean;
+  /** The welcome was answered or closed: do not show it again. */
+  readonly onWelcomed: () => void;
+};
+
+type Popup =
+  'palette' | 'shortcuts' | 'preferences' | 'documentSettings' | 'about' | 'whatsNew' | 'examples';
 
 type UiCommand = {
   readonly id: string;
@@ -146,8 +165,14 @@ export function EditorApp({
   settings,
   formatMessage,
   manualUrl = 'manual/',
+  examples,
 }: EditorAppProps): ReactElement {
-  const [popup, setPopup] = useState<Popup | null>(null);
+  const [popup, setPopup] = useState<Popup | null>(
+    examples?.isFirstVisit === true ? 'examples' : null,
+  );
+  const [examplesMode, setExamplesMode] = useState<ExamplesMode>(
+    examples?.isFirstVisit === true ? 'welcome' : 'menu',
+  );
   const [recent, setRecent] = useState<ReadonlyArray<string>>([]);
   const [contextMenu, setContextMenu] = useState<
     (ContextMenuRequest & { readonly key: number }) | null
@@ -176,6 +201,48 @@ export function EditorApp({
     // Give the keys back to the diagram, so `j` `k` work again.
     handle.focus();
   }, [handle]);
+
+  /** Closes the examples modal; a closed welcome is not shown again (UX EX2). */
+  const closeExamples = useCallback(() => {
+    if (examplesMode === 'welcome') {
+      examples?.onWelcomed();
+      setExamplesMode('menu');
+    }
+    closePopup();
+  }, [closePopup, examples, examplesMode]);
+
+  // Help › Examples… and one command per example (palette, toolbar "예제 ▾"), R-EDIT-25.
+  useEffect(() => {
+    if (examples === undefined) return;
+    const specs: CommandSpec[] = [
+      {
+        id: uiCommandIds.examples,
+        title: () => uiMessage(locale, 'cmd.examples'),
+        keys: [],
+        menu: { menu: 'help', group: 0, order: 2 },
+        edits: false,
+        when: () => true,
+        run: () => {
+          setExamplesMode('menu');
+          setPopup('examples');
+        },
+      },
+      ...exampleList.map((example): CommandSpec => ({
+        id: `${exampleCommandPrefix}${example.id}`,
+        title: () => example.name[locale],
+        keys: [],
+        edits: false,
+        when: () => true,
+        run: () => {
+          examples.open(example.id);
+        },
+      })),
+    ];
+    const unregister = specs.map((spec) => handle.commands.register(spec));
+    return () => {
+      for (const remove of unregister) remove();
+    };
+  }, [handle, locale, examples]);
 
   // The UI's own commands join the registry so that menus, palette and keys see them (ADR-0033).
   useEffect(() => {
@@ -235,6 +302,26 @@ export function EditorApp({
         return <AboutModal onClose={closePopup} />;
       case 'whatsNew':
         return <WhatsNewModal onClose={closePopup} />;
+      case 'examples':
+        return (
+          <ExamplesModal
+            mode={examplesMode}
+            examples={exampleList}
+            onClose={closeExamples}
+            onExample={(id) => {
+              closeExamples();
+              examples?.open(id);
+            }}
+            onBlank={() => {
+              closeExamples();
+              handle.commands.run('file.new');
+            }}
+            onOpenFile={() => {
+              closeExamples();
+              handle.commands.run('file.open');
+            }}
+          />
+        );
     }
   }
 

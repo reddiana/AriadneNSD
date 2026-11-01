@@ -1,5 +1,5 @@
 import type { Locale } from '@ariadne-nsd/core';
-import type { EditorHandle } from '@ariadne-nsd/editor';
+import type { EditorHandle, ExamplesHost } from '@ariadne-nsd/editor';
 import { EditorApp } from '@ariadne-nsd/editor';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,10 @@ export type AppProps = {
   readonly appearance: Appearance;
   readonly onAppearance: (listener: (appearance: Appearance) => void) => () => void;
   /** Whether a file is being dragged over the page (to show the drop hint). */
-  readonly onDragState: (listener: (isDragging: boolean) => void) => () => void;
+  readonly onDragState: (
+    listener: (isDragging: boolean) => void,
+  ) => () => void; /** The examples: opening one, and the first visit's welcome (R-EDIT-25). */
+  readonly examples: ExamplesHost;
 };
 
 /**
@@ -50,6 +53,7 @@ export function App(props: AppProps): ReactElement {
         appearance={appearance}
         settings={props.settings}
         manualUrl={manualUrl}
+        examples={props.examples}
       />
       {isDragging ? <div className="ans-web-drop">{dropHint(props.locale)}</div> : null}
     </>

@@ -3,8 +3,19 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
+/**
+ * Marks the first visit's welcome (the examples modal, UX EX2) as already shown, so it does not
+ * cover the editor. Call before the page loads; `openApp` does.
+ */
+export async function skipWelcome(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    localStorage.setItem('ariadne-nsd.setting.examples.welcomed', 'true');
+  });
+}
+
 /** Opens the app and waits until the editor and the block font are ready. */
 export async function openApp(page: Page): Promise<void> {
+  await skipWelcome(page);
   await page.goto('./');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
 }

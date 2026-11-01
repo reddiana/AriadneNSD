@@ -1,7 +1,7 @@
 // The web shell (06-web): opens and saves files, keeps local backups and recent files, auto saves,
 // and adds its commands to the editor's command list (03-editor 6.1).
 
-import type { Locale, OpenFailureReason } from '@ariadne-nsd/core';
+import type { Doc, Locale, OpenFailureReason } from '@ariadne-nsd/core';
 import { openSvgFile } from '@ariadne-nsd/core';
 
 import type {
@@ -75,6 +75,8 @@ export type WebShell = {
   /** The document the editor shows first: a new document. Restores happen in `start`. */
   readonly initialDocument: () => OpenedDocument;
   readonly newDocument: () => Promise<void>;
+  /** Opens a ready-made document (an example) as a new document with this file name. */
+  readonly openDocument: (doc: Doc, name: string) => Promise<void>;
   readonly openFromPicker: () => Promise<void>;
   /** Opens a file's content (from `<input type="file">` or a drop without a handle). */
   readonly openFile: (file: File) => Promise<void>;
@@ -366,6 +368,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     next: WebDocumentStore,
     fileText: string | null,
     restored: string | undefined,
+    doc?: Doc,
   ): Promise<void> {
     if (editor === null) {
       return;
@@ -382,6 +385,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       text: fileText,
       ...(isReadOnly ? { readOnly: true } : {}),
       ...(restored === undefined ? {} : { restored }),
+      ...(doc === undefined ? {} : { doc }),
     });
     // Told after `open`, which empties the status bar.
     if (isReadOnly) {
@@ -410,6 +414,10 @@ export function createWebShell(options: WebShellOptions): WebShell {
 
   async function newDocument(): Promise<void> {
     await switchTo(newStore(options.newKey(), untitledName, { kind: 'none' }), null, undefined);
+  }
+
+  async function openDocument(doc: Doc, name: string): Promise<void> {
+    await switchTo(newStore(options.newKey(), name, { kind: 'none' }), null, undefined, doc);
   }
 
   async function openFromPicker(): Promise<void> {
@@ -586,6 +594,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     start,
     initialDocument: () => ({ store, text: null }),
     newDocument,
+    openDocument,
     openFromPicker,
     openFile,
     openDropped,

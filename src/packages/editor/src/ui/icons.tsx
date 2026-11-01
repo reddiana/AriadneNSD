@@ -101,6 +101,7 @@ const strokePaths: Readonly<Record<string, string>> = {
   zoom: 'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5',
   menu: 'M4 7h16 M4 12h16 M4 17h16',
   help: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7v.5 M12 17v.5',
+  examples: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',
   chevron: 'M7 10l5 5 5-5',
 };
 

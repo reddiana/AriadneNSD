@@ -99,8 +99,9 @@ export type ReadDocument =
   | { readonly ok: false; readonly message: EditorMessage; readonly detail: string };
 
 /**
- * Reads what to open: the local backup first (dirty), a new document for `text: null` (its empty
- * block selected, UX OP1), otherwise the file (nothing selected).
+ * Reads what to open: the local backup first (dirty), then a ready-made document (an example,
+ * clean, nothing selected), a new document for `text: null` (its empty block selected, UX OP1),
+ * otherwise the file (nothing selected).
  */
 export function readDocument(opened: OpenedDocument): ReadDocument {
   if (opened.restored !== undefined) {
@@ -108,6 +109,9 @@ export function readDocument(opened: OpenedDocument): ReadDocument {
     return result.ok
       ? { ok: true, ...result.value, isDirty: true, selection: null }
       : { ok: false, message: openMessage(result.reason), detail: result.detail };
+  }
+  if (opened.doc !== undefined) {
+    return { ok: true, doc: opened.doc, kept: {}, isDirty: false, selection: null };
   }
   if (opened.text === null) {
     const doc = createDoc();
