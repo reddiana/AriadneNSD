@@ -8,7 +8,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "readme-images": "vitest run --config scripts/vitest.config.ts"
   },
   "dependencies": {
     "@ariadne-nsd/core": "workspace:*",
