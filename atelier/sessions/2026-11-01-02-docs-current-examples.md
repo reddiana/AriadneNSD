@@ -27,6 +27,8 @@ date: 2026-11-01
 
 - 코드가 없던 때의 문장을 고침: `README.md`의 Note(지금은 MVP 웹을 개발 중, 코드는 `src/`), `CONTRIBUTING.md`(MVP 써 보고 버그 알리기를 더함, 코드는 `src/README.md`, 코드 Pull Request는 아직 받지 않음), CLAUDE.md의 `CONTRIBUTING.md` 줄, [[03-quality-attribute-scenarios]]의 읽는 법, [[model-layout-render-theme]]에 MVP 코드의 자리를 덧붙임
 - DR-0005 · DR-0008의 "코드가 아직 없다"는 그때의 결정 근거라 그대로 둠
+- 저장소 전체 점검(에이전트 둘: 찾는 쪽, 근거를 확인하고 고치는 쪽): 확실한 것 33과 덧붙인 6을 고침, 22개 파일. 03-keymap(MVP에 없는 키를 keys.ts로), 04-visual-design(기준을 MVP 코드로, 7.1 상태 표의 칸을 "MVP"로, 분기 라벨 높이 If 16 · Case 28), 02-layout(66번째 판, 3장의 구현된 셋), 03-architecture(core 안은 순환만 막음, 설정 자리는 `src/`), 품질 속성 시나리오(woff2 약 328 KB, 테스트 기반은 만들었음), 07-coding-guide(`DocumentStore`), 06-web(base `./`), 07-testing(매일 밤 CI는 아직), 01-model · 01-file-format · 02-use-cases, til 일곱, backlog(끝난 것 지움), prototype.md(리뷰 순서는 Q20만), `site/custom.scss`(MVP 버튼 선택자)
+- 판단이 필요해 남긴 것은 [[backlog#MVP 개발]]의 "문서 현행화 점검"에 모음
 
 ## MVP에 예제 넣기
 
@@ -38,3 +40,11 @@ date: 2026-11-01
 - 예제의 순서(메인테이너: "예제의 순서도 신경써주세요. 알아서 잘 해주세요."): 쉬운 것에서 어려운 것으로, 새 블록 · 새 개념이 하나씩 늘게. 1 병합 정렬(README 그림) · 2 다익스트라(README 그림) · 3 UART 명령(Case) · 4 타이머 인터럽트(Event 하나, Do-While, 프로토타입의 "코드식") · 5 이진 탐색(Event와 Method, 결과를 받는 호출) · 6 퀵소트(Method 둘이 서로 부름) · 7 미로 찾기(아리아드네의 실) · 8 자판기(문장식, Event 둘) · 9 엘리베이터(가장 넓음) · 10 Raft(가장 큼)
 - 시안 M46(예제 고르기, https://claude.ai/artifact/UCv5JocwUAvNxL5KjKf9ri, `journal/assets/2026-11-01-example-picker-study.html`)의 E1 → 1번: 4×3, 남는 두 칸은 "빈 문서로 시작" · "파일 열기…" 카드. 썸네일은 프로토타입이 그린 그림을 찍음(`journal/assets/2026-11-01-example-thumbs.mjs`)
 - 메인테이너: "1번으로 하고 도움말>예제를 클릭해도 이 모달이 뜨면 좋겠네요. 그 때는 맨 위 문구를 어떻게 해야할까요?" → 도움말 › 예제는 하위 메뉴 대신 같은 모달을 여는 "예제…" 하나. 메뉴에서 열면 제목 "예제 열기", 안내 "예제는 새 문서로 열립니다. 지금 문서는 닫히고, 저장하지 않은 내용은 임시 보관에 남습니다.", 카드 "빈 문서로 시작 / 다시 묻지 않습니다"는 "빈 문서 / 새 문서"로(Claude의 추천을 고름). 툴바의 "예제 ▾" 드롭다운은 그대로
+- 결정을 문서에 적음: [[05-screen-layout]]의 예제 · 예제 모달 · 툴바, [[03-editor#5.1 메뉴 구성]]의 도움말 › 예제…, 5.2 툴바의 예제 ▾, [[ux-decisions#12. 예제 (2026-11-01)]]의 EX1 ~ EX3
+
+## 매듭 (2026-11-01)
+
+메인테이너: "이어서 하시지요. 중간중간 진행상태와 예상 종료시간 알려주세요." → 설계 문서(02-layout 1.5 ~ 1.7, 02-interaction-rules의 헤더 · 호출 블록 · 여러 다이어그램)를 읽던 중 메인테이너: "중간매듭 합시다". 코드는 아직 손대지 않음.
+
+다음 할 일: [[status#이번과 다음 세션에 할 것]]의 "MVP에 예제와 헤더 넣기"
+
