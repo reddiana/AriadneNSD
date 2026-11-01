@@ -62,21 +62,13 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 ## 어떻게 만들고 있나
 
-이 프로젝트는 **Claude Code를 처음 쓰는 백엔드 개발자**가 AI와 함께 프론트엔드 앱을 만들어 가는 과정이기도 합니다.
+이 프로젝트는 **Claude Code를 처음 쓰는 백엔드 개발자**가 AI와 함께 프론트엔드 앱을 만들어 가는 과정이기도 합니다. 그 과정에서 겪은 실수와 배움도 그대로 남깁니다. 누구라도 이 기록을 따라가 보며 "나도 해 볼 수 있겠다"는 용기를 얻기를 바랍니다.
 
-요구사항을 정하고, 결정의 근거를 결정 기록(ADR · DR)으로 남기고, 세션마다 무엇을 의논했는지 기록합니다. 그 과정에서 겪은 실수와 배움도 그대로 남깁니다. 누구라도 이 기록을 따라가 보며 "나도 해 볼 수 있겠다"는 용기를 얻기를 바랍니다.
+1. **설계:** 요구사항부터 UX · 아키텍처 · 상세 설계까지 문서로 먼저 썼습니다. 결정의 근거는 결정 기록(ADR · DR)으로, 세션마다 의논한 것은 세션 기록으로 남깁니다.
+2. **시안과 프로토타입:** 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐고, 버릴 프로토타입으로 요구사항을 써 보았습니다. 페이지마다 무엇을 견주어 왜 골랐는지 적혀 있습니다: [`atelier/sketchbook.md`](atelier/sketchbook.md)
+3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈습니다. 지금은 MVP를 써 보며 다듬고 있습니다.
 
-- 처음부터 지금까지의 흐름: [`journal/timeline.md`](journal/timeline.md)
-- AI와 일하는 법을 배워 간 기록: [`journal/learning-claude-code.md`](journal/learning-claude-code.md)
-
-## 시안과 프로토타입
-
-말로 견주기 어려운 것은 그림으로 그려 놓고 골랐습니다. 무엇과 무엇을 견주었고 왜 그것을 골랐는지가 페이지마다 적혀 있습니다. 누구나 열어 볼 수 있습니다.
-
-- <a href="https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG" target="_blank" rel="noopener">프로토타입</a>: 요구사항이 맞는지 써 보려고 만든 것입니다. 블록을 넣고, 감싸고, 접어 볼 수 있습니다. 제품이 아니고 버릴 코드입니다
-- 시안과 스파이크 전체의 목록: [`atelier/sketchbook.md`](atelier/sketchbook.md)
-
-시안과 스파이크 페이지의 글과 그림은 CC BY 4.0, 프로토타입은 Apache-2.0입니다(아래 [라이선스](#라이선스)). 같은 파일이 [`journal/assets/`](journal/assets/)에 있습니다.
+처음부터 지금까지의 흐름은 [`journal/timeline.md`](journal/timeline.md)에, AI와 일하는 법을 배워 간 기록은 [`journal/learning-claude-code.md`](journal/learning-claude-code.md)에 있습니다.
 
 ## 이름
 
