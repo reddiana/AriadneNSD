@@ -118,6 +118,7 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 편집 화면의 배치(메뉴 바 · 툴바 · 캔버스 · 상태 표시줄, 좁은 화면, 설정 창, 도움말)는 [[05-screen-layout|화면 배치]]에 있습니다. 여기는 웹에서만의 것입니다.
 
 - 브라우저 탭 제목에도 파일 이름과 저장 안 됨 표시를 적습니다(`● 예제.ns.svg – AriadneNSD`).
+- 처음 온 사람에게 예제 모달을 한 번 띄웁니다([[05-screen-layout|화면 배치]]의 예제). 그 브라우저에서 답했는지는 사용자 설정 `examples.welcomed`(localStorage)에 둡니다. 모달이 떠 있는 동안 키보드 포커스는 모달에 있어 `Esc`로 닫힙니다.
 - 저장 안 된 채 브라우저 탭을 닫으려 하면 묻습니다(브라우저의 "나가시겠습니까?"). 로컬 백업이 있어 내용을 잃지는 않습니다.
 - 환경 설정은 그 브라우저의 저장소(`localStorage`)에 남습니다.
 - **툴바 아이콘**은 명령의 `toolbar.icon` id로 고릅니다: `file.new` · `file.open` · `file.save` · `file.export`, `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste`, `block.process` · `block.if` · `block.case` · `block.while` · `block.for` · `block.doWhile`, 그리고 드롭다운의 `wrap` · `zoom`. 블록 아이콘 말고는 24 × 24 격자의 선 그림입니다(임시). 그림이 없는 id는 명령 이름을 글자로 보입니다. 툴팁은 명령 이름과 키이고, 지금 적용되지 않으면 그 이유입니다.

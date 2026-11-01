@@ -287,6 +287,7 @@ type OpenedDocument = {
   text: string | null;                           // .ns.svg · .ns 문자열. null이면 새 문서 (R-ALL-03)
   readOnly?: boolean;                            // 보기만 함 → 6.4
   restored?: string;                             // 로컬 백업에서 복원한 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
+  doc?: Doc;                                     // 만들어 둔 문서(예제 → R-EDIT-25). 있으면 text 대신 새 문서로 열고, 저장 안 됨이 아니며 선택한 것이 없다
 };
 type Appearance = { scheme: 'light' | 'dark'; uiFont: string };
 type SaveFonts = () => Promise<{ subsetter: Subsetter; ttf: Uint8Array }>;  // 웹: hb-subset wasm과 번들 TTF를 받아 온다
@@ -384,6 +385,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 
 - 새로 · 열기 · 최근 파일 · 내보내기(PNG) 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
 - 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 호출합니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
+- 예제([[01-requirements#^r-edit|R-EDIT-25]])는 `editor`가 내보내는 예제 목록에서 셸이 문서를 만들어 `open({ store, text: null, doc })`로 엽니다. 파일 이름은 예제의 이름(`병합 정렬.ns.svg`)이고 원래 파일은 없습니다. 예제 모달 · 도움말 › 예제… · 툴바의 "예제 ▾"는 `editor`의 화면에 있고, 셸은 예제를 여는 법과 첫 방문인지를 넘깁니다 → [[05-screen-layout|화면 배치]]
 - 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어 묻지 않고 바꿔도 내용을 잃지 않지만, 원래 파일에는 들어가지 않았음을 알립니다.
 - 열 수 없는 텍스트(모델이 없는 SVG, 프로토타입의 파일, 깨진 파일, 더 새 버전의 형식)를 받으면 `open`은 문서를 바꾸지 않고 `false`를 돌려주며 이유를 상태 표시줄에 보입니다 → [[01-file-format#1. 확장자와 판별]]
 
