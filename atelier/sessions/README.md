@@ -51,3 +51,4 @@ updated: 2026-10-25
 - [[2026-11-01-04-examples-button-android-load|2026-11-01 툴바의 예제는 모달로, S26에서 MVP가 안 뜨던 것(BUG-03), 휴대폰의 비기능 요구사항 · QAS, 테스트 아키텍처와 자동 테스트 목록, 좁은 화면의 아래 줄 없앰(MB2)]]
 - [[2026-11-02-01-release-stages|2026-11-02 MVP 다음의 단계(DR-0018, 시안 M47), 버전 0.1.0과 1.0 전 파일 알림, README 로드맵]]
 - [[2026-11-02-02-release-yaml-review|2026-11-02 GitHub Releases에 v0.1.0, inbox: nschart 코드 블록(R-FMT-12)과 yaml, README 그림을 MVP의 .ns.svg로]]
+- [[2026-11-02-03-readme-how-we-build|2026-11-02 README: '시안과 프로토타입'을 '어떻게 만들고 있나'에 합쳐 MVP까지]]
