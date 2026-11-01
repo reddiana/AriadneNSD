@@ -91,3 +91,16 @@ test('QA-20: on a phone a block is inserted from the toolbar and selected with a
   await page.touchscreen.tap(x, y);
   await expect(selection(page)).toHaveText('Process block');
 });
+
+test('BUG-04 · QA-20: on a phone the toolbar shows "Examples", and a tap opens the modal', async ({
+  page,
+}) => {
+  await skipWelcome(page);
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  const button = page.getByRole('toolbar').getByRole('button', { name: 'Examples' });
+  await expect(button).toBeVisible();
+  await button.tap();
+  const modal = page.locator('.ans-backdrop[data-kind="examples"] .ans-modal');
+  await expect(modal.locator('h2')).toHaveText('Open an Example');
+});

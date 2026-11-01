@@ -224,7 +224,9 @@ function ExamplesButton({
   return (
     <button
       type="button"
-      className="ans-tool ans-wide-only"
+      // On narrow screens too, with the icon only (BUG-04, 05-screen-layout).
+      className="ans-tool ans-examples-tool"
+      aria-label={label}
       aria-haspopup="dialog"
       title={command.title}
       data-command={command.id}

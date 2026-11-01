@@ -219,6 +219,7 @@ export const chromeCss = `
   .ans-brand { display: none; }
   .ans-toolbar { flex-wrap: wrap; }
   .ans-toolbar .ans-wide-only { display: none; }
+  .ans-examples-tool .ans-tool-label { display: none; }
   .ans-bottombar {
     display: flex; justify-content: space-around; align-items: center; height: 40px; flex: none;
     background: var(--ui-panel); border-top: 1px solid var(--ui-line);
