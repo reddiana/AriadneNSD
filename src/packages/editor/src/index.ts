@@ -45,3 +45,7 @@ export { keyBindings, keysOf, strokeOf } from './input/keys';
 export type { ClipboardData } from './clipboard/clip-format';
 export { clipMimeType } from './clipboard/clip-format';
 export type { ClipboardPort } from './session/session';
+
+// The examples a user can open as a new document (R-EDIT-25).
+export type { ExampleInfo, ExampleText } from './examples/examples';
+export { examples } from './examples/examples';
