@@ -11,14 +11,14 @@ updated: 2026-11-01
 
 # 파일 형식 명세
 
-배포 대상들이 주고받는 저장 파일, 곧 모델을 내장한 SVG의 형식입니다. 앱들 사이의 계약(호환성 계약)이므로, 첫 출시 뒤에는 **형식 버전이 바뀔 때만** 수정합니다.
+배포 대상들이 주고받는 저장 파일, 곧 모델을 내장한 SVG의 형식입니다. 앱들 사이의 계약(호환성 계약)이므로, 웹 1.0 뒤에는 **형식 버전이 바뀔 때만** 수정합니다([[dr-0018-release-stages|DR-0018]]).
 
 - 관련 요구사항: [[01-requirements#3.4 파일 형식]]
 - 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴), [[0034-default-block-font|ADR-0034]](기본 블록 글꼴), [[0035-model-namespace-and-v0|ADR-0035]](모델 네임스페이스, 프로토타입 파일)
 - 모델의 구조는 [[03-architecture#3.4 문서 모델]]과 [[03-architecture#3.5 내용과 뷰 상태]]를 따릅니다. 필드 이름과 스키마는 [[01-model]] 설계에서 굳혔습니다(v1, 3장).
 
 > [!warning] 지금 상태
-> 이 명세의 v1은 MVP의 코드(`src/packages/core/src/format/`)에 구현되어 있습니다. 첫 출시 전까지는 버전을 올리지 않고 고칠 수 있습니다. 프로토타입이 쓰는 파일(`version: 0`)은 이 형식과 다릅니다(7장).
+> 이 명세의 v1은 MVP의 코드(`src/packages/core/src/format/`)에 구현되어 있습니다. 웹 1.0 전까지는 버전을 올리지 않고 고칠 수 있습니다([[dr-0018-release-stages|DR-0018]]). 프로토타입이 쓰는 파일(`version: 0`)은 이 형식과 다릅니다(7장).
 
 ## 1. 확장자와 판별
 

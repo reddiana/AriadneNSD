@@ -67,7 +67,6 @@ MVP 코드에 남은 구멍(2026-11-01, 1~4단계 개발 에이전트의 보고.
 - [ ] [[04-visual-design]] 원칙 1의 "저장된 SVG에 편집 레이어의 색이 나오지 않는 것을 프로토타입 테스트가 확인한다": MVP 테스트에는 없다. 테스트를 더할지
 - [ ] [[04-visual-design]]의 원칙 4 그림(프로토타입 66번째 판의 화면)을 MVP 화면으로 다시 찍을지, 11장 "지금 프로토타입과 다른 곳"에 "MVP와 다른 곳"을 둘지
 - [ ] If ↔ Case로 바꿀지 묻는 모양: MVP는 상태 표시줄의 버튼으로 묻는다. [[02-interaction-rules#If ↔ Case로 바꾸기]]의 "정하지 않았다"를 이것으로 정할지
-- [ ] 사용법 `/manual/`이 아직 없어 MVP의 도움말 › 사용법이 빈 주소를 연다
 - [ ] [[03-architecture]]의 크기 숫자(800자 114 KB와 [[02-layout]]의 118 KB, wasm 652 KB와 [[06-web]]의 667 KB)를 맞출지, core 폴더 목록 · 코드 트리의 `apps/obsidian` · `apps/desktop`(아직 없음)을 계획으로 밝힐지
 - [ ] [[07-testing]]의 "프로토타입의 테스트 시나리오를 `editor`의 명령 테스트로 옮긴다"가 되었는지 확인
 - [ ] [[01-ux-overview]]의 "질문은 프로토타입을 버전마다 써 보며 정한다", backlog의 "프로토타입 리뷰가 끝난 뒤에", [[prototype]]의 "프로토타입에 드래그로 옮기기 넣기"를 MVP가 생긴 지금에 맞출지
@@ -128,16 +127,24 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 - [ ] 데스크톱 프레임워크(Electron · Tauri)를 정한다 → [[0009-desktop-framework|ADR-0009]]. 그 전에 지원할 OS(맥 · 리눅스 포함인지)를 정하고, 맥의 WebKit 웹뷰에서 그린 글자가 셈한 폭과 맞는지 본다. 저장되는 파일은 어느 쪽이든 같다(2026-10-25, 메인테이너: 데스크톱 때 정함)
 
+## 웹 베타의 문턱
+
+웹 베타(널리 알리기 시작하는 때)에 들어가기 전에 할 일입니다. 단계와 문턱은 [[01-requirements#5.1 MVP 다음의 단계]], 정한 과정은 [[dr-0018-release-stages|DR-0018]]. 메인테이너가 MVP를 써 보는 일과 브라우저 확인은 [[status#이번과 다음 세션에 할 것]]에 있습니다.
+
+- [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
+- [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너) → [[names-and-registries#확인하지 않은 것]]
+- [ ] 사용법 `/manual/`이 아직 없어 MVP의 도움말 › 사용법이 빈 주소를 연다
+- [ ] 비공개 문제 알리기 채널을 이메일과 폼 가운데에서 정한다 → [[01-requirements#^r-rep|R-REP-01]]
+- [ ] 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^r-all|R-ALL-01]]
+- [ ] 앱의 버전을 `0.1.0`으로 올리고(`src/` 패키지 넷) 도움말에 보인다. 판을 낼 때마다 `0.y`를 올리는 법(태그, 바뀐 것 목록)을 정한다
+- [ ] 앱과 README에 "웹 1.0 전에 저장한 파일은 뒤의 판에서 열리지 않을 수 있습니다"를 알린다
+
 ## 출시 무렵과 그 뒤
 
-- [ ] AI 대화창 스파이크([[01-requirements#^r-web|R-WEB-07]], `P3`): 키를 붙여 넣고 "퀵소트를 그려 주세요"를 보내 답이 흘러 들어오는지, AI가 쓴 모델을 읽을 수 있는지 보는 작은 페이지. 파일 형식이 굳은 뒤(MVP 뒤)에 한다. 메인테이너의 API 키(Claude · ChatGPT · Grok 가운데 하나, 유료)가 있어야 한다. 지금까지는 브라우저에서 부를 길이 열려 있는지만 확인함 → [[browser-storage-and-api-keys#브라우저에서 AI 회사의 서버를 직접 부를 수 있나]] (2026-10-25, 메인테이너: MVP 뒤로)
-- [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너, 공개 출시 전) → [[names-and-registries#확인하지 않은 것]]
+- [ ] AI 대화창 스파이크([[01-requirements#^r-web|R-WEB-07]], `P3`): 키를 붙여 넣고 "퀵소트를 그려 주세요"를 보내 답이 흘러 들어오는지, AI가 쓴 모델을 읽을 수 있는지 보는 작은 페이지. 파일 형식이 굳은 뒤(웹 1.0 무렵 → [[dr-0018-release-stages|DR-0018]])에 한다. 메인테이너의 API 키(Claude · ChatGPT · Grok 가운데 하나, 유료)가 있어야 한다. 지금까지는 브라우저에서 부를 길이 열려 있는지만 확인함 → [[browser-storage-and-api-keys#브라우저에서 AI 회사의 서버를 직접 부를 수 있나]] (2026-10-25, 메인테이너: MVP 뒤로)
 
 - [ ] 문서 사이트의 Quartz를 v4.5.2에서 v5로 올리기. 설정이 YAML로 바뀌는 큰 판 올림이라 `site/`의 설정 · 레이아웃 · `patch-quartz.mjs`를 다시 맞추고 사이트 전체(Mermaid, 태그 링크, 첫 화면, 목록 순서)를 다시 본다. 올리면 `site/custom.scss`의 탐색기 휠 스크롤 고침은 지운다(v5에 같은 고침이 있음) → [[2026-10-25-05-site-journal-explorer]]
-- [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
 
 
-- [ ] 웹 베타를 출시할 때: 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^r-all|R-ALL-01]]
 - [ ] 나중에 검토: 유료 버전. Confluence는 요구사항에 `P2`로 올림([[01-requirements#2.5 Confluence (유료, 나중에)]]). 다른 후보: Jira(같은 Forge로 묶음), Google Workspace Marketplace
 - [ ] 웹 광고의 정확한 자리: 광고 네트워크를 고를 때 정책 확인 (미룸: 2026-10-10) → [[01-requirements#^r-web|R-WEB-08]]
-- [ ] 비공개 문제 알리기 채널: 이메일 / 폼 (웹 베타 무렵 결정) → [[01-requirements#^r-rep|R-REP-01]]
