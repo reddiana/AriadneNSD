@@ -18,5 +18,5 @@ updated: 2026-11-01
 | --- | --- | --- | --- | --- | --- | --- |
 | BUG-01 | 2026-11-01 | 브라우저 화면보다 큰 다이어그램에 스크롤바가 나오지 않음(메인테이너) | 화면 틀의 자리와 캔버스가 같은 클래스 `ans-canvas`를 써서 틀의 `overflow: hidden`이 캔버스에도 먹음 | [[2026-11-01-03-mvp-scroll-dropdown]] | E2E `examples.spec.ts` | 고침 |
 | BUG-02 | 2026-11-01 | 툴바의 "예제 ▾" 등 드롭다운을 눌러도 아무것도 보이지 않음(메인테이너) | 툴바의 `overflow-x: auto`가 세로도 `auto`로 만들어 드롭다운이 툴바 안에 갇힘 | [[2026-11-01-03-mvp-scroll-dropdown]] | E2E `examples.spec.ts` | 고침 |
-| BUG-03 | 2026-11-01 | Galaxy S26의 Chrome에서 한참을 기다려도 MVP 화면이 뜨지 않음(메인테이너) | 원인 후보: 화면을 그리기 전에 IndexedDB를 여는데 시간 제한이 없음. 실제 폰에서는 아직 확인하지 못함 | [[2026-11-01-04-examples-button-android-load]] | E2E `boot.spec.ts` | 고침(폰에서 확인 전) |
+| BUG-03 | 2026-11-01 | Galaxy S26의 Chrome에서 한참을 기다려도 MVP 화면이 뜨지 않음(메인테이너) | 화면을 그리기 전에 IndexedDB를 여는데 시간 제한이 없음(원인 후보였고, 3초 제한을 넣은 뒤 S26에서 뜸) | [[2026-11-01-04-examples-button-android-load]] | E2E `boot.spec.ts` | 고침(S26에서 확인함) |
 | BUG-04 | 2026-11-01 | S26의 툴바에 "예제" 버튼이 보이지 않음(메인테이너) | 툴바의 예제를 드롭다운에서 버튼으로 바꿀 때(EX4) "넓은 화면에서만" 클래스를 그대로 둠. E2E가 노트북 크기로만 봐서 못 잡음 | [[2026-11-01-04-examples-button-android-load]] | E2E `mobile.spec.ts` | 고침 |

@@ -23,7 +23,7 @@ status: 생성됨
 
 | 유형 | 파일 | 테스트 |
 | --- | --- | --- |
-| E2E | 6 | 45 |
+| E2E | 6 | 46 |
 | 통합 | 8 | 113 |
 | 단위 | 40 | 343 |
 | 성능 | 1 | 3 |
@@ -77,6 +77,7 @@ status: 생성됨
 | [[03-quality-attribute-scenarios#1. 목록\|QA-18]] | on a slow phone the editor shows within 3 s and the block font within 5 s | — | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] | a first visit on a phone opens an example with a tap | — | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] | on a phone a block is inserted from the toolbar and selected with a tap | — | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-20]] | on a phone undo, redo, wrap and help are in the toolbar, with no bar at the bottom | — | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
 | [[01-requirements#^r-all\|R-ALL-03]] | a new document has one empty block, selected, and is not dirty | — | Vitest + happy-dom | 통합 | `packages/editor/src/create-editor.test.ts` |
 | [[01-requirements#^r-all\|R-ALL-03]] | a new document has one diagram holding one empty block | — | Vitest | 단위 | `packages/core/src/commands/new-document.test.ts` |
 | [[01-requirements#^r-all\|R-ALL-03]] | a new doc starts with nothing folded and the result symbol ← | — | Vitest | 단위 | `packages/core/src/commands/new-document.test.ts` |
@@ -328,7 +329,7 @@ status: 생성됨
 | `apps/web/e2e/boot.spec.ts` | The start of the page (R-NFR-10, QA-19; inbox 2026-11-01 | [[01-requirements#^r-nfr\|R-NFR-10]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 2 |
 | `apps/web/e2e/examples.spec.ts` | The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3) | [[01-requirements#^r-edit\|R-EDIT-25]], [[ux-decisions\|UX EX1]] | Playwright | E2E | 6 |
 | `apps/web/e2e/files.spec.ts` | Browser flows of the web shell (06-web 1, 2) | — | Playwright | E2E | 6 |
-| `apps/web/e2e/mobile.spec.ts` | The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts) | [[01-requirements#^r-nfr\|R-NFR-08]], [[01-requirements#^r-nfr\|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록\|QA-18]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 4 |
+| `apps/web/e2e/mobile.spec.ts` | The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts) | [[01-requirements#^r-nfr\|R-NFR-08]], [[01-requirements#^r-nfr\|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록\|QA-18]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 5 |
 | `apps/web/e2e/smoke.spec.ts` |  | — | Playwright | E2E | 1 |
 | `apps/web/src/files/web-document-store.test.ts` | web document store | — | Vitest | 통합 | 5 |
 | `apps/web/src/shell/web-shell.test.ts` | web shell | — | Vitest | 통합 | 8 |

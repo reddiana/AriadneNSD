@@ -1,6 +1,6 @@
 // The toolbar (03-editor 5.2, 06-web 7): the registry's toolbar commands in their groups, the six
-// block icons, then "감싸기 ▾", "확대 ▾" and "예제" (opens the examples modal). On narrow screens undo · redo · wrap move to the
-// bottom bar (UX MB1).
+// block icons, then "감싸기 ▾", "확대 ▾" and "예제" (opens the examples modal). Narrow screens show
+// the same buttons on more rows, with icons only, and a help button at the end (UX MB2).
 
 import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
 import { useEffect, useRef, useState } from 'react';
@@ -14,9 +14,6 @@ import type { ToolbarBlockKind } from './engine-api';
 import { BlockIcon, hasStrokeIcon, StrokeIcon } from './icons';
 import { displayKey, menuKey } from './keys';
 import { useChrome, useChromeState, useCommands } from './use-engine';
-
-/** Icons that go to the bottom bar on narrow screens (06-web 7 "좁은 화면"). */
-const bottomBarIcons: ReadonlySet<string> = new Set(['edit.undo', 'edit.redo']);
 
 /** How far the pointer must move before a press on a block icon becomes a drag (03-editor 3.2). */
 const dragThreshold = 4;
@@ -225,7 +222,7 @@ function ExamplesButton({
     <button
       type="button"
       // On narrow screens too, with the icon only (BUG-04, 05-screen-layout).
-      className="ans-tool ans-examples-tool"
+      className="ans-tool ans-icon-on-narrow"
       aria-label={label}
       aria-haspopup="dialog"
       title={command.title}
@@ -251,15 +248,15 @@ export function Toolbar(): ReactElement {
     )
     .sort(byPlace);
   const zoom = zoomCommandIds.flatMap((id) => commands.filter((command) => command.id === id));
+  // Narrow screens have no Help menu in sight, so the shortcut list gets a button (UX MB2).
+  const help = commands.find((command) => command.id === uiCommandIds.shortcuts);
 
   return (
     <div className="ans-toolbar" role="toolbar" aria-label={text('toolbar.label')}>
       {groupRuns(placed).map((run, index) => {
-        const isBottomBarGroup = run.every(({ icon }) => bottomBarIcons.has(icon));
-        const className = isBottomBarGroup ? 'ans-wide-only' : undefined;
         return (
           <span key={run[0]?.id ?? index} style={{ display: 'contents' }}>
-            {index > 0 && <span className={`ans-sep ${className ?? ''}`} aria-hidden="true" />}
+            {index > 0 && <span className="ans-sep" aria-hidden="true" />}
             {run.map(({ icon, command }) => {
               const kind = blockKindOfIcon(icon);
               if (kind !== null) {
@@ -267,13 +264,7 @@ export function Toolbar(): ReactElement {
                   <BlockButton key={command.id} kind={kind} command={command} commands={commands} />
                 );
               }
-              return (
-                <CommandButton
-                  key={command.id}
-                  command={command}
-                  className={bottomBarIcons.has(icon) ? 'ans-tool ans-wide-only' : 'ans-tool'}
-                />
-              );
+              return <CommandButton key={command.id} command={command} />;
             })}
           </span>
         );
@@ -283,7 +274,7 @@ export function Toolbar(): ReactElement {
         icon="wrap"
         label={text('toolbar.wrap')}
         commands={wrapCommands(commands)}
-        className="ans-wide-only"
+        className="ans-icon-on-narrow"
       />
       <DropdownButton
         icon="zoom"
@@ -292,26 +283,11 @@ export function Toolbar(): ReactElement {
         commands={zoom}
       />
       <ExamplesButton command={commands.find((command) => command.id === uiCommandIds.examples)} />
-    </div>
-  );
-}
-
-/** The bar at the bottom on narrow screens: undo · redo · wrap · help (06-web 7, UX MB1). */
-export function BottomBar(): ReactElement {
-  const { text } = useChrome();
-  const commands = useCommands();
-  const undoRedo = commands
-    .filter((command) => command.toolbar && bottomBarIcons.has(command.toolbar.icon))
-    .sort((a, b) => (a.toolbar?.order ?? 0) - (b.toolbar?.order ?? 0));
-  const help = commands.find((command) => command.id === uiCommandIds.shortcuts);
-  return (
-    <div className="ans-bottombar">
-      {undoRedo.map((command) => (
-        <CommandButton key={command.id} command={command} />
-      ))}
-      <DropdownButton icon="wrap" label={text('toolbar.wrap')} commands={wrapCommands(commands)} />
       {help && (
-        <CommandButton command={{ ...help, toolbar: { group: 0, order: 0, icon: 'help' } }} />
+        <CommandButton
+          command={{ ...help, toolbar: { group: 0, order: 0, icon: 'help' } }}
+          className="ans-tool ans-narrow-only"
+        />
       )}
     </div>
   );

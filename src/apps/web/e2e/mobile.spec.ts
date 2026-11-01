@@ -70,7 +70,6 @@ test('QA-20: a first visit on a phone opens an example with a tap', async ({ pag
   await modal.locator('[data-example="merge-sort"]').tap();
   await expect(modal).toHaveCount(0);
   await expect(page).toHaveTitle('Merge sort.ns.svg – AriadneNSD');
-  await expect(page.locator('.ans-bottombar')).toBeVisible();
 });
 
 test('QA-20: on a phone a block is inserted from the toolbar and selected with a tap', async ({
@@ -103,4 +102,18 @@ test('BUG-04 · QA-20: on a phone the toolbar shows "Examples", and a tap opens 
   await button.tap();
   const modal = page.locator('.ans-backdrop[data-kind="examples"] .ans-modal');
   await expect(modal.locator('h2')).toHaveText('Open an Example');
+});
+
+test('QA-20: on a phone undo, redo, wrap and help are in the toolbar, with no bar at the bottom', async ({
+  page,
+}) => {
+  await skipWelcome(page);
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  const toolbar = page.getByRole('toolbar');
+  for (const id of ['edit.undo', 'edit.redo', 'help.shortcuts']) {
+    await expect(toolbar.locator(`[data-command="${id}"]`)).toBeVisible();
+  }
+  await expect(toolbar.locator('button[title="Wrap"]')).toBeVisible();
+  await expect(page.locator('.ans-bottombar')).toHaveCount(0);
 });

@@ -37,7 +37,7 @@ import {
 } from './modals';
 import { StatusBar } from './status-bar';
 import { chromeCss } from './styles';
-import { BottomBar, Toolbar } from './toolbar';
+import { Toolbar } from './toolbar';
 import type { Chrome } from './use-engine';
 import { ChromeContext, textOf, useChromeState } from './use-engine';
 
@@ -341,7 +341,6 @@ export function EditorApp({
         <div className="ans-canvas-slot" ref={slotRef} />
         <KeyHint />
         <StatusBar />
-        <BottomBar />
         {contextMenu && (
           <ContextMenu key={contextMenu.key} request={contextMenu} onClose={closeContextMenu} />
         )}

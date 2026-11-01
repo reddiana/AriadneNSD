@@ -125,6 +125,10 @@ async function shoot(viewport, parts, file) {
   const context = await browser.newContext({ viewport, locale: 'ko-KR', deviceScaleFactor: 2, hasTouch: viewport.width < 600 });
   const page = await context.newPage();
   // 열기 창 대신 브라우저의 OPFS에 둔 예제 파일을 돌려준다.
+  // 첫 방문의 예제 모달은 이미 본 것으로 둔다.
+  await page.addInitScript(() => {
+    localStorage.setItem('ariadne-nsd.setting.examples.welcomed', 'true');
+  });
   await page.addInitScript(() => {
     window.showOpenFilePicker = async () => [
       await (await navigator.storage.getDirectory()).getFileHandle('예제.ns.svg', { create: true }),
@@ -167,7 +171,7 @@ await shoot({ width: 1366, height: 657 }, [
   { n: 6, color: colors[5], select: ['.ans-statusbar'], badge: 'in-r', inset: 2 },
 ], 'web-screen-layout-annotated.png');
 
-// 휴대폰: ① ☰ 메뉴 ② 파일 이름과 ● ③ 툴바 ④ 블록 아이콘 ⑤ 캔버스 ⑥ 상태 표시줄 ⑦ 아래 줄
+// 휴대폰: ① ☰ 메뉴 ② 파일 이름과 ● ③ 툴바 ④ 블록 아이콘 ⑤ 캔버스 ⑥ 상태 표시줄 (아래 줄은 2026-11-01에 없앰, UX MB2)
 await shoot({ width: 390, height: 844 }, [
   { n: 1, color: colors[0], select: ['.ans-hamburger'], badge: 'right', inset: -2 },
   { n: 2, color: colors[1], select: ['.ans-file-name'], badge: 'left', inset: -3, dx: -32 },
@@ -175,7 +179,6 @@ await shoot({ width: 390, height: 844 }, [
   { n: 4, color: colors[3], select: blocks, badge: 'right', inset: -2, perRow: true },
   { n: 5, color: colors[4], select: ['.ans-canvas'], badge: 'in-br', inset: 4 },
   { n: 6, color: colors[5], select: ['.ans-statusbar'], badge: 'in-r', inset: 1 },
-  { n: 7, color: colors[6], select: ['.ans-bottombar'], badge: 'in-tr', inset: 2 },
 ], 'web-screen-layout-annotated-phone.png');
 
 await browser.close();

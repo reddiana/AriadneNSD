@@ -109,7 +109,7 @@ export const chromeCss = `
 .ans-mode { margin-left: auto; color: var(--ui-accent); }
 .ans-mode + .ans-mode { margin-left: 0; }
 
-.ans-bottombar { display: none; }
+.ans-narrow-only { display: none; }
 
 .ans-keyhint {
   position: absolute; left: 12px; right: 12px; bottom: 34px; z-index: 15;
@@ -211,20 +211,14 @@ export const chromeCss = `
   border-color: var(--ui-accent); background: var(--ui-accent); color: var(--ui-panel);
 }
 
-/* Narrow screens (06-web 7, UX MB1): the menus fold into one button, undo · redo · wrap ·
-   help move to a bar at the bottom, the block icons stay. */
+/* Narrow screens (06-web 7, UX MB1 · MB2): the menus fold into one button, the toolbar keeps all
+   its buttons on more rows (labels hidden where an icon says it) and gains a help button. */
 @media (max-width: 860px) {
   .ans-menus { display: none; }
   .ans-hamburger { display: block; }
   .ans-brand { display: none; }
   .ans-toolbar { flex-wrap: wrap; }
-  .ans-toolbar .ans-wide-only { display: none; }
-  .ans-examples-tool .ans-tool-label { display: none; }
-  .ans-bottombar {
-    display: flex; justify-content: space-around; align-items: center; height: 40px; flex: none;
-    background: var(--ui-panel); border-top: 1px solid var(--ui-line);
-  }
-  .ans-bottombar .ans-dropdown { top: auto; bottom: 100%; margin: 0 0 2px; }
-  .ans-keyhint { bottom: 72px; }
+  .ans-toolbar .ans-narrow-only { display: inline-flex; }
+  .ans-icon-on-narrow .ans-tool-label { display: none; }
 }
 `;

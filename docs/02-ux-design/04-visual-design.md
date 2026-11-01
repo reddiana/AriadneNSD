@@ -480,7 +480,6 @@ flowchart LR
 
 - `⋯` `←` 기호가 문자로 들어갑니다(2장: 도형으로 그릴 것).
 - 호버, 드래그 앤 드롭(드롭 위치, 블록 위에 드롭, 드롭할 수 없는 곳), 받아들일 수 없는 입력의 모습이 없습니다(7장). 툴바의 블록 아이콘은 누르기 · `Shift`+클릭 · `Ctrl`+클릭만 되고 드래그할 수 없습니다.
-- 좁은 화면의 아래 줄(되돌리기 · 다시 · 감싸기 · 도움말)이 없습니다([[05-screen-layout|화면 배치]]).
 - 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 배경이 토큰이 아니라 코드에 적힌 값입니다.
 - 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다. 명세의 기본 블록 글꼴은 D2Coding입니다.
 - 테마를 선택할 수 없습니다. 늘 밝은 기본 테마입니다.
