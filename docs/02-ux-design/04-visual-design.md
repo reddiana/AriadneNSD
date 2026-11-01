@@ -361,7 +361,7 @@ flowchart LR
 | 블록 위에 드롭 (감싸기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리 + 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
 | 빈 분기 | If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
-| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름 | 문서 | `text.*`, `line.structure` | 있음 |
+| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름. 글자가 다이어그램의 왼쪽 선에 붙어 있으므로 선택 테두리는 헤더 바깥으로 4px 넓혀 글자를 덮지 않음 | 문서 | `text.*`, `line.structure` | 있음 |
 | 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 캔버스 아래(상태 표시줄 바로 위)에 키 힌트. 왼쪽 위에 첫 키와 묶음 이름(굵게), 그 아래에 이어 누를 키(고정폭 굵게 `ui.accent`)와 명령 이름(`ui.text`)을 폭에 맞춰 여러 열로. 배경 `ui.panel`, 테두리 1px `ui.line`, 모서리 반지름 6px. 다이어그램을 가리지 않게 캔버스 폭만큼 놓되 안쪽 여백 10px → [[03-keymap]] | 편집 (UI) | `ui.*` | 있음 |
 
 **겹칠 때의 규칙:**

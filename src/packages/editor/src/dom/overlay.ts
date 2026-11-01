@@ -62,12 +62,28 @@ export function selectionBox(
           (region) => region.kind === 'missingDefault' && region.blockId === selection.block,
         )?.box ?? null
       );
-    case 'head':
-      // The whole header, like a block (visual design 7.1).
-      return layout.diagrams.find((diagram) => diagram.id === selection.diagram)?.head ?? null;
+    case 'head': {
+      // The whole header, like a block (visual design 7.1). A header like a title has its text
+      // on the diagram's left edge, so its outline sits outside it and does not cover letters.
+      const node = layout.nodes.find(
+        (n): n is Extract<typeof n, { kind: 'diagramHead' }> =>
+          n.kind === 'diagramHead' && n.id === selection.diagram,
+      );
+      if (node === undefined) {
+        return null;
+      }
+      return node.style === 'title' ? grow(node.box, titleHeadOutset) : node.box;
+    }
     case 'fold':
       return null;
   }
+}
+
+/** How far the selection outline of a header like a title stands outside it (3px line + 1px). */
+const titleHeadOutset = 4;
+
+function grow(box: Box, by: number): Box {
+  return { x: box.x - by, y: box.y - by, width: box.width + 2 * by, height: box.height + by };
 }
 
 /**
