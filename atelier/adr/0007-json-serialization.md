@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0007: 모델 직렬화 형식 JSON
 
 > [!NOTE] 이후 변경
+> - 2026-11-02: 마크다운의 `nschart` 코드 블록에 손으로 적는 글의 형식을 요구사항에 더했다. 이 ADR이 정한 `.ns.svg` 안의 모델은 JSON 그대로이고, 코드 블록의 문법(YAML도 후보)은 따로 정한다 → [[01-requirements#^r-fmt|R-FMT-12]], [[2026-11-02-02-release-yaml-review]]
 > - 2026-11-01: 읽을 때 모르는 키가 있는 객체는 깨진 파일로 거부하고(열고 바로 저장하면 그대로), U+FFFE · U+FFFF는 JSON 이스케이프로 적는다 → [[01-file-format#3.2 CDATA 이스케이프]], [[01-file-format#3.3 노드별 필드]]
 > - 2026-10-25: JSON을 담는 모델 요소의 네임스페이스와 접두어(`ans`)를 정했다. 형식의 판 번호는 JSON의 `version` 필드와 모델 요소의 `version` 속성에 같은 값으로 들어간다 → [[0035-model-namespace-and-v0|ADR-0035]], [[01-file-format#2. 문서 구조]]
 

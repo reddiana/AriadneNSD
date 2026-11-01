@@ -50,6 +50,7 @@ updated: 2026-11-01
 	- 우선순위 `P3`의 뜻 "출시 뒤"를 "웹 베타 뒤"로 → [[01-requirements]]
 	- 1.0 전 파일 알림의 문구("AriadneNSD는 아직 1.0 전입니다. 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.")와 자리(첫 방문 모달의 맨 아래, 도움말 › AriadneNSD에 대하여, README)
 	- 판을 내는 법: 1.0 전에는 기능을 더하면 `0.y.0`, 고치기만 하면 `0.y.z`, 주석 태그와 GitHub Releases → `src/README.md`. 지금 커밋에 `v0.1.0`
+	- GitHub Releases의 v0.1.0을 Pre-release로 표시하고 본문을 씀(2026-11-02 → [[2026-11-02-02-release-yaml-review]]). https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0
 	- README의 로드맵 표(단계마다 한 줄, 날짜 없음, 배포 순서 문단을 표로 합침) → `README.md`
 
 ### MVP

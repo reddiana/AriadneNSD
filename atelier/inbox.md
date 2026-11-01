@@ -20,11 +20,6 @@ title: Inbox
 # 3. 기능
 ## MVP
 ### 추가/변경 요건
-- `.ns.svg`안의 모델 직렬화 형식을 json으로 결정했었습니다. 그런데 나중에 아래처럼 markdown의 code block에 삽입될 형식을 고려하면 yaml에 미련이 남습니다. 우리의 json 직렬화와 함께 yaml을 다시 검토해봅시다.
-~~~
-```nschart
-```
-~~~
 
 # 4. 나의 결정
 
