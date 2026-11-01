@@ -99,7 +99,12 @@ export function ExamplesModal({
           <span className="ans-example-what">.ns.svg · .ns</span>
         </button>
       </div>
-      {isWelcome && <p className="ans-note ans-example-foot">{text('examples.welcomeFoot')}</p>}
+      {isWelcome && (
+        <>
+          <p className="ans-note ans-example-foot">{text('examples.welcomeFoot')}</p>
+          <p className="ans-note">{text('examples.welcomePreview')}</p>
+        </>
+      )}
     </Modal>
   );
 }

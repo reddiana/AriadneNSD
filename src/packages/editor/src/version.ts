@@ -1,2 +1,5 @@
-/** The editor package version, shown in the problem report (02-interaction-rules 8). */
-export const editorVersion = '0.0.0';
+/**
+ * The app version, shown in Help › About and the problem report (02-interaction-rules 8).
+ * All four packages share it (DR-0018); the test keeps them in step.
+ */
+export const editorVersion = '0.1.0';

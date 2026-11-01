@@ -62,6 +62,20 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 | `pnpm lint` · `pnpm typecheck` · `pnpm deps`    | 검사를 하나씩                                                     |
 | `pnpm --filter @ariadne-nsd/core golden:update` | 골든 파일을 다시 만듦(의도한 변경일 때만)                                    |
 
+## 판을 낼 때
+
+`main`에 push할 때마다 웹 앱이 사이트에 올라가지만, 버전은 판을 낼 때만 올립니다. 버전은 SemVer이고 단계(MVP → 웹 베타 → 웹 1.0)는 [DR-0018](../atelier/decisions/dr-0018-release-stages.md)이 정합니다. 파일 형식의 버전(`v1`)과는 따로 갑니다.
+
+- 1.0 전에는 기능을 더한 판이 `0.y.0`, 고치기만 한 판이 `0.y.z`입니다. 웹 1.0이 `1.0.0`입니다.
+- 패키지 넷(`apps/web`, `packages/core` · `editor` · `fonts`)의 `package.json`과 `packages/editor/src/version.ts`는 늘 같은 버전입니다. 어긋나면 `version.test.ts`가 실패합니다. 이 버전이 도움말 › AriadneNSD에 대하여에 보입니다.
+
+순서:
+
+1. 위 다섯 곳의 버전을 올린다
+2. 도움말 › 이 버전에서 바뀐 것의 문구(`packages/editor/src/ui/messages.ts`의 `whatsNew.body`, 영어 · 한국어)를 고친다
+3. `pnpm check`, `pnpm e2e`가 통과하면 커밋하고 태그를 단다: `git tag v0.2.0`
+4. 커밋과 태그를 push한다(`git push --follow-tags`). GitHub의 Releases에 그 태그로 바뀐 것을 적는다
+
 ## 글꼴을 다시 만들 때
 
 `packages/fonts/assets/`의 글꼴과 `packages/fonts/src/generated/advance-widths.ts`는 스크립트가 만든 것이고 저장소에 넣어 둡니다. 원본 글꼴의 버전을 바꿀 때만 다시 만듭니다. Python 3와 fontTools · brotli가 필요합니다(`pip install fonttools brotli`).

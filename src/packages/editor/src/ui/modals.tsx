@@ -241,6 +241,7 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
     <Modal title={text('about.title')} onClose={onClose}>
       <p>{text('about.body')}</p>
       <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
+      <p className="ans-note">{text('about.preview')}</p>
     </Modal>
   );
 }

@@ -50,6 +50,7 @@ const en = {
   'about.title': 'About AriadneNSD',
   'about.body': 'A Nassi-Shneiderman diagram editor.',
   'about.version': 'Version {version}',
+  'about.preview': 'Before version 1.0, files you save may not open in later versions.',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body': 'This is the first version.',
   'modal.close': 'Close',
@@ -72,6 +73,8 @@ const en = {
     'Open an example to start. What you change becomes your document, and you can open the examples again from Help › Examples….',
   'examples.welcomeFoot':
     'You can open the examples again from "Examples" in the toolbar or Help › Examples….',
+  'examples.welcomePreview':
+    'AriadneNSD is before version 1.0. Files you save now may not open in later versions.',
   'examples.menuTitle': 'Open an Example',
   'examples.menuLead':
     'An example opens as a new document. This document closes; changes you have not saved stay in the local backup.',
@@ -130,6 +133,7 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.title': 'AriadneNSD에 대하여',
   'about.body': 'NS 차트(Nassi-Shneiderman Diagram) 편집기.',
   'about.version': '버전 {version}',
+  'about.preview': '1.0 전에 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body': '첫 버전입니다.',
   'modal.close': '닫기',
@@ -151,6 +155,8 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'examples.welcomeLead':
     '예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.',
   'examples.welcomeFoot': '예제는 툴바의 "예제"와 도움말 › 예제…로 다시 열 수 있습니다.',
+  'examples.welcomePreview':
+    'AriadneNSD는 아직 1.0 전입니다. 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
   'examples.menuTitle': '예제 열기',
   'examples.menuLead':
     '예제는 새 문서로 열립니다. 지금 문서는 닫히고, 저장하지 않은 내용은 임시 보관에 남습니다.',
