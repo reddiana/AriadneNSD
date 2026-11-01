@@ -30,7 +30,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
-- 테스트: 단위 369개, E2E 39개(인수 테스트 AT-01 ~ AT-17), `pnpm check` · CI. 남은 구멍은 [[backlog#MVP 개발]]
+- 테스트: 단위 · 통합 456개, E2E 46개(인수 테스트 AT-01 ~ AT-17, 휴대폰 흉내, 결함의 회귀 테스트 BUG-01 ~ 04), `pnpm check` · CI. 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 [[08-test-list]](자동 생성), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]
 - 문서 검사 훅이 Claude가 고친 문서의 표와 링크를 검사합니다(`.claude/hooks/doc-check.py`)
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
@@ -43,10 +43,10 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너가 고친 버그 둘(큰 다이어그램의 스크롤바, 툴바의 "예제 ▾")을 MVP에서 다시 써 보기 → [[2026-11-01-03-mvp-scroll-dropdown]]
+- [ ] 메인테이너가 S26에서 바뀐 툴바(예제 버튼, 아래 줄 없앰 → MB2)와 큰 다이어그램의 스크롤을 써 보기 → [[2026-11-01-04-examples-button-android-load]]
 - [ ] **메인테이너가 예제와 헤더를 써 보기**(push한 뒤 https://reddiana.github.io/AriadneNSD/app/ 를 새 창(시크릿 창)으로 열면 첫 방문 모달) → 만든 것과 정한 것은 [[2026-11-01-02-docs-current-examples]], 확인할 것은 [[outbox#확인해 주세요]]
 - [ ] 문서 현행화 점검에서 판단이 필요한 것을 메인테이너와 봄 → [[backlog#MVP 개발]]
-- [ ] **다음의 첫 일: push한 CI · Pages가 통과했는지 보고, MVP를 열어 보기** → [[backlog#MVP 개발]]
+- [ ] **다음의 첫 일: push한 CI · Pages가 통과했는지 보고(휴대폰 E2E의 시작 시간 QA-18이 CI에서도 통과하는지), MVP를 열어 보기** → [[backlog#MVP 개발]]
 - [ ] 메인테이너가 MVP를 써 보기(Chrome · Edge, 그리고 Firefox · Safari · 휴대폰)
 - [ ] 메인테이너가 확인할 것: 저장 파일의 글꼴 이름 "AriadneNSD Block", MVP에서 Claude가 정한 것 → [[outbox#확인해 주세요]]
 - [ ] 남은 "정해 주세요"(프로토타입 질문 셋, 이름이 겹친 헤더의 표시, Firefox로 글자 폭 스파이크 열기) → [[outbox]]

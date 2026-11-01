@@ -60,6 +60,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 
 ### 오픈소스 운영
 
+- [[test-types-and-doubles]] — 테스트 유형(단위 · 통합 · E2E)과 테스트 더블, 실제 기기 없이 휴대폰 흉내 내기 (2026-11-01)
 - [[bundle-size-budget]] — 번들 사이즈 체크(bundle size budget)와 글꼴의 예약 이름(OFL Reserved Font Name) (2026-11-01)
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
