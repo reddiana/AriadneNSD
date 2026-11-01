@@ -48,3 +48,15 @@ date: 2026-11-01
 
 다음 할 일: [[status#이번과 다음 세션에 할 것]]의 "MVP에 예제와 헤더 넣기"
 
+## 매듭 뒤: 예제와 헤더를 MVP에 (코드)
+
+메인테이너: "이어서 하시지요. 중간중간 진행상태와 예상 종료시간 알려주세요." 처음 어림은 4시간 30분 ~ 5시간, 실제로는 약 2시간 40분(에이전트 셋을 나란히).
+
+- core: 헤더 그리기(모자 · 아치 · 제목처럼)와 여러 다이어그램의 배치([[02-layout]] 1.5 · 1.7, 16 : 10), 장면의 `path` 요소, 골든 하나 갱신(Claude). 편집 명령 10개(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · editCall · setCallTarget · insertCall · newMethodAndCall · setSettings), ReasonCode 여섯(에이전트)
+- editor: 예제 데이터 10개(에이전트, 프로토타입의 코드를 실제로 돌려 견주어 10개 모두 같음). 헤더 선택 · 이동 · 이름 편집, `e` `m` `E` `M`, 호출 블록 넣기(Method 목록, 새 UI `picker-menu`) · 두 칸 편집 · 대상 바꾸기, 헤더 모양 설정과 기억(`editor.headStyle`)(에이전트). 예제 모달(첫 방문 · 도움말 › 예제…), 툴바의 "예제 ▾", 예제마다 명령(커맨드 팔레트에서도), `OpenedDocument.doc`(Claude)
+- web: 예제를 깨끗한 새 문서(`예제 이름.ns.svg`)로 열기, 첫 방문(`examples.welcomed`), 첫 방문이면 포커스를 모달에(`Esc`가 닫게), E2E는 환영을 건너뜀 + 예제 E2E 넷
+- 화면으로 확인: 노트북(1366 × 768)에서 4 × 3이 다 보이도록 썸네일 16 : 9. "제목처럼" 헤더의 선택 테두리가 글자를 덮어 바깥으로 넓힘
+- 검사: `pnpm check` 통과(core 261, editor 226, fonts 17, web 43), E2E 37 통과
+- 문서: [[01-requirements]]의 MVP 범위, [[03-editor]](open의 doc, 5.1 메뉴, 3.4 칸, 6장 Picker), [[06-web]] 7장(첫 방문), [[03-keymap]], [[02-layout]] 1.7, [[04-visual-design]] 7.1
+- Claude가 정한 것은 [[outbox#확인해 주세요]], 못 한 것은 [[backlog#MVP 개발]]
+
