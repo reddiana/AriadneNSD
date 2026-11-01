@@ -1,17 +1,11 @@
 // The toolbar (03-editor 5.2, 06-web 7): the registry's toolbar commands in their groups, the six
-// block icons, then "감싸기 ▾" and "확대 ▾". On narrow screens undo · redo · wrap move to the
+// block icons, then "감싸기 ▾", "확대 ▾" and "예제" (opens the examples modal). On narrow screens undo · redo · wrap move to the
 // bottom bar (UX MB1).
 
 import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import {
-  blockIconCommand,
-  blockKindOfIcon,
-  exampleCommandPrefix,
-  uiCommandIds,
-  zoomCommandIds,
-} from './command-ids';
+import { blockIconCommand, blockKindOfIcon, uiCommandIds, zoomCommandIds } from './command-ids';
 import type { CommandView } from './command-view';
 import { byPlace, groupRuns } from './command-view';
 import type { DropdownItem } from './dropdown';
@@ -218,6 +212,32 @@ export function wrapCommands(commands: ReadonlyArray<CommandView>): ReadonlyArra
     .sort((a, b) => (a.menu?.order ?? 0) - (b.menu?.order ?? 0));
 }
 
+/** "예제": opens the examples modal, the same one as Help › Examples… (UX EX3). */
+function ExamplesButton({
+  command,
+}: {
+  readonly command: CommandView | undefined;
+}): ReactElement | null {
+  const { run, text } = useChrome();
+  if (command === undefined) return null;
+  const label = text('toolbar.examples');
+  return (
+    <button
+      type="button"
+      className="ans-tool ans-wide-only"
+      aria-haspopup="dialog"
+      title={command.title}
+      data-command={command.id}
+      onClick={() => {
+        run(command.id);
+      }}
+    >
+      <StrokeIcon icon="examples" />
+      <span className="ans-tool-label">{label}</span>
+    </button>
+  );
+}
+
 /** The toolbar under the menu bar. */
 export function Toolbar(): ReactElement {
   const { handle, text } = useChrome();
@@ -269,12 +289,7 @@ export function Toolbar(): ReactElement {
         caption={`${String(Math.round(zoomLevel * 100))}%`}
         commands={zoom}
       />
-      <DropdownButton
-        icon="examples"
-        label={text('toolbar.examples')}
-        commands={commands.filter((command) => command.id.startsWith(exampleCommandPrefix))}
-        className="ans-wide-only"
-      />
+      <ExamplesButton command={commands.find((command) => command.id === uiCommandIds.examples)} />
     </div>
   );
 }

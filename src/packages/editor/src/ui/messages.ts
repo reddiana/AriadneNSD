@@ -71,11 +71,10 @@ const en = {
   'examples.welcomeLead':
     'Open an example to start. What you change becomes your document, and you can open the examples again from Help › Examples….',
   'examples.welcomeFoot':
-    'The examples are also in Help › Examples… and in the toolbar under "Examples ▾".',
+    'You can open the examples again from "Examples" in the toolbar or Help › Examples….',
   'examples.menuTitle': 'Open an Example',
   'examples.menuLead':
     'An example opens as a new document. This document closes; changes you have not saved stay in the local backup.',
-  'examples.menuFoot': 'You can also pick an example from "Examples ▾" in the toolbar.',
   'examples.blankWelcome': 'Start with a blank document',
   'examples.blankWelcomeWhat': 'Will not ask again',
   'examples.blank': 'Blank document',
@@ -151,11 +150,10 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'examples.welcomeTitle': 'AriadneNSD에 오신 것을 환영합니다',
   'examples.welcomeLead':
     '예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.',
-  'examples.welcomeFoot': '예제는 도움말 › 예제…와 툴바의 "예제 ▾"에도 있습니다.',
+  'examples.welcomeFoot': '예제는 툴바의 "예제"와 도움말 › 예제…로 다시 열 수 있습니다.',
   'examples.menuTitle': '예제 열기',
   'examples.menuLead':
     '예제는 새 문서로 열립니다. 지금 문서는 닫히고, 저장하지 않은 내용은 임시 보관에 남습니다.',
-  'examples.menuFoot': '툴바의 "예제 ▾"에서도 고를 수 있습니다.',
   'examples.blankWelcome': '빈 문서로 시작',
   'examples.blankWelcomeWhat': '다시 묻지 않습니다',
   'examples.blank': '빈 문서',

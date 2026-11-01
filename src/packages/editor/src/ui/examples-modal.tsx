@@ -1,6 +1,6 @@
 // The examples modal (R-EDIT-25, 05-screen-layout "예제", UX EX2 · EX3): ten examples, then
 // "blank document" and "open file…", on a 4 × 3 grid. It welcomes a first-time visitor once and
-// also opens from Help › Examples…, with other words at the top.
+// also opens from the toolbar's "예제" and Help › Examples…, with other words at the top.
 
 import type { Locale } from '@ariadne-nsd/core';
 import { renderDoc } from '@ariadne-nsd/core';
@@ -11,7 +11,7 @@ import type { ExampleInfo } from '../examples/examples';
 import { Modal } from './modals';
 import { useChrome } from './use-engine';
 
-/** Why the modal is open: the first visit (a welcome) or Help › Examples…. */
+/** Why the modal is open: the first visit (a welcome), or the toolbar · Help › Examples…. */
 export type ExamplesMode = 'welcome' | 'menu';
 
 /** A drawing of an example, scaled into its card by the SVG's own viewBox. */
@@ -99,9 +99,7 @@ export function ExamplesModal({
           <span className="ans-example-what">.ns.svg · .ns</span>
         </button>
       </div>
-      <p className="ans-note ans-example-foot">
-        {text(isWelcome ? 'examples.welcomeFoot' : 'examples.menuFoot')}
-      </p>
+      {isWelcome && <p className="ans-note ans-example-foot">{text('examples.welcomeFoot')}</p>}
     </Modal>
   );
 }

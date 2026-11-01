@@ -212,7 +212,7 @@ export function EditorApp({
     closePopup();
   }, [closePopup, examples, examplesMode]);
 
-  // Help › Examples… and one command per example (palette, toolbar "예제 ▾"), R-EDIT-25.
+  // Help › Examples… (also the toolbar's "예제") and one command per example (palette), R-EDIT-25.
   useEffect(() => {
     if (examples === undefined) return;
     const specs: CommandSpec[] = [

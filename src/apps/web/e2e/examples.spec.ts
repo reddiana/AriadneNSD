@@ -1,5 +1,5 @@
 // The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3): the first visit's welcome,
-// Help › Examples… and the toolbar's "Examples ▾".
+// Help › Examples… and the toolbar's "Examples", which open the same modal.
 import { expect, test } from '@playwright/test';
 
 import { canvas, command, openApp } from './support';
@@ -53,23 +53,24 @@ test('UX EX3: Help › Examples… opens the same modal with its own words', asy
   await expect(page).toHaveTitle('Raft consensus.ns.svg – AriadneNSD');
 });
 
-test('UX EX3: the toolbar\'s "Examples ▾" lists the ten examples in order', async ({ page }) => {
+test('UX EX3: the toolbar\'s "Examples" opens the examples modal', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: 'Examples' }).click();
-  const items = page.locator('.ans-dropdown [role="menuitem"]');
-  await expect(items).toHaveCount(10);
-  await expect(items.first()).toContainText('Merge sort');
-  await expect(items.last()).toContainText('Raft consensus');
-  await items.nth(1).click();
+  await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();
+  const dialog = page.locator(modal);
+  await expect(dialog.locator('h2')).toHaveText('Open an Example');
+  await expect(dialog.locator('.ans-example-card')).toHaveCount(12);
+  await expect(dialog.locator('.ans-example-name').first()).toContainText('Merge sort');
+  await dialog.locator('[data-example="dijkstra"]').click();
+  await expect(dialog).toHaveCount(0);
   await expect(page).toHaveTitle("Dijkstra's shortest path.ns.svg – AriadneNSD");
   expect(await command(page, 'file.new').count()).toBeGreaterThan(0);
 });
 
-test("UX EX3: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
+test("05-screen-layout: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
   page,
 }) => {
   await openApp(page);
-  await page.getByRole('button', { name: 'Examples' }).click();
+  await page.locator('.ans-toolbar button[title="Zoom"]').click();
   const last = page.locator('.ans-dropdown [role="menuitem"]').last();
   await expect(last).toBeVisible();
   // The toolbar must not clip it: the element seen at the item's centre is the item.
@@ -86,8 +87,8 @@ test('05-screen-layout: a diagram larger than the window scrolls in the canvas',
 }) => {
   await page.setViewportSize({ width: 1000, height: 600 });
   await openApp(page);
-  await page.getByRole('button', { name: 'Examples' }).click();
-  await page.locator('.ans-dropdown [role="menuitem"]').last().click();
+  await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();
+  await page.locator(`${modal} [data-example="raft"]`).click();
   await expect(page).toHaveTitle('Raft consensus.ns.svg – AriadneNSD');
   const area = canvas(page);
   await expect(area).toHaveCSS('overflow', 'auto');
