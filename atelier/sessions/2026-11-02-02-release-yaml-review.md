@@ -39,6 +39,14 @@ date: 2026-11-02
 - 새 요구사항 [[01-requirements#^r-fmt|R-FMT-12]] `P3`: 언어 이름이 `nschart`인 코드 블록에 글로 적은 NS 차트를 그림으로 보임
 - 문법은 [[01-requirements#6. 미결정 사항]]에, 그 일을 할 때 시안으로 견줄 일은 [[backlog#뒤의 배포 대상을 설계할 때]]에
 
+## README 첫 화면의 그림
+
+메인테이너: "대문 README의 예시 2개가 폰 처럼 좁은 화면에서는 중앙으로 정렬되지 않습니다. … 그리고 이제 MVP가 있는데 프로토타입으로 그렸다는 말도 눈에 띄입니다."
+
+- 원인: 두 그림 사이의 `&nbsp;&nbsp;`. 좁은 화면에서 줄이 바뀌면 그 빈칸이 첫 그림 줄 끝에 남아 첫 그림을 왼쪽으로 밀었다. 빈칸을 없애고 그림 양쪽에 `hspace="8"`(GitHub는 `style`을 지우므로 넓은 화면의 사이를 이것이 띄움, 사이트는 CSS가 여백을 0으로 하고 flex의 `gap`이 띄움). 폭 375px로 두 경우를 찍어 확인
+- 그림은 프로토타입 스크린숏(PNG)에서 MVP의 예제를 저장한 `.ns.svg`로(Claude가 정함 → [[outbox#확인해 주세요]]). 다익스트라 · 병합 정렬, 머리 모양 "제목처럼", 고정 문구는 한국어. 만드는 스크립트 `src/packages/editor/scripts/readme-images.script.ts`(`pnpm --filter @ariadne-nsd/editor readme-images`) → [[sketchbook]]의 M41
+- 캡션은 메인테이너의 말대로 "MVP로 그린 NS 차트: …"
+
 ## 매듭
 
 - 기술 설명은 [[yaml-and-json]]에, Pre-release는 [[build-output-and-releases]]에 더함. 연표 293 · 294
