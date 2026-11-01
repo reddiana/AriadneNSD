@@ -45,10 +45,10 @@ body[data-slug="index"] article {
   stroke: var(--tertiary) !important;
 }
 
-// 첫 화면(README): 인용절의 프로토타입 링크는 채운 버튼 그림 (시안 M42의 나11)
+// 첫 화면(README): 인용절의 MVP 링크는 채운 버튼 그림 (시안 M42의 나11, 2026-11-01에 프로토타입 링크에서 바꿈)
 body[data-slug="index"] article {
   // 인용절의 채운 버튼(나11): 제 줄에 따로
-  .callout a:has(img[src*="readme-prototype-button"]) {
+  .callout a:has(img[src*="readme-mvp-button"]) {
     background: none;
     padding: 0;
     img {

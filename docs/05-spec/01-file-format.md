@@ -15,7 +15,7 @@ updated: 2026-11-01
 
 - 관련 요구사항: [[01-requirements#3.4 파일 형식]]
 - 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴), [[0034-default-block-font|ADR-0034]](기본 블록 글꼴), [[0035-model-namespace-and-v0|ADR-0035]](모델 네임스페이스, 프로토타입 파일)
-- 모델의 구조는 [[03-architecture#3.4 문서 모델]]과 [[03-architecture#3.5 내용과 뷰 상태]]를 따릅니다. 필드 이름과 스키마는 [[01-model]] 설계에서 굳힙니다.
+- 모델의 구조는 [[03-architecture#3.4 문서 모델]]과 [[03-architecture#3.5 내용과 뷰 상태]]를 따릅니다. 필드 이름과 스키마는 [[01-model]] 설계에서 굳혔습니다(v1, 3장).
 
 > [!warning] 지금 상태
 > 이 명세의 v1은 MVP의 코드(`src/packages/core/src/format/`)에 구현되어 있습니다. 첫 출시 전까지는 버전을 올리지 않고 고칠 수 있습니다. 프로토타입이 쓰는 파일(`version: 0`)은 이 형식과 다릅니다(7장).
@@ -211,7 +211,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 
 ## 4. 그림 부분
 
-그림 요소의 모습(색, 선, 타이포그래피, 치수)은 [[04-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<text>`), 클래스 이름, 텍스트 외곽선 옵션([[01-requirements#^r-fmt|R-FMT-10]])은 [[02-layout]] 설계에서 정한다.
+그림 요소의 모습(색, 선, 타이포그래피, 치수)은 [[04-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<circle>`, `<text>`)과 클래스 이름은 [[02-layout#3. SVG 렌더링]]에서 정했다. 텍스트 외곽선 옵션([[01-requirements#^r-fmt|R-FMT-10]])은 아직 정하지 않았다(같은 절).
 
 ## 5. 버전 관리
 

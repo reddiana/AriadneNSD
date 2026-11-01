@@ -94,7 +94,7 @@ updated: 2026-11-01
 
 ## 5. 배포
 
-웹 버전은 GitHub Pages의 `https://reddiana.github.io/AriadneNSD/app/`에 놓인다. 같은 사이트에 설계 문서(`/docs/`, `/atelier/`)와 사용자 매뉴얼(`/manual/`)이 함께 있고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 그래서 앱 빌드의 base path를 `/AriadneNSD/app/`으로 두고, 빌드 산출물을 그 워크플로의 `_site/app/`에 넣는다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
+웹 버전은 GitHub Pages의 `https://reddiana.github.io/AriadneNSD/app/`에 놓인다. 같은 사이트에 설계 문서(`/docs/`, `/atelier/`)와 사용자 매뉴얼(`/manual/`, 나중에)이 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 그 워크플로가 빌드 산출물을 `_site/app/`에 넣으면 `/AriadneNSD/app/` 아래에서 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
 
 빌드 산출물(Vite, 2026-11-01)은 둘로 나뉘어 내려옵니다.
 

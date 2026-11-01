@@ -356,7 +356,7 @@ type Target =                                        // 명령이 적용되는 �
 
 ## 미결정 사항
 
-- [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1. 정할 때까지 MVP는 프로토타입처럼 조건 텍스트를 그대로 둔다
+- [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1. 정할 때까지 MVP는 조건 텍스트를 그대로 둔다(`src/packages/core/src/commands/branch.ts`)
 - [ ] 코드의 fall-through(`break` 없이 다음 분기로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
 - [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
 - [ ] 처음에 지원할 블록 텍스트의 언어 목록 → [[01-requirements#6. 미결정 사항]]

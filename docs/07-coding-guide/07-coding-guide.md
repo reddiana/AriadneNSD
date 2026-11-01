@@ -131,7 +131,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 - **문서는 불변입니다.** 모델의 타입은 `readonly` 필드와 `ReadonlyArray`로 적고, 명령은 새 객체를 만들어 반환합니다. 바뀌지 않은 하위 트리는 그대로 공유합니다 → [[0029-immutable-document-undo|ADR-0029]]
 - **편집 명령은 순수 함수입니다**: `(content, args) => Result`. 시간, 난수, I/O를 쓰지 않습니다. 새 id도 인자로 받은 id 생성기로 만듭니다(같은 입력이면 같은 출력 → 골든 파일) → [[01-model#4. 편집 명령]]
 - `core`에는 클래스를 두지 않고 타입과 함수로 씁니다. 상태를 가진 것(`editor`의 세션, 셸의 저장소)은 클래스나 클로저로 둡니다.
-- `type`을 기본으로 씁니다. 셸이 구현하는 계약(`DocStore` 등 → [[03-editor#6. 셸과의 연결]])은 `interface`로 씁니다.
+- `type`을 기본으로 씁니다. 셸이 구현하는 계약(`DocumentStore` 등 → [[03-editor#6. 셸과의 연결]])은 `interface`로 씁니다.
 - 유니온은 `kind` 필드로 구분합니다(`kind: 'if'`). `switch`로 다루고 `default`를 두지 않아 완전성 검사가 동작하게 합니다.
 
 ## 5. 오류 처리

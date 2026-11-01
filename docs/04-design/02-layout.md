@@ -164,7 +164,7 @@ flowchart LR
 
 ### 1.8 지금 프로토타입과 다른 곳
 
-프로토타입(62번째 버전)은 버리는 코드이고, 개발은 이 문서를 따릅니다.
+프로토타입(66번째 버전)은 버리는 코드이고, 개발은 이 문서를 따릅니다.
 
 - 텍스트 폭을 브라우저(`canvas.measureText`)로 측정합니다. 글꼴도 IBM Plex입니다(이 문서는 번들한 D2Coding의 폭 표).
 - default가 없는 Case(CD1)와 default만 있는 Case(CD2)는 편집 명령으로 만들 수 없어(코드에서 가져올 때만 생김) 그리지 않습니다.
@@ -207,11 +207,14 @@ D2Coding 1.4.0(unitsPerEm 1000)의 문자 폭은 **두 가지뿐**입니다: 반
 
 ## 3. SVG 렌더링
 
-> [!info] 미완성: 그림 부분의 형식
-> - SVG 요소 구성과 클래스 이름 → [[01-file-format#4. 그림 부분]]에 반영. 지금 정한 것: 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 적습니다
-> - 디자인 토큰 맵을 렌더러에 넘기는 방식. 문서 레이어는 테마, 오버레이 레이어는 `editor`가 화면 색으로 덧그림 → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
+MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
+
+- **SVG 요소와 클래스:** 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 적습니다. 안에는 `<rect>`(칸) · `<path>`(선, 빗금) · `<circle>`(`∅`) · `<text>`(굵은 부분은 `<tspan>`)만 두고, 색은 클래스가 아니라 `fill` · `stroke` 값으로 적습니다(`src/packages/core/src/render/to-svg.ts`) → [[01-file-format#4. 그림 부분]]
+- **디자인 토큰 맵:** `buildScene()`이 테마(토큰 이름 → 색 값, `src/packages/core/src/render/theme.ts`)를 받아 문서 레이어를 그립니다. 오버레이 레이어는 `editor`가 화면 색으로 따로 덧그립니다(`src/packages/editor/src/dom/overlay.ts`) → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
+- **고정 문구의 로캘:** `layout()`이 로캘을 받아, 그림에 적는 고정 문구("참" · "거짓" 등)를 `core`의 메시지 카탈로그(`src/packages/core/src/i18n/messages.ts`)에서 고릅니다 → [[01-requirements#^r-nfr|R-NFR-04]]
+
+> [!info] 미완성: 그림 부분의 형식에서 남은 것
 > - 구문 강조: 블록 텍스트의 언어마다 토크나이저 → [[03-architecture#5. 공통 관심사]]
-> - 그림에 적는 고정 문구("참" · "거짓" 등)의 로캘 → [[01-requirements#^r-nfr|R-NFR-04]]
 > - 텍스트를 외곽선 path로 변환하는 옵션 ([[01-requirements#^r-fmt|R-FMT-10]])
 > - PDF 내보내기: 같은 SVG를 인쇄용으로 변환하는 경로 ([[01-requirements#^r-exp|R-EXP-01]]). PNG는 웹 셸이 저장 파일의 SVG를 캔버스에 그려 만듭니다 → [[06-web#1.2 PNG 내보내기]]
 

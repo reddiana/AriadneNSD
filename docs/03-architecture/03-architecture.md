@@ -212,7 +212,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 
 ### 3.3 의존 규칙
 
-- 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. `core` 안의 모듈 폴더 사이도 한 방향이고, CI의 import 검사가 지킨다([[0036-code-layout|ADR-0036]]).
+- 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. 패키지 사이의 방향은 CI의 import 검사(`src/.dependency-cruiser.cjs`)가 지킨다([[0036-code-layout|ADR-0036]]). `core` 안의 모듈 폴더 사이는 지금 순환만 막는다(같은 설정의 `no-circular`).
 
 - `core`와 `fonts`는 **DOM과 브라우저 API에 의존하지 않는다.** Node에서 그대로 실행하고 테스트한다.
 - 텍스트 폭은 `core`가 `fonts`의 advance 폭 테이블로 직접 계산한다. 브라우저의 텍스트 측정 API(Canvas `measureText` 등)를 쓰지 않는다. → [[0026-bundled-font-metrics|ADR-0026]]
@@ -220,7 +220,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 - `editor`는 **렌더링 백엔드 인터페이스 하나**를 통해서만 화면에 그린다. 지금의 구현체는 렌더러가 만든 SVG 문자열을 DOM에 그대로 삽입한다([[0030-swappable-drawing|ADR-0030]]). 히트 테스트(클릭한 곳이 어느 블록인가)와 선택 오버레이의 위치는 DOM을 조회하지 않고 레이아웃 결과(블록 id → bounding box 맵)로 계산한다. 그래서 화면 렌더링을 UI 프레임워크로 바꾸더라도 백엔드 구현체 하나만 교체한다.
 - `editor`는 문서에 대한 상태를 파일 밖에 영속하지 않는다. 파일 밖에 영속하는 것은 사용자 설정(화면 언어, 자동 저장, 키 힌트 등 → [[05-screen-layout|화면 배치]]의 환경 설정)뿐이다(웹 셸은 그 밖에 로컬 백업 · 최근 파일을 브라우저에 둔다 → [[06-web#2. 로컬 백업과 자동 저장]]).
 
-> [!info] 미완성: core 안 모듈 폴더(model · commands · text · layout · render · format) 사이의 방향은 레이아웃 · 편집기 설계에서 정한다.
+> [!info] 미완성: `core` 안 모듈 폴더(model · commands · text · layout · render · format · i18n) 사이의 방향. 정하면 이 절에 적고 `src/.dependency-cruiser.cjs`에 규칙으로 더한다.
 
 ### 3.4 문서 모델
 
@@ -457,8 +457,8 @@ sequenceDiagram
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
 | `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#1. 계층마다 무엇을 테스트하나]] |
 | 브라우저 E2E · 시각 회귀 | Playwright 1.64 | `src/apps/web/e2e/` | 〃 |
-| 의존 방향 검사 | dependency-cruiser 18 | 저장소 맨 위 설정 | 〃 |
-| 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | 저장소 맨 위 설정 | 〃 |
+| 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | 〃 |
+| 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 
 ### 8.3 문서와 저장소의 도구
