@@ -1,0 +1,191 @@
+<title>M46 예제 고르기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 위에서 아래로 한 줄. 물음 → 안마다 MVP 편집 화면 위의 모달 → 메뉴와 툴바. 색은 MVP 편집기의 UI 토큰(--ans-ui-*)을 따름 */
+:root {
+  --bg: #eef1f6; --dots: #d3d9e4; --panel: #ffffff; --text: #1c2230; --muted: #5b6577;
+  --line: #d4dbe6; --accent: #2c55c9; --accent-soft: #e4ebfb; --scrim: rgba(28, 34, 48, .38);
+  --tag: #d0500b; --thumb-bg: #ffffff;
+  --ui: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono: "D2Coding", "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151b; --dots: #262c37; --panel: #1a1e26; --text: #e5e8ee; --muted: #9aa3b2;
+  --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --scrim: rgba(0, 0, 0, .55); --tag: #ff8a4c; --thumb-bg: #ffffff; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12151b; --dots: #262c37; --panel: #1a1e26; --text: #e5e8ee; --muted: #9aa3b2;
+  --line: #2b313c; --accent: #8ba7ff; --accent-soft: #232c45; --scrim: rgba(0, 0, 0, .55); --tag: #ff8a4c; --thumb-bg: #ffffff; color-scheme: dark }
+body { background: var(--bg); color: var(--text); font-family: var(--ui); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 48px; }
+main { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 24px; margin: 0; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+p { margin: 0; max-width: 70ch; }
+.lead { display: grid; gap: 10px; }
+.q { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; }
+.q ul { margin: 0; padding-left: 20px; }
+.badge { display: inline-block; font-weight: 700; color: #fff; background: var(--tag); border-radius: 4px; padding: 0 8px; font-size: 14px; }
+.rec { font-size: 13px; color: var(--accent); font-weight: 600; }
+.option { display: grid; gap: 12px; }
+.note { color: var(--muted); font-size: 14px; }
+
+/* MVP 편집 화면을 흉내 낸 무대: 점 바탕 위에 흐린 막, 그 위에 모달 */
+.stage { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+  background-color: var(--bg); background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 16px 16px; }
+.chrome { background: var(--panel); border-bottom: 1px solid var(--line); font-size: 13px; padding: 6px 12px; display: flex; gap: 14px; color: var(--muted); }
+.scrim { background: var(--scrim); padding: 28px 16px; display: flex; justify-content: center; }
+.modal { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25); width: 100%; max-width: 1000px; padding: 20px 22px; display: grid; gap: 14px; }
+.modal header { display: grid; gap: 4px; }
+.modal h3 { margin: 0; font-size: 18px; }
+.modal header p { color: var(--muted); font-size: 14px; }
+.grid { display: grid; gap: 12px; }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.card { display: grid; grid-template-rows: auto auto; gap: 6px; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-width: 0; }
+.card:hover, .card:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+.thumb { aspect-ratio: 4 / 3; max-width: 100%; background: var(--thumb-bg); border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--line); }
+.thumb img { max-width: 92%; max-height: 92%; object-fit: contain; }
+.thumb.plain { background: var(--accent-soft); color: var(--accent); font-size: 34px; font-weight: 300; }
+.name { font-weight: 600; font-size: 14px; line-height: 1.35; display: flex; gap: 6px; align-items: baseline; }
+.no { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 500; font-size: 12px; }
+.what { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.btns { display: flex; gap: 8px; }
+.btn { font: inherit; font-size: 14px; border-radius: 6px; padding: 6px 14px; border: 1px solid var(--line); background: var(--panel); color: var(--text); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+
+/* 메뉴와 툴바 */
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.menu { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; font-size: 14px; max-width: 420px; }
+.menu div { padding: 4px 16px; display: flex; justify-content: space-between; gap: 16px; }
+.menu .on { background: var(--accent-soft); }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+.sub { margin-left: 24px; }
+.toolbar { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; display: flex; gap: 6px; align-items: center; font-size: 13px; flex-wrap: wrap; }
+.tb { border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; color: var(--muted); }
+.tb.ex { color: var(--accent); border-color: var(--accent); }
+.dd { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; font-size: 13.5px; max-width: 300px; margin-top: 6px; margin-left: auto; }
+.dd div { padding: 3px 14px; }
+
+footer { font-size: 13px; line-height: 1.6; opacity: .8; border-top: 1px solid currentColor; padding-top: 12px; }
+footer a, a { color: inherit; }
+
+@media (max-width: 760px) {
+  .g4, .g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pair { grid-template-columns: 1fr; }
+  .scrim { padding: 16px 8px; }
+  .modal { padding: 16px 14px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main>
+  <section class="lead">
+    <h1>M46 예제 고르기</h1>
+    <p>MVP(웹)에 넣는 예제 열 개를 처음 온 사람에게 한 번에 보여 주는 모달의 시안입니다(2026-11-01). 메인테이너: "드롭다운 말고 예제 목록을 한번에 다 보여주세요. 3*4나 4*3이면 한번에 다 보여줄 수 있겠네요."</p>
+    <p class="note">썸네일은 프로토타입 66번째 판이 그린 그림을 찍은 것입니다. MVP에서는 MVP의 렌더러가 같은 예제로 그립니다. 접기 영역처럼 MVP 밖의 모습은 빠집니다.</p>
+  </section>
+
+  <section class="q">
+    <h2><span class="badge">E1</span> 모달의 격자</h2>
+    <p>예제는 열 개이고, 4×3 격자는 열두 칸입니다. 남는 두 칸을 어떻게 쓸지 두 안을 견줍니다.</p>
+    <ul>
+      <li><b>1번 (추천):</b> 4×3. 남는 두 칸에 "빈 문서로 시작"과 "파일 열기…"를 같은 카드로 둡니다. 말씀하신 4×3 그대로이고, 처음 온 사람이 할 수 있는 일 셋(예제 · 빈 문서 · 내 파일)이 한 격자에 모입니다.</li>
+      <li><b>2번:</b> 5×2. 카드는 예제 열 개뿐이고, "빈 문서로 시작"과 "파일 열기…"는 아래 단추로 둡니다. 칸이 꼭 맞지만 썸네일이 조금 작아집니다.</li>
+    </ul>
+    <p class="note">순서는 쉬운 것에서 어려운 것으로, 새 블록과 새 개념이 하나씩 늘게 놓았습니다. 앞의 둘은 저장소 첫 화면(README)의 그림입니다. 좁은 화면(760px 이하)에서는 두 줄 격자를 위아래로 넘겨 봅니다. 모달을 <kbd>Esc</kbd>로 닫거나 "빈 문서로 시작"을 고르면 다시 묻지 않습니다.</p>
+  </section>
+
+  <section class="option" aria-labelledby="o1">
+    <h2 id="o1"><span class="badge">1</span> 4×3, 빈 문서와 파일 열기도 카드로 <span class="rec">추천</span></h2>
+    <div class="stage">
+      <div class="chrome"><span>파일</span><span>편집</span><span>다이어그램</span><span>보기</span><span>도움말</span></div>
+      <div class="scrim">
+        <div class="modal" role="dialog" aria-label="예제 고르기 (1번 안)">
+          <header>
+            <h3>AriadneNSD에 오신 것을 환영합니다</h3>
+            <p>예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.</p>
+          </header>
+          <div class="grid g4" id="grid1"></div>
+          <div class="foot"><span>예제는 도움말 › 예제와 툴바의 "예제"에도 있습니다</span><span><kbd>Esc</kbd> 닫기</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="option" aria-labelledby="o2">
+    <h2 id="o2"><span class="badge">2</span> 5×2, 빈 문서와 파일 열기는 단추로</h2>
+    <div class="stage">
+      <div class="chrome"><span>파일</span><span>편집</span><span>다이어그램</span><span>보기</span><span>도움말</span></div>
+      <div class="scrim">
+        <div class="modal" role="dialog" aria-label="예제 고르기 (2번 안)">
+          <header>
+            <h3>AriadneNSD에 오신 것을 환영합니다</h3>
+            <p>예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.</p>
+          </header>
+          <div class="grid g5" id="grid2"></div>
+          <div class="foot"><span>예제는 도움말 › 예제와 툴바의 "예제"에도 있습니다</span>
+            <span class="btns"><button class="btn" type="button">파일 열기…</button><button class="btn primary" type="button">빈 문서로 시작</button></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="option" aria-labelledby="o3">
+    <h2 id="o3">도움말 › 예제와 툴바 (정한 대로)</h2>
+    <p class="note">메뉴는 모두 같은 레벨, 툴바는 오른쪽 끝의 "예제 ▾" 드롭다운입니다. 둘 다 순서가 모달과 같습니다. 툴바의 위치는 화면 배치(05-screen-layout)의 툴바 오른쪽 끝, 확대 · 축소 옆입니다.</p>
+    <div class="pair">
+      <div>
+        <div class="menu" aria-label="도움말 메뉴">
+          <div>사용법</div>
+          <div>단축키 목록<span class="no">?</span></div>
+          <div class="on">예제 ▸</div>
+          <hr>
+          <div>이 버전에서 바뀐 것</div>
+          <div>AriadneNSD에 대하여</div>
+        </div>
+        <div class="menu sub" id="menuList" aria-label="예제 하위 메뉴"></div>
+      </div>
+      <div>
+        <div class="toolbar" aria-label="툴바"><span class="tb">↶</span><span class="tb">↷</span><span class="tb">처리</span><span class="tb">If</span><span class="tb">Case</span><span class="tb">While</span><span class="tb">For</span><span class="tb">Do-While</span><span class="tb">− 100% +</span><span class="tb ex">예제 ▾</span></div>
+        <div class="dd" id="ddList" aria-label="예제 드롭다운"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>이 페이지는 <a href="https://github.com/reddiana/AriadneNSD">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
+</main>
+
+<script>
+// 예제 열 개: 쉬운 것에서 어려운 것으로
+const EX = [
+  ['01-merge-sort', '병합 정렬', 'Method 하나 · 자기를 부르는 호출'],
+  ['02-dijkstra', '다익스트라 최단 경로', '겹친 While · For · If'],
+  ['03-uart-case', 'UART 명령', '갈래 넷의 Case'],
+  ['04-timer-interrupt', '타이머 인터럽트', 'Event 헤더 · Do-While'],
+  ['05-binary-search', '이진 탐색', 'Event와 Method · 결과를 받는 호출'],
+  ['06-quicksort', '퀵소트', 'Method 둘이 서로 부름'],
+  ['07-maze', '미로 찾기 (아리아드네의 실)', '되추적 · 재귀'],
+  ['08-vending-machine', '자판기', '문장으로 적기 · Event 둘'],
+  ['09-elevator', '엘리베이터', '갈래 넷 · 호출 둘 · 가장 넓음'],
+  ['10-raft', 'Raft 합의', 'Event 일곱 · Method 셋 · 가장 큼'],
+];
+const card = (img, name, what, no) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'card';
+  b.innerHTML = (img ? `<span class="thumb"><img src="2026-11-01-example-thumb-${img}.png" alt="${name} 예제의 그림" loading="lazy"></span>`
+                     : `<span class="thumb plain" aria-hidden="true">${what}</span>`)
+    + `<span class="name">${no ? `<span class="no">${no}</span>` : ''}${name}</span>`
+    + (img ? `<span class="what">${what}</span>` : '');
+  return b;
+};
+const g1 = document.getElementById('grid1'), g2 = document.getElementById('grid2');
+EX.forEach(([f, n, w], i) => { g1.append(card(f, n, w, i + 1)); g2.append(card(f, n, w, i + 1)); });
+const blank = card(null, '빈 문서로 시작', '+'); blank.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">다시 묻지 않습니다</span>');
+const open = card(null, '파일 열기…', '↥'); open.querySelector('.name').insertAdjacentHTML('afterend', '<span class="what">.ns.svg · .ns</span>');
+g1.append(blank, open);
+const ml = document.getElementById('menuList'), dl = document.getElementById('ddList');
+EX.forEach(([, n]) => { ml.insertAdjacentHTML('beforeend', `<div>${n}</div>`); dl.insertAdjacentHTML('beforeend', `<div>${n}</div>`); });
+</script>

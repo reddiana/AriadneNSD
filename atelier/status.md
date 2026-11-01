@@ -19,6 +19,7 @@ updated: 2026-11-01
 | --- | --- | --- | --- |
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항\|조작의 미결정]] Q20(MVP 뒤) · [[requirements-rework]] Q18, Q23. MVP에 드는 물음은 M43에서 정함) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
+| M46 | 예제 고르기 (2026-11-01, 답을 기다림: E1 모달의 격자) | https://claude.ai/artifact/UCv5JocwUAvNxL5KjKf9ri | `journal/assets/2026-11-01-example-picker-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
@@ -44,7 +45,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 ## 이번과 다음 세션에 할 것
 
 - [ ] **MVP에 예제와 헤더 넣기** (2026-11-01 정함 → [[2026-11-01-02-docs-current-examples]], [[dr-0015-mvp-scope|DR-0015]])
-	- [ ] 첫 방문 모달(예제 열 개를 4×3으로 한 번에) 시안
+	- [ ] 첫 방문 모달(예제 열 개를 4×3으로 한 번에) 시안 M46의 E1 답
 	- [ ] Event · Method 헤더 그리기와 모양 고르기, 여러 다이어그램 배치([[02-layout]] 1.5 ~ 1.7), 헤더 편집, 같은 문서의 Method를 부르는 호출 블록
 	- [ ] 예제 열 개를 MVP 모델로 옮김, 도움말 › 예제, 툴바의 예제 드롭다운, 첫 방문 모달, 시험
 - [ ] 문서 현행화 점검에서 판단이 필요한 것을 메인테이너와 봄
