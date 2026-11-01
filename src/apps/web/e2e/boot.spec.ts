@@ -1,8 +1,9 @@
-// The start of the page (inbox 2026-11-01: the MVP did not appear on an Android phone): a
-// database that never answers must not keep the screen empty, and a failure shows on the screen.
+// The start of the page (R-NFR-10, QA-19; inbox 2026-11-01: the MVP did not appear on an Android
+// phone): a database that never answers must not keep the screen empty, and a failure shows on the
+// screen.
 import { expect, test } from '@playwright/test';
 
-test('the editor appears when indexedDB.open never answers', async ({ page }) => {
+test('QA-19: the editor appears when indexedDB.open never answers', async ({ page }) => {
   await page.addInitScript(() => {
     // An open request that fires no event at all.
     indexedDB.open = () => ({}) as IDBOpenDBRequest;
@@ -12,7 +13,7 @@ test('the editor appears when indexedDB.open never answers', async ({ page }) =>
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
 });
 
-test('a failure at start is shown on the boot screen', async ({ page }) => {
+test('QA-19: a failure at start is shown on the boot screen', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(window, 'crypto', { value: {} });
   });

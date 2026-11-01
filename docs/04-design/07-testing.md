@@ -16,7 +16,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 계층마다 무엇을 
 
 - [[01-requirements#^r-nfr|R-NFR-06]] (`core`는 DOM 없이 테스트), [[01-requirements#^r-fmt|R-FMT-03]] (같은 모델이면 같은 파일), [[01-requirements#^r-nfr|R-NFR-01]], [[01-requirements#^r-nfr|R-NFR-03]]
 - 인수 테스트 AT-11 ~ AT-17: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-web|R-WEB-03]], [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-exp|R-EXP-04]], [[01-requirements#^r-edit|R-EDIT-24]], [[01-requirements#^r-edit|R-EDIT-21]]
-- 품질 속성 시나리오 QA-01 ~ QA-17 → [[03-quality-attribute-scenarios]]
+- 품질 속성 시나리오 QA-01 ~ QA-20 → [[03-quality-attribute-scenarios]]
 - 유즈케이스 → [[02-use-cases]]
 
 ## 1. 계층마다 무엇을 테스트하나
