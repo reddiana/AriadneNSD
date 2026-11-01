@@ -98,8 +98,8 @@ type Context = {
  * Lays out a document: every block's bounding box, the click regions and what to draw
  * (02-layout 1). Pure: the same document and options give the same result (R-FMT-03).
  *
- * MVP scope: diagrams are stacked top to bottom and headers are not drawn. Fold regions are
- * drawn as if their name bands were off (02-layout 1.6), and folded things are drawn unfolded.
+ * MVP scope: fold regions are drawn as if their name bands were off (02-layout 1.6), and folded
+ * things are drawn unfolded.
  */
 export function layout(doc: Doc, options: LayoutOptions): LayoutResult {
   const context: Context = {
@@ -112,29 +112,154 @@ export function layout(doc: Doc, options: LayoutOptions): LayoutResult {
     nodes: [],
   };
 
+  const headStyle = doc.content.settings.headStyle;
+  const measuredDiagrams = doc.content.diagrams.map((diagram) =>
+    measureDiagram(context, diagram, headStyle),
+  );
+  const arrangement = arrange(measuredDiagrams);
+
   const diagrams: DiagramLayout[] = [];
-  let y = paper;
-  let widest = 0;
-  for (const diagram of doc.content.diagrams) {
-    const body = measureSeq(context, diagram.body);
-    const width = Math.max(body.width, diagramMinWidth);
-    const bodyBox: Box = { x: paper, y, width, height: body.height };
-    placeSeq(context, diagram.body, bodyBox, false);
-    context.boxes.set(diagram.id, bodyBox);
-    diagrams.push({ id: diagram.id, box: bodyBox, head: null, body: bodyBox });
-    widest = Math.max(widest, width);
-    y += body.height + diagramGap;
+  for (const { measure, x, y } of arrangement.placed) {
+    const { diagram, width, headHeight, bodyHeight, headText } = measure;
+    const box: Box = { x: paper + x, y: paper + y, width, height: headHeight + bodyHeight };
+    let head: Box | null = null;
+    if (diagram.head !== null && headText !== null) {
+      head = { x: box.x, y: box.y, width, height: headHeight };
+      context.nodes.push({
+        kind: 'diagramHead',
+        id: diagram.id,
+        headKind: diagram.head.kind,
+        style: headStyle,
+        box: head,
+        text: placedText(headText),
+      });
+      context.regions.push({ kind: 'diagramHead', diagramId: diagram.id, box: head });
+    }
+    const body: Box = { x: box.x, y: box.y + headHeight, width, height: bodyHeight };
+    placeSeq(context, diagram.body, body, false);
+    context.boxes.set(diagram.id, box);
+    diagrams.push({ id: diagram.id, box, head, body });
   }
-  const contentHeight = y - diagramGap - paper;
 
   return {
-    width: paper + widest + paper,
-    height: paper + Math.max(0, contentHeight) + paper,
+    width: paper + arrangement.width + paper,
+    height: paper + arrangement.height + paper,
     diagrams,
     boxes: context.boxes,
     regions: context.regions,
     nodes: context.nodes,
   };
+}
+
+/** A diagram measured as a whole: its header and body heights and its width (02-layout 1.5). */
+type DiagramMeasure = {
+  readonly diagram: Diagram;
+  readonly width: number;
+  readonly headHeight: number;
+  readonly bodyHeight: number;
+  /** The measured header text, or `null` without a header. */
+  readonly headText: TextSize | null;
+};
+
+function measureDiagram(
+  context: Context,
+  diagram: Diagram,
+  headStyle: 'shape' | 'title',
+): DiagramMeasure {
+  const body = measureSeq(context, diagram.body);
+  let width = Math.max(body.width, diagramMinWidth);
+  if (diagram.head === null) {
+    return { diagram, width, headHeight: 0, bodyHeight: body.height, headText: null };
+  }
+  const text = measureText(diagram.head.text);
+  let headHeight: number;
+  if (headStyle === 'title') {
+    // A label line, the bold name, and a gap above the rule. The text lines up with the
+    // diagram's left edge, so no padding is added (visual design 5).
+    const label = measureLine(headLabel(diagram.head.kind), fontSizes.secondary);
+    width = Math.max(width, text.width, label);
+    headHeight = geometry['size.title-tag'] + text.height + geometry['size.title-gap'];
+  } else {
+    width = Math.max(width, text.width + 2 * padX + geometry['size.hat-room']);
+    headHeight = geometry['size.hat'] + text.height + 2 * padY;
+  }
+  return { diagram, width, headHeight, bodyHeight: body.height, headText: text };
+}
+
+/** The small label above a header drawn like a title. The same words in every language. */
+export function headLabel(kind: 'event' | 'method'): string {
+  return kind === 'event' ? 'Event' : 'Method';
+}
+
+type Placed = { readonly measure: DiagramMeasure; readonly x: number; readonly y: number };
+type Stacked = { readonly width: number; readonly height: number; readonly placed: Placed[] };
+
+/**
+ * Places the diagrams (02-layout 1.7): Events and diagrams without a header on the left, Methods
+ * on the right. Each group is stacked top to bottom and wraps into a new column past the column
+ * height. The column height is chosen, in 4px steps, so the whole picture is closest to 16 : 10.
+ * Coordinates are relative to the paper margin.
+ */
+function arrange(measures: ReadonlyArray<DiagramMeasure>): Stacked {
+  const left = measures.filter((m) => m.diagram.head?.kind !== 'method');
+  const right = measures.filter((m) => m.diagram.head?.kind === 'method');
+  const heightOf = (m: DiagramMeasure): number => m.headHeight + m.bodyHeight;
+  const tallest = Math.max(0, ...measures.map(heightOf));
+  const oneColumn = (group: ReadonlyArray<DiagramMeasure>): number =>
+    sum(group.map(heightOf)) + Math.max(0, group.length - 1) * diagramGap;
+  const lowest = Math.max(geometry['size.column-min'], tallest);
+  const highest = Math.max(lowest, oneColumn(left), oneColumn(right));
+
+  let best: { score: number; a: Stacked; b: Stacked; width: number; height: number } | null = null;
+  for (let limit = lowest; ; limit += 4) {
+    const a = stack(left, limit, heightOf);
+    const b = stack(right, limit, heightOf);
+    const gap = a.width > 0 && b.width > 0 ? geometry['space.kind-gap'] : 0;
+    const width = a.width + gap + b.width;
+    const height = Math.max(a.height, b.height);
+    const score = height === 0 ? 0 : Math.abs(width / height - 1.6);
+    if (best === null || score < best.score - 1e-9) {
+      best = { score, a, b, width, height };
+    }
+    if (limit >= highest) {
+      break;
+    }
+  }
+  if (best === null) {
+    return { width: 0, height: 0, placed: [] };
+  }
+  const shift = best.a.width + (best.a.width > 0 && best.b.width > 0 ? geometry['space.kind-gap'] : 0);
+  return {
+    width: best.width,
+    height: best.height,
+    placed: [...best.a.placed, ...best.b.placed.map((p) => ({ ...p, x: p.x + shift }))],
+  };
+}
+
+/** Stacks one group in columns no taller than `limit` (the first diagram of a column may be). */
+function stack(
+  group: ReadonlyArray<DiagramMeasure>,
+  limit: number,
+  heightOf: (m: DiagramMeasure) => number,
+): Stacked {
+  let x = 0;
+  let y = 0;
+  let widest = 0;
+  let bottom = 0;
+  const placed: Placed[] = [];
+  for (const measure of group) {
+    const height = heightOf(measure);
+    if (y > 0 && y + height > limit) {
+      x += widest + diagramGap;
+      y = 0;
+      widest = 0;
+    }
+    placed.push({ measure, x, y });
+    widest = Math.max(widest, measure.width);
+    bottom = Math.max(bottom, y + height);
+    y += height + diagramGap;
+  }
+  return { width: group.length > 0 ? x + widest : 0, height: bottom, placed };
 }
 
 // Pass 1: measure (inside out).

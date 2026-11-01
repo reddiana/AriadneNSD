@@ -153,6 +153,39 @@ describe('render', () => {
   });
 });
 
+describe('render: headers (visual design principle 2)', () => {
+  const withHead = (headStyle: 'shape' | 'title', kind: 'event' | 'method'): Doc => ({
+    ...docOf(process('b1', 'x')),
+    content: {
+      settings: { textKind: 'plain', theme: 'default', headStyle },
+      diagrams: [
+        { id: 'd1', head: { kind, text: 'tick' }, body: { blocks: [process('b1', 'x')], folds: [] } },
+      ],
+    },
+  });
+
+  it('draws the Event hat as a closed curve in block.event', () => {
+    const { scene, svg } = renderDoc(withHead('shape', 'event'), en);
+    const path = scene.elements.find((element) => element.kind === 'path');
+    expect(path).toMatchObject({ blockId: 'd1', fill: '#e2efdf' });
+    expect(svg.content).toMatch(/<path d="M24 40 C46 22 /);
+    expect(svg.content).toContain('>tick</text>');
+  });
+
+  it('draws the Method arch across the width in block.call', () => {
+    const { scene } = renderDoc(withHead('shape', 'method'), en);
+    const path = scene.elements.find((element) => element.kind === 'path');
+    expect(path).toMatchObject({ blockId: 'd1', fill: '#ebe7f4' });
+  });
+
+  it('draws a header like a title: a muted label, a bold name and a rule, no fill', () => {
+    const { scene, svg } = renderDoc(withHead('title', 'method'), en);
+    expect(scene.elements.some((element) => element.kind === 'path')).toBe(false);
+    expect(svg.content).toContain('fill="#5a6476" xml:space="preserve">Method</text>');
+    expect(svg.content).toContain('<tspan font-weight="600">tick</tspan>');
+  });
+});
+
 describe('render: golden files (07-testing 2)', () => {
   const cases: ReadonlyArray<readonly [string, Doc]> = [
     [

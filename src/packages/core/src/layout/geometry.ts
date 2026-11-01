@@ -15,8 +15,16 @@ export const geometry = {
   'size.label-room': 18,
   'size.label-inset': 6,
   'size.call-bar': 7,
+  'size.hat': 16,
+  // The Event hat is min(size.hat-w, 45% of the diagram width) wide (visual design 5).
+  'size.hat-w': 110,
+  'size.hat-room': 24,
+  'size.title-tag': 16,
+  'size.title-gap': 6,
+  'size.column-min': 420,
   'size.diagram-min-w': 160,
   'size.text-halo': 3,
   'space.diagram': 44,
+  'space.kind-gap': 88,
   'space.paper': 24,
 } as const;

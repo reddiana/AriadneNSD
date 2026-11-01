@@ -3,10 +3,11 @@
 import { blockFont } from '@ariadne-nsd/fonts';
 
 import { geometry } from '../layout/geometry';
+import { headLabel } from '../layout/layout';
 import type { Box, BranchLabel, LayoutNode, LayoutResult, PlacedText } from '../layout/types';
 import type { Id } from '../model/types';
 import { fontSizes, lineHeight } from '../text/measure-text';
-import type { Point, Scene, SceneElement, TextRun } from './scene';
+import type { PathSegment, Point, Scene, SceneElement, TextRun } from './scene';
 import type { Theme } from './theme';
 
 /**
@@ -71,6 +72,9 @@ function paint(ctx: Painter, node: LayoutNode): void {
         emptyMark(ctx, node.id, node.box);
       }
       return;
+    case 'diagramHead':
+      diagramHead(ctx, node);
+      return;
     case 'missingDefault':
       rect(ctx, node.caseId, node.box, colors['block.process']);
       emptyMark(ctx, node.caseId, node.box);
@@ -89,6 +93,82 @@ function paint(ctx: Painter, node: LayoutNode): void {
       caseHead(ctx, node);
       return;
   }
+}
+
+/**
+ * The header of a diagram (visual design principle 2, 02-layout 1.5). Shape: the Event's hat
+ * rises on the left, the Method's low arch spans the width (the prototype's curves). Title: a
+ * muted label, the bold name and a 1px rule, on the paper.
+ */
+function diagramHead(ctx: Painter, node: Extract<LayoutNode, { kind: 'diagramHead' }>): void {
+  const colors = ctx.colors;
+  const { x, y, width: w, height: h } = node.box;
+  if (node.style === 'title') {
+    const tag = geometry['size.title-tag'];
+    ctx.elements.push({
+      kind: 'text',
+      blockId: node.id,
+      x,
+      y: y + tag - 4,
+      anchor: 'start',
+      fontSize: fontSizes.secondary,
+      fill: colors['text.muted'],
+      runs: [{ text: headLabel(node.headKind), weight: 400 }],
+      halo: null,
+    });
+    node.text.lines.forEach((line, index) => {
+      if (line === '') {
+        return;
+      }
+      ctx.elements.push({
+        kind: 'text',
+        blockId: node.id,
+        x,
+        y: baseline(y + tag, index),
+        anchor: 'start',
+        fontSize: fontSizes.body,
+        fill: colors['text.primary'],
+        runs: [{ text: line, weight: 600 }],
+        halo: null,
+      });
+    });
+    polyline(ctx, node.id, [
+      [x, y + h],
+      [x + w, y + h],
+    ]);
+    return;
+  }
+  const top = y + geometry['size.hat'];
+  const segments: PathSegment[] =
+    node.headKind === 'method'
+      ? [
+          { kind: 'move', to: [x, top] },
+          { kind: 'curve', c1: [x + w * 0.2, y + 1], c2: [x + w * 0.8, y + 1], to: [x + w, top] },
+          { kind: 'line', to: [x + w, y + h] },
+          { kind: 'line', to: [x, y + h] },
+        ]
+      : hatSegments(x, y, w, h, top);
+  ctx.elements.push({
+    kind: 'path',
+    blockId: node.id,
+    segments,
+    fill: node.headKind === 'method' ? colors['block.call'] : colors['block.event'],
+    stroke: colors['line.structure'],
+    strokeWidth: structureWidth,
+  });
+  blockText(ctx, node.id, node.text, x + padX, top + padY);
+}
+
+/** The Event hat: a bump `min(size.hat-w, 45%)` wide on the left, then the flat top. */
+function hatSegments(x: number, y: number, w: number, h: number, top: number): PathSegment[] {
+  const hat = Math.min(geometry['size.hat-w'], w * 0.45);
+  return [
+    { kind: 'move', to: [x, top] },
+    { kind: 'curve', c1: [x + 22, y - 2], c2: [x + hat - 22, y - 2], to: [x + hat, top] },
+    { kind: 'line', to: [x + w, top] },
+    { kind: 'line', to: [x + w, y + h] },
+    { kind: 'line', to: [x, y + h] },
+  ];
 }
 
 function call(ctx: Painter, node: Extract<LayoutNode, { kind: 'call' }>): void {

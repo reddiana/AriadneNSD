@@ -84,6 +84,18 @@ export type LayoutNode =
       readonly columns: ReadonlyArray<CaseColumn>;
     }
   | {
+      /**
+       * The header of a diagram (02-layout 1.5): an Event hat or Method arch (`shape`), or a
+       * label, a bold name and a rule (`title`). `id` is the diagram's id.
+       */
+      readonly kind: 'diagramHead';
+      readonly id: Id;
+      readonly headKind: 'event' | 'method';
+      readonly style: 'shape' | 'title';
+      readonly box: Box;
+      readonly text: PlacedText;
+    }
+  | {
       /** The empty default cell drawn for a Case without a default branch (UX CD1). */
       readonly kind: 'missingDefault';
       readonly caseId: Id;
@@ -112,14 +124,16 @@ export type HitRegion =
       readonly box: Box;
     }
   /** The empty default cell of a Case without a default branch (UX CD1). */
-  | { readonly kind: 'missingDefault'; readonly blockId: Id; readonly box: Box };
+  | { readonly kind: 'missingDefault'; readonly blockId: Id; readonly box: Box }
+  /** The header of a diagram (Event or Method). */
+  | { readonly kind: 'diagramHead'; readonly diagramId: Id; readonly box: Box };
 
 /** Where one diagram is. */
 export type DiagramLayout = {
   readonly id: Id;
   /** The whole diagram: header and body. */
   readonly box: Box;
-  /** The header. Always `null` in the MVP layout (headers come after the MVP). */
+  /** The header, or `null` for a diagram without one. */
   readonly head: Box | null;
   readonly body: Box;
 };

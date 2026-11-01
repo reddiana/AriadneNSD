@@ -1,6 +1,6 @@
 // The SVG backend (ADR-0030): scene → SVG text. It makes no decisions about color or shape.
 // The screen and the saved file use this same output (ADR-0018).
-import type { Point, Scene, SceneElement, TextRun } from './scene';
+import type { PathSegment, Point, Scene, SceneElement, TextRun } from './scene';
 
 /** The drawing part of an SVG: the `<g class="ans-render">` element and the picture's size. */
 export type RenderedSvg = {
@@ -55,6 +55,11 @@ function elementToSvg(element: SceneElement): string {
         (element.isRoundCap ? ' stroke-linecap="round"' : '') +
         '/>'
       );
+    case 'path':
+      return (
+        `<path d="${segmentData(element.segments)}" fill="${element.fill}"` +
+        ` stroke="${element.stroke}" stroke-width="${formatNumber(element.strokeWidth)}"/>`
+      );
     case 'circle':
       return (
         `<circle cx="${formatNumber(element.cx)}" cy="${formatNumber(element.cy)}"` +
@@ -89,6 +94,21 @@ function pathData(points: ReadonlyArray<Point>): string {
   return points
     .map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${formatNumber(x)} ${formatNumber(y)}`)
     .join(' ');
+}
+
+function segmentData(segments: ReadonlyArray<PathSegment>): string {
+  const point = ([x, y]: Point): string => `${formatNumber(x)} ${formatNumber(y)}`;
+  const parts = segments.map((segment) => {
+    switch (segment.kind) {
+      case 'move':
+        return `M${point(segment.to)}`;
+      case 'line':
+        return `L${point(segment.to)}`;
+      case 'curve':
+        return `C${point(segment.c1)} ${point(segment.c2)} ${point(segment.to)}`;
+    }
+  });
+  return `${parts.join(' ')} Z`;
 }
 
 /**

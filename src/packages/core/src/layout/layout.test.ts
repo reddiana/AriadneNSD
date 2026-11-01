@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
-import type { Block, Doc } from '../model/types';
+import type { Block, Diagram, Doc } from '../model/types';
 import {
   arm,
   branch,
@@ -321,8 +321,100 @@ describe('layout: click regions', () => {
   });
 });
 
-describe('layout: several diagrams', () => {
-  it('stacks diagrams top to bottom, 44px apart (the MVP stand-in for 02-layout 1.7)', () => {
+/** A document of diagrams, each `[id, head, block text]`, with the given header style. */
+function diagramsDoc(
+  headStyle: 'shape' | 'title',
+  diagrams: ReadonlyArray<readonly [string, Diagram['head'], string]>,
+): Doc {
+  return {
+    ...docOf(process('b0')),
+    content: {
+      settings: { textKind: 'plain', theme: 'default', headStyle },
+      diagrams: diagrams.map(([id, head, text], index) => ({
+        id,
+        head,
+        body: { blocks: [process(`b${String(index + 1)}`, text)], folds: [] },
+      })),
+    },
+  };
+}
+
+const event = (text: string): Diagram['head'] => ({ kind: 'event', text });
+const method = (text: string): Diagram['head'] => ({ kind: 'method', text });
+
+describe('layout: headers (02-layout 1.5)', () => {
+  it('a shaped header is the hat (16px) + the text + 2·pad-y high, above the body', () => {
+    const result = layout(diagramsDoc('shape', [['d1', event('start'), 'x']]), en);
+    const head = nodeOf(result, 'diagramHead', 'd1');
+    expect(head.box).toEqual({ x: 24, y: 24, width: 160, height: 16 + 18 + 14 });
+    expect(head.style).toBe('shape');
+    expect(boxOf(result, 'b1')).toEqual({ x: 24, y: 24 + 48, width: 160, height: 32 });
+    expect(boxOf(result, 'd1')).toEqual({ x: 24, y: 24, width: 160, height: 48 + 32 });
+    expect(result.diagrams[0]?.head).toEqual(head.box);
+  });
+
+  it('a shaped header is at least its text + 2·pad-x + 24px wide', () => {
+    const doc = diagramsDoc('shape', [['d1', method(wide), 'x']]);
+    expect(nodeOf(layout(doc, en), 'diagramHead', 'd1').box.width).toBe(195 + 20 + 24);
+  });
+
+  it('a header like a title is 16 + 18 + 6 = 40px high and needs no padding', () => {
+    const doc = diagramsDoc('title', [['d1', method(wide), 'x']]);
+    const head = nodeOf(layout(doc, en), 'diagramHead', 'd1');
+    expect(head.box).toEqual({ x: 24, y: 24, width: 195, height: 40 });
+  });
+
+  it('a diagram without a header has no header node and is clicked on its blocks', () => {
+    const result = layout(diagramsDoc('title', [['d1', null, 'x']]), en);
+    expect(result.nodes.some((node) => node.kind === 'diagramHead')).toBe(false);
+    expect(result.diagrams[0]?.head).toBeNull();
+  });
+
+  it('02-layout 1.1: a header is clicked anywhere on it', () => {
+    const result = layout(diagramsDoc('shape', [['d1', event('start'), 'x']]), en);
+    expect(result.regions).toContainEqual({
+      kind: 'diagramHead',
+      diagramId: 'd1',
+      box: { x: 24, y: 24, width: 160, height: 48 },
+    });
+  });
+});
+
+describe('layout: several diagrams (02-layout 1.7)', () => {
+  it('puts Methods to the right of Events, 88px apart', () => {
+    const doc = diagramsDoc('title', [
+      ['d1', method('sort(a)'), 'x'],
+      ['d2', event('start'), 'x'],
+    ]);
+    const result = layout(doc, en);
+    expect(boxOf(result, 'd2')).toMatchObject({ x: 24, y: 24 });
+    expect(boxOf(result, 'd1')).toMatchObject({ x: 24 + 160 + 88, y: 24 });
+    expect(result.width).toBe(24 + 160 + 88 + 160 + 24);
+  });
+
+  it('keeps a diagram without a header in the Event group', () => {
+    const doc = diagramsDoc('title', [
+      ['d1', null, 'x'],
+      ['d2', method('f'), 'x'],
+    ]);
+    const result = layout(doc, en);
+    expect(boxOf(result, 'd1').x).toBe(24);
+    expect(boxOf(result, 'd2').x).toBe(24 + 160 + 88);
+  });
+
+  it('wraps a long group into columns so the picture is closest to 16 : 10', () => {
+    const doc = diagramsDoc(
+      'title',
+      Array.from({ length: 12 }, (_, index) => [`d${String(index + 1)}`, event(`e${String(index)}`), 'x'] as const),
+    );
+    const result = layout(doc, en);
+    const xs = new Set(result.diagrams.map((diagram) => diagram.box.x));
+    expect(xs.size).toBeGreaterThan(1);
+    const ratio = (result.width - 48) / (result.height - 48);
+    expect(Math.abs(ratio - 1.6)).toBeLessThan(0.6);
+  });
+
+  it('stacks diagrams of one group top to bottom, 44px apart, while they fit', () => {
     const doc: Doc = {
       ...docOf(process('b1')),
       content: {

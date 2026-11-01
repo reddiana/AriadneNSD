@@ -5,6 +5,15 @@ import type { Id } from '../model/types';
 /** A point `[x, y]` in drawing coordinates. */
 export type Point = readonly [x: number, y: number];
 
+/**
+ * One step of a path: move to a point, a line to a point, or a cubic Bézier curve through two
+ * control points to a point. A path is always closed after its last segment.
+ */
+export type PathSegment =
+  | { readonly kind: 'move'; readonly to: Point }
+  | { readonly kind: 'line'; readonly to: Point }
+  | { readonly kind: 'curve'; readonly c1: Point; readonly c2: Point; readonly to: Point };
+
 /** A run of text with one weight, inside a text element. */
 export type TextRun = {
   readonly text: string;
@@ -37,6 +46,15 @@ export type SceneElement =
       readonly dash: readonly [number, number] | null;
       /** Round line ends, for the small `∅` symbol; flat (butt) ends otherwise. */
       readonly isRoundCap: boolean;
+    }
+  | {
+      /** A filled, closed outline of lines and cubic curves: the Event hat and Method arch. */
+      readonly kind: 'path';
+      readonly blockId: Id;
+      readonly segments: ReadonlyArray<PathSegment>;
+      readonly fill: string;
+      readonly stroke: string;
+      readonly strokeWidth: number;
     }
   | {
       /** A circle outline: part of the `∅` symbol, drawn as a shape (visual design 2). */
