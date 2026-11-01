@@ -2,7 +2,7 @@
 // Help › Examples… and the toolbar's "Examples ▾".
 import { expect, test } from '@playwright/test';
 
-import { command, openApp } from './support';
+import { canvas, command, openApp } from './support';
 
 const modal = '.ans-backdrop[data-kind="examples"] .ans-modal';
 
@@ -63,4 +63,41 @@ test('UX EX3: the toolbar\'s "Examples ▾" lists the ten examples in order', as
   await items.nth(1).click();
   await expect(page).toHaveTitle("Dijkstra's shortest path.ns.svg – AriadneNSD");
   expect(await command(page, 'file.new').count()).toBeGreaterThan(0);
+});
+
+test("UX EX3: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
+  page,
+}) => {
+  await openApp(page);
+  await page.getByRole('button', { name: 'Examples' }).click();
+  const last = page.locator('.ans-dropdown [role="menuitem"]').last();
+  await expect(last).toBeVisible();
+  // The toolbar must not clip it: the element seen at the item's centre is the item.
+  const isOnTop = await last.evaluate((item) => {
+    const box = item.getBoundingClientRect();
+    const seen = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+    return seen !== null && item.contains(seen);
+  });
+  expect(isOnTop).toBe(true);
+});
+
+test('05-screen-layout: a diagram larger than the window scrolls in the canvas', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1000, height: 600 });
+  await openApp(page);
+  await page.getByRole('button', { name: 'Examples' }).click();
+  await page.locator('.ans-dropdown [role="menuitem"]').last().click();
+  await expect(page).toHaveTitle('Raft consensus.ns.svg – AriadneNSD');
+  const area = canvas(page);
+  await expect(area).toHaveCSS('overflow', 'auto');
+  const sizes = await area.evaluate((element) => ({
+    scrollHeight: element.scrollHeight,
+    clientHeight: element.clientHeight,
+  }));
+  expect(sizes.scrollHeight).toBeGreaterThan(sizes.clientHeight);
+  await area.evaluate((element) => {
+    element.scrollTop = 200;
+  });
+  expect(await area.evaluate((element) => element.scrollTop)).toBe(200);
 });

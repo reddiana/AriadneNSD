@@ -70,7 +70,7 @@ export const chromeCss = `
 .ans-toolbar {
   display: flex; align-items: center; gap: 2px; min-height: 36px; padding: 3px 8px;
   background: var(--ui-panel); border-bottom: 1px solid var(--ui-line); flex: none;
-  overflow-x: auto;
+  flex-wrap: wrap;
 }
 .ans-sep { width: 1px; height: 20px; margin: 0 6px; background: var(--ui-line); flex: none; }
 .ans-tool {
@@ -84,8 +84,10 @@ export const chromeCss = `
 .ans-tool-label { font-size: 12px; }
 .ans-tool-root { position: relative; }
 
-.ans-canvas { position: relative; flex: 1; min-height: 0; overflow: hidden; }
-.ans-canvas > * { width: 100%; height: 100%; }
+/* The slot that holds the engine's element. Its own class: the engine's canvas is \`.ans-canvas\`
+   and scrolls, so a rule here on that name would clip the diagram. */
+.ans-canvas-slot { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.ans-canvas-slot > * { width: 100%; height: 100%; }
 
 .ans-statusbar {
   display: flex; align-items: center; gap: 12px; height: 26px; padding: 0 10px; flex: none;

@@ -338,7 +338,7 @@ export function EditorApp({
         <style>{chromeCss}</style>
         <MenuBar />
         <Toolbar />
-        <div className="ans-canvas" ref={slotRef} />
+        <div className="ans-canvas-slot" ref={slotRef} />
         <KeyHint />
         <StatusBar />
         <BottomBar />

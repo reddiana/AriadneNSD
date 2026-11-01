@@ -329,7 +329,7 @@ describe('canvas slot', () => {
   it('ADR-0010: puts the engine element between the toolbar and the status bar', () => {
     renderApp(fakeEngine(editCommands));
     const canvas = screen.getByTestId('engine-canvas');
-    expect(canvas.parentElement?.className).toBe('ans-canvas');
+    expect(canvas.parentElement?.className).toBe('ans-canvas-slot');
   });
 });
 
