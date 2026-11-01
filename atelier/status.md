@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # 현재 상태
@@ -29,7 +29,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - MVP: https://reddiana.github.io/AriadneNSD/app/ (push 뒤 GitHub Pages가 빌드). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
 
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
-- MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.1.0`이고, 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다 → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
+- MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.1.0`이고(GitHub Releases에 Pre-release로 올림), 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다 → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
 - 테스트: 단위 · 통합 456개, E2E 46개(인수 테스트 AT-01 ~ AT-17, 휴대폰 흉내, 결함의 회귀 테스트 BUG-01 ~ 04), `pnpm check` · CI. 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 [[08-test-list]](자동 생성), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]

@@ -2,7 +2,7 @@
 title: 앱은 어디로 내보내나
 tags:
   - til
-updated: 2026-10-25
+updated: 2026-11-02
 ---
 
 # 앱은 어디로 내보내나
@@ -32,7 +32,7 @@ updated: 2026-10-25
 | 데스크톱 | `src/apps/desktop` | GitHub Releases. 판 하나에 설치 파일(Windows · macOS · Linux)을 첨부한다 |
 | Obsidian 플러그인 | `src/apps/obsidian` | GitHub Releases. 판 하나에 `main.js` · `manifest.json` · `styles.css` 세 파일을 첨부한다 |
 
-**GitHub Releases**는 저장소에 붙은 "판 목록"입니다. 태그(`1.0.0` 같은)마다 설명과 파일을 붙여 둘 수 있고, 사용자는 거기서 내려받습니다. 백엔드로 치면 Maven 저장소에 올린 jar와 비슷하지만, 저장소 페이지 안에 있습니다.
+**GitHub Releases**는 저장소에 붙은 "판 목록"입니다. 태그(`1.0.0` 같은)마다 설명과 파일을 붙여 둘 수 있고, 사용자는 거기서 내려받습니다. 백엔드로 치면 Maven 저장소에 올린 jar와 비슷하지만, 저장소 페이지 안에 있습니다. 판마다 **Pre-release** 표시를 켤 수 있습니다. 켜면 "아직 안정판이 아님"이라는 딱지가 붙습니다. AriadneNSD의 v0.1.0(웹 MVP)은 1.0 전이라 켜 두었습니다(2026-11-02).
 
 ## Obsidian이 저장소 맨 위의 `manifest.json`을 읽는 까닭
 

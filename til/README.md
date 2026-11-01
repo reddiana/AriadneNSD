@@ -65,3 +65,4 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
 - [[feedback-and-funding-channels]] — 사용자 의견 받기(Issues·Discussions·양식)와 후원·광고 채널 (2026-10-10)
+- [[yaml-and-json]] — YAML과 JSON: 프로그램이 쓰는 글과 사람이 쓰는 글, YAML이 `yes` · `no`를 참 · 거짓으로 읽는 함정 (2026-11-02)

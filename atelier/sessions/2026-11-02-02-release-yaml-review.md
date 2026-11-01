@@ -39,6 +39,10 @@ date: 2026-11-02
 - 새 요구사항 [[01-requirements#^r-fmt|R-FMT-12]] `P3`: 언어 이름이 `nschart`인 코드 블록에 글로 적은 NS 차트를 그림으로 보임
 - 문법은 [[01-requirements#6. 미결정 사항]]에, 그 일을 할 때 시안으로 견줄 일은 [[backlog#뒤의 배포 대상을 설계할 때]]에
 
+## 매듭
+
+- 기술 설명은 [[yaml-and-json]]에, Pre-release는 [[build-output-and-releases]]에 더함. 연표 293 · 294
+
 ## 다음 할 일
 
 - 사용법 `/manual/`의 목차를 시안으로 보이기 → [[backlog#웹 베타의 문턱]]
