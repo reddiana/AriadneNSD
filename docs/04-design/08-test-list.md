@@ -295,7 +295,7 @@ status: 생성됨
 | [[ux-decisions\|UX CD1]] | a drop on the empty default cell makes the default branch | — | Vitest | 단위 | `packages/editor/src/input/hit-test.test.ts` |
 | [[ux-decisions\|UX CD1]] | the empty default cell of a Case is reached from the last branch | — | Vitest | 단위 | `packages/editor/src/navigation/navigate.test.ts` |
 | [[ux-decisions\|UX CD2]] | a Case with only a default has one column | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
-| [[ux-decisions\|UX CF1]] | with nothing selected the canvas draws no focus outline | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
+| [[ux-decisions\|UX CF2]] | with nothing selected the focus outline shows for a moment only | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
 | [[ux-decisions\|UX E1]] | marks the only, empty block of a branch | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
 | [[ux-decisions\|UX EX2]] | closing the welcome with Esc keeps the new document and does not ask again | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
 | [[ux-decisions\|UX EX3]] | Help › Examples… opens the same modal with its own words | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |

@@ -29,7 +29,12 @@ export type ViewOptions = {
   readonly appearance: Appearance;
   /** Opens the context menu at a page point (the UI draws it). */
   readonly contextMenu: (request: ContextMenuRequest) => void;
+  /** The preference: keep the canvas focus outline while nothing is selected (UX CF2). */
+  readonly isFocusOutlineKept: () => boolean;
 };
+
+/** How long the canvas focus outline shows after a focus, a click or a key that did nothing. */
+const focusFlashMs = 1000;
 
 /** A press of the primary button that may become a click or a drag. */
 type Press = {
@@ -92,6 +97,7 @@ export class CanvasView {
   };
   private frame: number | null = null;
   private hover: Id | null = null;
+  private focusFlash: ReturnType<typeof setTimeout> | null = null;
   private press: Press | null = null;
   private drag: DragState | null = null;
   private wheelRest = 0;
@@ -200,6 +206,7 @@ export class CanvasView {
       paper: svg.paper,
     });
     this.canvas.classList.toggle('ans-has-selection', state.selection !== null);
+    this.canvas.classList.toggle('ans-focus-kept', this.options.isFocusOutlineKept());
     this.syncEditor(state.editing);
     if (state.selection !== this.drawn.selection) {
       this.drawn = { ...this.drawn, selection: state.selection };
@@ -372,6 +379,13 @@ export class CanvasView {
       { signal },
     );
     canvas.addEventListener(
+      'focus',
+      () => {
+        this.flashFocus();
+      },
+      { signal },
+    );
+    canvas.addEventListener(
       'blur',
       () => {
         // Leaving the canvas (a click on the toolbar or outside) drops a waiting first key too.
@@ -516,6 +530,31 @@ export class CanvasView {
     if (stroke !== null && this.session.handleKey(stroke)) {
       event.preventDefault();
     }
+    if (stroke !== null) {
+      // A key that left nothing selected shows where the keys go (UX CF2).
+      const after = this.session.state;
+      if (after.selection === null && after.editing === null && after.pendingKeys === null) {
+        this.flashFocus();
+      }
+    }
+  }
+
+  /**
+   * Shows the canvas focus outline for a moment while nothing is selected (UX CF2): the diagram
+   * stays clear to read, and a keyboard user still sees where the keys go.
+   */
+  private flashFocus(): void {
+    if (this.session.state.selection !== null) {
+      return;
+    }
+    if (this.focusFlash !== null) {
+      clearTimeout(this.focusFlash);
+    }
+    this.canvas.classList.add('ans-focus-flash');
+    this.focusFlash = setTimeout(() => {
+      this.focusFlash = null;
+      this.canvas.classList.remove('ans-focus-flash');
+    }, focusFlashMs);
   }
 
   /**
@@ -602,8 +641,9 @@ export class CanvasView {
     const index = this.session.index();
     const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
     if (hit === null) {
-      // The empty canvas clears the selection (interaction rules 2).
+      // The empty canvas clears the selection (interaction rules 2) and shows the focus (CF2).
       this.session.select(null);
+      this.flashFocus();
       return;
     }
     const clicked = selectionOfHit(index, hit);
@@ -903,6 +943,9 @@ export class CanvasView {
 
   /** Removes the view and its listeners. */
   dispose(): void {
+    if (this.focusFlash !== null) {
+      clearTimeout(this.focusFlash);
+    }
     this.endDrag(false);
     this.events.abort();
     this.unsubscribe();

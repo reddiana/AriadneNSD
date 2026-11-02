@@ -1,4 +1,4 @@
-// The canvas: what clicks and focus do around the keys (UX K4, CF1).
+// The canvas: what clicks and focus do around the keys (UX K4, CF2).
 import { expect, test } from '@playwright/test';
 
 import { canvas, drawnText, middleOf, openApp } from './support';
@@ -19,14 +19,26 @@ test('BUG-08: a click on the empty canvas closes the key hint of a waiting a', a
   await expect(hint).toHaveCount(0);
 });
 
-test('UX CF1: with nothing selected the canvas draws no focus outline', async ({ page }) => {
+test('UX CF2: with nothing selected the focus outline shows for a moment only', async ({
+  page,
+}) => {
   await openApp(page);
   const area = canvas(page);
   await area.focus();
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
+  // A key that does nothing shows it, and it goes after a second.
+  await page.keyboard.press('q');
+  await expect(area).toHaveClass(/ans-focus-flash/);
+  await expect(area).not.toHaveClass(/ans-focus-flash/, { timeout: 3000 });
   await expect(area).toHaveCSS('box-shadow', 'none');
-  await expect(area).toHaveCSS('outline-style', 'none');
+  // A click on the empty canvas shows it too.
+  const box = await area.boundingBox();
+  if (box === null) {
+    throw new Error('no canvas');
+  }
+  await page.mouse.click(box.x + box.width - 20, box.y + box.height - 20);
+  await expect(area).toHaveClass(/ans-focus-flash/);
 });
 
 test('BUG-09: dragging a block does not select the drawn text', async ({ page }) => {

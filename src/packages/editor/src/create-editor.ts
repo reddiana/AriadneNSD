@@ -64,6 +64,7 @@ export type EditorOptions = {
 export const settingIds = {
   locale: 'ui.locale',
   keyHint: 'editor.keyHint',
+  focusOutline: 'editor.focusOutline',
   autoSave: 'file.autoSave',
   headStyle: 'editor.headStyle',
 } as const;
@@ -90,6 +91,13 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     title: 'setting.keyHint',
     values: [true, false],
     defaultValue: true,
+    scope: 'user',
+  },
+  {
+    id: settingIds.focusOutline,
+    title: 'setting.focusOutline',
+    values: [false, true],
+    defaultValue: false,
     scope: 'user',
   },
   {
@@ -423,10 +431,11 @@ export function createEditor(options: EditorOptions): EditorHandle {
     },
     locale,
     appearance: options.appearance,
+    isFocusOutlineKept: () => settings.get<boolean>(settingIds.focusOutline) === true,
   });
 
   const stopSettings = settings.onChange((key) => {
-    if (key === settingIds.locale) {
+    if (key === settingIds.locale || key === settingIds.focusOutline) {
       session.rerender();
     }
   });

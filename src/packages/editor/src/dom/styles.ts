@@ -29,7 +29,12 @@ export function editorCss(screenFontUrl: string | null): string {
   background-color: var(--ans-ui-bg);
   background-image: radial-gradient(var(--ans-ui-dots) 1px, transparent 1px);
   background-size: 18px 18px;
+  transition: box-shadow .3s ease-out;
 }
+/* The focus outline while nothing is selected: for a moment, or kept by the preference (UX CF2). */
+.ans-canvas.ans-focus-flash:not(.ans-has-selection),
+.ans-canvas.ans-focus-kept:focus:not(.ans-has-selection) { box-shadow: inset 0 0 0 2px var(--ans-ui-accent); }
+@media (prefers-reduced-motion: reduce) { .ans-canvas { transition: none; } }
 .ans-canvas[data-scheme="dark"] {
   --ans-ui-bg: #12151b; --ans-ui-dots: #262c37; --ans-ui-accent: #8ba7ff;
   --ans-ui-panel: #1a1e26; --ans-ui-text: #e5e8ee; --ans-ui-line: #2b313c;
