@@ -1,5 +1,5 @@
 import { blockFont } from '@ariadne-nsd/fonts';
-import woff2Url from '@ariadne-nsd/fonts/assets/ariadne-nsd-block-regular.woff2?url';
+import woff2Url from '@ariadne-nsd/fonts/assets/ariadne-nsd-mono-regular.woff2?url';
 
 /**
  * Registers the bundled block font for the screen. Vite copies the woff2 into the build and

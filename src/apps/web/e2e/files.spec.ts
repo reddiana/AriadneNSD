@@ -46,7 +46,7 @@ test.describe('download flow (no File System Access)', () => {
     const saved = await readFile(await download.path(), 'utf8');
     expect(saved).toContain('<ans:document');
     expect(saved).toContain('"kind": "if"');
-    expect(saved).toContain('@font-face { font-family: "AriadneNSD Block"');
+    expect(saved).toContain('@font-face { font-family: "AriadneNSD Mono"');
 
     await command(page, 'file.new').click();
     const choosing = page.waitForEvent('filechooser');

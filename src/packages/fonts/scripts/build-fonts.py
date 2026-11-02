@@ -1,8 +1,8 @@
 """Build the bundled block font and its advance-width table from D2Coding.
 
 Outputs (committed to the repository, regenerate only when the source font changes):
-  assets/ariadne-nsd-block-regular.ttf    subset TTF: the source for per-document subsets (ADR-0026)
-  assets/ariadne-nsd-block-regular.woff2  the same glyphs for the editor screen (02-layout 2.2)
+  assets/ariadne-nsd-mono-regular.ttf    subset TTF: the source for per-document subsets (ADR-0026)
+  assets/ariadne-nsd-mono-regular.woff2  the same glyphs for the editor screen (02-layout 2.2)
   assets/OFL.txt                          the font license
   src/generated/advance-widths.ts         advance-width ranges (02-layout 2.1)
 
@@ -41,9 +41,9 @@ RELEASE_SHA256 = '17e2da5e2879006eb725b87943f7988736ef8b6c9f8b84bc8e3bdbcb8dd467
 TTC_MEMBER = 'D2Coding/D2Coding-Ver1.4.0-20261003.ttc'
 LICENSE_MEMBER = 'OFL.txt'
 
-FAMILY_NAME = 'AriadneNSD Block'
-POSTSCRIPT_NAME = 'AriadneNSDBlock-Regular'
-FILE_STEM = 'ariadne-nsd-block-regular'
+FAMILY_NAME = 'AriadneNSD Mono'
+POSTSCRIPT_NAME = 'AriadneNSDMono-Regular'
+FILE_STEM = 'ariadne-nsd-mono-regular'
 
 # ADR-0034: Latin and European extensions, Greek, Cyrillic, symbols, kana, Hangul. No Han.
 UNICODE_BLOCKS = {

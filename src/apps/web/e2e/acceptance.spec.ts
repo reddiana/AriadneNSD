@@ -306,7 +306,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     }, saved);
     expect(inFile).not.toBeNull();
     expect(inFile).toBe(onScreen);
-    expect(saved).toContain('@font-face { font-family: "AriadneNSD Block"');
+    expect(saved).toContain('@font-face { font-family: "AriadneNSD Mono"');
     // A plain viewer (an <img>, like GitHub) draws it at its size.
     const size = await page.evaluate(async (svg) => {
       const image = new Image();

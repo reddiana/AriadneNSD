@@ -3,7 +3,7 @@
 // font down to the characters of the document itself.
 
 import type { Subsetter } from '@ariadne-nsd/fonts';
-import ttfUrl from '@ariadne-nsd/fonts/assets/ariadne-nsd-block-regular.ttf?url';
+import ttfUrl from '@ariadne-nsd/fonts/assets/ariadne-nsd-mono-regular.ttf?url';
 import { createBrowserSubsetter } from '@ariadne-nsd/fonts/browser';
 
 /** The subsetter and the TTF it cuts (the editor's `SaveFonts` answer). */

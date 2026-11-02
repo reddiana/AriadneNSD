@@ -53,7 +53,8 @@ updated: 2026-10-25
 | [[dr-0008-license-scope\|0008]] | 코드는 Apache-2.0, 글은 CC BY 4.0, 로고는 허락하지 않는다 | 대체됨 → 0010 | ADR-0024 |
 | [[dr-0010-study-pages-cc-by\|0010]] | 시안과 스파이크 페이지는 글로 보아 CC BY 4.0으로 공개한다 (프로토타입과 스크립트는 Apache-2.0 그대로) | 승인 | ADR-0027 |
 | [[dr-0011-repo-name\|0011]] | GitHub 저장소 이름은 `AriadneNSD`로 한다 (패키지 · 플러그인 id는 `ariadne-nsd` 그대로) | 승인 | ADR-0028 |
+| [[dr-0019-bundled-font-name\|0019]] | 번들 글꼴의 이름은 `AriadneNSD Mono` (D2Coding은 OFL의 예약 이름, 비례폭은 `AriadneNSD Sans`) | 승인 | |
 
-새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0019부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
+새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0020부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
 상태(ADR · DR 같음): **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**

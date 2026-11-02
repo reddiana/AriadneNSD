@@ -73,7 +73,7 @@ export type Subsetter = {
   /**
    * Returns a TTF with only the glyphs for `codePoints` (plus .notdef): no hinting, no layout tables.
    * Code points the font lacks are skipped. Order and duplicates do not matter.
-   * All name records are kept, so the family stays "AriadneNSD Block" and the OFL notice stays in.
+   * All name records are kept, so the family stays "AriadneNSD Mono" and the OFL notice stays in.
    */
   readonly subsetTtf: (ttf: Uint8Array, codePoints: Iterable<number>) => Uint8Array;
   /** `subsetTtf` wrapped in WOFF 1.0: the font a saved file embeds (ADR-0026, ADR-0039). */
@@ -175,7 +175,7 @@ function configureInput(hb: HbSubsetExports, input: number, codePoints: Iterable
   hb.hb_set_clear(hb.hb_subset_input_set(input, HB_SUBSET_SETS_LAYOUT_FEATURE_TAG));
 
   // Keep every name record and language: the bundled font's names are already
-  // "AriadneNSD Block" (OFL Reserved Font Name) and carry the copyright and license.
+  // "AriadneNSD Mono" (OFL Reserved Font Name) and carry the copyright and license.
   const nameIds = hb.hb_subset_input_set(input, HB_SUBSET_SETS_NAME_ID);
   hb.hb_set_clear(nameIds);
   hb.hb_set_invert(nameIds);

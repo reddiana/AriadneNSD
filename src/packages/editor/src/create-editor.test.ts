@@ -77,7 +77,7 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
     expect(handle.status().dirty).toBe(false);
     const written = store.written.at(-1) ?? '';
     expect(written).toContain('<ans:document');
-    expect(written).toContain('font-family: "AriadneNSD Block"');
+    expect(written).toContain('font-family: "AriadneNSD Mono"');
     const opened = openSvgFile(written);
     expect(opened.ok && opened.value.doc.content).toEqual(handle.state().doc.content);
     expect(await handle.serialize()).toBe(written);

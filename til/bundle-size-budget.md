@@ -44,6 +44,6 @@ SIL Open Font License(OFL)는 글꼴을 고쳐서 배포해도 되지만, 저작
 
 ### AriadneNSD에서
 
-- 한자를 빼고, 저장 파일에는 쓰인 문자만 남기고, WOFF · woff2로 바꾸므로 고친 판입니다. 그래서 글꼴 안의 이름을 "AriadneNSD Block"으로 바꿨습니다
+- 한자를 빼고, 저장 파일에는 쓰인 문자만 남기고, WOFF · woff2로 바꾸므로 고친 판입니다. 그래서 글꼴 안의 이름을 "AriadneNSD Mono"로 바꿨습니다(처음에는 "AriadneNSD Block", 2026-11-02에 고정폭 글꼴의 관례대로 바꿈)
 - NAVER의 저작권 표기와 라이선스 문구는 글꼴 안에 그대로 남깁니다(저장 파일의 서브셋에도). "D2Coding을 바탕으로 했다"고 밝히는 것은 괜찮습니다
 - 라이선스 전체 → [[open-source-licenses]]

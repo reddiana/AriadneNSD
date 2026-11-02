@@ -23,7 +23,7 @@ export type Drawing = {
 
 /** A subset font to embed as an `@font-face` data URI (ADR-0026, ADR-0039). */
 export type EmbeddedFont = {
-  /** The `font-family` name the drawing uses, for example `AriadneNSD Block`. */
+  /** The `font-family` name the drawing uses, for example `AriadneNSD Mono`. */
   readonly family: string;
   /** The WOFF bytes. */
   readonly woff: Uint8Array;

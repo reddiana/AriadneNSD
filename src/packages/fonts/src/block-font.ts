@@ -24,11 +24,11 @@ export type BundledFont = {
  * Bold has the same advances, so this table also measures bold text (02-layout 2.1).
  */
 export const blockFont: BundledFont = {
-  familyName: 'AriadneNSD Block',
+  familyName: 'AriadneNSD Mono',
   weight: 400,
   files: {
-    ttf: 'assets/ariadne-nsd-block-regular.ttf',
-    woff2: 'assets/ariadne-nsd-block-regular.woff2',
+    ttf: 'assets/ariadne-nsd-mono-regular.ttf',
+    woff2: 'assets/ariadne-nsd-mono-regular.woff2',
   },
   advances: blockFontAdvances,
 };

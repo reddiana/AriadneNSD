@@ -87,7 +87,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^r-fmt|R-FMT-01]]).
 - 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 버전 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 모델 요소의 이름은 `ans:document`다. 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다. 다르면 깨진 파일(`damaged`)로 본다.
-- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 문자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식은 **WOFF**(`font/woff`)다. 압축은 버전을 고정한 JS zlib 라이브러리로 한다 → [[0039-woff-subset-font|ADR-0039]]. 기본 블록 글꼴의 `font-family` 이름은 `AriadneNSD Block`이다(D2Coding은 OFL의 예약 글꼴 이름이라 고친 글꼴에 쓰지 못함 → [[0034-default-block-font|ADR-0034]]). 서브셋에는 원래 글꼴의 이름 레코드(저작권 · OFL 고지)를 모두 남긴다
+- **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 문자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식은 **WOFF**(`font/woff`)다. 압축은 버전을 고정한 JS zlib 라이브러리로 한다 → [[0039-woff-subset-font|ADR-0039]]. 기본 블록 글꼴의 `font-family` 이름은 `AriadneNSD Mono`이다(D2Coding은 OFL의 예약 글꼴 이름이라 고친 글꼴에 쓰지 못함 → [[0034-default-block-font|ADR-0034]]). 서브셋에는 원래 글꼴의 이름 레코드(저작권 · OFL 고지)를 모두 남긴다
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^r-fmt|R-FMT-08]], [[04-visual-design#2. 레이어와 출력]]
 - 그림 요소는 모델에서 생성한 파생 데이터일 뿐이며, 읽을 때 무시한다(단일 원천은 모델: [[01-requirements#^r-fmt|R-FMT-05]]). 저장되는 그림은 지금 화면 그대로이고 오버레이 레이어의 표시(선택 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
 

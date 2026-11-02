@@ -63,7 +63,7 @@ describe('render', () => {
   it('01-file-format 2: draws into one g.ans-render with the bundled font first', () => {
     const { svg } = renderDoc(sample, en);
     expect(svg.content.startsWith('<g class="ans-render" transform="translate(.5 .5)"')).toBe(true);
-    expect(svg.content).toContain(`font-family="'AriadneNSD Block', D2Coding,`);
+    expect(svg.content).toContain(`font-family="'AriadneNSD Mono', D2Coding,`);
     expect(svg.content).toContain('style="font-kerning:none"');
     expect(svg.content.endsWith('</g>')).toBe(true);
     expect(svg.viewBox).toBe(`0 0 ${String(svg.width)} ${String(svg.height)}`);

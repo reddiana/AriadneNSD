@@ -106,11 +106,11 @@ describe('subsetToWoff', () => {
     );
   });
 
-  it('ADR-0034: keeps the family name "AriadneNSD Block" (D2Coding is an OFL Reserved Font Name)', () => {
+  it('ADR-0034: keeps the family name "AriadneNSD Mono" (D2Coding is an OFL Reserved Font Name)', () => {
     const name =
       decodeWoffTables(subsetter.subsetToWoff(ttf, SAMPLE)).get('name') ?? new Uint8Array();
     expect(readName(name, 1)).toBe(blockFont.familyName);
-    expect(readName(name, 6)).toBe('AriadneNSDBlock-Regular');
+    expect(readName(name, 6)).toBe('AriadneNSDMono-Regular');
     expect(readName(name, 13)).toContain('SIL Open Font License');
   });
 
@@ -136,7 +136,7 @@ describe('pinned output', () => {
   it('ADR-0039: the sample subset has the recorded SHA-256', () => {
     const woff = subsetter.subsetToWoff(ttf, SAMPLE);
     expect(createHash('sha256').update(woff).digest('hex')).toBe(
-      '84b0a104a730e1ef4df69fbe863411897b204127ff0367c4da4f70fb49498b18',
+      'c2ae21c9ac44a2afbba7587fb2d8e96871fc16a1f9a2af591e6e2fdb0f3f6c26',
     );
   });
 

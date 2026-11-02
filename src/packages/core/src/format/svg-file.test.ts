@@ -42,7 +42,7 @@ describe('SVG file', () => {
     const file = assembleSvgFile({
       doc: docWithText('x'),
       drawing,
-      fonts: [{ family: 'AriadneNSD Block', woff: new Uint8Array([119, 79, 70, 70]) }],
+      fonts: [{ family: 'AriadneNSD Mono', woff: new Uint8Array([119, 79, 70, 70]) }],
     });
     const lines = file.split('\n');
     expect(lines[0]).toBe(
@@ -58,7 +58,7 @@ describe('SVG file', () => {
       '    ]]></ans:document>',
       '  </metadata>',
       '  <style>',
-      '    @font-face { font-family: "AriadneNSD Block"; src: url(data:font/woff;base64,d09GRg==); }',
+      '    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRg==); }',
       '  </style>',
       '  <rect width="100%" height="100%" fill="#ffffff"/>',
       '  <g class="ans-render"><rect x="8" y="8" width="104" height="24"/></g>',

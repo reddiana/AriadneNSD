@@ -10,7 +10,7 @@ test('the built web app opens a new document and loads the block font', async ({
       page.evaluate(() =>
         [...document.fonts].some(
           (face) =>
-            face.family.replaceAll('"', '') === 'AriadneNSD Block' && face.status === 'loaded',
+            face.family.replaceAll('"', '') === 'AriadneNSD Mono' && face.status === 'loaded',
         ),
       ),
     )
