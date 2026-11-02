@@ -1,14 +1,14 @@
 // Quartz의 quartz/styles/custom.scss 자리에 복사된다 (pages.yml, build.sh)
 @use "./base.scss";
 
-// 첫 화면(README): 가운데의 문자 로고가 제목을 대신하므로 글자 제목은 감춘다
-body[data-slug="index"] .article-title {
+// 소개 페이지(README, /about. 2026-11-02까지는 첫 화면 index): 가운데의 문자 로고가 제목을 대신하므로 글자 제목은 감춘다
+body[data-slug="about"] .article-title {
   display: none;
 }
 
-// 첫 화면(README): 그림 로고와 문자 로고 사이를 GitHub에서 보는 README만큼으로.
+// 소개 페이지(README, /about. 2026-11-02까지는 첫 화면 index): 그림 로고와 문자 로고 사이를 GitHub에서 보는 README만큼으로.
 // Quartz는 본문의 h1 위에 큰 여백을 두므로, 로고를 담은 단락과 h1의 여백을 줄인다
-body[data-slug="index"] article {
+body[data-slug="about"] article {
   p[align="center"] {
     margin: 0.5rem 0 0;
   }
@@ -45,8 +45,8 @@ body[data-slug="index"] article {
   stroke: var(--tertiary) !important;
 }
 
-// 첫 화면(README): 인용절의 MVP 링크는 채운 버튼 그림 (시안 M42의 나11, 2026-11-01에 프로토타입 링크에서 바꿈)
-body[data-slug="index"] article {
+// 소개 페이지(README, /about. 2026-11-02까지는 첫 화면 index): 인용절의 MVP 링크는 채운 버튼 그림 (시안 M42의 나11, 2026-11-01에 프로토타입 링크에서 바꿈)
+body[data-slug="about"] article {
   // 인용절의 채운 버튼(나11): 제 줄에 따로
   .callout a:has(img[src*="readme-mvp-button"]) {
     background: none;
