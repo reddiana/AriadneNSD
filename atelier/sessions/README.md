@@ -53,3 +53,4 @@ updated: 2026-10-25
 - [[2026-11-02-02-release-yaml-review|2026-11-02 GitHub Releases에 v0.1.0, inbox: nschart 코드 블록(R-FMT-12)과 yaml, README 그림을 MVP의 .ns.svg로]]
 - [[2026-11-02-03-readme-how-we-build|2026-11-02 README: '시안과 프로토타입'을 '어떻게 만들고 있나'에 합쳐 MVP까지, GitHub에서 그림 여백]]
 - [[2026-11-02-04-font-manual-domain|2026-11-02 글꼴 이름 AriadneNSD Mono(DR-0019), 사용법 /manual/(DR-0020, M48 · M49 · M51), ariadnensd.com과 첫 화면은 앱(DR-0021, M50), 키 힌트를 선택 아래로(K3, M52), BUG-05, 매듭 뒤 BUG-06과 툴바의 For(TB1)]]
+- [[2026-11-03-01-site-home-keys-focus|2026-11-03 문서 사이트의 Home과 앱 열기, a p · A p(KP1), 빈 블록의 o · O(KP2), 캔버스 포커스는 1초(CF2, M53), 클릭으로 키 힌트 닫기(K4), BUG-07 ~ 09]]

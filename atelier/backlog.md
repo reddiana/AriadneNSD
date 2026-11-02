@@ -19,6 +19,7 @@ MVP는 웹의 `P0` 항목입니다([[01-requirements#5. MVP 범위]]). 시작 �
 
 MVP 코드는 2026-11-01에 만들었습니다(뼈대 · `core` · `editor` · 웹 셸, 인수 테스트 AT-01 ~ AT-17 → [[2026-11-01-01-confirmations-terms-mvp]]). 남은 것:
 
+- [ ] 사용법의 그림을 다시 찍기(`pnpm --filter @ariadne-nsd/web manual-shots`): 2026-11-03에 선택 테두리가 1px 달라짐(BUG-07). 키 표는 그날 다시 만듦
 - [ ] push 뒤 GitHub Actions(CI · Pages)가 통과하는지, https://reddiana.github.io/AriadneNSD/app/ 이 열리는지 확인
 
 만들면서 정할 것(각 문서의 미결정 · 미완성이 원본):
