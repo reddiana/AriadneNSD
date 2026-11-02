@@ -1,0 +1,520 @@
+<section id="screen">
+  <h2>The screen</h2>
+  <div class="wide">
+    <img src="img/en/tour-0-screen.png" width="1100" height="700" alt="The AriadneNSD screen" />
+  </div>
+  <ul>
+    <li>
+      <b>Menu bar:</b> File · Edit · Diagram · View · Help. Every command is here, with its key next
+      to it if it has one.
+    </li>
+    <li>
+      <b>Toolbar:</b> New · Open · Save · Export, Undo · Redo, Cut · Copy · Paste, six block icons
+      (Process · If · Case · While · For · Do-While), Wrap, Zoom, Examples.
+    </li>
+    <li><b>Canvas:</b> where you draw. Several diagrams are laid out automatically.</li>
+    <li>
+      <b>Status bar:</b> what is selected, and messages. The <code>●</code> next to the file name at
+      the top right means unsaved changes.
+    </li>
+  </ul>
+</section>
+
+<section id="blocks">
+  <h2>Blocks</h2>
+  <p>
+    Write anything in a block: code or plain sentences. Text does not wrap by itself; break long
+    lines with
+    <kbd>Shift</kbd>+<kbd>Enter</kbd>. The <code>∅</code> in an empty cell means "nothing here".
+  </p>
+  <div class="pair">
+    <figure>
+      <img src="img/en/ref-blocks.png" alt="Process, If, Case, While, For and Do-While blocks" />
+      <figcaption>From the top: Process · If · Case · While · For · Do-While</figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Block</th>
+        <th>Meaning</th>
+        <th>Kind letter</th>
+      </tr>
+      <tr>
+        <td>Process</td>
+        <td>One step of work</td>
+        <td>(added with <kbd>o</kbd> <kbd>O</kbd>)</td>
+      </tr>
+      <tr>
+        <td>If</td>
+        <td>Two branches, true and false</td>
+        <td><kbd>i</kbd></td>
+      </tr>
+      <tr>
+        <td>Case</td>
+        <td>Several branches by value; default comes last</td>
+        <td><kbd>k</kbd></td>
+      </tr>
+      <tr>
+        <td>While</td>
+        <td>Checks the condition first, then repeats</td>
+        <td><kbd>w</kbd></td>
+      </tr>
+      <tr>
+        <td>For</td>
+        <td>Repeats a set number of times (looks like While; the text tells them apart)</td>
+        <td><kbd>f</kbd></td>
+      </tr>
+      <tr>
+        <td>Do-While</td>
+        <td>Runs once, then checks the condition</td>
+        <td><kbd>d</kbd></td>
+      </tr>
+      <tr>
+        <td>Call</td>
+        <td>Calls a Method of the same document</td>
+        <td><kbd>c</kbd></td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Kind letters follow the insert keys (<kbd>a</kbd> <kbd>A</kbd>) and the wrap key (<kbd>s</kbd>).
+  </p>
+</section>
+
+<section id="select">
+  <h2>Moving around and selecting</h2>
+  <p>
+    Arrow keys move in the order you see in the drawing. Only neighbouring blocks on the same level
+    can be selected together. <kbd>Shift</kbd>+click on a block at another depth widens the
+    selection to the nearest range that holds both.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Up · down · left · right</td>
+        <td><kbd>k</kbd> <kbd>j</kbd> <kbd>h</kbd> <kbd>l</kbd></td>
+        <td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>, click, wheel</td>
+      </tr>
+      <tr>
+        <td>Up · down, a control block as one piece</td>
+        <td><kbd>{</kbd> <kbd>}</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></td>
+      </tr>
+      <tr>
+        <td>To the next branch</td>
+        <td></td>
+        <td><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>First / last block of the diagram</td>
+        <td><kbd>gg</kbd> / <kbd>G</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Select several blocks</td>
+        <td><kbd>V</kbd>, then <kbd>j</kbd> <kbd>k</kbd></td>
+        <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+click</td>
+      </tr>
+      <tr>
+        <td>Select a branch label</td>
+        <td><kbd>k</kbd> on the branch's first block</td>
+        <td><kbd>↑</kbd> on the branch's first block, click the label</td>
+      </tr>
+      <tr>
+        <td>Clear the selection</td>
+        <td><kbd>Esc</kbd> <kbd>Esc</kbd></td>
+        <td>Click the empty canvas</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="insert">
+  <h2>Adding blocks and editing text</h2>
+  <p>
+    A new block goes after the selection, or before it with <kbd>Shift</kbd>. If an empty block
+    (<code>∅</code>) is selected, the new block takes its place. Editing the text (or condition)
+    starts right away.
+  </p>
+  <div class="wide">
+    <img
+      src="img/en/ref-insert-hint.png"
+      width="1100"
+      height="700"
+      alt="Pressing a and waiting shows the block kinds at the bottom"
+    />
+  </div>
+  <p class="caption">
+    Press <kbd>a</kbd> and wait a moment: the next letters appear at the bottom.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>A process block after / before</td>
+        <td><kbd>o</kbd> / <kbd>O</kbd></td>
+        <td>The process icon on the toolbar / <kbd>Shift</kbd>+click</td>
+      </tr>
+      <tr>
+        <td>Another block after / before</td>
+        <td><kbd>a</kbd> / <kbd>A</kbd> + kind letter</td>
+        <td>That icon on the toolbar / <kbd>Shift</kbd>+click, or drag the icon between blocks</td>
+      </tr>
+      <tr>
+        <td>Start editing text</td>
+        <td><kbd>i</kbd>, <kbd>cc</kbd> (clear and write)</td>
+        <td><kbd>Enter</kbd>, <kbd>F2</kbd>, double-click</td>
+      </tr>
+      <tr>
+        <td>Accept</td>
+        <td><kbd>Esc</kbd></td>
+        <td><kbd>Enter</kbd></td>
+      </tr>
+      <tr>
+        <td>Call block: result field ↔ argument field</td>
+        <td></td>
+        <td><kbd>Tab</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="move">
+  <h2>Moving, copying, deleting</h2>
+  <p>
+    Moving swaps the selection with the block above or below. Moving past the end takes it out of
+    the block that holds it. To put it inside another block, drag it there, or cut and paste. Text
+    copied from another program pastes as one process block per line.
+  </p>
+  <div class="pair">
+    <figure>
+      <img src="img/en/ref-move-before.png" alt="a, b, c with c selected" />
+      <figcaption>With <code>c</code> selected</figcaption>
+    </figure>
+    <span class="to" aria-hidden="true">→</span>
+    <figure>
+      <img src="img/en/ref-move-after.png" alt="c moved above b" />
+      <figcaption><kbd>Alt</kbd>+<kbd>k</kbd> moves it up</figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Move up · down (branches left · right)</td>
+        <td><kbd>Alt</kbd>+<kbd>k</kbd> <kbd>j</kbd> (<kbd>h</kbd> <kbd>l</kbd>)</td>
+        <td>
+          <kbd>Alt</kbd>+<kbd>↑</kbd> <kbd>↓</kbd> (<kbd>←</kbd> <kbd>→</kbd>), drag the block
+        </td>
+      </tr>
+      <tr>
+        <td>Copy</td>
+        <td><kbd>yy</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>C</kbd></td>
+      </tr>
+      <tr>
+        <td>Cut</td>
+        <td><kbd>dd</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>X</kbd></td>
+      </tr>
+      <tr>
+        <td>Paste after / before</td>
+        <td><kbd>p</kbd> / <kbd>P</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (after)</td>
+      </tr>
+      <tr>
+        <td>Delete (without copying)</td>
+        <td><kbd>x</kbd></td>
+        <td><kbd>Delete</kbd>, <kbd>Backspace</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="wrap-branches">
+  <h2>Wrapping, unwrapping, adding branches</h2>
+  <p>
+    Wrapping puts the selected blocks in a new control block (an If's true branch, a Case's first
+    branch). Unwrapping removes the shell and keeps what is inside. Add and delete a Case's branches
+    like blocks, with its label selected. The default branch always comes last.
+  </p>
+  <div class="pair">
+    <figure>
+      <img src="img/en/ref-branch-label.png" alt="The Case's branch label 1 selected" />
+      <figcaption>With the Case's label <code>1</code> selected</figcaption>
+    </figure>
+    <span class="to" aria-hidden="true">→</span>
+    <figure>
+      <img src="img/en/ref-branch-added.png" alt="A new branch 3 after 1" />
+      <figcaption><kbd>o</kbd> adds a branch after it, labelled <code>3</code></figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Wrap</td>
+        <td><kbd>s</kbd> + kind letter</td>
+        <td>
+          <kbd>Ctrl</kbd>+click a block icon, "Wrap" on the toolbar, or drop the icon on the blocks
+        </td>
+      </tr>
+      <tr>
+        <td>Unwrap (the nearest control block around the selection)</td>
+        <td><kbd>ds</kbd></td>
+        <td>The context menu</td>
+      </tr>
+      <tr>
+        <td>Add a branch after / before (label selected)</td>
+        <td><kbd>o</kbd> / <kbd>O</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Delete a branch (label selected)</td>
+        <td><kbd>x</kbd></td>
+        <td><kbd>Delete</kbd></td>
+      </tr>
+      <tr>
+        <td>Edit a branch label (anywhere in the branch)</td>
+        <td><kbd>L</kbd></td>
+        <td>Double-click the label</td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Adding a branch at an If's label asks whether to turn it into a Case. Swapping an If's true and
+    false branches keeps the condition, so the meaning changes: fix the condition.
+  </p>
+</section>
+
+<section id="diagrams">
+  <h2>Events, Methods and several diagrams</h2>
+  <p>
+    A document can hold several diagrams. With a header a diagram becomes an <b>Event</b> (something
+    started from outside, like an interrupt or a timer) or a <b>Method</b> (something a call block
+    calls). The layout is automatic: Events on the left, Methods on the right. A call block's name
+    follows the Method's header; each call block has its own arguments and result.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="img/en/ref-event-method.png"
+        alt="The binary search example: the Event main calls the Method binary_search"
+      />
+      <figcaption>
+        The "Binary search" example: a call block in the Event <code>main()</code> calls the Method
+        <code>binary_search</code>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Add an Event / Method header, or change its kind</td>
+        <td><kbd>e</kbd> / <kbd>m</kbd></td>
+        <td>The Diagram menu</td>
+      </tr>
+      <tr>
+        <td>New Event / Method diagram</td>
+        <td><kbd>E</kbd> / <kbd>M</kbd></td>
+        <td>The Diagram menu</td>
+      </tr>
+      <tr>
+        <td>Add a call block (pick the Method from a list)</td>
+        <td><kbd>a</kbd> <kbd>c</kbd></td>
+        <td>Context menu › Insert</td>
+      </tr>
+      <tr>
+        <td>Change the called Method / go to it</td>
+        <td><kbd>r</kbd> / <kbd>gd</kbd></td>
+        <td>The context menu</td>
+      </tr>
+      <tr>
+        <td>Previous / next diagram</td>
+        <td><kbd>[[</kbd> / <kbd>]]</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>Reorder diagrams (header selected)</td>
+        <td><kbd>Alt</kbd>+<kbd>h</kbd> <kbd>l</kbd></td>
+        <td><kbd>Alt</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>Delete a diagram</td>
+        <td></td>
+        <td><kbd>Shift</kbd>+<kbd>Delete</kbd></td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Choose the header shape ("Like a title" or "Hat · arch") in Diagram › Document Settings. The
+    shape you chose last is remembered.
+  </p>
+</section>
+
+<section id="undo-zoom">
+  <h2>Undo, zoom</h2>
+  <p>
+    Commands that change several places at once, like Wrap, also undo in one step. Up to 500 steps
+    are kept.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Undo / Redo</td>
+        <td><kbd>u</kbd> / <kbd>U</kbd></td>
+        <td>
+          <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd>, <kbd>Ctrl</kbd>+<kbd>R</kbd>
+        </td>
+      </tr>
+      <tr>
+        <td>Zoom in / out (10% each)</td>
+        <td><kbd>+</kbd> / <kbd>-</kbd></td>
+        <td><kbd>Ctrl</kbd>+wheel (around the mouse), Zoom on the toolbar</td>
+      </tr>
+      <tr>
+        <td>Back to 100%</td>
+        <td></td>
+        <td>The View menu</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="files">
+  <h2>Files</h2>
+  <p>
+    AriadneNSD runs in the browser without a server. Your files stay on your computer. A saved
+    <code>.ns.svg</code> is a picture in itself, so it shows anywhere, and opening it again lets you
+    keep editing.
+  </p>
+  <div class="wide">
+    <img
+      src="img/en/ref-file-menu.png"
+      width="1100"
+      height="700"
+      alt="The File menu: New, Open, Recent Files, Save, Save As, Export, Preferences"
+    />
+  </div>
+  <ul>
+    <li>
+      <b>Open:</b> the File menu, the toolbar, or drop a file on the page. Opens
+      <code>.ns.svg</code> and <code>.ns</code>.
+    </li>
+    <li>
+      <b>Save:</b> <kbd>Ctrl</kbd>+<kbd>S</kbd>; Save As is
+      <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. Chrome and Edge write to the original file and
+      save automatically after the first save. Firefox and Safari download the file on each save.
+    </li>
+    <li><b>Recent Files:</b> in the File menu, up to ten files you opened or saved.</li>
+    <li>
+      <b>Local backup:</b> unsaved work is kept in the browser; when you open the page again, it
+      asks whether to restore it.
+    </li>
+    <li><b>Export as PNG:</b> File › Export. It looks the same as the saved picture.</li>
+    <li>
+      <b>Examples:</b> "Examples" on the toolbar or Help › Examples… opens ten of them. An example
+      opens as a new document, so feel free to change it.
+    </li>
+  </ul>
+  <p class="tip">AriadneNSD is not 1.0 yet. Files you save now may not open in later versions.</p>
+</section>
+
+<section id="commands">
+  <h2>Command palette, context menu</h2>
+  <p>
+    If you cannot remember a key, type part of the command's name in the command palette. Each line
+    shows the key that does the same. The context menu shows only the commands for what is selected.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="img/en/ref-palette.png"
+        width="1100"
+        height="700"
+        alt="The command palette with wrap typed"
+      />
+      <figcaption>"wrap" typed in the command palette</figcaption>
+    </figure>
+    <figure>
+      <img
+        src="img/en/ref-context-menu.png"
+        width="1100"
+        height="700"
+        alt="The context menu of a process block"
+      />
+      <figcaption>The context menu of a process block</figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>To</th>
+        <th>Vim key</th>
+        <th>Standard key · mouse</th>
+      </tr>
+      <tr>
+        <td>Command palette</td>
+        <td></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, <kbd>F1</kbd></td>
+      </tr>
+      <tr>
+        <td>Context menu</td>
+        <td></td>
+        <td>Right-click, <kbd>Shift</kbd>+<kbd>F10</kbd>, the Menu key</td>
+      </tr>
+      <tr>
+        <td>Move in the list / run / close</td>
+        <td><kbd>j</kbd> <kbd>k</kbd></td>
+        <td><kbd>↓</kbd> <kbd>↑</kbd> / <kbd>Enter</kbd> / <kbd>Esc</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="report">
+  <h2>Reporting a problem</h2>
+  <p>
+    If something behaves oddly or a drawing is wrong, please tell us. Say what you did (keys,
+    clicks), what you expected and what happened. Add the version from Help › About AriadneNSD and
+    your browser and OS.
+  </p>
+  <ul>
+    <li>
+      <b>In public:</b> <a href="https://github.com/reddiana/AriadneNSD/issues">GitHub issues</a>,
+      where others can see and confirm it.
+    </li>
+    <li>
+      <b>In private:</b> if you would rather not share your diagram, email
+      <code>report@ariadnensd.com</code>. Attach the <code>.ns.svg</code> only if you want to.
+    </li>
+  </ul>
+</section>
