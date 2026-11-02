@@ -155,3 +155,19 @@ README에 HTML을 쓰면 GitHub는 보안 때문에 일부를 지우고 보여 �
 - **같은 모양을 어디서나 보이려면 그림으로.** 버튼을 SVG 그림으로 만들어 `<a>`로 감싸면 GitHub · 사이트 · Obsidian에서 같게 보입니다. `<img>`로 넣은 SVG는 웹 글꼴을 불러오지 못하므로, 글자를 글꼴의 모양 그대로 선(path)으로 바꿔 넣습니다(`journal/assets/2026-10-31-readme-buttons.py`).
 - **사이트(Quartz)는 지우지 않습니다.** 그래서 `style` · `target`은 사이트에서는 듣고, 사이트에만 맞는 꾸밈은 `site/custom.scss`에 둡니다.
 - **인용 상자 안의 줄바꿈.** 빈 줄(`>`만 있는 줄)로 나누면 단락이 되어 단락마다 여백이 붙습니다. 줄만 바꾸려면 줄 끝에 `<br>`을 씁니다.
+
+## 사용자 도메인
+
+2026-11-02에 사이트를 `reddiana.github.io/AriadneNSD/`에서 `ariadnensd.com`으로 옮겼습니다(→ [[dr-0021-domain-and-front-page|DR-0021]]). 도메인은 Cloudflare에서 샀고, 메일 전달도 Cloudflare에서 합니다. 메인테이너가 한 순서:
+
+1. **받을 메일 주소:** 새 Gmail을 만든다.
+2. **메일 전달(Cloudflare Email Routing):** 계정의 Email Routing › Onboard Domain에서 도메인을 고르고 Activate(MX · SPF 레코드가 들어가고 잠김). 받을 주소(Destination)를 확인 메일로 인증하고, `report@ariadnensd.com` → 그 Gmail 규칙을 만든다. 전달된 메일의 받는 사람 칸에 `report@ariadnensd.com`이 남아 Gmail 필터로 가를 수 있다.
+3. **GitHub에서 도메인 확인:** 계정(저장소가 아님)의 Settings › Pages › Add a domain. GitHub이 주는 TXT 레코드(`_github-pages-challenge-<계정>`)를 DNS에 넣고 Verify. 다른 사람이 이 도메인을 자기 Pages에 걸지 못하게 한다.
+4. **DNS:** `A @` 네 줄(185.199.108~111.153), `AAAA @` 네 줄(2606:50c0:8000~8003::153), `CNAME www` → `<계정>.github.io`. **Proxy status는 DNS only(회색 구름)**. 주황 구름(Proxied)이면 Cloudflare가 앞에 서서 GitHub이 HTTPS 인증서를 받지 못한다. 처음에 주황으로 들어가 바꿨다.
+5. **저장소의 Settings › Pages › Custom domain**에 도메인을 넣고, 인증서가 나오면(수십 분) Enforce HTTPS를 켠다. 옛 주소는 GitHub이 새 주소로 넘겨 준다.
+
+백엔드로 비유하면: 2는 메일 서버 없는 MX 포워딩, 3은 도메인 소유 증명(ACME의 DNS-01과 같은 생각), 4는 로드 밸런서 대신 GitHub의 공용 IP를 가리키는 것입니다.
+
+- Actions로 배포하면 저장소에 `CNAME` 파일을 두지 않아도 된다(설정에 남는다).
+- 브라우저의 저장소(localStorage, IndexedDB)는 주소(origin)마다 따로라, 옛 주소에서 쓰던 임시 보관과 설정은 새 주소로 따라오지 않는다.
+

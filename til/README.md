@@ -2,7 +2,7 @@
 title: Today I Learned (TIL)
 tags:
   - til
-updated: 2026-10-25
+updated: 2026-11-02
 ---
 
 # Today I Learned (TIL)
@@ -66,3 +66,4 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
 - [[feedback-and-funding-channels]] — 사용자 의견 받기(Issues·Discussions·양식)와 후원·광고 채널 (2026-10-10)
 - [[yaml-and-json]] — YAML과 JSON: 프로그램이 쓰는 글과 사람이 쓰는 글, YAML이 `yes` · `no`를 참 · 거짓으로 읽는 함정 (2026-11-02)
+- [[two-worker-scheduling]] — 두 사람이 서로 기다리지 않게 일하는 순서: 사람-기계 작업 분석, 존슨 · 잭슨의 규칙, 동시 공학, 바통 터치 (2026-11-02)

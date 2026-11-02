@@ -20,13 +20,14 @@ updated: 2026-11-02
 | M01 | **프로토타입** (요구사항 점검용) | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` (브라우저로 직접 열어도 됨) |
 | M09 | UX 규칙 시안 (2026-10-11, 답을 기다림: [[02-interaction-rules#9. 미결정 사항\|조작의 미결정]] Q20(MVP 뒤) · [[requirements-rework]] Q18, Q23. MVP에 드는 물음은 M43에서 정함) | https://claude.ai/artifact/A7sWbwCA4NFC8qSZg58d3y | `journal/assets/2026-10-11-ux-rules-study.html` |
 | M12 | 글자 폭 스파이크 (2026-10-13, 결정함: 글꼴 번들 · F1 2번 → [[0026-bundled-font-metrics\|ADR-0026]]. 답을 기다림: Firefox에서 열어 보기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` (만드는 스크립트 `…-spike-build.py`, 재는 스크립트 `…-spike-measure.mjs`) |
+| M51 | 사용법 전체 초안 (2026-11-02, 답을 기다림) | https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq | `journal/assets/2026-11-02-manual-full-study.html` (원본 `src/apps/manual`) |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
 
-**MVP(웹)의 코드를 만들었습니다(2026-11-01). 다음은 배포를 확인하고 메인테이너가 써 보는 것입니다.**
+**MVP(웹)를 `ariadnensd.com`에 올렸고(2026-11-02), 웹 베타의 문턱을 넘는 중입니다. 사용법이 생겼고 메인테이너가 검토합니다.**
 
-- MVP: https://reddiana.github.io/AriadneNSD/app/ (push 뒤 GitHub Pages가 빌드). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
+- MVP: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
 
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.1.0`이고(GitHub Releases에 Pre-release로 올림), 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다 → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
@@ -35,7 +36,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]
 - 문서 검사 훅이 Claude가 고친 문서의 표와 링크를 검사합니다(`.claude/hooks/doc-check.py`)
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
-- 설계 문서는 https://reddiana.github.io/AriadneNSD/ 에 펴내고 있습니다(`docs/` · `atelier/` · `til/`, `journal/`에서는 이름 이야기와 로고의 출처 두 문서 → [[dr-0013-publish-docs-github-pages|DR-0013]])
+- 설계 문서는 https://ariadnensd.com/about 에서 시작하는 사이트에 펴내고 있습니다(`docs/` · `atelier/` · `til/`, `journal/`에서는 이름 이야기와 로고의 출처 두 문서 → [[dr-0013-publish-docs-github-pages|DR-0013]])
 
 큰 순서: 요구사항 → 요구사항 리뷰용 프로토타입 → 아키텍처 → 상세 설계 → **테스트 설계와 테스트 코드** → 개발 → MVP(첫 출시, [[01-requirements#5. MVP 범위]]). 아키텍처와 상세 설계는 프로토타입 리뷰와 나란히 갑니다(2026-10-13, 메인테이너: "병행 진행").
 
@@ -44,12 +45,12 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너가 도메인을 설정하기(2026-11-02 → [[dr-0021-domain-and-front-page|DR-0021]]): ① 새 Gmail ② Cloudflare Email Routing으로 `report@ariadnensd.com` → 그 Gmail ③ GitHub 프로필 › Settings › Pages에서 `ariadnensd.com` 확인(TXT) ④ Cloudflare DNS: `A @` 185.199.108~111.153, `AAAA @` 2606:50c0:8000~8003::153, `CNAME www` reddiana.github.io, 모두 DNS only ⑤ push 뒤 저장소 › Settings › Pages › Custom domain에 `ariadnensd.com`, Enforce HTTPS
+- [ ] push 뒤 `https://ariadnensd.com`을 봄: 첫 화면이 앱인지, `/manual/ko/` · `/about`, 옛 `reddiana.github.io/AriadneNSD/app/`의 넘겨 주기 → [[2026-11-02-04-font-manual-domain]]
 - [ ] 메인테이너가 사용법 전체 초안 M51을 봄: https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq → [[backlog#웹 베타의 문턱]]
 - [ ] 메인테이너가 S26에서 바뀐 툴바(예제 버튼, 아래 줄 없앰 → MB2)와 큰 다이어그램의 스크롤을 써 보기 → [[2026-11-01-04-examples-button-android-load]]
-- [ ] **메인테이너가 예제와 헤더를 써 보기**(push한 뒤 https://reddiana.github.io/AriadneNSD/app/ 를 새 창(시크릿 창)으로 열면 첫 방문 모달) → 만든 것과 정한 것은 [[2026-11-01-02-docs-current-examples]], 확인할 것은 [[outbox#확인해 주세요]]
+- [ ] **메인테이너가 예제와 헤더를 써 보기**(https://ariadnensd.com/ 을 새 창(시크릿 창)으로 열면 첫 방문 모달) → 만든 것과 정한 것은 [[2026-11-01-02-docs-current-examples]], 확인할 것은 [[outbox#확인해 주세요]]
 - [ ] 문서 현행화 점검에서 판단이 필요한 것을 메인테이너와 봄 → [[backlog#MVP 개발]]
-- [ ] 웹 베타의 문턱: 남은 것(주소, 상표 검색, 사용법, 비공개 문제 알리기 채널, 후원 버튼) → [[backlog#웹 베타의 문턱]]. 사용법은 짜임을 정했고([[dr-0020-user-guide|DR-0020]]) 메인테이너가 첫 초안 M49(5분 둘러보기)를 봄
+- [ ] 웹 베타의 문턱: 남은 것은 상표 검색, 사용법 검토(M51), Firefox · Safari · 휴대폰에서 써 보기 → [[backlog#웹 베타의 문턱]]. 주소(`ariadnensd.com`, 첫 화면은 앱)와 비공개 보고(`report@ariadnensd.com`)는 2026-11-02에 끝남, 후원 버튼은 베타 뒤로 → [[dr-0021-domain-and-front-page|DR-0021]]
 - [ ] 메인테이너가 MVP를 써 보기(Chrome · Edge, 그리고 Firefox · Safari · 휴대폰)
 - [ ] 메인테이너가 확인할 것: MVP에서 Claude가 정한 것 → [[outbox#확인해 주세요]]
 - [ ] 남은 "정해 주세요"(프로토타입 질문 셋, 이름이 겹친 헤더의 표시, Firefox로 글자 폭 스파이크 열기) → [[outbox]]

@@ -134,11 +134,9 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 웹 베타(널리 알리기 시작하는 때)에 들어가기 전에 할 일입니다. 단계와 문턱은 [[01-requirements#5.1 MVP 다음의 단계]], 정한 과정은 [[dr-0018-release-stages|DR-0018]]. 메인테이너가 MVP를 써 보는 일과 브라우저 확인은 [[status#이번과 다음 세션에 할 것]]에 있습니다.
 
-- [ ] `ariadnensd.com`으로 옮기기: 저장소 쪽은 2026-11-02에 바꿈(첫 화면은 앱 → [[dr-0021-domain-and-front-page|DR-0021]]). 남은 것은 메인테이너의 도메인 설정 → [[status#이번과 다음 세션에 할 것]]. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
 - [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너) → [[names-and-registries#확인하지 않은 것]]
 - [ ] 사용법 `/manual/` · `/manual/ko/`를 만든다(지금은 MVP의 도움말 › 사용법이 빈 주소를 연다). 짜임은 [[dr-0020-user-guide|DR-0020]], 첫 초안은 시안 M49(5분 둘러보기)
 	- [ ] 메인테이너가 전체 초안 M51을 한 번에 봄(2026-11-02, 한국어 · 영어 모두 `src/apps/manual`에 씀). 고칠 것을 받으면 두 언어에 반영
-- [ ] 비공개 문제 알리기: `report@ariadnensd.com`(→ 새 Gmail)으로 정함([[dr-0021-domain-and-front-page|DR-0021]]). 메일 전달 설정은 메인테이너. 설정되면 사용법의 "문제 알리기"와 CONTRIBUTING에 적는다 → [[01-requirements#^r-rep|R-REP-01]]
 
 ## 출시 무렵과 그 뒤
 
