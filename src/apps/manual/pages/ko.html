@@ -151,8 +151,44 @@
         <section id="wrap">
           <h2><span class="n">3</span>While로 감싸기</h2>
           <p>
-            아래 두 블록을 반복문 안에 넣습니다. 먼저 두 블록을 함께 선택하고, 감쌀 블록의 종류를
-            고릅니다. 감싸면 반복 조건의 편집이 바로 시작됩니다.
+            아래 두 블록 <code>sum ← sum + a[i]</code>와 <code>i ← i + 1</code>을 반복문 안에
+            넣습니다.
+          </p>
+          <ol class="steps">
+            <li>
+              <b>두 블록을 함께 선택합니다.</b> 방금 적은 <code>i ← i + 1</code>이 선택된 채로
+              <kbd>Shift</kbd>+<kbd>↑</kbd>를 한 번 누르면 바로 위 블록까지 선택되어, 주황 테두리가
+              두 블록을 함께 감쌉니다. 마우스로는 <code>sum ← sum + a[i]</code>를 클릭한 뒤
+              <code>i ← i + 1</code>을 <kbd>Shift</kbd>+클릭합니다.
+            </li>
+            <li>
+              <b>While로 감쌉니다.</b> <kbd>s</kbd>를 누르고 <kbd>w</kbd>를 누릅니다. 마우스로는
+              툴바의 While 아이콘을 <kbd>Ctrl</kbd>+클릭합니다.
+            </li>
+            <li>
+              <b>반복 조건을 적습니다.</b> 편집이 바로 시작되니 <code>i &lt; n</code>을 적고
+              <kbd>Enter</kbd>를 누릅니다.
+            </li>
+          </ol>
+          <div class="pair">
+            <figure>
+              <img src="../img/ko/tour-2-more.png" alt="마지막 블록 하나가 선택됨" />
+              <figcaption>블록 하나가 선택된 채</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/ko/tour-3s-two-selected.png" alt="아래 두 블록이 함께 선택됨" />
+              <figcaption>1. <kbd>Shift</kbd>+<kbd>↑</kbd>로 두 블록</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/ko/tour-3e-done.png" alt="두 블록이 While 안에 들어감" />
+              <figcaption>2 · 3. <kbd>s</kbd> <kbd>w</kbd>, 조건을 적음</figcaption>
+            </figure>
+          </div>
+          <p class="caption">
+            아래는 같은 과정을 화면 전체로 보인 것입니다. <kbd>s</kbd>를 누르고 잠깐 기다리면 화면
+            아래에 다음에 누를 키의 힌트가 뜹니다.
           </p>
           <div
             class="movie"
@@ -164,10 +200,6 @@
             <img src="../img/ko/tour-3c-hint.png" alt="" />
             <img src="../img/ko/tour-3d-done.png" alt="" />
           </div>
-          <p class="caption">
-            마지막 블록에서 <kbd>Shift</kbd>+<kbd>↑</kbd> → <kbd>s</kbd>를 누르면 화면 아래에 다음
-            키의 힌트가 뜸 → <kbd>w</kbd> → 조건 <code>i &lt; n</code>을 적고 <kbd>Enter</kbd>
-          </p>
           <div class="tbl">
             <table class="keys">
               <tr>

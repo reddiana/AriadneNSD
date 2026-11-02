@@ -153,8 +153,47 @@
         <section id="wrap">
           <h2><span class="n">3</span>Wrap in a While</h2>
           <p>
-            Put the last two blocks in a loop. Select both, then pick the kind of block to wrap them
-            in. Editing the loop condition starts right away.
+            Put the last two blocks, <code>sum ← sum + a[i]</code> and <code>i ← i + 1</code>, in a
+            loop.
+          </p>
+          <ol class="steps">
+            <li>
+              <b>Select both blocks.</b> With <code>i ← i + 1</code> (the block you just wrote)
+              selected, press <kbd>Shift</kbd>+<kbd>↑</kbd> once: the block above joins the
+              selection and the orange frame goes around both. With the mouse, click
+              <code>sum ← sum + a[i]</code>, then <kbd>Shift</kbd>+click <code>i ← i + 1</code>.
+            </li>
+            <li>
+              <b>Wrap them in a While.</b> Press <kbd>s</kbd>, then <kbd>w</kbd>. With the mouse,
+              <kbd>Ctrl</kbd>+click the While icon on the toolbar.
+            </li>
+            <li>
+              <b>Write the loop condition.</b> Editing starts right away: write
+              <code>i &lt; n</code> and press <kbd>Enter</kbd>.
+            </li>
+          </ol>
+          <div class="pair">
+            <figure>
+              <img src="img/en/tour-2-more.png" alt="The last block selected" />
+              <figcaption>One block selected</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img
+                src="img/en/tour-3s-two-selected.png"
+                alt="The last two blocks selected together"
+              />
+              <figcaption>1. <kbd>Shift</kbd>+<kbd>↑</kbd>: two blocks</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="img/en/tour-3e-done.png" alt="The two blocks inside a While" />
+              <figcaption>2 · 3. <kbd>s</kbd> <kbd>w</kbd>, write the condition</figcaption>
+            </figure>
+          </div>
+          <p class="caption">
+            The same, on the whole screen. After <kbd>s</kbd>, wait a moment: a hint of the next
+            keys appears at the bottom.
           </p>
           <div
             class="movie"
@@ -166,11 +205,6 @@
             <img src="img/en/tour-3c-hint.png" alt="" />
             <img src="img/en/tour-3d-done.png" alt="" />
           </div>
-          <p class="caption">
-            On the last block, <kbd>Shift</kbd>+<kbd>↑</kbd> → <kbd>s</kbd> shows a hint of the next
-            keys at the bottom → <kbd>w</kbd> → write the condition <code>i &lt; n</code> and press
-            <kbd>Enter</kbd>
-          </p>
           <div class="tbl">
             <table class="keys">
               <tr>

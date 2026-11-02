@@ -201,6 +201,13 @@ a {
   border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
+.steps {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 8px;
+  max-width: 66ch;
+}
 .tip {
   background: var(--soft);
   border-radius: 6px;

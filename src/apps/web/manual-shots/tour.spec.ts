@@ -65,6 +65,7 @@ test('the 5-minute tour', async ({ page }) => {
   await shot(page, 'tour-3a-start', true);
   await page.keyboard.press('Shift+ArrowUp');
   await shot(page, 'tour-3b-selected', true);
+  await shot(page, 'tour-3s-two-selected');
   await page.keyboard.press('s');
   await page.waitForTimeout(600);
   await shot(page, 'tour-3c-hint', true);
