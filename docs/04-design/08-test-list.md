@@ -25,7 +25,7 @@ status: 생성됨
 | --- | --- | --- |
 | E2E | 6 | 47 |
 | 통합 | 8 | 113 |
-| 단위 | 40 | 344 |
+| 단위 | 41 | 348 |
 | 성능 | 1 | 3 |
 
 ## 2. ID가 있는 테스트
@@ -374,6 +374,7 @@ status: 생성됨
 | `packages/editor/src/input/keys.test.ts` | reading keys (03-editor 4) | — | Vitest | 단위 | 7 |
 | `packages/editor/src/navigation/navigate.test.ts` | keyboard navigation (03-editor 2.2) | — | Vitest | 단위 | 12 |
 | `packages/editor/src/state/selection.test.ts` | selection (03-editor 2) | — | Vitest | 단위 | 5 |
+| `packages/editor/src/ui/key-hint.test.ts` | UX K3: the key hint goes just under the selection | [[ux-decisions\|UX K3]] | Vitest | 단위 | 4 |
 | `packages/editor/src/ui/keys.test.ts` | keys | — | Vitest | 단위 | 5 |
 | `packages/editor/src/ui/menu-model.test.ts` | menuEntries | — | Vitest | 단위 | 1 |
 | `packages/editor/src/version.test.ts` | app version | — | Vitest | 단위 | 2 |

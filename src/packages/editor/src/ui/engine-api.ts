@@ -40,4 +40,5 @@ export type EditorHandle = Pick<
   | 'startBlockDrag'
   | 'focus'
   | 'onContextMenu'
+  | 'popupAnchor'
 >;

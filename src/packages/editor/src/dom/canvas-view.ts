@@ -564,6 +564,16 @@ export class CanvasView {
     };
   }
 
+  /** The page y of the selection's top edge, for a popup that flips above it. */
+  selectionTop(): number | null {
+    const state = this.session.state;
+    const box = selectionBox(state.layout, this.session.index(), state.selection);
+    if (box === null) {
+      return null;
+    }
+    return this.stage.getBoundingClientRect().top + box.y * state.zoom;
+  }
+
   /** The page point near the canvas's top left corner, for a menu when nothing is selected. */
   canvasAnchor(): Point {
     const rect = this.canvas.getBoundingClientRect();

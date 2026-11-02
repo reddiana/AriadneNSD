@@ -307,5 +307,11 @@ export interface EditorHandle {
   prompt(message: Message, value: string): Promise<string | null>;
   /** Addition: the diagram asks for the context menu (right click, Shift+F10). */
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;
+  /**
+   * Addition: the page point where a popup for the keyboard appears: just under the selection's
+   * left end, or near the canvas's top left corner when nothing is selected (the key hint, UX K3).
+   * `top` is the selection's top edge, where a popup that does not fit below goes above.
+   */
+  popupAnchor(): { readonly x: number; readonly y: number; readonly top: number };
   dispose(): void;
 }

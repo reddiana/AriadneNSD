@@ -323,7 +323,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
     active: number,
   ): Promise<number | null> => {
     picker?.choose(null);
-    const at = view?.selectionAnchor() ?? view?.canvasAnchor() ?? { x: 0, y: 0 };
+    const at = handle.popupAnchor();
     return new Promise((resolve) => {
       const id = nextPickerId++;
       picker = {
@@ -532,6 +532,10 @@ export function createEditor(options: EditorOptions): EditorHandle {
     },
     confirm: async (value, buttons = {}) => (await ask(value, null, buttons)) !== null,
     prompt: (value, initial) => ask(value, initial, {}),
+    popupAnchor: () => {
+      const at = view?.selectionAnchor() ?? view?.canvasAnchor() ?? { x: 0, y: 0 };
+      return { ...at, top: view?.selectionTop() ?? at.y };
+    },
     onContextMenu: (listener) => {
       contextMenuListeners.add(listener);
       return () => {

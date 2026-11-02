@@ -103,6 +103,7 @@ export function fakeEngine(
       return () => statusListeners.delete(listener);
     },
     chromeState: () => chrome,
+    popupAnchor: () => ({ x: 40, y: 120, top: 90 }),
     onChromeState: (listener) => {
       chromeListeners.add(listener);
       return () => chromeListeners.delete(listener);

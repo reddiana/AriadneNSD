@@ -112,12 +112,11 @@ export const chromeCss = `
 .ans-narrow-only { display: none; }
 
 .ans-keyhint {
-  position: absolute; left: 12px; right: 12px; bottom: 34px; z-index: 15;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2px 18px;
-  padding: 8px 12px; background: var(--ui-panel); border: 1px solid var(--ui-line);
+  position: fixed; z-index: 15; display: grid; gap: 1px; white-space: nowrap;
+  padding: 5px 12px 6px 9px; background: var(--ui-panel); border: 1px solid var(--ui-line);
   border-left: 3px solid var(--ui-warn); border-radius: 4px; box-shadow: 0 4px 14px var(--ui-shadow);
 }
-.ans-keyhint-title { grid-column: 1 / -1; color: var(--ui-muted); font-size: 12px; }
+.ans-keyhint-title { color: var(--ui-muted); font-size: 12px; }
 .ans-keyhint-row { display: flex; gap: 10px; }
 .ans-keyhint-row kbd { min-width: 18px; color: var(--ui-accent); font-weight: 600; }
 
