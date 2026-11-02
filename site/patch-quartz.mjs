@@ -15,8 +15,9 @@
 //   그런 주소는 브라우저가 페이지를 새로 불러오게 둔다 → DR-0021
 // - 왼쪽 위 사이트 이름(Quartz v4.5.2 PageTitle.tsx)이 사이트의 맨 위(`/`, 앱)로 가는 곳.
 //   문서 사이트의 첫 화면인 소개(`/about`)로 가게 한다(2026-11-03, 메인테이너: "Home으로 가게 해주세요")
-// - 왼쪽 목록(Quartz v4.5.2 explorer.inline.ts)의 맨 위에 앱(`/`)으로 가는 "앱 열기"를 넣는다.
-//   앱은 Quartz의 페이지가 아니라서 목록에 저절로 생기지 않는다(2026-11-03, 메인테이너)
+// - 왼쪽 목록(Quartz v4.5.2 explorer.inline.ts)의 맨 위에 앱(`/`)으로 가는 "앱 열기"와
+//   사용법(`/manual/ko/`)으로 가는 "사용자 도움말"을 넣는다. 둘은 Quartz의 페이지가 아니라서
+//   목록에 저절로 생기지 않는다(2026-11-03, 메인테이너)
 //
 // 고칠 글이 없으면(Quartz를 올려 소스가 달라졌으면) 멈춘다. 그때 이 패치가 아직 필요한지 다시 본다.
 import fs from "node:fs"
@@ -57,13 +58,13 @@ const patches = [
     from: "    const fragment = document.createDocumentFragment()\n",
     to:
       "    const fragment = document.createDocumentFragment()\n" +
-      "    // AriadneNSD: the app (/) is not a Quartz page, so add its link by hand\n" +
-      "    {\n" +
+      "    // AriadneNSD: the app (/) and the user guide are not Quartz pages, so add their links by hand\n" +
+      '    for (const [href, name] of [["/", "앱 열기"], ["/manual/ko/", "사용자 도움말"]]) {\n' +
       '      const tpl = document.getElementById("template-file") as HTMLTemplateElement\n' +
       '      const li = (tpl.content.cloneNode(true) as DocumentFragment).querySelector("li") as HTMLLIElement\n' +
       '      const a = li.querySelector("a") as HTMLAnchorElement\n' +
-      '      a.href = "/"\n' +
-      '      a.textContent = "앱 열기"\n' +
+      "      a.href = href\n" +
+      "      a.textContent = name\n" +
       "      fragment.appendChild(li)\n" +
       "    }\n",
   },

@@ -23,6 +23,8 @@ if [ ! -d "$QUARTZ_DIR/node_modules" ]; then
   (cd "$QUARTZ_DIR" && npm ci --no-audit --no-fund)
 fi
 
+# 받은 Quartz의 소스로 되돌린 뒤 고친다. 패치가 바뀌어도 두 번 들어가지 않게
+git -C "$QUARTZ_DIR" checkout --quiet -- quartz
 node "$REPO/site/patch-quartz.mjs" "$QUARTZ_DIR"
 cp "$REPO/site/quartz.config.ts" "$REPO/site/quartz.layout.ts" "$QUARTZ_DIR/"
 cp "$REPO/site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
