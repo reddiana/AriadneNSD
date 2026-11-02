@@ -23,7 +23,7 @@ status: 생성됨
 
 | 유형 | 파일 | 테스트 |
 | --- | --- | --- |
-| E2E | 6 | 46 |
+| E2E | 6 | 47 |
 | 통합 | 8 | 113 |
 | 단위 | 40 | 344 |
 | 성능 | 1 | 3 |
@@ -61,6 +61,7 @@ status: 생성됨
 | [[defects\|BUG-03]] | the editor appears when indexedDB.open never answers | [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | `apps/web/e2e/boot.spec.ts` |
 | [[defects\|BUG-03]] | a failure at start is shown on the boot screen | [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | `apps/web/e2e/boot.spec.ts` |
 | [[defects\|BUG-04]] | on a phone the toolbar shows "Examples", and a tap opens the modal | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
+| [[defects\|BUG-05]] | Escape closes a menu opened with the mouse | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | 400 random keys keep the invariants and undo all the way back (seed ${String(seed)}) | — | Vitest | 통합 | `packages/editor/src/session/random-keys.test.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | any sequence of commands keeps the invariants and never changes its input | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/commands/properties.test.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | ids stay unique even when the generator must avoid ids of the view state | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/commands/properties.test.ts` |
@@ -327,7 +328,7 @@ status: 생성됨
 | --- | --- | --- | --- | --- | --- |
 | `apps/web/e2e/acceptance.spec.ts` | The MVP acceptance tests AT-01 ~ AT-17 (07-testing 4) in the browser, against the production build | [[07-testing#4. MVP의 인수 테스트\|AT-01]], [[07-testing#4. MVP의 인수 테스트\|AT-17]] | Playwright | E2E | 26 |
 | `apps/web/e2e/boot.spec.ts` | The start of the page (R-NFR-10, QA-19; inbox 2026-11-01 | [[01-requirements#^r-nfr\|R-NFR-10]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 2 |
-| `apps/web/e2e/examples.spec.ts` | The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3) | [[01-requirements#^r-edit\|R-EDIT-25]], [[ux-decisions\|UX EX1]] | Playwright | E2E | 6 |
+| `apps/web/e2e/examples.spec.ts` | The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3) | [[01-requirements#^r-edit\|R-EDIT-25]], [[ux-decisions\|UX EX1]] | Playwright | E2E | 7 |
 | `apps/web/e2e/files.spec.ts` | Browser flows of the web shell (06-web 1, 2) | — | Playwright | E2E | 6 |
 | `apps/web/e2e/mobile.spec.ts` | The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts) | [[01-requirements#^r-nfr\|R-NFR-08]], [[01-requirements#^r-nfr\|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록\|QA-18]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 5 |
 | `apps/web/e2e/smoke.spec.ts` |  | — | Playwright | E2E | 1 |

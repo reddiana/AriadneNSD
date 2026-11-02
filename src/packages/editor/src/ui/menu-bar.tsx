@@ -34,8 +34,11 @@ function useMenus(commands: ReadonlyArray<CommandView>, text: Chrome['text']) {
     .filter(({ items }) => items.length > 0);
 }
 
-/** Closes an open menu when the pointer goes down outside `root`. */
-function useCloseOnOutside(
+/**
+ * Closes an open menu when the pointer goes down outside `root`, or on Escape wherever the focus
+ * is. A menu opened with the mouse leaves the focus on its title button, not in the menu (BUG-05).
+ */
+function useCloseMenu(
   root: RefObject<HTMLElement | null>,
   isOpen: boolean,
   close: () => void,
@@ -46,9 +49,14 @@ function useCloseOnOutside(
       if (root.current && event.target instanceof Node && !root.current.contains(event.target))
         close();
     }
+    function onKeyDown(event: KeyboardEvent): void {
+      if (event.key === 'Escape') close();
+    }
     document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
       document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, [root, isOpen, close]);
 }
@@ -67,7 +75,7 @@ export function MenuBar(): ReactElement {
   const close = useRef(() => {
     setOpen(null);
   }).current;
-  useCloseOnOutside(rootRef, open !== null, close);
+  useCloseMenu(rootRef, open !== null, close);
 
   function button(menu: MenuId | 'all', title: ReactElement | string, isIcon = false) {
     const isOpen = open?.menu === menu;

@@ -112,11 +112,7 @@ test('menus: file, context menu, command palette', async ({ page }) => {
     .getByText(lang() === 'ko' ? '파일' : 'File', { exact: true })
     .click();
   await shot(page, 'file-menu', true);
-  // Escape does not close a menu opened with the mouse (backlog); clicking the title again does.
-  await page
-    .getByRole('menubar')
-    .getByText(lang() === 'ko' ? '파일' : 'File', { exact: true })
-    .click();
+  await page.keyboard.press('Escape');
   await page.locator('.ans-canvas[tabindex]').focus();
   await page.keyboard.press('Shift+F10');
   await shot(page, 'context-menu', true);

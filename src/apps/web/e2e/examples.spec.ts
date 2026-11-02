@@ -100,3 +100,12 @@ test('BUG-01: a diagram larger than the window scrolls in the canvas', async ({ 
   });
   expect(await area.evaluate((element) => element.scrollTop)).toBe(200);
 });
+
+test('BUG-05: Escape closes a menu opened with the mouse', async ({ page }) => {
+  await openApp(page);
+  await page.getByRole('menubar').getByText('File', { exact: true }).click();
+  const menu = page.getByRole('menu', { name: 'File' });
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
+});
