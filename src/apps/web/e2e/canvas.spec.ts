@@ -1,4 +1,4 @@
-// The canvas: what clicks and focus do around the keys (UX K4, CF2).
+// The canvas: what clicks and focus do around the keys (UX K4, CF2, CM1).
 import { expect, test } from '@playwright/test';
 
 import { canvas, drawnText, middleOf, openApp } from './support';
@@ -59,4 +59,23 @@ test('BUG-09: dragging a block does not select the drawn text', async ({ page })
   await page.mouse.move(to.x, to.y + 10, { steps: 10 });
   expect(await page.evaluate(() => window.getSelection()?.toString() ?? '')).toBe('');
   await page.mouse.up();
+});
+
+test('UX CM1: a right click on the empty canvas shows the File and Help menus', async ({
+  page,
+}) => {
+  await openApp(page);
+  const area = canvas(page);
+  const box = await area.boundingBox();
+  if (box === null) {
+    throw new Error('no canvas');
+  }
+  await page.mouse.click(box.x + box.width - 20, box.y + box.height - 20, { button: 'right' });
+  const menu = page.getByRole('menu', { name: 'Context menu' });
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /^Save/ }).first()).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /^Examples/ })).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /^Copy/ })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
 });

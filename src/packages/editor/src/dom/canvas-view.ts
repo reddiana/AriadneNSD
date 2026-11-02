@@ -574,7 +574,9 @@ export class CanvasView {
     const index = this.session.index();
     const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
     if (hit === null) {
+      // The empty canvas: the File and Help menus (UX CM1).
       this.session.select(null);
+      this.options.contextMenu({ x: event.clientX, y: event.clientY });
       return;
     }
     const selected = selectedBlocks(index, state.selection);

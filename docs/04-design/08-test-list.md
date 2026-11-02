@@ -23,7 +23,7 @@ status: 생성됨
 
 | 유형 | 파일 | 테스트 |
 | --- | --- | --- |
-| E2E | 7 | 50 |
+| E2E | 7 | 51 |
 | 통합 | 8 | 114 |
 | 단위 | 42 | 351 |
 | 성능 | 1 | 3 |
@@ -296,6 +296,7 @@ status: 생성됨
 | [[ux-decisions\|UX CD1]] | the empty default cell of a Case is reached from the last branch | — | Vitest | 단위 | `packages/editor/src/navigation/navigate.test.ts` |
 | [[ux-decisions\|UX CD2]] | a Case with only a default has one column | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
 | [[ux-decisions\|UX CF2]] | with nothing selected the focus outline shows for a moment only | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
+| [[ux-decisions\|UX CM1]] | a right click on the empty canvas shows the File and Help menus | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
 | [[ux-decisions\|UX E1]] | marks the only, empty block of a branch | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
 | [[ux-decisions\|UX EX2]] | closing the welcome with Esc keeps the new document and does not ask again | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
 | [[ux-decisions\|UX EX3]] | Help › Examples… opens the same modal with its own words | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
@@ -334,7 +335,7 @@ status: 생성됨
 | --- | --- | --- | --- | --- | --- |
 | `apps/web/e2e/acceptance.spec.ts` | The MVP acceptance tests AT-01 ~ AT-17 (07-testing 4) in the browser, against the production build | [[07-testing#4. MVP의 인수 테스트\|AT-01]], [[07-testing#4. MVP의 인수 테스트\|AT-17]] | Playwright | E2E | 26 |
 | `apps/web/e2e/boot.spec.ts` | The start of the page (R-NFR-10, QA-19; inbox 2026-11-01 | [[01-requirements#^r-nfr\|R-NFR-10]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 2 |
-| `apps/web/e2e/canvas.spec.ts` | The canvas | — | Playwright | E2E | 3 |
+| `apps/web/e2e/canvas.spec.ts` | The canvas | — | Playwright | E2E | 4 |
 | `apps/web/e2e/examples.spec.ts` | The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3) | [[01-requirements#^r-edit\|R-EDIT-25]], [[ux-decisions\|UX EX1]] | Playwright | E2E | 7 |
 | `apps/web/e2e/files.spec.ts` | Browser flows of the web shell (06-web 1, 2) | — | Playwright | E2E | 6 |
 | `apps/web/e2e/mobile.spec.ts` | The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts) | [[01-requirements#^r-nfr\|R-NFR-08]], [[01-requirements#^r-nfr\|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록\|QA-18]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 5 |

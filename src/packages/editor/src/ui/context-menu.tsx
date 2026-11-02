@@ -1,6 +1,7 @@
 // The context menu (03-editor 1 "팝업 레이어", 5): a right click on a block, or Shift+F10 and the
-// context menu key, opens the commands whose `context` lists the kind of the selection. The
-// order and the submenus are the menu bar's (03-editor 5.1); `j` `k` move like ↓ ↑ (UX K2).
+// context menu key, opens the commands whose `context` lists the kind of the selection. A right
+// click on the empty canvas opens the File and Help menus (UX CM1). The order and the submenus
+// are the menu bar's (03-editor 5.1); `j` `k` move like ↓ ↑ (UX K2).
 
 import type { ReactElement } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -8,7 +9,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CommandView } from './command-view';
 import type { DropdownItem } from './dropdown';
 import { Dropdown } from './dropdown';
-import type { ContextMenuRequest, SelectionKind } from './engine-api';
+import type { ContextMenuRequest, MenuId, SelectionKind } from './engine-api';
 import { menuEntries, menuOrder } from './menu-model';
 import { useChrome, useCommands } from './use-engine';
 
@@ -18,11 +19,14 @@ import { useChrome, useCommands } from './use-engine';
  */
 export function contextMenuItems(
   commands: ReadonlyArray<CommandView>,
-  kind: SelectionKind,
+  kind: SelectionKind | null,
   submenuTitle: (submenu: string) => string,
 ): ReadonlyArray<DropdownItem> {
-  const shown = commands.filter((command) => command.context.includes(kind));
-  return menuOrder.flatMap((menu, menuIndex) =>
+  // Nothing selected (a right click on the empty canvas): the whole File and Help menus.
+  const shown =
+    kind === null ? commands : commands.filter((command) => command.context.includes(kind));
+  const menus: ReadonlyArray<MenuId> = kind === null ? emptyCanvasMenus : menuOrder;
+  return menus.flatMap((menu, menuIndex) =>
     menuEntries(shown, menu).map((entry): DropdownItem => {
       const group = menuIndex * 1000 + entry.group;
       return entry.kind === 'command'
@@ -36,6 +40,9 @@ export function contextMenuItems(
     }),
   );
 }
+
+/** The menus a right click on the empty canvas shows (UX CM1). */
+const emptyCanvasMenus: ReadonlyArray<MenuId> = ['file', 'help'];
 
 /** The menu at a point of the page. Closes on Esc, on a click outside, and after a command. */
 export function ContextMenu({
@@ -79,7 +86,6 @@ export function ContextMenu({
     };
   }, [onClose]);
 
-  if (kind === null) return null;
   const items = contextMenuItems(commands, kind, (submenu) =>
     text(`submenu.${submenu}` as Parameters<typeof text>[0]),
   );
