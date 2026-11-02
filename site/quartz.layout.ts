@@ -3,6 +3,7 @@
 // - 문서 위의 제목(ArticleTitle)을 뺌. 본문이 `# 제목`으로 시작해서 두 번 나왔다.
 //   본문에 제목이 없는 문서는 prepare-content.mjs가 넣는다. 첫 페이지(README)가 없는 폴더에서만 보인다.
 // - 왼쪽 목록은 이름이 아니라 파일 이름(읽는 순서의 번호)순으로 둔다
+// - 왼쪽 목록에서 소개(about, 왼쪽 위 사이트 이름이 가는 곳)를 뺌. 맨 위의 "앱 열기"는 patch-quartz.mjs가 넣는다
 // - 그래프에서 태그를 뺌
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
@@ -10,6 +11,7 @@ import * as Component from "./quartz/components"
 // 폴더 먼저, 그다음 파일. 둘 다 파일 이름(번호)순
 const explorer = () =>
   Component.Explorer({
+    filterFn: (node) => node.slugSegment !== "tags" && node.slug !== "about",
     sortFn: (a, b) => {
       if (a.isFolder !== b.isFolder) return a.isFolder ? -1 : 1
       // 맨 위에서는 문서(docs), 작업 공간(atelier), 배운 것(til), 여정(journal: 펴내는 문서만) 차례
