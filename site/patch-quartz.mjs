@@ -9,6 +9,10 @@
 //   만들지만, 뒤의 CrawlLinks("shortest")는 주소를 사이트 맨 위 기준으로 보고 `../..`를 또 붙인다.
 //   두 겹 아래 폴더(docs/01-requirements/)에서는 `../.././../tags/P0`가 되어 사이트 밖으로 나간다.
 //   위키링크처럼 맨 위 기준(`tags/P0`)으로 만들면 CrawlLinks가 맞게 바꾼다.
+// - 페이지를 옮기는 SPA(Quartz v4.5.2 spa.inline.ts)가 Quartz가 만들지 않은 페이지로 가는 링크까지
+//   가로채는 곳. 첫 화면(`/`, 앱)과 사용법(`/manual/`), 옛 앱 주소(`/app/`)를 받아 본문만 갈아 끼우면
+//   앱의 스크립트가 돌지 않아 "불러오는 중"에서 멈추고 왼쪽 목록이 겹친다(2026-11-02, 메인테이너).
+//   그런 주소는 브라우저가 페이지를 새로 불러오게 둔다 → DR-0021
 //
 // 고칠 글이 없으면(Quartz를 올려 소스가 달라졌으면) 멈춘다. 그때 이 패치가 아직 필요한지 다시 본다.
 import fs from "node:fs"
@@ -30,6 +34,14 @@ const patches = [
     file: "quartz/plugins/transformers/ofm.ts",
     from: "url: base + `/tags/${tag}`,",
     to: "url: `tags/${tag}`,",
+  },
+  {
+    file: "quartz/components/scripts/spa.inline.ts",
+    from: "  if (!isLocalUrl(href)) return\n",
+    to:
+      "  if (!isLocalUrl(href)) return\n" +
+      "  // AriadneNSD: the app (/) and the user guide are not Quartz pages: load them for real\n" +
+      "  if (/^\\/(app\\/|manual\\/|$)/.test(new URL(href).pathname)) return\n",
   },
 ]
 

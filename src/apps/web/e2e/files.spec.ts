@@ -142,7 +142,10 @@ test.describe('file handle flow (File System Access)', () => {
     const first = await writtenText(page, 'Untitled.ns.svg');
     expect(first).toContain('"kind": "if"');
 
-    await command(page, 'block.insert.for').click();
+    // For is inserted with keys or menus: the toolbar has no For icon (UX TB1).
+    await expect(page.locator('.ans-toolbar [data-command="block.insert.for"]')).toHaveCount(0);
+    await page.keyboard.press('a');
+    await page.keyboard.press('f');
     await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD', { timeout: 5000 });
     expect(await writtenText(page, 'Untitled.ns.svg')).toContain('"kind": "for"');

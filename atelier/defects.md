@@ -2,7 +2,7 @@
 title: 결함 기록
 tags:
   - plan
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # 결함 기록
@@ -21,3 +21,4 @@ updated: 2026-11-02
 | BUG-03 | 2026-11-01 | Galaxy S26의 Chrome에서 한참을 기다려도 MVP 화면이 뜨지 않음(메인테이너) | 화면을 그리기 전에 IndexedDB를 여는데 시간 제한이 없음(원인 후보였고, 3초 제한을 넣은 뒤 S26에서 뜸) | [[2026-11-01-04-examples-button-android-load]] | E2E `boot.spec.ts` | 고침(S26에서 확인함) |
 | BUG-04 | 2026-11-01 | S26의 툴바에 "예제" 버튼이 보이지 않음(메인테이너) | 툴바의 예제를 드롭다운에서 버튼으로 바꿀 때(EX4) "넓은 화면에서만" 클래스를 그대로 둠. E2E가 노트북 크기로만 봐서 못 잡음 | [[2026-11-01-04-examples-button-android-load]] | E2E `mobile.spec.ts` | 고침 |
 | BUG-05 | 2026-11-02 | 메뉴 바의 메뉴를 마우스로 연 뒤 `Esc`를 눌러도 닫히지 않음(Claude, 사용법 그림을 찍다 발견) | 마우스로 열면 포커스가 메뉴 제목 버튼에 남는데, 그 버튼은 `↓`만 받고 `Esc`는 메뉴 안(드롭다운)에서만 받았음 | 메뉴가 열려 있는 동안 문서 어디서든 `Esc`로 닫음(`packages/editor/src/ui/menu-bar.tsx`의 `useCloseMenu`) | `BUG-05: Escape closes a menu opened with the mouse` (`apps/web/e2e/examples.spec.ts`) | 고침 |
+| BUG-06 | 2026-11-03 | 설계 문서 사이트(`/about` 등)에서 왼쪽 위 AriadneNSD를 누르면 앱이 "불러오는 중…"에서 멈추고 왼쪽 목록이 되풀이됨(메인테이너) | Quartz의 SPA가 같은 사이트의 링크를 모두 가로채 받은 HTML의 본문만 갈아 끼움. 첫 화면이 앱이 된 뒤(DR-0021) 앱의 HTML이 문서 사이트 안에 끼워지고 앱의 스크립트는 돌지 않음 | `site/patch-quartz.mjs`: `/`, `/app/`, `/manual/`로 가는 링크는 SPA가 가로채지 않고 브라우저가 새로 불러옴 | 없음: 사이트 빌드(Quartz)에 붙은 것이라 앱의 E2E 밖. 로컬 사이트 빌드에서 제목을 눌러 앱이 뜨는 것을 확인함 | 고침 |
