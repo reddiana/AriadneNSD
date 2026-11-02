@@ -1,0 +1,113 @@
+<title>M53 캔버스의 포커스 표시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* M52와 같은 틀. 그림은 MVP의 실제 화면(1100×700) 전체이고, 표시는 그 위에 얹는다.
+   좌표는 원래 화면의 px를 1100×700의 %로: 캔버스 y 66–674, 상태 표시줄 y 674–700. */
+:root {
+  --bg: #f6f7f9; --fg: #1b2129; --muted: #5b6573; --line: #d4d9e1; --card: #ffffff;
+  --rec: #2c55c9; --tag: #1b2129; --tagfg: #ffffff;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 32px; }
+h1 { font-size: 26px; margin: 0; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { margin: 0; font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 14px; min-width: 0; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.note { border-left: 3px solid var(--line); padding-left: 12px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--card); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; max-width: 72ch; }
+.q { border-top: 1px solid var(--line); padding-top: 24px; }
+.q-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.q-id { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--rec); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--rec); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); } .opt dd { margin: 0; min-width: 0; }
+
+
+/* The screen: the whole app screenshot. Always light, like the app's default theme. */
+.screen { position: relative; aspect-ratio: 1100 / 700; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; container-type: inline-size; background: #eef1f5; }
+.screen > img { position: absolute; inset: 0; width: 100%; max-width: none; }
+.u { --u: calc(100cqw / 1100); }
+/* 2: the status bar message, over the app's status bar. */
+.status { position: absolute; left: 0; right: 0; top: 96.29%; bottom: 0; background: #ffffff; display: flex; align-items: center; gap: calc(8 * 100cqw / 1100);
+  padding-left: calc(10 * 100cqw / 1100); font: calc(13 * 100cqw / 1100)/1 var(--sans); color: #1b2129; }
+.status .chip { background: #2c55c9; color: #fff; border-radius: calc(3 * 100cqw / 1100); padding: calc(3 * 100cqw / 1100) calc(6 * 100cqw / 1100); font-weight: 600; }
+.status .muted { color: #5b6573; }
+/* 3: a thin band on the canvas's top edge. */
+.band { position: absolute; left: 0; right: 0; top: 9.43%; height: calc(3 * 100cqw / 1100); background: #2c55c9; }
+/* 4: the old ring, shown for a moment. */
+.ring { position: absolute; left: 0; right: 0; top: 9.43%; bottom: 3.71%; box-shadow: inset 0 0 0 calc(2 * 100cqw / 1100) #2c55c9; animation: fade 3s ease-in-out infinite; }
+.ring-label { position: absolute; right: 2%; top: 12%; font: 600 calc(13 * 100cqw / 1100)/1.3 var(--sans); color: #2c55c9; background: #ffffffd0; padding: 2px 6px; border-radius: 4px; }
+@keyframes fade { 0%, 15% { opacity: 1 } 45%, 100% { opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; opacity: .5 } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M53 · 2026-11-03 · 조작과 모습</div>
+    <h1>M53 캔버스의 포커스 표시</h1>
+    <p>선택한 것이 없을 때 캔버스 둘레에 그리던 파란 2px 테두리를 없앴습니다(UX 결정 CF1). 메인테이너가 바란 것은 "다이어그램을 검토하면서 다이어그램 자체에 집중"하는 것입니다. 그러면서도 키보드만 쓰는 사람이 "지금 키가 캔버스로 간다"를 알 수 있게 하는 길(WCAG 2.4.7, 포커스가 보여야 함)을 견줍니다.</p>
+    <p class="note">그림의 바탕은 MVP의 실제 화면입니다(예제 "이진 탐색"). 2~4번의 표시는 앱과 같은 색으로 그 위에 얹은 것입니다. 어느 안이든 블록을 선택하면 주황 테두리가 포커스를 보이는 것은 같습니다.</p>
+  </header>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">CF2</span><h2>선택한 것이 없을 때 포커스를 어떻게 보일까요?</h2></div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>키보드로 들어오면 첫 블록을 선택</h3><span class="star">★ 추천</span></div>
+        <div class="screen"><img src="{{FIRST}}" alt="첫 헤더 main()이 주황 테두리로 선택된 앱 화면"></div>
+        <dl><dt>어떻게</dt><dd><kbd>Tab</kbd>으로 캔버스에 들어오면 첫 블록(헤더가 있으면 헤더)을 바로 선택합니다. 마우스로 빈 곳을 누르거나 <kbd>Esc</kbd> <kbd>Esc</kbd>로 선택을 지우면 아무 표시도 없습니다(상태 표시줄의 "선택한 것 없음"뿐). 2026-10-10에 처음 정했던 방식입니다.</dd>
+        <dt>좋은 점</dt><dd>다이어그램에는 사람이 고른 것 말고는 아무것도 그리지 않습니다. 키보드로 온 사람은 곧바로 쓸 수 있는 주황 테두리를 봅니다. 파일을 열었을 때(OP1)와 마우스로 볼 때는 깨끗합니다.</dd>
+        <dt>아쉬운 점</dt><dd>스스로 선택을 지운 뒤에는 포커스가 상태 표시줄 글자로만 보입니다. 방향키 하나면 다시 선택됩니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>상태 표시줄에만 알림</h3></div>
+        <div class="screen"><img src="{{NONE}}" alt="선택한 것이 없는 앱 화면">
+          <div class="status"><span class="chip">캔버스</span><span>선택한 것 없음</span><span class="muted">· 방향키로 첫 블록</span></div></div>
+        <dl><dt>어떻게</dt><dd>캔버스에 키보드 포커스가 있고 선택한 것이 없으면, 상태 표시줄 왼쪽에 파란 "캔버스" 표시와 다음 할 일을 보입니다.</dd>
+        <dt>좋은 점</dt><dd>다이어그램과 캔버스에는 아무것도 그리지 않습니다.</dd>
+        <dt>아쉬운 점</dt><dd>표시가 화면 맨 아래라 시선이 가지 않습니다. 접근성 기준이 바라는 "포커스를 받은 것 위의 표시"는 아닙니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>캔버스 위 가장자리에 얇은 띠</h3></div>
+        <div class="screen"><img src="{{NONE}}" alt="선택한 것이 없는 앱 화면"><div class="band"></div></div>
+        <dl><dt>어떻게</dt><dd>둘레 전체 대신 캔버스 맨 위(툴바 바로 아래)에만 3px 파란 띠를 긋습니다. 편집기의 활성 탭 표시와 비슷합니다.</dd>
+        <dt>좋은 점</dt><dd>다이어그램을 둘러싸지 않아 눈에 덜 띄면서도 캔버스 위에 보입니다.</dd>
+        <dt>아쉬운 점</dt><dd>그래도 늘 보이는 선이 하나 생깁니다. 툴바의 경계선과 헷갈릴 수 있습니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">4</span><h3>들어올 때만 잠깐 테두리</h3></div>
+        <div class="screen"><img src="{{NONE}}" alt="선택한 것이 없는 앱 화면"><div class="ring"></div><span class="ring-label">1초 뒤 사라짐</span></div>
+        <dl><dt>어떻게</dt><dd>키보드로 캔버스에 들어오는 순간 예전 테두리를 보였다가 1초 뒤 흐리게 사라지게 합니다.</dd>
+        <dt>좋은 점</dt><dd>어디로 왔는지는 알려 주고, 검토하는 동안에는 남지 않습니다.</dd>
+        <dt>아쉬운 점</dt><dd>사라진 뒤에는 2번처럼 상태 표시줄에만 기댑니다. 움직이는 표시는 줄인 움직임 설정에서는 끕니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">5</span><h3>지금처럼 표시 없음</h3></div>
+        <div class="screen"><img src="{{NONE}}" alt="선택한 것이 없는 앱 화면"></div>
+        <dl><dt>어떻게</dt><dd>상태 표시줄의 "선택한 것 없음" 말고는 아무것도 보이지 않습니다. 방향키를 누르면 첫 블록이 선택됩니다.</dd>
+        <dt>좋은 점</dt><dd>가장 깨끗합니다.</dd>
+        <dt>아쉬운 점</dt><dd>키보드로 온 사람은 키가 캔버스로 가는지 화면으로 알 수 없습니다.</dd></dl>
+      </div>
+    </div>
+  </section>
+</div>
