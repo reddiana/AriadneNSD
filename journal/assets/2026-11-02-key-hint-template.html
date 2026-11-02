@@ -1,0 +1,149 @@
+<title>M52 키 힌트의 자리</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* M48과 같은 틀. 그림은 MVP의 실제 화면(1100×700)에서 캔버스 부분(640×400)만 보이게 하고,
+   힌트는 앱의 키 힌트와 같은 모양으로 그 위에 얹는다. 좌표는 원래 화면의 px를 640×400의 %로. */
+:root {
+  --bg: #f6f7f9; --fg: #1b2129; --muted: #5b6573; --line: #d4d9e1; --card: #ffffff;
+  --rec: #2c55c9; --tag: #1b2129; --tagfg: #ffffff;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 32px; }
+h1 { font-size: 26px; margin: 0; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { margin: 0; font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 14px; min-width: 0; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.note { border-left: 3px solid var(--line); padding-left: 12px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--card); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; max-width: 72ch; }
+.q { border-top: 1px solid var(--line); padding-top: 24px; }
+.q-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.q-id { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--rec); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--rec); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); } .opt dd { margin: 0; min-width: 0; }
+
+/* The screen: the canvas part of the app screenshot. Always light, like the app's default theme. */
+.screen { position: relative; aspect-ratio: 640 / 400; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; container-type: inline-size; background: #eef1f5; }
+.screen > img { position: absolute; left: 0; top: -15%; width: 171.875%; max-width: none; }
+.screen.whole { aspect-ratio: 1100 / 700; }
+.screen.whole > img { top: 0; width: 100%; }
+/* The hint, drawn like the app's key hint (white box, orange stripe on the left). Sizes in cqw so
+   it scales with the picture: 1 px of the 640 px crop = 100/640 cqw. */
+.hint { position: absolute; background: #ffffff; color: #1b2129; border: 1px solid #d4d9e1; border-left: calc(3 * 100cqw / 640) solid #c2561a;
+  border-radius: calc(4 * 100cqw / 640); box-shadow: 0 calc(2 * 100cqw / 640) calc(8 * 100cqw / 640) rgba(20, 30, 50, .18);
+  font: calc(12.5 * 100cqw / 640)/1.45 var(--sans); padding: calc(5 * 100cqw / 640) calc(9 * 100cqw / 640); }
+.hint .t { color: #5b6573; }
+.hint .row { display: flex; gap: calc(10 * 100cqw / 640); white-space: nowrap; }
+.hint .k { font-family: var(--mono); font-weight: 600; color: #2c55c9; width: calc(9 * 100cqw / 640); }
+.hint.list .row + .row { margin-top: calc(1 * 100cqw / 640); }
+.hint.line { display: flex; gap: calc(12 * 100cqw / 640); align-items: center; white-space: nowrap; }
+.hint.line .row { gap: calc(4 * 100cqw / 640); }
+/* The selected block in the crop: x 48–208, y 151–182 (of 640×400). */
+.below { left: 7.5%; top: 46.5%; }
+.right { left: 33.75%; top: 37.75%; }
+.eye { position: absolute; border: 2px dashed #2c55c9; border-radius: 50%; opacity: .55; pointer-events: none; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M52 · 2026-11-02 · 조작과 모습</div>
+    <h1>M52 키 힌트의 자리</h1>
+    <p>두 키 명령(<kbd>a</kbd> <kbd>s</kbd> <kbd>d</kbd> <kbd>y</kbd> <kbd>z</kbd> <kbd>g</kbd> <kbd>[</kbd> <kbd>]</kbd>)의 첫 키를 누르고 0.4초가 지나면 다음에 누를 키를 보여 줍니다. 지금은 화면 맨 아래에 뜹니다(UX 결정 K1, 2026-10-18. 그때 "선택한 블록 옆"도 견주었음 → 시안 M24). 메인테이너가 써 보니 선택한 블록과 화면 아래를 시선이 크게 오가서 불편합니다.</p>
+    <p class="note">그림의 바탕은 MVP의 실제 화면입니다(마지막 블록 <code>i ← i + 1</code>을 선택하고 <kbd>a</kbd>를 누른 때). 1~3번의 힌트는 앱과 같은 모양으로 그 위에 얹은 것입니다. 블록이 화면 아래쪽에 있어 밑에 자리가 모자라면 1 · 2번은 선택한 것의 위로 뒤집어 띄웁니다.</p>
+  </header>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">K3</span><h2>키 힌트를 어디에 띄울까요?</h2></div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>선택 바로 아래, 세로 목록</h3><span class="star">★ 추천</span></div>
+        <div class="screen">
+          <img src="{{BASE}}" alt="마지막 블록이 선택된 앱 화면">
+          <div class="hint list below">
+            <div class="t">a 뒤에 삽입</div>
+            <div class="row"><span class="k">c</span>호출 삽입…</div>
+            <div class="row"><span class="k">d</span>Do-While 삽입</div>
+            <div class="row"><span class="k">f</span>For 삽입</div>
+            <div class="row"><span class="k">i</span>If 삽입</div>
+            <div class="row"><span class="k">k</span>Case 삽입</div>
+            <div class="row"><span class="k">w</span>While 삽입</div>
+          </div>
+        </div>
+        <dl><dt>좋은 점</dt><dd>시선이 선택한 블록에서 한 뼘만 내려갑니다. IDE의 자동 완성 목록, 앱의 컨텍스트 메뉴와 같은 모양이라 낯설지 않고, 키와 이름이 한 줄씩이라 읽기 쉽습니다.</dd>
+        <dt>아쉬운 점</dt><dd>떠 있는 동안 선택 아래의 블록 몇 개를 가립니다. 둘째 키를 누르면 바로 사라집니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>선택 바로 아래, 가로 한 줄</h3></div>
+        <div class="screen">
+          <img src="{{BASE}}" alt="마지막 블록이 선택된 앱 화면">
+          <div class="hint line below">
+            <span class="t">a</span>
+            <span class="row"><span class="k">c</span>호출</span>
+            <span class="row"><span class="k">d</span>Do-While</span>
+            <span class="row"><span class="k">f</span>For</span>
+            <span class="row"><span class="k">i</span>If</span>
+            <span class="row"><span class="k">k</span>Case</span>
+            <span class="row"><span class="k">w</span>While</span>
+          </div>
+        </div>
+        <dl><dt>좋은 점</dt><dd>높이가 한 줄이라 가리는 블록이 가장 적습니다.</dd>
+        <dt>아쉬운 점</dt><dd>옆으로 길어 시선이 가로로 움직입니다. 이름을 줄여야 해서("If 삽입" → "If") 무엇을 하는지는 첫 줄의 묶음 이름에 기대고, 키가 많은 묶음(<kbd>z</kbd> 접기)은 줄이 넘칩니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>선택 오른쪽 옆, 세로 목록</h3></div>
+        <div class="screen">
+          <img src="{{BASE}}" alt="마지막 블록이 선택된 앱 화면">
+          <div class="hint list right">
+            <div class="t">a 뒤에 삽입</div>
+            <div class="row"><span class="k">c</span>호출 삽입…</div>
+            <div class="row"><span class="k">d</span>Do-While 삽입</div>
+            <div class="row"><span class="k">f</span>For 삽입</div>
+            <div class="row"><span class="k">i</span>If 삽입</div>
+            <div class="row"><span class="k">k</span>Case 삽입</div>
+            <div class="row"><span class="k">w</span>While 삽입</div>
+          </div>
+        </div>
+        <dl><dt>좋은 점</dt><dd>선택한 블록과 그 아래의 블록을 가리지 않습니다. <kbd>a</kbd>(뒤에 넣기)를 누를 때 넣을 자리가 보입니다.</dd>
+        <dt>아쉬운 점</dt><dd>넓은 다이어그램의 왼쪽 블록이면 오른쪽의 다른 열(If의 거짓 분기, 옆 다이어그램)을 가립니다. 오른쪽 끝에서는 왼쪽으로 뒤집어야 합니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">4</span><h3>지금처럼 화면 아래</h3></div>
+        <div class="screen whole">
+          <img src="{{NOW}}" alt="지금의 앱: 화면 맨 아래의 키 힌트">
+        </div>
+        <dl><dt>좋은 점</dt><dd>다이어그램을 하나도 가리지 않고, 키가 많아도 다 들어갑니다.</dd>
+        <dt>아쉬운 점</dt><dd>선택이 화면 위쪽에 있으면 시선이 화면 높이만큼 오갑니다(메인테이너가 겪은 불편).</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Claude가 정해 둘 것 (확인만)</h2>
+    <ul>
+      <li>고른 자리는 두 키 명령 모두(<kbd>a</kbd> <kbd>A</kbd> <kbd>s</kbd> <kbd>d</kbd> <kbd>y</kbd> <kbd>z</kbd> <kbd>g</kbd> <kbd>[</kbd> <kbd>]</kbd>)에 똑같이 씁니다.</li>
+      <li>0.4초를 기다리는 것은 그대로 둡니다. 키를 아는 사람의 화면이 깜박이지 않게 하려는 것입니다.</li>
+      <li>선택한 것이 없거나 여러 블록이면, 선택 범위(없으면 캔버스의 포커스 테두리)의 아래 왼쪽 모서리를 기준으로 띄웁니다. 화면 밖으로 나가면 위로 뒤집거나 안쪽으로 밀어 넣습니다.</li>
+      <li>환경 설정의 "키 힌트"(켜고 끄기)는 그대로입니다.</li>
+    </ul>
+  </section>
+</div>
