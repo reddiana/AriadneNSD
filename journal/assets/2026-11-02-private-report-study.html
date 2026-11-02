@@ -1,0 +1,129 @@
+<title>M50 비공개 문제 알리기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* M48과 같은 틀: 지금 정해진 것 → 물음 P1(선택지 카드마다 사용자가 보는 화면) */
+:root {
+  --bg: #f6f7f9; --fg: #1b2129; --muted: #5b6573; --line: #d4d9e1; --card: #ffffff;
+  --rec: #2c55c9; --tag: #1b2129; --tagfg: #ffffff; --paper: #ffffff; --soft: #eef1f6;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; --paper: #ffffff; --soft: #252a33; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; --paper: #ffffff; --soft: #252a33; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 36px; }
+h1 { font-size: 26px; margin: 0; text-wrap: balance; font-weight: 600; }
+h2 { font-size: 19px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { margin: 0; font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 70ch; }
+section { display: grid; gap: 14px; min-width: 0; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.muted { color: var(--muted); }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--card); white-space: nowrap; }
+ul, ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figure img { border: 1px solid var(--line); border-radius: 6px; width: 100%; height: auto; display: block; }
+figcaption { font-size: 13px; color: var(--muted); }
+.note { border-left: 3px solid var(--line); padding-left: 12px; font-size: 14px; }
+.q { border-top: 1px solid var(--line); padding-top: 24px; }
+.q-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.q-id { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--rec); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--rec); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); } .opt dd { margin: 0; min-width: 0; }
+/* 목차 미리 보기: 사용법 페이지의 왼쪽 목차를 줄여 그림 */
+.toc { background: var(--soft); border-radius: 6px; padding: 12px 14px; font-size: 13px; line-height: 1.5; display: grid; gap: 8px; }
+.toc .part { font-size: 11.5px; letter-spacing: .06em; color: var(--muted); }
+.toc ol, .toc ul { font-size: 13px; gap: 2px; }
+.sub { color: var(--muted); font-size: 12px; }
+/* 한 꼭지 미리 보기 */
+.entry { background: var(--soft); border-radius: 6px; padding: 12px; display: grid; gap: 8px; font-size: 13px; }
+.entry h4 { margin: 0; font-size: 14px; }
+.pair { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pair .pic { background: var(--paper); border-radius: 4px; padding: 2px; flex: 1 1 100px; min-width: 0; }
+.pair .pic svg { display: block; width: 100%; height: auto; }
+.pair .arrow { font-family: var(--mono); font-size: 12px; text-align: center; flex: none; }
+.anim { background: var(--paper); border-radius: 4px; position: relative; aspect-ratio: 208 / 176; width: 100%; max-width: 220px; }
+.anim > div { position: absolute; inset: 0; }
+.anim svg { width: 100%; height: 100%; }
+.anim .f2 { animation: show 3.2s infinite steps(1); }
+.anim .f1 { animation: hide 3.2s infinite steps(1); }
+.anim .keys { position: absolute; inset: auto 6px 6px auto; background: #1b2129; color: #ffffff; font: 12px var(--mono); border-radius: 4px; padding: 2px 6px; }
+@keyframes show { 0% { opacity: 0 } 50% { opacity: 1 } }
+@keyframes hide { 0% { opacity: 1 } 50% { opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .anim .f1, .anim .f2 { animation: none } .anim .f1 { opacity: 0 } }
+.keytbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.keytbl td { border-top: 1px solid var(--line); padding: 3px 4px; vertical-align: top; }
+.toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; font-size: 12px; }
+.toggle span { padding: 1px 8px; } .toggle .on { background: var(--rec); color: var(--tagfg); }
+.decided { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+</style>
+<style>
+.mock { background: var(--soft); border-radius: 6px; padding: 12px; display: grid; gap: 8px; font-size: 13px; }
+.mock .win { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; display: grid; gap: 6px; }
+.mock .title { font-weight: 600; font-size: 13px; }
+.mock .field { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.mock .btn { justify-self: start; background: var(--rec); color: var(--tagfg); border-radius: 4px; padding: 2px 10px; font-size: 12px; }
+.mock .step { color: var(--muted); font-size: 12px; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M50 · 2026-11-02 · 웹 베타의 문턱</div>
+    <h1>M50 비공개로 문제를 알리는 곳</h1>
+    <p>문제는 두 길로 받습니다(조작 규칙 8절): 공개는 GitHub Discussions, 그리고 <b>다이어그램을 공개하고 싶지 않은 사람을 위한 비공개 길</b>. 비공개 길은 "이메일이나 폼"까지만 적혀 있습니다. 웹 베타 전에 이것을 정해 사용법의 "문제 알리기"와 README에 적습니다.</p>
+    <p class="note">앱 안의 문제 알리기 기능(보고서를 만들어 보여 주기, R-REP-01)은 <code>P3</code>이라 베타 뒤입니다. 베타에서는 사람이 직접 보냅니다. 아래 그림은 그 기능이 생긴 뒤의 모습까지 함께 그렸습니다. 서버가 없어서 앱이 대신 보내지는 못합니다(R-REP-03).</p>
+  </header>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">P1</span><h2>비공개 보고를 어디로 받을까요?</h2></div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>전용 이메일 주소</h3><span class="star">★ 추천</span></div>
+        <div class="mock"><div class="win">
+          <div class="title">문제 알리기 · 비공개</div>
+          <div class="field">AriadneNSD 0.1.0 · Chrome 142 · Windows …</div>
+          <div class="btn">보고서 복사</div>
+          <div class="step">① 복사 → ② 메일에 붙여 넣기 → ③ 파일은 첨부(원할 때만)<br>보낼 곳: <code>report@ariadnensd.com</code> (복사 가능한 글자)</div>
+        </div></div>
+        <dl><dt>좋은 점</dt><dd>누구나 쓸 줄 압니다. <code>.ns.svg</code> 파일을 그대로 첨부할 수 있고, 메인테이너가 답장으로 더 물을 수 있습니다. 제3의 서비스에 사용자의 그림이 남지 않습니다.</dd>
+        <dt>아쉬운 점</dt><dd>주소가 드러나 스팸이 올 수 있습니다. 개인 메일이 아닌 전용 주소가 필요합니다: 산 도메인 <code>ariadnensd.com</code>의 메일 전달(Cloudflare Email Routing 등, 무료)이나 새 Gmail.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>Google 설문지</h3></div>
+        <div class="mock"><div class="win">
+          <div class="title">AriadneNSD 문제 알리기</div>
+          <div class="field">무엇을 했고 무엇이 일어났나요?</div>
+          <div class="field">보고서 붙여 넣기</div>
+          <div class="field">파일 첨부 (Google 로그인 필요)</div>
+          <div class="btn">제출</div>
+        </div></div>
+        <dl><dt>좋은 점</dt><dd>주소가 드러나지 않습니다. 칸으로 나눠 받아 빠진 것이 적고, 답이 시트에 모입니다. 무료입니다.</dd>
+        <dt>아쉬운 점</dt><dd>파일을 받으려면 보내는 사람이 Google에 로그인해야 합니다. 보낸 사람에게 되묻기 어렵습니다(이메일 칸을 따로 둬야 함). 앱의 화면과 다른 Google의 화면으로 나갑니다.</dd></dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>둘 다</h3></div>
+        <div class="mock"><div class="win">
+          <div class="title">문제 알리기 · 비공개</div>
+          <div class="step">글만: 설문지 열기 ↗<br>파일도 보내려면: <code>report@ariadnensd.com</code></div>
+        </div></div>
+        <dl><dt>좋은 점</dt><dd>사용자가 편한 쪽을 고릅니다.</dd>
+        <dt>아쉬운 점</dt><dd>두 곳을 봐야 하고, 보고가 두 모양으로 옵니다. 혼자 꾸리는 프로젝트에는 무겁습니다.</dd></dl>
+      </div>
+    </div>
+  </section>
+</div>

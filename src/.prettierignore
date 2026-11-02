@@ -8,3 +8,4 @@ packages/fonts/assets/
 **/golden/
 # Markdown follows the repository document style (Obsidian), not Prettier.
 *.md
+apps/manual/generated/

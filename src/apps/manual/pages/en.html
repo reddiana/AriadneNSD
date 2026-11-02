@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Guide – AriadneNSD</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <nav aria-label="Contents">
+        <div class="brand"><a href="../">AriadneNSD</a> User Guide</div>
+        <div class="lang"><b>English</b> · <a href="ko/" hreflang="ko">한국어</a></div>
+        <div>
+          <div class="part">5-minute tour</div>
+          <ol>
+            <li><a href="#first-block">Write the first block</a></li>
+            <li><a href="#more-blocks">Add more blocks</a></li>
+            <li><a href="#wrap">Wrap in a While</a></li>
+            <li><a href="#if">Add an If</a></li>
+            <li><a href="#save">Save</a></li>
+          </ol>
+        </div>
+        <div>
+          <div class="part">Reference</div>
+          <ul>
+            <li><a href="#shortcuts">All shortcuts</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main>
+        <section>
+          <h1>5-minute tour</h1>
+          <p class="lead">
+            Draw a Nassi–Shneiderman diagram that sums an array and takes the average, starting from
+            an empty document. The keyboard alone or the mouse alone is enough. In the key tables
+            the left column is the Vim key, the right one the standard key and the mouse. Use
+            whichever your hands know.
+          </p>
+          <div class="wide">
+            <img
+              src="img/en/tour-0-screen.png"
+              width="1100"
+              height="700"
+              alt="AriadneNSD with a new document: the menus and the toolbar on top, one empty block in the middle"
+            />
+          </div>
+          <p>
+            Open the <a href="../">app</a> and you see a new document with one empty block selected.
+            The menus and the toolbar are on top; the status bar at the bottom tells you what is
+            selected.
+          </p>
+        </section>
+
+        <section id="first-block">
+          <h2><span class="n">1</span>Write the first block</h2>
+          <p>
+            To write in the selected block, start editing. When you are done, press
+            <kbd>Enter</kbd> to accept. <kbd>Esc</kbd> also keeps what you wrote.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="img/en/tour-1a-empty.png" alt="An empty block, selected" />
+              <figcaption>An empty block, selected</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="img/en/tour-1b-done.png" alt="The block reads sum ← 0" />
+              <figcaption>After writing <code>sum ← 0</code></figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>To</th>
+                <th>Vim key</th>
+                <th>Standard key · mouse</th>
+              </tr>
+              <tr>
+                <td>Start editing</td>
+                <td><kbd>i</kbd> (cursor at the start), <kbd>cc</kbd> (clear and write)</td>
+                <td><kbd>Enter</kbd>, <kbd>F2</kbd>, double-click</td>
+              </tr>
+              <tr>
+                <td>Accept</td>
+                <td><kbd>Esc</kbd></td>
+                <td><kbd>Enter</kbd></td>
+              </tr>
+              <tr>
+                <td>New line inside a block</td>
+                <td></td>
+                <td><kbd>Shift</kbd>+<kbd>Enter</kbd></td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            While a block is selected, letter keys are commands, not text (as in Vim). Start editing
+            first to write.
+          </p>
+        </section>
+
+        <section id="more-blocks">
+          <h2><span class="n">2</span>Add more blocks</h2>
+          <p>
+            A new block goes after the selected one. Adding a process block starts editing right
+            away, so write, press
+            <kbd>Enter</kbd>, add, and write again. Hold <kbd>Shift</kbd> to add before instead.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="img/en/tour-1b-done.png" alt="One block" />
+              <figcaption>One block</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="img/en/tour-2-more.png" alt="Four blocks" />
+              <figcaption>Three more</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>To</th>
+                <th>Vim key</th>
+                <th>Standard key · mouse</th>
+              </tr>
+              <tr>
+                <td>Add a process block after / before and write</td>
+                <td><kbd>o</kbd> / <kbd>O</kbd></td>
+                <td>The process block icon on the toolbar / <kbd>Shift</kbd>+click</td>
+              </tr>
+              <tr>
+                <td>Move between blocks</td>
+                <td><kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>↓</kbd> <kbd>↑</kbd>, click</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="wrap">
+          <h2><span class="n">3</span>Wrap in a While</h2>
+          <p>
+            Put the last two blocks in a loop. Select both, then pick the kind of block to wrap them
+            in. Editing the loop condition starts right away.
+          </p>
+          <div
+            class="movie"
+            role="img"
+            aria-label="On the last block, Shift+↑ selects two blocks; s shows a key hint at the bottom; w wraps them in a While and starts editing its condition"
+          >
+            <img src="img/en/tour-3a-start.png" alt="" />
+            <img src="img/en/tour-3b-selected.png" alt="" />
+            <img src="img/en/tour-3c-hint.png" alt="" />
+            <img src="img/en/tour-3d-done.png" alt="" />
+          </div>
+          <p class="caption">
+            On the last block, <kbd>Shift</kbd>+<kbd>↑</kbd> → <kbd>s</kbd> shows a hint of the next
+            keys at the bottom → <kbd>w</kbd> → write the condition <code>i &lt; n</code> and press
+            <kbd>Enter</kbd>
+          </p>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>To</th>
+                <th>Vim key</th>
+                <th>Standard key · mouse</th>
+              </tr>
+              <tr>
+                <td>Select several blocks</td>
+                <td><kbd>V</kbd>, then <kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+click</td>
+              </tr>
+              <tr>
+                <td>Wrap in a While</td>
+                <td><kbd>s</kbd> <kbd>w</kbd></td>
+                <td>
+                  <kbd>Ctrl</kbd>+click the While icon on the toolbar, "Wrap" on the toolbar, or
+                  drop the icon on the blocks
+                </td>
+              </tr>
+              <tr>
+                <td>Wrap in another kind</td>
+                <td>
+                  <kbd>s</kbd> + <kbd>i</kbd> If · <kbd>k</kbd> Case · <kbd>d</kbd> Do-While ·
+                  <kbd>f</kbd> For
+                </td>
+                <td>The same, with that icon</td>
+              </tr>
+              <tr>
+                <td>Unwrap</td>
+                <td><kbd>ds</kbd></td>
+                <td>The context menu (right-click)</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            For two-key commands, press the first key and wait a moment: the keys you can press next
+            appear at the bottom. No need to memorize them.
+          </p>
+        </section>
+
+        <section id="if">
+          <h2><span class="n">4</span>Add an If</h2>
+          <p>
+            Add an If after the loop and write its condition. Then go down into the empty block of
+            the true branch and write the average. The <code>∅</code> in the false branch means
+            "nothing here".
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="img/en/tour-3e-done.png" alt="The blocks wrapped in a While" />
+              <figcaption>With the While selected</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img
+                src="img/en/tour-4-done.png"
+                alt="An If added, avg ← sum / n in the true branch"
+              />
+              <figcaption>If <code>n &gt; 0</code>, the average in the true branch</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>To</th>
+                <th>Vim key</th>
+                <th>Standard key · mouse</th>
+              </tr>
+              <tr>
+                <td>Add an If after / before</td>
+                <td><kbd>a</kbd> <kbd>i</kbd> / <kbd>A</kbd> <kbd>i</kbd></td>
+                <td>The If icon on the toolbar / <kbd>Shift</kbd>+click</td>
+              </tr>
+              <tr>
+                <td>Add other blocks</td>
+                <td>
+                  <kbd>a</kbd> + <kbd>k</kbd> Case · <kbd>w</kbd> While · <kbd>d</kbd> Do-While ·
+                  <kbd>f</kbd> For · <kbd>c</kbd> Call
+                </td>
+                <td>That icon on the toolbar</td>
+              </tr>
+              <tr>
+                <td>Into a branch / to the next branch</td>
+                <td><kbd>j</kbd> / <kbd>l</kbd> <kbd>h</kbd></td>
+                <td><kbd>↓</kbd> / <kbd>→</kbd> <kbd>←</kbd>, click</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="save">
+          <h2><span class="n">5</span>Save</h2>
+          <p>
+            Saving writes a <code>.ns.svg</code> file. The file is a picture in itself, so browsers,
+            GitHub and documents show it as is, and AriadneNSD opens it again for editing.
+          </p>
+          <div class="wide">
+            <img
+              src="img/en/tour-5-screen.png"
+              width="1100"
+              height="700"
+              alt="The finished diagram. A dot next to the file name at the top right: not saved yet"
+            />
+          </div>
+          <p>
+            The dot (<code>●</code>) next to the file name at the top right means there are unsaved
+            changes.
+          </p>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>To</th>
+                <th>Vim key</th>
+                <th>Standard key · mouse</th>
+              </tr>
+              <tr>
+                <td>Save / Save As</td>
+                <td></td>
+                <td>
+                  <kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>, the
+                  save icon on the toolbar
+                </td>
+              </tr>
+              <tr>
+                <td>Undo / Redo</td>
+                <td><kbd>u</kbd> / <kbd>U</kbd></td>
+                <td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td>
+              </tr>
+              <tr>
+                <td>See every key</td>
+                <td><kbd>?</kbd></td>
+                <td>Help › Keyboard Shortcuts</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            In Chrome and Edge, a file saved once is then saved automatically. In Firefox and
+            Safari, each save downloads the file. Unsaved work is also kept in the browser: when you
+            open the page again, it asks whether to restore it.
+          </p>
+        </section>
+
+        <section id="shortcuts">
+          <h2>All shortcuts</h2>
+          <p>The same table that <kbd>?</kbd> shows in the app.</p>
+          <div class="tbl">
+            <!-- keys -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

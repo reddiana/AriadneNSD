@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>사용법 – AriadneNSD</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <nav aria-label="목차">
+        <div class="brand"><a href="../../">AriadneNSD</a> 사용법</div>
+        <div class="lang"><b>한국어</b> · <a href="../" hreflang="en">English</a></div>
+        <div>
+          <div class="part">5분 둘러보기</div>
+          <ol>
+            <li><a href="#first-block">첫 블록 적기</a></li>
+            <li><a href="#more-blocks">블록 더 넣기</a></li>
+            <li><a href="#wrap">While로 감싸기</a></li>
+            <li><a href="#if">If 넣기</a></li>
+            <li><a href="#save">저장하기</a></li>
+          </ol>
+        </div>
+        <div>
+          <div class="part">찾아보기</div>
+          <ul>
+            <li><a href="#shortcuts">단축키 전체</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main>
+        <section>
+          <h1>5분 둘러보기</h1>
+          <p class="lead">
+            배열의 합과 평균을 구하는 NS 차트를 처음부터 그려 봅니다. 키보드만으로도, 마우스만으로도
+            됩니다. 키는 왼쪽이 Vim 키, 오른쪽이 표준 키와 마우스입니다. 둘 중 손에 익은 쪽을 쓰면
+            됩니다.
+          </p>
+          <div class="wide">
+            <img
+              src="../img/ko/tour-0-screen.png"
+              width="1100"
+              height="700"
+              alt="새 문서를 연 AriadneNSD 화면: 위에 메뉴와 툴바, 가운데 빈 블록 하나"
+            />
+          </div>
+          <p>
+            <a href="../../">앱</a>을 열면 빈 블록 하나가 선택된 새 문서가 보입니다. 위에는 메뉴와
+            툴바가, 아래에는 지금 선택한 것을 알려 주는 상태 표시줄이 있습니다.
+          </p>
+        </section>
+
+        <section id="first-block">
+          <h2><span class="n">1</span>첫 블록 적기</h2>
+          <p>
+            선택한 블록에 글자를 적으려면 편집을 시작합니다. 적고 나서 <kbd>Enter</kbd>를 누르면
+            받아들입니다. <kbd>Esc</kbd>도 적은 대로 받아들입니다.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="../img/ko/tour-1a-empty.png" alt="빈 블록이 선택됨" />
+              <figcaption>빈 블록이 선택된 채</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/ko/tour-1b-done.png" alt="블록에 sum ← 0" />
+              <figcaption><code>sum ← 0</code>을 적음</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>하는 일</th>
+                <th>Vim 키</th>
+                <th>표준 키 · 마우스</th>
+              </tr>
+              <tr>
+                <td>편집 시작</td>
+                <td><kbd>i</kbd> (글자 앞에 커서), <kbd>cc</kbd> (비우고 새로)</td>
+                <td><kbd>Enter</kbd>, <kbd>F2</kbd>, 더블클릭</td>
+              </tr>
+              <tr>
+                <td>받아들이기</td>
+                <td><kbd>Esc</kbd></td>
+                <td><kbd>Enter</kbd></td>
+              </tr>
+              <tr>
+                <td>블록 안에서 줄 바꾸기</td>
+                <td></td>
+                <td><kbd>Shift</kbd>+<kbd>Enter</kbd></td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            블록이 선택된 채로 글자 키를 누르면 글자가 적히지 않고 명령이 됩니다(Vim과 같습니다).
+            적으려면 먼저 편집을 시작하세요.
+          </p>
+        </section>
+
+        <section id="more-blocks">
+          <h2><span class="n">2</span>블록 더 넣기</h2>
+          <p>
+            새 블록은 선택한 블록의 뒤에 들어갑니다. 처리 블록을 넣으면 바로 편집이 시작되니, 적고
+            <kbd>Enter</kbd>, 다시 넣고 적기를 되풀이합니다. 앞에 넣으려면 <kbd>Shift</kbd>를 함께
+            누릅니다.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="../img/ko/tour-1b-done.png" alt="블록 하나" />
+              <figcaption>블록 하나</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/ko/tour-2-more.png" alt="블록 넷" />
+              <figcaption>셋을 더 넣음</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>하는 일</th>
+                <th>Vim 키</th>
+                <th>표준 키 · 마우스</th>
+              </tr>
+              <tr>
+                <td>처리 블록을 뒤 / 앞에 넣고 바로 적기</td>
+                <td><kbd>o</kbd> / <kbd>O</kbd></td>
+                <td>툴바의 처리 블록 아이콘 / <kbd>Shift</kbd>+클릭</td>
+              </tr>
+              <tr>
+                <td>블록 사이를 오가기</td>
+                <td><kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>↓</kbd> <kbd>↑</kbd>, 클릭</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="wrap">
+          <h2><span class="n">3</span>While로 감싸기</h2>
+          <p>
+            아래 두 블록을 반복문 안에 넣습니다. 먼저 두 블록을 함께 선택하고, 감쌀 블록의 종류를
+            고릅니다. 감싸면 반복 조건의 편집이 바로 시작됩니다.
+          </p>
+          <div
+            class="movie"
+            role="img"
+            aria-label="마지막 블록에서 Shift+↑로 두 블록을 선택하고, s를 누르면 아래에 키 힌트가 뜨고, w를 누르면 While로 감싸져 조건을 적는 과정"
+          >
+            <img src="../img/ko/tour-3a-start.png" alt="" />
+            <img src="../img/ko/tour-3b-selected.png" alt="" />
+            <img src="../img/ko/tour-3c-hint.png" alt="" />
+            <img src="../img/ko/tour-3d-done.png" alt="" />
+          </div>
+          <p class="caption">
+            마지막 블록에서 <kbd>Shift</kbd>+<kbd>↑</kbd> → <kbd>s</kbd>를 누르면 화면 아래에 다음
+            키의 힌트가 뜸 → <kbd>w</kbd> → 조건 <code>i &lt; n</code>을 적고 <kbd>Enter</kbd>
+          </p>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>하는 일</th>
+                <th>Vim 키</th>
+                <th>표준 키 · 마우스</th>
+              </tr>
+              <tr>
+                <td>여러 블록 선택</td>
+                <td><kbd>V</kbd> 다음 <kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+클릭</td>
+              </tr>
+              <tr>
+                <td>While로 감싸기</td>
+                <td><kbd>s</kbd> <kbd>w</kbd></td>
+                <td>
+                  툴바의 While 아이콘을 <kbd>Ctrl</kbd>+클릭, 툴바의 "감싸기", 아이콘을 블록 위에
+                  끌어 놓기
+                </td>
+              </tr>
+              <tr>
+                <td>다른 종류로 감싸기</td>
+                <td>
+                  <kbd>s</kbd> + <kbd>i</kbd> If · <kbd>k</kbd> Case · <kbd>d</kbd> Do-While ·
+                  <kbd>f</kbd> For
+                </td>
+                <td>같은 방법으로 그 아이콘</td>
+              </tr>
+              <tr>
+                <td>감싼 것 풀기</td>
+                <td><kbd>ds</kbd></td>
+                <td>컨텍스트 메뉴(오른쪽 클릭)</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            두 글자 명령은 첫 키를 누르고 잠깐 기다리면 화면 아래에 다음에 누를 수 있는 키가
+            보입니다. 외우지 않아도 됩니다.
+          </p>
+        </section>
+
+        <section id="if">
+          <h2><span class="n">4</span>If 넣기</h2>
+          <p>
+            반복문 뒤에 If를 넣고 조건을 적습니다. 그다음 참 분기의 빈 블록으로 내려가 평균을
+            적습니다. 거짓 분기의
+            <code>∅</code>는 "여기는 비어 있음"이라는 표시입니다.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="../img/ko/tour-3e-done.png" alt="While로 감싼 그림" />
+              <figcaption>While 블록이 선택된 채</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/ko/tour-4-done.png" alt="If를 넣고 참 분기에 avg ← sum / n" />
+              <figcaption>If <code>n &gt; 0</code>, 참 분기에 평균</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>하는 일</th>
+                <th>Vim 키</th>
+                <th>표준 키 · 마우스</th>
+              </tr>
+              <tr>
+                <td>If를 뒤 / 앞에 넣기</td>
+                <td><kbd>a</kbd> <kbd>i</kbd> / <kbd>A</kbd> <kbd>i</kbd></td>
+                <td>툴바의 If 아이콘 / <kbd>Shift</kbd>+클릭</td>
+              </tr>
+              <tr>
+                <td>다른 블록 넣기</td>
+                <td>
+                  <kbd>a</kbd> + <kbd>k</kbd> Case · <kbd>w</kbd> While · <kbd>d</kbd> Do-While ·
+                  <kbd>f</kbd> For · <kbd>c</kbd> 호출
+                </td>
+                <td>툴바의 그 아이콘</td>
+              </tr>
+              <tr>
+                <td>분기 안으로 / 옆 분기로</td>
+                <td><kbd>j</kbd> / <kbd>l</kbd> <kbd>h</kbd></td>
+                <td><kbd>↓</kbd> / <kbd>→</kbd> <kbd>←</kbd>, 클릭</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="save">
+          <h2><span class="n">5</span>저장하기</h2>
+          <p>
+            저장하면 <code>.ns.svg</code> 파일이 생깁니다. 이 파일은 그 자체로 그림이라 브라우저,
+            GitHub, 문서에 그대로 보이고, AriadneNSD로 다시 열면 이어서 고칠 수 있습니다.
+          </p>
+          <div class="wide">
+            <img
+              src="../img/ko/tour-5-screen.png"
+              width="1100"
+              height="700"
+              alt="완성한 그림. 오른쪽 위의 파일 이름 옆에 저장하지 않았다는 점"
+            />
+          </div>
+          <p>오른쪽 위의 파일 이름 옆 점(<code>●</code>)은 아직 저장하지 않았다는 뜻입니다.</p>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>하는 일</th>
+                <th>Vim 키</th>
+                <th>표준 키 · 마우스</th>
+              </tr>
+              <tr>
+                <td>저장 / 다른 이름으로 저장</td>
+                <td></td>
+                <td>
+                  <kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>,
+                  툴바의 저장 아이콘
+                </td>
+              </tr>
+              <tr>
+                <td>실행 취소 / 다시 하기</td>
+                <td><kbd>u</kbd> / <kbd>U</kbd></td>
+                <td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td>
+              </tr>
+              <tr>
+                <td>모든 키 보기</td>
+                <td><kbd>?</kbd></td>
+                <td>도움말 › 단축키 목록</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            Chrome과 Edge에서는 한 번 저장한 파일을 그 뒤로 자동으로 저장합니다. Firefox와
+            Safari에서는 저장할 때마다 파일을 내려받습니다. 저장하지 않은 내용도 브라우저에 임시로
+            보관되어, 페이지를 다시 열면 복원할지 묻습니다.
+          </p>
+        </section>
+
+        <section id="shortcuts">
+          <h2>단축키 전체</h2>
+          <p>앱에서 <kbd>?</kbd>를 누르면 보이는 표와 같습니다.</p>
+          <div class="tbl">
+            <!-- keys -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

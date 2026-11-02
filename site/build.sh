@@ -35,11 +35,13 @@ if [ "${1:-}" = "--serve" ]; then
   npx quartz build --serve
 else
   npx quartz build
-  # 웹 앱을 사이트의 /app/에 넣는다 (pages.yml과 같게)
+  # 웹 앱을 사이트의 첫 화면(/)에, 사용법을 /manual/에 넣는다 (pages.yml과 같게 → DR-0021)
   if [ "${SKIP_APP:-}" != "1" ]; then
-    (cd "$REPO/src" && pnpm install --frozen-lockfile && pnpm --filter @ariadne-nsd/web build)
-    mkdir -p "$QUARTZ_DIR/public/app"
-    cp -r "$REPO/src/apps/web/dist/." "$QUARTZ_DIR/public/app/"
+    (cd "$REPO/src" && pnpm install --frozen-lockfile && pnpm --filter @ariadne-nsd/web build && pnpm --filter @ariadne-nsd/manual build)
+    cp -r "$REPO/src/apps/web/dist/." "$QUARTZ_DIR/public/"
+    mkdir -p "$QUARTZ_DIR/public/app" "$QUARTZ_DIR/public/manual"
+    cp "$REPO/site/app-redirect.html" "$QUARTZ_DIR/public/app/index.html"
+    cp -r "$REPO/src/apps/manual/dist/." "$QUARTZ_DIR/public/manual/"
   fi
   echo "결과: $QUARTZ_DIR/public"
 fi

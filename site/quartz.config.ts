@@ -12,7 +12,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null, // 방문 통계를 모으지 않는다
     locale: "ko-KR",
-    baseUrl: "reddiana.github.io/AriadneNSD",
+    baseUrl: "ariadnensd.com",
     ignorePatterns: [".obsidian"],
     defaultDateType: "modified",
     theme: {

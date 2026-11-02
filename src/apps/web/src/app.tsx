@@ -7,8 +7,13 @@ import { useEffect, useState } from 'react';
 import type { Appearance, SettingsStore } from './editor-contract';
 import { shellMessage } from './shell/messages';
 
-/** The user guide on the same site (06-web 5, 7): `/AriadneNSD/manual/` next to `/AriadneNSD/app/`. */
-const manualUrl = '../manual/';
+/**
+ * The user guide on the same site, in the screen language (06-web 5, DR-0020): the app is the
+ * site's front page, the guide is `manual/` (English) and `manual/ko/` (Korean).
+ */
+export function manualUrl(locale: Locale): string {
+  return locale === 'ko' ? 'manual/ko/' : 'manual/';
+}
 
 export type AppProps = {
   /** The editor, with the members its UI needs (more than the shell's contract). */
@@ -52,7 +57,7 @@ export function App(props: AppProps): ReactElement {
         locale={props.locale}
         appearance={appearance}
         settings={props.settings}
-        manualUrl={manualUrl}
+        manualUrl={manualUrl(props.locale)}
         examples={props.examples}
       />
       {isDragging ? <div className="ans-web-drop">{dropHint(props.locale)}</div> : null}

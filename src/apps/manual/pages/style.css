@@ -1,0 +1,265 @@
+/* The user guide (DR-0020): a table of contents fixed on the left, the text on the right.
+   On a narrow screen the table of contents goes on top. */
+:root {
+  --bg: #ffffff;
+  --fg: #1b2129;
+  --muted: #5b6573;
+  --line: #d9dee6;
+  --soft: #f3f5f8;
+  --accent: #2c55c9;
+  --sans: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181d;
+    --fg: #e3e7ee;
+    --muted: #9aa4b2;
+    --line: #2e343d;
+    --soft: #1d2128;
+    --accent: #7d9bf0;
+    color-scheme: dark;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15.5px/1.7 var(--sans);
+}
+.layout {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 40px;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+nav {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  font-size: 13.5px;
+  line-height: 1.55;
+  display: grid;
+  gap: 14px;
+}
+nav .brand {
+  font-weight: 600;
+  font-size: 15px;
+}
+nav .brand a,
+nav a {
+  color: inherit;
+  text-decoration: none;
+}
+nav a:hover {
+  color: var(--accent);
+}
+nav .lang {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+nav .lang a {
+  text-decoration: underline;
+}
+nav .lang b {
+  color: var(--fg);
+  font-weight: 600;
+}
+nav .part {
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+nav ol,
+nav ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 2px;
+}
+main {
+  display: grid;
+  gap: 44px;
+  min-width: 0;
+}
+h1 {
+  font-size: 30px;
+  margin: 0;
+  font-weight: 600;
+  text-wrap: balance;
+}
+h2 {
+  font-size: 21px;
+  margin: 0;
+  font-weight: 600;
+  text-wrap: balance;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+h2 .n {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 16px;
+}
+p {
+  margin: 0;
+  max-width: 66ch;
+}
+section {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  scroll-margin-top: 16px;
+}
+kbd {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  background: var(--soft);
+  white-space: nowrap;
+}
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+a {
+  color: var(--accent);
+}
+.lead {
+  color: var(--muted);
+  font-size: 16px;
+}
+.pair {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.pair figure {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.pair img,
+.wide img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.pair figcaption,
+.caption {
+  font-size: 13px;
+  color: var(--muted);
+}
+.pair .to {
+  color: var(--muted);
+  font-size: 20px;
+}
+.tbl {
+  overflow-x: auto;
+}
+.keys,
+.ans-keytable {
+  border-collapse: collapse;
+  font-size: 14px;
+  width: 100%;
+  max-width: 680px;
+}
+.keys th,
+.ans-keytable th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 12.5px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.ans-keytable .ans-group th {
+  padding-top: 16px;
+  color: var(--fg);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.keys td,
+.ans-keytable td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.tip {
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  max-width: 66ch;
+}
+/* A short loop of four screenshots, for steps whose hand movement matters (DR-0020). */
+.movie {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1100 / 700;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.movie img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: frame 8s infinite steps(1);
+}
+.movie img:nth-child(2) {
+  animation-delay: 2s;
+}
+.movie img:nth-child(3) {
+  animation-delay: 4s;
+}
+.movie img:nth-child(4) {
+  animation-delay: 6s;
+}
+@keyframes frame {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .movie img {
+    animation: none;
+  }
+  .movie img:nth-child(4) {
+    opacity: 1;
+  }
+}
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  nav {
+    position: static;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+}

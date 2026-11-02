@@ -37,7 +37,12 @@ const anyId = new RegExp(idPattern, 'g');
 function testFiles(dir) {
   const found = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules', 'dist', 'test-results', 'playwright-report'].includes(entry.name))
+    // manual-shots/ takes the user guide's pictures with Playwright; it is not a test (DR-0020).
+    if (
+      ['node_modules', 'dist', 'test-results', 'playwright-report', 'manual-shots'].includes(
+        entry.name,
+      )
+    )
       continue;
     const path = join(dir, entry.name);
     if (entry.isDirectory()) found.push(...testFiles(path));

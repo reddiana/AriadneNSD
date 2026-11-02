@@ -1,13 +1,14 @@
 # 설계 문서를 GitHub Pages로 펴낸다 → atelier/decisions/dr-0013-publish-docs-github-pages.md
 #
-# 사이트: https://reddiana.github.io/AriadneNSD/
-#   /            첫 화면 (저장소의 README.md)
+# 사이트: https://ariadnensd.com/ (2026-11-02까지 https://reddiana.github.io/AriadneNSD/ → DR-0021)
+#   /            웹 버전 앱 (src/apps/web)
+#   /about       소개 (저장소의 README.md)
 #   /docs/…      설계 문서 (docs/)
 #   /atelier/…   작업 공간 (atelier/)
 #   /til/…       Today I Learned (til/)
 #   /journal/…   이름 이야기와 로고의 출처 두 문서만 (journal/name-story.md, logo-source.md)
-#   /app/        웹 버전 앱 (src/apps/web)
-#   /manual/     사용자 매뉴얼 (나중에)
+#   /app/        옛 앱 주소. 첫 화면으로 넘겨 준다 (site/app-redirect.html)
+#   /manual/     사용법 (src/apps/manual, 영어. 한국어는 /manual/ko/ → DR-0020)
 #
 # GitHub Pages는 저장소 하나에 사이트 하나다. 그래서 앱과 매뉴얼이 생기면 따로 올리지 않고
 # 이 워크플로가 모두 빌드해 _site/ 한 폴더로 모은 뒤 한 번에 올린다.
@@ -72,7 +73,7 @@ jobs:
 
       # ── 웹 버전 앱 ──────────────────────────────────────
       # 코드는 src/ 아래의 pnpm 워크스페이스다(ADR-0036). Vite의 base가 './'라서
-      # 산출물은 상대 경로로 서로를 가리키고, /AriadneNSD/app/ 아래에서 그대로 동작한다.
+      # 산출물은 상대 경로로 서로를 가리키고, 사이트의 어느 자리에서도 그대로 동작한다.
       # pnpm의 버전은 src/package.json의 packageManager에서 읽는다
       - uses: pnpm/action-setup@v4
         with:
@@ -84,19 +85,20 @@ jobs:
           cache: pnpm
           cache-dependency-path: src/pnpm-lock.yaml
 
-      - name: 웹 앱 빌드
+      - name: 웹 앱과 사용법 빌드
         working-directory: src
         run: |
           pnpm install --frozen-lockfile
           pnpm --filter @ariadne-nsd/web build
+          pnpm --filter @ariadne-nsd/manual build
 
-      - name: 웹 앱 넣기
+      # 앱이 첫 화면이다: Quartz가 만든 것 위에 앱의 index.html과 assets/를 덮는다(Quartz의 index는 만들지 않음)
+      - name: 웹 앱과 사용법 넣기
         run: |
-          mkdir -p _site/app
-          cp -r src/apps/web/dist/. _site/app/
-
-      # ── 사용자 매뉴얼 (나중에) ──────────────────────────
-      # 매뉴얼이 생기면 여기서 빌드해 _site/manual/에 넣는다.
+          cp -r src/apps/web/dist/. _site/
+          mkdir -p _site/app _site/manual
+          cp site/app-redirect.html _site/app/index.html
+          cp -r src/apps/manual/dist/. _site/manual/
 
       - uses: actions/upload-pages-artifact@v3
         with:
