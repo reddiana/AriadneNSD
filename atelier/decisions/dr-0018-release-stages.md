@@ -88,7 +88,7 @@ MVP 다음에 무엇이 오는지는 두 갈래만 정해져 있었다. 웹에�
 - 주소를 정한다: `ariadnensd.com`으로 옮길지. 알린 뒤에 바꾸면 링크가 깨진다.
 - 상표 검색(KIPRIS · USPTO · EUIPO)
 - 사용법 `/manual/`
-- 비공개 문제 알리기 채널([[01-requirements#^r-rep|R-REP-01]]), README의 후원 버튼([[01-requirements#^r-all|R-ALL-01]])
+- 비공개 문제 알리기 채널([[01-requirements#^r-rep|R-REP-01]]). README의 후원 버튼([[01-requirements#^r-all|R-ALL-01]])은 2026-11-02에 베타 뒤로 미룸 → [[dr-0021-domain-and-front-page|DR-0021]]
 - Firefox · Safari · 휴대폰에서 써 본다.
 - 앱과 README에 "1.0 전에 저장한 파일은 뒤의 판에서 열리지 않을 수 있습니다"를 알린다.
 

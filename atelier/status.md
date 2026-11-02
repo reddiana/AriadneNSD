@@ -44,6 +44,8 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] 메인테이너가 도메인을 설정하기(2026-11-02 → [[dr-0021-domain-and-front-page|DR-0021]]): ① 새 Gmail ② Cloudflare Email Routing으로 `report@ariadnensd.com` → 그 Gmail ③ GitHub 프로필 › Settings › Pages에서 `ariadnensd.com` 확인(TXT) ④ Cloudflare DNS: `A @` 185.199.108~111.153, `AAAA @` 2606:50c0:8000~8003::153, `CNAME www` reddiana.github.io, 모두 DNS only ⑤ push 뒤 저장소 › Settings › Pages › Custom domain에 `ariadnensd.com`, Enforce HTTPS
+- [ ] Claude: 사용법의 찾아보기 꼭지를 한국어 · 영어로 다 쓰고 링크 하나로 보이기 → [[backlog#웹 베타의 문턱]]
 - [ ] 메인테이너가 S26에서 바뀐 툴바(예제 버튼, 아래 줄 없앰 → MB2)와 큰 다이어그램의 스크롤을 써 보기 → [[2026-11-01-04-examples-button-android-load]]
 - [ ] **메인테이너가 예제와 헤더를 써 보기**(push한 뒤 https://reddiana.github.io/AriadneNSD/app/ 를 새 창(시크릿 창)으로 열면 첫 방문 모달) → 만든 것과 정한 것은 [[2026-11-01-02-docs-current-examples]], 확인할 것은 [[outbox#확인해 주세요]]
 - [ ] 문서 현행화 점검에서 판단이 필요한 것을 메인테이너와 봄 → [[backlog#MVP 개발]]

@@ -16,8 +16,8 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 > [!TIP]
 > **MVP를 브라우저에서 바로 써 볼 수 있습니다:**<br>
-> <a href="https://reddiana.github.io/AriadneNSD/app/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-01-readme-mvp-button.svg" height="32" alt="AriadneNSD MVP" align="absmiddle"></a><br>
-> 첫 출시(MVP)의 웹 버전입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
+> <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-01-readme-mvp-button.svg" height="32" alt="AriadneNSD MVP" align="absmiddle"></a><br>
+> 첫 출시(MVP)의 웹 버전입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
 
 > [!NOTE]
@@ -45,7 +45,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 이 저장소의 문서는 [Obsidian](https://obsidian.md/)으로 쓰고 읽도록 만들었습니다. `[[위키링크]]`, 블록 ID, 태그, 콜아웃을 쓰기 때문에 GitHub에서는 문서 사이의 링크가 동작하지 않고 일부가 글자 그대로 보입니다. 아래 두 가지 방법 가운데 하나로 읽어 주세요.
 
 > [!TIP]
-> **1. 웹 사이트에서 읽기 (설치 없이):** **https://reddiana.github.io/AriadneNSD/**
+> **1. 웹 사이트에서 읽기 (설치 없이):** **https://ariadnensd.com/about**
 > 설계 문서(`docs/`), 작업 공간(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
 > **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`의 대부분)도 함께 읽을 수 있습니다.

@@ -133,18 +133,15 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 웹 베타(널리 알리기 시작하는 때)에 들어가기 전에 할 일입니다. 단계와 문턱은 [[01-requirements#5.1 MVP 다음의 단계]], 정한 과정은 [[dr-0018-release-stages|DR-0018]]. 메인테이너가 MVP를 써 보는 일과 브라우저 확인은 [[status#이번과 다음 세션에 할 것]]에 있습니다.
 
-- [ ] 설계 문서 사이트와 웹 버전을 `ariadnensd.com`으로 옮길지 정하기(도메인은 2026-10-25에 삼). 옮기면 사이트 주소의 `/AriadneNSD/`가 빠지고 Quartz의 `baseUrl`, README · CONTRIBUTING의 주소가 바뀜. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
+- [ ] `ariadnensd.com`으로 옮기기: 저장소 쪽은 2026-11-02에 바꿈(첫 화면은 앱 → [[dr-0021-domain-and-front-page|DR-0021]]). 남은 것은 메인테이너의 도메인 설정 → [[status#이번과 다음 세션에 할 것]]. 네임스페이스 URI는 그대로 → [[0035-model-namespace-and-v0|ADR-0035]]
 - [ ] `AriadneNSD`의 상표 검색: KIPRIS(한국) · USPTO(미국) · EUIPO(유럽), 무료 (메인테이너) → [[names-and-registries#확인하지 않은 것]]
 - [ ] 사용법 `/manual/` · `/manual/ko/`를 만든다(지금은 MVP의 도움말 › 사용법이 빈 주소를 연다). 짜임은 [[dr-0020-user-guide|DR-0020]], 첫 초안은 시안 M49(5분 둘러보기)
-	- [ ] 메인테이너가 M49를 보고 고칠 것을 정함
-	- [ ] 찾아보기의 꼭지들을 한국어로 씀(시안으로 보이며)
-	- [ ] 영어판으로 옮김
-	- [ ] 빌드: 앱과 같은 Pages 빌드에서 페이지를 만들고, 그림은 Playwright로 찍는 스크립트, 단축키 전체 표는 앱의 키 표에서
-	- [ ] 앱의 도움말 › 사용법이 화면 언어 쪽(`/manual/ko/`)을 열게 함(지금 `src/apps/web/src/app.tsx`의 `manualUrl`은 하나)
-- [ ] 비공개 문제 알리기 채널을 이메일과 폼 가운데에서 정한다 → [[01-requirements#^r-rep|R-REP-01]]
-- [ ] 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다 → [[01-requirements#^r-all|R-ALL-01]]
+	- [ ] 찾아보기의 꼭지들을 한국어와 영어로 쓰고, 다 쓴 뒤 메인테이너가 한 번에 봄(2026-11-02). 5분 둘러보기와 단축키 전체는 `src/apps/manual`에 있음
+- [ ] 비공개 문제 알리기: `report@ariadnensd.com`(→ 새 Gmail)으로 정함([[dr-0021-domain-and-front-page|DR-0021]]). 메일 전달 설정은 메인테이너. 설정되면 사용법의 "문제 알리기"와 CONTRIBUTING에 적는다 → [[01-requirements#^r-rep|R-REP-01]]
 
 ## 출시 무렵과 그 뒤
+
+- [ ] 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다(2026-11-02에 웹 베타의 문턱에서 뺌 → [[dr-0021-domain-and-front-page|DR-0021]]) → [[01-requirements#^r-all|R-ALL-01]]
 
 - [ ] AI 대화창 스파이크([[01-requirements#^r-web|R-WEB-07]], `P3`): 키를 붙여 넣고 "퀵소트를 그려 주세요"를 보내 답이 흘러 들어오는지, AI가 쓴 모델을 읽을 수 있는지 보는 작은 페이지. 파일 형식이 굳은 뒤(웹 1.0 무렵 → [[dr-0018-release-stages|DR-0018]])에 한다. 메인테이너의 API 키(Claude · ChatGPT · Grok 가운데 하나, 유료)가 있어야 한다. 지금까지는 브라우저에서 부를 길이 열려 있는지만 확인함 → [[browser-storage-and-api-keys#브라우저에서 AI 회사의 서버를 직접 부를 수 있나]] (2026-10-25, 메인테이너: MVP 뒤로)
 
