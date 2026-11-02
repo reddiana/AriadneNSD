@@ -95,6 +95,16 @@ describe('insertBlock', () => {
     expect(result.touched).toEqual(['b1']);
   });
 
+  it('UX KP2: with besideEmpty a process block goes next to the empty block', () => {
+    const content = contentOf([empty('b1')]);
+    const at = { target: { ...blocks, first: 'b1', last: 'b1' }, kind: 'process' } as const;
+    const after = runOk(insertBlock, content, { ...at, side: 'after', besideEmpty: true });
+    expect(idsIn(after.content, 'd1')).toEqual(['b1', 'b2']);
+    expect(after.touched).toEqual(['b2']);
+    const before = runOk(insertBlock, content, { ...at, side: 'before', besideEmpty: true });
+    expect(idsIn(before.content, 'd1')).toEqual(['b2', 'b1']);
+  });
+
   it('R-EDIT-01: inserts inside a branch when a block of the branch is selected', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')])),

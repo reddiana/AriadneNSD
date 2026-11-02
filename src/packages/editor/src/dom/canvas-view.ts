@@ -372,6 +372,14 @@ export class CanvasView {
       { signal },
     );
     canvas.addEventListener(
+      'blur',
+      () => {
+        // Leaving the canvas (a click on the toolbar or outside) drops a waiting first key too.
+        this.session.clearPending();
+      },
+      { signal },
+    );
+    canvas.addEventListener(
       'pointermove',
       (event) => {
         this.onPointerMove(event);
@@ -581,6 +589,8 @@ export class CanvasView {
   }
 
   private onPointerDown(event: PointerEvent): void {
+    // A click drops a waiting first key (`a`) and its key hint (UX K4).
+    this.session.clearPending();
     if (event.button !== 0) {
       return;
     }

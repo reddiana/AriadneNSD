@@ -23,9 +23,9 @@ status: 생성됨
 
 | 유형 | 파일 | 테스트 |
 | --- | --- | --- |
-| E2E | 6 | 47 |
-| 통합 | 8 | 113 |
-| 단위 | 41 | 349 |
+| E2E | 7 | 49 |
+| 통합 | 8 | 114 |
+| 단위 | 42 | 351 |
 | 성능 | 1 | 3 |
 
 ## 2. ID가 있는 테스트
@@ -62,6 +62,8 @@ status: 생성됨
 | [[defects\|BUG-03]] | a failure at start is shown on the boot screen | [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | `apps/web/e2e/boot.spec.ts` |
 | [[defects\|BUG-04]] | on a phone the toolbar shows "Examples", and a tap opens the modal | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] | Playwright | E2E | `apps/web/e2e/mobile.spec.ts` |
 | [[defects\|BUG-05]] | Escape closes a menu opened with the mouse | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
+| [[defects\|BUG-07]] | the selection outline covers the block lines equally on all four sides | — | Vitest | 단위 | `packages/editor/src/dom/overlay.test.ts` |
+| [[defects\|BUG-08]] | a click on the empty canvas closes the key hint of a waiting a | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | 400 random keys keep the invariants and undo all the way back (seed ${String(seed)}) | — | Vitest | 통합 | `packages/editor/src/session/random-keys.test.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | any sequence of commands keeps the invariants and never changes its input | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/commands/properties.test.ts` |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | ids stay unique even when the generator must avoid ids of the view state | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/commands/properties.test.ts` |
@@ -292,6 +294,7 @@ status: 생성됨
 | [[ux-decisions\|UX CD1]] | a drop on the empty default cell makes the default branch | — | Vitest | 단위 | `packages/editor/src/input/hit-test.test.ts` |
 | [[ux-decisions\|UX CD1]] | the empty default cell of a Case is reached from the last branch | — | Vitest | 단위 | `packages/editor/src/navigation/navigate.test.ts` |
 | [[ux-decisions\|UX CD2]] | a Case with only a default has one column | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
+| [[ux-decisions\|UX CF1]] | with nothing selected the canvas draws no focus outline | — | Playwright | E2E | `apps/web/e2e/canvas.spec.ts` |
 | [[ux-decisions\|UX E1]] | marks the only, empty block of a branch | — | 속성 기반 (fast-check) | 단위 | `packages/core/src/layout/layout.test.ts` |
 | [[ux-decisions\|UX EX2]] | closing the welcome with Esc keeps the new document and does not ask again | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
 | [[ux-decisions\|UX EX3]] | Help › Examples… opens the same modal with its own words | — | Playwright | E2E | `apps/web/e2e/examples.spec.ts` |
@@ -302,6 +305,8 @@ status: 생성됨
 | [[ux-decisions\|UX K1]] | the key hint shows 0.4 s after the first key; Esc cancels | — | Vitest | 통합 | `packages/editor/src/session/engine.test.ts` |
 | [[ux-decisions\|UX K1]] | a key that does not continue the sequence, or Esc, cancels it | — | Vitest | 단위 | `packages/editor/src/input/keys.test.ts` |
 | [[ux-decisions\|UX K1]] | finds the second key after a pending first key | — | Vitest | 단위 | `packages/editor/src/ui/keys.test.ts` |
+| [[ux-decisions\|UX KP2]] | a process block (%j) goes next to an empty block too | — | Vitest | 통합 | `packages/editor/src/session/engine.test.ts` |
+| [[ux-decisions\|UX KP2]] | with besideEmpty a process block goes next to the empty block | — | Vitest | 단위 | `packages/core/src/commands/insert.test.ts` |
 | [[ux-decisions\|UX LT1]] | never wraps a long line | — | Vitest | 단위 | `packages/core/src/text/measure-text.test.ts` |
 | [[ux-decisions\|UX LT1]] | keeps spaces as written | — | Vitest | 단위 | `packages/core/src/text/measure-text.test.ts` |
 | [[ux-decisions\|UX MD1]] | joins a fold region at its end, and goes to the diagram end with no selection | — | Vitest | 단위 | `packages/core/src/commands/call.test.ts` |
@@ -328,6 +333,7 @@ status: 생성됨
 | --- | --- | --- | --- | --- | --- |
 | `apps/web/e2e/acceptance.spec.ts` | The MVP acceptance tests AT-01 ~ AT-17 (07-testing 4) in the browser, against the production build | [[07-testing#4. MVP의 인수 테스트\|AT-01]], [[07-testing#4. MVP의 인수 테스트\|AT-17]] | Playwright | E2E | 26 |
 | `apps/web/e2e/boot.spec.ts` | The start of the page (R-NFR-10, QA-19; inbox 2026-11-01 | [[01-requirements#^r-nfr\|R-NFR-10]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 2 |
+| `apps/web/e2e/canvas.spec.ts` | The canvas | — | Playwright | E2E | 2 |
 | `apps/web/e2e/examples.spec.ts` | The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3) | [[01-requirements#^r-edit\|R-EDIT-25]], [[ux-decisions\|UX EX1]] | Playwright | E2E | 7 |
 | `apps/web/e2e/files.spec.ts` | Browser flows of the web shell (06-web 1, 2) | — | Playwright | E2E | 6 |
 | `apps/web/e2e/mobile.spec.ts` | The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts) | [[01-requirements#^r-nfr\|R-NFR-08]], [[01-requirements#^r-nfr\|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록\|QA-18]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] | Playwright | E2E | 5 |
@@ -337,7 +343,7 @@ status: 생성됨
 | `packages/core/node/golden.test.ts` | Golden files (07-testing 3) | — | 골든 파일 | 통합 | 4 |
 | `packages/editor/src/create-editor.test.ts` | the shell contract (03-editor 6, QA-10) · the shell asks through the editor (03-editor 6 additions) · the header shape (R-LAY-10, UX HS1) · the picker (interaction rules "호출 블록") · the inline editor on headers and call blocks (03-editor 3.4) | [[03-quality-attribute-scenarios#1. 목록\|QA-10]], [[01-requirements#^r-lay\|R-LAY-10]], [[ux-decisions\|UX HS1]] | Vitest + happy-dom | 통합 | 23 |
 | `packages/editor/src/session/diagrams.test.ts` | selecting a header (interaction rules 2 "키보드로 이동하고 삽입하기") · editing a header name (interaction rules "Event 헤더", "Method 헤더") · header and diagram commands (interaction rules "새 Method로 빼기와 새 다이어그램") · call blocks (interaction rules "호출 블록") | — | Vitest | 통합 | 21 |
-| `packages/editor/src/session/engine.test.ts` | inserting and editing text (AT-03) · the selection after a command (03-editor 2.3) · the clipboard (AT-12) · branches (R-EDIT-11, UX MD3) · keys and modes (03-keymap) · view only (03-editor 6.4) | [[07-testing#4. MVP의 인수 테스트\|AT-03]], [[07-testing#4. MVP의 인수 테스트\|AT-12]], [[01-requirements#^r-edit\|R-EDIT-11]], [[ux-decisions\|UX MD3]] | Vitest | 통합 | 26 |
+| `packages/editor/src/session/engine.test.ts` | inserting and editing text (AT-03) · the selection after a command (03-editor 2.3) · the clipboard (AT-12) · branches (R-EDIT-11, UX MD3) · keys and modes (03-keymap) · view only (03-editor 6.4) | [[07-testing#4. MVP의 인수 테스트\|AT-03]], [[07-testing#4. MVP의 인수 테스트\|AT-12]], [[01-requirements#^r-edit\|R-EDIT-11]], [[ux-decisions\|UX MD3]] | Vitest | 통합 | 27 |
 | `packages/editor/src/session/random-keys.test.ts` | random keys (QA-01) | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] | Vitest | 통합 | 1 |
 | `packages/editor/src/ui/editor-app.test.tsx` | menu bar · toolbar block icons · command palette · status bar · key hint · modals · canvas slot · context menu · dialogs and notices from the shell · picker (interaction rules "호출 블록") | — | Vitest + happy-dom | 통합 | 25 |
 | `apps/web/src/files/export-png.test.ts` | PNG export size | — | Vitest | 단위 | 4 |
@@ -352,7 +358,7 @@ status: 생성됨
 | `packages/core/src/commands/delete.test.ts` | deleteBlocks | — | Vitest | 단위 | 6 |
 | `packages/core/src/commands/diagram.test.ts` | editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName | — | Vitest | 단위 | 31 |
 | `packages/core/src/commands/edit-text.test.ts` | editText | — | Vitest | 단위 | 5 |
-| `packages/core/src/commands/insert.test.ts` | insertBlock | — | Vitest | 단위 | 12 |
+| `packages/core/src/commands/insert.test.ts` | insertBlock | — | Vitest | 단위 | 13 |
 | `packages/core/src/commands/move-to.test.ts` | moveTo (drag and drop) | — | Vitest | 단위 | 5 |
 | `packages/core/src/commands/move.test.ts` | move up and down · move left and right (branches) | — | Vitest | 단위 | 12 |
 | `packages/core/src/commands/new-document.test.ts` | new document | — | Vitest | 단위 | 3 |
@@ -369,6 +375,7 @@ status: 생성됨
 | `packages/core/src/render/render-doc.test.ts` | render · render: headers (visual design principle 2) · render: golden files (07-testing 3) | — | Vitest | 단위 | 16 |
 | `packages/core/src/text/measure-text.test.ts` | text width | — | Vitest | 단위 | 8 |
 | `packages/editor/src/clipboard/clip-format.test.ts` | clipboard formats (03-editor 3.3) | — | Vitest | 단위 | 3 |
+| `packages/editor/src/dom/overlay.test.ts` | overlayContent | — | Vitest | 단위 | 1 |
 | `packages/editor/src/examples/examples.test.ts` | examples · $id | — | Vitest | 단위 | 9 |
 | `packages/editor/src/input/hit-test.test.ts` | hit testing (03-editor 3.1) · drop place (03-editor 3.2) · diagram headers (R-BLK-10, R-BLK-11) | [[01-requirements#^r-blk\|R-BLK-10]], [[01-requirements#^r-blk\|R-BLK-11]] | Vitest | 단위 | 14 |
 | `packages/editor/src/input/keys.test.ts` | reading keys (03-editor 4) | — | Vitest | 단위 | 8 |

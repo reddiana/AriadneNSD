@@ -149,11 +149,16 @@ function headTextBox(head: Box, style: 'shape' | 'title'): Box {
   return { ...head, y: head.y + hat, height: head.height - hat };
 }
 
-/** A rectangle whose stroke of `width` lies `inset` px inside the box edge. */
+/**
+ * A rectangle whose stroke of `width` lies `inset` px inside the block's drawn edge. The document
+ * is drawn half a pixel shifted (visual design 9.1), so a box's lines fill the pixels from x to
+ * x + width + 1: the right and bottom lines lie one pixel past the box. The rectangle covers them
+ * too, so the outline looks the same on all four sides.
+ */
 function insetRect(box: Box, inset: number, width: number, color: string): string {
   const offset = inset + width / 2;
-  const w = Math.max(0, box.width - 2 * offset);
-  const h = Math.max(0, box.height - 2 * offset);
+  const w = Math.max(0, box.width + 1 - 2 * offset);
+  const h = Math.max(0, box.height + 1 - 2 * offset);
   return `<rect x="${n(box.x + offset)}" y="${n(box.y + offset)}" width="${n(w)}" height="${n(h)}" fill="none" stroke="${color}" stroke-width="${n(width)}"/>`;
 }
 

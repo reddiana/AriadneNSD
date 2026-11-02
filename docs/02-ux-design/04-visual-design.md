@@ -128,7 +128,7 @@ flowchart LR
 
 | | 문서 레이어 | 편집 레이어 |
 | --- | --- | --- |
-| 무엇 | 블록, 선, 텍스트, 펴진 접기 영역의 테두리와 이름 띠, 펴 보인 호출 블록, 접힌 칸 | 선택한 블록과 범위, 분기 라벨 선택, 인라인 에디터, 호버, 드래그할 때의 드롭 위치, 오류, 캔버스 포커스, 펼침 삼각형(`▸` `▾`), 키 힌트 |
+| 무엇 | 블록, 선, 텍스트, 펴진 접기 영역의 테두리와 이름 띠, 펴 보인 호출 블록, 접힌 칸 | 선택한 블록과 범위, 분기 라벨 선택, 인라인 에디터, 호버, 드래그할 때의 드롭 위치, 오류, 펼침 삼각형(`▸` `▾`), 키 힌트 |
 | 저장 | 된다. 저장되는 그림은 지금 화면 그대로 → [[0018-save-as-shown\|ADR-0018]] | 되지 않는다 |
 | 색을 정하는 것 | 테마 (문서마다 선택함, 파일과 함께 감) | 화면 색 (사용자 설정) |
 
@@ -213,11 +213,11 @@ flowchart LR
 | `ui.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c2230;border:1px solid #8888;vertical-align:-0.1em"></span> `#1c2230` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e5e8ee;border:1px solid #8888;vertical-align:-0.1em"></span> `#e5e8ee` | 화면 텍스트 |
 | `ui.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `#5a6476` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9aa3b3;border:1px solid #8888;vertical-align:-0.1em"></span> `#9aa3b3` | 보조 텍스트 |
 | `ui.line` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d4dbe6;border:1px solid #8888;vertical-align:-0.1em"></span> `#d4dbe6` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2b313c;border:1px solid #8888;vertical-align:-0.1em"></span> `#2b313c` | 화면의 구분선 |
-| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8ba7ff;border:1px solid #8888;vertical-align:-0.1em"></span> `#8ba7ff` | 버튼의 포커스, 상태 표시줄의 모드, 캔버스 포커스 |
+| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8ba7ff;border:1px solid #8888;vertical-align:-0.1em"></span> `#8ba7ff` | 버튼의 포커스, 상태 표시줄의 모드 |
 | `ui.accent-soft` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e4eafb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e4eafb` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232c45;border:1px solid #8888;vertical-align:-0.1em"></span> `#232c45` | 버튼에 호버 |
 | `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b35a10;border:1px solid #8888;vertical-align:-0.1em"></span> `#b35a10` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0a560;border:1px solid #8888;vertical-align:-0.1em"></span> `#f0a560` | 키 힌트의 왼쪽 줄 |
 
-화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (배경 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1). 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 배경(`ui.bg`) 위에 그립니다. 종이 위에서는 어두운 테마의 `ui.accent`가 2.3:1밖에 되지 않습니다.
+화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (배경 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1).
 
 편집 레이어의 표시는 종이 위에 그려지므로, 어두운 화면에서도 종이에 맞는 같은 값을 씁니다. 어두운 테마의 종이 위에서 쓸 값은 어두운 기본 테마를 정할 때 함께 정합니다.
 
@@ -355,7 +355,7 @@ flowchart LR
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 텍스트를 편집하는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |
-| 선택한 것이 없음 | 그림에는 표시가 없음. 키보드로 캔버스에 왔으면 캔버스 안쪽에 2px 테두리(WCAG 2.4.7) | 편집 (UI) | `ui.accent` | 있음 |
+| 선택한 것이 없음 | 표시가 없음. 캔버스에도 포커스 테두리를 그리지 않음 → [[ux-decisions#CF1. 캔버스에는 포커스 테두리를 그리지 않는다\|CF1]] | — | — | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄 | 편집 | | 있음 |
 | 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 블록 위에 드롭 (감싸기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리 + 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
@@ -471,7 +471,7 @@ flowchart LR
 
 ### 10.3 키보드와 포커스
 
-- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스 안쪽 테두리가 포커스를 보입니다(WCAG 2.4.7). 마우스로 누를 때는 보이지 않습니다(`:focus-visible`).
+- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스에는 포커스 테두리를 그리지 않습니다. 이동 키를 누르면 첫 블록이 선택되어 그 테두리가 보입니다. WCAG 2.4.7(포커스가 보여야 함)에는 이 동안만 모자랍니다 → [[ux-decisions#CF1. 캔버스에는 포커스 테두리를 그리지 않는다|CF1]]
 - 편집 레이어의 모든 표시는 색과 함께 모양(테두리, 줄, 커서, 상태 표시줄의 텍스트)로도 알립니다.
 
 ## 11. 지금 프로토타입과 다른 곳

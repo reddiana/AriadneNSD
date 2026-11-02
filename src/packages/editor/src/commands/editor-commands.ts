@@ -433,7 +433,11 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       session.notify('reason.nothingSelected', 'warn');
       return;
     }
-    session.commit(insertBlock(content(), { target, side, kind, ids: session.ids() }), afterInsert);
+    // o / O put a new block even next to an empty one (UX KP2); a control block fills it.
+    session.commit(
+      insertBlock(content(), { target, side, kind, ids: session.ids(), besideEmpty: true }),
+      afterInsert,
+    );
   };
 
   const insertSpecs = blockKinds.flatMap((kind, order) => [

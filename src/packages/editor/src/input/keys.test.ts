@@ -74,9 +74,12 @@ describe('reading keys (03-editor 4)', () => {
     });
   });
 
-  it('03-keymap: a p inserts a process block like o', () => {
+  it('03-keymap: a p and A p insert a process block like o and O', () => {
     expect(readKey(keyBindings, 'a', 'p', normal)).toMatchObject({
       binding: { command: 'block.insert.process' },
+    });
+    expect(readKey(keyBindings, 'A', 'p', normal)).toMatchObject({
+      binding: { command: 'block.insertBefore.process' },
     });
   });
 

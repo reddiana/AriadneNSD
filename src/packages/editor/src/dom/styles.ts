@@ -32,7 +32,6 @@ export function editorCss(screenFontUrl: string | null): string {
   --ans-ui-bg: #12151b; --ans-ui-dots: #262c37; --ans-ui-accent: #8ba7ff;
   --ans-ui-panel: #1a1e26; --ans-ui-text: #e5e8ee; --ans-ui-line: #2b313c;
 }
-.ans-canvas:focus-visible:not(.ans-has-selection) { box-shadow: inset 0 0 0 2px var(--ans-ui-accent); }
 .ans-canvas.ans-is-dragging, .ans-canvas.ans-is-dragging * { cursor: grabbing; }
 .ans-canvas.ans-cannot-drop, .ans-canvas.ans-cannot-drop * { cursor: not-allowed; }
 .ans-sizer { position: relative; }

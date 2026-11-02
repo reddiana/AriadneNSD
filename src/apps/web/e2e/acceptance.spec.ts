@@ -182,7 +182,8 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await press(page, 'a', 'i');
     await typeText(page, 'x > 0');
     await page.keyboard.press('j');
-    await page.keyboard.press('o');
+    // An empty branch is written into with Enter: o would put a block next to it (UX KP2).
+    await page.keyboard.press('Enter');
     await typeText(page, 'print');
     await page.keyboard.press('l');
     await page.keyboard.press('Enter');
