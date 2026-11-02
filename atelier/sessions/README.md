@@ -52,4 +52,4 @@ updated: 2026-10-25
 - [[2026-11-02-01-release-stages|2026-11-02 MVP 다음의 단계(DR-0018, 시안 M47), 버전 0.1.0과 1.0 전 파일 알림, README 로드맵]]
 - [[2026-11-02-02-release-yaml-review|2026-11-02 GitHub Releases에 v0.1.0, inbox: nschart 코드 블록(R-FMT-12)과 yaml, README 그림을 MVP의 .ns.svg로]]
 - [[2026-11-02-03-readme-how-we-build|2026-11-02 README: '시안과 프로토타입'을 '어떻게 만들고 있나'에 합쳐 MVP까지, GitHub에서 그림 여백]]
-- [[2026-11-02-04-font-manual-domain|2026-11-02 글꼴 이름 AriadneNSD Mono(DR-0019), 사용법 /manual/(DR-0020, M48 · M49 · M51), ariadnensd.com과 첫 화면은 앱(DR-0021, M50), 키 힌트를 선택 아래로(K3, M52), BUG-05]]
+- [[2026-11-02-04-font-manual-domain|2026-11-02 글꼴 이름 AriadneNSD Mono(DR-0019), 사용법 /manual/(DR-0020, M48 · M49 · M51), ariadnensd.com과 첫 화면은 앱(DR-0021, M50), 키 힌트를 선택 아래로(K3, M52), BUG-05, 매듭 뒤 BUG-06과 툴바의 For(TB1)]]

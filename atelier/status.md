@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # 현재 상태
@@ -45,7 +45,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] push 뒤 `https://ariadnensd.com`을 봄: 첫 화면이 앱인지, `/manual/ko/` · `/about`, 옛 `reddiana.github.io/AriadneNSD/app/`의 넘겨 주기 → [[2026-11-02-04-font-manual-domain]]
+- [ ] 메인테이너: 앱이 "불러오는 중"에서 가끔 멈출 때(안드로이드 자주, Edge 가끔) 주소를 바로 열었는지, 문서 사이트 · README 버튼을 거쳤는지 알려 주기. 문서 사이트를 거친 경우는 BUG-06으로 고침(2026-11-03). 바로 열어도 멈추면 그 화면을 찍어 보내기 → [[defects]]
 - [ ] 메인테이너가 사용법 전체 초안 M51을 봄: https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq → [[backlog#웹 베타의 문턱]]
 - [ ] 메인테이너가 S26에서 바뀐 툴바(예제 버튼, 아래 줄 없앰 → MB2)와 큰 다이어그램의 스크롤을 써 보기 → [[2026-11-01-04-examples-button-android-load]]
 - [ ] **메인테이너가 예제와 헤더를 써 보기**(https://ariadnensd.com/ 을 새 창(시크릿 창)으로 열면 첫 방문 모달) → 만든 것과 정한 것은 [[2026-11-01-02-docs-current-examples]], 확인할 것은 [[outbox#확인해 주세요]]
