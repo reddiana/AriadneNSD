@@ -24,6 +24,8 @@ export function editorCss(screenFontUrl: string | null): string {
   --ans-ui-panel: #ffffff; --ans-ui-text: #1c2230; --ans-ui-line: #d4dbe6;
   position: relative; overflow: auto; outline: none; box-sizing: border-box;
   width: 100%; height: 100%;
+  /* Dragging blocks must not select the drawn text (BUG-09). The inline editor still can. */
+  user-select: none; -webkit-user-select: none;
   background-color: var(--ans-ui-bg);
   background-image: radial-gradient(var(--ans-ui-dots) 1px, transparent 1px);
   background-size: 18px 18px;
@@ -46,6 +48,7 @@ export function editorCss(screenFontUrl: string | null): string {
 .ans-overlay { pointer-events: none; overflow: visible; }
 .ans-inline-editor {
   position: absolute; box-sizing: border-box; margin: 0; z-index: 1;
+  user-select: text; -webkit-user-select: text;
   border: 2px solid ${editColors['edit.field']}; border-radius: 0; outline: none;
   background: #ffffff; color: #151a22; resize: none; overflow: hidden; white-space: pre;
   font: 13px/18px "${blockFont.familyName}", D2Coding, Consolas, "Malgun Gothic", monospace;
