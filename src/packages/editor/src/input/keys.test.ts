@@ -74,6 +74,12 @@ describe('reading keys (03-editor 4)', () => {
     });
   });
 
+  it('03-keymap: a p inserts a process block like o', () => {
+    expect(readKey(keyBindings, 'a', 'p', normal)).toMatchObject({
+      binding: { command: 'block.insert.process' },
+    });
+  });
+
   it('03-keymap: in a range (v), d cuts at once and s waits for a kind', () => {
     const visual = { mode: 'visual' as const, selection: 'blocks' as const };
     expect(readKey(keyBindings, null, 'd', visual)).toMatchObject({

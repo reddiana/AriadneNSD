@@ -20,7 +20,7 @@ export type KeyBinding = {
   readonly isDisplayOnly?: boolean;
 };
 
-/** The block kind letters after `a`, `A` and `s` (03-keymap). `c` (call) only inserts. */
+/** The block kind letters after `a`, `A` and `s` (03-keymap). `c` (call) only inserts, `p` (process) only after `a`. */
 export const kindLetters = [
   ['i', 'if'],
   ['k', 'case'],
@@ -30,6 +30,8 @@ export const kindLetters = [
 ] as const;
 
 const insertBindings: ReadonlyArray<KeyBinding> = [
+  // `a p` is `o` written like the other kinds (2026-11-03, maintainer).
+  { keys: 'a p', command: 'block.insert.process' },
   ...kindLetters.flatMap(([letter, kind]) => [
     { keys: `a ${letter}`, command: `block.insert.${kind}` },
     { keys: `A ${letter}`, command: `block.insertBefore.${kind}` },

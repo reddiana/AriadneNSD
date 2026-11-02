@@ -64,16 +64,19 @@ describe('inserting and editing text (AT-03)', () => {
     expect(engine.session.state.undo).toHaveLength(1);
   });
 
-  it('interaction rules 2: a process block on an empty block writes into it', () => {
-    const engine = testEngine(contentOf([empty('b1')]));
-    select(engine, 'b1');
-    engine.keys('o');
-    expect(bodyOf(engine)).toEqual(['b1']);
-    expect(engine.session.state.undo).toHaveLength(0);
-    expect(engine.session.state.editing?.field).toEqual({ kind: 'block', block: 'b1' });
-  });
+  it.each([[['o']], [['a', 'p']]])(
+    'interaction rules 2: a process block (%j) on an empty block writes into it',
+    (keys) => {
+      const engine = testEngine(contentOf([empty('b1')]));
+      select(engine, 'b1');
+      engine.keys(...keys);
+      expect(bodyOf(engine)).toEqual(['b1']);
+      expect(engine.session.state.undo).toHaveLength(0);
+      expect(engine.session.state.editing?.field).toEqual({ kind: 'block', block: 'b1' });
+    },
+  );
 
-  it('interaction rules "블록 아이콘": with nothing selected, a block goes at the diagram end', () => {
+  it('interaction rules "블록 아이콘"": with nothing selected, a block goes at the diagram end', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.run('block.insert.while');
     expect(bodyOf(engine)).toEqual(['b1', 'b2']);

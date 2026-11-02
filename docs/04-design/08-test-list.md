@@ -25,7 +25,7 @@ status: 생성됨
 | --- | --- | --- |
 | E2E | 6 | 47 |
 | 통합 | 8 | 113 |
-| 단위 | 41 | 348 |
+| 단위 | 41 | 349 |
 | 성능 | 1 | 3 |
 
 ## 2. ID가 있는 테스트
@@ -371,7 +371,7 @@ status: 생성됨
 | `packages/editor/src/clipboard/clip-format.test.ts` | clipboard formats (03-editor 3.3) | — | Vitest | 단위 | 3 |
 | `packages/editor/src/examples/examples.test.ts` | examples · $id | — | Vitest | 단위 | 9 |
 | `packages/editor/src/input/hit-test.test.ts` | hit testing (03-editor 3.1) · drop place (03-editor 3.2) · diagram headers (R-BLK-10, R-BLK-11) | [[01-requirements#^r-blk\|R-BLK-10]], [[01-requirements#^r-blk\|R-BLK-11]] | Vitest | 단위 | 14 |
-| `packages/editor/src/input/keys.test.ts` | reading keys (03-editor 4) | — | Vitest | 단위 | 7 |
+| `packages/editor/src/input/keys.test.ts` | reading keys (03-editor 4) | — | Vitest | 단위 | 8 |
 | `packages/editor/src/navigation/navigate.test.ts` | keyboard navigation (03-editor 2.2) | — | Vitest | 단위 | 12 |
 | `packages/editor/src/state/selection.test.ts` | selection (03-editor 2) | — | Vitest | 단위 | 5 |
 | `packages/editor/src/ui/key-hint.test.ts` | UX K3: the key hint goes just under the selection | [[ux-decisions\|UX K3]] | Vitest | 단위 | 4 |
@@ -401,3 +401,4 @@ status: 생성됨
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-07]] |
+| [[defects\|BUG-06]] | 없음 |
