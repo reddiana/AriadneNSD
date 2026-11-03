@@ -150,11 +150,20 @@ function SettingField({
     0,
   );
   const id = `ans-setting-${spec.id}`;
+  const hintId = `${id}-hint`;
   return (
     <div className="ans-field">
-      <label htmlFor={id}>{chrome.format(spec.title)}</label>
+      <span className="ans-field-title">
+        <label htmlFor={id}>{chrome.format(spec.title)}</label>
+        {spec.hint !== undefined && (
+          <span id={hintId} className="ans-field-hint">
+            {chrome.format(spec.hint)}
+          </span>
+        )}
+      </span>
       <select
         id={id}
+        aria-describedby={spec.hint === undefined ? undefined : hintId}
         value={selected}
         onChange={(event) => {
           const value = spec.values[Number(event.target.value)];

@@ -12,17 +12,15 @@ import { largeDoc } from './testing';
 import { defaultTheme } from './theme';
 import { toSvg } from './to-svg';
 
-const options = { locale: 'en' } as const;
-
 describe('02-layout 4: 500 blocks', () => {
   const doc = largeDoc(500);
-  const result = layout(doc, options);
+  const result = layout(doc);
 
   it('T-0517 · QA-07: layout and scene + SVG text stay far inside the 100ms edit budget', async ({
     bench,
   }) => {
     const layoutResult = await bench('T-0518: layout', () => {
-      layout(doc, options);
+      layout(doc);
     }).run();
     const renderResult = await bench('T-0519: scene + SVG text', () => {
       toSvg(buildScene(result, defaultTheme));
@@ -43,7 +41,7 @@ describe('opening a file of 500 blocks', () => {
   // but still reads past them, so the font is a block of about the size of a real subset WOFF.
   const saved = assembleSvgFile({
     doc,
-    drawing: toSvg(buildScene(layout(doc, options), defaultTheme)),
+    drawing: toSvg(buildScene(layout(doc), defaultTheme)),
     fonts: [{ family: 'AriadneNSD Mono', woff: new Uint8Array(100_000).fill(0x41) }],
   });
 
@@ -55,7 +53,7 @@ describe('opening a file of 500 blocks', () => {
       if (!opened.ok) {
         throw new Error(opened.detail);
       }
-      renderDoc(opened.value.doc, options);
+      renderDoc(opened.value.doc);
     }).run();
     console.log(
       `file ${String(Math.round(saved.length / 1024))} KB, open to drawing p50 ${result.latency.p50.toFixed(3)}ms`,

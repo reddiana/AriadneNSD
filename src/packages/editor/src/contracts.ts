@@ -143,6 +143,8 @@ export interface CommandRegistry {
 export type SettingSpec = {
   readonly id: string;
   readonly title: Message;
+  /** Addition: a faint line under the title that says what the setting changes. */
+  readonly hint?: Message;
   /** The allowed values. A boolean setting lists `[true, false]`. */
   readonly values: ReadonlyArray<string | number | boolean>;
   /** A screen name per allowed value, in the same order. */

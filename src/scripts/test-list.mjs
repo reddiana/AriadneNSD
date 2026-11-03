@@ -82,6 +82,7 @@ const areas = [
       'packages/editor/src/version.test.ts',
       'apps/web/src/shell/messages.test.ts',
       'apps/web/e2e/examples.spec.ts',
+      'apps/web/e2e/document-settings.spec.ts',
       'apps/web/scripts/example-thumbnails.test.ts',
       'apps/web/e2e/boot.spec.ts',
       'apps/web/e2e/mobile.spec.ts',

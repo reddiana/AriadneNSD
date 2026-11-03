@@ -1,4 +1,5 @@
 // Builders of small documents for the layout and rendering tests. Not exported from the package.
+import type { Locale } from '../i18n/messages';
 import type {
   Arm,
   Block,
@@ -65,10 +66,16 @@ export const forBlock = (id: string, text: string, blocks: Block[]): For => ({
 /** A document with one diagram without a header. */
 export const docOf = (...blocks: Block[]): Doc => ({
   content: {
-    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
     diagrams: [{ id: 'd1', head: null, body: seq(...blocks) }],
   },
   view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
+});
+
+/** The document with its drawing language `settings.locale` set to `locale` (ADR-0041). */
+export const inLocale = (doc: Doc, locale: Locale): Doc => ({
+  ...doc,
+  content: { ...doc.content, settings: { ...doc.content.settings, locale } },
 });
 
 /**

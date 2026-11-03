@@ -7,14 +7,14 @@ import { parseModel, parseModelJson } from './parse-model';
 const minimal = (): Record<string, unknown> => ({
   format: 'ariadne-nsd',
   version: 1,
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
   diagrams: [{ id: 'd1', body: [{ id: 'b1', kind: 'process', text: '' }] }],
   view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
 });
 
 const fullDoc: Doc = {
   content: {
-    settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+    settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
     diagrams: [
       {
         id: 'd1',
@@ -159,6 +159,7 @@ describe('model JSON parsing', () => {
       textKind: 'plain',
       theme: 'midnight',
       headStyle: 'shape',
+      locale: 'en',
     });
     expect(result.value.kept).toEqual({ textKind: 'cobol' });
     const saved = serializeModelJson(result.value.doc, result.value.kept);
@@ -224,11 +225,74 @@ describe('model JSON parsing', () => {
       { id: 'd2', body: [{ id: 'b1', kind: 'process', text: 'x' }] },
     ];
     expect(parseModel(value)).toMatchObject({ ok: false, reason: 'damaged' });
-    expect(parseModel(value, () => null).ok).toBe(true);
-    expect(parseModel(minimal(), () => 'no')).toEqual({
+    expect(parseModel(value, { check: () => null }).ok).toBe(true);
+    expect(parseModel(minimal(), { check: () => 'no' })).toEqual({
       ok: false,
       reason: 'damaged',
       detail: 'invariant: no',
     });
+  });
+});
+
+describe('the drawing language in the settings (ADR-0041)', () => {
+  const withoutLocale = (): Record<string, unknown> => ({
+    ...minimal(),
+    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+  });
+
+  it('T-0821 · R-FMT-02: a file with a locale reads it, whatever the opener asks for, and writes it back', () => {
+    const value = minimal();
+    value.settings = { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'ko' };
+    const result = parseModel(value, { locale: 'en' });
+    if (!result.ok) {
+      throw new Error(result.detail);
+    }
+    expect(result.value.doc.content.settings.locale).toBe('ko');
+    expect(result.value.kept).toEqual({});
+    const saved = serializeModelJson(result.value.doc, result.value.kept);
+    expect(parseModelJson(saved)).toEqual(result);
+    expect(saved).toContain('"locale": "ko"');
+  });
+
+  it('T-0822: a file without a locale opens in the language of the opener and the next save writes it', () => {
+    for (const locale of ['en', 'ko'] as const) {
+      const result = parseModel(withoutLocale(), { locale });
+      if (!result.ok) {
+        throw new Error(result.detail);
+      }
+      expect(result.value.doc.content.settings.locale).toBe(locale);
+      expect(result.value.kept).toEqual({});
+      expect(serializeModelJson(result.value.doc)).toContain(
+        `"headStyle": "shape",\n    "locale": "${locale}"`,
+      );
+    }
+    const english = parseModel(withoutLocale());
+    expect(english.ok && english.value.doc.content.settings.locale).toBe('en');
+  });
+
+  it('T-0823: 01-file-format 3.3: an unknown locale is drawn in the language of the opener and written back as it was', () => {
+    const value = minimal();
+    value.settings = { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'ja' };
+    const result = parseModel(value, { locale: 'ko' });
+    if (!result.ok) {
+      throw new Error(result.detail);
+    }
+    expect(result.value.doc.content.settings.locale).toBe('ko');
+    expect(serializeModelJson(result.value.doc, result.value.kept)).toContain('"locale": "ja"');
+    // Once the user picks a language, that one is written.
+    const english: Doc = {
+      ...result.value.doc,
+      content: {
+        ...result.value.doc.content,
+        settings: { ...result.value.doc.content.settings, locale: 'en' },
+      },
+    };
+    expect(serializeModelJson(english, result.value.kept)).toContain('"locale": "en"');
+  });
+
+  it('T-0824: a locale that is not a string is a damaged file', () => {
+    const value = minimal();
+    value.settings = { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 3 };
+    expect(parseModel(value)).toMatchObject({ ok: false, reason: 'damaged' });
   });
 });

@@ -7,7 +7,8 @@
   "settings": {
     "textKind": "cobol",
     "theme": "midnight",
-    "headStyle": "shape"
+    "headStyle": "shape",
+    "locale": "xx"
   },
   "diagrams": [
     {

@@ -31,8 +31,11 @@ export type ExampleInfo = {
   readonly name: ExampleText;
   /** What the example shows, in one short line. */
   readonly what: ExampleText;
-  /** Builds a new document with the header shape the user chose last (UX HS1). */
-  readonly build: (headStyle: Settings['headStyle']) => Doc;
+  /**
+   * Builds a new document with the header shape the user chose last (UX HS1), drawn in the
+   * opener's screen language like any new document (ADR-0041).
+   */
+  readonly build: (settings: Pick<Settings, 'headStyle' | 'locale'>) => Doc;
 };
 
 function example(
@@ -41,7 +44,7 @@ function example(
   what: ExampleText,
   diagrams: ReadonlyArray<DiagramSpec>,
 ): ExampleInfo {
-  return { id, name, what, build: (headStyle) => buildExample(diagrams, headStyle) };
+  return { id, name, what, build: (settings) => buildExample(diagrams, settings) };
 }
 
 /** The examples, in the order the picker shows them. */

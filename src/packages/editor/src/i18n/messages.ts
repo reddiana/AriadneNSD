@@ -248,6 +248,9 @@ const english = {
   'setting.keyHint': 'Show the key hint',
   'setting.focusOutline': 'Keep the canvas focus outline',
   'setting.autoSave': 'Save automatically',
+  // Document settings: the language of the fixed words drawn in the picture (ADR-0041).
+  'setting.documentLocale': 'Language of drawn labels',
+  'setting.documentLocale.hint': 'true · false, ⋯ n blocks',
   'setting.headStyle': 'Header shape',
   'setting.headStyle.title': 'Like a title',
   'setting.headStyle.shape': 'Hat · arch',
@@ -462,6 +465,8 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'setting.keyHint': '키 힌트 보이기',
   'setting.focusOutline': '캔버스 포커스 테두리 늘 보이기',
   'setting.autoSave': '자동 저장',
+  'setting.documentLocale': '그림 문구의 언어',
+  'setting.documentLocale.hint': '참 · 거짓, ⋯ 블록 n개',
   'setting.headStyle': '헤더 모양',
   'setting.headStyle.title': '제목처럼',
   'setting.headStyle.shape': '모자 · 아치',

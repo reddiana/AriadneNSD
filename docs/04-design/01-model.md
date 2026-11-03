@@ -47,15 +47,17 @@ type Settings = {
   textKind: TextKind;    // 블록 텍스트의 언어 → [[0032-token-highlighting|ADR-0032]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
   headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
+  locale: Locale;        // 그림 문구의 언어: 그림에 적는 고정 문구("참" · "거짓" 등)의 언어 → [[0041-drawing-locale-in-document|ADR-0041]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
 type ThemeId = string;   // 테마의 이름. v1 형식은 'default' 하나. 모르는 이름은 기본 테마로 그린다
+type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록)
 ```
 
-- `TextKind`는 유니온이라 파일에 적힌 모르는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 되돌려 적습니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 모르는 이름도 그대로 담습니다.
+- `TextKind`는 유니온이라 파일에 적힌 모르는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 되돌려 적습니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 모르는 이름도 그대로 담습니다. `Locale`도 유니온이라, 모르는 언어가 적힌 파일은 연 사람의 화면 언어로 그리고 받은 값은 `TextKind`처럼 모델 밖에 두었다가 되돌려 적습니다. `locale`이 없는 파일(ADR-0041 전에 저장한 파일)은 연 사람의 화면 언어로 엽니다.
 
 - 내용과 뷰 상태를 처음부터 나눠 둡니다. undo 스택에는 `content`의 스냅숏만 쌓입니다.
-- 화면의 줌 · 스크롤 위치, 선택, UI 언어는 모델에 없습니다. `editor`의 메모리 상태입니다.
+- 화면의 줌 · 스크롤 위치, 선택, UI 언어(화면 언어)는 모델에 없습니다. `editor`의 메모리 상태입니다. 그림에 적는 고정 문구의 언어는 화면 언어와 따로, 문서 설정 `locale`입니다.
 
 ### 1.2 다이어그램과 헤더
 
@@ -123,7 +125,7 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 
 - 조건이나 반복의 텍스트는 모두 `text` 필드 하나에 둡니다. 텍스트 편집 명령이 블록 종류(`kind`)마다 다른 필드로 분기하지 않아도 됩니다.
 - **빈 블록**은 텍스트가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 분기, 새 반복의 본문은 빈 블록 하나로 채웁니다.
-- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 저장할 때의 화면 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]]. default 분기의 라벨은 편집하지 않으며 늘 "default"입니다.
+- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 문서 설정 `locale`의 언어로 "참" · "거짓"을 적습니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]. default 분기의 라벨은 편집하지 않으며 늘 "default"입니다.
 - 분기(`Branch`)에도 id가 있습니다. If와 Case는 분기별로 접히므로, 뷰 상태가 분기를 id로 참조합니다.
 - **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 편집할 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 늘 default가 있고, default는 삭제할 수 없고, default가 아닌 분기는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 
@@ -312,8 +314,8 @@ type Target =                                        // 명령이 적용되는 �
 | | 헤더 이름 편집 | 겹치거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 · 풀기 · 이름 편집 | [[02-interaction-rules#접기 · 펼치기]]. 펴 보인 곳이면 `SiteFold`로 |
-| 문서 설정 | 블록 텍스트의 언어, 테마, 헤더 모양 | |
-| 문서 | 새 문서 | 헤더 없는 다이어그램 하나와 빈 블록 하나. 설정은 `textKind: 'plain'`, `theme: 'default'`, 헤더 모양은 사용자가 마지막에 고른 것(없으면 `'title'` → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼\|HS1]]). 뷰 상태는 이름 띠 켬, 결과 기호 `←` |
+| 문서 설정 | 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양 | |
+| 문서 | 새 문서 | 헤더 없는 다이어그램 하나와 빈 블록 하나. 설정은 `textKind: 'plain'`, `theme: 'default'`, 헤더 모양은 사용자가 마지막에 고른 것(없으면 `'title'` → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼\|HS1]]), 그림 문구의 언어는 만든 사람의 화면 언어([[0041-drawing-locale-in-document\|ADR-0041]]). 뷰 상태는 이름 띠 켬, 결과 기호 `←` |
 
 ### 4.2 보기 명령
 

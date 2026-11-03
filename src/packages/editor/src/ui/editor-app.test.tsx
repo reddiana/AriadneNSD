@@ -323,6 +323,31 @@ describe('modals', () => {
     expect(engine.handle.documentSetting('headerStyle')).toBe('title');
     expect(screen.getByLabelText<HTMLSelectElement>('Save automatically').value).toBe('1');
   });
+
+  it('T-0813: ADR-0041: the language of drawn labels shows a faint hint and each language in its own name', () => {
+    const engine = fakeEngine(editCommands, [
+      {
+        id: 'document.locale',
+        title: 'setting.documentLocale',
+        hint: 'setting.documentLocale.hint',
+        values: ['en', 'ko'],
+        valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko'],
+        defaultValue: 'en',
+        scope: 'document',
+      },
+    ]);
+    renderApp(engine, { locale: 'ko' });
+    act(() => {
+      engine.handle.commands.run('diagram.documentSettings');
+    });
+    const select = screen.getByLabelText<HTMLSelectElement>('그림 문구의 언어');
+    const hint = screen.getByText('참 · 거짓, ⋯ 블록 n개');
+    expect(hint.className).toBe('ans-field-hint');
+    expect(select.getAttribute('aria-describedby')).toBe(hint.id);
+    expect([...select.options].map((option) => option.textContent)).toEqual(['English', '한국어']);
+    fireEvent.change(select, { target: { value: '1' } });
+    expect(engine.handle.documentSetting('document.locale')).toBe('ko');
+  });
 });
 
 describe('canvas slot', () => {

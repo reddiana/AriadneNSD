@@ -51,7 +51,7 @@ export const whileBlock = (id: Id, blocks: ReadonlyArray<Block>, text = 'w'): Bl
 
 /** A content of headerless diagrams `d1`, `d2` … with these bodies. */
 export const contentOf = (...bodies: ReadonlyArray<ReadonlyArray<Block>>): Content => ({
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
   diagrams: bodies.map((body, i) => ({ id: `d${String(i + 1)}`, head: null, body: seq(body) })),
 });
 
@@ -181,7 +181,6 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
   const session = new EditorSession(
     docOf(content),
     {
-      locale: () => 'en',
       clipboard,
       timers,
       isKeyHintEnabled: () => true,
@@ -209,7 +208,6 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
   for (const spec of editorCommands({
     session,
     clipboard,
-    locale: () => 'en',
     save: () => {
       saves.push(session.state.doc.content);
       return Promise.resolve({ ok: true, name: 'test.ns.svg' });

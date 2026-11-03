@@ -7,7 +7,6 @@ import type {
   Id,
   IdGenerator,
   KeptSettings,
-  Locale,
   Note,
   OkResult,
   Reason,
@@ -55,8 +54,6 @@ export type Timers = {
 
 /** What the session needs from outside. */
 export type SessionOptions = {
-  /** The language of the drawing's fixed words and of the screen (R-NFR-04). */
-  readonly locale: () => Locale;
   readonly clipboard: ClipboardPort;
   readonly timers: Timers;
   /** Whether the key hint is shown after 0.4 s (setting `editor.keyHint`). */
@@ -106,7 +103,7 @@ export class EditorSession {
     private readonly options: SessionOptions,
     load: LoadOptions,
   ) {
-    this.rendered = renderDoc(doc, { locale: options.locale() });
+    this.rendered = renderDoc(doc);
     this.indexed = indexDoc(doc.content);
     this.saved = load.isDirty ? null : doc;
     this.keptSettings = load.kept;
@@ -176,7 +173,7 @@ export class EditorSession {
     this.noticeValue = null;
     this.keptSettings = load.kept;
     this.saved = load.isDirty ? null : doc;
-    this.rendered = renderDoc(doc, { locale: this.options.locale() });
+    this.rendered = renderDoc(doc);
     this.indexed = indexDoc(doc.content);
     this.clearPending();
     this.setState({
@@ -209,9 +206,9 @@ export class EditorSession {
 
   private readonly isDirty = (doc: Doc): boolean => !this.isSaved(doc);
 
-  /** Draws the document again, for example after the screen language changed. */
+  /** Draws the document again, for example after a user setting of the screen changed. */
   rerender(): void {
-    this.rendered = renderDoc(this.current.doc, { locale: this.options.locale() });
+    this.rendered = renderDoc(this.current.doc);
     this.setState({ ...this.current, layout: this.rendered.layout });
   }
 
@@ -333,7 +330,8 @@ export class EditorSession {
     if (label !== undefined && label !== '') {
       return label;
     }
-    const locale = this.options.locale();
+    // The fixed words are in the document's drawing language (ADR-0041).
+    const locale = this.current.doc.content.settings.locale;
     if (place.isDefault) {
       return drawingMessage(locale, 'case.default');
     }
@@ -408,7 +406,7 @@ export class EditorSession {
         return false;
       }
       const doc: Doc = { content, view: this.current.doc.view };
-      this.rendered = renderDoc(doc, { locale: this.options.locale() });
+      this.rendered = renderDoc(doc);
     }
     const index = indexDoc(content);
     const selection = validSelection(index, after.selection);
@@ -467,7 +465,7 @@ export class EditorSession {
       this.current,
       direction,
       (doc) => {
-        this.rendered = renderDoc(doc, { locale: this.options.locale() });
+        this.rendered = renderDoc(doc);
         return this.rendered.layout;
       },
       this.isDirty,

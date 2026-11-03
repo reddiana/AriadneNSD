@@ -7,7 +7,7 @@ const seq = (...blocks: Block[]): Seq => ({ blocks, folds: [] });
 const process = (id: string, text = ''): Block => ({ id, kind: 'process', text });
 
 const sample: Content = {
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
   diagrams: [
     {
       id: 'd1',

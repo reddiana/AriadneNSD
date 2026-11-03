@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0033: editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-03: 설정 스키마의 항목(`SettingSpec`)에 흐린 한 줄 설명(`hint`)이 생겼다. 첫 쓰임은 문서 설정의 "그림 문구의 언어"다 → [[0041-drawing-locale-in-document|ADR-0041]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: MVP 코드에서 `EditorHandle`이 커졌다(`state` · `onChange` · `chromeState` · `documentSetting` · `startBlockDrag` · `focus` 등). `open`은 열었는지를 돌려주고 `serialize`는 비동기다. `CommandRegistry`에 `context()`, `CommandSpec`에 `checked`, 메뉴 자리에 하위 메뉴(`submenu`)가 생겼다. 셸이 더하는 명령은 새로 · 열기 · 최근 파일 · 내보내기다 → [[03-editor#5. 명령 목록과 메뉴]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: 제공 인터페이스에 `EditorHandle`(문서 바꾸기 · 저장 · 직렬화 · 상태 알림)을 더했다. 셸도 자기 명령(새로 · 열기 · 최근 파일)을 `CommandRegistry.register`로 같은 목록에 더한다. 명령의 이름은 형편에 따라 바뀔 수 있다(내려받는 브라우저에서 "저장" → "내려받기") → [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: 명령 하나의 항목(`CommandSpec`)을 정했다 → [[03-editor#5. 명령 목록과 메뉴]]. 명령 목록은 웹 · 데스크톱의 메뉴 바와 커맨드 팔레트에도 쓰인다([[ux-decisions#W1. 웹 화면의 배치|W1]], [[ux-decisions#W6. 명령 찾기|W6]]). `SettingsSchema`의 설정에 범위(`user` · `document`)가 생겼다([[ux-decisions#W5. 설정|W5]])

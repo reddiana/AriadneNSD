@@ -4,8 +4,8 @@ import { encodeBase64 } from './base64';
 import { findModelElement, modelNamespace, svgNamespace } from './model-element';
 import type { KeptSettings } from './model-json';
 import { currentFormatVersion, serializeModelJson } from './model-json';
-import type { ContentCheck, OpenResult } from './parse-model';
-import { invariantCheck, openFailure, parseModel } from './parse-model';
+import type { OpenResult, ReadOptions } from './parse-model';
+import { openFailure, parseModel } from './parse-model';
 
 /**
  * The drawing made by the renderer from the model (the shape of `RenderedSvg` from `toSvg`).
@@ -87,9 +87,9 @@ function assemble(
  * Opens a saved file (`.ns` or `.ns.svg`): finds the model element, checks that its `version`
  * attribute matches the JSON, migrates and checks the model (01-file-format 5).
  * The drawing is ignored (R-FMT-05) and never read back into a model (R-FMT-06).
- * `check` runs on the model; by default the model invariants (01-model 3).
+ * `options` as for `parseModel`: the check, and the drawing language of a file without one.
  */
-export function openSvgFile(text: string, check: ContentCheck = invariantCheck): OpenResult {
+export function openSvgFile(text: string, options: ReadOptions = {}): OpenResult {
   const found = findModelElement(text);
   if (!found.ok) {
     return openFailure(found.reason, found.detail);
@@ -105,7 +105,7 @@ export function openSvgFile(text: string, check: ContentCheck = invariantCheck):
   if (typeof jsonVersion !== 'number' || found.element.version !== String(jsonVersion)) {
     return openFailure('damaged', 'the version attribute and the JSON version differ');
   }
-  return parseModel(value, check);
+  return parseModel(value, options);
 }
 
 /**

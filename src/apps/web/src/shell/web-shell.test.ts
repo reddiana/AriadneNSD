@@ -26,7 +26,7 @@ vi.mock('../files/file-fallback', () => ({
 const newDoc = createDoc();
 const savedFile = assembleSvgFile({
   doc: newDoc,
-  drawing: renderDoc(newDoc, { locale: 'en' }).svg,
+  drawing: renderDoc(newDoc).svg,
   fonts: [],
 });
 

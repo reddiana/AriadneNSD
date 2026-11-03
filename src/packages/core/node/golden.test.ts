@@ -31,8 +31,8 @@ beforeAll(async () => {
 });
 
 /** What saving writes for a document (the same steps as the editor's serializeDocument). */
-function save(doc: Doc, kept: KeptSettings | undefined, locale: Locale): string {
-  const rendering = renderDoc(doc, { locale });
+function save(doc: Doc, kept: KeptSettings | undefined): string {
+  const rendering = renderDoc(doc);
   return assembleSvgFile({
     doc,
     ...(kept === undefined ? {} : { kept }),
@@ -45,8 +45,12 @@ function save(doc: Doc, kept: KeptSettings | undefined, locale: Locale): string 
 
 const seq = (...blocks: Block[]): Seq => ({ blocks, folds: [] });
 const process = (id: string, text: string): Block => ({ id, kind: 'process', text });
-const settings = { textKind: 'plain', theme: 'default', headStyle: 'shape' } as const;
+const settings = { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' } as const;
 const view = { folded: [], opened: [], bands: true, resultSymbol: '←' } as const;
+const inLocale = (doc: Doc, locale: Locale): Doc => ({
+  ...doc,
+  content: { ...doc.content, settings: { ...doc.content.settings, locale } },
+});
 const oneDiagram = (...blocks: Block[]): Doc => ({
   content: { settings, diagrams: [{ id: 'd1', head: null, body: seq(...blocks) }] },
   view,
@@ -56,8 +60,6 @@ const cases: ReadonlyArray<{
   readonly name: string;
   readonly doc: Doc;
   readonly kept?: KeptSettings;
-  /** The language of the drawing's fixed words. English when left out. */
-  readonly locale?: Locale;
 }> = [
   { name: 'process', doc: oneDiagram(process('b1', 'x = read()')) },
   { name: 'empty-block', doc: oneDiagram(process('b1', '')) },
@@ -181,33 +183,32 @@ const cases: ReadonlyArray<{
         diagrams: oneDiagram(process('b1', 'x')).content.diagrams,
       },
     },
-    kept: { textKind: 'cobol' },
+    kept: { textKind: 'cobol', locale: { written: 'xx', drawnIn: 'en' } },
   },
   {
     name: 'korean-fixed-words',
-    // Branch labels left empty, so the drawing writes the fixed words of the locale.
-    doc: oneDiagram(
-      {
-        id: 'b1',
-        kind: 'if',
-        text: '맞나?',
-        yes: { id: 'r1', body: seq(process('b2', '')) },
-        no: { id: 'r2', body: seq(process('b3', '')) },
-      },
-      {
-        id: 'b4',
-        kind: 'case',
-        text: 'k',
-        arms: [{ id: 'r3', label: '1', body: seq(process('b5', '')) }],
-        otherwise: { id: 'r4', body: seq(process('b6', '')) },
-      },
+    // Branch labels left empty, so the drawing writes the fixed words of the document's locale.
+    doc: inLocale(
+      oneDiagram(
+        {
+          id: 'b1',
+          kind: 'if',
+          text: '맞나?',
+          yes: { id: 'r1', body: seq(process('b2', '')) },
+          no: { id: 'r2', body: seq(process('b3', '')) },
+        },
+        {
+          id: 'b4',
+          kind: 'case',
+          text: 'k',
+          arms: [{ id: 'r3', label: '1', body: seq(process('b5', '')) }],
+          otherwise: { id: 'r4', body: seq(process('b6', '')) },
+        },
+      ),
+      'ko',
     ),
-    locale: 'ko',
   },
 ];
-
-const localeOf = (name: string): Locale =>
-  cases.find((goldenCase) => goldenCase.name === name)?.locale ?? 'en';
 
 const suffix = '.ns.svg';
 
@@ -221,9 +222,9 @@ async function goldenNames(): Promise<ReadonlyArray<string>> {
 }
 
 describe('golden files', () => {
-  for (const { name, doc, kept, locale } of cases) {
+  for (const { name, doc, kept } of cases) {
     it(`T-0352 · R-FMT-03: ${name} is saved as the golden file`, async () => {
-      await expect(save(doc, kept, locale ?? 'en')).toMatchFileSnapshot(`../golden/${name}.ns.svg`);
+      await expect(save(doc, kept)).toMatchFileSnapshot(`../golden/${name}.ns.svg`);
     });
   }
 
@@ -239,7 +240,7 @@ describe('golden files', () => {
       if (!opened.ok) {
         throw new Error(`${file}: ${opened.detail}`);
       }
-      const saved = save(opened.value.doc, opened.value.kept, localeOf(name));
+      const saved = save(opened.value.doc, opened.value.kept);
       expect(Buffer.from(saved, 'utf8').equals(bytes), file).toBe(true);
     }
   });
@@ -253,7 +254,7 @@ describe('saved file size', () => {
     const blocks = Array.from({ length: 100 }, (_, index) =>
       process(`b${String(index + 1)}`, syllables.slice(index * 3, index * 3 + 3).join('')),
     );
-    const file = save(oneDiagram(...blocks), undefined, 'en');
+    const file = save(oneDiagram(...blocks), undefined);
     expect(Buffer.byteLength(file, 'utf8')).toBeLessThanOrEqual(300 * 1024);
   });
 });

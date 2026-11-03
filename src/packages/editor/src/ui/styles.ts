@@ -144,6 +144,8 @@ export const chromeCss = `
 .ans-modal-body { padding: 12px 14px; overflow: auto; display: grid; gap: 10px; }
 .ans-note { color: var(--ui-muted); margin: 0; }
 .ans-field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ans-field-title { display: grid; gap: 2px; }
+.ans-field-hint { color: var(--ui-muted); font-size: 12px; }
 .ans-field select {
   font: inherit; color: inherit; background: var(--ui-bg); border: 1px solid var(--ui-line);
   border-radius: 4px; padding: 2px 6px;

@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-03: `createEditor`가 받는 화면 언어의 기본값은 새 문서의 그림 문구의 언어(문서 설정)도 정한다. 그림의 고정 문구는 화면 언어가 아니라 문서 설정을 따른다 → [[0041-drawing-locale-in-document|ADR-0041]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: MVP 코드에서 `createEditor`에 저장 파일의 서브셋 글꼴을 만들 것(`fonts`), 화면 언어의 기본값, 화면 글꼴의 주소, 클립보드, 로그를 더했다. 저장 · 다른 이름으로 저장은 `editor`의 명령이고 `DocumentStore`를 거쳐 셸에 닿는다 → [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: `DocumentStore`는 문서 하나의 읽기 · 쓰기로 남고, 어떤 파일을 열지(새로 · 열기 · 최근 파일)와 자동 저장 · 임시 보관의 타이머는 셸이 맡는 것으로 정했다. 셸은 `editor`를 만들 때 문서와 함께 화면 밝기 · UI 글꼴(`Appearance`)을 넘긴다. 설정이 아니라 호스트의 형편이라 `SettingsStore`에 넣지 않았다 → [[03-editor#6.1 새로 · 열기 · 최근 파일]], [[03-editor#6.3 자동 저장과 로컬 백업은 셸이 맡는다]]
 > - 2026-11-01: 두 인터페이스에 구체적인 시그니처가 생겼다(`WriteResult`, `canWriteInPlace`, `readOther` 등) → [[03-editor#6. 셸과의 연결]]. 웹 셸은 파일 밖에 임시 보관과 최근 파일을 브라우저의 IndexedDB에 둔다 → [[06-web#2. 로컬 백업과 자동 저장]]

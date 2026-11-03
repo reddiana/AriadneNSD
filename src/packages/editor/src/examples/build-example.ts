@@ -52,13 +52,14 @@ const defaultLabel = 'default';
 /**
  * Builds a new document from diagrams in short notation. Ids come from the core id generator in
  * document order, so the same example always gives the same document. Settings and view state
- * are those of a new document, with the header shape the user chose last (UX HS1).
+ * are those of a new document, with the header shape the user chose last (UX HS1) and the
+ * drawing language (ADR-0041).
  */
 export function buildExample(
   diagrams: ReadonlyArray<DiagramSpec>,
-  headStyle: Settings['headStyle'],
+  settings: Pick<Settings, 'headStyle' | 'locale'>,
 ): Doc {
-  const base = createDoc({ headStyle });
+  const base = createDoc(settings);
   const ids = createIdGenerator({ ...base.content, diagrams: [] });
   // Diagram ids first, so a call can refer to a Method that comes later in the document.
   const numbered = diagrams.map((spec) => ({ spec, id: ids.next('diagram') }));

@@ -62,7 +62,7 @@ export const whileBlock = (id: Id, body: Seq | ReadonlyArray<Block>, text = 'w')
 
 /** A content with one headerless diagram `d1` whose body is `body`. */
 export const contentOf = (body: Seq | ReadonlyArray<Block>): Content => ({
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
   diagrams: [{ id: 'd1', head: null, body: 'blocks' in body ? body : seq(body) }],
 });
 
@@ -81,7 +81,7 @@ export const diagram = (id: Id, head: Head | null, body: Seq | ReadonlyArray<Blo
 
 /** A content with these diagrams and the settings of `contentOf`. */
 export const contentWith = (...diagrams: ReadonlyArray<Diagram>): Content => ({
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
   diagrams,
 });
 

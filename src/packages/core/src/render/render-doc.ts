@@ -1,5 +1,4 @@
 // The whole rendering pipeline in one call (02-layout, rendering pipeline).
-import type { Locale } from '../i18n/messages';
 import { layout } from '../layout/layout';
 import type { LayoutResult } from '../layout/types';
 import type { Doc } from '../model/types';
@@ -23,10 +22,10 @@ export type Rendering = {
 
 /**
  * Lays out and draws a document with the theme of its settings: layout → buildScene → toSvg.
- * `locale` is the language of the fixed words in the drawing (R-NFR-04).
+ * The fixed words are in the document's drawing language `settings.locale` (ADR-0041).
  */
-export function renderDoc(doc: Doc, options: { readonly locale: Locale }): Rendering {
-  const result = layout(doc, options);
+export function renderDoc(doc: Doc): Rendering {
+  const result = layout(doc);
   const scene = buildScene(result, themeFor(doc.content.settings.theme));
   return { layout: result, scene, svg: toSvg(scene), codePoints: usedCodePoints(scene) };
 }

@@ -18,7 +18,7 @@ export function exampleThumbnailSvg(
   locale: Locale,
   subsetToWoff: SubsetToWoff,
 ): string {
-  const rendering = renderDoc(example.build('title'), { locale });
+  const rendering = renderDoc(example.build({ headStyle: 'title', locale }));
   return assembleImageSvg(rendering.svg, [
     { family: blockFont.familyName, woff: subsetToWoff(rendering.codePoints) },
   ]);

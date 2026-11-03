@@ -12,6 +12,7 @@ import type {
   Seq,
   SiteFold,
 } from '../model/types';
+import { locales } from '../i18n/messages';
 import type { KeptSettings } from './model-json';
 import { serializeModelJson } from './model-json';
 import { parseModelJson } from './parse-model';
@@ -211,6 +212,7 @@ const docAndKept: fc.Arbitrary<{ readonly doc: Doc; readonly kept: KeptSettings 
     diagrams: fc.array(fc.record({ head, body: rawSeq(2) }), { minLength: 1, maxLength: 3 }),
     theme: text,
     headStyle: fc.constantFrom('shape' as const, 'title' as const),
+    locale: fc.constantFrom(...locales),
     keptTextKind: fc.option(
       text.filter((value) => value !== 'plain'),
       { nil: undefined },
@@ -223,7 +225,12 @@ const docAndKept: fc.Arbitrary<{ readonly doc: Doc; readonly kept: KeptSettings 
   .map((raw) => ({
     doc: {
       content: {
-        settings: { textKind: 'plain', theme: raw.theme, headStyle: raw.headStyle },
+        settings: {
+          textKind: 'plain',
+          theme: raw.theme,
+          headStyle: raw.headStyle,
+          locale: raw.locale,
+        },
         diagrams: numberDoc(raw.diagrams),
       },
       view: {
@@ -253,7 +260,7 @@ describe('round trip', () => {
     fc.assert(
       fc.property(docAndKept, ({ doc, kept }) => {
         const json = serializeModelJson(doc, kept);
-        const read = parseModelJson(json, formatOnly);
+        const read = parseModelJson(json, { check: formatOnly });
         if (!read.ok) {
           throw new Error(read.detail);
         }
@@ -268,7 +275,7 @@ describe('round trip', () => {
     fc.assert(
       fc.property(docAndKept, ({ doc, kept }) => {
         const file = assembleSvgFile({ doc, kept, drawing, fonts: [] });
-        const opened = openSvgFile(file, formatOnly);
+        const opened = openSvgFile(file, { check: formatOnly });
         if (!opened.ok) {
           throw new Error(opened.detail);
         }

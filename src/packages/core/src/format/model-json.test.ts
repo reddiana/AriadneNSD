@@ -10,7 +10,7 @@ const view = { folded: [], opened: [], bands: true, resultSymbol: '←' } as con
 
 const ifDoc: Doc = {
   content: {
-    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
     diagrams: [
       {
         id: 'd1',
@@ -38,7 +38,8 @@ describe('model JSON serialization', () => {
         '  "settings": {',
         '    "textKind": "plain",',
         '    "theme": "default",',
-        '    "headStyle": "shape"',
+        '    "headStyle": "shape",',
+        '    "locale": "en"',
         '  },',
         '  "diagrams": [',
         '    {',
@@ -93,7 +94,7 @@ describe('model JSON serialization', () => {
       view: { resultSymbol: '←', bands: true, opened: [], folded: [] },
       content: {
         diagrams: ifDoc.content.diagrams,
-        settings: { headStyle: 'shape', theme: 'default', textKind: 'plain' },
+        settings: { locale: 'en', headStyle: 'shape', theme: 'default', textKind: 'plain' },
       },
     };
     expect(serializeModelJson(shuffled)).toBe(serializeModelJson(ifDoc));
@@ -102,7 +103,7 @@ describe('model JSON serialization', () => {
   it('T-0410: 01-file-format 3.3: writes head, folds, labels, otherwise and siteFolds only when present', () => {
     const doc: Doc = {
       content: {
-        settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
+        settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
         diagrams: [
           {
             id: 'd1',

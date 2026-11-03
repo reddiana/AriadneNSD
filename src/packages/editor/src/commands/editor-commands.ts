@@ -6,7 +6,6 @@ import type {
   HeadKind,
   Id,
   IdGenerator,
-  Locale,
   NewBlockKind,
   Result,
   Side,
@@ -77,7 +76,6 @@ import {
 export type CommandDeps = {
   readonly session: EditorSession;
   readonly clipboard: ClipboardPort;
-  readonly locale: () => Locale;
   readonly save: () => Promise<WriteResult>;
   readonly saveAs: () => Promise<WriteResult>;
   /** Sets the zoom, keeping the selection (or the middle) in place on the screen. */
@@ -660,7 +658,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
   ): Promise<void> => {
     const where = await deps.clipboard.write({
       text: clipToText(clip, {
-        locale: deps.locale(),
+        // The fixed words as drawn: in the document's drawing language (ADR-0041).
+        locale: content().settings.locale,
         resultSymbol: session.state.doc.view.resultSymbol,
         diagrams: new Map(content().diagrams.map((diagram) => [diagram.id, diagram])),
       }),

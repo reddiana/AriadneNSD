@@ -33,12 +33,6 @@ import type {
   PlacedText,
 } from './types';
 
-/** Options of `layout`. */
-export type LayoutOptions = {
-  /** The language of the fixed words in the drawing ("true" / "false"), R-NFR-04. */
-  readonly locale: Locale;
-};
-
 const padX = geometry['space.pad-x'];
 const padY = geometry['space.pad-y'];
 const line = geometry['space.line'];
@@ -97,14 +91,15 @@ type Context = {
 
 /**
  * Lays out a document: every block's bounding box, the click regions and what to draw
- * (02-layout 1). Pure: the same document and options give the same result (R-FMT-03).
+ * (02-layout 1). Pure: the same document gives the same result (R-FMT-03). The fixed words
+ * ("true" / "false") are in the document's drawing language `settings.locale` (ADR-0041).
  *
  * MVP scope: fold regions are drawn as if their name bands were off (02-layout 1.6), and folded
  * things are drawn unfolded.
  */
-export function layout(doc: Doc, options: LayoutOptions): LayoutResult {
+export function layout(doc: Doc): LayoutResult {
   const context: Context = {
-    locale: options.locale,
+    locale: doc.content.settings.locale,
     view: doc.view,
     diagrams: new Map(doc.content.diagrams.map((diagram) => [diagram.id, diagram])),
     measures: new Map(),

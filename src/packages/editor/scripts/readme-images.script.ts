@@ -19,8 +19,8 @@ it('writes the README images', async () => {
   for (const id of ['dijkstra', 'merge-sort']) {
     const example = examples.find((e) => e.id === id);
     if (example === undefined) throw new Error(`no example ${id}`);
-    const doc = example.build('title');
-    const rendering = renderDoc(doc, { locale: 'ko' });
+    const doc = example.build({ headStyle: 'title', locale: 'ko' });
+    const rendering = renderDoc(doc);
     const woff = subsetter.subsetToWoff(ttf, rendering.codePoints);
     const file = assembleSvgFile({
       doc,

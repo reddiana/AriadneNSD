@@ -26,7 +26,7 @@ const content = contentOf([
   caseBlock('k1', [arm('r3', '1', [proc('p4')])], null),
 ]);
 const index = indexDoc(content);
-const result = layout(docOf(content), { locale: 'en' });
+const result = layout(docOf(content));
 
 const boxOf = (id: string): Box => {
   const box = result.boxes.get(id);
@@ -175,7 +175,7 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
     diagrams: content.diagrams.map((d) => ({ ...d, head: { kind: 'method', text: 'f(a)' } })),
   };
   const headedIndex = indexDoc(headed);
-  const headedLayout = layout(docOf(headed), { locale: 'en' });
+  const headedLayout = layout(docOf(headed));
   const head = headedLayout.diagrams[0]?.head ?? { x: -1, y: -1, width: 0, height: 0 };
 
   it('T-0241 · R-BLK-10: a click on the header hits the header and selects it', () => {

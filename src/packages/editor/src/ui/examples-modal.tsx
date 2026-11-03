@@ -34,7 +34,10 @@ function Thumbnail({
   readonly example: ExampleInfo;
   readonly locale: Locale;
 }) {
-  const svg = useMemo(() => renderDoc(example.build('title'), { locale }).svg, [example, locale]);
+  const svg = useMemo(
+    () => renderDoc(example.build({ headStyle: 'title', locale })).svg,
+    [example, locale],
+  );
   return (
     <span className="ans-example-thumb">
       <svg

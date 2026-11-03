@@ -1,5 +1,7 @@
 // Reading model JSON: docs/05-spec/01-file-format.md, sections 1, 3 and 5.
 // The input comes from outside (a file), so it is `unknown` until checked (coding guide 5).
+import type { Locale } from '../i18n/messages';
+import { locales } from '../i18n/messages';
 import { checkInvariants } from '../model/invariants';
 import type {
   Arm,
@@ -56,25 +58,37 @@ export function openFailure(reason: OpenFailureReason, detail: string): OpenResu
   return { ok: false, reason, detail };
 }
 
+/** How to read a model. */
+export type ReadOptions = {
+  /** Runs on the result; by default the model invariants (01-model 3). */
+  readonly check?: ContentCheck;
+  /**
+   * The drawing language for a file without `settings.locale` (or with one this version does not
+   * know): the opener's screen language (ADR-0041). Default English.
+   */
+  readonly locale?: Locale;
+};
+
 /** Parses model JSON text and checks it. See `parseModel`. */
-export function parseModelJson(text: string, check: ContentCheck = invariantCheck): OpenResult {
+export function parseModelJson(text: string, options: ReadOptions = {}): OpenResult {
   let value: unknown;
   try {
     value = JSON.parse(text);
   } catch (error) {
     return openFailure('damaged', `model JSON does not parse: ${String(error)}`);
   }
-  return parseModel(value, check);
+  return parseModel(value, options);
 }
 
 /**
  * Checks a parsed model JSON value and turns it into a document (01-file-format 5).
  * Older versions are migrated one step at a time; newer versions are refused. Unknown keys are
  * refused too, so that opening and saving never drops something silently (QA-04).
- * `check` runs on the result; by default the model invariants (01-model 3). Tests of the format
- * alone may pass another.
+ * `options.check` runs on the result; by default the model invariants (01-model 3). Tests of the
+ * format alone may pass another.
  */
-export function parseModel(value: unknown, check: ContentCheck = invariantCheck): OpenResult {
+export function parseModel(value: unknown, options: ReadOptions = {}): OpenResult {
+  const check = options.check ?? invariantCheck;
   if (!isRecord(value) || value.format !== formatName) {
     return openFailure('damaged', `"format" is not "${formatName}"`);
   }
@@ -99,7 +113,7 @@ export function parseModel(value: unknown, check: ContentCheck = invariantCheck)
     }
     migrated = migrate(migrated);
   }
-  const reader: Reader = { problem: null };
+  const reader: Reader = { problem: null, locale: options.locale ?? 'en' };
   const loaded = readDocument(reader, migrated);
   if (loaded === null) {
     return openFailure('damaged', reader.problem ?? 'unknown problem');
@@ -113,7 +127,11 @@ export function parseModel(value: unknown, check: ContentCheck = invariantCheck)
 
 // The reader functions return `null` on the first problem and note it in the reader.
 
-type Reader = { problem: string | null };
+type Reader = {
+  problem: string | null;
+  /** The drawing language when the file has none (ReadOptions.locale). */
+  readonly locale: Locale;
+};
 
 type Fields = Readonly<Record<string, unknown>>;
 
@@ -231,7 +249,12 @@ function readSettings(
   reader: Reader,
   value: unknown,
 ): { readonly settings: Settings; readonly kept: KeptSettings } | null {
-  const fields = readObject(reader, 'settings', value, ['textKind', 'theme', 'headStyle']);
+  const fields = readObject(reader, 'settings', value, [
+    'textKind',
+    'theme',
+    'headStyle',
+    'locale',
+  ]);
   if (fields === null) {
     return null;
   }
@@ -242,14 +265,26 @@ function readSettings(
   if (headStyle !== 'shape' && headStyle !== 'title') {
     return fail(reader, 'settings.headStyle', 'is not "shape" or "title"');
   }
-  if (textKind === null || theme === null) {
+  // A file without a locale (written before ADR-0041) is drawn in the opener's language.
+  const written =
+    'locale' in fields ? readString(reader, 'settings.locale', fields.locale) : reader.locale;
+  if (textKind === null || theme === null || written === null) {
     return null;
   }
+  // An unknown locale (a newer app's language) is drawn in the opener's and written back (3.3).
+  const locale = knownLocale(written) ?? reader.locale;
   // v1 uses only plain. Another value is shown as plain and written back as it was (3.3).
   return {
-    settings: { textKind: 'plain', theme, headStyle },
-    kept: textKind === 'plain' ? {} : { textKind },
+    settings: { textKind: 'plain', theme, headStyle, locale },
+    kept: {
+      ...(textKind === 'plain' ? {} : { textKind }),
+      ...(locale === written ? {} : { locale: { written, drawnIn: locale } }),
+    },
   };
+}
+
+function knownLocale(value: string): Locale | null {
+  return locales.find((locale) => locale === value) ?? null;
 }
 
 function readDiagram(reader: Reader, at: string, value: unknown): Diagram | null {

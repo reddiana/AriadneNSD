@@ -6,7 +6,7 @@ tags:
   - spec
 status: 초안
 format-version: 1
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # 파일 형식 명세
@@ -99,7 +99,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 {
   "format": "ariadne-nsd",
   "version": 1,
-  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape" },
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape", "locale": "ko" },
   "diagrams": [
     {
       "id": "d1",
@@ -118,7 +118,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 
 | 묶음 | 무엇 | undo |
 | --- | --- | --- |
-| `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]) | 대상 |
+| `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 헤더(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등(`kind`로 판별하는 유니온). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
 | 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 호출하면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]]에 있고, `external.file`에 무엇을 적는지만 정하지 않음 → [[01-requirements#^r-blk\|R-BLK-08]], [[01-requirements#^r-blk\|R-BLK-09]]). 이름 문자열을 복사해 갖지 않는다. 참조 대상이 없으면(dangling) 마지막에 보이던 이름을 보존한다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
@@ -140,7 +140,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 	- `folded`에는 지금 문서에 있는, 접을 수 있는 것(접기 영역, 펴 보인 곳의 접기 영역, If · Case의 분기, 반복 블록)의 id만 적는다. 없어진 id는 적지 않는다. 한 줄 안에서는 블록들(과 그 안)을 먼저, 그 줄의 접기 영역을 뒤에 적는다.
 	- `opened`에는 지금도 갈 수 있는 경로만 한 번씩 적는다: 경로의 id가 모두 호출 블록이고, 안쪽 것은 바로 바깥 호출 블록이 부르는(같은 문서의) Method 안에 있다. 다른 문서를 거치는 경로는 아직 설계하지 않아 적지 않는다([[01-model#미결정 사항]]).
 - 서브셋 글꼴은 문자를 코드 포인트 순으로 서브세팅하고, 같은 버전의 서브세팅 도구와 같은 버전 · 같은 수준의 압축 라이브러리로 만든다.
-- 그림 안의 텍스트 가운데 편집기가 적는 고정 문구("참" · "거짓", "⋯ 블록 n개")는 저장 시점의 UI 언어를 따른다([[01-requirements#^r-nfr|R-NFR-04]]). 그래서 같은 모델이라도 UI 언어가 다르면 그림 요소가 달라진다. 이것은 이 규칙의 예외이고, 모델 JSON은 언제나 같다.
+- 그림 안의 텍스트 가운데 편집기가 적는 고정 문구("참" · "거짓", "⋯ 블록 n개", "(이름 없음)")는 `settings.locale`의 언어로 적는다. 저장하는 사람의 화면 언어(UI 언어)는 파일에 들어가지 않는다. 그래서 같은 모델이면 누가 어느 화면 언어로 저장해도 같은 파일이다([[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]).
 
 ### 3.2 CDATA 이스케이프
 
@@ -161,7 +161,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 | 노드 | 필드 (순서대로) | 생략 |
 | --- | --- | --- |
 | 문서 | `format`(늘 `"ariadne-nsd"`) · `version` · `settings` · `diagrams` · `view` | 없음 |
-| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) | 없음 |
+| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) · `locale`(`"en"` \| `"ko"`) | 없음 (읽을 때는 `locale`이 없어도 받는다) |
 | 다이어그램 | `id` · `head` · `body` · `folds` | `head`는 헤더가 없으면, `folds`는 비면 |
 | `head` | `kind`(`"event"` \| `"method"`) · `text` | 없음 |
 | 처리 | `id` · `kind: "process"` · `text` | 없음 (빈 블록은 `text: ""`) |
@@ -181,6 +181,10 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 - **모르는 키**가 있는 객체는 깨진 파일(`damaged`)로 거부한다. 모르는 키를 버리고 열면 "열고 바로 저장하면 그대로"([[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로|QA-04]])를 지킬 수 없기 때문이다. 생략하는 목록을 빈 목록으로 적은 것(`"folds": []`)은 받는다(저장할 때는 생략한다).
 - **`textKind`**: v1에서 쓰는 값은 `"plain"` 하나다(블록 텍스트의 언어는 MVP 뒤 → [[dr-0015-mvp-scope|DR-0015]]). 모르는 값을 만나면 모델에는 `"plain"`을 두고, 받은 값은 모델 밖에 따로 보존한다(`editor`의 세션이 가진다 → [[03-editor#2. 상태와 선택]]). 저장할 때 모델의 값이 아직 `"plain"`이면 보존한 값을 그대로 적는다.
 - **`theme`**: v1에서 쓰는 값은 `"default"` 하나다. 모르는 값은 기본 테마로 그리고, 값은 그대로 둔다.
+- **`locale`**: 그림 문구의 언어. 값의 목록은 화면 언어의 목록(`core`의 `locales`)과 같다. 새 문서는 만든 사람의 화면 언어다 → [[0041-drawing-locale-in-document|ADR-0041]]
+	- 없으면(이 필드가 생기기 전에 저장한 파일) 연 사람의 화면 언어로 읽는다. 마이그레이션은 두지 않고, 다음에 저장할 때 그 값을 적는다. 그래서 이런 파일은 처음 저장하는 사람의 화면 언어에 따라 바이트가 다르다. 한 번 저장한 뒤로는 같다.
+	- 모르는 값(뒤의 판이 더한 언어)은 연 사람의 화면 언어로 그리고, 받은 값은 `textKind`처럼 모델 밖에 따로 보존한다. 사용자가 그 문서의 그림 문구의 언어를 바꾸지 않았으면 저장할 때 보존한 값을 그대로 적는다.
+	- 문자열이 아니면 깨진 파일이다.
 - 헤더 · 호출 블록 · 여러 다이어그램 · 접기 영역은 MVP 뒤의 기능이지만 v1 형식에 들어 있다. 그 기능을 낼 때 뜻이 바뀌면(예: `external.file`에 무엇을 적는지 → [[01-model#미결정 사항]]) 버전을 올리고 마이그레이션을 둔다(5장).
 
 작은 예입니다. 처리 블록 하나와 If 하나가 든, 헤더 없는 다이어그램입니다.
@@ -189,7 +193,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 {
   "format": "ariadne-nsd",
   "version": 1,
-  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape" },
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape", "locale": "ko" },
   "diagrams": [
     {
       "id": "d1",

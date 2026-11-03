@@ -192,6 +192,19 @@ describe('the clipboard (AT-12)', () => {
     expect(selected(engine)).toEqual(['b3']);
   });
 
+  it('T-0810: ADR-0041: copied text names the If branches in the language of the document, as drawn', async () => {
+    const content = contentOf([
+      ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')])),
+    ]);
+    const engine = testEngine({ ...content, settings: { ...content.settings, locale: 'ko' } });
+    select(engine, 'b1');
+    engine.keys('y', 'y');
+    await engine.settle();
+    expect(engine.clipboard.data.text).toBe(
+      ['c', '    참:', '        b2', '    거짓:', '        b3'].join('\n'),
+    );
+  });
+
   it('T-0038 · AT-12: text from another program becomes one process block per line', async () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.clipboard.data = { text: 'first\n  second', json: null };
@@ -486,11 +499,10 @@ describe('questions in the status bar (UX MD3)', () => {
 });
 
 describe('the session itself (03-editor 3.4, coding guide 5)', () => {
-  const sessionOf = (locale: { value: 'en' | 'ko' }, logs: string[] = []): EditorSession =>
+  const sessionOf = (logs: string[] = []): EditorSession =>
     new EditorSession(
       docOf(contentOf([ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')]))])),
       {
-        locale: () => locale.value,
         clipboard: memoryClipboard(),
         timers: manualTimers(),
         isKeyHintEnabled: () => false,
@@ -502,9 +514,8 @@ describe('the session itself (03-editor 3.4, coding guide 5)', () => {
       { kept: {}, selection: null, isDirty: false, readOnly: false },
     );
 
-  it('T-0549: rerender draws the fixed words again in the current language', () => {
-    const locale: { value: 'en' | 'ko' } = { value: 'en' };
-    const session = sessionOf(locale);
+  it('T-0811: ADR-0041: rerender draws again in the language of the document and leaves the content and undo alone', () => {
+    const session = sessionOf();
     const yes = '참'.codePointAt(0);
     expect(session.rendering.codePoints).not.toContain(yes);
     let calls = 0;
@@ -512,9 +523,8 @@ describe('the session itself (03-editor 3.4, coding guide 5)', () => {
       calls += 1;
     });
     const content = session.state.doc.content;
-    locale.value = 'ko';
     session.rerender();
-    expect(session.rendering.codePoints).toContain(yes);
+    expect(session.rendering.codePoints).not.toContain(yes);
     expect(session.state.doc.content).toBe(content);
     expect(session.state.undo).toHaveLength(0);
     expect(calls).toBe(1);
@@ -522,7 +532,7 @@ describe('the session itself (03-editor 3.4, coding guide 5)', () => {
 
   it('T-0550: content that breaks an invariant is not taken; the problem is logged and reported', () => {
     const logs: string[] = [];
-    const session = sessionOf({ value: 'en' }, logs);
+    const session = sessionOf(logs);
     const before = session.state.doc.content;
     // Two blocks with the same id.
     expect(session.apply(contentOf([proc('b1'), proc('b1')]), { selection: null })).toBe(false);
@@ -535,7 +545,7 @@ describe('the session itself (03-editor 3.4, coding guide 5)', () => {
   });
 
   it('T-0551: undo or redo with nothing to step says so and returns false', () => {
-    const session = sessionOf({ value: 'en' });
+    const session = sessionOf();
     expect(session.history('undo')).toBe(false);
     expect(session.chrome().notice?.message).toBe('reason.nothingToUndo');
     expect(session.history('redo')).toBe(false);
@@ -551,27 +561,27 @@ describe('the session itself (03-editor 3.4, coding guide 5)', () => {
     [{ kind: 'call', block: 'nope', part: 'args' }, 'reason.notFound'],
     [{ kind: 'call', block: 'b2', part: 'args' }, 'reason.wrongKind'],
   ] as const)('T-0552: the text field %j cannot be opened: %s', (field, reason) => {
-    const session = sessionOf({ value: 'en' });
+    const session = sessionOf();
     expect(session.fieldText(field)).toEqual({ reason });
     expect(session.startEditing(field, 'end')).toBe(reason);
     expect(session.state.editing).toBeNull();
   });
 
   it('T-0553: a text field does not open while view only', () => {
-    const session = sessionOf({ value: 'en' });
+    const session = sessionOf();
     session.setReadOnly(true);
     expect(session.startEditing({ kind: 'block', block: 'b2' }, 'end')).toBe('reason.readOnly');
   });
 
   it('T-0554: while the text field is open, diagram keys are left to it', () => {
-    const session = sessionOf({ value: 'en' });
+    const session = sessionOf();
     expect(session.startEditing({ kind: 'block', block: 'b2' }, 'end')).toBe(true);
     expect(session.handleKey('j')).toBe(false);
     expect(session.switchCallPart('x')).toBe(false);
   });
 
   it('T-0555: an unknown branch has no label text', () => {
-    expect(sessionOf({ value: 'en' }).labelText('nope')).toBe('');
+    expect(sessionOf().labelText('nope')).toBe('');
   });
 
   it('T-0556: the key hint titles of [ and ], and none for other keys', () => {

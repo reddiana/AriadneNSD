@@ -15,10 +15,8 @@ import {
   largeDoc,
   process,
   whileBlock,
+  inLocale,
 } from './testing';
-
-const en = { locale: 'en' } as const;
-const ko = { locale: 'ko' } as const;
 
 /** A standalone SVG for the golden files, so GitHub shows them as pictures (07-testing 3). */
 function standalone(svg: RenderedSvg): string {
@@ -55,13 +53,13 @@ const sample: Doc = docOf(
 
 describe('render', () => {
   it('T-0476 · R-FMT-03: the same model gives the same SVG text', () => {
-    const first = renderDoc(sample, ko).svg.content;
-    const second = renderDoc(structuredClone(sample), ko).svg.content;
+    const first = renderDoc(inLocale(sample, 'ko')).svg.content;
+    const second = renderDoc(inLocale(structuredClone(sample), 'ko')).svg.content;
     expect(second).toBe(first);
   });
 
   it('T-0477: 01-file-format 2: draws into one g.ans-render with the bundled font first', () => {
-    const { svg } = renderDoc(sample, en);
+    const { svg } = renderDoc(sample);
     expect(svg.content.startsWith('<g class="ans-render" transform="translate(.5 .5)"')).toBe(true);
     expect(svg.content).toContain(`font-family="'AriadneNSD Mono', D2Coding,`);
     expect(svg.content).toContain('style="font-kerning:none"');
@@ -71,7 +69,7 @@ describe('render', () => {
   });
 
   it('T-0478: visual design 3.3: uses the default theme colors', () => {
-    const { svg } = renderDoc(sample, en);
+    const { svg } = renderDoc(sample);
     expect(svg.content).toContain('fill="#edf0f5" stroke="#5b77ad"'); // block.process, line.structure
     expect(svg.content).toContain('fill="#f6ebdc"'); // block.branch
     expect(svg.content).toContain('fill="#dce6f6"'); // block.loop
@@ -79,14 +77,14 @@ describe('render', () => {
   });
 
   it('T-0479 · UX BH1: puts a header-colored halo behind the condition', () => {
-    const { svg } = renderDoc(sample, en);
+    const { svg } = renderDoc(sample);
     expect(svg.content).toContain(
       'text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke"',
     );
   });
 
   it('T-0480 · R-LAY-09: draws the ∅ of an empty branch as a shape, not a character', () => {
-    const { svg, scene } = renderDoc(sample, en);
+    const { svg, scene } = renderDoc(sample);
     expect(svg.content).not.toContain('∅');
     const marks = scene.elements.filter((element) => element.kind === 'circle');
     // The empty false branch of b3 and the empty arm of b9.
@@ -96,7 +94,6 @@ describe('render', () => {
   it('T-0481 · UX CD1: draws the empty default cell of a Case without a default', () => {
     const { scene } = renderDoc(
       docOf(caseBlock('b1', 'k', [arm('r2', '1', [process('b3')])], null)),
-      en,
     );
     const circles = scene.elements.filter((element) => element.kind === 'circle');
     expect(circles.map((circle) => circle.blockId)).toEqual(['b3', 'b1']);
@@ -106,18 +103,18 @@ describe('render', () => {
     const doc = docOf(
       ifBlock('b1', 'c', branch('r2', [process('b3')]), branch('r4', [process('b5')])),
     );
-    expect(renderDoc(doc, ko).svg.content).toContain('>참</text>');
-    expect(renderDoc(doc, ko).svg.content).toContain('>거짓</text>');
-    expect(renderDoc(doc, en).svg.content).toContain('>true</text>');
+    expect(renderDoc(inLocale(doc, 'ko')).svg.content).toContain('>참</text>');
+    expect(renderDoc(inLocale(doc, 'ko')).svg.content).toContain('>거짓</text>');
+    expect(renderDoc(doc).svg.content).toContain('>true</text>');
   });
 
   it('T-0483: escapes XML characters and keeps spaces', () => {
-    const { svg } = renderDoc(docOf(process('b1', '  a < b && c > "d"')), en);
+    const { svg } = renderDoc(docOf(process('b1', '  a < b && c > "d"')));
     expect(svg.content).toContain('xml:space="preserve">  a &lt; b &amp;&amp; c &gt; "d"</text>');
   });
 
   it('T-0484: every element of the scene names its block (ADR-0030)', () => {
-    const { scene } = renderDoc(sample, en);
+    const { scene } = renderDoc(sample);
     const ids = new Set(scene.elements.map((element) => element.blockId));
     expect([...ids].every((id) => id.startsWith('b'))).toBe(true);
   });
@@ -126,7 +123,7 @@ describe('render', () => {
     const doc = docOf(
       ifBlock('b1', 'a<b', branch('r2', [process('b3', '값')]), branch('r4', [process('b5')])),
     );
-    const codePoints = renderDoc(doc, ko).codePoints;
+    const codePoints = renderDoc(inLocale(doc, 'ko')).codePoints;
     // '<' 'a' 'b', then 값 거 참 짓 in code point order.
     expect(codePoints).toEqual(
       [0x3c, 0x61, 0x62, 0xac12, 0xac70, 0xcc38, 0xc9d3].sort((a, b) => a - b),
@@ -145,7 +142,7 @@ describe('render', () => {
     let best = Number.POSITIVE_INFINITY;
     for (let run = 0; run < 5; run += 1) {
       const start = performance.now();
-      renderDoc(doc, en);
+      renderDoc(doc);
       best = Math.min(best, performance.now() - start);
     }
     // 02-layout 4 measured about 1ms in a browser; this leaves room for slow CI machines.
@@ -157,7 +154,7 @@ describe('render: headers (visual design principle 2)', () => {
   const withHead = (headStyle: 'shape' | 'title', kind: 'event' | 'method'): Doc => ({
     ...docOf(process('b1', 'x')),
     content: {
-      settings: { textKind: 'plain', theme: 'default', headStyle },
+      settings: { textKind: 'plain', theme: 'default', headStyle, locale: 'en' },
       diagrams: [
         {
           id: 'd1',
@@ -169,7 +166,7 @@ describe('render: headers (visual design principle 2)', () => {
   });
 
   it('T-0488: draws the Event hat as a closed curve in block.event', () => {
-    const { scene, svg } = renderDoc(withHead('shape', 'event'), en);
+    const { scene, svg } = renderDoc(withHead('shape', 'event'));
     const path = scene.elements.find((element) => element.kind === 'path');
     expect(path).toMatchObject({ blockId: 'd1', fill: '#e2efdf' });
     expect(svg.content).toMatch(/<path d="M24 40 C46 22 /);
@@ -177,13 +174,13 @@ describe('render: headers (visual design principle 2)', () => {
   });
 
   it('T-0489: draws the Method arch across the width in block.call', () => {
-    const { scene } = renderDoc(withHead('shape', 'method'), en);
+    const { scene } = renderDoc(withHead('shape', 'method'));
     const path = scene.elements.find((element) => element.kind === 'path');
     expect(path).toMatchObject({ blockId: 'd1', fill: '#ebe7f4' });
   });
 
   it('T-0490: draws a header like a title: a muted label, a bold name and a rule, no fill', () => {
-    const { scene, svg } = renderDoc(withHead('title', 'method'), en);
+    const { scene, svg } = renderDoc(withHead('title', 'method'));
     expect(scene.elements.some((element) => element.kind === 'path')).toBe(false);
     expect(svg.content).toContain('fill="#5a6476" xml:space="preserve">Method</text>');
     expect(svg.content).toContain('<tspan font-weight="600">tick</tspan>');
@@ -261,7 +258,7 @@ describe('render: golden files (07-testing 3)', () => {
 
   for (const [name, doc] of cases) {
     it(`T-0491 · R-FMT-03: ${name} matches its golden SVG`, async () => {
-      const svg = standalone(renderDoc(doc, ko).svg);
+      const svg = standalone(renderDoc(inLocale(doc, 'ko')).svg);
       await expect(svg).toMatchFileSnapshot(`../../golden/render/${name}.svg`);
     });
   }

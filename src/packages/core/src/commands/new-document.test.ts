@@ -22,6 +22,7 @@ describe('new document', () => {
       textKind: 'plain',
       theme: 'default',
       headStyle: 'shape',
+      locale: 'en',
     });
   });
 

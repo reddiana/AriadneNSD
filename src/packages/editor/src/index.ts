@@ -4,7 +4,7 @@ export { editorVersion } from './version';
 export * from './ui';
 
 // The editor engine (03-editor): making an editor and the contracts with the shell (6).
-export type { EditorOptions, ReadDocument } from './create-editor';
+export type { EditorOptions, NewDocumentDefaults, ReadDocument } from './create-editor';
 export {
   createEditor,
   documentSettingIds,

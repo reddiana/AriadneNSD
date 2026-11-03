@@ -312,6 +312,7 @@ describe('setSettings', () => {
       textKind: 'plain',
       theme: 'default',
       headStyle: 'shape',
+      locale: 'en',
     });
     expect(result.content.diagrams).toBe(content.diagrams);
     expect(result.touched).toEqual([]);

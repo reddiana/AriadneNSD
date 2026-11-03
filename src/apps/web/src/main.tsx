@@ -106,9 +106,9 @@ const examplesHost: ExamplesHost = {
     if (example === undefined) {
       return;
     }
-    // In the header shape the user chose last (UX HS1).
+    // In the header shape the user chose last (UX HS1), drawn in the screen language (ADR-0041).
     void shell.openDocument(
-      example.build(rememberedHeadStyle(settings)),
+      example.build({ headStyle: rememberedHeadStyle(settings), locale }),
       `${example.name[locale]}.ns.svg`,
     );
   },

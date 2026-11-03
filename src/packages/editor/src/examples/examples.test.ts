@@ -269,22 +269,27 @@ describe('examples', () => {
     if (example === undefined) {
       throw new Error(`no example ${entry.id}`);
     }
-    const doc = example.build('title');
+    const doc = example.build({ headStyle: 'title', locale: 'en' });
 
     it('T-0322 · R-EDIT-25: keeps every invariant, with either header shape', () => {
       expect(checkInvariants(doc.content)).toEqual([]);
-      expect(checkInvariants(example.build('shape').content)).toEqual([]);
+      expect(checkInvariants(example.build({ headStyle: 'shape', locale: 'ko' }).content)).toEqual(
+        [],
+      );
     });
 
     it('T-0323 · R-EDIT-25: uses the given header shape and the settings and view of a new document', () => {
-      const shape = example.build('shape');
-      expect(shape.content.settings).toEqual(createDoc({ headStyle: 'shape' }).content.settings);
+      // The drawing language is passed in too, like the header shape (ADR-0041).
+      const shape = example.build({ headStyle: 'shape', locale: 'ko' });
+      expect(shape.content.settings).toEqual(
+        createDoc({ headStyle: 'shape', locale: 'ko' }).content.settings,
+      );
       expect(doc.content.settings).toEqual(createDoc({ headStyle: 'title' }).content.settings);
       expect(doc.view).toEqual(createDoc().view);
     });
 
     it('T-0324 · R-EDIT-25: builds the same document every time', () => {
-      expect(example.build('title')).toEqual(doc);
+      expect(example.build({ headStyle: 'title', locale: 'en' })).toEqual(doc);
     });
 
     it('T-0325 · R-EDIT-25: has the diagrams, headers and blocks of the prototype', () => {

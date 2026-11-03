@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
-import type { Doc } from '@ariadne-nsd/core';
-import { openSvgFile } from '@ariadne-nsd/core';
+import type { Block, Doc } from '@ariadne-nsd/core';
+import { createDoc, openSvgFile } from '@ariadne-nsd/core';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import type { EditorHandle, OpenedDocument, SaveFonts, SettingsStore } from './contracts';
@@ -320,7 +320,7 @@ describe('the picker (interaction rules "호출 블록")', () => {
 describe('the inline editor on headers and call blocks (03-editor 3.4)', () => {
   const twoEvents = (): Doc => ({
     content: {
-      settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+      settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
       diagrams: [
         {
           id: 'd1',
@@ -517,14 +517,16 @@ describe('rarer parts of the shell contract (03-editor 6)', () => {
     expect(handle.chromeState().notice?.message).toBe('reason.readOnly');
   });
 
-  it('T-0736 · R-NFR-04: changing the screen language draws the fixed words again', async () => {
+  it('T-0814: ADR-0041: changing the screen language leaves the fixed words in the language of the document', async () => {
     const settings = liveSettings();
     const { handle } = make({}, memoryStore(), settings);
     handle.commands.run('block.insert.if');
     handle.commands.run('select.clear');
-    expect(await handle.serialize()).not.toContain('참');
+    expect(await handle.serialize()).toContain('>true</text>');
     settings.set(settingIds.locale, 'ko');
-    expect(await handle.serialize()).toContain('참');
+    const svg = await handle.serialize();
+    expect(svg).toContain('>true</text>');
+    expect(svg).not.toContain('참');
   });
 
   it('T-0737 · UX K1: the key hint shows after 0.4 s on the real timers, unless turned off', async () => {
@@ -582,5 +584,114 @@ describe('rarer parts of the shell contract (03-editor 6)', () => {
     await tick();
     expect(handle.chromeState().picker).toBeNull();
     expect(calls()).toHaveLength(0);
+  });
+});
+
+describe('the drawing language in the document (ADR-0041)', () => {
+  const proc = (id: string): Block => ({ id, kind: 'process', text: '' });
+  /** An editor whose screen language is `locale`. */
+  const makeIn = (locale: 'en' | 'ko', doc: Partial<OpenedDocument> = {}) =>
+    make(doc, memoryStore(), memorySettings({ [settingIds.locale]: locale })).handle;
+
+  /** A saved file with an If whose branch labels are left as they are. */
+  const fileWithIf = async (locale: 'en' | 'ko'): Promise<string> => {
+    const handle = makeIn(locale);
+    handle.commands.run('block.insert.if');
+    handle.commands.run('select.clear');
+    return handle.serialize();
+  };
+
+  /** The same file as written before ADR-0041: no `locale` in the settings. */
+  const withoutLocale = (svg: string): string => svg.replace(/,\n {4}"locale": "\w+"/, '');
+
+  it('T-0815: a new document starts in the screen language of its creator, and draws its fixed words in it', async () => {
+    const korean = await fileWithIf('ko');
+    expect(korean).toContain('"locale": "ko"');
+    expect(korean).toContain('>참</text>');
+    expect(korean).toContain('>거짓</text>');
+    const english = await fileWithIf('en');
+    expect(english).toContain('"locale": "en"');
+    expect(english).toContain('>true</text>');
+  });
+
+  it('T-0816 · R-FMT-03 · QA-03: the same model saves to the same bytes under either screen language', async () => {
+    const file = await fileWithIf('ko');
+    for (const screen of ['en', 'ko'] as const) {
+      const handle = makeIn(screen, { text: file });
+      expect(handle.documentSetting('document.locale')).toBe('ko');
+      expect(await handle.serialize()).toBe(file);
+    }
+  });
+
+  it('T-0817: a file without a drawing language opens in the screen language and the next save writes it', async () => {
+    const old = withoutLocale(await fileWithIf('en'));
+    expect(old).not.toContain('"locale"');
+    const handle = makeIn('ko', { text: old });
+    expect(handle.status().dirty).toBe(false);
+    expect(handle.documentSetting('document.locale')).toBe('ko');
+    const saved = await handle.serialize();
+    expect(saved).toContain('"locale": "ko"');
+    expect(saved).toContain('>참</text>');
+  });
+
+  it('T-0818: UX W5 · Q9: changing the drawing language redraws the picture, and undo puts it back', async () => {
+    const handle = makeIn('en');
+    handle.commands.run('block.insert.if');
+    handle.commands.run('select.clear');
+    const undoBefore = handle.state().undo.length;
+    handle.setDocumentSetting('document.locale', 'ko');
+    expect(handle.documentSetting('document.locale')).toBe('ko');
+    expect(handle.state().undo).toHaveLength(undoBefore + 1);
+    expect(await handle.serialize()).toContain('>참</text>');
+    handle.commands.run('edit.undo');
+    expect(handle.documentSetting('document.locale')).toBe('en');
+    expect(await handle.serialize()).toContain('>true</text>');
+    handle.setDocumentSetting('document.locale', 'fr');
+    expect(handle.documentSetting('document.locale')).toBe('en');
+  });
+
+  it('T-0819: an edited branch label stays as typed; one left empty shows the fixed word of the document', async () => {
+    const created = createDoc({ locale: 'ko' });
+    const doc: Doc = {
+      ...created,
+      content: {
+        ...created.content,
+        diagrams: [
+          {
+            id: 'd1',
+            head: null,
+            body: {
+              blocks: [
+                {
+                  id: 'b1',
+                  kind: 'if',
+                  text: 'x',
+                  yes: { id: 'r1', label: 'yes!', body: { blocks: [proc('b2')], folds: [] } },
+                  no: { id: 'r2', body: { blocks: [proc('b3')], folds: [] } },
+                },
+              ],
+              folds: [],
+            },
+          },
+        ],
+      },
+    };
+    const handle = makeIn('en', { doc });
+    const svg = await handle.serialize();
+    expect(svg).toContain('>yes!</text>');
+    expect(svg).toContain('>거짓</text>');
+    expect(svg).not.toContain('>false</text>');
+  });
+
+  it('T-0820: the setting is listed for the document settings, after the block text language', () => {
+    const handle = makeIn('en');
+    const specs = handle.settingsSchema.list().filter((spec) => spec.scope === 'document');
+    expect(specs.map((spec) => spec.id)).toEqual(['document.locale', 'document.headStyle']);
+    expect(specs[0]).toMatchObject({
+      title: 'setting.documentLocale',
+      hint: 'setting.documentLocale.hint',
+      values: ['en', 'ko'],
+      valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko'],
+    });
   });
 });

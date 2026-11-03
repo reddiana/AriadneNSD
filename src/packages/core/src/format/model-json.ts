@@ -1,4 +1,5 @@
 // Model JSON serialization: docs/05-spec/01-file-format.md, section 3.
+import type { Locale } from '../i18n/messages';
 import { contentIds } from '../model/id';
 import type {
   Arm,
@@ -30,6 +31,11 @@ export const currentFormatVersion = 1;
 export type KeptSettings = {
   /** The `textKind` as written in the file, when it is not `plain`. The model has `plain`. */
   readonly textKind?: string;
+  /**
+   * The `locale` as written in the file, when this version does not know it, and the locale the
+   * model draws in instead (the opener's screen language). Written back while that is unchanged.
+   */
+  readonly locale?: { readonly written: string; readonly drawnIn: Locale };
 };
 
 /** A document read from a file, with the setting values the model could not hold. */
@@ -55,10 +61,11 @@ function modelJson(doc: Doc, kept: KeptSettings): unknown {
     settings.textKind === 'plain' && kept.textKind !== undefined
       ? kept.textKind
       : settings.textKind;
+  const locale = kept.locale?.drawnIn === settings.locale ? kept.locale.written : settings.locale;
   return {
     format: formatName,
     version: currentFormatVersion,
-    settings: { textKind, theme: settings.theme, headStyle: settings.headStyle },
+    settings: { textKind, theme: settings.theme, headStyle: settings.headStyle, locale },
     diagrams: doc.content.diagrams.map(diagramJson),
     view: viewJson(doc.content, doc.view),
   };

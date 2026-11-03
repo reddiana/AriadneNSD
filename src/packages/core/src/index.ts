@@ -43,7 +43,6 @@ export {
 export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
 export { geometry } from './layout/geometry';
-export type { LayoutOptions } from './layout/layout';
 export { headLabel, layout } from './layout/layout';
 export type { CallParts, CallTextContext } from './layout/call-text';
 export { callParts, callText } from './layout/call-text';
@@ -142,7 +141,12 @@ export { createContent, createDoc, defaultSettings } from './commands/new-docume
 // File format (docs/05-spec/01-file-format.md).
 export type { KeptSettings, LoadedDoc } from './format/model-json';
 export { currentFormatVersion, serializeModelJson } from './format/model-json';
-export type { ContentCheck, OpenFailureReason, OpenResult } from './format/parse-model';
+export type {
+  ContentCheck,
+  OpenFailureReason,
+  OpenResult,
+  ReadOptions,
+} from './format/parse-model';
 export { invariantCheck, parseModel, parseModelJson } from './format/parse-model';
 export type { Drawing, EmbeddedFont, SvgFileParts } from './format/svg-file';
 export { assembleImageSvg, assembleSvgFile, openSvgFile } from './format/svg-file';

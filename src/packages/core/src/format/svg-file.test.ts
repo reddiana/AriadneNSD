@@ -7,7 +7,7 @@ import { assembleSvgFile, openSvgFile } from './svg-file';
 
 const docWithText = (text: string): Doc => ({
   content: {
-    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
     diagrams: [
       { id: 'd1', head: null, body: { blocks: [{ id: 'b1', kind: 'process', text }], folds: [] } },
     ],
@@ -32,7 +32,7 @@ const model = (json: string, version = '1'): string =>
 const minimalJson = JSON.stringify({
   format: 'ariadne-nsd',
   version: 1,
-  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+  settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
   diagrams: [{ id: 'd1', body: [{ id: 'b1', kind: 'process', text: 'a < b' }] }],
   view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
 });

@@ -7,7 +7,8 @@
   "settings": {
     "textKind": "plain",
     "theme": "default",
-    "headStyle": "shape"
+    "headStyle": "shape",
+    "locale": "en"
   },
   "diagrams": [
     {

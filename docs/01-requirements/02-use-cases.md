@@ -325,7 +325,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 **예외 흐름**
 
 - 1a. 편집 화면의 밝기(밝음 · 어두움)는 문서의 테마와 따로다. 저장되는 그림은 문서의 테마를 따른다
-- 1b. 화면의 언어는 사용자의 설정이다. 그림에 적히는 텍스트("참", "거짓" 등)는 저장할 때의 언어를 따른다
+- 1b. 화면의 언어는 사용자의 설정이다. 그림에 적히는 텍스트("참", "거짓" 등)는 문서 설정의 "그림 문구의 언어"를 따른다. 새 문서는 만든 사람의 화면 언어로 시작한다
 
 **요구사항:** [[01-requirements#^r-lay|R-LAY-08]], [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-07]], [[01-requirements#^r-lay|R-LAY-10]], [[01-requirements#^r-lay|R-LAY-05]], [[01-requirements#^r-obs-3|R-OBS-10]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-04]]
 

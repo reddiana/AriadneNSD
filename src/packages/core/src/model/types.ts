@@ -1,5 +1,6 @@
 // Model types from docs/04-design/01-model.md, sections 1 and 2.
 // All values are immutable (ADR-0029): commands build new objects and share unchanged subtrees.
+import type { Locale } from '../i18n/messages';
 
 /**
  * A stable id, unique within a document: a kind prefix and an integer (01-model 1.7).
@@ -30,6 +31,11 @@ export type Settings = {
   readonly theme: ThemeId;
   /** Header shape: the hat or arch shape, or like a title (R-LAY-10). */
   readonly headStyle: 'shape' | 'title';
+  /**
+   * The language of the fixed words drawn in the picture ("true" / "false", "(no name)"), the
+   * same on screen, in the saved file and in PNG (ADR-0041). Menus follow the screen language.
+   */
+  readonly locale: Locale;
 };
 
 /** The language of block text. Which languages to support first is undecided (01-model 1.1). */

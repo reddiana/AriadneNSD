@@ -84,7 +84,7 @@ updated: 2026-11-01
 | 부분 | 내용 |
 | --- | --- |
 | 자극원 | 작성자 |
-| 자극 | 같은 문서(같은 내용, 같은 뷰 상태, 같은 화면 언어)를 저장한다 |
+| 자극 | 같은 문서(같은 내용, 같은 뷰 상태)를 저장한다. 저장하는 사람의 화면 언어는 달라도 된다 |
 | 환경 | 서로 다른 배포 대상(웹, Obsidian, 데스크톱), 브라우저(Chrome, Edge, Firefox, Safari), OS(Windows, macOS, Linux, Android) |
 | 대상 | `core`의 레이아웃 · 렌더러 · 파일 형식, `fonts` |
 | 응답 | 같은 바이트의 파일을 쓴다 |
@@ -92,7 +92,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 묻지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[03-architecture#5. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** 골든 파일 테스트. 대표 문서 묶음(한글 · 영문 · 기호, 블록 종류 모두, 접힘 · 펴 보기 포함)을 저장해 저장소의 기대 파일과 바이트로 비교한다. 같은 테스트를 Node와 각 브라우저(Playwright)에서 실행한다. **실행할 때:** 모든 커밋(Node, Chromium), 출시 전(모든 브라우저와 Obsidian)
-- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
+- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
 - **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ### QA-04 열고 바로 저장하면 그대로
@@ -101,7 +101,7 @@ updated: 2026-11-01
 | --- | --- |
 | 자극원 | 작성자 |
 | 자극 | 파일을 열고 아무것도 편집하지 않고 저장한다 |
-| 환경 | 파일을 만든 앱과 같은 형식 버전, 같은 화면 언어 |
+| 환경 | 파일을 만든 앱과 같은 형식 버전 |
 | 대상 | 파일 형식(역직렬화 → 직렬화) |
 | 응답 | 원본과 같은 파일을 쓴다 |
 | 응답 측정 | 골든 문서 묶음의 왕복(round-trip)에서 바이트 차이 **0건** |
@@ -109,7 +109,7 @@ updated: 2026-11-01
 - **아키텍처:** QA-03과 같다. 뷰 상태도 파일에 들어 있어 열 때 그대로 복원된다 → [[0018-save-as-shown|ADR-0018]]
 - **테스트:** 골든 파일 왕복 테스트. **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
-- **알아 둘 것:** 화면 언어가 다르면 같지 않다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 저장할 때의 화면 언어를 따르기 때문이다([[01-requirements#^r-nfr|R-NFR-04]]). 그래서 환경에 "같은 화면 언어"를 둔다
+- **알아 둘 것:** 화면 언어가 달라도 같다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 문서 설정의 언어를 따르기 때문이다([[0041-drawing-locale-in-document|ADR-0041]]). 그림의 언어가 적히지 않은 옛 파일만, 처음 저장할 때 연 사람의 화면 언어가 더해진다
 
 ### QA-05 옛 파일 열기
 
@@ -200,7 +200,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[03-architecture#3.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트용 가짜 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 본다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 36개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0356]] ~ T-0740). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
+- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 42개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0356]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[03-architecture#6. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 바꾸기

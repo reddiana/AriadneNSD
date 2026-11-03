@@ -72,6 +72,7 @@ export const settingIds = {
 /** The document setting ids (scope `document`): the model's `settings` (UX W5). */
 export const documentSettingIds = {
   headStyle: 'document.headStyle',
+  locale: 'document.locale',
   textKind: 'document.textKind',
   theme: 'document.theme',
 } as const;
@@ -108,6 +109,16 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     scope: 'user',
   },
   {
+    // After the block text's language (not shown in the MVP): the language of the drawn words.
+    id: documentSettingIds.locale,
+    title: 'setting.documentLocale',
+    hint: 'setting.documentLocale.hint',
+    values: locales,
+    valueTitles: locales.map((locale) => `setting.uiLocale.${locale}` as const),
+    defaultValue: 'en',
+    scope: 'document',
+  },
+  {
     id: documentSettingIds.headStyle,
     title: 'setting.headStyle',
     values: ['title', 'shape'],
@@ -133,17 +144,27 @@ export type ReadDocument =
     }
   | { readonly ok: false; readonly message: EditorMessage; readonly detail: string };
 
+/** What a new document starts with, and the drawing language of a file without one. */
+export type NewDocumentDefaults = {
+  /** The header shape chosen last (UX HS1). */
+  readonly headStyle: Settings['headStyle'];
+  /** The screen language of the one who opens or creates the document (ADR-0041). */
+  readonly locale: Locale;
+};
+
 /**
  * Reads what to open: the local backup first (dirty), then a ready-made document (an example,
  * clean, nothing selected), a new document for `text: null` (its empty block selected, UX OP1)
- * with the header shape `headStyle` (UX HS1), otherwise the file (nothing selected).
+ * with the header shape and drawing language of `defaults` (UX HS1, ADR-0041), otherwise the
+ * file (nothing selected). A file without a drawing language opens in `defaults.locale`.
  */
 export function readDocument(
   opened: OpenedDocument,
-  headStyle: Settings['headStyle'] = 'title',
+  defaults: NewDocumentDefaults = { headStyle: 'title', locale: 'en' },
 ): ReadDocument {
+  const { locale } = defaults;
   if (opened.restored !== undefined) {
-    const result = parseModelJson(opened.restored);
+    const result = parseModelJson(opened.restored, { locale });
     return result.ok
       ? { ok: true, ...result.value, isDirty: true, selection: null }
       : { ok: false, message: openMessage(result.reason), detail: result.detail };
@@ -152,7 +173,7 @@ export function readDocument(
     return { ok: true, doc: opened.doc, kept: {}, isDirty: false, selection: null };
   }
   if (opened.text === null) {
-    const doc = createDoc({ headStyle });
+    const doc = createDoc(defaults);
     const first = doc.content.diagrams[0]?.body.blocks[0];
     return {
       ok: true,
@@ -162,7 +183,7 @@ export function readDocument(
       selection: first === undefined ? null : selectBlock(indexDoc(doc.content), first.id),
     };
   }
-  const result = openSvgFile(opened.text);
+  const result = openSvgFile(opened.text, { locale });
   return result.ok
     ? { ok: true, ...result.value, isDirty: false, selection: null }
     : { ok: false, message: openMessage(result.reason), detail: result.detail };
@@ -204,11 +225,14 @@ export function createEditor(options: EditorOptions): EditorHandle {
   const fonts = cachedFonts(options.fonts);
   let store: DocumentStore = options.doc.store;
 
-  const first = readDocument(options.doc, rememberedHeadStyle(settings));
+  const defaults = (): NewDocumentDefaults => ({
+    headStyle: rememberedHeadStyle(settings),
+    locale: locale(),
+  });
+  const first = readDocument(options.doc, defaults());
   const session = new EditorSession(
-    first.ok ? first.doc : createDoc({ headStyle: rememberedHeadStyle(settings) }),
+    first.ok ? first.doc : createDoc(defaults()),
     {
-      locale,
       clipboard,
       timers: browserTimers,
       isKeyHintEnabled: () => settings.get<boolean>(settingIds.keyHint) !== false,
@@ -406,7 +430,6 @@ export function createEditor(options: EditorOptions): EditorHandle {
   for (const spec of editorCommands({
     session,
     clipboard,
-    locale,
     save,
     saveAs,
     zoomTo: (zoom) => {
@@ -447,7 +470,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
     settingsSchema,
     open: (opened) => {
       picker?.choose(null);
-      const read = readDocument(opened, rememberedHeadStyle(settings));
+      const read = readDocument(opened, defaults());
       if (!read.ok) {
         log(`Could not open ${opened.store.name}`, read.detail);
         session.notify(read.message, 'warn');
@@ -499,6 +522,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
       switch (id) {
         case documentSettingIds.headStyle:
           return current.headStyle;
+        case documentSettingIds.locale:
+          return current.locale;
         case documentSettingIds.textKind:
           return current.textKind;
         case documentSettingIds.theme:
@@ -572,6 +597,10 @@ function changedSettings(settings: Settings, id: string, value: unknown): Settin
   switch (id) {
     case documentSettingIds.headStyle:
       return value === 'shape' || value === 'title' ? { ...settings, headStyle: value } : null;
+    case documentSettingIds.locale: {
+      const chosen = locales.find((locale) => locale === value);
+      return chosen === undefined ? null : { ...settings, locale: chosen };
+    }
     case documentSettingIds.theme:
       return value === 'default' ? { ...settings, theme: value } : null;
     case documentSettingIds.textKind:

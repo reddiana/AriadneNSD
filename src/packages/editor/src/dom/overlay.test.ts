@@ -276,7 +276,7 @@ describe('fieldBox: where the inline editor opens', () => {
 
   it("T-0661: a call block's fields cover the inside of its double bars", () => {
     const c: Content = {
-      settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
+      settings: { textKind: 'plain', theme: 'default', headStyle: 'shape', locale: 'en' },
       diagrams: [
         {
           id: 'd1',
