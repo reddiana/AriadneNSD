@@ -41,6 +41,20 @@ const english = {
   'choice.save': 'Save',
   'choice.discardAndOpen': 'Discard and Open',
   'drop.hint': 'Drop a .ns.svg or .ns file to open it',
+  'command.share': 'Copy Share Link',
+  'notice.shareCopied': 'Copied the share link. Anyone with the link can view this diagram.',
+  'notice.shareLong':
+    'Copied the share link, but it is long ({size} KB): some apps cut long links. Sharing the file is safer.',
+  'notice.shareTooLong':
+    'This diagram is too large for a link ({size} KB). Share the file instead (File › Save).',
+  'notice.shareFailed': 'Could not make the share link.',
+  'share.copyManually': 'The clipboard is not available. Copy this share link:',
+  'link.newerVersion':
+    'This share link was made by a newer version of AriadneNSD. Reload the page to open it.',
+  'link.tooLarge': 'This share link is too large to open.',
+  'link.unsupported':
+    'This browser cannot open compressed share links. Open the link in a recent Chrome, Edge, Firefox or Safari.',
+  'link.damaged': 'This share link is damaged (perhaps cut off) and cannot be opened.',
 } as const;
 
 /** The key of a shell screen string. */
@@ -78,6 +92,21 @@ const korean: Record<ShellMessageKey, string> = {
   'choice.save': '저장',
   'choice.discardAndOpen': '버리고 열기',
   'drop.hint': '.ns.svg · .ns 파일을 놓으면 엽니다',
+  'command.share': '공유 링크 복사',
+  'notice.shareCopied':
+    '공유 링크를 복사했습니다. 링크가 있으면 누구나 이 다이어그램을 볼 수 있습니다.',
+  'notice.shareLong':
+    '공유 링크를 복사했지만 깁니다({size} KB). 긴 링크를 자르는 앱이 있어 파일로 공유하는 것을 추천합니다.',
+  'notice.shareTooLong':
+    '이 다이어그램은 링크에 담기에 너무 큽니다({size} KB). 파일로 공유해 주세요(파일 › 저장).',
+  'notice.shareFailed': '공유 링크를 만들지 못했습니다.',
+  'share.copyManually': '클립보드를 쓸 수 없습니다. 이 공유 링크를 복사하세요:',
+  'link.newerVersion':
+    '이 공유 링크는 더 새 버전의 AriadneNSD가 만든 것입니다. 페이지를 새로 고친 뒤 여세요.',
+  'link.tooLarge': '이 공유 링크는 너무 커서 열 수 없습니다.',
+  'link.unsupported':
+    '이 브라우저는 압축한 공유 링크를 열 수 없습니다. 최신 Chrome · Edge · Firefox · Safari에서 여세요.',
+  'link.damaged': '이 공유 링크는 손상되어(잘렸을 수 있습니다) 열 수 없습니다.',
 };
 
 const catalogs: Record<ShellLocale, Record<ShellMessageKey, string>> = { en: english, ko: korean };

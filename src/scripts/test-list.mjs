@@ -93,13 +93,14 @@ const areas = [
   {
     name: '파일',
     about:
-      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기 → [[01-file-format]], [[06-web]]',
+      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]',
     paths: [
       'packages/core/src/format/',
       'packages/core/node/golden.test.ts',
       'packages/editor/src/create-editor.test.ts',
       'apps/web/src/',
       'apps/web/e2e/files.spec.ts',
+      'apps/web/e2e/share.spec.ts',
     ],
   },
   {

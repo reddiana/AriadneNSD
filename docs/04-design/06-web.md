@@ -3,7 +3,7 @@ title: 웹
 tags:
   - design
 status: 초안
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # 웹
@@ -24,7 +24,8 @@ updated: 2026-11-01
 - [[01-requirements#2.3 웹 (정적 페이지)]]: [[01-requirements#^r-web|R-WEB-02]](파일 열기 · 저장), [[01-requirements#^r-web|R-WEB-03]](로컬 백업)
 - [[01-requirements#^r-exp|R-EXP-04]](자동 저장, 최근 파일)
 - 화면: [[01-requirements#^r-edit|R-EDIT-21]](도움말), [[01-requirements#^r-edit|R-EDIT-24]](커맨드 팔레트), [[01-requirements#^r-nfr|R-NFR-04]](화면 언어)
-- 공유 URL, 보기 전용, Google Drive, AI 대화창: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
+- 공유 URL과 보기 모드: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]] (3장)
+- Google Drive, AI 대화창: [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
 
 ## 1. 파일 열기·저장
 
@@ -86,9 +87,52 @@ updated: 2026-11-01
 
 > [!info] 미완성: 로컬 백업의 크기 한도(브라우저가 저장소를 비울 때)와, 보관할 문서 수의 한도.
 
-## 3. 공유 URL과 보기 전용
+## 3. 공유 URL과 보기 모드
 
-> [!info] 미완성: 문서를 압축 · 인코딩해 URL에 담아 공유하기 ([[01-requirements#^r-web|R-WEB-05]]), 읽기 전용 모드 ([[01-requirements#^r-web|R-WEB-06]])
+파일 › 공유 링크 복사([[01-requirements#^r-web|R-WEB-05]])는 다이어그램 전체를 링크 하나에 담아 클립보드에 복사합니다. 링크를 연 사람은 보기 모드([[01-requirements#^r-web|R-WEB-06]])로 보고, "편집하기"를 눌러 자기 새 문서로 고칩니다. 서버는 링크를 보지 않습니다. 형식과 그렇게 정한 까닭 → [[0043-share-link-in-fragment|ADR-0043]], 조작의 결정 → [[ux-decisions#2026-11-03 레인 4 (공유 URL · 보기 모드, 메인테이너가 추천안을 받아들임)|SH1 ~ SH6]]
+
+```text
+https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yqRKUnGNov99R0qy...
+```
+
+`#` 뒤가 링크의 몫입니다: `ns1`(링크 형식과 그 버전) · `d`(꾸림) · 내용, 그 사이는 `.`입니다.
+
+| | 무엇 |
+| --- | --- |
+| 자리 | URL의 fragment(`#` 뒤). 브라우저가 서버로 보내지 않아 GitHub Pages의 로그에도 다른 사이트로 가는 리퍼러에도 실리지 않는다. 페이지 주소는 지금 페이지의 `origin` + `pathname`(query는 뺌) |
+| 내용 | UTF-8 JSON `{"name": "정렬.ns.svg", "model": {…}}`. `model`은 파일의 모델 JSON([[01-file-format]])을 들여쓰기 없이 쓴 것으로, 뷰 상태(접힘, 이름 띠 등)도 들어 있다. 그림과 서브셋 글꼴은 넣지 않는다(받는 쪽이 같은 렌더러로 그림) |
+| 꾸림 | 브라우저의 `CompressionStream('deflate-raw')`로 압축하고 base64url(패딩 없음)로 적는다(`d`). CompressionStream이 없는 브라우저는 압축하지 않고 적는다(`j`). 라이브러리를 더하지 않는다 |
+| 버전 | `ns1.`이 링크 형식의 버전이다. `ns` + 다른 숫자로 시작하면 "더 새 버전의 AriadneNSD가 만든 링크"라고 알린다. 모델의 버전 규칙(옛 버전은 옮기고 더 새 버전은 거절)은 파일과 같다 |
+
+**링크를 만들 때**(`src/apps/web/src/files/share-command.ts`)
+
+1. `editor.snapshot()`(모델 JSON)과 문서 이름으로 링크를 만든다.
+2. 클립보드에 복사한다. `ClipboardItem`이 있으면 링크가 만들어지기 전에(클릭 안에서) 약속(Promise)으로 넘긴다. Safari는 클릭 안에서 시작한 복사만 받기 때문이다. 없으면 `writeText`.
+3. 길이에 따라 알린다(상태 표시줄 → [[ux-decisions#SH2. 긴 링크|SH2]]).
+
+| 링크 길이 | 하는 일 |
+| --- | --- |
+| 8 KB 이하 | 복사하고 "공유 링크를 복사했습니다. 링크가 있으면 누구나 이 다이어그램을 볼 수 있습니다."(`info`) |
+| 8 KB 넘음 | 복사하고 "공유 링크를 복사했지만 깁니다({크기} KB). 긴 링크를 자르는 앱이 있어 파일로 공유하는 것을 추천합니다."(`warn`) |
+| 1 MB 넘음 | 복사하지 않고 "이 다이어그램은 링크에 담기에 너무 큽니다({크기} KB). 파일로 공유해 주세요(파일 › 저장)."(`warn`) |
+| 클립보드가 거절함 | `editor`의 모달(`prompt`)에 링크를 넣어 보이고 "클립보드를 쓸 수 없습니다. 이 공유 링크를 복사하세요:" |
+
+8 KB는 메신저 · 메일 · 이슈 트래커가 링크를 자르거나 접기 시작하는 길이를 넉넉히 밑돈다. 블록 150개쯤의 다이어그램이 이 안에 든다. 1 MB는 브라우저가 주소로 받는 한도(Chromium 2 MB, Safari · Firefox는 그보다 작은 경우가 있다)의 안쪽이다.
+
+**링크를 열 때**(`src/apps/web/src/files/share-link.ts`, 셸의 `start` · `openShareLink`)
+
+- 페이지가 fragment가 `ns` + 숫자 + `.`로 시작하는 주소로 열리면 공유 링크다. 그 밖의 fragment는 보지 않는다.
+- 링크는 누구나 만들 수 있는 입력이다(QA-21). 링크 길이가 1 MB를 넘으면 풀지 않는다. 스트림으로 풀며 16 MB를 넘는 순간 멈춘다(작은 링크가 크게 풀리는 zip bomb). JSON 봉투는 `name`(문자열)과 `model` 두 키만 받는다. `model`은 파일과 같은 검증 파서(`parseModel`)를 거치고, 이름은 파일 이름 규칙으로 다듬는다(비면 "제목 없음.ns.svg").
+- 열 수 없으면 지금 문서를 바꾸지 않고 까닭을 알린다: 손상(잘렸을 수 있음) · 너무 큼 · 더 새 버전 · 이 브라우저가 압축을 풀 수 없음. 페이지를 처음 열 때였으면 그 뒤로 평소처럼 시작한다(로컬 백업의 복원을 묻는다).
+- 열면 **한 번도 저장하지 않은 새 문서**로, 보기 모드에서 연다(문서 키도 새것). 로컬 백업을 쓰지 않고, 두 탭 잠금에 걸리지 않는다.
+- 페이지를 처음 열 때의 공유 링크는 로컬 백업의 "복원할까요?"보다 앞선다. 그 백업은 지우지 않고 다음에 링크 없이 열 때 묻는다. 처음 온 사람의 예제 모달도 띄우지 않는다 → [[ux-decisions#SH5. 링크를 열 때|SH5]]
+- 열린 탭의 주소창에 다른 공유 링크를 붙여 넣으면 fragment만 바뀐다(`hashchange`). 다른 문서를 열 때처럼 저장하지 않은 새 문서는 먼저 묻고([[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]]) 보기 모드로 연다.
+
+**보기 모드**(화면 → [[05-screen-layout#보기 모드]])
+
+- 셸이 보기 모드인지를 가진다(`isViewing`, `onViewMode`). `editor`의 `EditorApp`은 `viewMode`(편집하기 버튼의 처리)를 받으면 메뉴 바 · 툴바 · 상태 표시줄 대신 보기 막대(`ViewBar`)를 그린다. 문서는 읽기 전용(`readOnly`)으로 열리므로 `editor`의 편집 명령은 "보기만 하는 중"의 이유로 거절된다. 선택 이동 · 접기 · 펴기 · 확대 · 스크롤은 된다(뷰 상태라서).
+- "편집하기"(`startEditing`)는 같은 문서를 다시 열지 않고 읽기 전용만 푼다. 그 뒤로는 저장하지 않은 새 문서의 규칙(로컬 백업, [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]])을 따른다.
+- 보기 모드가 끝나면(편집하기, 또는 다른 문서를 엶) 주소창에서 fragment를 지운다(`history.replaceState`). 편집한 뒤 새로 고치면 링크가 아니라 로컬 백업을 복원하게 하려는 것이다 → [[ux-decisions#SH4. 편집하기|SH4]]
 
 ## 4. Google Drive
 
@@ -102,7 +146,7 @@ updated: 2026-11-01
 
 | 언제 | 무엇 | 크기 |
 | --- | --- | --- |
-| 페이지를 열 때 | JS 하나(React와 `core` · `editor` · 셸) | 492 KB (gzip 156 KB) |
+| 페이지를 열 때 | JS 하나(React와 `core` · `editor` · 셸) | 526 KB (gzip 167 KB) |
 | 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
 | 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일 열 개(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 | 5 ~ 15 KB씩 |
 | 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |

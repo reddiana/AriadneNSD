@@ -38,6 +38,7 @@ import {
 import { StatusBar } from './status-bar';
 import { chromeCss } from './styles';
 import { Toolbar } from './toolbar';
+import { ViewBar } from './view-bar';
 import type { Chrome } from './use-engine';
 import { ChromeContext, textOf, useChromeState } from './use-engine';
 
@@ -64,6 +65,11 @@ export type EditorAppProps = {
    * a first-time visitor with the examples modal. Without it there are no examples.
    */
   readonly examples?: ExamplesHost;
+  /**
+   * View mode (R-WEB-06): only the diagram and a bar with "Edit" in place of the menu bar, the
+   * toolbar and the status bar. `onEdit` is the button. Without it, the editing UI.
+   */
+  readonly viewMode?: { readonly onEdit: () => void };
 };
 
 /** What the shell does for the examples (05-screen-layout "예제", UX EX2 · EX3). */
@@ -172,6 +178,7 @@ export function EditorApp({
   formatMessage,
   manualUrl = 'manual/',
   examples,
+  viewMode,
 }: EditorAppProps): ReactElement {
   const [popup, setPopup] = useState<Popup | null>(
     examples?.isFirstVisit === true ? 'examples' : null,
@@ -338,16 +345,23 @@ export function EditorApp({
       <div
         className="ans-app"
         data-scheme={appearance.scheme}
+        data-mode={viewMode ? 'view' : 'edit'}
         lang={locale}
         style={{ ['--ans-ui-font' as string]: appearance.uiFont }}
       >
         <style>{chromeCss}</style>
-        <MenuBar />
-        <Toolbar />
+        {viewMode ? (
+          <ViewBar onEdit={viewMode.onEdit} />
+        ) : (
+          <>
+            <MenuBar />
+            <Toolbar />
+          </>
+        )}
         <div className="ans-canvas-slot" ref={slotRef} />
         <KeyHint />
-        <StatusBar />
-        {contextMenu && (
+        {viewMode ? null : <StatusBar />}
+        {contextMenu && !viewMode && (
           <ContextMenu key={contextMenu.key} request={contextMenu} onClose={closeContextMenu} />
         )}
         {picker && <PickerMenu key={picker.id} picker={picker} />}

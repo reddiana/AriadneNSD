@@ -115,6 +115,21 @@ export const chromeCss = `
 
 .ans-narrow-only { display: none; }
 
+/* View mode (R-WEB-06, 05-screen-layout): one slim bar above the diagram. */
+.ans-viewbar {
+  display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px 0 10px; flex: none;
+  background: var(--ui-panel); border-bottom: 1px solid var(--ui-line); white-space: nowrap;
+}
+.ans-viewbar .ans-brand { margin-right: 0; }
+.ans-view-name { color: var(--ui-muted); overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ans-view-notice { flex: 1; min-width: 0; overflow: hidden; display: flex; justify-content: flex-end; }
+.ans-view-mode { color: var(--ui-muted); font-size: 12px; }
+.ans-view-edit {
+  padding: 4px 14px; border: 1px solid var(--ui-accent); border-radius: 4px; flex: none;
+  background: var(--ui-accent); color: var(--ui-panel) !important; font-weight: 600;
+}
+.ans-view-edit:hover { filter: brightness(1.1); }
+
 .ans-keyhint {
   position: fixed; z-index: 15; display: grid; gap: 1px; white-space: nowrap;
   padding: 5px 12px 6px 9px; background: var(--ui-panel); border: 1px solid var(--ui-line);
@@ -222,6 +237,7 @@ export const chromeCss = `
   .ans-menus { display: none; }
   .ans-hamburger { display: block; }
   .ans-brand { display: none; }
+  .ans-view-mode { display: none; }
   .ans-toolbar { flex-wrap: wrap; }
   .ans-toolbar .ans-narrow-only { display: inline-flex; }
   .ans-icon-on-narrow .ans-tool-label { display: none; }

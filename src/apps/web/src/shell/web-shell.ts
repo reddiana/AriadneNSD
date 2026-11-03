@@ -2,7 +2,7 @@
 // and adds its commands to the editor's command list (03-editor 6.1).
 
 import type { Doc, Locale, OpenFailureReason } from '@ariadne-nsd/core';
-import { openSvgFile } from '@ariadne-nsd/core';
+import { openSvgFile, parseModel } from '@ariadne-nsd/core';
 
 import type {
   CommandSpec,
@@ -20,6 +20,10 @@ import {
   isFileHandle,
   pickFileToOpen,
 } from '../files/file-system-access';
+import type { ShareHost } from '../files/share-command';
+import { copyShareLink } from '../files/share-command';
+import type { ShareLinkFailure } from '../files/share-link';
+import { readShareLink } from '../files/share-link';
 import type { StoreOrigin, Written } from '../files/web-document-store';
 import { WebDocumentStore } from '../files/web-document-store';
 import type { BrowserDb } from '../storage/browser-db';
@@ -53,6 +57,7 @@ export const shellCommandIds = {
   newDocument: 'file.new',
   open: 'file.open',
   exportPng: 'file.export.png',
+  share: 'file.share',
   recentPrefix: 'file.recent.',
 } as const;
 
@@ -72,12 +77,18 @@ export type WebShellOptions = {
   /** Sets the browser tab title. */
   readonly setTitle: (title: string) => void;
   readonly log: (detail: string) => void;
+  /** Making share links (R-WEB-05): this page's address, the compressor and the clipboard. */
+  readonly share: Pick<ShareHost, 'page' | 'deflate' | 'copyText'>;
 };
 
 /** The running shell. Create it with `createWebShell`, then `start` it with an editor. */
 export type WebShell = {
-  /** Opens the first document (restoring a local backup if the user wants) and wires the editor. */
-  readonly start: (editor: EditorHandle) => Promise<void>;
+  /**
+   * Opens the first document and wires the editor: the share link `fragment` (the URL's `#…`)
+   * in view mode if there is one and it opens (R-WEB-05, R-WEB-06), otherwise the local backup
+   * if the user wants it restored.
+   */
+  readonly start: (editor: EditorHandle, fragment?: string) => Promise<void>;
   /** The document the editor shows first: a new document. Restores happen in `start`. */
   readonly initialDocument: () => OpenedDocument;
   readonly newDocument: () => Promise<void>;
@@ -88,6 +99,14 @@ export type WebShell = {
   readonly openFile: (file: File) => Promise<void>;
   /** Opens a dropped file (06-web 1). Call from the `drop` handler, synchronously. */
   readonly openDropped: (transfer: DataTransfer) => void;
+  /** Opens a share link's fragment (the URL's `#…`) in view mode, as a new document (R-WEB-05). */
+  readonly openShareLink: (fragment: string) => Promise<void>;
+  /** Whether the document is shown in view mode (R-WEB-06). */
+  readonly isViewing: () => boolean;
+  /** Hears when view mode starts or ends. Returns the unsubscribe. */
+  readonly onViewMode: (listener: (isViewing: boolean) => void) => () => void;
+  /** "Edit" in view mode: the same document, now editable (UX SH4). */
+  readonly startEditing: () => void;
   /** Writes the backup now and lets go of the file (the page is hiding). */
   readonly suspend: () => void;
   readonly isDirty: () => boolean;
@@ -116,6 +135,9 @@ export function createWebShell(options: WebShellOptions): WebShell {
   const missingKeys = new Set<string>();
   let lastRevision = -1;
   let isReadOnly = false;
+  /** View mode (R-WEB-06): a share link's document, read only, without the editing UI. */
+  let isViewing = false;
+  const viewListeners = new Set<(isViewing: boolean) => void>();
   const unregister: (() => void)[] = [];
   let unregisterCommands: (() => void)[] = [];
   let unregisterRecent: (() => void)[] = [];
@@ -380,6 +402,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     restored: string | undefined,
     leave: Leave,
     doc?: Doc,
+    isView = false,
   ): Promise<void> {
     if (editor === null) {
       return;
@@ -387,7 +410,8 @@ export function createWebShell(options: WebShellOptions): WebShell {
     const leaving = leaveCurrent(leave);
     store = next;
     const isOwner = await lock.claim(next.key);
-    isReadOnly = !isOwner;
+    isReadOnly = !isOwner || isView;
+    setViewing(isView);
     autosave.dispose();
     autosave = createAutosave(autosaveOnce, autosaveDelay, options.clock);
     lastRevision = -1;
@@ -399,7 +423,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       ...(doc === undefined ? {} : { doc }),
     });
     // Told after `open`, which empties the status bar.
-    if (isReadOnly) {
+    if (!isOwner) {
       notices.show(text('notice.otherTab'), 'warn');
     } else if (leaving !== null) {
       notices.show(leaving, 'info');
@@ -541,6 +565,69 @@ export function createWebShell(options: WebShellOptions): WebShell {
     })();
   }
 
+  // --- Share links and view mode (06-web 3) ---
+
+  function setViewing(next: boolean): void {
+    if (next === isViewing) {
+      return;
+    }
+    isViewing = next;
+    for (const listener of [...viewListeners]) {
+      listener(next);
+    }
+  }
+
+  /** The document in a share link, checked like a file; or `null` after saying why not. */
+  async function readShared(fragment: string): Promise<{ doc: Doc; name: string } | null> {
+    const read = await readShareLink(fragment, options.share.deflate);
+    if (!read.ok) {
+      if (read.reason !== 'notShareLink') {
+        options.log(`Cannot open the share link: ${read.reason}: ${read.detail}`);
+        notices.show(text(linkFailureMessage(read.reason)), 'warn');
+      }
+      return null;
+    }
+    // The same validating parser as for a file (QA-02): a link is input from anyone.
+    const parsed = parseModel(read.model, { locale });
+    if (!parsed.ok) {
+      options.log(`Cannot open the share link: ${parsed.reason}: ${parsed.detail}`);
+      notices.show(
+        text(parsed.reason === 'newerVersion' ? 'link.newerVersion' : 'link.damaged'),
+        'warn',
+      );
+      return null;
+    }
+    return { doc: parsed.value.doc, name: documentFileName(read.name, text('file.untitled')) };
+  }
+
+  /** Opens a share link's document as a new document that was never saved, in view mode. */
+  async function openShared(shared: { doc: Doc; name: string }, leave: Leave): Promise<void> {
+    const next = newStore(options.newKey(), shared.name, { kind: 'none' });
+    await switchTo(next, null, undefined, leave, shared.doc, true);
+  }
+
+  async function openShareLink(fragment: string): Promise<void> {
+    const shared = await readShared(fragment);
+    if (shared === null) {
+      return;
+    }
+    const leave = await mayLeave();
+    if (leave === null) {
+      return;
+    }
+    await openShared(shared, leave);
+  }
+
+  function startEditing(): void {
+    if (!isViewing || editor === null) {
+      return;
+    }
+    setViewing(false);
+    // A share link's document has a key of its own, so no other tab holds it.
+    isReadOnly = false;
+    editor.setReadOnly(false);
+  }
+
   // --- Commands (03-editor 5.1 file menu, 5.2 toolbar) ---
 
   function registerCommand(spec: CommandSpec): () => void {
@@ -599,12 +686,31 @@ export function createWebShell(options: WebShellOptions): WebShell {
           });
         },
       },
+      {
+        id: shellCommandIds.share,
+        title: text('command.share'),
+        keys: [],
+        menu: { menu: 'file', group: 3, order: 2 },
+        edits: false,
+        when: () => true,
+        run: async () => {
+          if (editor === null) {
+            return;
+          }
+          await copyShareLink(editor, store.name, {
+            ...options.share,
+            notify: notices.show,
+            text,
+            log: options.log,
+          });
+        },
+      },
     ];
   }
 
   // --- Start ---
 
-  async function start(handle: EditorHandle): Promise<void> {
+  async function start(handle: EditorHandle, fragment?: string): Promise<void> {
     editor = handle;
     unregister.push(handle.onStatus(onStatus));
     registerShellCommands();
@@ -613,7 +719,17 @@ export function createWebShell(options: WebShellOptions): WebShell {
     const claimed = await lock.claim(store.key);
     isReadOnly = !claimed;
     onStatus(handle.status());
-    await restoreLastBackup();
+    const shared = fragment === undefined ? null : await readShared(fragment);
+    if (shared === null) {
+      await restoreLastBackup();
+    } else {
+      // The link is what the user came for: the local backup is asked about another time.
+      await openShared(shared, 'keep');
+    }
+    // The page may have started in view mode for a link that did not open: tell the UI.
+    for (const listener of [...viewListeners]) {
+      listener(isViewing);
+    }
   }
 
   /** "Restore last time's changes?" in the editor's modal. */
@@ -656,6 +772,15 @@ export function createWebShell(options: WebShellOptions): WebShell {
     openFromPicker,
     openFile,
     openDropped,
+    openShareLink,
+    isViewing: () => isViewing,
+    onViewMode: (listener) => {
+      viewListeners.add(listener);
+      return () => {
+        viewListeners.delete(listener);
+      };
+    },
+    startEditing,
     suspend: () => {
       backup.flush();
     },
@@ -676,6 +801,19 @@ export function createWebShell(options: WebShellOptions): WebShell {
       lock.dispose();
     },
   };
+}
+
+function linkFailureMessage(reason: Exclude<ShareLinkFailure, 'notShareLink'>): ShellMessageKey {
+  switch (reason) {
+    case 'newerVersion':
+      return 'link.newerVersion';
+    case 'tooLarge':
+      return 'link.tooLarge';
+    case 'unsupported':
+      return 'link.unsupported';
+    case 'damaged':
+      return 'link.damaged';
+  }
 }
 
 function openFailureMessage(reason: OpenFailureReason): ShellMessageKey {

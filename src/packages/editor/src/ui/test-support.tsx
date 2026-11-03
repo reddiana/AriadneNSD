@@ -166,7 +166,12 @@ export function memorySettings(initial: Readonly<Record<string, unknown>> = {}):
 /** Renders the whole UI around a fake engine. */
 export function renderApp(
   engine: FakeEngine,
-  options: { readonly locale?: 'en' | 'ko'; readonly settings?: SettingsStore } = {},
+  options: {
+    readonly locale?: 'en' | 'ko';
+    readonly settings?: SettingsStore;
+    /** View mode (R-WEB-06) with its "Edit" button. */
+    readonly onEdit?: () => void;
+  } = {},
 ) {
   const canvas = document.createElement('div');
   canvas.dataset.testid = 'engine-canvas';
@@ -178,6 +183,7 @@ export function renderApp(
       locale={options.locale ?? 'en'}
       appearance={{ scheme: 'light', uiFont: 'sans-serif' }}
       settings={options.settings ?? memorySettings()}
+      {...(options.onEdit === undefined ? {} : { viewMode: { onEdit: options.onEdit } })}
     />,
   );
 }

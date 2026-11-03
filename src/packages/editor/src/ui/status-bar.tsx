@@ -14,7 +14,7 @@ const noticeMilliseconds = 6000;
  * or another notice comes (06-web: the shell's warnings are told here too). A new notice (new id)
  * shows again. Returns whether it shows and a function that closes it.
  */
-function useVisibleNotice(
+export function useVisibleNotice(
   id: number | null,
   level: 'info' | 'warn' | null,
 ): readonly [boolean, () => void] {

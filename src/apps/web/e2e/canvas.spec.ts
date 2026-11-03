@@ -77,7 +77,8 @@ test('T-0206 · UX CM1: a right click on the empty canvas shows the File and Hel
   await expect(menu).toBeVisible();
   await expect(menu.getByRole('menuitem', { name: /^Save/ }).first()).toBeVisible();
   await expect(menu.getByRole('menuitem', { name: /^Examples/ })).toBeVisible();
-  await expect(menu.getByRole('menuitem', { name: /^Copy/ })).toHaveCount(0);
+  // The Edit menu's Copy is not there (the File menu's "Copy Share Link" is).
+  await expect(menu.getByRole('menuitem', { name: /^Copy(?! Share Link)/ })).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(menu).toHaveCount(0);
 });

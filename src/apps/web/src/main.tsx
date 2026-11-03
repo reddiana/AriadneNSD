@@ -8,6 +8,8 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app';
 import { hasFileSystemAccess } from './files/file-system-access';
 import { thumbnailUrl } from './examples/thumbnail-urls';
+import { browserCopyText } from './files/share-command';
+import { browserDeflate, isShareLink } from './files/share-link';
 import { createSaveFonts } from './fonts/save-font';
 import { loadBlockFont } from './fonts/screen-font';
 import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
@@ -73,7 +75,19 @@ const shell = createWebShell({
     document.title = title;
   },
   log,
+  share: {
+    page: window.location,
+    deflate: browserDeflate(),
+    copyText: browserCopyText(navigator.clipboard),
+  },
 });
+
+/** The share link this page was opened with (R-WEB-05): the URL's `#…`, or none. */
+function shareFragment(): string | undefined {
+  const fragment = window.location.hash.slice(1);
+  return isShareLink(fragment) ? fragment : undefined;
+}
+const sharedAtStart = shareFragment();
 
 const appearanceChanged = createListeners<Parameters<typeof watchAppearance>[0]>();
 const appearance = watchAppearance(appearanceChanged.emit);
@@ -112,7 +126,8 @@ const examplesHost: ExamplesHost = {
       `${example.name[locale]}.ns.svg`,
     );
   },
-  isFirstVisit: settings.get(welcomedKey) !== true,
+  // A share link shows its diagram: the welcome waits for a visit without one.
+  isFirstVisit: settings.get(welcomedKey) !== true && sharedAtStart === undefined,
   onWelcomed: () => {
     settings.set(welcomedKey, true);
   },
@@ -133,6 +148,11 @@ function render(): void {
         onAppearance={appearanceChanged.add}
         onDragState={dragging.add}
         examples={examplesHost}
+        view={{
+          isViewing: sharedAtStart !== undefined,
+          onViewMode: shell.onViewMode,
+          onEdit: shell.startEditing,
+        }}
       />
     </StrictMode>,
   );
@@ -150,8 +170,23 @@ settings.onChange((key) => {
   render();
 });
 
+// Leaving view mode (Edit, or another document) takes the link out of the address bar, so a
+// reload restores the local backup of the edits instead of the link (UX SH4).
+shell.onViewMode((isViewing) => {
+  if (!isViewing && shareFragment() !== undefined) {
+    history.replaceState(history.state, '', window.location.pathname + window.location.search);
+  }
+});
+// A share link pasted into the address bar of this tab changes only the fragment.
+window.addEventListener('hashchange', () => {
+  const fragment = shareFragment();
+  if (fragment !== undefined) {
+    void shell.openShareLink(fragment);
+  }
+});
+
 bootStep('start');
-await shell.start(editor);
+await shell.start(editor, sharedAtStart);
 // The keys go to the diagram from the start, so a keyboard-only user can begin (R-NFR-05).
 // On the first visit the examples modal has them instead, so Esc closes it (UX EX2).
 if (!examplesHost.isFirstVisit) {
