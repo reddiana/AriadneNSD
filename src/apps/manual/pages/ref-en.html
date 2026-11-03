@@ -23,8 +23,9 @@
 <section id="blocks">
   <h2>Blocks</h2>
   <p>
-    Write anything in a block: code or plain sentences. Text does not wrap by itself; break long
-    lines with
+    Write anything in a block: code or plain sentences. The condition of an If, a Case or a loop
+    goes in its condition cell (at the top; at the bottom for a Do-While). Text does not wrap by
+    itself; break long lines with
     <kbd>Shift</kbd>+<kbd>Enter</kbd>. The <code>∅</code> in an empty cell means "nothing here".
   </p>
   <div class="pair">
@@ -63,8 +64,8 @@
       <tr>
         <td>For</td>
         <td>
-          Repeats a set number of times (looks like While; the text tells them apart). Not on the
-          toolbar: use keys or menus
+          Repeats a set number of times (looks like While; the text in its condition cell tells them
+          apart). Not on the toolbar: use keys or menus
         </td>
         <td><kbd>f</kbd></td>
       </tr>
@@ -139,11 +140,12 @@
 </section>
 
 <section id="insert">
-  <h2>Adding blocks and editing text</h2>
+  <h2>Inserting blocks, editing text</h2>
   <p>
     A new block goes after the selection, or before it with <kbd>Shift</kbd>. If an empty block
-    (<code>∅</code>) is selected, the new block takes its place. Editing the text (or condition)
-    starts right away.
+    (<code>∅</code>) is selected, the new block takes its place. Editing the text (for a control
+    block, its condition cell) starts right away. Press <kbd>Enter</kbd> or <kbd>Esc</kbd> to finish
+    editing.
   </p>
   <div class="wide">
     <img
@@ -173,7 +175,10 @@
       <tr>
         <td>Another block after / before</td>
         <td><kbd>a</kbd> / <kbd>A</kbd> + kind letter</td>
-        <td>That icon on the toolbar / <kbd>Shift</kbd>+click, or drag the icon between blocks</td>
+        <td>
+          That icon on the toolbar / <kbd>Shift</kbd>+click, or drag and drop the icon between
+          blocks
+        </td>
       </tr>
       <tr>
         <td>Start editing text</td>
@@ -181,7 +186,7 @@
         <td><kbd>Enter</kbd>, <kbd>F2</kbd>, double-click</td>
       </tr>
       <tr>
-        <td>Accept</td>
+        <td>Finish editing</td>
         <td><kbd>Esc</kbd></td>
         <td><kbd>Enter</kbd></td>
       </tr>
@@ -198,8 +203,10 @@
   <h2>Moving, copying, deleting</h2>
   <p>
     Moving swaps the selection with the block above or below. Moving past the end takes it out of
-    the block that holds it. To put it inside another block, drag it there, or cut and paste. Text
-    copied from another program pastes as one process block per line.
+    the block that holds it. To put it inside another block, drag and drop it there, or cut and
+    paste. Text copied from another program pastes as one process block per line. Blocks copied into
+    another program become indented text; a call block reads as drawn,
+    <code>result ← name(arguments)</code>.
   </p>
   <div class="pair">
     <figure>
@@ -223,7 +230,8 @@
         <td>Move up · down (branches left · right)</td>
         <td><kbd>Alt</kbd>+<kbd>k</kbd> <kbd>j</kbd> (<kbd>h</kbd> <kbd>l</kbd>)</td>
         <td>
-          <kbd>Alt</kbd>+<kbd>↑</kbd> <kbd>↓</kbd> (<kbd>←</kbd> <kbd>→</kbd>), drag the block
+          <kbd>Alt</kbd>+<kbd>↑</kbd> <kbd>↓</kbd> (<kbd>←</kbd> <kbd>→</kbd>), drag and drop the
+          block
         </td>
       </tr>
       <tr>
@@ -251,11 +259,11 @@
 </section>
 
 <section id="wrap-branches">
-  <h2>Wrapping, unwrapping, adding branches</h2>
+  <h2>Wrapping, unwrapping, inserting branches</h2>
   <p>
     Wrapping puts the selected blocks in a new control block (an If's true branch, a Case's first
-    branch). Unwrapping removes the shell and keeps what is inside. Add and delete a Case's branches
-    like blocks, with its label selected. The default branch always comes last.
+    branch). Unwrapping removes the shell and keeps what is inside. Insert and delete a Case's
+    branches like blocks, with its label selected. The default branch always comes last.
   </p>
   <div class="pair">
     <figure>
@@ -265,7 +273,7 @@
     <span class="to" aria-hidden="true">→</span>
     <figure>
       <img src="img/en/ref-branch-added.png" alt="A new branch 3 after 1" />
-      <figcaption><kbd>o</kbd> adds a branch after it, labelled <code>3</code></figcaption>
+      <figcaption><kbd>o</kbd> inserts a branch after it, labelled <code>3</code></figcaption>
     </figure>
   </div>
   <div class="tbl">
@@ -279,7 +287,8 @@
         <td>Wrap</td>
         <td><kbd>s</kbd> + kind letter</td>
         <td>
-          <kbd>Ctrl</kbd>+click a block icon, "Wrap" on the toolbar, or drop the icon on the blocks
+          <kbd>Ctrl</kbd>+click a block icon, "Wrap" on the toolbar, or drag and drop the icon on
+          the blocks
         </td>
       </tr>
       <tr>
@@ -288,7 +297,7 @@
         <td>The context menu</td>
       </tr>
       <tr>
-        <td>Add a branch after / before (label selected)</td>
+        <td>Insert a branch after / before (label selected)</td>
         <td><kbd>o</kbd> / <kbd>O</kbd></td>
         <td></td>
       </tr>
@@ -305,8 +314,8 @@
     </table>
   </div>
   <p class="tip">
-    Adding a branch at an If's label asks whether to turn it into a Case. Swapping an If's true and
-    false branches keeps the condition, so the meaning changes: fix the condition.
+    Inserting a branch at an If's label asks whether to turn it into a Case. Swapping an If's true
+    and false branches keeps the condition, so the meaning changes: fix the condition.
   </p>
 </section>
 
@@ -348,7 +357,7 @@
         <td>The Diagram menu</td>
       </tr>
       <tr>
-        <td>Add a call block (pick the Method from a list)</td>
+        <td>Insert a call block (select the Method from a list)</td>
         <td><kbd>a</kbd> <kbd>c</kbd></td>
         <td>Context menu › Insert</td>
       </tr>
@@ -376,7 +385,10 @@
   </div>
   <p class="tip">
     Choose the header shape ("Like a title" or "Hat · arch") in Diagram › Document Settings. The
-    shape you chose last is remembered.
+    shape you chose last is remembered. "Language of drawn labels" in the same place is the language
+    of the words the editor draws (an If's "true" · "false", "⋯ n blocks"). It is set per document
+    and saved in the file, so the drawing looks the same whatever the reader's screen language. A
+    new document starts in your screen language.
   </p>
 </section>
 
@@ -431,7 +443,7 @@
   </div>
   <ul>
     <li>
-      <b>Open:</b> the File menu, the toolbar, or drop a file on the page. Opens
+      <b>Open:</b> the File menu, the toolbar, or drag and drop a file on the page. Opens
       <code>.ns.svg</code> and <code>.ns</code>.
     </li>
     <li>
@@ -442,12 +454,21 @@
     <li><b>Recent Files:</b> in the File menu, up to ten files you opened or saved.</li>
     <li>
       <b>Local backup:</b> unsaved work is kept in the browser; when you open the page again, it
-      asks whether to restore it.
+      asks whether to restore it. A document opened from a file keeps its local backup when you open
+      another one; open that file again and it asks whether to restore it.
     </li>
     <li><b>Export as PNG:</b> File › Export. It looks the same as the saved picture.</li>
     <li>
+      <b>New documents:</b> if you edited a new document that was never saved (a new one, or an
+      example) and open another document, it first asks: "… is a new document that has never been
+      saved. Once another document opens, it cannot be brought back. Save it first?" "Save"
+      (<kbd>Enter</kbd>) saves and then opens, "Discard and Open" drops it and opens, and "Cancel"
+      (<kbd>Esc</kbd>) opens nothing.
+    </li>
+    <li>
       <b>Examples:</b> "Examples" on the toolbar or Help › Examples… opens ten of them. An example
-      opens as a new document, so feel free to change it.
+      opens as a new document, so feel free to edit it. Examples are written in your screen
+      language.
     </li>
   </ul>
   <p class="tip">AriadneNSD is not 1.0 yet. Files you save now may not open in later versions.</p>

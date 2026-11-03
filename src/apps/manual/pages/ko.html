@@ -15,9 +15,9 @@
           <div class="part">5분 둘러보기</div>
           <ol>
             <li><a href="#first-block">첫 블록 적기</a></li>
-            <li><a href="#more-blocks">블록 더 넣기</a></li>
+            <li><a href="#more-blocks">블록 더 삽입하기</a></li>
             <li><a href="#wrap">While로 감싸기</a></li>
-            <li><a href="#if">If 넣기</a></li>
+            <li><a href="#if">If 삽입하기</a></li>
             <li><a href="#save">저장하기</a></li>
           </ol>
         </div>
@@ -27,9 +27,9 @@
             <li><a href="#screen">화면</a></li>
             <li><a href="#blocks">블록</a></li>
             <li><a href="#select">이동과 선택</a></li>
-            <li><a href="#insert">넣기 · 글자 고치기</a></li>
-            <li><a href="#move">옮기기 · 복사 · 삭제</a></li>
-            <li><a href="#wrap-branches">감싸기 · 풀기, 분기 더하기</a></li>
+            <li><a href="#insert">삽입 · 텍스트 편집</a></li>
+            <li><a href="#move">이동 · 복사 · 삭제</a></li>
+            <li><a href="#wrap-branches">감싸기 · 풀기, 분기 삽입</a></li>
             <li><a href="#diagrams">Event · Method와 여러 다이어그램</a></li>
             <li><a href="#undo-zoom">실행 취소, 확대 · 축소</a></li>
             <li><a href="#files">파일</a></li>
@@ -65,8 +65,8 @@
         <section id="first-block">
           <h2><span class="n">1</span>첫 블록 적기</h2>
           <p>
-            선택한 블록에 글자를 적으려면 편집을 시작합니다. 적고 나서 <kbd>Enter</kbd>를 누르면
-            받아들입니다. <kbd>Esc</kbd>도 적은 대로 받아들입니다.
+            선택한 블록에 텍스트를 적으려면 <kbd>Enter</kbd>를 눌러 편집을 시작합니다. 적고 나서
+            다시 <kbd>Enter</kbd>를 누르면 편집이 완료됩니다. <kbd>Esc</kbd>도 편집 완료입니다.
           </p>
           <div class="pair">
             <figure>
@@ -92,7 +92,7 @@
                 <td><kbd>Enter</kbd>, <kbd>F2</kbd>, 더블클릭</td>
               </tr>
               <tr>
-                <td>받아들이기</td>
+                <td>편집 완료</td>
                 <td><kbd>Esc</kbd></td>
                 <td><kbd>Enter</kbd></td>
               </tr>
@@ -104,17 +104,19 @@
             </table>
           </div>
           <p class="tip">
-            블록이 선택된 채로 글자 키를 누르면 글자가 적히지 않고 명령이 됩니다(Vim과 같습니다).
+            블록이 선택된 채로 글자 키를 누르면 텍스트가 적히지 않고 명령이 됩니다(Vim과 같습니다).
             적으려면 먼저 편집을 시작하세요.
           </p>
         </section>
 
         <section id="more-blocks">
-          <h2><span class="n">2</span>블록 더 넣기</h2>
+          <h2><span class="n">2</span>블록 더 삽입하기</h2>
           <p>
-            새 블록은 선택한 블록의 뒤에 들어갑니다. 처리 블록을 넣으면 바로 편집이 시작되니, 적고
-            <kbd>Enter</kbd>, 다시 넣고 적기를 되풀이합니다. 앞에 넣으려면 <kbd>Shift</kbd>를 함께
-            누릅니다.
+            새 블록은 선택한 블록의 다음에 들어갑니다. 처리 블록은 삽입하면 편집이 바로 시작되어,
+            <kbd>Enter</kbd>를 누르지 않고 곧장 적으면 됩니다. 적고 <kbd>Enter</kbd>를 누르면 그
+            블록이 선택된 채로 남으니, 다시 삽입해 다음 블록을 적습니다. 이렇게 <code>i ← 0</code>,
+            <code>sum ← sum + a[i]</code>, <code>i ← i + 1</code>을 차례로 적습니다. 앞에 삽입하려면
+            <kbd>Shift</kbd>를 함께 누릅니다.
           </p>
           <div class="pair">
             <figure>
@@ -124,7 +126,7 @@
             <span class="to" aria-hidden="true">→</span>
             <figure>
               <img src="../img/ko/tour-2-more.png" alt="블록 넷" />
-              <figcaption>셋을 더 넣음</figcaption>
+              <figcaption>셋을 더 삽입함</figcaption>
             </figure>
           </div>
           <div class="tbl">
@@ -135,7 +137,7 @@
                 <th>표준 키 · 마우스</th>
               </tr>
               <tr>
-                <td>처리 블록을 뒤 / 앞에 넣고 바로 적기</td>
+                <td>처리 블록을 다음 / 앞에 삽입하고 바로 적기</td>
                 <td>
                   <kbd>o</kbd> (또는 <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (또는 <kbd>A</kbd>
                   <kbd>p</kbd>)
@@ -169,8 +171,8 @@
               툴바의 While 아이콘을 <kbd>Ctrl</kbd>+클릭합니다.
             </li>
             <li>
-              <b>반복 조건을 적습니다.</b> 편집이 바로 시작되니 <code>i &lt; n</code>을 적고
-              <kbd>Enter</kbd>를 누릅니다.
+              <b>반복 조건을 적습니다.</b> While의 조건 칸에서 편집이 바로 시작되니
+              <code>i &lt; n</code>을 적고 <kbd>Enter</kbd>를 누릅니다.
             </li>
           </ol>
           <div class="pair">
@@ -220,7 +222,7 @@
                 <td><kbd>s</kbd> <kbd>w</kbd></td>
                 <td>
                   툴바의 While 아이콘을 <kbd>Ctrl</kbd>+클릭, 툴바의 "감싸기", 아이콘을 블록 위에
-                  끌어 놓기
+                  드래그 앤 드롭
                 </td>
               </tr>
               <tr>
@@ -245,10 +247,10 @@
         </section>
 
         <section id="if">
-          <h2><span class="n">4</span>If 넣기</h2>
+          <h2><span class="n">4</span>If 삽입하기</h2>
           <p>
-            반복문 뒤에 If를 넣고 조건을 적습니다. 그다음 참 분기의 빈 블록으로 내려가 평균을
-            적습니다. 거짓 분기의
+            반복문 다음에 If를 삽입하고 조건 칸에 조건을 적습니다. 그다음 참 분기의 빈 블록으로
+            내려가 평균을 적습니다. 거짓 분기의
             <code>∅</code>는 "여기는 비어 있음"이라는 표시입니다.
           </p>
           <div class="pair">
@@ -258,7 +260,7 @@
             </figure>
             <span class="to" aria-hidden="true">→</span>
             <figure>
-              <img src="../img/ko/tour-4-done.png" alt="If를 넣고 참 분기에 avg ← sum / n" />
+              <img src="../img/ko/tour-4-done.png" alt="If를 삽입하고 참 분기에 avg ← sum / n" />
               <figcaption>If <code>n &gt; 0</code>, 참 분기에 평균</figcaption>
             </figure>
           </div>
@@ -270,12 +272,12 @@
                 <th>표준 키 · 마우스</th>
               </tr>
               <tr>
-                <td>If를 뒤 / 앞에 넣기</td>
+                <td>If를 다음 / 앞에 삽입</td>
                 <td><kbd>a</kbd> <kbd>i</kbd> / <kbd>A</kbd> <kbd>i</kbd></td>
                 <td>툴바의 If 아이콘 / <kbd>Shift</kbd>+클릭</td>
               </tr>
               <tr>
-                <td>다른 블록 넣기</td>
+                <td>다른 블록 삽입</td>
                 <td>
                   <kbd>a</kbd> + <kbd>k</kbd> Case · <kbd>w</kbd> While · <kbd>d</kbd> Do-While ·
                   <kbd>f</kbd> For · <kbd>c</kbd> 호출
@@ -295,7 +297,7 @@
           <h2><span class="n">5</span>저장하기</h2>
           <p>
             저장하면 <code>.ns.svg</code> 파일이 생깁니다. 이 파일은 그 자체로 그림이라 브라우저,
-            GitHub, 문서에 그대로 보이고, AriadneNSD로 다시 열면 이어서 고칠 수 있습니다.
+            GitHub, 문서에 그대로 보이고, AriadneNSD로 다시 열면 이어서 편집할 수 있습니다.
           </p>
           <div class="wide">
             <img
@@ -335,8 +337,8 @@
           </div>
           <p class="tip">
             Chrome과 Edge에서는 한 번 저장한 파일을 그 뒤로 자동으로 저장합니다. Firefox와
-            Safari에서는 저장할 때마다 파일을 내려받습니다. 저장하지 않은 내용도 브라우저에 임시로
-            보관되어, 페이지를 다시 열면 복원할지 묻습니다.
+            Safari에서는 저장할 때마다 파일을 내려받습니다. 저장하지 않은 내용도 브라우저에 로컬
+            백업으로 남아, 페이지를 다시 열면 복원할지 묻습니다.
           </p>
         </section>
 

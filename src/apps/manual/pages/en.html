@@ -15,9 +15,9 @@
           <div class="part">5-minute tour</div>
           <ol>
             <li><a href="#first-block">Write the first block</a></li>
-            <li><a href="#more-blocks">Add more blocks</a></li>
+            <li><a href="#more-blocks">Insert more blocks</a></li>
             <li><a href="#wrap">Wrap in a While</a></li>
-            <li><a href="#if">Add an If</a></li>
+            <li><a href="#if">Insert an If</a></li>
             <li><a href="#save">Save</a></li>
           </ol>
         </div>
@@ -27,9 +27,9 @@
             <li><a href="#screen">The screen</a></li>
             <li><a href="#blocks">Blocks</a></li>
             <li><a href="#select">Moving around and selecting</a></li>
-            <li><a href="#insert">Adding blocks and editing text</a></li>
+            <li><a href="#insert">Inserting blocks, editing text</a></li>
             <li><a href="#move">Moving, copying, deleting</a></li>
-            <li><a href="#wrap-branches">Wrapping, adding branches</a></li>
+            <li><a href="#wrap-branches">Wrapping, inserting branches</a></li>
             <li><a href="#diagrams">Events, Methods, several diagrams</a></li>
             <li><a href="#undo-zoom">Undo, zoom</a></li>
             <li><a href="#files">Files</a></li>
@@ -67,8 +67,9 @@
         <section id="first-block">
           <h2><span class="n">1</span>Write the first block</h2>
           <p>
-            To write in the selected block, start editing. When you are done, press
-            <kbd>Enter</kbd> to accept. <kbd>Esc</kbd> also keeps what you wrote.
+            To write text in the selected block, press <kbd>Enter</kbd> to start editing. When you
+            are done, press <kbd>Enter</kbd> again to finish editing. <kbd>Esc</kbd> finishes
+            editing too.
           </p>
           <div class="pair">
             <figure>
@@ -94,7 +95,7 @@
                 <td><kbd>Enter</kbd>, <kbd>F2</kbd>, double-click</td>
               </tr>
               <tr>
-                <td>Accept</td>
+                <td>Finish editing</td>
                 <td><kbd>Esc</kbd></td>
                 <td><kbd>Enter</kbd></td>
               </tr>
@@ -112,11 +113,13 @@
         </section>
 
         <section id="more-blocks">
-          <h2><span class="n">2</span>Add more blocks</h2>
+          <h2><span class="n">2</span>Insert more blocks</h2>
           <p>
-            A new block goes after the selected one. Adding a process block starts editing right
-            away, so write, press
-            <kbd>Enter</kbd>, add, and write again. Hold <kbd>Shift</kbd> to add before instead.
+            A new block goes right after the selected one. Inserting a process block starts editing
+            at once, so just type; no need to press <kbd>Enter</kbd> first. After you write it and
+            press <kbd>Enter</kbd>, the block stays selected, so insert again to write the next one.
+            Write <code>i ← 0</code>, <code>sum ← sum + a[i]</code> and <code>i ← i + 1</code> this
+            way. Hold <kbd>Shift</kbd> to insert before instead.
           </p>
           <div class="pair">
             <figure>
@@ -126,7 +129,7 @@
             <span class="to" aria-hidden="true">→</span>
             <figure>
               <img src="img/en/tour-2-more.png" alt="Four blocks" />
-              <figcaption>Three more</figcaption>
+              <figcaption>Three more inserted</figcaption>
             </figure>
           </div>
           <div class="tbl">
@@ -137,7 +140,7 @@
                 <th>Standard key · mouse</th>
               </tr>
               <tr>
-                <td>Add a process block after / before and write</td>
+                <td>Insert a process block after / before and write</td>
                 <td>
                   <kbd>o</kbd> (or <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (or <kbd>A</kbd>
                   <kbd>p</kbd>)
@@ -171,8 +174,8 @@
               <kbd>Ctrl</kbd>+click the While icon on the toolbar.
             </li>
             <li>
-              <b>Write the loop condition.</b> Editing starts right away: write
-              <code>i &lt; n</code> and press <kbd>Enter</kbd>.
+              <b>Write the loop condition.</b> Editing starts right away in the While's condition
+              cell: write <code>i &lt; n</code> and press <kbd>Enter</kbd>.
             </li>
           </ol>
           <div class="pair">
@@ -225,7 +228,7 @@
                 <td><kbd>s</kbd> <kbd>w</kbd></td>
                 <td>
                   <kbd>Ctrl</kbd>+click the While icon on the toolbar, "Wrap" on the toolbar, or
-                  drop the icon on the blocks
+                  drag and drop the icon on the blocks
                 </td>
               </tr>
               <tr>
@@ -250,11 +253,11 @@
         </section>
 
         <section id="if">
-          <h2><span class="n">4</span>Add an If</h2>
+          <h2><span class="n">4</span>Insert an If</h2>
           <p>
-            Add an If after the loop and write its condition. Then go down into the empty block of
-            the true branch and write the average. The <code>∅</code> in the false branch means
-            "nothing here".
+            Insert an If after the loop and write its condition in its condition cell. Then go down
+            into the empty block of the true branch and write the average. The <code>∅</code> in the
+            false branch means "nothing here".
           </p>
           <div class="pair">
             <figure>
@@ -278,12 +281,12 @@
                 <th>Standard key · mouse</th>
               </tr>
               <tr>
-                <td>Add an If after / before</td>
+                <td>Insert an If after / before</td>
                 <td><kbd>a</kbd> <kbd>i</kbd> / <kbd>A</kbd> <kbd>i</kbd></td>
                 <td>The If icon on the toolbar / <kbd>Shift</kbd>+click</td>
               </tr>
               <tr>
-                <td>Add other blocks</td>
+                <td>Insert other blocks</td>
                 <td>
                   <kbd>a</kbd> + <kbd>k</kbd> Case · <kbd>w</kbd> While · <kbd>d</kbd> Do-While ·
                   <kbd>f</kbd> For · <kbd>c</kbd> Call
@@ -346,8 +349,8 @@
           </div>
           <p class="tip">
             In Chrome and Edge, a file saved once is then saved automatically. In Firefox and
-            Safari, each save downloads the file. Unsaved work is also kept in the browser: when you
-            open the page again, it asks whether to restore it.
+            Safari, each save downloads the file. Unsaved work is also kept in the browser as a
+            local backup: when you open the page again, it asks whether to restore it.
           </p>
         </section>
 
