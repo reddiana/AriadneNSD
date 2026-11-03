@@ -41,14 +41,27 @@ flowchart LR
 sequenceDiagram
   participant M as 메인테이너
   participant C as Claude
+  participant G1 as 에이전트 1
+  participant G2 as 에이전트 2
   participant A as atelier/
   M->>+C: 세션 시작 ("진도 나갑시다")
   C->>+A: status · outbox · 최근 세션 기록 · inbox를 읽음
   A-->>-C: 지금 단계, 답을 기다리는 것, 새 메모
   C-->>M: 지난 일과 다음 할 일을 요약
-  M->>C: 요청
-  C->>C: 설계 · 코드 · 테스트 · 문서
-  C-->>M: 결과와 물음 (시안 · 로컬 링크)
+  M->>C: 요청 · 결정
+  par 에이전트 1
+    C->>+G1: 정한 일 (예: 버그 고치기)
+    G1->>G1: 코드 · 테스트 · 문서, 검사, 커밋
+    G1-->>-C: 결과 보고
+  and 에이전트 2
+    C->>+G2: 다른 파일을 쓰는 일 (예: CI 손보기)
+    G2->>G2: 코드 · 테스트 · 문서, 검사, 커밋
+    G2-->>-C: 결과 보고
+  and 대화
+    C-->>M: 다음 물음 (시안 · 고르는 창)
+    M->>C: 답
+  end
+  C-->>M: 에이전트의 결과 (로컬 링크)
   M->>C: "매듭" 또는 "마무리"
   C->>+A: 세션 기록, status · backlog · outbox 갱신
   A-->>-C: 
