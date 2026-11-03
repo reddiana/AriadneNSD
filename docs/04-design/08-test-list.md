@@ -377,9 +377,9 @@ id. 단위 · Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
-| T-0203 | 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 | [[defects\|BUG-08]] |
+| T-0203 | 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 | [[defects#BUG-08\|BUG-08]] |
 | T-0204 | 선택한 것이 없으면 포커스 테두리가 잠깐만 보인다 | [[ux-decisions\|UX CF2]] |
-| T-0205 | 블록을 끌어도 그려진 글자가 선택되지 않는다 | [[defects\|BUG-09]] |
+| T-0205 | 블록을 끌어도 그려진 글자가 선택되지 않는다 | [[defects#BUG-09\|BUG-09]] |
 | T-0206 | 빈 캔버스를 오른쪽 클릭하면 파일 · 도움말 메뉴가 보인다 | [[ux-decisions\|UX CM1]] |
 
 #### `packages/editor/src/session/diagrams.test.ts`
@@ -424,7 +424,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
-| T-0229 | 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 | [[defects\|BUG-07]] |
+| T-0229 | 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 | [[defects#BUG-07\|BUG-07]] |
 
 #### `packages/editor/src/input/hit-test.test.ts`
 
@@ -526,8 +526,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
-| T-0278 | `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다 | [[defects\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
-| T-0279 | 시작하다 실패하면 시작 화면에 그 사실을 보인다 | [[defects\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
+| T-0278 | `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다 | [[defects#BUG-03\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
+| T-0279 | 시작하다 실패하면 시작 화면에 그 사실을 보인다 | [[defects#BUG-03\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
 
 #### `apps/web/e2e/examples.spec.ts`
 
@@ -539,9 +539,9 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0281 | 첫 방문 모달을 `Esc`로 닫으면 새 문서를 지키고 다시 묻지 않는다 | [[ux-decisions\|UX EX2]] |
 | T-0282 | 도움말 › 예제…는 같은 모달을 그 문구로 연다 | [[ux-decisions\|UX EX3]] |
 | T-0283 | 툴바의 "예제"가 예제 모달을 연다 | [[ux-decisions\|UX EX3]] |
-| T-0284 | 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 | [[defects\|BUG-02]] |
-| T-0285 | 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 | [[defects\|BUG-01]] |
-| T-0286 | 마우스로 연 메뉴를 `Esc`가 닫는다 | [[defects\|BUG-05]] |
+| T-0284 | 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 | [[defects#BUG-02\|BUG-02]] |
+| T-0285 | 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 | [[defects#BUG-01\|BUG-01]] |
+| T-0286 | 마우스로 연 메뉴를 `Esc`가 닫는다 | [[defects#BUG-05\|BUG-05]] |
 
 #### `apps/web/e2e/mobile.spec.ts`
 
@@ -552,7 +552,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0287 | 느린 휴대폰에서도 편집기가 3초 안에, 블록 글꼴이 5초 안에 보인다 | [[03-quality-attribute-scenarios#1. 목록\|QA-18]] |
 | T-0288 | 휴대폰의 첫 방문에서는 탭 한 번으로 예제를 연다 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
 | T-0289 | 휴대폰에서는 툴바로 블록을 넣고 탭으로 선택한다 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
-| T-0290 | 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 | [[defects\|BUG-04]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
+| T-0290 | 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 | [[defects#BUG-04\|BUG-04]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
 | T-0291 | 휴대폰에서는 실행 취소 · 다시 실행 · 감싸기 · 도움말이 툴바에 있고, 아래 줄은 없다 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
 
 #### `apps/web/e2e/smoke.spec.ts`
@@ -1009,4 +1009,4 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-07]] |
-| [[defects\|BUG-06]] | 없음 |
+| [[defects#BUG-06\|BUG-06]] | 없음 |

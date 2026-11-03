@@ -211,7 +211,7 @@ function link(id, inTable = true) {
   const bar = inTable ? '\\|' : '|';
   if (id.startsWith('AT-')) return `[[07-testing#4. MVP의 인수 테스트${bar}${id}]]`;
   if (id.startsWith('QA-')) return `[[03-quality-attribute-scenarios#1. 목록${bar}${id}]]`;
-  if (id.startsWith('BUG-')) return `[[defects${bar}${id}]]`;
+  if (id.startsWith('BUG-')) return `[[defects#${id}${bar}${id}]]`;
   if (id.startsWith('UX ')) return `[[ux-decisions${bar}${id}]]`;
   const area = id.split('-')[1].toLowerCase();
   return `[[01-requirements#^r-${area}${bar}${id}]]`;
@@ -306,7 +306,12 @@ if (problems.length > 0) {
 function definedIds(docPath, prefix) {
   const text = readFileSync(join(repo, docPath), 'utf8');
   return unique(
-    [...text.matchAll(new RegExp(String.raw`^\| (${prefix}-\d+) \|`, 'gm'))].map((m) => m[1]),
+    // The first cell is the id, or a link to its section (`[[#BUG-01\|BUG-01]]`).
+    [
+      ...text.matchAll(
+        new RegExp(String.raw`^\| (?:\[\[#[^\]|\\]*\\\|)?(${prefix}-\d+)(?:\]\])? \|`, 'gm'),
+      ),
+    ].map((m) => m[1]),
   );
 }
 const defined = [
