@@ -48,6 +48,18 @@ export function createRegistry(options: RegistryOptions): EditorRegistry {
     }
   };
 
+  // Registering and taking out come in runs (a whole menu's worth at start): tell the listeners
+  // once, after the run, rather than once per command. Each telling re-reads every command.
+  let changePending = false;
+  const changedSoon = (): void => {
+    if (changePending) return;
+    changePending = true;
+    queueMicrotask(() => {
+      changePending = false;
+      changed();
+    });
+  };
+
   return {
     list: () => [...specs.values()],
     has: (id) => specs.has(id),
@@ -56,11 +68,11 @@ export function createRegistry(options: RegistryOptions): EditorRegistry {
     register: (spec) => {
       const entry = guarded(spec);
       specs.set(spec.id, entry);
-      changed();
+      changedSoon();
       return () => {
         if (specs.get(spec.id) === entry) {
           specs.delete(spec.id);
-          changed();
+          changedSoon();
         }
       };
     },

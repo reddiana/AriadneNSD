@@ -250,17 +250,19 @@ function useWrappedSeparators(root: RefObject<HTMLElement | null>): void {
       if (!toolbar) return;
       const separators = [...toolbar.querySelectorAll<HTMLElement>('.ans-sep')];
       for (const separator of separators) separator.dataset.wrap = '';
+      const items = [
+        ...toolbar.querySelectorAll<HTMLElement>('.ans-sep, .ans-tool, .ans-tool-root'),
+      ].filter((item) => item.offsetParent !== null);
       // Top to bottom: taking one out changes only the rows below it.
       for (const separator of separators) {
-        const items = [
-          ...toolbar.querySelectorAll<HTMLElement>('.ans-sep, .ans-tool, .ans-tool-root'),
-        ].filter((item) => item.offsetParent !== null);
         const at = items.indexOf(separator);
+        if (at < 0) continue;
         const before = items[at - 1];
         const after = items[at + 1];
         const top = separator.offsetTop;
         if (before === undefined || before.offsetTop + before.offsetHeight <= top) {
           separator.dataset.wrap = 'start';
+          items.splice(at, 1);
         } else if (after === undefined || after.offsetTop >= top + separator.offsetHeight) {
           separator.dataset.wrap = 'end';
         }
