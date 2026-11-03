@@ -74,6 +74,11 @@ export type ExamplesHost = {
   readonly isFirstVisit: boolean;
   /** The welcome was answered or closed: do not show it again. */
   readonly onWelcomed: () => void;
+  /**
+   * The URL of an example's picture made ahead of time (`exampleThumbnailSvg`), if the shell has
+   * one. Without it the modal draws the example itself, which takes longer.
+   */
+  readonly thumbnailUrl?: (id: string, locale: Locale) => string | undefined;
 };
 
 type Popup =
@@ -308,6 +313,7 @@ export function EditorApp({
           <ExamplesModal
             mode={examplesMode}
             examples={exampleList}
+            thumbnailUrl={examples?.thumbnailUrl}
             onClose={closeExamples}
             onExample={(id) => {
               closeExamples();

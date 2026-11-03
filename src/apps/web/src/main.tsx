@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './app';
 import { hasFileSystemAccess } from './files/file-system-access';
+import { thumbnailUrl } from './examples/thumbnail-urls';
 import { createSaveFonts } from './fonts/save-font';
 import { loadBlockFont } from './fonts/screen-font';
 import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
@@ -115,6 +116,7 @@ const examplesHost: ExamplesHost = {
   onWelcomed: () => {
     settings.set(welcomedKey, true);
   },
+  thumbnailUrl,
 };
 
 bootStep('render');

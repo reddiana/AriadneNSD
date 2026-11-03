@@ -192,7 +192,7 @@ export const chromeCss = `
   aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; overflow: hidden;
   background: #ffffff; border: 1px solid var(--ui-line); border-radius: 4px;
 }
-.ans-example-thumb svg { width: 92%; height: 92%; }
+.ans-example-thumb svg, .ans-example-thumb img { width: 92%; height: 92%; object-fit: contain; }
 .ans-example-plain { background: var(--ui-accent-soft); color: var(--ui-accent); font-size: 30px; }
 .ans-example-name { font-weight: 600; display: flex; gap: 6px; align-items: baseline; }
 .ans-example-no { color: var(--ui-muted); font-weight: 400; font-size: 12px; }

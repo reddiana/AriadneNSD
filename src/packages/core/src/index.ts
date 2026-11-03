@@ -137,4 +137,4 @@ export { currentFormatVersion, serializeModelJson } from './format/model-json';
 export type { ContentCheck, OpenFailureReason, OpenResult } from './format/parse-model';
 export { invariantCheck, parseModel, parseModelJson } from './format/parse-model';
 export type { Drawing, EmbeddedFont, SvgFileParts } from './format/svg-file';
-export { assembleSvgFile, openSvgFile } from './format/svg-file';
+export { assembleImageSvg, assembleSvgFile, openSvgFile } from './format/svg-file';

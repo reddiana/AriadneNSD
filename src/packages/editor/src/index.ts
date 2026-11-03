@@ -58,3 +58,5 @@ export type { ClipboardPort } from './session/session';
 // The examples a user can open as a new document (R-EDIT-25).
 export type { ExampleInfo, ExampleText } from './examples/examples';
 export { examples } from './examples/examples';
+export type { SubsetToWoff } from './examples/thumbnail';
+export { exampleThumbnailSvg } from './examples/thumbnail';

@@ -23,14 +23,26 @@ function watch() {
   const checks = {
     toolbar: () => document.querySelector('.ans-toolbar') !== null,
     modal: () => document.querySelector('.ans-example-card') !== null,
-    thumbs: () => document.querySelectorAll('.ans-example-thumb svg').length >= 10,
+    // Drawn in the page (svg) or images made ahead of time, loaded (img).
+    thumbs: () =>
+      document.querySelectorAll('.ans-example-thumb svg').length +
+        [...document.querySelectorAll('.ans-example-thumb img')].filter((img) => img.complete)
+          .length >=
+      10,
     font: () => document.documentElement.dataset.ready === 'true',
   };
-  new MutationObserver(() => {
+  const update = () => {
     for (const [name, check] of Object.entries(checks)) {
       if (times[name] === undefined && check()) times[name] = Math.round(performance.now());
     }
-  }).observe(document, { subtree: true, childList: true, attributes: true });
+  };
+  new MutationObserver(update).observe(document, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+  });
+  // An image that finished loading changes no element: listen for it (captured, it does not bubble).
+  document.addEventListener('load', update, true);
 }
 
 async function once({ isFirstVisit, network }) {

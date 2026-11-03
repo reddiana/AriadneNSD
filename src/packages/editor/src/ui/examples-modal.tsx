@@ -14,6 +14,15 @@ import { useChrome } from './use-engine';
 /** Why the modal is open: the first visit (a welcome), or the toolbar · Help › Examples…. */
 export type ExamplesMode = 'welcome' | 'menu';
 
+/** A picture made ahead of time, loaded and drawn by the browser apart from the page. */
+function ThumbnailImage({ url }: { readonly url: string }) {
+  return (
+    <span className="ans-example-thumb">
+      <img src={url} alt="" decoding="async" />
+    </span>
+  );
+}
+
 /** A drawing of an example, scaled into its card by the SVG's own viewBox. */
 function Thumbnail({
   example,
@@ -45,9 +54,11 @@ export function ExamplesModal({
   onBlank,
   onOpenFile,
   onClose,
+  thumbnailUrl,
 }: {
   readonly mode: ExamplesMode;
   readonly examples: ReadonlyArray<ExampleInfo>;
+  readonly thumbnailUrl?: ((id: string, locale: Locale) => string | undefined) | undefined;
   readonly onExample: (id: string) => void;
   readonly onBlank: () => void;
   readonly onOpenFile: () => void;
@@ -62,24 +73,31 @@ export function ExamplesModal({
     >
       <p className="ans-note">{text(isWelcome ? 'examples.welcomeLead' : 'examples.menuLead')}</p>
       <div className="ans-example-grid">
-        {examples.map((example, index) => (
-          <button
-            key={example.id}
-            type="button"
-            className="ans-example-card"
-            data-example={example.id}
-            onClick={() => {
-              onExample(example.id);
-            }}
-          >
-            <Thumbnail example={example} locale={locale} />
-            <span className="ans-example-name">
-              <span className="ans-example-no">{index + 1}</span>
-              {example.name[locale]}
-            </span>
-            <span className="ans-example-what">{example.what[locale]}</span>
-          </button>
-        ))}
+        {examples.map((example, index) => {
+          const url = thumbnailUrl?.(example.id, locale);
+          return (
+            <button
+              key={example.id}
+              type="button"
+              className="ans-example-card"
+              data-example={example.id}
+              onClick={() => {
+                onExample(example.id);
+              }}
+            >
+              {url === undefined ? (
+                <Thumbnail example={example} locale={locale} />
+              ) : (
+                <ThumbnailImage url={url} />
+              )}
+              <span className="ans-example-name">
+                <span className="ans-example-no">{index + 1}</span>
+                {example.name[locale]}
+              </span>
+              <span className="ans-example-what">{example.what[locale]}</span>
+            </button>
+          );
+        })}
         <button type="button" className="ans-example-card" data-example="blank" onClick={onBlank}>
           <span className="ans-example-thumb ans-example-plain" aria-hidden="true">
             +

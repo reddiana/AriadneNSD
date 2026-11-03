@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="676" height="520" viewBox="0 0 676 520">
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAABHgAAsAAAAAGSgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAFQAAABgaxVCK2NtYXAAAAFcAAAAtwAAAQwUVI9NZ2FzcAAAAhQAAAAQAAAAEAAXAAlnbHlmAAACJAAAC+4AAA+QXinhemhlYWQAAA4UAAAANgAAADY67EFKaGhlYQAADkwAAAAfAAAAJAblAudobXR4AAAObAAAAGkAAAC2U8YJ8WxvY2EAAA7YAAAAZgAAAGZVvFIMbWF4cAAAD0AAAAAcAAAAIABcAYBuYW1lAAAPXAAAAmwAAAWisvBt9nBvc3QAABHIAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgYGEKEApMEgyDPCjcGBQeFKDXPQ/yyGBcztQGkOBpA6BiY+pm1ASoGBEQDE8xDgeNpjYGBgAmJmIBYBkoxgmoXhB5C2YlAAsqSApDKDJoMOgx6DLYMbgx9DCEM4QzxDIkMaQyZDAUMFQ5XihDUCa3M2Tdn05NCTo8eOuxz3OTvnSs3//0AzFBiUGDQYtMF6XRl8GYKhepMZMhiyGYpw6/3/8P+D/3f+3/5/6/+Z/0f/7/+/+//O/5v+b/y/4f/6/+v+r/2/5t70EImgvb7TfN1tPazSLV5ZPDaaor0V7AMyAQAyPlIGAAAAAAMACAACABAAAf//AAN42m1Xa3Ab1RXee9fRWrZjW4/V6mHZWq+l1cOWba1WayeykthaS7Zs+S0Hh5g4OIZQSEsgCYkhPAK0MNBCy5CQGVpaSsIjEFpC2gADMxkKZMhQUl4tHVqgJNOm/dFpZtoGrOueu0pCgFpzLXl89jvnfOc751wxmJnF1eh+fIZhGY5hbAonaXBmN5Snn5lz6fjMyZMnGbCqZJzoND7AeJgGw0oBK7AzjqQZR1PoEeBfT+j8HN/rmDNvcF3Ozdbr3jk409xl7mnz2uV1mzz4wO7duztf7HwbfuAtcfQog5ibF7eiZ/AXjAD49nos8FKUVeMprCl8NfsHb2JIyaiFpCgmC2pGGUp4UVfXzi1XBCqaNmzble6+9frLmyoCs5vnAakXkLaUkFA8imVVqWd5ezXmJDXFIs//hZrfPAtQl19/a3d617YNAHXFlp3wOCMy3egd7IL8GZuq8Aov8ZIqqe/1HzrUfwhNvPpq9s03s2A3tbgNZZlfMA6GEWIprMYDciCgxhNKzEFdS1M+LSS4llZafY2SGkjl5dVWr98u2M3ldqsj1JmMZFUv9befqUc9zAvUn3buaZPUGNgf9fmi9FxdeovSmjQxB9Hb6GCpcogX1SVw0NtkHB2AczCdfimdppijTC06gQ9TTL9oEflzL3SC3Iq2ko/RUnIGhWrxvr7j/YTarwf7d8HebKDSl0WyoHfJZ4gjZwv4cN/xHHkB7wNLJ1j+HiytYMlKrMyzkk2xCRr8klgVXZ3vH6ywjHumpysqZtbZx6sRIf9F5qRcXMD7yJFEAmWKU5iVAakDkF4CpBqIkZUlATwCkCJbFAta8WQFi0dvMn7XYldcK57G+4qnlAQWilPwrJ9h0Vv4KNMMnKmKw6HEEpT/knyAQpBSQGo08XaHQIVA+fRXtU22dmd7YtpAGy929ofCa5qqe0c7Ux3h1IQqzH+7c93yS6VGNRnpEVyRtg5/88qQvdY91h5uC8ctbiXR1TS3rh58OyDuP0HcUAG/ZJFUkZeQv3AEvXGkFq/t6wMLDBb/Aota4MgGzFCeOPgF6dlQU44NTOlrR0xlY1O9ayR2ADeSHXl0vDiF7hRFsgNoiufRnbQqYVD1scXnoNqMUedjZGawq4vqoAXyfxa7mSomBFGonImmqoAK/WrCkJBFkiUTTRsEqWnADbDBoZkb2pVQuC7md5B/BkeU1WvyLBYGo30T/fk97Up4QP6g0841twQjTjn+Sd4pXLmWvNgTDgzq+tBSV/UKVfBCVKvA9/PQHz7wzJ/zcYF08FONeWhmJaah5+t1+bpt3uWTy+Se+ipvpxReJtXWNi1vzrTfPOy2fu+Wrtle2eoacPINaiYYzijeOOQWBfxD+H1gD3Kj3VwqJM1OZcGLAgKB7KpZqTEKXZfCaKbCHRFjXUqHM9xgu1XOWNHYCItMHilo1fRgjTWURqm6RMR92ZUbL+XlhIiSfhGVFZd11LitFdHcTLxleqANPIfB86uQmQn0BRNPhWQ4LVaPeWgII6UETCaaccnvrtPc7Lfst7X3RQXycrWYCPkHG6sac4lkQXO7E6NomN11xxuNXePt/iVBPV7vcg8JDjl7ebJrfdoPPOqgklfwe8bMMsRKRw00gaQqpSki8Oi5YDgQfOqp8R07RofdrTyed0VaojrJoCO6OqibK3sBZyXgHAa+AAf0SCsNFaDNZKFSgOjR4bFg3BlpsI6NWTIt7V3S0loUH1npak75yV/wa+TfvmZfZ76V6opivYyLMAd4iMqigOqAbPXiuYSi95HbHto6GfR4gvTgapLRdXS9/lRdMFgHhyq3H3DOQEwwf5BNkjlITLFoCnL+ceOTPWNjJ65EK8iJs73PgffCp2A/C/Yvgv1S6hVqDUyArMAzCpiX3rxXDm7C7xcfqKzQ23y4Xace6ow55GEi8EcpTUjZEEsp+4s+KoLRE4h3pRtkwTzIlldXOjw1S/LwocruqeUGs7g6JoT96PVxR2u/Qn6FBvyxuiohlKgnx+Bzm7fSFUrUkTcRSfgkWrsS585vcm64+grng2WWvq+TjkjaFz3POdX7a6A6G92z2jltGSCwRWRjsJU64PPkUKvV1ppPLhtqtdP3VZq2qjuRYMPZmY6OmWw4nF2vaTN94fTG6XVXXjEzvZFWdHEO0D2lbtJKKjYQIWBbY0CG5QZRKyn2vMcfmYWwGOtOdDhD9dYb5e5SM3EeMWDVekO1tmb944t7ibzqF0/hx41Was7NJFqnc5AVYq4wNoqLbkebQNEvGg/g8jmTyRNSfeIqd5Ww0tekyfZxXL3BGhT5WstoDcyDtL+ICOAsB3ZegPgBVLsw58/vWePGYJADt4fSxgfdyGomMikqPasGu/VLJwJ5qWqpJMsWubVGjDe54yFXY0cuGB1vu63OI8mOmOjV1ZW9Flu/uabS1FBvcTudNZWepraGYIdUa60bodmkGRM6iF8w6n1u5hl9qhk9a6eTAR20J929oxs3ju/fn3dGLOtX1iztzSJVvz14QCfvDFWZAScFOIdwtXHjUajQ6VAz5tm5sZL6hmygv46XdIO8BF/QDWLcwPBHgFUOzJSWjGJbqNy5+tDkry+56eooup5gWL73XNhH1cbONlb1RQtJsyGfbjLFhkbHhsrKhsZGh9u48h50iry1IoXWAMRAXR05BEAHMjqCOwhivID2IaCd723JJisC9Hbk4MzNOy97Zv/MlhvWIRspHjuG2C+Me14vPHEQnoDbhR8mio3uTBYdJLsXz6DJxQk9jbboPeRusETMA+gMepNa2lRN4OAiInDornAO3U225sLI678r0j84AFIuYyYX72IfZ6sYC+OCmETKaCymVbOcnEhoQKe0xNA2r7BwA6JId/2w956MKXXN3nWxh486k1uTk2zDfYXCffcV38ZtBXIjuh1/hofvn19Xn259bDtGT3+Izr5THEaFgVdo3rnFW9iH8WfGZEyxqqiK9IIJIxL6XlTxk6aq8iWkDI+ZKqtMj5B7VpMdaFguFMaa+pVNV62X+8h29N0+2OWrIO79rJlZAlnC3ccGCLxo7HeRDtzfrUYLxQP4vYW9+O/FRwuYY82f9+3q7ye9yP1bOi9uXJxnn4W8OWNz0I0BGxHRKxuVIdycJYl99uFC4eGF42gf+eXshsdVb371dMuzaJYI7P3kUVTTR5Luyj4YgxzEk1u8g50EPBvgSYDoMHEOh8AFAqBJTk6xsh/0aYN06cu4Rf4Mm8ul7ZckcteEAttzydT6noYy9PNC4ariM+hvRMApIqAi/lzO+lZcG+gS1yUzG+VlYm7t5oyVxEjmr2P9pyZoBbcs7mAfA8+0fh1MFm45lAEFVk4iISuOi8OQVYlH9D9wFf9y89OZJZfa3+ikeAD7yCsjjwxPZs1jiKsZX5Fq6XEImfbY8E+R5elC4SlTIDkUjU2kJCk1EWseSAY/WjXMBxI+UZX54e1o01WbyG86fvydZW091wVTjcMxZdgfiWzbhnccJU1vRfR2j69zJNY+0ulzRVemRrrFRICHx8VumBJlUNl5qKwVqioxMqMAl8bGPB8pd34nnQtXoL3wJa0827R7z57dgYHNudzmgcC0C76naMOK06kMa/D9xfXJwt570FnC4TwcC746OzWVlbpaXK6WZNDm91gsHr/N6nPW1Dh9r2cyxX98OpH5eDIDpJ5THI2L1tiYpV+NzEYjsYgWGcJgvxYlK+158ME9gYFrc7lrBwK3L+y9FxcKpICeNLuUfEIbogEOaYm84sJrhmZnh+TuWF1dew/5BCQbQHFy/PRP8C5HyGez+UIOe8BrsXgDRhdQrpzwSWRUiAc8cyL0r8MBl1nuYv0ZvWzwBBwZzQLR0hdaidLkpa3IseImvdK8xJ5Xt34/mH9IH31+pCn3g51zUscm7fUFMs/OkRsWKGfFvZQ/1qlHMLKVi6m6gH1FVaSusbk8xdUHo06MyY0Tuj5xYjDzQQaYoxUF5oxvyjXAHHxdgzh4pCow8YyvwzyCWUYDK/XuEbyjOL/LVCj7M1fgdpH/XELmwPm9CBcfKkDJngBKTmYPwE+WPHgU/ngUocP/A2GxXXkAAAABAAAAAQo9RqoM418PPPUgCwPoAAAAANGm5a0AAAAA5uYN6f+B/wkDvwOJAAAACAACAAAAAAAAeNpjYGRgYA76L8UQwPzif+P/3cz7QSIoQBMAojIG0QB42i3OsQpAABDG8cNol8SgWBSzUqIwsFmUUcoT2JTH8WoewAP403X97rq6vs54RNQKGyc6hJhxIcKIBS5yxHBgIkGKGpnuLSrVa76v+3fzzQ0FGpTwNC/QHwzrlkkGqeWg78y/XhgGMuMAAAAAAAAAAAAAEwBEAGkAjwCjAMcA3QDxAQkBHgFDAWEBnwGwAdQB4QIfAk8CjALDAucDDQMxA0kDYgOhA8cD9gQyBFYEmQS9BOME+AUfBTgFTQVjBZsFvwXfBgcGRAasBvgHQgeVB8gAAHjaY2BkYGAwYvjCIMXQxcAD5iEAMwMjACwAAd142p1TS24TQRB99phPAkQoUnYRakUsQApDbCCLZBUwKEYJQThCAbGZ+IcVx7bGHgILtiw4AVfgBEjAAjaGE3AIDsCKBe/V9JAPliCoNTOvq6urXr2qAXAeIwTIFSaI3xfmPM7hQqHgcR5TwQ+PA3SC1x4XEAZPPD6BpSC7exLz+cz/FPr5Vx6fxly+7vEEHucnPZ7EKFf2+AxKuWmPz+ISvnt8Dm/wwOMpLGLW8DTjzAIfZ0Zv373EMtyXi19nvm0ZGn76/OEn0VMMufoYYAlXuXrEDXTRJOrypIM2amYZ8B3SGqOFTd5r0+Jwx/s5VImaRHuI6NOgJfU4HKFOS0JcJ46Jh4wk3yoqWON3w+c/GHntUIR5Wh7a7QHt8nEokpmerJq0lqyGmH7PeVrjPsQO90er3rMV0jvCM4st35ge6a1d8kuwbfnFSJU6lFHCLeI643epimMPGvwmrFkaOHZolUgM21Zxj6cxLX0ykDbSaZdW5axbZV3unKkr5mncfbviviBKjEWTtyKixOIMcNls4u2wYlVHjNrl2T3yL7OWR6ZIC1fINKISDveN6Y5mAneNYXq+an0Uc92RVR5Vs+l83bipNw2uZWZYYVduM64zTaSd3uKXdulPtdL5iLwOLdsPTf10TtQ5VSCNUpaZ8n/PFo5VYN3Oelb/wU6Nm6frfBas6pv0a9NTnEq0lfiHFfldwLWxWdzvPEcn4njeyv3/zI6TWRr2OVnyadnfodmt2UQpbhE3qFmKFv9Rf81gh0vdzaJmM6//KPZTL8/9f13dVrUt46m6tslLHhvMusmMFWxxX+F5DeEvoCjqIXjaY2BmAIP/FQxWQIoRwkMAACgAAbYAAA==); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L292 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">maze = read_maze()</text>
+<rect x="24" y="96" width="268" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 96 L31 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M285 96 L285 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="116" font-size="13" fill="#151a22" xml:space="preserve">found ← <tspan font-weight="600">solve</tspan>(maze, maze.entrance)</text>
+<rect x="24" y="128" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 128 L155 176 L292 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="155" y="146" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">found</text>
+<text x="30" y="171" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="286" y="171" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="176" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="196" font-size="13" fill="#151a22" xml:space="preserve">draw_thread(path)</text>
+<rect x="155" y="176" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="165" y="196" font-size="13" fill="#151a22" xml:space="preserve">print("출구 없음")</text>
+<text x="380" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="380" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">solve(maze, p)</tspan></text>
+<path d="M380 64 L652 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="380" y="64" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M380 64 L554 112 L652 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="554" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p == maze.exit</text>
+<text x="386" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="646" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="380" y="112" width="174" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="132" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="554" y="112" width="98" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="603" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M598.5 132.5 L607.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="380" y="144" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M380 144 L558 192 L652 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="551" y="162" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">maze.wall(p) or p in visited</text>
+<text x="386" y="187" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="646" y="187" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="380" y="192" width="178" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="212" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="558" y="192" width="94" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="605" cy="208" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M600.5 212.5 L609.5 203.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="380" y="224" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="244" font-size="13" fill="#151a22" xml:space="preserve">visited.add(p)</text>
+<rect x="380" y="256" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="276" font-size="13" fill="#151a22" xml:space="preserve">path.append(p)    # 실을 푼다</text>
+<rect x="380" y="288" width="272" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="308" font-size="13" fill="#151a22" xml:space="preserve">for d in (N, E, S, W)</text>
+<rect x="402" y="320" width="250" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M409 320 L409 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M645 320 L645 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="419" y="340" font-size="13" fill="#151a22" xml:space="preserve">ok ← <tspan font-weight="600">solve</tspan>(maze, p + d)</text>
+<rect x="402" y="352" width="250" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M402 352 L562 400 L652 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="562" y="370" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">ok</text>
+<text x="408" y="395" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="646" y="395" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="402" y="400" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="412" y="420" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="562" y="400" width="90" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="607" cy="416" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M602.5 420.5 L611.5 411.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="380" y="432" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="452" font-size="13" fill="#151a22" xml:space="preserve">path.pop()        # 실을 감는다</text>
+<rect x="380" y="464" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="390" y="484" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+</g>
+</svg>

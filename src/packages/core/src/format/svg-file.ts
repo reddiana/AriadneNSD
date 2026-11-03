@@ -44,19 +44,36 @@ export type SvgFileParts = {
  * `<style>`, the paper and the drawing. The same parts always give the same text (R-FMT-03).
  */
 export function assembleSvgFile(parts: SvgFileParts): string {
-  const { drawing } = parts;
-  if (!drawing.content.startsWith('<g class="ans-render"')) {
-    throw new Error('The drawing must be one <g class="ans-render"> element (01-file-format 2)');
-  }
-  const lines = [
-    `<svg xmlns="${svgNamespace}" version="1.1" width="${size(drawing.width)}" height="${size(drawing.height)}" viewBox="${escapeAttribute(drawing.viewBox)}">`,
+  return assemble(parts.drawing, parts.fonts, [
     '  <metadata>',
     `    <ans:document xmlns:ans="${modelNamespace}" version="${String(currentFormatVersion)}"><![CDATA[`,
     escapeCdata(serializeModelJson(parts.doc, parts.kept)),
     '    ]]></ans:document>',
     '  </metadata>',
+  ]);
+}
+
+/**
+ * A picture of a drawing, without the model: the same SVG as a saved file but no `<metadata>`.
+ * For images the app shows, such as the examples' thumbnails. It does not open as a document.
+ */
+export function assembleImageSvg(drawing: Drawing, fonts: ReadonlyArray<EmbeddedFont>): string {
+  return assemble(drawing, fonts, []);
+}
+
+function assemble(
+  drawing: Drawing,
+  fonts: ReadonlyArray<EmbeddedFont>,
+  metadata: ReadonlyArray<string>,
+): string {
+  if (!drawing.content.startsWith('<g class="ans-render"')) {
+    throw new Error('The drawing must be one <g class="ans-render"> element (01-file-format 2)');
+  }
+  const lines = [
+    `<svg xmlns="${svgNamespace}" version="1.1" width="${size(drawing.width)}" height="${size(drawing.height)}" viewBox="${escapeAttribute(drawing.viewBox)}">`,
+    ...metadata,
     '  <style>',
-    ...parts.fonts.map(fontFace),
+    ...fonts.map(fontFace),
     '  </style>',
     `  <rect width="100%" height="100%" fill="${escapeAttribute(drawing.paper)}"/>`,
     `  ${drawing.content}`,

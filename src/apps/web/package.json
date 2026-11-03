@@ -10,7 +10,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "e2e": "playwright test",
-    "manual-shots": "playwright test -c playwright.manual.config.ts"
+    "manual-shots": "playwright test -c playwright.manual.config.ts",
+    "thumbnails": "vitest run --config scripts/vitest.scripts.config.ts"
   },
   "dependencies": {
     "@ariadne-nsd/core": "workspace:*",
