@@ -370,7 +370,7 @@ const counts = [
       files.filter((file) => file.area === area.name),
     ),
   ),
-  countRow('모두', files),
+  countRow('합계', files),
 ];
 
 /**
@@ -469,7 +469,7 @@ const lines = [
   '',
   '영역마다 유형별 테스트 수입니다.',
   '',
-  `| 영역 | ${typeOrder.join(' | ')} | 모두 |`,
+  `| 영역 | ${typeOrder.join(' | ')} | 합계 |`,
   `| --- | ${typeOrder.map(() => ':---:').join(' | ')} | :---: |`,
   ...counts,
   '',
