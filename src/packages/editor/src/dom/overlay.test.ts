@@ -1,5 +1,5 @@
-import type { Block, Box, Content, LayoutResult } from '@ariadne-nsd/core';
-import { geometry } from '@ariadne-nsd/core';
+import type { Block, Box, ColorToken, Content, LayoutResult } from '@ariadne-nsd/core';
+import { geometry, themes } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -15,7 +15,14 @@ import {
 import type { DocIndex } from '../model/doc-index';
 import { selectBlock, selectRange } from '../state/selection';
 import type { OverlayInput } from './overlay';
-import { editColors, fieldBox, overlayContent, selectionBox } from './overlay';
+import {
+  editColors,
+  editColorsFor,
+  editColorsOnDark,
+  fieldBox,
+  overlayContent,
+  selectionBox,
+} from './overlay';
 
 describe('overlayContent', () => {
   it('T-0229 · BUG-07: the selection outline covers the block lines equally on all four sides', () => {
@@ -307,5 +314,63 @@ describe('fieldBox: where the inline editor opens', () => {
       width: box.width - 2 * bar,
     });
     expect(fieldBox(layout, { kind: 'call', block: 'b2', part: 'args' })).toBeNull();
+  });
+});
+
+/** WCAG 2.2 contrast ratio of two `#rrggbb` colors. */
+function contrast(a: string, b: string): number {
+  const luminance = (hex: string): number => {
+    const channel = (offset: number): number => {
+      const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+  };
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+  return (light + 0.05) / (dark + 0.05);
+}
+
+describe('edit colors on every theme (visual design 3.4, UX TM4)', () => {
+  const backgrounds: ReadonlyArray<ColorToken> = [
+    'paper',
+    'block.process',
+    'block.branch',
+    'block.loop',
+    'block.event',
+    'block.call',
+    'block.folded',
+    'fold.band',
+    'peek.band',
+  ];
+
+  it('T-0973: picks the colors by the kind of paper', () => {
+    expect(editColorsFor('light')).toBe(editColors);
+    expect(editColorsFor('dark')).toBe(editColorsOnDark);
+  });
+
+  for (const theme of themes) {
+    it(`T-0974: ${theme.id}: the selection, hover, drop and error marks have 3:1 on what they are drawn on`, () => {
+      const colors = editColorsFor(theme.kind);
+      for (const [token, value] of Object.entries(colors)) {
+        for (const back of backgrounds) {
+          expect(contrast(value, theme.colors[back]), `${token} on ${back}`).toBeGreaterThanOrEqual(
+            3,
+          );
+        }
+      }
+    });
+  }
+
+  it('T-0975: draws the selection and the hover in the colors it is given', () => {
+    const content = contentOf([proc('b1'), proc('b2')]);
+    const { index } = overlayOf(content);
+    const { svg } = overlayOf(content, {
+      hover: 'b2',
+      selection: selectBlock(index, 'b1'),
+      edit: editColorsOnDark,
+    });
+    expect(svg).toContain(`stroke="${editColorsOnDark['edit.select']}" stroke-width="3"`);
+    expect(svg).toContain(`stroke="${editColorsOnDark['edit.hover']}" stroke-width="1"`);
+    expect(svg).not.toContain(editColors['edit.select']);
   });
 });

@@ -269,6 +269,12 @@ const english = {
   'setting.headStyle': 'Header shape',
   'setting.headStyle.title': 'Like a title',
   'setting.headStyle.shape': 'Hat · arch',
+  'setting.theme': 'Theme',
+  'setting.theme.hint': 'The colors of the drawing, saved with it',
+  'setting.theme.default': 'Light',
+  'setting.theme.dark': 'Dark',
+  'setting.theme.high-contrast': 'High contrast',
+  'setting.theme.print': 'Black and white print',
 } as const;
 
 /** The keys of the editor's messages. */
@@ -500,6 +506,12 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'setting.headStyle': '헤더 모양',
   'setting.headStyle.title': '제목처럼',
   'setting.headStyle.shape': '모자 · 아치',
+  'setting.theme': '테마',
+  'setting.theme.hint': '그림의 색. 저장되는 그림도 이 색',
+  'setting.theme.default': '밝은 테마',
+  'setting.theme.dark': '어두운 테마',
+  'setting.theme.high-contrast': '고대비',
+  'setting.theme.print': '흑백 인쇄',
 };
 
 const catalogs: Readonly<Record<Locale, Readonly<Record<MessageKey, string>>>> = {

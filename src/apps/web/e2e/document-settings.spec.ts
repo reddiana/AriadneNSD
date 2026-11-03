@@ -59,3 +59,48 @@ test('T-0863 · R-LAY-06 · R-LAY-07: the block text language colors the keyword
   await page.keyboard.press('Control+z');
   await expect(colored).toHaveCount(0);
 });
+
+test('T-0976 · R-LAY-08 · R-NFR-07: the theme recolors the drawing and the inline editor, and undo puts it back', async ({
+  page,
+}) => {
+  await openApp(page);
+  const paper = page.locator('.ans-document svg > rect').first();
+  await expect(paper).toHaveAttribute('fill', '#ffffff');
+
+  await page.getByRole('button', { name: 'Diagram', exact: true }).click();
+  await page.getByRole('menuitem', { name: /Document Settings/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Document Settings' });
+  await expect(dialog.getByText('The colors of the drawing, saved with it')).toBeVisible();
+  await dialog.getByLabel('Theme').selectOption({ label: 'Dark' });
+  await expect(paper).toHaveAttribute('fill', '#171a21');
+  await dialog.getByLabel('Theme').selectOption({ label: 'High contrast' });
+  await expect(paper).toHaveAttribute('fill', '#000000');
+  await page.keyboard.press('Escape');
+
+  // The inline editor is drawn on the paper of the theme.
+  await canvas(page).focus();
+  await press(page, 'a', 'i');
+  const field = page.locator('.ans-inline-editor');
+  await expect(field).toBeVisible();
+  await expect(field).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+  await expect(field).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+
+  await canvas(page).focus();
+  await page.keyboard.press('Control+z');
+  await page.keyboard.press('Control+z');
+  await expect(paper).toHaveAttribute('fill', '#171a21');
+  await page.keyboard.press('Control+z');
+  await expect(paper).toHaveAttribute('fill', '#ffffff');
+});
+
+test('T-0977 · R-NFR-07: the screen colors follow the OS asking for more contrast', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light', contrast: 'more' });
+  await openApp(page);
+  await expect(page.locator('.ans-app')).toHaveCSS('color', 'rgb(0, 0, 0)');
+  await page.emulateMedia({ colorScheme: 'light', contrast: 'no-preference' });
+  await expect(page.locator('.ans-app')).toHaveCSS('color', 'rgb(28, 34, 48)');
+});

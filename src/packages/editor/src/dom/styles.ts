@@ -39,6 +39,11 @@ export function editorCss(screenFontUrl: string | null): string {
   --ans-ui-bg: #12151b; --ans-ui-dots: #262c37; --ans-ui-accent: #8ba7ff;
   --ans-ui-panel: #1a1e26; --ans-ui-text: #e5e8ee; --ans-ui-line: #2b313c;
 }
+/* High contrast screen colors when the OS asks for more contrast (R-NFR-07, visual design 3.4). */
+@media (prefers-contrast: more) {
+  .ans-canvas { --ans-ui-accent: #1f3fb8; --ans-ui-text: #000000; --ans-ui-line: #6b7486; }
+  .ans-canvas[data-scheme="dark"] { --ans-ui-accent: #a8bdff; --ans-ui-text: #ffffff; --ans-ui-line: #8790a0; }
+}
 .ans-canvas.ans-is-dragging, .ans-canvas.ans-is-dragging * { cursor: grabbing; }
 .ans-canvas.ans-cannot-drop, .ans-canvas.ans-cannot-drop * { cursor: not-allowed; }
 .ans-sizer { position: relative; }
@@ -54,13 +59,14 @@ export function editorCss(screenFontUrl: string | null): string {
 .ans-inline-editor {
   position: absolute; box-sizing: border-box; margin: 0; z-index: 1;
   user-select: text; -webkit-user-select: text;
-  border: 2px solid ${editColors['edit.field']}; border-radius: 0; outline: none;
-  background: #ffffff; color: #151a22; resize: none; overflow: hidden; white-space: pre;
+  border: 2px solid var(--ans-edit-field, ${editColors['edit.field']}); border-radius: 0; outline: none;
+  background: var(--ans-field-paper, #ffffff); color: var(--ans-field-text, #151a22);
+  resize: none; overflow: hidden; white-space: pre;
   font: 13px/18px "${blockFont.familyName}", D2Coding, Consolas, "Malgun Gothic", monospace;
   padding: ${String(padY - 2)}px ${String(padX - 2)}px;
 }
-.ans-inline-editor.ans-is-rejected { border-color: ${editColors['edit.error']}; }
-.ans-inline-editor::placeholder { color: #5a6476; }
+.ans-inline-editor.ans-is-rejected { border-color: var(--ans-edit-error, ${editColors['edit.error']}); }
+.ans-inline-editor::placeholder { color: var(--ans-field-muted, #5a6476); }
 .ans-drag-label {
   position: fixed; z-index: 10; pointer-events: none; padding: 2px 6px; border-radius: 4px;
   background: var(--ans-ui-panel); color: var(--ans-ui-text); border: 1px solid var(--ans-ui-line);

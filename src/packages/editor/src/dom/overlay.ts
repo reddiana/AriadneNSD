@@ -1,6 +1,6 @@
 // The overlay layer (03-editor 1): the selection, the hover, the drop place and the dragged
 // blocks, drawn as one SVG over the document layer. Never saved (ADR-0018). Pure: a string.
-import type { Box, Id, LayoutResult } from '@ariadne-nsd/core';
+import type { Box, Id, LayoutResult, ThemeKind } from '@ariadne-nsd/core';
 import { geometry } from '@ariadne-nsd/core';
 
 import type { Drop } from '../input/drop';
@@ -10,14 +10,36 @@ import type { EditField } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import { selectedBlocks } from '../state/selection';
 
-/** The edit layer colors (visual design 3.4). The same on light and dark screens. */
-export const editColors = {
+/** The edit layer color tokens (visual design 3.4). */
+export type EditColors = Readonly<
+  Record<'edit.select' | 'edit.hover' | 'edit.field' | 'edit.drop' | 'edit.error', string>
+>;
+
+/**
+ * The edit layer colors on light paper (visual design 3.4). The same on light and dark screens:
+ * they are drawn on the paper, so they follow the theme's kind, not the screen (UX TM4).
+ */
+export const editColors: EditColors = {
   'edit.select': '#d0500b',
   'edit.hover': '#d0500b',
   'edit.field': '#d0500b',
   'edit.drop': '#d0500b',
   'edit.error': '#b42318',
-} as const;
+};
+
+/** The edit layer colors on dark paper (the dark and high contrast themes, visual design 3.4). */
+export const editColorsOnDark: EditColors = {
+  'edit.select': '#f08a4b',
+  'edit.hover': '#f08a4b',
+  'edit.field': '#f08a4b',
+  'edit.drop': '#f08a4b',
+  'edit.error': '#ff7b72',
+};
+
+/** The edit layer colors for a theme's kind of paper. */
+export function editColorsFor(kind: ThemeKind): EditColors {
+  return kind === 'dark' ? editColorsOnDark : editColors;
+}
 
 /** What the overlay shows. */
 export type OverlayInput = {
@@ -31,6 +53,8 @@ export type OverlayInput = {
   readonly dragged: ReadonlyArray<Id>;
   /** The paper color, to fade the dragged blocks with. */
   readonly paper: string;
+  /** The edit layer colors for the document's theme (`editColorsFor`). Default: light paper. */
+  readonly edit?: EditColors;
 };
 
 /** The box a selection is drawn around, or `null`. */
@@ -170,6 +194,7 @@ function n(value: number): string {
 export function overlayContent(input: OverlayInput): string {
   const parts: string[] = [];
   const { layout, index } = input;
+  const colors = input.edit ?? editColors;
   for (const id of input.dragged) {
     const box = layout.boxes.get(id);
     if (box !== undefined) {
@@ -184,16 +209,16 @@ export function overlayContent(input: OverlayInput): string {
     const box = layout.boxes.get(input.hover);
     if (box !== undefined) {
       // 1px, 1px inside the block's outer line.
-      parts.push(insetRect(box, 1, 1, editColors['edit.hover']));
+      parts.push(insetRect(box, 1, 1, colors['edit.hover']));
     }
   }
   const box = selectionBox(layout, index, input.selection);
   if (box !== null) {
-    parts.push(insetRect(box, 0, 3, editColors['edit.select']));
+    parts.push(insetRect(box, 0, 3, colors['edit.select']));
   }
   const drop = input.drop;
   if (drop !== null) {
-    const color = editColors['edit.drop'];
+    const color = colors['edit.drop'];
     switch (drop.mark.kind) {
       case 'line': {
         const { x, y, width } = drop.mark;

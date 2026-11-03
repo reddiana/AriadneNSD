@@ -183,7 +183,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | 언제 | 무엇 | 크기 |
 | --- | --- | --- |
-| 페이지를 열 때 | JS 둘(React와 `core` · `editor` · 셸, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 545 KB + 13 KB (gzip 170 KB + 6 KB) |
+| 페이지를 열 때 | JS 둘(React와 `core` · `editor` · 셸, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 550 KB + 13 KB (gzip 172 KB + 6 KB) |
 | 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
 | 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일 열 개(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 | 5 ~ 15 KB씩 |
 | 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |

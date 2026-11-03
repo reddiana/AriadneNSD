@@ -27,7 +27,7 @@ export type Content = {
 export type Settings = {
   /** The language of block text (R-LAY-06): how block text is highlighted (ADR-0032). */
   readonly textKind: TextKind;
-  /** The color set of the drawing (visual design 8). Only `default` is used in file format v1. */
+  /** The color set of the drawing (visual design 8): `default`, `dark`, `high-contrast`, `print`. */
   readonly theme: ThemeId;
   /** Header shape: the hat or arch shape, or like a title (R-LAY-10). */
   readonly headStyle: 'shape' | 'title';
@@ -44,7 +44,10 @@ export type Settings = {
  */
 export type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';
 
-/** A theme name. File format v1 uses only `default` (01-file-format 3.3). */
+/**
+ * A theme name (01-file-format 3.3). The file keeps the name only, not the colors; an unknown
+ * name is drawn with the default theme and kept as it is (ADR-0044).
+ */
 export type ThemeId = string;
 
 // 1.2 Diagram and header

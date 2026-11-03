@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="474" height="152" viewBox="0 0 474 152">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "dark",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "start"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "a, 0, n",
+          "result": "p",
+          "siteFolds": [
+            {
+              "id": "f1",
+              "via": [],
+              "first": "b3",
+              "last": "b3",
+              "name": "swap"
+            }
+          ]
+        },
+        {
+          "id": "b2",
+          "kind": "call",
+          "target": {
+            "kind": "lost",
+            "lastName": "gone"
+          },
+          "args": "",
+          "result": ""
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "partition(a, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "swap"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [
+      "f1"
+    ],
+    "opened": [
+      [
+        "b1"
+      ]
+    ],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#171a21"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#a3acbc" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#e6e9ef" xml:space="preserve"><tspan font-weight="600">start</tspan></text>
+<path d="M24 64 L202 64" fill="none" stroke="#7d93c4" stroke-width="1"/>
+<rect x="24" y="64" width="178" height="32" fill="#2c2840" stroke="#7d93c4" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#7d93c4" stroke-width="1"/>
+<path d="M195 64 L195 96" fill="none" stroke="#7d93c4" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#e6e9ef" xml:space="preserve">p ← <tspan font-weight="600">partition</tspan>(a, 0, n)</text>
+<rect x="24" y="96" width="178" height="32" fill="#2c2840" stroke="#7d93c4" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 96 L31 128" fill="none" stroke="#7d93c4" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M195 96 L195 128" fill="none" stroke="#7d93c4" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="41" y="116" font-size="13" fill="#e6e9ef" xml:space="preserve"><tspan font-weight="600">gone</tspan></text>
+<text x="290" y="36" font-size="12" fill="#a3acbc" xml:space="preserve">Method</text>
+<text x="290" y="53" font-size="13" fill="#e6e9ef" xml:space="preserve"><tspan font-weight="600">partition(a, lo, hi)</tspan></text>
+<path d="M290 64 L450 64" fill="none" stroke="#7d93c4" stroke-width="1"/>
+<rect x="290" y="64" width="160" height="32" fill="#232833" stroke="#7d93c4" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="300" y="84" font-size="13" fill="#e6e9ef" xml:space="preserve">swap</text>
+</g>
+</svg>

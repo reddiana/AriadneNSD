@@ -18,12 +18,12 @@ status: 생성됨
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 2 | 45 | 184 | - | 231 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 155 | - | 190 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 20 | 27 | 42 | - | 89 |
-| [[#5. 파일\|파일]] | 11 | 146 | 164 | - | 321 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 105 | - | 107 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 158 | - | 193 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 27 | 42 | - | 91 |
+| [[#5. 파일\|파일]] | 11 | 148 | 164 | - | 323 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 112 | - | 114 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 66 | 248 | 650 | 5 | 969 |
+| 합계 | 68 | 250 | 660 | 5 | 983 |
 
 ## 읽는 법
 
@@ -481,7 +481,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 13개, 테스트 190개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 13개, 테스트 193개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -638,7 +638,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/overlay.test.ts`
 
-선택 테두리 그리기(overlayContent) · overlayContent: 편집 레이어가 그리는 것 · selectionBox · fieldBox: 인라인 편집기가 열리는 자리. Vitest · 테스트 15개.
+선택 테두리 그리기(overlayContent) · overlayContent: 편집 레이어가 그리는 것 · selectionBox · fieldBox: 인라인 편집기가 열리는 자리 · 모든 테마에서의 편집 색(시각 디자인 3.4, UX TM4). Vitest · 테스트 18개. 파일 전체가 확인하는 것: [[ux-decisions|UX TM4]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -657,6 +657,9 @@ id. Vitest · 테스트 5개.
 | T-0659 | 분기 라벨과 빈 default 칸은 클릭 영역을 쓴다 | - |
 | T-0660 | "제목처럼" 헤더의 이름 줄은 라벨 아래에, 모양이 있는 헤더의 이름 줄은 모자 아래에 놓인다 | - |
 | T-0661 | 호출 블록의 입력란은 이중 막대의 안쪽을 덮는다 | - |
+| T-0973 | 편집 레이어의 색을 종이의 종류(밝음 · 어두움)로 고른다 | - |
+| T-0974 | ${theme.id}: 선택 · 호버 · 드롭 위치 · 오류 표시가 그려지는 배경 위에서 3:1을 넘는다 | - |
+| T-0975 | 선택과 호버를 받은 색으로 그린다 | - |
 
 ^t-packages-editor-src-dom-overlay-test-ts
 
@@ -792,7 +795,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 89개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 91개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -807,12 +810,14 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [E2E] `apps/web/e2e/document-settings.spec.ts`
 
-문서 설정(UX W5). Playwright · 테스트 2개. 파일 전체가 확인하는 것: [[ux-decisions|UX W5]].
+문서 설정(UX W5). Playwright · 테스트 4개. 파일 전체가 확인하는 것: [[ux-decisions|UX W5]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0812 | ADR-0041 · UX Q9: 그림 문구의 언어를 바꾸면 If의 분기 라벨을 다시 그리고, 실행 취소하면 되돌아간다 | - |
 | T-0863 | 블록 텍스트의 언어를 고르면 화면에서 키워드를 칠하고, 실행 취소하면 되돌아간다 | [[01-requirements#^r-lay\|R-LAY-06]], [[01-requirements#^r-lay\|R-LAY-07]] |
+| T-0976 | 테마를 바꾸면 그림과 인라인 에디터의 색이 바뀌고, 실행 취소하면 되돌아간다 | [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
+| T-0977 | 운영체제가 더 높은 대비를 요청하면 화면 색이 고대비 화면 색으로 바뀐다 | [[01-requirements#^r-nfr\|R-NFR-07]] |
 
 ^t-apps-web-e2e-document-settings-spec-ts
 
@@ -1020,7 +1025,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 30개, 테스트 321개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 30개, 테스트 323개.
 
 ### [E2E] `apps/web/e2e/files.spec.ts`
 
@@ -1181,7 +1186,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `packages/editor/src/create-editor.test.ts`
 
-셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 45개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
+셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 47개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1218,6 +1223,8 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0732 | 03-editor 6.4: 보기 전용에서 다른 이름으로 저장은 사본을 쓰고 문서를 바뀐 상태로 둔다 | - |
 | T-0733 | 03-editor 6.2: 돌려받은 함수를 부르면 리스너가 멈춘다 | - |
 | T-0734 | 문서 설정은 모두 읽을 수 있고, 모르는 설정과 모르는 값은 아무 일도 하지 않는다 | [[ux-decisions\|UX W5]] |
+| T-0978 | 테마를 고르면 종이와 인라인 에디터를 그 색으로 다시 그리고, 실행 취소할 수 있다 | [[01-requirements#^r-lay\|R-LAY-08]], [[ux-decisions\|UX TM3]] |
+| T-0979 | 문서 설정에 모든 테마가 밝은 테마부터 나온다 | [[01-requirements#^r-lay\|R-LAY-08]] |
 | T-0735 | 03-editor 6.4: 보기 전용인 동안 문서 설정은 바뀌지 않는다 | - |
 | T-0814 | ADR-0041: 화면 언어를 바꿔도 고정 문구는 문서의 언어 그대로다 | - |
 | T-0737 | 진짜 타이머에서 키 힌트는 0.4초 뒤에 보이고, 꺼 두면 보이지 않는다 | [[ux-decisions\|UX K1]] |
@@ -1615,7 +1622,7 @@ SVG 파일. Vitest · 테스트 14개.
 
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 10개, 테스트 107개.
+블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 10개, 테스트 114개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -1706,7 +1713,7 @@ SVG 파일. Vitest · 테스트 14개.
 
 ### [단위] `packages/core/src/render/theme.test.ts`
 
-밝은 기본 테마의 대비(시각 디자인 3.3 · 10.1). Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-16]].
+테마들의 대비(시각 디자인 3.3 · 8 · 10.1). Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-16]], [[01-requirements#^r-lay|R-LAY-08]], [[01-requirements#^r-nfr|R-NFR-07]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1714,6 +1721,13 @@ SVG 파일. Vitest · 테스트 14개.
 | T-0537 | 뜻을 가진 선은 종이와 모든 블록 배경 위에서 3:1 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-nfr\|R-NFR-05]] |
 | T-0538 | 접기 영역과 펴 보기의 띠 위 텍스트는 4.5:1 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-nfr\|R-NFR-05]] |
 | T-0539 | WCAG 대비율을 표와 같게 셈(종이 위 text.primary 17.46) | - |
+| T-0980 | 테마는 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄이고, 밝은 테마가 처음이다 | [[01-requirements#^r-lay\|R-LAY-08]] |
+| T-0981 | 모르는 테마 이름은 기본 테마로 그린다 | - |
+| T-0982 | ${theme.id}: 모든 토큰이 #rrggbb 색이고, 테마의 종류(밝음 · 어두움)가 종이의 밝기와 맞는다 | - |
+| T-0983 | ${theme.id}: 블록 텍스트가 종이와 모든 블록 배경 위에서 기준 대비를 넘는다(4.5:1, 고대비는 7:1) | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
+| T-0984 | ${theme.id}: 뜻을 가진 선이 종이와 모든 블록 배경 위에서 기준 대비를 넘는다(3:1, 고대비는 7:1) | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
+| T-0985 | ${theme.id}: 접기 영역과 펴 보기의 띠 위 텍스트가 기준 대비를 넘는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
+| T-0986 | 흑백 인쇄는 배경이 모두 흰색, 선과 텍스트가 검정이고 구문 강조 색이 없다 | - |
 
 ^t-packages-core-src-render-theme-test-ts
 

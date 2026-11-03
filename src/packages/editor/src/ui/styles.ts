@@ -17,6 +17,18 @@ export const chromeCss = `
   --ui-muted: #9aa3b3; --ui-line: #2b313c; --ui-accent: #8ba7ff; --ui-accent-soft: #232c45;
   --ui-warn: #f0a560; --ui-shadow: rgba(0, 0, 0, 0.5); --ui-backdrop: rgba(0, 0, 0, 0.5);
 }
+/* High contrast screen colors (R-NFR-07, 04-visual-design 3.4): when the OS asks for more
+   contrast, texts reach 7:1 and the dividers 3:1. The drawing has its own high contrast theme. */
+@media (prefers-contrast: more) {
+  .ans-app {
+    --ui-text: #000000; --ui-muted: #3d4554; --ui-line: #6b7486; --ui-accent: #1f3fb8;
+    --ui-warn: #8f4508;
+  }
+  .ans-app[data-scheme='dark'] {
+    --ui-text: #ffffff; --ui-muted: #c5ccd8; --ui-line: #8790a0; --ui-accent: #a8bdff;
+    --ui-warn: #f5b97a;
+  }
+}
 .ans-app *, .ans-app *::before, .ans-app *::after { box-sizing: border-box; }
 .ans-app button { font: inherit; color: inherit; }
 .ans-app kbd { font-family: inherit; font-size: 12px; color: var(--ui-muted); }

@@ -56,6 +56,48 @@ const oneDiagram = (...blocks: Block[]): Doc => ({
   view,
 });
 
+/** Event and Method headers, a call opened in place, a lost call and a fold. */
+const diagramsAndCalls: Doc = {
+  content: {
+    settings: { ...settings, headStyle: 'title' },
+    diagrams: [
+      {
+        id: 'd1',
+        head: { kind: 'event', text: 'start' },
+        body: seq(
+          {
+            id: 'b1',
+            kind: 'call',
+            target: { kind: 'local', diagram: 'd2' },
+            args: 'a, 0, n',
+            result: 'p',
+            siteFolds: [{ id: 'f1', via: [], first: 'b3', last: 'b3', name: 'swap' }],
+          },
+          {
+            id: 'b2',
+            kind: 'call',
+            target: { kind: 'lost', lastName: 'gone' },
+            args: '',
+            result: '',
+            siteFolds: [],
+          },
+        ),
+      },
+      {
+        id: 'd2',
+        head: { kind: 'method', text: 'partition(a, lo, hi)' },
+        body: seq(process('b3', 'swap')),
+      },
+    ],
+  },
+  view: { folded: ['f1'], opened: [['b1']], bands: true, resultSymbol: '←' },
+};
+
+const inTheme = (doc: Doc, theme: string): Doc => ({
+  ...doc,
+  content: { ...doc.content, settings: { ...doc.content.settings, theme } },
+});
+
 const cases: ReadonlyArray<{
   readonly name: string;
   readonly doc: Doc;
@@ -136,44 +178,12 @@ const cases: ReadonlyArray<{
       view: { folded: ['f2', 'b2', 'f1'], opened: [], bands: false, resultSymbol: '=' },
     },
   },
-  {
-    name: 'diagrams-and-calls',
-    doc: {
-      content: {
-        settings: { ...settings, headStyle: 'title' },
-        diagrams: [
-          {
-            id: 'd1',
-            head: { kind: 'event', text: 'start' },
-            body: seq(
-              {
-                id: 'b1',
-                kind: 'call',
-                target: { kind: 'local', diagram: 'd2' },
-                args: 'a, 0, n',
-                result: 'p',
-                siteFolds: [{ id: 'f1', via: [], first: 'b3', last: 'b3', name: 'swap' }],
-              },
-              {
-                id: 'b2',
-                kind: 'call',
-                target: { kind: 'lost', lastName: 'gone' },
-                args: '',
-                result: '',
-                siteFolds: [],
-              },
-            ),
-          },
-          {
-            id: 'd2',
-            head: { kind: 'method', text: 'partition(a, lo, hi)' },
-            body: seq(process('b3', 'swap')),
-          },
-        ],
-      },
-      view: { folded: ['f1'], opened: [['b1']], bands: true, resultSymbol: '←' },
-    },
-  },
+  { name: 'diagrams-and-calls', doc: diagramsAndCalls },
+  // One golden per theme (visual design 8): the theme's name in the model, its colors in the
+  // drawing. Headers, calls, a peek and a fold, so every token is drawn.
+  { name: 'theme-dark', doc: inTheme(diagramsAndCalls, 'dark') },
+  { name: 'theme-high-contrast', doc: inTheme(diagramsAndCalls, 'high-contrast') },
+  { name: 'theme-print', doc: inTheme(diagramsAndCalls, 'print') },
   {
     name: 'unknown-settings-kept',
     doc: {

@@ -2,6 +2,7 @@
 // editor, and the pointer, wheel and key input. Outside React (ADR-0010). Everything it decides
 // goes through the session or the command registry; this file only translates DOM events.
 import type { Box, Id, Locale, RenderedSvg } from '@ariadne-nsd/core';
+import { themeFor } from '@ariadne-nsd/core';
 
 import { runDrop } from '../commands/drop-command';
 import type { Appearance, ContextMenuRequest } from '../contracts';
@@ -17,7 +18,8 @@ import type { Editing, EditField } from '../state/editor-state';
 import { clampZoom } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import { extendTo, selectBlock, selectedBlocks, targetOf } from '../state/selection';
-import { fieldBox, overlayContent, selectionBox } from './overlay';
+import type { EditColors } from './overlay';
+import { editColorsFor, fieldBox, overlayContent, selectionBox } from './overlay';
 import { canvasMargin } from './styles';
 
 /** What the view needs. */
@@ -102,6 +104,7 @@ export class CanvasView {
   private drag: DragState | null = null;
   private wheelRest = 0;
   private shownEditing: Editing | null = null;
+  private editColors: EditColors = editColorsFor('light');
 
   constructor(private readonly options: ViewOptions) {
     const document = options.host.ownerDocument;
@@ -159,6 +162,22 @@ export class CanvasView {
     this.canvas.focus({ preventScroll: true });
   }
 
+  /**
+   * The inline editor and the edit layer follow the document's theme: they are drawn on the
+   * paper (visual design 3.4, UX TM4). Set whenever the drawing changes.
+   */
+  private applyTheme(): void {
+    const theme = themeFor(this.session.state.doc.content.settings.theme);
+    this.editColors = editColorsFor(theme.kind);
+    const style = this.canvas.style;
+    style.setProperty('--ans-edit-field', this.editColors['edit.field']);
+    style.setProperty('--ans-edit-error', this.editColors['edit.error']);
+    style.setProperty('--ans-field-paper', theme.colors.paper);
+    style.setProperty('--ans-field-text', theme.colors['text.primary']);
+    style.setProperty('--ans-field-muted', theme.colors['text.muted']);
+    this.canvas.dataset.theme = theme.id;
+  }
+
   /** Follows the host's brightness (03-editor 6). */
   setAppearance(appearance: Appearance): void {
     this.canvas.dataset.scheme = appearance.scheme;
@@ -185,6 +204,7 @@ export class CanvasView {
     if (rendering !== this.drawn.rendering || zoom !== this.drawn.zoom) {
       if (rendering !== this.drawn.rendering) {
         this.documentLayer.innerHTML = drawingMarkup(svg);
+        this.applyTheme();
       }
       this.stage.style.width = `${String(svg.width)}px`;
       this.stage.style.height = `${String(svg.height)}px`;
@@ -204,6 +224,7 @@ export class CanvasView {
       drop: this.drag?.drop ?? null,
       dragged: this.drag?.source.kind === 'blocks' ? this.drag.source.blocks : [],
       paper: svg.paper,
+      edit: this.editColors,
     });
     this.canvas.classList.toggle('ans-has-selection', state.selection !== null);
     this.canvas.classList.toggle('ans-focus-kept', this.options.isFocusOutlineKept());

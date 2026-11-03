@@ -18,6 +18,7 @@ superseded-by:
 > - 2026-11-01: docs/ 검토에서 MVP 설계가 이미 쓰는 키 힌트([[01-requirements#^r-edit|R-EDIT-04]]), If 갈래 이름 고치기([[01-requirements#^r-edit|R-EDIT-12]]), 빈 갈래 기호([[01-requirements#^r-lay|R-LAY-09]])를 `P0`으로 올리고, 새 문서 만들기([[01-requirements#^r-all|R-ALL-03]])를 `P0`으로 더했다. 비기능 요구사항에도 우선순위를 달았다. 접근성([[01-requirements#^r-nfr|R-NFR-05]])은 둘로 나눠 키보드 전용 조작은 `P0`에 두고, 고대비 화면은 새 [[01-requirements#^r-nfr|R-NFR-07]]로 옮겨 `P1`로 했다 → [[2026-10-31-03-prototype-64]]
 > - 2026-11-01: 예제([[01-requirements#^r-edit|R-EDIT-25]])를 새 요구사항으로 더해 `P0`으로 넣었다. 예제 열 가운데 여섯이 Event · Method 헤더와 여러 다이어그램을 쓰므로, 헤더([[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]])와 그 모양 고르기([[01-requirements#^r-lay|R-LAY-10]]), 같은 문서의 Method를 부르는 호출 블록([[01-requirements#^r-blk|R-BLK-07]]), 한 문서에 여러 다이어그램([[01-requirements#^r-edit|R-EDIT-18]])도 `P1`에서 `P0`으로 올렸다. 아래 결정의 "MVP 다음 판들로 미룬다" 가운데 Event · Method 머리, 호출 블록(같은 문서의 Method), 한 문서에 여러 다이어그램은 이로써 MVP로 들어왔다(메인테이너: "헤더 그리기를 MVP에 넣기") → [[2026-11-01-02-docs-current-examples]]
 > - 2026-11-02: 아래 "MVP 다음 판들로 미룬다"의 남은 것(접기, Method로 빼기, 블록 글자의 종류와 구문 강조, 테마 고르기)은 웹의 `P1` 모두와 함께 웹 1.0까지 넣는다. MVP 다음은 웹 베타와 웹 1.0이다 → [[dr-0018-release-stages|DR-0018]]
+> - 2026-11-03: 미룬 것 가운데 "테마 고르기"를 넣었다(테마 넷, 문서 설정의 "테마") → [[04-visual-design#8. 테마]], [[0044-document-themes|ADR-0044]]
 
 ## 배경
 

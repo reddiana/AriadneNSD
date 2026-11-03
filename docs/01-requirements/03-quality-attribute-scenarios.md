@@ -201,7 +201,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[03-architecture#3.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트용 가짜 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 본다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 45개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0356]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
+- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 47개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0356]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[03-architecture#6. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 바꾸기
@@ -292,7 +292,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 색은 토큰 맵으로 렌더러에 넘기고, 테마와 화면 색은 다른 맵이다 → [[03-architecture#5. 공통 관심사]], [[04-visual-design#8. 테마]]
 - **테스트:** 토큰 표에서 짝(텍스트 · 배경, 선 · 배경)의 대비를 계산하는 단위 테스트. 지금은 밝은 기본 테마만 있어, 그 테마의 [[04-visual-design#3.3 밝은 기본 테마|3.3절]] 기준(텍스트 4.5:1, 선 3:1)을 종이와 블록 배경 여섯 위에서 본다. 고대비 화면 색과 흑백 인쇄 팔레트가 생기면 같은 테스트에 이 시나리오의 기준(7:1)으로 더한다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/core/src/render/theme.test.ts`의 테스트 4개([[08-test-list#^t-packages-core-src-render-theme-test-ts|T-0536]] ~ T-0539)
+- **테스트 ID:** `packages/core/src/render/theme.test.ts`의 테스트 11개([[08-test-list#^t-packages-core-src-render-theme-test-ts|T-0536]] ~ T-0986)
 
 ### QA-17 저장 실패
 

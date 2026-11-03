@@ -13,17 +13,17 @@ updated: 2026-11-01
 
 > [!abstract] 이 문서는
 > **AriadneNSD가 어떻게 보이는가**를 정한 명세입니다. 원칙, 디자인 토큰(색 · 타이포그래피 · 치수), 블록의 해부도, 상태마다의 모습, 테마, 렌더링 규칙, 접근성 검증을 담습니다.
-> - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
+> - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]], [[01-requirements#^r-nfr|R-NFR-07]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐이고, MVP 뒤의 기능(접기, 펴 보기)의 모습은 MVP에 없습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
+> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 테마 넷(밝은 · 어두운 · 고대비 · 흑백 인쇄)과 고대비 화면 색이 2026-11-03에 들어갔습니다(8장). 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐이고, MVP 뒤의 기능(접기, 펴 보기)의 모습은 MVP에 없습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
 > - 그림은 모두 프로토타입에서 찍거나 스크립트로 그린 것이고, 언제든 다시 만들 수 있습니다: `journal/assets/2026-11-01-docs-shots.mjs`(화면, 프로토타입 65번째 버전에서 2026-11-01에 다시 찍음. 그 전은 `2026-10-16-visual-design-shots.mjs`로 60번째 버전에서), `2026-10-17-visual-anatomy.py`(해부도), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산)
 > - **용어.**
 > 	- **대비율**은 WCAG 2.2의 contrast ratio(상대 휘도의 비)입니다. 텍스트는 4.5:1(AA, 1.4.3), 뜻을 가진 선과 도형은 3:1(1.4.11)이 기준입니다.
-> 	- **테마**는 그림의 색 묶음입니다. 문서마다 선택하고 파일과 함께 갑니다. 밝은 테마와 어두운 테마가 있습니다. **화면 색**은 툴바 · 캔버스 배경 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
+> 	- **테마**는 그림의 색 묶음입니다. 문서마다 선택하고 파일과 함께 갑니다. 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄의 넷이 있습니다. **화면 색**은 툴바 · 캔버스 배경 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
 > 	- **토큰**은 값 대신 쓰는 이름입니다(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` → <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `#5b77ad`). 코드와 문서는 값이 아니라 이름을 씁니다.
 
 ![[visual-design-code.png|500]]
@@ -170,6 +170,8 @@ flowchart LR
 | `green.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `#22702a` | 41 | `red.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `#b42318` | 40 |
 | `amber.800` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `#8a5a00` | 42 | | | |
 
+어두운 테마 · 고대비 · 흑백 인쇄가 쓰는 원시 토큰(`night.*` · `deep.*` · `ink.50` 등)은 3.5 · 3.6 · 9.3절의 표에 값과 함께 있습니다.
+
 ### 3.3 밝은 기본 테마
 
 대비율은 블록 배경 다섯과 종이에 대어 본 가장 낮은 값 ~ 가장 높은 값입니다. 전부 기준을 넘습니다.
@@ -219,15 +221,87 @@ flowchart LR
 
 화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (배경 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1).
 
-편집 레이어의 표시는 종이 위에 그려지므로, 어두운 화면에서도 종이에 맞는 같은 값을 씁니다. 어두운 테마의 종이 위에서 쓸 값은 어두운 기본 테마를 정할 때 함께 정합니다.
+**고대비 화면 색**([[01-requirements#^r-nfr|R-NFR-07]]): 운영체제가 더 높은 대비를 요청하면(`prefers-contrast: more`, Windows의 대비 테마 · macOS의 "대비 증가") 아래 다섯 토큰만 바뀝니다. 나머지는 위 표 그대로입니다. 그림의 색은 바뀌지 않습니다. 그림은 문서의 테마(3.6절의 고대비 테마)가 정합니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
 
-| 토큰 | → 원시 | 역할 |
-| --- | --- | --- |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | 선택한 블록 · 범위의 테두리 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | 호버한 블록 (1px. 블록 배경 위 3.45:1 이상, 펴 보기의 띠 위 3.05:1) |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | 인라인 에디터의 테두리 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | 드래그할 때의 드롭 위치의 줄 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `red.700` | 받아들일 수 없는 입력 (종이 위 5.23 ~ 6.57:1) |
+| 토큰 | 밝은 화면 | 어두운 화면 | 역할 |
+| --- | --- | --- | --- |
+| `ui.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `#000000` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` | 화면 텍스트 |
+| `ui.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3d4554;border:1px solid #8888;vertical-align:-0.1em"></span> `#3d4554` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#c5ccd8;border:1px solid #8888;vertical-align:-0.1em"></span> `#c5ccd8` | 보조 텍스트 |
+| `ui.line` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#6b7486;border:1px solid #8888;vertical-align:-0.1em"></span> `#6b7486` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8790a0;border:1px solid #8888;vertical-align:-0.1em"></span> `#8790a0` | 화면의 구분선 (패널 위 3:1 이상) |
+| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 버튼의 포커스, 상태 표시줄의 모드, 캔버스 포커스 |
+| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8f4508;border:1px solid #8888;vertical-align:-0.1em"></span> `#8f4508` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄 |
+
+고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.line` 4.70 / 5.19, `ui.warn` 6.14 / 10.54 (배경 위). 텍스트는 모두 7:1을 넘습니다.
+
+편집 레이어의 표시는 종이 위에 그려지므로, 화면 색이 아니라 **테마의 종류**(종이가 밝은가 어두운가)를 따릅니다. 밝은 종이(밝은 테마 · 흑백 인쇄)에는 주황 `orange.600`을, 어두운 종이(어두운 테마 · 고대비)에는 더 밝은 주황을 씁니다. 인라인 에디터의 바탕과 글자도 그 테마의 `paper` · `text.primary`이고, 자리 표시 글자는 `text.muted`입니다 → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
+
+| 토큰 | 밝은 종이 | 어두운 종이 | 역할 |
+| --- | --- | --- | --- |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 선택한 블록 · 범위의 테두리 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 호버한 블록 (1px) |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 인라인 에디터의 테두리 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 드래그할 때의 드롭 위치의 줄 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `red.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ff7b72;border:1px solid #8888;vertical-align:-0.1em"></span> `#ff7b72` | 받아들일 수 없는 입력 |
+
+편집 레이어의 대비율(종이와 블록 배경 · 이름 띠 · 펴 보기의 띠 위, 가장 낮은 값 ~ 가장 높은 값): 선택 · 호버 · 드롭은 밝은 테마 3.05 ~ 4.34, 어두운 테마 4.80 ~ 7.00, 고대비 6.43 ~ 8.44, 흑백 인쇄 4.34. 오류는 밝은 테마 4.61 ~ 6.57, 어두운 테마 4.73 ~ 6.90, 고대비 6.35 ~ 8.33, 흑백 인쇄 6.57. 모두 3:1을 넘습니다(테두리와 줄이라 기준은 3:1).
+
+### 3.5 어두운 기본 테마
+
+3.3절과 같은 색상(회청 · 모래 · 하늘 · 민트 · 라일락)을 어두운 종이 위에 옮겼습니다. 역할은 3.3절과 같습니다. 대비율은 블록 배경 다섯과 종이에 대어 본 가장 낮은 값 ~ 가장 높은 값이고, 전부 3.3절과 같은 기준(AA)을 넘습니다. 초안은 M17 테마 시안에 있었고, 값은 이 기준에 맞춰 정했습니다 → [[ux-decisions#TM1. 테마는 넷 (밝은 · 어두운 · 고대비 · 흑백 인쇄)|TM1]]
+
+| 의미 · 구성 요소 토큰 | → 원시 | 대비율 | 기준 |
+| --- | --- | --- | --- |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `paper` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `night.paper` (`#171a21`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232833;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232833;border:1px solid #8888;vertical-align:-0.1em"></span> `night.slate` (`#232833`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3a3226;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3a3226;border:1px solid #8888;vertical-align:-0.1em"></span> `night.sand` (`#3a3226`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22304a;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22304a;border:1px solid #8888;vertical-align:-0.1em"></span> `night.sky` (`#22304a`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#213328;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#213328;border:1px solid #8888;vertical-align:-0.1em"></span> `night.mint` (`#213328`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c2840;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c2840;border:1px solid #8888;vertical-align:-0.1em"></span> `night.lilac` (`#2c2840`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c2029;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c2029;border:1px solid #8888;vertical-align:-0.1em"></span> `night.snow` (`#1c2029`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7d93c4;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7d93c4;border:1px solid #8888;vertical-align:-0.1em"></span> `slate.300` (`#7d93c4`) | 4.11 ~ 5.67 | 3:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e6e9ef;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e6e9ef;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.50` (`#e6e9ef`) | 10.38 ~ 14.32 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b4bccb;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b4bccb;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.200` (`#b4bccb`) | 6.61 ~ 9.12 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a3acbc;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a3acbc;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.300` (`#a3acbc`) | 5.52 ~ 7.61 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9db8ff;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.keyword` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9db8ff;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.300` (`#9db8ff`) | 6.45 ~ 8.90 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#82c98a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#82c98a;border:1px solid #8888;vertical-align:-0.1em"></span> `green.300` (`#82c98a`) | 6.41 ~ 8.85 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e3b862;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e3b862;border:1px solid #8888;vertical-align:-0.1em"></span> `amber.300` (`#e3b862`) | 6.79 ~ 9.37 | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7f9cf0;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7f9cf0;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.400` (`#7f9cf0`) | 4.76 ~ 6.56 | 3:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f2a45;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f2a45;border:1px solid #8888;vertical-align:-0.1em"></span> `night.ice` (`#1f2a45`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a9c0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a9c0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.200` (`#a9c0ff`) | 7.91 (띠 위) | 4.5:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a58be0;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a58be0;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.300` (`#a58be0`) | 4.43 ~ 6.11 | 3:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.fill` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `night.paper` (`#171a21`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#171a21;border:1px solid #8888;vertical-align:-0.1em"></span> `night.paper` (`#171a21`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3a3158;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3a3158;border:1px solid #8888;vertical-align:-0.1em"></span> `night.lilac-strong` (`#3a3158`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b0b8c6;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b0b8c6;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.250` (`#b0b8c6`) | 6.32 ~ 8.72, 띠 위 5.98 | 4.5:1 |
+
+### 3.6 고대비 테마
+
+검은 종이에 흰 선과 흰 글자입니다([[01-requirements#^r-nfr|R-NFR-07]]). 블록 배경은 블록 종류의 색상을 아주 어둡게 남겨, 색이 거드는 몫(원칙 2)은 그대로 둡니다. 텍스트와 뜻을 가진 선이 모두 **7:1**(WCAG 1.4.6, AAA)을 넘습니다. Windows의 대비 테마("야간 하늘")처럼 검은 바탕이 고대비 화면의 관례라 어두운 쪽으로 정했습니다. 흰 종이에 검정이 필요하면 흑백 인쇄(9.3절, 21:1)가 그 몫입니다 → [[ux-decisions#TM1. 테마는 넷 (밝은 · 어두운 · 고대비 · 흑백 인쇄)|TM1]]
+
+| 의미 · 구성 요소 토큰 | → 원시 | 대비율 | 기준 |
+| --- | --- | --- | --- |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `paper` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `black` (`#000000`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `black` (`#000000`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f1a00;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f1a00;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.sand` (`#1f1a00`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#00183d;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#00183d;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.sky` (`#00183d`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#002208;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#002208;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.mint` (`#002208`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c0d33;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c0d33;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.lilac` (`#1c0d33`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#0f0f0f;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#0f0f0f;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.snow` (`#0f0f0f`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `white` (`#ffffff`) | 17.04 ~ 21.00 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `white` (`#ffffff`) | 17.04 ~ 21.00 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0f0f0;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0f0f0;border:1px solid #8888;vertical-align:-0.1em"></span> `gray.100` (`#f0f0f0`) | 14.95 ~ 18.43 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d6d6d6;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d6d6d6;border:1px solid #8888;vertical-align:-0.1em"></span> `gray.200` (`#d6d6d6`) | 11.72 ~ 14.45 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8fd0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.keyword` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8fd0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `cyan.200` (`#8fd0ff`) | 10.25 ~ 12.63 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7ee08a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7ee08a;border:1px solid #8888;vertical-align:-0.1em"></span> `green.200` (`#7ee08a`) | 10.48 ~ 12.92 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffd84d;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffd84d;border:1px solid #8888;vertical-align:-0.1em"></span> `yellow.300` (`#ffd84d`) | 12.32 ~ 15.18 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#6cb6ff;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#6cb6ff;border:1px solid #8888;vertical-align:-0.1em"></span> `sky.300` (`#6cb6ff`) | 7.93 ~ 9.77 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#00183d;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#00183d;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.sky` (`#00183d`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9fd0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9fd0ff;border:1px solid #8888;vertical-align:-0.1em"></span> `sky.200` (`#9fd0ff`) | 10.80 (띠 위) | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d2a8ff;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d2a8ff;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.200` (`#d2a8ff`) | 8.75 ~ 10.79 | 7:1 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.fill` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `black` (`#000000`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.halo` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `black` (`#000000`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2a1747;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2a1747;border:1px solid #8888;vertical-align:-0.1em"></span> `deep.lilac-strong` (`#2a1747`) |  |  |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dcdcdc;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dcdcdc;border:1px solid #8888;vertical-align:-0.1em"></span> `gray.150` (`#dcdcdc`) | 12.43 ~ 15.31, 띠 위 11.67 | 7:1 |
 
 ## 4. 타이포그래피
 
@@ -353,7 +427,7 @@ flowchart LR
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 텍스트를 편집하는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
+| 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 늘 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄 | 편집 | | 있음 |
@@ -396,11 +470,27 @@ flowchart LR
 ## 8. 테마
 
 - **테마**는 그림의 색 묶음입니다. 3장의 의미 · 구성 요소 토큰이 어느 색을 가리키는지를 정합니다. 문서마다 선택하고 파일과 함께 갑니다. 그래서 누가 어디서 열어도, 저장된 그림과 인쇄물과 PNG도 같은 색입니다([[01-requirements#^r-lay|R-LAY-08]], [[01-requirements#^r-fmt|R-FMT-08]]). → 선택한 과정은 M17 테마 시안(TH1 · 1번): https://claude.ai/artifact/CABapWNP4NnQupcmTpwyZf, 사본 `journal/assets/2026-10-17-theme-study.html`
-- 테마에는 **밝은 테마와 어두운 테마** 두 종류가 있습니다. 지금은 종류마다 기본 테마 하나씩 둡니다: **밝은 기본 테마**(3.3절)와 **어두운 기본 테마**(아직 정하지 않음. 시안의 초안은 M17에 있음). 새 문서는 밝은 기본 테마로 시작합니다.
-- **흑백 인쇄 팔레트**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나로 만듭니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 값은 9.3절에 있습니다.
-- **화면 색**(툴바, 사이드 패널, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번).
-- **고대비**([[01-requirements#^r-nfr|R-NFR-05]])는 두 곳에 나뉩니다. UI는 고대비 화면 색으로, 그림은 흑백 인쇄 팔레트를 화면에서도 선택할 수 있게 하는 것으로 합니다. 테마를 화면에서 바꾸면 저장되는 그림도 바뀌므로, 화면에서만 바꾸는 "보기 전용" 선택을 따로 둡니다.
+- 테마는 **넷**입니다. 문서 설정의 "테마"에서 이 차례로 나옵니다 → [[ux-decisions#TM1. 테마는 넷 (밝은 · 어두운 · 고대비 · 흑백 인쇄)|TM1]]
+
+| 테마 (화면의 이름, 영어 화면) | 파일의 이름 | 종류 | 값 | 대비의 기준 |
+| --- | --- | --- | --- | --- |
+| 밝은 테마 (Light) | `default` | 밝음 | 3.3절 | 텍스트 4.5:1, 선 3:1 |
+| 어두운 테마 (Dark) | `dark` | 어두움 | 3.5절 | 텍스트 4.5:1, 선 3:1 |
+| 고대비 (High contrast) | `high-contrast` | 어두움 | 3.6절 | 텍스트 7:1, 선 7:1 |
+| 흑백 인쇄 (Black and white print) | `print` | 밝음 | 9.3절 | 21:1 (`peek.text`만 10.4:1) |
+
+- 새 문서는 밝은 테마로 시작합니다. 테마를 바꾸는 것은 문서를 고치는 것이라 실행 취소의 대상이고, 저장하지 않은 표시(`●`)가 붙습니다. 저장되는 그림은 고른 테마 그대로입니다(화면 그대로 저장, [[0018-save-as-shown|ADR-0018]]) → [[ux-decisions#TM2. 테마는 문서 설정의 한 줄|TM2]], [[ux-decisions#TM3. 테마를 바꾸는 것은 실행 취소의 대상|TM3]]
+- 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 모르는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 그대로 두어 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
+- **종류**(밝음 · 어두움)는 종이의 밝기입니다. 편집 레이어(선택 · 호버 · 드롭 위치 · 인라인 에디터)는 화면 색이 아니라 이 종류를 따릅니다(3.4절) → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
+- **흑백 인쇄**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나입니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 값은 9.3절에 있습니다.
+- **화면 색**(툴바, 사이드 패널, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번). 반대로 밝은 화면에 어두운 테마의 종이도 놓입니다.
+- **고대비**([[01-requirements#^r-nfr|R-NFR-07]])는 두 곳에 나뉩니다. 화면은 운영체제가 더 높은 대비를 요청할 때(`prefers-contrast: more`) 고대비 화면 색으로 바뀝니다(3.4절). 그림은 문서의 테마로 고대비를 고릅니다(3.6절). 운영체제의 설정이 문서의 테마를 바꾸지는 않습니다. 바꾸면 저장되는 그림과 다른 사람이 보는 그림이 달라지기 때문입니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
 - 테마가 바꿀 수 없는 것: 5장의 치수, 6장의 선 굵기, 블록의 모양, 글꼴(원칙 6).
+
+> [!example] 같은 그림을 네 테마로 (왼쪽부터 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄)
+> 블록의 크기와 자리는 넷이 같습니다. 그림은 골든 파일 `src/packages/core/golden/render/sample*.svg`를 `journal/assets/2026-11-03-theme-shots.mjs`로 찍은 것입니다.
+>
+> ![[visual-design-themes.png|720]]
 
 ## 9. 렌더링 규칙
 
@@ -425,6 +515,8 @@ flowchart LR
 
 ### 9.3 흑백 인쇄 팔레트의 값
 
+테마 `print`(흑백 인쇄)의 값입니다. 원시 토큰은 `white` · `black` · `gray.700`입니다.
+
 | 의미 토큰 | 값 |
 | --- | --- |
 | 모든 `block.*`, `fold.band`, `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` |
@@ -447,7 +539,9 @@ flowchart LR
 
 ### 10.1 대비율
 
-3.3절의 표가 결과입니다. 밝은 기본 테마의 모든 텍스트와 뜻을 가진 선이, 쓰이는 모든 배경에서 기준을 넘습니다. 기준에 닿지 않는 짝은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 띠 위의 구문 강조는 없습니다(펴 보인 텍스트는 강조하지 않음).
+3.3 · 3.5 · 3.6 · 9.3절의 표가 결과입니다. 네 테마의 모든 텍스트와 뜻을 가진 선이, 쓰이는 모든 배경에서 기준을 넘습니다. 밝은 테마 · 어두운 테마 · 흑백 인쇄는 AA(텍스트 4.5:1, 선 3:1), 고대비는 텍스트와 선 모두 7:1입니다. 편집 레이어의 표시는 네 테마 모두에서 3:1을 넘습니다(3.4절). 단위 테스트(`theme.test.ts`, `overlay.test.ts`)가 테마마다 이 기준을 확인하므로, 테마의 색을 바꾸면 기준에 닿지 않는 짝이 바로 드러납니다. 기준에 닿지 않는 짝은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 띠 위의 구문 강조는 없습니다(펴 보인 텍스트는 강조하지 않음).
+
+밝은 테마에서 기준에 닿지 않는 짝:
 
 | 짝 | 대비율 | 쓰임 |
 | --- | --- | --- |
@@ -488,9 +582,9 @@ flowchart LR
 ## 12. 미결정 사항
 
 - 비례폭 글꼴(분기 라벨 등의 자리, 그리고 블록 텍스트를 문장으로 쓰는 문서). 아직 없다. 들인다면 블록 텍스트의 언어가 아닌 다른 문서 설정으로 고르게 한다. 그래야 이미 저장한 파일이 다시 배치되지 않는다 ([[0034-default-block-font|ADR-0034]], [[0042-text-kind-keeps-block-font|ADR-0042]])
-- 어두운 기본 테마의 색. 대비를 3.3절처럼 맞춰 정한다 (초안은 M17 테마 시안)
-- 문서에 테마를 무엇으로 적을지: 테마의 이름만 적을지, 색 값까지 적을지. 다른 사람에게 없는 테마로 그린 문서를 열 때가 갈린다 ([[01-file-format]])
-- 테마를 선택하는 자리(문서 설정의 어디에서, 어떤 모습으로)
 - 화면의 나머지(툴바, 메뉴, 모달, 설정 화면, 아이콘)의 모습. 배포 대상마다 그 앱의 모습을 따를지, 공통 모습을 둘지. 웹의 배치는 [[05-screen-layout|화면 배치]]에서 정했고, 아이콘의 그림과 색이 남았습니다
 - 이름이 겹친 헤더에 붙이는 표시의 모양 ([[01-requirements#^r-blk|R-BLK-10]])
 - 어두운 화면 색에서 종이를 화면에서만 조금 어둡게 할지 (저장되는 색은 그대로)
+- 화면에서만 그림을 고대비로 보는 "보기 전용" 선택(저장되는 그림과 다른 사람의 화면은 문서의 테마 그대로)을 둘지. 지금은 고대비가 필요하면 문서의 테마를 고대비로 바꾼다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
+- 운영체제의 강제 색 모드(`forced-colors: active`, Windows의 대비 테마)에서 그림을 그대로 둘지, 운영체제의 색으로 바꿀지. 지금은 따로 다루지 않는다(시험하지 않음)
+- 사용자가 테마를 더 만들 수 있게 할지(사용자 정의 테마)
