@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { Block, Call, Doc, FoldMark, Seq, View } from '../model/types';
 import { buildScene } from '../render/build-scene';
-import { branch, docOf, ifBlock, inLocale, process, whileBlock } from '../render/testing';
+import { branch, docOf, ifBlock, inLocale, largeDoc, process, whileBlock } from '../render/testing';
 import { defaultTheme } from '../render/theme';
 import { toSvg } from '../render/to-svg';
 import { defaultFoldName, layout } from './layout';
@@ -268,5 +268,43 @@ describe('opened call blocks (R-EDIT-15, R-EDIT-16)', () => {
         shownView({ folded: ['f5'], opened: [], bands: false, resultSymbol: '←' }),
       )[0]?.kind,
     ).toBe('fold');
+  });
+});
+
+describe('opened call blocks and the time budget (QA-07, 03-architecture 7)', () => {
+  it('peek: 2,000 blocks drawn through opened calls lay out and render inside the budget', () => {
+    const big = largeDoc(500);
+    const [body] = big.content.diagrams;
+    if (body === undefined) {
+      throw new Error('no diagram');
+    }
+    const calls: Call[] = [1, 2, 3, 4].map((n) => ({
+      id: `c${String(n)}`,
+      kind: 'call',
+      target: { kind: 'local', diagram: 'dm' },
+      args: '',
+      result: '',
+      siteFolds: [],
+    }));
+    const doc: Doc = {
+      content: {
+        ...big.content,
+        diagrams: [
+          { id: 'd1', head: null, body: { blocks: calls, folds: [] } },
+          { ...body, id: 'dm', head: { kind: 'method', text: 'work' } },
+        ],
+      },
+      view: { ...big.view, opened: calls.map((block) => [block.id]) },
+    };
+    const result = layout(doc);
+    expect(result.nodes.filter((node) => node.kind !== 'peek').length).toBeGreaterThan(2000);
+    let best = Number.POSITIVE_INFINITY;
+    for (let run = 0; run < 5; run += 1) {
+      const start = performance.now();
+      toSvg(buildScene(layout(doc), defaultTheme));
+      best = Math.min(best, performance.now() - start);
+    }
+    // 02-layout 4 measured 2,000 drawn blocks well under 50ms in a browser.
+    expect(best).toBeLessThan(100);
   });
 });

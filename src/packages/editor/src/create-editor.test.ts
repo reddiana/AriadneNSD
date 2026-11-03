@@ -332,7 +332,11 @@ describe('the picker (interaction rules "호출 블록")', () => {
     expect(handle.chromeState().picker).toBeNull();
     handle.commands.run('block.insert.call');
     const asked = handle.chromeState().picker;
-    expect(asked?.items.map((item) => item.title)).toEqual(['Method 1', 'picker.newMethod']);
+    expect(asked?.items.map((item) => item.title)).toEqual([
+      'Method 1',
+      'picker.newMethod',
+      'picker.namedCall',
+    ]);
     asked?.choose(0);
     await tick();
     expect(handle.chromeState().picker).toBeNull();

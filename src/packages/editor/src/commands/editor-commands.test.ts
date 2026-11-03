@@ -207,7 +207,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     p1: 'reason.noControlBlock',
     p6: 'reason.noControlBlock',
     range: 'reason.noControlBlock',
-    c1: 'reason.unsupported',
     label: 'reason.nothingSelected',
     armLabel: 'reason.nothingSelected',
     defaultLabel: 'reason.nothingSelected',

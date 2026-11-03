@@ -277,7 +277,7 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 돌려줍니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 돌려줄 뿐이고, `editor`가 앞의 내용을 쌓습니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
@@ -298,16 +298,18 @@ type Target =                                        // 명령이 적용되는 �
 | | 텍스트 편집 | 블록의 `text`, 호출 블록의 `args` · `result`, 헤더, 분기 라벨, 접기 영역 이름. If의 분기 라벨을 비우면 `label`을 지워 기본 라벨("참" · "거짓")로 돌아간다. Case의 분기 라벨은 비울 수 없고(`emptyLabel`), default의 라벨은 편집하지 않는다(`defaultLabelFixed`) |
 | | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 자리를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 앞 · 뒤로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
 | | 드래그 앤 드롭으로 이동 (`moveTo`) | 블록을 문서의 아무 블록 곁으로 옮긴다. id는 그대로이고 이웃 제어 블록 안으로도 들어간다. 빈 줄에는 빈 블록을 남기고, 놓은 곳이 빈 블록이면 그것을 바꾼다. 제자리에 놓으면 바뀌는 것이 없고, 자기 안쪽에 놓으면 `intoItself`로 거절한다 |
-| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 이 문서에 없는 Method를 부르던 호출 블록은 `lost`가 된다(불변식 6) |
+| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 부르고, 없으면 그 이름을 `lastName`으로 간직한 `lost`가 된다. 이름이 없으면 id가 같은 Method를 부르고, 없으면 `lost`(불변식 6) |
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
-| | 풀기 (호출 블록) | Method의 블록을 새 id로 깊은 복사해 그 자리에 인라인한다. 이 자리의 접기 영역은 보통 접기 영역이 된다. `lost`이면 풀 수 없다 |
+| | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 자리에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 부르지 않으면(`named` · `external` · `lost`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 돌려준다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 자리에 그 Method를 부르는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 돌려준다. 안의 호출 블록은 부르던 것을 그대로 부른다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
 | 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 늘 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 그려 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 자리)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |
-| 호출 | 호출할 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다 |
+| 호출 | 호출할 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다. 이름을 적어 호출하게 바꾸는 것은 `nameCallTarget`(이 자리의 접기 영역은 없어진다) |
+| | 이름을 적는 호출 블록 삽입 (`insertNamedCall`) | `named` 대상의 호출 블록을 삽입한다([[01-requirements#^r-blk\|R-BLK-08]]). 이름은 한 줄, 앞뒤 공백 없이. 보통 빈 이름으로 넣고 `editor`가 이름 칸을 연다 |
+| | 인자 · 결과 · 이름 편집 (`editCall`) | 이름(`name`)은 `named` 대상에만 적는다(아니면 `wrongKind`). 한 번 적은 이름을 비우면 `emptyCallName` |
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
 | | 삭제 | 이 Method를 호출하던 호출 블록을 `lost`로 바꾼다 |
 | | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 `lost`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |

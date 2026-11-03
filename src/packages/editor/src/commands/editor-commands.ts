@@ -10,6 +10,7 @@ import type {
   Result,
   Side,
   Target,
+  View,
   WrapKind,
 } from '@ariadne-nsd/core';
 import {
@@ -22,13 +23,17 @@ import {
   deleteBranch,
   deleteDiagram,
   extractMethod,
+  headName,
   headParams,
+  inlineCall,
   insertBlock,
   insertBranch,
   insertCall,
+  insertNamedCall,
   move,
   moveBranch,
   moveDiagram,
+  nameCallTarget,
   newDiagram,
   newMethodAndCall,
   paste,
@@ -38,7 +43,13 @@ import {
   wrap,
 } from '@ariadne-nsd/core';
 
-import { clipFromJson, clipFromText, clipToJson, clipToText } from '../clipboard/clip-format';
+import {
+  clipFromJson,
+  clipFromText,
+  clipNamesFromJson,
+  clipToJson,
+  clipToText,
+} from '../clipboard/clip-format';
 import type { CommandSpec, MenuPlace, PickerItem, ToolbarPlace, WriteResult } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
@@ -67,7 +78,7 @@ import {
   selectedBlocks,
   targetOf,
 } from '../state/selection';
-import { foldCommands } from './fold-commands';
+import { foldCommands, isOpenable } from './fold-commands';
 import type { Applies } from './spec';
 import { always, commandTitle, spec } from './spec';
 
@@ -520,7 +531,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       }
       const firstBlock = ix.blocks.get(first)?.block;
       if (selected.length === 1 && firstBlock?.kind === 'call') {
-        return 'reason.unsupported';
+        return isOpenable(ix, first) ? true : 'reason.notCallable';
       }
       if (selected.length === 1 && firstBlock !== undefined && isControl(firstBlock)) {
         return true;
@@ -536,6 +547,10 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       const selected = selectedBlocks(ix, state.selection);
       const [only] = selected;
       const onlyBlock = only === undefined ? undefined : ix.blocks.get(only)?.block;
+      if (selected.length === 1 && onlyBlock?.kind === 'call') {
+        runInline(onlyBlock.id, state.doc.view);
+        return;
+      }
       const isWhole = selected.length === 1 && onlyBlock !== undefined && isControl(onlyBlock);
       // Which block goes: the selected control block, or the nearest one holding the selection.
       const holder = only === undefined ? null : seqOfBlock(ix, only).holder;
@@ -556,6 +571,46 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     menu: { menu: 'diagram', group: 2, order: 10 },
     context: ['blocks'],
   });
+
+  /**
+   * Replaces a call block with its Method's blocks (R-EDIT-08). The copies show the way the
+   * Method's blocks were shown at this call: folded where the originals are folded, the regions
+   * of this call site folded as they were, calls opened inside it still opened (UX CB8).
+   */
+  const runInline = (call: Id, view: View): void => {
+    const block = index().blocks.get(call)?.block;
+    const target = block?.kind === 'call' ? block.target : null;
+    const head =
+      target?.kind === 'local' ? (index().diagrams.get(target.diagram)?.head ?? null) : null;
+    const result = inlineCall(content(), { block: call, ids: session.ids() });
+    if (!result.ok) {
+      session.refuse(result.reason);
+      return;
+    }
+    const renamed = result.renamed;
+    const folded = [
+      ...view.folded,
+      ...view.folded.flatMap((id) => {
+        const copy = renamed.get(id);
+        return copy === undefined ? [] : [copy];
+      }),
+    ];
+    const opened = view.opened.flatMap((path) => {
+      if (path[0] !== call) {
+        return [path];
+      }
+      const [inner, ...rest] = path.slice(1);
+      const copy = inner === undefined ? undefined : renamed.get(inner);
+      return copy === undefined ? [] : [[copy, ...rest]];
+    });
+    const isApplied = session.commit(result, (ok) => ({
+      selection: selectTouched(ok.content, ok.touched),
+      view: { ...view, folded, opened },
+    }));
+    if (isApplied) {
+      session.notify(message('notice.inlined', { name: head === null ? '' : headName(head) }));
+    }
+  };
 
   // Branches.
   const branchInsertSpec = (side: Side, id: string, order: number): CommandSpec =>
@@ -663,7 +718,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         resultSymbol: session.state.doc.view.resultSymbol,
         diagrams: new Map(content().diagrams.map((diagram) => [diagram.id, diagram])),
       }),
-      json: clipToJson(clip),
+      json: clipToJson(clip, index().diagrams),
     });
     session.notify(where === 'memory' ? 'notice.clipboardLocal' : notice);
   };
@@ -738,6 +793,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       session.notify('reason.emptyClip', 'warn');
       return;
     }
+    // The names of the Methods the copied calls called: another document links by name.
+    const names = data.json === null ? new Map<Id, string>() : clipNamesFromJson(data.json);
     // The selection may have changed while the clipboard was read.
     const state = session.state;
     if (state.readOnly) {
@@ -759,6 +816,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
             target: { kind: 'blocks', first: empty, last: empty },
             side,
             clip,
+            names,
             ids,
           }),
         after,
@@ -767,7 +825,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     }
     const target = targetOf(selection);
     if (target !== null) {
-      session.commit(paste(content(), { target, side, clip, ids: session.ids() }), after);
+      session.commit(paste(content(), { target, side, clip, names, ids: session.ids() }), after);
     }
   };
 
@@ -1027,14 +1085,18 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   // Call blocks (R-BLK-07, interaction rules "호출 블록").
 
-  /** Asks which Method to call: every Method, then "New Method, and call it" (last). */
+  /**
+   * Asks which Method to call: every Method, then "New Method, and call it", then "Call by a
+   * written name" (R-BLK-08). `method: null` is a new Method; `isNamed` a written name.
+   */
   const pickMethod = async (
     current: Id | null,
-  ): Promise<{ readonly method: Diagram | null } | null> => {
+  ): Promise<{ readonly method: Diagram | null; readonly isNamed: boolean } | null> => {
     const methods = methodsOf(index());
     const items: PickerItem[] = [
       ...methods.map((m) => ({ title: m.head?.text ?? '', isLiteral: true })),
       { title: 'picker.newMethod', isLiteral: false },
+      { title: 'picker.namedCall', isLiteral: false },
     ];
     const active = Math.max(
       0,
@@ -1049,8 +1111,14 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       session.notify('reason.readOnly', 'warn');
       return null;
     }
-    return { method: methods[chosen] ?? null };
+    return { method: methods[chosen] ?? null, isNamed: chosen === methods.length + 1 };
   };
+
+  /** After a call by a written name is made: its name is typed at once (R-BLK-08). */
+  const afterNamed = (call: Id, made: Content): After => ({
+    selection: selectBlock(indexDoc(made), call),
+    edit: { field: { kind: 'call', block: call, part: 'name' }, caret: 'selectAll' },
+  });
 
   /** After inserting a call block: select it and type its arguments (or result) at once. */
   const afterCall = (method: Diagram, call: Id, made: Content): After => {
@@ -1070,16 +1138,23 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     if (picked === null) {
       return;
     }
-    const { method } = picked;
-    const op = (made: Content, target: Target, ids: IdGenerator): Result =>
-      method === null
+    const { method, isNamed } = picked;
+    const op = (made: Content, target: Target, ids: IdGenerator): Result => {
+      if (isNamed) {
+        return insertNamedCall(made, { target, side, name: '', ids });
+      }
+      return method === null
         ? newMethodAndCall(made, { target, side, ids })
         : insertCall(made, { target, side, diagram: method.id, ids });
+    };
     const after = (ok: {
       readonly content: Content;
       readonly touched: ReadonlyArray<Id>;
     }): After => {
       const [first, second] = ok.touched;
+      if (isNamed) {
+        return first === undefined ? { selection: null } : afterNamed(first, ok.content);
+      }
       if (method === null) {
         // A new Method: its name is written now, and the call block follows it (ADR-0022).
         return first === undefined ? { selection: null } : afterHead(first, true);
@@ -1156,6 +1231,14 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         return;
       }
       const keep = (): After => ({ selection: session.state.selection });
+      if (picked.isNamed) {
+        // The name it shows now is where the written name starts (UX CB6).
+        const shown = block?.kind === 'call' ? session.callName(block) : '';
+        session.commit(nameCallTarget(content(), { block: call, name: shown }), (ok) =>
+          afterNamed(call, ok.content),
+        );
+        return;
+      }
       if (picked.method !== null) {
         session.commit(setCallTarget(content(), { block: call, diagram: picked.method.id }), keep);
         return;
@@ -1175,6 +1258,47 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     },
     menu: { menu: 'diagram', group: 4, order: 1 },
     context: ['blocks'],
+  });
+
+  /**
+   * `gd` (03-keymap): from a call block to the header of the Method it calls; from a block shown
+   * in an opened call to the Method's own block (interaction rules "호출 블록 펴 보기").
+   */
+  const goToTarget = (state: EditorState): Found<Selection> => {
+    const selection = state.selection;
+    const ix = index();
+    if (selection?.kind === 'peek') {
+      return { value: selectBlock(ix, selection.focus) };
+    }
+    if (
+      selection?.kind === 'fold' &&
+      selection.path !== undefined &&
+      ix.folds.has(selection.fold)
+    ) {
+      return { value: { kind: 'fold', fold: selection.fold } };
+    }
+    const found = selectedCall(state);
+    if (!('value' in found)) {
+      return found;
+    }
+    const block = ix.blocks.get(found.value)?.block;
+    if (block?.kind !== 'call' || block.target.kind !== 'local') {
+      return { reason: 'reason.notCallable' };
+    }
+    return { value: { kind: 'head', diagram: block.target.diagram } };
+  };
+
+  const goToSpec = spec('call.goTo', {
+    edits: false,
+    when: (state) => appliesIf(goToTarget(state)),
+    run: (state) => {
+      const found = goToTarget(state);
+      if ('value' in found) {
+        session.select(found.value);
+      }
+    },
+    menu: { menu: 'diagram', group: 4, order: 3 },
+    context: ['blocks', 'peek'],
   });
 
   // Headers and diagrams (R-BLK-10, R-BLK-11, R-EDIT-18).
@@ -1418,6 +1542,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     convertIfSpec,
     convertCaseSpec,
     setTargetSpec,
+    goToSpec,
     ...diagramSpecs,
     ...selectionSpecs,
     zoomSpec('view.zoom.in', 1, (zoom) => zoom + zoomRange.step),

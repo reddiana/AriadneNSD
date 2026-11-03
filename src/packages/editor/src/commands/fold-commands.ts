@@ -1,19 +1,29 @@
-// The fold commands (interaction rules "접기 · 펼치기", R-EDIT-13, R-EDIT-14): fold and unfold,
-// make and remove fold regions, and show or hide the name bands. Folding changes the view state
-// only, so it is not an undo step (UX Q9); making and removing a region changes the content.
-import type { Id, Path, Seq, View } from '@ariadne-nsd/core';
-import { foldRange, makeFold, removeFold } from '@ariadne-nsd/core';
+// The fold commands (interaction rules "접기 · 펼치기", R-EDIT-13, R-EDIT-14, R-EDIT-15,
+// R-EDIT-16): fold and unfold, open call blocks in place, make and remove fold regions, and show
+// or hide the name bands. Folding and opening change the view state only, so they are not undo
+// steps (UX Q9); making and removing a region changes the content.
+import type { Content, Id, Path, Seq, View } from '@ariadne-nsd/core';
+import {
+  foldRange,
+  headName,
+  makeFold,
+  makeSiteFold,
+  placeSiteFolds,
+  removeFold,
+} from '@ariadne-nsd/core';
 
 import type { CommandSpec } from '../contracts';
+import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
 import { childSeqs, indexDoc, isControl } from '../model/doc-index';
-import type { EditorSession } from '../session/session';
+import type { After, EditorSession } from '../session/session';
 import type { EditorState } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import {
   foldBlocks,
   foldPath,
+  peekBlocks,
   selectBlock,
   selectFold,
   selectRange,
@@ -23,9 +33,14 @@ import {
 import type { Applies } from './spec';
 import { always, spec } from './spec';
 
-/** One thing that folds: a branch or loop body (its owner), or a fold region. */
+/**
+ * One thing that folds: a branch or loop body (its owner), a fold region, or a call block opened
+ * in place (its call path, outermost first).
+ */
 type FoldItem =
-  { readonly kind: 'seq'; readonly owner: Id } | { readonly kind: 'fold'; readonly fold: Id };
+  | { readonly kind: 'seq'; readonly owner: Id }
+  | { readonly kind: 'fold'; readonly fold: Id }
+  | { readonly kind: 'call'; readonly path: Path };
 
 /**
  * What one fold command acts on: one thing, or the branches of a control block together. The
@@ -46,6 +61,16 @@ export type FoldDeps = { readonly session: EditorSession };
 export function isFoldableSeq(seq: Seq): boolean {
   const [only] = seq.blocks;
   return seq.blocks.length > 1 || (only !== undefined && isControl(only));
+}
+
+/** Whether a call block can be opened in place: it calls a Method of this document (R-EDIT-15). */
+export function isOpenable(index: DocIndex, block: Id): boolean {
+  const call = index.blocks.get(block)?.block;
+  return (
+    call?.kind === 'call' &&
+    call.target.kind === 'local' &&
+    index.diagrams.get(call.target.diagram)?.head?.kind === 'method'
+  );
 }
 
 /** The fold region that is exactly the whole sequence, if there is one. */
@@ -97,6 +122,19 @@ function foldTarget(fold: Id, path: Path): FoldTarget {
   return { items: [{ kind: 'fold', fold }], afterClose: selectFold(fold, path) };
 }
 
+/** Opening or closing the call block `path.at(-1)` seen through the rest of the path. */
+function callTarget(index: DocIndex, path: Path): FoldTarget {
+  const outer = path.slice(0, -1);
+  const call = path.at(-1) ?? '';
+  return {
+    items: [{ kind: 'call', path }],
+    afterClose:
+      outer.length === 0
+        ? selectBlock(index, call)
+        : { kind: 'peek', path: outer, anchor: call, focus: call },
+  };
+}
+
 /**
  * What holds the blocks `lo..hi` of the sequence `owner`, nearest first: the fold regions marked
  * there around them (smallest first), the sequence itself when it is a branch or loop body that
@@ -113,16 +151,8 @@ function outward(index: DocIndex, start: Id, from: number, to: number): FoldTarg
       break;
     }
     const seq = place.seq;
-    const around = seq.folds
-      .map((fold) => ({ fold, range: foldRange(seq, fold) }))
-      .flatMap(({ fold, range }) =>
-        range !== null && range[0] <= lo && hi <= range[1]
-          ? [{ fold, size: range[1] - range[0] }]
-          : [],
-      )
-      .sort((a, b) => a.size - b.size);
-    for (const { fold } of around) {
-      targets.push(foldTarget(fold.id, []));
+    for (const fold of around(seq, seq.folds, lo, hi)) {
+      targets.push(foldTarget(fold, []));
     }
     if (place.holder === null) {
       break;
@@ -144,10 +174,83 @@ function outward(index: DocIndex, start: Id, from: number, to: number): FoldTarg
   return targets;
 }
 
+/** The regions of `folds` on `seq` that hold `lo..hi`, smallest first. */
+function around(
+  seq: Seq,
+  folds: ReadonlyArray<{ readonly id: Id; readonly first: Id; readonly last: Id }>,
+  lo: number,
+  hi: number,
+): ReadonlyArray<Id> {
+  return folds
+    .map((fold) => ({ fold, range: foldRange({ blocks: seq.blocks, folds: [] }, fold) }))
+    .flatMap(({ fold, range }) =>
+      range !== null && range[0] <= lo && hi <= range[1]
+        ? [{ id: fold.id, size: range[1] - range[0] }]
+        : [],
+    )
+    .sort((a, b) => a.size - b.size)
+    .map((item) => item.id);
+}
+
+/**
+ * The fold regions of the call site `path` that hold the blocks `lo..hi` of the called Method's
+ * sequence `owner`, nearest first, walking out to the Method's body (R-EDIT-16). The Method's own
+ * regions and branches are the Method's and are left alone here.
+ */
+function siteOutward(
+  index: DocIndex,
+  path: Path,
+  start: Id,
+  from: number,
+  to: number,
+): ReadonlyArray<Id> {
+  const [outermost] = path;
+  const call = outermost === undefined ? undefined : index.blocks.get(outermost)?.block;
+  const inner = index.blocks.get(path.at(-1) ?? '')?.block;
+  if (call?.kind !== 'call' || inner?.kind !== 'call' || inner.target.kind !== 'local') {
+    return [];
+  }
+  const method = index.diagrams.get(inner.target.diagram);
+  if (method === undefined) {
+    return [];
+  }
+  const via = path.slice(1);
+  const placed = placeSiteFolds(
+    method.body,
+    call.siteFolds.filter((fold) => fold.via.join(' ') === via.join(' ')),
+  );
+  const found: Id[] = [];
+  let owner: Id = start;
+  let lo = from;
+  let hi = to;
+  for (;;) {
+    const place = index.seqs.get(owner);
+    if (place === undefined) {
+      break;
+    }
+    const ranges = placed.get(place.seq) ?? [];
+    found.push(
+      ...ranges
+        .filter((range) => range.lo <= lo && hi <= range.hi)
+        .sort((a, b) => a.hi - a.lo - (b.hi - b.lo))
+        .map((range) => range.fold.id),
+    );
+    const holder = place.holder === null ? undefined : index.blocks.get(place.holder);
+    if (holder === undefined) {
+      break;
+    }
+    owner = holder.owner;
+    lo = holder.index;
+    hi = holder.index;
+  }
+  return found;
+}
+
 /**
  * Everything a fold command could act on for the selection, nearest first (UX Q20): what is
- * selected when it folds, otherwise what holds it. A folded row or cell that is selected comes
- * first, so folding it again unfolds it.
+ * selected when it folds or opens, otherwise what holds it. A folded row or cell that is selected
+ * comes first, so folding it again unfolds it. Inside an opened call block that is a region of
+ * this call site, else the opened call block holding it (UX 4.1).
  */
 export function foldTargets(
   index: DocIndex,
@@ -160,16 +263,20 @@ export function foldTargets(
   const folded = new Set(view.folded);
   switch (selection.kind) {
     case 'head':
-    case 'peek':
       return [];
+    case 'peek':
+      return peekTargets(index, selection);
     case 'fold': {
       const path = foldPath(selection);
+      const self = foldTarget(selection.fold, path);
+      if (path.length > 0) {
+        return [self, callTarget(index, path)];
+      }
       const owner = index.folds.get(selection.fold);
       const seq = owner === undefined ? undefined : index.seqs.get(owner)?.seq;
       const mark = seq?.folds.find((fold) => fold.id === selection.fold);
       const range = seq === undefined || mark === undefined ? null : foldRange(seq, mark);
-      const self = foldTarget(selection.fold, path);
-      if (owner === undefined || range === null || path.length > 0) {
+      if (owner === undefined || range === null) {
         return [self];
       }
       return unique([self, ...outward(index, owner, range[0], range[1])]);
@@ -199,7 +306,7 @@ export function foldTargets(
       const last = ids.at(-1);
       const a = first === undefined ? undefined : index.blocks.get(first);
       const b = last === undefined ? undefined : index.blocks.get(last);
-      if (a === undefined || b === undefined) {
+      if (a === undefined || b === undefined || first === undefined) {
         return [];
       }
       const seq = index.seqs.get(a.owner)?.seq;
@@ -212,8 +319,11 @@ export function foldTargets(
           targets.push(row);
         }
       }
-      if (ids.length === 1 && first !== undefined) {
-        const inside = controlTarget(index, first);
+      if (ids.length === 1) {
+        // A call block opens in place; a control block folds its inside.
+        const inside = isOpenable(index, first)
+          ? callTarget(index, [first])
+          : controlTarget(index, first);
         if (inside !== null) {
           targets.push(inside);
         }
@@ -224,12 +334,43 @@ export function foldTargets(
   }
 }
 
+function peekTargets(
+  index: DocIndex,
+  selection: Extract<Selection, { kind: 'peek' }>,
+): FoldTarget[] {
+  const ids = peekBlocks(index, selection);
+  const [first] = ids;
+  const a = first === undefined ? undefined : index.blocks.get(first);
+  const b = index.blocks.get(ids.at(-1) ?? '');
+  if (a === undefined || b === undefined || first === undefined) {
+    return [];
+  }
+  const targets: FoldTarget[] = [];
+  if (ids.length === 1 && isOpenable(index, first)) {
+    targets.push(callTarget(index, [...selection.path, first]));
+  }
+  for (const fold of siteOutward(index, selection.path, a.owner, a.index, b.index)) {
+    targets.push(foldTarget(fold, selection.path));
+  }
+  targets.push(callTarget(index, selection.path));
+  return targets;
+}
+
+function itemKey(item: FoldItem): string {
+  switch (item.kind) {
+    case 'seq':
+      return item.owner;
+    case 'fold':
+      return item.fold;
+    case 'call':
+      return item.path.join('/');
+  }
+}
+
 function unique(targets: ReadonlyArray<FoldTarget>): FoldTarget[] {
   const seen = new Set<string>();
   return targets.filter((target) => {
-    const key = target.items
-      .map((item) => (item.kind === 'seq' ? item.owner : item.fold))
-      .join(' ');
+    const key = target.items.map(itemKey).join(' ');
     if (seen.has(key)) {
       return false;
     }
@@ -238,32 +379,80 @@ function unique(targets: ReadonlyArray<FoldTarget>): FoldTarget[] {
   });
 }
 
-function isClosed(view: View, item: FoldItem): boolean {
-  return view.folded.includes(item.kind === 'seq' ? item.owner : item.fold);
+function samePath(a: Path, b: Path): boolean {
+  return a.length === b.length && a.every((id, at) => id === b[at]);
 }
 
-/** The view with the items of a target folded (`close`) or unfolded. */
+function isClosed(view: View, item: FoldItem): boolean {
+  switch (item.kind) {
+    case 'seq':
+      return view.folded.includes(item.owner);
+    case 'fold':
+      return view.folded.includes(item.fold);
+    case 'call':
+      return !view.opened.some((path) => samePath(path, item.path));
+  }
+}
+
+/** The view with the items of a target folded or closed (`close`), or unfolded or opened. */
 function withItems(view: View, items: ReadonlyArray<FoldItem>, close: boolean): View {
-  const ids = items.map((item) => (item.kind === 'seq' ? item.owner : item.fold));
+  const ids = items.flatMap((item) => (item.kind === 'call' ? [] : [itemKey(item)]));
+  const paths = items.flatMap((item) => (item.kind === 'call' ? [item.path] : []));
   const folded = close
     ? [...view.folded, ...ids.filter((id) => !view.folded.includes(id))]
     : view.folded.filter((id) => !ids.includes(id));
-  return { ...view, folded };
+  const kept = view.opened.filter((path) => !paths.some((other) => samePath(path, other)));
+  const opened = close ? kept : [...kept, ...paths];
+  return { ...view, folded, opened };
 }
 
 /**
- * The fold region a "remove" acts on (interaction rules "접기 · 펼치기" 풀기): the selected region,
- * or the smallest region holding the selection.
+ * How many times the Method a newly opened call calls is now shown along its path: the diagram
+ * itself counts once if it is that Method, and every call of it on the path once (UX Q14).
  */
-export function regionToRemove(index: DocIndex, selection: Selection | null): Id | null {
-  if (selection === null) {
+function depthOf(
+  index: DocIndex,
+  path: Path,
+): { readonly count: number; readonly method: Id } | null {
+  const last = index.blocks.get(path.at(-1) ?? '')?.block;
+  if (last?.kind !== 'call' || last.target.kind !== 'local') {
     return null;
+  }
+  const method = last.target.diagram;
+  const home = index.blocks.get(path[0] ?? '')?.diagram;
+  let count = home === method ? 1 : 0;
+  for (const id of path) {
+    const call = index.blocks.get(id)?.block;
+    if (call?.kind === 'call' && call.target.kind === 'local' && call.target.diagram === method) {
+      count += 1;
+    }
+  }
+  return { count, method };
+}
+
+/** The region a "remove" acts on, or why there is none. */
+type ToRemove = { readonly fold: Id } | { readonly reason: EditorMessage };
+
+/**
+ * The fold region a "remove" acts on (interaction rules "접기 · 펼치기" 풀기): the selected region,
+ * or the smallest region holding the selection. Inside an opened call block only regions of that
+ * call site can go; the Method's own are removed in the Method (R-EDIT-16).
+ */
+export function regionToRemove(index: DocIndex, selection: Selection | null): ToRemove {
+  if (selection === null) {
+    return { reason: 'reason.nothingSelected' };
   }
   if (selection.kind === 'fold') {
-    return selection.fold;
+    if (foldPath(selection).length > 0 && !index.siteFolds.has(selection.fold)) {
+      return { reason: 'reason.methodFoldHere' };
+    }
+    return { fold: selection.fold };
   }
-  if (selection.kind !== 'blocks' && selection.kind !== 'branchLabel') {
-    return null;
+  if (selection.kind === 'head') {
+    return { reason: 'reason.notOnHead' };
+  }
+  if (selection.kind === 'missingDefault') {
+    return { reason: 'reason.noFoldRegion' };
   }
   const targets = foldTargets(
     index,
@@ -273,16 +462,17 @@ export function regionToRemove(index: DocIndex, selection: Selection | null): Id
   for (const target of targets) {
     const [item] = target.items;
     if (target.items.length === 1 && item?.kind === 'fold') {
-      return item.fold;
+      return { fold: item.fold };
     }
   }
-  return null;
+  return { reason: 'reason.noFoldRegion' };
 }
 
 /** Makes the fold commands. */
 export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
   const { session } = deps;
   const index = (): DocIndex => session.index();
+  const content = (): Content => session.state.doc.content;
 
   const whenFolding = (state: EditorState): Applies => {
     const selection = state.selection;
@@ -297,7 +487,7 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
       : 'reason.nothingToFold';
   };
 
-  /** Folds (`close`) or unfolds a target and says so. */
+  /** Folds or closes (`close`), or unfolds or opens, a target and says so. */
   const fold = (state: EditorState, target: FoldTarget, close: boolean): void => {
     const view = withItems(state.doc.view, target.items, close);
     let selection = state.selection;
@@ -312,7 +502,30 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
         first === undefined || last === undefined ? null : selectRange(index(), first, last);
     }
     session.setView(view, selection);
+    const [only] = target.items;
+    if (only?.kind === 'call' && target.items.length === 1) {
+      notifyCall(only.path, close);
+      return;
+    }
     session.notify(close ? 'notice.folded' : 'notice.unfolded');
+  };
+
+  /** Opening the same Method a third time along the path tells so, after opening (UX Q14). */
+  const notifyCall = (path: Path, close: boolean): void => {
+    if (close) {
+      session.notify('notice.closed');
+      return;
+    }
+    const depth = depthOf(index(), path);
+    const head = depth === null ? null : (index().diagrams.get(depth.method)?.head ?? null);
+    if (depth !== null && head !== null && depth.count >= 3) {
+      session.notify(
+        message('notice.openedAgain', { name: headName(head), count: depth.count }),
+        'warn',
+      );
+      return;
+    }
+    session.notify('notice.opened');
   };
 
   const toggleSpec = spec('view.fold.toggle', {
@@ -326,7 +539,7 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
       }
     },
     menu: { menu: 'view', group: 1, order: 1 },
-    context: ['blocks', 'branchLabel', 'fold', 'missingDefault'],
+    context: ['blocks', 'branchLabel', 'fold', 'missingDefault', 'peek'],
   });
 
   const openSpec = spec('view.fold.open', {
@@ -375,8 +588,27 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
     },
   });
 
+  /** After making a region: select it, fold it and open its name (interaction rules 4). */
+  const afterMade = (state: EditorState, made: Id | undefined, path: Path): After => {
+    if (made === undefined) {
+      return { selection: state.selection };
+    }
+    const view = state.doc.view;
+    return {
+      selection: selectFold(made, path),
+      view: { ...view, folded: [...view.folded, made] },
+      edit: {
+        field: { kind: 'fold', fold: made, ...(path.length === 0 ? {} : { path }) },
+        caret: 'selectAll',
+        joinsLast: true,
+      },
+    };
+  };
+
   const makeSpec = spec('fold.make', {
     edits: true,
+    // A region of an opened call site is made on its blocks (R-EDIT-16).
+    onPeek: true,
     when: (state) => {
       const selection = state.selection;
       if (selection === null) {
@@ -384,10 +616,10 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
       }
       switch (selection.kind) {
         case 'blocks':
+        case 'peek':
           return true;
         case 'fold':
           return 'reason.foldExists';
-        case 'peek':
         case 'head':
         case 'branchLabel':
         case 'missingDefault':
@@ -395,63 +627,72 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
       }
     },
     run: (state) => {
-      const target = targetOf(state.selection);
+      const selection = state.selection;
+      if (selection?.kind === 'peek') {
+        const [call] = selection.path;
+        if (call === undefined) {
+          return;
+        }
+        const result = makeSiteFold(content(), {
+          call,
+          via: selection.path.slice(1),
+          first: selection.anchor,
+          last: selection.focus,
+          ids: session.ids(),
+        });
+        if (session.commit(result, (ok) => afterMade(state, ok.touched[0], selection.path))) {
+          session.notify('notice.siteFoldMade');
+        }
+        return;
+      }
+      const target = targetOf(selection);
       if (target === null) {
         return;
       }
-      // Made, folded at once, and its name asked in the folded cell (interaction rules 4).
-      const result = makeFold(session.state.doc.content, { target, ids: session.ids() });
-      const isApplied = session.commit(result, (ok) => {
-        const [made] = ok.touched;
-        if (made === undefined) {
-          return { selection: state.selection };
-        }
-        const view = state.doc.view;
-        return {
-          selection: selectFold(made, []),
-          view: { ...view, folded: [...view.folded, made] },
-          edit: { field: { kind: 'fold', fold: made }, caret: 'selectAll', joinsLast: true },
-        };
-      });
-      if (isApplied) {
+      const result = makeFold(content(), { target, ids: session.ids() });
+      if (session.commit(result, (ok) => afterMade(state, ok.touched[0], []))) {
         session.notify('notice.foldMade');
       }
     },
     menu: { menu: 'view', group: 2, order: 1 },
-    context: ['blocks'],
+    context: ['blocks', 'peek'],
   });
 
   const removeSpec = spec('fold.remove', {
     edits: true,
+    onPeek: true,
     when: (state) => {
-      if (state.selection === null) {
-        return 'reason.nothingSelected';
-      }
-      if (state.selection.kind === 'head') {
-        return 'reason.notOnHead';
-      }
-      return regionToRemove(index(), state.selection) === null ? 'reason.noFoldRegion' : true;
+      const found = regionToRemove(index(), state.selection);
+      return 'fold' in found ? true : found.reason;
     },
     run: (state) => {
-      const fold = regionToRemove(index(), state.selection);
-      if (fold === null) {
+      const found = regionToRemove(index(), state.selection);
+      if (!('fold' in found)) {
         return;
       }
+      const fold = found.fold;
       const name = session.foldName(fold);
-      const wasSelected = state.selection?.kind === 'fold';
-      const isApplied = session.commit(removeFold(session.state.doc.content, { fold }), (ok) => {
+      const selection = state.selection;
+      const isSelected = selection?.kind === 'fold';
+      const path = selection === null ? [] : selection.kind === 'fold' ? foldPath(selection) : [];
+      const isApplied = session.commit(removeFold(content(), { fold }), (ok) => {
         const [first, last] = ok.touched;
-        if (!wasSelected || first === undefined || last === undefined) {
-          return { selection: state.selection };
+        if (!isSelected || first === undefined || last === undefined) {
+          return { selection };
         }
-        return { selection: selectRange(indexDoc(ok.content), first, last) };
+        return {
+          selection:
+            path.length === 0
+              ? selectRange(indexDoc(ok.content), first, last)
+              : { kind: 'peek', path, anchor: first, focus: last },
+        };
       });
       if (isApplied) {
         session.notify(message('notice.foldRemoved', { name }));
       }
     },
     menu: { menu: 'view', group: 2, order: 2 },
-    context: ['blocks', 'fold'],
+    context: ['blocks', 'fold', 'peek'],
   });
 
   const bandsSpec = spec('view.bands', {

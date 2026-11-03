@@ -138,7 +138,7 @@ describe('unwrap', () => {
     expect(result.touched).toEqual(['b5']);
   });
 
-  it('T-0184 · R-EDIT-07: refuses when there is no control block, and for call blocks (later)', () => {
+  it('T-0184 · R-EDIT-07 · R-EDIT-08: refuses when there is no control block, and for a call block that calls nothing here', () => {
     expectRefused(unwrap, contentOf([proc('b1')]), { target: range('b1') }, 'noControlBlock');
     const call = contentOf([
       {
@@ -150,6 +150,6 @@ describe('unwrap', () => {
         siteFolds: [],
       },
     ]);
-    expectRefused(unwrap, call, { target: range('b1') }, 'unsupported');
+    expectRefused(unwrap, call, { target: range('b1') }, 'notCallable');
   });
 });

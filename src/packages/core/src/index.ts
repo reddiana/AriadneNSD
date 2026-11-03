@@ -146,10 +146,21 @@ export {
 export type {
   EditCallArgs,
   InsertCallArgs,
+  InsertNamedCallArgs,
+  NameCallTargetArgs,
   NewMethodAndCallArgs,
   SetCallTargetArgs,
 } from './commands/call';
-export { editCall, insertCall, newMethodAndCall, setCallTarget } from './commands/call';
+export {
+  editCall,
+  insertCall,
+  insertNamedCall,
+  nameCallTarget,
+  newMethodAndCall,
+  setCallTarget,
+} from './commands/call';
+export type { InlineCallArgs, InlineResult } from './commands/inline';
+export { inlineCall } from './commands/inline';
 export type {
   MakeFoldArgs,
   MakeSiteFoldArgs,

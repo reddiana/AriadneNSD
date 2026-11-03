@@ -389,6 +389,14 @@
     that call block. In a diagram without a header, <kbd>m</kbd> shows a small list to choose
     "Extract into New Method" or "Add Method Header". One undo puts the blocks back.
   </p>
+  <p>
+    Select a call block and press <kbd>f</kbd>: the Method's blocks are <b>shown in place</b> (a
+    violet dashed border and band, grey text). Only the view changes, so the shown blocks can be
+    selected and copied but not edited. Select shown blocks and press <kbd>zf</kbd> for a fold
+    region at this call only. <kbd>ds</kbd> (unwrap) replaces the call block with a copy of the
+    Method's blocks (the opposite of extracting). To call a function the document does not have,
+    choose "Call by a written name" in the list and type its name.
+  </p>
   <div class="pair">
     <figure>
       <img
@@ -429,9 +437,24 @@
         <td>Context menu › Insert</td>
       </tr>
       <tr>
-        <td>Change the called Method / go to it</td>
-        <td><kbd>r</kbd> / <kbd>gd</kbd></td>
-        <td>The context menu</td>
+        <td>Change the called Method ("Call by a written name" is in this list too)</td>
+        <td></td>
+        <td>The Diagram menu, the context menu</td>
+      </tr>
+      <tr>
+        <td>Go to the called Method (from a shown block, to its own block)</td>
+        <td><kbd>gd</kbd></td>
+        <td>The Diagram menu, the context menu</td>
+      </tr>
+      <tr>
+        <td>Open · close a call block in place</td>
+        <td><kbd>f</kbd>, <kbd>za</kbd></td>
+        <td>Click the triangle <code>▾</code> on its band</td>
+      </tr>
+      <tr>
+        <td>Replace a call block with the Method's blocks (unwrap)</td>
+        <td><kbd>ds</kbd></td>
+        <td>Diagram › Unwrap</td>
       </tr>
       <tr>
         <td>Previous / next diagram</td>

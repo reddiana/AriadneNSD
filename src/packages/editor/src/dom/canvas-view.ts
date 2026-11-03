@@ -272,7 +272,12 @@ export class CanvasView {
     if (field.kind !== 'call') {
       return '';
     }
-    const key = field.part === 'args' ? 'field.callArgs' : 'field.callResult';
+    const key =
+      field.part === 'args'
+        ? 'field.callArgs'
+        : field.part === 'name'
+          ? 'field.callName'
+          : 'field.callResult';
     return formatMessage(this.options.locale(), key);
   }
 

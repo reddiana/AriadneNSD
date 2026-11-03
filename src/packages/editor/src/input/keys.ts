@@ -143,6 +143,8 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'F', command: 'fold.make' },
   { keys: 'z d', command: 'fold.remove' },
   { keys: 'Ctrl+Shift+F', command: 'fold.remove' },
+  // Calls: go to the called Method, or from a shown block to the Method's own (03-keymap).
+  { keys: 'g d', command: 'call.goTo' },
   // File, view, help. The UI registers the palette, preferences and shortcut list commands.
   { keys: 'Ctrl+S', command: 'file.save' },
   { keys: 'Ctrl+Shift+S', command: 'file.saveAs' },

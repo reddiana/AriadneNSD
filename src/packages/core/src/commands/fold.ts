@@ -84,8 +84,10 @@ export type MakeSiteFoldArgs = WithIds & {
 /**
  * Makes a fold region that exists only where a call block is opened (R-EDIT-16): the called
  * Method is not changed and other calls of it do not show the region. The blocks must be in one
- * sequence of the Method that the path ends in (`notContiguous` otherwise), and the same range
- * at the same place is refused (`foldExists`). Touched: the new region.
+ * sequence of the Method that the path ends in (`notContiguous` otherwise). It must nest with
+ * the Method's regions and the regions already at this place, or it could not be shown: the same
+ * range is refused (`foldExists`), and so is one crossing an end (`foldsCross`). Touched: the new
+ * region.
  */
 export function makeSiteFold(content: Content, args: MakeSiteFoldArgs): Result {
   const index = indexContent(content);
@@ -108,13 +110,16 @@ export function makeSiteFold(content: Content, args: MakeSiteFoldArgs): Result {
   const lo = Math.min(first.index, last.index);
   const hi = Math.max(first.index, last.index);
   const seq = index.seqs.get(first.owner)?.seq;
-  const firstId = seq?.blocks[lo]?.id ?? args.first;
-  const lastId = seq?.blocks[hi]?.id ?? args.last;
-  const isSame = (fold: SiteFold): boolean =>
-    sameIds(fold.via, args.via) && fold.first === firstId && fold.last === lastId;
-  const existing = call.siteFolds.find(isSame);
-  if (existing !== undefined) {
-    return fail('foldExists', existing.id);
+  if (seq === undefined) {
+    return fail('notFound');
+  }
+  const firstId = seq.blocks[lo]?.id ?? args.first;
+  const lastId = seq.blocks[hi]?.id ?? args.last;
+  // It must nest with the Method's regions and with this site's, or it could not be shown.
+  const here = call.siteFolds.filter((fold) => sameIds(fold.via, args.via));
+  const clash = foldClash(seq, lo, hi) ?? foldClash({ blocks: seq.blocks, folds: here }, lo, hi);
+  if (clash !== null) {
+    return fail(clash.code, clash.fold);
   }
   const fold: SiteFold = {
     id: idsFor(content, args).next('fold'),

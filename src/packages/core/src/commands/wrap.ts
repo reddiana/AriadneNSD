@@ -4,6 +4,7 @@ import { done, fail, failWith, idsFor, isReason, resolveTarget } from './common'
 import { emptySeq, fillEmpty, replaceRange, sliceSeq } from './seq-edit';
 import { childSeqs, indexContent, isControlBlock, isEmptySeq, updateSeq } from './tree';
 import type { NewBlockKind, Result, Target, WithIds, WrapKind } from './types';
+import { inlineCall } from './inline';
 
 /** Arguments of `wrap`. */
 export type WrapArgs = WithIds & {
@@ -78,7 +79,8 @@ export type UnwrapArgs = WithIds & {
  * When the target is one control block, that block is removed; otherwise the nearest control
  * block holding the target is. An If or Case leaves the blocks of its non-empty branches, one
  * branch after another; branches of only empty blocks leave nothing. Fold regions inside come
- * out with their blocks. Call blocks (R-EDIT-08) come later.
+ * out with their blocks. A call block alone is replaced by the blocks of its Method (R-EDIT-08,
+ * `inlineCall`).
  * Touched: the blocks that came out (or the empty block left in their place).
  */
 export function unwrap(content: Content, args: UnwrapArgs): Result {
@@ -92,7 +94,10 @@ export function unwrap(content: Content, args: UnwrapArgs): Result {
   }
   const only = range.lo === range.hi ? range.seq.blocks[range.lo] : undefined;
   if (only?.kind === 'call') {
-    return fail('unsupported', only.id);
+    return inlineCall(content, {
+      block: only.id,
+      ...(args.ids === undefined ? {} : { ids: args.ids }),
+    });
   }
   let shellId: Id | null;
   if (only !== undefined && isControlBlock(only)) {

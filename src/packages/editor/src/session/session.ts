@@ -613,14 +613,37 @@ export class EditorSession {
 
   /**
    * The fields of a call block, in `Tab` order (interaction rules "호출 블록"): the arguments,
-   * then the result. A call to a Method that receives nothing has the result only.
+   * then the result. A call to a Method that receives nothing has the result only; a call by a
+   * written name has its name last (R-BLK-08, UX CB6).
    */
   callParts(block: Block): ReadonlyArray<CallPart> {
+    if (block.kind === 'call' && block.target.kind === 'named') {
+      return ['args', 'result', 'name'];
+    }
     if (block.kind !== 'call' || block.target.kind !== 'local') {
       return ['args', 'result'];
     }
     const head = this.index().diagrams.get(block.target.diagram)?.head ?? null;
     return head !== null && headParams(head) !== null ? ['args', 'result'] : ['result'];
+  }
+
+  /** The name a call block shows now, without the "no name" word (empty then). */
+  callName(block: Block): string {
+    if (block.kind !== 'call') {
+      return '';
+    }
+    const target = block.target;
+    switch (target.kind) {
+      case 'local': {
+        const head = this.index().diagrams.get(target.diagram)?.head ?? null;
+        return head === null ? '' : headName(head);
+      }
+      case 'named':
+        return target.name;
+      case 'external':
+      case 'lost':
+        return target.lastName;
+    }
   }
 
   /**
@@ -676,6 +699,11 @@ export class EditorSession {
         if (block.target.kind === 'lost') {
           return { reason: 'reason.lostTarget' };
         }
+        if (field.part === 'name') {
+          return block.target.kind === 'named'
+            ? { text: block.target.name }
+            : { reason: 'reason.wrongKind' };
+        }
         return { text: field.part === 'args' ? block.args : block.result };
       }
       case 'fold': {
@@ -716,7 +744,7 @@ export class EditorSession {
         initial: found.text,
         text: caret === 'clear' ? '' : found.text,
         caret: caret === 'clear' ? 'end' : caret,
-        ...(call?.kind === 'call' ? { call: { args: call.args, result: call.result } } : {}),
+        ...(call?.kind === 'call' ? { call: callFields(call) } : {}),
         ...(extracted === undefined ? {} : { extracted }),
         ...(joinsLast ? { joinsLast: true } : {}),
       },
@@ -735,13 +763,13 @@ export class EditorSession {
     }
     const field = editing.field;
     const block = this.index().blocks.get(field.block)?.block;
-    const other: CallPart = field.part === 'args' ? 'result' : 'args';
-    if (block === undefined || !this.callParts(block).includes(other)) {
+    const parts = block === undefined ? [] : this.callParts(block);
+    const other = parts[(parts.indexOf(field.part) + 1) % parts.length];
+    if (other === undefined || other === field.part) {
       return false;
     }
-    const call =
-      field.part === 'args' ? { ...editing.call, args: text } : { ...editing.call, result: text };
-    const next = other === 'args' ? call.args : call.result;
+    const call = withPart(editing.call, field.part, text);
+    const next = partOf(call, other);
     this.setState({
       ...this.current,
       editing: { field: { ...field, part: other }, initial: next, text: next, caret: 'end', call },
@@ -769,9 +797,8 @@ export class EditorSession {
     }
     const keep = (): After => ({ selection: this.current.selection });
     if (field.kind === 'call') {
-      // Both fields in one command: one undo step. The same texts change nothing (UX MD2).
-      const typed = editing.call ?? { args: '', result: '' };
-      const call = field.part === 'args' ? { ...typed, args: text } : { ...typed, result: text };
+      // All fields in one command: one undo step. The same texts change nothing (UX MD2).
+      const call = withPart(editing.call ?? { args: '', result: '' }, field.part, text);
       this.commit(editCall(this.current.doc.content, { block: field.block, ...call }), keep);
       return;
     }
@@ -1059,6 +1086,43 @@ export class EditorSession {
   dispose(): void {
     this.clearHintTimer();
     this.listeners.clear();
+  }
+}
+
+/** What the fields of a call block hold when the inline editor opens. */
+function callFields(call: Extract<Block, { kind: 'call' }>): {
+  readonly args: string;
+  readonly result: string;
+  readonly name?: string;
+} {
+  return call.target.kind === 'named'
+    ? { args: call.args, result: call.result, name: call.target.name }
+    : { args: call.args, result: call.result };
+}
+
+type CallTexts = { readonly args: string; readonly result: string; readonly name?: string };
+
+/** The fields with one of them set to `text`. */
+function withPart(call: CallTexts, part: CallPart, text: string): CallTexts {
+  switch (part) {
+    case 'args':
+      return { ...call, args: text };
+    case 'result':
+      return { ...call, result: text };
+    case 'name':
+      return { ...call, name: text };
+  }
+}
+
+/** One field of the fields. */
+function partOf(call: CallTexts, part: CallPart): string {
+  switch (part) {
+    case 'args':
+      return call.args;
+    case 'result':
+      return call.result;
+    case 'name':
+      return call.name ?? '';
   }
 }
 

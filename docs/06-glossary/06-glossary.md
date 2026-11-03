@@ -43,6 +43,7 @@ updated: 2026-11-03
 | 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhile` | 본문을 먼저 실행하고 조건을 검사하는 반복 |
 | 횟수 반복 | for | `For` | 정해진 횟수만큼 반복 |
 | 호출 블록 | call | `Call` | Method를 호출하는 블록. 같은 문서의 Method, 이름만 적은 함수, 다른 문서의 Method를 호출한다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 꼴로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
+| 이름을 적는 호출 블록 | call by name | `named` (`CallTarget`) | 문서에 없는 것(라이브러리 함수, 아직 그리지 않은 서브루틴)을 이름 · 인자 · 결과를 적어 호출하는 호출 블록. 보통 호출 블록과 같은 모양이고, 펴 보거나 풀 수 없다 → [[01-requirements#^r-blk\|R-BLK-08]], [[02-interaction-rules#호출 블록]] |
 | 인자 · 결과 | arguments · result | `args` · `result` | 호출 블록마다 적는 텍스트. 이름은 적지 않고 Method의 헤더를 따른다 |
 | 결과 기호 | result symbol | `resultSymbol` | 결과를 받는 기호 `←` 또는 `=`. 문서마다 하나이고, 뷰 상태다(파일에 저장되지만 실행 취소의 대상이 아님) → [[ux-decisions#Q9. 실행 취소의 대상 (R7)\|Q9]] |
 | 분기 | branch | `Branch` · `Arm` | If · Case 안의 각 경로. 줄 하나를 가진다. 분기마다 분기 라벨이 있다(If는 처음에 "참" · "거짓", Case는 사용자가 적음). If의 분기와 default 분기는 `Branch`, Case의 나머지 분기는 `Arm`. 예전에는 "갈래"라고 적었다(분기 라벨은 "갈래 이름") |
@@ -75,6 +76,8 @@ updated: 2026-11-03
 | 접힌 줄 | folded lane row | 접힌 제어 블록의 분기 자리에 보이는 한 줄. "⋯ 블록 n개"가 보인다 |
 | 펴 보기 | expand in place | 호출 블록 자리에 호출하는 Method의 블록을 보기로만 보여 주는 것. 펴 보인 블록은 편집할 수 없다 → [[02-interaction-rules#호출 블록 펴 보기]] |
 | 펴 보인 곳의 접기 영역 | site fold region | 펴 보인 호출 블록 자리에만 있는 접기 영역. Method의 원본에는 없다 → [[02-interaction-rules#펴 보인 곳의 접기 영역]] |
+| 화면 id | screen id | 펴 보인 호출 블록 안에 그린 것의 id. 펴 보인 호출 블록의 경로를 `/`로 이은 뒤에 모델의 id를 붙인다(`b4/b17`). 같은 Method를 여러 곳에서 펴 보여도 섞이지 않는다 → [[03-editor#2. 상태와 선택]] |
+| 보이는 구조 | shown structure | 줄 하나가 지금 보이는 모습: 블록과 그 줄의 접기 영역을 묶은 나무(펴 보인 곳의 접기 영역 포함). 레이아웃이 그리고 `editor`가 키보드 이동에 쓴다. 코드 이름은 `ShownItem`(core), 다이어그램 전체의 나무는 `ShownIndex`(editor) → [[02-layout#1.6 테두리가 있는 것]] |
 
 ## 시각 디자인
 
