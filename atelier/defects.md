@@ -26,6 +26,8 @@ updated: 2026-11-03
 | [[#BUG-07\|BUG-07]] | 2026-11-03 | 선택한 블록의 주황 테두리가 오른쪽 · 아래에서 안쪽으로 더 들어가 보임 | 고침 |
 | [[#BUG-08\|BUG-08]] | 2026-11-03 | `a`를 눌러 키 힌트가 뜬 뒤 빈 곳을 클릭해도 힌트가 남음 | 고침 |
 | [[#BUG-09\|BUG-09]] | 2026-11-03 | 블록이나 선택 영역을 드래그하면 지나간 블록들의 글자가 하이라이트됨 | 고침 |
+| [[#BUG-10\|BUG-10]] | 2026-11-03 | 빈 default 칸에서 복사 · 잘라내기를 하면 "삭제할 default 분기가 없습니다"라고 알림 | 고침 |
+| [[#BUG-11\|BUG-11]] | 2026-11-03 | 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 "먼저 블록을 선택하세요"라고 알림 | 고침 |
 
 ## BUG-01
 
@@ -93,3 +95,18 @@ updated: 2026-11-03
 - **원인:** 그림의 글자(SVG `text`)가 브라우저의 글자 선택 대상이었음
 - **고친 곳:** `packages/editor/src/dom/styles.ts`: 캔버스는 `user-select: none`, 인라인 에디터만 글자 선택
 - **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0205]] 블록을 끌어도 그려진 글자가 선택되지 않는다 (E2E, `apps/web/e2e/canvas.spec.ts`)
+
+## BUG-10
+
+- **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
+- **원인:** 복사 · 잘라내기 · 삭제가 공통 검사 `blocksOnly` 하나를 써서 빈 default 칸에서는 셋 모두 삭제의 문구가 나옴
+- **고친 곳:** `packages/editor/src/commands/editor-commands.ts`: `blocksOnly`가 빈 default 칸의 문구를 명령마다 받음(복사 "빈 칸에는 복사할 블록이 없습니다.", 잘라내기 "빈 칸에는 잘라낼 블록이 없습니다."), 메시지 카탈로그(`packages/editor/src/i18n/messages.ts`)
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0797]] 빈 default 칸에서 복사 · 잘라내기를 하면 삭제할 default가 없다가 아니라 거기에 블록이 없다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
+
+## BUG-11
+
+- **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
+- **증상의 자세한 모습:** 같은 헤더에서 복사 · 잘라내기는 "헤더에서는 되지 않습니다"라고 알리는데, 붙여넣기 · 감싸기 · 풀기는 선택한 것이 없다고 알림
+- **원인:** 붙여넣기 · 감싸기 · 풀기의 `when`이 헤더를 따로 보지 않아 "선택 없음"의 문구로 떨어짐
+- **고친 곳:** `packages/editor/src/commands/editor-commands.ts`: 헤더에서 붙여넣기는 "헤더에는 붙여넣을 수 없습니다.", 감싸기는 "헤더는 감쌀 수 없습니다.", 풀기는 "헤더에서는 되지 않습니다. 블록을 선택하세요."라고 알림, 메시지 카탈로그(`packages/editor/src/i18n/messages.ts`)
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0798]] 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 선택한 것이 없다가 아니라 헤더라서 안 된다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)

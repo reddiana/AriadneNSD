@@ -131,7 +131,7 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     label: 'reason.undecidedOnBranchLabel',
     armLabel: 'reason.undecidedOnBranchLabel',
     defaultLabel: 'reason.undecidedOnBranchLabel',
-    missing: 'reason.noDefaultToDelete',
+    missing: 'reason.nothingToCut',
     head: 'reason.notOnHead',
   },
   'edit.copy': {
@@ -139,7 +139,7 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     label: 'reason.undecidedOnBranchLabel',
     armLabel: 'reason.undecidedOnBranchLabel',
     defaultLabel: 'reason.undecidedOnBranchLabel',
-    missing: 'reason.noDefaultToDelete',
+    missing: 'reason.nothingToCopy',
     head: 'reason.notOnHead',
   },
   'edit.paste': {
@@ -147,7 +147,7 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     label: 'reason.undecidedOnBranchLabel',
     armLabel: 'reason.undecidedOnBranchLabel',
     defaultLabel: 'reason.undecidedOnBranchLabel',
-    head: 'reason.nothingSelected',
+    head: 'reason.cannotPasteOnHead',
   },
   'edit.delete': {
     none: 'reason.nothingSelected',
@@ -200,7 +200,7 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     armLabel: 'reason.undecidedOnBranchLabel',
     defaultLabel: 'reason.undecidedOnBranchLabel',
     missing: 'reason.nothingSelected',
-    head: 'reason.nothingSelected',
+    head: 'reason.cannotWrapHead',
   },
   'block.unwrap': {
     none: 'reason.nothingSelected',
@@ -212,7 +212,7 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     armLabel: 'reason.nothingSelected',
     defaultLabel: 'reason.nothingSelected',
     missing: 'reason.nothingSelected',
-    head: 'reason.nothingSelected',
+    head: 'reason.notOnHead',
   },
   'branch.insert': {
     none: 'reason.selectBranchLabel',
@@ -338,6 +338,26 @@ describe('why a command is not available (03-editor 5)', () => {
       message: 'reason.notOnHead',
       level: 'warn',
     });
+  });
+
+  it('T-0797 · BUG-10: copy and cut on the empty default cell say there is no block there, not no default to delete', () => {
+    const engine = engineAt('missing');
+    engine.run('edit.copy');
+    expect(notice(engine)).toBe('reason.nothingToCopy');
+    engine.run('edit.cut');
+    expect(notice(engine)).toBe('reason.nothingToCut');
+    engine.run('edit.delete');
+    expect(notice(engine)).toBe('reason.noDefaultToDelete');
+  });
+
+  it('T-0798 · BUG-11: paste, wrap and unwrap on a header say it is a header, not that nothing is selected', () => {
+    const engine = engineAt('head');
+    engine.run('edit.paste');
+    expect(notice(engine)).toBe('reason.cannotPasteOnHead');
+    engine.run('block.wrap.while');
+    expect(notice(engine)).toBe('reason.cannotWrapHead');
+    engine.run('block.unwrap');
+    expect(notice(engine)).toBe('reason.notOnHead');
   });
 
   it('T-0560: undo, redo and zoom reset are refused when there is nothing to do', () => {

@@ -470,6 +470,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         if (selection?.kind === 'branchLabel') {
           return 'reason.undecidedOnBranchLabel';
         }
+        if (selection?.kind === 'head') {
+          return 'reason.cannotWrapHead';
+        }
         return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
       },
       run: (state) => {
@@ -484,24 +487,30 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     }),
   );
 
-  const blocksOnly = (state: EditorState): Applies => {
-    const selection = state.selection;
-    if (selection?.kind === 'branchLabel') {
-      return 'reason.undecidedOnBranchLabel';
-    }
-    if (selection?.kind === 'head') {
-      return 'reason.notOnHead';
-    }
-    if (selection?.kind === 'missingDefault') {
-      return 'reason.noDefaultToDelete';
-    }
-    return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
-  };
+  /** Commands that act on selected blocks. `onEmptyCell` is why one does not work on the empty default cell. */
+  const blocksOnly =
+    (onEmptyCell: EditorMessage) =>
+    (state: EditorState): Applies => {
+      const selection = state.selection;
+      if (selection?.kind === 'branchLabel') {
+        return 'reason.undecidedOnBranchLabel';
+      }
+      if (selection?.kind === 'head') {
+        return 'reason.notOnHead';
+      }
+      if (selection?.kind === 'missingDefault') {
+        return onEmptyCell;
+      }
+      return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
+    };
 
   const unwrapSpec = spec('block.unwrap', {
     edits: true,
     // Greyed out when nothing would come off: same checks as core's `unwrap`, read from the index.
     when: (state) => {
+      if (state.selection?.kind === 'head') {
+        return 'reason.notOnHead';
+      }
       if (state.selection?.kind !== 'blocks') {
         return 'reason.nothingSelected';
       }
@@ -658,7 +667,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const copySpec = spec('edit.copy', {
     edits: false,
-    when: blocksOnly,
+    when: blocksOnly('reason.nothingToCopy'),
     run: async (state) => {
       const target = targetOf(state.selection);
       if (target === null) {
@@ -678,7 +687,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const cutSpec = spec('edit.cut', {
     edits: true,
-    when: blocksOnly,
+    when: blocksOnly('reason.nothingToCut'),
     run: async (state) => {
       const target = targetOf(state.selection);
       if (target === null) {
@@ -765,6 +774,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         if (selection?.kind === 'branchLabel') {
           return 'reason.undecidedOnBranchLabel';
         }
+        if (selection?.kind === 'head') {
+          return 'reason.cannotPasteOnHead';
+        }
         return selection?.kind === 'blocks' || selection?.kind === 'missingDefault'
           ? true
           : 'reason.nothingSelected';
@@ -780,7 +792,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
   const deleteSpec = spec('edit.delete', {
     edits: true,
     // On a header, Delete removes the header (03-keymap).
-    when: (state) => (state.selection?.kind === 'head' ? true : blocksOnly(state)),
+    when: (state) =>
+      state.selection?.kind === 'head' ? true : blocksOnly('reason.noDefaultToDelete')(state),
     run: (state) => {
       if (state.selection?.kind === 'head') {
         session.runCommand('diagram.removeHead');
