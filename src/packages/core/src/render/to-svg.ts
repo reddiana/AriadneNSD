@@ -87,7 +87,9 @@ function textToSvg(element: Extract<SceneElement, { kind: 'text' }>): string {
 
 function runToSvg(run: TextRun): string {
   const text = escapeText(run.text);
-  return run.weight === 400 ? text : `<tspan font-weight="${String(run.weight)}">${text}</tspan>`;
+  const weight = run.weight === 400 ? '' : ` font-weight="${String(run.weight)}"`;
+  const style = run.isItalic === true ? ' font-style="italic"' : '';
+  return weight === '' && style === '' ? text : `<tspan${weight}${style}>${text}</tspan>`;
 }
 
 function pathData(points: ReadonlyArray<Point>): string {

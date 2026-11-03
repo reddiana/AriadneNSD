@@ -277,7 +277,7 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 돌려줍니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 돌려줄 뿐이고, `editor`가 앞의 내용을 쌓습니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
@@ -313,7 +313,10 @@ type Target =                                        // 명령이 적용되는 �
 | | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 `lost`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
 | | 헤더 이름 편집 | 겹치거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
-| 접기 영역 | 만들기 · 풀기 · 이름 편집 | [[02-interaction-rules#접기 · 펼치기]]. 펴 보인 곳이면 `SiteFold`로 |
+| 접기 영역 | 만들기 (`makeFold`) | [[02-interaction-rules#접기 · 펼치기]]. 한 줄의 연속 범위에 `FoldMark`를 붙인다. 이름은 없이 시작한다(`editor`가 바로 이름 칸을 연다). 같은 범위가 이미 있으면 `foldExists`, 다른 접기 영역의 끝에 걸치면 `foldsCross`(불변식 5). `touched`는 새 접기 영역 |
+| | 펴 보인 곳의 접기 영역 만들기 (`makeSiteFold`) | [[02-interaction-rules#펴 보인 곳의 접기 영역]]. 가장 바깥 호출 블록의 `siteFolds`에 `via` 경로와 함께 둔다. Method는 바뀌지 않는다. 두 끝이 Method의 다른 줄이면 `notContiguous`, 같은 자리에 같은 범위가 있으면 `foldExists` |
+| | 풀기 (`removeFold`) | 접기 영역(펴 보인 곳의 것도)과 그 이름을 없앤다. 블록은 그대로다. `touched`는 그 영역의 처음과 끝 블록 |
+| | 이름 편집 (`renameFold`, 텍스트 편집 `editText`) | 이름을 바꾼다. 빈 이름은 이름을 지워 기본 이름이 다시 보이게 한다 |
 | 문서 설정 | 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양 | |
 | 문서 | 새 문서 | 헤더 없는 다이어그램 하나와 빈 블록 하나. 설정은 `textKind: 'plain'`, `theme: 'default'`, 헤더 모양은 사용자가 마지막에 고른 것(없으면 `'title'` → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼\|HS1]]), 그림 문구의 언어는 만든 사람의 화면 언어([[0041-drawing-locale-in-document\|ADR-0041]]). 뷰 상태는 이름 띠 켬, 결과 기호 `←` |
 

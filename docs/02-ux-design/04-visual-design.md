@@ -16,7 +16,7 @@ updated: 2026-11-01
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐이고, MVP 뒤의 기능(접기, 펴 보기)의 모습은 MVP에 없습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
+> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐입니다. MVP 뒤의 기능 가운데 접기와 펴 보기의 모습은 2026-11-03에 코드에 들어왔습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
@@ -300,7 +300,8 @@ flowchart LR
 | `size.title-gap` | 6px | "제목처럼" 헤더에서 이름 줄과 아랫줄 사이. 헤더의 높이는 16 + 18 + 6 = 40px. 텍스트는 다이어그램의 왼쪽 선에 맞춥니다(`space.pad-x` 없음) |
 | `size.call-bar` | 7px | 호출 블록 세로 이중선의 안쪽 거리 |
 | `size.band` | 18px | 이름 띠의 높이 |
-| `size.band-text-x` | 10px | 이름 띠 · 펴 보기 띠의 텍스트가 왼쪽 끝에서 떨어진 거리 |
+| `size.band-text-x` | 10px | 이름 띠 · 펴 보기 띠의 왼쪽 끝에서 펼침 삼각형 자리까지 |
+| `size.band-icon-room` | 10px | 이름 띠 · 펴 보기 띠에서 텍스트 앞 펼침 삼각형(`▾`)의 자리. 텍스트는 왼쪽 끝에서 `size.band-text-x` + 10 = 20px(접힌 칸과 같은 자리)에서 시작합니다. 삼각형은 편집 레이어에만 그리지만 이 자리는 저장되는 그림에도 남습니다 → [[ux-decisions#FD8. 이름 띠의 텍스트 자리\|FD8]] |
 | `size.fold-icon-room` / `size.fold-extra-h` | 20 / 4px | 접힌 접기 영역 칸에서 이름 앞 펼침 삼각형(`▸`)의 자리, 높이에 더하는 여유. 삼각형은 편집 레이어에만 그리지만 이 20px은 저장되는 그림에도 그대로 남습니다. 화면과 파일의 기하는 같기 때문입니다(화면 그대로 → [[0018-save-as-shown\|ADR-0018]]) |
 | `size.fold-edge` | 3px | 펴진 접기 영역의 테두리 굵기 (M11에서 선택한 굵기) |
 | `size.nest-gap` | 1px | 테두리 안에 테두리가 들어갈 때의 틈 |
@@ -342,13 +343,13 @@ flowchart LR
 | 상태 | 모습 | 레이어 | 토큰 | MVP |
 | --- | --- | --- | --- | --- |
 | 기본 | 2 ~ 6장 그대로 | 문서 | | 있음 |
-| 펴진 접기 영역 | 테두리 + 이름 띠(이름, 굵게). 이름 띠를 끄면 접기 영역이 없는 것과 똑같음. 편집할 때는 이름 앞에 펼침 삼각형 `▾`(편집 레이어, 저장되지 않음) | 문서 | `fold.*` | 없음 (MVP 뒤) |
-| 접힌 접기 영역 | 한 줄 칸 + 이름. 편집할 때는 이름 앞에 펼침 삼각형 `▸`(편집 레이어, 저장되지 않음) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 없음 (MVP 뒤) |
-| 접힌 제어 블록의 분기 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 없음 (MVP 뒤) |
-| 펴 보인 호출 블록 | 점선 + 띠(호출 블록의 텍스트. 편집할 때는 앞에 펼침 삼각형 `▾`, 편집 레이어). 안의 텍스트는 회색이고 구문 강조 없음. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 없음 (MVP 뒤) |
+| 펴진 접기 영역 | 테두리 + 이름 띠(이름, 굵게). 이름 띠를 끄면 접기 영역이 없는 것과 똑같음. 편집할 때는 이름 앞에 펼침 삼각형 `▾`(편집 레이어, 저장되지 않음) | 문서 | `fold.*` | 있음 (2026-11-03) |
+| 접힌 접기 영역 | 한 줄 칸 + 이름. 편집할 때는 이름 앞에 펼침 삼각형 `▸`(편집 레이어, 저장되지 않음) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 있음 (2026-11-03) |
+| 접힌 제어 블록의 분기 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 (2026-11-03) |
+| 펴 보인 호출 블록 | 점선 + 띠(호출 블록의 텍스트. 편집할 때는 앞에 펼침 삼각형 `▾`, 편집 레이어). 안의 텍스트는 회색이고 구문 강조 없음. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 있음 (2026-11-03) |
 | 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함, 다른 문서를 찾을 수 없음) | 세로 이중선이 점선(3 · 3) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
-| 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 없음 (MVP 뒤) |
-| 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 없음 (MVP 뒤) |
+| 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 (2026-11-03) |
+| 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 (2026-11-03) |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | 있음 |
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |

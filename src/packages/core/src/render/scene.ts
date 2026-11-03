@@ -19,6 +19,8 @@ export type TextRun = {
   readonly text: string;
   /** 400 regular or 600 bold (visual design 4.2). */
   readonly weight: 400 | 600;
+  /** Slanted: a default fold region name, the words of a folded row (visual design 4.2). */
+  readonly isItalic?: true;
 };
 
 /** One element of the display list. `blockId` is the block it belongs to. */

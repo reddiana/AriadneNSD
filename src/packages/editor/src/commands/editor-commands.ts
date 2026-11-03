@@ -39,16 +39,9 @@ import {
 } from '@ariadne-nsd/core';
 
 import { clipFromJson, clipFromText, clipToJson, clipToText } from '../clipboard/clip-format';
-import type {
-  CommandContext,
-  CommandSpec,
-  MenuPlace,
-  PickerItem,
-  ToolbarPlace,
-  WriteResult,
-} from '../contracts';
-import type { EditorMessage, Message } from '../i18n/messages';
-import { isMessageKey, message } from '../i18n/messages';
+import type { CommandSpec, MenuPlace, PickerItem, ToolbarPlace, WriteResult } from '../contracts';
+import type { EditorMessage } from '../i18n/messages';
+import { message } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
 import {
   branchesOf,
@@ -60,18 +53,25 @@ import {
 } from '../model/doc-index';
 import type { Navigation } from '../navigation/navigate';
 import { drawnDiagrams, navigate } from '../navigation/navigate';
+import { fromShown, shownLastSelected, toShown } from '../navigation/shown-selection';
 import type { After, ClipboardPort, EditorSession } from '../session/session';
 import type { Caret, EditField, EditorState } from '../state/editor-state';
 import { zoomRange } from '../state/editor-state';
-import type { Selection, SelectionKind } from '../state/selection';
+import type { Selection } from '../state/selection';
 import {
   diagramOf,
   extendBy,
+  peekBlocks,
   selectBlock,
   selectRange,
   selectedBlocks,
   targetOf,
 } from '../state/selection';
+import { foldCommands } from './fold-commands';
+import type { Applies } from './spec';
+import { always, commandTitle, spec } from './spec';
+
+export { commandTitle } from './spec';
 
 /** What the editor's commands need besides the session. */
 export type CommandDeps = {
@@ -112,40 +112,6 @@ const kindNames: Readonly<Record<string, string>> = {
   for: 'For',
   doWhile: 'Do-While',
 };
-
-/** The catalog title of a command id: `command.<id>`. */
-export function commandTitle(id: string): Message {
-  const key = `command.${id}`;
-  return isMessageKey(key) ? key : id;
-}
-
-type Applies = true | EditorMessage;
-
-type SpecParts = {
-  readonly edits: boolean;
-  readonly when: (state: EditorState, ctx: CommandContext) => Applies;
-  readonly run: (state: EditorState, args: unknown, ctx: CommandContext) => void | Promise<void>;
-  readonly menu?: MenuPlace;
-  readonly toolbar?: ToolbarPlace;
-  readonly context?: ReadonlyArray<SelectionKind>;
-  readonly title?: Message | ((ctx: CommandContext) => Message);
-};
-
-function spec(id: string, parts: SpecParts): CommandSpec {
-  return {
-    id,
-    title: parts.title ?? commandTitle(id),
-    keys: [],
-    edits: parts.edits,
-    when: (ctx) => parts.when(ctx.state, ctx),
-    run: (ctx, args) => parts.run(ctx.state, args, ctx),
-    ...(parts.menu === undefined ? {} : { menu: parts.menu }),
-    ...(parts.toolbar === undefined ? {} : { toolbar: parts.toolbar }),
-    ...(parts.context === undefined ? {} : { context: parts.context }),
-  };
-}
-
-const always = (): Applies => true;
 
 /** Reads `{ block: Id }` from command arguments. */
 function blockArg(args: unknown): Id | null {
@@ -278,7 +244,15 @@ function fieldOfSelection(
     case 'head':
       return { value: { kind: 'head', diagram: selection.diagram } };
     case 'fold':
-      return { reason: 'reason.unsupported' };
+      return {
+        value: {
+          kind: 'fold',
+          fold: selection.fold,
+          ...(selection.path === undefined ? {} : { path: selection.path }),
+        },
+      };
+    case 'peek':
+      return { reason: 'reason.peekReadOnly' };
   }
 }
 
@@ -327,6 +301,8 @@ function extractTarget(selection: Selection | null): Found<Target> {
       return { value: { kind: 'blocks', first: selection.anchor, last: selection.focus } };
     case 'fold':
       return { value: { kind: 'fold', fold: selection.fold } };
+    case 'peek':
+      return { reason: 'reason.peekReadOnly' };
     case 'branchLabel':
     case 'missingDefault':
     case 'head':
@@ -401,9 +377,6 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       }
       if (selection?.kind === 'head') {
         return 'reason.notOnHead';
-      }
-      if (selection?.kind === 'fold') {
-        return 'reason.unsupported';
       }
       return true;
     };
@@ -493,7 +466,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         if (selection?.kind === 'head') {
           return 'reason.cannotWrapHead';
         }
-        return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
+        return selection?.kind === 'blocks' || selection?.kind === 'fold'
+          ? true
+          : 'reason.nothingSelected';
       },
       run: (state) => {
         const target = targetOf(state.selection);
@@ -503,7 +478,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         session.commit(wrap(content(), { target, kind, ids: session.ids() }), afterInsert);
       },
       menu: { menu: 'diagram', group: 2, order: order + 1, submenu: 'wrap' },
-      context: ['blocks'],
+      context: ['blocks', 'fold'],
     }),
   );
 
@@ -521,7 +496,10 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       if (selection?.kind === 'missingDefault') {
         return onEmptyCell;
       }
-      return selection?.kind === 'blocks' ? true : 'reason.nothingSelected';
+      // A folded thing moves, goes and is copied whole (interaction rules "접기 · 펼치기").
+      return selection?.kind === 'blocks' || selection?.kind === 'fold'
+        ? true
+        : 'reason.nothingSelected';
     };
 
   const unwrapSpec = spec('block.unwrap', {
@@ -692,9 +670,17 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const copySpec = spec('edit.copy', {
     edits: false,
-    when: blocksOnly('reason.nothingToCopy'),
+    // Blocks shown in an opened call are copied as the Method has them (R-EDIT-15).
+    when: (state) =>
+      state.selection?.kind === 'peek' ? true : blocksOnly('reason.nothingToCopy')(state),
     run: async (state) => {
-      const target = targetOf(state.selection);
+      const peeked = peekBlocks(index(), state.selection);
+      const [first] = peeked;
+      const last = peeked.at(-1);
+      const target =
+        first !== undefined && last !== undefined
+          ? ({ kind: 'blocks', first, last } as const)
+          : targetOf(state.selection);
       if (target === null) {
         return;
       }
@@ -707,7 +693,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     },
     menu: { menu: 'edit', group: 2, order: 2 },
     toolbar: { group: 3, order: 2, icon: 'edit.copy' },
-    context: ['blocks'],
+    context: ['blocks', 'fold', 'peek'],
   });
 
   const cutSpec = spec('edit.cut', {
@@ -737,7 +723,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     },
     menu: { menu: 'edit', group: 2, order: 1 },
     toolbar: { group: 3, order: 1, icon: 'edit.cut' },
-    context: ['blocks'],
+    context: ['blocks', 'fold'],
   });
 
   // A paste reads the system clipboard asynchronously. Saving waits for it, so Ctrl+V then
@@ -802,7 +788,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         if (selection?.kind === 'head') {
           return 'reason.cannotPasteOnHead';
         }
-        return selection?.kind === 'blocks' || selection?.kind === 'missingDefault'
+        return selection?.kind === 'blocks' ||
+          selection?.kind === 'missingDefault' ||
+          selection?.kind === 'fold'
           ? true
           : 'reason.nothingSelected';
       },
@@ -838,7 +826,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       }));
     },
     menu: { menu: 'edit', group: 2, order: 5 },
-    context: ['blocks'],
+    context: ['blocks', 'fold'],
   });
 
   // Move.
@@ -852,7 +840,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
             ? true
             : 'reason.branchMovesSideways';
         }
-        return selection?.kind === 'blocks' || selection?.kind === 'head'
+        return selection?.kind === 'blocks' ||
+          selection?.kind === 'head' ||
+          selection?.kind === 'fold'
           ? true
           : 'reason.nothingSelected';
       },
@@ -880,7 +870,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         }
       },
       menu: { menu: 'edit', group: 4, order },
-      context: ['blocks', 'branchLabel', 'head'],
+      context: ['blocks', 'branchLabel', 'head', 'fold'],
     });
 
   // Text editing.
@@ -905,7 +895,9 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         }
       },
       ...(menu === undefined ? {} : { menu }),
-      context: ['blocks', 'branchLabel', 'missingDefault', 'head'],
+      context: ['blocks', 'branchLabel', 'missingDefault', 'head', 'fold'],
+      // The name of a fold region of an opened call site is edited there (R-EDIT-16).
+      onPeek: true,
     });
 
   const branchLabelSpec = spec('edit.branchLabel', {
@@ -953,9 +945,16 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       edits: false,
       when: always,
       run: (state) => {
-        const result = navigate(index(), state.selection, state.lastSelected, navigation);
+        // Moves go over what is shown: folded things are one, opened calls hold their Method.
+        const shown = session.shown();
+        const result = navigate(
+          shown.index,
+          toShown(shown, index(), state.selection),
+          shownLastSelected(shown, state.lastSelected),
+          navigation,
+        );
         if (result.kind === 'select') {
-          session.select(result.selection);
+          session.select(fromShown(shown, index(), result.selection));
         } else if (result.reason !== undefined) {
           session.notify(`notice.${result.reason}`);
         }
@@ -1424,5 +1423,6 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     zoomSpec('view.zoom.in', 1, (zoom) => zoom + zoomRange.step),
     zoomSpec('view.zoom.out', 2, (zoom) => zoom - zoomRange.step),
     zoomSpec('view.zoom.reset', 3, () => 1),
+    ...foldCommands({ session }),
   ];
 }

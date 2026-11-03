@@ -43,12 +43,26 @@ export {
 export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
 export { geometry } from './layout/geometry';
-export { headLabel, layout } from './layout/layout';
+export { defaultFoldName, foldLabel, headLabel, layout } from './layout/layout';
+export type { ShownAt, ShownFold, ShownItem, ShownView, SiteRange } from './layout/shown';
+export {
+  countBlocks,
+  insideCall,
+  pathSeparator,
+  placeSiteFolds,
+  prefixInside,
+  screenId,
+  shownItems,
+  shownView,
+  splitScreenId,
+  topLevel,
+} from './layout/shown';
 export type { CallParts, CallTextContext } from './layout/call-text';
 export { callParts, callText } from './layout/call-text';
 export type {
   Box,
   BranchLabel,
+  CallWords,
   CaseColumn,
   DiagramLayout,
   HitRegion,
@@ -136,6 +150,14 @@ export type {
   SetCallTargetArgs,
 } from './commands/call';
 export { editCall, insertCall, newMethodAndCall, setCallTarget } from './commands/call';
+export type {
+  MakeFoldArgs,
+  MakeSiteFoldArgs,
+  RemoveFoldArgs,
+  RenameFoldArgs,
+} from './commands/fold';
+export { makeFold, makeSiteFold, removeFold, renameFold, siteFoldOf } from './commands/fold';
+export { foldRange } from './commands/seq-edit';
 export type { ExtractMethodArgs, ExtractResult } from './commands/extract';
 export { extractMethod } from './commands/extract';
 export { createContent, createDoc, defaultSettings } from './commands/new-document';

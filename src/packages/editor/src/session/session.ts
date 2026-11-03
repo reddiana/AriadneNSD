@@ -12,11 +12,13 @@ import type {
   Reason,
   Rendering,
   Result,
+  View,
 } from '@ariadne-nsd/core';
 import {
   addDefaultBranch,
   checkInvariants,
   createIdGenerator,
+  defaultFoldName,
   drawingMessage,
   editCall,
   editHead,
@@ -24,6 +26,7 @@ import {
   headName,
   headParams,
   renderDoc,
+  siteFoldOf,
 } from '@ariadne-nsd/core';
 
 import type { ClipboardData } from '../clipboard/clip-format';
@@ -34,6 +37,8 @@ import type { KeyBinding } from '../input/keys';
 import { readKey } from '../input/keys';
 import type { DocIndex } from '../model/doc-index';
 import { indexDoc, isEmptyBlock } from '../model/doc-index';
+import type { ShownIndex } from '../model/shown-index';
+import { shownIndexOf } from '../model/shown-index';
 import type {
   CallPart,
   Caret,
@@ -44,7 +49,13 @@ import type {
 } from '../state/editor-state';
 import { clampZoom, stepHistory, withContent, withSelection } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import { selectBlock, selectedBlocks, validSelection } from '../state/selection';
+import {
+  foldPath,
+  peekBlocks,
+  selectBlock,
+  selectedBlocks,
+  validSelection,
+} from '../state/selection';
 
 /** The system clipboard, or the editor's own when the browser blocks it (03-editor 3.3). */
 export type ClipboardPort = {
@@ -81,12 +92,16 @@ export type LoadOptions = {
 /** What to do after a command changed the content. */
 export type After = {
   readonly selection: Selection | null;
+  /** The view state to show the new content with (not an undo step); the same view if left out. */
+  readonly view?: View;
   /** Open the inline editor on this field (after inserting or wrapping). */
   readonly edit?: {
     readonly field: EditField;
     readonly caret: Caret | 'clear';
     /** The field names the Method an extract just made (UX XM2). */
     readonly extracted?: Extracted;
+    /** What is typed joins the undo step that opened the field (a new fold region's name). */
+    readonly joinsLast?: true;
   };
 };
 
@@ -98,6 +113,7 @@ export class EditorSession {
   private current: EditorState;
   private rendered: Rendering;
   private indexed: DocIndex;
+  private shownCache: ShownIndex | null = null;
   private saved: Doc | null;
   private keptSettings: KeptSettings;
   private readonly listeners = new Set<(state: EditorState) => void>();
@@ -123,7 +139,7 @@ export class EditorSession {
       doc,
       undo: [],
       redo: [],
-      selection: validSelection(this.indexed, load.selection),
+      selection: validSelection(this.indexed, load.selection, this.shownOf(doc)),
       lastSelected: null,
       editing: null,
       dirty: load.isDirty,
@@ -157,6 +173,21 @@ export class EditorSession {
       this.indexed = indexDoc(this.current.doc.content);
     }
     return this.indexed;
+  }
+
+  /**
+   * What the diagram shows now, as a tree of screen ids: folded things count as one, opened call
+   * blocks hold their Method's blocks (03-editor 2.2).
+   */
+  shown(): ShownIndex {
+    return this.shownOf(this.current.doc);
+  }
+
+  private shownOf(doc: Doc): ShownIndex {
+    if (this.shownCache?.doc !== doc) {
+      this.shownCache = shownIndexOf(doc);
+    }
+    return this.shownCache;
   }
 
   /** Calls `listener` after every state change. Returns the function that stops it. */
@@ -193,7 +224,7 @@ export class EditorSession {
       doc,
       undo: [],
       redo: [],
-      selection: validSelection(this.indexed, load.selection),
+      selection: validSelection(this.indexed, load.selection, this.shownOf(doc)),
       lastSelected: null,
       editing: null,
       dirty: load.isDirty,
@@ -328,8 +359,53 @@ export class EditorSession {
         return message(key, { name: headName(head) });
       }
       case 'fold':
-        return null;
+        return message('selection.fold', { name: this.foldName(selection.fold) });
+      case 'peek':
+        return message('selection.peek', { count: peekBlocks(index, selection).length });
     }
+  }
+
+  /** A fold region's name as drawn: its own name, or the default name (R-EDIT-23). */
+  foldName(fold: Id): string {
+    const index = this.index();
+    const content = this.current.doc.content;
+    const words = {
+      locale: content.settings.locale,
+      resultSymbol: this.current.doc.view.resultSymbol,
+      diagrams: index.diagrams,
+    };
+    const owner = index.folds.get(fold);
+    if (owner !== undefined) {
+      const seq = index.seqs.get(owner)?.seq;
+      const mark = seq?.folds.find((item) => item.id === fold);
+      if (seq === undefined || mark === undefined) {
+        return '';
+      }
+      if (mark.name !== undefined && mark.name !== '') {
+        return mark.name;
+      }
+      const first = seq.blocks.findIndex((block) => block.id === mark.first);
+      const last = seq.blocks.findIndex((block) => block.id === mark.last);
+      return defaultFoldName(words, seq.blocks.slice(first, last + 1));
+    }
+    const site = siteFoldOf(content, fold);
+    if (site === null) {
+      return '';
+    }
+    if (site.fold.name !== undefined && site.fold.name !== '') {
+      return site.fold.name;
+    }
+    const first = index.blocks.get(site.fold.first) ?? index.blocks.get(site.fold.last);
+    if (first === undefined) {
+      return '';
+    }
+    const seq = index.seqs.get(first.owner)?.seq;
+    const lastPlace = index.blocks.get(site.fold.last);
+    const hi = lastPlace?.owner === first.owner ? lastPlace.index : first.index;
+    return defaultFoldName(
+      words,
+      seq?.blocks.slice(Math.min(first.index, hi), Math.max(first.index, hi) + 1) ?? [],
+    );
   }
 
   /** A branch label as drawn: the user's label, or the fixed word. */
@@ -354,7 +430,27 @@ export class EditorSession {
 
   /** Changes the selection. */
   select(selection: Selection | null): void {
-    this.setState(withSelection(this.current, validSelection(this.index(), selection)));
+    this.setState(
+      withSelection(this.current, validSelection(this.index(), selection, this.shown())),
+    );
+  }
+
+  /**
+   * Changes the view state: what is folded, opened and banded (01-model 2). Not an undo step, but
+   * the document is changed (unsaved), except while it is view only (03-editor 6.4). The
+   * selection becomes `selection` (when given), dropped if it is no longer shown.
+   */
+  setView(view: View, selection?: Selection | null): void {
+    const doc: Doc = { content: this.current.doc.content, view };
+    this.rendered = renderDoc(doc);
+    const next = selection === undefined ? this.current.selection : selection;
+    this.setState({
+      ...withSelection(this.current, validSelection(this.index(), next, this.shownOf(doc))),
+      doc,
+      dirty: this.current.readOnly ? this.current.dirty : this.isDirty(doc),
+      layout: this.rendered.layout,
+      revision: this.current.revision + 1,
+    });
   }
 
   /** Starts or ends selecting a range with `v`. */
@@ -410,6 +506,7 @@ export class EditorSession {
    * document is left as it was and the problem is logged (coding guide 5).
    */
   apply(content: Content, after: After, isAmend = false): boolean {
+    const view = after.view ?? this.current.doc.view;
     if (content !== this.current.doc.content) {
       const violations = checkInvariants(content);
       if (violations.length > 0) {
@@ -417,16 +514,34 @@ export class EditorSession {
         this.notify('notice.internalError', 'warn');
         return false;
       }
-      const doc: Doc = { content, view: this.current.doc.view };
+    }
+    const doc: Doc =
+      content === this.current.doc.content && view === this.current.doc.view
+        ? this.current.doc
+        : { content, view };
+    if (doc !== this.current.doc) {
       this.rendered = renderDoc(doc);
     }
     const index = indexDoc(content);
-    const selection = validSelection(index, after.selection);
+    const selection = validSelection(index, after.selection, this.shownOf(doc));
     this.setState(
-      withContent(this.current, content, selection, this.rendered.layout, this.isDirty, isAmend),
+      withContent(
+        this.current,
+        content,
+        selection,
+        this.rendered.layout,
+        this.isDirty,
+        isAmend,
+        view,
+      ),
     );
     if (after.edit !== undefined) {
-      this.startEditing(after.edit.field, after.edit.caret, after.edit.extracted);
+      this.startEditing(
+        after.edit.field,
+        after.edit.caret,
+        after.edit.extracted,
+        after.edit.joinsLast === true,
+      );
     }
     return true;
   }
@@ -489,7 +604,7 @@ export class EditorSession {
     const index = indexDoc(stepped.content);
     this.setState({
       ...stepped.state,
-      selection: validSelection(index, stepped.state.selection),
+      selection: validSelection(index, stepped.state.selection, this.shownOf(stepped.state.doc)),
     });
     return true;
   }
@@ -563,6 +678,17 @@ export class EditorSession {
         }
         return { text: field.part === 'args' ? block.args : block.result };
       }
+      case 'fold': {
+        const isSite = index.siteFolds.has(field.fold);
+        if (!index.folds.has(field.fold) && !isSite) {
+          return { reason: 'reason.notFound' };
+        }
+        // A region of the Method seen in an opened call is the Method's (R-EDIT-16).
+        if (foldPath(field).length > 0 && !isSite) {
+          return { reason: 'reason.methodFoldHere' };
+        }
+        return { text: this.foldName(field.fold) };
+      }
     }
   }
 
@@ -571,6 +697,7 @@ export class EditorSession {
     field: EditField,
     caret: Caret | 'clear',
     extracted?: Extracted,
+    joinsLast = false,
   ): true | EditorMessage {
     if (this.current.readOnly) {
       return 'reason.readOnly';
@@ -591,6 +718,7 @@ export class EditorSession {
         caret: caret === 'clear' ? 'end' : caret,
         ...(call?.kind === 'call' ? { call: { args: call.args, result: call.result } } : {}),
         ...(extracted === undefined ? {} : { extracted }),
+        ...(joinsLast ? { joinsLast: true } : {}),
       },
     });
     return true;
@@ -657,6 +785,16 @@ export class EditorSession {
       case 'branchLabel':
         this.commit(editText(this.current.doc.content, { node: field.branch, text }), keep);
         return;
+      case 'fold': {
+        // An empty name brings the default name back (UX Q4); the region keeps no name.
+        const result = editText(this.current.doc.content, { node: field.fold, text });
+        if (editing.joinsLast === true && result.ok) {
+          this.apply(result.content, keep(), true);
+          return;
+        }
+        this.commit(result, keep);
+        return;
+      }
       case 'missingDefault': {
         // Typing into the empty default cell makes the default branch: one undo step (UX CD1).
         const content = this.current.doc.content;
@@ -945,6 +1083,8 @@ export function keyHintTitle(first: string): EditorMessage | null {
       return 'keyHint.[';
     case ']':
       return 'keyHint.]';
+    case 'z':
+      return 'keyHint.z';
     default:
       return null;
   }

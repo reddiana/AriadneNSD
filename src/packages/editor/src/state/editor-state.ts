@@ -1,5 +1,5 @@
 // What the editor remembers (03-editor 2). Only `doc` goes into the file; the rest is memory.
-import type { Content, Doc, Id, LayoutResult } from '@ariadne-nsd/core';
+import type { Content, Doc, Id, LayoutResult, Path, View } from '@ariadne-nsd/core';
 
 import type { Selection } from './selection';
 
@@ -14,13 +14,16 @@ export type EditField =
   /** The text of a diagram's header: the name, and a Method's parameters (R-BLK-10, R-BLK-11). */
   | { readonly kind: 'head'; readonly diagram: Id }
   /**
-   * One of the two fields of a call block: the arguments after the name, or the result before
-   * it (interaction rules "호출 블록"). `Tab` goes to the other one.
+   * One of the fields of a call block: the arguments after the name, or the result before it
+   * (interaction rules "호출 블록"), and the written name of a call by name (R-BLK-08). `Tab`
+   * goes to the next one.
    */
-  | { readonly kind: 'call'; readonly block: Id; readonly part: CallPart };
+  | { readonly kind: 'call'; readonly block: Id; readonly part: CallPart }
+  /** The name of a fold region (R-EDIT-23). `path` is the opened call path of a site region. */
+  | { readonly kind: 'fold'; readonly fold: Id; readonly path?: Path };
 
 /** The fields of a call block. */
-export type CallPart = 'args' | 'result';
+export type CallPart = 'args' | 'result' | 'name';
 
 /** Where the caret starts (03-keymap): all selected (`Enter` `F2`), at the start (`i`), at the end. */
 export type Caret = 'selectAll' | 'start' | 'end';
@@ -37,7 +40,7 @@ export type Editing = {
    * A call block's two fields as typed so far. Both are written back in one command when the
    * editor closes, so editing them is one undo step (UX MD2).
    */
-  readonly call?: { readonly args: string; readonly result: string };
+  readonly call?: { readonly args: string; readonly result: string; readonly name?: string };
   /**
    * The field opened again because its header name was refused (a clash). `Esc` there puts the
    * name back (UX Q3), and the field is drawn as an input that cannot be accepted (visual design
@@ -49,6 +52,11 @@ export type Editing = {
    * extract's undo step, and closing the field selects the call block left in place (UX XM2).
    */
   readonly extracted?: Extracted;
+  /**
+   * The name typed right after making a fold region joins that undo step (interaction rules
+   * "접기 · 펼치기": the name is asked when the region is made).
+   */
+  readonly joinsLast?: true;
 };
 
 /** What "새 Method로 빼기" left: the call block in place and how many blocks went. */
@@ -110,6 +118,7 @@ function rememberedBlock(selection: Selection | null): Id | null {
       return selection.diagram;
     case 'branchLabel':
     case 'fold':
+    case 'peek':
       return null;
   }
 }
@@ -128,7 +137,8 @@ export function withSelection(state: EditorState, selection: Selection | null): 
 /**
  * A new content from a command: the old content goes on the undo stack and redo is emptied.
  * The same content object means nothing changed: nothing is pushed (01-model 4). `isAmend`
- * keeps the undo stack as it is, so the change joins the last step.
+ * keeps the undo stack as it is, so the change joins the last step. `view` changes the view
+ * state with it (a new fold region folds at once); the view is never an undo step.
  */
 export function withContent(
   state: EditorState,
@@ -137,17 +147,22 @@ export function withContent(
   layout: LayoutResult,
   isDirty: (doc: Doc) => boolean,
   isAmend = false,
+  view: View = state.doc.view,
 ): EditorState {
-  if (content === state.doc.content) {
+  if (content === state.doc.content && view === state.doc.view) {
     return withSelection(state, selection);
   }
-  const doc: Doc = { content, view: state.doc.view };
+  const doc: Doc = { content, view };
+  const isContentChanged = content !== state.doc.content;
   return {
     ...withSelection(state, selection),
     doc,
     // An amend joins the last undo step instead of making one (the name typed after an extract).
-    undo: isAmend ? state.undo : [...state.undo.slice(-(undoLimit - 1)), state.doc.content],
-    redo: [],
+    undo:
+      isAmend || !isContentChanged
+        ? state.undo
+        : [...state.undo.slice(-(undoLimit - 1)), state.doc.content],
+    redo: isContentChanged ? [] : state.redo,
     dirty: isDirty(doc),
     layout,
     revision: state.revision + 1,

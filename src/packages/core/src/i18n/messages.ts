@@ -19,7 +19,13 @@ export type DrawingMessageKey =
   /** The label of a Case's default branch when the user has not written one. */
   | 'case.default'
   /** A call block whose target has no name. */
-  | 'call.noName';
+  | 'call.noName'
+  /** The row of a folded branch or loop body: "⋯ {count} blocks" after the dots (R-EDIT-13). */
+  | 'folded.count'
+  /** The default name of a fold region of several blocks: its first block's text and the rest. */
+  | 'fold.more'
+  /** The first block's text in a default fold region name when that block has no text. */
+  | 'fold.empty';
 
 const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string>>>> = {
   en: {
@@ -27,18 +33,35 @@ const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string
     'if.no': 'false',
     'case.default': 'default',
     'call.noName': '(no name)',
+    'folded.count': '{count} blocks',
+    'fold.more': '{text} and {count} more',
+    'fold.empty': '(empty block)',
   },
   ko: {
     'if.yes': '참',
     'if.no': '거짓',
     'case.default': 'default',
     'call.noName': '(이름 없음)',
+    'folded.count': '블록 {count}개',
+    'fold.more': '{text} 외 {count}개',
+    'fold.empty': '(빈 블록)',
   },
 };
 
-/** Returns the fixed word for a key in a locale. */
-export function drawingMessage(locale: Locale, key: DrawingMessageKey): string {
-  return catalog[locale][key];
+const placeholderPattern = /\{(\w+)\}/g;
+
+/**
+ * Returns the fixed word for a key in a locale. `{name}` placeholders take the given values.
+ */
+export function drawingMessage(
+  locale: Locale,
+  key: DrawingMessageKey,
+  values: Readonly<Record<string, string | number>> = {},
+): string {
+  return catalog[locale][key].replace(placeholderPattern, (whole, name: string) => {
+    const value = values[name];
+    return value === undefined ? whole : String(value);
+  });
 }
 
 /** One key of a message catalog with its text in every screen language. */
@@ -64,8 +87,6 @@ export function catalogEntriesOf<Key extends string>(
     return { key, text };
   });
 }
-
-const placeholderPattern = /\{(\w+)\}/g;
 
 /**
  * What is wrong with a catalog (QA-13): a key missing or empty in a language, or a language whose

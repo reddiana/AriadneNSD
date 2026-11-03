@@ -14,6 +14,7 @@ import {
   whileBlock,
 } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
+import { shownIndexOf } from '../model/shown-index';
 import { selectBlock, selectRange } from '../state/selection';
 import { findDrop, zoneOf } from './drop';
 import { fieldBox, selectionBox } from '../dom/overlay';
@@ -181,7 +182,9 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
   it('T-0241 · R-BLK-10: a click on the header hits the header and selects it', () => {
     const hit = hitTest(headedLayout, headedIndex, middle(head));
     expect(hit).toMatchObject({ kind: 'diagramHead', diagram: 'd1' });
-    expect(hit === null ? null : selectionOfHit(headedIndex, hit)).toEqual({
+    expect(
+      hit === null ? null : selectionOfHit(shownIndexOf(docOf(headed)), headedIndex, hit),
+    ).toEqual({
       kind: 'head',
       diagram: 'd1',
     });

@@ -1,6 +1,7 @@
 // Keyboard navigation (03-editor 2.2, interaction rules "키보드로 이동하고 삽입하기").
 // The rules are functions over the drawn order of one diagram. They use the document only, not
-// the DOM, so they are tested in Node. The MVP draws everything unfolded.
+// the DOM, so they are tested in Node. The editor runs them on the shown tree, where folded
+// things count as one and opened call blocks hold their Method's blocks (`shown-index.ts`).
 import type { Block, Id } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
@@ -186,6 +187,7 @@ function step(
       return stepFromMissingDefault(index, selection.block, direction);
     case 'head':
     case 'fold':
+    case 'peek':
       return stay;
   }
 }
@@ -398,6 +400,7 @@ function branchKey(
     }
     case 'head':
     case 'fold':
+    case 'peek':
       return stay;
   }
 }

@@ -8,7 +8,7 @@ import { union } from '../input/drop';
 import type { DocIndex } from '../model/doc-index';
 import type { EditField } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import { selectedBlocks } from '../state/selection';
+import { selectedBlocks, selectedScreenIds } from '../state/selection';
 
 /** The edit layer colors (visual design 3.4). The same on light and dark screens. */
 export const editColors = {
@@ -17,6 +17,8 @@ export const editColors = {
   'edit.field': '#d0500b',
   'edit.drop': '#d0500b',
   'edit.error': '#b42318',
+  // The fold triangles are on the editing layer in the muted text color (visual design 3.3).
+  'edit.toggle': '#5a6476',
 } as const;
 
 /** What the overlay shows. */
@@ -43,8 +45,11 @@ export function selectionBox(
     return null;
   }
   switch (selection.kind) {
-    case 'blocks': {
-      const boxes = selectedBlocks(index, selection).flatMap((id) => {
+    case 'blocks':
+    case 'peek':
+    case 'fold': {
+      // A block hidden in something folded has that thing's box (02-layout 1.1).
+      const boxes = selectedScreenIds(index, selection).flatMap((id) => {
         const box = layout.boxes.get(id);
         return box === undefined ? [] : [box];
       });
@@ -74,8 +79,6 @@ export function selectionBox(
       }
       return node.style === 'title' ? grow(node.box, titleHeadOutset) : node.box;
     }
-    case 'fold':
-      return null;
   }
 }
 
@@ -117,12 +120,30 @@ export function fieldBox(layout: LayoutResult, field: EditField): Box | null {
       return node?.kind === 'diagramHead' ? headTextBox(node.box, node.style) : null;
     }
     case 'call': {
-      const node = layout.nodes.find((n) => n.kind === 'call' && n.id === field.block);
+      const node = layout.nodes.find(
+        (n) => (n.kind === 'call' || n.kind === 'peek') && n.id === field.block,
+      );
+      if (node?.kind === 'peek') {
+        return node.band;
+      }
       if (node?.kind !== 'call') {
         return null;
       }
       const bar = geometry['size.call-bar'];
       return { ...node.box, x: node.box.x + bar, width: node.box.width - 2 * bar };
+    }
+    case 'fold': {
+      const id =
+        (field.path ?? []).length === 0
+          ? field.fold
+          : [...(field.path ?? []), field.fold].join('/');
+      const node = layout.nodes.find(
+        (n) => (n.kind === 'foldCell' || n.kind === 'foldFrame') && n.id === id,
+      );
+      if (node?.kind === 'foldFrame') {
+        return node.band;
+      }
+      return node?.kind === 'foldCell' ? node.box : null;
     }
   }
 }
@@ -166,6 +187,28 @@ function n(value: number): string {
   return String(Math.round(value * 100) / 100);
 }
 
+/**
+ * A fold triangle in its click box (interaction rules 4): `▾` while open, `▸` while folded.
+ * Only on the editing layer, so it is never saved (UX Q2).
+ */
+function triangle(box: Box, isOpen: boolean): string {
+  const cx = box.x + box.width / 2 + 1;
+  const cy = box.y + Math.min(box.height, geometry['size.band']) / 2;
+  const points = isOpen
+    ? [
+        [cx - 4, cy - 2],
+        [cx + 4, cy - 2],
+        [cx, cy + 3],
+      ]
+    : [
+        [cx - 2, cy - 4],
+        [cx - 2, cy + 4],
+        [cx + 3, cy],
+      ];
+  const d = points.map(([x = 0, y = 0]) => `${n(x)},${n(y)}`).join(' ');
+  return `<polygon points="${d}" fill="${editColors['edit.toggle']}"/>`;
+}
+
 /** The overlay's SVG content (the inside of the overlay `<svg>`). */
 export function overlayContent(input: OverlayInput): string {
   const parts: string[] = [];
@@ -185,6 +228,11 @@ export function overlayContent(input: OverlayInput): string {
     if (box !== undefined) {
       // 1px, 1px inside the block's outer line.
       parts.push(insetRect(box, 1, 1, editColors['edit.hover']));
+    }
+  }
+  for (const region of layout.regions) {
+    if (region.kind === 'toggle') {
+      parts.push(triangle(region.box, region.isOpen));
     }
   }
   const box = selectionBox(layout, index, input.selection);

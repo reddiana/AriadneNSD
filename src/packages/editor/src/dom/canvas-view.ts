@@ -75,6 +75,11 @@ const editingKeys: ReadonlyMap<string, string> = new Map([
   ['F1', 'edit.commandPalette'],
 ]);
 
+/** A field's call path, left out outside opened call blocks. */
+function pathPart(path: ReadonlyArray<Id>): { readonly path?: ReadonlyArray<Id> } {
+  return path.length === 0 ? {} : { path };
+}
+
 function drawingMarkup(svg: RenderedSvg): string {
   return `<svg xmlns="${svgNamespace}" width="${String(svg.width)}" height="${String(svg.height)}" viewBox="${svg.viewBox}"><rect width="100%" height="100%" fill="${svg.paper}"/>${svg.content}</svg>`;
 }
@@ -572,7 +577,8 @@ export class CanvasView {
     this.focus();
     const state = this.session.state;
     const index = this.session.index();
-    const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
+    const shown = this.session.shown();
+    const hit = hitTest(state.layout, shown.index, this.toDrawing(event.clientX, event.clientY));
     if (hit === null) {
       // The empty canvas: the File and Help menus (UX CM1).
       this.session.select(null);
@@ -581,9 +587,11 @@ export class CanvasView {
     }
     const selected = selectedBlocks(index, state.selection);
     const isInSelection =
-      hit.kind === 'block' && ancestorsOf(index, hit.block).some((id) => selected.includes(id));
+      hit.kind === 'block' &&
+      index.blocks.has(hit.block) &&
+      ancestorsOf(index, hit.block).some((id) => selected.includes(id));
     if (!isInSelection) {
-      this.session.select(selectionOfHit(index, hit));
+      this.session.select(selectionOfHit(shown, index, hit));
     }
     this.options.contextMenu({ x: event.clientX, y: event.clientY });
   }
@@ -641,20 +649,30 @@ export class CanvasView {
     this.focus();
     const state = this.session.state;
     const index = this.session.index();
-    const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
+    const shown = this.session.shown();
+    const hit = hitTest(state.layout, shown.index, this.toDrawing(event.clientX, event.clientY));
     if (hit === null) {
       // The empty canvas clears the selection (interaction rules 2) and shows the focus (CF2).
       this.session.select(null);
       this.flashFocus();
       return;
     }
-    const clicked = selectionOfHit(index, hit);
+    const clicked = selectionOfHit(shown, index, hit);
+    if (hit.kind === 'toggle') {
+      // The fold triangle folds or unfolds what it is on (interaction rules 4).
+      this.session.select(clicked);
+      this.options.run('view.fold.toggle');
+      return;
+    }
+    // Only blocks of the model are dragged and widen a range; folded rows, fold regions and
+    // shown blocks of an opened call are selected as they are.
+    const isModelBlock = hit.kind === 'block' && index.blocks.has(hit.block);
     const selected = selectedBlocks(index, state.selection);
     const isInRange =
-      hit.kind === 'block' &&
+      isModelBlock &&
       selected.length > 1 &&
       ancestorsOf(index, hit.block).some((id) => selected.includes(id));
-    if (event.shiftKey && hit.kind === 'block') {
+    if (event.shiftKey && isModelBlock) {
       this.session.select(extendTo(index, state.selection, hit.block));
     } else if (!isInRange) {
       this.session.select(clicked);
@@ -663,7 +681,7 @@ export class CanvasView {
       pointerId: event.pointerId,
       x: event.clientX,
       y: event.clientY,
-      block: hit.kind === 'block' ? hit.block : null,
+      block: isModelBlock ? hit.block : null,
       deferred: isInRange && !event.shiftKey ? clicked : null,
     };
     this.canvas.setPointerCapture(event.pointerId);
@@ -685,7 +703,7 @@ export class CanvasView {
     const state = this.session.state;
     const hit = hitTest(
       state.layout,
-      this.session.index(),
+      this.session.shown().index,
       this.toDrawing(event.clientX, event.clientY),
     );
     const hover = hit?.kind === 'block' ? hit.block : null;
@@ -710,17 +728,31 @@ export class CanvasView {
 
   private onDoubleClick(event: MouseEvent): void {
     const state = this.session.state;
-    const index = this.session.index();
-    const hit = hitTest(state.layout, index, this.toDrawing(event.clientX, event.clientY));
-    if (hit === null) {
+    const shown = this.session.shown();
+    const hit = hitTest(state.layout, shown.index, this.toDrawing(event.clientX, event.clientY));
+    if (hit === null || hit.kind === 'toggle') {
       return;
     }
-    // Double-click edits text everywhere (UX Q2).
+    // Double-click edits text everywhere (UX Q2); a folded row has none and unfolds.
     let field: EditField;
     switch (hit.kind) {
-      case 'block':
-        field = this.session.blockField(hit.block);
+      case 'block': {
+        const meaning = shown.meanings.get(hit.block);
+        if (meaning?.kind === 'row') {
+          event.preventDefault();
+          this.options.run('view.fold.toggle');
+          return;
+        }
+        if (meaning?.kind === 'peek') {
+          this.session.notify('reason.peekReadOnly', 'warn');
+          return;
+        }
+        field =
+          meaning?.kind === 'fold'
+            ? { kind: 'fold', fold: meaning.fold, ...pathPart(meaning.path) }
+            : this.session.blockField(hit.block);
         break;
+      }
       case 'diagramHead':
         field = { kind: 'head', diagram: hit.diagram };
         break;

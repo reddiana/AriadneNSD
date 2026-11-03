@@ -39,6 +39,7 @@ const from = (id: string, navigation: Navigation): Selection | string => {
       return `missing:${selection.block}`;
     case 'head':
     case 'fold':
+    case 'peek':
       return selection.kind;
   }
 };
