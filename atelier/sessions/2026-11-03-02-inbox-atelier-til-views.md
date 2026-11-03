@@ -32,3 +32,15 @@ date: 2026-11-03
 | 아뜰리에 | "작업 공간" · "아틀리에"를 모두 "아뜰리에"로. 승인된 DR은 링크 글자만(Claude 추천), 세션 기록 · 연표는 그대로 |
 | 논리 · 물리 뷰 | 뜻 A: 블록 하나를 설명 문장(논리)과 코드(물리)의 두 얼굴로 봄 |
 | til의 방법론 | 새 주제 "방법론"(메인테이너: "1로 하되 일하는 방식 -> 방법론으로")에 two-worker-scheduling · spike-prototype-mvp, "오픈소스 운영"에 잘못 든 셋은 "테스트와 빌드"로 |
+
+## 한 일
+
+- **테스트 목록:** [[08-test-list]]를 기능 영역 일곱(인수 테스트, 편집 명령과 모델, 키 · 마우스 · 선택, 메뉴 · 화면 · 시작, 파일, 레이아웃 · 그리기 · 글자, 성능)으로 묶음. 요약은 영역 × 유형의 테스트 수, 영역마다 한 줄 설명과 그 문서의 링크, 파일 표, ID가 있는 테스트 표. 파일 → 영역은 `src/scripts/test-list.mjs`의 `areas`가 정하고, 어느 영역에도 들지 않는 새 테스트 파일은 스크립트가 실패한다. "테스트가 없는 ID"는 4장 → 3장(backlog의 링크도 고침)
+- **아뜰리에:** `atelier/README.md`의 제목(사이트의 목록과 탭), README · CONTRIBUTING · CLAUDE.md · `docs/README` · UX 개요 · ADR · DR 목록의 링크 글자, dr-0008의 링크 글자, `pages.yml` · `quartz.layout.ts`의 주석. dr-0013의 표(승인된 DR), 세션 기록, 연표, 시안 HTML은 그대로
+- **til:** [[til/README|TIL]]에 "방법론"(spike-prototype-mvp, two-worker-scheduling)과 "테스트와 빌드"(test-types-and-doubles, bundle-size-budget, yaml-and-json) 주제
+- **논리 · 물리 뷰:** [[01-requirements#^r-ide|R-IDE-08]]과 요구사항의 미결정 "논리 · 물리 뷰의 범위", [[01-model#미결정 사항]]에 담는 자리. Claude의 답: 아키텍처를 지금 바꿀 필요는 없다. 블록에 선택 필드 하나를 더하고 보이는 얼굴은 뷰 상태에 두면 되며, 레이아웃은 보이는 글자를 잴 뿐이다. 웹 1.0 전에는 파일 형식이 바뀌어도 되고, 뒤에도 선택 필드를 더하는 것은 옛 파일을 깨지 않는다
+
+## Claude가 정한 것 (확인받지 못함)
+
+- R-IDE-08의 우선순위를 `P3`(IDE 플러그인 `P2`의 기본기 뒤)로
+- 테스트 목록의 영역 일곱과 그 이름, 파일을 나눈 자리(예: 헤더 이동 `diagrams.test.ts`는 키 · 마우스 · 선택, 셸 계약 `create-editor.test.ts`는 파일)
