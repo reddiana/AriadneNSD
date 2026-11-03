@@ -1,0 +1,423 @@
+<title>M55 브라우저 안의 문서 시안</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* M54와 같은 틀. 앱 화면의 그림은 HTML/CSS로 그린 모형이고, 색은 앱의 화면 색 토큰(editor/src/ui/styles.ts)을 따른다. */
+:root {
+  --bg: #f6f7f9; --fg: #1b2129; --muted: #5b6573; --line: #d4d9e1; --card: #ffffff;
+  --rec: #2c55c9; --tag: #1b2129; --tagfg: #ffffff;
+  --ui-bg: #eef1f6; --ui-panel: #ffffff; --ui-text: #1c2230; --ui-muted: #5a6476; --ui-line: #d4dbe6;
+  --ui-accent: #2c55c9; --ui-accent-soft: #e4eafb; --ui-warn: #b35a10; --ui-shadow: rgba(20, 30, 60, 0.18);
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c;
+  --ui-bg: #12151b; --ui-panel: #1a1e26; --ui-text: #e5e8ee; --ui-muted: #9aa3b3; --ui-line: #2b313c;
+  --ui-accent: #8ba7ff; --ui-accent-soft: #232c45; --ui-warn: #f0a560; --ui-shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c;
+  --ui-bg: #12151b; --ui-panel: #1a1e26; --ui-text: #e5e8ee; --ui-muted: #9aa3b3; --ui-line: #2b313c;
+  --ui-accent: #8ba7ff; --ui-accent-soft: #232c45; --ui-warn: #f0a560; --ui-shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); margin: 0; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 32px; }
+h1 { font-size: 26px; margin: 0; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { margin: 0; font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 14px; min-width: 0; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.note { border-left: 3px solid var(--line); padding-left: 12px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--card); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; max-width: 76ch; }
+.q { border-top: 1px solid var(--line); padding-top: 24px; }
+.q-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.q-id { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--rec); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--rec); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); } .opt dd { margin: 0; min-width: 0; }
+table { border-collapse: collapse; font-size: 14px; width: 100%; }
+td, th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+.tablewrap { overflow-x: auto; }
+.research { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.research .opt { font-size: 14px; }
+
+/* ---- App mockups (screen colour tokens of the app) ---- */
+.app { background: var(--ui-bg); color: var(--ui-text); border: 1px solid var(--ui-line); border-radius: 6px;
+  font: 13px/18px var(--sans); overflow: hidden; position: relative; min-width: 0; }
+.app .bar { display: flex; align-items: center; gap: 2px; height: 30px; padding: 0 8px; background: var(--ui-panel); border-bottom: 1px solid var(--ui-line); }
+.app .bar b { font-weight: 600; margin-right: 8px; }
+.app .bar span.m { padding: 3px 8px; border-radius: 4px; }
+.app .bar span.m.on { background: var(--ui-accent-soft); color: var(--ui-accent); }
+.app .bar .fname { margin-left: auto; color: var(--ui-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip { display: inline-block; font-size: 11px; line-height: 16px; padding: 0 6px; border-radius: 8px; background: var(--ui-accent-soft); color: var(--ui-accent); margin-left: 6px; vertical-align: 1px; }
+.stage { padding: 6px 10px 14px; min-height: 120px; }
+.dd { background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 6px; box-shadow: 0 6px 18px var(--ui-shadow);
+  padding: 4px; width: min(250px, 100%); }
+.dd div { display: flex; gap: 14px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.dd div kbd, .dd div i { margin-left: auto; color: var(--ui-muted); font: 12px var(--sans); border: 0; background: none; padding: 0; font-style: normal; }
+.dd div.new { background: var(--ui-accent-soft); color: var(--ui-accent); font-weight: 600; }
+.dd hr { border: 0; border-top: 1px solid var(--ui-line); margin: 4px 2px; }
+.lab { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--tag); color: var(--tagfg);
+  font: 500 11px var(--mono); flex: none; }
+.dd div .lab { margin-left: 4px; }
+.modal { background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 8px; box-shadow: 0 12px 32px var(--ui-shadow); width: 100%; max-width: 560px; }
+.modal header { display: flex; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--ui-line); font-weight: 600; }
+.modal header span:last-child { margin-left: auto; color: var(--ui-muted); font-weight: 400; }
+.modal .body { padding: 10px 12px; display: grid; gap: 8px; }
+.seg { display: flex; border: 1px solid var(--ui-line); border-radius: 6px; overflow: hidden; width: fit-content; }
+.seg span { padding: 3px 12px; } .seg span.on { background: var(--ui-accent-soft); color: var(--ui-accent); font-weight: 600; }
+.mt { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.mt th, .mt td { padding: 4px 6px; border-bottom: 1px solid var(--ui-line); text-align: left; white-space: nowrap; }
+.mt th { color: var(--ui-muted); font-weight: 400; }
+.mt tr.sel td { background: var(--ui-accent-soft); }
+.mt td.r, .mt th.r { text-align: right; }
+.btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.btn { border: 1px solid var(--ui-line); border-radius: 4px; padding: 2px 10px; background: var(--ui-bg); white-space: nowrap; }
+.btn.pri { background: var(--ui-accent); color: var(--ui-panel); border-color: var(--ui-accent); }
+.btn.danger { color: var(--ui-warn); }
+.btns .left { margin-right: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.warn { color: var(--ui-warn); font-size: 12px; display: flex; gap: 6px; align-items: flex-start; }
+.muted { color: var(--ui-muted); font-size: 12px; }
+.field { border: 1px solid var(--ui-line); border-radius: 4px; padding: 3px 8px; background: var(--ui-bg); }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.card { border: 1px solid var(--ui-line); border-radius: 6px; padding: 4px; display: grid; gap: 2px; font-size: 12px; min-width: 0; }
+.card.sel { border-color: var(--ui-accent); box-shadow: 0 0 0 2px var(--ui-accent-soft); }
+.thumb { aspect-ratio: 16/9; background: #fff; border: 1px solid var(--ui-line); border-radius: 3px; display: grid; place-items: center; }
+.thumb svg { width: 70%; height: 80%; }
+.card b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.statusbar { border-top: 1px solid var(--ui-line); background: var(--ui-panel); padding: 4px 10px; font-size: 12px; color: var(--ui-muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.paperstub { margin: 10px; height: 60px; background: #fff; border: 1px solid var(--ui-line); border-radius: 3px; }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+.flow .step { border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; background: var(--card); }
+.mtwrap { overflow-x: auto; }
+@media (max-width: 520px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M55 · 2026-11-03 · 조작과 모습</div>
+    <h1>M55 브라우저 안의 문서 시안</h1>
+    <p>새 요구사항 R-WEB-09(<code>P1</code>, 웹 베타의 문턱): <i>파일 없이 문서에 이름을 붙여 그 브라우저에 저장하고, 목록에서 열고 지운다. 브라우저 데이터를 지우면 함께 지워진다는 것을 화면에 알리고, 파일로 내보낼 길을 둔다.</i> 본보기는 SequenceDiagram.org의 "Web Storage (localStorage)"입니다. 저장소는 IndexedDB입니다. localStorage는 5 MB쯤에서 막히고, 로컬 백업과 최근 파일이 이미 IndexedDB를 씁니다(상세 설계 웹 1.1, 2).</p>
+    <p class="note">물음은 BS1~BS4 넷입니다. 선택지마다 번호 딱지가 있고 ★가 Claude의 추천입니다. 그림의 <span class="lab">1</span> 같은 작은 딱지는 그 그림에서 새로 생기는 자리입니다. 앱 화면의 그림은 앱의 화면 색을 따른 HTML 모형이라, 글꼴과 아이콘은 실제와 조금 다릅니다.</p>
+  </header>
+
+  <section>
+    <h2>다른 도구는 어떻게 하나</h2>
+    <div class="research">
+      <div class="opt">
+        <h3>SequenceDiagram.org</h3>
+        <ul>
+          <li>저장 창 · 열기 창에 저장소마다 한 칸씩: File System · Google Drive · OneDrive · <b>Web Storage (localStorage)</b> · Download Folder.</li>
+          <li>Web Storage의 열기 창은 표 하나: 모두 고르기 체크박스, <b>Name · Modified · Size</b> 열, 버튼 <b>Cancel · Delete · Open</b>. 여러 개를 골라 한꺼번에 지웁니다.</li>
+          <li>설정 "Default (Ctrl+S / Ctrl+O) Storage"에서 기본 저장소를 고릅니다. "Autosave every 10 min", "Alert for unsaved changes", "Synchronize filename with title in diagram"도 있습니다.</li>
+          <li>Web Storage에는 이름 바꾸기 · 모두 내보내기 · 가져오기가 없고, 브라우저 데이터를 지우면 사라진다는 경고도 화면에 없습니다.</li>
+        </ul>
+      </div>
+      <div class="opt">
+        <h3>draw.io · Excalidraw</h3>
+        <ul>
+          <li>draw.io: 처음 화면에서 저장 위치를 고르고 그중 하나가 "Browser"입니다. 마지막에 쓴 위치를 기억하고, 브라우저였으면 마지막 문서를 바로 엽니다. "나중에 정하기"를 고르면 브라우저에 남지만 "영구히 저장되지 않을 수 있다"고 안내합니다.</li>
+          <li>Excalidraw: 문서 하나가 늘 브라우저에 자동 저장되고, 이름 붙인 목록은 없습니다. 브라우저 데이터가 지워져 그림을 잃었다는 사용자 글이 있고, 목록 · 내보내기를 더하는 확장 프로그램(ExcaliKeep, Excalisave)이 따로 나와 있습니다.</li>
+          <li>배울 점: 목록이 없으면 사용자가 따로 만들어 씁니다. 잃는 위험은 화면에 적어 두어야 합니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>이미 정해져 있는 것</h2>
+    <ul>
+      <li>우선순위 <code>P1</code>, 웹 베타 전에 만듭니다(2026-11-03, 메인테이너).</li>
+      <li>저장소는 IndexedDB이고, 로컬 백업 · 최근 파일과 같은 데이터베이스에 저장소(store)를 하나 더 둡니다.</li>
+      <li>브라우저 데이터를 지우면 함께 지워진다는 것을 화면에 알리고, 파일로 내보낼 길을 둡니다.</li>
+      <li>저장되는 텍스트는 파일 저장과 같은 SVG 문자열입니다(같은 모델이면 같은 텍스트). 그래서 내보낸 파일은 <code>.ns.svg</code> 그대로 열립니다.</li>
+      <li>목록은 그 브라우저에만 있습니다. 다른 기기 · 다른 브라우저와 나누지 않습니다(최근 파일과 같음).</li>
+    </ul>
+  </section>
+
+  <!-- BS1 -->
+  <section class="q">
+    <div class="q-head"><span class="q-id">BS1</span><h2>메뉴의 어디에 둘까요?</h2></div>
+    <p>지금 파일 메뉴: 새로 · 열기… · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ ／ 환경 설정…</p>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>파일 메뉴에 두 항목</h3><span class="star">★ 추천</span></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="m on">파일</span><span class="m">편집</span></div>
+          <div class="stage"><div class="dd">
+            <div>새로</div><div>열기…</div><div>최근 파일 <i>▸</i></div><hr>
+            <div>저장 <kbd>Ctrl+S</kbd></div><div>다른 이름으로 저장…</div><hr>
+            <div class="new">브라우저에 저장… <span class="lab">1</span></div>
+            <div class="new">브라우저의 문서… <span class="lab">2</span></div><hr>
+            <div>내보내기 <i>▸</i></div><div>환경 설정…</div>
+          </div></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>① 이름을 묻고 브라우저에 저장. ② 목록 모달(BS3)을 엶. 커맨드 팔레트에도 같은 이름.</dd>
+          <dt>좋은 점</dt><dd>지금의 열기 · 저장은 그대로입니다. Chromium의 열기는 바로 운영체제의 창이 뜨는데, 그 앞에 창이 하나 더 끼지 않습니다. 메뉴에서 무엇이 되는지 바로 보입니다.</dd>
+          <dt>아쉬운 점</dt><dd>파일 메뉴가 두 줄 길어집니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>열기 · 저장 창 안에서 고르기</h3></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="m">파일</span></div>
+          <div class="stage"><div class="modal">
+            <header><span>열기</span><span>✕</span></header>
+            <div class="body">
+              <div class="seg"><span>이 컴퓨터의 파일</span><span class="on">이 브라우저 <span class="lab">1</span></span></div>
+              <div class="muted">(아래에 BS3의 목록)</div>
+            </div>
+          </div></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>열기… · 다른 이름으로 저장…이 먼저 앱의 창을 띄우고, 거기서 파일과 브라우저를 고름. SequenceDiagram.org · draw.io의 방식.</dd>
+          <dt>좋은 점</dt><dd>저장소가 늘어도(Google Drive) 메뉴는 그대로입니다.</dd>
+          <dt>아쉬운 점</dt><dd>파일을 여는 사람도 늘 한 번 더 누릅니다. 마지막에 고른 쪽을 기억하면 줄지만, 그때는 어느 쪽이 열릴지 헷갈립니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>최근 파일에 섞기</h3></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="m on">파일</span></div>
+          <div class="stage"><div class="dd">
+            <div>최근 · 브라우저의 문서 <i>▸</i></div>
+            <div style="padding-left:20px">병합 정렬 <span class="chip">브라우저</span> <span class="lab">1</span></div>
+            <div style="padding-left:20px">quicksort.ns.svg</div>
+            <div style="padding-left:20px">합과 평균 <span class="chip">브라우저</span></div><hr>
+            <div>저장 <kbd>Ctrl+S</kbd></div><div class="new">브라우저에 저장…</div>
+          </div></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>하위 메뉴 하나에 최근 파일과 브라우저의 문서를 고친 때 순으로. 지우기 · 이름 바꾸기는 항목의 컨텍스트 메뉴.</dd>
+          <dt>좋은 점</dt><dd>메뉴가 한 줄만 늘어납니다.</dd>
+          <dt>아쉬운 점</dt><dd>최근 파일은 열 개까지라 오래된 브라우저 문서가 밀려 안 보입니다. 지우기를 찾기 어렵습니다(휴대폰에는 컨텍스트 메뉴가 없음).</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- BS2 -->
+  <section class="q">
+    <div class="q-head"><span class="q-id">BS2</span><h2>브라우저에 둔 문서에서 <kbd>Ctrl</kbd>+<kbd>S</kbd>는 어디에 저장할까요?</h2></div>
+    <p>지금은 "원래 파일"이 하나 있고, <kbd>Ctrl</kbd>+<kbd>S</kbd>와 자동 저장(Chromium, 편집하고 2초 뒤)은 그 파일에 씁니다. 로컬 백업은 이와 따로, 저장 안 된 편집을 늘 브라우저에 둡니다.</p>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>브라우저가 그 문서의 자리</h3><span class="star">★ 추천</span></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="m">파일</span><span class="fname">병합 정렬<span class="chip">브라우저</span> <span class="lab">1</span></span></div>
+          <div class="paperstub"></div>
+          <div class="statusbar"><span>브라우저에 저장함 · 방금</span></div>
+        </div>
+        <div class="flow"><span class="step">브라우저에 저장… 또는 목록에서 열기</span>→<span class="step"><kbd>Ctrl</kbd>+<kbd>S</kbd> · 자동 저장 = 그 브라우저 문서</span>→<span class="step">다른 이름으로 저장… = 파일로 옮김</span></div>
+        <dl>
+          <dt>규칙</dt><dd>브라우저 문서는 "원래 파일"의 한 종류. 이름 옆에 ① "브라우저" 딱지. 자동 저장도 그리로(쓰기 권한이 필요 없어 모든 브라우저에서).</dd>
+          <dt>좋은 점</dt><dd>파일과 똑같이 움직여 새로 익힐 것이 없습니다. Firefox · Safari 사용자도 내려받기 없이 저장 · 자동 저장을 씁니다. SequenceDiagram.org도 Web Storage로 연 문서는 Save가 그리로 갑니다.</dd>
+          <dt>아쉬운 점</dt><dd>"내 문서가 파일이 아니다"를 잊기 쉽습니다. 그래서 딱지와 BS4의 경고가 필요합니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>그때의 사본만</h3></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="m">파일</span><span class="fname">merge-sort.ns.svg ●</span></div>
+          <div class="paperstub"></div>
+          <div class="statusbar"><span>“병합 정렬 (11월 3일)”을 브라우저에 남겼습니다 <span class="lab">1</span></span></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>"브라우저에 저장…"은 지금 내용을 이름 붙여 남길 뿐. <kbd>Ctrl</kbd>+<kbd>S</kbd>는 언제나 파일. 목록에서 연 문서는 새 문서처럼 열림.</dd>
+          <dt>좋은 점</dt><dd>지금의 저장 규칙이 하나도 바뀌지 않습니다.</dd>
+          <dt>아쉬운 점</dt><dd>목록에서 연 문서를 고친 뒤 <kbd>Ctrl</kbd>+<kbd>S</kbd>를 누르면 파일 저장 창이 떠 놀랍니다. 같은 문서의 사본이 쌓입니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>1번 + 기본 저장소 설정</h3></div>
+        <div class="app">
+          <div class="stage"><div class="modal">
+            <header><span>환경 설정</span><span>✕</span></header>
+            <div class="body">
+              <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span>새 문서의 저장 <span class="lab">1</span></span><span class="field">이 컴퓨터의 파일 ▾</span></div>
+              <div class="muted">이 컴퓨터의 파일 / 이 브라우저</div>
+            </div>
+          </div></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>1번에 더해, 한 번도 저장하지 않은 새 문서의 첫 <kbd>Ctrl</kbd>+<kbd>S</kbd>가 어디로 갈지 설정에서 고름. SequenceDiagram.org의 "Default (Ctrl+S / Ctrl+O) Storage".</dd>
+          <dt>좋은 점</dt><dd>브라우저만 쓰는 사람은 <kbd>Ctrl</kbd>+<kbd>S</kbd> 한 번으로 끝납니다.</dd>
+          <dt>아쉬운 점</dt><dd>설정이 하나 늘고, 같은 키가 사람마다 다르게 움직입니다. 쓰는 사람이 있을 때 더해도 늦지 않습니다.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- BS3 -->
+  <section class="q">
+    <div class="q-head"><span class="q-id">BS3</span><h2>"브라우저의 문서" 목록에는 무엇을 보일까요?</h2></div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>표: 이름 · 고친 때 · 크기</h3><span class="star">★ 추천</span></div>
+        <div class="app"><div class="stage"><div class="modal">
+          <header><span>브라우저의 문서</span><span>✕</span></header>
+          <div class="body">
+            <div class="mtwrap"><table class="mt">
+              <tr><th>이름</th><th>고친 때</th><th class="r">크기</th></tr>
+              <tr class="sel"><td>병합 정렬</td><td>오늘 14:02</td><td class="r">18 KB</td></tr>
+              <tr><td>합과 평균</td><td>어제</td><td class="r">6 KB</td></tr>
+              <tr><td>퀵소트 연습</td><td>10월 28일</td><td class="r">11 KB</td></tr>
+            </table></div>
+            <div class="btns"><span class="left"><span class="btn">이름 바꾸기 <span class="lab">1</span></span><span class="btn">파일로 내보내기</span><span class="btn danger">지우기</span></span><span class="btn pri">열기</span></div>
+          </div>
+        </div></div></div>
+        <dl>
+          <dt>규칙</dt><dd>고친 때 최신순. 줄을 더블클릭 · <kbd>Enter</kbd>로 열기, <kbd>Delete</kbd>로 지우기(묻고). 지금 연 문서는 굵게.</dd>
+          <dt>좋은 점</dt><dd>문서가 쉰 개가 되어도 한눈에 보입니다. SequenceDiagram.org와 같고, 휴대폰에서도 줄 하나가 한 문서라 좁아도 됩니다.</dd>
+          <dt>아쉬운 점</dt><dd>이름만으로는 어느 그림인지 떠오르지 않을 수 있습니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>카드와 썸네일</h3></div>
+        <div class="app"><div class="stage"><div class="modal">
+          <header><span>브라우저의 문서</span><span>✕</span></header>
+          <div class="body">
+            <div class="cards">
+              <div class="card sel"><div class="thumb"><svg viewBox="0 0 40 30"><rect x="1" y="1" width="38" height="28" fill="none" stroke="#5a6476"/><path d="M1 9h38M1 9l19 8 19-8M20 17v12" fill="none" stroke="#5a6476"/></svg></div><b>병합 정렬 <span class="lab">1</span></b><span class="muted">오늘 14:02</span></div>
+              <div class="card"><div class="thumb"><svg viewBox="0 0 40 30"><rect x="1" y="1" width="38" height="28" fill="none" stroke="#5a6476"/><path d="M1 10h38M1 19h38M8 19v10" fill="none" stroke="#5a6476"/></svg></div><b>합과 평균</b><span class="muted">어제</span></div>
+              <div class="card"><div class="thumb"><svg viewBox="0 0 40 30"><rect x="1" y="1" width="38" height="28" fill="none" stroke="#5a6476"/><path d="M1 12h38M1 12l19 9 19-9" fill="none" stroke="#5a6476"/></svg></div><b>퀵소트 연습</b><span class="muted">10월 28일</span></div>
+            </div>
+            <div class="btns"><span class="btn">⋯</span><span class="btn pri">열기</span></div>
+          </div>
+        </div></div></div>
+        <dl>
+          <dt>규칙</dt><dd>예제 모달과 같은 카드. 썸네일은 저장할 때 SVG를 줄여 함께 둠.</dd>
+          <dt>좋은 점</dt><dd>그림으로 알아봅니다. 예제 모달과 모습이 같습니다.</dd>
+          <dt>아쉬운 점</dt><dd>NS 차트는 줄이면 모양이 비슷해 구별이 덜 됩니다. 저장할 때마다 썸네일을 만들어야 하고, 많아지면 스크롤이 깁니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>1번 + 체크박스로 여러 개</h3></div>
+        <div class="app"><div class="stage"><div class="modal">
+          <header><span>브라우저의 문서</span><span>✕</span></header>
+          <div class="body">
+            <div class="mtwrap"><table class="mt">
+              <tr><th>☑ <span class="lab">1</span></th><th>이름</th><th>고친 때</th></tr>
+              <tr class="sel"><td>☑</td><td>병합 정렬</td><td>오늘 14:02</td></tr>
+              <tr class="sel"><td>☑</td><td>합과 평균</td><td>어제</td></tr>
+              <tr><td>☐</td><td>퀵소트 연습</td><td>10월 28일</td></tr>
+            </table></div>
+            <div class="btns"><span class="left"><span class="btn">2개 내보내기</span><span class="btn danger">2개 지우기</span></span><span class="btn pri">열기</span></div>
+          </div>
+        </div></div></div>
+        <dl>
+          <dt>규칙</dt><dd>SequenceDiagram.org 그대로: 모두 고르기와 줄마다의 체크박스.</dd>
+          <dt>좋은 점</dt><dd>한꺼번에 지우고 내보냅니다.</dd>
+          <dt>아쉬운 점</dt><dd>열기는 하나만 되는데 여럿을 고를 수 있어 버튼이 헷갈립니다. 1번도 <kbd>Shift</kbd> · <kbd>Ctrl</kbd>+클릭으로 여러 줄을 고르게 할 수 있습니다(뒤에 더하기 쉬움).</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- BS4 -->
+  <section class="q">
+    <div class="q-head"><span class="q-id">BS4</span><h2>"지우면 함께 지워진다"는 어디에 알리고, 백업은 어떻게 할까요?</h2></div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>저장 창과 목록에 늘 한 줄 + 모두 내보내기 · 가져오기</h3><span class="star">★ 추천</span></div>
+        <div class="app"><div class="stage" style="display:grid;gap:8px">
+          <div class="modal">
+            <header><span>브라우저에 저장</span><span>✕</span></header>
+            <div class="body">
+              <span class="field">병합 정렬</span>
+              <div class="warn"><span>⚠</span><span>이 브라우저 안에만 저장됩니다. 브라우저의 사이트 데이터를 지우면 함께 지워집니다. <span class="lab">1</span></span></div>
+              <div class="btns"><span class="btn">취소</span><span class="btn pri">저장</span></div>
+            </div>
+          </div>
+          <div class="modal">
+            <header><span>브라우저의 문서</span><span>✕</span></header>
+            <div class="body">
+              <div class="muted">(BS3의 표)</div>
+              <div class="warn"><span>⚠</span><span>이 브라우저 안에만 있습니다. 브라우저의 사이트 데이터를 지우면 함께 지워지니, 가끔 파일로 내보내 두세요.</span></div>
+              <div class="btns"><span class="left"><span class="btn">모두 파일로 내보내기 (.zip) <span class="lab">2</span></span><span class="btn">파일에서 가져오기… <span class="lab">3</span></span></span></div>
+            </div>
+          </div>
+        </div></div>
+        <dl>
+          <dt>규칙</dt><dd>① 저장 창과 목록 모달에 늘 같은 경고. ② 모든 문서를 <code>.ns.svg</code> 파일들로 묶은 zip 하나. ③ <code>.ns.svg</code> 여러 개나 그 zip을 브라우저의 문서로 들여옴(다른 기기 · 브라우저로 옮길 때).</dd>
+          <dt>좋은 점</dt><dd>저장하는 때와 찾는 때 모두 보입니다. 백업과 옮기기를 한 번에 할 수 있습니다.</dd>
+          <dt>아쉬운 점</dt><dd>zip을 만드는 작은 라이브러리가 하나 듭니다(fflate 등, 수십 KB). 늘 보이는 경고는 익숙해지면 안 읽힙니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>처음 저장할 때 한 번 + 한 문서씩</h3></div>
+        <div class="app"><div class="stage"><div class="modal">
+          <header><span>브라우저에 저장했습니다</span><span>✕</span></header>
+          <div class="body">
+            <div>브라우저의 문서는 이 브라우저 안에만 있습니다. 사이트 데이터를 지우면 함께 지워집니다. <span class="lab">1</span></div>
+            <div class="btns"><span class="btn">파일로도 내보내기</span><span class="btn pri">알겠습니다</span></div>
+          </div>
+        </div></div></div>
+        <dl>
+          <dt>규칙</dt><dd>처음 한 번만 모달로 알림. 그 뒤로는 목록의 "파일로 내보내기"로 한 문서씩.</dd>
+          <dt>좋은 점</dt><dd>화면이 조용합니다. 라이브러리가 들지 않습니다.</dd>
+          <dt>아쉬운 점</dt><dd>한 달 뒤에는 잊습니다. 문서가 많으면 백업이 번거롭고, 다른 기기로 옮길 길이 없습니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>1번 + 오래 내보내지 않으면 다시 알림</h3></div>
+        <div class="app">
+          <div class="bar"><b>AriadneNSD</b><span class="fname">병합 정렬<span class="chip">브라우저</span></span></div>
+          <div class="paperstub"></div>
+          <div class="statusbar"><span>⚠ 브라우저의 문서 7개를 30일 동안 파일로 내보내지 않았습니다 · <u>모두 내보내기</u> <span class="lab">1</span></span></div>
+        </div>
+        <dl>
+          <dt>규칙</dt><dd>1번에 더해, 마지막 "모두 내보내기"에서 30일이 지나면 상태 표시줄에 한 줄(닫으면 다시 30일 뒤).</dd>
+          <dt>좋은 점</dt><dd>잊어도 다시 떠올립니다.</dd>
+          <dt>아쉬운 점</dt><dd>편집 중에 나타나는 알림이 하나 늘어납니다. 써 보고 잃는 사람이 생기면 더해도 됩니다.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q">
+    <h2>Claude가 정해 둔 것</h2>
+    <p>물음의 추천을 고른다고 보고 정해 둔 것입니다. 다르게 하고 싶은 것만 알려 주세요.</p>
+    <div class="tablewrap"><table>
+      <tr><th>무엇</th><th>정해 둔 것</th></tr>
+      <tr><td>이름</td><td>저장 창의 이름 칸은 첫 다이어그램의 헤더 이름(없으면 "제목 없음")으로 채워 둡니다. 화면 문구는 "브라우저에 저장…" · "브라우저의 문서…", 영어 화면은 "Save in Browser…" · "Documents in This Browser…".</td></tr>
+      <tr><td>같은 이름</td><td>이미 있는 이름이면 "“병합 정렬”이 이미 있습니다. 바꿀까요?"를 묻습니다(바꾸기 · 취소). 이름은 대소문자 · 앞뒤 공백을 무시하고 견줍니다.</td></tr>
+      <tr><td>로컬 백업과의 관계</td><td>브라우저 문서도 1장의 문서 키를 씁니다. 브라우저 문서에 저장되면 파일 저장 때처럼 그 문서의 로컬 백업 칸을 지웁니다. 로컬 백업은 여전히 "저장 안 된 편집"만 맡습니다.</td></tr>
+      <tr><td>자동 저장</td><td>BS2의 1번이면, 브라우저 문서는 모든 브라우저에서 편집하고 2초 뒤 자동 저장합니다(설정의 자동 저장 켬/끔을 따름).</td></tr>
+      <tr><td>최근 파일</td><td>브라우저 문서도 최근 파일 ▸에 "브라우저" 딱지를 달고 보입니다. 목록에서 지우면 최근 파일에서도 빠집니다.</td></tr>
+      <tr><td>한 번도 저장하지 않은 새 문서 (US1)</td><td>다른 문서를 열기 전에 묻는 모달의 버튼을 "버리고 열기 · 취소 · 브라우저에 저장 · 저장"으로 넷으로 합니다. Firefox · Safari에서는 "저장"이 내려받기라, 브라우저 쪽이 더 가볍습니다.</td></tr>
+      <tr><td>다른 이름으로 저장…</td><td>브라우저 문서에서 고르면 파일로 저장하고, 그 뒤로 원래 자리는 그 파일입니다. 브라우저의 문서는 목록에 그대로 남습니다.</td></tr>
+      <tr><td>브라우저가 비우지 않게</td><td>처음 브라우저에 저장할 때 <code>navigator.storage.persist()</code>를 요청합니다(저장 공간이 모자랄 때 브라우저가 이 사이트의 데이터를 먼저 지우지 않게). 허락되지 않아도 저장은 하고, 경고 문구는 그대로입니다.</td></tr>
+      <tr><td>저장 공간이 모자랄 때</td><td>저장이 실패하면 "브라우저의 저장 공간이 모자라 저장하지 못했습니다. 파일로 저장해 주세요."를 알리고 저장 안 됨(●)으로 둡니다.</td></tr>
+      <tr><td>두 탭</td><td>같은 브라우저 문서를 두 탭에서 열면 파일과 같은 규칙(나중 탭은 보기만, BroadcastChannel)입니다.</td></tr>
+      <tr><td>지우기</td><td>"“병합 정렬”을 이 브라우저에서 지울까요? 되돌릴 수 없습니다."(지우기 · 취소). 지금 연 문서를 지우면 편집 화면은 그대로 두고 저장 안 된 새 문서가 됩니다.</td></tr>
+      <tr><td>휴대폰</td><td>목록 모달은 화면 폭에 맞추고, 크기 열은 감춥니다. 버튼은 두 줄로 접힙니다.</td></tr>
+    </table></div>
+  </section>
+
+  <section class="q">
+    <h2>출처</h2>
+    <ul>
+      <li>SequenceDiagram.org 편집 화면의 저장 · 열기 창과 설정: <a href="https://sequencediagram.org/">sequencediagram.org</a>, 사용법 <a href="https://sequencediagram.org/instructions.html">instructions.html</a> (2026-11-03에 봄)</li>
+      <li>draw.io: <a href="https://www.drawio.com/docs/manual/storage-location-select/">Choose where to save your diagram</a></li>
+      <li>Excalidraw: <a href="https://github.com/excalidraw/excalidraw/discussions/7837">GitHub discussion 7837</a>(브라우저 데이터와 함께 그림을 잃은 글)</li>
+    </ul>
+  </section>
+</div>
