@@ -29,7 +29,7 @@ SQL을 쓰면 실행 계획은 옵티마이저가 정하는 것과 같다. 원�
 
 ## AriadneNSD에서 어디에 쓰나
 
-- [[07-testing#1.2 유형과 구성 요소]]의 그림. 그림 안의 `%%` 주석에 위의 까닭을 적었다.
+- [[07-testing#1.2 유형과 구성 요소]]의 그림. 그림 바로 위의 Obsidian 주석에 위의 까닭을 적었다(그림 안에는 `%%`를 쓰지 않는다).
 - 그림을 판마다 찍어 보는 도구: `node site/tools/render-mermaid.cjs <그림.mmd> <결과.png>`. `MERMAID_VERSION=10.9.1`을 붙이면 옛 판으로 그린다. 문법만 검사하는 것은 `site/check-mermaid.mjs`, 빌드한 사이트의 페이지에서 오류 없이 그려졌는지 보는 것은 `node site/tools/check-page-mermaid.cjs <페이지 주소>`다.
 
 ## 더 읽을거리
