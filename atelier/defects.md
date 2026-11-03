@@ -28,6 +28,7 @@ updated: 2026-11-03
 | [[#BUG-09\|BUG-09]] | 2026-11-03 | 블록이나 선택 영역을 드래그하면 지나간 블록들의 글자가 하이라이트됨 | 고침 |
 | [[#BUG-10\|BUG-10]] | 2026-11-03 | 빈 default 칸에서 복사 · 잘라내기를 하면 "삭제할 default 분기가 없습니다"라고 알림 | 고침 |
 | [[#BUG-11\|BUG-11]] | 2026-11-03 | 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 "먼저 블록을 선택하세요"라고 알림 | 고침 |
+| [[#BUG-12\|BUG-12]] | 2026-11-03 | 분기 라벨 · 빈 default 칸에서 `Ctrl`+`←` `→`가 If · Case 블록에서 출발함(If의 오른쪽 라벨에서 `Ctrl`+`→`를 누르면 왼쪽 분기의 첫 블록으로 감) | 고침 |
 
 ## BUG-01
 
@@ -110,3 +111,10 @@ updated: 2026-11-03
 - **원인:** 붙여넣기 · 감싸기 · 풀기의 `when`이 헤더를 따로 보지 않아 "선택 없음"의 문구로 떨어짐
 - **고친 곳:** `packages/editor/src/commands/editor-commands.ts`: 헤더에서 붙여넣기는 "헤더에는 붙여넣을 수 없습니다.", 감싸기는 "헤더는 감쌀 수 없습니다.", 풀기는 "헤더에서는 되지 않습니다. 블록을 선택하세요."라고 알림, 메시지 카탈로그(`packages/editor/src/i18n/messages.ts`)
 - **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0798]] 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 선택한 것이 없다가 아니라 헤더라서 안 된다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
+
+## BUG-12
+
+- **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
+- **원인:** `Ctrl`+`←` `→`가 선택의 초점 블록(`focusBlock`)에서 출발해, 분기 라벨과 빈 default 칸에서는 그 If · Case 블록에서 출발함. If · Case 블록은 분기 밖이라 `Ctrl`+`→`가 `↓`처럼 움직여 첫 분기로 들어감
+- **고친 곳:** `packages/editor/src/navigation/navigate.ts`: 분기 라벨은 그 분기 안, 빈 default 칸은 그 Case의 가장 오른쪽 칸으로 보고 옆 분기를 찾음. 그쪽에 없으면 한 겹 바깥 If · Case로 가고, 바깥에도 없으면 움직이지 않음
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-navigation-navigate-test-ts|T-0799]] 분기 라벨에서 `Ctrl`+`→`는 If · Case 블록에서 출발하지 않고 그 If · Case의 다음 분기로 간다 (단위, `packages/editor/src/navigation/navigate.test.ts`)

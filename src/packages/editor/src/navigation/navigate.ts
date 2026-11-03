@@ -70,10 +70,8 @@ export function navigate(
       const block = focusBlock(index, selection);
       return block === null ? stay : unit(index, block, navigation.direction);
     }
-    case 'branch': {
-      const block = focusBlock(index, selection);
-      return block === null ? stay : sideBranch(index, block, navigation.direction);
-    }
+    case 'branch':
+      return branchKey(index, selection, navigation.direction);
     case 'diagram':
       return neighbourDiagram(index, diagramOf(index, selection), navigation.direction);
     case 'edge': {
@@ -364,9 +362,62 @@ function unit(index: DocIndex, current: Id, direction: 'up' | 'down'): Navigatio
   return stay;
 }
 
+/**
+ * Ctrl+Left / Right. A branch label and the empty default cell count as inside their branch
+ * (the empty default cell is its Case's rightmost column), so the key starts from there.
+ */
+function branchKey(
+  index: DocIndex,
+  selection: Selection,
+  direction: 'left' | 'right',
+): NavigationResult {
+  switch (selection.kind) {
+    case 'blocks':
+      return sideBranch(index, selection.focus, direction);
+    case 'branchLabel': {
+      const place = index.branches.get(selection.branch);
+      if (place === undefined) {
+        return stay;
+      }
+      return (
+        sideOf(index, place.block, place.column, direction) ??
+        outward(index, place.block.id, direction) ??
+        stay
+      );
+    }
+    case 'missingDefault': {
+      const block = index.blocks.get(selection.block)?.block;
+      if (block?.kind !== 'case') {
+        return stay;
+      }
+      return (
+        sideOf(index, block, branchesOf(block).length, direction) ??
+        outward(index, block.id, direction) ??
+        stay
+      );
+    }
+    case 'head':
+    case 'fold':
+      return stay;
+  }
+}
+
 function sideBranch(index: DocIndex, current: Id, direction: 'left' | 'right'): NavigationResult {
+  const result = outward(index, current, direction);
+  if (result !== null) {
+    return result;
+  }
+  return direction === 'right' ? stepDown(index, current) : stepUp(index, current);
+}
+
+/**
+ * The side branch of the nearest If or Case holding `start`, looking further out if needed.
+ * Stays when `start` is in a branch but no If or Case has one on that side; `null` when `start`
+ * is in no branch at all.
+ */
+function outward(index: DocIndex, start: Id, direction: 'left' | 'right'): NavigationResult | null {
   let isInBranch = false;
-  for (let id: Id | null = current; id !== null; id = seqOfBlock(index, id).holder) {
+  for (let id: Id | null = start; id !== null; id = seqOfBlock(index, id).holder) {
     const container = containerOf(index, id);
     if (container === null) {
       break;
@@ -376,20 +427,39 @@ function sideBranch(index: DocIndex, current: Id, direction: 'left' | 'right'): 
       continue;
     }
     isInBranch = true;
-    const branches = branchesOf(block);
-    const column = branches.findIndex((branch) => branch.id === container.branch);
-    const side = branches[column + (direction === 'right' ? 1 : -1)];
-    if (side !== undefined) {
-      return firstOfBranch(index, side.id);
-    }
-    if (direction === 'right' && block.kind === 'case' && block.otherwise === null) {
-      return selectMissingDefault(block.id);
+    const column = branchesOf(block).findIndex((branch) => branch.id === container.branch);
+    const side = sideOf(index, block, column, direction);
+    if (side !== null) {
+      return side;
     }
   }
-  if (isInBranch) {
-    return stay;
+  return isInBranch ? stay : null;
+}
+
+/**
+ * The column beside `column` of an If or Case: its branch's first block, or the empty default
+ * cell right of a Case's last arm. `column` may be the empty default cell's (one past the
+ * branches). `null` when there is none on that side.
+ */
+function sideOf(
+  index: DocIndex,
+  block: Block,
+  column: number,
+  direction: 'left' | 'right',
+): NavigationResult | null {
+  if (!isBranching(block)) {
+    return null;
   }
-  return direction === 'right' ? stepDown(index, current) : stepUp(index, current);
+  const branches = branchesOf(block);
+  const side = branches[column + (direction === 'right' ? 1 : -1)];
+  if (side !== undefined) {
+    return firstOfBranch(index, side.id);
+  }
+  const isLastArm = column === branches.length - 1;
+  if (direction === 'right' && isLastArm && block.kind === 'case' && block.otherwise === null) {
+    return selectMissingDefault(block.id);
+  }
+  return null;
 }
 
 /** The side diagram's header, or its first block when it has none (interaction rules 2). */
