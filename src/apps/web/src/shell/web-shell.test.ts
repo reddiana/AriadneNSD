@@ -1,4 +1,4 @@
-import { assembleSvgFile, createDoc, renderDoc } from '@ariadne-nsd/core';
+import { assembleSvgFile, createDoc, renderDoc, serializeModelJson } from '@ariadne-nsd/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -11,6 +11,7 @@ import type {
 import type { BrowserDb } from '../storage/browser-db';
 import { memoryDb } from '../storage/browser-db';
 import { chooseFileWithInput } from '../files/file-fallback';
+import { browserDeflate, toBase64Url, writeShareLink } from '../files/share-link';
 import { createSettingsStore } from '../storage/settings-store';
 import type { Channel, TabMessage } from './tab-lock';
 import type { Clock } from './timers';
@@ -161,6 +162,7 @@ function setup(options: SetupOptions = {}) {
   const clock = manualClock();
   const titles: string[] = [];
   const logs: string[] = [];
+  const copied: string[] = [];
   const settings = createSettingsStore(null, () => undefined);
   let keys = 0;
   const tabId = options.tabId ?? 'tab';
@@ -180,10 +182,17 @@ function setup(options: SetupOptions = {}) {
     now: () => 1000,
     setTitle: (title) => titles.push(title),
     log: (detail) => logs.push(detail),
+    share: {
+      page: { origin: 'https://ariadnensd.com', pathname: '/' },
+      deflate: browserDeflate(),
+      copyText: async (text) => {
+        copied.push(await text);
+      },
+    },
   });
   const editor = fakeEditor(options.confirm ?? true);
   editor.open(shell.initialDocument());
-  return { shell, editor, db, clock, titles, logs, settings };
+  return { shell, editor, db, clock, titles, logs, settings, copied };
 }
 
 /** A file handle in memory, as Chromium gives it. `permission` is what queryPermission answers. */
@@ -891,5 +900,125 @@ describe('web shell: export, language, tabs', () => {
     await settle();
     expect(second.editor.status().readOnly).toBe(false);
     expect(second.editor.notices.at(-1)).toBe('The other tab closed. You can edit this file now.');
+  });
+});
+
+describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
+  const model = serializeModelJson(newDoc);
+  const link = (name = 'Shared.ns.svg') => writeShareLink(model, name, browserDeflate());
+
+  it('adds "Copy Share Link" to the file menu and copies a link that opens the document', async () => {
+    const { shell, editor, copied } = setup();
+    await shell.start(editor);
+    vi.spyOn(editor, 'snapshot').mockReturnValue(model);
+    const spec = editor.commands.specs.get(shellCommandIds.share);
+    expect(spec?.title).toBe('Copy Share Link');
+    expect(spec?.menu).toMatchObject({ menu: 'file' });
+    await spec?.run(undefined);
+    expect(copied).toHaveLength(1);
+    expect(copied[0]).toMatch(/^https:\/\/ariadnensd\.com\/#ns1\.d\./);
+    expect(editor.notices.at(-1)).toBe(
+      'Copied the share link. Anyone with the link can view this diagram.',
+    );
+  });
+
+  it('opens the link at start in view mode, as a new document, without asking to restore', async () => {
+    const db = memoryDb();
+    await db.putBackup({ key: 'old', name: 'a.ns.svg', snapshot: '{"a":1}', savedAt: 1 });
+    const { shell, editor } = setup({ db });
+    const heard: boolean[] = [];
+    shell.onViewMode((isViewing) => heard.push(isViewing));
+    await shell.start(editor, await link());
+    expect(editor.opened.at(-1)).toMatchObject({ text: null, readOnly: true });
+    expect(editor.opened.at(-1)?.doc?.content).toEqual(newDoc.content);
+    expect(editor.status()).toMatchObject({ name: 'Shared.ns.svg', readOnly: true, dirty: false });
+    expect(shell.isViewing()).toBe(true);
+    expect(heard.at(-1)).toBe(true);
+    // The backup is kept for another time.
+    expect(await db.backups()).toHaveLength(1);
+  });
+
+  it('"Edit" makes the same document editable; its edits are backed up and leaving it asks first', async () => {
+    const { shell, editor, db, clock } = setup();
+    const heard: boolean[] = [];
+    shell.onViewMode((isViewing) => heard.push(isViewing));
+    await shell.start(editor, await link());
+    const opened = editor.opened.length;
+    shell.startEditing();
+    expect(editor.opened.length).toBe(opened);
+    expect(editor.status().readOnly).toBe(false);
+    expect(shell.isViewing()).toBe(false);
+    expect(heard.at(-1)).toBe(false);
+    editor.edit();
+    clock.advance(500);
+    await settle();
+    expect(await db.backups()).toHaveLength(1);
+    // A share link's document was never saved (UX US1).
+    await shell.newDocument();
+    expect(editor.asked).toHaveLength(1);
+    // A second "Edit" does nothing.
+    shell.startEditing();
+    expect(heard.filter((isViewing) => !isViewing)).toHaveLength(1);
+  });
+
+  it('a damaged link at start says why and starts as usual', async () => {
+    const db = memoryDb();
+    await db.putBackup({ key: 'old', name: 'a.ns.svg', snapshot: '{"a":1}', savedAt: 1 });
+    const { shell, editor, logs } = setup({ db });
+    const heard: boolean[] = [];
+    shell.onViewMode((isViewing) => heard.push(isViewing));
+    const fragment = await link();
+    await shell.start(editor, fragment.slice(0, 20));
+    expect(editor.notices).toContain(
+      'This share link is damaged (perhaps cut off) and cannot be opened.',
+    );
+    expect(logs.some((line) => line.startsWith('Cannot open the share link: damaged'))).toBe(true);
+    expect(editor.opened.at(-1)?.restored).toBe('{"a":1}');
+    expect(shell.isViewing()).toBe(false);
+    expect(heard).toEqual([false]);
+  });
+
+  it('a link whose model does not pass the file checks is not opened', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const opened = editor.opened.length;
+    const pack = (value: unknown) =>
+      `ns1.j.${toBase64Url(new TextEncoder().encode(JSON.stringify({ name: 'x', model: value })))}`;
+    await shell.openShareLink(pack({ format: 'ariadne-nsd', version: 1 }));
+    expect(editor.notices.at(-1)).toBe(
+      'This share link is damaged (perhaps cut off) and cannot be opened.',
+    );
+    await shell.openShareLink(pack({ ...(JSON.parse(model) as object), version: 99 }));
+    expect(editor.notices.at(-1)).toBe(
+      'This share link was made by a newer version of AriadneNSD. Reload the page to open it.',
+    );
+    await shell.openShareLink('ns9.d.abc');
+    expect(editor.notices.at(-1)).toMatch(/newer version/);
+    await shell.openShareLink('not-a-link');
+    expect(editor.opened.length).toBe(opened);
+  });
+
+  it('a link opened later asks before it replaces an edited new document, then shows view mode', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    editor.edit();
+    editor.choices.push('cancel');
+    await shell.openShareLink(await link());
+    expect(editor.asked).toHaveLength(1);
+    expect(shell.isViewing()).toBe(false);
+    editor.choices.push('other');
+    await shell.openShareLink(await link('Second.ns.svg'));
+    expect(shell.isViewing()).toBe(true);
+    expect(editor.status().name).toBe('Second.ns.svg');
+  });
+
+  it('opening another document ends view mode; a link without a usable name is untitled', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor, await link('  '));
+    expect(editor.status().name).toBe('Untitled.ns.svg');
+    expect(shell.isViewing()).toBe(true);
+    await shell.newDocument();
+    expect(shell.isViewing()).toBe(false);
+    expect(editor.status().readOnly).toBe(false);
   });
 });

@@ -44,6 +44,7 @@ updated: 2026-11-01
 | QA-18 | 성능 | 느린 휴대폰과 모바일 망에서 웹의 편집 화면이 정해진 시간 안에 보인다 | [[01-requirements#^r-nfr\|R-NFR-09]] | 중간 |
 | QA-19 | 신뢰성 | 시작하다 막히거나 실패해도 빈 화면으로 남지 않는다 | [[01-requirements#^r-nfr\|R-NFR-10]] | 높음 |
 | QA-20 | 호환성 · 사용성 | 휴대폰(Android의 Chrome)에서 터치로 열고 편집한다 | [[01-requirements#^r-nfr\|R-NFR-08]] | 중간 |
+| QA-21 | 보안 · 신뢰성 | 깨지거나 꾸민 공유 링크를 열어도 편집기는 죽지 않고, 작은 링크가 메모리를 다 쓰지 않는다 | [[01-requirements#^r-web\|R-WEB-05]] | 높음 |
 
 "우선"은 아키텍처에 주는 무게입니다. **높음**은 구조를 정하는 시나리오이고(어기면 구조를 바꿔야 함), **중간 · 낮음**은 구현에서 맞출 수 있는 시나리오입니다.
 
@@ -353,6 +354,21 @@ updated: 2026-11-01
 - **테스트:** E2E(Playwright의 Android 폰 흉내: 화면 크기 · 터치 · user agent). 실제 휴대폰은 출시 점검표. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
 - **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
+### QA-21 믿을 수 없는 공유 링크
+
+| 부분 | 내용 |
+| --- | --- |
+| 자극원 | 링크를 만든 누구나(꾸민 사람도) |
+| 자극 | 잘리거나 바뀐 공유 링크, 아주 긴 링크, 작게 꾸렸지만 풀면 아주 커지는 링크(zip bomb), 모델이 파일의 규칙을 어기는 링크를 연다 |
+| 환경 | 웹. 페이지를 처음 열 때나, 열린 탭의 주소창에 붙여 넣을 때 |
+| 대상 | 웹 셸의 공유 링크 읽기(`apps/web/src/files/share-link.ts`)와 모델 파서 |
+| 응답 | 링크를 열지 않고 까닭(손상 · 너무 큼 · 더 새 버전 · 이 브라우저가 풀 수 없음)을 알린 뒤 평소처럼 시작한다. 지금 문서는 바뀌지 않는다 |
+| 응답 측정 | 편집기가 죽는 경우 **0번**. 1 MB가 넘는 링크는 **풀지 않음**. 푼 크기가 16 MB를 넘는 순간 **멈춤** |
+
+- **아키텍처:** 길이를 먼저 보고, 스트림으로 풀며 크기를 세고, 모델은 파일과 같은 검증 파서를 거친다 → [[0042-share-link-in-fragment|ADR-0042]], [[06-web#3. 공유 URL과 보기 모드]]
+- **테스트:** 단위 테스트(잘린 · 바뀐 · 긴 링크, zip bomb, 봉투가 틀린 JSON, 모델 검증 실패)와 E2E(손상된 링크로 페이지를 엶). **실행할 때:** 모든 커밋
+- **테스트 ID:** `apps/web/src/files/share-link.test.ts`, `apps/web/src/shell/web-shell.test.ts`의 "share links and view mode", `apps/web/e2e/share.spec.ts`
+
 ## 3. 테스트 전략
 
 시나리오의 테스트를 종류별로 모으면 다음과 같습니다. 테스트 기반은 MVP 코드와 함께 만들었습니다(속성 기반 테스트 `src/packages/core/src/format/round-trip.test.ts`, 골든 파일 `src/packages/core/golden/`, 의존 규칙 `src/.dependency-cruiser.cjs`, 성능 벤치마크 `src/packages/core/src/render/render.bench.ts`). 표의 "매일 밤" 실행은 아직 없습니다. 도구는 [[0038-build-and-test-tools|ADR-0038]]에서 정했고, 계층마다의 쓰임과 인수 테스트는 [[07-testing]]에 있습니다.
@@ -367,9 +383,9 @@ updated: 2026-11-01
 | 번들 사이즈 체크 | QA-09 | 빌드 산출물 크기 검사 | 모든 커밋 |
 | 정적 분석 | QA-10, QA-13, QA-14 | dependency-cruiser, ESLint, `tsconfig`의 `lib` | 모든 커밋 |
 | 계약 테스트 | QA-10, QA-11, QA-17 | 가짜 `DocumentStore`, 렌더링 백엔드 계약 | 모든 커밋 |
-| E2E | QA-15, QA-19, QA-20 | Playwright(키 입력만, 폰 흉내와 터치) | 모든 커밋(웹), 출시 전 |
+| E2E | QA-15, QA-19, QA-20, QA-21 | Playwright(키 입력만, 폰 흉내와 터치) | 모든 커밋(웹), 출시 전 |
 | 시작 시간 | QA-18 | Playwright(폰 흉내 + CPU · 네트워크 감속) | 모든 커밋(흉내), 출시 전(실제 휴대폰) |
-| 단위 테스트 | QA-16 | Vitest | 모든 커밋 |
+| 단위 테스트 | QA-16, QA-21 | Vitest | 모든 커밋 |
 | 수동 점검표 | QA-03, QA-06 (Obsidian, GitHub, Drive, Safari), QA-18 · QA-20 (실제 휴대폰) | 출시 점검표 | 출시 전 |
 
 ## 4. 미결정 사항
@@ -377,4 +393,4 @@ updated: 2026-11-01
 > [!question] 미결정
 > - 제안값의 확인: QA-01의 명령열 크기, QA-06의 픽셀 차이 1%, QA-07의 기준 기기, QA-08의 1초, QA-09의 300 KB와 3 MB, QA-14의 1분, QA-16의 7:1
 > - QA-07: "블록 500개"를 문서의 블록 수로 셀지, 그려지는 블록 수로 셀지
-> - 보안과 개인 정보의 시나리오: 공유 URL에 담긴 문서, AI 대화창의 API 키, 광고 스크립트와 한 페이지에 있는 것([[01-requirements#6. 미결정 사항]]). 그 기능들(`P1`~`P3`)을 설계할 때 추가한다
+> - 보안과 개인 정보의 시나리오: AI 대화창의 API 키, 광고 스크립트와 한 페이지에 있는 것([[01-requirements#6. 미결정 사항]]). 그 기능들(`P3`)을 설계할 때 추가한다. 공유 링크는 QA-21

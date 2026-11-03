@@ -29,6 +29,12 @@ export type AppProps = {
     listener: (isDragging: boolean) => void,
   ) => () => void; /** The examples: opening one, and the first visit's welcome (R-EDIT-25). */
   readonly examples: ExamplesHost;
+  /** View mode (R-WEB-06): whether the page starts in it, hearing changes, and "Edit". */
+  readonly view: {
+    readonly isViewing: boolean;
+    readonly onViewMode: (listener: (isViewing: boolean) => void) => () => void;
+    readonly onEdit: () => void;
+  };
 };
 
 /**
@@ -37,9 +43,11 @@ export type AppProps = {
  * `confirm`, `prompt`), so there is one place for both.
  */
 export function App(props: AppProps): ReactElement {
-  const { handle, onAppearance, onDragState } = props;
+  const { handle, onAppearance, onDragState, view } = props;
   const [appearance, setAppearance] = useState(props.appearance);
   const [isDragging, setDragging] = useState(false);
+  const [isViewing, setViewing] = useState(view.isViewing);
+  const { onViewMode, onEdit } = view;
   useEffect(
     () =>
       onAppearance((next) => {
@@ -49,6 +57,7 @@ export function App(props: AppProps): ReactElement {
     [handle, onAppearance],
   );
   useEffect(() => onDragState(setDragging), [onDragState]);
+  useEffect(() => onViewMode(setViewing), [onViewMode]);
   return (
     <>
       <EditorApp
@@ -59,6 +68,7 @@ export function App(props: AppProps): ReactElement {
         settings={props.settings}
         manualUrl={manualUrl(props.locale)}
         examples={props.examples}
+        {...(isViewing ? { viewMode: { onEdit } } : {})}
       />
       {isDragging ? <div className="ans-web-drop">{dropHint(props.locale)}</div> : null}
     </>

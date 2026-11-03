@@ -84,6 +84,9 @@ const en = {
   'examples.blank': 'Blank document',
   'examples.blankWhat': 'New document',
   'examples.openFile': 'Open File…',
+  'view.label': 'View mode',
+  'view.edit': 'Edit',
+  'view.editTip': 'Edit this diagram. Your copy stays in this browser until you save it.',
 } as const;
 
 /** The keys of the UI's screen strings. */
@@ -166,6 +169,9 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'examples.blank': '빈 문서',
   'examples.blankWhat': '새 문서',
   'examples.openFile': '파일 열기…',
+  'view.label': '보기 모드',
+  'view.edit': '편집하기',
+  'view.editTip': '이 다이어그램을 편집합니다. 저장하기 전에는 이 브라우저에만 남습니다.',
 };
 
 const catalog: Readonly<Record<Locale, Readonly<Record<UiMessageKey, string>>>> = { en, ko };
