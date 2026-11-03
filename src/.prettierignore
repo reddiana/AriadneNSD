@@ -9,3 +9,5 @@ packages/fonts/assets/
 # Markdown follows the repository document style (Obsidian), not Prettier.
 *.md
 apps/manual/generated/
+# Written by scripts/build-fonts.py; a rebuild must give the same bytes.
+packages/fonts/src/generated/screen-slices.ts

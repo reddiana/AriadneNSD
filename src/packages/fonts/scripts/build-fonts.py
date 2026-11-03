@@ -2,13 +2,17 @@
 
 Outputs (committed to the repository, regenerate only when the source font changes):
   assets/ariadne-nsd-mono-regular.ttf    subset TTF: the source for per-document subsets (ADR-0026)
-  assets/ariadne-nsd-mono-regular.woff2  the same glyphs for the editor screen (02-layout 2.2)
+  assets/ariadne-nsd-mono-regular.woff2  the same glyphs in one file, for other hosts (02-layout 2.2)
+  assets/screen/…NN.woff2                the same glyphs in slices, for the web screen (ADR-0040)
   assets/OFL.txt                          the font license
   src/generated/advance-widths.ts         advance-width ranges (02-layout 2.1)
+  src/generated/screen-slices.ts          the characters of each slice (CSS unicode-range)
 
 Usage (from src/packages/fonts):
   py -3.14 -I scripts/build-fonts.py              download the pinned release and build
   py -3.14 -I scripts/build-fonts.py --zip X.zip  build from an already downloaded release zip
+  py -3.14 -I scripts/build-fonts.py --slices-only     only cut the slices from the committed TTF
+  py -3.14 -I scripts/build-fonts.py --recount-hangul  count the Hangul order again (see below)
 
 Needs fontTools and brotli (pip install fonttools brotli).
 
@@ -68,7 +72,30 @@ UNICODE_BLOCKS = {
 
 PACKAGE_DIR = Path(__file__).resolve().parent.parent
 ASSETS_DIR = PACKAGE_DIR / 'assets'
+SLICES_DIR = ASSETS_DIR / 'screen'
 GENERATED_FILE = PACKAGE_DIR / 'src' / 'generated' / 'advance-widths.ts'
+SLICES_FILE = PACKAGE_DIR / 'src' / 'generated' / 'screen-slices.ts'
+REPO_DIR = PACKAGE_DIR.parent.parent.parent
+
+# The screen slices (ADR-0040). The browser downloads only the slices whose characters are on
+# screen. Slice 0 (Latin, punctuation, symbols) is loaded at start, the others when a character
+# of theirs shows. Hangul syllables: the ones in HANGUL_ORDER_FILE by how often they are used, in
+# small slices; all others in code point order, in larger slices.
+SLICE_GROUPS: list[tuple[str, list[tuple[int, int]]]] = [
+    ('Latin, punctuation, symbols', [
+        (0x20, 0xFF), (0x2000, 0x206F), (0x2190, 0x22FF), (0x2500, 0x25FF), (0x27C0, 0x29FF),
+    ]),
+    ('Latin Extended, Greek, Cyrillic', [(0x100, 0x24F), (0x370, 0x4FF)]),
+    ('CJK punctuation, kana, Hangul jamo, full width', [
+        (0x3000, 0x30FF), (0x3130, 0x318F), (0xFF00, 0xFFEF),
+    ]),
+]
+COMMON_HANGUL_PER_SLICE = 100
+RARE_HANGUL_PER_SLICE = 400
+# The Hangul syllables of the repository's Korean documents, most used first. Counted once
+# (2026-11-03) and committed, so that a rebuild gives the same slices.
+HANGUL_ORDER_FILE = PACKAGE_DIR / 'scripts' / 'hangul-order.txt'
+HANGUL_SOURCES = ['docs', 'atelier', 'til', 'journal']
 
 
 def read_release(zip_path: Path | None) -> tuple[bytes, bytes]:
@@ -189,12 +216,135 @@ def write_table(default: int, units_per_em: int, ranges: list[list[int]], stats:
     )
 
 
+def is_hangul(code_point: int) -> bool:
+    return 0xAC00 <= code_point <= 0xD7A3
+
+
+def recount_hangul() -> None:
+    counts: dict[int, int] = {}
+    for folder in HANGUL_SOURCES:
+        for path in sorted((REPO_DIR / folder).rglob('*.md')):
+            for char in path.read_text(encoding='utf-8'):
+                if is_hangul(ord(char)):
+                    counts[ord(char)] = counts.get(ord(char), 0) + 1
+    ranked = sorted(counts, key=lambda c: (-counts[c], c))
+    HANGUL_ORDER_FILE.write_text(
+        ''.join(chr(c) for c in ranked) + '\n', encoding='utf-8', newline='\n'
+    )
+    print(f'{len(ranked)} syllables, {sum(counts.values())} in all -> {HANGUL_ORDER_FILE.name}')
+
+
+def slice_code_points(covered: list[int]) -> list[tuple[str, list[int]]]:
+    """The slices: a name and the code points of each. Every covered code point is in one."""
+    rest = set(covered)
+    slices: list[tuple[str, list[int]]] = []
+    for name, ranges in SLICE_GROUPS:
+        points = [c for c in covered if any(lo <= c <= hi for lo, hi in ranges)]
+        rest -= set(points)
+        slices.append((name, points))
+    hangul = sorted(c for c in rest if is_hangul(c))
+    rest -= set(hangul)
+    if rest:
+        raise SystemExit(f'Code points in no slice: {[hex(c) for c in sorted(rest)][:20]}')
+    in_font = set(hangul)
+    order = [ord(c) for c in HANGUL_ORDER_FILE.read_text(encoding='utf-8').strip()]
+    common = [c for c in order if c in in_font]
+    placed = set(common)
+    # The rest in code point order, so each slice is a few long runs (a short unicode-range).
+    rare = [c for c in hangul if c not in placed]
+    for kind, codes, size in (
+        ('common', common, COMMON_HANGUL_PER_SLICE),
+        ('rare', rare, RARE_HANGUL_PER_SLICE),
+    ):
+        starts = list(range(0, len(codes), size))
+        # A short last slice joins the one before: Vite would inline a tiny file into the script.
+        if len(starts) > 1 and len(codes) - starts[-1] < size // 2:
+            starts.pop()
+        for at, start in enumerate(starts):
+            end = starts[at + 1] if at + 1 < len(starts) else len(codes)
+            slices.append((f'Hangul, {kind} {start + 1}-{end}', codes[start:end]))
+    return slices
+
+
+def unicode_range(points: list[int]) -> str:
+    """The CSS unicode-range of sorted code points, runs joined: `U+20-7E, U+AC00`."""
+    runs: list[list[int]] = []
+    for c in points:
+        if runs and runs[-1][1] == c - 1:
+            runs[-1][1] = c
+        else:
+            runs.append([c, c])
+    return ', '.join(f'U+{lo:X}' if lo == hi else f'U+{lo:X}-{hi:X}' for lo, hi in runs)
+
+
+def cut_slice(ttf: bytes, points: list[int]) -> bytes:
+    options = subset.Options()
+    options.flavor = 'woff2'
+    options.name_IDs = ['*']
+    options.name_languages = ['*']
+    options.notdef_outline = True
+    options.layout_features = ['*']
+    font = TTFont(io.BytesIO(ttf), recalcTimestamp=False)
+    subsetter = subset.Subsetter(options)
+    subsetter.populate(unicodes=points)
+    subsetter.subset(font)
+    return save(font, 'woff2')
+
+
+def write_slices(ttf: bytes) -> None:
+    covered = sorted(TTFont(io.BytesIO(ttf)).getBestCmap())
+    slices = slice_code_points(covered)
+    SLICES_DIR.mkdir(exist_ok=True)
+    for old in SLICES_DIR.glob('*.woff2'):
+        old.unlink()
+    rows = []
+    total = 0
+    for index, (name, points) in enumerate(slices):
+        file = f'{FILE_STEM}.{index:02d}.woff2'
+        data = cut_slice(ttf, sorted(points))
+        (SLICES_DIR / file).write_bytes(data)
+        total += len(data)
+        # Written short, so the list adds little to the first download: the characters of a
+        # common Hangul slice, the first and last code point of a rare one (all syllables
+        # between them that no common slice holds), the unicode-range of the others.
+        if name.startswith('Hangul, common'):
+            where = f"chars: '{''.join(chr(c) for c in points)}'"
+        elif name.startswith('Hangul, rare'):
+            where = f'from: 0x{min(points):X}, to: 0x{max(points):X}'
+        else:
+            where = f"unicodeRange: '{unicode_range(sorted(points))}'"
+        rows.append(
+            f'  // {index:02d}: {name}, {len(data) / 1024:.1f} KB\n'
+            f"  {{ file: '{file}', count: {len(points)}, {where} }},"
+        )
+    SLICES_FILE.write_text(
+        '// Generated by scripts/build-fonts.py. Do not edit.\n'
+        "import type { ScreenSliceData } from '../screen-slice-types';\n"
+        '\n'
+        '/** The screen font in slices (ADR-0040), as written by the build. */\n'
+        'export const screenSliceData: ReadonlyArray<ScreenSliceData> = [\n'
+        + '\n'.join(rows)
+        + '\n];\n',
+        encoding='utf-8',
+        newline='\n',
+    )
+    print(f'{len(slices)} screen slices, {total / 1024:.0f} KB in all')
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument('--zip', type=Path, help='an already downloaded release zip')
+    parser.add_argument('--slices-only', action='store_true', help='only cut the screen slices')
+    parser.add_argument('--recount-hangul', action='store_true', help='count the Hangul order')
     args = parser.parse_args()
+    if args.recount_hangul:
+        recount_hangul()
+        return
+    if args.slices_only:
+        write_slices((ASSETS_DIR / f'{FILE_STEM}.ttf').read_bytes())
+        return
 
     ttc_bytes, license_bytes = read_release(args.zip)
     collection = TTCollection(io.BytesIO(ttc_bytes))
@@ -222,6 +372,7 @@ def main() -> None:
         f'{len(covered)} code points, advances {json.dumps(widths)}.'
     )
     write_table(default, units_per_em, ranges, stats)
+    write_slices(ttf)
 
     print(stats)
     print(f'{len(ranges)} non-default ranges, default advance {default}, unitsPerEm {units_per_em}')

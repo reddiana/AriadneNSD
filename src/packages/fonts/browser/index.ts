@@ -16,3 +16,19 @@ export async function createBrowserSubsetter(): Promise<Subsetter> {
   }
   return createSubsetter(new Uint8Array(await response.arrayBuffer()));
 }
+
+// The screen font slices (ADR-0040). Vite copies each into the build and gives its URL.
+const sliceUrls = import.meta.glob<string>('../assets/screen/*.woff2', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+});
+
+/** The URL of a screen font slice in a Vite build (`ScreenSlice.file`). */
+export function screenSliceUrl(file: string): string {
+  const url = sliceUrls[`../assets/screen/${file}`];
+  if (url === undefined) {
+    throw new Error(`No screen font slice ${file}`);
+  }
+  return url;
+}

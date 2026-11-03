@@ -97,16 +97,17 @@ updated: 2026-11-01
 
 웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 넘겨 준다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about`), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]])이 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 자리에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
 
-빌드 산출물(Vite, 2026-11-01)은 둘로 나뉘어 내려옵니다.
+빌드 산출물(Vite, 2026-11-03)은 셋으로 나뉘어 내려옵니다.
 
 | 언제 | 무엇 | 크기 |
 | --- | --- | --- |
-| 페이지를 열 때 | JS 하나(React와 `core` · `editor` · 셸) | 425 KB (gzip 134 KB) |
-| 〃 | 화면에 쓰는 블록 글꼴(woff2) | 328 KB |
+| 페이지를 열 때 | JS 하나(React와 `core` · `editor` · 셸) | 492 KB (gzip 156 KB) |
+| 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
+| 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |
 | 처음 저장 · 내보내기를 할 때(자동 저장이면 첫 편집 뒤) | 서브세팅 wasm(`hb-subset`) | 667 KB |
 | 〃 | 서브셋을 떠낼 번들 글꼴(TTF) | 1.34 MB |
 
-CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴, gzip)이 540 KB(첫 빌드의 450 KB + 20%) 안인지 봅니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
+CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip)이 212 KB(글꼴을 조각으로 나눈 뒤의 176 KB + 20%) 안인지 봅니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
 
 > [!info] 미완성: 코드 스플리팅, 캐시 전략
 

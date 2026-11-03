@@ -119,7 +119,7 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 
 | 언제 | 무엇을 | 걸리는 시간(목표) |
 | --- | --- | --- |
-| Pull Request와 `main`에 push할 때마다 | `pnpm check`(타입 검사 → ESLint → Prettier → 의존 방향 → 단위 · 속성 · 골든 · 계약 테스트) → 웹 빌드와 번들 사이즈 체크(bundle size budget, 첫 내려받기 540 KB, [[06-web#5. 배포]]) → 웹 E2E(Chromium) | 10분 안 |
+| Pull Request와 `main`에 push할 때마다 | `pnpm check`(타입 검사 → ESLint → Prettier → 의존 방향 → 단위 · 속성 · 골든 · 계약 테스트) → 웹 빌드와 번들 사이즈 체크(bundle size budget, 첫 내려받기 212 KB, [[06-web#5. 배포]]) → 웹 E2E(Chromium) | 10분 안 |
 | 매일 밤 | 긴 퍼징, 벤치마크 기록(느려지면 알림). 아직 만들지 않음 | — |
 | 출시 전 | 기준 기기에서 성능, 수동 점검표(AT-08 · AT-10) | — |
 

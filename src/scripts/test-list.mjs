@@ -97,12 +97,14 @@ const areas = [
   },
   {
     name: '레이아웃 · 그리기 · 글자',
-    about: '블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋 → [[02-layout]]',
+    about:
+      '블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
     paths: [
       'packages/core/src/layout/',
       'packages/core/src/render/render-doc',
       'packages/core/src/text/',
       'packages/fonts/',
+      'apps/web/e2e/fonts.spec.ts',
     ],
   },
   {
