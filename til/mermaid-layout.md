@@ -29,7 +29,7 @@ SQL을 쓰면 실행 계획은 옵티마이저가 정하는 것과 같다. 원�
 
 ## AriadneNSD에서 어디에 쓰나
 
-- [[07-testing#1.2 유형과 구성 요소]]의 그림. 그림 바로 위의 Obsidian 주석에 위의 까닭을 적었다(그림 안에는 `%%`를 쓰지 않는다).
+- [[07-testing#1.2 유형과 구성 요소]]의 그림을 이렇게 다듬다가, 끝내 SVG로 직접 그렸다(`docs/04-design/assets/testing-types-components.svg`). 상자를 겹쳐 담기만 하는 그림은 Mermaid의 자동 배치를 달래기보다 SVG로 그리는 편이 낫다: 배치와 글자 크기를 정할 수 있고, 판이나 사이트 처리에 따라 달라지지 않는다. 사이트에서는 넓은 Mermaid 그림이 본문 폭(약 750px)에 맞춰 줄어 글자가 작아진다(1633px → 45%).
 - 그림을 판마다 찍어 보는 도구: `node site/tools/render-mermaid.cjs <그림.mmd> <결과.png>`. `MERMAID_VERSION=10.9.1`을 붙이면 옛 판으로 그린다. 문법만 검사하는 것은 `site/check-mermaid.mjs`, 빌드한 사이트의 페이지에서 오류 없이 그려졌는지 보는 것은 `node site/tools/check-page-mermaid.cjs <페이지 주소>`다.
 
 ## 더 읽을거리

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="368" viewBox="0 0 720 368">
+<style>
+  .t { font-family: "IBM Plex Sans KR", "Malgun Gothic", sans-serif; text-anchor: middle; }
+  .title { font-size: 14px; font-weight: 600; fill: #1c2230; }
+  .sub { font-size: 12px; fill: #5a6372; }
+  .name { font-size: 13px; font-weight: 600; fill: #151a22; }
+  .desc { font-size: 12px; fill: #3a4250; }
+  .node { fill: #ffffff; stroke: #5b77ad; stroke-width: 1; }
+</style>
+<rect width="720" height="368" fill="#ffffff"/>
+<g transform="translate(.5 .5)">
+  <!-- E2E -->
+  <rect x="8" y="8" width="704" height="352" rx="6" fill="#f7f5ec" stroke="#a39a6b"/>
+  <text class="t title" x="360" y="30">E2E</text>
+  <text class="t sub" x="360" y="47">빌드한 웹 앱 + Chromium</text>
+
+  <!-- 통합 -->
+  <rect x="24" y="60" width="490" height="284" rx="6" fill="#eef2f8" stroke="#7d8db0"/>
+  <text class="t title" x="269" y="82">통합</text>
+  <text class="t sub" x="269" y="99">Node · 가짜 셸 · happy-dom</text>
+
+  <!-- 단위 -->
+  <rect x="40" y="112" width="250" height="216" rx="6" fill="#edf5ee" stroke="#7aa287"/>
+  <text class="t title" x="165" y="133">단위</text>
+  <text class="t sub" x="165" y="150">Node</text>
+
+  <rect class="node" x="58" y="162" width="214" height="44" rx="3"/>
+  <text class="t name" x="165" y="180">core</text>
+  <text class="t desc" x="165" y="197">모델 · 명령 · 레이아웃 · 파일 형식</text>
+
+  <rect class="node" x="58" y="216" width="214" height="44" rx="3"/>
+  <text class="t name" x="165" y="234">fonts</text>
+  <text class="t desc" x="165" y="251">advance 폭 · 서브셋</text>
+
+  <rect class="node" x="58" y="270" width="214" height="44" rx="3"/>
+  <text class="t name" x="165" y="288">editor의 순수 함수</text>
+  <text class="t desc" x="165" y="305">이동 · 히트 테스트 · 키 읽기</text>
+
+  <!-- 통합에만 드는 것 -->
+  <rect class="node" x="310" y="184" width="188" height="44" rx="3"/>
+  <text class="t name" x="404" y="202">editor</text>
+  <text class="t desc" x="404" y="219">엔진 · 화면(React)</text>
+
+  <rect class="node" x="310" y="240" width="188" height="44" rx="3"/>
+  <text class="t name" x="404" y="258">웹 셸</text>
+  <text class="t desc" x="404" y="275">저장 · 로컬 백업 · 최근 파일</text>
+
+  <!-- E2E에만 드는 것 -->
+  <rect class="node" x="530" y="170" width="166" height="62" rx="3"/>
+  <text class="t name" x="613" y="189">브라우저</text>
+  <text class="t desc" x="613" y="206">CSS · 포커스 · 파일</text>
+  <text class="t desc" x="613" y="222">IndexedDB · 시작</text>
+</g>
+</svg>
