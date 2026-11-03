@@ -1,0 +1,17 @@
+{
+  "Contrast of the themes (visual design 3.3, 8 and 10.1, QA-16)": "테마들의 대비(시각 디자인 3.3 · 8 · 10.1)",
+  "has the light, dark, high contrast and print themes, light first": "테마는 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄이고, 밝은 테마가 처음이다",
+  "draws an unknown theme name with the default theme": "모르는 테마 이름은 기본 테마로 그린다",
+  "${theme.id}: every token is a #rrggbb color and the kind matches the paper": "${theme.id}: 모든 토큰이 #rrggbb 색이고, 테마의 종류(밝음 · 어두움)가 종이의 밝기와 맞는다",
+  "${theme.id}: block texts stand out from the paper and every block background": "${theme.id}: 블록 텍스트가 종이와 모든 블록 배경 위에서 기준 대비를 넘는다(4.5:1, 고대비는 7:1)",
+  "${theme.id}: lines with a meaning stand out from the paper and every block background": "${theme.id}: 뜻을 가진 선이 종이와 모든 블록 배경 위에서 기준 대비를 넘는다(3:1, 고대비는 7:1)",
+  "${theme.id}: texts on the fold and peek bands stand out": "${theme.id}: 접기 영역과 펴 보기의 띠 위 텍스트가 기준 대비를 넘는다",
+  "print has white backgrounds, black lines and texts, and no syntax colors": "흑백 인쇄는 배경이 모두 흰색, 선과 텍스트가 검정이고 구문 강조 색이 없다",
+  "choosing a theme redraws the paper and the inline editor in it, and is undoable": "테마를 고르면 종이와 인라인 에디터를 그 색으로 다시 그리고, 실행 취소할 수 있다",
+  "the document settings list every theme, light first": "문서 설정에 모든 테마가 밝은 테마부터 나온다",
+  "picks the colors by the kind of paper": "편집 레이어의 색을 종이의 종류(밝음 · 어두움)로 고른다",
+  "${theme.id}: the selection, hover, drop and error marks have 3:1 on what they are drawn on": "${theme.id}: 선택 · 호버 · 드롭 위치 · 오류 표시가 그려지는 배경 위에서 3:1을 넘는다",
+  "draws the selection and the hover in the colors it is given": "선택과 호버를 받은 색으로 그린다",
+  "the theme recolors the drawing and the inline editor, and undo puts it back": "테마를 바꾸면 그림과 인라인 에디터의 색이 바뀌고, 실행 취소하면 되돌아간다",
+  "the screen colors follow the OS asking for more contrast": "운영체제가 더 높은 대비를 요청하면 화면 색이 고대비 화면 색으로 바뀐다"
+}

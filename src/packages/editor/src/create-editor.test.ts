@@ -526,7 +526,7 @@ describe('rarer parts of the shell contract (03-editor 6)', () => {
     expect(handle.documentSetting('document.textKind')).toBe('plain');
     expect(handle.documentSetting('document.theme')).toBe('default');
     expect(handle.documentSetting('nope')).toBeUndefined();
-    handle.setDocumentSetting('document.theme', 'dark');
+    handle.setDocumentSetting('document.theme', 'midnight');
     handle.setDocumentSetting('document.textKind', 'markdown');
     handle.setDocumentSetting('nope', 'x');
     expect(handle.state().undo).toHaveLength(0);
@@ -534,6 +534,40 @@ describe('rarer parts of the shell contract (03-editor 6)', () => {
     handle.setDocumentSetting('document.textKind', 'plain');
     expect(handle.documentSetting('document.theme')).toBe('default');
     expect(handle.documentSetting('document.textKind')).toBe('plain');
+  });
+
+  it('R-LAY-08 · UX TH3: choosing a theme redraws the paper and the inline editor in it, and is undoable', async () => {
+    const { handle, host } = make();
+    const canvas = host.querySelector<HTMLElement>('.ans-canvas');
+    const paper = (): string | null | undefined =>
+      host.querySelector('.ans-document rect')?.getAttribute('fill');
+    expect(paper()).toBe('#ffffff');
+    handle.setDocumentSetting('document.theme', 'dark');
+    expect(handle.documentSetting('document.theme')).toBe('dark');
+    expect(handle.status().dirty).toBe(true);
+    expect(handle.state().doc.content.settings.theme).toBe('dark');
+    handle.commands.run('edit.undo');
+    expect(handle.documentSetting('document.theme')).toBe('default');
+    handle.commands.run('edit.redo');
+    expect(handle.documentSetting('document.theme')).toBe('dark');
+    await tick();
+    expect(canvas?.dataset.theme).toBe('dark');
+    expect(paper()).toBe('#171a21');
+    expect(canvas?.style.getPropertyValue('--ans-field-paper')).toBe('#171a21');
+    expect(canvas?.style.getPropertyValue('--ans-edit-field')).toBe('#f08a4b');
+  });
+
+  it('R-LAY-08: the document settings list every theme, light first', () => {
+    const { handle } = make();
+    const spec = handle.settingsSchema.list().find((s) => s.id === 'document.theme');
+    expect(spec?.scope).toBe('document');
+    expect(spec?.values).toEqual(['default', 'dark', 'high-contrast', 'print']);
+    expect(spec?.valueTitles).toEqual([
+      'setting.theme.default',
+      'setting.theme.dark',
+      'setting.theme.high-contrast',
+      'setting.theme.print',
+    ]);
   });
 
   it('T-0735: 03-editor 6.4: a document setting is not changed while view only', () => {
@@ -713,7 +747,11 @@ describe('the drawing language in the document (ADR-0041)', () => {
   it('T-0820: the setting is listed for the document settings, after the block text language', () => {
     const handle = makeIn('en');
     const specs = handle.settingsSchema.list().filter((spec) => spec.scope === 'document');
-    expect(specs.map((spec) => spec.id)).toEqual(['document.locale', 'document.headStyle']);
+    expect(specs.map((spec) => spec.id)).toEqual([
+      'document.locale',
+      'document.headStyle',
+      'document.theme',
+    ]);
     expect(specs[0]).toMatchObject({
       title: 'setting.documentLocale',
       hint: 'setting.documentLocale.hint',

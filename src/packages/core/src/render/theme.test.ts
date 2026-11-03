@@ -1,9 +1,9 @@
-// Contrast of the light default theme (visual design 3.3 and 10.1, QA-16): every text and every
+// Contrast of the themes (visual design 3.3, 8 and 10.1, QA-16): every text and every
 // line with a meaning stands out from what it is drawn on (WCAG 2.2: text 4.5:1, lines 3:1).
 import { describe, expect, it } from 'vitest';
 
-import type { ColorToken } from './theme';
-import { defaultTheme } from './theme';
+import type { ColorToken, Theme } from './theme';
+import { defaultTheme, isKnownTheme, themeFor, themeIds, themes } from './theme';
 
 /** WCAG 2.2 relative luminance of a `#rrggbb` color. */
 function luminance(hex: string): number {
@@ -87,5 +87,77 @@ describe('the light default theme (visual design 3.3)', () => {
   it('T-0539: computes the WCAG ratio of the table (text.primary on paper 17.46)', () => {
     expect(contrast(colors['text.primary'], colors.paper)).toBeCloseTo(17.46, 1);
     expect(contrast('#000000', '#ffffff')).toBeCloseTo(21, 5);
+  });
+});
+
+/** The least contrast each theme keeps: AA for all (4.5:1 text, 3:1 lines), 7:1 for high contrast. */
+function minimums(theme: Theme): { readonly text: number; readonly line: number } {
+  return theme.id === 'high-contrast' ? { text: 7, line: 7 } : { text: 4.5, line: 3 };
+}
+
+describe('every theme (visual design 8, R-LAY-08, R-NFR-07)', () => {
+  it('R-LAY-08: has the light, dark, high contrast and print themes, light first', () => {
+    expect(themeIds).toEqual(['default', 'dark', 'high-contrast', 'print']);
+    expect(themes[0]).toBe(defaultTheme);
+  });
+
+  it('draws an unknown theme name with the default theme', () => {
+    expect(themeFor('midnight')).toBe(defaultTheme);
+    expect(isKnownTheme('midnight')).toBe(false);
+    expect(themeFor('dark').id).toBe('dark');
+    expect(isKnownTheme('print')).toBe(true);
+  });
+
+  for (const theme of themes) {
+    const colors = theme.colors;
+    const least = minimums(theme);
+
+    it(`${theme.id}: every token is a #rrggbb color and the kind matches the paper`, () => {
+      for (const [token, value] of Object.entries(colors)) {
+        expect(value, token).toMatch(/^#[0-9a-f]{6}$/);
+      }
+      expect(Object.keys(colors).sort()).toEqual(Object.keys(defaultTheme.colors).sort());
+      expect(luminance(colors.paper) > 0.5 ? 'light' : 'dark').toBe(theme.kind);
+    });
+
+    it(`QA-16 · R-LAY-08 · R-NFR-07: ${theme.id}: block texts stand out from the paper and every block background`, () => {
+      for (const fore of textOnBlocks) {
+        for (const back of blockBackgrounds) {
+          expect(contrast(colors[fore], colors[back]), `${fore} on ${back}`).toBeGreaterThanOrEqual(
+            least.text,
+          );
+        }
+      }
+    });
+
+    it(`QA-16 · R-LAY-08 · R-NFR-07: ${theme.id}: lines with a meaning stand out from the paper and every block background`, () => {
+      for (const fore of linesOnBlocks) {
+        for (const back of blockBackgrounds) {
+          expect(contrast(colors[fore], colors[back]), `${fore} on ${back}`).toBeGreaterThanOrEqual(
+            least.line,
+          );
+        }
+      }
+    });
+
+    it(`QA-16 · R-LAY-08 · R-NFR-07: ${theme.id}: texts on the fold and peek bands stand out`, () => {
+      for (const { fore, back } of otherPairs) {
+        expect(contrast(colors[fore], colors[back]), `${fore} on ${back}`).toBeGreaterThanOrEqual(
+          least.text,
+        );
+      }
+    });
+  }
+
+  it('print has white backgrounds, black lines and texts, and no syntax colors', () => {
+    const colors = themeFor('print').colors;
+    for (const back of blockBackgrounds) {
+      expect(colors[back], back).toBe('#ffffff');
+    }
+    for (const fore of ['line.structure', 'text.primary', 'fold.edge', 'peek.edge'] as const) {
+      expect(colors[fore], fore).toBe('#000000');
+    }
+    expect(colors['syntax.keyword']).toBe(colors['text.primary']);
+    expect(contrast(colors['peek.text'], colors.paper)).toBeCloseTo(10.4, 1);
   });
 });

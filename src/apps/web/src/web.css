@@ -15,6 +15,21 @@
   }
 }
 
+/* High contrast screen colors (R-NFR-07, 04-visual-design 3.4). */
+@media (prefers-contrast: more) {
+  :root {
+    --web-text: #000000;
+    --web-accent: #1f3fb8;
+  }
+}
+
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root {
+    --web-text: #ffffff;
+    --web-accent: #a8bdff;
+  }
+}
+
 html,
 body,
 #root {

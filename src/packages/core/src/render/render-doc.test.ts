@@ -29,6 +29,11 @@ function standalone(svg: RenderedSvg): string {
   ].join('\n');
 }
 
+/** The same document with another theme. */
+function inTheme(doc: Doc, theme: string): Doc {
+  return { ...doc, content: { ...doc.content, settings: { ...doc.content.settings, theme } } };
+}
+
 /** The sorting example of the prototype: every MVP block kind with Hangul and Latin text. */
 const sample: Doc = docOf(
   process('b1', 'i ← 0\n합계 ← 0'),
@@ -254,6 +259,10 @@ describe('render: golden files (07-testing 3)', () => {
       ),
     ],
     ['sample', sample],
+    // One golden per theme (visual design 8): the same drawing, only the colors change.
+    ['sample-dark', inTheme(sample, 'dark')],
+    ['sample-high-contrast', inTheme(sample, 'high-contrast')],
+    ['sample-print', inTheme(sample, 'print')],
   ];
 
   for (const [name, doc] of cases) {

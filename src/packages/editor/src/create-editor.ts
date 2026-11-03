@@ -1,6 +1,14 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
-import { createDoc, locales, openSvgFile, parseModelJson, setSettings } from '@ariadne-nsd/core';
+import {
+  createDoc,
+  isKnownTheme,
+  locales,
+  openSvgFile,
+  parseModelJson,
+  setSettings,
+  themeIds,
+} from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -124,6 +132,16 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     values: ['title', 'shape'],
     valueTitles: ['setting.headStyle.title', 'setting.headStyle.shape'],
     defaultValue: 'title',
+    scope: 'document',
+  },
+  {
+    // The drawing's colors (R-LAY-08, R-NFR-07, visual design 8): saved, so undoable (UX TH3).
+    id: documentSettingIds.theme,
+    title: 'setting.theme',
+    hint: 'setting.theme.hint',
+    values: themeIds,
+    valueTitles: themeIds.map((id) => `setting.theme.${id}` as const),
+    defaultValue: 'default',
     scope: 'document',
   },
 ];
@@ -621,7 +639,9 @@ function changedSettings(settings: Settings, id: string, value: unknown): Settin
       return chosen === undefined ? null : { ...settings, locale: chosen };
     }
     case documentSettingIds.theme:
-      return value === 'default' ? { ...settings, theme: value } : null;
+      return typeof value === 'string' && isKnownTheme(value)
+        ? { ...settings, theme: value }
+        : null;
     case documentSettingIds.textKind:
       return value === 'plain' ? { ...settings, textKind: value } : null;
     default:
