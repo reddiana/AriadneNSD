@@ -117,3 +117,32 @@ test('T-0291 · QA-20: on a phone undo, redo, wrap and help are in the toolbar, 
   await expect(toolbar.locator('button[title="Wrap"]')).toBeVisible();
   await expect(page.locator('.ans-bottombar')).toHaveCount(0);
 });
+
+test('T-0523: on a phone no separator is left at the start or the end of a toolbar row', async ({
+  page,
+}) => {
+  await skipWelcome(page);
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  const toolbar = page.getByRole('toolbar');
+  // The phone's toolbar takes more than one row (UX MB2).
+  expect((await toolbar.boundingBox())?.height ?? 0).toBeGreaterThan(50);
+  const stray = await toolbar.evaluate((root) => {
+    const shown = (item: Element): boolean =>
+      item instanceof HTMLElement &&
+      item.offsetParent !== null &&
+      getComputedStyle(item).visibility !== 'hidden';
+    const items = [...root.querySelectorAll('.ans-sep, .ans-tool, .ans-tool-root')].filter(shown);
+    return items.flatMap((item, at) => {
+      if (!item.classList.contains('ans-sep') || !(item instanceof HTMLElement)) return [];
+      const before = items[at - 1];
+      const after = items[at + 1];
+      const top = item.getBoundingClientRect().top;
+      const bottom = item.getBoundingClientRect().bottom;
+      const isStart = before === undefined || before.getBoundingClientRect().bottom <= top;
+      const isEnd = after === undefined || after.getBoundingClientRect().top >= bottom;
+      return isStart || isEnd ? [at] : [];
+    });
+  });
+  expect(stray).toEqual([]);
+});

@@ -500,7 +500,26 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const unwrapSpec = spec('block.unwrap', {
     edits: true,
-    when: (state) => (state.selection?.kind === 'blocks' ? true : 'reason.nothingSelected'),
+    // Greyed out when nothing would come off: same checks as core's `unwrap`, read from the index.
+    when: (state) => {
+      if (state.selection?.kind !== 'blocks') {
+        return 'reason.nothingSelected';
+      }
+      const ix = index();
+      const selected = selectedBlocks(ix, state.selection);
+      const [first] = selected;
+      if (first === undefined) {
+        return 'reason.nothingSelected';
+      }
+      const firstBlock = ix.blocks.get(first)?.block;
+      if (selected.length === 1 && firstBlock?.kind === 'call') {
+        return 'reason.unsupported';
+      }
+      if (selected.length === 1 && firstBlock !== undefined && isControl(firstBlock)) {
+        return true;
+      }
+      return seqOfBlock(ix, first).holder === null ? 'reason.noControlBlock' : true;
+    },
     run: (state) => {
       const target = targetOf(state.selection);
       if (target === null) {
@@ -687,6 +706,57 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     context: ['blocks'],
   });
 
+  // A paste reads the system clipboard asynchronously. Saving waits for it, so Ctrl+V then
+  // Ctrl+S saves the pasted document, not the one before it.
+  let pendingPaste: Promise<void> = Promise.resolve();
+  const pasteNow = async (side: Side): Promise<void> => {
+    const data = await deps.clipboard.read();
+    const clip =
+      (data.json === null ? null : clipFromJson(data.json)) ??
+      (data.text === null ? null : clipFromText(data.text));
+    if (clip === null) {
+      session.notify('reason.emptyClip', 'warn');
+      return;
+    }
+    // The selection may have changed while the clipboard was read.
+    const state = session.state;
+    if (state.readOnly) {
+      session.notify('reason.readOnly', 'warn');
+      return;
+    }
+    const after = (ok: {
+      readonly content: Content;
+      readonly touched: ReadonlyArray<Id>;
+    }): After => ({
+      selection: selectTouched(ok.content, ok.touched),
+    });
+    const selection = state.selection;
+    if (selection?.kind === 'missingDefault') {
+      intoMissingDefault(
+        selection.block,
+        (made, empty, ids) =>
+          paste(made, {
+            target: { kind: 'blocks', first: empty, last: empty },
+            side,
+            clip,
+            ids,
+          }),
+        after,
+      );
+      return;
+    }
+    const target = targetOf(selection);
+    if (target !== null) {
+      session.commit(paste(content(), { target, side, clip, ids: session.ids() }), after);
+    }
+  };
+
+  const runPaste = async (side: Side): Promise<void> => {
+    const pasting = pasteNow(side);
+    pendingPaste = pasting.catch(() => undefined);
+    await pasting;
+  };
+
   const pasteSpec = (side: Side, id: string, order: number, toolbar?: ToolbarPlace): CommandSpec =>
     spec(id, {
       edits: true,
@@ -700,45 +770,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
           : 'reason.nothingSelected';
       },
       run: async () => {
-        const data = await deps.clipboard.read();
-        const clip =
-          (data.json === null ? null : clipFromJson(data.json)) ??
-          (data.text === null ? null : clipFromText(data.text));
-        if (clip === null) {
-          session.notify('reason.emptyClip', 'warn');
-          return;
-        }
-        // The selection may have changed while the clipboard was read.
-        const state = session.state;
-        if (state.readOnly) {
-          session.notify('reason.readOnly', 'warn');
-          return;
-        }
-        const after = (ok: {
-          readonly content: Content;
-          readonly touched: ReadonlyArray<Id>;
-        }): After => ({
-          selection: selectTouched(ok.content, ok.touched),
-        });
-        const selection = state.selection;
-        if (selection?.kind === 'missingDefault') {
-          intoMissingDefault(
-            selection.block,
-            (made, empty, ids) =>
-              paste(made, {
-                target: { kind: 'blocks', first: empty, last: empty },
-                side,
-                clip,
-                ids,
-              }),
-            after,
-          );
-          return;
-        }
-        const target = targetOf(selection);
-        if (target !== null) {
-          session.commit(paste(content(), { target, side, clip, ids: session.ids() }), after);
-        }
+        await runPaste(side);
       },
       menu: { menu: 'edit', group: 2, order },
       ...(toolbar === undefined ? {} : { toolbar }),
@@ -1238,6 +1270,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       title: (ctx) => (ctx.store.canWriteInPlace ? 'command.file.save' : 'command.file.download'),
       when: always,
       run: async () => {
+        await pendingPaste;
         await deps.save();
       },
       menu: { menu: 'file', group: 2, order: 1 },
@@ -1247,6 +1280,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       edits: false,
       when: always,
       run: async () => {
+        await pendingPaste;
         await deps.saveAs();
       },
       menu: { menu: 'file', group: 2, order: 2 },

@@ -158,6 +158,8 @@ export type TestEngine = {
   readonly clipboard: ReturnType<typeof memoryClipboard>;
   readonly timers: ReturnType<typeof manualTimers>;
   readonly logs: string[];
+  /** The content at each save, in order. */
+  readonly saves: Content[];
   /** Presses keys (strokes as in the key table). Returns whether each was used. */
   keys(...strokes: ReadonlyArray<string>): ReadonlyArray<boolean>;
   run(id: string, args?: unknown): void;
@@ -172,6 +174,7 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
   const clipboard = memoryClipboard();
   const timers = manualTimers();
   const logs: string[] = [];
+  const saves: Content[] = [];
   const store = memoryStore();
   const settings = memorySettings();
   let picker: TestPicker | null = null;
@@ -207,7 +210,10 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
     session,
     clipboard,
     locale: () => 'en',
-    save: () => Promise.resolve({ ok: true, name: 'test.ns.svg' }),
+    save: () => {
+      saves.push(session.state.doc.content);
+      return Promise.resolve({ ok: true, name: 'test.ns.svg' });
+    },
     saveAs: () => Promise.resolve({ ok: true, name: 'test.ns.svg' }),
     zoomTo: (zoom) => {
       session.setZoom(zoom);
@@ -234,6 +240,7 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
     clipboard,
     timers,
     logs,
+    saves,
     keys: (...strokes) => strokes.map((stroke) => session.handleKey(stroke)),
     run: (id, args) => {
       registry.run(id, args);

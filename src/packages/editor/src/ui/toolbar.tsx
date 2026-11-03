@@ -3,7 +3,7 @@
 // the same buttons on more rows, with icons only, and a help button at the end (UX MB2).
 
 import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { blockIconCommand, blockKindOfIcon, uiCommandIds, zoomCommandIds } from './command-ids';
 import type { CommandView } from './command-view';
@@ -237,8 +237,50 @@ function ExamplesButton({
   );
 }
 
+/**
+ * Hides the separators that the wrapping of a narrow toolbar leaves at the start or the end of a
+ * row (UX MB2). One at a row's start is taken out; one at a row's end only goes invisible, so the
+ * rows do not change and pull it back. Runs again when the toolbar changes size.
+ */
+function useWrappedSeparators(root: RefObject<HTMLElement | null>): void {
+  useLayoutEffect(() => {
+    const toolbar = root.current;
+    if (!toolbar) return;
+    function update(): void {
+      if (!toolbar) return;
+      const separators = [...toolbar.querySelectorAll<HTMLElement>('.ans-sep')];
+      for (const separator of separators) separator.dataset.wrap = '';
+      // Top to bottom: taking one out changes only the rows below it.
+      for (const separator of separators) {
+        const items = [
+          ...toolbar.querySelectorAll<HTMLElement>('.ans-sep, .ans-tool, .ans-tool-root'),
+        ].filter((item) => item.offsetParent !== null);
+        const at = items.indexOf(separator);
+        const before = items[at - 1];
+        const after = items[at + 1];
+        const top = separator.offsetTop;
+        if (before === undefined || before.offsetTop + before.offsetHeight <= top) {
+          separator.dataset.wrap = 'start';
+        } else if (after === undefined || after.offsetTop >= top + separator.offsetHeight) {
+          separator.dataset.wrap = 'end';
+        }
+      }
+    }
+    update();
+    const view = toolbar.ownerDocument.defaultView;
+    if (!view || !('ResizeObserver' in view)) return;
+    const observer = new view.ResizeObserver(update);
+    observer.observe(toolbar);
+    return () => {
+      observer.disconnect();
+    };
+  });
+}
+
 /** The toolbar under the menu bar. */
 export function Toolbar(): ReactElement {
+  const rootRef = useRef<HTMLDivElement>(null);
+  useWrappedSeparators(rootRef);
   const { handle, text } = useChrome();
   const { zoom: zoomLevel } = useChromeState(handle);
   const commands = useCommands();
@@ -252,7 +294,7 @@ export function Toolbar(): ReactElement {
   const help = commands.find((command) => command.id === uiCommandIds.shortcuts);
 
   return (
-    <div className="ans-toolbar" role="toolbar" aria-label={text('toolbar.label')}>
+    <div className="ans-toolbar" role="toolbar" aria-label={text('toolbar.label')} ref={rootRef}>
       {groupRuns(placed).map((run, index) => {
         return (
           <span key={run[0]?.id ?? index} style={{ display: 'contents' }}>

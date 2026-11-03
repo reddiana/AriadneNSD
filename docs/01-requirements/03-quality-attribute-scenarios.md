@@ -321,7 +321,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 편집 화면은 블록 글꼴을 기다리지 않고 그린다(텍스트 폭은 글꼴 파일이 아니라 번들한 advance 폭 테이블로 계산하므로 레이아웃은 같다). 저장용 TTF와 wasm은 첫 편집 뒤에 받는다 → [[06-web#5. 배포]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** E2E(Playwright, Android 폰 흉내 + CPU · 네트워크 감속). 편집 화면과 블록 글꼴이 보인 때를 재어 합격 기준과 견준다. 원인을 나눠 보는 재기 스크립트 `src/apps/web/scripts/measure-startup.mjs`. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
-- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 5개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0291)
+- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
 ### QA-19 시작이 막혀도 빈 화면은 없음
 
@@ -351,7 +351,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 좁은 화면 배치 → [[05-screen-layout|화면 배치]], [[ux-decisions#MB1. 좁은 화면|MB1]]
 - **테스트:** E2E(Playwright의 Android 폰 흉내: 화면 크기 · 터치 · user agent). 실제 휴대폰은 출시 점검표. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
-- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 5개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0291)
+- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
 ## 3. 테스트 전략
 

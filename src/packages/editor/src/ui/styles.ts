@@ -53,6 +53,7 @@ export const chromeCss = `
   box-shadow: 0 6px 18px var(--ui-shadow); list-style: none; margin: 2px 0 0;
 }
 .ans-dropdown .ans-dropdown { top: -5px; left: 100%; margin: 0 0 0 2px; }
+.ans-dropdown .ans-dropdown.ans-flipped { left: auto; right: 100%; margin-left: 0; margin-right: 2px; }
 .ans-dropdown li { position: relative; }
 .ans-dropdown hr { border: 0; border-top: 1px solid var(--ui-line); margin: 4px 2px; }
 .ans-item {
@@ -73,6 +74,9 @@ export const chromeCss = `
   flex-wrap: wrap;
 }
 .ans-sep { width: 1px; height: 20px; margin: 0 6px; background: var(--ui-line); flex: none; }
+/* A separator the wrapping left at a row's start or end (toolbar.tsx). */
+.ans-sep[data-wrap='start'] { display: none; }
+.ans-sep[data-wrap='end'] { visibility: hidden; }
 .ans-tool {
   display: inline-flex; align-items: center; justify-content: center; gap: 3px;
   min-width: 28px; height: 28px; padding: 0 5px; background: none; border: 1px solid transparent;

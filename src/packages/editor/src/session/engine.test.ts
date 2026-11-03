@@ -145,6 +145,21 @@ describe('the selection after a command (03-editor 2.3)', () => {
     });
   });
 
+  it('T-0520 · R-EDIT-07: unwrap is greyed out when no control block would come off', () => {
+    const engine = testEngine(contentOf([proc('b1'), whileBlock('b2', [proc('b3')])]));
+    const unwrapWhen = (): unknown =>
+      engine.registry
+        .list()
+        .find((spec) => spec.id === 'block.unwrap')
+        ?.when(engine.registry.context());
+    select(engine, 'b1');
+    expect(unwrapWhen()).toBe('reason.noControlBlock');
+    select(engine, 'b2');
+    expect(unwrapWhen()).toBe(true);
+    select(engine, 'b3');
+    expect(unwrapWhen()).toBe(true);
+  });
+
   it('T-0036 · R-EDIT-11: moving keeps the moved blocks selected', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     select(engine, 'b2');
@@ -364,6 +379,17 @@ describe('view only (03-editor 6.4)', () => {
     expect(engine.clipboard.data.text).toBe('b2');
     const cut = engine.registry.list().find((spec) => spec.id === 'edit.cut');
     expect(cut?.when(engine.registry.context())).toBe('reason.readOnly');
+  });
+
+  it('T-0521: saving right after a paste waits for the paste', async () => {
+    const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
+    select(engine, 'b1');
+    engine.keys('y', 'y');
+    await engine.settle();
+    engine.keys('p', 'Ctrl+S');
+    await engine.settle();
+    expect(bodyOf(engine)).toHaveLength(3);
+    expect(engine.saves).toEqual([engine.content()]);
   });
 
   it('T-0053: 03-editor 5: the registry gives every command its keys and a title', () => {

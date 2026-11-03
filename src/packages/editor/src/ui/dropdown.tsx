@@ -3,7 +3,7 @@
 // tell why in the status bar (03-editor 3: "막지 않고 알린다").
 
 import type { KeyboardEvent, ReactElement } from 'react';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CommandView } from './command-view';
 import { displayKey, menuKey } from './keys';
@@ -27,9 +27,14 @@ type DropdownProps = {
   readonly onDone: () => void;
   /** Move focus into the first item when it opens (opened by keyboard). */
   readonly isFocusedOnOpen?: boolean;
-  /** `j` / `k` move like ↓ / ↑ (the context menu, 03-keymap UX K2). */
+  /** `j` / `k` move like ↓ / ↑, `h` / `l` like ← / → (the context menu, 03-keymap UX K2). */
   readonly hasVimKeys?: boolean;
+  /** A submenu beside its item: it turns to the left or moves up to stay in the window. */
+  readonly isSubmenu?: boolean;
 };
+
+/** How far a submenu stays from the window's edge, in px. */
+const windowMargin = 4;
 
 function menuItems(list: HTMLElement): HTMLElement[] {
   return [
@@ -47,15 +52,38 @@ export function Dropdown({
   onDone,
   isFocusedOnOpen = false,
   hasVimKeys = false,
+  isSubmenu = false,
 }: DropdownProps): ReactElement {
   const { run } = useChrome();
   const listRef = useRef<HTMLUListElement>(null);
   const [openSubmenu, setOpenSubmenu] = useState<number | null>(null);
   const [isSubmenuFocused, setIsSubmenuFocused] = useState(false);
 
+  const [place, setPlace] = useState<{ flip: boolean; shift: number; lift: number }>({
+    flip: false,
+    shift: 0,
+    lift: 0,
+  });
+
   useEffect(() => {
     if (isFocusedOnOpen && listRef.current) menuItems(listRef.current)[0]?.focus();
   }, [isFocusedOnOpen]);
+
+  // A submenu that would stick out of the window opens to the left of its item when there is
+  // room there, otherwise moves left over its menu; one that would stick out below moves up.
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const view = list?.ownerDocument.defaultView;
+    const item = list?.parentElement;
+    if (!isSubmenu || !list || !view || !item) return;
+    const box = list.getBoundingClientRect();
+    const right = view.innerWidth - windowMargin;
+    const flip = box.right > right && item.getBoundingClientRect().left - box.width >= windowMargin;
+    const shift = box.right > right && !flip ? box.right - right : 0;
+    const below = box.bottom - (view.innerHeight - windowMargin);
+    const lift = below > 0 ? Math.min(below, box.top - windowMargin) : 0;
+    setPlace({ flip, shift, lift });
+  }, [isSubmenu]);
 
   function onKeyDown(event: KeyboardEvent<HTMLUListElement>): void {
     const list = listRef.current;
@@ -63,7 +91,11 @@ export function Dropdown({
     const buttons = menuItems(list);
     const current = buttons.indexOf(document.activeElement as HTMLElement);
     if (current === -1) return; // the key belongs to a submenu below
-    const vimArrows: Readonly<Record<string, string>> = { j: 'ArrowDown', k: 'ArrowUp' };
+    const vimArrows: Readonly<Record<string, string>> = {
+      j: 'ArrowDown',
+      k: 'ArrowUp',
+      h: 'ArrowLeft',
+    };
     const key = (hasVimKeys ? vimArrows[event.key] : undefined) ?? event.key;
     switch (key) {
       case 'ArrowDown':
@@ -84,7 +116,21 @@ export function Dropdown({
   }
 
   return (
-    <ul className="ans-dropdown" role="menu" aria-label={label} ref={listRef} onKeyDown={onKeyDown}>
+    <ul
+      className={place.flip ? 'ans-dropdown ans-flipped' : 'ans-dropdown'}
+      role="menu"
+      aria-label={label}
+      ref={listRef}
+      style={
+        place.shift > 0 || place.lift > 0
+          ? {
+              ...(place.shift > 0 ? { marginLeft: 2 - place.shift } : {}),
+              ...(place.lift > 0 ? { marginTop: -place.lift } : {}),
+            }
+          : undefined
+      }
+      onKeyDown={onKeyDown}
+    >
       {items.map((item, index) => {
         const previous = items[index - 1];
         const separator =
@@ -145,7 +191,12 @@ export function Dropdown({
                   setIsSubmenuFocused(false);
                 }}
                 onKeyDown={(event) => {
-                  if (event.key === 'ArrowRight' || event.key === 'Enter' || event.key === ' ') {
+                  const isOpenKey =
+                    event.key === 'ArrowRight' ||
+                    event.key === 'Enter' ||
+                    event.key === ' ' ||
+                    (hasVimKeys && event.key === 'l');
+                  if (isOpenKey) {
                     event.preventDefault();
                     event.stopPropagation();
                     setOpenSubmenu(index);
@@ -165,6 +216,7 @@ export function Dropdown({
                   label={item.title}
                   isFocusedOnOpen={isSubmenuFocused}
                   hasVimKeys={hasVimKeys}
+                  isSubmenu
                   onClose={() => {
                     setOpenSubmenu(null);
                     if (listRef.current) menuItems(listRef.current)[index]?.focus();
