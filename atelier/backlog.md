@@ -52,7 +52,6 @@ MVP 코드에 남은 구멍(2026-11-01, 1~4단계 개발 에이전트의 보고.
 
 헤더 · 호출 블록(2026-11-01)에서 못 한 것:
 
-- [ ] 새 Method로 빼기([[01-requirements#^r-edit|R-EDIT-19]], `P1`): 시안 M54에서 XM1 ~ XM3을 정함(2026-11-03 → [[ux-decisions#XM1. 새 Method의 자리|XM1]]). 2026-11-03 세션 06에 에이전트가 만드는 중 → [[status#이번과 다음 세션에 할 것]]
 - [ ] 이름을 적는 호출 블록 만들기([[01-requirements#^r-blk|R-BLK-08]]): 목록에 "이름을 적어 호출하기"가 없고, named 호출 블록의 이름을 편집할 수 없음
 - [ ] 이름이 겹친 헤더에 붙이는 표시([[03-editor]] 1장, 모양은 [[04-visual-design]]의 미결정). 만들기 전에 시안으로 모양을 물음. 헤더를 선택하고 "뒤에" 삽입하면 어디에 들어가는지도 함께 물음(→ [[2026-10-10-02-prototype#만들며 생긴 질문 (메인테이너의 답을 기다림)]] 9). 아직 [[02-interaction-rules#키보드로 이동하고 삽입하기]]에 없고, 붙여넣기만 본문 맨 앞으로 정해져 있음([[02-interaction-rules#붙여넣기]])
 - [ ] 클립(복사한 블록)이 Method 이름을 담지 않아, 다른 문서에 붙인 호출 블록이 `lost`가 되면 이름이 "(이름 없음)"으로 보이고, 우연히 같은 id의 Method에 이어질 수 있음 → 클립 형식
@@ -133,7 +132,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 - [ ] 사용법 `/manual/` · `/manual/ko/`를 만든다(지금은 MVP의 도움말 › 사용법이 빈 주소를 연다). 짜임은 [[dr-0020-user-guide|DR-0020]], 첫 초안은 시안 M49(5분 둘러보기)
 	- [ ] 메인테이너가 전체 초안 M51을 한 번에 봄(2026-11-02, 한국어 · 영어 모두 `src/apps/manual`에 씀). 고칠 것을 받으면 두 언어에 반영
-- [ ] 브라우저 안의 문서([[01-requirements#^r-web|R-WEB-09]], `P1`, 2026-11-03 메인테이너가 웹 베타의 문턱에 넣음): 본보기는 SequenceDiagram.org의 Web Storage (localStorage). 저장소는 IndexedDB(로컬 백업 · 최근 파일과 같은 곳 → [[06-web#2. 로컬 백업과 자동 저장]]). 시안 M55(`journal/assets/2026-11-03-browser-storage-study.html`)의 답을 받아 UX 설계 · [[06-web]]에 쓰고 만든다. M55에서 BS1~BS4를 정함(2026-11-03 → [[ux-decisions#BS1. 브라우저 안의 문서는 열기 · 저장 창 안에서 고른다|BS1]]~[[ux-decisions#BS4. 함께 지워진다는 경고와 백업|BS4]]) → 구현은 새 Method로 빼기 다음에
+- [ ] 브라우저 안의 문서([[01-requirements#^r-web|R-WEB-09]], `P1`, 2026-11-03 메인테이너가 웹 베타의 문턱에 넣음): 본보기는 SequenceDiagram.org의 Web Storage (localStorage). 저장소는 IndexedDB(로컬 백업 · 최근 파일과 같은 곳 → [[06-web#2. 로컬 백업과 자동 저장]]). 시안 M55(`journal/assets/2026-11-03-browser-storage-study.html`)의 답을 받아 UX 설계 · [[06-web]]에 쓰고 만든다. M55에서 BS1~BS4를 정함(2026-11-03 → [[ux-decisions#BS1. 브라우저 안의 문서는 열기 · 저장 창 안에서 고른다|BS1]]~[[ux-decisions#BS4. 함께 지워진다는 경고와 백업|BS4]]). 2026-11-03 세션 06에 에이전트가 만드는 중 → [[status#이번과 다음 세션에 할 것]]
 
 ## 출시 무렵과 그 뒤
 
