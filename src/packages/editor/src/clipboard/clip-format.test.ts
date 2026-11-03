@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { branch, empty, ifBlock, proc, seq, whileBlock } from '../engine-test-support';
+import {
+  arm,
+  branch,
+  caseBlock,
+  empty,
+  ifBlock,
+  proc,
+  seq,
+  whileBlock,
+} from '../engine-test-support';
 import { clipFromJson, clipFromText, clipToJson, clipToText } from './clip-format';
 
 const clip = seq([
@@ -15,6 +24,55 @@ describe('clipboard formats (03-editor 3.3)', () => {
       ['read n', 'n > 0', '    true:', '        x', '    no:', 'running', '    tick'].join('\n'),
     );
     expect(clipToText(clip, 'ko').split('\n')[2]).toBe('    참:');
+  });
+
+  it('T-0557 · R-EDIT-10: call, loop and Case blocks become indented lines too', () => {
+    const others = seq([
+      {
+        id: 'c1',
+        kind: 'call',
+        target: { kind: 'named', name: 'sort' },
+        args: 'xs',
+        result: 'ys',
+        siteFolds: [],
+      },
+      {
+        id: 'c2',
+        kind: 'call',
+        target: { kind: 'named', name: 'reset' },
+        args: '',
+        result: '',
+        siteFolds: [],
+      },
+      { id: 'd1', kind: 'doWhile', text: 'more', body: seq([proc('b1', 'step')]) },
+      { id: 'f1', kind: 'for', text: 'i in xs', body: seq([proc('b2', 'use i')]) },
+      caseBlock('k1', [arm('a1', '1', [proc('b3', 'one')])], branch('o1', [proc('b4', 'other')])),
+      caseBlock('k2', [arm('a2', '2', [])], branch('o2', [], 'else')),
+      caseBlock('k3', [arm('a3', '3', [])], null),
+      proc('b5', 'first line\nsecond line'),
+    ]);
+    expect(clipToText(others, 'en').split('\n')).toEqual([
+      'ys xs',
+      // A call without arguments or result is an empty line.
+      '',
+      '    step',
+      // A Do-While's condition comes after its blocks.
+      'more',
+      'i in xs',
+      '    use i',
+      'k',
+      '    1:',
+      '        one',
+      '    default:',
+      '        other',
+      'k',
+      '    2:',
+      '    else:',
+      'k',
+      '    3:',
+      'first line',
+      'second line',
+    ]);
   });
 
   it('T-0201 · R-EDIT-10: the model JSON reads back as the same blocks', () => {

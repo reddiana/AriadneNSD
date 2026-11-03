@@ -24,7 +24,8 @@ if (!process.argv.includes('--report')) {
   for (const dir of packages) {
     run(
       [
-        'pnpm exec vitest run --coverage.enabled --coverage.provider=v8',
+        // Coverage slows the tests down; the property-based ones need more than the usual 5 s.
+        'pnpm exec vitest run --testTimeout=60000 --coverage.enabled --coverage.provider=v8',
         '--coverage.reporter=json',
         `--coverage.reportsDirectory=${unitDir}`,
         "--coverage.include='src/**'",

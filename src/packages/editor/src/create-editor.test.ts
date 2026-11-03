@@ -3,7 +3,7 @@ import type { Doc } from '@ariadne-nsd/core';
 import { openSvgFile } from '@ariadne-nsd/core';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import type { EditorHandle, OpenedDocument, SaveFonts } from './contracts';
+import type { EditorHandle, OpenedDocument, SaveFonts, SettingsStore } from './contracts';
 import { createEditor, settingIds } from './create-editor';
 import { memoryClipboard, memorySettings, memoryStore } from './engine-test-support';
 
@@ -395,5 +395,192 @@ describe('the inline editor on headers and call blocks (03-editor 3.4)', () => {
       result: 'r',
     });
     expect(handle.state().undo).toHaveLength(1);
+  });
+});
+
+describe('rarer parts of the shell contract (03-editor 6)', () => {
+  /** Settings that tell their listeners, like a shell's. */
+  const liveSettings = (values: Record<string, unknown> = {}): SettingsStore => {
+    const listeners = new Set<(key: string) => void>();
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- the contract's shape
+      get: <T>(key: string) => values[key] as T | undefined,
+      set: (key, value) => {
+        values[key] = value;
+        for (const listener of [...listeners]) listener(key);
+      },
+      onChange: (listener) => {
+        listeners.add(listener);
+        return () => {
+          listeners.delete(listener);
+        };
+      },
+    };
+  };
+
+  const pressA = (host: HTMLElement): void => {
+    host
+      .querySelector('.ans-canvas')
+      ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA', bubbles: true }));
+  };
+
+  it.each([
+    ['{"format":"ariadne-nsd","version":0}', 'notice.openPrototype'],
+    ['{"format":"ariadne-nsd","version":999}', 'notice.openNewerVersion'],
+    ['not json', 'notice.openDamaged'],
+  ])('T-0728: 01-file-format 5: a local backup %s is refused with %s', (restored, expected) => {
+    const { handle } = make();
+    const before = handle.state().doc;
+    expect(handle.open({ store: memoryStore(), text: null, restored })).toBe(false);
+    expect(handle.state().doc).toBe(before);
+    expect(handle.chromeState().notice?.message).toBe(expected);
+  });
+
+  it('T-0729: 03-editor 6.4: saving while view only is denied without writing', async () => {
+    const { handle, store } = make();
+    handle.setReadOnly(true);
+    expect(await handle.save()).toEqual({ ok: false, reason: 'denied', detail: 'view only' });
+    expect(store.written).toHaveLength(0);
+  });
+
+  it('T-0730: 03-editor 6: a failed write keeps the document dirty and says so', async () => {
+    const { handle, store } = make();
+    handle.commands.run('block.insert.while');
+    store.result = { ok: false, reason: 'failed', detail: 'disk full' };
+    await handle.save();
+    expect(handle.status().dirty).toBe(true);
+    expect(handle.chromeState().notice?.message).toBe('notice.saveFailed');
+  });
+
+  it('T-0731: 03-editor 6: Save As writes, marks the document saved and names the file', async () => {
+    const { handle, store } = make();
+    handle.commands.run('block.insert.while');
+    handle.commands.run('file.saveAs');
+    await tick();
+    expect(store.written).toHaveLength(1);
+    expect(handle.status().dirty).toBe(false);
+    expect(handle.chromeState().notice?.message).toEqual({
+      key: 'notice.saved',
+      params: { name: 'test.ns.svg' },
+    });
+  });
+
+  it('T-0732: 03-editor 6.4: Save As while view only writes a copy and leaves the document dirty', async () => {
+    const { handle, store } = make();
+    handle.commands.run('block.insert.while');
+    handle.setReadOnly(true);
+    handle.commands.run('file.saveAs');
+    await tick();
+    expect(store.written).toHaveLength(1);
+    expect(handle.status().dirty).toBe(true);
+  });
+
+  it('T-0733: 03-editor 6.2: listeners stop when their returned function is called', () => {
+    const { handle } = make();
+    const seen = { change: 0, chrome: 0, status: 0 };
+    const stops = [
+      handle.onChange(() => (seen.change += 1)),
+      handle.onChromeState(() => (seen.chrome += 1)),
+      handle.onStatus(() => (seen.status += 1)),
+      handle.onContextMenu(() => undefined),
+    ];
+    handle.commands.run('block.insert.while');
+    expect(seen.change).toBeGreaterThan(0);
+    expect(seen.chrome).toBeGreaterThan(0);
+    expect(seen.status).toBeGreaterThan(0);
+    for (const stop of stops) stop();
+    const before = { ...seen };
+    handle.commands.run('block.insert.if');
+    expect(seen).toEqual(before);
+  });
+
+  it('T-0734 · UX W5: every document setting can be read; unknown ones and unknown values do nothing', () => {
+    const { handle } = make();
+    expect(handle.documentSetting('document.textKind')).toBe('plain');
+    expect(handle.documentSetting('document.theme')).toBe('default');
+    expect(handle.documentSetting('nope')).toBeUndefined();
+    handle.setDocumentSetting('document.theme', 'dark');
+    handle.setDocumentSetting('document.textKind', 'markdown');
+    handle.setDocumentSetting('nope', 'x');
+    expect(handle.state().undo).toHaveLength(0);
+    handle.setDocumentSetting('document.theme', 'default');
+    handle.setDocumentSetting('document.textKind', 'plain');
+    expect(handle.documentSetting('document.theme')).toBe('default');
+    expect(handle.documentSetting('document.textKind')).toBe('plain');
+  });
+
+  it('T-0735: 03-editor 6.4: a document setting is not changed while view only', () => {
+    const { handle } = make();
+    handle.setReadOnly(true);
+    handle.setDocumentSetting('document.headStyle', 'shape');
+    expect(handle.documentSetting('document.headStyle')).toBe('title');
+    expect(handle.chromeState().notice?.message).toBe('reason.readOnly');
+  });
+
+  it('T-0736 · R-NFR-04: changing the screen language draws the fixed words again', async () => {
+    const settings = liveSettings();
+    const { handle } = make({}, memoryStore(), settings);
+    handle.commands.run('block.insert.if');
+    handle.commands.run('select.clear');
+    expect(await handle.serialize()).not.toContain('참');
+    settings.set(settingIds.locale, 'ko');
+    expect(await handle.serialize()).toContain('참');
+  });
+
+  it('T-0737 · UX K1: the key hint shows after 0.4 s on the real timers, unless turned off', async () => {
+    const shown = make();
+    pressA(shown.host);
+    expect(shown.handle.chromeState().pendingKeys).toBe('a');
+    expect(shown.handle.chromeState().isKeyHintShown).toBe(false);
+    await new Promise((resolve) => setTimeout(resolve, 450));
+    expect(shown.handle.chromeState().isKeyHintShown).toBe(true);
+
+    const off = make({}, memoryStore(), memorySettings({ [settingIds.keyHint]: false }));
+    pressA(off.host);
+    await new Promise((resolve) => setTimeout(resolve, 450));
+    expect(off.handle.chromeState().isKeyHintShown).toBe(false);
+  });
+
+  it('T-0738: 03-editor 1.1: the zoom commands go through the view', () => {
+    const { handle } = make();
+    handle.commands.run('view.zoom.in');
+    expect(handle.state().zoom).toBe(1.1);
+    expect(handle.chromeState().zoom).toBe(1.1);
+  });
+
+  it('T-0739: an answer to a dialog that was already replaced is ignored', async () => {
+    const { handle } = make();
+    void handle.confirm('First?');
+    const first = handle.chromeState().dialog;
+    const second = handle.confirm('Second?');
+    first?.answer('');
+    expect(handle.chromeState().dialog?.message).toBe('Second?');
+    handle.chromeState().dialog?.answer(null);
+    expect(await second).toBe(false);
+  });
+
+  it('T-0740: interaction rules "호출 블록": opening a document closes the list; a late or out-of-range answer inserts nothing', async () => {
+    const { handle } = make();
+    const calls = () =>
+      handle
+        .state()
+        .doc.content.diagrams.flatMap((d) => d.body.blocks)
+        .filter((b) => b.kind === 'call');
+    handle.commands.run('diagram.newMethod');
+    handle.commands.run('select.down');
+    handle.commands.run('block.insert.call');
+    const stale = handle.chromeState().picker;
+    expect(handle.open({ store: memoryStore(), text: null })).toBe(true);
+    expect(handle.chromeState().picker).toBeNull();
+    stale?.choose(0);
+    await tick();
+    expect(calls()).toHaveLength(0);
+    handle.commands.run('diagram.newMethod');
+    handle.commands.run('select.down');
+    handle.commands.run('block.insert.call');
+    handle.chromeState().picker?.choose(9);
+    await tick();
+    expect(handle.chromeState().picker).toBeNull();
+    expect(calls()).toHaveLength(0);
   });
 });

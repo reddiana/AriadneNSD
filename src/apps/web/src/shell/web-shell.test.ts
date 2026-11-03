@@ -1,5 +1,5 @@
 import { assembleSvgFile, createDoc, renderDoc } from '@ariadne-nsd/core';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
   CommandSpec,
@@ -10,7 +10,9 @@ import type {
 } from '../editor-contract';
 import type { BrowserDb } from '../storage/browser-db';
 import { memoryDb } from '../storage/browser-db';
+import { chooseFileWithInput } from '../files/file-fallback';
 import { createSettingsStore } from '../storage/settings-store';
+import type { Channel, TabMessage } from './tab-lock';
 import type { Clock } from './timers';
 import { createWebShell, shellCommandIds } from './web-shell';
 
@@ -133,32 +135,129 @@ async function settle(): Promise<void> {
   }
 }
 
-function setup(options: { db?: BrowserDb; confirm?: boolean } = {}) {
+type SetupOptions = {
+  db?: BrowserDb;
+  confirm?: boolean;
+  canWriteInPlace?: boolean;
+  channel?: Channel | null;
+  tabId?: string;
+};
+
+function setup(options: SetupOptions = {}) {
   const db = options.db ?? memoryDb();
   const clock = manualClock();
   const titles: string[] = [];
+  const logs: string[] = [];
+  const settings = createSettingsStore(null, () => undefined);
   let keys = 0;
+  const tabId = options.tabId ?? 'tab';
   const shell = createWebShell({
     db,
-    settings: createSettingsStore(null, () => undefined),
+    settings,
     locale: 'en',
-    canWriteInPlace: false,
-    channel: null,
-    tabId: 'tab',
+    canWriteInPlace: options.canWriteInPlace ?? false,
+    channel: options.channel ?? null,
+    tabId,
     wait: () => Promise.resolve(),
     clock,
     newKey: () => {
       keys += 1;
-      return `key-${String(keys)}`;
+      return `${tabId}-key-${String(keys)}`;
     },
     now: () => 1000,
     setTitle: (title) => titles.push(title),
-    log: () => undefined,
+    log: (detail) => logs.push(detail),
   });
   const editor = fakeEditor(options.confirm ?? true);
   editor.open(shell.initialDocument());
-  return { shell, editor, db, clock, titles };
+  return { shell, editor, db, clock, titles, logs, settings };
 }
+
+/** A file handle in memory, as Chromium gives it. `permission` is what queryPermission answers. */
+function fakeHandle(
+  name: string,
+  text: string,
+  options: { permission?: PermissionState; writeError?: Error; readError?: Error } = {},
+) {
+  const state = { text, permission: options.permission ?? 'granted', writes: 0 };
+  const handle = {
+    kind: 'file',
+    name,
+    getFile: () =>
+      options.readError === undefined
+        ? Promise.resolve({ text: () => Promise.resolve(state.text) })
+        : Promise.reject(options.readError),
+    createWritable: () =>
+      options.writeError === undefined
+        ? Promise.resolve({
+            write: (data: string) => {
+              state.text = data;
+              state.writes += 1;
+              return Promise.resolve();
+            },
+            close: () => Promise.resolve(),
+          })
+        : Promise.reject(options.writeError),
+    isSameEntry: (other: { name: string }) => Promise.resolve(other.name === name),
+    queryPermission: () => Promise.resolve(state.permission),
+    requestPermission: () => Promise.resolve(state.permission),
+  };
+  return { handle: handle as unknown as FileSystemFileHandle, state };
+}
+
+/** A drop of `files`; each may come with a file system handle (Chromium). */
+function dropOf(
+  files: ReadonlyArray<{ file: File | null; handle?: FileSystemHandle | null }>,
+  extra: ReadonlyArray<{ kind: string }> = [],
+): DataTransfer {
+  const items = [
+    ...files.map(({ file, handle }) => ({
+      kind: 'file',
+      getAsFile: () => file,
+      ...(handle === undefined ? {} : { getAsFileSystemHandle: () => Promise.resolve(handle) }),
+    })),
+    ...extra,
+  ];
+  return { items } as unknown as DataTransfer;
+}
+
+/** Channels that deliver to each other at once, like tabs of one site. */
+function hub(): () => Channel {
+  const listeners = new Set<(event: { readonly data: unknown }) => void>();
+  return () => {
+    let own: ((event: { readonly data: unknown }) => void) | null = null;
+    return {
+      postMessage(message: TabMessage) {
+        for (const listener of [...listeners]) {
+          if (listener !== own) {
+            listener({ data: message });
+          }
+        }
+      },
+      addEventListener(_type, listener) {
+        own = listener;
+        listeners.add(listener);
+      },
+      close() {
+        if (own !== null) {
+          listeners.delete(own);
+        }
+      },
+    };
+  };
+}
+
+/** The saved file with its model version changed to `version` (attribute and JSON). */
+function withVersion(version: number): string {
+  return savedFile
+    .replace(/ version="1"><!\[CDATA\[/, ` version="${String(version)}"><![CDATA[`)
+    .replace(/"version": 1/, `"version": ${String(version)}`);
+}
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.mocked(chooseFileWithInput).mockReset();
+});
 
 describe('web shell', () => {
   it('T-0344: 03-editor 6.1: adds new, open, recent files and export to the command list', async () => {
@@ -243,5 +342,432 @@ describe('web shell', () => {
     await settle();
     expect(await db.backups()).toHaveLength(1);
     expect(editor.notices.at(-1)).toContain('were not saved to the file');
+  });
+});
+
+describe('web shell: opening', () => {
+  it('T-0693 · R-WEB-02: says why a damaged file cannot be opened', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const before = editor.opened.length;
+    await shell.openFile(new File([savedFile.replace('"version": 1', '"version": 2')], 'x.ns.svg'));
+    expect(editor.opened.length).toBe(before);
+    expect(editor.notices.at(-1)).toBe(
+      '“x.ns.svg” is damaged and cannot be edited. The file was not changed.',
+    );
+  });
+
+  it('T-0694 · R-WEB-02: says to reload for a file saved by a newer version', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openFile(new File([withVersion(999)], 'new.ns.svg'));
+    expect(editor.notices.at(-1)).toBe(
+      '“new.ns.svg” was saved by a newer version of AriadneNSD. Reload the page and open it again.',
+    );
+  });
+
+  it('T-0695: says it could not read a file whose content cannot be read', async () => {
+    const { shell, editor, logs } = setup();
+    await shell.start(editor);
+    const file = { name: 'gone.ns.svg', text: () => Promise.reject(new Error('gone')) };
+    await shell.openFile(file as unknown as File);
+    expect(editor.notices.at(-1)).toBe('Could not read “gone.ns.svg”.');
+    expect(logs.at(-1)).toContain('Reading gone.ns.svg failed');
+  });
+
+  it('T-0696 · R-WEB-03: reopening a browser copy finds its backup by name and offers to restore it', async () => {
+    const db = memoryDb();
+    const { shell, editor } = setup({ db, confirm: false });
+    await shell.start(editor);
+    await shell.openFile(new File([savedFile], 'if.ns.svg'));
+    const [entry] = await db.recentFiles();
+    const key = entry?.key ?? '';
+    await db.putBackup({ key, name: 'if.ns.svg', snapshot: '{"x":1}', savedAt: 5 });
+    await shell.newDocument();
+    await shell.openFile(new File([savedFile], 'if.ns.svg'));
+    // Declined: the backup is removed, and the recent entry keeps its key.
+    expect(editor.opened.at(-1)?.restored).toBeUndefined();
+    expect(await db.backup(key)).toBeUndefined();
+    expect((await db.recentFiles()).map((item) => item.key)).toEqual([key]);
+  });
+
+  it('T-0697 · R-WEB-03: a restored backup with a file handle keeps writing to that file', async () => {
+    const db = memoryDb();
+    const { handle, state } = fakeHandle('h.ns.svg', '');
+    await db.putBackup({ key: 'k', name: 'h.ns.svg', snapshot: '{"h":1}', savedAt: 1, handle });
+    const { shell, editor } = setup({ db, canWriteInPlace: true });
+    await shell.start(editor);
+    expect(editor.opened.at(-1)?.store.name).toBe('h.ns.svg');
+    expect(editor.opened.at(-1)?.restored).toBe('{"h":1}');
+    expect(await editor.save()).toEqual({ ok: true, name: 'h.ns.svg' });
+    expect(state.text).toBe(savedFile);
+  });
+
+  it('T-0698 · R-WEB-03: a restored backup of a browser copy keeps the copy', async () => {
+    const db = memoryDb();
+    await db.touchRecent({
+      key: 'c',
+      name: 'c.ns.svg',
+      usedAt: 1,
+      source: { kind: 'copy', text: savedFile },
+    });
+    await db.putBackup({ key: 'c', name: 'c.ns.svg', snapshot: '{"c":1}', savedAt: 1 });
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    expect(editor.opened.at(-1)?.store.name).toBe('c.ns.svg');
+    expect(await editor.opened.at(-1)?.store.read()).toBe(savedFile);
+  });
+
+  it('T-0699: opens an example as a new document with its name', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    expect(editor.opened.at(-1)).toMatchObject({ doc: newDoc, text: null });
+    expect(editor.status().name).toBe('Quicksort.ns.svg');
+  });
+
+  it('T-0700 · R-WEB-02: without File System Access, opens the file chosen with the file input', async () => {
+    vi.mocked(chooseFileWithInput).mockResolvedValueOnce(new File([savedFile], 'in.ns.svg'));
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openFromPicker();
+    expect(editor.status().name).toBe('in.ns.svg');
+  });
+
+  it('T-0701: closing the file input opens nothing', async () => {
+    vi.mocked(chooseFileWithInput).mockResolvedValueOnce(null);
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const before = editor.opened.length;
+    await shell.openFromPicker();
+    expect(editor.opened.length).toBe(before);
+  });
+
+  it('T-0702 · R-WEB-02: with File System Access, opens the picked file and saves back to it', async () => {
+    const { handle, state } = fakeHandle('p.ns.svg', savedFile);
+    vi.stubGlobal('window', { showOpenFilePicker: () => Promise.resolve([handle]) });
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    await shell.openFromPicker();
+    expect(editor.status().name).toBe('p.ns.svg');
+    state.text = '';
+    await editor.save();
+    expect(state.text).toBe(savedFile);
+  });
+
+  it('T-0703: closing the open dialog opens nothing', async () => {
+    vi.stubGlobal('window', {
+      showOpenFilePicker: () => Promise.reject(new DOMException('closed', 'AbortError')),
+    });
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    const before = editor.opened.length;
+    await shell.openFromPicker();
+    expect(editor.opened.length).toBe(before);
+  });
+
+  it('T-0704: says it could not read a picked file that cannot be read', async () => {
+    const { handle } = fakeHandle('bad.ns.svg', '', { readError: new Error('locked') });
+    vi.stubGlobal('window', { showOpenFilePicker: () => Promise.resolve([handle]) });
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    await shell.openFromPicker();
+    expect(editor.notices.at(-1)).toBe('Could not read “bad.ns.svg”.');
+  });
+});
+
+describe('web shell: dropping files', () => {
+  it('T-0705: 06-web 1: opens one dropped file', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: new File([savedFile], 'drop.ns.svg') }]));
+    await settle();
+    expect(editor.status().name).toBe('drop.ns.svg');
+  });
+
+  it('T-0706: 06-web 1: asks for one file at a time when several are dropped', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const before = editor.opened.length;
+    shell.openDropped(
+      dropOf([
+        { file: new File([savedFile], 'a.ns.svg') },
+        { file: new File([savedFile], 'b.ns.svg') },
+      ]),
+    );
+    await settle();
+    expect(editor.opened.length).toBe(before);
+    expect(editor.notices.at(-1)).toBe('Drop one file at a time.');
+  });
+
+  it('T-0707: ignores a drop without files and counts only file items', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const before = { opened: editor.opened.length, notices: editor.notices.length };
+    shell.openDropped(dropOf([], [{ kind: 'string' }]));
+    await settle();
+    expect(editor.opened.length).toBe(before.opened);
+    expect(editor.notices.length).toBe(before.notices);
+    shell.openDropped(
+      dropOf([{ file: new File([savedFile], 'one.ns.svg') }], [{ kind: 'string' }]),
+    );
+    await settle();
+    expect(editor.status().name).toBe('one.ns.svg');
+  });
+
+  it('T-0708: 06-web 1: in Chromium, a dropped file is saved back to the original file', async () => {
+    const { handle, state } = fakeHandle('orig.ns.svg', savedFile);
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: new File(['ignored'], 'copy.ns.svg'), handle }]));
+    await settle();
+    expect(editor.status().name).toBe('orig.ns.svg');
+    state.text = '';
+    await editor.save();
+    expect(state.text).toBe(savedFile);
+  });
+
+  it('T-0709: 06-web 1: a dropped folder falls back to the dropped file', async () => {
+    const folder = { kind: 'directory', name: 'dir' } as unknown as FileSystemHandle;
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: new File([savedFile], 'f.ns.svg'), handle: folder }]));
+    await settle();
+    expect(editor.status().name).toBe('f.ns.svg');
+  });
+});
+
+describe('web shell: recent files', () => {
+  it('T-0710 · R-EXP-04: opens a browser copy from the recent files', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openFile(new File([savedFile], 'r.ns.svg'));
+    await shell.newDocument();
+    await editor.commands.specs.get('file.recent.1')?.run({}, undefined);
+    expect(editor.status().name).toBe('r.ns.svg');
+    expect(editor.opened.at(-1)?.text).toBe(savedFile);
+  });
+
+  it('T-0711 · R-EXP-04: a recent file that was moved or deleted is marked missing', async () => {
+    const db = memoryDb();
+    const { handle } = fakeHandle('lost.ns.svg', '', { readError: new Error('NotFound') });
+    await db.touchRecent({
+      key: 'l',
+      name: 'lost.ns.svg',
+      usedAt: 1,
+      source: { kind: 'handle', handle },
+    });
+    const { shell, editor } = setup({ db, canWriteInPlace: true });
+    await shell.start(editor);
+    const spec = editor.commands.specs.get('file.recent.1');
+    expect(spec?.title).toBe('lost.ns.svg');
+    expect(spec?.when({})).toBe(true);
+    await spec?.run({}, undefined);
+    expect(editor.notices.at(-1)).toBe('lost.ns.svg: The file was moved or deleted.');
+    expect(editor.commands.specs.get('file.recent.1')?.when({})).toBe(
+      'The file was moved or deleted.',
+    );
+  });
+
+  it('T-0712 · R-EXP-04: a recent file without read permission is not opened', async () => {
+    const db = memoryDb();
+    const { handle } = fakeHandle('no.ns.svg', savedFile, { permission: 'denied' });
+    await db.touchRecent({
+      key: 'n',
+      name: 'no.ns.svg',
+      usedAt: 1,
+      source: { kind: 'handle', handle },
+    });
+    const { shell, editor } = setup({ db, canWriteInPlace: true });
+    await shell.start(editor);
+    const before = editor.opened.length;
+    await editor.commands.specs.get('file.recent.1')?.run({}, undefined);
+    expect(editor.opened.length).toBe(before);
+    expect(editor.notices.at(-1)).toBe('Could not read “no.ns.svg”.');
+  });
+
+  it('T-0713 · R-EXP-04: opens a recent file through its handle', async () => {
+    const db = memoryDb();
+    const { handle } = fakeHandle('ok.ns.svg', savedFile);
+    await db.touchRecent({
+      key: 'o',
+      name: 'ok.ns.svg',
+      usedAt: 1,
+      source: { kind: 'handle', handle },
+    });
+    const { shell, editor } = setup({ db, canWriteInPlace: true });
+    await shell.start(editor);
+    await editor.commands.specs.get('file.recent.1')?.run({}, undefined);
+    expect(editor.status().name).toBe('ok.ns.svg');
+    expect((await db.recentFiles()).map((entry) => entry.key)).toEqual(['o']);
+  });
+});
+
+describe('web shell: saving', () => {
+  it('T-0714: 06-web 1: tells once that this browser downloads instead of writing the file', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openFile(new File([savedFile], 'd.ns.svg'));
+    await editor.save();
+    await editor.save();
+    const notice =
+      'This browser cannot write to the original file, so saving downloads a copy to your Downloads folder.';
+    expect(editor.notices.filter((item) => item === notice)).toHaveLength(1);
+  });
+
+  it('T-0715: 06-web 1: "download as" asks for the name in the editor', async () => {
+    const { shell, editor } = setup();
+    const asked: string[] = [];
+    editor.prompt = (message, value) => {
+      asked.push(`${typeof message === 'string' ? message : message.key}|${value}`);
+      return Promise.resolve('other');
+    };
+    await shell.start(editor);
+    const result = await editor.opened.at(-1)?.store.writeAs(savedFile, 'Untitled.ns.svg');
+    expect(asked).toEqual(['File name to download:|Untitled.ns.svg']);
+    expect(result).toEqual({ ok: true, name: 'other.ns.svg' });
+  });
+
+  it('T-0716: 06-web 2: auto saves to the file 2 s after an edit', async () => {
+    const { handle, state } = fakeHandle('auto.ns.svg', savedFile);
+    const { shell, editor, clock } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: null, handle }]));
+    await settle();
+    editor.edit();
+    clock.advance(1999);
+    await settle();
+    expect(state.writes).toBe(0);
+    clock.advance(1);
+    await settle();
+    expect(state.writes).toBe(1);
+    expect(editor.status().dirty).toBe(false);
+  });
+
+  it('T-0717: UX W3-b: no auto save when the setting is off', async () => {
+    const { handle, state } = fakeHandle('off.ns.svg', savedFile);
+    const { shell, editor, clock, settings } = setup({ canWriteInPlace: true });
+    settings.set('file.autoSave', false);
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: null, handle }]));
+    await settle();
+    editor.edit();
+    clock.advance(5000);
+    await settle();
+    expect(state.writes).toBe(0);
+  });
+
+  it('T-0718: 06-web 2: auto save stops and says so when writing is not allowed', async () => {
+    const { handle } = fakeHandle('deny.ns.svg', savedFile, {
+      writeError: new DOMException('no', 'NotAllowedError'),
+    });
+    const { shell, editor, clock } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: null, handle }]));
+    await settle();
+    editor.edit();
+    clock.advance(2000);
+    await settle();
+    expect(editor.notices.at(-1)).toBe(
+      'Auto save stopped: no permission to write the file. Press Ctrl+S to save and allow it again.',
+    );
+    expect(editor.status().dirty).toBe(true);
+  });
+
+  it('T-0719: 06-web 2: a failed auto save is logged, not shown', async () => {
+    const { handle } = fakeHandle('fail.ns.svg', savedFile, { writeError: new Error('disk full') });
+    const { shell, editor, clock, logs } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: null, handle }]));
+    await settle();
+    const notices = editor.notices.length;
+    editor.edit();
+    clock.advance(2000);
+    await settle();
+    expect(logs.at(-1)).toContain('Auto save failed: failed');
+    expect(editor.notices.length).toBe(notices);
+  });
+
+  it('T-0720: 06-web 2: auto save waits for Ctrl+S when there is no write permission yet', async () => {
+    const { handle, state } = fakeHandle('ro.ns.svg', savedFile, { permission: 'prompt' });
+    const { shell, editor, clock } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    shell.openDropped(dropOf([{ file: null, handle }]));
+    await settle();
+    editor.edit();
+    clock.advance(2000);
+    await settle();
+    expect(state.writes).toBe(0);
+  });
+
+  it('T-0721 · R-WEB-03: suspend writes the pending backup at once', async () => {
+    const { shell, editor, db } = setup();
+    await shell.start(editor);
+    editor.edit();
+    expect(shell.isDirty()).toBe(true);
+    shell.suspend();
+    await settle();
+    expect(await db.backups()).toHaveLength(1);
+  });
+});
+
+describe('web shell: export, language, tabs', () => {
+  it('T-0722 · R-EXP-01: a PNG export that cannot draw says it failed', async () => {
+    const { shell, editor, logs } = setup();
+    await shell.start(editor);
+    await editor.commands.specs.get('file.export.png')?.run({}, undefined);
+    expect(editor.notices.at(-1)).toBe('Could not export the PNG.');
+    expect(logs.at(-1)).toContain('PNG export failed');
+  });
+
+  it('T-0723 · R-NFR-04: switching the screen language changes the shell command names', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    expect(editor.commands.specs.get('file.recent.empty')?.title).toBe('No recent files');
+    shell.setLocale('ko');
+    expect(editor.commands.specs.get('file.recent.empty')?.title).toBe('최근 파일 없음');
+    expect(editor.commands.specs.has('file.new')).toBe(true);
+  });
+
+  it('T-0724 · R-NFR-04: notices after a language switch are in the new language', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    shell.setLocale('ko');
+    shell.openDropped(dropOf([{ file: new File([''], 'a') }, { file: new File([''], 'b') }]));
+    expect(editor.notices.at(-1)).toBe('파일은 하나씩 놓아 주세요.');
+  });
+
+  it('T-0725 · R-NFR-04: the untitled name keeps the language the shell started with', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    shell.setLocale('ko');
+    await shell.newDocument();
+    expect(editor.status().name).toBe('Untitled.ns.svg');
+  });
+
+  it('T-0726: dispose removes the shell commands', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    shell.dispose();
+    expect([...editor.commands.specs.keys()]).toEqual([]);
+  });
+
+  it('T-0727: 06-web 2: a file open in another tab is view only, until that tab lets go', async () => {
+    const connect = hub();
+    const db = memoryDb();
+    const first = setup({ db, channel: connect(), tabId: 'one' });
+    await first.shell.start(first.editor);
+    await first.shell.openFile(new File([savedFile], 'shared.ns.svg'));
+    const second = setup({ db, channel: connect(), tabId: 'two' });
+    await second.shell.start(second.editor);
+    await second.shell.openFile(new File([savedFile], 'shared.ns.svg'));
+    expect(second.editor.opened.at(-1)?.readOnly).toBe(true);
+    expect(second.editor.notices.at(-1)).toBe(
+      'Another tab is editing this file. This tab is view only.',
+    );
+    await first.shell.newDocument();
+    await settle();
+    expect(second.editor.status().readOnly).toBe(false);
+    expect(second.editor.notices.at(-1)).toBe('The other tab closed. You can edit this file now.');
   });
 });

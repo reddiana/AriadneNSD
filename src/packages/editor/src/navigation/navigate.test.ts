@@ -151,4 +151,88 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     const down = navigate(cases, { kind: 'missingDefault', block: 'k1' }, null, step('down'));
     expect(down).toEqual({ kind: 'select', selection: selectBlock(cases, 'z') });
   });
+  it('T-0672: interaction rules 2: keys on a header other than the arrows', () => {
+    const heads = indexDoc({
+      ...contentOf([proc('a')], [proc('b'), proc('c')]),
+      diagrams: contentOf([proc('a')], [proc('b'), proc('c')]).diagrams.map((d) => ({
+        ...d,
+        head: { kind: 'method' as const, text: d.id },
+      })),
+    });
+    const on = (navigation: Navigation): unknown =>
+      navigate(heads, { kind: 'head', diagram: 'd2' }, null, navigation);
+    expect(on({ kind: 'unit', direction: 'up' })).toEqual({ kind: 'stay' });
+    expect(on({ kind: 'unit', direction: 'down' })).toEqual({
+      kind: 'select',
+      selection: selectBlock(heads, 'b'),
+    });
+    expect(on({ kind: 'branch', direction: 'left' })).toEqual({ kind: 'stay' });
+    expect(on({ kind: 'diagram', direction: 'previous' })).toEqual({
+      kind: 'select',
+      selection: { kind: 'head', diagram: 'd1' },
+    });
+    expect(on({ kind: 'diagram', direction: 'next' })).toEqual({
+      kind: 'stay',
+      reason: 'noDiagramThere',
+    });
+    expect(on({ kind: 'edge', end: 'first' })).toEqual({
+      kind: 'select',
+      selection: { kind: 'head', diagram: 'd2' },
+    });
+    expect(on({ kind: 'edge', end: 'last' })).toEqual({
+      kind: 'select',
+      selection: selectBlock(heads, 'c'),
+    });
+    // With nothing selected, a header selected last is selected again.
+    expect(navigate(heads, null, 'd2', step('down'))).toEqual({
+      kind: 'select',
+      selection: { kind: 'head', diagram: 'd2' },
+    });
+  });
+
+  it('T-0673: 03-editor 2.2: on a branch label, unit and branch keys go from its If block', () => {
+    const label: Selection = { kind: 'branchLabel', branch: 'r2' };
+    expect(navigate(index, label, null, { kind: 'unit', direction: 'up' })).toEqual({
+      kind: 'select',
+      selection: selectBlock(index, 'a'),
+    });
+    // Acts as on the If block itself: Down from it goes into its first branch.
+    expect(navigate(index, label, null, { kind: 'branch', direction: 'right' })).toEqual({
+      kind: 'select',
+      selection: selectBlock(index, 'c'),
+    });
+    expect(navigate(index, label, null, step('up'))).toEqual({
+      kind: 'select',
+      selection: selectBlock(index, 'b1'),
+    });
+    expect(navigate(index, { kind: 'branchLabel', branch: 'nope' }, null, step('up'))).toEqual({
+      kind: 'stay',
+    });
+    expect(navigate(index, { kind: 'fold', fold: 'f1' }, null, step('down'))).toEqual({
+      kind: 'stay',
+    });
+  });
+
+  it('T-0674: 03-editor 2.2: { at the top of a diagram stays; inside a block it goes to the holder', () => {
+    expect(from('a', { kind: 'unit', direction: 'up' })).toBe('stay');
+    expect(from('c', { kind: 'unit', direction: 'up' })).toBe('b1');
+    expect(from('w1', { kind: 'unit', direction: 'down' })).toBe('stay');
+  });
+
+  it('T-0675 · UX CD1: from the empty default cell, Right with nothing after the Case stays; Ctrl+Left goes from the Case', () => {
+    const cases = indexDoc(contentOf([caseBlock('k1', [arm('r1', '1', [proc('x')])], null)]));
+    const missing: Selection = { kind: 'missingDefault', block: 'k1' };
+    expect(navigate(cases, missing, null, step('right'))).toEqual({ kind: 'stay' });
+    expect(navigate(cases, missing, null, step('up'))).toEqual({
+      kind: 'select',
+      selection: selectBlock(cases, 'k1'),
+    });
+    expect(navigate(cases, { kind: 'missingDefault', block: 'x' }, null, step('up'))).toEqual({
+      kind: 'stay',
+    });
+    // Acts as on the Case block itself, which has nothing above it.
+    expect(navigate(cases, missing, null, { kind: 'branch', direction: 'left' })).toEqual({
+      kind: 'stay',
+    });
+  });
 });

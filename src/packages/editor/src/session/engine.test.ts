@@ -5,16 +5,21 @@ import {
   branch,
   caseBlock,
   contentOf,
+  docOf,
   empty,
   ifBlock,
+  manualTimers,
+  memoryClipboard,
   proc,
   testEngine,
   whileBlock,
 } from '../engine-test-support';
 import { clipToJson } from '../clipboard/clip-format';
+import { keyBindings } from '../input/keys';
 import { indexDoc } from '../model/doc-index';
 import { selectBlock, selectRange, selectedBlocks } from '../state/selection';
 import type { TestEngine } from '../engine-test-support';
+import { EditorSession, keyHintTitle } from './session';
 
 const select = (engine: TestEngine, id: string): void => {
   engine.select(selectBlock(indexDoc(engine.content()), id));
@@ -402,5 +407,176 @@ describe('view only (03-editor 6.4)', () => {
     expect(typeof title === 'function' ? title(engine.registry.context()) : title).toBe(
       'command.file.save',
     );
+  });
+});
+
+describe('visual mode (03-keymap "Visual")', () => {
+  it('T-0542: v again leaves visual mode and the range shrinks to where it ended', () => {
+    const engine = testEngine(contentOf([proc('b1'), proc('b2'), proc('b3')]));
+    select(engine, 'b1');
+    engine.keys('v', 'j');
+    expect(engine.session.state.mode).toBe('visual');
+    expect(selected(engine)).toEqual(['b1', 'b2']);
+    engine.keys('v');
+    expect(engine.session.state.mode).toBe('normal');
+    expect(selected(engine)).toEqual(['b2']);
+  });
+
+  it('T-0543: Esc leaves visual mode the same way, without clearing the selection', () => {
+    const engine = testEngine(contentOf([proc('b1'), proc('b2'), proc('b3')]));
+    select(engine, 'b3');
+    engine.keys('V', 'k');
+    engine.keys('Escape');
+    expect(engine.session.state.mode).toBe('normal');
+    expect(selected(engine)).toEqual(['b2']);
+  });
+
+  it('T-0544: a command key in visual mode runs on the range and ends visual mode', () => {
+    const engine = testEngine(contentOf([proc('b1'), proc('b2'), proc('b3')]));
+    select(engine, 'b1');
+    engine.keys('v', 'j', 'x');
+    expect(engine.session.state.mode).toBe('normal');
+    expect(bodyOf(engine)).toEqual(['b3']);
+  });
+});
+
+describe('questions in the status bar (UX MD3)', () => {
+  const asked = (): TestEngine => {
+    const engine = testEngine(
+      contentOf([
+        caseBlock(
+          'b1',
+          [arm('r1', '1', [proc('b2')]), arm('r2', '2', [proc('b3')])],
+          branch('r3', [proc('b4')]),
+        ),
+      ]),
+    );
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    engine.keys('x');
+    return engine;
+  };
+
+  it('T-0545: Enter takes the first choice: the Case becomes an If', () => {
+    const engine = asked();
+    expect(engine.keys('Enter')).toEqual([true]);
+    expect(engine.session.chrome().question).toBeNull();
+    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('if');
+  });
+
+  it('T-0546: a digit takes that choice: 2 keeps the Case', () => {
+    const engine = asked();
+    expect(engine.keys('2')).toEqual([true]);
+    expect(engine.session.chrome().question).toBeNull();
+    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
+  });
+
+  it('T-0547: another key closes the question and then works as usual', () => {
+    const engine = asked();
+    engine.keys('j');
+    expect(engine.session.chrome().question).toBeNull();
+    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
+    expect(selected(engine)).toEqual(['b3']);
+  });
+
+  it('T-0548: a digit without a choice closes the question too', () => {
+    const engine = asked();
+    engine.keys('9');
+    expect(engine.session.chrome().question).toBeNull();
+  });
+});
+
+describe('the session itself (03-editor 3.4, coding guide 5)', () => {
+  const sessionOf = (locale: { value: 'en' | 'ko' }, logs: string[] = []): EditorSession =>
+    new EditorSession(
+      docOf(contentOf([ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')]))])),
+      {
+        locale: () => locale.value,
+        clipboard: memoryClipboard(),
+        timers: manualTimers(),
+        isKeyHintEnabled: () => false,
+        log: (text) => {
+          logs.push(text);
+        },
+        keyBindings,
+      },
+      { kept: {}, selection: null, isDirty: false, readOnly: false },
+    );
+
+  it('T-0549: rerender draws the fixed words again in the current language', () => {
+    const locale: { value: 'en' | 'ko' } = { value: 'en' };
+    const session = sessionOf(locale);
+    const yes = '참'.codePointAt(0);
+    expect(session.rendering.codePoints).not.toContain(yes);
+    let calls = 0;
+    session.subscribe(() => {
+      calls += 1;
+    });
+    const content = session.state.doc.content;
+    locale.value = 'ko';
+    session.rerender();
+    expect(session.rendering.codePoints).toContain(yes);
+    expect(session.state.doc.content).toBe(content);
+    expect(session.state.undo).toHaveLength(0);
+    expect(calls).toBe(1);
+  });
+
+  it('T-0550: content that breaks an invariant is not taken; the problem is logged and reported', () => {
+    const logs: string[] = [];
+    const session = sessionOf({ value: 'en' }, logs);
+    const before = session.state.doc.content;
+    // Two blocks with the same id.
+    expect(session.apply(contentOf([proc('b1'), proc('b1')]), { selection: null })).toBe(false);
+    expect(session.state.doc.content).toBe(before);
+    expect(logs).toEqual(['A command broke the model invariants']);
+    expect(session.chrome().notice).toMatchObject({
+      message: 'notice.internalError',
+      level: 'warn',
+    });
+  });
+
+  it('T-0551: undo or redo with nothing to step says so and returns false', () => {
+    const session = sessionOf({ value: 'en' });
+    expect(session.history('undo')).toBe(false);
+    expect(session.chrome().notice?.message).toBe('reason.nothingToUndo');
+    expect(session.history('redo')).toBe(false);
+    expect(session.chrome().notice?.message).toBe('reason.nothingToRedo');
+  });
+
+  it.each([
+    [{ kind: 'block', block: 'nope' }, 'reason.notFound'],
+    [{ kind: 'branchLabel', branch: 'nope' }, 'reason.notFound'],
+    [{ kind: 'missingDefault', block: 'nope' }, 'reason.notFound'],
+    [{ kind: 'head', diagram: 'nope' }, 'reason.notFound'],
+    [{ kind: 'head', diagram: 'd1' }, 'reason.noHead'],
+    [{ kind: 'call', block: 'nope', part: 'args' }, 'reason.notFound'],
+    [{ kind: 'call', block: 'b2', part: 'args' }, 'reason.wrongKind'],
+  ] as const)('T-0552: the text field %j cannot be opened: %s', (field, reason) => {
+    const session = sessionOf({ value: 'en' });
+    expect(session.fieldText(field)).toEqual({ reason });
+    expect(session.startEditing(field, 'end')).toBe(reason);
+    expect(session.state.editing).toBeNull();
+  });
+
+  it('T-0553: a text field does not open while view only', () => {
+    const session = sessionOf({ value: 'en' });
+    session.setReadOnly(true);
+    expect(session.startEditing({ kind: 'block', block: 'b2' }, 'end')).toBe('reason.readOnly');
+  });
+
+  it('T-0554: while the text field is open, diagram keys are left to it', () => {
+    const session = sessionOf({ value: 'en' });
+    expect(session.startEditing({ kind: 'block', block: 'b2' }, 'end')).toBe(true);
+    expect(session.handleKey('j')).toBe(false);
+    expect(session.switchCallPart('x')).toBe(false);
+  });
+
+  it('T-0555: an unknown branch has no label text', () => {
+    expect(sessionOf({ value: 'en' }).labelText('nope')).toBe('');
+  });
+
+  it('T-0556: the key hint titles of [ and ], and none for other keys', () => {
+    expect(keyHintTitle('[')).toBe('keyHint.[');
+    expect(keyHintTitle(']')).toBe('keyHint.]');
+    expect(keyHintTitle('q')).toBeNull();
   });
 });
