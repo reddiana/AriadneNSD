@@ -132,21 +132,21 @@ updated: 2026-11-03
 
 - [x] README 첫 화면에 넣은 것 (2026-10-31): 소개 아래에 그림 둘(M41의 5 · 7번, 머리 모양 "제목처럼")을 나란히, 사이트 본문 폭에 맞게 폭 300 · 291px, 그 아래 버튼(TIP 콜아웃, 2026-10-31 세션 02에 채운 버튼 그림으로 → 시안 M42. 2026-11-01에 프로토타입 버튼을 MVP 버튼(`/app/`)으로 바꿈). 7번의 `mid = (lo + hi) // 2`는 프로토타입의 구문 강조가 `//`를 C 주석으로 칠해 `>> 1`로 바꿈. 5번의 안쪽 반복은 For 블록으로 그림 → `README.md` → 모두 그대로(2026-11-03 세션 06)
 
-- [ ] Obsidian에서 시퀀스 다이어그램의 활성 막대가 연해졌는지 봐 주기 (2026-10-31 세션 02). CSS 조각 `.obsidian/snippets/mermaid-activation.css`를 만들어 켜 두었음. 그대로면 설정 → 모양 → CSS 조각에서 `mermaid-activation`을 켜기. `.obsidian/`은 git에 들지 않아 다른 PC에는 없음 → [[2026-10-31-02-readme-polish-activation]]
+- [x] Obsidian에서 시퀀스 다이어그램의 활성 막대가 연해졌는지 봐 주기 (2026-10-31 세션 02). CSS 조각 `.obsidian/snippets/mermaid-activation.css`를 만들어 켜 두었음. 그대로면 설정 → 모양 → CSS 조각에서 `mermaid-activation`을 켜기. `.obsidian/`은 git에 들지 않아 다른 PC에는 없음 → [[2026-10-31-02-readme-polish-activation]] → 쓰며 문제 없어 닫음(2026-11-03 세션 06)
 
-- [ ] 요구사항 ID를 바꾼 것을 Obsidian에서 봐 주기 (2026-10-25 세션 06) → [[2026-10-25-06-requirement-ids]], [[dr-0016-requirement-ids|DR-0016]]
+- [x] 요구사항 ID를 바꾼 것을 Obsidian에서 봐 주기 (2026-10-25 세션 06) → [[2026-10-25-06-requirement-ids]], [[dr-0016-requirement-ids|DR-0016]] → 쓰며 문제 없어 닫음(2026-11-03 세션 06)
 	- 다른 문서의 요구사항 링크(예: [[03-architecture]]의 [[01-requirements#^r-nfr|R-NFR-01]])를 누르면 그 표로 가는가, 마우스를 올리면 표가 미리 보이는가. 사이트에서는 그 줄로 가는 것을 로컬 빌드로 확인함
 	- 요구사항인지 Claude가 가른 것: 절의 소개, 참고 모델, MVP 범위, 미결정 사항은 ID를 매기지 않음. 절 머리글 속 문장 아홉은 요구사항으로 보고 표로 옮김([[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-gd|R-GD-05]], [[01-requirements#^r-cf|R-CF-02]], [[01-requirements#^r-ide|R-IDE-07]], [[01-requirements#^r-edit|R-EDIT-22]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-rep|R-REP-03]], 그리고 핵심 원칙 `R-CORE` · 배포 대상 `R-TGT`)
 	- 블록은 블록 종류 표와 합치며 처리 · If · While · Do-While · Case · For · 호출 … 순서로 번호를 매김(`R-BLK-01~14`)
 	- DR-0016은 같은 세션에서 다듬어 push 전에 고쳐 씀(새 DR을 따로 만들지 않음). 체크박스는 없앰(구현의 진행은 개발 때 정함)
-- [ ] 사이트를 손본 것이 펴낸 사이트에서 맞는지 봐 주기 (2026-10-25 세션 05) → [[2026-10-25-05-site-journal-explorer]]
+- [x] 사이트를 손본 것이 펴낸 사이트에서 맞는지 봐 주기 (2026-10-25 세션 05) → [[2026-10-25-05-site-journal-explorer]] → 쓰며 문제 없어 닫음(2026-11-03 세션 06)
 	- 왼쪽 목록의 폴더를 펼쳐 스크롤바가 생긴 뒤, 펼친 폴더 위에서 마우스 휠이 듣는가(브라우저에서 굴려 보지 못함)
 	- `/journal/name-story` · `/journal/logo-source`의 그림이 보이는가. 왼쪽 목록의 맨 끝(til 다음)에 `journal`을 둔 것은 Claude가 정함
 	- 세션 목록(`/atelier/sessions/`)의 2026-10-10 inbox 검토 · 로고 두 줄이 링크인가
 
 ### 아키텍처 · 기술
 
-- [ ] 예제 썸네일을 미리 그리며 Claude가 정한 것 (2026-11-03 세션 03 → [[2026-11-03-03-small-holes-font-slices-thumbnails]], [[06-web]] 7장): 예제 · 화면 언어마다 하나씩 20개를 저장소에 둠(`src/apps/web/src/examples/thumbnails/`), 낡으면 테스트가 실패하고 스크립트로 다시 만듦. 형식은 처음에 서브셋 글꼴을 넣은 SVG였다가 2026-11-03 세션 04에 WebP 그림(최대 440 × 248)으로 바꿈: SVG는 브라우저가 메인 스레드에서 글자를 배치해 열 개에 CPU 6배 느림으로 1.5초쯤 더 들었음. 크기는 같음
+- [x] 예제 썸네일을 미리 그리며 Claude가 정한 것 (2026-11-03 세션 03 → [[2026-11-03-03-small-holes-font-slices-thumbnails]], [[06-web]] 7장): 예제 · 화면 언어마다 하나씩 20개를 저장소에 둠(`src/apps/web/src/examples/thumbnails/`), 낡으면 테스트가 실패하고 스크립트로 다시 만듦. 형식은 처음에 서브셋 글꼴을 넣은 SVG였다가 2026-11-03 세션 04에 WebP 그림(최대 440 × 248)으로 바꿈: SVG는 브라우저가 메인 스레드에서 글자를 배치해 열 개에 CPU 6배 느림으로 1.5초쯤 더 들었음. 크기는 같음 → 그대로(2026-11-03 세션 06)
 
 
 ## 알아만 두세요
