@@ -405,13 +405,17 @@ const testRow = (test) =>
  */
 const blockOf = (rel) => `t-${rel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-/** One file: a line about the whole file, then one row per test. */
+/**
+ * One file: the heading with its type in front (every test of a file has the file's type;
+ * maintainer, 2026-11-03: "제목 앞에 유형 말머리를 붙여주세요"), a line about the whole file, then
+ * one row per test.
+ */
 const fileBlock = (file) => [
-  `### \`${file.rel}\``,
+  `### [${file.type}] \`${file.rel}\``,
   '',
   [
     ko(file.purpose),
-    `${file.type} · ${file.method} · 테스트 ${String(file.tests.length)}개`,
+    `${file.method} · 테스트 ${String(file.tests.length)}개`,
     ...(file.refs.length === 0
       ? []
       : [`파일 전체가 확인하는 것: ${file.refs.map((id) => link(id, false)).join(', ')}`]),
@@ -476,7 +480,7 @@ const lines = [
   '## 읽는 법',
   '',
   '- **ID:** 테스트마다 `T-`와 네 자리 번호의 ID가 있습니다(테스트 코드의 이름 맨 앞). 번호는 바뀌지 않고, 지운 테스트의 번호는 다시 쓰지 않습니다.',
-  '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(영역마다 한 절). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 아래 한 줄에 파일이 무엇을 확인하는지, 유형 · 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
+  '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(영역마다 한 절). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 앞에는 유형을 말머리로 붙이고(`[E2E]`), 제목 아래 한 줄에 파일이 무엇을 확인하는지, 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
   '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
   '- **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).',
