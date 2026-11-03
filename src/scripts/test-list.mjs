@@ -297,14 +297,31 @@ const counts = [
   countRow('모두', files),
 ];
 
-const idRow = ({ ids, what, file }) =>
-  `| ${link(ids[0])} | ${cell(what)} | ${ids.slice(1).map(link).join(', ') || '—'} | ${file.type} | \`${file.rel}\` |`;
+/**
+ * The tests of an area grouped by their first id, so that an id is one row (maintainer,
+ * 2026-11-03: "ID는 유니크해야하지 않나요?"): one defect or acceptance test may be kept by several
+ * tests.
+ */
+function byId(tests) {
+  const groups = new Map();
+  for (const test of tests) groups.set(test.ids[0], [...(groups.get(test.ids[0]) ?? []), test]);
+  return [...groups].map(([id, of]) => ({ id, tests: of }));
+}
+const idRow = ({ id, tests }) =>
+  `| ${link(id)} | ${tests.map((test) => cell(test.what)).join('<br>')} | ${
+    unique(tests.flatMap((test) => test.ids.slice(1)))
+      .map(link)
+      .join(', ') || '—'
+  } | ${unique(tests.map((test) => test.file.type)).join(', ')} | ${unique(
+    tests.map((test) => `\`${test.file.rel}\``),
+  ).join('<br>')} |`;
 const fileRow = (file) =>
   `| \`${file.rel}\` | ${cell(file.purpose)} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`;
 
 const areaSections = areas.flatMap((area, i) => {
   const of = files.filter((file) => file.area === area.name);
   const withIds = idTests.filter((test) => test.file.area === area.name);
+  const rows = byId(withIds);
   return [
     `### 2.${String(i + 1)} ${area.name}`,
     '',
@@ -319,11 +336,11 @@ const areaSections = areas.flatMap((area, i) => {
     ...(withIds.length === 0
       ? []
       : [
-          `ID가 있는 테스트 ${String(withIds.length)}개:`,
+          `ID ${String(rows.length)}개를 테스트 ${String(withIds.length)}개가 지킵니다:`,
           '',
-          '| ID | 목적/내용 | 근거 | 유형 | 자리 |',
+          '| ID | 지키는 테스트 | 다른 근거 | 유형 | 자리 |',
           '| --- | --- | --- | --- | --- |',
-          ...withIds.map(idRow),
+          ...rows.map(idRow),
           '',
         ]),
   ];
@@ -346,7 +363,7 @@ const lines = [
   '',
   '## 읽는 법',
   '',
-  '- **영역:** 테스트를 그것이 지키는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 이름에 ID를 단 테스트를 한 줄씩 보입니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
+  '- **영역:** 테스트를 그것이 지키는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 ID(인수 테스트 · 결함 · 요구사항 등)를 한 줄씩, 그 ID를 이름에 단 테스트와 함께 보입니다. 한 ID를 테스트 여럿이 지키면 한 줄에 모두 적습니다. 같은 ID가 다른 영역에도 나올 수 있습니다(예: 인수 테스트가 E2E와 통합 테스트 양쪽에 있을 때). 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
   '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
   '- **근거:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)',
