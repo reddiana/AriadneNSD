@@ -57,7 +57,7 @@ updated: 2026-11-03
 ### 2026-11-03 세션 05에 Claude가 정한 것 (→ [[2026-11-03-05-tests-before-refactoring]])
 
 - [ ] 일하는 방식 문서 [[how-we-work]]의 내용과 자리(inbox의 "로컬에서 보기"를 둘 곳으로 새로 만듦)
-- [ ] [[0041-drawing-locale-in-document|ADR-0041]]은 고르신 안(B)으로 썼지만 상태는 "제안됨"입니다. 승인으로 바꿀지. 필드 이름은 `settings.locale`
+- [x] [[0041-drawing-locale-in-document|ADR-0041]]을 승인으로 바꿀지 → 승인(2026-11-03 세션 06). 구현은 에이전트에게
 - [ ] 커버리지: `pnpm coverage`(단위 Vitest V8 + E2E Chromium, 줄마다 합침), 숫자는 [[07-testing#6. 지금의 커버리지]]에 손으로 옮김(생성 문서로 하지 않음)
 - [ ] QA-13: JSX에 글자를 직접 쓰면 막는 ESLint 규칙, 화면 언어 목록을 `core`의 `locales` 하나로 → [[07-coding-guide]] 8장
 - [ ] 번역 에이전트가 뜻을 짐작해 옮긴 테스트 이름 몇(예: "두 번째 비춤은 1초를 처음부터 다시 센다", "줄이 옮겨진 범위는 새 소유자로 다시 적힌다") → [[08-test-list]]

@@ -2,7 +2,7 @@
 title: "ADR-0041: 그림의 고정 문구는 문서의 언어를 따른다"
 tags:
   - adr
-status: 제안됨
+status: 승인
 date: 2026-11-03
 supersedes:
 superseded-by:
