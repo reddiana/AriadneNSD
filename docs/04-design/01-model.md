@@ -50,7 +50,7 @@ type Settings = {
   locale: Locale;        // 그림 문구의 언어: 그림에 적는 고정 문구("참" · "거짓" 등)의 언어 → [[0041-drawing-locale-in-document|ADR-0041]]
 };
 type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
-type ThemeId = string;   // 테마의 이름. v1 형식은 'default' 하나. 모르는 이름은 기본 테마로 그린다
+type ThemeId = string;   // 테마의 이름: 'default' · 'dark' · 'high-contrast' · 'print'. 모르는 이름은 기본 테마로 그리고 그대로 둔다 (ADR-0042)
 type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록)
 ```
 

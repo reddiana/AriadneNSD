@@ -210,7 +210,7 @@ D2Coding 1.4.0(unitsPerEm 1000)의 문자 폭은 **두 가지뿐**입니다: 반
 MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 
 - **SVG 요소와 클래스:** 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 적습니다. 안에는 `<rect>`(칸) · `<path>`(선, 빗금) · `<circle>`(`∅`) · `<text>`(굵은 부분은 `<tspan>`)만 두고, 색은 클래스가 아니라 `fill` · `stroke` 값으로 적습니다(`src/packages/core/src/render/to-svg.ts`) → [[01-file-format#4. 그림 부분]]
-- **디자인 토큰 맵:** `buildScene()`이 테마(토큰 이름 → 색 값, `src/packages/core/src/render/theme.ts`)를 받아 문서 레이어를 그립니다. 오버레이 레이어는 `editor`가 화면 색으로 따로 덧그립니다(`src/packages/editor/src/dom/overlay.ts`) → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
+- **디자인 토큰 맵:** `buildScene()`이 테마(토큰 이름 → 색 값, `src/packages/core/src/render/theme.ts`)를 받아 문서 레이어를 그립니다. 테마는 넷(`themes`: `default` · `dark` · `high-contrast` · `print`)이고, 저마다 종이의 종류(`kind`: `light` · `dark`)를 가집니다. `themeFor(id)`는 모르는 이름에 기본 테마를 줍니다. 오버레이 레이어는 `editor`가 테마의 종류에 맞는 편집 색으로 따로 덧그립니다(`src/packages/editor/src/dom/overlay.ts`, [[0042-document-themes|ADR-0042]]) → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
 - **고정 문구의 로캘:** `layout()`이 문서 설정의 그림 문구의 언어(`settings.locale`)를 읽어, 그림에 적는 고정 문구("참" · "거짓" 등)를 `core`의 메시지 카탈로그(`src/packages/core/src/i18n/messages.ts`)에서 고릅니다. 화면 언어는 받지 않습니다. 그래서 같은 문서는 화면 언어와 상관없이 같은 그림이 됩니다 → [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]
 
 > [!info] 미완성: 그림 부분의 형식에서 남은 것
