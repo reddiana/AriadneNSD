@@ -360,7 +360,7 @@ const countRow = (name, of) =>
   `| ${name} | ${typeOrder
     .map((kind) => {
       const n = testCount(of.filter((file) => file.type === kind));
-      return n === 0 ? '' : String(n);
+      return n === 0 ? '-' : String(n);
     })
     .join(' | ')} | ${String(testCount(of))} |`;
 const counts = [
@@ -470,7 +470,7 @@ const lines = [
   '영역마다 유형별 테스트 수입니다.',
   '',
   `| 영역 | ${typeOrder.join(' | ')} | 모두 |`,
-  `| --- | ${typeOrder.map(() => '---').join(' | ')} | --- |`,
+  `| --- | ${typeOrder.map(() => ':---:').join(' | ')} | :---: |`,
   ...counts,
   '',
   '## 읽는 법',
