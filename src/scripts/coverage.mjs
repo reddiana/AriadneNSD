@@ -5,6 +5,7 @@
 //   pnpm coverage            run everything, then report
 //   pnpm coverage --report   report the last run again
 //   pnpm coverage --files 40 list 40 files instead of 20
+//   pnpm coverage --check    also fail when a package is below its floor or a test run failed (CI)
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,10 +15,17 @@ const unitDir = 'coverage';
 const e2eFile = 'apps/web/coverage-e2e/coverage-final.json';
 const argument = (name) => process.argv[process.argv.indexOf(name) + 1];
 const fileCount = process.argv.includes('--files') ? Number(argument('--files')) : 20;
+const isCheck = process.argv.includes('--check');
+/** The least share of lines (unit and browser tests together) each package keeps, in % (07-testing 5). */
+const floors = new Map(packages.map((dir) => [dir, 90]));
+let hasFailedRun = false;
 
 function run(command, cwd) {
   const result = spawnSync(command, { cwd, stdio: 'inherit', shell: true });
-  if (result.status !== 0) console.error(`"${command}" in ${cwd} failed; the coverage is partial.`);
+  if (result.status !== 0) {
+    hasFailedRun = true;
+    console.error(`"${command}" in ${cwd} failed; the coverage is partial.`);
+  }
 }
 
 if (!process.argv.includes('--report')) {
@@ -115,4 +123,18 @@ for (const f of files.slice(0, fileCount)) {
   console.log(
     `  ${String(f.code - f.both).padStart(6)} / ${String(f.code).padEnd(5)} ${pct(f.both, f.code)} ${pct(f.unit, f.code)} ${pct(f.e2e, f.code)}   ${f.path}`,
   );
+}
+
+if (isCheck) {
+  const below = [...totals]
+    .filter(([dir, t]) => t.code > 0 && (100 * t.both) / t.code < (floors.get(dir) ?? 0))
+    .map(([dir, t]) => `${dir} ${pct(t.both, t.code).trim()} < ${String(floors.get(dir))}%`);
+  const missing = [...totals].filter(([, t]) => t.code === 0).map(([dir]) => `${dir} has no data`);
+  const problems = [...below, ...missing];
+  if (hasFailedRun) problems.push('a test run failed');
+  if (problems.length > 0) {
+    console.error(`\nCoverage check failed:\n  ${problems.join('\n  ')}`);
+    process.exit(1);
+  }
+  console.log('\nEvery package is at or above its floor.');
 }

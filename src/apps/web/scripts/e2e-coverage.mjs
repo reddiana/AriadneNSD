@@ -22,7 +22,11 @@ if (!process.argv.includes('--report')) {
     shell: true,
     env: { ...process.env, E2E_COVERAGE: '1' },
   });
-  if (run.status !== 0) console.error('Some browser tests failed; the coverage is of the rest.');
+  if (run.status !== 0) {
+    // Still report, but end with a failure so `pnpm coverage --check` sees it.
+    process.exitCode = 1;
+    console.error('Some browser tests failed; the coverage is of the rest.');
+  }
 }
 
 const mcr = MCR({

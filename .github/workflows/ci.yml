@@ -3,6 +3,9 @@
 # pnpm check: 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트(골든 파일 포함)
 # 그다음 웹 앱을 빌드해 첫 내려받기의 번들 사이즈 체크(bundle size budget)를 하고(apps/web/scripts/check-size.mjs),
 # Chromium으로 E2E를 실행한다(apps/web/e2e/).
+# coverage job은 check와 나란히 돈다: 단위 테스트와 E2E를 커버리지와 함께 돌려 줄마다 합치고,
+# 패키지마다 합친 줄 커버리지가 하한(90%)보다 낮거나 테스트가 실패하면 실패한다
+# (pnpm coverage:check, scripts/coverage.mjs → docs/04-design/07-testing.md 6장).
 # 문서 사이트의 빌드(pages.yml)와는 따로 실행된다.
 
 name: CI
@@ -65,3 +68,28 @@ jobs:
           name: playwright-report
           path: src/apps/web/playwright-report/
           retention-days: 7
+
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: src/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: src/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Playwright 브라우저 받기
+        run: pnpm --filter @ariadne-nsd/web exec playwright install --with-deps chromium
+
+      # 패키지마다 단위 + E2E의 합친 줄 커버리지가 90% 이상인가
+      - name: 커버리지 하한
+        run: pnpm coverage:check
