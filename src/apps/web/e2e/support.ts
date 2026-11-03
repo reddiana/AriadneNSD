@@ -40,6 +40,22 @@ export function statusBar(page: Page): Locator {
   return page.locator('.ans-statusbar');
 }
 
+/** The open · save modal that File › Open…, Save As… and a new document's first save show (UX BS1). */
+export function placesModal(page: Page): Locator {
+  return page.locator('.ans-backdrop[data-kind="places"]');
+}
+
+/**
+ * Answers the open · save modal with "Files on This Computer" and its one button, so the
+ * computer's own file dialog (or the download) follows as before the modal (06-web 1).
+ */
+export async function onThisComputer(page: Page): Promise<void> {
+  const modal = placesModal(page);
+  await modal.locator('#ans-places-tab-computer').click();
+  await modal.locator('#ans-places-panel-computer [data-default="true"]').click();
+  await expect(modal).toHaveCount(0);
+}
+
 /** Takes the File System Access pickers away: the download flow of Firefox and Safari. */
 export async function useDownloads(page: Page): Promise<void> {
   await page.addInitScript(() => {

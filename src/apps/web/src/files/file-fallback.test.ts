@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { chooseFileWithInput, download } from './file-fallback';
+import { chooseFileWithInput, chooseFilesWithInput, download } from './file-fallback';
 
 /** An element of the fake page: keeps its attributes, listeners, clicks and whether it is in the page. */
 type FakeElement = {
@@ -123,5 +123,29 @@ describe('file input', () => {
     const choosing = chooseFileWithInput();
     elements[0]?.listeners.get('change')?.();
     expect(await choosing).toBeNull();
+  });
+  it('T-0972 · UX BS4: Import from Files… offers several files and gives them all, or none when closed', async () => {
+    const files = [new File(['a'], 'a.ns.svg'), new File(['z'], 'all.zip')];
+    const choosing = chooseFilesWithInput(['.ns.svg', '.zip']);
+    const [input] = elements;
+    expect(input).toMatchObject({
+      type: 'file',
+      multiple: true,
+      accept: '.ns.svg,.zip',
+      clicks: 1,
+    });
+    if (input === undefined) {
+      throw new Error('no input');
+    }
+    input.files = files;
+    input.listeners.get('change')?.();
+    expect(await choosing).toEqual(files);
+    expect(input.isInPage).toBe(false);
+    const closing = chooseFilesWithInput(['.zip']);
+    elements[1]?.listeners.get('cancel')?.();
+    expect(await closing).toEqual([]);
+    const empty = chooseFilesWithInput(['.zip']);
+    elements[2]?.listeners.get('change')?.();
+    expect(await empty).toEqual([]);
   });
 });

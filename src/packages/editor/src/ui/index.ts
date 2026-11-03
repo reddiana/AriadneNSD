@@ -3,4 +3,12 @@
 
 export type { EditorAppProps, ExamplesHost } from './editor-app';
 export { EditorApp } from './editor-app';
+export type {
+  BrowserDocumentInfo,
+  PlaceSide,
+  PlacesAnswer,
+  PlacesHost,
+  PlacesRequest,
+} from './places-modal';
+export { formatSavedAt, formatSize } from './places-modal';
 export { uiCommandIds } from './command-ids';

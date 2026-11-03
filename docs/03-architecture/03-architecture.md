@@ -152,7 +152,7 @@ UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의�
 | `editor` | 화면 표시, 선택, 텍스트 편집, 키보드 · 마우스 · 드래그 앤 드롭 입력, 메뉴와 툴바(React → [[0010-ui-framework\|ADR-0010]]), UI 다국어 | [[03-editor]] |
 | `apps/obsidian` | 파일 뷰 등록, `.ns.svg` 판별, 볼트 파일 I/O, 노트에 삽입된 그림 갱신 | [[04-obsidian-plugin]] |
 | `apps/desktop` | 창, 파일 대화상자, OS 파일 연결 | [[05-desktop]] |
-| `apps/web` | 정적 사이트, 브라우저 파일 I/O(File System Access API), 로컬 백업 · 자동 저장 · 최근 파일, 공유 URL, Drive 연동 | [[06-web]] |
+| `apps/web` | 정적 사이트, 브라우저 파일 I/O(File System Access API), 브라우저 문서, 로컬 백업 · 자동 저장 · 최근 파일, 공유 URL, Drive 연동 | [[06-web]] |
 
 나중의 대상: `apps/confluence` · `apps/vscode` · `apps/intellij`(→ `editor`), `skills/ariadne-nsd`(셸이 아님) → [[0036-code-layout|ADR-0036]]
 
@@ -434,8 +434,8 @@ sequenceDiagram
 | UI 프레임워크 | React 19 (`react`, `react-dom`) | `editor`의 주변 UI(메뉴 바, 툴바, 모달, 커맨드 팔레트). 다이어그램 영역 · 오버레이 · 키 입력 · 인라인 에디터는 React 밖의 TypeScript | MIT | [[0010-ui-framework\|ADR-0010]] |
 | 글꼴 | D2Coding 1.4.0 보통(400), 한자를 뺀 문자([[02-layout#2.1 advance 폭 테이블]]) | `packages/fonts`. 텍스트 폭 계산과 화면 · 저장 파일의 글꼴 | OFL-1.1 | [[0034-default-block-font\|ADR-0034]], [[0026-bundled-font-metrics\|ADR-0026]] |
 | 서브셋 글꼴 | HarfBuzz의 서브세팅(`harfbuzzjs` 1.6.3의 `hb-subset` wasm) | `packages/fonts`. 저장 파일에 쓰인 문자만 남긴 글꼴 | MIT(HarfBuzz는 Old MIT) | [[0026-bundled-font-metrics\|ADR-0026]] (2026-10-13 스파이크) |
-| 압축 | `fflate` 0.8.3 (zlib, 압축 수준 9 · 메모리 수준 8로 고정) | `packages/fonts`. 서브셋 글꼴을 WOFF로 | MIT | [[0039-woff-subset-font\|ADR-0039]] |
-| 웹 플랫폼 API | File System Access API(`showOpenFilePicker` · `showSaveFilePicker`, 파일 핸들), IndexedDB, BroadcastChannel, Clipboard API | `apps/web`: 열기 · 저장, 로컬 백업 · 최근 파일, 같은 파일을 연 다른 탭, 복사 · 붙여넣기 | (브라우저) | [[06-web]], [[0031-shell-interfaces\|ADR-0031]] |
+| 압축 | `fflate` 0.8.3 (zlib, 압축 수준 9 · 메모리 수준 8로 고정) | `packages/fonts`. 서브셋 글꼴을 WOFF로. `apps/web`: 브라우저 문서를 모두 내보내는 zip과 가져오는 zip(저장 파일의 바이트에 들지 않음 → [[06-web#1.3 브라우저 문서]]) | MIT | [[0039-woff-subset-font\|ADR-0039]] |
+| 웹 플랫폼 API | File System Access API(`showOpenFilePicker` · `showSaveFilePicker`, 파일 핸들), IndexedDB, BroadcastChannel, Clipboard API | `apps/web`: 열기 · 저장, 브라우저 문서 · 로컬 백업 · 최근 파일, 같은 파일을 연 다른 탭, 복사 · 붙여넣기 | (브라우저) | [[06-web]], [[0031-shell-interfaces\|ADR-0031]] |
 | Obsidian | Obsidian 플러그인 API(`obsidian` 패키지) | `apps/obsidian` | MIT | [[04-obsidian-plugin]] |
 | 데스크톱 | Tauri 또는 Electron (미정) | `apps/desktop` | — | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
 | Google Drive | Google Drive API(`drive.file` 범위) | `apps/web` 안 | — | [[0012-google-drive-integration\|ADR-0012]] |

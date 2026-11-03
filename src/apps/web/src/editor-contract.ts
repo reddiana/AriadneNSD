@@ -19,12 +19,19 @@ export type WriteResult =
       readonly ok: false;
       readonly reason: 'cancelled' | 'denied' | 'failed';
       readonly detail?: string;
+      /** The shell's own words for the failure, shown instead of the editor's general notice. */
+      readonly message?: Message;
     };
+
+/** Where a document lives: a file, or a document kept in this browser (R-WEB-09). */
+export type DocumentPlace = 'file' | 'browser';
 
 /** One document's reading and writing, implemented by the shell (03-editor 6). */
 export type DocumentStore = {
   readonly name: string;
   readonly canWriteInPlace: boolean;
+  /** `browser`: the editor shows a "Browser" chip next to the name (UX BS2). */
+  readonly place?: DocumentPlace;
   read(): Promise<string>;
   write(svg: string): Promise<WriteResult>;
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
@@ -105,11 +112,60 @@ export type EditorHandle = {
     message: Message,
     buttons?: { readonly confirm?: Message; readonly cancel?: Message },
   ): Promise<boolean>;
-  /** Asks a question with three answers in the editor's modal (US1: save, discard, cancel). */
+  /**
+   * Asks a question with three answers in the editor's modal (US1: save, discard, cancel), or
+   * four with `second` (US1: save in this browser).
+   */
   choose(
     message: Message,
-    buttons: { readonly confirm: Message; readonly other: Message; readonly cancel?: Message },
-  ): Promise<'confirm' | 'other' | 'cancel'>;
+    buttons: {
+      readonly confirm: Message;
+      readonly other: Message;
+      readonly second?: Message;
+      readonly cancel?: Message;
+    },
+  ): Promise<'confirm' | 'other' | 'second' | 'cancel'>;
   /** Asks for a text in the editor's modal; `null` when cancelled. */
   prompt(message: Message, value: string): Promise<string | null>;
+};
+
+/** The two sides of the open · save modal (UX BS1). */
+export type PlaceSide = 'computer' | 'browser';
+
+/** A document in this browser as the open · save modal lists it (UX BS3). */
+export type BrowserDocumentInfo = {
+  readonly key: string;
+  readonly name: string;
+  readonly savedAt: number;
+  readonly size: number;
+};
+
+/** What the shell asks the open · save modal for (the editor's `PlacesRequest`). */
+export type PlacesRequest = {
+  readonly id: number;
+  readonly mode: 'open' | 'save';
+  readonly side: PlaceSide;
+  readonly name: string;
+  readonly currentKey: string | null;
+  readonly isDownload: boolean;
+};
+
+/** The user's answer in the open · save modal. `null`: closed. */
+export type PlacesAnswer =
+  | { readonly kind: 'computer' }
+  | { readonly kind: 'open'; readonly key: string }
+  | { readonly kind: 'save'; readonly name: string }
+  | null;
+
+/** What the shell does for the open · save modal (the editor's `PlacesHost`). */
+export type PlacesHost = {
+  readonly request: () => PlacesRequest | null;
+  readonly onRequest: (listener: () => void) => () => void;
+  readonly answer: (answer: PlacesAnswer) => void;
+  readonly documents: () => Promise<ReadonlyArray<BrowserDocumentInfo>>;
+  readonly rename: (key: string) => Promise<void>;
+  readonly exportDocument: (key: string) => Promise<void>;
+  readonly remove: (key: string) => Promise<void>;
+  readonly exportAll: () => Promise<void>;
+  readonly importFiles: () => Promise<void>;
 };

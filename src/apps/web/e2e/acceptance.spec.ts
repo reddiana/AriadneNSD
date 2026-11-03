@@ -12,7 +12,9 @@ import {
   drawnText,
   middleOf,
   modelOf,
+  onThisComputer,
   openApp,
+  placesModal,
   outline,
   press,
   putFile,
@@ -33,6 +35,13 @@ async function savedOutline(page: Page, name = 'Untitled.ns.svg'): Promise<strin
   await expect(page).toHaveTitle(/^● /);
   const writes = await writeCount(page);
   await page.keyboard.press('Control+S');
+  // A new document's first save asks where first (UX BS1); later saves write at once.
+  await expect
+    .poll(async () => (await placesModal(page).count()) > 0 || (await writeCount(page)) > writes)
+    .toBe(true);
+  if ((await placesModal(page).count()) > 0) {
+    await onThisComputer(page);
+  }
   await expect.poll(() => writeCount(page)).toBe(writes + 1);
   await expect(page).toHaveTitle(`${name} – AriadneNSD`);
   const text = await writtenText(page, name);
@@ -104,6 +113,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await typeText(page, 'done');
     await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
     await command(page, 'file.save').click();
+    await onThisComputer(page);
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
     const saved = await writtenText(page, 'Untitled.ns.svg');
     expect(outline(modelOf(saved ?? '').diagrams[0]?.body ?? [])).toBe('W(i < n)[E] P(done)');
@@ -121,6 +131,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
 
     await command(page, 'file.new').click();
     await command(page, 'file.open').click();
+    await onThisComputer(page);
     await expect(drawnText(page, 'read x')).toBeVisible();
     expect(await page.locator('.ans-document').innerHTML()).toBe(drawn);
     await page.keyboard.press('Control+S');
@@ -209,6 +220,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await page.keyboard.press('Enter');
     await page.keyboard.type('typed, not accepted yet');
     await page.keyboard.press('Control+S');
+    await onThisComputer(page);
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
     const text = (await writtenText(page, 'Untitled.ns.svg')) ?? '';
     expect(outline(modelOf(text).diagrams[0]?.body ?? [])).toBe('P(typed, not accepted yet)');
@@ -221,6 +233,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     test.skip(process.env.E2E_COVERAGE !== undefined, 'coverage recording slows the page down');
     await putFile(page, 'large.ns.svg', largeDocument(500));
     await command(page, 'file.open').click();
+    await onThisComputer(page);
     await expect(page).toHaveTitle('large.ns.svg – AriadneNSD');
     await drawnText(page, 'step 250').click();
     // From the key to the frame after the document layer changed (03-editor 1.2).
@@ -260,6 +273,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     const damaged = largeDocument(1).replace('"kind":"process"', '"kind":"nonsense"');
     await putFile(page, 'damaged.ns.svg', damaged);
     await command(page, 'file.open').click();
+    await onThisComputer(page);
     await expect(statusBar(page)).toContainText('“damaged.ns.svg” is damaged');
     await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
     expect(await writtenText(page, 'damaged.ns.svg')).toBe(damaged);
@@ -358,6 +372,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await openApp(other);
     await putFile(other, 'copy.ns.svg', first);
     await command(other, 'file.open').click();
+    await onThisComputer(other);
     await expect(other).toHaveTitle('copy.ns.svg – AriadneNSD');
     await other.keyboard.press('Control+S');
     await expect(other).toHaveTitle('copy.ns.svg – AriadneNSD');
@@ -552,11 +567,13 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await processBlocks(page, 'download', '내려받기');
     let downloading = page.waitForEvent('download');
     await page.keyboard.press('Control+S');
+    await onThisComputer(page);
     const first = await readFile(await (await downloading).path(), 'utf8');
 
     await command(page, 'file.new').click();
     const choosing = page.waitForEvent('filechooser');
     await command(page, 'file.open').click();
+    await onThisComputer(page);
     await (
       await choosing
     ).setFiles({ name: 'Untitled.ns.svg', mimeType: 'image/svg+xml', buffer: Buffer.from(first) });
@@ -571,6 +588,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
   }) => {
     await processBlocks(page, 'named');
     await page.keyboard.press('Control+Shift+S');
+    await onThisComputer(page);
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('File name to download');
     await dialog.getByRole('button', { name: 'Cancel' }).click();
@@ -578,6 +596,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await expect(canvas(page)).toBeFocused();
 
     await page.keyboard.press('Control+Shift+S');
+    await onThisComputer(page);
     await page.getByRole('textbox').fill('renamed');
     const downloading = page.waitForEvent('download');
     await page.keyboard.press('Enter');
@@ -607,6 +626,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await processBlocks(page, 'x');
     const downloading = page.waitForEvent('download');
     await command(page, 'file.save').click();
+    await onThisComputer(page);
     await downloading;
     await expect(statusBar(page)).toContainText('This browser cannot write to the original file');
   });

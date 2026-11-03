@@ -323,6 +323,16 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
           <button type="button" onClick={cancel}>
             {format(dialog.cancel)}
           </button>
+          {dialog.second !== undefined && (
+            <button
+              type="button"
+              onClick={() => {
+                dialog.answerSecond?.();
+              }}
+            >
+              {format(dialog.second)}
+            </button>
+          )}
           <button type="submit" ref={confirmRef} data-default="true">
             {format(dialog.confirm)}
           </button>

@@ -1,33 +1,55 @@
-// The web shell (06-web): opens and saves files, keeps local backups and recent files, auto saves,
-// and adds its commands to the editor's command list (03-editor 6.1).
+// The web shell (06-web): opens and saves files and documents in this browser, keeps local
+// backups and recent files, auto saves, and adds its commands to the editor's command list
+// (03-editor 6.1).
 
 import type { Doc, Locale, OpenFailureReason } from '@ariadne-nsd/core';
-import { openSvgFile, parseModel } from '@ariadne-nsd/core';
+import { headName, openSvgFile, parseModel } from '@ariadne-nsd/core';
 
 import type {
   CommandSpec,
   DocStatus,
   EditorHandle,
   OpenedDocument,
+  PlaceSide,
   SettingsStore,
+  WriteResult,
 } from '../editor-contract';
 import { exportPng } from '../files/export-command';
-import { chooseFileWithInput } from '../files/file-fallback';
-import { documentFileName, windowTitle } from '../files/file-name';
+import {
+  chooseFileWithInput,
+  chooseFilesWithInput,
+  documentMediaType,
+  download,
+} from '../files/file-fallback';
+import {
+  baseName,
+  documentFileName,
+  isOpenableName,
+  openableExtensions,
+  windowTitle,
+} from '../files/file-name';
 import {
   droppedHandle,
   ensurePermission,
   isFileHandle,
+  pickDocumentToSave,
   pickFileToOpen,
+  pickZipToSave,
+  writeToHandle,
 } from '../files/file-system-access';
 import type { ShareHost } from '../files/share-command';
 import { copyShareLink } from '../files/share-command';
 import type { ShareLinkFailure } from '../files/share-link';
 import { readShareLink } from '../files/share-link';
-import type { StoreOrigin, Written } from '../files/web-document-store';
+import type { SavePlace, SaveSubject, StoreOrigin, Written } from '../files/web-document-store';
 import { WebDocumentStore } from '../files/web-document-store';
+import { isZip, unzipTexts, zipTexts } from '../files/zip';
 import type { BrowserDb } from '../storage/browser-db';
+import type { BrowserDocument } from '../storage/browser-documents';
+import { byteSize, findByName, isSameName, uniqueName } from '../storage/browser-documents';
 import type { RecentFile } from '../storage/recent-files';
+import type { Places } from './places';
+import { createPlaces } from './places';
 import type { ShellMessageKey } from './messages';
 import { shellMessage } from './messages';
 import type { Channel } from './tab-lock';
@@ -48,6 +70,10 @@ const appName = 'AriadneNSD';
 export const autosaveSettingKey = 'file.autoSave';
 /** Remembers that the "this browser downloads" notice was shown (06-web 1: once). */
 const downloadNoticeKey = 'web.downloadNoticeShown';
+/** The side of the open · save modal used last in this browser (UX BS1). */
+export const placeSideKey = 'web.placeSide';
+/** Remembers that persistent storage was asked for once (06-web 1.3). */
+const persistAskedKey = 'web.persistAsked';
 
 /**
  * The ids of the commands the shell adds (03-editor 6.1). Save and save as are the editor's own
@@ -79,6 +105,11 @@ export type WebShellOptions = {
   readonly log: (detail: string) => void;
   /** Making share links (R-WEB-05): this page's address, the compressor and the clipboard. */
   readonly share: Pick<ShareHost, 'page' | 'deflate' | 'copyText'>;
+  /**
+   * Asks the browser not to clear this site's storage first when space runs low
+   * (`navigator.storage.persist`). Absent: the browser has no such API.
+   */
+  readonly persistStorage?: () => Promise<boolean>;
 };
 
 /** The running shell. Create it with `createWebShell`, then `start` it with an editor. */
@@ -112,6 +143,8 @@ export type WebShell = {
   readonly isDirty: () => boolean;
   /** The screen language changed (preferences): the shell's command names follow. */
   readonly setLocale: (locale: Locale) => void;
+  /** The open · save modal's host, for the editor's UI (R-WEB-09, UX BS1). */
+  readonly places: Places;
   readonly dispose: () => void;
 };
 
@@ -122,6 +155,19 @@ export function createWebShell(options: WebShellOptions): WebShell {
   const text = (key: ShellMessageKey, values?: Readonly<Record<string, string>>): string =>
     shellMessage(locale, key, values);
   const untitledName = documentFileName('', text('file.untitled'));
+  const places = createPlaces({
+    documents: async () =>
+      (await db.documents()).map(({ key, name, savedAt, size }) => ({ key, name, savedAt, size })),
+    rename: renameBrowserDocument,
+    exportDocument: exportBrowserDocument,
+    remove: deleteBrowserDocument,
+    exportAll: exportAllBrowserDocuments,
+    importFiles: importBrowserDocuments,
+  });
+  /** A notice to show after the next document opens (it empties the status bar). */
+  let pendingNotice: string | null = null;
+  /** US1 "Save in Browser": the next save goes to this browser without the modal. */
+  let isNextSaveToBrowser = false;
 
   let editor: EditorHandle | null = null;
   /** Tells the user in the editor's status bar (06-web 7: one place for notices). */
@@ -170,6 +216,8 @@ export function createWebShell(options: WebShellOptions): WebShell {
           editor === null
             ? Promise.resolve(null)
             : editor.prompt(text('notice.askName'), suggested),
+        chooseSavePlace,
+        writeBrowser,
         log: options.log,
       },
       key,
@@ -202,11 +250,9 @@ export function createWebShell(options: WebShellOptions): WebShell {
   }
 
   function isAutosaveOn(): boolean {
-    return (
-      options.canWriteInPlace &&
-      store.handle !== null &&
-      settings.get<boolean>(autosaveSettingKey) !== false
-    );
+    const canWrite =
+      store.place === 'browser' || (options.canWriteInPlace && store.handle !== null);
+    return canWrite && settings.get<boolean>(autosaveSettingKey) !== false;
   }
 
   function writeBackup(): void {
@@ -261,10 +307,326 @@ export function createWebShell(options: WebShellOptions): WebShell {
       name: written.name,
       usedAt: options.now(),
       source:
-        written.handle === undefined
-          ? { kind: 'copy', text: written.svg }
-          : { kind: 'handle', handle: written.handle },
+        written.isBrowser === true
+          ? { kind: 'browser' }
+          : written.handle === undefined
+            ? { kind: 'copy', text: written.svg }
+            : { kind: 'handle', handle: written.handle },
     });
+  }
+
+  // --- Documents in this browser (06-web 1.3, R-WEB-09) ---
+
+  function placeSide(): PlaceSide {
+    return settings.get<PlaceSide>(placeSideKey) === 'browser' ? 'browser' : 'computer';
+  }
+
+  function rememberSide(side: PlaceSide): void {
+    settings.set(placeSideKey, side);
+  }
+
+  /** The name a document gets in this browser: its first diagram's header name (06-web 1.3). */
+  function suggestedBrowserName(svg: string): string {
+    const opened = openSvgFile(svg);
+    const head = opened.ok ? (opened.value.doc.content.diagrams[0]?.head ?? null) : null;
+    const name = head === null ? '' : headName(head);
+    return name === '' ? text('file.untitled') : name;
+  }
+
+  /**
+   * Save As and a new document's first save (UX BS1): asks where in the open · save modal. A name
+   * that is taken asks to replace that document; "no" goes back to the modal.
+   */
+  async function chooseSavePlace(subject: SaveSubject): Promise<SavePlace | null> {
+    let name = subject.isBrowser ? subject.name : suggestedBrowserName(subject.svg);
+    if (isNextSaveToBrowser) {
+      // UX US1 "Save in Browser": no modal, a name that is free.
+      isNextSaveToBrowser = false;
+      const taken = (await db.documents()).map((document) => document.name);
+      return { kind: 'browser', name: uniqueName(name, taken), key: options.newKey() };
+    }
+    for (;;) {
+      const answer = await places.ask({
+        mode: 'save',
+        side: placeSide(),
+        name,
+        currentKey: subject.isBrowser ? subject.key : null,
+        isDownload: !options.canWriteInPlace,
+      });
+      if (answer === null || answer.kind === 'open') {
+        return null;
+      }
+      if (answer.kind === 'computer') {
+        rememberSide('computer');
+        return { kind: 'computer' };
+      }
+      rememberSide('browser');
+      name = answer.name.trim() === '' ? text('file.untitled') : answer.name.trim();
+      const clash = findByName(await db.documents(), name);
+      if (clash === undefined) {
+        return {
+          kind: 'browser',
+          name,
+          key: subject.isBrowser && isSameName(subject.name, name) ? subject.key : options.newKey(),
+        };
+      }
+      if (
+        clash.key === subject.key ||
+        (editor !== null &&
+          (await editor.confirm(text('notice.replace', { name: clash.name }), {
+            confirm: text('choice.replace'),
+          })))
+      ) {
+        return { kind: 'browser', name, key: clash.key };
+      }
+    }
+  }
+
+  /** Writes a document to this browser; a full storage is told in the shell's words (06-web 1.3). */
+  async function writeBrowser(entry: {
+    readonly key: string;
+    readonly name: string;
+    readonly svg: string;
+  }): Promise<WriteResult> {
+    await askPersistOnce();
+    const result = await db.putDocument({
+      key: entry.key,
+      name: entry.name,
+      text: entry.svg,
+      savedAt: options.now(),
+      size: byteSize(entry.svg),
+    });
+    switch (result) {
+      case 'ok':
+        return { ok: true, name: entry.name };
+      case 'full':
+        return {
+          ok: false,
+          reason: 'failed',
+          detail: 'browser storage is full',
+          message: text('notice.browserFull'),
+        };
+      case 'failed':
+        return { ok: false, reason: 'failed', detail: 'browser storage write failed' };
+    }
+  }
+
+  /** The first save to this browser asks it to keep the site's storage (06-web 1.3). */
+  async function askPersistOnce(): Promise<void> {
+    if (options.persistStorage === undefined || settings.get<boolean>(persistAskedKey) === true) {
+      return;
+    }
+    settings.set(persistAskedKey, true);
+    try {
+      const isPersisted = await options.persistStorage();
+      options.log(`Persistent storage ${isPersisted ? 'granted' : 'not granted'}`);
+    } catch (error) {
+      options.log(`Persistent storage request failed: ${String(error)}`);
+    }
+  }
+
+  async function openBrowserDocument(key: string, fallbackName: string): Promise<void> {
+    const document = await db.document(key);
+    if (document === undefined) {
+      missingKeys.add(key);
+      notices.show(text('notice.browserMissing', { name: fallbackName }), 'warn');
+      registerRecent();
+      return;
+    }
+    await openText(document.text, key, document.name, { kind: 'browser', text: document.text });
+  }
+
+  /** Refreshes the name and chip in the editor after the store changed under it. */
+  function refreshStatus(): void {
+    // setReadOnly emits the status again, which reads the store's name and place.
+    editor?.setReadOnly(isReadOnly);
+  }
+
+  async function renameBrowserDocument(key: string): Promise<void> {
+    const document = await db.document(key);
+    if (document === undefined || editor === null) {
+      return;
+    }
+    const answer = await editor.prompt(text('notice.renamePrompt'), document.name);
+    const name = answer?.trim() ?? '';
+    if (name === '' || name === document.name) {
+      return;
+    }
+    const clash = findByName(await db.documents(), name);
+    if (clash !== undefined && clash.key !== key) {
+      notices.show(text('notice.nameTaken', { name: clash.name }), 'warn');
+      return;
+    }
+    if ((await db.putDocument({ ...document, name })) !== 'ok') {
+      notices.show(text('notice.browserFull'), 'warn');
+      return;
+    }
+    const entry = recent.find((item) => item.key === key);
+    if (entry !== undefined) {
+      await remember({ ...entry, name });
+    }
+    if (store.key === key) {
+      store.renameBrowser(name);
+      refreshStatus();
+    }
+  }
+
+  async function exportBrowserDocument(key: string): Promise<void> {
+    const document = await db.document(key);
+    if (document === undefined) {
+      return;
+    }
+    const name = documentFileName(document.name, untitledName);
+    try {
+      const saved = await saveToComputer(
+        name,
+        document.text,
+        documentMediaType,
+        pickDocumentToSave,
+      );
+      if (saved !== null) {
+        notices.show(text('notice.exported', { name: saved }), 'info');
+      }
+    } catch (error) {
+      options.log(`Export of ${document.name} failed: ${String(error)}`);
+      notices.show(text('notice.exportDocumentFailed', { name: document.name }), 'warn');
+    }
+  }
+
+  /**
+   * Saves a file on this computer: the save dialog (Chromium) or a download. Resolves with the
+   * file's name, or `null` when the user closed the dialog.
+   */
+  async function saveToComputer(
+    name: string,
+    data: string | Blob,
+    type: string,
+    pick: (name: string) => Promise<FileSystemFileHandle | null>,
+  ): Promise<string | null> {
+    if (!options.canWriteInPlace) {
+      download(name, data, type);
+      return name;
+    }
+    const handle = await pick(name);
+    if (handle === null) {
+      return null;
+    }
+    await writeToHandle(handle, data);
+    return handle.name;
+  }
+
+  async function deleteBrowserDocument(key: string): Promise<void> {
+    const document = await db.document(key);
+    if (document === undefined || editor === null) {
+      return;
+    }
+    const isSure = await editor.confirm(text('notice.deleteBrowser', { name: document.name }), {
+      confirm: text('choice.delete'),
+    });
+    if (!isSure) {
+      return;
+    }
+    await db.deleteDocument(key);
+    await db.forgetRecent(key);
+    recent = await db.recentFiles();
+    registerRecent();
+    if (store.key !== key || store.place !== 'browser') {
+      await db.deleteBackup(key);
+      return;
+    }
+    // The open document stays on the screen as a new document that is not saved (06-web 1.3).
+    const snapshot = editor.snapshot();
+    store = newStore(key, documentFileName(document.name, untitledName), { kind: 'none' });
+    lastRevision = -1;
+    editor.open({ store, text: null, restored: snapshot });
+    notices.show(text('notice.deletedOpen', { name: document.name }), 'info');
+  }
+
+  async function exportAllBrowserDocuments(): Promise<void> {
+    const documents = await db.documents();
+    if (documents.length === 0) {
+      return;
+    }
+    const taken: string[] = [];
+    const entries = documents.map((document) => {
+      const fileName = documentFileName(
+        uniqueName(document.name, taken.map(baseName)),
+        untitledName,
+      );
+      taken.push(fileName);
+      return { name: fileName, text: document.text };
+    });
+    const name = `${appName}-${isoDate(options.now())}.zip`;
+    try {
+      const zip = await zipTexts(entries);
+      const blob = new Blob([zip as Uint8Array<ArrayBuffer>], { type: 'application/zip' });
+      const saved = await saveToComputer(name, blob, 'application/zip', pickZipToSave);
+      if (saved !== null) {
+        notices.show(
+          text('notice.exportedAll', { count: String(documents.length), name: saved }),
+          'info',
+        );
+      }
+    } catch (error) {
+      options.log(`Export of all browser documents failed: ${String(error)}`);
+      notices.show(text('notice.exportDocumentFailed', { name }), 'warn');
+    }
+  }
+
+  /**
+   * Import from Files… (UX BS4): `.ns.svg` and `.ns` files, or a zip of them, become documents
+   * in this browser. A name that is taken gets a number; files that cannot be edited are left out.
+   */
+  async function importBrowserDocuments(): Promise<void> {
+    const files = await chooseFilesWithInput([...openableExtensions, '.zip', 'image/svg+xml']);
+    if (files.length === 0) {
+      return;
+    }
+    const texts: { readonly name: string; readonly text: string }[] = [];
+    for (const file of files) {
+      try {
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        if (isZip(bytes)) {
+          texts.push(...(await unzipTexts(bytes, isOpenableName)));
+        } else {
+          texts.push({ name: file.name, text: new TextDecoder().decode(bytes) });
+        }
+      } catch (error) {
+        options.log(`Import of ${file.name} failed: ${String(error)}`);
+        notices.show(text('notice.readFailed', { name: file.name }), 'warn');
+        return;
+      }
+    }
+    const taken = (await db.documents()).map((document) => document.name);
+    const skipped: string[] = [];
+    let imported = 0;
+    for (const { name, text: fileText } of texts) {
+      if (!openSvgFile(fileText).ok) {
+        skipped.push(name);
+        continue;
+      }
+      const documentName = uniqueName(baseName(name), taken);
+      const document: BrowserDocument = {
+        key: options.newKey(),
+        name: documentName,
+        text: fileText,
+        savedAt: options.now(),
+        size: byteSize(fileText),
+      };
+      if ((await db.putDocument(document)) !== 'ok') {
+        notices.show(text('notice.browserFull'), 'warn');
+        return;
+      }
+      taken.push(documentName);
+      imported += 1;
+    }
+    const message = text('notice.imported', { count: String(imported) });
+    notices.show(
+      skipped.length === 0
+        ? message
+        : `${message} ${text('notice.importSkipped', { names: skipped.join(', ') })}`,
+      skipped.length === 0 ? 'info' : 'warn',
+    );
   }
 
   // --- Recent files (06-web 1.1) ---
@@ -306,7 +668,9 @@ export function createWebShell(options: WebShellOptions): WebShell {
     const label =
       entry.source.kind === 'copy'
         ? `${entry.name} (${text('file.recent.browserCopy')})`
-        : entry.name;
+        : entry.source.kind === 'browser'
+          ? `${entry.name} (${text('file.recent.browser')})`
+          : entry.name;
     return {
       id: `${shellCommandIds.recentPrefix}${String(index + 1)}`,
       title: label,
@@ -320,6 +684,9 @@ export function createWebShell(options: WebShellOptions): WebShell {
 
   async function openRecent(entry: RecentFile): Promise<void> {
     switch (entry.source.kind) {
+      case 'browser':
+        await openBrowserDocument(entry.key, entry.name);
+        return;
       case 'copy':
         await openText(entry.source.text, entry.key, entry.name, {
           kind: 'copy',
@@ -392,7 +759,12 @@ export function createWebShell(options: WebShellOptions): WebShell {
       key,
       name,
       usedAt: options.now(),
-      source: origin.kind === 'handle' ? origin : { kind: 'copy', text: fileText },
+      source:
+        origin.kind === 'handle'
+          ? origin
+          : origin.kind === 'browser'
+            ? { kind: 'browser' }
+            : { kind: 'copy', text: fileText },
     });
   }
 
@@ -427,7 +799,10 @@ export function createWebShell(options: WebShellOptions): WebShell {
       notices.show(text('notice.otherTab'), 'warn');
     } else if (leaving !== null) {
       notices.show(leaving, 'info');
+    } else if (pendingNotice !== null) {
+      notices.show(pendingNotice, 'info');
     }
+    pendingNotice = null;
     onStatus(editor.status());
   }
 
@@ -470,6 +845,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     const answer = await editor.choose(text('notice.saveNewFirst', { name: status.name }), {
       confirm: text('choice.save'),
       other: text('choice.discardAndOpen'),
+      second: text('choice.saveInBrowser'),
     });
     switch (answer) {
       case 'cancel':
@@ -478,6 +854,16 @@ export function createWebShell(options: WebShellOptions): WebShell {
         return 'discard';
       case 'confirm':
         return (await editor.save()).ok ? 'keep' : null;
+      case 'second': {
+        isNextSaveToBrowser = true;
+        const saved = await editor.save();
+        isNextSaveToBrowser = false;
+        if (!saved.ok) {
+          return null;
+        }
+        pendingNotice = text('notice.savedInBrowser', { name: saved.name });
+        return 'keep';
+      }
     }
   }
 
@@ -502,7 +888,30 @@ export function createWebShell(options: WebShellOptions): WebShell {
     await switchTo(newStore(options.newKey(), name, { kind: 'none' }), null, undefined, leave, doc);
   }
 
+  /** File › Open… (UX BS1): asks where first, then a file or a document in this browser. */
   async function openFromPicker(): Promise<void> {
+    const answer = await places.ask({
+      mode: 'open',
+      side: placeSide(),
+      name: '',
+      currentKey: store.place === 'browser' ? store.key : null,
+      isDownload: false,
+    });
+    if (answer === null || answer.kind === 'save') {
+      return;
+    }
+    if (answer.kind === 'open') {
+      rememberSide('browser');
+      const entry = (await db.documents()).find((document) => document.key === answer.key);
+      await openBrowserDocument(answer.key, entry?.name ?? '');
+      return;
+    }
+    rememberSide('computer');
+    await openFromComputer();
+  }
+
+  /** The operating system's open dialog (06-web 1), behind "Files on This Computer". */
+  async function openFromComputer(): Promise<void> {
     if (options.canWriteInPlace) {
       const handle = await pickFileToOpen();
       if (handle !== null) {
@@ -755,12 +1164,15 @@ export function createWebShell(options: WebShellOptions): WebShell {
       return;
     }
     const copy = recent.find((entry) => entry.key === last.key && entry.source.kind === 'copy');
+    const inBrowser = await db.document(last.key);
     const origin: StoreOrigin =
       last.handle !== undefined
         ? { kind: 'handle', handle: last.handle }
-        : copy?.source.kind === 'copy'
-          ? { kind: 'copy', text: copy.source.text }
-          : { kind: 'none' };
+        : inBrowser !== undefined
+          ? { kind: 'browser', text: inBrowser.text }
+          : copy?.source.kind === 'copy'
+            ? { kind: 'copy', text: copy.source.text }
+            : { kind: 'none' };
     await switchTo(newStore(last.key, last.name, origin), null, last.snapshot, 'keep');
   }
 
@@ -785,6 +1197,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       backup.flush();
     },
     isDirty: () => editor?.status().dirty === true,
+    places,
     setLocale(next) {
       locale = next;
       if (editor !== null) {
@@ -793,6 +1206,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       }
     },
     dispose() {
+      places.answer(null);
       backup.flush();
       autosave.dispose();
       for (const remove of [...unregister, ...unregisterCommands, ...unregisterRecent]) {
@@ -814,6 +1228,11 @@ function linkFailureMessage(reason: Exclude<ShareLinkFailure, 'notShareLink'>): 
     case 'damaged':
       return 'link.damaged';
   }
+}
+
+/** `2026-11-03`: the date in a file name, in UTC. */
+function isoDate(milliseconds: number): string {
+  return new Date(milliseconds).toISOString().slice(0, 10);
 }
 
 function openFailureMessage(reason: OpenFailureReason): ShellMessageKey {

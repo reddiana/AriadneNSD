@@ -12,6 +12,7 @@ export type ShellLocale = Locale;
 const english = {
   'file.recent.empty': 'No recent files',
   'file.recent.browserCopy': 'browser copy',
+  'file.recent.browser': 'Browser',
   'file.recent.missing': 'The file was moved or deleted.',
   'file.untitled': 'Untitled',
   'notice.downloadInstead':
@@ -55,6 +56,23 @@ const english = {
   'link.unsupported':
     'This browser cannot open compressed share links. Open the link in a recent Chrome, Edge, Firefox or Safari.',
   'link.damaged': 'This share link is damaged (perhaps cut off) and cannot be opened.',
+  'notice.browserFull':
+    'The browser’s storage is full, so it could not be saved. Save it to a file instead.',
+  'notice.replace': '“{name}” already exists in this browser. Replace it?',
+  'notice.deleteBrowser': 'Delete “{name}” from this browser? This cannot be undone.',
+  'notice.renamePrompt': 'New name:',
+  'notice.nameTaken': '“{name}” already exists in this browser.',
+  'notice.browserMissing': '“{name}” is no longer in this browser.',
+  'notice.savedInBrowser': 'Saved “{name}” in this browser.',
+  'notice.deletedOpen':
+    '“{name}” was deleted from this browser. The diagram on the screen is now a new document that is not saved.',
+  'notice.exportedAll': 'Exported {count} documents to “{name}”.',
+  'notice.exportDocumentFailed': 'Could not export “{name}”.',
+  'notice.imported': 'Imported {count} documents into this browser.',
+  'notice.importSkipped': 'Not imported, as they cannot be edited: {names}',
+  'choice.replace': 'Replace',
+  'choice.delete': 'Delete',
+  'choice.saveInBrowser': 'Save in Browser',
 } as const;
 
 /** The key of a shell screen string. */
@@ -63,6 +81,7 @@ export type ShellMessageKey = keyof typeof english;
 const korean: Record<ShellMessageKey, string> = {
   'file.recent.empty': '최근 파일 없음',
   'file.recent.browserCopy': '브라우저 사본',
+  'file.recent.browser': '브라우저',
   'file.recent.missing': '파일이 이동되었거나 삭제되었습니다.',
   'file.untitled': '제목 없음',
   'notice.downloadInstead':
@@ -107,6 +126,22 @@ const korean: Record<ShellMessageKey, string> = {
   'link.unsupported':
     '이 브라우저는 압축한 공유 링크를 열 수 없습니다. 최신 Chrome · Edge · Firefox · Safari에서 여세요.',
   'link.damaged': '이 공유 링크는 손상되어(잘렸을 수 있습니다) 열 수 없습니다.',
+  'notice.browserFull': '브라우저의 저장 공간이 모자라 저장하지 못했습니다. 파일로 저장해 주세요.',
+  'notice.replace': '“{name}”이(가) 이 브라우저에 이미 있습니다. 바꿀까요?',
+  'notice.deleteBrowser': '“{name}”을(를) 이 브라우저에서 삭제할까요? 되돌릴 수 없습니다.',
+  'notice.renamePrompt': '새 이름:',
+  'notice.nameTaken': '“{name}”이(가) 이 브라우저에 이미 있습니다.',
+  'notice.browserMissing': '“{name}”이(가) 이 브라우저에 더 이상 없습니다.',
+  'notice.savedInBrowser': '“{name}”을(를) 이 브라우저에 저장했습니다.',
+  'notice.deletedOpen':
+    '“{name}”을(를) 이 브라우저에서 삭제했습니다. 화면의 다이어그램은 이제 저장하지 않은 새 문서입니다.',
+  'notice.exportedAll': '문서 {count}개를 “{name}”(으)로 내보냈습니다.',
+  'notice.exportDocumentFailed': '“{name}”을(를) 내보내지 못했습니다.',
+  'notice.imported': '문서 {count}개를 이 브라우저로 가져왔습니다.',
+  'notice.importSkipped': '편집할 수 없어 가져오지 않은 파일: {names}',
+  'choice.replace': '바꾸기',
+  'choice.delete': '삭제',
+  'choice.saveInBrowser': '브라우저에 저장',
 };
 
 const catalogs: Record<ShellLocale, Record<ShellMessageKey, string>> = { en: english, ko: korean };

@@ -4,10 +4,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Backup, BrowserDb } from './browser-db';
 import { memoryDb, openBrowserDb } from './browser-db';
+import type { BrowserDocument } from './browser-documents';
 import type { RecentFile } from './recent-files';
 import { recentFilesLimit } from './recent-files';
 
-type Failure = 'none' | 'requests' | 'transactions';
+type Failure = 'none' | 'requests' | 'transactions' | 'quota';
 
 /** Fires a request's or transaction's handler later, as IndexedDB does. */
 function later(work: () => void): void {
@@ -20,6 +21,7 @@ function later(work: () => void): void {
  */
 function fakeIndexedDb() {
   const databases = new Map<string, Map<string, Map<string, unknown>>>();
+  const versions = new Map<string, number>();
   const control = {
     open: 'ok' as 'ok' | 'error' | 'blocked' | 'never',
     failure: 'none' as Failure,
@@ -63,7 +65,7 @@ function fakeIndexedDb() {
             getAll: () => request(() => [...objects.values()]),
             get: (key: string) => request(() => objects.get(key)),
             put: (value: { key: string }) => {
-              if (control.failure !== 'transactions') {
+              if (control.failure !== 'transactions' && control.failure !== 'quota') {
                 objects.set(value.key, value);
               }
             },
@@ -79,6 +81,12 @@ function fakeIndexedDb() {
         if (control.failure === 'transactions') {
           transaction.error = new Error('write failed');
           transaction.onerror?.();
+        } else if (control.failure === 'quota') {
+          transaction.error = new DOMException(
+            'The quota has been exceeded.',
+            'QuotaExceededError',
+          );
+          transaction.onerror?.();
         } else {
           transaction.oncomplete?.();
         }
@@ -87,7 +95,7 @@ function fakeIndexedDb() {
     },
   });
   const factory = {
-    open: (name: string) => {
+    open: (name: string, version: number) => {
       const opening = {
         result: undefined as unknown,
         error: null as Error | null,
@@ -108,11 +116,12 @@ function fakeIndexedDb() {
             opening.onerror?.();
             return;
           case 'ok': {
-            const isNew = !databases.has(name);
+            const isOlder = (versions.get(name) ?? 0) < version;
             const stores = databases.get(name) ?? new Map<string, Map<string, unknown>>();
             databases.set(name, stores);
+            versions.set(name, Math.max(version, versions.get(name) ?? 0));
             opening.result = database(stores);
-            if (isNew) {
+            if (isOlder) {
               control.upgrades += 1;
               opening.onupgradeneeded?.();
             }
@@ -123,7 +132,16 @@ function fakeIndexedDb() {
       return opening;
     },
   };
-  return { factory, control };
+  /** Puts a database of an earlier version in place, as an earlier page left it. */
+  const seed = (name: string, version: number, stores: Record<string, unknown[]>): void => {
+    const made = new Map<string, Map<string, unknown>>();
+    for (const [store, values] of Object.entries(stores)) {
+      made.set(store, new Map(values.map((value) => [(value as { key: string }).key, value])));
+    }
+    databases.set(name, made);
+    versions.set(name, version);
+  };
+  return { factory, control, seed };
 }
 
 function recentFile(key: string, usedAt: number): RecentFile {
@@ -222,6 +240,67 @@ describe('browser database in IndexedDB', () => {
     ]);
     fake.control.failure = 'none';
     expect(await db.backups()).toEqual([]);
+  });
+});
+
+function browserDocument(key: string, savedAt: number): BrowserDocument {
+  return { key, name: key.toUpperCase(), text: `<svg>${key}</svg>`, savedAt, size: 12 };
+}
+
+describe('browser database: documents in this browser (R-WEB-09)', () => {
+  it('T-0963: 06-web 1.3: version 2 adds the documents and keeps the backups and recent files of version 1', async () => {
+    const fake = fakeIndexedDb();
+    fake.seed('ariadne-nsd-web', 1, {
+      recent: [recentFile('a', 1)],
+      backups: [backupOf('a')],
+    });
+    const db = await openWith(fake);
+    expect(fake.control.upgrades).toBe(1);
+    expect(await db.recentFiles()).toEqual([recentFile('a', 1)]);
+    expect(await db.backups()).toEqual([backupOf('a')]);
+    expect(await db.documents()).toEqual([]);
+    expect(await db.putDocument(browserDocument('d', 5))).toBe('ok');
+    const again = await openWith(fake);
+    expect(fake.control.upgrades).toBe(1);
+    expect(await again.document('d')).toEqual(browserDocument('d', 5));
+  });
+
+  it('T-0964 · UX BS3: keeps documents across page loads, newest first, and deletes them', async () => {
+    const fake = fakeIndexedDb();
+    const db = await openWith(fake);
+    await db.putDocument(browserDocument('old', 1));
+    await db.putDocument(browserDocument('new', 9));
+    const second = await openWith(fake);
+    expect((await second.documents()).map((item) => item.key)).toEqual(['new', 'old']);
+    await second.deleteDocument('old');
+    expect(await second.document('old')).toBeUndefined();
+    expect((await second.documents()).map((item) => item.key)).toEqual(['new']);
+  });
+
+  it('T-0965 · R-WEB-09: a full storage is told apart from other failures', async () => {
+    const fake = fakeIndexedDb();
+    const errors: string[] = [];
+    const db = await openWith(fake, errors);
+    fake.control.failure = 'quota';
+    expect(await db.putDocument(browserDocument('a', 1))).toBe('full');
+    fake.control.failure = 'transactions';
+    expect(await db.putDocument(browserDocument('a', 1))).toBe('failed');
+    await db.deleteDocument('a');
+    fake.control.failure = 'requests';
+    expect(await db.documents()).toEqual([]);
+    expect(await db.document('a')).toBeUndefined();
+    expect(errors).toHaveLength(5);
+    expect(errors[0]).toContain('IndexedDB write document failed: QuotaExceededError');
+  });
+
+  it('T-0966 · R-WEB-09: memory keeps documents for this page', async () => {
+    const db = memoryDb();
+    expect(await db.putDocument(browserDocument('a', 1))).toBe('ok');
+    await db.putDocument(browserDocument('b', 2));
+    expect((await db.documents()).map((item) => item.key)).toEqual(['b', 'a']);
+    expect(await db.document('a')).toEqual(browserDocument('a', 1));
+    await db.deleteDocument('a');
+    expect(await db.document('a')).toBeUndefined();
   });
 });
 

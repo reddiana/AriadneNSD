@@ -231,6 +231,54 @@ export const chromeCss = `
   border-color: var(--ui-accent); background: var(--ui-accent); color: var(--ui-panel);
 }
 
+.ans-file-name .ans-place-chip {
+  display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 8px; font-size: 11px;
+  line-height: 16px; vertical-align: 1px; background: var(--ui-accent-soft); color: var(--ui-accent);
+}
+/* The open · save modal (R-WEB-09, UX BS1 · BS3 · BS4). */
+.ans-backdrop[data-kind='places'] .ans-modal { width: min(620px, 100%); }
+.ans-places-sides {
+  display: flex; width: fit-content; border: 1px solid var(--ui-line); border-radius: 6px;
+  overflow: hidden;
+}
+.ans-places-sides button { background: none; border: 0; padding: 4px 14px; cursor: default; }
+.ans-places-sides button[aria-selected='true'] {
+  background: var(--ui-accent-soft); color: var(--ui-accent); font-weight: 600;
+}
+.ans-places-panel { display: grid; gap: 10px; }
+.ans-places-name { display: flex; align-items: center; gap: 8px; margin: 0; }
+.ans-places-name input {
+  flex: 1; min-width: 0; font: inherit; color: inherit; background: var(--ui-bg);
+  border: 1px solid var(--ui-line); border-radius: 4px; padding: 4px 8px;
+}
+.ans-places-list {
+  max-height: 260px; overflow: auto; border: 1px solid var(--ui-line); border-radius: 4px;
+}
+.ans-places-list table { width: 100%; border-collapse: collapse; }
+.ans-places-list th, .ans-places-list td {
+  text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--ui-line); white-space: nowrap;
+}
+.ans-places-list td:first-child { white-space: normal; overflow-wrap: anywhere; }
+.ans-places-list th {
+  position: sticky; top: 0; background: var(--ui-panel); color: var(--ui-muted); font-weight: 400;
+  font-size: 12px;
+}
+.ans-places-list .ans-places-size { text-align: right; }
+.ans-places-list tr[aria-selected='true'] td { background: var(--ui-accent-soft); }
+.ans-places-list tr[data-current='true'] td:first-child { font-weight: 600; }
+.ans-places-empty { padding: 14px; color: var(--ui-muted); }
+.ans-places-warning {
+  display: flex; gap: 6px; align-items: flex-start; margin: 0; color: var(--ui-warn); font-size: 12px;
+}
+.ans-places-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-right: auto; }
+.ans-dialog-buttons { flex-wrap: wrap; }
+.ans-dialog-buttons button:disabled { opacity: 0.5; }
+.ans-places-delete:not(:disabled) { color: var(--ui-warn); }
+.ans-places-backup { justify-content: flex-start; }
+@media (max-width: 600px) {
+  .ans-places-list .ans-places-size { display: none; }
+}
+
 /* Narrow screens (06-web 7, UX MB1 · MB2): the menus fold into one button, the toolbar keeps all
    its buttons on more rows (labels hidden where an icon says it) and gains a help button. */
 @media (max-width: 860px) {

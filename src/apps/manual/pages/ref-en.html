@@ -447,9 +447,9 @@
 <section id="files">
   <h2>Files</h2>
   <p>
-    AriadneNSD runs in the browser without a server. Your files stay on your computer. A saved
-    <code>.ns.svg</code> is a picture in itself, so it shows anywhere, and opening it again lets you
-    keep editing.
+    AriadneNSD runs in the browser without a server. Your files stay on your computer, or in this
+    browser if you save them there. A saved <code>.ns.svg</code> is a picture in itself, so it shows
+    anywhere, and opening it again lets you keep editing.
   </p>
   <div class="wide">
     <img
@@ -465,11 +465,33 @@
       <code>.ns.svg</code> and <code>.ns</code>.
     </li>
     <li>
+      <b>Where:</b> File › Open…, Save As… and the first save of a new document ask first: "Files on
+      This Computer" or "This Browser". It opens on the side you used last. On "Files on This
+      Computer" one more button opens your computer's file dialog. <kbd>←</kbd> <kbd>→</kbd> switch
+      sides, <kbd>Esc</kbd> closes.
+    </li>
+    <li>
       <b>Save:</b> <kbd>Ctrl</kbd>+<kbd>S</kbd>; Save As is
       <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. Chrome and Edge write to the original file and
       save automatically after the first save. Firefox and Safari download the file on each save.
     </li>
-    <li><b>Recent Files:</b> in the File menu, up to ten files you opened or saved.</li>
+    <li>
+      <b>Documents in this browser:</b> on "This Browser", give the document a name and save it
+      without a file. A "Browser" chip then shows next to its name, and <kbd>Ctrl</kbd>+<kbd>S</kbd>
+      and auto save write there, in every browser. The list shows name, when it was modified and
+      size, newest first: open (double-click or <kbd>Enter</kbd>), Rename…, Export to File, and
+      Delete (<kbd>Delete</kbd>, it asks first). Save As… moves a document to a file.
+    </li>
+    <li>
+      <b>Keep a copy:</b> documents in this browser are only in this browser. Clearing the browser's
+      site data deletes them too, so export them now and then: "Export All to Files (.zip)" saves
+      them all in one zip, and "Import from Files…" brings <code>.ns.svg</code> files or that zip
+      back, also into another browser or computer.
+    </li>
+    <li>
+      <b>Recent Files:</b> in the File menu, up to ten files you opened or saved. Documents in this
+      browser show "(Browser)".
+    </li>
     <li>
       <b>Local backup:</b> unsaved work is kept in the browser; when you open the page again, it
       asks whether to restore it. A document opened from a file keeps its local backup when you open
@@ -489,7 +511,8 @@
       <b>New documents:</b> if you edited a new document that was never saved (a new one, or an
       example) and open another document, it first asks: "… is a new document that has never been
       saved. Once another document opens, it cannot be brought back. Save it first?" "Save"
-      (<kbd>Enter</kbd>) saves and then opens, "Discard and Open" drops it and opens, and "Cancel"
+      (<kbd>Enter</kbd>) saves and then opens, "Save in Browser" saves it in this browser under its
+      first diagram's name and then opens, "Discard and Open" drops it and opens, and "Cancel"
       (<kbd>Esc</kbd>) opens nothing.
     </li>
     <li>

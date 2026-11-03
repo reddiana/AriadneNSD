@@ -1,5 +1,5 @@
 import type { Locale } from '@ariadne-nsd/core';
-import type { EditorHandle, ExamplesHost } from '@ariadne-nsd/editor';
+import type { EditorHandle, ExamplesHost, PlacesHost } from '@ariadne-nsd/editor';
 import { EditorApp } from '@ariadne-nsd/editor';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
@@ -25,9 +25,8 @@ export type AppProps = {
   readonly appearance: Appearance;
   readonly onAppearance: (listener: (appearance: Appearance) => void) => () => void;
   /** Whether a file is being dragged over the page (to show the drop hint). */
-  readonly onDragState: (
-    listener: (isDragging: boolean) => void,
-  ) => () => void; /** The examples: opening one, and the first visit's welcome (R-EDIT-25). */
+  readonly onDragState: (listener: (isDragging: boolean) => void) => () => void;
+  /** The examples: opening one, and the first visit's welcome (R-EDIT-25). */
   readonly examples: ExamplesHost;
   /** View mode (R-WEB-06): whether the page starts in it, hearing changes, and "Edit". */
   readonly view: {
@@ -35,6 +34,8 @@ export type AppProps = {
     readonly onViewMode: (listener: (isViewing: boolean) => void) => () => void;
     readonly onEdit: () => void;
   };
+  /** The open · save modal: a file on this computer or a document in this browser (R-WEB-09). */
+  readonly places: PlacesHost;
 };
 
 /**
@@ -69,6 +70,7 @@ export function App(props: AppProps): ReactElement {
         manualUrl={manualUrl(props.locale)}
         examples={props.examples}
         {...(isViewing ? { viewMode: { onEdit } } : {})}
+        places={props.places}
       />
       {isDragging ? <div className="ans-web-drop">{dropHint(props.locale)}</div> : null}
     </>

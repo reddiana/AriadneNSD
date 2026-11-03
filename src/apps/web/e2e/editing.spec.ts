@@ -7,6 +7,7 @@ import {
   canvas,
   drawnText,
   middleOf,
+  onThisComputer,
   openApp,
   selection,
   statusBar,
@@ -56,6 +57,7 @@ test('T-0839 · R-EDIT-19 · UX XM1 · UX XM2: m extracts the selected blocks; a
 
   const writes = await writeCount(page);
   await page.keyboard.press('Control+S');
+  await onThisComputer(page);
   await expect.poll(() => writeCount(page)).toBe(writes + 1);
   const saved = await writtenText(page, 'Untitled.ns.svg');
   const match = /<!\[CDATA\[([\s\S]*?)\]\]>/.exec(saved ?? '');

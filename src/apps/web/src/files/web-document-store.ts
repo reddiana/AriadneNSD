@@ -1,6 +1,6 @@
 // The web shell's `DocumentStore` (03-editor 6, 06-web 1). One store per open document.
 
-import type { DocumentStore, WriteResult } from '../editor-contract';
+import type { DocumentPlace, DocumentStore, WriteResult } from '../editor-contract';
 import { documentMediaType, download } from './file-fallback';
 import { documentFileName } from './file-name';
 import { ensurePermission, pickDocumentToSave, writeToHandle } from './file-system-access';
@@ -14,6 +14,22 @@ export type Written = {
   readonly svg: string;
   /** Chromium: the file that was written. Absent for downloads. */
   readonly handle?: FileSystemFileHandle;
+  /** The document was written to this browser (R-WEB-09), not to a file. */
+  readonly isBrowser?: true;
+};
+
+/** Where Save As writes (the open · save modal, UX BS1). */
+export type SavePlace =
+  | { readonly kind: 'computer' }
+  /** A document in this browser: its name, and the key to write under (a replaced one's). */
+  | { readonly kind: 'browser'; readonly name: string; readonly key: string };
+
+/** The document being saved, for choosing where. */
+export type SaveSubject = {
+  readonly key: string;
+  readonly name: string;
+  readonly svg: string;
+  readonly isBrowser: boolean;
 };
 
 /** What the store needs from the shell. */
@@ -28,6 +44,17 @@ export type StoreHost = {
   readonly downloading: () => void;
   /** Firefox and Safari "save as": asks for a name, or `null` when the user cancelled. */
   readonly askDownloadName: (suggestedName: string) => Promise<string | null>;
+  /**
+   * Save As (and a new document's first save): asks where, or `null` when the user closed the
+   * modal. Absent: always this computer.
+   */
+  readonly chooseSavePlace?: (subject: SaveSubject) => Promise<SavePlace | null>;
+  /** Writes a document to this browser (R-WEB-09). */
+  readonly writeBrowser?: (entry: {
+    readonly key: string;
+    readonly name: string;
+    readonly svg: string;
+  }) => Promise<WriteResult>;
   readonly log: (detail: string) => void;
 };
 
@@ -36,6 +63,8 @@ export type StoreOrigin =
   | { readonly kind: 'handle'; readonly handle: FileSystemFileHandle }
   /** Opened from `<input type="file">`, a dropped file without a handle, or a browser copy. */
   | { readonly kind: 'copy'; readonly text: string }
+  /** A document kept in this browser under its key (R-WEB-09, UX BS2). */
+  | { readonly kind: 'browser'; readonly text: string }
   /** A new document (R-ALL-03), or one restored without its file. */
   | { readonly kind: 'none' };
 
@@ -76,6 +105,18 @@ export class WebDocumentStore implements DocumentStore {
     return this.#origin.kind === 'none';
   }
 
+  /** A document in this browser is "the original file" of its own kind (UX BS2). */
+  get place(): DocumentPlace {
+    return this.#origin.kind === 'browser' ? 'browser' : 'file';
+  }
+
+  /** A browser document's new name (renamed in the list). Changes nothing else. */
+  renameBrowser(name: string): void {
+    if (this.#origin.kind === 'browser') {
+      this.#name = name;
+    }
+  }
+
   /** The file handle, when the document is a file this browser can write to. */
   get handle(): FileSystemFileHandle | null {
     return this.#origin.kind === 'handle' ? this.#origin.handle : null;
@@ -86,6 +127,10 @@ export class WebDocumentStore implements DocumentStore {
    * (by a save, or still granted from earlier) (06-web 2).
    */
   async canAutosave(): Promise<boolean> {
+    if (this.#origin.kind === 'browser') {
+      // No permission is needed, so every browser auto saves a browser document (UX BS2).
+      return true;
+    }
     const { handle } = this;
     if (handle === null) {
       return false;
@@ -113,6 +158,7 @@ export class WebDocumentStore implements DocumentStore {
         return file.text();
       }
       case 'copy':
+      case 'browser':
         return this.#origin.text;
       case 'none':
         throw new Error('A new document has no file to read');
@@ -124,14 +170,47 @@ export class WebDocumentStore implements DocumentStore {
     if (handle !== null) {
       return this.#writeHandle(handle, svg);
     }
-    if (this.canWriteInPlace) {
-      // A new document's first save shows the save dialog (06-web 1 table).
-      return this.#isQuiet ? { ok: false, reason: 'denied' } : this.writeAs(svg, this.#name);
+    if (this.#origin.kind === 'browser') {
+      return this.#writeBrowser(this.#key, this.#name, svg);
+    }
+    if (this.canWriteInPlace || (this.isNew && this.#host.chooseSavePlace !== undefined)) {
+      // A new document's first save asks where, like Save As (06-web 1 table, UX BS1).
+      return this.#isQuiet ? { ok: false, reason: 'denied' } : this.#saveAs(svg, this.#name, true);
     }
     return this.#download(this.#name, svg);
   }
 
   async writeAs(svg: string, suggestedName: string): Promise<WriteResult> {
+    return this.#saveAs(svg, suggestedName, false);
+  }
+
+  /**
+   * Asks where (when the shell has browser documents), then writes there. A new document's first
+   * save that goes to this computer downloads at once in Firefox and Safari, as before (06-web 1).
+   */
+  async #saveAs(svg: string, suggestedName: string, isFirstSave: boolean): Promise<WriteResult> {
+    const { chooseSavePlace } = this.#host;
+    if (chooseSavePlace !== undefined) {
+      const place = await chooseSavePlace({
+        key: this.#key,
+        name: this.#name,
+        svg,
+        isBrowser: this.#origin.kind === 'browser',
+      });
+      if (place === null) {
+        return { ok: false, reason: 'cancelled' };
+      }
+      if (place.kind === 'browser') {
+        return this.#writeBrowser(place.key, place.name, svg);
+      }
+    }
+    if (isFirstSave && !this.canWriteInPlace) {
+      return this.#download(this.#name, svg);
+    }
+    return this.#writeAsFile(svg, suggestedName);
+  }
+
+  async #writeAsFile(svg: string, suggestedName: string): Promise<WriteResult> {
     const name = documentFileName(suggestedName, this.#host.untitledName);
     if (!this.canWriteInPlace) {
       const chosen = await this.#host.askDownloadName(name);
@@ -200,6 +279,23 @@ export class WebDocumentStore implements DocumentStore {
       handle,
     });
     return { ok: true, name: handle.name };
+  }
+
+  async #writeBrowser(key: string, name: string, svg: string): Promise<WriteResult> {
+    const { writeBrowser } = this.#host;
+    if (writeBrowser === undefined) {
+      throw new Error('This store has no browser documents');
+    }
+    const result = await writeBrowser({ key, name, svg });
+    if (!result.ok) {
+      return result;
+    }
+    const previousKey = this.#key;
+    this.#origin = { kind: 'browser', text: svg };
+    this.#name = name;
+    this.#key = key;
+    this.#host.written({ previousKey, key, name, svg, isBrowser: true });
+    return { ok: true, name };
   }
 
   #download(name: string, svg: string): WriteResult {

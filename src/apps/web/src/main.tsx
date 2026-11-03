@@ -80,6 +80,9 @@ const shell = createWebShell({
     deflate: browserDeflate(),
     copyText: browserCopyText(navigator.clipboard),
   },
+  ...('storage' in navigator && 'persist' in navigator.storage
+    ? { persistStorage: () => navigator.storage.persist() }
+    : {}),
 });
 
 /** The share link this page was opened with (R-WEB-05): the URL's `#…`, or none. */
@@ -153,6 +156,7 @@ function render(): void {
           onViewMode: shell.onViewMode,
           onEdit: shell.startEditing,
         }}
+        places={shell.places}
       />
     </StrictMode>,
   );

@@ -5,11 +5,13 @@ export const recentFilesLimit = 10;
 
 /**
  * Where a recent file is. Chromium remembers the file handle; Firefox and Safari cannot, so they
- * remember a copy of the last text in this browser ("browser copy").
+ * remember a copy of the last text in this browser ("browser copy"). A document kept in this
+ * browser (R-WEB-09) is read from the documents store by its key.
  */
 export type RecentSource =
   | { readonly kind: 'handle'; readonly handle: FileSystemFileHandle }
-  | { readonly kind: 'copy'; readonly text: string };
+  | { readonly kind: 'copy'; readonly text: string }
+  | { readonly kind: 'browser' };
 
 /** One entry of the list. `key` is the document's key, the same as its local backup (06-web 2). */
 export type RecentFile = {

@@ -19,11 +19,11 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 2 | 45 | 184 | - | 231 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 155 | - | 190 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 20 | 27 | 29 | - | 76 |
-| [[#5. 파일\|파일]] | 10 | 124 | 150 | - | 284 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 20 | 27 | 42 | - | 89 |
+| [[#5. 파일\|파일]] | 11 | 146 | 164 | - | 321 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 105 | - | 107 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 65 | 226 | 623 | 5 | 919 |
+| 합계 | 66 | 248 | 650 | 5 | 969 |
 
 ## 읽는 법
 
@@ -792,7 +792,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 14개, 테스트 76개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 89개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -971,6 +971,28 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ^t-packages-editor-src-ui-menu-model-test-ts
 
+### [단위] `packages/editor/src/ui/places-modal.test.tsx`
+
+열기 · 저장 창(R-WEB-09, UX BS1 · BS3 · BS4)과 "브라우저" 딱지(UX BS2). Vitest + happy-dom · 테스트 13개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]], [[ux-decisions|UX BS1]], [[ux-decisions|UX BS2]], [[ux-decisions|UX BS3]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0923 | 열기는 어디서 열지 묻고, 이 컴퓨터 쪽은 운영체제의 파일 창으로 넘긴다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS1]] |
+| T-0924 | 화살표 키로 두 쪽을 오가고, Esc는 답 없이 닫는다 | [[ux-decisions\|UX BS1]] |
+| T-0925 | 브라우저 쪽은 이름 · 고친 때 · 크기를 보이고, 첫 줄이 선택되어 있다 | [[ux-decisions\|UX BS3]] |
+| T-0926 | j k와 화살표로 선택하고 끝에서 반대쪽 끝으로 돌며, Enter와 더블클릭으로 연다 | [[ux-decisions\|UX BS3]], [[ux-decisions\|UX K2]] |
+| T-0927 | 버튼으로 이름 바꾸기 · 내보내기 · 삭제 · 모두 내보내기 · 가져오기를 한다 | [[ux-decisions\|UX BS3]], [[ux-decisions\|UX BS4]] |
+| T-0928 | 브라우저에 문서가 없으면 그렇다고 알리고, 열기와 내보내기를 막는다 | [[ux-decisions\|UX BS3]] |
+| T-0929 | 저장은 이름을 묻고 경고를 보이며, 줄을 선택하면 그 이름이 채워진다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS4]] |
+| T-0930 | 이 컴퓨터 쪽의 저장은 저장할 곳을 고르거나, 다른 브라우저에서는 내려받는다 | [[ux-decisions\|UX BS1]] |
+| T-0931 | 배경을 누르면 모달이 닫힌다 | [[ux-decisions\|UX BS3]] |
+| T-0932 | "고친 때"는 오늘이면 시각, 어제면 "어제", 올해면 월 · 일, 그 전이면 날짜 전체다 | - |
+| T-0933 | 크기는 KB 정수(적어도 1)이고, 1 MB부터는 MB다 | - |
+| T-0934 | 브라우저 문서는 이름 옆에 "브라우저" 딱지를 단다 | [[ux-decisions\|UX BS2]] |
+| T-0935 | 답이 넷인 질문은 넷째 버튼을 취소와 확인 사이에 둔다 | [[ux-decisions\|UX US1]] |
+
+^t-packages-editor-src-ui-places-modal-test-tsx
+
 ### [단위] `packages/editor/src/ui/view-bar.test.tsx`
 
 보기 모드 (R-WEB-06). Vitest + happy-dom · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-06]].
@@ -998,11 +1020,11 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 27개, 테스트 284개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 30개, 테스트 321개.
 
 ### [E2E] `apps/web/e2e/files.spec.ts`
 
-웹 셸의 브라우저 흐름(06-web 1, 2). Playwright · 테스트 7개.
+웹 셸의 브라우저 흐름(06-web 1, 2). Playwright · 테스트 8개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1013,6 +1035,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0336 | 파일에 저장하고, 다음 편집 2초 뒤에 자동 저장한다 | [[01-requirements#^r-web\|R-WEB-02]], [[01-requirements#^r-exp\|R-EXP-04]] |
 | T-0337 | 그림의 두 배 크기로 PNG를 내보낸다 | [[01-requirements#^r-exp\|R-EXP-01]] |
 | T-0338 | 06-web 2: 같은 파일을 연 둘째 탭은 보기만 한다 | - |
+| T-0971 | 브라우저에 저장하고, 새로 고친 뒤 열고, 편집을 저장하고, 모두 내보내고, 삭제한다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS1]], [[ux-decisions\|UX BS2]], [[ux-decisions\|UX BS3]], [[ux-decisions\|UX BS4]] |
 
 ^t-apps-web-e2e-files-spec-ts
 
@@ -1030,7 +1053,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `apps/web/src/files/web-document-store.test.ts`
 
-웹 문서 저장소 · 웹 문서 저장소: Chromium · 웹 문서 저장소: 다른 브라우저. Vitest · 테스트 18개.
+웹 문서 저장소 · 웹 문서 저장소: Chromium · 웹 문서 저장소: 다른 브라우저 · 웹 문서 저장소: 브라우저 문서(R-WEB-09). Vitest · 테스트 23개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1052,12 +1075,17 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0690 | 06-web 1: 취소한 "다른 이름으로 내려받기"는 아무것도 바꾸지 않는다 | - |
 | T-0691 | 실패한 내려받기는 실패한 저장이다 | - |
 | T-0692 | 새 문서에는 읽을 파일이 없고, 다른 문서는 아직 읽지 않는다 | - |
+| T-0936 | 브라우저 문서는 그 문서 키로 브라우저에 저장되고 자동 저장된다 | [[ux-decisions\|UX BS2]] |
+| T-0937 | 다른 이름으로 저장은 어디에 저장할지 묻고, 이 브라우저를 고르면 받은 키로 문서를 옮긴다 | [[ux-decisions\|UX BS1]] |
+| T-0938 | 이 컴퓨터로 다른 이름으로 저장하면 내려받고, 창을 닫으면 취소한다 | [[ux-decisions\|UX BS1]] |
+| T-0939 | 브라우저에 쓰지 못하면 문서는 원래 자리에 남는다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0940 | 브라우저 문서가 없는 저장소는 브라우저에 쓰지 못한다 | - |
 
 ^t-apps-web-src-files-web-document-store-test-ts
 
 ### [통합] `apps/web/src/shell/web-shell.test.ts`
 
-웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06). Vitest · 테스트 57개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]].
+웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 74개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1118,6 +1146,23 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0899 | 모델이 파일의 검사를 통과하지 못하는 링크는 열지 않는다 | - |
 | T-0900 | 나중에 연 링크는 편집한 새 문서를 바꾸기 전에 묻고, 그 뒤 보기 모드로 보인다 | - |
 | T-0901 | 다른 문서를 열면 보기 모드가 끝난다. 쓸 만한 이름이 없는 링크는 제목 없음이다 | - |
+| T-0941 | 첫 저장은 어디에 저장할지 묻고, 처음에는 이 컴퓨터 쪽이며, 이름은 첫 다이어그램의 헤더 이름이다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS1]] |
+| T-0942 | Ctrl+S와 자동 저장은 브라우저 문서에 쓴다. 파일에 쓸 수 없는 브라우저에서도 | [[ux-decisions\|UX BS2]] |
+| T-0943 | 이미 있는 이름이면 바꿀지 묻고, 아니면 이름을 다시 묻는다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0944 | 이미 있는 이름을 바꾸기로 하면 그 문서에 덮어쓴다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0945 | 저장 공간이 모자라면 그렇다고 알리고 문서는 저장 안 됨으로 남는다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0946 | 06-web 1.3: 브라우저에 처음 저장할 때 한 번, 저장 공간을 지우지 않게 브라우저에 요청한다 | - |
+| T-0947 | 열기…는 브라우저 문서를 열고, 고른 쪽을 기억한다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS1]] |
+| T-0948 | 문서의 이름을 바꾼다. 지금 연 문서와 그 최근 파일 항목도 | [[ux-decisions\|UX BS3]] |
+| T-0949 | 묻고 나서 삭제한다. 지금 연 문서는 저장하지 않은 새 문서로 남는다 | [[ux-decisions\|UX BS3]] |
+| T-0950 | 삭제를 확인하지 않으면 문서가 남는다 | [[ux-decisions\|UX BS3]] |
+| T-0951 | 문서 하나를 그 이름의 파일로 내보낸다 | [[ux-decisions\|UX BS3]] |
+| T-0952 | 모두 zip 하나로 내보내고, 다시 가져오면 겹치는 이름에 번호를 붙인다 | [[ux-decisions\|UX BS4]] |
+| T-0953 | 내보내거나 가져올 것이 없으면 아무것도 하지 않고, 읽지 못한 파일은 알린다 | [[ux-decisions\|UX BS4]] |
+| T-0954 | "브라우저에 저장"은 열기 · 저장 창 없이 새 문서를 브라우저에 저장하고 다른 문서를 연다 | [[ux-decisions\|UX US1]] |
+| T-0955 | "브라우저에 저장"이 실패하면 새 문서에 머문다 | [[ux-decisions\|UX US1]] |
+| T-0956 | 브라우저 문서의 로컬 백업은 그 브라우저 문서로 복원된다 | [[01-requirements#^r-web\|R-WEB-03]] |
+| T-0957 | 다른 탭에서 연 브라우저 문서는 이 탭에서 보기만 한다 | [[01-requirements#^r-web\|R-WEB-09]] |
 
 ^t-apps-web-src-shell-web-shell-test-ts
 
@@ -1221,7 +1266,7 @@ PNG 내보내기의 크기 · PNG 그리기. Vitest · 테스트 8개.
 
 ### [단위] `apps/web/src/files/file-fallback.test.ts`
 
-파일 대체 경로(06-web 1). Vitest · 테스트 5개.
+파일 대체 경로(06-web 1). Vitest · 테스트 6개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1230,6 +1275,7 @@ PNG 내보내기의 크기 · PNG 그리기. Vitest · 테스트 8개.
 | T-0752 | .ns.svg와 .ns 파일을 보여 주고, 고른 것을 준다 | [[01-requirements#^r-web\|R-WEB-02]] |
 | T-0753 | 선택 창을 닫으면 null을 준다 | - |
 | T-0754 | 파일 없이 온 변경은 null을 준다 | - |
+| T-0972 | 파일에서 가져오기…는 여러 파일을 고르게 하고 모두 돌려주며, 닫으면 아무것도 돌려주지 않는다 | [[ux-decisions\|UX BS4]] |
 
 ^t-apps-web-src-files-file-fallback-test-ts
 
@@ -1309,6 +1355,18 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ^t-apps-web-src-files-share-link-test-ts
 
+### [단위] `apps/web/src/files/zip.test.ts`
+
+"모두 파일로 내보내기"와 "파일에서 가져오기…"의 zip(R-WEB-09, UX BS4). Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]], [[ux-decisions|UX BS4]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0958 | 텍스트를 묶고 같은 텍스트로 푼다 | [[ux-decisions\|UX BS4]] |
+| T-0959 | 받는 파일만 폴더 이름 없이 푼다 | [[ux-decisions\|UX BS4]] |
+| T-0960 | zip과 다른 바이트를 가린다 | - |
+
+^t-apps-web-src-files-zip-test-ts
+
 ### [단위] `apps/web/src/fonts/save-font.test.ts`
 
 저장에 필요한 글꼴(서브셋 도구와 TTF). Vitest · 테스트 2개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-07]].
@@ -1362,6 +1420,17 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ^t-apps-web-src-shell-page-events-test-ts
 
+### [단위] `apps/web/src/shell/places.test.ts`
+
+열기 · 저장 창의 셸 쪽(R-WEB-09, UX BS1). Vitest · 테스트 2개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]], [[ux-decisions|UX BS1]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0961 | 요청은 모달의 답을 기다리고, 모달에 요청을 알린다 | [[ux-decisions\|UX BS1]] |
+| T-0962 | 새 요청은 앞의 요청을 닫는다 | - |
+
+^t-apps-web-src-shell-places-test-ts
+
 ### [단위] `apps/web/src/shell/tab-lock.test.ts`
 
 탭 잠금. Vitest · 테스트 5개.
@@ -1394,7 +1463,7 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ### [단위] `apps/web/src/storage/browser-db.test.ts`
 
-브라우저 데이터베이스(06-web 1.1, 2). Vitest · 테스트 10개.
+브라우저 데이터베이스(06-web 1.1, 2). Vitest · 테스트 14개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1403,6 +1472,10 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-0779 | 최근 파일에서 밀려난 파일은 로컬 백업도 잃는다 | [[01-requirements#^r-exp\|R-EXP-04]] |
 | T-0780 | 실패한 읽기는 알리고, 빈 것으로 읽힌다 | - |
 | T-0781 | 실패한 쓰기는 알리고, 예외를 던지지 않는다 | - |
+| T-0963 | 06-web 1.3: 버전 2는 브라우저 문서를 더하고 버전 1의 로컬 백업과 최근 파일을 지킨다 | - |
+| T-0964 | 페이지를 다시 열어도 문서가 남고, 최신순이며, 삭제할 수 있다 | [[ux-decisions\|UX BS3]] |
+| T-0965 | 저장 공간이 모자란 것을 다른 실패와 구분한다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0966 | 메모리는 이 페이지 동안 문서를 지킨다 | [[01-requirements#^r-web\|R-WEB-09]] |
 | T-0782 | 06-web 2: IndexedDB가 없으면 메모리를 쓴다 | - |
 | T-0783 | 06-web 2: 다른 탭이 데이터베이스를 막으면 메모리를 쓴다 | - |
 | T-0784 | 06-web 2: 열기에 실패하면 메모리를 쓴다 | - |
@@ -1410,6 +1483,19 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-0786 | 최근 파일을 지키고, 밀려난 파일의 로컬 백업은 버린다 | [[01-requirements#^r-exp\|R-EXP-04]] |
 
 ^t-apps-web-src-storage-browser-db-test-ts
+
+### [단위] `apps/web/src/storage/browser-documents.test.ts`
+
+브라우저 문서(R-WEB-09). Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-09]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0967 | 마지막에 저장한 것을 맨 앞에 보인다 | [[ux-decisions\|UX BS3]] |
+| T-0968 | 대소문자와 앞뒤 공백만 다른 이름은 같은 이름이다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0969 | 이미 있는 이름에는 비어 있는 다음 번호를 붙인다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-0970 | 크기를 UTF-8 바이트로 센다 | - |
+
+^t-apps-web-src-storage-browser-documents-test-ts
 
 ### [단위] `apps/web/src/storage/recent-files.test.ts`
 

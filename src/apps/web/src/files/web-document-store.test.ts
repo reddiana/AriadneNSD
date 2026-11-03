@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { WriteResult } from '../editor-contract';
 import { download } from './file-fallback';
-import type { StoreHost, Written } from './web-document-store';
+import type { SavePlace, SaveSubject, StoreHost, Written } from './web-document-store';
 import { WebDocumentStore } from './web-document-store';
 
 vi.mock('./file-fallback', () => ({
@@ -267,5 +268,113 @@ describe('web document store: other browsers', () => {
     const store = new WebDocumentStore(host(false, []), 'k', 'a.ns.svg', { kind: 'none' });
     await expect(store.read()).rejects.toThrow('A new document has no file to read');
     expect(await store.readOther()).toBeNull();
+  });
+});
+
+describe('web document store: documents in this browser (R-WEB-09)', () => {
+  /** A host with browser documents: Save As answers `place`, writes answer `result`. */
+  function browserHost(
+    written: Written[],
+    place: SavePlace | null,
+    result: WriteResult = { ok: true, name: '' },
+  ) {
+    const writes: { key: string; name: string; svg: string }[] = [];
+    const subjects: SaveSubject[] = [];
+    const value: StoreHost = {
+      ...host(false, written),
+      chooseSavePlace: (subject) => {
+        subjects.push(subject);
+        return Promise.resolve(place);
+      },
+      writeBrowser: (entry) => {
+        writes.push(entry);
+        return Promise.resolve(result.ok ? { ok: true, name: entry.name } : result);
+      },
+    };
+    return { value, writes, subjects };
+  }
+
+  it('T-0936 · UX BS2: a browser document saves to this browser under its key and auto saves', async () => {
+    const written: Written[] = [];
+    const { value, writes } = browserHost(written, null);
+    const store = new WebDocumentStore(value, 'k', 'Merge Sort', { kind: 'browser', text: 'old' });
+    expect(store.place).toBe('browser');
+    expect(store.isNew).toBe(false);
+    expect(await store.canAutosave()).toBe(true);
+    expect(await store.read()).toBe('old');
+    expect(await store.write('<svg/>')).toEqual({ ok: true, name: 'Merge Sort' });
+    expect(writes).toEqual([{ key: 'k', name: 'Merge Sort', svg: '<svg/>' }]);
+    expect(written[0]).toEqual({
+      previousKey: 'k',
+      key: 'k',
+      name: 'Merge Sort',
+      svg: '<svg/>',
+      isBrowser: true,
+    });
+    store.renameBrowser('Quick Sort');
+    expect(store.name).toBe('Quick Sort');
+  });
+
+  it('T-0937 · UX BS1: Save As asks where; this browser moves the document there under the given key', async () => {
+    const written: Written[] = [];
+    const { value, subjects } = browserHost(written, {
+      kind: 'browser',
+      name: 'Merge Sort',
+      key: 'k2',
+    });
+    const store = new WebDocumentStore(value, 'k', 'a.ns.svg', { kind: 'copy', text: '' });
+    expect(await store.writeAs('<svg/>', 'a.ns.svg')).toEqual({ ok: true, name: 'Merge Sort' });
+    expect(subjects).toEqual([{ key: 'k', name: 'a.ns.svg', svg: '<svg/>', isBrowser: false }]);
+    expect(store.key).toBe('k2');
+    expect(store.place).toBe('browser');
+    expect(written[0]).toMatchObject({ previousKey: 'k', key: 'k2' });
+  });
+
+  it('T-0938 · UX BS1: Save As to this computer downloads; closing the modal cancels', async () => {
+    const written: Written[] = [];
+    const store = new WebDocumentStore(
+      browserHost(written, { kind: 'computer' }).value,
+      'k',
+      'Merge Sort',
+      { kind: 'browser', text: '' },
+    );
+    expect(await store.writeAs('<svg/>', 'Merge Sort')).toEqual({
+      ok: true,
+      name: 'renamed-Merge Sort.ns.svg',
+    });
+    expect(store.place).toBe('file');
+    const closed = new WebDocumentStore(browserHost([], null).value, 'k', 'Untitled.ns.svg', {
+      kind: 'none',
+    });
+    // A new document's first save asks where too, in every browser.
+    expect(await closed.write('<svg/>')).toEqual({ ok: false, reason: 'cancelled' });
+    // On this computer it then downloads under its name at once, without asking for a name.
+    const first = new WebDocumentStore(
+      browserHost([], { kind: 'computer' }).value,
+      'k',
+      'Untitled.ns.svg',
+      { kind: 'none' },
+    );
+    expect(await first.write('<svg/>')).toEqual({ ok: true, name: 'Untitled.ns.svg' });
+  });
+
+  it('T-0939 · R-WEB-09: a failed browser write keeps the document where it was', async () => {
+    const written: Written[] = [];
+    const failure: WriteResult = { ok: false, reason: 'failed', message: 'full' };
+    const store = new WebDocumentStore(
+      browserHost(written, { kind: 'browser', name: 'B', key: 'k2' }, failure).value,
+      'k',
+      'a.ns.svg',
+      { kind: 'none' },
+    );
+    expect(await store.writeAs('<svg/>', 'a.ns.svg')).toEqual(failure);
+    expect(store.key).toBe('k');
+    expect(store.isNew).toBe(true);
+    expect(written).toEqual([]);
+  });
+
+  it('T-0940: a store without browser documents cannot write to the browser', async () => {
+    const store = new WebDocumentStore(host(false, []), 'k', 'B', { kind: 'browser', text: '' });
+    await expect(store.write('<svg/>')).rejects.toThrow('no browser documents');
   });
 });
