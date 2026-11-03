@@ -2,7 +2,7 @@
 title: Today I Learned (TIL)
 tags:
   - til
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Today I Learned (TIL)
@@ -38,13 +38,23 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 - [[logo-and-icon-assets]] — 로고와 아이콘 파일 만들기: 벡터, 사진 옮기기, 크기별 판, 윤곽선 글자, 라이선스 (2026-10-10)
 - [[model-layout-render-theme]] — 모양을 바꾸는 일의 크기: 모델 · 레이아웃 · 그리기 · 테마의 네 단계, 테마로 바꿀 수 있는 것과 없는 것 (2026-10-11)
 
-### 설계와 기술 선택
+### 방법론
 
 - [[spike-prototype-mvp]] — 스파이크, 프로토타입, MVP의 차이 (2026-10-10)
+- [[two-worker-scheduling]] — 두 사람이 서로 기다리지 않게 일하는 순서: 사람-기계 작업 분석, 존슨 · 잭슨의 규칙, 동시 공학, 바통 터치 (2026-11-02)
+
+### 설계와 기술 선택
+
 - [[ui-framework-choice]] — UI 프레임워크 고르기: 프레임워크가 하는 일(손으로 · 컴파일러 · 다시 부르기), 잰 크기, 개발자 층, React를 읽을 때 알아 둘 것, 그 프로그램의 메뉴에 올리기, lexer와 parser, 실행 취소의 두 층 (2026-10-18)
 - [[wasm-and-shell]] — wasm과 셸: JVM 바이트코드에 견준 WebAssembly, 우리가 HarfBuzz를 wasm으로 쓰는 곳, 셸은 배포 대상마다의 바깥 프로그램(저장소 어댑터에 견줌) (2026-10-17)
 - [[monorepo-and-tools]] — 모노레포와 개발 도구: `apps/`와 `packages/`의 뜻, Maven 멀티 모듈에 빗댐, 빌드 · 시험 · 코드 검사 도구를 Java 도구에 빗댄 표 (2026-10-25)
 - [[benchmark-numbers]] — 속도를 잰 숫자 읽기: 중앙값과 느린 5%(p95), 워밍업, 누를 때마다 숫자가 다른 까닭 (2026-10-25)
+
+### 테스트와 빌드
+
+- [[test-types-and-doubles]] — 테스트 유형(단위 · 통합 · E2E)과 테스트 더블, 실제 기기 없이 휴대폰 흉내 내기 (2026-11-01)
+- [[bundle-size-budget]] — 번들 사이즈 체크(bundle size budget)와 글꼴의 예약 이름(OFL Reserved Font Name) (2026-11-01)
+- [[yaml-and-json]] — YAML과 JSON: 프로그램이 쓰는 글과 사람이 쓰는 글, YAML이 `yes` · `no`를 참 · 거짓으로 읽는 함정 (2026-11-02)
 
 ### 배포 대상
 
@@ -61,10 +71,6 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 
 ### 오픈소스 운영
 
-- [[test-types-and-doubles]] — 테스트 유형(단위 · 통합 · E2E)과 테스트 더블, 실제 기기 없이 휴대폰 흉내 내기 (2026-11-01)
-- [[bundle-size-budget]] — 번들 사이즈 체크(bundle size budget)와 글꼴의 예약 이름(OFL Reserved Font Name) (2026-11-01)
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
 - [[names-and-registries]] — 이름을 잡아 두는 곳들: npm, 도메인, GitHub Pages와 그 비용 (2026-10-10)
 - [[feedback-and-funding-channels]] — 사용자 의견 받기(Issues·Discussions·양식)와 후원·광고 채널 (2026-10-10)
-- [[yaml-and-json]] — YAML과 JSON: 프로그램이 쓰는 글과 사람이 쓰는 글, YAML이 `yes` · `no`를 참 · 거짓으로 읽는 함정 (2026-11-02)
-- [[two-worker-scheduling]] — 두 사람이 서로 기다리지 않게 일하는 순서: 사람-기계 작업 분석, 존슨 · 잭슨의 규칙, 동시 공학, 바통 터치 (2026-11-02)

@@ -14,7 +14,7 @@ const explorer = () =>
     filterFn: (node) => node.slugSegment !== "tags" && node.slug !== "about",
     sortFn: (a, b) => {
       if (a.isFolder !== b.isFolder) return a.isFolder ? -1 : 1
-      // 맨 위에서는 문서(docs), 작업 공간(atelier), 배운 것(til), 여정(journal: 펴내는 문서만) 차례
+      // 맨 위에서는 문서(docs), 아뜰리에(atelier), 배운 것(til), 여정(journal: 펴내는 문서만) 차례
       const first = ["docs", "atelier", "til", "journal"]
       const ra = first.indexOf(a.slugSegment)
       const rb = first.indexOf(b.slugSegment)

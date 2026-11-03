@@ -46,7 +46,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 > [!TIP]
 > **1. 웹 사이트에서 읽기 (설치 없이):** **https://ariadnensd.com/about**
-> 설계 문서(`docs/`), 작업 공간(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
+> 설계 문서(`docs/`), 아뜰리에(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
 > **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`의 대부분)도 함께 읽을 수 있습니다.
 <!-- /site:skip -->
@@ -55,7 +55,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 | ------------------------------------- | ------------------------------------------------------ |
 | [`docs/`](docs/README.md)             | 애플리케이션 문서: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세          |
 | [`src/`](src/README.md)               | 코드: pnpm 모노레포(모델 · 레이아웃 · 파일 형식의 `core`, 글꼴의 `fonts`, 편집 화면의 `editor`, 웹 앱). 개발을 시작하는 법은 [`src/README.md`](src/README.md) |
-| [`atelier/`](atelier/README.md)       | 작업 공간: 현재 상태, 할 일, 답을 기다리는 것, 프로토타입, 결정 기록(아키텍처는 ADR, 그 밖은 DR), 세션 기록, inbox |
+| [`atelier/`](atelier/README.md)       | 아뜰리에: 현재 상태, 할 일, 답을 기다리는 것, 프로토타입, 결정 기록(아키텍처는 ADR, 그 밖은 DR), 세션 기록, inbox |
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                    |
 | [`til/`](til/README.md)               | Today I Learned: 백엔드 개발자가 프론트엔드를 배우며 정리한 것                  |
 | [`site/`](site/)                      | 펴낸 사이트(GitHub Pages, Quartz)의 설정과 빌드 스크립트                  |

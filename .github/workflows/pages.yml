@@ -4,7 +4,7 @@
 #   /            웹 버전 앱 (src/apps/web)
 #   /about       소개 (저장소의 README.md)
 #   /docs/…      설계 문서 (docs/)
-#   /atelier/…   작업 공간 (atelier/)
+#   /atelier/…   아뜰리에 (atelier/)
 #   /til/…       Today I Learned (til/)
 #   /journal/…   이름 이야기와 로고의 출처 두 문서만 (journal/name-story.md, logo-source.md)
 #   /app/        옛 앱 주소. 첫 화면으로 넘겨 준다 (site/app-redirect.html)
