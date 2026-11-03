@@ -32,7 +32,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.1.0`이고(GitHub Releases에 Pre-release로 올림), 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다 → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
-- 테스트: 단위 · 통합 576개, E2E 55개, 벤치마크 2개, 테스트마다 ID `T-0001` ~ `T-0541`([[dr-0022-test-ids|DR-0022]]). 인수 기준은 [[01-requirements#5.2 MVP의 인수 기준]], 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 기능 영역마다 [[08-test-list]](자동 생성, 한국어), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
+- 테스트: 단위 · 통합 736개(`it.each`를 펴면 1,157번 실행), E2E 55개, 성능 5개, 테스트마다 ID `T-0001` ~ `T-0796`. 합친 줄 커버리지 core 94% · editor 96% · fonts 97% · web 90% → [[07-testing#6. 지금의 커버리지]]. 일하는 방식 전체는 [[how-we-work]]([[dr-0022-test-ids|DR-0022]]). 인수 기준은 [[01-requirements#5.2 MVP의 인수 기준]], 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 기능 영역마다 [[08-test-list]](자동 생성, 한국어), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]
 - 문서 검사 훅이 Claude가 고친 문서의 표와 링크를 검사합니다(`.claude/hooks/doc-check.py`)
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
@@ -45,6 +45,8 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] **메인테이너가 정해 주기: 테스트를 더하다 찾은 버그 후보 일곱 가운데 고칠 것, 테스트 목록 번역의 용어** → [[outbox#정해 주세요]] (2026-11-03 세션 05가 묻기 전에 끊겨 다음 세션이 적음)
+- [ ] 리팩토링 준비의 3단계(커버리지 하한을 CI에), 그다음 ADR-0041 · US1 구현 → [[backlog#MVP 개발]]
 - [ ] 메인테이너가 2026-11-03 세션 03에 바뀐 것을 배포한 사이트에서 써 보기: 첫 방문의 빠르기(새 창 · 시크릿 창, 휴대폰), 예제 썸네일, 한글이 잠깐 다른 글꼴로 보였다 바뀌는 것 → [[2026-11-03-03-small-holes-font-slices-thumbnails]]
 - [ ] 메인테이너가 2026-11-03 세션 04에 바뀐 것을 써 보기: 예제 썸네일이 WebP 그림이 됨(시크릿 창의 첫 방문 모달에서 그림이 또렷한지, 빨리 채워지는지) → [[2026-11-03-04-startup-cpu-webp-thumbnails]]
 - [ ] 메인테이너가 2026-11-03 세션 02에 바뀐 문서를 사이트에서 봄: [[08-test-list]](기능 영역, 테스트 ID, 한국어), [[defects]], [[03-quality-attribute-scenarios]]의 "테스트 ID", [[01-requirements#5.2 MVP의 인수 기준]], [[07-testing#1.2 유형과 구성 요소]]의 그림 → [[2026-11-03-02-inbox-atelier-til-views]]
