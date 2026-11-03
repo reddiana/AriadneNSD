@@ -12,37 +12,33 @@ status: 생성됨
 > [!info] 이 문서는 손으로 고치지 않습니다
 > `src/scripts/test-list.mjs`가 테스트의 이름과 테스트 파일의 첫 주석에서 만듭니다(`src/`에서 `pnpm test-list`). `pnpm check`가 이 문서가 코드와 다르면 실패하므로, 테스트를 더하거나 바꾸면 이 문서도 같은 커밋에서 바뀝니다. 테스트 코드의 이름과 주석은 영어이고(→ [[dr-0017-code-language-and-commits|DR-0017]]), 이 문서에는 한국어로 옮겨 적습니다. 번역은 `src/scripts/test-list-ko.json`에 있고, 번역이 빠진 테스트가 있으면 `pnpm check`가 실패합니다.
 
+영역마다 유형별 테스트 수입니다.
+
+| 영역 | E2E | 통합 | 단위 | 성능 | 모두 |
+| --- | --- | --- | --- | --- | --- |
+| [[#1. 인수 테스트\|인수 테스트]] | 26 |  |  |  | 26 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] |  | 27 | 149 |  | 176 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 4 | 22 | 49 |  | 75 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 15 | 25 | 15 |  | 55 |
+| [[#5. 파일\|파일]] | 6 | 40 | 60 |  | 106 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] |  |  | 78 |  | 78 |
+| [[#7. 성능\|성능]] |  |  |  | 3 | 3 |
+| 모두 | 51 | 114 | 351 | 3 | 519 |
+
 ## 읽는 법
 
 - **ID:** 테스트마다 `T-`와 네 자리 번호의 ID가 있습니다(테스트 코드의 이름 맨 앞). 번호는 바뀌지 않고, 지운 테스트의 번호는 다시 쓰지 않습니다.
-- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(2장). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 아래 한 줄에 파일이 무엇을 확인하는지, 유형 · 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.
+- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(영역마다 한 절). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 아래 한 줄에 파일이 무엇을 확인하는지, 유형 · 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.
 - **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.
 - **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)
 - **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).
 - **이름 규칙:** 테스트 코드의 이름은 `T-0412: …`, 확인하는 것이 있으면 `T-0412 · BUG-03 · QA-19: …`입니다. 이 문서는 확인하는 것의 ID를 "확인하는 것" 칸에 옮기고, 나머지를 "테스트" 칸에 한국어로 적습니다.
 
-## 1. 요약
-
-영역마다 유형별 테스트 수입니다.
-
-| 영역 | E2E | 통합 | 단위 | 성능 | 모두 |
-| --- | --- | --- | --- | --- | --- |
-| [[#2.1 인수 테스트\|인수 테스트]] | 26 |  |  |  | 26 |
-| [[#2.2 편집 명령과 모델\|편집 명령과 모델]] |  | 27 | 149 |  | 176 |
-| [[#2.3 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 4 | 22 | 49 |  | 75 |
-| [[#2.4 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 15 | 25 | 15 |  | 55 |
-| [[#2.5 파일\|파일]] | 6 | 40 | 60 |  | 106 |
-| [[#2.6 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] |  |  | 78 |  | 78 |
-| [[#2.7 성능\|성능]] |  |  |  | 3 | 3 |
-| 모두 | 51 | 114 | 351 | 3 | 519 |
-
-## 2. 영역마다
-
-### 2.1 인수 테스트
+## 1. 인수 테스트
 
 MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[01-requirements#5.2 MVP의 인수 기준]]. 파일 1개, 테스트 26개.
 
-#### `apps/web/e2e/acceptance.spec.ts`
+### `apps/web/e2e/acceptance.spec.ts`
 
 MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서, 배포용 빌드로. E2E · Playwright · 테스트 26개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-01]], [[01-requirements#^at|AT-17]].
 
@@ -77,11 +73,11 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ^t-apps-web-e2e-acceptance-spec-ts
 
-### 2.2 편집 명령과 모델
+## 2. 편집 명령과 모델
 
 블록 넣기 · 지우기 · 옮기기 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 16개, 테스트 176개.
 
-#### `packages/editor/src/session/engine.test.ts`
+### `packages/editor/src/session/engine.test.ts`
 
 글자 넣기와 편집 · 명령 뒤의 선택(03-editor 2.3) · 클립보드 · 분기 · 키와 모드(03-keymap) · 보기 전용(03-editor 6.4). 통합 · Vitest · 테스트 27개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-03]], [[01-requirements#^at|AT-12]], [[01-requirements#^r-edit|R-EDIT-11]], [[ux-decisions|UX MD3]].
 
@@ -117,7 +113,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ^t-packages-editor-src-session-engine-test-ts
 
-#### `packages/core/src/commands/branch.test.ts`
+### `packages/core/src/commands/branch.test.ts`
 
 Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX MD3]], [[ux-decisions|UX CD1]].
 
@@ -137,7 +133,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-branch-test-ts
 
-#### `packages/core/src/commands/call.test.ts`
+### `packages/core/src/commands/call.test.ts`
 
 호출 블록의 명령(editCall · setCallTarget · insertCall · newMethodAndCall). 단위 · Vitest · 테스트 24개.
 
@@ -170,7 +166,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-call-test-ts
 
-#### `packages/core/src/commands/clipboard.test.ts`
+### `packages/core/src/commands/clipboard.test.ts`
 
 복사, 잘라내기, 붙여넣기. 단위 · Vitest · 테스트 7개.
 
@@ -186,7 +182,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-clipboard-test-ts
 
-#### `packages/core/src/commands/delete.test.ts`
+### `packages/core/src/commands/delete.test.ts`
 
 블록 지우기(deleteBlocks). 단위 · Vitest · 테스트 6개.
 
@@ -201,7 +197,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-delete-test-ts
 
-#### `packages/core/src/commands/diagram.test.ts`
+### `packages/core/src/commands/diagram.test.ts`
 
 헤더와 다이어그램의 명령(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName). 단위 · Vitest · 테스트 31개.
 
@@ -241,7 +237,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-diagram-test-ts
 
-#### `packages/core/src/commands/edit-text.test.ts`
+### `packages/core/src/commands/edit-text.test.ts`
 
 글자 편집(editText). 단위 · Vitest · 테스트 5개.
 
@@ -255,7 +251,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-edit-text-test-ts
 
-#### `packages/core/src/commands/insert.test.ts`
+### `packages/core/src/commands/insert.test.ts`
 
 블록 넣기(insertBlock). 단위 · Vitest · 테스트 13개.
 
@@ -277,7 +273,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 
 ^t-packages-core-src-commands-insert-test-ts
 
-#### `packages/core/src/commands/move-to.test.ts`
+### `packages/core/src/commands/move-to.test.ts`
 
 moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
@@ -291,7 +287,7 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-commands-move-to-test-ts
 
-#### `packages/core/src/commands/move.test.ts`
+### `packages/core/src/commands/move.test.ts`
 
 위아래로 옮기기 · 좌우로 옮기기(분기). 단위 · Vitest · 테스트 12개.
 
@@ -312,7 +308,7 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-commands-move-test-ts
 
-#### `packages/core/src/commands/new-document.test.ts`
+### `packages/core/src/commands/new-document.test.ts`
 
 새 문서. 단위 · Vitest · 테스트 3개.
 
@@ -324,7 +320,7 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-commands-new-document-test-ts
 
-#### `packages/core/src/commands/properties.test.ts`
+### `packages/core/src/commands/properties.test.ts`
 
 속성 기반 테스트(07-testing 2). 단위 · 속성 기반 (fast-check) · 테스트 2개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-01]].
 
@@ -335,7 +331,7 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-commands-properties-test-ts
 
-#### `packages/core/src/commands/wrap.test.ts`
+### `packages/core/src/commands/wrap.test.ts`
 
 감싸기 · 풀기. 단위 · Vitest · 테스트 12개.
 
@@ -356,7 +352,7 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-commands-wrap-test-ts
 
-#### `packages/core/src/model/id.test.ts`
+### `packages/core/src/model/id.test.ts`
 
 id. 단위 · Vitest · 테스트 5개.
 
@@ -370,7 +366,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-model-id-test-ts
 
-#### `packages/core/src/model/invariants.test.ts`
+### `packages/core/src/model/invariants.test.ts`
 
 불변식 검사(checkInvariants). 단위 · Vitest · 테스트 10개.
 
@@ -389,7 +385,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-core-src-model-invariants-test-ts
 
-#### `packages/editor/src/clipboard/clip-format.test.ts`
+### `packages/editor/src/clipboard/clip-format.test.ts`
 
 클립보드 형식(03-editor 3.3). 단위 · Vitest · 테스트 3개.
 
@@ -401,11 +397,11 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-clipboard-clip-format-test-ts
 
-### 2.3 키 · 마우스 · 선택
+## 3. 키 · 마우스 · 선택
 
 키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 끌기가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 10개, 테스트 75개.
 
-#### `apps/web/e2e/canvas.spec.ts`
+### `apps/web/e2e/canvas.spec.ts`
 
 캔버스. E2E · Playwright · 테스트 4개.
 
@@ -418,7 +414,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-apps-web-e2e-canvas-spec-ts
 
-#### `packages/editor/src/session/diagrams.test.ts`
+### `packages/editor/src/session/diagrams.test.ts`
 
 헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). 통합 · Vitest · 테스트 21개.
 
@@ -448,7 +444,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-session-diagrams-test-ts
 
-#### `packages/editor/src/session/random-keys.test.ts`
+### `packages/editor/src/session/random-keys.test.ts`
 
 무작위 키. 통합 · Vitest · 테스트 1개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-01]].
 
@@ -458,7 +454,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-session-random-keys-test-ts
 
-#### `packages/editor/src/dom/overlay.test.ts`
+### `packages/editor/src/dom/overlay.test.ts`
 
 선택 테두리 그리기(overlayContent). 단위 · Vitest · 테스트 1개.
 
@@ -468,7 +464,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-dom-overlay-test-ts
 
-#### `packages/editor/src/input/hit-test.test.ts`
+### `packages/editor/src/input/hit-test.test.ts`
 
 클릭이 맞는 자리(03-editor 3.1) · 떨어뜨리는 자리(03-editor 3.2) · 다이어그램 헤더. 단위 · Vitest · 테스트 14개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]].
 
@@ -491,7 +487,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-input-hit-test-test-ts
 
-#### `packages/editor/src/input/keys.test.ts`
+### `packages/editor/src/input/keys.test.ts`
 
 키 읽기(03-editor 4). 단위 · Vitest · 테스트 8개.
 
@@ -508,7 +504,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-input-keys-test-ts
 
-#### `packages/editor/src/navigation/navigate.test.ts`
+### `packages/editor/src/navigation/navigate.test.ts`
 
 키보드 이동(03-editor 2.2). 단위 · Vitest · 테스트 12개.
 
@@ -529,7 +525,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-navigation-navigate-test-ts
 
-#### `packages/editor/src/state/selection.test.ts`
+### `packages/editor/src/state/selection.test.ts`
 
 선택(03-editor 2). 단위 · Vitest · 테스트 5개.
 
@@ -543,7 +539,7 @@ id. 단위 · Vitest · 테스트 5개.
 
 ^t-packages-editor-src-state-selection-test-ts
 
-#### `packages/editor/src/ui/key-hint.test.ts`
+### `packages/editor/src/ui/key-hint.test.ts`
 
 UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[ux-decisions|UX K3]].
 
@@ -556,7 +552,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-ui-key-hint-test-ts
 
-#### `packages/editor/src/ui/keys.test.ts`
+### `packages/editor/src/ui/keys.test.ts`
 
 키. 단위 · Vitest · 테스트 5개.
 
@@ -570,11 +566,11 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-ui-keys-test-ts
 
-### 2.4 메뉴 · 화면 · 시작
+## 4. 메뉴 · 화면 · 시작
 
 메뉴와 툴바, 화면 언어, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 9개, 테스트 55개.
 
-#### `apps/web/e2e/boot.spec.ts`
+### `apps/web/e2e/boot.spec.ts`
 
 페이지의 시작. E2E · Playwright · 테스트 2개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-10]], [[03-quality-attribute-scenarios#1. 목록|QA-19]].
 
@@ -585,7 +581,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-e2e-boot-spec-ts
 
-#### `apps/web/e2e/examples.spec.ts`
+### `apps/web/e2e/examples.spec.ts`
 
 예제(05-screen-layout "예제"). E2E · Playwright · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-25]], [[ux-decisions|UX EX1]].
 
@@ -601,7 +597,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-e2e-examples-spec-ts
 
-#### `apps/web/e2e/mobile.spec.ts`
+### `apps/web/e2e/mobile.spec.ts`
 
 휴대폰의 웹 앱(페이지의 시작은 boot.spec.ts에). E2E · Playwright · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-08]], [[01-requirements#^r-nfr|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록|QA-18]], [[03-quality-attribute-scenarios#1. 목록|QA-20]].
 
@@ -615,7 +611,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-e2e-mobile-spec-ts
 
-#### `apps/web/e2e/smoke.spec.ts`
+### `apps/web/e2e/smoke.spec.ts`
 
 . E2E · Playwright · 테스트 1개.
 
@@ -625,7 +621,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-e2e-smoke-spec-ts
 
-#### `packages/editor/src/ui/editor-app.test.tsx`
+### `packages/editor/src/ui/editor-app.test.tsx`
 
 메뉴 바 · 툴바의 블록 아이콘 · 명령 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 자리 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록"). 통합 · Vitest + happy-dom · 테스트 25개.
 
@@ -659,7 +655,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
-#### `apps/web/src/shell/messages.test.ts`
+### `apps/web/src/shell/messages.test.ts`
 
 화면 언어. 단위 · Vitest · 테스트 3개.
 
@@ -671,7 +667,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-src-shell-messages-test-ts
 
-#### `packages/editor/src/examples/examples.test.ts`
+### `packages/editor/src/examples/examples.test.ts`
 
 예제 · $id. 단위 · Vitest · 테스트 9개.
 
@@ -689,7 +685,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-examples-examples-test-ts
 
-#### `packages/editor/src/ui/menu-model.test.ts`
+### `packages/editor/src/ui/menu-model.test.ts`
 
 메뉴 항목(menuEntries). 단위 · Vitest · 테스트 1개.
 
@@ -699,7 +695,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-ui-menu-model-test-ts
 
-#### `packages/editor/src/version.test.ts`
+### `packages/editor/src/version.test.ts`
 
 앱의 판 번호. 단위 · Vitest · 테스트 2개.
 
@@ -710,11 +706,11 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-version-test-ts
 
-### 2.5 파일
+## 5. 파일
 
 파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 임시 보관, 탭 잠금, 최근 파일, PNG 내보내기 → [[01-file-format]], [[06-web]]. 파일 15개, 테스트 106개.
 
-#### `apps/web/e2e/files.spec.ts`
+### `apps/web/e2e/files.spec.ts`
 
 웹 셸의 브라우저 흐름(06-web 1, 2). E2E · Playwright · 테스트 6개.
 
@@ -729,7 +725,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-e2e-files-spec-ts
 
-#### `apps/web/src/files/web-document-store.test.ts`
+### `apps/web/src/files/web-document-store.test.ts`
 
 웹 문서 저장소. 통합 · Vitest · 테스트 5개.
 
@@ -743,7 +739,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-src-files-web-document-store-test-ts
 
-#### `apps/web/src/shell/web-shell.test.ts`
+### `apps/web/src/shell/web-shell.test.ts`
 
 웹 셸. 통합 · Vitest · 테스트 8개.
 
@@ -760,7 +756,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-apps-web-src-shell-web-shell-test-ts
 
-#### `packages/core/node/golden.test.ts`
+### `packages/core/node/golden.test.ts`
 
 골든 파일(07-testing 3). 통합 · 골든 파일 · 테스트 4개.
 
@@ -773,7 +769,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-core-node-golden-test-ts
 
-#### `packages/editor/src/create-editor.test.ts`
+### `packages/editor/src/create-editor.test.ts`
 
 셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4). 통합 · Vitest + happy-dom · 테스트 23개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
@@ -805,7 +801,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 
 ^t-packages-editor-src-create-editor-test-ts
 
-#### `apps/web/src/files/export-png.test.ts`
+### `apps/web/src/files/export-png.test.ts`
 
 PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
@@ -818,7 +814,7 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
 ^t-apps-web-src-files-export-png-test-ts
 
-#### `apps/web/src/files/file-name.test.ts`
+### `apps/web/src/files/file-name.test.ts`
 
 파일 이름. 단위 · Vitest · 테스트 6개.
 
@@ -833,7 +829,7 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
 ^t-apps-web-src-files-file-name-test-ts
 
-#### `apps/web/src/shell/tab-lock.test.ts`
+### `apps/web/src/shell/tab-lock.test.ts`
 
 탭 잠금. 단위 · Vitest · 테스트 5개.
 
@@ -847,7 +843,7 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
 ^t-apps-web-src-shell-tab-lock-test-ts
 
-#### `apps/web/src/shell/timers.test.ts`
+### `apps/web/src/shell/timers.test.ts`
 
 임시 보관 타이머 · 자동 저장 타이머. 단위 · Vitest · 테스트 7개.
 
@@ -863,7 +859,7 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
 ^t-apps-web-src-shell-timers-test-ts
 
-#### `apps/web/src/storage/recent-files.test.ts`
+### `apps/web/src/storage/recent-files.test.ts`
 
 최근 파일. 단위 · Vitest · 테스트 5개.
 
@@ -877,7 +873,7 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 
 ^t-apps-web-src-storage-recent-files-test-ts
 
-#### `packages/core/src/format/base64.test.ts`
+### `packages/core/src/format/base64.test.ts`
 
 base64 인코딩. 단위 · Vitest · 테스트 2개.
 
@@ -888,7 +884,7 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 
 ^t-packages-core-src-format-base64-test-ts
 
-#### `packages/core/src/format/model-json.test.ts`
+### `packages/core/src/format/model-json.test.ts`
 
 모델 JSON 쓰기. 단위 · Vitest · 테스트 6개.
 
@@ -903,7 +899,7 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 
 ^t-packages-core-src-format-model-json-test-ts
 
-#### `packages/core/src/format/parse-model.test.ts`
+### `packages/core/src/format/parse-model.test.ts`
 
 모델 JSON 읽기. 단위 · Vitest · 테스트 8개.
 
@@ -920,7 +916,7 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 
 ^t-packages-core-src-format-parse-model-test-ts
 
-#### `packages/core/src/format/round-trip.test.ts`
+### `packages/core/src/format/round-trip.test.ts`
 
 왕복. 단위 · 속성 기반 (fast-check) · 테스트 3개.
 
@@ -932,7 +928,7 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 
 ^t-packages-core-src-format-round-trip-test-ts
 
-#### `packages/core/src/format/svg-file.test.ts`
+### `packages/core/src/format/svg-file.test.ts`
 
 SVG 파일. 단위 · Vitest · 테스트 14개.
 
@@ -955,11 +951,11 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-core-src-format-svg-file-test-ts
 
-### 2.6 레이아웃 · 그리기 · 글자
+## 6. 레이아웃 · 그리기 · 글자
 
 블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋 → [[02-layout]]. 파일 6개, 테스트 78개.
 
-#### `packages/core/src/layout/layout.test.ts`
+### `packages/core/src/layout/layout.test.ts`
 
 레이아웃: 블록 · 짧은 분기 · 클릭 영역 · 헤더(02-layout 1.5) · 여러 다이어그램(02-layout 1.7) · 속성 · 크기. 단위 · 속성 기반 (fast-check) · 테스트 37개. 파일 전체가 확인하는 것: [[ux-decisions|UX SB1]].
 
@@ -1005,7 +1001,7 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-core-src-layout-layout-test-ts
 
-#### `packages/core/src/render/render-doc.test.ts`
+### `packages/core/src/render/render-doc.test.ts`
 
 렌더링 · 렌더링: 헤더(시각 디자인 원칙 2) · 렌더링: 골든 파일(07-testing 3). 단위 · Vitest · 테스트 16개.
 
@@ -1030,7 +1026,7 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-core-src-render-render-doc-test-ts
 
-#### `packages/core/src/text/measure-text.test.ts`
+### `packages/core/src/text/measure-text.test.ts`
 
 글자 폭. 단위 · Vitest · 테스트 8개.
 
@@ -1047,7 +1043,7 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-core-src-text-measure-text-test-ts
 
-#### `packages/fonts/node/index.test.ts`
+### `packages/fonts/node/index.test.ts`
 
 글꼴 파일 읽기(readFontFile). 단위 · Vitest · 테스트 2개.
 
@@ -1058,7 +1054,7 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-fonts-node-index-test-ts
 
-#### `packages/fonts/node/subset.test.ts`
+### `packages/fonts/node/subset.test.ts`
 
 글꼴 서브셋(subsetToWoff) · 고정한 출력. 단위 · Vitest · 테스트 10개.
 
@@ -1077,7 +1073,7 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-fonts-node-subset-test-ts
 
-#### `packages/fonts/src/advance-table.test.ts`
+### `packages/fonts/src/advance-table.test.ts`
 
 블록 글꼴의 글자 폭 표. 단위 · Vitest · 테스트 5개.
 
@@ -1091,11 +1087,11 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-fonts-src-advance-table-test-ts
 
-### 2.7 성능
+## 7. 성능
 
 그리기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]. 파일 1개, 테스트 3개.
 
-#### `packages/core/src/render/render.bench.ts`
+### `packages/core/src/render/render.bench.ts`
 
 02-layout 4의 성능 예산. 성능 · Vitest bench · 테스트 3개.
 
@@ -1107,9 +1103,9 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ^t-packages-core-src-render-render-bench-ts
 
-## 3. 테스트가 없는 ID
+## 8. 테스트가 없는 ID
 
-문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[01-requirements#5.2 MVP의 인수 기준]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.
+문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(영역 절의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[01-requirements#5.2 MVP의 인수 기준]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.
 
 | ID | 다른 길로 맡은 것 |
 | --- | --- |

@@ -414,7 +414,7 @@ MVP(웹, [[dr-0015-mvp-scope|DR-0015]])를 내놓기 전에 모두 지나야 하
 
 ^at
 
-- 웹에서 하는 인수 테스트(E2E)는 테스트 목록의 [[08-test-list#2.1 인수 테스트|2.1]]에 있고, 코드는 `src/apps/web/e2e/acceptance.spec.ts`에 있습니다. 테스트 이름에 AT ID를 적고(`T-0004 · AT-04: …`), 한 ID에 테스트가 여럿인 것도 있습니다(AT-02 · AT-04 · AT-07 · AT-14). 빌드한 앱을 Chromium으로 엽니다(`pnpm e2e`).
+- 웹에서 하는 인수 테스트(E2E)는 테스트 목록의 [[08-test-list#1. 인수 테스트|1장]]에 있고, 코드는 `src/apps/web/e2e/acceptance.spec.ts`에 있습니다. 테스트 이름에 AT ID를 적고(`T-0004 · AT-04: …`), 한 ID에 테스트가 여럿인 것도 있습니다(AT-02 · AT-04 · AT-07 · AT-14). 빌드한 앱을 Chromium으로 엽니다(`pnpm e2e`).
 - AT-05 · AT-08 · AT-10 · AT-14는 Chromium에서 확인되는 부분만 E2E입니다(AT-10 · AT-14는 테스트 이름에 `(Chromium part)`). 기준 기기의 성능, 다른 뷰어, Firefox · Safari는 사람이 점검표로 봅니다([[07-testing#5. 도구와 CI]]의 출시 전).
 
 ## 6. 미결정 사항
