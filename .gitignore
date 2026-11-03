@@ -21,3 +21,6 @@ playwright/.cache/
 .eslintcache
 .vite/
 .claude/worktrees/
+
+# 개인의 Claude Code 설정(알림 훅 등)
+.claude/settings.local.json
