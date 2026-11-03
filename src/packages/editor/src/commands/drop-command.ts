@@ -36,13 +36,21 @@ function land(content: Content, source: DragSource, to: Id, ids: IdGenerator): R
     : moveTo(content, { target: source.target, to, side: 'after', ids });
 }
 
-/** Runs what a drop does. Returns whether the document changed. */
+/**
+ * Runs what a drop does. Returns whether the document changed: `false` when the drop was refused
+ * or left the blocks where they were (dropped back in their own place, no undo step).
+ */
 export function runDrop(session: EditorSession, action: DropAction): boolean {
   if (session.state.readOnly) {
     session.notify('reason.readOnly', 'warn');
     return false;
   }
   const content = session.state.doc.content;
+  return runAction(session, action, content) && session.state.doc.content !== content;
+}
+
+/** Commits the drop's command. Returns whether it was taken, even when nothing moved. */
+function runAction(session: EditorSession, action: DropAction, content: Content): boolean {
   switch (action.kind) {
     case 'insert':
       return session.commit(

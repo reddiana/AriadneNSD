@@ -30,6 +30,7 @@ updated: 2026-11-03
 | [[#BUG-11\|BUG-11]] | 2026-11-03 | 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 "먼저 블록을 선택하세요"라고 알림 | 고침 |
 | [[#BUG-12\|BUG-12]] | 2026-11-03 | 분기 라벨 · 빈 default 칸에서 `Ctrl`+`←` `→`가 If · Case 블록에서 출발함(If의 오른쪽 라벨에서 `Ctrl`+`→`를 누르면 왼쪽 분기의 첫 블록으로 감) | 고침 |
 | [[#BUG-13\|BUG-13]] | 2026-11-03 | 호출 블록을 텍스트로 복사하면 Method 이름이 빠짐(`ys ← MergeSort(xs)`가 `ys xs`로, 결과 · 인자가 없으면 빈 줄로) | 고침 |
+| [[#BUG-14\|BUG-14]] | 2026-11-03 | 드래그한 블록을 제자리에 드롭하면 바뀐 것도 실행 취소 단계도 없는데 드롭 함수가 "문서가 바뀜"(`true`)을 돌려줌 | 고침 |
 
 ## BUG-01
 
@@ -126,3 +127,10 @@ updated: 2026-11-03
 - **원인:** 클립보드의 텍스트(`clipToText`)가 호출 블록에서 결과와 인자만 이어 적고, 레이아웃이 그리는 이름 · 결과 기호 · 괄호를 적지 않음
 - **고친 곳:** `packages/core/src/layout/call-text.ts`: 호출 블록의 그려지는 텍스트(`callParts` · `callText`)를 레이아웃에서 떼어 내 내보냄. `packages/editor/src/clipboard/clip-format.ts`가 그것으로 그려진 대로 적음(`ys ← MergeSort(xs)`, 결과가 없으면 `MergeSort(xs)`, 둘 다 없으면 `MergeSort()`, 결과 기호는 문서의 `=`도 따름). 복사할 때 문서의 다이어그램과 결과 기호를 넘김(`packages/editor/src/commands/editor-commands.ts`)
 - **회귀 테스트:** [[08-test-list#^t-packages-editor-src-clipboard-clip-format-test-ts|T-0800]] 복사한 호출 블록은 Method 이름을 잃지 않고, 그려진 대로 적힌다 (단위, `packages/editor/src/clipboard/clip-format.test.ts`)
+
+## BUG-14
+
+- **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
+- **원인:** `runDrop`이 명령이 받아들여졌는지(`session.commit`)를 그대로 돌려줌. 제자리로의 이동은 받아들여지지만 내용이 그대로라 실행 취소 단계가 생기지 않음. 함수 주석은 "문서가 바뀌었는지"라고 적혀 있었음. 화면에는 영향 없음, 셸이 이 값을 믿으면 헷갈릴 수 있음
+- **고친 곳:** `packages/editor/src/commands/drop-command.ts`: 드롭 뒤 내용이 그대로면 `false`를 돌려줌. 주석에 거절되었거나 제자리에 놓였을 때 `false`라고 적음
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-drop-command-test-ts|T-0801]] 분기 안의 범위를 제자리에 드롭하면 문서가 바뀌지 않았다고 알린다 (단위, `packages/editor/src/commands/drop-command.test.ts`)

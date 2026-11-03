@@ -81,7 +81,7 @@ describe('runDrop', () => {
     expect(session.state.undo).toHaveLength(1);
   });
 
-  it('T-0580: a move to where the blocks already are reports success but adds no undo step', () => {
+  it('T-0580: a move to where the blocks already are reports no change and adds no undo step', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     const { session } = engine;
     const before = engine.content();
@@ -92,10 +92,35 @@ describe('runDrop', () => {
         to: 'b2',
         side: 'before',
       }),
-    ).toBe(true);
+    ).toBe(false);
     expect(engine.content()).toBe(before);
     expect(session.state.undo).toHaveLength(0);
     expect(session.chrome().notice).toBeNull();
+  });
+
+  it('T-0801 · BUG-14: dropping a range back in its own place inside a branch says the document did not change', () => {
+    const engine = testEngine(
+      contentOf([
+        ifBlock(
+          'i1',
+          branch('y1', [proc('b1'), proc('b2'), proc('b3')]),
+          branch('n1', [proc('b4')]),
+        ),
+      ]),
+    );
+    const { session } = engine;
+    const before = engine.content();
+    expect(
+      runDrop(session, {
+        kind: 'move',
+        target: { kind: 'blocks', first: 'b2', last: 'b3' },
+        to: 'b1',
+        side: 'after',
+      }),
+    ).toBe(false);
+    expect(engine.content()).toBe(before);
+    expect(session.state.undo).toHaveLength(0);
+    expect(session.state.dirty).toBe(false);
   });
 
   it('T-0581: a move into the moved block itself is refused, changes nothing and says why', () => {
