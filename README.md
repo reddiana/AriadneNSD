@@ -23,22 +23,6 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 > [!NOTE]
 > **지금은 첫 출시(MVP)인 웹 버전을 개발하고 있습니다.** 요구사항 · 아키텍처 · 상세 설계를 바탕으로 코드를 [`src/`](src/README.md)에서 만들고 있고, 만든 것은 위의 MVP 주소에 올라갑니다. Obsidian 플러그인과 데스크톱 앱은 아직 설계 단계입니다.
 
-## 로드맵
-
-웹에서 먼저 다듬고, 같은 편집기를 Obsidian 플러그인과 데스크톱 앱으로 넓힙니다. 웹은 MVP → 베타 → 1.0을 거칩니다.
-
-| 단계 | 버전 | 무엇을 | 저장한 파일 |
-| --- | --- | --- | --- |
-| **웹 MVP** (지금) | 0.1 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
-| 웹 베타 | 0.x | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
-| Obsidian 베타 | 0.x | 웹 베타와 함께 시작합니다. BRAT 플러그인으로 GitHub에서 바로 설치합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
-| 웹 1.0 | 1.0 | 접기, Method로 빼기, 호출 블록 펴 보기, 구문 강조, 테마, 공유 URL, PDF · 인쇄, 고대비 화면. 키 배치가 굳습니다 | **뒤의 모든 버전이 엽니다** |
-| Obsidian 1.0 | | Obsidian 커뮤니티 플러그인 목록에 올립니다 | 뒤의 모든 버전이 엽니다 |
-| 데스크톱 앱 | | 내 컴퓨터의 `.ns` · `.ns.svg` 파일을 바로 열어 편집 | |
-| 그 뒤 | | Google Drive 연동, Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill | |
-
-날짜는 정하지 않았습니다. 단계를 정한 과정은 [DR-0018](atelier/decisions/dr-0018-release-stages.md)에, 기능마다의 우선순위는 [요구사항](docs/01-requirements/01-requirements.md)에 있습니다.
-
 ## 이 저장소를 읽는 법
 
 <!-- site:skip -->
@@ -59,6 +43,22 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                    |
 | [`til/`](til/README.md)               | Today I Learned: 백엔드 개발자가 프론트엔드를 배우며 정리한 것                  |
 | [`site/`](site/)                      | 펴낸 사이트(GitHub Pages, Quartz)의 설정과 빌드 스크립트                  |
+
+## 로드맵
+
+웹에서 먼저 다듬고, 같은 편집기를 Obsidian 플러그인과 데스크톱 앱으로 넓힙니다. 웹은 MVP → 베타 → 1.0을 거칩니다.
+
+| 단계 | 버전 | 무엇을 | 저장한 파일 |
+| --- | --- | --- | --- |
+| **웹 MVP** (지금) | 0.1 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| 웹 베타 | 0.x | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| Obsidian 베타 | 0.x | 웹 베타와 함께 시작합니다. BRAT 플러그인으로 GitHub에서 바로 설치합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| 웹 1.0 | 1.0 | 접기, Method로 빼기, 호출 블록 펴 보기, 구문 강조, 테마, 공유 URL, PDF · 인쇄, 고대비 화면. 키 배치가 굳습니다 | **뒤의 모든 버전이 엽니다** |
+| Obsidian 1.0 | | Obsidian 커뮤니티 플러그인 목록에 올립니다 | 뒤의 모든 버전이 엽니다 |
+| 데스크톱 앱 | | 내 컴퓨터의 `.ns` · `.ns.svg` 파일을 바로 열어 편집 | |
+| 그 뒤 | | Google Drive 연동, Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill | |
+
+날짜는 정하지 않았습니다. 단계를 정한 과정은 [DR-0018](atelier/decisions/dr-0018-release-stages.md)에, 기능마다의 우선순위는 [요구사항](docs/01-requirements/01-requirements.md)에 있습니다.
 
 ## 어떻게 만들고 있나
 
