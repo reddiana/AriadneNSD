@@ -41,15 +41,21 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 
 어느 유형이 어느 구성 요소([[03-architecture#3. 구성 요소]])를 덮는지입니다.
 
+%% 그림의 배치: 이어지지 않은 상자는 direction TB면 옆으로, LR이면 아래로 놓인다. APP은 editor와 웹 셸을 위아래로 묶는 테두리 없는 묶음이고, UNIT ~~~ APP(보이지 않는 연결)이 단위를 왼쪽에 둔다(연결이 없으면 Mermaid 판마다 좌우가 뒤집힌다). 그림 안에는 %% 를 쓰지 않는다: 사이트(Quartz)가 코드 블록 안의 %% 도 Obsidian 주석으로 지운다. → [[mermaid-layout]] %%
+
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 400, "subGraphTitleMargin": {"top": 4, "bottom": 24}}}}%%
+---
+config:
+  flowchart:
+    wrappingWidth: 400
+    subGraphTitleMargin:
+      top: 4
+      bottom: 40
+---
 flowchart TB
-    %% 이어지지 않은 상자는 direction TB면 옆으로, LR이면 아래로 놓인다. 그림이 가로로 길게 그려지게 고름(2026-11-03)
-    %% APP은 editor와 웹 셸을 위아래로 묶는 테두리 없는 묶음. UNIT ~~~ APP(보이지 않는 연결)이 단위를 왼쪽에 둔다.
-    %% 연결이 없으면 Mermaid 판마다 좌우가 뒤집힌다(Obsidian의 10.x와 사이트의 11.4)
-    subgraph E2E["E2E<br/>빌드한 웹 앱 + Chromium"]
+    subgraph E2E["E2E<br/>빌드한 웹 앱<br/>+ Chromium"]
         direction TB
-        subgraph INT["통합<br/>Node · 가짜 셸 · happy-dom"]
+        subgraph INT["통합<br/>Node · 가짜 셸<br/>happy-dom"]
             direction LR
             subgraph UNIT["단위<br/>Node"]
                 direction LR
