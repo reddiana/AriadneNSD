@@ -45,16 +45,16 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 블록 종류는 색이 없어도 모양만으로 구분됩니다. 흑백으로 인쇄해도, 색을 구분하지 못하는 사람이 보아도 뜻이 같아야 합니다(WCAG 1.4.1).
 
-예외는 하나, **For와 While**입니다. 둘은 같은 반복이고 NS 차트 표준도 같은 모양으로 그립니다. For는 헤더의 텍스트(`for …`)로 가릅니다. 텍스트는 흑백에서도 읽히므로 WCAG 1.4.1(색에만 기대지 않음)은 지켜집니다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
+예외는 하나, **For와 While**입니다. 둘은 같은 반복이고 NS 차트 표준도 같은 모양으로 그립니다. For는 조건 칸의 텍스트(`for …`)로 가릅니다. 텍스트는 흑백에서도 읽히므로 WCAG 1.4.1(색에만 기대지 않음)은 지켜집니다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
 
 | 블록 | 모양 (의미 전달) | 배경 (보조) |
 | --- | --- | --- |
 | 처리 | 직사각형 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
-| If | 헤더에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 분기 라벨(처음은 "참" · "거짓", 편집할 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
-| Case | 헤더에 긴 빗금과 짧은 빗금, 분기마다 세로선과 분기 라벨. 분기 라벨은 칸의 왼쪽에 붙이고, **default 분기의 라벨만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]). 코드에서 가져와 default가 없으면 빈 default 칸(`∅`)을 그려 두고, default만 있으면 짧은 빗금 하나만 그린다(→ [[ux-decisions#CD1. default가 없는 Case\|CD1]] · [[ux-decisions#CD2. default만 있는 Case\|CD2]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
-| While / Do-While | 왼쪽 띠 안에 본문. 헤더가 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
+| If | 조건 칸에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 분기 라벨(처음은 "참" · "거짓", 편집할 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| Case | 조건 칸에 긴 빗금과 짧은 빗금, 분기마다 세로선과 분기 라벨. 분기 라벨은 칸의 왼쪽에 붙이고, **default 분기의 라벨만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]). 코드에서 가져와 default가 없으면 빈 default 칸(`∅`)을 그려 두고, default만 있으면 짧은 빗금 하나만 그린다(→ [[ux-decisions#CD1. default가 없는 Case\|CD1]] · [[ux-decisions#CD2. default만 있는 Case\|CD2]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| While / Do-While | 왼쪽 띠 안에 본문. 조건 칸이 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선. 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함, 다른 문서를 찾을 수 없음)은 이중선이 점선 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
-| For | While과 같은 모양(왼쪽 띠 안에 본문, 헤더가 위). While과는 **헤더의 텍스트로만** 구분한다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
+| For | While과 같은 모양(왼쪽 띠 안에 본문, 조건 칸이 위). While과는 **조건 칸의 텍스트로만** 구분한다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | Event 헤더 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 헤더 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("호출하는 것과 호출되는 것"이라 같은 색) |
 
@@ -178,8 +178,8 @@ flowchart LR
 | --- | --- | --- | --- | --- |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `paper` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper` | 종이(그림 전체의 배경). 저장되는 그림에도 칠함 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.slate` | 처리 블록 배경 | | |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sand` | If · Case 헤더 배경 | | |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sky` | 반복 블록의 띠와 헤더 | | |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sand` | If · Case의 조건 칸 배경 | | |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.sky` | 반복 블록의 띠와 조건 칸 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.mint` | Event 헤더 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.lilac` | 호출 블록, Method 헤더 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.snow` | 접힌 칸 | | |
@@ -288,8 +288,8 @@ flowchart LR
 | `space.line` | 18px | 블록 텍스트 한 줄 |
 | `size.block-min-w` | 52px | 블록의 가장 좁은 폭 |
 | `size.loop-strip` | 22px | 반복 블록 왼쪽 띠의 폭 |
-| `size.if-label` / `size.case-label` | 16 / 28px | If · Case 헤더 아래 분기 라벨 줄 |
-| `size.if-head-extra` / `size.case-head-extra` | 70 / 90px | If · Case 헤더의 최소 폭에서 조건 텍스트와 양옆 여백에 더하는 폭(빗금이 지나갈 자리) |
+| `size.if-label` / `size.case-label` | 16 / 28px | If · Case의 조건 칸 아래 분기 라벨 줄 |
+| `size.if-head-extra` / `size.case-head-extra` | 70 / 90px | If · Case 조건 칸의 최소 폭에서 조건 텍스트와 양옆 여백에 더하는 폭(빗금이 지나갈 자리) |
 | `size.label-room` | 18px | If · Case 분기 하나의 최소 폭에서 분기 라벨의 폭에 더하는 여유 |
 | `size.label-inset` | 6px | 분기 라벨과 칸의 구석 사이(왼쪽에 붙는 라벨은 왼쪽 구석, "거짓"과 default 라벨은 오른쪽 구석에서) |
 | `size.hat` | 16px | Event · Method 헤더가 솟은 높이 |
@@ -316,9 +316,9 @@ flowchart LR
 **배치 규칙:**
 
 - 블록은 서로 맞붙습니다(NS 차트의 표기). 블록 사이에 틈을 두지 않습니다.
-- 텍스트의 기준선은 그 줄(`space.line` 18px)의 아래 끝에서 5px 위입니다. If · Case 헤더의 조건 텍스트는 블록 텍스트보다 2px 더 위에 둡니다. 분기 라벨의 기준선은 헤더의 아래 끝에서 5px 위입니다(프로토타입의 그림과 같음).
+- 텍스트의 기준선은 그 줄(`space.line` 18px)의 아래 끝에서 5px 위입니다. If · Case의 조건 텍스트는 블록 텍스트보다 2px 더 위에 둡니다. 분기 라벨의 기준선은 조건 칸의 아래 끝에서 5px 위입니다(프로토타입의 그림과 같음).
 - 빈 분기의 `∅`는 지름 7px의 원과 빗금이고 선은 1.1px입니다. 빗금은 원 밖으로 양쪽 1px씩 나갑니다 → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
-- If · Case 헤더의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 헤더의 폭과 높이는 늘리지 않으므로(폭은 텍스트 + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **헤더의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
+- If · Case의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 조건 칸의 폭과 높이는 늘리지 않으므로(폭은 텍스트 + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **조건 칸의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
 - 펴진 접기 영역의 안쪽 블록은 테두리에 붙습니다. 테두리 안에 다른 테두리(겹친 접기 영역, 펴 보인 호출 블록)가 들어가면 `size.nest-gap`만큼 띄웁니다. 겹치거나 이어져도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]]
 
 ## 6. 선
@@ -351,7 +351,7 @@ flowchart LR
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 없음 (MVP 뒤) |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | 있음 |
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 분기 라벨을 선택함 | 헤더 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
+| 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 텍스트를 편집하는 중 | 블록 자리에 흰 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |

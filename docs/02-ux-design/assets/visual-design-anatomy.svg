@@ -26,7 +26,7 @@
 <text x="403.0" y="162" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">6</text>
 <text x="400" y="180" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">빗금의 꼭짓점 = 두 갈래의 경계</text>
 <text x="400" y="194" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">조건은 그 위 가운데, 갈래 이름은 12px</text>
-<text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 헤더가 아래)</text>
+<text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 조건 칸이 아래)</text>
 <rect x="70" y="250" width="230" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/>
 <text x="80" y="270" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">j &lt; hi</text>
 <rect x="92" y="282" width="208" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>

@@ -49,7 +49,7 @@ text(x, y + h + 88, '조건은 그 위 가운데, 갈래 이름은 12px', 10, DI
 
 # 3. While
 x, y = 70, 250
-title(x, y - 24, 'While (Do-While은 헤더가 아래)')
+title(x, y - 24, 'While (Do-While은 조건 칸이 아래)')
 rect(x, y, W, 96, C['loop'])
 text(x + K['padX'], y + K['padY'] + K['lh'] - 5, 'j &lt; hi')
 rect(x + K['strip'], y + 32, W - K['strip'], 32, C['process']); rect(x + K['strip'], y + 64, W - K['strip'], 32, C['process'])
