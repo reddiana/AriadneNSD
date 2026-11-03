@@ -26,7 +26,7 @@
 <text x="403.0" y="162" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">6</text>
 <text x="400" y="180" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">빗금의 꼭짓점 = 두 갈래의 경계</text>
 <text x="400" y="194" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">조건은 그 위 가운데, 갈래 이름은 12px</text>
-<text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 머리가 아래)</text>
+<text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 헤더가 아래)</text>
 <rect x="70" y="250" width="230" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/>
 <text x="80" y="270" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">j &lt; hi</text>
 <rect x="92" y="282" width="208" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
@@ -43,7 +43,7 @@
 <text x="403.5" y="240" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">7</text>
 <text x="400" y="300" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이름은 굵게, 인자와 결과는 보통 (ADR-0022)</text>
 <text x="400" y="314" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">부를 Method가 없으면 이중선이 점선</text>
-<text x="70" y="406" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">Event 머리 · Method 머리</text>
+<text x="70" y="406" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">Event 헤더 · Method 헤더</text>
 <path d="M70 456 C92 438,151.5 438,173.5 456 L300 456 L300 488 L70 488 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
 <text x="80" y="476" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">TIM2 인터럽트</text>
 <path d="M60 440 V456 M57 440 H63 M57 456 H63" stroke="#c2410c" stroke-width="1" fill="none"/>

@@ -49,7 +49,7 @@ text(x, y + h + 88, '조건은 그 위 가운데, 갈래 이름은 12px', 10, DI
 
 # 3. While
 x, y = 70, 250
-title(x, y - 24, 'While (Do-While은 머리가 아래)')
+title(x, y - 24, 'While (Do-While은 헤더가 아래)')
 rect(x, y, W, 96, C['loop'])
 text(x + K['padX'], y + K['padY'] + K['lh'] - 5, 'j &lt; hi')
 rect(x + K['strip'], y + 32, W - K['strip'], 32, C['process']); rect(x + K['strip'], y + 64, W - K['strip'], 32, C['process'])
@@ -68,7 +68,7 @@ text(x, y + 64, '부를 Method가 없으면 이중선이 점선', 10, DIM, SANS)
 
 # 5. Event 머리 / Method 머리
 x, y = 70, 440
-title(x, y - 34, 'Event 머리 · Method 머리')
+title(x, y - 34, 'Event 헤더 · Method 헤더')
 top = y + K['hat']; bw = min(110, W * 0.45)
 a(f'<path d="M{x} {top} C{x+22} {y-2},{x+bw-22} {y-2},{x+bw} {top} L{x+W} {top} L{x+W} {top+32} L{x} {top+32} Z" fill="{C["event"]}" stroke="{C["stroke"]}" stroke-width="1"/>')
 text(x + K['padX'], top + K['padY'] + K['lh'] - 5, 'TIM2 인터럽트')
