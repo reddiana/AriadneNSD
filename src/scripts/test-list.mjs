@@ -45,7 +45,7 @@ const areas = [
   {
     name: '편집 명령과 모델',
     about:
-      '블록 넣기 · 지우기 · 옮기기 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]',
+      '블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]',
     paths: [
       'packages/core/src/commands/',
       'packages/core/src/model/',
@@ -57,7 +57,7 @@ const areas = [
   {
     name: '키 · 마우스 · 선택',
     about:
-      '키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 끌기가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]',
+      '키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]',
     paths: [
       'packages/editor/src/input/',
       'packages/editor/src/navigation/',
@@ -73,7 +73,7 @@ const areas = [
   {
     name: '메뉴 · 화면 · 시작',
     about:
-      '메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
+      '메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
     paths: [
       'packages/editor/src/ui/',
       'packages/editor/src/i18n/',
@@ -91,7 +91,7 @@ const areas = [
   {
     name: '파일',
     about:
-      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 임시 보관, 탭 잠금, 최근 파일, PNG 내보내기 → [[01-file-format]], [[06-web]]',
+      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기 → [[01-file-format]], [[06-web]]',
     paths: [
       'packages/core/src/format/',
       'packages/core/node/golden.test.ts',
@@ -346,7 +346,7 @@ const checks = new Map([
   ['QA-12', 'TypeScript의 완전성 검사 (`pnpm typecheck`)'],
   [
     'QA-13',
-    'JSX에 쓴 글자 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)',
+    'JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)',
   ],
   ['QA-14', '`core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`)'],
 ]);

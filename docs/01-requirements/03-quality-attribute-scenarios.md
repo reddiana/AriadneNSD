@@ -246,7 +246,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 화면의 텍스트는 `editor`, 그림에 적는 텍스트는 `core`가 한 곳씩에서 관리한다 → [[03-architecture#5. 공통 관심사]]
 - **테스트:** 정적 분석: UI 코드(`.tsx`)의 JSX에 쓴 글자와 `title` · `aria-label` · `placeholder` · `alt` 속성의 글자를 ESLint가 막는다(번역하지 않는 제품 이름과 확장자는 이름 붙은 상수로). 카탈로그 넷(그림 · 엔진 · UI · 웹 셸)이 언어마다 모든 키를 가지는지는 타입 검사가 본다. 단위 테스트는 빈 글이 없는지, `{name}` 자리표시가 언어마다 같은지, 엔진과 UI 카탈로그에 같은 키가 없는지 본다. 언어 목록은 `core`의 `locales` 한 줄이다. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[08-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 글자 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
+- **테스트 ID:** [[08-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[08-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
 
 ### QA-14 DOM 없이 테스트
 
