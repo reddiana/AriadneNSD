@@ -265,6 +265,33 @@ describe('the shell asks through the editor (03-editor 6 additions)', () => {
     handle.chromeState().dialog?.answer('');
     expect(await second).toBe(true);
   });
+
+  it('T-0834: US1: choose resolves with the button pressed: confirm, the third one, or cancel', async () => {
+    const { handle } = make();
+    const buttons = { confirm: 'Save', other: 'Discard and Open' };
+    const saved = handle.choose('Save it?', buttons);
+    expect(handle.chromeState().dialog).toMatchObject({
+      message: 'Save it?',
+      input: null,
+      confirm: 'Save',
+      other: 'Discard and Open',
+      cancel: 'choice.cancel',
+    });
+    handle.chromeState().dialog?.answer('');
+    expect(await saved).toBe('confirm');
+    const discarded = handle.choose('Save it?', buttons);
+    handle.chromeState().dialog?.answerOther();
+    expect(await discarded).toBe('other');
+    expect(handle.chromeState().dialog).toBeNull();
+    const cancelled = handle.choose('Save it?', buttons);
+    handle.chromeState().dialog?.answer(null);
+    expect(await cancelled).toBe('cancel');
+    // A yes/no question has no third button, and is not confirmed through it.
+    const question = handle.confirm('Sure?');
+    expect(handle.chromeState().dialog?.other).toBeNull();
+    handle.chromeState().dialog?.answerOther();
+    expect(await question).toBe(false);
+  });
 });
 
 describe('the header shape (R-LAY-10, UX HS1)', () => {

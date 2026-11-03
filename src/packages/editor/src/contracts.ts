@@ -250,8 +250,12 @@ export type Dialog = {
   readonly input: string | null;
   readonly confirm: Message;
   readonly cancel: Message;
+  /** A third button between "do it" and "cancel" (`choose`), or `null`. */
+  readonly other: Message | null;
   /** The user's answer: the text (or `''` for a yes/no question), or `null` when cancelled. */
   answer(value: string | null): void;
+  /** The user pressed the third button (`other`). */
+  answerOther(): void;
 };
 
 /** Where the context menu opens, in page (client) coordinates. */
@@ -305,6 +309,14 @@ export interface EditorHandle {
     message: Message,
     buttons?: { readonly confirm?: Message; readonly cancel?: Message },
   ): Promise<boolean>;
+  /**
+   * Addition: asks a question with three answers in a modal: the confirm button (the default),
+   * a third button `other`, or cancel (Esc, the close button).
+   */
+  choose(
+    message: Message,
+    buttons: { readonly confirm: Message; readonly other: Message; readonly cancel?: Message },
+  ): Promise<'confirm' | 'other' | 'cancel'>;
   /** Addition: asks for a text in a modal. Resolves `null` when cancelled. */
   prompt(message: Message, value: string): Promise<string | null>;
   /** Addition: the diagram asks for the context menu (right click, Shift+F10). */

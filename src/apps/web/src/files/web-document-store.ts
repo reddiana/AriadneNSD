@@ -71,6 +71,11 @@ export class WebDocumentStore implements DocumentStore {
     return this.#key;
   }
 
+  /** Whether the document was never saved: a new document (or an example), not a file (UX US1). */
+  get isNew(): boolean {
+    return this.#origin.kind === 'none';
+  }
+
   /** The file handle, when the document is a file this browser can write to. */
   get handle(): FileSystemFileHandle | null {
     return this.#origin.kind === 'handle' ? this.#origin.handle : null;

@@ -36,6 +36,11 @@ function fakeEditor(answer: boolean): EditorHandle & {
   opened: OpenedDocument[];
   /** The status bar messages the shell sent, oldest first. */
   notices: string[];
+  /** The questions with three answers the shell asked, oldest first (UX US1). */
+  asked: string[];
+  /** What the next `choose` answers. Cancel when empty. */
+  choices: ('confirm' | 'other' | 'cancel')[];
+
   commands: { register: (spec: CommandSpec) => () => void; specs: Map<string, CommandSpec> };
 } {
   let doc: OpenedDocument | null = null;
@@ -50,13 +55,21 @@ function fakeEditor(answer: boolean): EditorHandle & {
   };
   const opened: OpenedDocument[] = [];
   const notices: string[] = [];
+  const asked: string[] = [];
+  const choices: ('confirm' | 'other' | 'cancel')[] = [];
   return {
     opened,
     notices,
+    asked,
+    choices,
     notify: (message) => {
       notices.push(typeof message === 'string' ? message : message.key);
     },
     confirm: () => Promise.resolve(answer),
+    choose: (message) => {
+      asked.push(typeof message === 'string' ? message : message.key);
+      return Promise.resolve(choices.shift() ?? 'cancel');
+    },
     prompt: (_message, value) => Promise.resolve(value),
     commands: {
       specs,
@@ -337,11 +350,120 @@ describe('web shell', () => {
   it('T-0351: 03-editor 6.1: switching away from unsaved edits keeps them in the backup and says so', async () => {
     const { shell, editor, db } = setup();
     await shell.start(editor);
+    // A document opened from a file: opening that file again restores it, so no question (US1).
+    await shell.openFile(new File([savedFile], 'a.ns.svg'));
     editor.edit();
     await shell.newDocument();
     await settle();
+    expect(editor.asked).toEqual([]);
     expect(await db.backups()).toHaveLength(1);
     expect(editor.notices.at(-1)).toContain('were not saved to the file');
+  });
+});
+
+describe('web shell: leaving a new document that was never saved (UX US1)', () => {
+  /** A started shell whose first (new) document has unsaved edits, backed up. */
+  async function editedNewDocument() {
+    const context = setup();
+    await context.shell.start(context.editor);
+    context.editor.edit();
+    context.clock.advance(500);
+    await settle();
+    expect(await context.db.backups()).toHaveLength(1);
+    return context;
+  }
+
+  it('T-0827: asks before a new document, an example or a file replaces it; cancel keeps it', async () => {
+    const { shell, editor, db } = await editedNewDocument();
+    const before = editor.opened.length;
+    await shell.newDocument();
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    await shell.openFile(new File([savedFile], 'a.ns.svg'));
+    expect(editor.asked).toHaveLength(3);
+    expect(editor.asked[0]).toBe(
+      '“Untitled.ns.svg” is a new document that has never been saved. Once another document opens, it cannot be brought back. Save it first?',
+    );
+    expect(editor.opened).toHaveLength(before);
+    expect(editor.status()).toMatchObject({ name: 'Untitled.ns.svg', dirty: true });
+    expect(await db.backups()).toHaveLength(1);
+  });
+
+  it('T-0828: asks before a recent file replaces it, and a file that cannot be opened asks nothing', async () => {
+    const db = memoryDb();
+    await db.touchRecent({
+      key: 'r',
+      name: 'r.ns.svg',
+      usedAt: 1,
+      source: { kind: 'copy', text: savedFile },
+    });
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    editor.edit();
+    await shell.openFile(new File(['<svg/>'], 'plain.svg'));
+    expect(editor.asked).toEqual([]);
+    editor.choices.push('other');
+    await editor.commands.specs.get('file.recent.1')?.run({}, undefined);
+    expect(editor.asked).toHaveLength(1);
+    expect(editor.status().name).toBe('r.ns.svg');
+  });
+
+  it('T-0829: "Discard and Open" opens the other document and drops the backup without a notice', async () => {
+    const { shell, editor, db } = await editedNewDocument();
+    editor.choices.push('other');
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    await settle();
+    expect(editor.status().name).toBe('Quicksort.ns.svg');
+    expect(await db.backups()).toHaveLength(0);
+    expect(editor.notices.some((notice) => notice.includes('were not saved'))).toBe(false);
+  });
+
+  it('T-0830: "Save" saves first, then opens the other document', async () => {
+    const { shell, editor, db } = await editedNewDocument();
+    editor.choices.push('confirm');
+    await shell.newDocument();
+    await settle();
+    expect(editor.opened.at(-1)?.text).toBeNull();
+    expect(editor.status()).toMatchObject({ name: 'Untitled.ns.svg', dirty: false });
+    expect(await db.backups()).toHaveLength(0);
+    expect((await db.recentFiles()).map((entry) => entry.name)).toEqual(['Untitled.ns.svg']);
+  });
+
+  it('T-0831: a save that is cancelled keeps the document where it was', async () => {
+    vi.stubGlobal('window', {
+      showSaveFilePicker: () => Promise.reject(new DOMException('closed', 'AbortError')),
+    });
+    const { shell, editor } = setup({ canWriteInPlace: true });
+    await shell.start(editor);
+    editor.edit();
+    const before = editor.opened.length;
+    editor.choices.push('confirm');
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    expect(editor.asked).toHaveLength(1);
+    expect(editor.opened).toHaveLength(before);
+    expect(editor.status()).toMatchObject({ name: 'Untitled.ns.svg', dirty: true });
+  });
+
+  it('T-0832: a new document without changes, or one saved before, is left without asking', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.newDocument();
+    expect(editor.asked).toEqual([]);
+    editor.edit();
+    await editor.save();
+    editor.edit();
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    expect(editor.asked).toEqual([]);
+    expect(editor.status().name).toBe('Quicksort.ns.svg');
+  });
+
+  it('T-0833: an edited example is a new document too', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.openDocument(newDoc, 'Quicksort.ns.svg');
+    editor.edit();
+    await shell.newDocument();
+    expect(editor.asked).toHaveLength(1);
+    expect(editor.asked[0]).toContain('“Quicksort.ns.svg”');
   });
 });
 

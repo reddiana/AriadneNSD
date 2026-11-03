@@ -105,6 +105,11 @@ export type EditorHandle = {
     message: Message,
     buttons?: { readonly confirm?: Message; readonly cancel?: Message },
   ): Promise<boolean>;
+  /** Asks a question with three answers in the editor's modal (US1: save, discard, cancel). */
+  choose(
+    message: Message,
+    buttons: { readonly confirm: Message; readonly other: Message; readonly cancel?: Message },
+  ): Promise<'confirm' | 'other' | 'cancel'>;
   /** Asks for a text in the editor's modal; `null` when cancelled. */
   prompt(message: Message, value: string): Promise<string | null>;
 };

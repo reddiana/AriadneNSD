@@ -310,6 +310,16 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
           />
         )}
         <div className="ans-dialog-buttons">
+          {dialog.other !== null && (
+            <button
+              type="button"
+              onClick={() => {
+                dialog.answerOther();
+              }}
+            >
+              {format(dialog.other)}
+            </button>
+          )}
           <button type="button" onClick={cancel}>
             {format(dialog.cancel)}
           </button>

@@ -344,6 +344,7 @@ interface EditorHandle {
   focus(): void;                                 // 키보드 포커스를 다이어그램에, 편집 중이면 인라인 에디터에 (모달을 닫은 뒤)
   notify(message: Message, level?: 'info' | 'warn'): void;  // 셸의 알림을 상태 표시줄에 (알림은 이곳 하나 → 06-web 7)
   confirm(message: Message, buttons?: { confirm?: Message; cancel?: Message }): Promise<boolean>;  // 모달로 예/아니오를 묻는다. 확인 버튼이면 true
+  choose(message: Message, buttons: { confirm: Message; other: Message; cancel?: Message }): Promise<'confirm' | 'other' | 'cancel'>;  // 모달로 답이 셋인 것을 묻는다 (US1의 저장 · 버리고 열기 · 취소). 확인 버튼이 기본
   prompt(message: Message, value: string): Promise<string | null>;  // 모달로 글자를 묻는다 (value로 시작). 취소하면 null
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;  // 다이어그램이 컨텍스트 메뉴를 청했다 (오른쪽 클릭, Shift+F10 → 1장)
   dispose(): void;
@@ -375,7 +376,9 @@ type Dialog = {
   input: string | null;                          // null이면 예/아니오 물음, 아니면 이 값으로 시작하는 입력 칸
   confirm: Message;                              // 확인 버튼의 이름 ("복원")
   cancel: Message;                               // 취소 버튼의 이름 ("버리기")
+  other: Message | null;                         // 셋째 버튼의 이름 (choose의 "버리고 열기"). 없으면 null. 셋째 · 취소 · 확인의 순서로 놓는다
   answer(value: string | null): void;            // 사용자의 답: 입력한 글자(예/아니오면 ''), 취소면 null
+  answerOther(): void;                           // 사용자가 셋째 버튼을 눌렀다
 };
 type ContextMenuRequest = { x: number; y: number };  // 컨텍스트 메뉴를 열 자리 (페이지 좌표)
 type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
@@ -390,7 +393,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - `Message`는 카탈로그의 키(와 값)이거나, 셸이 자기 카탈로그로 만든 문자열입니다 → [[07-coding-guide#8. 화면의 문자열]]
 - 처음 문서(`doc`)를 열 수 없으면 `editor`는 새 문서를 **읽기 전용**으로 보이고 이유를 상태 표시줄에 알립니다. 열 수 없는 파일 위에 편집한 내용을 쓰지 않게 하려는 것입니다.
 - 저장이 성공해도 알리지 않습니다(자동 저장이 자주 하므로). 실패(`denied` · `failed`)와 "다른 이름으로 저장"의 성공만 상태 표시줄에 알립니다.
-- 알림 · 확인 · 입력은 셸도 `editor`의 것을 씁니다. 셸은 자기 토스트나 브라우저의 `window.confirm` · `window.prompt`를 두지 않고 `notify` · `confirm` · `prompt`를 부릅니다. 그래서 알림은 상태 표시줄 한 곳에 모이고(`info`는 6초 뒤 사라지고 `warn`은 다음 알림이나 `✕`까지 남음 → [[05-screen-layout|화면 배치]]), 물음은 다른 모달과 같은 모습입니다. 웹 셸을 만드는 옵션에도 알림판 · `confirm` · `prompt`가 없습니다. 웹의 예: "지난번 내용을 복원할까요?"(복원 / 버리기), 내려받을 파일 이름 → [[06-web#2. 로컬 백업과 자동 저장]]
+- 알림 · 확인 · 입력은 셸도 `editor`의 것을 씁니다. 셸은 자기 토스트나 브라우저의 `window.confirm` · `window.prompt`를 두지 않고 `notify` · `confirm` · `choose` · `prompt`를 부릅니다. 그래서 알림은 상태 표시줄 한 곳에 모이고(`info`는 6초 뒤 사라지고 `warn`은 다음 알림이나 `✕`까지 남음 → [[05-screen-layout|화면 배치]]), 물음은 다른 모달과 같은 모습입니다. 웹 셸을 만드는 옵션에도 알림판 · `confirm` · `prompt`가 없습니다. 웹의 예: "지난번 내용을 복원할까요?"(복원 / 버리기), 내려받을 파일 이름 → [[06-web#2. 로컬 백업과 자동 저장]]
 - 화면 색의 밝기(라이트/다크)와 UI 글꼴은 호스트 플랫폼에서 받습니다(Obsidian이면 Obsidian의 테마 밝기) → [[04-visual-design#8. 테마]]. 설정이 아니라 호스트의 상황이라 `SettingsStore`에 넣지 않고, 시작할 때 `appearance`로 넘기고 바뀌면 `setAppearance`로 알립니다.
 
 ### 6.1 새로 · 열기 · 최근 파일
@@ -400,7 +403,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - 새로 · 열기 · 최근 파일 · 내보내기(PNG) 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
 - 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 호출합니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
 - 예제([[01-requirements#^r-edit|R-EDIT-25]])는 `editor`가 내보내는 예제 목록에서 셸이 문서를 만들어 `open({ store, text: null, doc })`로 엽니다. 파일 이름은 예제의 이름(`병합 정렬.ns.svg`)이고 원래 파일은 없습니다. 예제 모달과 그것을 여는 도움말 › 예제… · 툴바의 "예제"는 `editor`의 화면에 있고, 셸은 예제를 여는 법과 첫 방문인지를 넘깁니다 → [[05-screen-layout|화면 배치]]
-- 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어 묻지 않고 바꿔도 내용을 잃지 않지만, 원래 파일에는 들어가지 않았음을 알립니다.
+- 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어, 파일로 연 문서는 묻지 않고 바꾸고 원래 파일에는 들어가지 않았음을 알립니다(그 파일을 다시 열면 복원을 묻습니다). 한 번도 저장하지 않은 새 문서(새 문서, 예제)는 다시 꺼낼 길이 없어 `choose`로 묻습니다: 저장 · 버리고 열기 · 취소. 저장이 끝나지 않으면(저장 창을 닫음, 실패) 바꾸지 않고, 버리면 그 로컬 백업을 지웁니다 → [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]], [[02-interaction-rules#다른 문서를 열 때]]
 - 열 수 없는 텍스트(모델이 없는 SVG, 프로토타입의 파일, 깨진 파일, 더 새 버전의 형식)를 받으면 `open`은 문서를 바꾸지 않고 `false`를 돌려주며 이유를 상태 표시줄에 보입니다 → [[01-file-format#1. 확장자와 판별]]
 
 ```mermaid
@@ -412,6 +415,10 @@ sequenceDiagram
     U->>+S: 파일 ▸ 열기
     S->>+F: 파일 선택 창
     F-->>-S: 파일 핸들 · 텍스트
+    opt 지금 문서가 한 번도 저장하지 않은 새 문서이고 저장 안 됨 (US1)
+        S->>+E: choose(먼저 저장할까요?)
+        E-->>-S: 저장 / 버리고 열기 / 취소
+    end
     S->>S: DocumentStore를 만든다
     S->>+E: open({ store, text })
     E-->>-S: onStatus(name, dirty: false)

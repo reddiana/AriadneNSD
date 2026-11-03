@@ -94,6 +94,8 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
   test('T-0001 · AT-01: makes a new diagram, inserts blocks and saves', async ({ page }) => {
     await processBlocks(page, 'old');
     await command(page, 'file.new').click();
+    // The old document was never saved, so the app asks first (UX US1).
+    await page.getByRole('dialog').getByRole('button', { name: 'Discard and Open' }).click();
     await expect(drawnText(page, 'old')).toHaveCount(0);
     await expect(selection(page)).toHaveText('Empty block');
     await command(page, 'block.insert.while').click();

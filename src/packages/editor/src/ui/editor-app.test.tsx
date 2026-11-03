@@ -414,7 +414,9 @@ describe('dialogs and notices from the shell', () => {
           input: null,
           confirm: 'Restore',
           cancel: 'Discard',
+          other: null,
           answer: (value) => answers.push(value),
+          answerOther: () => answers.push('other'),
         },
       });
     });
@@ -435,7 +437,9 @@ describe('dialogs and notices from the shell', () => {
           input: 'a.ns.svg',
           confirm: 'choice.ok',
           cancel: 'choice.cancel',
+          other: null,
           answer: (value) => answers.push(value),
+          answerOther: () => answers.push('other'),
         },
       });
     });
@@ -444,6 +448,34 @@ describe('dialogs and notices from the shell', () => {
     fireEvent.click(screen.getByRole('button', { name: 'OK' }));
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
     expect(answers).toEqual(['b.ns.svg', null]);
+  });
+
+  it('T-0825: US1: a question with three answers shows the third button before cancel', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    const answers: (string | null)[] = [];
+    act(() => {
+      engine.setChrome({
+        dialog: {
+          id: 3,
+          message: 'Save it?',
+          input: null,
+          confirm: 'Save',
+          cancel: 'choice.cancel',
+          other: 'Discard and Open',
+          answer: (value) => answers.push(value),
+          answerOther: () => answers.push('other'),
+        },
+      });
+    });
+    const buttons = within(screen.getByRole('dialog')).getAllByRole('button');
+    expect(buttons.map((button) => button.textContent).slice(-3)).toEqual([
+      'Discard and Open',
+      'Cancel',
+      'Save',
+    ]);
+    fireEvent.click(screen.getByRole('button', { name: 'Discard and Open' }));
+    expect(answers).toEqual(['other']);
   });
 
   it('T-0315: 06-web 7: a warning stays in the status bar until it is closed', () => {

@@ -20,6 +20,36 @@ function command(page: Page, id: string) {
   return page.locator(`[data-command="${id}"]`).first();
 }
 
+test('T-0826 · UX US1: leaving an edited new document asks first; cancel keeps it, discard opens the other', async ({
+  page,
+}) => {
+  await openApp(page);
+  await command(page, 'block.insert.if').click();
+  await page.keyboard.type('kept');
+  await page.keyboard.press('Enter');
+  await command(page, 'file.new').click();
+  const question = page.getByRole('dialog');
+  await expect(question).toContainText(
+    '“Untitled.ns.svg” is a new document that has never been saved.',
+  );
+  // The close button ✕, then the three answers; Save is the default (Enter).
+  await expect(question.getByRole('button')).toHaveText([
+    '✕',
+    'Discard and Open',
+    'Cancel',
+    'Save',
+  ]);
+  await question.getByRole('button', { name: 'Cancel' }).click();
+  await expect(question).toHaveCount(0);
+  await expect(page.locator('.ans-document text').filter({ hasText: /^kept$/ })).toHaveCount(1);
+  await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
+
+  await command(page, 'file.new').click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Discard and Open' }).click();
+  await expect(page.locator('.ans-document text').filter({ hasText: /^kept$/ })).toHaveCount(0);
+  await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
+});
+
 test.describe('download flow (no File System Access)', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {

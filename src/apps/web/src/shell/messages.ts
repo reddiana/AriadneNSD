@@ -34,8 +34,12 @@ const english = {
   'open.damaged': '“{name}” is damaged and cannot be edited. The file was not changed.',
   'open.newerVersion':
     '“{name}” was saved by a newer version of AriadneNSD. Reload the page and open it again.',
+  'notice.saveNewFirst':
+    '“{name}” is a new document that has never been saved. Once another document opens, it cannot be brought back. Save it first?',
   'choice.restore': 'Restore',
   'choice.discard': 'Discard',
+  'choice.save': 'Save',
+  'choice.discardAndOpen': 'Discard and Open',
   'drop.hint': 'Drop a .ns.svg or .ns file to open it',
 } as const;
 
@@ -67,8 +71,12 @@ const korean: Record<ShellMessageKey, string> = {
   'open.damaged': '“{name}”이(가) 손상되어 편집할 수 없습니다. 파일은 바꾸지 않았습니다.',
   'open.newerVersion':
     '“{name}”은(는) 더 새 버전의 AriadneNSD가 저장한 파일입니다. 페이지를 새로 고친 뒤 다시 여세요.',
+  'notice.saveNewFirst':
+    '“{name}”은(는) 한 번도 저장하지 않은 새 문서입니다. 다른 문서를 열면 다시 꺼낼 수 없습니다. 먼저 저장할까요?',
   'choice.restore': '복원',
   'choice.discard': '버리기',
+  'choice.save': '저장',
+  'choice.discardAndOpen': '버리고 열기',
   'drop.hint': '.ns.svg · .ns 파일을 놓으면 엽니다',
 };
 

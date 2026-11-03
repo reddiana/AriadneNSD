@@ -78,7 +78,7 @@ const en = {
     'AriadneNSD is before version 1.0. Files you save now may not open in later versions.',
   'examples.menuTitle': 'Open an Example',
   'examples.menuLead':
-    'An example opens as a new document. This document closes; changes you have not saved stay in the local backup.',
+    'An example opens as a new document. This document closes; a document opened from a file can be restored by opening that file again.',
   'examples.blankWelcome': 'Start with a blank document',
   'examples.blankWelcomeWhat': 'Will not ask again',
   'examples.blank': 'Blank document',
@@ -160,7 +160,7 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
     'AriadneNSD는 아직 1.0 전입니다. 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
   'examples.menuTitle': '예제 열기',
   'examples.menuLead':
-    '예제는 새 문서로 열립니다. 지금 문서는 닫히고, 저장하지 않은 내용은 임시 보관에 남습니다.',
+    '예제는 새 문서로 열립니다. 지금 문서는 닫힙니다. 파일로 연 문서는 그 파일을 다시 열면 복원할 수 있습니다.',
   'examples.blankWelcome': '빈 문서로 시작',
   'examples.blankWelcomeWhat': '다시 묻지 않습니다',
   'examples.blank': '빈 문서',

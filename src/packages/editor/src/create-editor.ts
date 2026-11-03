@@ -317,28 +317,37 @@ export function createEditor(options: EditorOptions): EditorHandle {
   // Dialogs a shell asks for (restore?, a file name). One at a time; a new one cancels the old.
   let dialog: Dialog | null = null;
   let nextDialogId = 1;
+  /** The answer of a dialog: the text (`''` for a question), the third button, or cancelled. */
+  type Answer = { readonly text: string } | 'other' | null;
   const ask = (
     message: Message,
     input: string | null,
-    buttons: { readonly confirm?: Message; readonly cancel?: Message },
-  ): Promise<string | null> => {
+    buttons: { readonly confirm?: Message; readonly other?: Message; readonly cancel?: Message },
+  ): Promise<Answer> => {
     dialog?.answer(null);
     return new Promise((resolve) => {
       const id = nextDialogId++;
+      const close = (answer: Answer): void => {
+        if (dialog?.id !== id) {
+          return;
+        }
+        dialog = null;
+        emitChrome();
+        view?.focus();
+        resolve(answer);
+      };
       dialog = {
         id,
         message,
         input,
         confirm: buttons.confirm ?? 'choice.ok',
         cancel: buttons.cancel ?? 'choice.cancel',
+        other: buttons.other ?? null,
         answer: (value) => {
-          if (dialog?.id !== id) {
-            return;
-          }
-          dialog = null;
-          emitChrome();
-          view?.focus();
-          resolve(value);
+          close(value === null ? null : { text: value });
+        },
+        answerOther: () => {
+          close('other');
         },
       };
       emitChrome();
@@ -564,8 +573,18 @@ export function createEditor(options: EditorOptions): EditorHandle {
     notify: (value, level = 'info') => {
       session.notifyMessage(value, level);
     },
-    confirm: async (value, buttons = {}) => (await ask(value, null, buttons)) !== null,
-    prompt: (value, initial) => ask(value, initial, {}),
+    confirm: async (value, buttons = {}) => {
+      const answer = await ask(value, null, buttons);
+      return answer !== null && answer !== 'other';
+    },
+    choose: async (value, buttons) => {
+      const answer = await ask(value, null, buttons);
+      return answer === null ? 'cancel' : answer === 'other' ? 'other' : 'confirm';
+    },
+    prompt: async (value, initial) => {
+      const answer = await ask(value, initial, {});
+      return answer === null || answer === 'other' ? null : answer.text;
+    },
     popupAnchor: () => {
       const at = view?.selectionAnchor() ?? view?.canvasAnchor() ?? { x: 0, y: 0 };
       return { ...at, top: view?.selectionTop() ?? at.y };

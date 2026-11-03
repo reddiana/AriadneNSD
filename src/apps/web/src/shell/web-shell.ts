@@ -31,6 +31,12 @@ import { createTabLock } from './tab-lock';
 import type { Autosave, AutosaveOutcome, Clock, Debounce } from './timers';
 import { autosaveDelay, backupDelay, createAutosave, createDebounce } from './timers';
 
+/**
+ * How the current document is left for another (UX US1): its changes kept in the local backup,
+ * or discarded because the user chose so.
+ */
+type Leave = 'keep' | 'discard';
+
 /** The product name, in the browser tab title. */
 const appName = 'AriadneNSD';
 
@@ -349,13 +355,17 @@ export function createWebShell(options: WebShellOptions): WebShell {
       notices.show(text(openFailureMessage(opened.reason), { name }), 'warn');
       return;
     }
+    const leave = await mayLeave();
+    if (leave === null) {
+      return;
+    }
     const key = knownKey ?? (await keyOf(origin, name));
     const saved = await db.backup(key);
     const restored = saved !== undefined && (await askRestore(name)) ? saved.snapshot : undefined;
     if (saved !== undefined && restored === undefined) {
       await db.deleteBackup(key);
     }
-    await switchTo(newStore(key, name, origin), fileText, restored);
+    await switchTo(newStore(key, name, origin), fileText, restored, leave);
     await remember({
       key,
       name,
@@ -368,12 +378,13 @@ export function createWebShell(options: WebShellOptions): WebShell {
     next: WebDocumentStore,
     fileText: string | null,
     restored: string | undefined,
+    leave: Leave,
     doc?: Doc,
   ): Promise<void> {
     if (editor === null) {
       return;
     }
-    const leaving = leaveCurrent();
+    const leaving = leaveCurrent(leave);
     store = next;
     const isOwner = await lock.claim(next.key);
     isReadOnly = !isOwner;
@@ -397,27 +408,74 @@ export function createWebShell(options: WebShellOptions): WebShell {
   }
 
   /**
-   * Before another document replaces this one: keeps its edits in the backup. Returns what to
-   * tell the user when they were not saved to the file, or `null`.
+   * Before another document replaces this one: keeps its edits in the backup, unless the user
+   * chose to discard them. Returns what to tell the user when they were not saved to the file,
+   * or `null`.
    */
-  function leaveCurrent(): string | null {
+  function leaveCurrent(leave: Leave): string | null {
     if (editor === null) {
       return null;
     }
     const status = editor.status();
-    backup.flush();
+    if (leave === 'discard') {
+      backup.cancel();
+      void db.deleteBackup(store.key);
+    } else {
+      backup.flush();
+    }
     lock.release();
-    return status.dirty && !status.readOnly
+    return status.dirty && !status.readOnly && leave === 'keep'
       ? text('notice.notSavedToFile', { name: status.name })
       : null;
   }
 
+  /**
+   * UX US1: before another document replaces a new document that was never saved and has
+   * changes, asks to save it first, since its local backup could not be opened again.
+   * Resolves how to leave it, or `null` to stay (cancelled, or the save did not finish).
+   * A document opened from a file is left without asking: opening the file restores it.
+   */
+  async function mayLeave(): Promise<Leave | null> {
+    if (editor === null || !store.isNew) {
+      return 'keep';
+    }
+    const status = editor.status();
+    if (!status.dirty || status.readOnly) {
+      return 'keep';
+    }
+    const answer = await editor.choose(text('notice.saveNewFirst', { name: status.name }), {
+      confirm: text('choice.save'),
+      other: text('choice.discardAndOpen'),
+    });
+    switch (answer) {
+      case 'cancel':
+        return null;
+      case 'other':
+        return 'discard';
+      case 'confirm':
+        return (await editor.save()).ok ? 'keep' : null;
+    }
+  }
+
   async function newDocument(): Promise<void> {
-    await switchTo(newStore(options.newKey(), untitledName, { kind: 'none' }), null, undefined);
+    const leave = await mayLeave();
+    if (leave === null) {
+      return;
+    }
+    await switchTo(
+      newStore(options.newKey(), untitledName, { kind: 'none' }),
+      null,
+      undefined,
+      leave,
+    );
   }
 
   async function openDocument(doc: Doc, name: string): Promise<void> {
-    await switchTo(newStore(options.newKey(), name, { kind: 'none' }), null, undefined, doc);
+    const leave = await mayLeave();
+    if (leave === null) {
+      return;
+    }
+    await switchTo(newStore(options.newKey(), name, { kind: 'none' }), null, undefined, leave, doc);
   }
 
   async function openFromPicker(): Promise<void> {
@@ -587,7 +645,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
         : copy?.source.kind === 'copy'
           ? { kind: 'copy', text: copy.source.text }
           : { kind: 'none' };
-    await switchTo(newStore(last.key, last.name, origin), null, last.snapshot);
+    await switchTo(newStore(last.key, last.name, origin), null, last.snapshot, 'keep');
   }
 
   return {
