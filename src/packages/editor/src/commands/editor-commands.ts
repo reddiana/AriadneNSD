@@ -659,7 +659,11 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     notice: EditorMessage,
   ): Promise<void> => {
     const where = await deps.clipboard.write({
-      text: clipToText(clip, deps.locale()),
+      text: clipToText(clip, {
+        locale: deps.locale(),
+        resultSymbol: session.state.doc.view.resultSymbol,
+        diagrams: new Map(content().diagrams.map((diagram) => [diagram.id, diagram])),
+      }),
       json: clipToJson(clip),
     });
     session.notify(where === 'memory' ? 'notice.clipboardLocal' : notice);

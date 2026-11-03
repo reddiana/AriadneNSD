@@ -45,6 +45,8 @@ export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './t
 export { geometry } from './layout/geometry';
 export type { LayoutOptions } from './layout/layout';
 export { headLabel, layout } from './layout/layout';
+export type { CallParts, CallTextContext } from './layout/call-text';
+export { callParts, callText } from './layout/call-text';
 export type {
   Box,
   BranchLabel,

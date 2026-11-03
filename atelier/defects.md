@@ -29,6 +29,7 @@ updated: 2026-11-03
 | [[#BUG-10\|BUG-10]] | 2026-11-03 | 빈 default 칸에서 복사 · 잘라내기를 하면 "삭제할 default 분기가 없습니다"라고 알림 | 고침 |
 | [[#BUG-11\|BUG-11]] | 2026-11-03 | 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 "먼저 블록을 선택하세요"라고 알림 | 고침 |
 | [[#BUG-12\|BUG-12]] | 2026-11-03 | 분기 라벨 · 빈 default 칸에서 `Ctrl`+`←` `→`가 If · Case 블록에서 출발함(If의 오른쪽 라벨에서 `Ctrl`+`→`를 누르면 왼쪽 분기의 첫 블록으로 감) | 고침 |
+| [[#BUG-13\|BUG-13]] | 2026-11-03 | 호출 블록을 텍스트로 복사하면 Method 이름이 빠짐(`ys ← MergeSort(xs)`가 `ys xs`로, 결과 · 인자가 없으면 빈 줄로) | 고침 |
 
 ## BUG-01
 
@@ -118,3 +119,10 @@ updated: 2026-11-03
 - **원인:** `Ctrl`+`←` `→`가 선택의 초점 블록(`focusBlock`)에서 출발해, 분기 라벨과 빈 default 칸에서는 그 If · Case 블록에서 출발함. If · Case 블록은 분기 밖이라 `Ctrl`+`→`가 `↓`처럼 움직여 첫 분기로 들어감
 - **고친 곳:** `packages/editor/src/navigation/navigate.ts`: 분기 라벨은 그 분기 안, 빈 default 칸은 그 Case의 가장 오른쪽 칸으로 보고 옆 분기를 찾음. 그쪽에 없으면 한 겹 바깥 If · Case로 가고, 바깥에도 없으면 움직이지 않음
 - **회귀 테스트:** [[08-test-list#^t-packages-editor-src-navigation-navigate-test-ts|T-0799]] 분기 라벨에서 `Ctrl`+`→`는 If · Case 블록에서 출발하지 않고 그 If · Case의 다음 분기로 간다 (단위, `packages/editor/src/navigation/navigate.test.ts`)
+
+## BUG-13
+
+- **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
+- **원인:** 클립보드의 텍스트(`clipToText`)가 호출 블록에서 결과와 인자만 이어 적고, 레이아웃이 그리는 이름 · 결과 기호 · 괄호를 적지 않음
+- **고친 곳:** `packages/core/src/layout/call-text.ts`: 호출 블록의 그려지는 텍스트(`callParts` · `callText`)를 레이아웃에서 떼어 내 내보냄. `packages/editor/src/clipboard/clip-format.ts`가 그것으로 그려진 대로 적음(`ys ← MergeSort(xs)`, 결과가 없으면 `MergeSort(xs)`, 둘 다 없으면 `MergeSort()`, 결과 기호는 문서의 `=`도 따름). 복사할 때 문서의 다이어그램과 결과 기호를 넘김(`packages/editor/src/commands/editor-commands.ts`)
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-clipboard-clip-format-test-ts|T-0800]] 복사한 호출 블록은 Method 이름을 잃지 않고, 그려진 대로 적힌다 (단위, `packages/editor/src/clipboard/clip-format.test.ts`)

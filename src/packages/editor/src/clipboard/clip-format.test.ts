@@ -1,3 +1,4 @@
+import type { CallTextContext, Locale } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -18,12 +19,19 @@ const clip = seq([
   whileBlock('b5', [proc('b6', 'tick')], 'running'),
 ]);
 
+/** A document without Method diagrams, with the default result symbol. */
+const drawn = (locale: Locale): CallTextContext => ({
+  locale,
+  resultSymbol: '←',
+  diagrams: new Map(),
+});
+
 describe('clipboard formats (03-editor 3.3)', () => {
   it('T-0200 · R-EDIT-10: copied blocks are indented lines for other programs', () => {
-    expect(clipToText(clip, 'en')).toBe(
+    expect(clipToText(clip, drawn('en'))).toBe(
       ['read n', 'n > 0', '    true:', '        x', '    no:', 'running', '    tick'].join('\n'),
     );
-    expect(clipToText(clip, 'ko').split('\n')[2]).toBe('    참:');
+    expect(clipToText(clip, drawn('ko')).split('\n')[2]).toBe('    참:');
   });
 
   it('T-0557 · R-EDIT-10: call, loop and Case blocks become indented lines too', () => {
@@ -51,10 +59,10 @@ describe('clipboard formats (03-editor 3.3)', () => {
       caseBlock('k3', [arm('a3', '3', [])], null),
       proc('b5', 'first line\nsecond line'),
     ]);
-    expect(clipToText(others, 'en').split('\n')).toEqual([
-      'ys xs',
-      // A call without arguments or result is an empty line.
-      '',
+    expect(clipToText(others, drawn('en')).split('\n')).toEqual([
+      // A call is written as it is drawn.
+      'ys ← sort(xs)',
+      'reset',
       '    step',
       // A Do-While's condition comes after its blocks.
       'more',
@@ -73,6 +81,67 @@ describe('clipboard formats (03-editor 3.3)', () => {
       'first line',
       'second line',
     ]);
+  });
+
+  it('T-0800 · BUG-13: a copied call block keeps its Method name, written as it is drawn', () => {
+    const calls = seq([
+      {
+        id: 'c1',
+        kind: 'call',
+        target: { kind: 'local', diagram: 'd2' },
+        args: 'xs',
+        result: 'ys',
+        siteFolds: [],
+      },
+      {
+        id: 'c2',
+        kind: 'call',
+        target: { kind: 'local', diagram: 'd2' },
+        args: 'xs',
+        result: '',
+        siteFolds: [],
+      },
+      {
+        id: 'c3',
+        kind: 'call',
+        target: { kind: 'local', diagram: 'd2' },
+        args: '',
+        result: '',
+        siteFolds: [],
+      },
+      {
+        id: 'c4',
+        kind: 'call',
+        target: { kind: 'lost', lastName: 'Old' },
+        args: 'a',
+        result: 'r',
+        siteFolds: [],
+      },
+      {
+        id: 'c5',
+        kind: 'call',
+        target: { kind: 'named', name: '' },
+        args: '',
+        result: '',
+        siteFolds: [],
+      },
+    ]);
+    const diagrams = new Map([
+      [
+        'd2',
+        { id: 'd2', head: { kind: 'method' as const, text: 'MergeSort(list)' }, body: seq([]) },
+      ],
+    ]);
+    expect(clipToText(calls, { locale: 'en', resultSymbol: '←', diagrams }).split('\n')).toEqual([
+      'ys ← MergeSort(xs)',
+      'MergeSort(xs)',
+      'MergeSort()',
+      'r ← Old(a)',
+      '(no name)',
+    ]);
+    expect(clipToText(calls, { locale: 'en', resultSymbol: '=', diagrams }).split('\n')[0]).toBe(
+      'ys = MergeSort(xs)',
+    );
   });
 
   it('T-0201 · R-EDIT-10: the model JSON reads back as the same blocks', () => {

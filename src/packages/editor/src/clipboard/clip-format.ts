@@ -1,7 +1,13 @@
 // What copied blocks look like on the system clipboard (03-editor 3.3): indented text for other
 // programs, and the model JSON for AriadneNSD itself.
-import type { Block, Clip, Locale } from '@ariadne-nsd/core';
-import { createDoc, drawingMessage, parseModelJson, serializeModelJson } from '@ariadne-nsd/core';
+import type { Block, CallTextContext, Clip } from '@ariadne-nsd/core';
+import {
+  callText,
+  createDoc,
+  drawingMessage,
+  parseModelJson,
+  serializeModelJson,
+} from '@ariadne-nsd/core';
 
 /** The web custom clipboard format of copied blocks (Chromium's web custom formats). */
 export const clipMimeType = 'web application/x-ariadne-nsd+json';
@@ -18,9 +24,12 @@ const indentUnit = '    ';
 /**
  * The blocks as indented lines, so they read like pseudocode elsewhere. Control blocks put their
  * text on one line and their blocks below, one level in; If and Case branches get a label line.
- * A Do-While writes its condition after its blocks, as it is drawn. Empty blocks are left out.
+ * A Do-While writes its condition after its blocks, as it is drawn. A call block is its line as
+ * drawn, `ys ← MergeSort(xs)`, so it needs the document's diagrams and result symbol (`drawn`).
+ * Empty blocks are left out.
  */
-export function clipToText(clip: Clip, locale: Locale): string {
+export function clipToText(clip: Clip, drawn: CallTextContext): string {
+  const locale = drawn.locale;
   const lines: string[] = [];
   const textLines = (text: string, depth: number): void => {
     for (const line of text.split('\n')) {
@@ -35,7 +44,7 @@ export function clipToText(clip: Clip, locale: Locale): string {
         }
         return;
       case 'call':
-        textLines(`${block.result} ${block.args}`.trim(), depth);
+        textLines(callText(drawn, block), depth);
         return;
       case 'while':
       case 'for':

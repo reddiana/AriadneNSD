@@ -400,6 +400,7 @@
   "content that breaks an invariant is not taken; the problem is logged and reported": "불변식을 깨는 내용은 받지 않고, 문제를 기록하고 알린다",
   "Contrast of the light default theme (visual design 3.3 and 10.1, QA-16)": "밝은 기본 테마의 대비(시각 디자인 3.3 · 10.1)",
   "copied blocks are indented lines for other programs": "복사한 블록은 다른 프로그램에는 들여쓴 줄들이다",
+  "a copied call block keeps its Method name, written as it is drawn": "복사한 호출 블록은 Method 이름을 잃지 않고, 그려진 대로 적힌다",
   "copy takes whole subtrees and the fold regions inside the range": "복사는 하위 트리 전체와 범위 안의 접기 영역을 가져간다",
   "copy, cut and paste": "복사, 잘라내기, 붙여넣기",
   "Ctrl+→ on a branch label goes to the next branch of that If · Case, not from the If · Case block": "분기 라벨에서 `Ctrl`+`→`는 If · Case 블록에서 출발하지 않고 그 If · Case의 다음 분기로 간다",

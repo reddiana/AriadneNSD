@@ -20,6 +20,7 @@ import type {
 } from '../model/types';
 import { fontSizes, measureLine, measureText } from '../text/measure-text';
 import type { TextSize } from '../text/measure-text';
+import { callParts } from './call-text';
 import { geometry } from './geometry';
 import type {
   Box,
@@ -377,7 +378,10 @@ function measureCase(context: Context, block: Case): Measure {
 }
 
 function measureCall(context: Context, block: Call): Measure {
-  const parts = callParts(context, block);
+  const parts = callParts(
+    { locale: context.locale, resultSymbol: context.view.resultSymbol, diagrams: context.diagrams },
+    block,
+  );
   const width =
     measureLine(parts.before) +
     measureLine(parts.name) +
@@ -385,35 +389,6 @@ function measureCall(context: Context, block: Call): Measure {
     2 * padX +
     2 * callBar;
   return { kind: 'call', ...parts, width, height: line + 2 * padY };
-}
-
-/** The call block's text: `result ← Name(args)` (01-model 1.5, ADR-0022). */
-function callParts(context: Context, block: Call): { before: string; name: string; after: string } {
-  const before = block.result === '' ? '' : `${block.result} ${context.view.resultSymbol} `;
-  const target = block.target;
-  let name: string;
-  let hasParentheses = false;
-  switch (target.kind) {
-    case 'local': {
-      const head = context.diagrams.get(target.diagram)?.head?.text ?? '';
-      const open = head.indexOf('(');
-      name = (open < 0 ? head : head.slice(0, open)).trim();
-      hasParentheses = open >= 0;
-      break;
-    }
-    case 'named':
-      name = target.name;
-      break;
-    case 'external':
-    case 'lost':
-      name = target.lastName;
-      break;
-  }
-  if (name === '') {
-    name = drawingMessage(context.locale, 'call.noName');
-  }
-  const after = block.args !== '' || hasParentheses ? `(${block.args})` : '';
-  return { before, name, after };
 }
 
 // Pass 2: place (outside in).
