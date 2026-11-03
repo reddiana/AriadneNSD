@@ -137,6 +137,8 @@ function addRowAnchor(line) {
     .replace(/\[\[([^\]#|\\]*)#\^r-[a-z0-9-]+(\\?\|)(R-[A-Z]+-\d+)\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
     // 테스트 목록의 표로 가는 테스트 ID 링크([[08-test-list#^t-…|T-0278]])도 그 줄로 돌린다(2026-11-03 → DR-0022)
     .replace(/\[\[([^\]#|\\]*)#\^t-[a-z0-9-]+(\\?\|)(T-\d{4})\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
+    // 요구사항 5.2의 인수 기준 표로 가는 링크([[01-requirements#^at|AT-04]])도 그 줄로 돌린다
+    .replace(/\[\[([^\]#|\\]*)#\^at(\\?\|)(AT-\d+)\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
   // 표 안에서 같은 문서의 제목으로 가는 위키링크([[#감싸기 · 풀기]])를 Quartz v4.5.2는 글자 없이, 앵커를 바꾸지 않은 채로 만든다.
   // 마크다운 링크로 바꾸고 앵커는 Quartz가 제목에 다는 모양(github-slugger: 소문자, 문장 부호 빼기, 빈칸은 -)으로 만든다
   if (line.startsWith("|")) {

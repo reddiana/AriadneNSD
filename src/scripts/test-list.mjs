@@ -39,7 +39,7 @@ const areas = [
   {
     name: '인수 테스트',
     about:
-      'MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[07-testing#4. MVP의 인수 테스트]]',
+      'MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[01-requirements#5.2 MVP의 인수 기준]]',
     paths: ['apps/web/e2e/acceptance.spec.ts'],
   },
   {
@@ -209,7 +209,7 @@ function type(path) {
 /** A wiki link for an id, with `\|` when it goes in a table. */
 function link(id, inTable = true) {
   const bar = inTable ? '\\|' : '|';
-  if (id.startsWith('AT-')) return `[[07-testing#4. MVP의 인수 테스트${bar}${id}]]`;
+  if (id.startsWith('AT-')) return `[[01-requirements#^at${bar}${id}]]`;
   if (id.startsWith('QA-')) return `[[03-quality-attribute-scenarios#1. 목록${bar}${id}]]`;
   if (id.startsWith('BUG-')) return `[[defects#${id}${bar}${id}]]`;
   if (id.startsWith('UX ')) return `[[ux-decisions${bar}${id}]]`;
@@ -316,14 +316,14 @@ function definedIds(docPath, prefix) {
 }
 const defined = [
   ...definedIds('docs/01-requirements/03-quality-attribute-scenarios.md', 'QA'),
-  ...definedIds('docs/04-design/07-testing.md', 'AT'),
+  ...definedIds('docs/01-requirements/01-requirements.md', 'AT'),
   ...definedIds('atelier/defects.md', 'BUG'),
 ];
 const named = new Set(idTests.flatMap((test) => test.ids));
 const untested = defined.filter((id) => !named.has(id));
 
-/** The QA ids an acceptance test covers, from the AT table of 07-testing ("… (UC-02, QA-04)"). */
-const testingDoc = readFileSync(join(repo, 'docs/04-design/07-testing.md'), 'utf8');
+/** The QA ids an acceptance test covers, from the AT table of 01-requirements 5.2 ("… (UC-02, QA-04)"). */
+const testingDoc = readFileSync(join(repo, 'docs/01-requirements/01-requirements.md'), 'utf8');
 const atOfQa = new Map();
 for (const match of testingDoc.matchAll(/^\| (AT-\d+) \| ([^|]*)\|/gm)) {
   for (const qa of match[2].match(/QA-\d+/g) ?? []) {
@@ -488,7 +488,7 @@ const lines = [
   ...areaSections,
   '## 3. 테스트가 없는 ID',
   '',
-  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
+  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[01-requirements#5.2 MVP의 인수 기준]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
   '',
   '| ID | 다른 길로 맡은 것 |',
   '| --- | --- |',

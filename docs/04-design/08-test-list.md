@@ -40,39 +40,39 @@ status: 생성됨
 
 ### 2.1 인수 테스트
 
-MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[07-testing#4. MVP의 인수 테스트]]. 파일 1개, 테스트 26개.
+MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[01-requirements#5.2 MVP의 인수 기준]]. 파일 1개, 테스트 26개.
 
 #### `apps/web/e2e/acceptance.spec.ts`
 
-MVP의 인수 테스트 AT-01 ~ AT-17(07-testing 4)을 브라우저에서, 배포용 빌드로. E2E · Playwright · 테스트 26개. 파일 전체가 확인하는 것: [[07-testing#4. MVP의 인수 테스트|AT-01]], [[07-testing#4. MVP의 인수 테스트|AT-17]].
+MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서, 배포용 빌드로. E2E · Playwright · 테스트 26개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-01]], [[01-requirements#^at|AT-17]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
-| T-0001 | 새 다이어그램을 만들고, 블록을 넣고, 저장한다 | [[07-testing#4. MVP의 인수 테스트\|AT-01]] |
-| T-0002 | 저장한 파일을 다시 열면 같은 그림이고, 다시 저장하면 같은 바이트다 | [[07-testing#4. MVP의 인수 테스트\|AT-02]] |
-| T-0003 | 블록 종류 여섯, 감싸기와 풀기, 복사와 붙여넣기, 분기 넣기와 지우기, If 라벨 편집 | [[07-testing#4. MVP의 인수 테스트\|AT-03]] |
-| T-0004 | 키보드만으로 AT-01 | [[07-testing#4. MVP의 인수 테스트\|AT-04]], [[01-requirements#^r-nfr\|R-NFR-05]] |
-| T-0005 | `a`+`i` 바로 뒤에 친 글자는 쉬지 않고 쳐도 새 블록에 들어간다 | [[07-testing#4. MVP의 인수 테스트\|AT-04]] |
-| T-0006 | 글자를 치는 중의 `Ctrl`+`S`는 글자를 받아들이고 저장한다 | [[07-testing#4. MVP의 인수 테스트\|AT-04]] |
-| T-0007 | 블록 500개 문서의 편집이 100ms 안에 그려진다 | [[07-testing#4. MVP의 인수 테스트\|AT-05]] |
-| T-0008 | 손상된 파일은 열지 않고, 원래 문서는 그대로 남으며 편집기도 계속 동작한다 | [[07-testing#4. MVP의 인수 테스트\|AT-06]] |
-| T-0009 | 저장에 실패해도 잃는 것이 없고, 다음 저장이 그것을 쓴다 | [[07-testing#4. MVP의 인수 테스트\|AT-07]] |
-| T-0010 | 저장한 파일은 화면과 같은 그림을 그리고, 그 안에 글꼴이 들어 있다 | [[07-testing#4. MVP의 인수 테스트\|AT-08]] |
-| T-0011 | 그림의 두 배 크기로 PNG를 내보낸다 | [[07-testing#4. MVP의 인수 테스트\|AT-09]] |
-| T-0012 | 같은 문서는 다른 탭에서도 같은 바이트로 저장된다(Chromium 쪽) | [[07-testing#4. MVP의 인수 테스트\|AT-10]] |
-| T-0013 | 블록을 끌어 옮기고, 블록 아이콘을 끌어 넣고 감싼다 | [[07-testing#4. MVP의 인수 테스트\|AT-11]] |
-| T-0014 | 복사한 블록은 블록으로, 보통 글은 한 줄에 처리 블록 하나로 붙여 넣는다 | [[07-testing#4. MVP의 인수 테스트\|AT-12]] |
-| T-0015 | 자동 저장은 편집하고 2초 뒤에 원래 파일에 쓴다(Chromium 쪽) | [[07-testing#4. MVP의 인수 테스트\|AT-14]] |
-| T-0016 | 최근 파일에서 파일을 다시 연다 | [[07-testing#4. MVP의 인수 테스트\|AT-15]] |
-| T-0017 | 명령 팔레트에서 명령을 찾아 실행한다 | [[07-testing#4. MVP의 인수 테스트\|AT-16]] |
-| T-0018 | `?`는 단축키 목록을, 도움말은 사용법을 연다 | [[07-testing#4. MVP의 인수 테스트\|AT-17]] |
+| T-0001 | 새 다이어그램을 만들고, 블록을 넣고, 저장한다 | [[01-requirements#^at\|AT-01]] |
+| T-0002 | 저장한 파일을 다시 열면 같은 그림이고, 다시 저장하면 같은 바이트다 | [[01-requirements#^at\|AT-02]] |
+| T-0003 | 블록 종류 여섯, 감싸기와 풀기, 복사와 붙여넣기, 분기 넣기와 지우기, If 라벨 편집 | [[01-requirements#^at\|AT-03]] |
+| T-0004 | 키보드만으로 AT-01 | [[01-requirements#^at\|AT-04]], [[01-requirements#^r-nfr\|R-NFR-05]] |
+| T-0005 | `a`+`i` 바로 뒤에 친 글자는 쉬지 않고 쳐도 새 블록에 들어간다 | [[01-requirements#^at\|AT-04]] |
+| T-0006 | 글자를 치는 중의 `Ctrl`+`S`는 글자를 받아들이고 저장한다 | [[01-requirements#^at\|AT-04]] |
+| T-0007 | 블록 500개 문서의 편집이 100ms 안에 그려진다 | [[01-requirements#^at\|AT-05]] |
+| T-0008 | 손상된 파일은 열지 않고, 원래 문서는 그대로 남으며 편집기도 계속 동작한다 | [[01-requirements#^at\|AT-06]] |
+| T-0009 | 저장에 실패해도 잃는 것이 없고, 다음 저장이 그것을 쓴다 | [[01-requirements#^at\|AT-07]] |
+| T-0010 | 저장한 파일은 화면과 같은 그림을 그리고, 그 안에 글꼴이 들어 있다 | [[01-requirements#^at\|AT-08]] |
+| T-0011 | 그림의 두 배 크기로 PNG를 내보낸다 | [[01-requirements#^at\|AT-09]] |
+| T-0012 | 같은 문서는 다른 탭에서도 같은 바이트로 저장된다(Chromium 쪽) | [[01-requirements#^at\|AT-10]] |
+| T-0013 | 블록을 끌어 옮기고, 블록 아이콘을 끌어 넣고 감싼다 | [[01-requirements#^at\|AT-11]] |
+| T-0014 | 복사한 블록은 블록으로, 보통 글은 한 줄에 처리 블록 하나로 붙여 넣는다 | [[01-requirements#^at\|AT-12]] |
+| T-0015 | 자동 저장은 편집하고 2초 뒤에 원래 파일에 쓴다(Chromium 쪽) | [[01-requirements#^at\|AT-14]] |
+| T-0016 | 최근 파일에서 파일을 다시 연다 | [[01-requirements#^at\|AT-15]] |
+| T-0017 | 명령 팔레트에서 명령을 찾아 실행한다 | [[01-requirements#^at\|AT-16]] |
+| T-0018 | `?`는 단축키 목록을, 도움말은 사용법을 연다 | [[01-requirements#^at\|AT-17]] |
 | T-0019 | 키와 툴바로 실행 취소 · 다시 실행 |  |
 | T-0020 | 키 · `Ctrl`+휠 · 줌 메뉴로 줌 |  |
 | T-0021 | 컨텍스트 메뉴가 선택에 맞는 명령을 보인다 |  |
-| T-0022 | 내려받은 파일을 다시 열면 같은 바이트로 내려받는다 | [[07-testing#4. MVP의 인수 테스트\|AT-02]] |
-| T-0023 | 다른 이름으로 저장은 편집기 안에서 이름을 묻고, 취소하면 편집한 것을 지킨다 | [[07-testing#4. MVP의 인수 테스트\|AT-07]] |
-| T-0024 | 새로 고친 뒤 브라우저의 임시 보관이 복원된다 | [[07-testing#4. MVP의 인수 테스트\|AT-13]] |
-| T-0025 | File System Access가 없으면 저장은 내려받기가 되고, 그 사실을 한 번 알린다(Chromium 쪽) | [[07-testing#4. MVP의 인수 테스트\|AT-14]] |
+| T-0022 | 내려받은 파일을 다시 열면 같은 바이트로 내려받는다 | [[01-requirements#^at\|AT-02]] |
+| T-0023 | 다른 이름으로 저장은 편집기 안에서 이름을 묻고, 취소하면 편집한 것을 지킨다 | [[01-requirements#^at\|AT-07]] |
+| T-0024 | 새로 고친 뒤 브라우저의 임시 보관이 복원된다 | [[01-requirements#^at\|AT-13]] |
+| T-0025 | File System Access가 없으면 저장은 내려받기가 되고, 그 사실을 한 번 알린다(Chromium 쪽) | [[01-requirements#^at\|AT-14]] |
 | T-0026 | 메뉴, 상태 표시줄, 그림의 고정 문구가 한국어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-apps-web-e2e-acceptance-spec-ts
@@ -83,7 +83,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(07-testing 4)을 브라우저에서, 배�
 
 #### `packages/editor/src/session/engine.test.ts`
 
-글자 넣기와 편집 · 명령 뒤의 선택(03-editor 2.3) · 클립보드 · 분기 · 키와 모드(03-keymap) · 보기 전용(03-editor 6.4). 통합 · Vitest · 테스트 27개. 파일 전체가 확인하는 것: [[07-testing#4. MVP의 인수 테스트|AT-03]], [[07-testing#4. MVP의 인수 테스트|AT-12]], [[01-requirements#^r-edit|R-EDIT-11]], [[ux-decisions|UX MD3]].
+글자 넣기와 편집 · 명령 뒤의 선택(03-editor 2.3) · 클립보드 · 분기 · 키와 모드(03-keymap) · 보기 전용(03-editor 6.4). 통합 · Vitest · 테스트 27개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-03]], [[01-requirements#^at|AT-12]], [[01-requirements#^r-edit|R-EDIT-11]], [[ux-decisions|UX MD3]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
@@ -98,8 +98,8 @@ MVP의 인수 테스트 AT-01 ~ AT-17(07-testing 4)을 브라우저에서, 배�
 | T-0035 | 안에서 풀면 선택을 지키고, 무엇을 없앴는지 알린다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
 | T-0036 | 옮긴 블록은 선택된 채로 남는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0037 | `dd`는 잘라내고, `p`는 새 id로 선택 뒤에 붙여 넣는다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-0038 | 다른 프로그램의 글은 한 줄에 처리 블록 하나가 된다 | [[07-testing#4. MVP의 인수 테스트\|AT-12]] |
-| T-0039 | 사용자 정의 형식이 글보다 먼저다 | [[07-testing#4. MVP의 인수 테스트\|AT-12]] |
+| T-0038 | 다른 프로그램의 글은 한 줄에 처리 블록 하나가 된다 | [[01-requirements#^at\|AT-12]] |
+| T-0039 | 사용자 정의 형식이 글보다 먼저다 | [[01-requirements#^at\|AT-12]] |
 | T-0040 | 조작 규칙 "붙여넣기": 선택한 것이 없으면 아무것도 붙여 넣지 않는다 |  |
 | T-0041 | 03-keymap: `v` 다음 `j` `j`와 `y`는 범위를 복사한다 |  |
 | T-0042 | 분기 라벨에서 `o`는 분기를 넣고 그 라벨을 연다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
@@ -397,7 +397,7 @@ id. 단위 · Vitest · 테스트 5개.
 | --- | --- | --- |
 | T-0200 | 복사한 블록은 다른 프로그램에는 들여쓴 줄들이다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0201 | 모델 JSON을 다시 읽으면 같은 블록이다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-0202 | 바깥에서 온 글은 한 줄에 처리 블록 하나가 된다 | [[07-testing#4. MVP의 인수 테스트\|AT-12]] |
+| T-0202 | 바깥에서 온 글은 한 줄에 처리 블록 하나가 된다 | [[01-requirements#^at\|AT-12]] |
 
 ^t-packages-editor-src-clipboard-clip-format-test-ts
 
@@ -1109,20 +1109,20 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 
 ## 3. 테스트가 없는 ID
 
-문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.
+문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[01-requirements#5.2 MVP의 인수 기준]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.
 
 | ID | 다른 길로 맡은 것 |
 | --- | --- |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-03]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-10]] |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-03]] | 인수 테스트: [[01-requirements#^at\|AT-10]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-05]] | 없음 |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-06]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-08]] |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-06]] | 인수 테스트: [[01-requirements#^at\|AT-08]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-08]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-10]] | 파일: `packages/editor/src/create-editor.test.ts`<br>검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-11]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-12]] | 검사: TypeScript의 완전성 검사 (`pnpm typecheck`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-14]] | 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`) |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-04]] |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[01-requirements#^at\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]] | 없음 |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[07-testing#4. MVP의 인수 테스트\|AT-07]] |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
 | [[defects#BUG-06\|BUG-06]] | 없음 |

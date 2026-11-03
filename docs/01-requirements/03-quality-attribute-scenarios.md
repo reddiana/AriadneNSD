@@ -77,7 +77,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 역직렬화할 때도 편집 명령과 같은 불변식 검사를 한다. 열기는 읽기만 한다 → [[01-file-format#5. 버전 관리]], [[03-architecture#4.2 저장과 열기]]
 - **테스트:** 퍼징(올바른 파일을 무작위로 망가뜨린 입력 + 손으로 만든 깨진 파일 묶음). 열기 뒤 원본 파일의 해시가 같은지 본다. **실행할 때:** 모든 커밋(짧게), 매일 밤(길게)
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-06]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
+- **테스트 ID:** [[08-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[01-requirements#^at|AT-06]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
 
 ### QA-03 어디서 저장해도 같은 파일
 
@@ -92,7 +92,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 묻지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[03-architecture#5. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** 골든 파일 테스트. 대표 문서 묶음(한글 · 영문 · 기호, 블록 종류 모두, 접힘 · 펴 보기 포함)을 저장해 저장소의 기대 파일과 바이트로 비교한다. 같은 테스트를 Node와 각 브라우저(Playwright)에서 실행한다. **실행할 때:** 모든 커밋(Node, Chromium), 출시 전(모든 브라우저와 Obsidian)
-- **테스트 ID:** 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
 - **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ### QA-04 열고 바로 저장하면 그대로
@@ -108,7 +108,7 @@ updated: 2026-11-01
 
 - **아키텍처:** QA-03과 같다. 뷰 상태도 파일에 들어 있어 열 때 그대로 복원된다 → [[0018-save-as-shown|ADR-0018]]
 - **테스트:** 골든 파일 왕복 테스트. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
+- **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
 - **알아 둘 것:** 화면 언어가 다르면 같지 않다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 저장할 때의 화면 언어를 따르기 때문이다([[01-requirements#^r-nfr|R-NFR-04]]). 그래서 환경에 "같은 화면 언어"를 둔다
 
 ### QA-05 옛 파일 열기
@@ -139,7 +139,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 쓰인 문자만 남긴 서브셋 글꼴과 문서 테마의 색을 파일 안에 포함한다. 편집 중에만 보이는 표시는 오버레이 레이어라 저장되지 않는다 → [[0026-bundled-font-metrics|ADR-0026]], [[0018-save-as-shown|ADR-0018]], [[03-architecture#4.2 저장과 열기]]
 - **테스트:** 시각 회귀 테스트. 골든 문서를 각 브라우저에서 이미지로 열어(Playwright 스크린샷) 기준 그림과 픽셀로 비교한다. SVG 1.1 검증기로 문법을 본다. GitHub · Drive · Obsidian은 수동 점검표. **실행할 때:** 모든 커밋(Chromium), 출시 전(나머지)
-- **테스트 ID:** 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-08]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0010]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-08]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0010]])
 
 ### QA-07 편집 반응 시간
 
@@ -154,7 +154,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리를 구분해 낼 수 있다. 증분 레이아웃(메모이제이션)을 할지는 측정해서 정한다 → [[0029-immutable-document-undo|ADR-0029]], [[02-layout#4. 성능]]
 - **테스트:** 성능 벤치마크. 블록 500개 문서에서 대표 명령 20가지를 각 100번 실행해 p95를 측정한다. Node에서 `core`만(레이아웃 + 렌더링, 목표의 절반인 50ms 이하를 제안)과 브라우저에서 화면 갱신까지(Playwright, 성능 타임라인)로 나눈다. **실행할 때:** 모든 커밋(Node, 결과를 기록해 느려지면 알림), 출시 전(기준 기기)
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]])
+- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]])
 - **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ### QA-08 여는 시간 (제안)
@@ -276,7 +276,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 모든 명령은 `CommandRegistry`에 있고 키 표 하나로 키에 잇는다. 메뉴와 툴바도 같은 레지스트리에서 나온다 → [[0033-command-list-for-shells|ADR-0033]], [[03-keymap]]
 - **테스트:** E2E 테스트(Playwright, 키 입력만). 레지스트리의 명령마다 키나 키로 열 수 있는 메뉴가 있는지 보는 테스트. **실행할 때:** 모든 커밋(웹), 출시 전(Obsidian, 데스크톱)
-- **테스트 ID:** 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-04]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0004]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0005]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0006]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-04]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0004]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0005]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0006]])
 
 ### QA-16 고대비
 
@@ -306,7 +306,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 문서는 불변이고 `editor`가 갖고 있으므로, 쓰기 실패는 문서를 바꾸지 않는다. `DocumentStore`의 쓰기는 실패를 던지지 않고 값(`WriteResult`: `cancelled` · `denied` · `failed`)으로 반환한다 → [[03-editor#6. 셸과의 연결]]
 - **테스트:** 실패하는 가짜 `DocumentStore`로 저장하고, 문서 · "저장 안 됨" 표시 · 알림을 보는 테스트. **실행할 때:** 모든 커밋
-- **테스트 ID:** 인수 테스트 [[07-testing#4. MVP의 인수 테스트|AT-07]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0009]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0023]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-07]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0009]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0023]])
 
 ### QA-18 휴대폰에서 시작하는 시간
 
