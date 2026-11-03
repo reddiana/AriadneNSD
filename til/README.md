@@ -70,6 +70,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 
 - [[git-line-endings]] — git과 줄 끝 문자 (LF / CRLF) (2026-10-10. 2026-10-22에 "내용은 같은데 modified"를 더함)
 - [[git-history-rewrite]] — git 기록에서 파일 지우기: 지워도 남는 까닭, 기록 고쳐 쓰기, 강제 push, 바뀌는 해시 (2026-10-11)
+- [[git-worktree]] — git worktree로 나란히 일하기: 작업 폴더를 여럿 꺼내 에이전트마다 하나씩, 그래도 부딪치는 포트 · 번호 (2026-11-04)
 - [[github-pages-site]] — GitHub Pages로 문서 사이트 펴내기: 저장소 하나에 사이트 하나, 정적 사이트 생성기 Quartz, GitHub Actions, 첫 화면은 README로, custom.scss, 주소가 저절로 링크가 될 때 (2026-10-18, 링크 공유 그림(og:image)과 페이스북의 캐시 2026-10-25)
 
 ### 오픈소스 운영

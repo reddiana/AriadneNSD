@@ -132,6 +132,52 @@ Claude가 버그 후보 1 · 2를 직접 고치는 동안 메인테이너가 기
 - 새 Method로 빼기를 마침(에이전트 진행 중), 그다음 브라우저 안의 문서, 그다음 접기
 - 메인테이너: 로컬 앱(http://localhost:5173/)에서 ADR-0041 · US1 · 영어 예제 · 조건 칸 · 사용법을 써 보기, [[outbox#확인해 주세요]]
 
+## 매듭 뒤 (2026-11-03 밤 ~ 11-04)
+
+매듭(`8999ceb`) 뒤에 이어 간 일이다. 위 "다음 할 것"은 매듭 때의 것이고, 지금의 다음 할 것은 [[status#이번과 다음 세션에 할 것]]에 있다.
+
+### 매듭 뒤에 만들고 push한 것 (차례대로)
+
+1. **새 Method로 빼기**([[01-requirements#^r-edit|R-EDIT-19]]): `5f543b4`. 사용법 · 설계 문서의 "받아들이기"를 "편집 완료"로(`293b194`). XM3는 메인테이너가 3번(고르는 목록)으로 바꿈 → [[ux-decisions#XM3. 헤더 없는 다이어그램에서 블록에 m은 고르는 목록|XM3]]. 에이전트가 정한 것은 outbox에(`ba5305f`)
+2. **Windows 알림 훅**: `2c385a9`(`.claude/hooks/toast.ps1`, 개인 설정 `.claude/settings.local.json`은 git에서 뺌). 밤에는 메인테이너의 요청("이번에는 알림을 주시 마세요. 잘거에요")으로 `settings.local.json`의 `hooks`를 비워 둠. 다시 켤지는 내일 → [[status#이번과 다음 세션에 할 것]]
+3. **브라우저 안의 문서**([[01-requirements#^r-web|R-WEB-09]]): `8f6dbca`. BS1은 메인테이너가 추천과 다른 2번(열기 · 저장 창 안에서 고르기)을 고름 → [[ux-decisions#BS1. 브라우저 안의 문서는 열기 · 저장 창 안에서 고른다|BS1]]
+4. 메인테이너: "웹버전 1.0 출시 전에 개발할 기능이 어떤게 남아있나요?" Claude가 웹의 `P1` 가운데 남은 것을 다섯 묶음으로 보여 드림. 메인테이너: "모두 지금 개발해주세요. 나의 선택이 필요한 부분은 일단 달님의 추천안을 수용하겠습니다. push도 해주세요. 써보면서 내 판단을 정하겠습니다."
+5. 레인 다섯을 git worktree(`.claude/worktrees/agent-*`)에서 나란히 돌리고, 합치는 에이전트(integrator) 하나가 차례로 `main`에 합쳐 push함:
+	- `793be08` 레인 2: 블록 텍스트의 언어 · 구문 강조([[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-07]])
+	- `7e62971` 레인 4: 공유 링크 · 보기 모드([[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]])
+	- `fa56b0e` 브라우저 안의 문서([[01-requirements#^r-web|R-WEB-09]])를 레인 4와 함께 합침
+	- `05deb73` 레인 3: 문서 테마 · 고대비 화면([[01-requirements#^r-lay|R-LAY-08]], [[01-requirements#^r-nfr|R-NFR-07]])
+	- `605264e` + `b75acb9` 레인 5: 그림만 담은 SVG · PDF · 인쇄 · 그림 지문 · 텍스트 외곽선([[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-exp|R-EXP-03]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-fmt|R-FMT-10]])
+	- `abc4a4b` 레인 1: 접기 · 호출 블록([[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]])
+6. **0.2.0을 냄**: `daa71af`(패키지 다섯과 `version.ts`, 도움말 › 이 버전에서 바뀐 것을 목록으로), 주석 태그 `v0.2.0`, GitHub Releases에 Pre-release "AriadneNSD 0.2.0"(https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0). `pnpm check`(단위 · 통합 1,520개), 빌드와 크기(첫 내려받기 213.9 KB, 한도 230 KB), `pnpm e2e`(76개), 문서 검사가 모두 통과함
+
+레인이 추천안으로 정한 것은 [[ux-decisions]]의 레인별 절(2026-11-03 레인 1 ~ 5)에 있고, 확인 요청은 [[outbox#확인해 주세요]]에 있다. 새 ADR 넷은 모두 제안됨: [[0042-text-kind-keeps-block-font|ADR-0042]](텍스트 종류는 블록 글꼴을 바꾸지 않음), [[0043-share-link-in-fragment|ADR-0043]](공유 링크는 fragment), [[0044-document-themes|ADR-0044]](문서 테마), [[0045-export-pipeline|ADR-0045]](내보내기 파이프라인). 합치는 에이전트가 첫 내려받기 한도를 212 KB에서 230 KB로 올림(레인 1 뒤 213.4 KB → [[06-web]]).
+
+### 밤사이의 준비
+
+- 화면이 잠겨도 일이 이어지도록 전원 연결 때의 절전을 이 밤만 "안 함"으로(`powercfg`). 되돌리는 것은 메인 세션이 함
+- 사용 한도에 걸려도 이어 가도록 사용자 설정에서 `autoContinueAtUsageLimit`를 켬
+
+### 앱의 크기 (2026-11-04, `v0.2.0`)
+
+`git ls-files`로 센 줄 수(빈 줄 포함). 제품 코드는 `src/` 아래의 `.ts` · `.tsx` · `.css` · `.mjs`에서 테스트와 생성 파일을 뺀 것.
+
+| 패키지 | 제품 코드 | 테스트(단위 · 통합) |
+| --- | --- | --- |
+| `packages/core` | 10,097 | 6,345 |
+| `packages/editor` | 15,008 | 7,376 |
+| `packages/fonts` | 905 | 525 |
+| `apps/web` | 4,419 | 4,630 |
+| E2E(`apps/web/e2e`) | | 2,360 |
+| 합계 | 30,429 | 21,236 |
+
+### 발견한 위험과 배운 것
+
+- 나란히 도는 레인들이 E2E 서버의 포트 4173 · 4175를 두고 다툼. 잠금 폴더로 차례를 지켰으나 R-WEB-09 에이전트는 그 잠금을 몰라 서버와 씨름함. 다음에는 레인마다 포트를 나눠 주거나 잠금 규칙을 처음 지시에 넣는다
+- 부하가 클 때 T-0171과 인수 테스트 AT-05(시간을 잼)가 흔들림. 다시 돌리면 통과
+- 레인 모두가 다음 ADR 번호 0042를 가져감. 합치는 에이전트가 0042 ~ 0045로 다시 매김. 테스트 ID도 겹쳐 push 전에 다시 매김. 다음에는 번호대를 레인마다 미리 나눠 준다
+- 텍스트 외곽선과 PDF에서 기울임 텍스트가 바로 선 글자로 나옴 → [[defects#BUG-15|BUG-15]]
+
 ## outbox에서 옮긴 것
 
 답을 받아 outbox에서 지운 항목의 원문(체크한 채로):

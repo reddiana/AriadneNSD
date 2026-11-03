@@ -2173,3 +2173,4 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-21]] | 없음 |
 | [[defects#BUG-06\|BUG-06]] | 없음 |
+| [[defects#BUG-15\|BUG-15]] | 없음 |
