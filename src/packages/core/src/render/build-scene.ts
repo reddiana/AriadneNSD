@@ -85,6 +85,9 @@ const syntaxTokens: Readonly<Record<TokenKind, ColorToken | null>> = {
  * (R-LAY-07, ADR-0032). The text is tokenized as a whole, so a comment may span lines.
  */
 function highlightedLines(ctx: Painter, text: PlacedText): ReadonlyArray<ReadonlyArray<TextRun>> {
+  if (ctx.textKind === 'plain') {
+    return text.lines.map((line) => (line === '' ? [] : [{ text: line, weight: 400 }]));
+  }
   const lines = tokenLines(tokenize(text.lines.join('\n'), ctx.textKind));
   return lines.map((tokens) =>
     tokens.map((token): TextRun => {
