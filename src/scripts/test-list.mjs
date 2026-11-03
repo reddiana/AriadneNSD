@@ -3,10 +3,12 @@
 // file is out of date, so `pnpm check` keeps it current (maintainer, 2026-11-01: "테스트들을
 // 정리하고 항상 현행화해주세요").
 //
-// A test whose name starts with ids (`AT-04: …`, `BUG-03 · QA-19: …`, `R-NFR-04: …`, `UX EX3: …`)
-// is listed on its own; every test file is listed once with its count. The ids defined in the
-// documents (QA in the scenarios, AT in 07-testing, BUG in the defect log) that no test names are
-// listed at the end.
+// The list is grouped by feature area (maintainer, 2026-11-03: "분류를 해야 독자에게 유용한 정보가
+// 될 수 있습니다"). Every test file belongs to one area by its path (`areas` below); a new file
+// that matches none fails the script. In each area, every file is listed once with its count, and
+// a test whose name starts with ids (`AT-04: …`, `BUG-03 · QA-19: …`, `R-NFR-04: …`, `UX EX3: …`)
+// is listed on its own. The ids defined in the documents (QA in the scenarios, AT in 07-testing,
+// BUG in the defect log) that no test names are listed at the end.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +30,99 @@ const integrationFiles = new Set([
 ]);
 
 const typeOrder = ['E2E', '통합', '단위', '성능'];
+
+/**
+ * The feature areas, in reading order. A file belongs to the first area with a path that its path
+ * starts with (or ends with, for a path that starts with a dot).
+ */
+const areas = [
+  {
+    name: '인수 테스트',
+    about:
+      'MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[07-testing#4. MVP의 인수 테스트]]',
+    paths: ['apps/web/e2e/acceptance.spec.ts'],
+  },
+  {
+    name: '편집 명령과 모델',
+    about:
+      '블록 넣기 · 지우기 · 옮기기 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]',
+    paths: [
+      'packages/core/src/commands/',
+      'packages/core/src/model/',
+      'packages/editor/src/session/engine.test.ts',
+      'packages/editor/src/clipboard/',
+    ],
+  },
+  {
+    name: '키 · 마우스 · 선택',
+    about:
+      '키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 끌기가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]',
+    paths: [
+      'packages/editor/src/input/',
+      'packages/editor/src/navigation/',
+      'packages/editor/src/state/',
+      'packages/editor/src/session/',
+      'packages/editor/src/ui/key-hint.test.ts',
+      'packages/editor/src/ui/keys.test.ts',
+      'packages/editor/src/dom/',
+      'apps/web/e2e/canvas.spec.ts',
+    ],
+  },
+  {
+    name: '메뉴 · 화면 · 시작',
+    about:
+      '메뉴와 툴바, 화면 언어, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
+    paths: [
+      'packages/editor/src/ui/',
+      'packages/editor/src/examples/',
+      'packages/editor/src/version.test.ts',
+      'apps/web/src/shell/messages.test.ts',
+      'apps/web/e2e/examples.spec.ts',
+      'apps/web/e2e/boot.spec.ts',
+      'apps/web/e2e/mobile.spec.ts',
+      'apps/web/e2e/smoke.spec.ts',
+    ],
+  },
+  {
+    name: '파일',
+    about:
+      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 임시 보관, 탭 잠금, 최근 파일, PNG 내보내기 → [[01-file-format]], [[06-web]]',
+    paths: [
+      'packages/core/src/format/',
+      'packages/core/node/golden.test.ts',
+      'packages/editor/src/create-editor.test.ts',
+      'apps/web/src/',
+      'apps/web/e2e/files.spec.ts',
+    ],
+  },
+  {
+    name: '레이아웃 · 그리기 · 글자',
+    about: '블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋 → [[02-layout]]',
+    paths: [
+      'packages/core/src/layout/',
+      'packages/core/src/render/render-doc',
+      'packages/core/src/text/',
+      'packages/fonts/',
+    ],
+  },
+  {
+    name: '성능',
+    about: '그리기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]',
+    paths: ['.bench.ts'],
+  },
+];
+
+function areaOf(path) {
+  const area = areas.find((a) =>
+    a.paths.some((p) => (p.startsWith('.') ? path.endsWith(p) : path.startsWith(p))),
+  );
+  if (area === undefined) {
+    console.error(`${path} is in no area. Add it to \`areas\` in src/scripts/test-list.mjs.`);
+    process.exit(1);
+  }
+  return area.name;
+}
+const areaIndex = (name) => areas.findIndex((area) => area.name === name);
 const idPattern = String.raw`(?:AT|QA|BUG)-\d+|R-[A-Z]+-\d+|UX [A-Z]+\d+`;
 const leadingIds = new RegExp(
   String.raw`^((?:${idPattern})(?:\s*·\s*(?:${idPattern}))*)(\s*\([^)]*\))?:\s*(.*)$`,
@@ -114,10 +209,22 @@ const files = testFiles(join(src, 'apps'))
     const refs = unique(
       [...`${header(text)} ${describes.join(' ')}`.matchAll(anyId)].map((m) => m[0]),
     );
-    return { rel, text, tests, purpose, refs, type: type(rel), method: method(rel, text) };
+    return {
+      rel,
+      text,
+      tests,
+      purpose,
+      refs,
+      type: type(rel),
+      method: method(rel, text),
+      area: areaOf(rel),
+    };
   })
   .sort(
-    (a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type) || a.rel.localeCompare(b.rel),
+    (a, b) =>
+      areaIndex(a.area) - areaIndex(b.area) ||
+      typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type) ||
+      a.rel.localeCompare(b.rel),
   );
 
 const idTests = files.flatMap((file) =>
@@ -172,9 +279,54 @@ function coveredBy(id) {
   return ways.length > 0 ? ways.join('<br>') : '없음';
 }
 
-const counts = typeOrder.map((kind) => {
-  const of = files.filter((file) => file.type === kind);
-  return `| ${kind} | ${String(of.length)} | ${String(of.reduce((sum, file) => sum + file.tests.length, 0))} |`;
+const testCount = (of) => of.reduce((sum, file) => sum + file.tests.length, 0);
+const countRow = (name, of) =>
+  `| ${name} | ${typeOrder
+    .map((kind) => {
+      const n = testCount(of.filter((file) => file.type === kind));
+      return n === 0 ? '' : String(n);
+    })
+    .join(' | ')} | ${String(testCount(of))} |`;
+const counts = [
+  ...areas.map((area, i) =>
+    countRow(
+      `[[#2.${String(i + 1)} ${area.name}\\|${area.name}]]`,
+      files.filter((file) => file.area === area.name),
+    ),
+  ),
+  countRow('모두', files),
+];
+
+const idRow = ({ ids, what, file }) =>
+  `| ${link(ids[0])} | ${cell(what)} | ${ids.slice(1).map(link).join(', ') || '—'} | ${file.type} | \`${file.rel}\` |`;
+const fileRow = (file) =>
+  `| \`${file.rel}\` | ${cell(file.purpose)} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`;
+
+const areaSections = areas.flatMap((area, i) => {
+  const of = files.filter((file) => file.area === area.name);
+  const withIds = idTests.filter((test) => test.file.area === area.name);
+  return [
+    `### 2.${String(i + 1)} ${area.name}`,
+    '',
+    area.about,
+    '',
+    `파일 ${String(of.length)}개, 테스트 ${String(testCount(of))}개:`,
+    '',
+    '| 자리 | 목적/내용 | 근거 | 방법 | 유형 | 테스트 수 |',
+    '| --- | --- | --- | --- | --- | --- |',
+    ...of.map(fileRow),
+    '',
+    ...(withIds.length === 0
+      ? []
+      : [
+          `ID가 있는 테스트 ${String(withIds.length)}개:`,
+          '',
+          '| ID | 목적/내용 | 근거 | 유형 | 자리 |',
+          '| --- | --- | --- | --- | --- |',
+          ...withIds.map(idRow),
+          '',
+        ]),
+  ];
 });
 
 const lines = [
@@ -194,38 +346,26 @@ const lines = [
   '',
   '## 읽는 법',
   '',
+  '- **영역:** 테스트를 그것이 지키는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 이름에 ID를 단 테스트를 한 줄씩 보입니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
   '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
   '- **근거:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)',
-  '- **이름 규칙:** 근거가 하나인 테스트는 이름 앞에 ID를 적습니다(`AT-04: …`, 여럿이면 `BUG-03 · QA-19: …`). 그런 테스트는 2장에 한 줄씩 나옵니다. 모든 테스트 파일은 3장에 한 줄씩 나오고, 파일의 첫 주석이 목적/내용이 됩니다(주석이 없으면 `describe`의 이름).',
+  '- **이름 규칙:** 테스트의 이름 앞에 근거의 ID를 적습니다(`AT-04: …`, 여럿이면 `BUG-03 · QA-19: …`). 파일의 첫 주석이 그 파일의 목적/내용이 됩니다(주석이 없으면 `describe`의 이름).',
   '',
   '## 1. 요약',
   '',
-  '| 유형 | 파일 | 테스트 |',
-  '| --- | --- | --- |',
+  '영역마다 유형별 테스트 수입니다.',
+  '',
+  `| 영역 | ${typeOrder.join(' | ')} | 모두 |`,
+  `| --- | ${typeOrder.map(() => '---').join(' | ')} | --- |`,
   ...counts,
   '',
-  '## 2. ID가 있는 테스트',
+  '## 2. 영역마다',
   '',
-  '| ID | 목적/내용 | 근거 | 방법 | 유형 | 자리 |',
-  '| --- | --- | --- | --- | --- | --- |',
-  ...idTests.map(
-    ({ ids, what, file }) =>
-      `| ${link(ids[0])} | ${cell(what)} | ${ids.slice(1).map(link).join(', ') || '—'} | ${file.method} | ${file.type} | \`${file.rel}\` |`,
-  ),
+  ...areaSections,
+  '## 3. 테스트가 없는 ID',
   '',
-  '## 3. 파일마다',
-  '',
-  '| 자리 | 목적/내용 | 근거 | 방법 | 유형 | 테스트 수 |',
-  '| --- | --- | --- | --- | --- | --- |',
-  ...files.map(
-    (file) =>
-      `| \`${file.rel}\` | ${cell(file.purpose)} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`,
-  ),
-  '',
-  '## 4. 테스트가 없는 ID',
-  '',
-  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(3장의 근거 칸), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
+  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장 파일 표의 근거 칸), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
   '',
   '| ID | 다른 길로 맡은 것 |',
   '| --- | --- |',
