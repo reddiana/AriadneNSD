@@ -73,6 +73,9 @@ const shell = createWebShell({
     document.title = title;
   },
   log,
+  ...('storage' in navigator && 'persist' in navigator.storage
+    ? { persistStorage: () => navigator.storage.persist() }
+    : {}),
 });
 
 const appearanceChanged = createListeners<Parameters<typeof watchAppearance>[0]>();
@@ -133,6 +136,7 @@ function render(): void {
         onAppearance={appearanceChanged.add}
         onDragState={dragging.add}
         examples={examplesHost}
+        places={shell.places}
       />
     </StrictMode>,
   );

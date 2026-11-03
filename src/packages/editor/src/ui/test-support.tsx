@@ -3,6 +3,7 @@
 import { render } from '@testing-library/react';
 
 import { EditorApp } from './editor-app';
+import type { PlacesHost } from './places-modal';
 import type {
   ChromeState,
   CommandContext,
@@ -37,6 +38,8 @@ export type FakeEngine = {
   /** The ids passed to `commands.run`, in order. */
   readonly ran: string[];
   readonly drags: string[];
+  /** How many times the UI gave the keys back to the diagram (`handle.focus`). */
+  readonly focused: () => number;
   setStatus(status: Partial<DocStatus>): void;
   setChrome(state: Partial<ChromeState>): void;
   /** Tells the UI that "applies now" may have changed. */
@@ -56,7 +59,14 @@ export function fakeEngine(
   const documentSettings = new Map<string, unknown>();
   const ran: string[] = [];
   const drags: string[] = [];
-  let status: DocStatus = { name: 'example.ns.svg', dirty: false, readOnly: false, revision: 0 };
+  let focusCount = 0;
+  let status: DocStatus = {
+    name: 'example.ns.svg',
+    dirty: false,
+    readOnly: false,
+    revision: 0,
+    place: 'file',
+  };
   let chrome: ChromeState = {
     selection: null,
     notice: null,
@@ -117,7 +127,9 @@ export function fakeEngine(
     startBlockDrag: (kind) => {
       drags.push(kind);
     },
-    focus: () => undefined,
+    focus: () => {
+      focusCount += 1;
+    },
     onContextMenu: (listener) => {
       contextMenuListeners.add(listener);
       return () => contextMenuListeners.delete(listener);
@@ -128,6 +140,7 @@ export function fakeEngine(
     handle,
     ran,
     drags,
+    focused: () => focusCount,
     setStatus: (next) => {
       status = { ...status, ...next };
       for (const listener of statusListeners) listener(status);
@@ -166,7 +179,11 @@ export function memorySettings(initial: Readonly<Record<string, unknown>> = {}):
 /** Renders the whole UI around a fake engine. */
 export function renderApp(
   engine: FakeEngine,
-  options: { readonly locale?: 'en' | 'ko'; readonly settings?: SettingsStore } = {},
+  options: {
+    readonly locale?: 'en' | 'ko';
+    readonly settings?: SettingsStore;
+    readonly places?: PlacesHost;
+  } = {},
 ) {
   const canvas = document.createElement('div');
   canvas.dataset.testid = 'engine-canvas';
@@ -178,6 +195,7 @@ export function renderApp(
       locale={options.locale ?? 'en'}
       appearance={{ scheme: 'light', uiFont: 'sans-serif' }}
       settings={options.settings ?? memorySettings()}
+      {...(options.places === undefined ? {} : { places: options.places })}
     />,
   );
 }

@@ -54,6 +54,7 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
       dirty: false,
       readOnly: false,
       revision: 0,
+      place: 'file',
     });
     expect(handle.state().selection).toMatchObject({ kind: 'blocks', anchor: 'b1' });
     expect(handle.chromeState().selection).toBe('selection.empty');

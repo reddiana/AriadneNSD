@@ -25,6 +25,8 @@ import { ExamplesModal } from './examples-modal';
 import { KeyHint } from './key-hint';
 import { MenuBar } from './menu-bar';
 import { PickerMenu } from './picker-menu';
+import type { PlacesHost, PlacesRequest } from './places-modal';
+import { PlacesModal } from './places-modal';
 import type { UiMessageKey } from './messages';
 import { uiMessage } from './messages';
 import {
@@ -64,6 +66,11 @@ export type EditorAppProps = {
    * a first-time visitor with the examples modal. Without it there are no examples.
    */
   readonly examples?: ExamplesHost;
+  /**
+   * The open · save modal (R-WEB-09, UX BS1): the shell asks through it where to open or save,
+   * a file on this computer or a document in this browser. Without it there is no such modal.
+   */
+  readonly places?: PlacesHost;
 };
 
 /** What the shell does for the examples (05-screen-layout "예제", UX EX2 · EX3). */
@@ -159,6 +166,19 @@ function useMountedCanvas(canvas: HTMLElement) {
   return slotRef;
 }
 
+/** The shell's open · save request, or `null` while there is none. */
+function usePlacesRequest(places: PlacesHost | undefined): PlacesRequest | null {
+  const [request, setRequest] = useState<PlacesRequest | null>(() => places?.request() ?? null);
+  useEffect(() => {
+    if (places === undefined) return;
+    setRequest(places.request());
+    return places.onRequest(() => {
+      setRequest(places.request());
+    });
+  }, [places]);
+  return request;
+}
+
 /**
  * The whole editor screen: menu bar, toolbar, the engine's canvas, status bar, and the popups.
  * Shells render this once per document view.
@@ -172,6 +192,7 @@ export function EditorApp({
   formatMessage,
   manualUrl = 'manual/',
   examples,
+  places,
 }: EditorAppProps): ReactElement {
   const [popup, setPopup] = useState<Popup | null>(
     examples?.isFirstVisit === true ? 'examples' : null,
@@ -185,6 +206,17 @@ export function EditorApp({
   >(null);
   const slotRef = useMountedCanvas(canvas);
   const { dialog, picker } = useChromeState(handle);
+  const placesRequest = usePlacesRequest(places);
+  // When the open · save modal closes, the keys go back to the diagram, as after other popups.
+  const hadPlaces = useRef(false);
+  useEffect(() => {
+    if (placesRequest !== null) {
+      hadPlaces.current = true;
+    } else if (hadPlaces.current) {
+      hadPlaces.current = false;
+      handle.focus();
+    }
+  }, [placesRequest, handle]);
 
   useEffect(
     () =>
@@ -351,12 +383,23 @@ export function EditorApp({
           <ContextMenu key={contextMenu.key} request={contextMenu} onClose={closeContextMenu} />
         )}
         {picker && <PickerMenu key={picker.id} picker={picker} />}
+        {places && placesRequest && (
+          <div
+            className="ans-backdrop"
+            data-kind="places"
+            onPointerDown={(event) => {
+              if (event.target === event.currentTarget && !dialog) places.answer(null);
+            }}
+          >
+            <PlacesModal key={placesRequest.id} host={places} request={placesRequest} />
+          </div>
+        )}
         {dialog && (
           <div className="ans-backdrop" data-kind="dialog">
             <DialogModal key={dialog.id} dialog={dialog} />
           </div>
         )}
-        {!dialog && content && (
+        {!dialog && !placesRequest && content && (
           <div
             className="ans-backdrop"
             data-kind={popup}

@@ -281,6 +281,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
     dirty: session.state.dirty,
     readOnly: session.state.readOnly,
     revision: session.state.revision,
+    place: store.place ?? 'file',
   });
   const statusListeners = new Set<(s: DocStatus) => void>();
   let lastStatus = status();
@@ -290,7 +291,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
       next.name !== lastStatus.name ||
       next.dirty !== lastStatus.dirty ||
       next.readOnly !== lastStatus.readOnly ||
-      next.revision !== lastStatus.revision
+      next.revision !== lastStatus.revision ||
+      next.place !== lastStatus.place
     ) {
       lastStatus = next;
       for (const listener of [...statusListeners]) {
@@ -318,11 +320,16 @@ export function createEditor(options: EditorOptions): EditorHandle {
   let dialog: Dialog | null = null;
   let nextDialogId = 1;
   /** The answer of a dialog: the text (`''` for a question), the third button, or cancelled. */
-  type Answer = { readonly text: string } | 'other' | null;
+  type Answer = { readonly text: string } | 'other' | 'second' | null;
   const ask = (
     message: Message,
     input: string | null,
-    buttons: { readonly confirm?: Message; readonly other?: Message; readonly cancel?: Message },
+    buttons: {
+      readonly confirm?: Message;
+      readonly other?: Message;
+      readonly second?: Message;
+      readonly cancel?: Message;
+    },
   ): Promise<Answer> => {
     dialog?.answer(null);
     return new Promise((resolve) => {
@@ -349,6 +356,14 @@ export function createEditor(options: EditorOptions): EditorHandle {
         answerOther: () => {
           close('other');
         },
+        ...(buttons.second === undefined
+          ? {}
+          : {
+              second: buttons.second,
+              answerSecond: () => {
+                close('second');
+              },
+            }),
       };
       emitChrome();
     });
@@ -408,7 +423,11 @@ export function createEditor(options: EditorOptions): EditorHandle {
         return;
       case 'failed':
         log('Saving failed', result.detail);
-        session.notify('notice.saveFailed', 'warn');
+        if (result.message === undefined) {
+          session.notify('notice.saveFailed', 'warn');
+        } else {
+          session.notifyMessage(result.message, 'warn');
+        }
         return;
     }
   };
@@ -575,15 +594,15 @@ export function createEditor(options: EditorOptions): EditorHandle {
     },
     confirm: async (value, buttons = {}) => {
       const answer = await ask(value, null, buttons);
-      return answer !== null && answer !== 'other';
+      return answer !== null && typeof answer !== 'string';
     },
     choose: async (value, buttons) => {
       const answer = await ask(value, null, buttons);
-      return answer === null ? 'cancel' : answer === 'other' ? 'other' : 'confirm';
+      return answer === null ? 'cancel' : typeof answer === 'string' ? answer : 'confirm';
     },
     prompt: async (value, initial) => {
       const answer = await ask(value, initial, {});
-      return answer === null || answer === 'other' ? null : answer.text;
+      return answer === null || typeof answer === 'string' ? null : answer.text;
     },
     popupAnchor: () => {
       const at = view?.selectionAnchor() ?? view?.canvasAnchor() ?? { x: 0, y: 0 };

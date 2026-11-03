@@ -302,12 +302,13 @@ type SaveFonts = () => Promise<{ subsetter: Subsetter; ttf: Uint8Array }>;  // �
 interface DocumentStore {
   readonly name: string;                         // 파일 이름 (화면의 "예제.ns.svg"). 다른 이름으로 저장하면 바뀐다
   readonly canWriteInPlace: boolean;             // 원래 파일에 쓸 수 있는가 (웹의 Firefox · Safari는 false)
+  readonly place?: 'file' | 'browser';           // 문서가 사는 곳. 'browser'면 이름 옆에 "브라우저" 딱지 (웹의 브라우저 문서 → 06-web 1.3). 없으면 파일
   read(): Promise<string>;                       // .ns.svg 문자열
   write(svg: string): Promise<WriteResult>;      // 원래 자리에. 못 쓰면 셸이 내려받기 등으로 대신한다
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
   readOther(path: string): Promise<string | null>; // 다른 문서 (R-BLK-09). 읽지 못하면 null
 }
-type WriteResult = { ok: true; name: string } | { ok: false; reason: 'cancelled' | 'denied' | 'failed'; detail?: string };
+type WriteResult = { ok: true; name: string } | { ok: false; reason: 'cancelled' | 'denied' | 'failed'; detail?: string; message?: Message };  // message: 셸의 문장 (브라우저의 저장 공간이 모자람). 있으면 editor의 일반 알림 대신 보인다
 
 interface SettingsStore {
   get<T>(key: string): T | undefined;            // 동기: 시작할 때 셸이 모두 읽어 둔다
@@ -347,12 +348,12 @@ interface EditorHandle {
   focus(): void;                                 // 키보드 포커스를 다이어그램에, 편집 중이면 인라인 에디터에 (모달을 닫은 뒤)
   notify(message: Message, level?: 'info' | 'warn'): void;  // 셸의 알림을 상태 표시줄에 (알림은 이곳 하나 → 06-web 7)
   confirm(message: Message, buttons?: { confirm?: Message; cancel?: Message }): Promise<boolean>;  // 모달로 예/아니오를 묻는다. 확인 버튼이면 true
-  choose(message: Message, buttons: { confirm: Message; other: Message; cancel?: Message }): Promise<'confirm' | 'other' | 'cancel'>;  // 모달로 답이 셋인 것을 묻는다 (US1의 저장 · 버리고 열기 · 취소). 확인 버튼이 기본
+  choose(message: Message, buttons: { confirm: Message; other: Message; second?: Message; cancel?: Message }): Promise<'confirm' | 'other' | 'second' | 'cancel'>;  // 모달로 답이 셋(second가 있으면 넷)인 것을 묻는다 (US1의 저장 · 브라우저에 저장 · 버리고 열기 · 취소). 확인 버튼이 기본
   prompt(message: Message, value: string): Promise<string | null>;  // 모달로 글자를 묻는다 (value로 시작). 취소하면 null
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;  // 다이어그램이 컨텍스트 메뉴를 청했다 (오른쪽 클릭, Shift+F10 → 1장)
   dispose(): void;
 }
-type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름
+type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number; place: 'file' | 'browser' };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름. place: store의 place
 type ChromeState = {
   selection: Message | null;                     // 선택한 것 ("If 블록", "블록 3개")
   notice: Notice | null;                         // 상태 표시줄의 알림 { id, message, level: 'info' | 'warn' }
@@ -379,9 +380,11 @@ type Dialog = {
   input: string | null;                          // null이면 예/아니오 물음, 아니면 이 값으로 시작하는 입력 칸
   confirm: Message;                              // 확인 버튼의 이름 ("복원")
   cancel: Message;                               // 취소 버튼의 이름 ("버리기")
-  other: Message | null;                         // 셋째 버튼의 이름 (choose의 "버리고 열기"). 없으면 null. 셋째 · 취소 · 확인의 순서로 놓는다
+  other: Message | null;                         // 셋째 버튼의 이름 (choose의 "버리고 열기"). 없으면 null. 셋째 · 취소 · 넷째 · 확인의 순서로 놓는다
+  second?: Message;                              // 넷째 버튼의 이름 (choose의 "브라우저에 저장"). 없으면 없음
   answer(value: string | null): void;            // 사용자의 답: 입력한 글자(예/아니오면 ''), 취소면 null
   answerOther(): void;                           // 사용자가 셋째 버튼을 눌렀다
+  answerSecond?(): void;                         // 사용자가 넷째 버튼을 눌렀다
 };
 type ContextMenuRequest = { x: number; y: number };  // 컨텍스트 메뉴를 열 자리 (페이지 좌표)
 type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
@@ -406,7 +409,8 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - 새로 · 열기 · 최근 파일 · 내보내기(PNG) 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
 - 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 호출합니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
 - 예제([[01-requirements#^r-edit|R-EDIT-25]])는 `editor`가 내보내는 예제 목록에서 셸이 문서를 만들어 `open({ store, text: null, doc })`로 엽니다. 파일 이름은 화면 언어로 적은 예제의 이름(`병합 정렬.ns.svg`, `Merge sort.ns.svg`)이고 원래 파일은 없습니다. 예제의 텍스트도 화면 언어를 따릅니다: 문장 · 주석 · 메시지 · 헤더의 이름처럼 말이 든 예제 일곱(UART 명령 · 타이머 인터럽트 · 이진 탐색 · 미로 찾기 · 자판기 · 엘리베이터 · Raft 합의)은 한국어판과 영어판이 있고 블록의 자리는 같습니다. 코드만 든 셋(병합 정렬 · 다익스트라 · 퀵소트)은 하나입니다. 셸이 넘기는 `locale`(그림 문구의 언어와 같은 값)로 고릅니다. 예제 모달과 그것을 여는 도움말 › 예제… · 툴바의 "예제"는 `editor`의 화면에 있고, 셸은 예제를 여는 법과 첫 방문인지를 넘깁니다 → [[05-screen-layout|화면 배치]]
-- 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어, 파일로 연 문서는 묻지 않고 바꾸고 원래 파일에는 들어가지 않았음을 알립니다(그 파일을 다시 열면 복원을 묻습니다). 한 번도 저장하지 않은 새 문서(새 문서, 예제)는 다시 꺼낼 길이 없어 `choose`로 묻습니다: 저장 · 버리고 열기 · 취소. 저장이 끝나지 않으면(저장 창을 닫음, 실패) 바꾸지 않고, 버리면 그 로컬 백업을 지웁니다 → [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]], [[02-interaction-rules#다른 문서를 열 때]]
+- 열기 · 저장 창(어디서 열고 어디에 저장할지: 이 컴퓨터의 파일 / 이 브라우저)도 `editor`의 화면(`EditorApp`의 `places`, `PlacesModal`)에 있습니다. 셸이 요청(열기 · 저장, 처음 보일 쪽, 이름 칸의 값)을 두면 모달이 뜨고, 사용자의 답(이 컴퓨터 · 이 브라우저 문서 열기 · 이 이름으로 저장 · 닫기)을 셸이 받아 일합니다. 목록의 이름 바꾸기 · 내보내기 · 삭제 · 모두 내보내기 · 가져오기도 셸의 함수를 부릅니다. 이것을 넘기지 않는 셸(Obsidian, 데스크톱)에는 이 창이 없습니다 → [[06-web#1.3 브라우저 문서]]
+- 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어, 파일로 연 문서는 묻지 않고 바꾸고 원래 파일에는 들어가지 않았음을 알립니다(그 파일을 다시 열면 복원을 묻습니다). 한 번도 저장하지 않은 새 문서(새 문서, 예제)는 다시 꺼낼 길이 없어 `choose`로 묻습니다: 저장 · 버리고 열기 · 취소(웹은 브라우저에 저장을 더해 넷 → [[06-web#2. 로컬 백업과 자동 저장]]). 저장이 끝나지 않으면(저장 창을 닫음, 실패) 바꾸지 않고, 버리면 그 로컬 백업을 지웁니다 → [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]], [[02-interaction-rules#다른 문서를 열 때]]
 - 열 수 없는 텍스트(모델이 없는 SVG, 프로토타입의 파일, 깨진 파일, 더 새 버전의 형식)를 받으면 `open`은 문서를 바꾸지 않고 `false`를 돌려주며 이유를 상태 표시줄에 보입니다 → [[01-file-format#1. 확장자와 판별]]
 
 ```mermaid

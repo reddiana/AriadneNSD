@@ -16,6 +16,11 @@ export interface DocumentStore {
   readonly name: string;
   /** Whether the original file can be written (false in Firefox and Safari on the web). */
   readonly canWriteInPlace: boolean;
+  /**
+   * Addition: where the document lives when it is not a file. `browser`: a document kept in this
+   * browser (R-WEB-09); the UI shows a chip next to its name. Absent: a file.
+   */
+  readonly place?: DocumentPlace;
   read(): Promise<string>;
   /** Writes to the original place. If it cannot, the shell does something else (download). */
   write(svg: string): Promise<WriteResult>;
@@ -31,7 +36,15 @@ export type WriteResult =
       readonly ok: false;
       readonly reason: 'cancelled' | 'denied' | 'failed';
       readonly detail?: string;
+      /**
+       * Addition: the shell's own words for the failure (the browser storage is full), shown
+       * instead of the editor's general notice.
+       */
+      readonly message?: Message;
     };
+
+/** Where a document lives: a file, or a document kept in this browser (R-WEB-09). */
+export type DocumentPlace = 'file' | 'browser';
 
 /** The user settings the shell keeps (03-editor 6). Reading is synchronous. */
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- a contract the shell implements (coding guide 4)
@@ -167,6 +180,8 @@ export type DocStatus = {
   readonly readOnly: boolean;
   /** Grows by one whenever the content or the view state changes. */
   readonly revision: number;
+  /** Addition: the store's `place` (`file` when it has none). */
+  readonly place: DocumentPlace;
 };
 
 /** A short message in the status bar (03-editor 3: "막지 않고 알린다"). */
@@ -252,10 +267,14 @@ export type Dialog = {
   readonly cancel: Message;
   /** A third button between "do it" and "cancel" (`choose`), or `null`. */
   readonly other: Message | null;
+  /** A fourth button between "cancel" and "do it" (`choose` with `second`). Absent: none. */
+  readonly second?: Message;
   /** The user's answer: the text (or `''` for a yes/no question), or `null` when cancelled. */
   answer(value: string | null): void;
   /** The user pressed the third button (`other`). */
   answerOther(): void;
+  /** The user pressed the fourth button (`second`). */
+  answerSecond?: () => void;
 };
 
 /** Where the context menu opens, in page (client) coordinates. */
@@ -311,12 +330,18 @@ export interface EditorHandle {
   ): Promise<boolean>;
   /**
    * Addition: asks a question with three answers in a modal: the confirm button (the default),
-   * a third button `other`, or cancel (Esc, the close button).
+   * a third button `other`, or cancel (Esc, the close button). With `second`, a fourth button
+   * sits between cancel and confirm (UX US1: "Save in Browser").
    */
   choose(
     message: Message,
-    buttons: { readonly confirm: Message; readonly other: Message; readonly cancel?: Message },
-  ): Promise<'confirm' | 'other' | 'cancel'>;
+    buttons: {
+      readonly confirm: Message;
+      readonly other: Message;
+      readonly second?: Message;
+      readonly cancel?: Message;
+    },
+  ): Promise<'confirm' | 'other' | 'second' | 'cancel'>;
   /** Addition: asks for a text in a modal. Resolves `null` when cancelled. */
   prompt(message: Message, value: string): Promise<string | null>;
   /** Addition: the diagram asks for the context menu (right click, Shift+F10). */

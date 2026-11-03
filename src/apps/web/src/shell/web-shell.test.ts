@@ -1,4 +1,7 @@
+import type { Doc } from '@ariadne-nsd/core';
 import { assembleSvgFile, createDoc, renderDoc } from '@ariadne-nsd/core';
+import { examples } from '@ariadne-nsd/editor';
+import { unzipSync } from 'fflate';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -6,32 +9,36 @@ import type {
   DocStatus,
   EditorHandle,
   OpenedDocument,
+  PlacesAnswer,
+  PlacesRequest,
   WriteResult,
 } from '../editor-contract';
 import type { BrowserDb } from '../storage/browser-db';
 import { memoryDb } from '../storage/browser-db';
-import { chooseFileWithInput } from '../files/file-fallback';
+import { chooseFileWithInput, chooseFilesWithInput, download } from '../files/file-fallback';
 import { createSettingsStore } from '../storage/settings-store';
 import type { Channel, TabMessage } from './tab-lock';
 import type { Clock } from './timers';
-import { createWebShell, shellCommandIds } from './web-shell';
+import { autosaveDelay } from './timers';
+import { createWebShell, placeSideKey, shellCommandIds } from './web-shell';
 
 vi.mock('../files/file-fallback', () => ({
   download: vi.fn(),
   chooseFileWithInput: vi.fn(),
+  chooseFilesWithInput: vi.fn(),
   documentMediaType: 'image/svg+xml',
 }));
 
 /** A saved file of a new document, made by core (without a font: the shell does not read it). */
 const newDoc = createDoc();
-const savedFile = assembleSvgFile({
-  doc: newDoc,
-  drawing: renderDoc(newDoc).svg,
-  fonts: [],
-});
+const savedFile = fileOf(newDoc);
+
+function fileOf(doc: Doc): string {
+  return assembleSvgFile({ doc, drawing: renderDoc(doc).svg, fonts: [] });
+}
 
 /** An editor that only keeps the status, enough to drive the shell. */
-function fakeEditor(answer: boolean): EditorHandle & {
+type FakeEditor = EditorHandle & {
   edit: () => void;
   opened: OpenedDocument[];
   /** The status bar messages the shell sent, oldest first. */
@@ -39,10 +46,17 @@ function fakeEditor(answer: boolean): EditorHandle & {
   /** The questions with three answers the shell asked, oldest first (UX US1). */
   asked: string[];
   /** What the next `choose` answers. Cancel when empty. */
-  choices: ('confirm' | 'other' | 'cancel')[];
+  choices: ('confirm' | 'other' | 'second' | 'cancel')[];
+  /** What the next `prompt` answers. The suggested value when empty. */
+  prompts: (string | null)[];
+  /** The text `save` and `saveAs` write. */
+  file: string;
+  saveAs: () => Promise<WriteResult>;
 
   commands: { register: (spec: CommandSpec) => () => void; specs: Map<string, CommandSpec> };
-} {
+};
+
+function fakeEditor(answer: boolean): FakeEditor {
   let doc: OpenedDocument | null = null;
   let status: DocStatus = { name: '', dirty: false, readOnly: false, revision: 0 };
   const listeners = new Set<(status: DocStatus) => void>();
@@ -56,12 +70,15 @@ function fakeEditor(answer: boolean): EditorHandle & {
   const opened: OpenedDocument[] = [];
   const notices: string[] = [];
   const asked: string[] = [];
-  const choices: ('confirm' | 'other' | 'cancel')[] = [];
-  return {
+  const choices: ('confirm' | 'other' | 'second' | 'cancel')[] = [];
+  const prompts: (string | null)[] = [];
+  const editor: FakeEditor = {
+    file: savedFile,
     opened,
     notices,
     asked,
     choices,
+    prompts,
     notify: (message) => {
       notices.push(typeof message === 'string' ? message : message.key);
     },
@@ -70,7 +87,8 @@ function fakeEditor(answer: boolean): EditorHandle & {
       asked.push(typeof message === 'string' ? message : message.key);
       return Promise.resolve(choices.shift() ?? 'cancel');
     },
-    prompt: (_message, value) => Promise.resolve(value),
+    prompt: (_message, value) =>
+      Promise.resolve(prompts.length === 0 ? value : (prompts.shift() ?? null)),
     commands: {
       specs,
       register(spec) {
@@ -97,26 +115,38 @@ function fakeEditor(answer: boolean): EditorHandle & {
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
-    serialize: () => Promise.resolve(savedFile),
+    serialize: () => Promise.resolve(editor.file),
     snapshot: () => '{"snapshot":true}',
     async save(): Promise<WriteResult> {
       if (doc === null) {
         throw new Error('no document');
       }
-      const result = await doc.store.write(savedFile);
+      const result = await doc.store.write(editor.file);
+      if (result.ok) {
+        update({ name: result.name, dirty: false });
+      }
+      return result;
+    },
+    async saveAs(): Promise<WriteResult> {
+      if (doc === null) {
+        throw new Error('no document');
+      }
+      const result = await doc.store.writeAs(editor.file, doc.store.name);
       if (result.ok) {
         update({ name: result.name, dirty: false });
       }
       return result;
     },
     setReadOnly: (readOnly) => {
-      update({ readOnly });
+      // The engine's status reads the store's name, so a renamed store shows here too.
+      update({ readOnly, ...(doc === null ? {} : { name: doc.store.name }) });
     },
     setAppearance: () => undefined,
     edit: () => {
       update({ dirty: true });
     },
   };
+  return editor;
 }
 
 function manualClock(): Clock & { advance: (milliseconds: number) => void } {
@@ -154,6 +184,7 @@ type SetupOptions = {
   canWriteInPlace?: boolean;
   channel?: Channel | null;
   tabId?: string;
+  persistStorage?: () => Promise<boolean>;
 };
 
 function setup(options: SetupOptions = {}) {
@@ -180,10 +211,25 @@ function setup(options: SetupOptions = {}) {
     now: () => 1000,
     setTitle: (title) => titles.push(title),
     log: (detail) => logs.push(detail),
+    ...(options.persistStorage === undefined ? {} : { persistStorage: options.persistStorage }),
   });
   const editor = fakeEditor(options.confirm ?? true);
   editor.open(shell.initialDocument());
-  return { shell, editor, db, clock, titles, logs, settings };
+  // The open · save modal (UX BS1): answers from `placeAnswers`, or "this computer" when empty.
+  const placeAnswers: PlacesAnswer[] = [];
+  const placeRequests: PlacesRequest[] = [];
+  shell.places.onRequest(() => {
+    const request = shell.places.request();
+    if (request === null) {
+      return;
+    }
+    placeRequests.push(request);
+    const answer = placeAnswers.length === 0 ? { kind: 'computer' as const } : placeAnswers.shift();
+    queueMicrotask(() => {
+      shell.places.answer(answer ?? null);
+    });
+  });
+  return { shell, editor, db, clock, titles, logs, settings, placeAnswers, placeRequests };
 }
 
 /** A file handle in memory, as Chromium gives it. `permission` is what queryPermission answers. */
@@ -270,6 +316,8 @@ function withVersion(version: number): string {
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.mocked(chooseFileWithInput).mockReset();
+  vi.mocked(chooseFilesWithInput).mockReset();
+  vi.mocked(download).mockReset();
 });
 
 describe('web shell', () => {
@@ -891,5 +939,362 @@ describe('web shell: export, language, tabs', () => {
     await settle();
     expect(second.editor.status().readOnly).toBe(false);
     expect(second.editor.notices.at(-1)).toBe('The other tab closed. You can edit this file now.');
+  });
+});
+
+/** A browser document as an earlier page left it. */
+function browserDocument(key: string, name: string, text = savedFile) {
+  return { key, name, text, savedAt: 1, size: text.length };
+}
+
+/** A database whose document writes are counted, and can be made to report a full storage. */
+function countingDb() {
+  const base = memoryDb();
+  const control = { puts: 0, result: 'ok' as 'ok' | 'full' | 'failed' };
+  const db: BrowserDb = {
+    ...base,
+    putDocument: async (document) => {
+      control.puts += 1;
+      return control.result === 'ok' ? base.putDocument(document) : control.result;
+    },
+  };
+  return { db, control };
+}
+
+describe('web shell: documents in this browser (R-WEB-09)', () => {
+  it('T-0881 · R-WEB-09 · UX BS1: a first save asks where, on this computer at first, named after the first diagram', async () => {
+    const { shell, editor, db, titles, settings, placeAnswers, placeRequests } = setup();
+    await shell.start(editor);
+    const example = examples.find((item) => item.id === 'binary-search');
+    editor.file = fileOf(example?.build({ headStyle: 'title', locale: 'en' }) ?? newDoc);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: ' Merge Sort ' });
+    expect(await editor.save()).toEqual({ ok: true, name: 'Merge Sort' });
+    expect(placeRequests[0]).toMatchObject({
+      mode: 'save',
+      side: 'computer',
+      name: 'main()',
+      currentKey: null,
+      isDownload: true,
+    });
+    const [saved] = await db.documents();
+    expect(saved).toMatchObject({ name: 'Merge Sort', text: editor.file, savedAt: 1000 });
+    expect(saved?.size).toBe(new TextEncoder().encode(editor.file).length);
+    expect(editor.opened.at(-1)?.store.place).toBe('browser');
+    expect(titles.at(-1)).toBe('Merge Sort – AriadneNSD');
+    await settle();
+    expect(editor.commands.specs.get('file.recent.1')?.title).toBe('Merge Sort (Browser)');
+    expect(await db.backups()).toHaveLength(0);
+    expect(settings.get(placeSideKey)).toBe('browser');
+    // The modal opens on the side used last, with the document's own name.
+    placeAnswers.push(null);
+    await editor.saveAs();
+    expect(placeRequests[1]).toMatchObject({ side: 'browser', name: 'Merge Sort' });
+    expect(placeRequests[1]?.currentKey).toBe(saved?.key);
+  });
+
+  it('T-0882 · UX BS2: Ctrl+S and auto save write the browser document, also where files cannot be written', async () => {
+    const { db, control } = countingDb();
+    const { shell, editor, clock, placeAnswers } = setup({ db });
+    await shell.start(editor);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: 'Merge Sort' });
+    await editor.save();
+    editor.edit();
+    await editor.save();
+    expect(control.puts).toBe(2);
+    expect(await db.documents()).toHaveLength(1);
+    editor.edit();
+    clock.advance(autosaveDelay);
+    await settle();
+    expect(control.puts).toBe(3);
+    expect(editor.status().dirty).toBe(false);
+  });
+
+  it('T-0883 · R-WEB-09: a taken name asks to replace it; no asks again for a name', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('old', 'Merge Sort'));
+    const { shell, editor, placeAnswers, placeRequests } = setup({ db, confirm: false });
+    await shell.start(editor);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: 'merge sort' }, { kind: 'save', name: 'Quick Sort' });
+    await editor.save();
+    expect(placeRequests[1]).toMatchObject({ name: 'merge sort' });
+    expect((await db.documents()).map((item) => item.name).sort()).toEqual([
+      'Merge Sort',
+      'Quick Sort',
+    ]);
+  });
+
+  it('T-0884 · R-WEB-09: replacing a taken name writes over that document', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('old', 'Merge Sort'));
+    const { shell, editor, placeAnswers } = setup({ db, confirm: true });
+    await shell.start(editor);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: 'MERGE SORT' });
+    await editor.save();
+    const documents = await db.documents();
+    expect(documents.map((item) => [item.key, item.name])).toEqual([['old', 'MERGE SORT']]);
+    expect(editor.opened.at(-1)?.store.name).toBe('MERGE SORT');
+  });
+
+  it('T-0885 · R-WEB-09: a full storage says so in its own words and the document stays unsaved', async () => {
+    const { db, control } = countingDb();
+    control.result = 'full';
+    const { shell, editor, placeAnswers } = setup({ db });
+    await shell.start(editor);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: 'Merge Sort' });
+    expect(await editor.save()).toEqual({
+      ok: false,
+      reason: 'failed',
+      detail: 'browser storage is full',
+      message:
+        'The browser’s storage is full, so it could not be saved. Save it to a file instead.',
+    });
+    expect(editor.status().dirty).toBe(true);
+    control.result = 'failed';
+    placeAnswers.push({ kind: 'save', name: 'Merge Sort' });
+    expect(await editor.save()).toMatchObject({ ok: false, reason: 'failed' });
+  });
+
+  it('T-0886: 06-web 1.3: the first save to this browser asks the browser to keep the storage, once', async () => {
+    const persist = vi.fn(() => Promise.resolve(false));
+    const { shell, editor, placeAnswers, logs } = setup({ persistStorage: persist });
+    await shell.start(editor);
+    editor.edit();
+    placeAnswers.push({ kind: 'save', name: 'A' });
+    await editor.save();
+    editor.edit();
+    await editor.save();
+    expect(persist).toHaveBeenCalledTimes(1);
+    expect(logs).toContain('Persistent storage not granted');
+    const failing = setup({ persistStorage: () => Promise.reject(new Error('no')) });
+    await failing.shell.start(failing.editor);
+    failing.editor.edit();
+    failing.placeAnswers.push({ kind: 'save', name: 'A' });
+    expect((await failing.editor.save()).ok).toBe(true);
+    expect(failing.logs).toContain('Persistent storage request failed: Error: no');
+  });
+
+  it('T-0887 · R-WEB-09 · UX BS1: Open… opens a document in this browser and remembers the side', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    const { shell, editor, settings, placeAnswers, placeRequests } = setup({ db });
+    await shell.start(editor);
+    placeAnswers.push({ kind: 'open', key: 'b1' });
+    await shell.openFromPicker();
+    expect(placeRequests[0]).toMatchObject({ mode: 'open', side: 'computer', currentKey: null });
+    expect(editor.opened.at(-1)?.text).toBe(savedFile);
+    expect(editor.opened.at(-1)?.store.place).toBe('browser');
+    expect(editor.status().name).toBe('Merge Sort');
+    expect(settings.get(placeSideKey)).toBe('browser');
+    placeAnswers.push(null);
+    await shell.openFromPicker();
+    expect(placeRequests[1]).toMatchObject({ side: 'browser', currentKey: 'b1' });
+    // Recent files open it again from the browser; a deleted one is marked missing.
+    await db.deleteDocument('b1');
+    await editor.commands.specs.get('file.recent.1')?.run(undefined);
+    expect(editor.notices.at(-1)).toBe('“Merge Sort” is no longer in this browser.');
+    expect(editor.commands.specs.get('file.recent.1')?.when(undefined)).toBe(
+      'The file was moved or deleted.',
+    );
+  });
+
+  it('T-0888 · UX BS3: renames a document, also the open one and its recent entry', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    await db.putDocument(browserDocument('b2', 'Quick Sort'));
+    const { shell, editor, placeAnswers, titles } = setup({ db });
+    await shell.start(editor);
+    placeAnswers.push({ kind: 'open', key: 'b1' });
+    await shell.openFromPicker();
+    editor.prompts.push('Bubble Sort');
+    await shell.places.rename('b1');
+    expect((await db.document('b1'))?.name).toBe('Bubble Sort');
+    expect(editor.opened.at(-1)?.store.name).toBe('Bubble Sort');
+    expect(titles.at(-1)).toBe('Bubble Sort – AriadneNSD');
+    expect(editor.commands.specs.get('file.recent.1')?.title).toBe('Bubble Sort (Browser)');
+    editor.prompts.push('quick sort');
+    await shell.places.rename('b1');
+    expect(editor.notices.at(-1)).toBe('“Quick Sort” already exists in this browser.');
+    editor.prompts.push(null);
+    await shell.places.rename('b2');
+    expect((await db.document('b2'))?.name).toBe('Quick Sort');
+    await shell.places.rename('missing');
+  });
+
+  it('T-0889 · UX BS3: deletes after asking; the open document stays as a new unsaved one', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    await db.putDocument(browserDocument('b2', 'Quick Sort'));
+    await db.putBackup({ key: 'b2', name: 'Quick Sort', snapshot: '{}', savedAt: 1 });
+    const { shell, editor, placeAnswers } = setup({ db });
+    await shell.start(editor);
+    placeAnswers.push({ kind: 'open', key: 'b1' });
+    await shell.openFromPicker();
+    await shell.places.remove('b2');
+    expect(await db.document('b2')).toBeUndefined();
+    expect(await db.backup('b2')).toBeUndefined();
+    await shell.places.remove('b1');
+    expect(await db.documents()).toEqual([]);
+    const reopened = editor.opened.at(-1);
+    expect(reopened?.restored).toBe('{"snapshot":true}');
+    expect(reopened?.store.place).toBe('file');
+    expect(reopened?.store.name).toBe('Merge Sort.ns.svg');
+    expect(editor.status().dirty).toBe(true);
+    expect(editor.notices.at(-1)).toContain('“Merge Sort” was deleted from this browser.');
+    expect(editor.commands.specs.has('file.recent.empty')).toBe(true);
+  });
+
+  it('T-0890 · UX BS3: a delete that is not confirmed keeps the document', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    const { shell, editor } = setup({ db, confirm: false });
+    await shell.start(editor);
+    await shell.places.remove('b1');
+    await shell.places.remove('missing');
+    expect(await db.documents()).toHaveLength(1);
+  });
+
+  it('T-0891 · UX BS3: exports one document to a file of its name', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    await shell.places.exportDocument('b1');
+    expect(vi.mocked(download)).toHaveBeenCalledWith(
+      'Merge Sort.ns.svg',
+      savedFile,
+      'image/svg+xml',
+    );
+    expect(editor.notices.at(-1)).toBe('Exported “Merge Sort.ns.svg”.');
+    vi.mocked(download).mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    await shell.places.exportDocument('b1');
+    expect(editor.notices.at(-1)).toBe('Could not export “Merge Sort”.');
+    await shell.places.exportDocument('missing');
+  });
+
+  it('T-0892 · UX BS4: exports all to one zip and imports it back with numbered names', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    await db.putDocument(browserDocument('b2', 'Quick Sort'));
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    expect((await shell.places.documents()).map((item) => item.name)).toEqual([
+      'Merge Sort',
+      'Quick Sort',
+    ]);
+    await shell.places.exportAll();
+    const [name, blob, type] = vi.mocked(download).mock.calls[0] ?? [];
+    expect(name).toBe('AriadneNSD-1970-01-01.zip');
+    expect(type).toBe('application/zip');
+    const bytes = new Uint8Array(await (blob as Blob).arrayBuffer());
+    expect(Object.keys(unzipSync(bytes)).sort()).toEqual([
+      'Merge Sort.ns.svg',
+      'Quick Sort.ns.svg',
+    ]);
+    expect(editor.notices.at(-1)).toBe('Exported 2 documents to “AriadneNSD-1970-01-01.zip”.');
+    vi.mocked(chooseFilesWithInput).mockResolvedValue([
+      new File([bytes], 'backup.zip'),
+      new File(['<svg xmlns="http://www.w3.org/2000/svg"/>'], 'plain.svg'),
+      new File([savedFile], 'Heap Sort.ns.svg'),
+    ]);
+    await shell.places.importFiles();
+    expect((await db.documents()).map((item) => item.name).sort()).toEqual([
+      'Heap Sort',
+      'Merge Sort',
+      'Merge Sort (2)',
+      'Quick Sort',
+      'Quick Sort (2)',
+    ]);
+    expect(editor.notices.at(-1)).toBe(
+      'Imported 3 documents into this browser. Not imported, as they cannot be edited: plain.svg',
+    );
+  });
+
+  it('T-0893 · UX BS4: nothing to export or import does nothing; a file that cannot be read is told', async () => {
+    const { db, control } = countingDb();
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    await shell.places.exportAll();
+    expect(vi.mocked(download)).not.toHaveBeenCalled();
+    vi.mocked(chooseFilesWithInput).mockResolvedValue([]);
+    await shell.places.importFiles();
+    const broken = new File(['x'], 'broken.zip');
+    vi.spyOn(broken, 'arrayBuffer').mockRejectedValue(new Error('gone'));
+    vi.mocked(chooseFilesWithInput).mockResolvedValue([broken]);
+    await shell.places.importFiles();
+    expect(editor.notices.at(-1)).toBe('Could not read “broken.zip”.');
+    control.result = 'full';
+    vi.mocked(chooseFilesWithInput).mockResolvedValue([new File([savedFile], 'a.ns.svg')]);
+    await shell.places.importFiles();
+    expect(editor.notices.at(-1)).toBe(
+      'The browser’s storage is full, so it could not be saved. Save it to a file instead.',
+    );
+    control.result = 'ok';
+    await db.putDocument(browserDocument('b1', 'A'));
+    vi.mocked(download).mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    await shell.places.exportAll();
+    expect(editor.notices.at(-1)).toBe('Could not export “AriadneNSD-1970-01-01.zip”.');
+  });
+
+  it('T-0894 · UX US1: "Save in Browser" saves the new document without the modal, then opens the other', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Untitled'));
+    const { shell, editor, placeRequests } = setup({ db });
+    await shell.start(editor);
+    editor.edit();
+    editor.choices.push('second');
+    await shell.newDocument();
+    expect(placeRequests).toEqual([]);
+    expect((await db.documents()).map((item) => item.name).sort()).toEqual([
+      'Untitled',
+      'Untitled (2)',
+    ]);
+    expect(editor.notices.at(-1)).toBe('Saved “Untitled (2)” in this browser.');
+    expect(editor.status().name).toBe('Untitled.ns.svg');
+  });
+
+  it('T-0895 · UX US1: "Save in Browser" that fails keeps the new document', async () => {
+    const { db, control } = countingDb();
+    control.result = 'full';
+    const { shell, editor } = setup({ db });
+    await shell.start(editor);
+    editor.edit();
+    const before = editor.opened.length;
+    editor.choices.push('second');
+    await shell.newDocument();
+    expect(editor.opened.length).toBe(before);
+  });
+
+  it('T-0896 · R-WEB-03: the backup of a browser document is restored as that browser document', async () => {
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    await db.putBackup({ key: 'b1', name: 'Merge Sort', snapshot: '{"edited":1}', savedAt: 5 });
+    const { shell, editor } = setup({ db, confirm: true });
+    await shell.start(editor);
+    expect(editor.opened.at(-1)?.restored).toBe('{"edited":1}');
+    expect(editor.opened.at(-1)?.store.place).toBe('browser');
+  });
+
+  it('T-0897 · R-WEB-09: a browser document open in another tab is view only here', async () => {
+    const connect = hub();
+    const db = memoryDb();
+    await db.putDocument(browserDocument('b1', 'Merge Sort'));
+    const first = setup({ db, channel: connect(), tabId: 'one' });
+    await first.shell.start(first.editor);
+    first.placeAnswers.push({ kind: 'open', key: 'b1' });
+    await first.shell.openFromPicker();
+    const second = setup({ db, channel: connect(), tabId: 'two' });
+    await second.shell.start(second.editor);
+    second.placeAnswers.push({ kind: 'open', key: 'b1' });
+    await second.shell.openFromPicker();
+    expect(second.editor.opened.at(-1)?.readOnly).toBe(true);
   });
 });

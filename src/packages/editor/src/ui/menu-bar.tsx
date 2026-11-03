@@ -145,6 +145,11 @@ export function MenuBar(): ReactElement {
       </nav>
       <span className="ans-file-name" data-testid="file-name">
         {status.name}
+        {status.place === 'browser' && (
+          <span className="ans-place-chip" title={text('place.browserTip')}>
+            {text('place.browser')}
+          </span>
+        )}
         {status.dirty && (
           <span
             className="ans-dirty"

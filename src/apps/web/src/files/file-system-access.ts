@@ -45,6 +45,8 @@ const documentType: PickerType = {
 
 const pngType: PickerType = { description: 'PNG', accept: { 'image/png': ['.png'] } };
 
+const zipType: PickerType = { description: 'ZIP', accept: { 'application/zip': ['.zip'] } };
+
 /** The picker id: the browser remembers the last folder per id. */
 const pickerId = 'ariadne-nsd';
 
@@ -73,6 +75,11 @@ export async function pickDocumentToSave(suggestedName: string): Promise<Picked>
 /** Shows the save dialog for an exported PNG. */
 export async function pickPngToSave(suggestedName: string): Promise<Picked> {
   return pickToSave(suggestedName, pngType);
+}
+
+/** Shows the save dialog for the zip of all browser documents (R-WEB-09). */
+export async function pickZipToSave(suggestedName: string): Promise<Picked> {
+  return pickToSave(suggestedName, zipType);
 }
 
 async function pickToSave(suggestedName: string, type: PickerType): Promise<Picked> {

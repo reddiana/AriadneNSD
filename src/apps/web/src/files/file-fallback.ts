@@ -28,6 +28,32 @@ export function chooseFileWithInput(): Promise<File | null> {
   });
 }
 
+/**
+ * Shows the browser's file chooser for several files (Import from Files…, R-WEB-09) and resolves
+ * with them, or an empty list when the user closed it.
+ */
+export function chooseFilesWithInput(accept: ReadonlyArray<string>): Promise<ReadonlyArray<File>> {
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = accept.join(',');
+    input.style.display = 'none';
+    const finish = (files: ReadonlyArray<File>): void => {
+      input.remove();
+      resolve(files);
+    };
+    input.addEventListener('change', () => {
+      finish([...(input.files ?? [])]);
+    });
+    input.addEventListener('cancel', () => {
+      finish([]);
+    });
+    document.body.append(input);
+    input.click();
+  });
+}
+
 /** Saves `data` as a download named `name` (the browser's Downloads folder). */
 export function download(name: string, data: string | Blob, type: string): void {
   const blob = typeof data === 'string' ? new Blob([data], { type }) : data;

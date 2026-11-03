@@ -1,13 +1,20 @@
-// The shell's IndexedDB database (06-web 1.1, 2): recent files and local backups.
-// One database, two object stores. Both are keyed by the document key.
+// The shell's IndexedDB database (06-web 1.1, 1.3, 2): recent files, local backups and the
+// documents kept in this browser. One database, three object stores, all keyed by the document key.
 
+import type { BrowserDocument } from './browser-documents';
+import { newestFirst } from './browser-documents';
 import type { RecentFile } from './recent-files';
 import { forgetRecent, orderRecent, touchRecent } from './recent-files';
 
 const databaseName = 'ariadne-nsd-web';
-const databaseVersion = 1;
+/** 1: recent files and backups. 2: documents in this browser (R-WEB-09). */
+const databaseVersion = 2;
 const recentStore = 'recent';
 const backupStore = 'backups';
+const documentStore = 'documents';
+
+/** How a write of a browser document ended. `full`: the browser's storage quota is used up. */
+export type PutResult = 'ok' | 'full' | 'failed';
 
 /**
  * A local backup of one document (R-WEB-03): the model JSON from `snapshot()` of edits that are
@@ -33,6 +40,12 @@ export type BrowserDb = {
   readonly backup: (key: string) => Promise<Backup | undefined>;
   readonly putBackup: (backup: Backup) => Promise<void>;
   readonly deleteBackup: (key: string) => Promise<void>;
+  /** The documents kept in this browser (R-WEB-09), newest first. */
+  readonly documents: () => Promise<ReadonlyArray<BrowserDocument>>;
+  readonly document: (key: string) => Promise<BrowserDocument | undefined>;
+  /** Adds or replaces a document. Unlike the other writes it says how it went (a full quota). */
+  readonly putDocument: (document: BrowserDocument) => Promise<PutResult>;
+  readonly deleteDocument: (key: string) => Promise<void>;
 };
 
 /**
@@ -86,13 +99,44 @@ export async function openBrowserDb(onError: (detail: string) => void): Promise<
       ),
     putBackup: (backup) => guard('write backup', undefined, () => put(backupStore, backup)),
     deleteBackup: (key) => guard('delete backup', undefined, () => remove(backupStore, key)),
+    documents: () =>
+      guard('read documents', [], async () =>
+        newestFirst(await all<BrowserDocument>(documentStore)),
+      ),
+    document: (key) =>
+      guard('read document', undefined, () =>
+        request<BrowserDocument | undefined>(
+          database.transaction(documentStore).objectStore(documentStore).get(key),
+        ),
+      ),
+    putDocument: async (document) => {
+      try {
+        await put(documentStore, document);
+        return 'ok';
+      } catch (error) {
+        onError(`IndexedDB write document failed: ${String(error)}`);
+        return isQuotaError(error) ? 'full' : 'failed';
+      }
+    },
+    deleteDocument: (key) => guard('delete document', undefined, () => remove(documentStore, key)),
   };
+}
+
+/** Whether an IndexedDB failure is the browser's storage quota (R-WEB-09: tell the user). */
+export function isQuotaError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'name' in error &&
+    error.name === 'QuotaExceededError'
+  );
 }
 
 /** A database in memory, for when IndexedDB cannot be opened. */
 export function memoryDb(): BrowserDb {
   let recent: ReadonlyArray<RecentFile> = [];
   const backups = new Map<string, Backup>();
+  const documents = new Map<string, BrowserDocument>();
   return {
     recentFiles: () => Promise.resolve(recent),
     touchRecent: (entry) => {
@@ -117,6 +161,16 @@ export function memoryDb(): BrowserDb {
       backups.delete(key);
       return Promise.resolve();
     },
+    documents: () => Promise.resolve(newestFirst([...documents.values()])),
+    document: (key) => Promise.resolve(documents.get(key)),
+    putDocument: (document) => {
+      documents.set(document.key, document);
+      return Promise.resolve('ok');
+    },
+    deleteDocument: (key) => {
+      documents.delete(key);
+      return Promise.resolve();
+    },
   };
 }
 
@@ -139,7 +193,8 @@ function openDatabase(): Promise<IDBDatabase> {
     };
     opening.onupgradeneeded = () => {
       const database = opening.result;
-      for (const store of [recentStore, backupStore]) {
+      // Version 2 adds the documents store; the other stores and what is in them stay.
+      for (const store of [recentStore, backupStore, documentStore]) {
         if (!database.objectStoreNames.contains(store)) {
           database.createObjectStore(store, { keyPath: 'key' });
         }
