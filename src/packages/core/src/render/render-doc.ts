@@ -1,4 +1,6 @@
 // The whole rendering pipeline in one call (02-layout, rendering pipeline).
+import type { GlyphOutlines } from '@ariadne-nsd/fonts';
+
 import { layout } from '../layout/layout';
 import type { LayoutResult } from '../layout/types';
 import type { Doc } from '../model/types';
@@ -30,4 +32,24 @@ export function renderDoc(doc: Doc): Rendering {
   const { settings } = doc.content;
   const scene = buildScene(result, themeFor(settings.theme), settings.textKind);
   return { layout: result, scene, svg: toSvg(scene), codePoints: usedCodePoints(scene) };
+}
+
+/** The drawing part of a saved file and the code points its subset font must hold. */
+export type SavedDrawing = {
+  readonly svg: RenderedSvg;
+  readonly codePoints: ReadonlyArray<number>;
+};
+
+/**
+ * What a saved file draws (ADR-0018): the rendering as shown, or with `outlines` its text as the
+ * bundled font's outlines (R-FMT-10, the document setting `textOutlines`). Then the subset font
+ * holds only the characters of text that stays text (characters the font lacks).
+ */
+export function savedDrawing(rendering: Rendering, outlines: GlyphOutlines | null): SavedDrawing {
+  return outlines === null
+    ? { svg: rendering.svg, codePoints: rendering.codePoints }
+    : {
+        svg: toSvg(rendering.scene, { outlines }),
+        codePoints: usedCodePoints(rendering.scene, outlines),
+      };
 }

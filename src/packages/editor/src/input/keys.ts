@@ -137,6 +137,8 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   // File, view, help. The UI registers the palette, preferences and shortcut list commands.
   { keys: 'Ctrl+S', command: 'file.save' },
   { keys: 'Ctrl+Shift+S', command: 'file.saveAs' },
+  // A shell command (R-EXP-03): the web shell prints through its print view.
+  { keys: 'Ctrl+P', command: 'file.print' },
   { keys: '+', command: 'view.zoom.in' },
   { keys: '-', command: 'view.zoom.out' },
   { keys: '?', command: 'help.shortcuts' },

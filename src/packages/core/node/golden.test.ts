@@ -12,34 +12,38 @@
 // own code must not use (.dependency-cruiser.cjs, core-no-node-builtins).
 import { readdir, readFile } from 'node:fs/promises';
 
-import { blockFont } from '@ariadne-nsd/fonts';
-import type { Subsetter } from '@ariadne-nsd/fonts';
+import { blockFont, readGlyphOutlines } from '@ariadne-nsd/fonts';
+import type { GlyphOutlines, Subsetter } from '@ariadne-nsd/fonts';
 import { createNodeSubsetter, readFontFile } from '@ariadne-nsd/fonts/node';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Block, Doc, KeptSettings, Locale, Seq } from '../src/index';
-import { assembleSvgFile, openSvgFile, renderDoc } from '../src/index';
+import { assembleSvgFile, openSvgFile, renderDoc, savedDrawing } from '../src/index';
 
 const goldenDirectory = new URL('../golden/', import.meta.url);
 
 let subsetter: Subsetter;
 let ttf: Uint8Array;
+let outlines: GlyphOutlines;
 
 beforeAll(async () => {
   subsetter = await createNodeSubsetter();
   ttf = await readFontFile(blockFont.files.ttf);
+  outlines = readGlyphOutlines(ttf);
 });
 
 /** What saving writes for a document (the same steps as the editor's serializeDocument). */
 function save(doc: Doc, kept: KeptSettings | undefined): string {
-  const rendering = renderDoc(doc);
+  const isOutlined = doc.content.settings.textOutlines === true;
+  const drawn = savedDrawing(renderDoc(doc), isOutlined ? outlines : null);
   return assembleSvgFile({
     doc,
     ...(kept === undefined ? {} : { kept }),
-    drawing: rendering.svg,
-    fonts: [
-      { family: blockFont.familyName, woff: subsetter.subsetToWoff(ttf, rendering.codePoints) },
-    ],
+    drawing: drawn.svg,
+    fonts:
+      isOutlined && drawn.codePoints.length === 0
+        ? []
+        : [{ family: blockFont.familyName, woff: subsetter.subsetToWoff(ttf, drawn.codePoints) }],
   });
 }
 
@@ -233,6 +237,52 @@ const cases: ReadonlyArray<{
       ),
       'ko',
     ),
+  },
+  {
+    name: 'text-outlines',
+    // Text as outlines (R-FMT-10): bold (the called name), a halo (branch labels), Hangul, and a
+    // Han character the font lacks, which stays text with its subset font.
+    doc: {
+      content: {
+        settings: { ...settings, textOutlines: true },
+        diagrams: [
+          {
+            id: 'd1',
+            head: null,
+            body: seq(
+              {
+                id: 'b1',
+                kind: 'if',
+                text: '합계 > 0',
+                yes: { id: 'r1', body: seq(process('b2', 'print(x)')) },
+                no: { id: 'r2', body: seq(process('b3', '漢 stays text')) },
+              },
+              {
+                id: 'b4',
+                kind: 'call',
+                target: { kind: 'local', diagram: 'd2' },
+                args: 'n',
+                result: 'r',
+                siteFolds: [],
+              },
+            ),
+          },
+          { id: 'd2', head: { kind: 'method', text: 'twice(n)' }, body: seq(process('b5', 'n*2')) },
+        ],
+      },
+      view,
+    },
+  },
+  {
+    name: 'text-outlines-all',
+    // Every character is in the font: no text and no subset font is left.
+    doc: {
+      ...oneDiagram(process('b1', 'x = read()')),
+      content: {
+        settings: { ...settings, textOutlines: true },
+        diagrams: oneDiagram(process('b1', 'x = read()')).content.diagrams,
+      },
+    },
   },
 ];
 

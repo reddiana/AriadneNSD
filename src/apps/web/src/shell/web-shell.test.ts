@@ -117,6 +117,8 @@ function fakeEditor(answer: boolean): FakeEditor {
       return () => listeners.delete(listener);
     },
     serialize: () => Promise.resolve(editor.file),
+    serializeImage: () => Promise.resolve('<svg/>'),
+    rendering: () => renderDoc(createDoc()),
     snapshot: () => '{"snapshot":true}',
     async save(): Promise<WriteResult> {
       if (doc === null) {
@@ -186,6 +188,7 @@ type SetupOptions = {
   channel?: Channel | null;
   tabId?: string;
   persistStorage?: () => Promise<boolean>;
+  isPrintable?: boolean;
 };
 
 function setup(options: SetupOptions = {}) {
@@ -196,6 +199,7 @@ function setup(options: SetupOptions = {}) {
   const copied: string[] = [];
   const settings = createSettingsStore(null, () => undefined);
   let keys = 0;
+  let prints = 0;
   const tabId = options.tabId ?? 'tab';
   const shell = createWebShell({
     db,
@@ -221,6 +225,12 @@ function setup(options: SetupOptions = {}) {
       },
     },
     ...(options.persistStorage === undefined ? {} : { persistStorage: options.persistStorage }),
+    fontFile: () => Promise.resolve(new Uint8Array()),
+    languageTag: 'en-US',
+    print: () => {
+      prints += 1;
+      return options.isPrintable ?? true;
+    },
   });
   const editor = fakeEditor(options.confirm ?? true);
   editor.open(shell.initialDocument());
@@ -238,7 +248,19 @@ function setup(options: SetupOptions = {}) {
       shell.places.answer(answer ?? null);
     });
   });
-  return { shell, editor, db, clock, titles, logs, settings, copied, placeAnswers, placeRequests };
+  return {
+    shell,
+    editor,
+    db,
+    clock,
+    titles,
+    logs,
+    settings,
+    copied,
+    placeAnswers,
+    placeRequests,
+    prints: () => prints,
+  };
 }
 
 /** A file handle in memory, as Chromium gives it. `permission` is what queryPermission answers. */
@@ -318,7 +340,7 @@ function hub(): () => Channel {
 /** The saved file with its model version changed to `version` (attribute and JSON). */
 function withVersion(version: number): string {
   return savedFile
-    .replace(/ version="1"><!\[CDATA\[/, ` version="${String(version)}"><![CDATA[`)
+    .replace(/ version="1" /, ` version="${String(version)}" `)
     .replace(/"version": 1/, `"version": ${String(version)}`);
 }
 
@@ -897,6 +919,37 @@ describe('web shell: export, language, tabs', () => {
     await editor.commands.specs.get('file.export.png')?.run({}, undefined);
     expect(editor.notices.at(-1)).toBe('Could not export the PNG.');
     expect(logs.at(-1)).toContain('PNG export failed');
+  });
+
+  it('T-0992: puts PNG, SVG and PDF in the export submenu and print below it', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const place = (id: string) => editor.commands.specs.get(id)?.menu;
+    expect(place('file.export.png')).toMatchObject({ group: 3, order: 1, submenu: 'export' });
+    expect(place('file.export.svg')).toMatchObject({ group: 3, order: 2, submenu: 'export' });
+    expect(place('file.export.pdf')).toMatchObject({ group: 3, order: 3, submenu: 'export' });
+    expect(place('file.print')).toEqual({ menu: 'file', group: 3, order: 10 });
+    expect(editor.commands.specs.get('file.print')?.keys).toEqual(['Ctrl+P']);
+  });
+
+  it('T-0993: prints through the print view, and says so when the pages cannot be made', async () => {
+    const printable = setup();
+    await printable.shell.start(printable.editor);
+    await printable.editor.commands.specs.get('file.print')?.run({}, undefined);
+    expect(printable.prints()).toBe(1);
+    expect(printable.editor.notices).not.toContain('Could not prepare the pages to print.');
+    const failing = setup({ isPrintable: false });
+    await failing.shell.start(failing.editor);
+    await failing.editor.commands.specs.get('file.print')?.run({}, undefined);
+    expect(failing.editor.notices.at(-1)).toBe('Could not prepare the pages to print.');
+  });
+
+  it('T-0994: a PDF export without the font says it failed', async () => {
+    const { shell, editor, logs } = setup();
+    await shell.start(editor);
+    await editor.commands.specs.get('file.export.pdf')?.run({}, undefined);
+    expect(editor.notices.at(-1)).toBe('Could not export the PDF.');
+    expect(logs.at(-1)).toContain('PDF export failed');
   });
 
   it('T-0723 · R-NFR-04: switching the screen language changes the shell command names', async () => {

@@ -20,10 +20,10 @@ status: 생성됨
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 2 | 45 | 184 | - | 231 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 158 | - | 193 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 27 | 42 | - | 91 |
-| [[#5. 파일\|파일]] | 11 | 148 | 164 | - | 323 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 112 | - | 114 |
+| [[#5. 파일\|파일]] | 16 | 151 | 213 | - | 380 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 134 | - | 136 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 68 | 250 | 660 | 5 | 983 |
+| 합계 | 73 | 253 | 731 | 5 | 1062 |
 
 ## 읽는 법
 
@@ -1025,7 +1025,21 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 30개, 테스트 323개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 38개, 테스트 380개.
+
+### [E2E] `apps/web/e2e/export.spec.ts`
+
+브라우저에서의 내보내기와 인쇄. Playwright · 테스트 5개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0987 | 그림을 모델 없는 SVG로 내보낸다 | - |
+| T-0988 | 페이지로 나눈 PDF를 내보낸다 | - |
+| T-0989 | 메뉴와 Ctrl+P로 인쇄 보기를 거쳐 인쇄한다 | - |
+| T-0990 | 다른 도구로 고친 그림이 모델과 다르다고 알린다 | - |
+| T-0991 | 문서 설정을 켜면 텍스트를 외곽선으로 저장한다 | - |
+
+^t-apps-web-e2e-export-spec-ts
 
 ### [E2E] `apps/web/e2e/files.spec.ts`
 
@@ -1090,7 +1104,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `apps/web/src/shell/web-shell.test.ts`
 
-웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 74개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
+웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 77개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1139,6 +1153,9 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0720 | 06-web 2: 아직 쓰기 권한이 없으면 자동 저장은 `Ctrl`+`S`를 기다린다 | - |
 | T-0721 | suspend는 기다리던 로컬 백업을 바로 쓴다 | [[01-requirements#^r-web\|R-WEB-03]] |
 | T-0722 | 그릴 수 없는 PNG 내보내기는 실패했다고 알린다 | [[01-requirements#^r-exp\|R-EXP-01]] |
+| T-0992 | PNG · SVG · PDF를 내보내기 하위 메뉴에, 인쇄를 그 아래에 둔다 | - |
+| T-0993 | 인쇄 보기로 인쇄하고, 페이지를 만들지 못하면 그렇다고 알린다 | - |
+| T-0994 | 글꼴이 없는 PDF 내보내기는 실패했다고 알린다 | - |
 | T-0723 | 화면 언어를 바꾸면 셸 명령의 이름이 바뀐다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0724 | 언어를 바꾼 뒤의 알림은 새 언어로 나온다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0725 | 제목 없는 문서의 이름은 셸이 시작할 때의 언어를 지킨다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
@@ -1253,6 +1270,22 @@ PNG 내보내기 명령. Vitest · 테스트 5개. 파일 전체가 확인하는
 | T-0745 | 실패한 내보내기는 기록하고 사용자에게 알린다 | [[01-requirements#^r-exp\|R-EXP-01]] |
 
 ^t-apps-web-src-files-export-command-test-ts
+
+### [단위] `apps/web/src/files/export-formats.test.ts`
+
+모델 없는 SVG와 PDF로 내보내기. Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-exp|R-EXP-03]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0995 | 내보낸 파일의 이름은 문서 이름에 그 형식의 확장자다 | - |
+| T-0996 | 문서 이름으로 순수 SVG를 내려받는다 | - |
+| T-0997 | Chromium에서는 SVG로 거른 저장 창으로 어디에 둘지 묻는다 | - |
+| T-0998 | 실패한 SVG 내보내기는 기록하고 사용자에게 알린다 | - |
+| T-0999 | 문서 이름으로 그림의 PDF를 내려받는다 | - |
+| T-1000 | Letter를 쓰는 지역의 언어면 Letter, 그 밖은 A4를 쓴다 | - |
+| T-1001 | 글꼴을 불러오지 못한 PDF 내보내기는 실패했다고 알린다 | - |
+
+^t-apps-web-src-files-export-formats-test-ts
 
 ### [단위] `apps/web/src/files/export-png.test.ts`
 
@@ -1384,6 +1417,22 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-0803 | TTF를 받지 못하면 실패하고, 다음에 부를 때 다시 받는다 | - |
 
 ^t-apps-web-src-fonts-save-font-test-ts
+
+### [단위] `apps/web/src/print/print-view.test.ts`
+
+인쇄 보기. Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-03]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1002 | 페이지마다 그 부분의 그림을 인쇄 크기로 담은 section이 하나 있다 | - |
+| T-1003 | 종이를 정하고, 인쇄할 때만 둘레의 화면을 숨긴다 | - |
+| T-1004 | 페이지가 여럿일 때만 쪽 번호를 단다 | - |
+| T-1005 | 페이지를 넣고 인쇄 창을 연 뒤, 끝나면 뺀다 | - |
+| T-1006 | 브라우저의 인쇄를 써도 같은 페이지를 준비한다 | - |
+| T-1007 | 그림이 없으면 인쇄하지 않고 실패를 알린다 | - |
+| T-1008 | dispose하면 듣기를 멈춘다 | - |
+
+^t-apps-web-src-print-print-view-test-ts
 
 ### [단위] `apps/web/src/shell/appearance.test.ts`
 
@@ -1537,6 +1586,46 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ^t-apps-web-src-storage-settings-store-test-ts
 
+### [단위] `packages/core/node/export-golden.test.ts`
+
+내보내기의 골든 파일. 골든 파일 · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1009 | 순수 SVG를 골든 파일로 저장한다 | - |
+| T-1010 | PDF를 골든 파일로 저장한다 | - |
+
+^t-packages-core-node-export-golden-test-ts
+
+### [단위] `packages/core/src/export/paginate.test.ts`
+
+인쇄와 PDF의 페이지. Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-03]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1011 | Letter를 쓰는 지역에서는 Letter, 그 밖은 A4다 | - |
+| T-1012 | 작은 그림은 인쇄 크기 그대로 세로 페이지 하나에 놓는다 | - |
+| T-1013 | 긴 그림을 블록 사이에서 페이지로 나누고, 페이지마다 그 안에 든다 | - |
+| T-1014 | 페이지보다 높은 블록은 가로질러 자른다 | - |
+| T-1015 | 넓은 그림은 페이지가 적게 나오면 가로로 돌린다 | - |
+| T-1016 | 어느 페이지보다 넓은 그림은 열로 나누고, 아래로 먼저 그다음 옆으로 읽는다 | - |
+| T-1017 | 종이만 보일 페이지는 뺀다 | - |
+
+^t-packages-core-src-export-paginate-test-ts
+
+### [단위] `packages/core/src/export/pdf.test.ts`
+
+PDF 내보내기. Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-03]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1018 | 교차 참조 표가 객체를 바로 가리키는 PDF 1.4 파일을 쓴다 | - |
+| T-1019 | 인쇄 페이지마다 A4 페이지 하나이고, 제목은 문서 이름이다 | - |
+| T-1020 | 글리프는 칠하는 방식마다 폼으로 한 번만 둔다 | - |
+| T-1021 | 같은 그림이면 같은 바이트를 준다 | - |
+
+^t-packages-core-src-export-pdf-test-ts
+
 ### [단위] `packages/core/src/format/base64.test.ts`
 
 base64 인코딩. Vitest · 테스트 2개.
@@ -1565,7 +1654,7 @@ base64 인코딩. Vitest · 테스트 2개.
 
 ### [단위] `packages/core/src/format/parse-model.test.ts`
 
-모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041). Vitest · 테스트 13개.
+모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041) · 텍스트를 외곽선으로 저장하는 설정(R-FMT-10). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1582,6 +1671,9 @@ base64 인코딩. Vitest · 테스트 2개.
 | T-0822 | 그림 문구의 언어가 없는 파일은 연 사람의 화면 언어로 읽고, 다음에 저장할 때 그 값을 적는다 | - |
 | T-0823 | 01-file-format 3.3: 모르는 그림 문구의 언어는 연 사람의 화면 언어로 그리고, 받은 값을 그대로 다시 적는다 | - |
 | T-0824 | 그림 문구의 언어가 문자열이 아니면 깨진 파일이다 | - |
+| T-1022 | true는 켬, false나 키 없음은 끔으로 읽는다 | - |
+| T-1023 | true · false가 아닌 값은 받지 않는다 | - |
+| T-1024 | 켰을 때만 그림 문구의 언어 다음에 키를 적는다 | - |
 
 ^t-packages-core-src-format-parse-model-test-ts
 
@@ -1597,9 +1689,21 @@ base64 인코딩. Vitest · 테스트 2개.
 
 ^t-packages-core-src-format-round-trip-test-ts
 
+### [단위] `packages/core/src/format/sha256.test.ts`
+
+그림 지문을 위한 SHA-256과 UTF-8. Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-09]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1025 | FIPS 180-4 예제의 표준 다이제스트를 준다 | - |
+| T-1026 | 한 블록보다 길거나 ASCII 밖의 문자가 든 텍스트도 다이제스트한다 | - |
+| T-1027 | 문자마다 1 ~ 4바이트로 인코딩하고, 짝 없는 서로게이트는 U+FFFD로 한다 | - |
+
+^t-packages-core-src-format-sha256-test-ts
+
 ### [단위] `packages/core/src/format/svg-file.test.ts`
 
-SVG 파일. Vitest · 테스트 14개.
+SVG 파일 · 순수 SVG(R-EXP-02) · 그림 검사(R-FMT-09). Vitest · 테스트 21개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-fmt|R-FMT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1617,12 +1721,37 @@ SVG 파일. Vitest · 테스트 14개.
 | T-0436 | 망가진 파일은 손상으로 거절하고, 예외를 던지지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-02]] |
 | T-0437 | 01-file-format 5: 더 새 버전의 파일은 업데이트하라고 알린다 | - |
 | T-0438 | 모델 요소와 그 버전을 찾는다 | - |
+| T-1028 | 저장 파일에서 metadata만 뺀 것이라 모델이 없고 열리지 않는다 | - |
+| T-1029 | 저장 파일의 그림 지문이 가리키는 텍스트다 | - |
+| T-1030 | 저장한 그대로의 파일은 같다고 본다. 줄 끝이 CRLF이거나 BOM이 있어도 | - |
+| T-1031 | 다른 도구로 고친 그림을 찾는다 | - |
+| T-1032 | 모델을 고친 것은 그림을 고친 것으로 치지 않는다 | - |
+| T-1033 | 그림 지문이나 모델이 없는 파일은 알 수 없다고 한다 | - |
+| T-1034 | metadata 요소가 다른 마크업과 한 줄에 있으면 그 요소만 뺀다 | - |
 
 ^t-packages-core-src-format-svg-file-test-ts
 
+### [단위] `packages/editor/src/create-editor-export.test.ts`
+
+editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + happy-dom · 테스트 9개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-fmt|R-FMT-09]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1035 | 모델을 뺀 저장 파일이다: 그림과 글꼴이 같다 | - |
+| T-1036 | 인쇄와 PDF를 위해 화면에 그린 것을 셸에 준다 | - |
+| T-1037 | 문서 설정이고 기본은 끔이며, 실행 취소로 되돌아간다 | - |
+| T-1038 | 텍스트를 path로 저장하고 모델에는 텍스트를 남긴다 | - |
+| T-1039 | 다시 끄면 텍스트로 저장하고 설정 키를 적지 않는다 | - |
+| T-1040 | true · false가 아닌 값은 받지 않는다 | - |
+| T-1041 | 파일을 열 때 그 이름과 함께 알린다 | - |
+| T-1042 | 그런 파일이 열린 문서를 바꿀 때도 알린다 | - |
+| T-1043 | 앱이 저장한 그대로의 파일에는 알리지 않는다 | - |
+
+^t-packages-editor-src-create-editor-export-test-ts
+
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 10개, 테스트 114개.
+블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 14개, 테스트 136개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -1634,6 +1763,16 @@ SVG 파일. Vitest · 테스트 14개.
 | T-0525 | 한국어 텍스트는 쓰인 한글 조각만 받고, 모두 받지 않는다 | - |
 
 ^t-apps-web-e2e-fonts-spec-ts
+
+### [단위] `packages/core/node/outline-font.test.ts`
+
+번들 글꼴로 그린 텍스트 외곽선. Vitest · 테스트 1개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1044 | 레이아웃이 잰 폭에 맞고 그 줄 안에 든다 | - |
+
+^t-packages-core-node-outline-font-test-ts
 
 ### [단위] `packages/core/src/layout/layout.test.ts`
 
@@ -1680,6 +1819,25 @@ SVG 파일. Vitest · 테스트 14개.
 | T-0475 | 블록 500개 문서의 레이아웃 | - |
 
 ^t-packages-core-src-layout-layout-test-ts
+
+### [단위] `packages/core/src/render/outline-text.test.ts`
+
+텍스트 외곽선. Vitest · 테스트 10개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1045 | 글리프를 기준점에서 advance 폭대로 나란히 놓는다 | - |
+| T-1046 | 런마다의 굵기와 크기의 배율을 지킨다 | - |
+| T-1047 | 글꼴에 없는 문자가 있으면, 대신 그릴 것을 받지 않은 한 외곽선으로 하지 않는다 | - |
+| T-1048 | 글리프마다 그림 좌표(y는 아래로)로 적고, 공백은 아무것도 적지 않는다 | - |
+| T-1049 | 레이아웃이 그 텍스트에 잰 상자 안에 든다 | - |
+| T-1050 | 브라우저의 합성 굵게처럼 9px까지는 크기의 1/24, 36px부터는 1/32이다 | - |
+| T-1051 | 텍스트를 path로 적는다. 테두리를 먼저, 굵은 글자는 획을 더해 | - |
+| T-1052 | 각 런의 구문 강조 색을 지켜, 색마다 path 하나로 적는다(02-layout 3.1) | - |
+| T-1053 | 글꼴에 없는 문자가 든 요소만 텍스트로 남긴다 | - |
+| T-1054 | 외곽선 없이는 텍스트를 그대로 적는다 | - |
+
+^t-packages-core-src-render-outline-text-test-ts
 
 ### [단위] `packages/core/src/render/render-doc.test.ts`
 
@@ -1772,6 +1930,21 @@ SVG 파일. Vitest · 테스트 14개.
 
 ^t-packages-core-src-text-syntax-test-ts
 
+### [단위] `packages/fonts/node/glyph-outlines.test.ts`
+
+텍스트 외곽선과 PDF를 위해 읽는 번들 글꼴의 글리프 외곽선. Vitest · 테스트 6개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-exp|R-EXP-03]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1055 | 번들 글꼴의 em 크기를 읽는다 | - |
+| T-1056 | 글리프마다 폭 테이블과 같은 advance를 준다 | - |
+| T-1057 | em 상자 안에 닫힌 윤곽선을 그린다 | - |
+| T-1058 | 공백에는 외곽선이 없고, 글꼴에 없는 문자에는 글리프가 없다 | - |
+| T-1059 | 같은 글꼴에서 같은 명령을 읽는다 | - |
+| T-1060 | 글리프 표가 없는 글꼴에서는 실패한다 | - |
+
+^t-packages-fonts-node-glyph-outlines-test-ts
+
 ### [단위] `packages/fonts/node/index.test.ts`
 
 글꼴 파일 읽기(readFontFile). Vitest · 테스트 2개.
@@ -1827,6 +2000,20 @@ SVG 파일. Vitest · 테스트 14개.
 | T-0516 | 02-layout 2.1: 13px 글자 폭이 설계의 예와 맞는다 | - |
 
 ^t-packages-fonts-src-advance-table-test-ts
+
+### [단위] `packages/fonts/src/glyph-outlines.test.ts`
+
+손으로 만든 작은 TrueType 글꼴로 본 글리프 읽기. Vitest · 테스트 5개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1061 | cmap 형식 4로 코드 포인트를 찾는다: delta로, 그리고 글리프 id 배열로 | - |
+| T-1062 | 곡선 밖의 점만으로 된 윤곽선은 처음 두 점의 가운데에서 시작한다 | - |
+| T-1063 | 짧은 좌표와 반복한 x를 직선으로 읽는다 | - |
+| T-1064 | 합성 글리프를 그 오프셋과 변환대로 모은다 | - |
+| T-1065 | BMP 밖까지 닿는 cmap 형식 12 하위 표를 먼저 쓴다 | - |
+
+^t-packages-fonts-src-glyph-outlines-test-ts
 
 ## 7. 성능
 

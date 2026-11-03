@@ -3,7 +3,7 @@
 // They are the members the shell calls, written after 03-editor 6, so the editor's own types
 // (which have more members) can be passed wherever these are expected.
 
-import type { Doc } from '@ariadne-nsd/core';
+import type { Doc, Rendering } from '@ariadne-nsd/core';
 
 /** A screen string. The shell passes plain text (from its own catalog). */
 export type Message =
@@ -101,6 +101,10 @@ export type EditorHandle = {
   onStatus(listener: (status: DocStatus) => void): () => void;
   /** The `.ns.svg` text (makes the subset font, so it is asynchronous). */
   serialize(): Promise<string>;
+  /** The pure SVG: the same drawing and font without the model (R-EXP-02). */
+  serializeImage(): Promise<string>;
+  /** The current rendering (layout, scene, drawing): for print and PDF (R-EXP-03). */
+  rendering(): Rendering;
   snapshot(): string;
   save(): Promise<WriteResult>;
   setReadOnly(readOnly: boolean): void;

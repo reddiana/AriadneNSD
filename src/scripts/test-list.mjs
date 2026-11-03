@@ -93,24 +93,30 @@ const areas = [
   {
     name: '파일',
     about:
-      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG 내보내기, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]',
+      '파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]',
     paths: [
       'packages/core/src/format/',
       'packages/core/node/golden.test.ts',
+      'packages/core/node/export-golden.test.ts',
+      'packages/core/src/export/',
       'packages/editor/src/create-editor.test.ts',
+      'packages/editor/src/create-editor-export.test.ts',
       'apps/web/src/',
       'apps/web/e2e/files.spec.ts',
       'apps/web/e2e/share.spec.ts',
+      'apps/web/e2e/export.spec.ts',
     ],
   },
   {
     name: '레이아웃 · 그리기 · 글자',
     about:
-      '블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
+      '블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
     paths: [
       'packages/core/src/layout/',
       'packages/core/src/render/render-doc',
       'packages/core/src/render/theme',
+      'packages/core/src/render/outline-text',
+      'packages/core/node/outline-font.test.ts',
       'packages/core/src/text/',
       'packages/fonts/',
       'apps/web/e2e/fonts.spec.ts',

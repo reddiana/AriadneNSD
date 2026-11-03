@@ -1,6 +1,7 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
 import {
+  checkDrawing,
   createDoc,
   isTextKind,
   isKnownTheme,
@@ -40,7 +41,7 @@ import type { EditorMessage, Message } from './i18n/messages';
 import { formatMessage } from './i18n/messages';
 import { keyBindings } from './input/keys';
 import { indexDoc } from './model/doc-index';
-import { cachedFonts, serializeDocument, snapshotDocument } from './save/serialize';
+import { cachedFonts, serializeDocument, serializeImage, snapshotDocument } from './save/serialize';
 import type { ClipboardPort, Timers } from './session/session';
 import { EditorSession } from './session/session';
 import type { Selection } from './state/selection';
@@ -85,6 +86,7 @@ export const documentSettingIds = {
   locale: 'document.locale',
   textKind: 'document.textKind',
   theme: 'document.theme',
+  textOutlines: 'document.textOutlines',
 } as const;
 
 /** The settings the editor knows. `file.autoSave` is used by the web shell. */
@@ -147,6 +149,15 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     scope: 'document',
   },
   {
+    // R-FMT-10: a document setting, since it changes the file and goes with it (ADR-0018).
+    id: documentSettingIds.textOutlines,
+    title: 'setting.textOutlines',
+    hint: 'setting.textOutlines.hint',
+    values: [false, true],
+    defaultValue: false,
+    scope: 'document',
+  },
+  {
     // The drawing's colors (R-LAY-08, R-NFR-07, visual design 8): saved, so undoable (UX TM3).
     id: documentSettingIds.theme,
     title: 'setting.theme',
@@ -171,6 +182,11 @@ export type ReadDocument =
       readonly kept: KeptSettings;
       readonly isDirty: boolean;
       readonly selection: Selection | null;
+      /**
+       * The file's drawing was changed by another tool (R-FMT-09): its fingerprint does not match.
+       * Only for a file's text; a backup, an example or a new document has no drawing to check.
+       */
+      readonly isDrawingEdited: boolean;
     }
   | { readonly ok: false; readonly message: EditorMessage; readonly detail: string };
 
@@ -196,11 +212,18 @@ export function readDocument(
   if (opened.restored !== undefined) {
     const result = parseModelJson(opened.restored, { locale });
     return result.ok
-      ? { ok: true, ...result.value, isDirty: true, selection: null }
+      ? { ok: true, ...result.value, isDirty: true, selection: null, isDrawingEdited: false }
       : { ok: false, message: openMessage(result.reason), detail: result.detail };
   }
   if (opened.doc !== undefined) {
-    return { ok: true, doc: opened.doc, kept: {}, isDirty: false, selection: null };
+    return {
+      ok: true,
+      doc: opened.doc,
+      kept: {},
+      isDirty: false,
+      selection: null,
+      isDrawingEdited: false,
+    };
   }
   if (opened.text === null) {
     const doc = createDoc(defaults);
@@ -211,11 +234,18 @@ export function readDocument(
       kept: {},
       isDirty: false,
       selection: first === undefined ? null : selectBlock(indexDoc(doc.content), first.id),
+      isDrawingEdited: false,
     };
   }
   const result = openSvgFile(opened.text, { locale });
   return result.ok
-    ? { ok: true, ...result.value, isDirty: false, selection: null }
+    ? {
+        ok: true,
+        ...result.value,
+        isDirty: false,
+        selection: null,
+        isDrawingEdited: checkDrawing(opened.text) === 'edited',
+      }
     : { ok: false, message: openMessage(result.reason), detail: result.detail };
 }
 
@@ -281,6 +311,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
   if (!first.ok) {
     log(`Could not open ${store.name}`, first.detail);
     session.notify(first.message, 'warn');
+  } else if (first.isDrawingEdited) {
+    session.notify({ key: 'notice.drawingEdited', params: { name: store.name } }, 'warn');
   }
 
   const context = (): CommandContext => ({ state: session.state, store, settings });
@@ -434,8 +466,13 @@ export function createEditor(options: EditorOptions): EditorHandle {
   };
 
   // Saving (03-editor 6, 6.3).
+  const saveSource = (): { doc: Doc; kept: KeptSettings; rendering: typeof session.rendering } => ({
+    doc: session.state.doc,
+    kept: session.kept,
+    rendering: session.rendering,
+  });
   const serialize = async (): Promise<{ readonly svg: string; readonly doc: Doc }> => {
-    const source = { doc: session.state.doc, kept: session.kept, rendering: session.rendering };
+    const source = saveSource();
     return { svg: await serializeDocument(source, fonts), doc: source.doc };
   };
   const tellWrite = (result: WriteResult, isQuiet: boolean): void => {
@@ -541,6 +578,10 @@ export function createEditor(options: EditorOptions): EditorHandle {
         isDirty: read.isDirty,
         readOnly: opened.readOnly ?? false,
       });
+      if (read.isDrawingEdited) {
+        // After `load`, which empties the status bar (R-FMT-09).
+        session.notify({ key: 'notice.drawingEdited', params: { name: store.name } }, 'warn');
+      }
       emitStatus();
       return true;
     },
@@ -566,6 +607,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
       };
     },
     serialize: async () => (await serialize()).svg,
+    serializeImage: () => serializeImage(saveSource(), fonts),
+    rendering: () => session.rendering,
     snapshot: () => snapshotDocument({ doc: session.state.doc, kept: session.kept }),
     save,
     setReadOnly: (readOnly) => {
@@ -586,6 +629,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
           return current.textKind;
         case documentSettingIds.theme:
           return current.theme;
+        case documentSettingIds.textOutlines:
+          return current.textOutlines === true;
         default:
           return undefined;
       }
@@ -675,6 +720,15 @@ function changedSettings(settings: Settings, id: string, value: unknown): Settin
         : null;
     case documentSettingIds.textKind:
       return isTextKind(value) ? { ...settings, textKind: value } : null;
+    case documentSettingIds.textOutlines: {
+      if (typeof value !== 'boolean') {
+        return null;
+      }
+      // Absent is off; the file leaves the key out when off (01-file-format 3.3).
+      return value === (settings.textOutlines === true)
+        ? settings
+        : { ...settings, textOutlines: value };
+    }
     default:
       return null;
   }

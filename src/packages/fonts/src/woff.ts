@@ -17,6 +17,14 @@ const SFNT_DIRECTORY_ENTRY_SIZE = 16;
 const HEAD_CHECKSUM_ADJUSTMENT = 8;
 
 /**
+ * zlib-compresses bytes with the same fixed settings as WOFF tables: for PDF streams
+ * (`FlateDecode`), which must be the same bytes for the same input like saved files.
+ */
+export function zlibCompress(bytes: Uint8Array): Uint8Array {
+  return zlibSync(bytes, ZLIB_OPTIONS);
+}
+
+/**
  * Wraps an sfnt (TTF) font in WOFF 1.0 (ADR-0039).
  * Each table is zlib-compressed unless that would not make it smaller, as the WOFF spec requires.
  * There is no metadata or private block. The same input always gives the same bytes (R-FMT-03).

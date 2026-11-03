@@ -1,6 +1,6 @@
 // The interfaces between the editor and a shell (03-editor 6, ADR-0031, ADR-0033).
 // Required interfaces (ports) are implemented by the shell; provided ones by the editor.
-import type { Doc } from '@ariadne-nsd/core';
+import type { Doc, Rendering } from '@ariadne-nsd/core';
 import type { Subsetter } from '@ariadne-nsd/fonts';
 
 import type { Message } from './i18n/messages';
@@ -300,6 +300,10 @@ export interface EditorHandle {
   onChromeState(listener: () => void): () => void;
   /** The `.ns.svg` text of the document (saving, auto-save). Makes the subset font. */
   serialize(): Promise<string>;
+  /** The pure SVG (R-EXP-02): the saved file's drawing and font without the model. */
+  serializeImage(): Promise<string>;
+  /** The document's current rendering (layout, scene, SVG): for print and PDF (R-EXP-03). */
+  rendering(): Rendering;
   /** The model JSON of the document (local backup). No font, so it is light. */
   snapshot(): string;
   /** "Save": serialize → `store.write` → on success the document is no longer dirty. */

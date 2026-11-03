@@ -36,6 +36,12 @@ export type Settings = {
    * same on screen, in the saved file and in PNG (ADR-0041). Menus follow the screen language.
    */
   readonly locale: Locale;
+  /**
+   * Text as outlines (R-FMT-10): the saved file draws text with the bundled font's glyph
+   * outlines (paths) instead of the subset font, so every viewer shows the same glyphs. The
+   * model keeps the text. Absent means off.
+   */
+  readonly textOutlines?: boolean;
 };
 
 /**

@@ -4,5 +4,5 @@
     "lib": ["ES2022"],
     "types": []
   },
-  "include": ["src", "vitest.config.ts"]
+  "include": ["src", "pdf", "vitest.config.ts"]
 }

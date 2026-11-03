@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./pdf": "./pdf/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p node/tsconfig.json",
     "test": "vitest run",
-    "golden:update": "vitest run node/golden.test.ts -u -t \"is saved as the golden file\" && vitest run node/golden.test.ts"
+    "golden:update": "vitest run node/golden.test.ts node/export-golden.test.ts -u -t \"is saved as the golden file\" && vitest run node/golden.test.ts node/export-golden.test.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

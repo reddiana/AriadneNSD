@@ -6,4 +6,6 @@ export type { ScreenSlice, ScreenSliceData } from './screen-slice-types';
 export { screenSlices, unicodeRangeOf } from './screen-slices';
 export type { Subsetter } from './subset';
 export { createSubsetter, subsetterFromExports } from './subset';
-export { encodeWoff } from './woff';
+export { encodeWoff, zlibCompress } from './woff';
+export type { Glyph, GlyphCommand, GlyphOutlines } from './glyph-outlines';
+export { readGlyphOutlines } from './glyph-outlines';

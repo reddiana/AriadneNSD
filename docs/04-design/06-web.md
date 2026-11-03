@@ -23,6 +23,7 @@ updated: 2026-11-03
 
 - [[01-requirements#2.3 웹 (정적 페이지)]]: [[01-requirements#^r-web|R-WEB-02]](파일 열기 · 저장), [[01-requirements#^r-web|R-WEB-03]](로컬 백업), [[01-requirements#^r-web|R-WEB-09]](브라우저 문서)
 - [[01-requirements#^r-exp|R-EXP-04]](자동 저장, 최근 파일)
+- 내보내기 · 인쇄: [[01-requirements#^r-exp|R-EXP-01]](PNG), [[01-requirements#^r-exp|R-EXP-02]](SVG), [[01-requirements#^r-exp|R-EXP-03]](PDF · 인쇄)
 - 화면: [[01-requirements#^r-edit|R-EDIT-21]](도움말), [[01-requirements#^r-edit|R-EDIT-24]](커맨드 팔레트), [[01-requirements#^r-nfr|R-NFR-04]](화면 언어)
 - 공유 URL과 보기 모드: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]] (3장)
 - Google Drive, AI 대화창: [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
@@ -64,6 +65,8 @@ updated: 2026-11-03
 3. `canvas`에 2배 배율로 그립니다. 배율은 명령의 인자(`{ scale }`, 8배까지)로 바꿀 수 있습니다. 한 변이 16,384px(브라우저가 믿고 그리는 가장 큰 캔버스, Safari가 가장 작음)를 넘으면 배율을 그만큼 낮춥니다.
 4. `canvas.toBlob`으로 PNG를 만듭니다. Chromium은 저장 창으로 문서 곁에 저장하고, Firefox · Safari는 내려받습니다. 이름은 문서 이름에서 확장자를 바꾼 것입니다(`예제.ns.svg` → `예제.png`).
 
+내보내기 셋(PNG · SVG · PDF)은 같은 순서로 일합니다: 저장 창을 먼저 띄우고(누른 순간의 사용자 활성화가 필요해서), 그다음 파일을 만들어 쓰거나 내려받고, 상태 표시줄에 "“{이름}”(으)로 내보냈습니다."를 알립니다. 실패하면 로그에 남기고 형식마다 "… 내보내지 못했습니다."를 알립니다. 저장 창을 닫으면 아무것도 하지 않습니다.
+
 ### 1.3 브라우저 문서
 
 파일 없이 문서에 이름을 붙여 그 브라우저에 저장하고, 목록에서 열고 삭제합니다([[01-requirements#^r-web|R-WEB-09]]). 정한 과정 → [[ux-decisions#BS1. 브라우저 안의 문서는 열기 · 저장 창 안에서 고른다|BS1]] ~ [[ux-decisions#BS4. 함께 지워진다는 경고와 백업|BS4]], 시안 M55(https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV, 사본 `journal/assets/2026-11-03-browser-storage-study.html`)
@@ -99,6 +102,27 @@ updated: 2026-11-03
 - zip은 `fflate`로 만들고 풉니다. 저장 파일의 서브셋 글꼴을 WOFF로 만드는 데 이미 쓰는 라이브러리입니다(→ [[03-architecture#8.1 제품에 들어가는 것]]).
 
 **지워지지 않게.** 처음 브라우저에 저장할 때 한 번 `navigator.storage.persist()`를 요청합니다(저장 공간이 모자랄 때 브라우저가 이 사이트의 데이터를 먼저 지우지 않게. Firefox는 이때 사용자에게 묻습니다). 허락되지 않아도 저장은 하고, 경고 문구는 그대로입니다. 저장이 브라우저의 저장 공간 한도로 실패하면(`QuotaExceededError`) "브라우저의 저장 공간이 모자라 저장하지 못했습니다. 파일로 저장해 주세요."를 알리고 저장 안 됨(`●`)으로 둡니다.
+
+### 1.4 SVG 내보내기 (그림만)
+
+파일 메뉴의 "내보내기 ▸ SVG로 내보내기(그림만)…"([[01-requirements#^r-exp|R-EXP-02]])는 모델을 뺀 순수 SVG를 `이름.svg`로 저장합니다(`.ns.svg`가 아님: 다시 열면 모델이 없어 편집할 수 없음). 내용은 `editor.serializeImage()`의 문자열 그대로이고, 저장 파일에서 `<metadata>` 요소만 뺀 것과 바이트까지 같습니다 → [[01-file-format#4.2 순수 SVG]], [[ux-decisions#XS1. 순수 SVG는 저장 파일에서 모델만 뺀 것|XS1]]
+
+### 1.5 PDF 내보내기
+
+파일 메뉴의 "내보내기 ▸ PDF로 내보내기…"([[01-requirements#^r-exp|R-EXP-03]])는 지금 그린 것(`editor.rendering()`)을 페이지로 나눠(`core`의 `paginate` → [[02-layout#5. 인쇄와 PDF의 페이지]]) 벡터 PDF로 씁니다(`@ariadne-nsd/core/pdf`의 `writePdf`). 라이브러리를 쓰지 않는 작은 작성기이고, 텍스트는 번들 글꼴의 외곽선으로 그립니다 → [[0045-export-pipeline|ADR-0045]]
+
+- 종이는 브라우저의 언어(`navigator.language`)의 지역으로 고릅니다: 미국 · 캐나다 · 멕시코 등 Letter를 쓰는 지역(CLDR)은 Letter, 그 밖은 A4입니다. 정하는 창은 두지 않습니다 → [[ux-decisions#PD2. 종이와 방향은 묻지 않는다|PD2]]
+- 작성기와 글리프 읽기는 처음 PDF로 내보낼 때 불러옵니다(첫 방문의 내려받기에 들지 않음, 5장). 번들 글꼴(TTF)은 저장과 같은 것을 같은 때에 받습니다.
+- 이름은 `이름.pdf`, PDF의 제목(뷰어의 제목 표시줄)은 확장자를 뺀 문서 이름입니다.
+
+### 1.6 인쇄
+
+파일 메뉴의 "인쇄…"와 `Ctrl`+`P`([[01-requirements#^r-exp|R-EXP-03]])는 인쇄 전용 보기를 페이지에 넣고 `window.print()`를 부릅니다(`src/apps/web/src/print/print-view.ts`).
+
+- 인쇄 전용 보기는 `body` 끝의 `<div class="ans-print">` 하나입니다. 페이지마다 `<section>`에 그 페이지가 보일 그림의 부분을 인라인 SVG로 넣습니다(PDF와 같은 페이지 나누기). 글자는 화면 글꼴로 그려지므로 번들 글꼴에 없는 문자도 대체 글꼴로 보입니다(PDF와 다른 점).
+- 그 요소의 `<style>`이 `@page`의 크기를 정하고(여백 0, 여백은 페이지 안에 둠), `@media print`에서 `body`의 다른 자식을 모두 숨깁니다. 화면에서는 늘 숨어 있습니다. 배경색이 빠지지 않게 `print-color-adjust: exact`를 둡니다.
+- 인쇄 창이 닫히면(`afterprint`) 보기를 뺍니다. 브라우저의 메뉴로 인쇄해도(`beforeprint`) 같은 보기를 넣어, 편집 화면이 아니라 다이어그램이 인쇄됩니다.
+- 페이지를 만들지 못하면 인쇄하지 않고 "인쇄할 페이지를 만들지 못했습니다."를 알립니다.
 
 ## 2. 로컬 백업과 자동 저장
 
@@ -183,12 +207,14 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | 언제 | 무엇 | 크기 |
 | --- | --- | --- |
-| 페이지를 열 때 | JS 둘(React와 `core` · `editor` · 셸, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 550 KB + 13 KB (gzip 172 KB + 6 KB) |
+| 페이지를 열 때 | JS 넷(React와 `core` · `editor` · 셸, 나중에 불러오는 PDF 작성기와 함께 쓰는 모듈 두 조각, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 499 KB + 55 KB + 8 KB + 13 KB (gzip 153 KB + 20 KB + 4 KB + 6 KB) |
 | 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
 | 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일 열 개(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 | 5 ~ 15 KB씩 |
 | 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |
 | 처음 저장 · 내보내기를 할 때(자동 저장이면 첫 편집 뒤) | 서브세팅 wasm(`hb-subset`) | 667 KB |
 | 〃 | 서브셋을 떠낼 번들 글꼴(TTF) | 1.34 MB |
+| 처음 PDF로 내보낼 때 | PDF 작성기와 글리프 읽기(번들 글꼴은 위의 것) | 11 KB (gzip 5 KB) |
+| 텍스트를 외곽선으로 저장하는 문서를 처음 저장할 때 | 글리프 읽기 | 4 KB (gzip 2 KB) |
 
 CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip, 지금 190 KB)이 212 KB(글꼴을 조각으로 나눈 뒤의 176 KB + 20%) 안인지 봅니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
 

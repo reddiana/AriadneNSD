@@ -1,5 +1,9 @@
 // The SVG backend (ADR-0030): scene → SVG text. It makes no decisions about color or shape.
 // The screen and the saved file use this same output (ADR-0018).
+import type { GlyphOutlines } from '@ariadne-nsd/fonts';
+
+import type { PlacedGlyph, TextElement } from './outline-text';
+import { glyphPathData, placeGlyphs, syntheticBoldWidth } from './outline-text';
 import type { PathSegment, Point, Scene, SceneElement, TextRun } from './scene';
 
 /** The drawing part of an SVG: the `<g class="ans-render">` element and the picture's size. */
@@ -14,17 +18,34 @@ export type RenderedSvg = {
   readonly content: string;
 };
 
+/** How to write the SVG. */
+export type SvgOptions = {
+  /**
+   * Text as outlines (R-FMT-10): each text element whose characters are all in these outlines is
+   * written as paths. Text with a character the font lacks stays text (a fallback font draws it).
+   */
+  readonly outlines?: GlyphOutlines;
+};
+
 /**
  * Writes a scene as SVG. Deterministic: the same scene gives the same text (R-FMT-03).
  * The whole drawing is shifted by half a pixel so 1px lines on whole coordinates fill one pixel
  * row (visual design 9.1).
  */
-export function toSvg(scene: Scene): RenderedSvg {
+export function toSvg(scene: Scene, options: SvgOptions = {}): RenderedSvg {
   const lines: string[] = [
     `<g class="ans-render" transform="translate(.5 .5)" font-family="${escapeAttribute(scene.fontFamily)}" style="font-kerning:none">`,
   ];
   for (const element of scene.elements) {
-    lines.push(elementToSvg(element));
+    const glyphs =
+      element.kind === 'text' && options.outlines !== undefined
+        ? placeGlyphs(element, options.outlines)
+        : null;
+    lines.push(
+      element.kind === 'text' && glyphs !== null
+        ? outlinedTextToSvg(element, glyphs)
+        : elementToSvg(element),
+    );
   }
   lines.push('</g>');
   return {
@@ -71,7 +92,7 @@ function elementToSvg(element: SceneElement): string {
   }
 }
 
-function textToSvg(element: Extract<SceneElement, { kind: 'text' }>): string {
+function textToSvg(element: TextElement): string {
   const anchor = element.anchor === 'start' ? '' : ` text-anchor="${element.anchor}"`;
   const halo =
     element.halo === null
@@ -83,6 +104,50 @@ function textToSvg(element: Extract<SceneElement, { kind: 'text' }>): string {
     ` font-size="${formatNumber(element.fontSize)}" fill="${element.fill}"${halo}` +
     ` xml:space="preserve">${element.runs.map((run) => runToSvg(run, element.fill)).join('')}</text>`
   );
+}
+
+/**
+ * A text element as paths (R-FMT-10): its halo first (UX BH1, like `paint-order="stroke"`), then
+ * the glyphs. Bold glyphs get a stroke of the text color, as the browser's synthetic bold.
+ */
+function outlinedTextToSvg(element: TextElement, glyphs: ReadonlyArray<PlacedGlyph>): string {
+  const boldWidth = syntheticBoldWidth(element.fontSize);
+  const stroked = (d: string, color: string, width: number, fill: string): string =>
+    `<path d="${d}" fill="${fill}" stroke="${color}" stroke-width="${formatNumber(width)}"` +
+    ' stroke-linejoin="round"/>';
+  const paths = (of: ReadonlyArray<PlacedGlyph>) => ({
+    regular: glyphPathData(
+      of.filter((glyph) => glyph.weight === 400),
+      formatNumber,
+    ),
+    bold: glyphPathData(
+      of.filter((glyph) => glyph.weight !== 400),
+      formatNumber,
+    ),
+  });
+  const parts: string[] = [];
+  if (element.halo !== null) {
+    const { regular, bold } = paths(glyphs);
+    const haloWidth = 2 * element.halo.width;
+    if (regular !== '') {
+      parts.push(stroked(regular, element.halo.color, haloWidth, 'none'));
+    }
+    if (bold !== '') {
+      parts.push(stroked(bold, element.halo.color, haloWidth + boldWidth, 'none'));
+    }
+  }
+  // One path per color, in the order the colors first appear (syntax colors, 02-layout 3.1).
+  const fills = [...new Set(glyphs.map((glyph) => glyph.fill))];
+  for (const fill of fills) {
+    const { regular, bold } = paths(glyphs.filter((glyph) => glyph.fill === fill));
+    if (regular !== '') {
+      parts.push(`<path d="${regular}" fill="${fill}"/>`);
+    }
+    if (bold !== '') {
+      parts.push(stroked(bold, fill, boldWidth, fill));
+    }
+  }
+  return parts.join('\n');
 }
 
 function runToSvg(run: TextRun, textFill: string): string {

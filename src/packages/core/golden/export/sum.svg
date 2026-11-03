@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="1800" viewBox="0 0 208 1800">
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sum(n)</tspan></text>
+<path d="M24 64 L184 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 0</text>
+<rect x="24" y="96" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 1</text>
+<rect x="24" y="128" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 2</text>
+<rect x="24" y="160" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 3</text>
+<rect x="24" y="192" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 4</text>
+<rect x="24" y="224" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="244" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 5</text>
+<rect x="24" y="256" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="276" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 6</text>
+<rect x="24" y="288" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="308" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 7</text>
+<rect x="24" y="320" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="340" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 8</text>
+<rect x="24" y="352" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="372" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 9</text>
+<rect x="24" y="384" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="404" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 10</text>
+<rect x="24" y="416" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="436" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 11</text>
+<rect x="24" y="448" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="468" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 12</text>
+<rect x="24" y="480" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="500" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 13</text>
+<rect x="24" y="512" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="532" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 14</text>
+<rect x="24" y="544" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="564" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 15</text>
+<rect x="24" y="576" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="596" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 16</text>
+<rect x="24" y="608" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="628" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 17</text>
+<rect x="24" y="640" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="660" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 18</text>
+<rect x="24" y="672" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="692" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 19</text>
+<rect x="24" y="704" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="724" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 20</text>
+<rect x="24" y="736" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="756" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 21</text>
+<rect x="24" y="768" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="788" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 22</text>
+<rect x="24" y="800" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="820" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 23</text>
+<rect x="24" y="832" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="852" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 24</text>
+<rect x="24" y="864" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="884" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 25</text>
+<rect x="24" y="896" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="916" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 26</text>
+<rect x="24" y="928" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="948" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 27</text>
+<rect x="24" y="960" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="980" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 28</text>
+<rect x="24" y="992" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1012" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 29</text>
+<rect x="24" y="1024" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1044" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 30</text>
+<rect x="24" y="1056" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1076" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 31</text>
+<rect x="24" y="1088" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1108" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 32</text>
+<rect x="24" y="1120" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1140" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 33</text>
+<rect x="24" y="1152" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1172" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 34</text>
+<rect x="24" y="1184" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1204" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 35</text>
+<rect x="24" y="1216" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1236" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 36</text>
+<rect x="24" y="1248" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1268" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 37</text>
+<rect x="24" y="1280" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1300" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 38</text>
+<rect x="24" y="1312" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1332" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 39</text>
+<rect x="24" y="1344" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1364" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 40</text>
+<rect x="24" y="1376" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1396" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 41</text>
+<rect x="24" y="1408" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1428" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 42</text>
+<rect x="24" y="1440" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1460" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 43</text>
+<rect x="24" y="1472" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1492" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 44</text>
+<rect x="24" y="1504" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1524" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 45</text>
+<rect x="24" y="1536" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1556" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 46</text>
+<rect x="24" y="1568" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1588" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 47</text>
+<rect x="24" y="1600" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1620" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 48</text>
+<rect x="24" y="1632" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1652" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 49</text>
+<rect x="24" y="1664" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1684" font-size="13" fill="#151a22" xml:space="preserve">합계 ← 합계 + 50</text>
+<rect x="24" y="1696" width="160" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 1696 L126 1744 L184 1696" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="126" y="1714" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">합계 &gt; 100</text>
+<text x="30" y="1739" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="178" y="1739" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="1744" width="102" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1764" font-size="13" fill="#151a22" xml:space="preserve">print(합계)</text>
+<rect x="126" y="1744" width="58" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="155" cy="1760" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M150.5 1764.5 L159.5 1755.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+</g>
+</svg>

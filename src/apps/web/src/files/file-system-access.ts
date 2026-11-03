@@ -43,7 +43,14 @@ const documentType: PickerType = {
   accept: { 'image/svg+xml': [...openableExtensions] },
 };
 
-const pngType: PickerType = { description: 'PNG', accept: { 'image/png': ['.png'] } };
+/** What "Export ▸" makes (R-EXP-01, R-EXP-02, R-EXP-03). */
+export type ExportKind = 'png' | 'svg' | 'pdf';
+
+const exportTypes: Readonly<Record<ExportKind, PickerType>> = {
+  png: { description: 'PNG', accept: { 'image/png': ['.png'] } },
+  svg: { description: 'SVG', accept: { 'image/svg+xml': ['.svg'] } },
+  pdf: { description: 'PDF', accept: { 'application/pdf': ['.pdf'] } },
+};
 
 const zipType: PickerType = { description: 'ZIP', accept: { 'application/zip': ['.zip'] } };
 
@@ -72,9 +79,9 @@ export async function pickDocumentToSave(suggestedName: string): Promise<Picked>
   return pickToSave(suggestedName, documentType);
 }
 
-/** Shows the save dialog for an exported PNG. */
-export async function pickPngToSave(suggestedName: string): Promise<Picked> {
-  return pickToSave(suggestedName, pngType);
+/** Shows the save dialog for an exported file, filtered to its type. */
+export async function pickExportToSave(suggestedName: string, kind: ExportKind): Promise<Picked> {
+  return pickToSave(suggestedName, exportTypes[kind]);
 }
 
 /** Shows the save dialog for the zip of all browser documents (R-WEB-09). */

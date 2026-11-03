@@ -9,7 +9,7 @@ import {
   isFileHandle,
   pickDocumentToSave,
   pickFileToOpen,
-  pickPngToSave,
+  pickExportToSave,
   writeToHandle,
 } from './file-system-access';
 
@@ -89,7 +89,7 @@ describe('File System Access', () => {
       },
     });
     await pickDocumentToSave('a.ns.svg');
-    await pickPngToSave('a.png');
+    await pickExportToSave('a.png', 'png');
     expect(calls).toEqual([
       {
         types: [{ description: 'AriadneNSD', accept: { 'image/svg+xml': ['.ns.svg', '.ns'] } }],

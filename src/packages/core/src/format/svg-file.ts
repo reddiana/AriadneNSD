@@ -6,6 +6,7 @@ import type { KeptSettings } from './model-json';
 import { currentFormatVersion, serializeModelJson } from './model-json';
 import type { OpenResult, ReadOptions } from './parse-model';
 import { openFailure, parseModel } from './parse-model';
+import { sha256Hex } from './sha256';
 
 /**
  * The drawing made by the renderer from the model (the shape of `RenderedSvg` from `toSvg`).
@@ -42,11 +43,14 @@ export type SvgFileParts = {
 /**
  * Assembles the saved SVG file (01-file-format 2): the model in `<metadata>`, the subset fonts in
  * `<style>`, the paper and the drawing. The same parts always give the same text (R-FMT-03).
+ * The model element carries the fingerprint of everything else (the drawing part): the SHA-256
+ * of the file without its `<metadata>` element, which is the pure SVG (R-FMT-09, R-EXP-02).
  */
 export function assembleSvgFile(parts: SvgFileParts): string {
+  const fingerprint = sha256Hex(assembleImageSvg(parts.drawing, parts.fonts));
   return assemble(parts.drawing, parts.fonts, [
     '  <metadata>',
-    `    <ans:document xmlns:ans="${modelNamespace}" version="${String(currentFormatVersion)}"><![CDATA[`,
+    `    <ans:document xmlns:ans="${modelNamespace}" version="${String(currentFormatVersion)}" drawing-sha256="${fingerprint}"><![CDATA[`,
     escapeCdata(serializeModelJson(parts.doc, parts.kept)),
     '    ]]></ans:document>',
     '  </metadata>',
@@ -55,7 +59,8 @@ export function assembleSvgFile(parts: SvgFileParts): string {
 
 /**
  * A picture of a drawing, without the model: the same SVG as a saved file but no `<metadata>`.
- * For images the app shows, such as the examples' thumbnails. It does not open as a document.
+ * The pure SVG of "Export ▸ SVG" (R-EXP-02) and the examples' thumbnails. It does not open as a
+ * document.
  */
 export function assembleImageSvg(drawing: Drawing, fonts: ReadonlyArray<EmbeddedFont>): string {
   return assemble(drawing, fonts, []);
@@ -106,6 +111,30 @@ export function openSvgFile(text: string, options: ReadOptions = {}): OpenResult
     return openFailure('damaged', 'the version attribute and the JSON version differ');
   }
   return parseModel(value, options);
+}
+
+/**
+ * Whether the drawing part of a saved file is still the one the app wrote (R-FMT-09):
+ * `unchanged`, `edited` (another tool changed the drawing, so it may no longer match the model),
+ * or `unknown` (no model element, or no fingerprint: a file written before it was added).
+ * Line ends are read as LF, so a checkout that turned them into CRLF is not an edit.
+ */
+export function checkDrawing(text: string): 'unchanged' | 'edited' | 'unknown' {
+  const normalized = (text.charCodeAt(0) === 0xfeff ? text.slice(1) : text).replaceAll(
+    '\r\n',
+    '\n',
+  );
+  const found = findModelElement(normalized);
+  if (!found.ok || found.element.drawingSha256 === null) {
+    return 'unknown';
+  }
+  const { start, end } = found.element.metadata;
+  // The metadata element and its line: the indentation before it and the line end after it.
+  const lineStart = normalized.lastIndexOf('\n', start - 1);
+  const isOwnLine = normalized.slice(lineStart + 1, start).trim() === '';
+  const cutFrom = isOwnLine && lineStart !== -1 ? lineStart : start;
+  const drawing = normalized.slice(0, cutFrom) + normalized.slice(end);
+  return sha256Hex(drawing) === found.element.drawingSha256 ? 'unchanged' : 'edited';
 }
 
 /**

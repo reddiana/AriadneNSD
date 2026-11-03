@@ -255,9 +255,14 @@ function readSettings(
     'theme',
     'headStyle',
     'locale',
+    'textOutlines',
   ]);
   if (fields === null) {
     return null;
+  }
+  const { textOutlines } = fields;
+  if (textOutlines !== undefined && typeof textOutlines !== 'boolean') {
+    return fail(reader, 'settings.textOutlines', 'is not true or false');
   }
   const textKind = readString(reader, 'settings.textKind', fields.textKind);
   // An unknown theme is drawn with the default theme by the renderer and kept as it is (3.3).
@@ -277,7 +282,13 @@ function readSettings(
   // An unknown language (a newer app's) is shown as plain and written back as it was (3.3).
   const known = isTextKind(textKind) ? textKind : null;
   return {
-    settings: { textKind: known ?? 'plain', theme, headStyle, locale },
+    settings: {
+      textKind: known ?? 'plain',
+      theme,
+      headStyle,
+      locale,
+      ...(textOutlines === true ? { textOutlines } : {}),
+    },
     kept: {
       ...(known === null ? { textKind } : {}),
       ...(locale === written ? {} : { locale: { written, drawnIn: locale } }),

@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import type { Doc } from '../model/types';
 import { findModelElement } from './model-element';
 import type { Drawing } from './svg-file';
-import { assembleSvgFile, openSvgFile } from './svg-file';
+import { assembleImageSvg, assembleSvgFile, checkDrawing, openSvgFile } from './svg-file';
+import { sha256Hex } from './sha256';
 
 const docWithText = (text: string): Doc => ({
   content: {
@@ -48,10 +49,10 @@ describe('SVG file', () => {
     expect(lines[0]).toBe(
       '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="120" height="40" viewBox="0 0 120 40">',
     );
-    expect(lines.slice(1, 3)).toEqual([
-      '  <metadata>',
-      '    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[',
-    ]);
+    expect(lines[1]).toBe('  <metadata>');
+    expect(lines[2]).toMatch(
+      /^ {4}<ans:document xmlns:ans="https:\/\/github\.com\/reddiana\/AriadneNSD" version="1" drawing-sha256="[0-9a-f]{64}"><!\[CDATA\[$/,
+    );
     expect(lines[3]).toBe('{');
     expect(lines.slice(-10)).toEqual([
       '}',
@@ -202,7 +203,64 @@ describe('SVG file', () => {
   it('T-0438: finds the model element and its version', () => {
     expect(findModelElement(wrap(model('<![CDATA[{}]]>')))).toEqual({
       ok: true,
-      element: { version: '1', text: '{}' },
+      element: { version: '1', text: '{}', drawingSha256: null, metadata: { start: 40, end: 167 } },
     });
+  });
+});
+
+describe('pure SVG (R-EXP-02)', () => {
+  const fonts = [{ family: 'AriadneNSD Mono', woff: new Uint8Array([119, 79, 70, 70]) }];
+
+  it('T-1028: is the saved file without its metadata, so it has no model and does not open', () => {
+    const file = assembleSvgFile({ doc: docWithText('x'), drawing, fonts });
+    const image = assembleImageSvg(drawing, fonts);
+    expect(image).not.toContain('<metadata>');
+    expect(image).not.toContain('ans:document');
+    expect(image).toContain('@font-face');
+    expect(image).toContain(drawing.content);
+    expect(openSvgFile(image)).toMatchObject({ ok: false, reason: 'noModel' });
+    expect(file.replace(/\n {2}<metadata>[\s\S]*<\/metadata>/, '')).toBe(image);
+  });
+
+  it('T-1029: is what the saved file fingerprints', () => {
+    const file = assembleSvgFile({ doc: docWithText('x'), drawing, fonts });
+    const image = assembleImageSvg(drawing, fonts);
+    expect(file).toContain(`drawing-sha256="${sha256Hex(image)}"`);
+  });
+});
+
+describe('drawing check (R-FMT-09)', () => {
+  const saved = (text = 'x'): string =>
+    assembleSvgFile({ doc: docWithText(text), drawing, fonts: [] });
+
+  it('T-1030: finds a saved file unchanged, also with CRLF line ends or a byte order mark', () => {
+    expect(checkDrawing(saved())).toBe('unchanged');
+    expect(checkDrawing(saved().replaceAll('\n', '\r\n'))).toBe('unchanged');
+    expect(checkDrawing(`\ufeff${saved()}`)).toBe('unchanged');
+  });
+
+  it('T-1031: finds a drawing edited by another tool', () => {
+    expect(checkDrawing(saved().replace('width="104"', 'width="90"'))).toBe('edited');
+    expect(checkDrawing(saved().replace('</svg>', '<circle r="3"/></svg>'))).toBe('edited');
+    expect(checkDrawing(saved().replace('fill="#ffffff"', 'fill="#000000"'))).toBe('edited');
+  });
+
+  it('T-1032: does not count a change to the model as a drawing edit', () => {
+    const edited = saved('x').replace('"text": "x"', '"text": "y"');
+    expect(edited).not.toBe(saved('x'));
+    expect(checkDrawing(edited)).toBe('unchanged');
+  });
+
+  it('T-1033: cannot tell for a file without a fingerprint or without a model', () => {
+    expect(checkDrawing(saved().replace(/ drawing-sha256="[0-9a-f]+"/, ''))).toBe('unknown');
+    expect(checkDrawing(assembleImageSvg(drawing, []))).toBe('unknown');
+    expect(checkDrawing('not xml')).toBe('unknown');
+  });
+
+  it('T-1034: cuts only the metadata element when it shares its line with other markup', () => {
+    const oneLine = saved().replace('>\n  <metadata>', '><metadata>');
+    expect(oneLine).not.toBe(saved());
+    expect(checkDrawing(oneLine)).toBe('unchanged');
+    expect(checkDrawing(oneLine.replace('<style>', '<style> '))).toBe('edited');
   });
 });
