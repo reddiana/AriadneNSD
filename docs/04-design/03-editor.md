@@ -390,6 +390,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(그려야 할 때 기다리지 않게).
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
+- 문서 설정의 블록 텍스트의 언어(`document.textKind`, 모델의 `settings.textKind`)는 문서 설정 목록의 맨 위입니다. 값은 `core`의 `textKinds` 목록이고, 렌더러만 이 값을 읽습니다(구문 강조 → [[02-layout#3.1 구문 강조]]). 새 문서는 언제나 `'plain'`입니다 → [[ux-decisions#TK2. 문서 설정의 자리와 이름|TK2]]
 - 문서 설정의 그림 문구의 언어(`document.locale`, 모델의 `settings.locale`)는 그림에 적는 고정 문구("참" · "거짓" 등)의 언어입니다. 레이아웃 · 렌더러 · 텍스트로 복사가 이 값을 읽고, 화면 언어(`ui.locale`)는 메뉴 · 알림에만 씁니다. 새 문서(`text: null`)와 예제는 지금의 화면 언어로 시작하고, `locale`이 없는 파일과 로컬 백업은 지금의 화면 언어로 엽니다. 이 값은 사용자 설정에 기억하지 않습니다 → [[0041-drawing-locale-in-document|ADR-0041]]
 - 문서 설정의 헤더 모양(`document.headStyle`)을 바꾸면 `editor`가 그 값을 사용자 설정 `editor.headStyle`에도 적고, 새 문서(`text: null`)는 그 값으로 시작합니다(없으면 `'title'`). 파일을 열 때는 파일의 값을 따르고 이 사용자 설정은 바꾸지 않습니다. 환경 설정 창에는 보이지 않는 값입니다 → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼|HS1]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]

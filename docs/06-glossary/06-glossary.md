@@ -48,7 +48,7 @@ updated: 2026-11-03
 | 분기 | branch | `Branch` · `Arm` | If · Case 안의 각 경로. 줄 하나를 가진다. 분기마다 분기 라벨이 있다(If는 처음에 "참" · "거짓", Case는 사용자가 적음). If의 분기와 default 분기는 `Branch`, Case의 나머지 분기는 `Arm`. 예전에는 "갈래"라고 적었다(분기 라벨은 "갈래 이름") |
 | 조건 칸 | condition cell | — | If · Case · While · For의 윗부분, Do-While의 아랫부분. 조건을 적는 곳이다. If · Case에서는 빗금과 분기 라벨 줄도 이 칸에 있다. 다이어그램의 헤더와는 다르다. 레이아웃 코드에서는 `head`(`headHeight`)라고 부른다. 2026-11-03까지는 "헤더"라고 적었다 |
 | 조건 | condition | `text` | 제어 블록의 조건 칸에 적는 판정 텍스트. 블록 텍스트와 같은 필드다 |
-| 블록 텍스트 | block text | `text` | 블록에 적는 텍스트. 문서마다 언어(일반 텍스트, C, Java …)를 선택한다 → [[01-requirements#^r-lay\|R-LAY-06]]. 예전에는 "블록 글자"라고 적었다(언어는 "종류", 일반 텍스트는 "문장") |
+| 블록 텍스트 | block text | `text` | 블록에 적는 텍스트. 문서마다 언어(일반 텍스트, C, C++, Java, JavaScript · TypeScript, Python, Bash)를 선택하고, 그 언어로 구문 강조를 한다 → [[01-requirements#^r-lay\|R-LAY-06]], [[01-requirements#^r-lay\|R-LAY-07]]. 예전에는 "블록 글자"라고 적었다(언어는 "종류", 일반 텍스트는 "문장") |
 
 ## 편집
 
@@ -84,6 +84,7 @@ updated: 2026-11-03
 | 테마 | theme | 그림의 색 묶음. 문서마다 선택하고 파일에 저장한다. 밝은 테마와 어두운 테마가 있다 → [[04-visual-design#8. 테마]] |
 | 토큰 | design token | 값 대신 쓰는 이름(`line.structure` → `#5b77ad`). 원시 · 의미 · 구성 요소의 세 단계 → [[04-visual-design#3. 디자인 토큰]] |
 | 대비율 | contrast ratio | WCAG 2.2의 상대 휘도의 비. 텍스트는 4.5:1, 뜻을 가진 선은 3:1이 기준 |
+| 구문 강조 | syntax highlighting | 블록 텍스트의 키워드 · 문자열 · 숫자 · 주석을 블록 텍스트의 언어의 문법대로 다른 색으로 칠하는 것. 색은 테마의 `syntax.*` 토큰이다. 코드에서 텍스트를 이렇게 가르는 함수는 렉서(`tokenize`)다 → [[02-layout#3.1 구문 강조]] |
 
 ## 화면 (UI)
 

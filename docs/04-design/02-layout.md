@@ -14,7 +14,7 @@ updated: 2026-11-01
 
 ## 관련 요구사항
 
-- [[01-requirements#3.3 레이아웃 · 렌더링]] ([[01-requirements#^r-lay|R-LAY-01]] 여러 줄 텍스트, [[01-requirements#^r-lay|R-LAY-05]] → [[04-visual-design]])
+- [[01-requirements#3.3 레이아웃 · 렌더링]] ([[01-requirements#^r-lay|R-LAY-01]] 여러 줄 텍스트, [[01-requirements#^r-lay|R-LAY-05]] → [[04-visual-design]]), 구문 강조 [[01-requirements#^r-lay|R-LAY-06]] · [[01-requirements#^r-lay|R-LAY-07]] → 3.1
 - 내보내기: [[01-requirements#^r-exp|R-EXP-01]] (`P0`), [[01-requirements#^r-exp|R-EXP-03]], [[01-requirements#^r-exp|R-EXP-02]]
 - [[01-requirements#^r-fmt|R-FMT-07]], [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-fmt|R-FMT-03]]
 - [[01-requirements#^r-nfr|R-NFR-03]], [[01-requirements#^r-nfr|R-NFR-02]]
@@ -209,14 +209,38 @@ D2Coding 1.4.0(unitsPerEm 1000)의 문자 폭은 **두 가지뿐**입니다: 반
 
 MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 
-- **SVG 요소와 클래스:** 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 적습니다. 안에는 `<rect>`(칸) · `<path>`(선, 빗금) · `<circle>`(`∅`) · `<text>`(굵은 부분은 `<tspan>`)만 두고, 색은 클래스가 아니라 `fill` · `stroke` 값으로 적습니다(`src/packages/core/src/render/to-svg.ts`) → [[01-file-format#4. 그림 부분]]
+- **SVG 요소와 클래스:** 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 적습니다. 안에는 `<rect>`(칸) · `<path>`(선, 빗금) · `<circle>`(`∅`) · `<text>`(굵은 부분과 구문 강조의 색은 `<tspan>` → 3.1)만 두고, 색은 클래스가 아니라 `fill` · `stroke` 값으로 적습니다(`src/packages/core/src/render/to-svg.ts`) → [[01-file-format#4. 그림 부분]]
 - **디자인 토큰 맵:** `buildScene()`이 테마(토큰 이름 → 색 값, `src/packages/core/src/render/theme.ts`)를 받아 문서 레이어를 그립니다. 오버레이 레이어는 `editor`가 화면 색으로 따로 덧그립니다(`src/packages/editor/src/dom/overlay.ts`) → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
 - **고정 문구의 로캘:** `layout()`이 문서 설정의 그림 문구의 언어(`settings.locale`)를 읽어, 그림에 적는 고정 문구("참" · "거짓" 등)를 `core`의 메시지 카탈로그(`src/packages/core/src/i18n/messages.ts`)에서 고릅니다. 화면 언어는 받지 않습니다. 그래서 같은 문서는 화면 언어와 상관없이 같은 그림이 됩니다 → [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]
 
 > [!info] 미완성: 그림 부분의 형식에서 남은 것
-> - 구문 강조: 블록 텍스트의 언어마다 토크나이저 → [[03-architecture#5. 공통 관심사]]
 > - 텍스트를 외곽선 path로 변환하는 옵션 ([[01-requirements#^r-fmt|R-FMT-10]])
 > - PDF 내보내기: 같은 SVG를 인쇄용으로 변환하는 경로 ([[01-requirements#^r-exp|R-EXP-01]]). PNG는 웹 셸이 저장 파일의 SVG를 캔버스에 그려 만듭니다 → [[06-web#1.2 PNG 내보내기]]
+
+### 3.1 구문 강조
+
+블록 텍스트를 문서 설정의 블록 텍스트의 언어(`settings.textKind` → [[01-requirements#^r-lay|R-LAY-06]])로 칠합니다([[01-requirements#^r-lay|R-LAY-07]]). 화면과 저장 파일 · PNG가 같은 색입니다([[0018-save-as-shown|ADR-0018]]).
+
+- **어디서:** `buildScene()`이 `settings.textKind`를 받아 칠합니다(`src/packages/core/src/render/build-scene.ts`). 레이아웃은 언어를 읽지 않습니다. 언어와 상관없이 글꼴과 굵기가 같아 폭이 같으므로, 언어를 바꾸면 색만 바뀝니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
+- **무엇을:** 처리 블록의 텍스트와 반복 · If · Case의 조건 칸입니다. 헤더의 이름, 분기 라벨, 호출 블록은 칠하지 않습니다 → [[ux-decisions#SY1. 칠하는 텍스트|SY1]]
+- **렉서:** 언어마다 하나이고(`src/packages/core/src/text/syntax.ts` → [[0032-token-highlighting|ADR-0032]]), 텍스트를 키워드 · 문자열 · 숫자 · 주석 · 그 밖으로 가릅니다. 블록 하나의 텍스트 전체를 한 번에 가른 뒤 줄로 나누므로, 블록 주석은 여러 줄에 걸쳐 칠해집니다. 블록 사이로는 이어지지 않습니다.
+- **SVG:** 색이 있는 토큰은 `<text>` 안의 `<tspan fill="…">`입니다. 그 밖의 토큰은 `<text>`의 `fill`(`text.primary`)을 따릅니다. 색은 테마의 `syntax.keyword`(키워드) · `syntax.comment`(주석) · `syntax.literal`(문자열과 숫자) 토큰입니다 → [[04-visual-design#3.3 밝은 기본 테마]]
+
+언어마다의 규칙입니다. 블록의 텍스트는 문법상 완전하지 않은 조각이라 렉서는 실패하지 않습니다.
+
+| 언어 (`textKind`) | 주석 | 문자열 | 그 밖 |
+| --- | --- | --- | --- |
+| 일반 텍스트 (`plain`) | 칠하지 않음 | 칠하지 않음 | 칠하지 않음 |
+| C (`c`) | `//` · `/* */` | `"…"` · `'…'` | 줄 처음의 `#include` 같은 지시문은 키워드. C23의 키워드까지 |
+| C++ (`cpp`) | `//` · `/* */` | `"…"` · `'…'` | 지시문은 키워드. 숫자 안의 `'`(`1'000`)는 숫자의 일부 |
+| Java (`java`) | `//` · `/* */` | `"…"` · `'…'` · `"""…"""`(여러 줄) | `$`는 이름의 일부 |
+| JavaScript · TypeScript (`javascript`) | `//` · `/* */` | `"…"` · `'…'` · `` `…` ``(여러 줄) | TypeScript의 키워드(`interface` · `type` 등)도 키워드. 타입 이름(`number` · `string`)은 변수 이름으로도 흔해 칠하지 않음 |
+| Python (`python`) | `#` | `"…"` · `'…'` · `"""…"""` · `'''…'''`(여러 줄). 접두사(`f"…"` · `rb'…'`)까지 한 문자열 | `//`는 나눗셈이라 주석이 아님 |
+| Bash (`bash`) | 낱말 처음의 `#`만(`${#a}` · `a#b`는 주석이 아님) | `"…"` · `'…'`(둘 다 여러 줄. `'…'` 안의 백슬래시는 이스케이프가 아님) | 예약어와 그처럼 쓰는 내장 명령(`local` · `export` · `return` 등). `$`는 이름의 일부 |
+
+- 닫지 않은 문자열은 그 줄의 끝까지(여러 줄 문자열은 텍스트의 끝까지), 닫지 않은 블록 주석은 텍스트의 끝까지입니다.
+- 숫자는 낱말의 처음에서만 셉니다(`x1`의 `1`은 이름). `0x1F` · `1.5e-3f` · `.5`처럼 접두사 · 지수 · 접미사까지 한 숫자이고, 범위 `1..10`의 점은 숫자가 아닙니다.
+- 이름은 모든 문자(한글 포함)로 이루어질 수 있고, 키워드와 글자가 같을 때만 키워드입니다(`합계if`는 이름).
 
 ## 4. 성능
 

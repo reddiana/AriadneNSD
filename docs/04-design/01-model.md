@@ -22,7 +22,7 @@ updated: 2026-11-03
 - 감싸기 · 풀기: [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-08]]
 - 이동 · 붙여넣기 · 분기: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]]
 - 새 Method로 빼기: [[01-requirements#^r-edit|R-EDIT-19]]
-- 문서 설정(블록 텍스트의 언어, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-10]]
+- 문서 설정(블록 텍스트의 언어, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-07]], [[01-requirements#^r-lay|R-LAY-10]]
 - 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
 - 접기 영역과 뷰 상태: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-16]], [[0018-save-as-shown|ADR-0018]]
 
@@ -44,12 +44,12 @@ type Content = {
 };
 
 type Settings = {
-  textKind: TextKind;    // 블록 텍스트의 언어 → [[0032-token-highlighting|ADR-0032]]
+  textKind: TextKind;    // 블록 텍스트의 언어: 구문 강조의 문법. 글꼴과 레이아웃은 바꾸지 않는다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
   headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
   locale: Locale;        // 그림 문구의 언어: 그림에 적는 고정 문구("참" · "거짓" 등)의 언어 → [[0041-drawing-locale-in-document|ADR-0041]]
 };
-type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';  // 처음에 지원할 목록은 미결정
+type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';  // 일반 텍스트, C, C++, Java, JavaScript · TypeScript, Python, Bash
 type ThemeId = string;   // 테마의 이름. v1 형식은 'default' 하나. 모르는 이름은 기본 테마로 그린다
 type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록)
 ```
@@ -361,5 +361,4 @@ type Target =                                        // 명령이 적용되는 �
 - [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1. 정할 때까지 MVP는 조건 텍스트를 그대로 둔다(`src/packages/core/src/commands/branch.ts`)
 - [ ] 코드의 fall-through(`break` 없이 다음 분기로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
 - [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
-- [ ] 처음에 지원할 블록 텍스트의 언어 목록 → [[01-requirements#6. 미결정 사항]]
 - [ ] 논리 · 물리 뷰([[01-requirements#^r-ide|R-IDE-08]])를 담는 자리. 블록에 선택 필드 하나(예: 설명 문장이나 코드 가운데 지금의 `text`가 아닌 쪽)를 더하고, 어느 얼굴을 보이는지는 뷰 상태에 둔다. 필드를 더하는 일이라 지금의 타입 · 레이아웃 · 렌더러의 구조는 바꾸지 않아도 된다. 레이아웃은 보이는 얼굴의 글자를 잴 뿐이다

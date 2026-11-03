@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0032: 구문 강조는 블록 글자의 종류마다 토크나이저 하나로 한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-03: 처음의 언어를 일반 텍스트 · C · C++ · Java · JavaScript · TypeScript · Python · Bash로 정하고 구현했다. 렉서는 `src/packages/core/src/text/syntax.ts`이고, 문자열과 숫자는 한 색(`syntax.literal`)이다 → [[0042-text-kind-keeps-block-font|ADR-0042]], [[02-layout#3.1 구문 강조]]
 > - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[03-architecture]]
 
 ## 배경
