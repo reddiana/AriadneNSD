@@ -298,30 +298,34 @@ const counts = [
 ];
 
 /**
- * The tests of an area grouped by their first id, so that an id is one row (maintainer,
- * 2026-11-03: "ID는 유니크해야하지 않나요?"): one defect or acceptance test may be kept by several
- * tests.
+ * The Korean of the English texts that come from the code (maintainer, 2026-11-03: "코드는 그대로
+ * 두세요. 문서에만 한국어로 번역해달라는 말입니다"). The code stays English (DR-0017); the
+ * document is Korean. An English text without Korean fails the script; `--add-missing` adds the
+ * missing ones with an empty value and drops the unused ones, and Claude fills them in.
  */
-function byId(tests) {
-  const groups = new Map();
-  for (const test of tests) groups.set(test.ids[0], [...(groups.get(test.ids[0]) ?? []), test]);
-  return [...groups].map(([id, of]) => ({ id, tests: of }));
+const koFile = join(src, 'scripts/test-list-ko.json');
+let koTable = {};
+try {
+  koTable = JSON.parse(readFileSync(koFile, 'utf8'));
+} catch {
+  // No file yet: every text is missing.
 }
-const idRow = ({ id, tests }) =>
-  `| ${link(id)} | ${tests.map((test) => cell(test.what)).join('<br>')} | ${
-    unique(tests.flatMap((test) => test.ids.slice(1)))
-      .map(link)
-      .join(', ') || '—'
-  } | ${unique(tests.map((test) => test.file.type)).join(', ')} | ${unique(
-    tests.map((test) => `\`${test.file.rel}\``),
-  ).join('<br>')} |`;
+const wanted = new Set();
+function ko(english) {
+  const key = english.replace(/\s+/g, ' ').trim();
+  if (key === '') return '';
+  wanted.add(key);
+  return koTable[key] || '';
+}
+
+const idRow = ({ ids, what, file }) =>
+  `| ${cell(ko(what))} | ${ids.map(link).join(', ')} | ${file.type} | \`${file.rel}\` |`;
 const fileRow = (file) =>
-  `| \`${file.rel}\` | ${cell(file.purpose)} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`;
+  `| \`${file.rel}\` | ${cell(ko(file.purpose))} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`;
 
 const areaSections = areas.flatMap((area, i) => {
   const of = files.filter((file) => file.area === area.name);
   const withIds = idTests.filter((test) => test.file.area === area.name);
-  const rows = byId(withIds);
   return [
     `### 2.${String(i + 1)} ${area.name}`,
     '',
@@ -329,18 +333,18 @@ const areaSections = areas.flatMap((area, i) => {
     '',
     `파일 ${String(of.length)}개, 테스트 ${String(testCount(of))}개:`,
     '',
-    '| 자리 | 목적/내용 | 근거 | 방법 | 유형 | 테스트 수 |',
+    '| 자리 | 무엇을 확인하나 | 확인하는 것 | 방법 | 유형 | 테스트 수 |',
     '| --- | --- | --- | --- | --- | --- |',
     ...of.map(fileRow),
     '',
     ...(withIds.length === 0
       ? []
       : [
-          `ID ${String(rows.length)}개를 테스트 ${String(withIds.length)}개가 지킵니다:`,
+          `확인하는 것(ID)을 이름에 적은 테스트 ${String(withIds.length)}개:`,
           '',
-          '| ID | 지키는 테스트 | 다른 근거 | 유형 | 자리 |',
-          '| --- | --- | --- | --- | --- |',
-          ...rows.map(idRow),
+          '| 테스트 | 확인하는 것 | 유형 | 자리 |',
+          '| --- | --- | --- | --- |',
+          ...withIds.map(idRow),
           '',
         ]),
   ];
@@ -359,15 +363,15 @@ const lines = [
   '지금 코드에 있는 테스트의 목록입니다. 무엇을 왜 어떻게 테스트하는지의 원칙은 [[07-testing]], 품질 속성 시나리오는 [[03-quality-attribute-scenarios]], 결함은 [[defects|결함 기록]]에 있습니다.',
   '',
   '> [!info] 이 문서는 손으로 고치지 않습니다',
-  '> `src/scripts/test-list.mjs`가 테스트의 이름과 테스트 파일의 첫 주석에서 만듭니다(`src/`에서 `pnpm test-list`). `pnpm check`가 이 문서가 코드와 다르면 실패하므로, 테스트를 더하거나 바꾸면 이 문서도 같은 커밋에서 바뀝니다. 목적/내용은 테스트 코드의 영어 그대로입니다.',
+  '> `src/scripts/test-list.mjs`가 테스트의 이름과 테스트 파일의 첫 주석에서 만듭니다(`src/`에서 `pnpm test-list`). `pnpm check`가 이 문서가 코드와 다르면 실패하므로, 테스트를 더하거나 바꾸면 이 문서도 같은 커밋에서 바뀝니다. 테스트 코드의 이름과 주석은 영어이고(→ [[dr-0017-code-language-and-commits|DR-0017]]), 이 문서에는 한국어로 옮겨 적습니다. 번역은 `src/scripts/test-list-ko.json`에 있고, 번역이 빠진 테스트가 있으면 `pnpm check`가 실패합니다.',
   '',
   '## 읽는 법',
   '',
-  '- **영역:** 테스트를 그것이 지키는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 ID(인수 테스트 · 결함 · 요구사항 등)를 한 줄씩, 그 ID를 이름에 단 테스트와 함께 보입니다. 한 ID를 테스트 여럿이 지키면 한 줄에 모두 적습니다. 같은 ID가 다른 영역에도 나올 수 있습니다(예: 인수 테스트가 E2E와 통합 테스트 양쪽에 있을 때). 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
+  '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 확인하는 것의 ID를 이름에 적은 테스트를 한 줄씩 보입니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
   '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
-  '- **근거:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)',
-  '- **이름 규칙:** 테스트의 이름 앞에 근거의 ID를 적습니다(`AT-04: …`, 여럿이면 `BUG-03 · QA-19: …`). 파일의 첫 주석이 그 파일의 목적/내용이 됩니다(주석이 없으면 `describe`의 이름).',
+  '- **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트에는 ID가 없습니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).',
+  '- **이름 규칙:** 테스트 코드에서는 테스트의 이름 앞에 그 테스트가 확인하는 것의 ID를 적습니다(`AT-04: …`, 여럿이면 `BUG-03 · QA-19: …`). 이 문서는 그 ID를 "확인하는 것" 칸에 옮기고, 이름의 나머지를 "테스트" 칸에 한국어로 적습니다. 파일의 "무엇을 확인하나"는 파일의 첫 주석(없으면 `describe`의 이름)을 옮긴 것입니다.',
   '',
   '## 1. 요약',
   '',
@@ -382,7 +386,7 @@ const lines = [
   ...areaSections,
   '## 3. 테스트가 없는 ID',
   '',
-  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장 파일 표의 근거 칸), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
+  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장 파일 표의 "확인하는 것" 칸), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
   '',
   '| ID | 다른 길로 맡은 것 |',
   '| --- | --- |',
@@ -391,6 +395,22 @@ const lines = [
 ];
 
 const output = lines.join('\n');
+const missing = [...wanted].filter((key) => !koTable[key]);
+const unused = Object.keys(koTable).filter((key) => !wanted.has(key));
+if (process.argv.includes('--add-missing')) {
+  const next = Object.fromEntries(
+    [...wanted].sort((x, y) => x.localeCompare(y)).map((key) => [key, koTable[key] ?? '']),
+  );
+  writeFileSync(koFile, `${JSON.stringify(next, null, 2)}\n`);
+  console.log(`${String(missing.length)} texts need Korean in ${relative(src, koFile)}.`);
+  process.exit(0);
+}
+if (missing.length > 0 || unused.length > 0) {
+  console.error(
+    `${relative(src, koFile)}: ${String(missing.length)} texts have no Korean, ${String(unused.length)} are unused. Run \`node scripts/test-list.mjs --add-missing\` and fill in the Korean.`,
+  );
+  process.exit(1);
+}
 if (process.argv.includes('--check')) {
   let current = '';
   try {
