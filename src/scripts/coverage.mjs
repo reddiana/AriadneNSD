@@ -65,11 +65,22 @@ function linesOf(file, prefix = '') {
       : slashed;
     if (isHelper(path)) continue;
     const code = new Set();
-    const covered = new Set();
+    // A line is decided by the innermost statements that span it: those starting on it, or else
+    // the one starting latest before it. A statement over several lines (a JSX expression, a call
+    // with its arguments on their own lines) then counts for the lines inside it, too; the browser
+    // run's statements are mostly such, and before 2026-11-03 only their first line counted.
+    const innermost = new Map(); // line → { start, ran }
     for (const [id, location] of Object.entries(entry.statementMap)) {
-      code.add(location.start.line);
-      if (entry.s[id] > 0) covered.add(location.start.line);
+      const { line: start } = location.start;
+      code.add(start);
+      const ran = entry.s[id] > 0;
+      for (let line = start; line <= location.end.line; line += 1) {
+        const best = innermost.get(line);
+        if (best === undefined || best.start < start) innermost.set(line, { start, ran });
+        else if (best.start === start) best.ran ||= ran;
+      }
     }
+    const covered = new Set([...innermost].filter(([, best]) => best.ran).map(([line]) => line));
     out.set(path, { code, covered });
   }
   return out;
