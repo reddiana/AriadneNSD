@@ -75,6 +75,8 @@ MVP의 인수 테스트 AT-01 ~ AT-17(07-testing 4)을 브라우저에서, 배�
 | T-0025 | File System Access가 없으면 저장은 내려받기가 되고, 그 사실을 한 번 알린다(Chromium 쪽) | [[07-testing#4. MVP의 인수 테스트\|AT-14]] |
 | T-0026 | 메뉴, 상태 표시줄, 그림의 고정 문구가 한국어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
+^t-apps-web-e2e-acceptance-spec-ts
+
 ### 2.2 편집 명령과 모델
 
 블록 넣기 · 지우기 · 옮기기 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 16개, 테스트 176개.
@@ -113,6 +115,8 @@ MVP의 인수 테스트 AT-01 ~ AT-17(07-testing 4)을 브라우저에서, 배�
 | T-0052 | 03-editor 6.4: 편집 명령은 거절하고, 이동과 복사는 그대로 된다 |  |
 | T-0053 | 03-editor 5: 등록부는 명령마다 키와 제목을 준다 |  |
 
+^t-packages-editor-src-session-engine-test-ts
+
 #### `packages/core/src/commands/branch.test.ts`
 
 Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX MD3]], [[ux-decisions|UX CD1]].
@@ -130,6 +134,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0062 | If는 참과 default 사이에 새 분기가 든 Case가 된다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0063 | default가 없는 Case에 빈 default 분기를 준다 | [[ux-decisions\|UX CD1]] |
 | T-0064 | default가 있는 Case, 다른 블록, 모르는 id는 거절한다 | [[ux-decisions\|UX CD1]] |
+
+^t-packages-core-src-commands-branch-test-ts
 
 #### `packages/core/src/commands/call.test.ts`
 
@@ -162,6 +168,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 |  |
 | T-0088 | 비거나 겹치는 이름과 모르는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 
+^t-packages-core-src-commands-call-test-ts
+
 #### `packages/core/src/commands/clipboard.test.ts`
 
 복사, 잘라내기, 붙여넣기. 단위 · Vitest · 테스트 7개.
@@ -176,6 +184,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 지운다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 
+^t-packages-core-src-commands-clipboard-test-ts
+
 #### `packages/core/src/commands/delete.test.ts`
 
 블록 지우기(deleteBlocks). 단위 · Vitest · 테스트 6개.
@@ -188,6 +198,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0099 | 접기 영역 전체를 지우면 그 블록들이 지워진다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
 | T-0100 | 하나뿐인 빈 블록과 없는 대상은 지우기를 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
 | T-0101 | 다른 블록과 함께 있는 빈 블록은 지울 수 있다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
+
+^t-packages-core-src-commands-delete-test-ts
 
 #### `packages/core/src/commands/diagram.test.ts`
 
@@ -227,6 +239,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0131 | 01-model 4: 같은 설정이면 내용은 그대로다 |  |
 | T-0132 | "Event n"이나 "Method n"이고, n은 쓰이지 않은 가장 작은 수다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 
+^t-packages-core-src-commands-diagram-test-ts
+
 #### `packages/core/src/commands/edit-text.test.ts`
 
 글자 편집(editText). 단위 · Vitest · 테스트 5개.
@@ -238,6 +252,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0135 | If의 분기 라벨을 정하고 지운다 | [[01-requirements#^r-edit\|R-EDIT-12]] |
 | T-0136 | Case의 분기 라벨을 정하되, 빈 라벨과 default 라벨은 정하지 않는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0137 | 없는 노드, 다이어그램 헤더, 호출 블록(나중 기능)은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
+
+^t-packages-core-src-commands-edit-text-test-ts
 
 #### `packages/core/src/commands/insert.test.ts`
 
@@ -259,6 +275,8 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. 단위 · Vites
 | T-0149 | 01-model 1.7: 새 id는 주어진 생성기에서 온다 |  |
 | T-0150 | 없거나 이어지지 않은 대상은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
 
+^t-packages-core-src-commands-insert-test-ts
+
 #### `packages/core/src/commands/move-to.test.ts`
 
 moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
@@ -270,6 +288,8 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 | T-0153 | 블록이 하나도 남지 않은 줄에는 빈 블록이 들어간다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0154 | 제자리에 떨어뜨린 블록은 아무것도 바꾸지 않는다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0155 | 블록을 자기 안에 떨어뜨리기는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+
+^t-packages-core-src-commands-move-to-test-ts
 
 #### `packages/core/src/commands/move.test.ts`
 
@@ -290,6 +310,8 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 | T-0166 | default 분기는 늘 맨 끝이고, 양 끝을 넘는 것은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0167 | If의 분기를 맞바꾸면 블록이 바뀌고, 라벨은 제자리에 있으며, 조건에 그 사실을 적는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 
+^t-packages-core-src-commands-move-test-ts
+
 #### `packages/core/src/commands/new-document.test.ts`
 
 새 문서. 단위 · Vitest · 테스트 3개.
@@ -300,6 +322,8 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 | T-0169 | 헤더 모양의 기본은 "제목처럼"이고, 넘겨줄 수도 있다(UX HS1) | [[01-requirements#^r-lay\|R-LAY-10]] |
 | T-0170 | 새 문서는 아무것도 접히지 않은 채, 결과 기호 ←로 시작한다 | [[01-requirements#^r-all\|R-ALL-03]] |
 
+^t-packages-core-src-commands-new-document-test-ts
+
 #### `packages/core/src/commands/properties.test.ts`
 
 속성 기반 테스트(07-testing 2). 단위 · 속성 기반 (fast-check) · 테스트 2개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-01]].
@@ -308,6 +332,8 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 | --- | --- | --- |
 | T-0171 | 어떤 명령을 이어도 불변식이 지켜지고, 입력을 바꾸지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] |
 | T-0172 | 생성기가 뷰 상태의 id를 피해야 할 때도 id가 겹치지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] |
+
+^t-packages-core-src-commands-properties-test-ts
 
 #### `packages/core/src/commands/wrap.test.ts`
 
@@ -328,6 +354,8 @@ moveTo(끌어 놓기). 단위 · Vitest · 테스트 5개.
 | T-0183 | 안이 빈 블록뿐인 제어 블록은, 남는 것이 없으면 빈 블록 하나를 남긴다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
 | T-0184 | 제어 블록이 없으면, 그리고 호출 블록(나중)은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
 
+^t-packages-core-src-commands-wrap-test-ts
+
 #### `packages/core/src/model/id.test.ts`
 
 id. 단위 · Vitest · 테스트 5개.
@@ -339,6 +367,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0187 | 01-model 1.7: 같은 문서는 같은 id를 준다 |  |
 | T-0188 | alsoAvoid로 넘긴 id는 다시 쓰지 않는다 |  |
 | T-0189 | id를 읽고 다른 꼴은 거절한다 |  |
+
+^t-packages-core-src-model-id-test-ts
 
 #### `packages/core/src/model/invariants.test.ts`
 
@@ -357,6 +387,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0198 | 01-model 3.6: 로컬 호출은 있는 Method를 가리킨다 |  |
 | T-0199 | 01-model 3.7: 빈 다이어그램은 그것 하나뿐일 때만 있다 |  |
 
+^t-packages-core-src-model-invariants-test-ts
+
 #### `packages/editor/src/clipboard/clip-format.test.ts`
 
 클립보드 형식(03-editor 3.3). 단위 · Vitest · 테스트 3개.
@@ -366,6 +398,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0200 | 복사한 블록은 다른 프로그램에는 들여쓴 줄들이다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0201 | 모델 JSON을 다시 읽으면 같은 블록이다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0202 | 바깥에서 온 글은 한 줄에 처리 블록 하나가 된다 | [[07-testing#4. MVP의 인수 테스트\|AT-12]] |
+
+^t-packages-editor-src-clipboard-clip-format-test-ts
 
 ### 2.3 키 · 마우스 · 선택
 
@@ -381,6 +415,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0204 | 선택한 것이 없으면 포커스 테두리가 잠깐만 보인다 | [[ux-decisions\|UX CF2]] |
 | T-0205 | 블록을 끌어도 그려진 글자가 선택되지 않는다 | [[defects#BUG-09\|BUG-09]] |
 | T-0206 | 빈 캔버스를 오른쪽 클릭하면 파일 · 도움말 메뉴가 보인다 | [[ux-decisions\|UX CM1]] |
+
+^t-apps-web-e2e-canvas-spec-ts
 
 #### `packages/editor/src/session/diagrams.test.ts`
 
@@ -410,6 +446,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0226 | 대상을 잃은 호출 블록은 편집할 수 없다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0227 | 호출할 Method를 바꿀 때는 지금 Method에서 시작하고 글자를 지킨다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 
+^t-packages-editor-src-session-diagrams-test-ts
+
 #### `packages/editor/src/session/random-keys.test.ts`
 
 무작위 키. 통합 · Vitest · 테스트 1개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-01]].
@@ -418,6 +456,8 @@ id. 단위 · Vitest · 테스트 5개.
 | --- | --- | --- |
 | T-0228 | 무작위 키 400개를 눌러도 불변식이 지켜지고, 실행 취소로 처음까지 되돌아간다(시드 ${String(seed)}) | [[03-quality-attribute-scenarios#1. 목록\|QA-01]] |
 
+^t-packages-editor-src-session-random-keys-test-ts
+
 #### `packages/editor/src/dom/overlay.test.ts`
 
 선택 테두리 그리기(overlayContent). 단위 · Vitest · 테스트 1개.
@@ -425,6 +465,8 @@ id. 단위 · Vitest · 테스트 5개.
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
 | T-0229 | 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 | [[defects#BUG-07\|BUG-07]] |
+
+^t-packages-editor-src-dom-overlay-test-ts
 
 #### `packages/editor/src/input/hit-test.test.ts`
 
@@ -447,6 +489,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0242 | 시각 디자인 7.1: 선택한 헤더는 통째로 테두리를 두르고, 그 위에는 아무것도 떨어지지 않는다 |  |
 | T-0243 | 03-editor 3.4: 헤더 이름의 입력란은 헤더 안에 있다 |  |
 
+^t-packages-editor-src-input-hit-test-test-ts
+
 #### `packages/editor/src/input/keys.test.ts`
 
 키 읽기(03-editor 4). 단위 · Vitest · 테스트 8개.
@@ -461,6 +505,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0249 | 03-keymap: `a p` · `A p`는 `o` · `O`처럼 처리 블록을 넣는다 |  |
 | T-0250 | 03-keymap: 범위(`v`)에서 `d`는 바로 잘라내고, `s`는 종류를 기다린다 |  |
 | T-0251 | 03-editor 4: 키 표는 명령마다 보일 키를 준다 |  |
+
+^t-packages-editor-src-input-keys-test-ts
 
 #### `packages/editor/src/navigation/navigate.test.ts`
 
@@ -481,6 +527,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0262 | 조작 규칙 2: 선택한 것이 없으면 이동 키는 마지막에 선택한 블록에서 시작한다 |  |
 | T-0263 | Case의 빈 default 칸에는 마지막 분기에서 간다 | [[ux-decisions\|UX CD1]] |
 
+^t-packages-editor-src-navigation-navigate-test-ts
+
 #### `packages/editor/src/state/selection.test.ts`
 
 선택(03-editor 2). 단위 · Vitest · 테스트 5개.
@@ -493,6 +541,8 @@ id. 단위 · Vitest · 테스트 5개.
 | T-0267 | 03-editor 2: id가 사라진 선택은 버린다 |  |
 | T-0268 | 블록 범위를 명령의 대상으로 바꾼다 |  |
 
+^t-packages-editor-src-state-selection-test-ts
+
 #### `packages/editor/src/ui/key-hint.test.ts`
 
 UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[ux-decisions|UX K3]].
@@ -503,6 +553,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0270 | 아래로 삐져나가면 선택 위로 간다 |  |
 | T-0271 | 위에도 자리가 없으면 아래에 있되 창 안에 머문다 |  |
 | T-0272 | 오른쪽 끝에서는 창 안에 머물도록 왼쪽으로 옮긴다 |  |
+
+^t-packages-editor-src-ui-key-hint-test-ts
 
 #### `packages/editor/src/ui/keys.test.ts`
 
@@ -516,6 +568,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0276 | 키를 단축키 목록의 두 열로 나눈다 |  |
 | T-0277 | 기다리던 첫 키 다음의 둘째 키를 찾는다 | [[ux-decisions\|UX K1]] |
 
+^t-packages-editor-src-ui-keys-test-ts
+
 ### 2.4 메뉴 · 화면 · 시작
 
 메뉴와 툴바, 화면 언어, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 9개, 테스트 55개.
@@ -528,6 +582,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | --- | --- | --- |
 | T-0278 | `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다 | [[defects#BUG-03\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
 | T-0279 | 시작하다 실패하면 시작 화면에 그 사실을 보인다 | [[defects#BUG-03\|BUG-03]], [[03-quality-attribute-scenarios#1. 목록\|QA-19]] |
+
+^t-apps-web-e2e-boot-spec-ts
 
 #### `apps/web/e2e/examples.spec.ts`
 
@@ -543,9 +599,11 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0285 | 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 | [[defects#BUG-01\|BUG-01]] |
 | T-0286 | 마우스로 연 메뉴를 `Esc`가 닫는다 | [[defects#BUG-05\|BUG-05]] |
 
+^t-apps-web-e2e-examples-spec-ts
+
 #### `apps/web/e2e/mobile.spec.ts`
 
-휴대폰의 웹 앱(QA-19는 boot.spec.ts에). E2E · Playwright · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-08]], [[01-requirements#^r-nfr|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록|QA-18]], [[03-quality-attribute-scenarios#1. 목록|QA-20]], [[03-quality-attribute-scenarios#1. 목록|QA-19]].
+휴대폰의 웹 앱(페이지의 시작은 boot.spec.ts에). E2E · Playwright · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-08]], [[01-requirements#^r-nfr|R-NFR-09]], [[03-quality-attribute-scenarios#1. 목록|QA-18]], [[03-quality-attribute-scenarios#1. 목록|QA-20]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
@@ -555,6 +613,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0290 | 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 | [[defects#BUG-04\|BUG-04]], [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
 | T-0291 | 휴대폰에서는 실행 취소 · 다시 실행 · 감싸기 · 도움말이 툴바에 있고, 아래 줄은 없다 | [[03-quality-attribute-scenarios#1. 목록\|QA-20]] |
 
+^t-apps-web-e2e-mobile-spec-ts
+
 #### `apps/web/e2e/smoke.spec.ts`
 
 . E2E · Playwright · 테스트 1개.
@@ -562,6 +622,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
 | T-0292 | 빌드한 웹 앱이 새 문서를 열고 블록 글꼴을 읽어 들인다 |  |
+
+^t-apps-web-e2e-smoke-spec-ts
 
 #### `packages/editor/src/ui/editor-app.test.tsx`
 
@@ -595,6 +657,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0316 | Method들과 "새 Method"를 보이고, `j` · `k`는 지금 것에서 움직이며 `Enter`가 고른다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 |  |
 
+^t-packages-editor-src-ui-editor-app-test-tsx
+
 #### `apps/web/src/shell/messages.test.ts`
 
 화면 언어. 단위 · Vitest · 테스트 3개.
@@ -604,6 +668,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0318 | 한국어 브라우저는 한국어, 다른 모든 언어는 영어를 받는다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0320 | 자리 표시자를 채우고 모르는 것은 그대로 둔다 |  |
+
+^t-apps-web-src-shell-messages-test-ts
 
 #### `packages/editor/src/examples/examples.test.ts`
 
@@ -621,6 +687,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0328 | 모델 JSON으로 저장하고, 같은 문서로 연다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
 | T-0329 | SVG 파일로 저장하고, 같은 문서로 연다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
 
+^t-packages-editor-src-examples-examples-test-ts
+
 #### `packages/editor/src/ui/menu-model.test.ts`
 
 메뉴 항목(menuEntries). 단위 · Vitest · 테스트 1개.
@@ -628,6 +696,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | --- |
 | T-0330 | 03-editor 5.1: 메뉴를 묶음과 순서로 정렬하고 하위 메뉴를 제자리에 모은다 |  |
+
+^t-packages-editor-src-ui-menu-model-test-ts
 
 #### `packages/editor/src/version.test.ts`
 
@@ -637,6 +707,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | --- | --- | --- |
 | T-0331 | 유의적 버전이다 |  |
 | T-0332 | 모든 패키지의 판과 같다 |  |
+
+^t-packages-editor-src-version-test-ts
 
 ### 2.5 파일
 
@@ -655,6 +727,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0337 | 그림의 두 배 크기로 PNG를 내보낸다 | [[01-requirements#^r-exp\|R-EXP-01]] |
 | T-0338 | 06-web 2: 같은 파일을 연 둘째 탭은 보기만 한다 |  |
 
+^t-apps-web-e2e-files-spec-ts
+
 #### `apps/web/src/files/web-document-store.test.ts`
 
 웹 문서 저장소. 통합 · Vitest · 테스트 5개.
@@ -666,6 +740,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0341 | 06-web 2: 권한을 받으면 자동 저장이 쓸 수 있다 |  |
 | T-0342 | 06-web 1: File System Access가 없으면 저장은 같은 이름으로 내려받는다 |  |
 | T-0343 | 06-web 1: "다른 이름으로 내려받기"는 이름을 묻고 문서의 확장자를 지킨다 |  |
+
+^t-apps-web-src-files-web-document-store-test-ts
 
 #### `apps/web/src/shell/web-shell.test.ts`
 
@@ -682,6 +758,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0350 | 복원을 거절하면 그 임시 보관을 지운다 | [[01-requirements#^r-web\|R-WEB-03]] |
 | T-0351 | 03-editor 6.1: 저장하지 않은 편집을 두고 다른 문서로 가면 임시 보관에 지키고 그렇다고 알린다 |  |
 
+^t-apps-web-src-shell-web-shell-test-ts
+
 #### `packages/core/node/golden.test.ts`
 
 골든 파일(07-testing 3). 통합 · 골든 파일 · 테스트 4개.
@@ -692,6 +770,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0353 | 골든 파일마다 사례가 있다 |  |
 | T-0354 | 골든 파일은 모두 열고 저장하면 같은 바이트다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
 | T-0355 | 서로 다른 한글 음절 300자가 든 블록 100개를 저장하면 300 KB 이하다 | [[03-quality-attribute-scenarios#1. 목록\|QA-09]] |
+
+^t-packages-core-node-golden-test-ts
 
 #### `packages/editor/src/create-editor.test.ts`
 
@@ -723,6 +803,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. 단위 · Vitest · 테스�
 | T-0377 | 조작 규칙 "Event 헤더": 겹치는 이름이면 입력란이 다시 열리고, 거기서 `Esc`는 되돌린다 |  |
 | T-0378 | 03-keymap: `Tab`은 호출 블록의 인자와 결과 사이를 옮긴다 |  |
 
+^t-packages-editor-src-create-editor-test-ts
+
 #### `apps/web/src/files/export-png.test.ts`
 
 PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
@@ -733,6 +815,8 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 | T-0380 | 크기가 없는 SVG는 null을 준다 |  |
 | T-0381 | 기본으로 두 배 크기, 정수 픽셀로 그린다 | [[01-requirements#^r-exp\|R-EXP-01]] |
 | T-0382 | 캔버스가 담을 수 있는 것보다 큰 그림은 배율을 낮춘다 |  |
+
+^t-apps-web-src-files-export-png-test-ts
 
 #### `apps/web/src/files/file-name.test.ts`
 
@@ -747,6 +831,8 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 | T-0387 | PNG의 이름을 문서 이름으로 짓는다 | [[01-requirements#^r-exp\|R-EXP-01]] |
 | T-0388 | 저장하지 않은 동안 탭 제목의 이름 앞에 ●를 붙인다 | [[ux-decisions\|UX W3]] |
 
+^t-apps-web-src-files-file-name-test-ts
+
 #### `apps/web/src/shell/tab-lock.test.ts`
 
 탭 잠금. 단위 · Vitest · 테스트 5개.
@@ -758,6 +844,8 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 | T-0391 | 03-editor 6.4: 다른 탭이 닫히면 보기만 하던 탭이 다시 편집할 수 있다 |  |
 | T-0392 | 다른 이름으로 저장한 뒤 점유를 새 파일로 옮긴다 |  |
 | T-0393 | BroadcastChannel이 없으면 모든 점유가 성공한다 |  |
+
+^t-apps-web-src-shell-tab-lock-test-ts
 
 #### `apps/web/src/shell/timers.test.ts`
 
@@ -773,6 +861,8 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 | T-0399 | 06-web 2: 쓰기 권한을 잃으면 다시 시작할 때까지 멈춘다 |  |
 | T-0400 | dispose 뒤에는 저장하지 않는다 |  |
 
+^t-apps-web-src-shell-timers-test-ts
+
 #### `apps/web/src/storage/recent-files.test.ts`
 
 최근 파일. 단위 · Vitest · 테스트 5개.
@@ -785,6 +875,8 @@ PNG 내보내기의 크기. 단위 · Vitest · 테스트 4개.
 | T-0404 | 키로 파일을 잊는다 |  |
 | T-0405 | 저장한 항목을 새것부터 늘어놓는다 |  |
 
+^t-apps-web-src-storage-recent-files-test-ts
+
 #### `packages/core/src/format/base64.test.ts`
 
 base64 인코딩. 단위 · Vitest · 테스트 2개.
@@ -793,6 +885,8 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 | --- | --- | --- |
 | T-0406 | RFC 4648의 시험 벡터를 인코딩한다 |  |
 | T-0407 | 큰 값에는 +와 /를 쓴다 |  |
+
+^t-packages-core-src-format-base64-test-ts
 
 #### `packages/core/src/format/model-json.test.ts`
 
@@ -806,6 +900,8 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 | T-0411 | 01-model 2: 있는 접을 수 있는 id만, 문서 순서로, 겹치지 않게 쓴다 |  |
 | T-0412 | 01-file-format 3.1: 열린 경로는 문서 순서이고, 있는 것만이다 |  |
 | T-0413 | 01-file-format 3.3: 파일에서 지켜 둔 모르는 textKind를 다시 쓴다 |  |
+
+^t-packages-core-src-format-model-json-test-ts
 
 #### `packages/core/src/format/parse-model.test.ts`
 
@@ -822,6 +918,8 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 | T-0420 | 01-model 2: 읽을 때 대상이 없는 뷰의 id도 지킨다(약한 참조) |  |
 | T-0421 | 01-model 3: 불변식을 깨는 문서는 고치지 않고 거절한다 |  |
 
+^t-packages-core-src-format-parse-model-test-ts
+
 #### `packages/core/src/format/round-trip.test.ts`
 
 왕복. 단위 · 속성 기반 (fast-check) · 테스트 3개.
@@ -831,6 +929,8 @@ base64 인코딩. 단위 · Vitest · 테스트 2개.
 | T-0422 | 모델 JSON을 다시 읽으면 같은 내용이고, 다시 쓰면 같은 글이다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
 | T-0423 | 저장한 SVG 파일을 열면 같은 문서이고, 다시 저장하면 같은 바이트다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
 | T-0424 | 어떤 글을 열어도 예외를 던지지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-02]] |
+
+^t-packages-core-src-format-round-trip-test-ts
 
 #### `packages/core/src/format/svg-file.test.ts`
 
@@ -852,6 +952,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0436 | 망가진 파일은 손상으로 거절하고, 예외를 던지지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-02]] |
 | T-0437 | 01-file-format 5: 더 새 판의 파일은 업데이트를 권한다 |  |
 | T-0438 | 모델 요소와 그 판을 찾는다 |  |
+
+^t-packages-core-src-format-svg-file-test-ts
 
 ### 2.6 레이아웃 · 그리기 · 글자
 
@@ -901,6 +1003,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0474 | 다이어그램 본문의 블록이 본문을 꼭 채운다(직사각형을 지킨다) | [[01-requirements#^r-lay\|R-LAY-02]] |
 | T-0475 | 블록 500개 문서의 레이아웃 |  |
 
+^t-packages-core-src-layout-layout-test-ts
+
 #### `packages/core/src/render/render-doc.test.ts`
 
 렌더링 · 렌더링: 헤더(시각 디자인 원칙 2) · 렌더링: 골든 파일(07-testing 3). 단위 · Vitest · 테스트 16개.
@@ -924,6 +1028,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0490 | "제목처럼" 헤더를 그린다: 흐린 라벨, 굵은 이름, 선, 채움 없음 |  |
 | T-0491 | ${name}이 골든 SVG와 같다 | [[01-requirements#^r-fmt\|R-FMT-03]] |
 
+^t-packages-core-src-render-render-doc-test-ts
+
 #### `packages/core/src/text/measure-text.test.ts`
 
 글자 폭. 단위 · Vitest · 테스트 8개.
@@ -939,6 +1045,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0498 | 긴 줄을 줄바꿈하지 않는다 | [[ux-decisions\|UX LT1]] |
 | T-0499 | 공백을 적힌 그대로 지킨다 | [[ux-decisions\|UX LT1]] |
 
+^t-packages-core-src-text-measure-text-test-ts
+
 #### `packages/fonts/node/index.test.ts`
 
 글꼴 파일 읽기(readFontFile). 단위 · Vitest · 테스트 2개.
@@ -947,6 +1055,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | --- | --- | --- |
 | T-0500 | ADR-0026: 문서마다의 서브셋이 시작하는 서브셋 TTF를 읽는다 |  |
 | T-0501 | 02-layout 2.2: 편집 화면용 woff2를 읽는다 |  |
+
+^t-packages-fonts-node-index-test-ts
 
 #### `packages/fonts/node/subset.test.ts`
 
@@ -965,6 +1075,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0510 | ADR-0039: 견본 서브셋의 SHA-256이 기록한 값이다 |  |
 | T-0511 | ADR-0039: 서브셋 TTF의 encodeWoff가 subsetToWoff와 같다 |  |
 
+^t-packages-fonts-node-subset-test-ts
+
 #### `packages/fonts/src/advance-table.test.ts`
 
 블록 글꼴의 글자 폭 표. 단위 · Vitest · 테스트 5개.
@@ -976,6 +1088,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0514 | 02-layout 2.1: 글꼴에 없는 문자는 전각으로 센다 |  |
 | T-0515 | 02-layout 2.1: 범위는 정렬되어 있고 겹치지 않는다 |  |
 | T-0516 | 02-layout 2.1: 13px 글자 폭이 설계의 예와 맞는다 |  |
+
+^t-packages-fonts-src-advance-table-test-ts
 
 ### 2.7 성능
 
@@ -990,6 +1104,8 @@ SVG 파일. 단위 · Vitest · 테스트 14개.
 | T-0517 | 레이아웃과 장면 + SVG 글자가 편집 예산 100ms에 넉넉히 든다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 | T-0518 | 레이아웃 |  |
 | T-0519 | 장면 + SVG 글자 |  |
+
+^t-packages-core-src-render-render-bench-ts
 
 ## 3. 테스트가 없는 ID
 

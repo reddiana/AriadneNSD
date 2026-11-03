@@ -8,7 +8,7 @@ updated: 2026-11-03
 # 결함 기록
 
 > [!abstract] 이 문서는
-> MVP를 써 보다 찾은 **결함**(버그와 품질 문제)의 기록입니다. 결함마다 `BUG-` 번호를 붙이고, 그 결함이 다시 생기지 않는지 보는 **회귀 테스트**의 이름에 같은 번호를 적습니다(`T-0285 · BUG-01: …`, 앞의 `T-`는 테스트의 ID → [[dr-0022-test-ids|DR-0022]]). 테스트 목록([[08-test-list]])이 그 번호로 이 문서와 테스트를 잇습니다.
+> MVP를 써 보다 찾은 **결함**(버그와 품질 문제)의 기록입니다. 결함마다 `BUG-` 번호를 붙이고, 그 결함이 다시 생기지 않는지 보는 **회귀 테스트**의 이름에 같은 번호를 적습니다(`T-0285 · BUG-01: …`, 앞의 `T-`는 테스트의 ID → [[dr-0022-test-ids|DR-0022]]). 테스트 목록([[08-test-list]])이 그 번호로 이 문서와 테스트를 잇습니다. 이 문서의 테스트 ID는 테스트 목록의 그 파일 표로 가는 링크입니다(사이트에서는 그 줄로 갑니다). 링크가 다른 표를 가리키면 테스트 목록 검사가 실패합니다.
 > - 번호는 불변이고 다시 쓰지 않습니다. 새 결함은 다음 번호를 받습니다.
 > - 고친 결함도 지우지 않습니다. 언제 무엇이 깨졌고 무엇이 막고 있는지의 기록입니다.
 > - 표에는 ID · 찾은 날 · 증상 · 상태만 두고, 찾은 사람 · 원인 · 고친 곳 · 회귀 테스트는 표 아래 결함마다의 절에 적습니다.
@@ -32,14 +32,14 @@ updated: 2026-11-03
 - **찾은 사람:** 메인테이너
 - **원인:** 화면 틀의 자리와 캔버스가 같은 클래스 `ans-canvas`를 써서 틀의 `overflow: hidden`이 캔버스에도 먹음
 - **고친 곳:** [[2026-11-01-03-mvp-scroll-dropdown]]
-- **회귀 테스트:** T-0285 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0285]] 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-02
 
 - **찾은 사람:** 메인테이너
 - **원인:** 툴바의 `overflow-x: auto`가 세로도 `auto`로 만들어 드롭다운이 툴바 안에 갇힘
 - **고친 곳:** [[2026-11-01-03-mvp-scroll-dropdown]]
-- **회귀 테스트:** T-0284 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0284]] 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-03
 
@@ -47,22 +47,22 @@ updated: 2026-11-03
 - **원인:** 화면을 그리기 전에 IndexedDB를 여는데 시간 제한이 없음(원인 후보였고, 3초 제한을 넣은 뒤 S26에서 뜸)
 - **고친 곳:** [[2026-11-01-04-examples-button-android-load]]
 - **회귀 테스트:** (E2E, `apps/web/e2e/boot.spec.ts`)
-	- T-0278 `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다
-	- T-0279 시작하다 실패하면 시작 화면에 그 사실을 보인다
+	- [[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다
+	- [[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0279]] 시작하다 실패하면 시작 화면에 그 사실을 보인다
 
 ## BUG-04
 
 - **찾은 사람:** 메인테이너
 - **원인:** 툴바의 예제를 드롭다운에서 버튼으로 바꿀 때(EX4) "넓은 화면에서만" 클래스를 그대로 둠. E2E가 노트북 크기로만 봐서 못 잡음
 - **고친 곳:** [[2026-11-01-04-examples-button-android-load]]
-- **회귀 테스트:** T-0290 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 (E2E, `apps/web/e2e/mobile.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0290]] 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 (E2E, `apps/web/e2e/mobile.spec.ts`)
 
 ## BUG-05
 
 - **찾은 사람:** Claude(사용법 그림을 찍다 발견)
 - **원인:** 마우스로 열면 포커스가 메뉴 제목 버튼에 남는데, 그 버튼은 `↓`만 받고 `Esc`는 메뉴 안(드롭다운)에서만 받았음
 - **고친 곳:** 메뉴가 열려 있는 동안 문서 어디서든 `Esc`로 닫음(`packages/editor/src/ui/menu-bar.tsx`의 `useCloseMenu`)
-- **회귀 테스트:** T-0286 마우스로 연 메뉴를 `Esc`가 닫는다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0286]] 마우스로 연 메뉴를 `Esc`가 닫는다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-06
 
@@ -78,18 +78,18 @@ updated: 2026-11-03
 - **증상의 자세한 모습:** 주황 테두리가 왼쪽 · 위보다 오른쪽 · 아래에서 안쪽으로 더 들어가 보이고, 오른쪽 · 아래에는 블록의 파란 선이 바깥에 드러남
 - **원인:** 문서 그림은 1px 선을 또렷하게 하려고 반 픽셀 밀어 그려서([[04-visual-design]] 9.1) 상자의 오른쪽 · 아래 선이 상자 바깥 1px에 놓임. 오버레이의 테두리는 상자 안에만 그림
 - **고친 곳:** `packages/editor/src/dom/overlay.ts`: 선택 · 호버 테두리가 그 1px까지 덮음
-- **회귀 테스트:** T-0229 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 (단위, `packages/editor/src/dom/overlay.test.ts`)
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-0229]] 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 (단위, `packages/editor/src/dom/overlay.test.ts`)
 
 ## BUG-08
 
 - **찾은 사람:** 메인테이너
 - **원인:** 기다리던 첫 키를 버리는 곳이 다른 키와 `Esc`뿐이었음
 - **고친 곳:** `packages/editor/src/dom/canvas-view.ts`: 캔버스를 누르거나 포커스가 캔버스를 떠나면 버림 → [[ux-decisions#K4. 클릭하면 기다리던 키를 버린다|K4]]
-- **회귀 테스트:** T-0203 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 (E2E, `apps/web/e2e/canvas.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0203]] 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 (E2E, `apps/web/e2e/canvas.spec.ts`)
 
 ## BUG-09
 
 - **찾은 사람:** 메인테이너
 - **원인:** 그림의 글자(SVG `text`)가 브라우저의 글자 선택 대상이었음
 - **고친 곳:** `packages/editor/src/dom/styles.ts`: 캔버스는 `user-select: none`, 인라인 에디터만 글자 선택
-- **회귀 테스트:** T-0205 블록을 끌어도 그려진 글자가 선택되지 않는다 (E2E, `apps/web/e2e/canvas.spec.ts`)
+- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0205]] 블록을 끌어도 그려진 글자가 선택되지 않는다 (E2E, `apps/web/e2e/canvas.spec.ts`)

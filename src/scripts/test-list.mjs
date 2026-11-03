@@ -397,6 +397,13 @@ function ko(english) {
 const testRow = (test) =>
   `| ${test.id} | ${cell(ko(test.what))} | ${test.ids.map((id) => link(id)).join(', ')} |`;
 
+/**
+ * The block id of a file's table (`^t-apps-web-e2e-boot-spec-ts`). Other documents link a test as
+ * `[[08-test-list#^t-…|T-0278]]`: Obsidian goes to the table (it cannot point at a row), and the
+ * site build goes to the row (site/prepare-content.mjs), as for requirement ids (DR-0016).
+ */
+const blockOf = (rel) => `t-${rel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
 /** One file: a line about the whole file, then one row per test. */
 const fileBlock = (file) => [
   `#### \`${file.rel}\``,
@@ -413,7 +420,25 @@ const fileBlock = (file) => [
   '| --- | --- | --- |',
   ...file.tests.map((test) => testRow({ ...test, file })),
   '',
+  `^${blockOf(file.rel)}`,
+  '',
 ];
+
+/** Links to tests in these documents must point at the table of the test's file. */
+const linkingDocs = ['atelier/defects.md'];
+for (const doc of linkingDocs) {
+  const text = readFileSync(join(repo, doc), 'utf8');
+  for (const m of text.matchAll(/\[\[08-test-list#\^([a-z0-9-]+)\\?\|(T-\d{4})\]\]/g)) {
+    const file = seen.get(m[2]);
+    if (file === undefined) problems.push(`${doc}: ${m[2]} is not a test`);
+    else if (blockOf(file) !== m[1])
+      problems.push(`${doc}: ${m[2]} should link to #^${blockOf(file)}`);
+  }
+}
+if (problems.length > 0) {
+  console.error(problems.join('\n'));
+  process.exit(1);
+}
 
 const areaSections = areas.flatMap((area, i) => {
   const of = files.filter((file) => file.area === area.name);
@@ -472,6 +497,48 @@ const lines = [
 ];
 
 const output = lines.join('\n');
+
+/**
+ * The "테스트 ID" line under the "테스트" line of each scenario in 03-quality-attribute-scenarios
+ * (maintainer, 2026-11-03: "QAS의 테스트 부분에 있다면 테스트ID를 넣어주세요"). It is written
+ * here so that it never falls behind the tests.
+ */
+const qasFile = join(repo, 'docs/01-requirements/03-quality-attribute-scenarios.md');
+const testLink = (test) => `[[08-test-list#^${blockOf(test.file.rel)}|${test.id}]]`;
+function testIdsOf(qa) {
+  const parts = [];
+  const whole = files.filter((f) => f.refs.includes(qa));
+  // A test of a file that checks the scenario as a whole is listed with that file only.
+  const own = allTests.filter((test) => test.ids.includes(qa) && !whole.includes(test.file));
+  if (own.length > 0) parts.push(own.map(testLink).join(', '));
+  for (const file of whole) {
+    const of = file.tests.map((test) => ({ ...test, file }));
+    const range =
+      of.length === 1 ? testLink(of[0]) : `${testLink(of[0])} ~ ${of[of.length - 1].id}`;
+    parts.push(`\`${file.rel}\`의 테스트 ${String(of.length)}개(${range})`);
+  }
+  for (const at of atOfQa.get(qa) ?? []) {
+    const ofAt = allTests.filter((test) => test.ids.includes(at));
+    parts.push(`인수 테스트 ${link(at, false)}(${ofAt.map(testLink).join(', ')})`);
+  }
+  if (checks.has(qa)) parts.push(`테스트가 아닌 검사: ${checks.get(qa)}`);
+  return parts.length > 0 ? parts.join('. ') : '없음';
+}
+const qasBefore = readFileSync(qasFile, 'utf8').replaceAll('\r\n', '\n');
+let qa = null;
+const qasOutput = qasBefore
+  .split('\n')
+  .filter((line) => !line.startsWith('- **테스트 ID:**'))
+  .flatMap((line) => {
+    const heading = /^### (QA-\d+) /.exec(line);
+    if (heading !== null) qa = heading[1];
+    else if (line.startsWith('## ')) qa = null;
+    if (qa !== null && line.startsWith('- **테스트:**'))
+      return [line, `- **테스트 ID:** ${testIdsOf(qa)}`];
+    return [line];
+  })
+  .join('\n');
+
 const missing = [...wanted].filter((key) => !koTable[key]);
 const unused = Object.keys(koTable).filter((key) => !wanted.has(key));
 if (process.argv.includes('--add-missing')) {
@@ -495,13 +562,16 @@ if (process.argv.includes('--check')) {
   } catch {
     // Missing: out of date.
   }
-  if (current !== output) {
-    console.error('docs/04-design/08-test-list.md is out of date. Run `pnpm test-list` in src/.');
+  if (current !== output || qasBefore !== qasOutput) {
+    console.error(
+      'docs/04-design/08-test-list.md or the test ids in 03-quality-attribute-scenarios.md are out of date. Run `pnpm test-list` in src/.',
+    );
     process.exit(1);
   }
   console.log('The test list is up to date.');
 } else {
   writeFileSync(outFile, output);
+  if (qasBefore !== qasOutput) writeFileSync(qasFile, qasOutput);
   console.log(
     `Wrote ${relative(repo, outFile)}: ${String(files.length)} files, ${String(allTests.length)} tests.`,
   );

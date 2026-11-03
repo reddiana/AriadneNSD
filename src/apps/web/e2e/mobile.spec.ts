@@ -1,4 +1,4 @@
-// The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts). Chromium made to look like an
+// The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; the start of the page is in boot.spec.ts). Chromium made to look like an
 // Android phone: its screen, touch and user agent. A real phone is on the release checklist
 // (07-testing 5); these catch what a desktop-sized test cannot (inbox 2026-11-01: the MVP did not
 // appear on a Galaxy S26).

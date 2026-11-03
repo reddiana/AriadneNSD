@@ -537,7 +537,6 @@
   "The start of the page (R-NFR-10, QA-19; inbox 2026-11-01": "페이지의 시작",
   "the toolbar's \"Examples\" opens the examples modal": "툴바의 \"예제\"가 예제 모달을 연다",
   "the toolbar's dropdown opens over the canvas, not inside the toolbar": "툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다",
-  "The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; QA-19 is in boot.spec.ts)": "휴대폰의 웹 앱(QA-19는 boot.spec.ts에)",
   "the written name becomes the header, its parameters the arguments": "적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다",
   "turns a block range into a command target": "블록 범위를 명령의 대상으로 바꾼다",
   "typing into the empty default cell makes the default branch, one undo step": "빈 default 칸에 글자를 치면 default 분기가 생기고, 실행 취소 한 단계다",
@@ -571,5 +570,6 @@
   "writes the fixed words in the given locale": "고정 문구를 주어진 언어로 쓴다",
   "writes to the original file, asking for permission on a save": "원래 파일에 쓰고, 저장할 때 권한을 묻는다",
   "written arguments stay when the parameters change": "매개변수가 바뀌어도 적은 인자는 남는다",
-  "zoom with keys, Ctrl+wheel and the zoom menu": "키 · `Ctrl`+휠 · 줌 메뉴로 줌"
+  "zoom with keys, Ctrl+wheel and the zoom menu": "키 · `Ctrl`+휠 · 줌 메뉴로 줌",
+  "The web app on a phone (R-NFR-08 · R-NFR-09, QA-18 · QA-20; the start of the page is in boot.spec.ts)": "휴대폰의 웹 앱(페이지의 시작은 boot.spec.ts에)"
 }
