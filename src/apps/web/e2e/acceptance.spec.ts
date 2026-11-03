@@ -215,6 +215,8 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
   test('T-0007 · AT-05: an edit in a document of 500 blocks is drawn within 100 ms', async ({
     page,
   }) => {
+    // Recording the coverage slows the page down: the time is measured by `pnpm e2e` only.
+    test.skip(process.env.E2E_COVERAGE !== undefined, 'coverage recording slows the page down');
     await putFile(page, 'large.ns.svg', largeDocument(500));
     await command(page, 'file.open').click();
     await expect(page).toHaveTitle('large.ns.svg – AriadneNSD');
