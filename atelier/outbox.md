@@ -44,7 +44,6 @@ updated: 2026-11-03
 
 ### 요구사항 · 범위
 
-
 - [ ] 2026-11-03 세션 02에 Claude가 정한 것 (→ [[2026-11-03-02-inbox-atelier-til-views]])
 	- 논리 · 물리 뷰 [[01-requirements#^r-ide|R-IDE-08]]의 우선순위를 `P3`(IDE 플러그인 `P2`의 기본기 뒤)로
 	- 요구사항 5.2 "MVP의 인수 기준"은 `R-` ID가 아닌 `AT-` ID의 표(블록 ID `^at`). 표와 주 둘은 07-testing 4장에서 그대로 옮김
