@@ -22,10 +22,12 @@ export type Rendering = {
 
 /**
  * Lays out and draws a document with the theme of its settings: layout → buildScene → toSvg.
- * The fixed words are in the document's drawing language `settings.locale` (ADR-0041).
+ * The fixed words are in the document's drawing language `settings.locale` (ADR-0041), and block
+ * text is highlighted in the language `settings.textKind` (R-LAY-07).
  */
 export function renderDoc(doc: Doc): Rendering {
   const result = layout(doc);
-  const scene = buildScene(result, themeFor(doc.content.settings.theme));
+  const { settings } = doc.content;
+  const scene = buildScene(result, themeFor(settings.theme), settings.textKind);
   return { layout: result, scene, svg: toSvg(scene), codePoints: usedCodePoints(scene) };
 }

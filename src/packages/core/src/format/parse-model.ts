@@ -19,6 +19,7 @@ import type {
   SiteFold,
   View,
 } from '../model/types';
+import { isTextKind } from '../text/syntax';
 import { migrations } from './migrations';
 import type { KeptSettings, LoadedDoc } from './model-json';
 import { currentFormatVersion, formatName } from './model-json';
@@ -273,11 +274,12 @@ function readSettings(
   }
   // An unknown locale (a newer app's language) is drawn in the opener's and written back (3.3).
   const locale = knownLocale(written) ?? reader.locale;
-  // v1 uses only plain. Another value is shown as plain and written back as it was (3.3).
+  // An unknown language (a newer app's) is shown as plain and written back as it was (3.3).
+  const known = isTextKind(textKind) ? textKind : null;
   return {
-    settings: { textKind: 'plain', theme, headStyle, locale },
+    settings: { textKind: known ?? 'plain', theme, headStyle, locale },
     kept: {
-      ...(textKind === 'plain' ? {} : { textKind }),
+      ...(known === null ? { textKind } : {}),
       ...(locale === written ? {} : { locale: { written, drawnIn: locale } }),
     },
   };

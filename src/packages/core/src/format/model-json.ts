@@ -29,7 +29,7 @@ export const currentFormatVersion = 1;
  * them back unchanged (01-file-format 3.3). The model shows the default instead.
  */
 export type KeptSettings = {
-  /** The `textKind` as written in the file, when it is not `plain`. The model has `plain`. */
+  /** The `textKind` as written in the file, when this version does not know it. The model has `plain`. */
   readonly textKind?: string;
   /**
    * The `locale` as written in the file, when this version does not know it, and the locale the

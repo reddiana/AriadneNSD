@@ -186,6 +186,22 @@ const cases: ReadonlyArray<{
     kept: { textKind: 'cobol', locale: { written: 'xx', drawnIn: 'en' } },
   },
   {
+    // The saved drawing has the highlight colors, as on screen (R-LAY-07, ADR-0018).
+    name: 'syntax-python',
+    doc: {
+      content: {
+        settings: { ...settings, textKind: 'python' },
+        diagrams: oneDiagram(process('b1', 'total = a // 2  # half\nname = f"{x}"'), {
+          id: 'b2',
+          kind: 'while',
+          text: 'n is not None',
+          body: seq(process('b3', 'pass')),
+        }).content.diagrams,
+      },
+      view,
+    },
+  },
+  {
     name: 'korean-fixed-words',
     // Branch labels left empty, so the drawing writes the fixed words of the document's locale.
     doc: inLocale(

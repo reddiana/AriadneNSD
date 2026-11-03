@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Doc } from '../model/types';
+import type { Doc, TextKind } from '../model/types';
+import { textKinds } from '../text/syntax';
 import { renderDoc } from './render-doc';
 import type { RenderedSvg } from './to-svg';
 import { formatNumber } from './to-svg';
@@ -187,6 +188,87 @@ describe('render: headers (visual design principle 2)', () => {
   });
 });
 
+/** A document with its block text in a language (R-LAY-06). */
+const inTextKind = (doc: Doc, textKind: TextKind): Doc => ({
+  ...doc,
+  content: { ...doc.content, settings: { ...doc.content.settings, textKind } },
+});
+
+/** A C fragment with every token kind, a comment over two lines and a C keyword in a condition. */
+const cCode: Doc = docOf(
+  process('b1', 'int n = 0; // count\nchar *s = "hi";'),
+  whileBlock('b2', 'n < 10 && s != NULL', [process('b3', '/* step\n   on */ n++;')]),
+  ifBlock(
+    'b4',
+    "c == 'x'",
+    branch('r5', [process('b6', 'return 1;')]),
+    branch('r7', [process('b8')]),
+  ),
+);
+
+describe('render: syntax highlighting (R-LAY-07)', () => {
+  it('colors keywords, comments, strings and numbers with the syntax tokens', () => {
+    const { svg } = renderDoc(inTextKind(cCode, 'c'));
+    expect(svg.content).toContain(
+      'xml:space="preserve"><tspan fill="#1f45d6">int</tspan> n = <tspan fill="#8a5a00">0</tspan>; <tspan fill="#22702a">// count</tspan></text>',
+    );
+    expect(svg.content).toContain('<tspan fill="#8a5a00">"hi"</tspan>');
+    expect(svg.content).toContain('<tspan fill="#1f45d6">return</tspan>');
+    // The condition keeps its halo; the character literal is colored.
+    expect(svg.content).toContain(`<tspan fill="#8a5a00">'x'</tspan>`);
+  });
+
+  it('colors a block comment on every line it spans', () => {
+    const { svg } = renderDoc(inTextKind(cCode, 'c'));
+    expect(svg.content).toContain('><tspan fill="#22702a">/* step</tspan></text>');
+    expect(svg.content).toContain('><tspan fill="#22702a">   on */</tspan> n++;</text>');
+  });
+
+  it('plain text is drawn in one color, as before', () => {
+    const { svg } = renderDoc(cCode);
+    expect(svg.content).not.toContain('<tspan');
+  });
+
+  it('changing the language changes colors only, never the layout (ADR-0042)', () => {
+    const plain = renderDoc(cCode);
+    for (const kind of textKinds) {
+      const other = renderDoc(inTextKind(cCode, kind));
+      expect(other.layout).toEqual(plain.layout);
+      expect(other.codePoints).toEqual(plain.codePoints);
+    }
+  });
+
+  it('does not highlight the header, branch labels or calls', () => {
+    const doc: Doc = {
+      ...docOf(process('b1', 'x')),
+      content: {
+        settings: { textKind: 'c', theme: 'default', headStyle: 'shape', locale: 'en' },
+        diagrams: [
+          {
+            id: 'd1',
+            head: { kind: 'method', text: 'int max(int a)' },
+            body: {
+              blocks: [
+                caseBlock('b2', 'k', [arm('r3', '1', [process('b4', 'x')])], null),
+                {
+                  id: 'b5',
+                  kind: 'call',
+                  target: { kind: 'local', diagram: 'd1' },
+                  args: '0',
+                  result: '',
+                  siteFolds: [],
+                },
+              ],
+              folds: [],
+            },
+          },
+        ],
+      },
+    };
+    expect(renderDoc(doc).svg.content).not.toContain('<tspan fill');
+  });
+});
+
 describe('render: golden files (07-testing 3)', () => {
   const cases: ReadonlyArray<readonly [string, Doc]> = [
     [
@@ -254,6 +336,7 @@ describe('render: golden files (07-testing 3)', () => {
       ),
     ],
     ['sample', sample],
+    ['syntax-c', inTextKind(cCode, 'c')],
   ];
 
   for (const [name, doc] of cases) {

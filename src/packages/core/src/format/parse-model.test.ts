@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Doc } from '../model/types';
+import { textKinds } from '../text/syntax';
 import { serializeModelJson } from './model-json';
 import { parseModel, parseModelJson } from './parse-model';
 
@@ -165,6 +166,20 @@ describe('model JSON parsing', () => {
     const saved = serializeModelJson(result.value.doc, result.value.kept);
     expect(saved).toContain('"textKind": "cobol"');
     expect(saved).toContain('"theme": "midnight"');
+  });
+
+  it('01-file-format 3.3: reads every language of this version into the model and writes it back', () => {
+    for (const textKind of textKinds) {
+      const value = minimal();
+      value.settings = { textKind, theme: 'default', headStyle: 'shape', locale: 'en' };
+      const result = parseModel(value);
+      if (!result.ok) {
+        throw new Error(result.detail);
+      }
+      expect(result.value.doc.content.settings.textKind).toBe(textKind);
+      expect(result.value.kept).toEqual({});
+      expect(serializeModelJson(result.value.doc)).toContain(`"textKind": "${textKind}"`);
+    }
   });
 
   it('T-0417: 01-file-format 7: a version 0 file is a prototype file and cannot be edited', () => {
