@@ -134,6 +134,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 - [ ] 사용법 `/manual/` · `/manual/ko/`를 만든다(지금은 MVP의 도움말 › 사용법이 빈 주소를 연다). 짜임은 [[dr-0020-user-guide|DR-0020]], 첫 초안은 시안 M49(5분 둘러보기)
 	- [ ] 메인테이너가 전체 초안 M51을 한 번에 봄(2026-11-02, 한국어 · 영어 모두 `src/apps/manual`에 씀). 고칠 것을 받으면 두 언어에 반영
+- [ ] 브라우저 안의 문서([[01-requirements#^r-web|R-WEB-09]], `P1`, 2026-11-03 메인테이너가 웹 베타의 문턱에 넣음): 본보기는 SequenceDiagram.org의 Web Storage (localStorage). 저장소는 IndexedDB(로컬 백업 · 최근 파일과 같은 곳 → [[06-web#2. 로컬 백업과 자동 저장]]). 시안 M55(`journal/assets/2026-11-03-browser-storage-study.html`)의 답을 받아 UX 설계 · [[06-web]]에 쓰고 만든다
 
 ## 출시 무렵과 그 뒤
 
