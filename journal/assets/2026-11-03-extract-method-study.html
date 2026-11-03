@@ -1,0 +1,871 @@
+<title>M54 새 Method로 빼기 시안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* M53과 같은 틀. 다이어그램 그림은 앱의 렌더러(renderDoc)와 오버레이(overlayContent)가 그린 SVG이고,
+   만드는 스크립트는 2026-11-03-extract-method-figs.test.ts, 페이지로 넣는 것은 …-build.py. */
+@font-face { font-family: 'AriadneNSD Mono'; src: url(data:font/woff;base64,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) format('woff'); }
+:root {
+  --bg: #f6f7f9; --fg: #1b2129; --muted: #5b6573; --line: #d4d9e1; --card: #ffffff;
+  --rec: #2c55c9; --tag: #1b2129; --tagfg: #ffffff; --sel: #d0500b;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14171c; --fg: #e3e7ee; --muted: #9aa4b2; --line: #2e343d; --card: #1c2027;
+  --rec: #7d9bf0; --tag: #e3e7ee; --tagfg: #14171c; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.65 var(--sans); margin: 0; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 32px; }
+h1 { font-size: 26px; margin: 0; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { margin: 0; font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 14px; min-width: 0; }
+.id { font-family: var(--mono); color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.note { border-left: 3px solid var(--line); padding-left: 12px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--card); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; max-width: 76ch; }
+.q { border-top: 1px solid var(--line); padding-top: 24px; }
+.q-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.q-id { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+.opts.wide { grid-template-columns: 1fr; }
+.opt { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--rec); border-width: 2px; padding: 15px; }
+.opt .head { display: flex; align-items: center; gap: 10px; }
+.tag { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--tag); color: var(--tagfg); font-family: var(--mono); font-weight: 500; }
+.opt .star { margin-left: auto; font-size: 13px; color: var(--rec); white-space: nowrap; }
+.opt dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.opt dt { color: var(--muted); } .opt dd { margin: 0; min-width: 0; }
+/* The drawing: always on white paper, like the app's default theme. Scrolls sideways on a phone. */
+.paper { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; position: relative; }
+.paper svg { display: block; max-width: 100%; height: auto; }
+.paper.keep svg { max-width: none; }
+@media (max-width: 640px) { .paper:not(.keep) svg { max-width: none; width: 620px; } }
+.cap { font-size: 13px; color: var(--muted); }
+.before { display: grid; gap: 6px; }
+.status { font: 13px/1.4 var(--sans); background: #ffffff; color: #1b2129; border-top: 1px solid #d4d9e1; padding: 5px 10px; }
+.legend { display: inline-block; width: 18px; height: 10px; border: 3px solid var(--sel); vertical-align: -1px; }
+.legend.dash { border: 2px dashed var(--sel); }
+/* EX3 option 3: the small list shown where the key hint goes (UX K3). */
+.pick { position: absolute; left: 30px; top: 192px; background: #ffffff; color: #1b2129; border: 1px solid #b9c1cd; border-radius: 6px;
+  box-shadow: 0 4px 14px #0002; font: 13px/1.5 var(--sans); padding: 6px 0; min-width: 190px; }
+.pick div { padding: 2px 12px; display: flex; gap: 10px; }
+.pick div.on { background: #e8eefb; }
+.pick b { font-family: var(--mono); font-weight: 500; color: #5b6573; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 10px; align-items: start; }
+table { border-collapse: collapse; font-size: 14px; width: 100%; }
+td, th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+.tablewrap { overflow-x: auto; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <div class="id">M54 · 2026-11-03 · 조작과 모습</div>
+    <h1>M54 새 Method로 빼기 시안</h1>
+    <p>다음 기능은 "새 Method로 빼기"입니다(R-EDIT-19, <code>P1</code>): <i>선택한 블록들이 새 Method 다이어그램이 되고, 그 자리에는 그 Method를 호출하는 호출 블록이 남는다.</i> IDE의 Extract Method와 같은 일입니다. 지금 MVP에서는 헤더가 있는 다이어그램의 블록에서 <kbd>m</kbd>을 누르면 "새 Method로 빼기는 아직 지원하지 않습니다"라고만 알립니다.</p>
+    <p class="note">그림은 모두 앱의 렌더러가 그린 것입니다(예제 "병합 정렬"에 Event 하나와 Method <code>show</code>를 더함, EX3은 5분 둘러보기의 합과 평균). <span class="legend"></span> 주황 굵은 테두리는 선택, <span class="legend dash"></span> 주황 점선은 열린 인라인 에디터(이름이나 칸을 적는 중)입니다.</p>
+  </header>
+
+  <section>
+    <h2>이미 정해져 있는 것</h2>
+    <ul>
+      <li>묻지 않고 뺍니다. 블록 하나든 여러 개든 같습니다. 새 Method가 생기면 바로 헤더의 이름을 적게 합니다(조작 규칙 "새 Method로 빼기와 새 다이어그램").</li>
+      <li>키는 <kbd>m</kbd>(Method 명령)입니다. 블록을 선택하고 <kbd>e</kbd>를 누르면 빼지 않습니다(Event는 호출할 수 없으므로). 메뉴 다이어그램 › "새 Method로 빼기"는 이미 있고 지금은 흐립니다.</li>
+      <li>실행 취소 한 번으로 되돌립니다(조작 규칙 6, 모델 4.1).</li>
+      <li>남는 호출 블록은 같은 문서의 Method를 부르는 호출 블록이고, 이름은 새 Method의 헤더를 따릅니다(ADR-0022). 이름을 적는 때는 새 Method를 만들 때뿐입니다.</li>
+      <li>새 다이어그램은 그 종류의 맨 뒤에 놓이고 화면이 그리로 갑니다(조작 규칙 5). 다만 UX 결정 6절 "처음 읽는 눈에 놀라웠던 곳"에 "새 Method가 맨 뒤에 생기고 화면이 그리로 가는 것. 블록을 뺀 사용자가 보던 자리를 잃는다"가 남아 있어 EX1에서 다시 묻습니다.</li>
+    </ul>
+  </section>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">EX1</span><h2>새 Method는 어디에 놓일까요?</h2></div>
+    <div class="before">
+      <div class="cap">전: <code>merge_sort</code>에서 합치는 부분(블록 4개)을 선택하고 <kbd>m</kbd></div>
+      <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 837 616" width="837" height="616"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C356 25 518 25 572 40 L572 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="270" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L446 120 L572 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="446" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="144" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="446" y="120" width="126" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="509" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M504.5 140.5 L513.5 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M565 184 L565 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M565 216 L565 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="268" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="302" y="280" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="300" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="324" y="312" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M324 312 L448 360 L572 312" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="448" y="330" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="330" y="355" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="355" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="324" y="360" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="380" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="324" y="392" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="412" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="448" y="360" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="380" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="448" y="392" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="412" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="302" y="424" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="444" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="302" y="456" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="476" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+<path d="M616 40 C648 25 744 25 776 40 L776 72 L616 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="60" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="616" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="92" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="616" y="104" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="124" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="638" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="156" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="616" y="168" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="188" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M616 260 C655.4 245 773.6 245 813 260 L813 292 L616 292 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="280" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="616" y="292" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="312" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="638" y="324" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M638 324 L752 372 L813 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="752" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="644" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="807" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="638" y="372" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="392" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="752" y="372" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="782.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778 392.5 L787 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="616" y="404" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="424" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M616 496 C648 481 744 481 776 496 L776 528 L616 528 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="516" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="616" y="528" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="548" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="638" y="560" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="580" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+</g><rect x="303.5" y="249.5" width="268" height="238" fill="none" stroke="#d0500b" stroke-width="3"/></svg></div>
+    </div>
+    <div class="opts wide">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>뺀 Method의 바로 뒤</h3><span class="star">★ 추천</span></div>
+        <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 837 636" width="837" height="636"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C338.2 25 446.8 25 483 40 L483 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="181" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L398 120 L483 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="398" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="477" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="398" y="120" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="440.5" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M436 140.5 L445 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="181" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 184 L476 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 216 L476 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 248 L309 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 248 L476 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="268" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Method 1</tspan></text>
+<path d="M302 340 C356 325 518 325 572 340 L572 372 L302 372 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="360" font-size="13" fill="#151a22" xml:space="preserve">Method 1</text>
+<rect x="302" y="372" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="392" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="302" y="404" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="424" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="324" y="436" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M324 436 L448 484 L572 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="448" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="330" y="479" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="479" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="324" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="324" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="536" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="448" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="448" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="536" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="302" y="548" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="568" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="302" y="580" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="600" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+<path d="M616 40 C648 25 744 25 776 40 L776 72 L616 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="60" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="616" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="92" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="616" y="104" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="124" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="638" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="156" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="616" y="168" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="188" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M616 260 C655.4 245 773.6 245 813 260 L813 292 L616 292 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="280" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="616" y="292" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="312" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="638" y="324" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M638 324 L752 372 L813 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="752" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="644" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="807" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="638" y="372" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="392" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="752" y="372" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="782.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778 392.5 L787 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="616" y="404" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="424" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M616 496 C648 481 744 481 776 496 L776 528 L616 528 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="516" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="616" y="528" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="548" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="638" y="560" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="580" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+</g><rect x="303" y="341" width="269" height="31" fill="none" stroke="#d0500b" stroke-width="2" stroke-dasharray="5 3"/></svg></div>
+        <dl>
+          <dt>규칙</dt><dd>Method에서 뺐으면 그 Method 바로 다음. Event나 헤더 없는 다이어그램에서 뺐으면 지금 규칙대로 Method의 맨 뒤.</dd>
+          <dt>좋은 점</dt><dd>부르는 Method와 불리는 Method가 붙어 있어 위에서 아래로 읽힙니다. 화면이 조금만 움직입니다. IntelliJ · VS Code의 Extract Method도 지금 메서드 바로 뒤에 새 메서드를 둡니다.</dd>
+          <dt>아쉬운 점</dt><dd>"새 다이어그램은 그 종류의 맨 뒤"에 예외가 하나 생깁니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>Method의 맨 뒤 (지금 규칙)</h3></div>
+        <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 821 728" width="821" height="728"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C338.2 25 446.8 25 483 40 L483 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="181" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L398 120 L483 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="398" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="477" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="398" y="120" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="440.5" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M436 140.5 L445 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="181" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 184 L476 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 216 L476 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 248 L309 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 248 L476 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="268" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Method 1</tspan></text>
+<path d="M302 340 C334 325 430 325 462 340 L462 372 L302 372 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="360" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="302" y="372" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="392" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="302" y="404" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="424" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="324" y="436" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="456" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="302" y="468" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="488" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M527 40 C566.4 25 684.6 25 724 40 L724 72 L527 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="537" y="60" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="527" y="72" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="92" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="549" y="104" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M549 104 L663 152 L724 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="663" y="122" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="555" y="147" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="718" y="147" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="549" y="152" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="172" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="663" y="152" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="693.5" cy="168" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M689 172.5 L698 163.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="527" y="184" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="204" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M527 276 C559 261 655 261 687 276 L687 308 L527 308 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="537" y="296" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="527" y="308" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="328" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="549" y="340" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="360" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+<path d="M527 432 C581 417 743 417 797 432 L797 464 L527 464 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="537" y="452" font-size="13" fill="#151a22" xml:space="preserve">Method 1</text>
+<rect x="527" y="464" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="484" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="527" y="496" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="516" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="549" y="528" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M549 528 L673 576 L797 528" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="673" y="546" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="555" y="571" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="791" y="571" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="549" y="576" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="596" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="549" y="608" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="628" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="673" y="576" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="683" y="596" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="673" y="608" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="683" y="628" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="527" y="640" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="660" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="527" y="672" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="537" y="692" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+</g><rect x="528" y="433" width="269" height="31" fill="none" stroke="#d0500b" stroke-width="2" stroke-dasharray="5 3"/></svg></div>
+        <dl>
+          <dt>규칙</dt><dd>새 Method 다이어그램(<kbd>M</kbd>), 호출 목록의 "새 Method를 만들고 호출"과 같습니다.</dd>
+          <dt>좋은 점</dt><dd>규칙 하나로 끝납니다.</dd>
+          <dt>아쉬운 점</dt><dd>Method가 많으면 화면이 멀리 갔다가 와야 합니다. <code>merge</code>가 <code>merge_sort</code>와 떨어집니다.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">EX2</span><h2>이름을 적고 <kbd>Enter</kbd>를 누른 뒤에는 무엇이 선택될까요?</h2></div>
+    <p class="cap">세 그림 모두 EX1 1번의 자리에, 이름 칸에 <code>merge(a, lo, mid, hi)</code>를 적은 뒤입니다. 괄호까지 적으면 헤더 규칙대로 호출 블록의 인자에 <code>a, lo, mid, hi</code>가 채워집니다(조작 규칙 "호출 블록").</p>
+    <div class="opts wide">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>뺀 자리의 호출 블록</h3><span class="star">★ 추천</span></div>
+        <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 837 636" width="837" height="636"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C338.2 25 446.8 25 483 40 L483 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="181" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L398 120 L483 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="398" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="477" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="398" y="120" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="440.5" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M436 140.5 L445 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="181" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 184 L476 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 216 L476 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 248 L309 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 248 L476 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="268" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge</tspan>(a, lo, mid, hi)</text>
+<path d="M302 340 C356 325 518 325 572 340 L572 372 L302 372 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="360" font-size="13" fill="#151a22" xml:space="preserve">merge(a, lo, mid, hi)</text>
+<rect x="302" y="372" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="392" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="302" y="404" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="424" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="324" y="436" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M324 436 L448 484 L572 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="448" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="330" y="479" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="479" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="324" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="324" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="536" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="448" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="448" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="536" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="302" y="548" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="568" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="302" y="580" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="600" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+<path d="M616 40 C648 25 744 25 776 40 L776 72 L616 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="60" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="616" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="92" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="616" y="104" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="124" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="638" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="156" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="616" y="168" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="188" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M616 260 C655.4 245 773.6 245 813 260 L813 292 L616 292 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="280" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="616" y="292" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="312" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="638" y="324" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M638 324 L752 372 L813 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="752" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="644" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="807" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="638" y="372" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="392" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="752" y="372" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="782.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778 392.5 L787 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="616" y="404" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="424" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M616 496 C648 481 744 481 776 496 L776 528 L616 528 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="516" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="616" y="528" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="548" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="638" y="560" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="580" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+</g><rect x="303.5" y="249.5" width="179" height="30" fill="none" stroke="#d0500b" stroke-width="3"/></svg><div class="status">블록 4개를 새 Method <code>merge</code>로 뺐습니다.</div></div>
+        <dl>
+          <dt>움직임</dt><dd>선택과 화면이 뺀 자리로 돌아옵니다. 하던 편집을 그 자리에서 잇습니다.</dd>
+          <dt>좋은 점</dt><dd>IDE와 같습니다(빼고 나면 커서는 부르는 곳에). 결과를 받아야 하면 <kbd>Enter</kbd>로 바로 칸을 엽니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>호출 블록의 결과 칸을 이어서 연다</h3></div>
+        <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 837 636" width="837" height="636"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C338.2 25 446.8 25 483 40 L483 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="181" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L398 120 L483 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="398" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="477" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="398" y="120" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="440.5" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M436 140.5 L445 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="181" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 184 L476 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 216 L476 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 248 L309 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 248 L476 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="268" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge</tspan>(a, lo, mid, hi)</text>
+<path d="M302 340 C356 325 518 325 572 340 L572 372 L302 372 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="360" font-size="13" fill="#151a22" xml:space="preserve">merge(a, lo, mid, hi)</text>
+<rect x="302" y="372" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="392" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="302" y="404" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="424" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="324" y="436" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M324 436 L448 484 L572 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="448" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="330" y="479" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="479" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="324" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="324" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="536" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="448" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="448" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="536" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="302" y="548" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="568" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="302" y="580" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="600" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+<path d="M616 40 C648 25 744 25 776 40 L776 72 L616 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="60" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="616" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="92" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="616" y="104" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="124" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="638" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="156" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="616" y="168" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="188" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M616 260 C655.4 245 773.6 245 813 260 L813 292 L616 292 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="280" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="616" y="292" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="312" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="638" y="324" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M638 324 L752 372 L813 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="752" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="644" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="807" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="638" y="372" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="392" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="752" y="372" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="782.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778 392.5 L787 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="616" y="404" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="424" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M616 496 C648 481 744 481 776 496 L776 528 L616 528 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="516" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="616" y="528" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="548" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="638" y="560" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="580" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+</g><rect x="310" y="249" width="166" height="31" fill="none" stroke="#d0500b" stroke-width="2" stroke-dasharray="5 3"/></svg></div>
+        <dl>
+          <dt>움직임</dt><dd>돌아와서 호출 블록의 인라인 에디터를 엽니다(결과 칸, <kbd>Tab</kbd>으로 인자 칸).</dd>
+          <dt>아쉬운 점</dt><dd>결과를 받지 않는 Method(이 예처럼 <code>a</code>를 고치기만 하는 것)가 많아, 대개 <kbd>Esc</kbd>를 한 번 더 누릅니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>새 Method의 헤더에 남는다</h3></div>
+        <div class="paper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 837 636" width="837" height="636"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C46 22 87.5 22 109.5 40 L214 40 L214 72 L24 72 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">정렬 버튼을 누름</text>
+<rect x="24" y="72" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 72 L31 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 72 L207 104" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="92" font-size="13" fill="#151a22" xml:space="preserve">a ← <tspan font-weight="600">read_numbers</tspan>()</text>
+<rect x="24" y="104" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 104 L31 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 104 L207 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="124" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, 0, len(a))</text>
+<rect x="24" y="136" width="190" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 136 L106 184 L214 136" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="106" y="154" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">is_sorted(a)</text>
+<text x="30" y="179" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="208" y="179" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="184" width="82" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 184 L31 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M99 184 L99 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">show</tspan>(a)</text>
+<rect x="106" y="184" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="116" y="204" font-size="13" fill="#151a22" xml:space="preserve">오류를 알린다</text>
+<path d="M302 40 C338.2 25 446.8 25 483 40 L483 72 L302 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="60" font-size="13" fill="#151a22" xml:space="preserve">merge_sort(a, lo, hi)</text>
+<rect x="302" y="72" width="181" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M302 72 L398 120 L483 72" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="398" y="90" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="308" y="115" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="477" y="115" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="302" y="120" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="140" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="398" y="120" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="440.5" cy="136" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M436 140.5 L445 131.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="302" y="152" width="181" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="172" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="302" y="184" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 184 L309 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 184 L476 216" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="204" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="302" y="216" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 216 L309 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 216 L476 248" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="236" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="302" y="248" width="181" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M309 248 L309 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M476 248 L476 280" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319" y="268" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge</tspan>(a, lo, mid, hi)</text>
+<path d="M302 340 C356 325 518 325 572 340 L572 372 L302 372 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="360" font-size="13" fill="#151a22" xml:space="preserve">merge(a, lo, mid, hi)</text>
+<rect x="302" y="372" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="392" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="302" y="404" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="424" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="324" y="436" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M324 436 L448 484 L572 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="448" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="330" y="479" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="566" y="479" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="324" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="324" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="334" y="536" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="448" y="484" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="504" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="448" y="516" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="536" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="302" y="548" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="568" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="302" y="580" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="312" y="600" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+<path d="M616 40 C648 25 744 25 776 40 L776 72 L616 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="60" font-size="13" fill="#151a22" xml:space="preserve">read_numbers()</text>
+<rect x="616" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="92" font-size="13" fill="#151a22" xml:space="preserve">a = []</text>
+<rect x="616" y="104" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="124" font-size="13" fill="#151a22" xml:space="preserve">입력이 남음</text>
+<rect x="638" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="156" font-size="13" fill="#151a22" xml:space="preserve">a.append(다음 수)</text>
+<rect x="616" y="168" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="188" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<path d="M616 260 C655.4 245 773.6 245 813 260 L813 292 L616 292 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="280" font-size="13" fill="#151a22" xml:space="preserve">is_sorted(a)</text>
+<rect x="616" y="292" width="197" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="312" font-size="13" fill="#151a22" xml:space="preserve">i in 1 .. len(a) - 1</text>
+<rect x="638" y="324" width="175" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M638 324 L752 372 L813 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="752" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i-1] &gt; a[i]</text>
+<text x="644" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="807" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="638" y="372" width="114" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="392" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="752" y="372" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="782.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778 392.5 L787 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="616" y="404" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="424" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<path d="M616 496 C648 481 744 481 776 496 L776 528 L616 528 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="626" y="516" font-size="13" fill="#151a22" xml:space="preserve">show(a)</text>
+<rect x="616" y="528" width="160" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="626" y="548" font-size="13" fill="#151a22" xml:space="preserve">x in a</text>
+<rect x="638" y="560" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="648" y="580" font-size="13" fill="#151a22" xml:space="preserve">print(x)</text>
+</g><rect x="303.5" y="325.5" width="268" height="46" fill="none" stroke="#d0500b" stroke-width="3"/></svg></div>
+        <dl>
+          <dt>움직임</dt><dd>새 빈 다이어그램을 만들고 이름을 적은 뒤와 같습니다.</dd>
+          <dt>아쉬운 점</dt><dd>뺀 블록을 이어서 고칠 때만 좋습니다. 대개는 뺀 자리로 돌아가려고 화면을 옮깁니다.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q">
+    <div class="q-head"><span class="q-id">EX3</span><h2>헤더 없는 다이어그램에서 블록을 선택하고 <kbd>m</kbd>을 누르면?</h2></div>
+    <p>지금 MVP에서는 헤더 없는 다이어그램에서 블록을 선택했어도 <kbd>e</kbd> · <kbd>m</kbd>이 그 다이어그램에 헤더를 답니다(빼기가 없고, 헤더를 다는 길이 이것뿐이어서). 빼기가 생기면 <kbd>m</kbd>에 맞는 일이 둘이 됩니다(요구사항 다시 짜기에서 짚은 겹침). 새 문서와 5분 둘러보기는 헤더 없는 다이어그램 하나로 시작하므로 자주 만나는 경우입니다.</p>
+    <div class="before">
+      <div class="cap">전: <code>i ← 0</code>부터 While까지(블록 2개)를 선택하고 <kbd>m</kbd></div>
+      <div class="paper keep" style="width:fit-content"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 240" width="208" height="240"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">sum ← 0</text>
+<rect x="24" y="56" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="76" font-size="13" fill="#151a22" xml:space="preserve">i ← 0</text>
+<rect x="24" y="88" width="160" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="108" font-size="13" fill="#151a22" xml:space="preserve">i &lt; n</text>
+<rect x="46" y="120" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="140" font-size="13" fill="#151a22" xml:space="preserve">sum ← sum + a[i]</text>
+<rect x="46" y="152" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="172" font-size="13" fill="#151a22" xml:space="preserve">i ← i + 1</text>
+<rect x="24" y="184" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="204" font-size="13" fill="#151a22" xml:space="preserve">avg ← sum / n</text>
+</g><rect x="25.5" y="57.5" width="158" height="126" fill="none" stroke="#d0500b" stroke-width="3"/></svg></div>
+    </div>
+    <div class="opts">
+      <div class="opt rec">
+        <div class="head"><span class="tag">1</span><h3>빼기 (블록에서 <kbd>m</kbd>은 어디서나 빼기)</h3><span class="star">★ 추천</span></div>
+        <div class="paper keep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456 224" width="456" height="224"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">sum ← 0</text>
+<rect x="24" y="56" width="160" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 56 L31 88" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M177 56 L177 88" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="76" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sum_from</tspan>(a, n)</text>
+<rect x="24" y="88" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="108" font-size="13" fill="#151a22" xml:space="preserve">avg ← sum / n</text>
+<path d="M272 40 C304 25 400 25 432 40 L432 72 L272 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="282" y="60" font-size="13" fill="#151a22" xml:space="preserve">sum_from(a, n)</text>
+<rect x="272" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="282" y="92" font-size="13" fill="#151a22" xml:space="preserve">i ← 0</text>
+<rect x="272" y="104" width="160" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="282" y="124" font-size="13" fill="#151a22" xml:space="preserve">i &lt; n</text>
+<rect x="294" y="136" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="304" y="156" font-size="13" fill="#151a22" xml:space="preserve">sum ← sum + a[i]</text>
+<rect x="294" y="168" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="304" y="188" font-size="13" fill="#151a22" xml:space="preserve">i ← i + 1</text>
+</g><rect x="273" y="41" width="159" height="31" fill="none" stroke="#d0500b" stroke-width="2" stroke-dasharray="5 3"/></svg></div>
+        <dl>
+          <dt>헤더 달기</dt><dd><kbd>e</kbd>는 지금처럼 Event 헤더 달기. Method 헤더 달기는 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트의 "Method 헤더 달기"로.</dd>
+          <dt>좋은 점</dt><dd>블록을 선택한 <kbd>m</kbd>이 어느 다이어그램에서나 같은 일을 합니다. 헤더 달기는 다이어그램마다 한 번이지만 빼기는 여러 번 합니다.</dd>
+          <dt>아쉬운 점</dt><dd>헤더 없는 다이어그램에 키로 Method 헤더를 달 수 없습니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">2</span><h3>헤더 달기 (지금대로)</h3></div>
+        <div class="paper keep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 288" width="208" height="288"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<path d="M24 40 C56 25 152 25 184 40 L184 72 L24 72 Z" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
+<text x="34" y="60" font-size="13" fill="#151a22" xml:space="preserve">Method 1</text>
+<rect x="24" y="72" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="92" font-size="13" fill="#151a22" xml:space="preserve">sum ← 0</text>
+<rect x="24" y="104" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="124" font-size="13" fill="#151a22" xml:space="preserve">i ← 0</text>
+<rect x="24" y="136" width="160" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="156" font-size="13" fill="#151a22" xml:space="preserve">i &lt; n</text>
+<rect x="46" y="168" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="188" font-size="13" fill="#151a22" xml:space="preserve">sum ← sum + a[i]</text>
+<rect x="46" y="200" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="220" font-size="13" fill="#151a22" xml:space="preserve">i ← i + 1</text>
+<rect x="24" y="232" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="252" font-size="13" fill="#151a22" xml:space="preserve">avg ← sum / n</text>
+</g><rect x="25" y="41" width="159" height="31" fill="none" stroke="#d0500b" stroke-width="2" stroke-dasharray="5 3"/></svg></div>
+        <dl>
+          <dt>빼기</dt><dd>이 다이어그램에서는 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트의 "새 Method로 빼기"로만.</dd>
+          <dt>아쉬운 점</dt><dd>같은 <kbd>m</kbd>이 다이어그램에 따라 다른 일을 합니다. 빼려던 사용자는 문서 전체가 Method가 된 것을 보고 놀랍니다.</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <div class="head"><span class="tag">3</span><h3>둘 가운데 고르게 묻는다</h3></div>
+        <div class="paper keep" style="padding-bottom:40px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 240" width="208" height="240"><g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">sum ← 0</text>
+<rect x="24" y="56" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="76" font-size="13" fill="#151a22" xml:space="preserve">i ← 0</text>
+<rect x="24" y="88" width="160" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="108" font-size="13" fill="#151a22" xml:space="preserve">i &lt; n</text>
+<rect x="46" y="120" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="140" font-size="13" fill="#151a22" xml:space="preserve">sum ← sum + a[i]</text>
+<rect x="46" y="152" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="172" font-size="13" fill="#151a22" xml:space="preserve">i ← i + 1</text>
+<rect x="24" y="184" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="204" font-size="13" fill="#151a22" xml:space="preserve">avg ← sum / n</text>
+</g><rect x="25.5" y="57.5" width="158" height="126" fill="none" stroke="#d0500b" stroke-width="3"/></svg><div class="pick"><div class="on"><b>1</b>새 Method로 빼기</div><div><b>2</b>Method 헤더 달기</div></div></div>
+        <dl>
+          <dt>움직임</dt><dd>키 힌트 자리(선택 바로 아래, K3)에 작은 목록. <kbd>Enter</kbd>는 1번, <kbd>Esc</kbd>는 그만두기.</dd>
+          <dt>아쉬운 점</dt><dd>"묻지 않고 뺀다"는 규칙과 어긋나고, 이 경우에만 한 번 더 누릅니다.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q">
+    <h2>Claude가 정해 둔 것 (다르면 알려 주세요)</h2>
+    <div class="tablewrap"><table>
+      <tr><th>경우</th><th>정해 둔 것</th></tr>
+      <tr><td>뺄 수 있는 것</td><td>한 줄에 이어진 블록들(선택은 늘 그렇습니다, ADR-0008). 제어 블록을 선택하면 그 안쪽도 함께. 줄의 블록을 모두 빼도 그 자리에는 호출 블록 하나가 남습니다.</td></tr>
+      <tr><td>블록이 아닌 것을 선택하고 <kbd>m</kbd></td><td>헤더: 지금처럼 Method로 바꾸기. 분기 라벨 · 빈 default 칸: 빼지 않고 "뺄 블록을 선택하세요"를 알림.</td></tr>
+      <tr><td>Event에서 빼기</td><td>됩니다. 새 Method의 자리는 EX1을 따릅니다.</td></tr>
+      <tr><td>새 Method의 이름</td><td>기본 이름 <code>Method n</code>(쓰지 않은 가장 작은 번호)이 모두 선택된 채로 이름 칸이 열립니다. <kbd>Enter</kbd> · <kbd>Esc</kbd>로 그대로 닫으면 기본 이름으로 남습니다. 겹치는 이름은 지금 헤더 규칙대로 칸을 다시 엽니다.</td></tr>
+      <tr><td>호출 블록의 인자 · 결과</td><td>비운 채로 시작합니다. 이름 칸에 괄호까지 적으면 헤더 규칙대로 인자가 채워집니다. 편집기는 블록 글자에서 변수를 찾아 제안하지 않습니다(블록 글자는 자유 텍스트).</td></tr>
+      <tr><td>실행 취소</td><td>빼기와 바로 이어 적은 이름이 한 단계입니다(<kbd>Ctrl</kbd>+<kbd>Z</kbd> 한 번에 뺀 블록이 제자리로). 빈 default 칸에 적기(CD1)와 같은 방식입니다.</td></tr>
+      <tr><td>접기 영역</td><td>선택 안에 다 든 접기 영역은 새 Method로 따라갑니다. 접기 영역 하나를 선택하고 빼면 그 접기 영역은 없어지고, 그 이름이 새 Method의 기본 이름이 됩니다. 선택의 경계에 걸친 접기 영역은 풀고 상태 표시줄에 알립니다.</td></tr>
+      <tr><td>자기 자신을 부르는 블록</td><td>뺀 블록 속에 <code>merge_sort</code>를 부르는 호출 블록이 있으면 그대로 <code>merge_sort</code>를 부릅니다.</td></tr>
+      <tr><td>알림</td><td>상태 표시줄: "블록 n개를 새 Method로 뺐습니다. 이름을 적으세요." 이름을 적은 뒤에는 "… 새 Method <code>이름</code>으로 뺐습니다."</td></tr>
+      <tr><td>메뉴</td><td>다이어그램 › "새 Method로 빼기"(흐림을 풂), 컨텍스트 메뉴, 커맨드 팔레트. 툴바에는 넣지 않습니다.</td></tr>
+    </table></div>
+  </section>
+</div>
