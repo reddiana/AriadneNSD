@@ -45,21 +45,26 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 %%{init: {"flowchart": {"wrappingWidth": 400, "subGraphTitleMargin": {"top": 4, "bottom": 18}}}}%%
 flowchart TB
     %% 이어지지 않은 상자는 direction TB면 옆으로, LR이면 아래로 놓인다. 그림이 가로로 길게 그려지게 고름(2026-11-03)
+    %% APP은 editor와 웹 셸을 위아래로 묶는 테두리 없는 묶음. 나중에 적은 묶음(UNIT)이 왼쪽에 놓인다
     subgraph E2E["E2E<br/>빌드한 웹 앱 + Chromium"]
         direction TB
         subgraph INT["통합<br/>Node<br/>가짜 셸 · happy-dom"]
             direction TB
+            subgraph APP[" "]
+                direction LR
+                engine["editor<br/>엔진 · 화면(React)"]
+                shell["웹 셸<br/>저장 · 로컬 백업 · 최근 파일"]
+            end
             subgraph UNIT["단위<br/>Node"]
                 direction LR
                 core["core<br/>모델 · 명령 · 레이아웃 · 파일 형식"]
                 fonts["fonts<br/>advance 폭 · 서브셋"]
                 pure["editor의 순수 함수<br/>이동 · 히트 테스트 · 키 읽기"]
             end
-            engine["editor<br/>엔진 · 화면(React)"]
-            shell["웹 셸<br/>저장 · 로컬 백업 · 최근 파일"]
         end
         browser["브라우저<br/>CSS · 포커스 · 파일 · IndexedDB · 시작"]
     end
+    style APP fill:none,stroke:none
 ```
 
 ### 1.3 테스트 더블
