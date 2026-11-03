@@ -32,7 +32,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.1.0`이고(GitHub Releases에 Pre-release로 올림), 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다 → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
-- 테스트: 단위 · 통합 560개, E2E 50개(인수 테스트 AT-01 ~ AT-17, 휴대폰 흉내, 결함의 회귀 테스트 BUG-01 ~ 09), `pnpm check` · CI. 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 [[08-test-list]](자동 생성), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
+- 테스트: 단위 · 통합 560개, E2E 51개, 테스트마다 ID `T-0001` ~ `T-0519`([[dr-0022-test-ids|DR-0022]]). 인수 기준은 [[01-requirements#5.2 MVP의 인수 기준]], 테스트 아키텍처는 [[07-testing#1. 테스트 아키텍처]], 지금의 테스트 전부는 기능 영역마다 [[08-test-list]](자동 생성, 한국어), 결함은 [[defects]]. 남은 구멍은 [[backlog#MVP 개발]]
 - 프로토타입은 **66번째 판**입니다(정한 웹 화면까지) → [[prototype]]
 - 문서 검사 훅이 Claude가 고친 문서의 표와 링크를 검사합니다(`.claude/hooks/doc-check.py`)
 - 요구사항은 모두 `R-` ID([[01-requirements#^r-web|R-WEB-02]])를 받아 표에 있고, ID는 불변, 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 → [[dr-0016-requirement-ids|DR-0016]]
@@ -45,6 +45,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] 메인테이너가 2026-11-03 세션 02에 바뀐 문서를 사이트에서 봄: [[08-test-list]](기능 영역, 테스트 ID, 한국어), [[defects]], [[03-quality-attribute-scenarios]]의 "테스트 ID", [[01-requirements#5.2 MVP의 인수 기준]], [[07-testing#1.2 유형과 구성 요소]]의 그림 → [[2026-11-03-02-inbox-atelier-til-views]]
 - [ ] 메인테이너가 2026-11-03에 바뀐 것을 써 보기: 빈 블록에서 `o` · `O`, `a p` · `A p`, 캔버스 포커스 테두리(1초, 환경 설정의 늘 보이기), 클릭으로 키 힌트 닫기, 드래그할 때 글자, 문서 사이트의 왼쪽 위 · "앱 열기" → [[2026-11-03-01-site-home-keys-focus]]
 - [ ] 메인테이너: 앱이 "불러오는 중"에서 가끔 멈출 때(안드로이드 자주, Edge 가끔) 주소를 바로 열었는지, 문서 사이트 · README 버튼을 거쳤는지 알려 주기. 문서 사이트를 거친 경우는 BUG-06으로 고침(2026-11-03). 바로 열어도 멈추면 그 화면을 찍어 보내기 → [[defects]]
 - [ ] 메인테이너가 사용법 전체 초안 M51을 봄: https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq → [[backlog#웹 베타의 문턱]]
