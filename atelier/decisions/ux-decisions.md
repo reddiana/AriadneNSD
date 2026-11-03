@@ -391,9 +391,9 @@ MVP에 드는 조작의 미결정을 한 번에 정했다(메인테이너: "mvp 
 
 **정함 (2026-11-03): 새 Method의 이름을 적고 `Enter`를 누르면, 그 자리에 남은 호출 블록이 선택되고 화면이 그리로 돌아온다.** 견준 것: 새 Method의 헤더를 선택한 채 그 자리에 머묾, 새 Method의 첫 블록 선택. → 시안 M54(https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n, 사본 `journal/assets/2026-11-03-extract-method-study.html`, 만드는 스크립트 `…-build.py` · `…-figs.test.ts`)
 
-### XM3. 빼기의 키 `m`
+### XM3. 헤더 없는 다이어그램에서 블록에 m은 고르는 목록
 
-**정함 (2026-11-03): 블록을 선택하고 `m`을 누르면 모든 다이어그램에서(헤더 없는 다이어그램에서도) 새 Method로 뺀다. `e`는 그대로 "Event 헤더 달기"이고, 헤더 없는 다이어그램의 "Method 헤더 달기"는 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트로 옮긴다.** 견준 것: 헤더 없는 다이어그램에서는 `m`이 Method 헤더 달기(지금까지)이고 빼기는 다른 키, 빼기에 키를 두지 않음. → 시안 M54(https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n, 사본 `journal/assets/2026-11-03-extract-method-study.html`, 만드는 스크립트 `…-build.py` · `…-figs.test.ts`)
+**정함 (2026-11-03): 헤더 없는 다이어그램에서 블록을 선택하고 `m`을 누르면 키 힌트 자리(선택 바로 아래, K3)에 작은 목록 "1 새 Method로 빼기 · 2 Method 헤더 달기"를 띄운다. `Enter`나 `1`은 빼기, `2`는 Method 헤더 달기, `Esc`는 그만두기. 헤더가 있는 다이어그램에서는 `m`이 바로 빼기다. `e`는 그대로 Event 헤더 달기다. Method 헤더 달기는 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트에도 둔다.** 시안 M54 EX3의 3번(둘 가운데 고르게 묻는다). 같은 날 처음에는 1번(어디서나 빼기)으로 정했다가 메인테이너가 3번으로 바꿈. 견준 것: 블록에서 `m`은 어디서나 빼기(1번, Claude의 추천), 헤더 없는 다이어그램에서는 `m`이 Method 헤더 달기(지금대로, 2번)이고 빼기는 메뉴로만. → 시안 M54(https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n, 사본 `journal/assets/2026-11-03-extract-method-study.html`, 만드는 스크립트 `…-build.py` · `…-figs.test.ts`)
 
 ### BS1. 브라우저 안의 문서는 열기 · 저장 창 안에서 고른다
 
