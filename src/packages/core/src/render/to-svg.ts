@@ -81,13 +81,15 @@ function textToSvg(element: Extract<SceneElement, { kind: 'text' }>): string {
   return (
     `<text x="${formatNumber(element.x)}" y="${formatNumber(element.y)}"${anchor}` +
     ` font-size="${formatNumber(element.fontSize)}" fill="${element.fill}"${halo}` +
-    ` xml:space="preserve">${element.runs.map(runToSvg).join('')}</text>`
+    ` xml:space="preserve">${element.runs.map((run) => runToSvg(run, element.fill)).join('')}</text>`
   );
 }
 
-function runToSvg(run: TextRun): string {
+function runToSvg(run: TextRun, textFill: string): string {
   const text = escapeText(run.text);
-  return run.weight === 400 ? text : `<tspan font-weight="${String(run.weight)}">${text}</tspan>`;
+  const weight = run.weight === 400 ? '' : ` font-weight="${String(run.weight)}"`;
+  const fill = run.fill === undefined || run.fill === textFill ? '' : ` fill="${run.fill}"`;
+  return weight === '' && fill === '' ? text : `<tspan${weight}${fill}>${text}</tspan>`;
 }
 
 function pathData(points: ReadonlyArray<Point>): string {

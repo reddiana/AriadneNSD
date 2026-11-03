@@ -1,6 +1,14 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
-import { createDoc, locales, openSvgFile, parseModelJson, setSettings } from '@ariadne-nsd/core';
+import {
+  createDoc,
+  isTextKind,
+  locales,
+  openSvgFile,
+  parseModelJson,
+  setSettings,
+  textKinds,
+} from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -109,7 +117,17 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     scope: 'user',
   },
   {
-    // After the block text's language (not shown in the MVP): the language of the drawn words.
+    // The language of block text: how it is highlighted (R-LAY-06, R-LAY-07).
+    id: documentSettingIds.textKind,
+    title: 'setting.textKind',
+    hint: 'setting.textKind.hint',
+    values: textKinds,
+    valueTitles: textKinds.map((kind) => `setting.textKind.${kind}` as const),
+    defaultValue: 'plain',
+    scope: 'document',
+  },
+  {
+    // Right after the block text's language: the language of the drawn words (ADR-0041).
     id: documentSettingIds.locale,
     title: 'setting.documentLocale',
     hint: 'setting.documentLocale.hint',
@@ -623,7 +641,7 @@ function changedSettings(settings: Settings, id: string, value: unknown): Settin
     case documentSettingIds.theme:
       return value === 'default' ? { ...settings, theme: value } : null;
     case documentSettingIds.textKind:
-      return value === 'plain' ? { ...settings, textKind: value } : null;
+      return isTextKind(value) ? { ...settings, textKind: value } : null;
     default:
       return null;
   }

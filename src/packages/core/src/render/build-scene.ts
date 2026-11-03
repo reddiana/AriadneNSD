@@ -5,10 +5,12 @@ import { blockFont } from '@ariadne-nsd/fonts';
 import { geometry } from '../layout/geometry';
 import { headLabel } from '../layout/layout';
 import type { Box, BranchLabel, LayoutNode, LayoutResult, PlacedText } from '../layout/types';
-import type { Id } from '../model/types';
+import type { Id, TextKind } from '../model/types';
 import { fontSizes, lineHeight } from '../text/measure-text';
+import type { TokenKind } from '../text/syntax';
+import { tokenize, tokenLines } from '../text/syntax';
 import type { PathSegment, Point, Scene, SceneElement, TextRun } from './scene';
-import type { Theme } from './theme';
+import type { ColorToken, Theme } from './theme';
 
 /**
  * The font family list of the drawing: the bundled block font first, then fonts likely to be
@@ -39,11 +41,16 @@ const conditionRaise = 2;
 
 /**
  * Builds the scene of a laid-out document with a theme. All color and shape decisions are made
- * here, so a rendering backend only translates the result (ADR-0030).
+ * here, so a rendering backend only translates the result (ADR-0030). Block text is highlighted
+ * in the language `textKind` (R-LAY-07); `plain` is not.
  */
-export function buildScene(result: LayoutResult, theme: Theme): Scene {
+export function buildScene(
+  result: LayoutResult,
+  theme: Theme,
+  textKind: TextKind = 'plain',
+): Scene {
   const elements: SceneElement[] = [];
-  const ctx: Painter = { elements, colors: theme.colors };
+  const ctx: Painter = { elements, colors: theme.colors, textKind };
   for (const node of result.nodes) {
     paint(ctx, node);
   }
@@ -60,7 +67,37 @@ export function buildScene(result: LayoutResult, theme: Theme): Scene {
 type Painter = {
   readonly elements: SceneElement[];
   readonly colors: Theme['colors'];
+  /** The language block text is highlighted in (R-LAY-07). */
+  readonly textKind: TextKind;
 };
+
+/** The color token of each token kind (visual design 3.3); `null` keeps the text's color. */
+const syntaxTokens: Readonly<Record<TokenKind, ColorToken | null>> = {
+  keyword: 'syntax.keyword',
+  comment: 'syntax.comment',
+  string: 'syntax.literal',
+  number: 'syntax.literal',
+  other: null,
+};
+
+/**
+ * The runs of each line of a block text, colored by the syntax of the document's language
+ * (R-LAY-07, ADR-0032). The text is tokenized as a whole, so a comment may span lines.
+ */
+function highlightedLines(ctx: Painter, text: PlacedText): ReadonlyArray<ReadonlyArray<TextRun>> {
+  if (ctx.textKind === 'plain') {
+    return text.lines.map((line) => (line === '' ? [] : [{ text: line, weight: 400 }]));
+  }
+  const lines = tokenLines(tokenize(text.lines.join('\n'), ctx.textKind));
+  return lines.map((tokens) =>
+    tokens.map((token): TextRun => {
+      const color = syntaxTokens[token.kind];
+      return color === null
+        ? { text: token.text, weight: 400 }
+        : { text: token.text, weight: 400, fill: ctx.colors[color] };
+    }),
+  );
+}
 
 function paint(ctx: Painter, node: LayoutNode): void {
   const colors = ctx.colors;
@@ -156,7 +193,8 @@ function diagramHead(ctx: Painter, node: Extract<LayoutNode, { kind: 'diagramHea
     stroke: colors['line.structure'],
     strokeWidth: structureWidth,
   });
-  blockText(ctx, node.id, node.text, x + padX, top + padY);
+  // The header is a name, not code: it is not highlighted (visual design 3.3).
+  blockText({ ...ctx, textKind: 'plain' }, node.id, node.text, x + padX, top + padY);
 }
 
 /** The Event hat: a bump `min(size.hat-w, 45%)` wide on the left, then the flat top. */
@@ -266,8 +304,8 @@ function condition(ctx: Painter, blockId: Id, text: PlacedText, head: Box, verte
   const half = text.width / 2;
   const x = Math.min(Math.max(vertexX, head.x + half + padX), head.x + head.width - half - padX);
   const top = head.y + padY - conditionRaise;
-  text.lines.forEach((line, index) => {
-    if (line === '') {
+  highlightedLines(ctx, text).forEach((runs, index) => {
+    if (runs.length === 0) {
       return;
     }
     ctx.elements.push({
@@ -278,7 +316,7 @@ function condition(ctx: Painter, blockId: Id, text: PlacedText, head: Box, verte
       anchor: 'middle',
       fontSize: fontSizes.body,
       fill: colors['text.primary'],
-      runs: [{ text: line, weight: 400 }],
+      runs,
       halo: { color: colors['block.branch'], width: geometry['size.text-halo'] },
     });
   });
@@ -310,8 +348,8 @@ function branchLabel(
 
 function blockText(ctx: Painter, blockId: Id, text: PlacedText, x: number, top: number): void {
   const fill = ctx.colors['text.primary'];
-  text.lines.forEach((line, index) => {
-    if (line === '') {
+  highlightedLines(ctx, text).forEach((runs, index) => {
+    if (runs.length === 0) {
       return;
     }
     ctx.elements.push({
@@ -322,7 +360,7 @@ function blockText(ctx: Painter, blockId: Id, text: PlacedText, x: number, top: 
       anchor: 'start',
       fontSize: fontSizes.body,
       fill,
-      runs: [{ text: line, weight: 400 }],
+      runs,
       halo: null,
     });
   });

@@ -110,7 +110,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 테마를 바꿔도 블록의 크기와 자리는 한 픽셀도 바뀌지 않습니다. 그래서 테마는 git 기록에 그림의 이동을 남기지 않고, 다른 사람이 다른 테마로 열어도 그림의 모양은 같습니다([[01-requirements#^r-nfr|R-NFR-02]]).
 
-- 그래서 **글꼴은 테마에 넣지 않습니다.** 블록의 폭은 번들한 글꼴의 문자 폭 표로 계산하므로, 글꼴이 바뀌면 레이아웃이 바뀝니다([[0026-bundled-font-metrics|ADR-0026]]). 글꼴은 문서 설정인 "블록 텍스트의 언어"([[01-requirements#^r-lay|R-LAY-06]])가 정합니다.
+- 그래서 **글꼴은 테마에 넣지 않습니다.** 블록의 폭은 번들한 글꼴의 문자 폭 표로 계산하므로, 글꼴이 바뀌면 레이아웃이 바뀝니다([[0026-bundled-font-metrics|ADR-0026]]). 문서 설정인 "블록 텍스트의 언어"([[01-requirements#^r-lay|R-LAY-06]])도 글꼴을 바꾸지 않고 구문 강조의 색만 정합니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 그래서 **선 굵기도 테마에 넣지 않습니다.** 접기 영역 테두리의 굵기는 안쪽에 겹친 테두리가 들어가는 깊이(`size.nest-inset`)를 정하므로, 굵기가 바뀌면 레이아웃이 바뀝니다.
 - 테마가 바꿀 수 있는 것은 3장의 **색 토큰뿐**입니다.
 
@@ -199,7 +199,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.lilac-strong` | 펴 보인 호출 블록의 띠 배경 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.550` | 펴 보인 블록의 텍스트(편집할 수 없음, 구문 강조 없음) | 5.18 ~ 6.52, 띠 위 4.58 | 4.5:1 |
 
-- 구문 강조는 블록 텍스트를 단어로 갈라 예약어는 `syntax.keyword`, 주석은 `syntax.comment`, 문자열과 숫자는 `syntax.literal`로 칠합니다. 그 밖의 단어는 `text.primary`입니다. 블록 텍스트의 언어가 "일반 텍스트"면 칠하지 않습니다 → [[0032-token-highlighting|ADR-0032]]
+- 구문 강조는 블록 텍스트를 단어로 갈라 예약어는 `syntax.keyword`, 주석은 `syntax.comment`, 문자열과 숫자는 `syntax.literal`로 칠합니다. 그 밖의 단어는 `text.primary`입니다. 블록 텍스트의 언어가 "일반 텍스트"면 칠하지 않습니다 → [[0032-token-highlighting|ADR-0032]]. 칠하는 것은 처리 블록의 텍스트와 조건 칸이고, 헤더의 이름 · 분기 라벨 · 호출 블록은 칠하지 않습니다([[ux-decisions#SY1. 칠하는 텍스트|SY1]]). 굵기와 기울임은 쓰지 않으므로 강조해도 폭은 그대로입니다. 언어마다의 규칙 → [[02-layout#3.1 구문 강조]]
 - 분기 라벨은 구문 강조의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700`)을 쓰지 않습니다. 구조의 텍스트가 코드의 일부처럼 보이지 않게 하려는 것입니다.
 - 펴 보인 블록의 텍스트는 흐리게 하되 4.5:1을 지킵니다. "편집할 수 없다"는 것은 점선과 띠가 알리고, 텍스트는 들여다보려고 편 것이라 읽혀야 합니다.
 
@@ -265,13 +265,13 @@ flowchart LR
 
 | 자리 | 글꼴 | 정하는 것 |
 | --- | --- | --- |
-| 블록 글꼴 (블록 텍스트, 호출 블록, 접힌 접기 영역의 이름, 펴 보기의 띠) | 고정폭 또는 비례폭 | 문서 설정 "블록 텍스트의 언어": 코드 언어면 고정폭, 일반 텍스트면 비례폭 |
+| 블록 글꼴 (블록 텍스트, 호출 블록, 접힌 접기 영역의 이름, 펴 보기의 띠) | 고정폭 (기본 블록 글꼴) | 고정. 블록 텍스트의 언어와 상관없음 → [[0042-text-kind-keeps-block-font\|ADR-0042]] |
 | 비례폭 (분기 라벨, 접기 영역의 이름 띠, "⋯ 블록 n개") | 비례폭 | 고정 |
 | 화면 | 배포 대상의 기본 글꼴 | 배포 대상 (Obsidian이면 Obsidian의 글꼴) |
 
 - **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 싣고 한자는 싣지 않습니다 → [[0034-default-block-font|ADR-0034]]
 - 번들한 글꼴 파일 안의 이름(패밀리 이름)은 `AriadneNSD Mono`입니다. "D2Coding"은 OFL의 예약 글꼴 이름(Reserved Font Name)이라, 문자를 추려 고친 글꼴에는 쓸 수 없습니다. 고정폭 글꼴의 관례(JetBrains Mono 등)를 따른 이름이고, 비례폭 글꼴을 번들하면 `AriadneNSD Sans`로 합니다 → [[dr-0019-bundled-font-name|DR-0019]]. 그림의 `font-family`는 이 이름 다음에 폴백 글꼴 목록을 적습니다 → [[01-file-format#2. 문서 구조]]
-- 블록 텍스트의 언어가 없는 MVP에서는 글꼴이 하나뿐입니다. 위 표의 "비례폭" 자리(분기 라벨 등)도 D2Coding으로 그립니다. 비례폭 글꼴은 블록 텍스트의 언어에 "일반 텍스트"가 들어올 때 정합니다.
+- 글꼴은 하나뿐입니다. 블록 텍스트의 언어가 일반 텍스트여도, 위 표의 "비례폭" 자리(분기 라벨 등)도 D2Coding으로 그립니다. 언어를 바꾸면 색만 바뀌고 블록의 폭은 그대로라, MVP로 저장한 파일(일반 텍스트)도 그대로 열립니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 프로토타입은 IBM Plex Mono · IBM Plex Sans KR을 씁니다.
 - 블록 텍스트의 공백은 그대로 둡니다(`white-space: pre`). 코드의 들여쓰기가 그림에서도 보여야 합니다.
 - 폭은 번들한 글꼴의 폭 표로 계산합니다. 커닝을 끄고, 정수 px로 올립니다 → [[0026-bundled-font-metrics|ADR-0026]]
@@ -487,7 +487,7 @@ flowchart LR
 
 ## 12. 미결정 사항
 
-- 비례폭 글꼴(블록 텍스트의 언어 "일반 텍스트"와 분기 라벨 등의 자리). MVP에는 없다 ([[0034-default-block-font|ADR-0034]])
+- 비례폭 글꼴(분기 라벨 등의 자리, 그리고 블록 텍스트를 문장으로 쓰는 문서). 아직 없다. 들인다면 블록 텍스트의 언어가 아닌 다른 문서 설정으로 고르게 한다. 그래야 이미 저장한 파일이 다시 배치되지 않는다 ([[0034-default-block-font|ADR-0034]], [[0042-text-kind-keeps-block-font|ADR-0042]])
 - 어두운 기본 테마의 색. 대비를 3.3절처럼 맞춰 정한다 (초안은 M17 테마 시안)
 - 문서에 테마를 무엇으로 적을지: 테마의 이름만 적을지, 색 값까지 적을지. 다른 사람에게 없는 테마로 그린 문서를 열 때가 갈린다 ([[01-file-format]])
 - 테마를 선택하는 자리(문서 설정의 어디에서, 어떤 모습으로)

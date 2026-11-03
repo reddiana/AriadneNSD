@@ -154,6 +154,47 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
     expect(handle.state().undo).toHaveLength(0);
   });
 
+  it('R-LAY-06 · R-LAY-07: choosing the block text language highlights the drawing and is undoable', async () => {
+    const plain = createDoc();
+    const doc: Doc = {
+      ...plain,
+      content: {
+        ...plain.content,
+        diagrams: plain.content.diagrams.map((diagram) => ({
+          ...diagram,
+          body: { blocks: [{ id: 'b1', kind: 'process', text: 'return 0' }], folds: [] },
+        })),
+      },
+    };
+    const { handle, host } = make({ doc });
+    const drawing = (): string => host.querySelector('.ans-document svg')?.innerHTML ?? '';
+    expect(drawing()).not.toContain('<tspan fill');
+    handle.setDocumentSetting('document.textKind', 'python');
+    await tick();
+    expect(handle.documentSetting('document.textKind')).toBe('python');
+    expect(drawing()).toContain('<tspan fill="#1f45d6">return</tspan>');
+    const saved = await handle.serialize();
+    expect(saved).toContain('"textKind": "python"');
+    expect(saved).toContain('<tspan fill="#1f45d6">return</tspan>');
+    handle.commands.run('edit.undo');
+    await tick();
+    expect(handle.documentSetting('document.textKind')).toBe('plain');
+    expect(drawing()).not.toContain('<tspan fill');
+  });
+
+  it('R-LAY-06: the block text language lists every language with its screen name', () => {
+    const { handle } = make();
+    const spec = handle.settingsSchema.list().find((item) => item.id === 'document.textKind');
+    expect(spec).toMatchObject({
+      title: 'setting.textKind',
+      hint: 'setting.textKind.hint',
+      values: ['plain', 'c', 'cpp', 'java', 'javascript', 'python', 'bash'],
+      defaultValue: 'plain',
+      scope: 'document',
+    });
+    expect(spec?.valueTitles?.[0]).toBe('setting.textKind.plain');
+  });
+
   it('T-0366: 03-editor 1, 3.4: keys on the diagram open the inline editor; Enter accepts', async () => {
     const { handle, host } = make();
     const canvas = host.querySelector<HTMLElement>('.ans-canvas');
@@ -713,8 +754,12 @@ describe('the drawing language in the document (ADR-0041)', () => {
   it('T-0820: the setting is listed for the document settings, after the block text language', () => {
     const handle = makeIn('en');
     const specs = handle.settingsSchema.list().filter((spec) => spec.scope === 'document');
-    expect(specs.map((spec) => spec.id)).toEqual(['document.locale', 'document.headStyle']);
-    expect(specs[0]).toMatchObject({
+    expect(specs.map((spec) => spec.id)).toEqual([
+      'document.textKind',
+      'document.locale',
+      'document.headStyle',
+    ]);
+    expect(specs[1]).toMatchObject({
       title: 'setting.documentLocale',
       hint: 'setting.documentLocale.hint',
       values: ['en', 'ko'],

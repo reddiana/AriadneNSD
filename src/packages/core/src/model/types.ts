@@ -25,7 +25,7 @@ export type Content = {
 
 /** Document settings. */
 export type Settings = {
-  /** The language of block text (ADR-0032). Only `plain` is used in file format v1. */
+  /** The language of block text (R-LAY-06): how block text is highlighted (ADR-0032). */
   readonly textKind: TextKind;
   /** The color set of the drawing (visual design 8). Only `default` is used in file format v1. */
   readonly theme: ThemeId;
@@ -38,8 +38,11 @@ export type Settings = {
   readonly locale: Locale;
 };
 
-/** The language of block text. Which languages to support first is undecided (01-model 1.1). */
-export type TextKind = 'plain' | 'c' | 'java' | 'python' | 'bash';
+/**
+ * The language of block text (01-model 1.1). `plain` is not highlighted. All languages draw with
+ * the same block font (ADR-0042), so changing the language never changes the layout.
+ */
+export type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';
 
 /** A theme name. File format v1 uses only `default` (01-file-format 3.3). */
 export type ThemeId = string;

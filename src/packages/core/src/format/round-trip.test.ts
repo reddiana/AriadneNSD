@@ -13,6 +13,7 @@ import type {
   SiteFold,
 } from '../model/types';
 import { locales } from '../i18n/messages';
+import { isTextKind, textKinds } from '../text/syntax';
 import type { KeptSettings } from './model-json';
 import { serializeModelJson } from './model-json';
 import { parseModelJson } from './parse-model';
@@ -213,8 +214,10 @@ const docAndKept: fc.Arbitrary<{ readonly doc: Doc; readonly kept: KeptSettings 
     theme: text,
     headStyle: fc.constantFrom('shape' as const, 'title' as const),
     locale: fc.constantFrom(...locales),
+    textKind: fc.constantFrom(...textKinds),
+    // A language this version does not know: the model shows plain and the file keeps it.
     keptTextKind: fc.option(
-      text.filter((value) => value !== 'plain'),
+      text.filter((value) => !isTextKind(value)),
       { nil: undefined },
     ),
     folded: fc.array(someId, { maxLength: 8 }),
@@ -226,7 +229,7 @@ const docAndKept: fc.Arbitrary<{ readonly doc: Doc; readonly kept: KeptSettings 
     doc: {
       content: {
         settings: {
-          textKind: 'plain',
+          textKind: raw.keptTextKind === undefined ? raw.textKind : 'plain',
           theme: raw.theme,
           headStyle: raw.headStyle,
           locale: raw.locale,

@@ -42,6 +42,8 @@ export {
 } from './i18n/messages';
 export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
+export type { Token, TokenKind } from './text/syntax';
+export { isTextKind, textKinds, tokenize, tokenLines } from './text/syntax';
 export { geometry } from './layout/geometry';
 export { headLabel, layout } from './layout/layout';
 export type { CallParts, CallTextContext } from './layout/call-text';

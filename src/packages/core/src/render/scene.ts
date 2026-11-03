@@ -14,11 +14,13 @@ export type PathSegment =
   | { readonly kind: 'line'; readonly to: Point }
   | { readonly kind: 'curve'; readonly c1: Point; readonly c2: Point; readonly to: Point };
 
-/** A run of text with one weight, inside a text element. */
+/** A run of text with one weight and color, inside a text element. */
 export type TextRun = {
   readonly text: string;
   /** 400 regular or 600 bold (visual design 4.2). */
   readonly weight: 400 | 600;
+  /** The run's own color: a syntax color (R-LAY-07). Without it, the text element's color. */
+  readonly fill?: string;
 };
 
 /** One element of the display list. `blockId` is the block it belongs to. */

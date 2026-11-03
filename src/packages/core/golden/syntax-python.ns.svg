@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="211" height="162" viewBox="0 0 211 162">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "python",
+    "theme": "default",
+    "headStyle": "shape",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "total = a // 2  # half\nname = f\"{x}\""
+        },
+        {
+          "id": "b2",
+          "kind": "while",
+          "text": "n is not None",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "process",
+              "text": "pass"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="163" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="44" font-size="13" fill="#151a22" xml:space="preserve">total = a // <tspan fill="#8a5a00">2</tspan>  <tspan fill="#22702a"># half</tspan></text>
+<text x="34" y="62" font-size="13" fill="#151a22" xml:space="preserve">name = <tspan fill="#8a5a00">f"{x}"</tspan></text>
+<rect x="24" y="74" width="163" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="94" font-size="13" fill="#151a22" xml:space="preserve">n <tspan fill="#1f45d6">is</tspan> <tspan fill="#1f45d6">not</tspan> <tspan fill="#1f45d6">None</tspan></text>
+<rect x="46" y="106" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="126" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">pass</tspan></text>
+</g>
+</svg>
