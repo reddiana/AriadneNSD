@@ -3,7 +3,7 @@ title: 모델
 tags:
   - design
 status: 작성 중
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # 모델
@@ -302,13 +302,13 @@ type Target =                                        // 명령이 적용되는 �
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
 | | 풀기 (호출 블록) | Method의 블록을 새 id로 깊은 복사해 그 자리에 인라인한다. 이 자리의 접기 영역은 보통 접기 영역이 된다. `lost`이면 풀 수 없다 |
-| | 새 Method로 빼기 | 선택한 블록이 새 Method의 본문이 되고, 그 자리에 `local` 호출 블록이 남는다 |
+| | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 자리에 그 Method를 부르는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 돌려준다. 안의 호출 블록은 부르던 것을 그대로 부른다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
 | 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 늘 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 그려 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 자리)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |
 | 호출 | 호출할 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다 |
-| 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다 |
+| 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
 | | 삭제 | 이 Method를 호출하던 호출 블록을 `lost`로 바꾼다 |
 | | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 `lost`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
 | | 헤더 이름 편집 | 겹치거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |

@@ -62,7 +62,7 @@ const english = {
   'command.diagram.method': 'Method Header',
   'command.diagram.method.add': 'Add Method Header',
   'command.diagram.method.change': 'Change to Method',
-  'command.diagram.method.extract': 'Extract into New Method',
+  'command.diagram.extractMethod': 'Extract into New Method',
   'command.diagram.removeHead': 'Remove Header',
   'command.diagram.newEvent': 'New Event Diagram',
   'command.diagram.newMethod': 'New Method Diagram',
@@ -153,7 +153,8 @@ const english = {
   'reason.notOnHead': 'This does not work on a header. Select a block.',
   'reason.cannotPasteOnHead': 'You cannot paste on a header.',
   'reason.cannotWrapHead': 'A header cannot be wrapped.',
-  'reason.extractNotYet': 'Extracting blocks into a new Method is not supported yet.',
+  'reason.selectBlocksToExtract': 'Select the blocks to extract.',
+  'reason.hasHead': 'This diagram already has a header. Select the header to change its kind.',
   'reason.eventNotExtracted':
     'An Event cannot be called, so blocks are not extracted into one. Select the header to change its kind.',
 
@@ -185,6 +186,10 @@ const english = {
   'notice.clipboardLocal':
     'The system clipboard is not available, so the blocks were kept in this tab only.',
   'notice.diagramDeleted': 'Deleted the diagram. Undo brings it back.',
+  'notice.extracted': 'Extracted {count} block(s) into a new Method. Type its name.',
+  'notice.extractedFoldsRemoved':
+    'Extracted {count} block(s) into a new Method. Type its name. Fold regions crossing the selection were removed.',
+  'notice.extractedNamed': 'Extracted {count} block(s) into the new Method {name}.',
 
   // Questions in the status bar (UX MD3).
   'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',
@@ -214,6 +219,7 @@ const english = {
   // The list of Methods to call (interaction rules "호출 블록").
   'picker.callTarget': 'Method to call',
   'picker.newMethod': 'New Method, and call it',
+  'picker.methodKey': 'Method',
 
   // The two fields of a call block, shown in the empty inline editor.
   'field.callArgs': 'Arguments',
@@ -303,7 +309,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.diagram.method': 'Method 헤더',
   'command.diagram.method.add': 'Method 헤더 달기',
   'command.diagram.method.change': 'Method로 바꾸기',
-  'command.diagram.method.extract': '새 Method로 빼기',
+  'command.diagram.extractMethod': '새 Method로 빼기',
   'command.diagram.removeHead': '헤더 제거',
   'command.diagram.newEvent': '새 Event 다이어그램',
   'command.diagram.newMethod': '새 Method 다이어그램',
@@ -387,7 +393,8 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.notOnHead': '헤더에서는 되지 않습니다. 블록을 선택하세요.',
   'reason.cannotPasteOnHead': '헤더에는 붙여넣을 수 없습니다.',
   'reason.cannotWrapHead': '헤더는 감쌀 수 없습니다.',
-  'reason.extractNotYet': '새 Method로 빼기는 아직 지원하지 않습니다.',
+  'reason.selectBlocksToExtract': '뺄 블록을 선택하세요.',
+  'reason.hasHead': '이 다이어그램에는 이미 헤더가 있습니다. 종류를 바꾸려면 헤더를 선택하세요.',
   'reason.eventNotExtracted':
     'Event는 호출할 수 없어 블록을 Event로 빼지 않습니다. 종류를 바꾸려면 헤더를 선택하세요.',
   'notice.escAgain': '한 번 더 Esc를 누르면 선택한 것을 풉니다.',
@@ -418,6 +425,10 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'notice.internalError': '문제가 생겨 문서를 그대로 두었습니다.',
   'notice.clipboardLocal': '시스템 클립보드를 쓸 수 없어 이 탭 안에만 복사했습니다.',
   'notice.diagramDeleted': '다이어그램을 삭제했습니다. 실행 취소로 되돌릴 수 있습니다.',
+  'notice.extracted': '블록 {count}개를 새 Method로 뺐습니다. 이름을 적으세요.',
+  'notice.extractedFoldsRemoved':
+    '블록 {count}개를 새 Method로 뺐습니다. 이름을 적으세요. 선택의 경계에 걸친 접기 영역은 풀었습니다.',
+  'notice.extractedNamed': '블록 {count}개를 새 Method {name}(으)로 뺐습니다.',
   'question.convertIfToCase': 'If에는 분기를 더할 수 없습니다. Case로 바꿀까요?',
   'question.convertCaseToIf': '분기가 하나만 남았습니다. If로 바꿀까요?',
   'choice.convertToCase': 'Case로 바꾸기',
@@ -441,6 +452,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'selection.methodHead': 'Method 헤더 "{name}"',
   'picker.callTarget': '호출할 Method',
   'picker.newMethod': '새 Method를 만들고 호출',
+  'picker.methodKey': 'Method',
   'field.callArgs': '인자',
   'field.callResult': '결과',
   'mode.editing': '-- 편집 --',

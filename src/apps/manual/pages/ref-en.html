@@ -327,6 +327,12 @@
     calls). The layout is automatic: Events on the left, Methods on the right. A call block's name
     follows the Method's header; each call block has its own arguments and result.
   </p>
+  <p>
+    Select blocks and press <kbd>m</kbd>: they become a <b>new Method</b>, and a call block calling
+    it is left in their place. Type the new Method's name and press <kbd>Enter</kbd> to go back to
+    that call block. In a diagram without a header, <kbd>m</kbd> shows a small list to choose
+    "Extract into New Method" or "Add Method Header". One undo puts the blocks back.
+  </p>
   <div class="pair">
     <figure>
       <img
@@ -347,9 +353,14 @@
         <th>Standard key · mouse</th>
       </tr>
       <tr>
-        <td>Add an Event / Method header, or change its kind</td>
+        <td>Add an Event / Method header, or change its kind (<kbd>m</kbd> on a header)</td>
         <td><kbd>e</kbd> / <kbd>m</kbd></td>
         <td>The Diagram menu</td>
+      </tr>
+      <tr>
+        <td>Extract the selected blocks into a new Method</td>
+        <td><kbd>m</kbd></td>
+        <td>The Diagram menu, the context menu</td>
       </tr>
       <tr>
         <td>New Event / Method diagram</td>

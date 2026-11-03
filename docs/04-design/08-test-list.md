@@ -17,13 +17,13 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | - | 45 | 171 | - | 216 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 22 | 155 | - | 182 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 2 | 45 | 184 | - | 231 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 155 | - | 190 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 19 | 27 | 24 | - | 70 |
 | [[#5. 파일\|파일]] | 7 | 115 | 128 | - | 250 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 85 | - | 87 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 59 | 209 | 563 | 5 | 836 |
+| 합계 | 61 | 217 | 576 | 5 | 859 |
 
 ## 읽는 법
 
@@ -75,7 +75,18 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 17개, 테스트 216개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 19개, 테스트 231개.
+
+### [E2E] `apps/web/e2e/editing.spec.ts`
+
+인수 테스트가 다루지 않는 편집 명령을 브라우저에서 확인합니다. Playwright · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0839 | `m`이 선택한 블록을 빼고, 이름을 적으면 호출 블록이 선택되며, 새 Method는 뺀 Method 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM1]], [[ux-decisions\|UX XM2]] |
+| T-0840 | 헤더 없는 다이어그램에서 `m`은 묻는다: `Esc`는 그만두고, `2`는 Method 헤더를 달고, `Enter`는 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
+
+^t-apps-web-e2e-editing-spec-ts
 
 ### [통합] `packages/editor/src/session/engine.test.ts`
 
@@ -269,6 +280,28 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 
 ^t-packages-core-src-commands-edit-text-test-ts
 
+### [단위] `packages/core/src/commands/extract.test.ts`
+
+extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0841 | 블록들이 새 Method가 되고, 그 자리에 그 Method를 호출하는 호출 블록이 남는다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0842 | 새 Method는 뺀 Method 바로 뒤에 놓인다(UX XM1) | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0843 | Event에서 빼면 새 Method는 Method의 맨 뒤에 놓인다(UX XM1) | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0844 | 헤더 없는 다이어그램에서도, Method가 아직 없어도 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0845 | 줄의 블록을 모두 빼면 그 자리에 호출 블록 하나가 남는다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0846 | 분기 안의 블록은 그 안의 것과 함께 빠진다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0847 | 기본 이름은 쓰지 않은 가장 작은 번호의 "Method n"이다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0848 | 뺀 블록 속의 호출 블록은 뺀 Method를 그대로 호출한다(재귀) | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0849 | 선택 안에 다 든 접기 영역은 따라가고, 선택을 품은 접기 영역은 호출 블록을 품는다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0850 | 선택의 경계에 걸친 접기 영역은 없어지고 그 수를 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0851 | 접기 영역 하나를 빼면 그 이름이 Method의 이름이 되고 접기 영역은 없어진다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0852 | 새 이름이 될 수 없는 접기 영역의 이름이면 기본 이름이 된다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0853 | 선택한 것이 없거나 한 줄에 이어지지 않은 블록이면 거절한다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+
+^t-packages-core-src-commands-extract-test-ts
+
 ### [단위] `packages/core/src/commands/insert.test.ts`
 
 블록 삽입(insertBlock). Vitest · 테스트 13개.
@@ -448,7 +481,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 13개, 테스트 182개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 13개, 테스트 190개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -466,7 +499,7 @@ id. Vitest · 테스트 5개.
 
 ### [통합] `packages/editor/src/session/diagrams.test.ts`
 
-헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 21개.
+헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 새 Method로 빼기(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 29개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -479,12 +512,20 @@ id. Vitest · 테스트 5개.
 | T-0213 | 겹치는 이름이면 입력란이 다시 열리고, 거기서 `Esc`는 옛 이름을 지킨다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
-| T-0216 | 헤더가 있는 다이어그램의 블록에서 `m`은 빼내기가 아직 없다고 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0218 | Method 헤더를 없애면 그 호출은 대상을 잃고 첫 블록이 선택된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0221 | 헤더에서 `Alt`+방향키는 같은 종류 안에서 다이어그램을 이동한다 | [[ux-decisions\|UX Q6]] |
+| T-0854 | 블록에서 `m`을 누르면 새 Method를 만들고 이름 칸을 열며 상태 표시줄에 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0855 | 새 Method는 뺀 Method 뒤에, Event에서 빼면 Method의 맨 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM1]] |
+| T-0856 | 이름을 적고 나면 뺀 자리의 호출 블록이 선택되고, 실행 취소 한 번에 블록이 제자리로 돌아온다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM2]] |
+| T-0857 | 이름을 바꾸지 않고 닫으면 기본 이름으로 남고 호출 블록으로 돌아간다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM2]] |
+| T-0858 | 겹치는 이름이면 이름 칸이 다시 열리고, 거기서 `Esc`를 누르면 기본 이름으로 남고 뺀 자리로 돌아간다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0859 | 헤더 없는 다이어그램의 블록에서 `m`은 묻는다: `1`은 빼기, `2`는 Method 헤더 달기 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
+| T-0860 | 메뉴에서는 헤더 없는 다이어그램에서도 묻지 않고 빼고, Method 헤더 달기와 `e`는 그대로다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
+| T-0861 | 헤더가 있는 다이어그램에서는 `m`이 묻지 않고 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
+| T-0862 | 분기 라벨이나 빈 default 칸에서 `m`은 뺄 블록을 선택하라고 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
 | T-0222 | `a c`는 Method 목록을 보이고, 고른 Method를 호출하며 그 인자를 입력한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |

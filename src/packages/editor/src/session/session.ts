@@ -34,7 +34,14 @@ import type { KeyBinding } from '../input/keys';
 import { readKey } from '../input/keys';
 import type { DocIndex } from '../model/doc-index';
 import { indexDoc, isEmptyBlock } from '../model/doc-index';
-import type { CallPart, Caret, EditField, EditorState } from '../state/editor-state';
+import type {
+  CallPart,
+  Caret,
+  EditField,
+  Editing,
+  EditorState,
+  Extracted,
+} from '../state/editor-state';
 import { clampZoom, stepHistory, withContent, withSelection } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import { selectBlock, selectedBlocks, validSelection } from '../state/selection';
@@ -75,7 +82,12 @@ export type LoadOptions = {
 export type After = {
   readonly selection: Selection | null;
   /** Open the inline editor on this field (after inserting or wrapping). */
-  readonly edit?: { readonly field: EditField; readonly caret: Caret | 'clear' };
+  readonly edit?: {
+    readonly field: EditField;
+    readonly caret: Caret | 'clear';
+    /** The field names the Method an extract just made (UX XM2). */
+    readonly extracted?: Extracted;
+  };
 };
 
 /** The key hint shows this long after the first key of a sequence (UX K1). */
@@ -397,7 +409,7 @@ export class EditorSession {
    * Replaces the content (one undo step), unless it breaks an invariant: that is a bug, so the
    * document is left as it was and the problem is logged (coding guide 5).
    */
-  apply(content: Content, after: After): boolean {
+  apply(content: Content, after: After, isAmend = false): boolean {
     if (content !== this.current.doc.content) {
       const violations = checkInvariants(content);
       if (violations.length > 0) {
@@ -411,10 +423,10 @@ export class EditorSession {
     const index = indexDoc(content);
     const selection = validSelection(index, after.selection);
     this.setState(
-      withContent(this.current, content, selection, this.rendered.layout, this.isDirty),
+      withContent(this.current, content, selection, this.rendered.layout, this.isDirty, isAmend),
     );
     if (after.edit !== undefined) {
-      this.startEditing(after.edit.field, after.edit.caret);
+      this.startEditing(after.edit.field, after.edit.caret, after.edit.extracted);
     }
     return true;
   }
@@ -555,7 +567,11 @@ export class EditorSession {
   }
 
   /** Opens the inline editor on a field. Returns `true`, or why it did not open. */
-  startEditing(field: EditField, caret: Caret | 'clear'): true | EditorMessage {
+  startEditing(
+    field: EditField,
+    caret: Caret | 'clear',
+    extracted?: Extracted,
+  ): true | EditorMessage {
     if (this.current.readOnly) {
       return 'reason.readOnly';
     }
@@ -574,6 +590,7 @@ export class EditorSession {
         text: caret === 'clear' ? '' : found.text,
         caret: caret === 'clear' ? 'end' : caret,
         ...(call?.kind === 'call' ? { call: { args: call.args, result: call.result } } : {}),
+        ...(extracted === undefined ? {} : { extracted }),
       },
     });
     return true;
@@ -618,6 +635,10 @@ export class EditorSession {
       return;
     }
     const field = editing.field;
+    if (field.kind === 'head' && editing.extracted !== undefined) {
+      this.nameExtracted(editing, field.diagram, editing.extracted, text);
+      return;
+    }
     const keep = (): After => ({ selection: this.current.selection });
     if (field.kind === 'call') {
       // Both fields in one command: one undo step. The same texts change nothing (UX MD2).
@@ -670,10 +691,58 @@ export class EditorSession {
     }
   }
 
+  /**
+   * The name typed for the Method an extract just made (UX XM2): it joins the extract's undo
+   * step, and the call block left in place is selected again. The default name stays when the
+   * text did not change; a clashing name opens the field again like any header name.
+   */
+  private nameExtracted(editing: Editing, diagram: Id, extracted: Extracted, text: string): void {
+    const content = this.current.doc.content;
+    const back = (now: Content): After => ({
+      selection: selectBlock(indexDoc(now), extracted.call),
+    });
+    if (text !== editing.initial) {
+      const result = editHead(content, { diagram, text });
+      if (!result.ok) {
+        this.refuse(result.reason);
+        if (result.reason.code === 'duplicateHeadName') {
+          this.setState({
+            ...this.current,
+            editing: { ...editing, text, caret: 'end', isRejected: true },
+          });
+          return;
+        }
+        // An empty name keeps the default name; the refusal says so.
+        this.select(back(content).selection);
+        return;
+      }
+      if (!this.apply(result.content, back(result.content), true)) {
+        return;
+      }
+    } else {
+      this.select(back(content).selection);
+    }
+    this.notifyExtracted(diagram, extracted);
+  }
+
+  /** "Extracted n blocks into the new Method name." */
+  private notifyExtracted(diagram: Id, extracted: Extracted): void {
+    const head = this.index().diagrams.get(diagram)?.head ?? null;
+    const name = head === null ? '' : headName(head);
+    this.notify(message('notice.extractedNamed', { count: extracted.count, name }));
+  }
+
   /** Closes the inline editor without running anything. */
   cancelEditing(): void {
-    if (this.current.editing !== null) {
-      this.setState({ ...this.current, editing: null });
+    const editing = this.current.editing;
+    if (editing === null) {
+      return;
+    }
+    this.setState({ ...this.current, editing: null });
+    if (editing.field.kind === 'head' && editing.extracted !== undefined) {
+      // Esc on a refused name keeps the name the Method has, and goes back (UX XM2).
+      this.select(selectBlock(this.index(), editing.extracted.call));
+      this.notifyExtracted(editing.field.diagram, editing.extracted);
     }
   }
 

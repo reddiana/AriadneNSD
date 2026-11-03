@@ -152,11 +152,11 @@ export function deepFreeze<T>(value: T): T {
  * a success keeps the invariants, and running again gives the same result (redo is
  * deterministic).
  */
-export function run<A>(
-  command: (content: Content, args: A) => Result,
+export function run<A, R extends Result>(
+  command: (content: Content, args: A) => R,
   content: Content,
   args: A,
-): Result {
+): R {
   deepFreeze(content);
   const before: unknown = JSON.parse(JSON.stringify(content));
   const result = command(content, args);
@@ -172,16 +172,17 @@ export function run<A>(
 }
 
 /** Like `run`, and expects success. */
-export function runOk<A>(
-  command: (content: Content, args: A) => Result,
+export function runOk<A, R extends Result>(
+  command: (content: Content, args: A) => R,
   content: Content,
   args: A,
-): OkResult {
+): Extract<R, OkResult> {
   const result = run(command, content, args);
   if (!result.ok) {
     throw new Error(`expected success, got ${result.reason.code}`);
   }
-  return result;
+  // `run` returns what the command returned.
+  return result as Extract<R, OkResult>;
 }
 
 /** Like `run`, and expects a refusal with this code. */

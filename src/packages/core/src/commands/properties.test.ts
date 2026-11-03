@@ -10,6 +10,7 @@ import { convertCaseToIf, convertIfToCase, deleteBranch, insertBranch } from './
 import { copy, cut, paste } from './clipboard';
 import { deleteBlocks } from './delete';
 import { editText } from './edit-text';
+import { extractMethod } from './extract';
 import { insertBlock } from './insert';
 import { move, moveBranch } from './move';
 import { createContent } from './new-document';
@@ -49,6 +50,7 @@ const opNames = [
   'convert',
   'addFold',
   'addFold',
+  'extract',
 ] as const;
 
 const opArbitrary: fc.Arbitrary<Op> = fc.record({
@@ -153,6 +155,8 @@ function apply(content: Content, op: Op): Result {
     }
     case 'addFold':
       return addFold(content, op);
+    case 'extract':
+      return extractMethod(content, { target });
   }
 }
 

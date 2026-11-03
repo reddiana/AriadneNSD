@@ -277,7 +277,15 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     head: 'reason.selectCall',
   },
   'diagram.event': { none: 'reason.nothingSelected', p6: 'reason.eventNotExtracted' },
-  'diagram.method': { none: 'reason.nothingSelected', p6: 'reason.extractNotYet' },
+  'diagram.method': { none: 'reason.nothingSelected', p6: 'reason.hasHead' },
+  'diagram.extractMethod': {
+    none: 'reason.nothingSelected',
+    label: 'reason.selectBlocksToExtract',
+    armLabel: 'reason.selectBlocksToExtract',
+    defaultLabel: 'reason.selectBlocksToExtract',
+    missing: 'reason.selectBlocksToExtract',
+    head: 'reason.selectBlocksToExtract',
+  },
   'diagram.removeHead': {
     none: 'reason.selectHead',
     p1: 'reason.selectHead',
@@ -388,7 +396,8 @@ describe('the Event and Method command titles (interaction rules "새 Method로 
     ['p1', 'diagram.method', 'command.diagram.method.add'],
     ['p1', 'diagram.event', 'command.diagram.event.add'],
     ['head', 'diagram.event', 'command.diagram.event.change'],
-    ['p6', 'diagram.method', 'command.diagram.method.extract'],
+    ['p6', 'diagram.method', 'command.diagram.method'],
+    ['head', 'diagram.method', 'command.diagram.method.change'],
     ['p6', 'diagram.event', 'command.diagram.event'],
   ] as const)('T-0562: with %s selected, %s is called %s', (place, id, expected) => {
     expect(title(engineAt(place), id)).toBe(expected);

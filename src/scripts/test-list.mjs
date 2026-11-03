@@ -52,6 +52,7 @@ const areas = [
       'packages/editor/src/session/engine.test.ts',
       'packages/editor/src/commands/editor-commands.test.ts',
       'packages/editor/src/clipboard/',
+      'apps/web/e2e/editing.spec.ts',
     ],
   },
   {

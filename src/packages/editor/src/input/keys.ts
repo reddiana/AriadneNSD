@@ -89,8 +89,11 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'O', command: 'block.insertBefore.process' },
   ...insertBindings,
   // Headers and diagrams (interaction rules "새 Method로 빼기와 새 다이어그램").
+  // On blocks `m` extracts them into a new Method; in a diagram without a header it first asks
+  // whether to extract or to add a Method header (UX XM3). On a header it changes the kind.
   { keys: 'e', command: 'diagram.event' },
-  { keys: 'm', command: 'diagram.method' },
+  { keys: 'm', command: 'diagram.method', selection: 'head' },
+  { keys: 'm', command: 'diagram.extractMethod', args: { fromKey: true } },
   { keys: 'E', command: 'diagram.newEvent' },
   { keys: 'M', command: 'diagram.newMethod' },
   { keys: 'Shift+Delete', command: 'diagram.delete' },

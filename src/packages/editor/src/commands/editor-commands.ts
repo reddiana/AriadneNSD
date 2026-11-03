@@ -21,6 +21,7 @@ import {
   deleteBlocks,
   deleteBranch,
   deleteDiagram,
+  extractMethod,
   headParams,
   insertBlock,
   insertBranch,
@@ -159,6 +160,11 @@ function blockArg(args: unknown): Id | null {
   return null;
 }
 
+/** Whether command arguments say the command came from its key (`{ fromKey: true }`). */
+function isKeyArg(args: unknown): boolean {
+  return typeof args === 'object' && args !== null && 'fromKey' in args && args.fromKey === true;
+}
+
 /** Something found, or why not. */
 type Found<T> = { readonly value: T } | { readonly reason: EditorMessage };
 
@@ -276,18 +282,19 @@ function fieldOfSelection(
   }
 }
 
-/** What the Event or Method command does on a selection (interaction rules "새 Method로 빼기"). */
+/**
+ * What the Event or Method header command does on a selection (interaction rules "새 Method로
+ * 빼기와 새 다이어그램").
+ */
 type HeadAction =
   | { readonly kind: 'add'; readonly diagram: Id }
-  | { readonly kind: 'change'; readonly diagram: Id }
-  | { readonly kind: 'extract' };
+  | { readonly kind: 'change'; readonly diagram: Id };
 
 /**
- * The Event or Method command's action: on a header it changes the kind; in a diagram without
- * a header it gives it one; on blocks of a diagram with a header the Method command extracts
- * them into a new Method, and the Event command does nothing (an Event cannot be called).
- * In a diagram without a header both commands give it a header, even on blocks: extracting is
- * not in the MVP, and this is the only way to give that diagram a header.
+ * The Event or Method header command's action: on a header it changes the kind; in a diagram
+ * without a header it gives it one. In a diagram with a header, on blocks, it does nothing: `m`
+ * there (and everywhere on blocks) is "새 Method로 빼기", a command of its own (UX XM3), and an
+ * Event cannot be called, so `e` does not extract.
  */
 function headAction(
   index: DocIndex,
@@ -307,9 +314,24 @@ function headAction(
   if ((index.diagrams.get(diagram)?.head ?? null) === null) {
     return { value: { kind: 'add', diagram } };
   }
-  return kind === 'method'
-    ? { value: { kind: 'extract' } }
-    : { reason: 'reason.eventNotExtracted' };
+  return { reason: kind === 'method' ? 'reason.hasHead' : 'reason.eventNotExtracted' };
+}
+
+/** What "새 Method로 빼기" takes: selected blocks or a fold region (R-EDIT-19). */
+function extractTarget(selection: Selection | null): Found<Target> {
+  if (selection === null) {
+    return { reason: 'reason.nothingSelected' };
+  }
+  switch (selection.kind) {
+    case 'blocks':
+      return { value: { kind: 'blocks', first: selection.anchor, last: selection.focus } };
+    case 'fold':
+      return { value: { kind: 'fold', fold: selection.fold } };
+    case 'branchLabel':
+    case 'missingDefault':
+    case 'head':
+      return { reason: 'reason.selectBlocksToExtract' };
+  }
 }
 
 /** The Methods of the document in drawn order: the list a call block's target is chosen from. */
@@ -1171,20 +1193,12 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
             return commandTitle(`${id}.add`);
           case 'change':
             return commandTitle(`${id}.change`);
-          case 'extract':
-            return commandTitle(`${id}.extract`);
         }
       },
-      when: (state) => {
-        const action = headAction(index(), state.selection, kind);
-        if ('reason' in action) {
-          return action.reason;
-        }
-        return action.value.kind === 'extract' ? 'reason.extractNotYet' : true;
-      },
+      when: (state) => appliesIf(headAction(index(), state.selection, kind)),
       run: (state) => {
         const action = headAction(index(), state.selection, kind);
-        if (!('value' in action) || action.value.kind === 'extract') {
+        if (!('value' in action)) {
           return;
         }
         const { diagram } = action.value;
@@ -1196,6 +1210,80 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       context: ['blocks', 'head'],
     });
   };
+
+  // Extract into a new Method (R-EDIT-19): the name is typed at once, and closing the field goes
+  // back to the call block left in place (UX XM2).
+  const runExtract = (): void => {
+    const target = extractTarget(session.state.selection);
+    if (!('value' in target)) {
+      return;
+    }
+    const result = extractMethod(content(), { target: target.value, ids: session.ids() });
+    if (!result.ok) {
+      session.refuse(result.reason);
+      return;
+    }
+    const [diagram, call] = result.touched;
+    const made = result.content.diagrams.find((d) => d.id === diagram);
+    if (diagram === undefined || call === undefined || made === undefined) {
+      return;
+    }
+    const count = made.body.blocks.length;
+    const isApplied = session.commit(result, () => ({
+      selection: { kind: 'head', diagram },
+      edit: { field: { kind: 'head', diagram }, caret: 'selectAll', extracted: { call, count } },
+    }));
+    if (isApplied) {
+      const key = result.removedFolds > 0 ? 'notice.extractedFoldsRemoved' : 'notice.extracted';
+      session.notify(message(key, { count }));
+    }
+  };
+
+  /**
+   * `m` on blocks of a diagram without a header could mean either: a small list just below the
+   * selection asks which (UX XM3). Enter or `1` extracts, `2` gives the diagram a Method header.
+   */
+  const askExtractOrHead = async (diagram: Id): Promise<void> => {
+    const chosen = await deps.pick(
+      'picker.methodKey',
+      [
+        { title: 'command.diagram.extractMethod', isLiteral: false },
+        { title: 'command.diagram.method.add', isLiteral: false },
+      ],
+      0,
+    );
+    if (chosen === null) {
+      return;
+    }
+    if (session.state.readOnly) {
+      session.notify('reason.readOnly', 'warn');
+      return;
+    }
+    if (chosen === 0) {
+      runExtract();
+    } else {
+      session.commit(setHead(content(), { diagram, kind: 'method' }), () =>
+        afterHead(diagram, true),
+      );
+    }
+  };
+
+  const extractSpec = spec('diagram.extractMethod', {
+    edits: true,
+    when: (state) => appliesIf(extractTarget(state.selection)),
+    run: async (state, args) => {
+      const diagram = diagramOf(index(), state.selection);
+      const isHeaderless =
+        diagram !== null && (index().diagrams.get(diagram)?.head ?? null) === null;
+      if (isKeyArg(args) && isHeaderless && 'value' in extractTarget(state.selection)) {
+        await askExtractOrHead(diagram);
+        return;
+      }
+      runExtract();
+    },
+    menu: { menu: 'diagram', group: 4, order: 2 },
+    context: ['blocks', 'fold'],
+  });
 
   const removeHeadSpec = spec('diagram.removeHead', {
     edits: true,
@@ -1273,6 +1361,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     headKindSpec('event', 1),
     headKindSpec('method', 2),
     removeHeadSpec,
+    extractSpec,
     newDiagramSpec('event', 'diagram.newEvent', 1),
     newDiagramSpec('method', 'diagram.newMethod', 2),
     deleteDiagramSpec,

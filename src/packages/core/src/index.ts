@@ -136,6 +136,8 @@ export type {
   SetCallTargetArgs,
 } from './commands/call';
 export { editCall, insertCall, newMethodAndCall, setCallTarget } from './commands/call';
+export type { ExtractMethodArgs, ExtractResult } from './commands/extract';
+export { extractMethod } from './commands/extract';
 export { createContent, createDoc, defaultSettings } from './commands/new-document';
 
 // File format (docs/05-spec/01-file-format.md).

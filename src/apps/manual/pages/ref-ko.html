@@ -320,6 +320,12 @@
     것은 자동이어서 Event는 왼쪽, Method는 오른쪽에 모입니다. 호출 블록의 이름은 Method의 헤더를
     따라가고, 블록마다 인자와 결과만 적습니다.
   </p>
+  <p>
+    블록을 선택하고 <kbd>m</kbd>을 누르면 그 블록들이 <b>새 Method</b>가 되고, 그 자리에는 그
+    Method를 호출하는 호출 블록이 남습니다. 새 Method의 이름을 적고 <kbd>Enter</kbd>를 누르면 남은
+    호출 블록으로 돌아옵니다. 헤더 없는 다이어그램에서는 <kbd>m</kbd>이 "새 Method로 빼기"와 "Method
+    헤더 달기" 가운데 고르는 작은 목록을 띄웁니다. 실행 취소 한 번이면 블록이 제자리로 돌아옵니다.
+  </p>
   <div class="pair">
     <figure>
       <img
@@ -340,9 +346,14 @@
         <th>표준 키 · 마우스</th>
       </tr>
       <tr>
-        <td>Event / Method 헤더 달기, 종류 바꾸기</td>
+        <td>Event / Method 헤더 달기, 종류 바꾸기 (<kbd>m</kbd>은 헤더에서)</td>
         <td><kbd>e</kbd> / <kbd>m</kbd></td>
         <td>다이어그램 메뉴</td>
+      </tr>
+      <tr>
+        <td>선택한 블록을 새 Method로 빼기</td>
+        <td><kbd>m</kbd></td>
+        <td>다이어그램 메뉴, 컨텍스트 메뉴</td>
       </tr>
       <tr>
         <td>새 Event / Method 다이어그램</td>

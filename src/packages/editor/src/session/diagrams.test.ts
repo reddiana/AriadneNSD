@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { contentOf, empty, proc, testEngine } from '../engine-test-support';
 import type { TestEngine } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
-import { selectBlock, selectedBlocks } from '../state/selection';
+import { selectBlock, selectRange, selectedBlocks } from '../state/selection';
 
 /** Gives diagrams headers: `{ d1: ['event', 'tick'] }`. */
 const withHeads = (
@@ -41,6 +41,12 @@ const blockOf = (engine: TestEngine, id: string): Block | undefined =>
   engine.session.index().blocks.get(id)?.block;
 
 const notice = (engine: TestEngine): unknown => engine.session.chrome().notice?.message;
+
+const idsOf = (engine: TestEngine, owner: string): ReadonlyArray<string> =>
+  engine.session
+    .index()
+    .seqs.get(owner)
+    ?.seq.blocks.map((b) => b.id) ?? [];
 
 // d1: Event "tick" { a, b }; d2: Method "sort(xs)" { c }; d3: no header { e }
 const sample = (): Content =>
@@ -179,16 +185,6 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(notice(called)).toBe('reason.methodHasCallers');
   });
 
-  it('T-0216 · R-EDIT-19: on blocks of a diagram with a header, m tells that extracting is not there yet', () => {
-    const engine = testEngine(sample());
-    select(engine, 'a');
-    engine.keys('m');
-    expect(notice(engine)).toBe('reason.extractNotYet');
-    engine.keys('e');
-    expect(notice(engine)).toBe('reason.eventNotExtracted');
-    expect(engine.session.state.undo).toHaveLength(0);
-  });
-
   it('T-0217 · R-EDIT-18: E and M make a new diagram of that kind and edit its name', () => {
     const engine = testEngine(sample());
     select(engine, 'a');
@@ -261,6 +257,179 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(engine.session.state.selection).toEqual({ kind: 'head', diagram: 'd1' });
     engine.keys('Alt+ArrowDown');
     expect(notice(engine)).toBe('reason.atBottom');
+  });
+});
+
+describe('extracting into a new Method (interaction rules "새 Method로 빼기와 새 다이어그램")', () => {
+  // d1: Event "tick" { a, b, z }; d2: Method "sort(xs)" { c, d }; d3: Method "show" { f };
+  // d4: no header { e, g }
+  const program = (): Content =>
+    withHeads(
+      contentOf(
+        [proc('a'), proc('b'), proc('z')],
+        [proc('c'), proc('d')],
+        [proc('f')],
+        [proc('e'), proc('g')],
+      ),
+      { d1: ['event', 'tick'], d2: ['method', 'sort(xs)'], d3: ['method', 'show'] },
+    );
+  const order = (engine: TestEngine): ReadonlyArray<string> =>
+    engine.content().diagrams.map((d) => d.id);
+  const selectRangeOf = (engine: TestEngine, first: string, last: string): void => {
+    engine.select(selectRange(indexDoc(engine.content()), first, last));
+  };
+
+  it('T-0854 · R-EDIT-19: m on blocks makes a new Method, opens its name and says so', () => {
+    const engine = testEngine(program());
+    selectRangeOf(engine, 'a', 'b');
+    engine.keys('m');
+    expect(idsOf(engine, 'd1')).toEqual(['b1', 'z']);
+    expect(blockOf(engine, 'b1')).toMatchObject({ kind: 'call', target: { diagram: 'd5' } });
+    expect(idsOf(engine, 'd5')).toEqual(['a', 'b']);
+    expect(engine.session.state.editing).toMatchObject({
+      field: { kind: 'head', diagram: 'd5' },
+      text: 'Method 1',
+      caret: 'selectAll',
+    });
+    expect(notice(engine)).toEqual({ key: 'notice.extracted', params: { count: 2 } });
+  });
+
+  it('T-0855 · R-EDIT-19 · UX XM1: the new Method goes after the Method it came from; from an Event, after the last Method', () => {
+    const fromMethod = testEngine(program());
+    select(fromMethod, 'c');
+    fromMethod.keys('m');
+    expect(order(fromMethod)).toEqual(['d1', 'd2', 'd5', 'd3', 'd4']);
+
+    const fromEvent = testEngine(program());
+    select(fromEvent, 'a');
+    fromEvent.keys('m');
+    expect(order(fromEvent)).toEqual(['d1', 'd2', 'd3', 'd5', 'd4']);
+  });
+
+  it('T-0856 · R-EDIT-19 · UX XM2: after the name, the call block left in place is selected and one undo puts the blocks back', () => {
+    const engine = testEngine(program());
+    const before = engine.content();
+    select(engine, 'c');
+    engine.keys('m');
+    engine.session.commitEditing('merge(xs, lo)');
+    expect(headText(engine, 'd5')).toBe('merge(xs, lo)');
+    expect(selected(engine)).toEqual(['b1']);
+    // The parentheses rule of the header fills the call block's arguments.
+    expect(blockOf(engine, 'b1')).toMatchObject({ args: 'xs, lo', result: '' });
+    expect(notice(engine)).toEqual({
+      key: 'notice.extractedNamed',
+      params: { count: 1, name: 'merge' },
+    });
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.keys('u');
+    expect(engine.content()).toBe(before);
+  });
+
+  it('T-0857 · R-EDIT-19 · UX XM2: closing the name unchanged keeps the default name and goes back to the call block', () => {
+    const engine = testEngine(program());
+    select(engine, 'c');
+    engine.keys('m');
+    engine.session.commitEditing('Method 1');
+    expect(headText(engine, 'd5')).toBe('Method 1');
+    expect(selected(engine)).toEqual(['b1']);
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-0858 · R-EDIT-19: a clashing name opens the field again; Esc there keeps the default name and goes back', () => {
+    const engine = testEngine(program());
+    select(engine, 'c');
+    engine.keys('m');
+    engine.session.commitEditing('show');
+    expect(notice(engine)).toBe('reason.duplicateHeadName');
+    expect(engine.session.state.editing).toMatchObject({
+      field: { kind: 'head', diagram: 'd5' },
+      isRejected: true,
+    });
+    engine.session.cancelEditing();
+    expect(headText(engine, 'd5')).toBe('Method 1');
+    expect(selected(engine)).toEqual(['b1']);
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-0859 · R-EDIT-19 · UX XM3: m on blocks of a diagram without a header asks: 1 extracts, 2 adds a Method header', async () => {
+    const engine = testEngine(program());
+    select(engine, 'e');
+    engine.keys('m');
+    expect(engine.picker()).toMatchObject({
+      title: 'picker.methodKey',
+      items: [{ title: 'command.diagram.extractMethod' }, { title: 'command.diagram.method.add' }],
+      active: 0,
+    });
+    engine.picker()?.choose(0);
+    await engine.settle();
+    expect(headText(engine, 'd4')).toBeNull();
+    expect(idsOf(engine, 'd5')).toEqual(['e']);
+    engine.session.commitEditing('Method 1');
+    engine.keys('u');
+
+    select(engine, 'e');
+    engine.keys('m');
+    engine.picker()?.choose(1);
+    await engine.settle();
+    expect(headText(engine, 'd4')).toBe('Method 1');
+    expect(engine.session.state.editing?.field).toEqual({ kind: 'head', diagram: 'd4' });
+    engine.session.commitEditing('Method 1');
+    engine.keys('u');
+
+    // Esc closes the list: nothing changes.
+    select(engine, 'e');
+    engine.keys('m');
+    engine.picker()?.choose(null);
+    await engine.settle();
+    expect(engine.session.state.undo).toHaveLength(0);
+    expect(engine.session.state.redo).toHaveLength(1);
+  });
+
+  it('T-0860 · R-EDIT-19 · UX XM3: from the menu, a diagram without a header extracts at once; adding a Method header and e stay', () => {
+    const engine = testEngine(program());
+    select(engine, 'e');
+    engine.run('diagram.extractMethod');
+    expect(engine.picker()).toBeNull();
+    expect(idsOf(engine, 'd5')).toEqual(['e']);
+    engine.session.commitEditing('Method 1');
+    engine.keys('u');
+    select(engine, 'e');
+    engine.run('diagram.method');
+    expect(headText(engine, 'd4')).toBe('Method 1');
+    engine.session.commitEditing('Method 1');
+    engine.keys('u');
+    select(engine, 'e');
+    engine.keys('e');
+    expect(headText(engine, 'd4')).toBe('Event 1');
+  });
+
+  it('T-0861 · R-EDIT-19 · UX XM3: in a diagram with a header, m extracts without asking', () => {
+    const engine = testEngine(program());
+    select(engine, 'c');
+    engine.keys('m');
+    expect(engine.picker()).toBeNull();
+    expect(idsOf(engine, 'd5')).toEqual(['c']);
+  });
+
+  it('T-0862 · R-EDIT-19: on a branch label or the empty default cell, m tells to select blocks', () => {
+    const engine = testEngine(
+      contentOf([
+        {
+          id: 'k1',
+          kind: 'case',
+          text: 'v',
+          arms: [{ id: 'r1', label: '1', body: { blocks: [proc('p1')], folds: [] } }],
+          otherwise: null,
+        },
+      ]),
+    );
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    engine.keys('m');
+    expect(notice(engine)).toBe('reason.selectBlocksToExtract');
+    engine.select({ kind: 'missingDefault', block: 'k1' });
+    engine.keys('m');
+    expect(notice(engine)).toBe('reason.selectBlocksToExtract');
+    expect(engine.session.state.undo).toHaveLength(0);
   });
 });
 

@@ -44,7 +44,15 @@ export type Editing = {
    * 7.1).
    */
   readonly isRejected?: boolean;
+  /**
+   * The header name of a Method just made by "새 Method로 빼기": typing the name joins the
+   * extract's undo step, and closing the field selects the call block left in place (UX XM2).
+   */
+  readonly extracted?: Extracted;
 };
+
+/** What "새 Method로 빼기" left: the call block in place and how many blocks went. */
+export type Extracted = { readonly call: Id; readonly count: number };
 
 /** The editor's state (03-editor 2). Immutable: every change makes a new object. */
 export type EditorState = {
@@ -119,7 +127,8 @@ export function withSelection(state: EditorState, selection: Selection | null): 
 
 /**
  * A new content from a command: the old content goes on the undo stack and redo is emptied.
- * The same content object means nothing changed: nothing is pushed (01-model 4).
+ * The same content object means nothing changed: nothing is pushed (01-model 4). `isAmend`
+ * keeps the undo stack as it is, so the change joins the last step.
  */
 export function withContent(
   state: EditorState,
@@ -127,6 +136,7 @@ export function withContent(
   selection: Selection | null,
   layout: LayoutResult,
   isDirty: (doc: Doc) => boolean,
+  isAmend = false,
 ): EditorState {
   if (content === state.doc.content) {
     return withSelection(state, selection);
@@ -135,7 +145,8 @@ export function withContent(
   return {
     ...withSelection(state, selection),
     doc,
-    undo: [...state.undo.slice(-(undoLimit - 1)), state.doc.content],
+    // An amend joins the last undo step instead of making one (the name typed after an extract).
+    undo: isAmend ? state.undo : [...state.undo.slice(-(undoLimit - 1)), state.doc.content],
     redo: [],
     dirty: isDirty(doc),
     layout,

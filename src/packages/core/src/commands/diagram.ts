@@ -223,19 +223,30 @@ export function addDiagram(
     head: { kind, text: text ?? defaultHeadName(content, kind) },
     body: emptySeq(ids),
   };
-  const isSameSide = (d: Diagram): boolean => isMethod(d) === (kind === 'method');
-  let at = -1;
-  content.diagrams.forEach((d, index) => {
-    if (isSameSide(d)) {
-      at = index + 1;
-    }
-  });
-  if (at < 0) {
+  return { content: insertDiagramAt(content, diagram, null), diagram: diagram.id };
+}
+
+/**
+ * Puts a diagram into the document right after the diagram `after`, or, with `null`, at the end
+ * of its kind: after the last Method, or after the last Event or diagram without a header
+ * (interaction rules 5, UX XM1).
+ */
+export function insertDiagramAt(content: Content, diagram: Diagram, after: Id | null): Content {
+  let at = after === null ? -1 : content.diagrams.findIndex((d) => d.id === after) + 1;
+  if (at <= 0) {
+    const side = isMethod(diagram);
+    content.diagrams.forEach((d, index) => {
+      if (isMethod(d) === side) {
+        at = index + 1;
+      }
+    });
+  }
+  if (at <= 0) {
     // Methods are drawn on the right, Events on the left (interaction rules 5).
-    at = kind === 'method' ? content.diagrams.length : 0;
+    at = isMethod(diagram) ? content.diagrams.length : 0;
   }
   const diagrams = [...content.diagrams.slice(0, at), diagram, ...content.diagrams.slice(at)];
-  return { content: { ...content, diagrams }, diagram: diagram.id };
+  return { ...content, diagrams };
 }
 
 /**
