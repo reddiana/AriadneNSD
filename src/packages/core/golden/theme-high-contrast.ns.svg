@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="474" height="152" viewBox="0 0 474 152">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="458" height="174" viewBox="0 0 458 174">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="a4a43dcd074997a27965c8cf7485895f48afadfcf9c622e8816ac06d68d0f748"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="fca9d4d622da627c346644beaaaf6adcb7b9ea4ddcc59daac9c0ae14a810dfed"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -86,19 +86,21 @@
   <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
 <text x="24" y="36" font-size="12" fill="#d6d6d6" xml:space="preserve">Event</text>
 <text x="24" y="53" font-size="13" fill="#ffffff" xml:space="preserve"><tspan font-weight="600">start</tspan></text>
-<path d="M24 64 L202 64" fill="none" stroke="#ffffff" stroke-width="1"/>
-<rect x="24" y="64" width="178" height="32" fill="#1c0d33" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M31 64 L31 96" fill="none" stroke="#ffffff" stroke-width="1"/>
-<path d="M195 64 L195 96" fill="none" stroke="#ffffff" stroke-width="1"/>
-<text x="41" y="84" font-size="13" fill="#ffffff" xml:space="preserve">p ← <tspan font-weight="600">partition</tspan>(a, 0, n)</text>
-<rect x="24" y="96" width="178" height="32" fill="#1c0d33" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M31 96 L31 128" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3"/>
-<path d="M195 96 L195 128" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="41" y="116" font-size="13" fill="#ffffff" xml:space="preserve"><tspan font-weight="600">gone</tspan></text>
-<text x="290" y="36" font-size="12" fill="#d6d6d6" xml:space="preserve">Method</text>
-<text x="290" y="53" font-size="13" fill="#ffffff" xml:space="preserve"><tspan font-weight="600">partition(a, lo, hi)</tspan></text>
-<path d="M290 64 L450 64" fill="none" stroke="#ffffff" stroke-width="1"/>
-<rect x="290" y="64" width="160" height="32" fill="#000000" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="300" y="84" font-size="13" fill="#ffffff" xml:space="preserve">swap</text>
+<path d="M24 64 L186 64" fill="none" stroke="#ffffff" stroke-width="1"/>
+<rect x="24" y="82" width="162" height="36" fill="#0f0f0f" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="102" font-size="13" fill="#dcdcdc" xml:space="preserve">swap</text>
+<path d="M25 65 L185 65 L185 117 L25 117 L25 65" fill="none" stroke="#000000" stroke-width="3"/>
+<rect x="24" y="64" width="162" height="18" fill="#2a1747" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M25 65 L185 65 L185 117 L25 117 L25 65" fill="none" stroke="#d2a8ff" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="44" y="77" font-size="12" fill="#dcdcdc" xml:space="preserve">p ← <tspan font-weight="600">partition</tspan>(a, 0, n)</text>
+<rect x="24" y="118" width="162" height="32" fill="#1c0d33" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 118 L31 150" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M179 118 L179 150" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="41" y="138" font-size="13" fill="#ffffff" xml:space="preserve"><tspan font-weight="600">gone</tspan></text>
+<text x="274" y="36" font-size="12" fill="#d6d6d6" xml:space="preserve">Method</text>
+<text x="274" y="53" font-size="13" fill="#ffffff" xml:space="preserve"><tspan font-weight="600">partition(a, lo, hi)</tspan></text>
+<path d="M274 64 L434 64" fill="none" stroke="#ffffff" stroke-width="1"/>
+<rect x="274" y="64" width="160" height="32" fill="#000000" stroke="#ffffff" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="284" y="84" font-size="13" fill="#ffffff" xml:space="preserve">swap</text>
 </g>
 </svg>

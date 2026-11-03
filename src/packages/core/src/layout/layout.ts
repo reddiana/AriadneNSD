@@ -1,6 +1,7 @@
 // Layout in two passes (02-layout 1.1, ADR-0037): measure the smallest size of every block from
 // the inside out, then place from the outside in, giving each child its real box.
 // The whole document is laid out again on every edit; there is no incremental layout.
+// What is folded, opened and banded comes from the view state (02-layout 1.6, `shown.ts`).
 import type { Locale } from '../i18n/messages';
 import { drawingMessage } from '../i18n/messages';
 import type {
@@ -15,16 +16,27 @@ import type {
   Id,
   If,
   Seq,
-  View,
   While,
 } from '../model/types';
 import { fontSizes, measureLine, measureText } from '../text/measure-text';
 import type { TextSize } from '../text/measure-text';
-import { callParts } from './call-text';
+import type { CallTextContext } from './call-text';
+import { callParts, callText } from './call-text';
 import { geometry } from './geometry';
+import type { ShownAt, ShownFold, ShownItem, ShownView } from './shown';
+import {
+  countBlocks,
+  innerSeqs,
+  insideCall,
+  screenId,
+  shownItems,
+  shownView,
+  topLevel,
+} from './shown';
 import type {
   Box,
   BranchLabel,
+  CallWords,
   CaseColumn,
   DiagramLayout,
   HitRegion,
@@ -43,6 +55,20 @@ const callBar = geometry['size.call-bar'];
 const diagramMinWidth = geometry['size.diagram-min-w'];
 const diagramGap = geometry['space.diagram'];
 const paper = geometry['space.paper'];
+const band = geometry['size.band'];
+const bandTextX = geometry['size.band-text-x'];
+const bandIconRoom = geometry['size.band-icon-room'];
+const foldIconRoom = geometry['size.fold-icon-room'];
+const foldExtraHeight = geometry['size.fold-extra-h'];
+const nestGap = geometry['size.nest-gap'];
+const nestInset = geometry['size.nest-inset'];
+const peekInset = geometry['size.peek-inset'];
+
+/** The three dots of a folded row, drawn as shapes before its words (visual design 2). */
+export const foldedDotsRoom = 16;
+
+/** How far the fold triangle's click box reaches into a band or a folded cell. */
+const toggleWidth = 18;
 
 /** The size of an empty process block: the stand-in for a Case's missing default (UX CD1). */
 const emptyBlockSize = {
@@ -54,12 +80,7 @@ type Size = { readonly width: number; readonly height: number };
 
 type Measure =
   | (Size & { readonly kind: 'process'; readonly text: TextSize })
-  | (Size & {
-      readonly kind: 'call';
-      readonly before: string;
-      readonly name: string;
-      readonly after: string;
-    })
+  | (Size & CallWords & { readonly kind: 'call' })
   | (Size & { readonly kind: 'loop'; readonly text: TextSize; readonly headHeight: number })
   | (Size & {
       readonly kind: 'if';
@@ -76,14 +97,28 @@ type Measure =
       /** Arms, then the default (drawn even when the model has none, UX CD1). */
       readonly labels: ReadonlyArray<string>;
       readonly columnWidths: ReadonlyArray<number>;
-    });
+    })
+  /** An opened call block: the band and the called Method's body below it. */
+  | (Size & CallWords & { readonly kind: 'peek'; readonly inside: ShownAt; readonly body: Seq });
+
+/** A fold region's size: a folded cell, or a frame with its name band. */
+type FoldMeasure =
+  | (Size & { readonly kind: 'cell'; readonly name: TextSize; readonly isNamed: boolean })
+  | (Size & { readonly kind: 'frame'; readonly name: PlacedText; readonly isNamed: boolean });
 
 /** What both passes need besides the tree. */
 type Context = {
   readonly locale: Locale;
-  readonly view: View;
-  readonly diagrams: ReadonlyMap<Id, Diagram>;
+  readonly shown: ShownView;
+  readonly words: CallTextContext;
+  /** Every call block of the document by id: the outermost call of an opened path. */
+  readonly calls: ReadonlyMap<Id, Call>;
+  /** Block measures by screen id. */
   readonly measures: Map<Id, Measure>;
+  /** Fold region measures by screen id. */
+  readonly folds: Map<Id, FoldMeasure>;
+  /** Shown items by sequence and place, so both passes see the same. */
+  readonly items: Map<Seq, Map<string, ReadonlyArray<ShownItem>>>;
   readonly boxes: Map<Id, Box>;
   readonly regions: HitRegion[];
   readonly nodes: LayoutNode[];
@@ -93,16 +128,19 @@ type Context = {
  * Lays out a document: every block's bounding box, the click regions and what to draw
  * (02-layout 1). Pure: the same document gives the same result (R-FMT-03). The fixed words
  * ("true" / "false") are in the document's drawing language `settings.locale` (ADR-0041).
- *
- * MVP scope: fold regions are drawn as if their name bands were off (02-layout 1.6), and folded
- * things are drawn unfolded.
+ * Folded branches, loop bodies and fold regions, opened call blocks and name bands follow the
+ * view state (02-layout 1.6); ids the view names that are gone are ignored.
  */
 export function layout(doc: Doc): LayoutResult {
+  const diagrams = new Map(doc.content.diagrams.map((diagram) => [diagram.id, diagram]));
   const context: Context = {
     locale: doc.content.settings.locale,
-    view: doc.view,
-    diagrams: new Map(doc.content.diagrams.map((diagram) => [diagram.id, diagram])),
+    shown: shownView(doc.view),
+    words: { locale: doc.content.settings.locale, resultSymbol: doc.view.resultSymbol, diagrams },
+    calls: callsOf(doc.content.diagrams),
     measures: new Map(),
+    folds: new Map(),
+    items: new Map(),
     boxes: new Map(),
     regions: [],
     nodes: [],
@@ -114,7 +152,7 @@ export function layout(doc: Doc): LayoutResult {
   );
   const arrangement = arrange(measuredDiagrams);
 
-  const diagrams: DiagramLayout[] = [];
+  const placed: DiagramLayout[] = [];
   for (const { measure, x, y } of arrangement.placed) {
     const { diagram, width, headHeight, bodyHeight, headText } = measure;
     const box: Box = { x: paper + x, y: paper + y, width, height: headHeight + bodyHeight };
@@ -132,19 +170,37 @@ export function layout(doc: Doc): LayoutResult {
       context.regions.push({ kind: 'diagramHead', diagramId: diagram.id, box: head });
     }
     const body: Box = { x: box.x, y: box.y + headHeight, width, height: bodyHeight };
-    placeSeq(context, diagram.body, body, false);
+    placeSeq(context, diagram.body, body, topLevel, 0, false);
     context.boxes.set(diagram.id, box);
-    diagrams.push({ id: diagram.id, box, head, body });
+    placed.push({ id: diagram.id, box, head, body });
   }
 
   return {
     width: paper + arrangement.width + paper,
     height: paper + arrangement.height + paper,
-    diagrams,
+    diagrams: placed,
     boxes: context.boxes,
     regions: context.regions,
     nodes: context.nodes,
   };
+}
+
+function callsOf(diagrams: ReadonlyArray<Diagram>): ReadonlyMap<Id, Call> {
+  const calls = new Map<Id, Call>();
+  const visit = (seq: Seq): void => {
+    for (const block of seq.blocks) {
+      if (block.kind === 'call') {
+        calls.set(block.id, block);
+      }
+      for (const inner of innerSeqs(block)) {
+        visit(inner);
+      }
+    }
+  };
+  for (const diagram of diagrams) {
+    visit(diagram.body);
+  }
+  return calls;
 }
 
 /** A diagram measured as a whole: its header and body heights and its width (02-layout 1.5). */
@@ -162,7 +218,7 @@ function measureDiagram(
   diagram: Diagram,
   headStyle: 'shape' | 'title',
 ): DiagramMeasure {
-  const body = measureSeq(context, diagram.body);
+  const body = measureSeq(context, diagram.body, topLevel, 0);
   let width = Math.max(body.width, diagramMinWidth);
   if (diagram.head === null) {
     return { diagram, width, headHeight: 0, bodyHeight: body.height, headText: null };
@@ -257,26 +313,169 @@ function stack(
   return { width: group.length > 0 ? x + widest : 0, height: bottom, placed };
 }
 
+// What a sequence shows.
+
+function itemsOf(context: Context, seq: Seq, at: ShownAt): ReadonlyArray<ShownItem> {
+  let byPlace = context.items.get(seq);
+  if (byPlace === undefined) {
+    byPlace = new Map();
+    context.items.set(seq, byPlace);
+  }
+  let items = byPlace.get(at.prefix);
+  if (items === undefined) {
+    items = shownItems(seq, at, context.shown);
+    byPlace.set(at.prefix, items);
+  }
+  return items;
+}
+
+/** Where an opened call block shows its Method, or `null` when it is not opened (or cannot be). */
+function openedInside(context: Context, block: Call, at: ShownAt): ShownAt | null {
+  const id = screenId(at.prefix, block.id);
+  if (!context.shown.opened.has(id) || block.target.kind !== 'local') {
+    return null;
+  }
+  const method = context.words.diagrams.get(block.target.diagram);
+  const outermost = at.site === null ? block : context.calls.get(at.site.call);
+  if (method?.head?.kind !== 'method' || outermost === undefined) {
+    return null;
+  }
+  return insideCall(at, block, id, method, outermost);
+}
+
+/** Whether an item is drawn with a border: an unfolded fold region's frame, an opened call. */
+function isFramed(context: Context, item: ShownItem, at: ShownAt): boolean {
+  if (item.kind === 'fold') {
+    return !item.fold.isFolded;
+  }
+  return (
+    item.block.kind === 'call' &&
+    context.measures.get(screenId(at.prefix, item.block.id))?.kind === 'peek'
+  );
+}
+
+/**
+ * The name drawn for a fold region: its own name, or the default name "the first block's text
+ * and n more" (interaction rules "접기 · 펼치기"), in the drawing language.
+ */
+export function foldLabel(
+  words: CallTextContext,
+  fold: { readonly name?: string; readonly blocks: ReadonlyArray<Block> },
+): { readonly text: string; readonly isNamed: boolean } {
+  if (fold.name !== undefined && fold.name !== '') {
+    return { text: fold.name, isNamed: true };
+  }
+  return { text: defaultFoldName(words, fold.blocks), isNamed: false };
+}
+
+/** The default name of a region holding `blocks`: "the first block's text and n more". */
+export function defaultFoldName(words: CallTextContext, blocks: ReadonlyArray<Block>): string {
+  const [first] = blocks;
+  const raw =
+    first === undefined ? '' : first.kind === 'call' ? callText(words, first) : first.text;
+  const text = raw.split('\n')[0] ?? '';
+  const shown = text === '' ? drawingMessage(words.locale, 'fold.empty') : text;
+  const rest = blocks.length - 1;
+  return rest > 0 ? drawingMessage(words.locale, 'fold.more', { text: shown, count: rest }) : shown;
+}
+
+/** The words of a folded row: "n blocks" in the drawing language. */
+function foldedWords(context: Context, seq: Seq): string {
+  return drawingMessage(context.locale, 'folded.count', { count: countBlocks(seq) });
+}
+
 // Pass 1: measure (inside out).
 
-function measureSeq(context: Context, seq: Seq): Size {
+/**
+ * Measures a sequence. `inset` is how far framed children sit inside the frame holding the
+ * sequence (0 outside frames): they are inset at both sides and at the bottom, and two framed
+ * children in a row keep a gap (02-layout 1.6).
+ */
+function measureSeq(context: Context, seq: Seq, at: ShownAt, inset: number): Size {
+  return measureItems(context, itemsOf(context, seq, at), at, inset);
+}
+
+function measureItems(
+  context: Context,
+  items: ReadonlyArray<ShownItem>,
+  at: ShownAt,
+  inset: number,
+): Size {
   let width = 0;
   let height = 0;
-  for (const block of seq.blocks) {
-    const size = measureBlock(context, block);
-    width = Math.max(width, size.width);
-    height += size.height;
-  }
+  let wasFramed = false;
+  items.forEach((item, index) => {
+    const size = measureItem(context, item, at);
+    const framed = isFramed(context, item, at);
+    width = Math.max(width, size.width + (framed ? 2 * inset : 0));
+    height += size.height + (framed && wasFramed ? gapBetweenFrames : 0);
+    if (framed && index === items.length - 1) {
+      height += inset;
+    }
+    wasFramed = framed;
+  });
   return { width, height };
 }
 
-function measureBlock(context: Context, block: Block): Measure {
-  const measure = measureBlockOnce(context, block);
-  context.measures.set(block.id, measure);
+/** Two frames in a row: the shared line splits into two, with a 1px gap between (02-layout 1.6). */
+const gapBetweenFrames = 1 + nestGap;
+
+function measureItem(context: Context, item: ShownItem, at: ShownAt): Size {
+  if (item.kind === 'block') {
+    return measureBlock(context, item.block, at);
+  }
+  return measureFold(context, item.fold, item.items, at);
+}
+
+function measureFold(
+  context: Context,
+  fold: ShownFold,
+  items: ReadonlyArray<ShownItem>,
+  at: ShownAt,
+): Size {
+  const label = foldLabel(context.words, fold);
+  let measure: FoldMeasure;
+  if (fold.isFolded) {
+    const name = measureText(label.text);
+    measure = {
+      kind: 'cell',
+      name,
+      isNamed: label.isNamed,
+      width: name.width + 2 * padX + foldIconRoom,
+      height: name.height + 2 * padY + foldExtraHeight,
+    };
+  } else {
+    const inner = measureItems(context, items, at, nestInset);
+    const text = oneLine(label.text);
+    const nameWidth = measureLine(text, fontSizes.secondary);
+    measure = {
+      kind: 'frame',
+      name: { lines: [text], width: nameWidth },
+      isNamed: label.isNamed,
+      width: Math.max(inner.width, bandTextWidth(nameWidth)),
+      height: band + inner.height,
+    };
+  }
+  context.folds.set(fold.screenId, measure);
   return measure;
 }
 
-function measureBlockOnce(context: Context, block: Block): Measure {
+/** The smallest width of a band holding text this wide: room, the triangle, the text, padding. */
+function bandTextWidth(textWidth: number): number {
+  return bandTextX + bandIconRoom + textWidth + padX;
+}
+
+function oneLine(text: string): string {
+  return text.replace(/\r\n|\r|\n/g, ' ');
+}
+
+function measureBlock(context: Context, block: Block, at: ShownAt): Measure {
+  const measure = measureBlockOnce(context, block, at);
+  context.measures.set(screenId(at.prefix, block.id), measure);
+  return measure;
+}
+
+function measureBlockOnce(context: Context, block: Block, at: ShownAt): Measure {
   switch (block.kind) {
     case 'process': {
       const text = measureText(block.text);
@@ -288,22 +487,37 @@ function measureBlockOnce(context: Context, block: Block): Measure {
       };
     }
     case 'call':
-      return measureCall(context, block);
+      return measureCall(context, block, at);
     case 'while':
     case 'doWhile':
     case 'for':
-      return measureLoop(context, block);
+      return measureLoop(context, block, at);
     case 'if':
-      return measureIf(context, block);
+      return measureIf(context, block, at);
     case 'case':
-      return measureCase(context, block);
+      return measureCase(context, block, at);
   }
 }
 
-function measureLoop(context: Context, block: While | DoWhile | For): Measure {
+/**
+ * Measures the body of a branch or loop: one row "⋯ n blocks" when it is folded (R-EDIT-13),
+ * otherwise its sequence.
+ */
+function measureBody(context: Context, owner: Id, seq: Seq, at: ShownAt): Size {
+  if (context.shown.folded.has(owner)) {
+    return {
+      width:
+        padX + foldedDotsRoom + measureLine(foldedWords(context, seq), fontSizes.secondary) + padX,
+      height: line + 2 * padY,
+    };
+  }
+  return measureSeq(context, seq, at, 0);
+}
+
+function measureLoop(context: Context, block: While | DoWhile | For, at: ShownAt): Measure {
   const text = measureText(block.text);
   const headHeight = text.height + 2 * padY;
-  const body = measureSeq(context, block.body);
+  const body = measureBody(context, block.id, block.body, at);
   return {
     kind: 'loop',
     text,
@@ -318,7 +532,7 @@ function columnWidth(sequenceWidth: number, label: string): number {
   return Math.max(sequenceWidth, measureLine(label, fontSizes.secondary) + labelRoom);
 }
 
-function measureIf(context: Context, block: If): Measure {
+function measureIf(context: Context, block: If, at: ShownAt): Measure {
   const text = measureText(block.text);
   const headHeight = text.height + 2 * padY + geometry['size.if-label'];
   const headWidth = text.width + 2 * padX + geometry['size.if-head-extra'];
@@ -326,8 +540,8 @@ function measureIf(context: Context, block: If): Measure {
     block.yes.label ?? drawingMessage(context.locale, 'if.yes'),
     block.no.label ?? drawingMessage(context.locale, 'if.no'),
   ] as const;
-  const yes = measureSeq(context, block.yes.body);
-  const no = measureSeq(context, block.no.body);
+  const yes = measureBody(context, block.yes.id, block.yes.body, at);
+  const no = measureBody(context, block.no.id, block.no.body, at);
   const branchWidths = [
     columnWidth(yes.width, labels[0]),
     columnWidth(no.width, labels[1]),
@@ -343,7 +557,7 @@ function measureIf(context: Context, block: If): Measure {
   };
 }
 
-function measureCase(context: Context, block: Case): Measure {
+function measureCase(context: Context, block: Case, at: ShownAt): Measure {
   const text = measureText(block.text);
   const headHeight = text.height + 2 * padY + geometry['size.case-label'];
   const headWidth = text.width + 2 * padX + geometry['size.case-head-extra'];
@@ -351,13 +565,15 @@ function measureCase(context: Context, block: Case): Measure {
   const columnWidths: number[] = [];
   let bodyHeight = 0;
   for (const arm of block.arms) {
-    const size = measureSeq(context, arm.body);
+    const size = measureBody(context, arm.id, arm.body, at);
     labels.push(arm.label);
     columnWidths.push(columnWidth(size.width, arm.label));
     bodyHeight = Math.max(bodyHeight, size.height);
   }
   const defaultLabel = block.otherwise?.label ?? drawingMessage(context.locale, 'case.default');
-  const defaultSize = block.otherwise ? measureSeq(context, block.otherwise.body) : emptyBlockSize;
+  const defaultSize = block.otherwise
+    ? measureBody(context, block.otherwise.id, block.otherwise.body, at)
+    : emptyBlockSize;
   labels.push(defaultLabel);
   columnWidths.push(columnWidth(defaultSize.width, defaultLabel));
   bodyHeight = Math.max(bodyHeight, defaultSize.height);
@@ -372,11 +588,24 @@ function measureCase(context: Context, block: Case): Measure {
   };
 }
 
-function measureCall(context: Context, block: Call): Measure {
-  const parts = callParts(
-    { locale: context.locale, resultSymbol: context.view.resultSymbol, diagrams: context.diagrams },
-    block,
-  );
+function measureCall(context: Context, block: Call, at: ShownAt): Measure {
+  const parts = callParts(context.words, block);
+  const inside = openedInside(context, block, at);
+  if (inside !== null && block.target.kind === 'local') {
+    const method = context.words.diagrams.get(block.target.diagram);
+    if (method !== undefined) {
+      const inner = measureSeq(context, method.body, inside, peekInset);
+      const words = measureLine(parts.before + parts.name + parts.after, fontSizes.secondary);
+      return {
+        kind: 'peek',
+        ...parts,
+        inside,
+        body: method.body,
+        width: Math.max(inner.width, bandTextWidth(words)),
+        height: band + inner.height,
+      };
+    }
+  }
   const width =
     measureLine(parts.before) +
     measureLine(parts.name) +
@@ -388,26 +617,78 @@ function measureCall(context: Context, block: Call): Measure {
 
 // Pass 2: place (outside in).
 
+/** Marks a node as drawn inside an opened call block. */
+function peeked(at: ShownAt): { readonly isPeeked?: true } {
+  return at.prefix === '' ? {} : { isPeeked: true };
+}
+
 /**
  * Places a sequence in its box. Every block gets the full width. When the box is taller than the
- * blocks, the leftover height is shared equally and the last block takes the remainder
- * (02-layout 1.3, UX SB1).
+ * blocks, the leftover height is shared equally and the last item takes the remainder
+ * (02-layout 1.3, UX SB1). Framed items sit `inset` inside (02-layout 1.6).
  */
-function placeSeq(context: Context, seq: Seq, box: Box, isBranch: boolean): void {
-  const count = seq.blocks.length;
+function placeSeq(
+  context: Context,
+  seq: Seq,
+  box: Box,
+  at: ShownAt,
+  inset: number,
+  isBranch: boolean,
+): void {
+  const items = itemsOf(context, seq, at);
+  const [only] = items;
+  const isEmptyBranch =
+    isBranch && items.length === 1 && only?.kind === 'block' && isEmptyBlock(only.block);
+  placeItems(context, items, box, at, inset, isEmptyBranch);
+}
+
+function placeItems(
+  context: Context,
+  items: ReadonlyArray<ShownItem>,
+  box: Box,
+  at: ShownAt,
+  inset: number,
+  isEmptyBranch: boolean,
+): void {
+  const count = items.length;
+  const framed = items.map((item) => isFramed(context, item, at));
   let needed = 0;
-  for (const block of seq.blocks) {
-    needed += measured(context, block.id).height;
+  items.forEach((item, index) => {
+    needed += itemHeight(context, item, at);
+    if (framed[index] === true && framed[index - 1] === true) {
+      needed += gapBetweenFrames;
+    }
+  });
+  if (framed[count - 1] === true) {
+    needed += inset;
   }
   const each = Math.floor(Math.max(0, box.height - needed) / count);
-  const isEmptyBranch = isBranch && count === 1 && isEmptyBlock(seq.blocks[0]);
   let y = box.y;
-  seq.blocks.forEach((block, index) => {
+  items.forEach((item, index) => {
+    const isFrame = framed[index] === true;
+    if (isFrame && framed[index - 1] === true) {
+      y += gapBetweenFrames;
+    }
     const isLast = index === count - 1;
-    const height = isLast ? box.y + box.height - y : measured(context, block.id).height + each;
-    placeBlock(context, block, { x: box.x, y, width: box.width, height }, isEmptyBranch);
+    const height = isLast
+      ? box.y + box.height - y - (isFrame ? inset : 0)
+      : itemHeight(context, item, at) + each;
+    const side = isFrame ? inset : 0;
+    const itemBox: Box = { x: box.x + side, y, width: box.width - 2 * side, height };
+    if (item.kind === 'block') {
+      placeBlock(context, item.block, itemBox, at, isEmptyBranch);
+    } else {
+      placeFold(context, item.fold, item.items, itemBox, at);
+    }
     y += height;
   });
+}
+
+function itemHeight(context: Context, item: ShownItem, at: ShownAt): number {
+  if (item.kind === 'block') {
+    return measured(context, screenId(at.prefix, item.block.id)).height;
+  }
+  return foldMeasured(context, item.fold.screenId).height;
 }
 
 function isEmptyBlock(block: Block | undefined): boolean {
@@ -422,58 +703,244 @@ function measured(context: Context, id: Id): Measure {
   return measure;
 }
 
-function placeBlock(context: Context, block: Block, box: Box, isEmptyBranch: boolean): void {
-  context.boxes.set(block.id, box);
-  const measure = measured(context, block.id);
+function foldMeasured(context: Context, id: Id): FoldMeasure {
+  const measure = context.folds.get(id);
+  if (measure === undefined) {
+    throw new Error(`Layout: fold region ${id} was not measured`);
+  }
+  return measure;
+}
+
+function placeFold(
+  context: Context,
+  fold: ShownFold,
+  items: ReadonlyArray<ShownItem>,
+  box: Box,
+  at: ShownAt,
+): void {
+  const measure = foldMeasured(context, fold.screenId);
+  context.boxes.set(fold.screenId, box);
+  if (measure.kind === 'cell') {
+    context.nodes.push({
+      kind: 'foldCell',
+      id: fold.screenId,
+      box,
+      name: placedText(measure.name),
+      isNamed: measure.isNamed,
+      ...peeked(at),
+    });
+    context.regions.push(
+      { kind: 'fold', foldId: fold.screenId, isFolded: true, box },
+      toggle('fold', fold.screenId, false, box, measure.name.height + 2 * padY),
+    );
+    for (const block of fold.blocks) {
+      hide(context, block, at.prefix, box);
+    }
+    return;
+  }
+  const bandBox: Box = { x: box.x, y: box.y, width: box.width, height: band };
+  context.regions.push(
+    { kind: 'fold', foldId: fold.screenId, isFolded: false, box: bandBox },
+    toggle('fold', fold.screenId, true, bandBox, band),
+  );
+  placeItems(
+    context,
+    items,
+    { x: box.x, y: box.y + band, width: box.width, height: box.height - band },
+    at,
+    nestInset,
+    false,
+  );
+  // The frame goes over the blocks it holds, so its thick line covers their outer lines.
+  context.nodes.push({
+    kind: 'foldFrame',
+    id: fold.screenId,
+    box,
+    band: bandBox,
+    name: measure.name,
+    isNamed: measure.isNamed,
+  });
+}
+
+/** The click box of a fold triangle at the left of a band or a folded cell. */
+function toggle(
+  what: 'fold' | 'peek',
+  target: Id,
+  isOpen: boolean,
+  box: Box,
+  height: number,
+): HitRegion {
+  return {
+    kind: 'toggle',
+    what,
+    target,
+    isOpen,
+    box: { x: box.x + 1, y: box.y, width: toggleWidth, height: Math.min(height, box.height) },
+  };
+}
+
+/**
+ * Gives a block hidden in a folded branch, loop body or region (and everything in it) the box of
+ * what is drawn in its place, so selecting it outlines that (02-layout 1.1).
+ */
+function hide(context: Context, block: Block, prefix: string, box: Box): void {
+  context.boxes.set(screenId(prefix, block.id), box);
+  for (const inner of innerOwners(block)) {
+    context.boxes.set(screenId(prefix, inner.owner), box);
+    for (const child of inner.seq.blocks) {
+      hide(context, child, prefix, box);
+    }
+  }
+}
+
+/** The sequences inside a block with the ids that own them (branches; a loop owns its body). */
+function innerOwners(block: Block): ReadonlyArray<{ readonly owner: Id; readonly seq: Seq }> {
+  switch (block.kind) {
+    case 'process':
+    case 'call':
+      return [];
+    case 'if':
+      return [
+        { owner: block.yes.id, seq: block.yes.body },
+        { owner: block.no.id, seq: block.no.body },
+      ];
+    case 'case':
+      return [...block.arms, ...(block.otherwise === null ? [] : [block.otherwise])].map(
+        (branch) => ({ owner: branch.id, seq: branch.body }),
+      );
+    case 'while':
+    case 'doWhile':
+    case 'for':
+      return [{ owner: block.id, seq: block.body }];
+  }
+}
+
+function placeBlock(
+  context: Context,
+  block: Block,
+  box: Box,
+  at: ShownAt,
+  isEmptyBranch: boolean,
+): void {
+  const id = screenId(at.prefix, block.id);
+  context.boxes.set(id, box);
+  const measure = measured(context, id);
   switch (block.kind) {
     case 'process':
       if (measure.kind === 'process') {
         context.nodes.push({
           kind: 'process',
-          id: block.id,
+          id,
           box,
           text: placedText(measure.text),
           isEmptyBranch,
+          ...peeked(at),
         });
-        context.regions.push({ kind: 'block', blockId: block.id, box });
+        context.regions.push({ kind: 'block', blockId: id, box });
       }
       return;
     case 'call':
       if (measure.kind === 'call') {
         context.nodes.push({
           kind: 'call',
-          id: block.id,
+          id,
           box,
           before: measure.before,
           name: measure.name,
           after: measure.after,
           isLost: block.target.kind === 'lost',
+          ...peeked(at),
         });
-        context.regions.push({ kind: 'block', blockId: block.id, box });
+        context.regions.push({ kind: 'block', blockId: id, box });
+      } else if (measure.kind === 'peek') {
+        placePeek(context, id, box, measure, at);
       }
       return;
     case 'while':
     case 'doWhile':
     case 'for':
       if (measure.kind === 'loop') {
-        placeLoop(context, block, box, measure);
+        placeLoop(context, block, box, measure, at);
       }
       return;
     case 'if':
       if (measure.kind === 'if') {
-        placeIf(context, block, box, measure);
+        placeIf(context, block, box, measure, at);
       }
       return;
     case 'case':
       if (measure.kind === 'case') {
-        placeCase(context, block, box, measure);
+        placeCase(context, block, box, measure, at);
       }
       return;
   }
 }
 
+/** An opened call block: its band on top, the called Method's blocks below (02-layout 1.6). */
+function placePeek(
+  context: Context,
+  id: Id,
+  box: Box,
+  measure: Extract<Measure, { kind: 'peek' }>,
+  at: ShownAt,
+): void {
+  const bandBox: Box = { x: box.x, y: box.y, width: box.width, height: band };
+  context.regions.push(
+    { kind: 'peekBand', blockId: id, box: bandBox },
+    toggle('peek', id, true, bandBox, band),
+  );
+  placeSeq(
+    context,
+    measure.body,
+    { x: box.x, y: box.y + band, width: box.width, height: box.height - band },
+    measure.inside,
+    peekInset,
+    false,
+  );
+  context.nodes.push({
+    kind: 'peek',
+    id,
+    box,
+    band: bandBox,
+    before: measure.before,
+    name: measure.name,
+    after: measure.after,
+    ...peeked(at),
+  });
+}
+
 function placedText(text: TextSize): PlacedText {
   return { lines: text.lines, width: text.width };
+}
+
+/**
+ * Places a branch's or loop's body: the row "⋯ n blocks" when it is folded, which the blocks
+ * inside then point at (02-layout 1.1), otherwise its sequence.
+ */
+function placeBody(
+  context: Context,
+  owner: Id,
+  seq: Seq,
+  box: Box,
+  at: ShownAt,
+  isBranch: boolean,
+): void {
+  if (!context.shown.folded.has(owner)) {
+    placeSeq(context, seq, box, at, 0, isBranch);
+    return;
+  }
+  const id = screenId(at.prefix, owner);
+  context.nodes.push({
+    kind: 'foldedSeq',
+    id,
+    box,
+    text: foldedWords(context, seq),
+    ...peeked(at),
+  });
+  context.regions.push({ kind: 'foldedSeq', owner: id, box });
+  for (const block of seq.blocks) {
+    hide(context, block, at.prefix, box);
+  }
 }
 
 function placeLoop(
@@ -481,7 +948,9 @@ function placeLoop(
   block: While | DoWhile | For,
   box: Box,
   measure: Extract<Measure, { kind: 'loop' }>,
+  at: ShownAt,
 ): void {
+  const id = screenId(at.prefix, block.id);
   const isBottom = block.kind === 'doWhile';
   const headHeight = measure.headHeight;
   const head: Box = {
@@ -492,16 +961,18 @@ function placeLoop(
   };
   context.nodes.push({
     kind: 'loop',
-    id: block.id,
+    id,
     loop: block.kind,
     box,
     head,
     text: placedText(measure.text),
+    ...peeked(at),
   });
-  context.regions.push({ kind: 'head', blockId: block.id, box: head });
+  context.regions.push({ kind: 'head', blockId: id, box: head });
   // Extra height goes to the body, not the header (02-layout 1.3).
-  placeSeq(
+  placeBody(
     context,
+    block.id,
     block.body,
     {
       x: box.x + loopStrip,
@@ -509,6 +980,7 @@ function placeLoop(
       width: box.width - loopStrip,
       height: box.height - headHeight,
     },
+    at,
     false,
   );
 }
@@ -547,7 +1019,9 @@ function placeIf(
   block: If,
   box: Box,
   measure: Extract<Measure, { kind: 'if' }>,
+  at: ShownAt,
 ): void {
+  const id = screenId(at.prefix, block.id);
   const head: Box = { x: box.x, y: box.y, width: box.width, height: measure.headHeight };
   const [yesWidth = 0] = splitWidth(box.width, measure.branchWidths);
   const bodyY = box.y + measure.headHeight;
@@ -563,31 +1037,32 @@ function placeIf(
   const no: BranchLabel = { text: measure.labels[1], column: noBox };
   context.nodes.push({
     kind: 'if',
-    id: block.id,
+    id,
     box,
     head,
     text: placedText(measure.text),
     splitX: noBox.x,
     yes,
     no,
+    ...peeked(at),
   });
-  context.regions.push({ kind: 'head', blockId: block.id, box: head });
+  context.regions.push({ kind: 'head', blockId: id, box: head });
   const rowHeight = geometry['size.if-label'];
   context.regions.push(
-    branchLabelRegion(block.id, block.yes.id, 0, labelRow(yesBox, head, rowHeight)),
-    branchLabelRegion(block.id, block.no.id, 1, labelRow(noBox, head, rowHeight)),
+    branchLabelRegion(id, screenId(at.prefix, block.yes.id), 0, labelRow(yesBox, head, rowHeight)),
+    branchLabelRegion(id, screenId(at.prefix, block.no.id), 1, labelRow(noBox, head, rowHeight)),
   );
-  placeBranch(context, block.yes, yesBox);
-  placeBranch(context, block.no, noBox);
+  placeBranch(context, block.yes, yesBox, at);
+  placeBranch(context, block.no, noBox, at);
 }
 
 function branchLabelRegion(blockId: Id, branchId: Id | null, index: number, box: Box): HitRegion {
   return { kind: 'branchLabel', blockId, branchId, index, box };
 }
 
-function placeBranch(context: Context, branch: Branch, box: Box): void {
-  context.boxes.set(branch.id, box);
-  placeSeq(context, branch.body, box, true);
+function placeBranch(context: Context, branch: Branch, box: Box, at: ShownAt): void {
+  context.boxes.set(screenId(at.prefix, branch.id), box);
+  placeBody(context, branch.id, branch.body, box, at, true);
 }
 
 function placeCase(
@@ -595,7 +1070,9 @@ function placeCase(
   block: Case,
   box: Box,
   measure: Extract<Measure, { kind: 'case' }>,
+  at: ShownAt,
 ): void {
+  const id = screenId(at.prefix, block.id);
   const head: Box = { x: box.x, y: box.y, width: box.width, height: measure.headHeight };
   const widths = splitWidth(box.width, measure.columnWidths);
   const bodyY = box.y + measure.headHeight;
@@ -607,7 +1084,7 @@ function placeCase(
     const width = widths[index] ?? 0;
     const column: Box = { x, y: bodyY, width, height: bodyHeight };
     columns.push({
-      branchId: branch?.id ?? null,
+      branchId: branch === null ? null : screenId(at.prefix, branch.id),
       isDefault: index === branches.length - 1,
       label: { text: measure.labels[index] ?? '', column },
     });
@@ -616,22 +1093,18 @@ function placeCase(
 
   context.nodes.push({
     kind: 'case',
-    id: block.id,
+    id,
     box,
     head,
     text: placedText(measure.text),
     columns,
+    ...peeked(at),
   });
-  context.regions.push({ kind: 'head', blockId: block.id, box: head });
+  context.regions.push({ kind: 'head', blockId: id, box: head });
   const rowHeight = geometry['size.case-label'];
   columns.forEach((column, index) => {
     context.regions.push(
-      branchLabelRegion(
-        block.id,
-        column.branchId,
-        index,
-        labelRow(column.label.column, head, rowHeight),
-      ),
+      branchLabelRegion(id, column.branchId, index, labelRow(column.label.column, head, rowHeight)),
     );
   });
 
@@ -642,10 +1115,10 @@ function placeCase(
     }
     if (branch === null) {
       // A Case without a default draws an empty default cell, measured as an empty block (UX CD1).
-      context.nodes.push({ kind: 'missingDefault', caseId: block.id, box: column });
-      context.regions.push({ kind: 'missingDefault', blockId: block.id, box: column });
+      context.nodes.push({ kind: 'missingDefault', caseId: id, box: column, ...peeked(at) });
+      context.regions.push({ kind: 'missingDefault', blockId: id, box: column });
     } else {
-      placeBranch(context, branch, column);
+      placeBranch(context, branch, column, at);
     }
   });
 }

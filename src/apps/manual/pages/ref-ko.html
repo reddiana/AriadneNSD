@@ -312,6 +312,61 @@
   </p>
 </section>
 
+<section id="folds">
+  <h2>접기</h2>
+  <p>
+    긴 다이어그램은 접어서 봅니다. 제어 블록을 선택하고 <kbd>f</kbd>(또는 <kbd>za</kbd>)를 누르면 그
+    안쪽이 "⋯ 블록 n개" 한 줄로 접힙니다. If와 Case는 분기마다 접히고, 처리 블록 하나뿐인 분기는
+    접지 않습니다. 블록을 선택하고 누르면 그 블록을 담은 가장 가까운 것(접기 영역, 분기)이 접힙니다.
+    접힌 줄을 선택하고 한 번 더 누르면 펴집니다.
+  </p>
+  <p>
+    <b>접기 영역</b>은 블록 몇 개를 묶어 이름을 붙인 것입니다. 블록들을 선택하고 <kbd>zf</kbd>를
+    누르면 묶어서 바로 접고 이름을 묻습니다. 그냥 <kbd>Enter</kbd>를 누르면 "첫 블록의 텍스트 외
+    n개"가 이름처럼 보입니다. 펴면 굵은 테두리와 이름 띠가 남아 어디까지인지 보입니다. 이름 띠는
+    보기 › 접기 영역 보기로 끌 수 있습니다. 접힘과 이름은 파일에 함께 저장되고, 저장되는 그림도 화면
+    그대로입니다. 접고 펴는 것은 실행 취소의 대상이 아닙니다.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>하는 일</th>
+        <th>Vim 키</th>
+        <th>표준 키 · 마우스</th>
+      </tr>
+      <tr>
+        <td>접기 · 펴기</td>
+        <td><kbd>za</kbd>, <kbd>f</kbd></td>
+        <td>펼침 삼각형 <code>▸</code> <code>▾</code>을 클릭, 접힌 줄을 더블클릭</td>
+      </tr>
+      <tr>
+        <td>펴기만 / 접기만</td>
+        <td><kbd>zo</kbd> / <kbd>zc</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>접기 영역 만들기</td>
+        <td><kbd>zf</kbd></td>
+        <td><kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>접기 영역 풀기 (블록은 남음)</td>
+        <td><kbd>zd</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>접기 영역의 이름 바꾸기 (이름 띠나 접힌 칸을 선택한 채)</td>
+        <td><kbd>i</kbd>, <kbd>cc</kbd></td>
+        <td><kbd>Enter</kbd>, 더블클릭</td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    접힌 칸 · 접힌 줄은 방향키로 블록 하나처럼 지나갑니다. 펴진 접기 영역의 첫 블록에서
+    <kbd>↑</kbd>를 누르면 이름 띠가 선택됩니다. 접힌 것은 통째로 이동 · 복사 · 삭제됩니다.
+  </p>
+</section>
+
 <section id="diagrams">
   <h2>Event · Method와 여러 다이어그램</h2>
   <p>
@@ -325,6 +380,14 @@
     Method를 호출하는 호출 블록이 남습니다. 새 Method의 이름을 적고 <kbd>Enter</kbd>를 누르면 남은
     호출 블록으로 돌아옵니다. 헤더 없는 다이어그램에서는 <kbd>m</kbd>이 "새 Method로 빼기"와 "Method
     헤더 달기" 가운데 고르는 작은 목록을 띄웁니다. 실행 취소 한 번이면 블록이 제자리로 돌아옵니다.
+  </p>
+  <p>
+    호출 블록을 선택하고 <kbd>f</kbd>를 누르면 그 자리에 Method의 블록들이 <b>펴 보입니다</b>(보라
+    점선과 띠, 회색 텍스트). 보기만 바뀌고 내용은 그대로라, 펴 보인 블록은 선택하고 복사할 수 있지만
+    편집할 수는 없습니다. 펴 보인 블록들을 선택하고 <kbd>zf</kbd>를 누르면 그 호출 블록 자리에만
+    있는 접기 영역이 생깁니다. <kbd>ds</kbd>(풀기)는 호출 블록을 Method의 블록 사본으로
+    바꿉니다(Method로 빼기의 반대). 문서에 없는 함수는 목록의 "이름을 적어 호출하기"로 이름을 직접
+    적어 호출합니다.
   </p>
   <div class="pair">
     <figure>
@@ -366,9 +429,24 @@
         <td>컨텍스트 메뉴 › 삽입</td>
       </tr>
       <tr>
-        <td>호출할 Method 바꾸기 / 그 Method로 가기</td>
-        <td><kbd>r</kbd> / <kbd>gd</kbd></td>
-        <td>컨텍스트 메뉴</td>
+        <td>호출할 Method 바꾸기 ("이름을 적어 호출하기"도 이 목록에)</td>
+        <td></td>
+        <td>다이어그램 메뉴, 컨텍스트 메뉴</td>
+      </tr>
+      <tr>
+        <td>호출하는 Method로 가기 (펴 보인 블록에서는 원래 블록으로)</td>
+        <td><kbd>gd</kbd></td>
+        <td>다이어그램 메뉴, 컨텍스트 메뉴</td>
+      </tr>
+      <tr>
+        <td>호출 블록 펴 보기 · 접기</td>
+        <td><kbd>f</kbd>, <kbd>za</kbd></td>
+        <td>띠의 펼침 삼각형 <code>▾</code>을 클릭</td>
+      </tr>
+      <tr>
+        <td>호출 블록을 Method의 블록들로 바꾸기 (풀기)</td>
+        <td><kbd>ds</kbd></td>
+        <td>다이어그램 메뉴 › 풀기</td>
       </tr>
       <tr>
         <td>앞 / 뒤 다이어그램으로</td>

@@ -319,6 +319,62 @@
   </p>
 </section>
 
+<section id="folds">
+  <h2>Folding</h2>
+  <p>
+    Fold a long diagram to read it. Select a control block and press <kbd>f</kbd> (or
+    <kbd>za</kbd>): its inside folds into one row "⋯ n blocks". If and Case fold branch by branch; a
+    branch of only one process block does not fold. On a block, the key folds the nearest thing
+    holding it (a fold region, a branch). Select a folded row and press the key again to unfold it.
+  </p>
+  <p>
+    A <b>fold region</b> groups a few blocks under a name. Select the blocks and press
+    <kbd>zf</kbd>: they are grouped, folded at once, and you are asked for a name. Just press
+    <kbd>Enter</kbd> and "the first block's text and n more" shows as its name. Unfolded, a thick
+    border and a name band show where it ends; turn the bands off with View › Show Fold Regions.
+    What is folded and the names are saved in the file, and the saved drawing looks as on the
+    screen. Folding and unfolding are not undo steps.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>What</th>
+        <th>Vim keys</th>
+        <th>Standard keys · mouse</th>
+      </tr>
+      <tr>
+        <td>Fold · unfold</td>
+        <td><kbd>za</kbd>, <kbd>f</kbd></td>
+        <td>Click the triangle <code>▸</code> <code>▾</code>, double-click a folded row</td>
+      </tr>
+      <tr>
+        <td>Unfold only / fold only</td>
+        <td><kbd>zo</kbd> / <kbd>zc</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Make a fold region</td>
+        <td><kbd>zf</kbd></td>
+        <td><kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>Remove a fold region (the blocks stay)</td>
+        <td><kbd>zd</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>Rename a fold region (its band or folded cell selected)</td>
+        <td><kbd>i</kbd>, <kbd>cc</kbd></td>
+        <td><kbd>Enter</kbd>, double-click</td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    The arrow keys pass a folded cell or row as one block. From the first block of an unfolded fold
+    region, <kbd>↑</kbd> selects its name band. A folded thing is moved, copied and deleted whole.
+  </p>
+</section>
+
 <section id="diagrams">
   <h2>Events, Methods and several diagrams</h2>
   <p>
@@ -332,6 +388,14 @@
     it is left in their place. Type the new Method's name and press <kbd>Enter</kbd> to go back to
     that call block. In a diagram without a header, <kbd>m</kbd> shows a small list to choose
     "Extract into New Method" or "Add Method Header". One undo puts the blocks back.
+  </p>
+  <p>
+    Select a call block and press <kbd>f</kbd>: the Method's blocks are <b>shown in place</b> (a
+    violet dashed border and band, grey text). Only the view changes, so the shown blocks can be
+    selected and copied but not edited. Select shown blocks and press <kbd>zf</kbd> for a fold
+    region at this call only. <kbd>ds</kbd> (unwrap) replaces the call block with a copy of the
+    Method's blocks (the opposite of extracting). To call a function the document does not have,
+    choose "Call by a written name" in the list and type its name.
   </p>
   <div class="pair">
     <figure>
@@ -373,9 +437,24 @@
         <td>Context menu › Insert</td>
       </tr>
       <tr>
-        <td>Change the called Method / go to it</td>
-        <td><kbd>r</kbd> / <kbd>gd</kbd></td>
-        <td>The context menu</td>
+        <td>Change the called Method ("Call by a written name" is in this list too)</td>
+        <td></td>
+        <td>The Diagram menu, the context menu</td>
+      </tr>
+      <tr>
+        <td>Go to the called Method (from a shown block, to its own block)</td>
+        <td><kbd>gd</kbd></td>
+        <td>The Diagram menu, the context menu</td>
+      </tr>
+      <tr>
+        <td>Open · close a call block in place</td>
+        <td><kbd>f</kbd>, <kbd>za</kbd></td>
+        <td>Click the triangle <code>▾</code> on its band</td>
+      </tr>
+      <tr>
+        <td>Replace a call block with the Method's blocks (unwrap)</td>
+        <td><kbd>ds</kbd></td>
+        <td>Diagram › Unwrap</td>
       </tr>
       <tr>
         <td>Previous / next diagram</td>

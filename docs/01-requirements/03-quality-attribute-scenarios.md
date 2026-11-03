@@ -155,7 +155,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리를 구분해 낼 수 있다. 증분 레이아웃(메모이제이션)을 할지는 측정해서 정한다 → [[0029-immutable-document-undo|ADR-0029]], [[02-layout#4. 성능]]
 - **테스트:** 성능 벤치마크. 블록 500개 문서에서 대표 명령 20가지를 각 100번 실행해 p95를 측정한다. Node에서 `core`만(레이아웃 + 렌더링, 목표의 절반인 50ms 이하를 제안)과 브라우저에서 화면 갱신까지(Playwright, 성능 타임라인)로 나눈다. **실행할 때:** 모든 커밋(Node, 결과를 기록해 느려지면 알림), 출시 전(기준 기기)
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]])
+- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 14개([[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]])
 - **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
 
 ### QA-08 여는 시간 (제안)

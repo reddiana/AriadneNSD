@@ -443,6 +443,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(picker?.items).toEqual([
       { title: 'sort(xs)', isLiteral: true },
       { title: 'picker.newMethod', isLiteral: false },
+      { title: 'picker.namedCall', isLiteral: false },
     ]);
     picker?.choose(0);
     await engine.settle();

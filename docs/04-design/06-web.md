@@ -207,7 +207,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | 언제 | 무엇 | 크기 |
 | --- | --- | --- |
-| 페이지를 열 때 | JS 넷(React와 `core` · `editor` · 셸, 나중에 불러오는 PDF 작성기와 함께 쓰는 모듈 두 조각, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 499 KB + 55 KB + 8 KB + 13 KB (gzip 153 KB + 20 KB + 4 KB + 6 KB) |
+| 페이지를 열 때 | JS 넷(React와 `core` · `editor` · 셸, 나중에 불러오는 PDF 작성기와 함께 쓰는 모듈 두 조각, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 531 KB + 66 KB + 8 KB + 13 KB (gzip 161 KB + 23 KB + 4 KB + 6 KB) |
 | 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
 | 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일 열 개(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 | 5 ~ 15 KB씩 |
 | 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |
@@ -216,7 +216,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 | 처음 PDF로 내보낼 때 | PDF 작성기와 글리프 읽기(번들 글꼴은 위의 것) | 11 KB (gzip 5 KB) |
 | 텍스트를 외곽선으로 저장하는 문서를 처음 저장할 때 | 글리프 읽기 | 4 KB (gzip 2 KB) |
 
-CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip, 지금 190 KB)이 212 KB(글꼴을 조각으로 나눈 뒤의 176 KB + 20%) 안인지 봅니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
+CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip, 지금 213 KB)이 230 KB 안인지 봅니다. 한도는 글꼴을 조각으로 나눈 뒤의 176 KB + 20%인 212 KB였고, 2026-11-04에 접기와 펴 보기가 들어와 첫 내려받기가 213 KB가 되어 230 KB로 올렸습니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
 
 > [!info] 미완성: 코드 스플리팅, 캐시 전략
 

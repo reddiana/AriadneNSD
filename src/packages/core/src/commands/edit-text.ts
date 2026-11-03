@@ -1,11 +1,12 @@
 import type { Block, Branch, Content, Id } from '../model/types';
 import { done, fail, unchanged } from './common';
+import { renameFold, siteFoldOf } from './fold';
 import { indexContent, replaceBlock } from './tree';
 import type { Result } from './types';
 
 /** Arguments of `editText`. */
 export type EditTextArgs = {
-  /** A block (its text) or a branch of an If or Case (its label). */
+  /** A block (its text), a branch of an If or Case (its label), or a fold region (its name). */
   readonly node: Id;
   readonly text: string;
 };
@@ -17,7 +18,8 @@ export type EditTextArgs = {
  * - An If branch label set to `''` is removed, so the editor shows its own "true" / "false".
  * - A Case branch label cannot be empty (the editor puts the label back), and the default
  *   branch's label cannot be edited.
- * - Header text, call block arguments and fold region names come with those features.
+ * - A fold region's name: `renameFold` (`''` removes it, R-EDIT-23).
+ * - Header text and call block arguments have commands of their own.
  * The same text as before leaves the content as it is. Touched: the node.
  */
 export function editText(content: Content, args: EditTextArgs): Result {
@@ -36,7 +38,10 @@ export function editText(content: Content, args: EditTextArgs): Result {
 
   const branch = index.branches.get(args.node);
   if (branch === undefined) {
-    return index.diagrams.has(args.node) || index.folds.has(args.node)
+    if (index.folds.has(args.node) || siteFoldOf(content, args.node) !== null) {
+      return renameFold(content, { fold: args.node, name: args.text });
+    }
+    return index.diagrams.has(args.node)
       ? fail('unsupported', args.node)
       : fail('notFound', args.node);
   }

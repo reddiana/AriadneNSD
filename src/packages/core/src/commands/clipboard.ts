@@ -1,4 +1,5 @@
 import type { IdGenerator } from '../model/id';
+import { headName } from '../model/head';
 import type { Arm, Block, Branch, CallTarget, Content, FoldMark, Id, Seq } from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget } from './common';
 import { deleteBlocks } from './delete';
@@ -49,13 +50,19 @@ export type PasteArgs = WithIds & {
   readonly target: Target;
   readonly side: Side;
   readonly clip: Clip;
+  /**
+   * The names of the Methods the copied call blocks called, by Method id, as the clip remembers
+   * them (03-editor 3.3). With them a call block calls the Method of that name here, or loses
+   * its target keeping the name; without them it calls the Method with the same id.
+   */
+  readonly names?: ReadonlyMap<Id, string>;
 };
 
 /**
  * Pastes copied blocks after (or before) the target, or in place of an empty block
  * (R-EDIT-10, interaction rules "붙여넣기"). Every pasted node gets a new id, and fold regions in
  * the clip are mapped to the new ids (01-model 1.7). A call block whose Method is not in this
- * document loses its target. Touched: the pasted blocks.
+ * document loses its target, keeping the name it showed (`names`). Touched: the pasted blocks.
  */
 export function paste(content: Content, args: PasteArgs): Result {
   if (args.clip.blocks.length === 0) {
@@ -66,11 +73,7 @@ export function paste(content: Content, args: PasteArgs): Result {
   if (isReason(range)) {
     return failWith(range);
   }
-  const methods = new Set(
-    content.diagrams
-      .filter((diagram) => diagram.head?.kind === 'method')
-      .map((diagram) => diagram.id),
-  );
+  const methods = methodsOf(content, args.names);
   const fresh = renewSeq(args.clip, idsFor(content, args), methods);
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
   const next = putBlocks(content, range, side, fresh);
@@ -80,8 +83,35 @@ export function paste(content: Content, args: PasteArgs): Result {
   );
 }
 
+/**
+ * Where pasted call blocks go: copied Method id → the target here. With the clip's names, a
+ * call goes to the Method of the same name in this document (whatever its id), or is lost with
+ * the name; without names, to the Method with the same id.
+ */
+type Methods = (id: Id) => CallTarget;
+
+function methodsOf(content: Content, names: ReadonlyMap<Id, string> | undefined): Methods {
+  const methods = content.diagrams.filter((diagram) => diagram.head?.kind === 'method');
+  const byName = new Map(
+    methods.flatMap((diagram) =>
+      diagram.head === null ? [] : [[headName(diagram.head), diagram.id]],
+    ),
+  );
+  const ids = new Set(methods.map((diagram) => diagram.id));
+  return (id) => {
+    const name = names?.get(id);
+    if (name === undefined) {
+      return ids.has(id) ? { kind: 'local', diagram: id } : { kind: 'lost', lastName: '' };
+    }
+    const found = byName.get(name);
+    return found === undefined
+      ? { kind: 'lost', lastName: name }
+      : { kind: 'local', diagram: found };
+  };
+}
+
 /** A deep copy of a sequence with new ids. Broken or crossing fold regions are left out. */
-function renewSeq(seq: Seq, ids: IdGenerator, methods: ReadonlySet<Id>): Seq {
+function renewSeq(seq: Seq, ids: IdGenerator, methods: Methods): Seq {
   const renamed = new Map<Id, Id>();
   const blocks = seq.blocks.map((block) => {
     const copied = renewBlock(block, ids, methods);
@@ -122,7 +152,7 @@ function laminar(seq: Seq): ReadonlyArray<FoldMark> {
   return kept.map((entry) => entry.fold);
 }
 
-function renewBlock(block: Block, ids: IdGenerator, methods: ReadonlySet<Id>): Block {
+function renewBlock(block: Block, ids: IdGenerator, methods: Methods): Block {
   const id = ids.next('block');
   const branch = (old: Branch): Branch => ({
     ...old,
@@ -161,8 +191,6 @@ function renewBlock(block: Block, ids: IdGenerator, methods: ReadonlySet<Id>): B
 }
 
 /** A local target must name a Method of this document (invariant 6); otherwise it is lost. */
-function keepTarget(target: CallTarget, methods: ReadonlySet<Id>): CallTarget {
-  return target.kind === 'local' && !methods.has(target.diagram)
-    ? { kind: 'lost', lastName: '' }
-    : target;
+function keepTarget(target: CallTarget, methods: Methods): CallTarget {
+  return target.kind === 'local' ? methods(target.diagram) : target;
 }

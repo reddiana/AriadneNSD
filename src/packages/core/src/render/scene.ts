@@ -21,6 +21,8 @@ export type TextRun = {
   readonly weight: 400 | 600;
   /** The run's own color: a syntax color (R-LAY-07). Without it, the text element's color. */
   readonly fill?: string;
+  /** Slanted: a default fold region name, the words of a folded row (visual design 4.2). */
+  readonly isItalic?: true;
 };
 
 /** One element of the display list. `blockId` is the block it belongs to. */

@@ -17,13 +17,13 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 2 | 45 | 184 | - | 231 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 158 | - | 193 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 5 | 45 | 225 | - | 275 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 161 | - | 196 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 27 | 42 | - | 91 |
 | [[#5. 파일\|파일]] | 16 | 151 | 213 | - | 380 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 134 | - | 136 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 148 | - | 150 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 73 | 253 | 731 | 5 | 1062 |
+| 합계 | 76 | 253 | 789 | 5 | 1123 |
 
 ## 읽는 법
 
@@ -75,7 +75,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 19개, 테스트 231개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 24개, 테스트 275개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -87,6 +87,18 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0840 | 헤더 없는 다이어그램에서 `m`은 묻는다: `Esc`는 그만두고, `2`는 Method 헤더를 달고, `Enter`는 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 
 ^t-apps-web-e2e-editing-spec-ts
+
+### [E2E] `apps/web/e2e/folding.spec.ts`
+
+브라우저에서 접기와 호출 블록 펴 보기 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11, R-EDIT-15, R-EDIT-08). Playwright · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-08]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1066 | fold region: zf는 선택한 블록을 이름 붙은 칸으로 접고, 펼침 삼각형이 펴며, 파일이 그것을 저장한다 | - |
+| T-1067 | fold: While에서 f는 본문을 한 줄로 접고, 방향키는 그것을 블록 하나로 지나간다 | - |
+| T-1068 | peek: f는 호출 블록을 그 자리에 펴 보이고(보기만), ds는 그것을 Method의 블록들로 바꾼다 | - |
+
+^t-apps-web-e2e-folding-spec-ts
 
 ### [통합] `packages/editor/src/session/engine.test.ts`
 
@@ -302,6 +314,42 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ^t-packages-core-src-commands-extract-test-ts
 
+### [단위] `packages/core/src/commands/fold.test.ts`
+
+접기 영역의 명령 (01-model 4.1 "접기 영역", R-EDIT-14, R-EDIT-16, R-EDIT-23). Vitest · 테스트 10개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-23]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1069 | fold: 선택한 블록들을 이름 없는 접기 영역으로 만든다 | - |
+| T-1070 | fold: 블록 하나로도 되고, 이름을 줄 수 있다 | - |
+| T-1071 | fold: 접기 영역은 중첩되지만, 같은 범위를 또 만들거나 끝에 걸치게 만드는 것은 거절한다 | - |
+| T-1072 | fold: 블록 범위만 접기 영역이 된다 | - |
+| T-1073 | fold: 접기 영역을 풀면 블록은 남고 처음 · 끝 블록이 touched가 된다 | - |
+| T-1074 | fold: 이름을 바꾸고, 빈 이름은 이름을 지우며, 같은 이름은 아무것도 바꾸지 않는다 | - |
+| T-1075 | fold: 텍스트 편집 명령으로도 접기 영역의 이름을 바꾼다 | - |
+| T-1076 | fold: 펴 보인 곳의 접기 영역은 호출 블록에 딸리고 Method는 바뀌지 않는다 | - |
+| T-1077 | fold: 같은 펴 보인 곳의 접기 영역, 두 줄에 걸친 블록, 호출 블록이 아닌 것은 거절한다 | - |
+| T-1078 | fold: 펴 보인 곳의 접기 영역도 다른 접기 영역처럼 이름을 바꾸고 푼다 | - |
+
+^t-packages-core-src-commands-fold-test-ts
+
+### [단위] `packages/core/src/commands/inline.test.ts`
+
+호출 블록. Vitest · 테스트 8개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1079 | inline: 호출 블록이 Method 블록들의 사본이 되고, Method는 그대로 남는다 | - |
+| T-1080 | inline: 그 자리의 접기 영역은 보통 접기 영역이 되고, 더 안쪽 것은 안쪽 호출 블록을 따라간다 | - |
+| T-1081 | inline: 호출 블록 하나에서 풀기도 같고, 이 문서의 것을 부르지 않는 호출 블록은 거절한다 | - |
+| T-1082 | named call: 적은 이름을 호출하는 호출 블록을 삽입한다. 이름은 한 줄, 앞뒤 공백 없이 | - |
+| T-1083 | named call: 이름은 인자와 함께 편집하고, 한 번 적은 이름은 비울 수 없다 | - |
+| T-1084 | named call: 어느 호출 블록이든 적은 이름을 호출하게 바꿀 수 있다 | - |
+| T-1085 | paste: 호출 블록은 id와 상관없이 이 문서에서 이름이 같은 Method를 호출한다 | - |
+| T-1086 | paste: 이 문서에 그 이름이 없으면 "(이름 없음)"이 아니라 보이던 이름을 간직한다 | - |
+
+^t-packages-core-src-commands-inline-test-ts
+
 ### [단위] `packages/core/src/commands/insert.test.ts`
 
 블록 삽입(insertBlock). Vitest · 테스트 13개.
@@ -399,7 +447,7 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 5개.
 | T-0181 | 감쌌다 풀면 같은 블록으로 돌아온다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
 | T-0182 | 안의 접기 영역은 밖으로 나오고, 블록을 둘러싼 영역은 이제 그 블록들에 걸친다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
 | T-0183 | 안이 빈 블록뿐인 제어 블록은, 남는 것이 없으면 빈 블록 하나를 남긴다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
-| T-0184 | 제어 블록이 없으면, 그리고 호출 블록(나중)은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
+| T-0184 | 담은 제어 블록이 없을 때와, 이 문서의 것을 부르지 않는 호출 블록에서는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-07]], [[01-requirements#^r-edit\|R-EDIT-08]] |
 
 ^t-packages-core-src-commands-wrap-test-ts
 
@@ -450,6 +498,25 @@ id. Vitest · 테스트 5개.
 
 ^t-packages-editor-src-clipboard-clip-format-test-ts
 
+### [단위] `packages/editor/src/commands/call-commands.test.ts`
+
+펴 보인 호출 블록, 그 자리의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 10개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1087 | peek: 호출 블록에서 f는 펴 보이고, Method의 블록은 선택하고 복사할 수 있지만 편집할 수 없다 | - |
+| T-1088 | peek: 펴 보인 안쪽에서 접으면 그 호출 블록을 접고 호출 블록을 선택한다 | - |
+| T-1089 | peek: 펴 보인 안쪽에서 편 호출 블록은 경로를 갖고, 같은 Method를 세 번째로 펴면 알린다 | - |
+| T-1090 | peek: 호출 블록에서 gd는 그 Method로 가고, 이름을 적는 호출 블록에는 갈 곳이 없다 | - |
+| T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
+| T-1092 | peek: Method의 접기 영역은 펴 보인 곳에서 풀거나 이름을 바꿀 수 없다 | - |
+| T-1093 | inline: 호출 블록에서 ds는 그 자리에 Method의 블록을 접힌 모습 그대로 넣는다 | - |
+| T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
+| T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |
+| T-1096 | paste: 복사한 호출 블록은 id가 아니라 이름으로 Method를 잇는다 | - |
+
+^t-packages-editor-src-commands-call-commands-test-ts
+
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
 명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 20개.
@@ -479,9 +546,31 @@ id. Vitest · 테스트 5개.
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
+### [단위] `packages/editor/src/commands/fold-commands.test.ts`
+
+접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 13개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1097 | fold: If에서 f는 접을 수 있는 분기를 접고, 다시 누르면 편다 | - |
+| T-1098 | fold: 분기 안의 블록에서 접으면 그 분기를 접고 접힌 줄을 선택한다 | - |
+| T-1099 | fold: 단순한 블록 하나뿐인 본문은 접지 않고, 제어 블록 하나뿐인 본문은 접는다 | - |
+| T-1100 | fold: 분기 라벨에서 f는 그 분기를 접고, 헤더에서는 아무것도 접지 않는다 | - |
+| T-1101 | fold: 아래로 이동하면 접힌 분기를 한 줄로 지나간다 | - |
+| T-1102 | fold region: zf는 접기 영역을 만들어 접고 이름을 묻는다. Enter는 기본 이름을 둔다 | - |
+| T-1103 | fold region: 만들 때 적은 이름은 같은 실행 취소 단계에 든다 | - |
+| T-1104 | fold region: 이름은 나중에 텍스트 편집 명령으로 바꾸고, 비우면 기본 이름으로 돌아간다 | - |
+| T-1105 | fold region: 같은 범위는 다시 만들지 않고, zd는 선택한 것을 담은 가장 작은 접기 영역을 푼다 | - |
+| T-1106 | fold region: 접기 영역 안의 블록에서 접으면 그 영역을 접고, 접힌 영역은 하나로 친다 | - |
+| T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
+| T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
+| T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
+
+^t-packages-editor-src-commands-fold-commands-test-ts
+
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 13개, 테스트 193개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 196개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -681,6 +770,18 @@ id. Vitest · 테스트 5개.
 | T-0671 | 쓰기 바로 뒤의 읽기는 쓴 것이 클립보드에 닿기를 기다린다(`yyp`) | - |
 
 ^t-packages-editor-src-dom-system-clipboard-test-ts
+
+### [단위] `packages/editor/src/input/hit-shown.test.ts`
+
+접힌 것, 접기 영역, 펴 보인 호출 블록에서 클릭이 가리키는 것과 오버레이가 두르는 것 (03-editor 3.1, 조작 규칙 4). Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1110 | hit: 펼침 삼각형이 띠보다 먼저이고, 띠는 접기 영역을, 접힌 줄은 그 분기를 선택한다 | - |
+| T-1111 | hit: 펴 보인 블록은 보이는 대로 선택하고, 띠는 호출 블록을 선택한다 | - |
+| T-1112 | overlay: 펼침 삼각형은 편집 레이어에만 그리고, 저장되는 그림에는 없다 | - |
+
+^t-packages-editor-src-input-hit-shown-test-ts
 
 ### [단위] `packages/editor/src/input/hit-test.test.ts`
 
@@ -1751,7 +1852,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 14개, 테스트 136개.
+블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 150개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -1773,6 +1874,29 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1044 | 레이아웃이 잰 폭에 맞고 그 줄 안에 든다 | - |
 
 ^t-packages-core-node-outline-font-test-ts
+
+### [단위] `packages/core/src/layout/fold-layout.test.ts`
+
+접힌 것, 접기 영역, 펴 보인 호출 블록의 레이아웃과 그리기 (02-layout 1.6). Vitest · 테스트 14개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1113 | fold: 접힌 분기는 "블록 n개" 한 줄이고, 그 안의 블록은 그 줄의 상자를 받는다 | - |
+| T-1114 | fold: 접힌 줄은 그림 문구의 언어로 적고, 제어 블록 안의 블록까지 센다 | - |
+| T-1115 | fold: 뷰 상태가 가리키는 없는 id는 무시한다 | - |
+| T-1116 | fold: 접힌 접기 영역은 기본 이름이 든 한 칸이고, 그 안의 블록은 그 칸의 상자를 받는다 | - |
+| T-1117 | fold: 이름 띠를 켠 펴진 접기 영역은 맨 위에 띠가 있고, 그 안의 블록 뒤에 그린다 | - |
+| T-1118 | fold: 테두리 안의 테두리는 양옆과 아래로 들어가고, 이어진 테두리 사이에는 틈이 있다 | - |
+| T-1119 | fold: 이름 띠를 끄면 펴진 접기 영역은 없는 것과 똑같이 그린다 | - |
+| T-1120 | fold: 기본 이름은 첫 블록의 첫 줄이고, 텍스트가 없으면 "(빈 블록)"이다 | - |
+| T-1121 | fold: 테두리와 접힌 칸은 접기 영역의 색으로 그리고, 기본 이름은 기울여 쓴다 | - |
+| T-1122 | peek: 펴 보인 호출 블록은 띠 아래에 Method의 블록을 자기 id 뒤의 화면 id로, 회색으로 보인다 | - |
+| T-1123 | peek: 펴 보인 안쪽에서 편 호출 블록은 경로를 갖고, 펴지 않은 것은 호출 블록이다 | - |
+| T-1124 | peek: 점선 테두리와 띠는 펴 보기의 색으로 그린다 | - |
+| T-1125 | peek: 펴 보인 곳의 접기 영역은 남은 블록으로 줄고, 걸쳐 겹치면 그리지 않는다 | - |
+| T-1126 | peek: 펴 보인 호출 블록으로 그려지는 블록 2,000개도 예산 안에서 레이아웃하고 그린다 | - |
+
+^t-packages-core-src-layout-fold-layout-test-ts
 
 ### [단위] `packages/core/src/layout/layout.test.ts`
 

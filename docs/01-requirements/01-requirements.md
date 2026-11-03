@@ -241,7 +241,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-EDIT-20 | 자주 쓰는 블록 묶음: 자주 쓰는 블록을 저장해 두고 드래그해 쓴다 (Scratch의 하드웨어 전용 블록 묶음처럼)                                                                                               | P2   |
 | R-EDIT-21 | 도움말: 사용법을 한 페이지로 안내하고, 단축키 목록을 볼 수 있게 한다(본보기: [SequenceDiagram.org의 Instructions](https://sequencediagram.org/instructions.html)) (모든 배포 대상) → [[05-screen-layout\|상세]] | P0   |
 | R-EDIT-22 | 여러 블록 선택은 언제나 **같은 부모 아래에서 연속으로 붙어 있는 블록 범위**다 → [[0008-contiguous-selection\|ADR-0008]] → [[02-interaction-rules#여러 블록 선택\|상세]] | P0   |
-| R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]]                                                                                                        | P1   |
+| R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]], [[02-interaction-rules#접기 · 펼치기\|상세]]                                                                                                        | P1   |
 | R-EDIT-24 | 커맨드 팔레트: 명령 이름의 일부를 쳐서 명령을 찾아 실행한다(VS Code의 Command Palette, IntelliJ의 Find Action). 찾은 명령마다 같은 일을 하는 키를 함께 보인다 → 상세 [[02-interaction-rules#커맨드 팔레트\|커맨드 팔레트]] | P0  |
 | R-EDIT-25 | 예제: 만들어 둔 예제 다이어그램을 골라 연다. 처음 온 사람에게는 예제를 볼지 묻는다 → [[05-screen-layout\|상세]] | P0  |
 
@@ -281,7 +281,7 @@ Claude에게 알고리즘을 물으면 Claude가 NS 다이어그램으로 그려
 | R-FMT-08 | 저장되는 그림의 색은 문서의 색(문서가 선택한 테마의 색)이다. 편집 화면이 어두워도, 보는 곳이 어두워도 같은 색으로 저장되고 보인다. | P0  |
 | R-FMT-09 | 다른 도구로 그림 부분만 수정한 파일을 열면, 그림이 모델과 달라졌음을 알린다. 저장하면 그 변경이 사라진다는 것도 함께 알린다. → [[01-file-format#4.1 그림 지문\|상세]] | P1  |
 | R-FMT-10 | 다른 뷰어에서도 글꼴이 똑같이 보이도록 텍스트를 외곽선(path)으로 바꿔 저장하는 옵션 (모델에는 텍스트가 그대로 남음) → [[01-file-format#4.3 텍스트 외곽선\|상세]] | P1  |
-| R-FMT-11 | 접힘 상태와 접기 영역의 이름은 파일에 함께 저장한다. 저장되는 그림은 지금 화면 그대로다 → [[0017-fold-name-in-model\|ADR-0017]], [[0018-save-as-shown\|ADR-0018]] | P1  |
+| R-FMT-11 | 접힘 상태와 접기 영역의 이름은 파일에 함께 저장한다. 저장되는 그림은 지금 화면 그대로다 → [[0017-fold-name-in-model\|ADR-0017]], [[0018-save-as-shown\|ADR-0018]], [[01-file-format#3.3 노드별 필드\|상세]] | P1  |
 | R-FMT-12 | 마크다운 문서에서 언어 이름이 `nschart`인 코드 블록에 글로 적은 NS 차트를 그림으로 보인다. 이 글은 사람과 Claude가 손으로 쓰는 형식이라, `.ns.svg` 안의 모델 JSON([[#^r-fmt\|R-FMT-02]])과 따로 정한다 → [[#6. 미결정 사항]] | P3  |
 
 ^r-fmt

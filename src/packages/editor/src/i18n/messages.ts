@@ -102,6 +102,13 @@ const english = {
   'command.view.zoom.in': 'Zoom In',
   'command.view.zoom.out': 'Zoom Out',
   'command.view.zoom.reset': 'Zoom to 100%',
+  'command.view.fold.toggle': 'Fold · Unfold',
+  'command.view.fold.open': 'Unfold',
+  'command.view.fold.close': 'Fold',
+  'command.view.bands': 'Show Fold Regions',
+  'command.fold.make': 'Make Fold Region',
+  'command.fold.remove': 'Remove Fold Region',
+  'command.call.goTo': 'Go to Called Method',
 
   // Refusals: core's reason codes.
   'reason.notFound': 'It is no longer there.',
@@ -160,6 +167,20 @@ const english = {
   'reason.hasHead': 'This diagram already has a header. Select the header to change its kind.',
   'reason.eventNotExtracted':
     'An Event cannot be called, so blocks are not extracted into one. Select the header to change its kind.',
+  'reason.foldExists': 'A fold region with this range is already there.',
+  'reason.foldsCross':
+    'This would cross the end of another fold region. Select inside it, or all of it.',
+  'reason.notCallable':
+    'This call block calls nothing in this document, so it cannot be opened or replaced.',
+  'reason.emptyCallName': 'A call needs a name. The name was put back.',
+  'reason.nothingToFold': 'Nothing here can be folded.',
+  'reason.nothingToUnfold': 'Nothing here is folded.',
+  'reason.noFoldRegion': 'No fold region holds the selection.',
+  'reason.selectBlocksToFold': 'Select the blocks to make a fold region of.',
+  'reason.peekReadOnly':
+    'Blocks shown in an opened call block cannot be edited. Go to the Method (gd) to edit them.',
+  'reason.methodFoldHere':
+    'This fold region belongs to the Method. Remove or rename it in the Method.',
 
   // Status bar notices.
   'notice.escAgain': 'Press Esc again to clear the selection.',
@@ -195,6 +216,17 @@ const english = {
   'notice.extractedFoldsRemoved':
     'Extracted {count} block(s) into a new Method. Type its name. Fold regions crossing the selection were removed.',
   'notice.extractedNamed': 'Extracted {count} block(s) into the new Method {name}.',
+  'notice.folded': 'Folded.',
+  'notice.unfolded': 'Unfolded.',
+  'notice.foldMade': 'Made a fold region. Type its name, or press Enter for the default name.',
+  'notice.siteFoldMade':
+    'Made a fold region at this call only; the Method is unchanged. Type its name.',
+  'notice.foldRemoved': 'Removed the fold region "{name}". The blocks stay.',
+  'notice.opened': 'Opened the call block: only the view changed, not the content.',
+  'notice.openedAgain':
+    'Opened {name} for the {count}th time. A Method that calls itself opens without end.',
+  'notice.closed': 'Closed the call block.',
+  'notice.inlined': 'Replaced the call block with the blocks of {name}.',
 
   // Questions in the status bar (UX MD3).
   'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',
@@ -220,15 +252,19 @@ const english = {
   'selection.missingDefault': 'Empty default branch',
   'selection.eventHead': 'Event header "{name}"',
   'selection.methodHead': 'Method header "{name}"',
+  'selection.fold': 'Fold region "{name}"',
+  'selection.peek': '{count} shown block(s), view only',
 
   // The list of Methods to call (interaction rules "호출 블록").
   'picker.callTarget': 'Method to call',
   'picker.newMethod': 'New Method, and call it',
   'picker.methodKey': 'Method',
+  'picker.namedCall': 'Call by a written name',
 
   // The two fields of a call block, shown in the empty inline editor.
   'field.callArgs': 'Arguments',
   'field.callResult': 'Result',
+  'field.callName': 'Name',
 
   // Modes in the status bar (visual design 7.1).
   'mode.editing': '-- EDIT --',
@@ -244,6 +280,7 @@ const english = {
   'keyHint.g': 'Go',
   'keyHint.[': 'Previous',
   'keyHint.]': 'Next',
+  'keyHint.z': 'Fold',
 
   // The label next to the cursor when a drop would wrap (interaction rules 7).
   'drag.wrap.if': 'Wrap in If',
@@ -369,6 +406,13 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.view.zoom.in': '확대',
   'command.view.zoom.out': '축소',
   'command.view.zoom.reset': '100%',
+  'command.view.fold.toggle': '접기 · 펴기',
+  'command.view.fold.open': '펴기',
+  'command.view.fold.close': '접기',
+  'command.view.bands': '접기 영역 보기',
+  'command.fold.make': '접기 영역 만들기',
+  'command.fold.remove': '접기 영역 풀기',
+  'command.call.goTo': '호출하는 Method로 가기',
   'reason.notFound': '이미 없습니다.',
   'reason.wrongKind': '선택한 것에는 적용되지 않습니다.',
   'reason.notContiguous': '같은 부모 아래 붙어 있는 블록을 선택하세요.',
@@ -422,6 +466,16 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.hasHead': '이 다이어그램에는 이미 헤더가 있습니다. 종류를 바꾸려면 헤더를 선택하세요.',
   'reason.eventNotExtracted':
     'Event는 호출할 수 없어 블록을 Event로 빼지 않습니다. 종류를 바꾸려면 헤더를 선택하세요.',
+  'reason.foldExists': '같은 범위의 접기 영역이 이미 있습니다.',
+  'reason.foldsCross': '다른 접기 영역의 끝에 걸칩니다. 그 안쪽이나 그 전체를 선택하세요.',
+  'reason.notCallable': '이 문서에 없는 것을 호출하는 블록이라 펴 보거나 풀 수 없습니다.',
+  'reason.emptyCallName': '호출할 이름은 비울 수 없어 원래 이름으로 되돌렸습니다.',
+  'reason.nothingToFold': '접을 것이 없습니다.',
+  'reason.nothingToUnfold': '펼 것이 없습니다.',
+  'reason.noFoldRegion': '선택한 것을 담은 접기 영역이 없습니다.',
+  'reason.selectBlocksToFold': '접기 영역으로 만들 블록을 선택하세요.',
+  'reason.peekReadOnly': '펴 보인 블록은 편집할 수 없습니다. 고치려면 Method로 가세요(gd).',
+  'reason.methodFoldHere': 'Method에 있는 접기 영역은 여기서 풀거나 이름을 바꿀 수 없습니다.',
   'notice.escAgain': '한 번 더 Esc를 누르면 선택한 것을 풉니다.',
   'notice.selectionCleared':
     '선택한 것을 풀었습니다. 이동 키를 누르면 마지막에 선택했던 블록부터 다시 선택합니다.',
@@ -456,6 +510,17 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'notice.extractedFoldsRemoved':
     '블록 {count}개를 새 Method로 뺐습니다. 이름을 적으세요. 선택의 경계에 걸친 접기 영역은 풀었습니다.',
   'notice.extractedNamed': '블록 {count}개를 새 Method {name}(으)로 뺐습니다.',
+  'notice.folded': '접었습니다.',
+  'notice.unfolded': '폈습니다.',
+  'notice.foldMade': '접기 영역을 만들었습니다. 이름을 적으세요(Enter는 기본 이름).',
+  'notice.siteFoldMade':
+    '이 호출 블록 자리에만 있는 접기 영역입니다. Method는 그대로입니다. 이름을 적으세요.',
+  'notice.foldRemoved': '접기 영역 "{name}"을(를) 풀었습니다. 블록은 그대로입니다.',
+  'notice.opened': '펴 보였습니다. 보기만 바뀌고 내용은 그대로입니다.',
+  'notice.openedAgain':
+    '{name}을(를) {count}번째 폈습니다. 자기를 호출하는 Method는 끝없이 펼 수 있습니다.',
+  'notice.closed': '호출 블록을 접었습니다.',
+  'notice.inlined': '호출 블록을 {name}의 블록들로 바꿨습니다.',
   'question.convertIfToCase': 'If에는 분기를 더할 수 없습니다. Case로 바꿀까요?',
   'question.convertCaseToIf': '분기가 하나만 남았습니다. If로 바꿀까요?',
   'choice.convertToCase': 'Case로 바꾸기',
@@ -477,11 +542,15 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'selection.missingDefault': '빈 default 분기',
   'selection.eventHead': 'Event 헤더 "{name}"',
   'selection.methodHead': 'Method 헤더 "{name}"',
+  'selection.fold': '접기 영역 "{name}"',
+  'selection.peek': '펴 보인 블록 {count}개 (보기만)',
   'picker.callTarget': '호출할 Method',
   'picker.newMethod': '새 Method를 만들고 호출',
   'picker.methodKey': 'Method',
+  'picker.namedCall': '이름을 적어 호출하기',
   'field.callArgs': '인자',
   'field.callResult': '결과',
+  'field.callName': '이름',
   'mode.editing': '-- 편집 --',
   'mode.visual': '-- 영역 --',
   'keyHint.a': '뒤에 삽입',
@@ -493,6 +562,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'keyHint.g': '가기',
   'keyHint.[': '앞으로',
   'keyHint.]': '뒤로',
+  'keyHint.z': '접기',
   'drag.wrap.if': 'If로 감싸기',
   'drag.wrap.case': 'Case로 감싸기',
   'drag.wrap.while': 'While로 감싸기',

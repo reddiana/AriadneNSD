@@ -150,7 +150,8 @@ function paginateAs(
 
 /**
  * The box a cut must not go through: a block that holds text (a process or call block, the
- * header of a control block, a diagram header). A control block's sides may be cut.
+ * header of a control block, a diagram header, a folded row or fold region, the band of a fold
+ * region or an opened call). A control block's sides may be cut.
  */
 function leafBox(node: LayoutNode): Box {
   switch (node.kind) {
@@ -158,11 +159,17 @@ function leafBox(node: LayoutNode): Box {
     case 'call':
     case 'diagramHead':
     case 'missingDefault':
+    case 'foldedSeq':
+    case 'foldCell':
       return node.box;
     case 'loop':
     case 'if':
     case 'case':
       return node.head;
+    // A fold region's name band and an opened call's band hold text; their sides may be cut.
+    case 'foldFrame':
+    case 'peek':
+      return node.band;
   }
 }
 

@@ -14,14 +14,18 @@ export type EditCallArgs = {
   readonly args?: string;
   /** What receives the return value. Line breaks become spaces (one line). */
   readonly result?: string;
+  /** The written name of a call by name (R-BLK-08). One line, without surrounding spaces. */
+  readonly name?: string;
 };
 
 /**
  * Sets the arguments and the result of a call block (R-BLK-07). Both are one line, so line
  * breaks become spaces. Calling a Method that receives something, empty arguments are refilled
  * with the text inside its parentheses (interaction rules "텍스트 편집"). A call block that lost
- * its target cannot be edited (`lostTarget`). The same text as before leaves the content as it
- * is. Touched: the call block.
+ * its target cannot be edited (`lostTarget`). A call by a written name also takes a new `name`
+ * (R-BLK-08); it cannot become empty once written (`emptyCallName`, UX Q4), and a name is only
+ * written on such a call (`wrongKind`). The same text as before leaves the content as it is.
+ * Touched: the call block.
  */
 export function editCall(content: Content, args: EditCallArgs): Result {
   const index = indexContent(content);
@@ -41,10 +45,91 @@ export function editCall(content: Content, args: EditCallArgs): Result {
     newArgs = filledArgs(newArgs, paramsOf(index.diagrams.get(call.target.diagram)));
   }
   const newResult = args.result === undefined ? call.result : oneLine(args.result);
-  if (newArgs === call.args && newResult === call.result) {
+  let target = call.target;
+  if (args.name !== undefined) {
+    if (target.kind !== 'named') {
+      return fail('wrongKind', args.block);
+    }
+    const name = oneLine(args.name).trim();
+    if (name === '' && target.name !== '') {
+      return fail('emptyCallName', args.block);
+    }
+    target = name === target.name ? target : { kind: 'named', name };
+  }
+  if (newArgs === call.args && newResult === call.result && target === call.target) {
     return unchanged(content, [call.id]);
   }
-  const next = replaceBlock(content, entry, () => ({ ...call, args: newArgs, result: newResult }));
+  const next = replaceBlock(content, entry, () => ({
+    ...call,
+    target,
+    args: newArgs,
+    result: newResult,
+  }));
+  return done(next, [call.id]);
+}
+
+/** Arguments of `insertNamedCall`. */
+export type InsertNamedCallArgs = WithIds & {
+  readonly target: Target;
+  readonly side: Side;
+  /** The name to call, as written. Usually empty: the editor opens the name field at once. */
+  readonly name: string;
+};
+
+/**
+ * Inserts a call block that calls something by a written name: a library function, or a
+ * subroutine not drawn yet (R-BLK-08). It looks like any call block (UX CB1). Placed like
+ * `insertBlock`. Touched: the new call block.
+ */
+export function insertNamedCall(content: Content, args: InsertNamedCallArgs): Result {
+  const range = resolveTarget(indexContent(content), args.target);
+  if (isReason(range)) {
+    return failWith(range);
+  }
+  const ids = idsFor(content, args);
+  const block: Call = {
+    id: ids.next('block'),
+    kind: 'call',
+    target: { kind: 'named', name: oneLine(args.name).trim() },
+    args: '',
+    result: '',
+    siteFolds: [],
+  };
+  const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
+  const next = putBlocks(content, range, side, { blocks: [block], folds: [] });
+  return done(next, [block.id]);
+}
+
+/** Arguments of `nameCallTarget`. */
+export type NameCallTargetArgs = {
+  readonly block: Id;
+  /** The name to call. */
+  readonly name: string;
+};
+
+/**
+ * Makes a call block call a written name instead of what it called (R-BLK-08, "호출할 Method
+ * 바꾸기" → "이름을 적어 호출하기"). The arguments and the result stay; the fold regions of an
+ * opened call site go, since there is nothing to open. Touched: the call block.
+ */
+export function nameCallTarget(content: Content, args: NameCallTargetArgs): Result {
+  const entry = indexContent(content).blocks.get(args.block);
+  if (entry === undefined) {
+    return fail('notFound', args.block);
+  }
+  const call = entry.block;
+  if (call.kind !== 'call') {
+    return fail('wrongKind', args.block);
+  }
+  const name = oneLine(args.name).trim();
+  if (call.target.kind === 'named' && call.target.name === name) {
+    return unchanged(content, [call.id]);
+  }
+  const next = replaceBlock(content, entry, () => ({
+    ...call,
+    target: { kind: 'named', name },
+    siteFolds: [],
+  }));
   return done(next, [call.id]);
 }
 

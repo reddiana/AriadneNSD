@@ -1,7 +1,7 @@
 // Geometry tokens from visual design 5 (docs/02-ux-design/04-visual-design.md).
 // Themes never change these (visual design principle 6), so they live with the layout.
 
-/** Dimension tokens in px, named as in visual design 5. Only the ones the MVP layout uses. */
+/** Dimension tokens in px, named as in visual design 5. */
 export const geometry = {
   'space.pad-x': 10,
   'space.pad-y': 7,
@@ -24,6 +24,20 @@ export const geometry = {
   'size.column-min': 420,
   'size.diagram-min-w': 160,
   'size.text-halo': 3,
+  'size.band': 18,
+  'size.band-text-x': 10,
+  // The fold triangle's room in a band, after size.band-text-x: the text starts 20px in, as in
+  // a folded cell (size.fold-icon-room).
+  'size.band-icon-room': 10,
+  'size.fold-icon-room': 20,
+  'size.fold-extra-h': 4,
+  'size.fold-edge': 3,
+  'size.nest-gap': 1,
+  // size.fold-edge + size.nest-gap: how deep a frame inside a fold region's frame sits.
+  'size.nest-inset': 4,
+  // The white line under the dashed border (size.peek-halo) + size.nest-gap.
+  'size.peek-inset': 4,
+  'size.peek-halo': 3,
   'space.diagram': 44,
   'space.kind-gap': 88,
   'space.paper': 24,

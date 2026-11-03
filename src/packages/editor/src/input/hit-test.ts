@@ -1,17 +1,23 @@
 // What the pointer points at (03-editor 3.1). Computed from the layout's click regions, not the
-// DOM, so it is tested in Node.
+// DOM, so it is tested in Node. Ids are the shown tree's (screen ids, `shown-index.ts`).
 import type { Box, Id, LayoutResult } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
+import type { ShownIndex } from '../model/shown-index';
+import { rowId } from '../model/shown-index';
+import { fromShown, selectionOfScreenId } from '../navigation/shown-selection';
 import type { Selection } from '../state/selection';
-import { selectBlock } from '../state/selection';
 
 /** A point in drawing coordinates (px, origin at the paper's top left). */
 export type Point = { readonly x: number; readonly y: number };
 
 /** What a point hits. */
 export type Hit =
-  /** A block: a process block's box, a control block's header (or its loop strip). */
+  /**
+   * A shown block: a process block's box, a control block's header (or its loop strip), the row
+   * of a folded branch or loop body, a fold region's band or folded cell, an opened call's band.
+   * `block` is the shown id (`shown-index.ts`).
+   */
   | { readonly kind: 'block'; readonly block: Id; readonly box: Box; readonly isHead: boolean }
   /** The label row of a branch. `branch` is `null` for the drawn default of a Case without one. */
   | {
@@ -23,7 +29,15 @@ export type Hit =
   /** The empty default cell of a Case without a default (UX CD1). */
   | { readonly kind: 'missingDefault'; readonly block: Id; readonly box: Box }
   /** The header of a diagram (Event or Method). */
-  | { readonly kind: 'diagramHead'; readonly diagram: Id; readonly box: Box };
+  | { readonly kind: 'diagramHead'; readonly diagram: Id; readonly box: Box }
+  /** The fold triangle of a fold region or an opened call block (interaction rules 4). */
+  | {
+      readonly kind: 'toggle';
+      readonly what: 'fold' | 'peek';
+      readonly target: Id;
+      readonly isOpen: boolean;
+      readonly box: Box;
+    };
 
 /** Whether a box holds a point. Edges count as inside. */
 export function contains(box: Box, point: Point): boolean {
@@ -39,9 +53,10 @@ const area = (box: Box): number => box.width * box.height;
 
 /**
  * Finds the innermost thing under a point (03-editor 3.1). Among the click regions holding the
- * point the smallest wins, so a branch label row beats the header around it. A point on a loop's
- * strip, which has no click region, hits the innermost block box holding it. `null`: nothing
- * (the empty canvas, or the paper outside the diagrams).
+ * point the smallest wins, so a branch label row beats the header around it and a fold triangle
+ * the band it is on. A point on a loop's strip, which has no click region, hits the innermost
+ * shown box holding it. `null`: nothing (the empty canvas, or the paper outside the diagrams).
+ * `index` is the shown tree's index.
  */
 export function hitTest(layout: LayoutResult, index: DocIndex, point: Point): Hit | null {
   let best: Hit | null = null;
@@ -72,6 +87,24 @@ export function hitTest(layout: LayoutResult, index: DocIndex, point: Point): Hi
       case 'diagramHead':
         best = { kind: 'diagramHead', diagram: region.diagramId, box: region.box };
         break;
+      case 'foldedSeq':
+        best = { kind: 'block', block: rowId(region.owner), box: region.box, isHead: false };
+        break;
+      case 'fold':
+        best = { kind: 'block', block: region.foldId, box: region.box, isHead: !region.isFolded };
+        break;
+      case 'peekBand':
+        best = { kind: 'block', block: region.blockId, box: region.box, isHead: true };
+        break;
+      case 'toggle':
+        best = {
+          kind: 'toggle',
+          what: region.what,
+          target: region.target,
+          isOpen: region.isOpen,
+          box: region.box,
+        };
+        break;
     }
   }
   if (best !== null) {
@@ -90,17 +123,23 @@ export function hitTest(layout: LayoutResult, index: DocIndex, point: Point): Hi
   return inner === null ? null : { kind: 'block', block: inner.id, box: inner.box, isHead: false };
 }
 
-/** The selection a click on a hit makes. */
-export function selectionOfHit(index: DocIndex, hit: Hit): Selection {
+/** The selection a click on a hit makes, in the model (`real`). */
+export function selectionOfHit(shown: ShownIndex, real: DocIndex, hit: Hit): Selection | null {
   switch (hit.kind) {
     case 'block':
-      return selectBlock(index, hit.block);
+      return selectionOfScreenId(shown, real, hit.block);
+    case 'toggle':
+      return selectionOfScreenId(shown, real, hit.target);
     case 'branchLabel':
-      return hit.branch === null
-        ? { kind: 'missingDefault', block: hit.block }
-        : { kind: 'branchLabel', branch: hit.branch };
+      return fromShown(
+        shown,
+        real,
+        hit.branch === null
+          ? { kind: 'missingDefault', block: hit.block }
+          : { kind: 'branchLabel', branch: hit.branch },
+      );
     case 'missingDefault':
-      return { kind: 'missingDefault', block: hit.block };
+      return fromShown(shown, real, { kind: 'missingDefault', block: hit.block });
     case 'diagramHead':
       return { kind: 'head', diagram: hit.diagram };
   }

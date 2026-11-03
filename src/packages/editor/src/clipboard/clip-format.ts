@@ -1,10 +1,13 @@
 // What copied blocks look like on the system clipboard (03-editor 3.3): indented text for other
 // programs, and the model JSON for AriadneNSD itself.
-import type { Block, CallTextContext, Clip } from '@ariadne-nsd/core';
+import type { Block, CallTextContext, Clip, Diagram, Id, Seq } from '@ariadne-nsd/core';
 import {
   callText,
+  contentIds,
   createDoc,
   drawingMessage,
+  headName,
+  parseId,
   parseModelJson,
   serializeModelJson,
 } from '@ariadne-nsd/core';
@@ -95,15 +98,68 @@ export function clipToText(clip: Clip, drawn: CallTextContext): string {
 }
 
 /**
- * The blocks as model JSON: a document of one diagram holding them, in the file format
- * (01-file-format 3), so reading it back goes through the same checks as opening a file.
+ * The blocks as model JSON: a document whose first diagram, without a header, holds them, in the
+ * file format (01-file-format 3), so reading it back goes through the same checks as opening a
+ * file. Each Method the copied call blocks call (`diagrams`) comes along as an empty Method with
+ * its header, so the clip is a valid document (invariant 6) and remembers the names: pasted into
+ * another document, a call finds the Method of that name, or keeps the name (03-editor 3.3).
  */
-export function clipToJson(clip: Clip): string {
+export function clipToJson(clip: Clip, diagrams: ReadonlyMap<Id, Diagram> = new Map()): string {
   const doc = createDoc();
+  const called = [...new Set(calledMethods(clip))].flatMap((id) => {
+    const method = diagrams.get(id);
+    return method?.head?.kind === 'method' ? [{ id, head: method.head }] : [];
+  });
+  const body = { id: 'd0', head: null, body: clip };
+  let block = largest({ settings: doc.content.settings, diagrams: [body] }, 'b');
+  const stubs: Diagram[] = called.map(({ id, head }) => {
+    block += 1;
+    return {
+      id,
+      head,
+      body: { blocks: [{ id: `b${String(block)}`, kind: 'process', text: '' }], folds: [] },
+    };
+  });
+  const ownId = `d${String(Math.max(0, ...called.map(({ id }) => parseId(id)?.number ?? 0)) + 1)}`;
   return serializeModelJson({
     ...doc,
-    content: { ...doc.content, diagrams: [{ id: 'd1', head: null, body: clip }] },
+    content: { ...doc.content, diagrams: [{ ...body, id: ownId }, ...stubs] },
   });
+}
+
+/** The ids of the Methods the call blocks of a sequence call, inner ones included. */
+function calledMethods(seq: Seq): Id[] {
+  return seq.blocks.flatMap((block): Id[] => {
+    switch (block.kind) {
+      case 'process':
+        return [];
+      case 'call':
+        return block.target.kind === 'local' ? [block.target.diagram] : [];
+      case 'if':
+        return [...calledMethods(block.yes.body), ...calledMethods(block.no.body)];
+      case 'case':
+        return [
+          ...block.arms.flatMap((arm) => calledMethods(arm.body)),
+          ...(block.otherwise === null ? [] : calledMethods(block.otherwise.body)),
+        ];
+      case 'while':
+      case 'doWhile':
+      case 'for':
+        return calledMethods(block.body);
+    }
+  });
+}
+
+/** The largest number used with an id prefix in a content (0 when there is none). */
+function largest(content: Parameters<typeof contentIds>[0], prefix: string): number {
+  let most = 0;
+  for (const id of contentIds(content)) {
+    const parsed = parseId(id);
+    if (parsed?.prefix === prefix) {
+      most = Math.max(most, parsed.number);
+    }
+  }
+  return most;
 }
 
 /** Reads blocks back from model JSON, or `null` when the JSON is not a valid clip. */
@@ -113,6 +169,20 @@ export function clipFromJson(json: string): Clip | null {
     return null;
   }
   return opened.value.doc.content.diagrams[0]?.body ?? null;
+}
+
+/** The names of the Methods a clip's call blocks call, by Method id (`clipToJson`). */
+export function clipNamesFromJson(json: string): ReadonlyMap<Id, string> {
+  const opened = parseModelJson(json);
+  const names = new Map<Id, string>();
+  if (opened.ok) {
+    for (const diagram of opened.value.doc.content.diagrams.slice(1)) {
+      if (diagram.head?.kind === 'method') {
+        names.set(diagram.id, headName(diagram.head));
+      }
+    }
+  }
+  return names;
 }
 
 /**

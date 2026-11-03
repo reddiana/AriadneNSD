@@ -45,14 +45,17 @@ const areas = [
   {
     name: '편집 명령과 모델',
     about:
-      '블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]',
+      '블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]',
     paths: [
       'packages/core/src/commands/',
       'packages/core/src/model/',
       'packages/editor/src/session/engine.test.ts',
       'packages/editor/src/commands/editor-commands.test.ts',
+      'packages/editor/src/commands/fold-commands.test.ts',
+      'packages/editor/src/commands/call-commands.test.ts',
       'packages/editor/src/clipboard/',
       'apps/web/e2e/editing.spec.ts',
+      'apps/web/e2e/folding.spec.ts',
     ],
   },
   {

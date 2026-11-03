@@ -134,6 +134,17 @@ export const keyBindings: ReadonlyArray<KeyBinding> = [
   { keys: 'Ctrl+Shift+Z', command: 'edit.redo' },
   // Wrap and unwrap.
   { keys: 'd s', command: 'block.unwrap' },
+  // Fold (interaction rules 4). `f` alone folds; after `a`, `A` or `s` it is For (UX FB2).
+  { keys: 'z a', command: 'view.fold.toggle' },
+  { keys: 'f', command: 'view.fold.toggle' },
+  { keys: 'z o', command: 'view.fold.open' },
+  { keys: 'z c', command: 'view.fold.close' },
+  { keys: 'z f', command: 'fold.make' },
+  { keys: 'F', command: 'fold.make' },
+  { keys: 'z d', command: 'fold.remove' },
+  { keys: 'Ctrl+Shift+F', command: 'fold.remove' },
+  // Calls: go to the called Method, or from a shown block to the Method's own (03-keymap).
+  { keys: 'g d', command: 'call.goTo' },
   // File, view, help. The UI registers the palette, preferences and shortcut list commands.
   { keys: 'Ctrl+S', command: 'file.save' },
   { keys: 'Ctrl+Shift+S', command: 'file.saveAs' },

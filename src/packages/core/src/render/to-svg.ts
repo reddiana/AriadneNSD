@@ -154,7 +154,10 @@ function runToSvg(run: TextRun, textFill: string): string {
   const text = escapeText(run.text);
   const weight = run.weight === 400 ? '' : ` font-weight="${String(run.weight)}"`;
   const fill = run.fill === undefined || run.fill === textFill ? '' : ` fill="${run.fill}"`;
-  return weight === '' && fill === '' ? text : `<tspan${weight}${fill}>${text}</tspan>`;
+  const style = run.isItalic === true ? ' font-style="italic"' : '';
+  return weight === '' && fill === '' && style === ''
+    ? text
+    : `<tspan${weight}${fill}${style}>${text}</tspan>`;
 }
 
 function pathData(points: ReadonlyArray<Point>): string {

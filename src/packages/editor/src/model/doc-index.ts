@@ -39,6 +39,10 @@ export type DocIndex = {
   readonly seqs: ReadonlyMap<Id, SeqPlace>;
   readonly branches: ReadonlyMap<Id, BranchPlace>;
   readonly diagrams: ReadonlyMap<Id, Diagram>;
+  /** Fold regions → the owner id of the sequence they are marked on (01-model 1.3). */
+  readonly folds: ReadonlyMap<Id, Id>;
+  /** Fold regions of opened call sites → the call block holding them (01-model 1.6). */
+  readonly siteFolds: ReadonlyMap<Id, Id>;
 };
 
 /** One sequence directly inside a block, left to right. */
@@ -93,11 +97,21 @@ export function indexDoc(content: Content): DocIndex {
   const seqs = new Map<Id, SeqPlace>();
   const branches = new Map<Id, BranchPlace>();
   const diagrams = new Map<Id, Diagram>();
+  const folds = new Map<Id, Id>();
+  const siteFolds = new Map<Id, Id>();
 
   const visit = (seq: Seq, owner: Id, holder: Id | null, branch: Id | null, diagram: Id): void => {
     seqs.set(owner, { seq, owner, holder, branch, diagram });
+    for (const fold of seq.folds) {
+      folds.set(fold.id, owner);
+    }
     seq.blocks.forEach((block, index) => {
       blocks.set(block.id, { block, owner, index, diagram });
+      if (block.kind === 'call') {
+        for (const fold of block.siteFolds) {
+          siteFolds.set(fold.id, block.id);
+        }
+      }
       if (isBranching(block)) {
         branchesOf(block).forEach((item, column) => {
           const isDefault = block.kind === 'case' && item === block.otherwise;
@@ -114,7 +128,7 @@ export function indexDoc(content: Content): DocIndex {
     diagrams.set(diagram.id, diagram);
     visit(diagram.body, diagram.id, null, null, diagram.id);
   }
-  return { content, blocks, seqs, branches, diagrams };
+  return { content, blocks, seqs, branches, diagrams, folds, siteFolds };
 }
 
 /** The place of a block. Throws when the id is not a block: callers check ids first. */
