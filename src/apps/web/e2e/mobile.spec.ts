@@ -3,8 +3,9 @@
 // (07-testing 5); these catch what a desktop-sized test cannot (inbox 2026-11-01: the MVP did not
 // appear on a Galaxy S26).
 import type { Page } from '@playwright/test';
-import { devices, expect, test } from '@playwright/test';
+import { devices } from '@playwright/test';
 
+import { expect, test } from './fixtures';
 import { canvas, command, drawnText, middleOf, selection, skipWelcome } from './support';
 
 // The phone's screen, touch and user agent. `defaultBrowserType` is a project-wide setting and

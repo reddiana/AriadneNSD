@@ -5,7 +5,7 @@
 import { readFile } from 'node:fs/promises';
 
 import type { Page } from '@playwright/test';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 async function openApp(page: Page): Promise<void> {
   // The first visit's examples modal would cover the editor (UX EX2).

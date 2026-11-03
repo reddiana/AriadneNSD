@@ -1,7 +1,7 @@
 // The screen font in slices (ADR-0040): the browser downloads only the slices whose characters
 // are on screen, so a first visit does not wait for all of Hangul.
 import type { Page } from '@playwright/test';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 import { command, openApp } from './support';
 

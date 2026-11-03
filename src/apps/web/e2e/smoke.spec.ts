@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('T-0292: the built web app opens a new document and loads the block font', async ({
   page,

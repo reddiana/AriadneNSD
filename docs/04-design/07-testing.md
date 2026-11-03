@@ -127,6 +127,7 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 - CI는 `.github/workflows/ci.yml`이고 Node 24, `pnpm install --frozen-lockfile`로 돕니다. E2E가 실패하면 Playwright 보고서를 7일 남깁니다.
 - 벤치마크는 `pnpm test`에 들지 않습니다. `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 따로 돌립니다(`*.bench.ts`).
 - 지금 있는 문서 사이트의 빌드(`.github/workflows/pages.yml`)와는 따로 둡니다.
+- 커버리지(테스트가 실행한 코드 줄의 비율)는 `src/`에서 `pnpm coverage`로 잽니다. 패키지마다 단위 테스트(Vitest, V8)를 돌리고, 웹 E2E를 소스맵을 넣은 빌드로 돌려 Chromium의 JS 커버리지를 원래 소스 파일에 대어 본 뒤(`apps/web`의 `e2e:coverage`, `monocart-coverage-reports`), 둘을 줄마다 합칩니다. 어느 쪽이든 실행한 줄은 덮인 것으로 셉니다. 패키지마다의 표와, 테스트가 닿지 않은 줄이 많은 파일을 보여 줍니다. CI에서는 돌지 않습니다.
 
 ## 미결정 사항
 

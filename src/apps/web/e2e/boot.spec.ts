@@ -1,7 +1,7 @@
 // The start of the page (R-NFR-10, QA-19; inbox 2026-11-01: the MVP did not appear on an Android
 // phone): a database that never answers must not keep the screen empty, and a failure shows on the
 // screen.
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('T-0278 · BUG-03 · QA-19: the editor appears when indexedDB.open never answers', async ({
   page,

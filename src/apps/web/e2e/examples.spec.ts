@@ -1,6 +1,6 @@
 // The examples (R-EDIT-25, 05-screen-layout "예제", UX EX1 ~ EX3): the first visit's welcome,
 // Help › Examples… and the toolbar's "Examples", which open the same modal.
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 import { canvas, command, openApp } from './support';
 

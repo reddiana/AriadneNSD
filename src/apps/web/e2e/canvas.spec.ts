@@ -1,5 +1,5 @@
 // The canvas: what clicks and focus do around the keys (UX K4, CF2, CM1), and its context menu.
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 import { canvas, drawnText, middleOf, openApp, press } from './support';
 

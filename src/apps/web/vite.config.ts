@@ -7,5 +7,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
+    // Source maps only for measuring the browser tests' coverage (`pnpm e2e:coverage`).
+    sourcemap: process.env.E2E_COVERAGE !== undefined,
   },
 });

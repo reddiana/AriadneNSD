@@ -11,6 +11,8 @@ site/.quartz/
 node_modules/
 dist/
 coverage/
+coverage-e2e/
+coverage-e2e-raw/
 test-results/
 playwright-report/
 blob-report/

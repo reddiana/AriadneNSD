@@ -8,6 +8,7 @@
   },
   "scripts": {
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm test && pnpm test-list:check",
+    "coverage": "node scripts/coverage.mjs",
     "test-list": "node scripts/test-list.mjs",
     "test-list:check": "node scripts/test-list.mjs --check",
     "typecheck": "pnpm -r --parallel typecheck",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "5.0.5",
     "dependency-cruiser": "^18.7.0",
     "eslint": "^10.14.0",
     "eslint-plugin-react-hooks": "^7.1.1",

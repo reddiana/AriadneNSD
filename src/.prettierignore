@@ -11,3 +11,5 @@ packages/fonts/assets/
 apps/manual/generated/
 # Written by scripts/build-fonts.py; a rebuild must give the same bytes.
 packages/fonts/src/generated/screen-slices.ts
+coverage-e2e/
+coverage-e2e-raw/

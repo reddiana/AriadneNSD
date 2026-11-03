@@ -13,6 +13,8 @@ export default tseslint.config(
       '**/node_modules/',
       '**/dist/',
       '**/coverage/',
+      '**/coverage-e2e/',
+      '**/coverage-e2e-raw/',
       '**/test-results/',
       '**/playwright-report/',
       'packages/fonts/assets/',

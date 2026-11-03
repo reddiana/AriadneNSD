@@ -10,6 +10,7 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "e2e": "playwright test",
+    "e2e:coverage": "node scripts/e2e-coverage.mjs",
     "manual-shots": "playwright test -c playwright.manual.config.ts",
     "thumbnails": "vitest run --config scripts/vitest.scripts.config.ts"
   },
@@ -26,6 +27,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "monocart-coverage-reports": "^3.2.0",
     "typescript": "6.0.3",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

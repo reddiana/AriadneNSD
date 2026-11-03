@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const port = 4173;
+// Coverage runs build with source maps, so they never reuse a server of a plain build.
+const port = process.env.E2E_COVERAGE === undefined ? 4173 : 4175;
 const isCi = process.env.CI !== undefined;
 
 export default defineConfig({
