@@ -3,7 +3,8 @@
 // The areas here (`menu.*`, `palette.*`, `hint.*` …) are the UI's only; the engine's catalog
 // (../i18n/messages.ts) has the others, so the keys of the two never clash.
 
-import type { Locale } from '@ariadne-nsd/core';
+import type { CatalogEntry, Locale } from '@ariadne-nsd/core';
+import { catalogEntriesOf } from '@ariadne-nsd/core';
 
 const en = {
   'menu.file': 'File',
@@ -183,4 +184,9 @@ export function uiMessage(
 /** Whether a string is a key of the UI catalog (used for the UI's own command titles). */
 export function isUiMessageKey(text: string): text is UiMessageKey {
   return Object.hasOwn(en, text);
+}
+
+/** Every key of the UI catalog with its text in every screen language, for checks (QA-13). */
+export function uiCatalogEntries(): ReadonlyArray<CatalogEntry> {
+  return catalogEntriesOf(catalog);
 }

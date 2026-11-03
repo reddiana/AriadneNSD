@@ -12,6 +12,9 @@ import { StrokeIcon } from './icons';
 import type { MenuEntry } from './menu-model';
 import { menuEntries, menuOrder } from './menu-model';
 import type { Chrome } from './use-engine';
+
+/** The product name on the menu bar. A name, so it is not translated. */
+const productName = 'AriadneNSD';
 import { useChrome, useCommands, useDocStatus } from './use-engine';
 
 function dropdownItems(entries: ReadonlyArray<MenuEntry>, text: Chrome['text']): DropdownItem[] {
@@ -127,7 +130,7 @@ export function MenuBar(): ReactElement {
 
   return (
     <div className="ans-menubar" ref={rootRef}>
-      <span className="ans-brand">AriadneNSD</span>
+      <span className="ans-brand">{productName}</span>
       <div className="ans-menu-root">
         {button('all', <StrokeIcon icon="menu" />, true)}
         {dropdown('all', allItems, text('menu.all'))}

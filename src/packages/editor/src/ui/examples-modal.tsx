@@ -11,6 +11,9 @@ import type { ExampleInfo } from '../examples/examples';
 import { Modal } from './modals';
 import { useChrome } from './use-engine';
 
+/** The file extensions the open card names. Not translated. */
+const openableExtensions = '.ns.svg · .ns';
+
 /** Why the modal is open: the first visit (a welcome), or the toolbar · Help › Examples…. */
 export type ExamplesMode = 'welcome' | 'menu';
 
@@ -114,7 +117,7 @@ export function ExamplesModal({
             ↥
           </span>
           <span className="ans-example-name">{text('examples.openFile')}</span>
-          <span className="ans-example-what">.ns.svg · .ns</span>
+          <span className="ans-example-what">{openableExtensions}</span>
         </button>
       </div>
       {isWelcome && (

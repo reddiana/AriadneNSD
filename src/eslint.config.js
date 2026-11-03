@@ -57,6 +57,35 @@ export default tseslint.config(
     },
   },
   {
+    // QA-13 (coding guide 8): screen text comes from a message catalog. Words written right in
+    // the JSX (text, or a title · aria-label · placeholder · alt attribute) are not translated.
+    // Text that is never translated (a product name, file extensions) goes in a named constant.
+    files: ['packages/editor/src/**/*.tsx', 'apps/**/src/**/*.tsx'],
+    ignores: ['**/*.test.tsx', '**/test-support.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportDefaultDeclaration',
+          message: 'Use named exports only (coding guide 3.2).',
+        },
+        {
+          selector: 'JSXText[value=/[A-Za-z0-9가-힣]/]',
+          message: 'Screen text comes from a message catalog (coding guide 8, QA-13).',
+        },
+        {
+          selector: 'JSXElement > JSXExpressionContainer > Literal[value=/[A-Za-z0-9가-힣]/]',
+          message: 'Screen text comes from a message catalog (coding guide 8, QA-13).',
+        },
+        {
+          selector:
+            'JSXAttribute[name.name=/^(title|aria-label|placeholder|alt)$/] > Literal[value=/[A-Za-z0-9가-힣]/]',
+          message: 'Screen text comes from a message catalog (coding guide 8, QA-13).',
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', '**/*.bench.ts', '**/e2e/**', '**/scripts/**'],
     rules: { 'no-console': 'off' },
   },

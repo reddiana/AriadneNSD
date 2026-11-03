@@ -32,8 +32,14 @@ export { contentIds, createIdGenerator, parseId } from './model/id';
 export { headName, headParams } from './model/head';
 
 // Text, layout and rendering (02-layout).
-export type { DrawingMessageKey, Locale } from './i18n/messages';
-export { drawingMessage } from './i18n/messages';
+export type { CatalogEntry, DrawingMessageKey, Locale } from './i18n/messages';
+export {
+  catalogEntriesOf,
+  catalogProblems,
+  drawingCatalogEntries,
+  drawingMessage,
+  locales,
+} from './i18n/messages';
 export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
 export { geometry } from './layout/geometry';

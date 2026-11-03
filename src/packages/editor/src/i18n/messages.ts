@@ -12,7 +12,8 @@
 // - Placeholders are `{name}`; the values come in `params`.
 // - The UI keeps its own strings (menus, dialogs) in `ui/messages.ts`. A key lives in one
 //   catalog only; the UI formats a key with its catalog first, then with `formatMessage`.
-import type { Locale } from '@ariadne-nsd/core';
+import type { CatalogEntry, Locale } from '@ariadne-nsd/core';
+import { catalogEntriesOf } from '@ariadne-nsd/core';
 
 const english = {
   // File (shell commands use these titles too).
@@ -502,15 +503,7 @@ export function formatMessage(locale: Locale, value: Message): string {
   );
 }
 
-/** Every key with its English and Korean text, for checks and the shortcut list. */
-export function catalogEntries(): ReadonlyArray<{
-  readonly key: MessageKey;
-  readonly en: string;
-  readonly ko: string;
-}> {
-  return (Object.keys(english) as MessageKey[]).map((key) => ({
-    key,
-    en: english[key],
-    ko: korean[key],
-  }));
+/** Every key with its text in every screen language, for checks (QA-13). */
+export function catalogEntries(): ReadonlyArray<CatalogEntry> {
+  return catalogEntriesOf(catalogs);
 }

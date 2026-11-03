@@ -71,9 +71,11 @@ const areas = [
   {
     name: '메뉴 · 화면 · 시작',
     about:
-      '메뉴와 툴바, 화면 언어, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
+      '메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
     paths: [
       'packages/editor/src/ui/',
+      'packages/editor/src/i18n/',
+      'packages/core/src/i18n/',
       'packages/editor/src/examples/',
       'packages/editor/src/version.test.ts',
       'apps/web/src/shell/messages.test.ts',
@@ -99,10 +101,11 @@ const areas = [
   {
     name: '레이아웃 · 그리기 · 글자',
     about:
-      '블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
+      '블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
     paths: [
       'packages/core/src/layout/',
       'packages/core/src/render/render-doc',
+      'packages/core/src/render/theme',
       'packages/core/src/text/',
       'packages/fonts/',
       'apps/web/e2e/fonts.spec.ts',
@@ -110,7 +113,7 @@ const areas = [
   },
   {
     name: '성능',
-    about: '그리기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]',
+    about: '그리기와 파일 열기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]',
     paths: ['.bench.ts'],
   },
 ];
@@ -339,6 +342,10 @@ const checks = new Map([
   ['QA-09', '번들 사이즈 체크 `apps/web/scripts/check-size.mjs` (CI의 웹 빌드 뒤)'],
   ['QA-10', '의존 방향 검사 dependency-cruiser (`pnpm deps`)'],
   ['QA-12', 'TypeScript의 완전성 검사 (`pnpm typecheck`)'],
+  [
+    'QA-13',
+    'JSX에 쓴 글자 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)',
+  ],
   ['QA-14', '`core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`)'],
 ]);
 

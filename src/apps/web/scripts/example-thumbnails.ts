@@ -8,7 +8,7 @@
 // examples or the renderer; then run `pnpm --filter @ariadne-nsd/web thumbnails`.
 import { createHash } from 'node:crypto';
 
-import type { Locale } from '@ariadne-nsd/core';
+import { locales } from '@ariadne-nsd/core';
 import { examples, exampleThumbnailSvg } from '@ariadne-nsd/editor';
 import { blockFont } from '@ariadne-nsd/fonts';
 import { createNodeSubsetter, readFontFile } from '@ariadne-nsd/fonts/node';
@@ -26,8 +26,6 @@ export const pictureBox = { width: 440, height: 248 } as const;
 
 /** WebP quality (0 ~ 1). At 0.9 the ten pictures of a language take about 84 KB, like the SVGs. */
 export const pictureQuality = 0.9;
-
-const locales: ReadonlyArray<Locale> = ['en', 'ko'];
 
 /** The SVG each picture is made from: picture file name → SVG text. */
 export async function thumbnailSources(): Promise<Map<string, string>> {

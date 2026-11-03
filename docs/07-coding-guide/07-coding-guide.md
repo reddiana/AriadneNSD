@@ -169,6 +169,8 @@ export function wrap(content: Content, args: WrapArgs): Result {
 
 - 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 그림에 적는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그, 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 넘깁니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#5. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
 - 개발자에게만 보이는 문자열(예외 메시지, 로그)은 영어로 직접 씁니다.
+- `.tsx`의 JSX에 글자를 직접 쓰면(텍스트, `title` · `aria-label` · `placeholder` · `alt` 속성) ESLint가 막습니다. 번역하지 않는 글(제품 이름, 파일 확장자)은 이름 붙은 상수로 두고 `{productName}`처럼 넣습니다.
+- 화면 언어의 목록은 `core`의 `locales` 하나입니다. 언어를 더하면 이 목록에 한 줄, 카탈로그마다 그 언어의 글을 더합니다. 빠진 키는 타입 검사가, 빈 글과 언어마다 다른 `{name}` 자리표시는 카탈로그 테스트가 찾습니다 → [[03-quality-attribute-scenarios#QA-13 화면 언어 추가|QA-13]]
 
 ## 9. React
 

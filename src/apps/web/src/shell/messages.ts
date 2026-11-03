@@ -3,7 +3,8 @@
 // tabs. The keys follow the editor catalog's rules (`area.name`, `{name}` placeholders). Command
 // titles are the editor catalog's (`command.file.new` …): the shell passes those keys as they are.
 
-import type { Locale } from '@ariadne-nsd/core';
+import type { CatalogEntry, Locale } from '@ariadne-nsd/core';
+import { catalogEntriesOf } from '@ariadne-nsd/core';
 
 /** A screen language: the same set as the editor's and the drawing's (core `Locale`). */
 export type ShellLocale = Locale;
@@ -88,4 +89,9 @@ export function shellMessage(
     /\{(\w+)\}/g,
     (match, name: string) => values[name] ?? match,
   );
+}
+
+/** Every key of the shell catalog with its text in every screen language, for checks (QA-13). */
+export function shellCatalogEntries(): ReadonlyArray<CatalogEntry> {
+  return catalogEntriesOf(catalogs);
 }

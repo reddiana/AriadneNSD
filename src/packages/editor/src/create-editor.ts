@@ -1,6 +1,6 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
-import { createDoc, openSvgFile, parseModelJson, setSettings } from '@ariadne-nsd/core';
+import { createDoc, locales, openSvgFile, parseModelJson, setSettings } from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -81,8 +81,8 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
   {
     id: settingIds.locale,
     title: 'setting.uiLocale',
-    values: ['en', 'ko'],
-    valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko'],
+    values: locales,
+    valueTitles: locales.map((locale) => `setting.uiLocale.${locale}` as const),
     defaultValue: 'en',
     scope: 'user',
   },

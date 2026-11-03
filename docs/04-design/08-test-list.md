@@ -19,11 +19,11 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | - | 29 | 149 | - | 178 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 22 | 49 | - | 76 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 16 | 25 | 16 | - | 57 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 16 | 25 | 22 | - | 63 |
 | [[#5. 파일\|파일]] | 6 | 40 | 60 | - | 106 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 81 | - | 83 |
-| [[#7. 성능\|성능]] | - | - | - | 3 | 3 |
-| 합계 | 55 | 116 | 355 | 3 | 529 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 85 | - | 87 |
+| [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
+| 합계 | 55 | 116 | 365 | 5 | 541 |
 
 ## 읽는 법
 
@@ -571,7 +571,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 10개, 테스트 57개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 판 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 12개, 테스트 63개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -671,15 +671,27 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `apps/web/src/shell/messages.test.ts`
 
-화면 언어. Vitest · 테스트 3개.
+화면 언어. Vitest · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0318 | 한국어 브라우저는 한국어, 다른 모든 언어는 영어를 받는다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0320 | 자리 표시자를 채우고 모르는 것은 그대로 둔다 | - |
+| T-0530 | 셸 카탈로그는 모든 언어에 모든 키가 있고 자리표시가 같음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-apps-web-src-shell-messages-test-ts
+
+### [단위] `packages/core/src/i18n/messages.test.ts`
+
+메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 2개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0531 | 그림 카탈로그는 모든 언어에 모든 키가 있음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0532 | 검사가 빠진 글과 다른 자리표시를 찾음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+
+^t-packages-core-src-i18n-messages-test-ts
 
 ### [단위] `packages/editor/src/examples/examples.test.ts`
 
@@ -698,6 +710,18 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0329 | SVG 파일로 저장하고, 같은 문서로 연다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
 
 ^t-packages-editor-src-examples-examples-test-ts
+
+### [단위] `packages/editor/src/i18n/messages.test.ts`
+
+편집기의 메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0533 | 엔진 카탈로그는 모든 언어에 모든 키가 있고 자리표시가 같음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0534 | UI 카탈로그는 모든 언어에 모든 키가 있고 자리표시가 같음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0535 | 키 하나는 한 카탈로그에만 있다(UI는 제 카탈로그로 먼저 옮김) | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+
+^t-packages-editor-src-i18n-messages-test-ts
 
 ### [단위] `packages/editor/src/ui/menu-model.test.ts`
 
@@ -967,7 +991,7 @@ SVG 파일. Vitest · 테스트 14개.
 
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 자리, SVG로 그리기, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 8개, 테스트 83개.
+블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 9개, 테스트 87개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -1051,6 +1075,19 @@ SVG 파일. Vitest · 테스트 14개.
 
 ^t-packages-core-src-render-render-doc-test-ts
 
+### [단위] `packages/core/src/render/theme.test.ts`
+
+밝은 기본 테마의 대비(시각 디자인 3.3 · 10.1). Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-16]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-0536 | 블록 텍스트는 종이와 모든 블록 배경 위에서 4.5:1 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-nfr\|R-NFR-05]] |
+| T-0537 | 뜻을 가진 선은 종이와 모든 블록 배경 위에서 3:1 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-nfr\|R-NFR-05]] |
+| T-0538 | 접기 영역과 펴 보기의 띠 위 텍스트는 4.5:1 | [[03-quality-attribute-scenarios#1. 목록\|QA-16]], [[01-requirements#^r-nfr\|R-NFR-05]] |
+| T-0539 | WCAG 대비율을 표와 같게 셈(종이 위 text.primary 17.46) | - |
+
+^t-packages-core-src-render-theme-test-ts
+
 ### [단위] `packages/core/src/text/measure-text.test.ts`
 
 글자 폭. Vitest · 테스트 8개.
@@ -1126,17 +1163,19 @@ SVG 파일. Vitest · 테스트 14개.
 
 ## 7. 성능
 
-그리기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]. 파일 1개, 테스트 3개.
+그리기와 파일 열기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]. 파일 1개, 테스트 5개.
 
 ### [성능] `packages/core/src/render/render.bench.ts`
 
-02-layout 4의 성능 예산. Vitest bench · 테스트 3개.
+02-layout 4의 성능 예산. Vitest bench · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0517 | 레이아웃과 장면 + SVG 글자가 편집 예산 100ms에 넉넉히 든다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 | T-0518 | 레이아웃 | - |
 | T-0519 | 장면 + SVG 글자 | - |
+| T-0540 | 열기 · 검사 · 레이아웃 · 그리기가 1초 예산의 한참 안 | [[03-quality-attribute-scenarios#1. 목록\|QA-08]], [[01-requirements#^r-nfr\|R-NFR-03]] |
+| T-0541 | 열기 + 레이아웃 + 장면 + SVG 텍스트 | - |
 
 ^t-packages-core-src-render-render-bench-ts
 
@@ -1149,13 +1188,10 @@ SVG 파일. Vitest · 테스트 14개.
 | [[03-quality-attribute-scenarios#1. 목록\|QA-03]] | 인수 테스트: [[01-requirements#^at\|AT-10]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-05]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-06]] | 인수 테스트: [[01-requirements#^at\|AT-08]] |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-08]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-10]] | 파일: `packages/editor/src/create-editor.test.ts`<br>검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-11]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-12]] | 검사: TypeScript의 완전성 검사 (`pnpm typecheck`) |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-13]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-14]] | 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[01-requirements#^at\|AT-04]] |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-16]] | 없음 |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
 | [[defects#BUG-06\|BUG-06]] | 없음 |
