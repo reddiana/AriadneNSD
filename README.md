@@ -50,7 +50,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 | 단계 | 버전 | 무엇을 | 저장한 파일 |
 | --- | --- | --- | --- |
-| **웹 MVP** (지금) | 0.1 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| **웹 MVP** (지금) | 0.1 · 0.2 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기(0.1). 0.2에서 아래 1.0의 기능을 먼저 더했습니다. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | 웹 베타 | 0.x | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | Obsidian 베타 | 0.x | 웹 베타와 함께 시작합니다. BRAT 플러그인으로 GitHub에서 바로 설치합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | 웹 1.0 | 1.0 | 접기, Method로 빼기, 호출 블록 펴 보기, 구문 강조, 테마, 공유 URL, PDF · 인쇄, 고대비 화면. 키 배치가 굳습니다 | **뒤의 모든 버전이 엽니다** |
@@ -66,7 +66,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 1. **설계:** 요구사항부터 UX · 아키텍처 · 상세 설계까지 문서로 먼저 썼습니다. 결정의 근거는 결정 기록(ADR · DR)으로, 세션마다 의논한 것은 세션 기록으로 남깁니다.
 2. **시안과 프로토타입:** 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐고, 버릴 프로토타입으로 요구사항을 써 보았습니다. 페이지마다 무엇을 견주어 왜 골랐는지 적혀 있습니다: [`atelier/sketchbook.md`](atelier/sketchbook.md)
-3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈습니다. 지금은 MVP를 써 보며 다듬고 있습니다.
+3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈고, 웹 1.0의 기능을 더한 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)이 지금 판입니다. 지금은 써 보며 다듬고 있습니다.
 
 처음부터 지금까지의 흐름은 [`journal/timeline.md`](journal/timeline.md)에, AI와 일하는 법을 배워 간 기록은 [`journal/learning-claude-code.md`](journal/learning-claude-code.md)에 있습니다.
 

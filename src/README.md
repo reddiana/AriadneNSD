@@ -74,7 +74,7 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 순서:
 
 1. 위 다섯 곳의 버전을 올린다
-2. 도움말 › 이 버전에서 바뀐 것의 문구(`packages/editor/src/ui/messages.ts`의 `whatsNew.body`, 영어 · 한국어)를 고친다
+2. 도움말 › 이 버전에서 바뀐 것의 문구(`packages/editor/src/ui/messages.ts`의 `whatsNew.body`, 영어 · 한국어)를 고친다. 첫 줄은 문장, `- `로 시작하는 줄은 목록으로 보인다
 3. `pnpm check`, `pnpm e2e`가 통과하면 커밋하고 주석 태그를 단다: `git tag -a v0.2.0 -m "0.2.0"` (`--follow-tags`는 주석 태그만 올린다)
 4. 커밋과 태그를 push한다(`git push --follow-tags`). GitHub의 Releases에 그 태그로 바뀐 것을 적는다
 

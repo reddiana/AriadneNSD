@@ -258,9 +258,19 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
 /** Help › What's New in This Version. */
 export function WhatsNewModal({ onClose }: { readonly onClose: () => void }): ReactElement {
   const { text } = useChrome();
+  // The body is one message: the first line is a sentence, the lines that start with "- " a list.
+  const [lead = '', ...lines] = text('whatsNew.body').split('\n');
+  const items = lines.filter((line) => line.startsWith('- ')).map((line) => line.slice(2));
   return (
     <Modal title={text('whatsNew.title')} onClose={onClose}>
-      <p>{text('whatsNew.body')}</p>
+      <p>{lead}</p>
+      {items.length > 0 && (
+        <ul>
+          {items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
     </Modal>
   );
 }
