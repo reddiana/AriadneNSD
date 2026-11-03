@@ -207,7 +207,7 @@ const cCode: Doc = docOf(
 );
 
 describe('render: syntax highlighting (R-LAY-07)', () => {
-  it('colors keywords, comments, strings and numbers with the syntax tokens', () => {
+  it('T-0867: colors keywords, comments, strings and numbers with the syntax tokens', () => {
     const { svg } = renderDoc(inTextKind(cCode, 'c'));
     expect(svg.content).toContain(
       'xml:space="preserve"><tspan fill="#1f45d6">int</tspan> n = <tspan fill="#8a5a00">0</tspan>; <tspan fill="#22702a">// count</tspan></text>',
@@ -218,18 +218,18 @@ describe('render: syntax highlighting (R-LAY-07)', () => {
     expect(svg.content).toContain(`<tspan fill="#8a5a00">'x'</tspan>`);
   });
 
-  it('colors a block comment on every line it spans', () => {
+  it('T-0868: colors a block comment on every line it spans', () => {
     const { svg } = renderDoc(inTextKind(cCode, 'c'));
     expect(svg.content).toContain('><tspan fill="#22702a">/* step</tspan></text>');
     expect(svg.content).toContain('><tspan fill="#22702a">   on */</tspan> n++;</text>');
   });
 
-  it('plain text is drawn in one color, as before', () => {
+  it('T-0869: plain text is drawn in one color, as before', () => {
     const { svg } = renderDoc(cCode);
     expect(svg.content).not.toContain('<tspan');
   });
 
-  it('changing the language changes colors only, never the layout (ADR-0042)', () => {
+  it('T-0870: changing the language changes colors only, never the layout (ADR-0042)', () => {
     const plain = renderDoc(cCode);
     for (const kind of textKinds) {
       const other = renderDoc(inTextKind(cCode, kind));
@@ -238,7 +238,7 @@ describe('render: syntax highlighting (R-LAY-07)', () => {
     }
   });
 
-  it('does not highlight the header, branch labels or calls', () => {
+  it('T-0871: does not highlight the header, branch labels or calls', () => {
     const doc: Doc = {
       ...docOf(process('b1', 'x')),
       content: {

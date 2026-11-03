@@ -16,7 +16,7 @@ function marked(text: string, kind: TextKind): ReadonlyArray<string> {
 const of = (kind: TokenKind, text: string): Token => ({ kind, text });
 
 describe('block text languages', () => {
-  it('R-LAY-06: lists plain text first, then the code languages', () => {
+  it('T-0872 · R-LAY-06: lists plain text first, then the code languages', () => {
     expect(textKinds).toEqual(['plain', 'c', 'cpp', 'java', 'javascript', 'python', 'bash']);
     expect(isTextKind('python')).toBe(true);
     expect(isTextKind('cobol')).toBe(false);
@@ -24,13 +24,13 @@ describe('block text languages', () => {
     expect(isTextKind(3)).toBe(false);
   });
 
-  it('R-LAY-07: plain text is one token and is not highlighted', () => {
+  it('T-0873 · R-LAY-07: plain text is one token and is not highlighted', () => {
     expect(tokenize('if x // y "z" 1', 'plain')).toEqual([of('other', 'if x // y "z" 1')]);
     expect(tokenize('', 'c')).toEqual([]);
     expect(tokenize('', 'plain')).toEqual([]);
   });
 
-  it('R-LAY-07: the tokens of any text in any language join back to the text', () => {
+  it('T-0874 · R-LAY-07: the tokens of any text in any language join back to the text', () => {
     fc.assert(
       fc.property(
         fc.string({ unit: fc.constantFrom(...'ab1 .#/*"\'`\\\n$_e+x0f가'.split('')) }),
@@ -48,7 +48,7 @@ describe('block text languages', () => {
 });
 
 describe('C and C++', () => {
-  it('R-LAY-07: keywords, strings, characters, numbers and both comments', () => {
+  it('T-0875 · R-LAY-07: keywords, strings, characters, numbers and both comments', () => {
     expect(marked('for (int i = 0; i < n; i++) // next', 'c')).toEqual([
       'keyword:for',
       'keyword:int',
@@ -67,13 +67,13 @@ describe('C and C++', () => {
     ]);
   });
 
-  it('R-LAY-07: a directive at the start of a line is a keyword, a name with digits is not a number', () => {
+  it('T-0876 · R-LAY-07: a directive at the start of a line is a keyword, a name with digits is not a number', () => {
     expect(marked('  #include <stdio.h>', 'c')).toEqual(['keyword:#include']);
     expect(marked('a # b', 'c')).toEqual([]);
     expect(marked('x1 = y2', 'c')).toEqual([]);
   });
 
-  it('R-LAY-07: C++ has its own keywords and digit separators', () => {
+  it('T-0877 · R-LAY-07: C++ has its own keywords and digit separators', () => {
     expect(marked("auto p = new Node(1'000); // C++", 'cpp')).toEqual([
       'keyword:auto',
       'keyword:new',
@@ -84,7 +84,7 @@ describe('C and C++', () => {
     expect(marked('class template', 'cpp')).toEqual(['keyword:class', 'keyword:template']);
   });
 
-  it('R-LAY-07: an unterminated string ends at the line, an unterminated comment at the text', () => {
+  it('T-0878 · R-LAY-07: an unterminated string ends at the line, an unterminated comment at the text', () => {
     expect(tokenize('s = "open\nnext', 'c')).toEqual([
       of('other', 's = '),
       of('string', '"open'),
@@ -95,7 +95,7 @@ describe('C and C++', () => {
 });
 
 describe('Java and JavaScript', () => {
-  it('R-LAY-07: Java keywords, text blocks and names with $', () => {
+  it('T-0879 · R-LAY-07: Java keywords, text blocks and names with $', () => {
     expect(marked('final var s = """\nhi""";', 'java')).toEqual([
       'keyword:final',
       'keyword:var',
@@ -104,7 +104,7 @@ describe('Java and JavaScript', () => {
     expect(marked('$if = null', 'java')).toEqual(['keyword:null']);
   });
 
-  it('R-LAY-07: JavaScript template strings may span lines; TypeScript words are keywords', () => {
+  it('T-0880 · R-LAY-07: JavaScript template strings may span lines; TypeScript words are keywords', () => {
     expect(marked('const t = `a\nb`; // x', 'javascript')).toEqual([
       'keyword:const',
       'string:`a\nb`',
@@ -118,11 +118,11 @@ describe('Java and JavaScript', () => {
 });
 
 describe('Python', () => {
-  it('R-LAY-07: # is the comment and // is floor division, not a comment', () => {
+  it('T-0881 · R-LAY-07: # is the comment and // is floor division, not a comment', () => {
     expect(marked('total = a // 2  # half', 'python')).toEqual(['number:2', 'comment:# half']);
   });
 
-  it('R-LAY-07: keywords, prefixed and triple-quoted strings', () => {
+  it('T-0882 · R-LAY-07: keywords, prefixed and triple-quoted strings', () => {
     expect(marked('if x is not None: print(f"{x}")', 'python')).toEqual([
       'keyword:if',
       'keyword:is',
@@ -141,12 +141,12 @@ describe('Python', () => {
 });
 
 describe('Bash', () => {
-  it('R-LAY-07: # starts a comment only at the start of a word', () => {
+  it('T-0883 · R-LAY-07: # starts a comment only at the start of a word', () => {
     expect(marked('echo ${#files} a#b # count', 'bash')).toEqual(['comment:# count']);
     expect(marked('# all', 'bash')).toEqual(['comment:# all']);
   });
 
-  it('R-LAY-07: reserved words, both quotes and variables', () => {
+  it('T-0884 · R-LAY-07: reserved words, both quotes and variables', () => {
     expect(marked('if [ "$n" -gt 0 ]; then echo \'a\\\'; fi', 'bash')).toEqual([
       'keyword:if',
       'string:"$n"',
@@ -160,11 +160,11 @@ describe('Bash', () => {
 });
 
 describe('numbers and words', () => {
-  it('R-LAY-07: a range keeps its dots out of the numbers', () => {
+  it('T-0885 · R-LAY-07: a range keeps its dots out of the numbers', () => {
     expect(marked('k ← 1..10', 'c')).toEqual(['number:1', 'number:10']);
   });
 
-  it('R-LAY-07: words in other scripts are words, not keywords', () => {
+  it('T-0886 · R-LAY-07: words in other scripts are words, not keywords', () => {
     expect(marked('합계if = 0', 'c')).toEqual(['number:0']);
     expect(marked('𝑥 if', 'c')).toEqual(['keyword:if']);
   });

@@ -30,7 +30,7 @@ test('T-0812: ADR-0041 · UX Q9: the language of drawn labels redraws the If bra
   await expect(drawnText(page, '참')).toHaveCount(0);
 });
 
-test('R-LAY-06 · R-LAY-07: the block text language colors the keywords on screen, and undo takes it back', async ({
+test('T-0863 · R-LAY-06 · R-LAY-07: the block text language colors the keywords on screen, and undo takes it back', async ({
   page,
 }) => {
   await openApp(page);

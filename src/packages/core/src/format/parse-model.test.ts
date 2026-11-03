@@ -168,7 +168,7 @@ describe('model JSON parsing', () => {
     expect(saved).toContain('"theme": "midnight"');
   });
 
-  it('01-file-format 3.3: reads every language of this version into the model and writes it back', () => {
+  it('T-0866: 01-file-format 3.3: reads every language of this version into the model and writes it back', () => {
     for (const textKind of textKinds) {
       const value = minimal();
       value.settings = { textKind, theme: 'default', headStyle: 'shape', locale: 'en' };

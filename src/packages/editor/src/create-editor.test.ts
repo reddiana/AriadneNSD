@@ -154,7 +154,7 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
     expect(handle.state().undo).toHaveLength(0);
   });
 
-  it('R-LAY-06 · R-LAY-07: choosing the block text language highlights the drawing and is undoable', async () => {
+  it('T-0864 · R-LAY-06 · R-LAY-07: choosing the block text language highlights the drawing and is undoable', async () => {
     const plain = createDoc();
     const doc: Doc = {
       ...plain,
@@ -182,7 +182,7 @@ describe('the shell contract (03-editor 6, QA-10)', () => {
     expect(drawing()).not.toContain('<tspan fill');
   });
 
-  it('R-LAY-06: the block text language lists every language with its screen name', () => {
+  it('T-0865 · R-LAY-06: the block text language lists every language with its screen name', () => {
     const { handle } = make();
     const spec = handle.settingsSchema.list().find((item) => item.id === 'document.textKind');
     expect(spec).toMatchObject({
