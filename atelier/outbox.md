@@ -47,6 +47,7 @@ updated: 2026-11-03
 - [ ] 2026-11-03 세션 02에 Claude가 정한 것 (→ [[2026-11-03-02-inbox-atelier-til-views]])
 	- 논리 · 물리 뷰 [[01-requirements#^r-ide|R-IDE-08]]의 우선순위를 `P3`(IDE 플러그인 `P2`의 기본기 뒤)로
 	- 요구사항 5.2 "MVP의 인수 기준"은 `R-` ID가 아닌 `AT-` ID의 표(블록 ID `^at`). 표와 주 둘은 07-testing 4장에서 그대로 옮김
+- [ ] [[07-testing#1.2 유형과 구성 요소]]의 그림을 SVG로 다시 그린 모양 (2026-11-03 세션 02의 매듭 뒤 → [[2026-11-03-02-inbox-atelier-til-views]]): 720 × 368, `visual-design-anatomy.svg`와 같은 글꼴 · 바탕. 배치는 Mermaid 판과 같게(E2E ⊃ 통합 ⊃ 단위(core · fonts · editor의 순수 함수) · editor · 웹 셸, 그 밖에 브라우저). 사이트에서는 확인함, Obsidian에서 봐 주기 → `docs/04-design/assets/testing-types-components.svg`
 - [ ] MVP 다음의 단계에서 Claude가 정한 것 (2026-11-02 → [[2026-11-02-01-release-stages]], [[dr-0018-release-stages|DR-0018]])
 	- 웹 베타와 웹 1.0의 문턱에 넣은 항목(DR-0018의 "결정"). 고르신 것은 다섯 물음이고, 문턱의 목록은 Claude가 짰음
 	- 우선순위 `P3`의 뜻 "출시 뒤"를 "웹 베타 뒤"로 → [[01-requirements]]
