@@ -1,9 +1,8 @@
 // Prototype M41 example 1 (journal/assets/2026-10-10-ns-prototype.html, `MORE`).
-import type { DiagramSpec } from './build-example';
+import type { DiagramSpec, LocalizedSpec } from './build-example';
 import { event, method } from './build-example';
 
-/** Vending machine: written in sentences, two Events and a Method. */
-export const vendingMachine: ReadonlyArray<DiagramSpec> = [
+const ko: ReadonlyArray<DiagramSpec> = [
   event('동전이 들어오면', [
     '동전의 종류를 알아본다',
     [
@@ -48,3 +47,56 @@ export const vendingMachine: ReadonlyArray<DiagramSpec> = [
     ],
   ]),
 ];
+
+const en: ReadonlyArray<DiagramSpec> = [
+  event('When a coin is inserted', [
+    'Find out which coin it is',
+    [
+      'if',
+      'Accepted coin?',
+      [
+        "Add the coin's value to the balance",
+        'Show the balance on the display',
+        ['call', 'Light up the drinks you can buy'],
+      ],
+      ['Send the coin back to the return slot'],
+    ],
+  ]),
+  event('When a drink button is pressed', [
+    [
+      'case',
+      'Chosen drink',
+      [
+        ['Coffee', ['price = $1.20']],
+        ['Green tea', ['price = $1.00']],
+        ['Water', ['price = $0.80']],
+        ['default', ['Beep', 'Stop']],
+      ],
+    ],
+    [
+      'if',
+      'balance ≥ price?',
+      [
+        'Dispense the drink',
+        'Subtract the price from the balance',
+        [
+          'while',
+          'balance > 0',
+          ['Give change with the largest coin', "Subtract that coin's value from the balance"],
+        ],
+        'Reset the display',
+      ],
+      ['Show "Not enough money"'],
+    ],
+  ]),
+  method('Light up the drinks you can buy', [
+    [
+      'while',
+      'For each button',
+      [['if', 'price ≤ balance and in stock?', ['Light the button'], ['Turn the button off']]],
+    ],
+  ]),
+];
+
+/** Vending machine: written in sentences, two Events and a Method. */
+export const vendingMachine: LocalizedSpec = { ko, en };

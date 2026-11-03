@@ -1,9 +1,8 @@
 // Prototype M41 example 3 (journal/assets/2026-10-10-ns-prototype.html, `MORE`).
-import type { DiagramSpec } from './build-example';
+import type { DiagramSpec, LocalizedSpec } from './build-example';
 import { event, method } from './build-example';
 
-/** Elevator: a Case with four branches, a named fold region and two calls. */
-export const elevator: ReadonlyArray<DiagramSpec> = [
+const ko: ReadonlyArray<DiagramSpec> = [
   event('층 버튼이 눌리면', [
     '눌린 층을 요청 목록에 더한다',
     '버튼에 불을 켠다',
@@ -55,3 +54,59 @@ export const elevator: ReadonlyArray<DiagramSpec> = [
     ],
   ]),
 ];
+
+const en: ReadonlyArray<DiagramSpec> = [
+  event('When a floor button is pressed', [
+    'Add the floor to the request list',
+    'Light the button',
+    ['if', 'Is the elevator idle?', [['call', 'Choose the next destination']], ['']],
+  ]),
+  event('Every control cycle (100ms)', [
+    [
+      'case',
+      'state',
+      [
+        [
+          'Going up',
+          [['if', 'Reached the destination?', ['Stop', 'state = Doors open'], ['Go up a floor']]],
+        ],
+        [
+          'Going down',
+          [['if', 'Reached the destination?', ['Stop', 'state = Doors open'], ['Go down a floor']]],
+        ],
+        [
+          'Doors open',
+          [
+            [
+              'range',
+              'Open and close the doors',
+              [
+                'Open the doors',
+                'Wait 3 seconds',
+                ['while', 'While someone is in the doorway', ['Wait 1 more second']],
+                'Close the doors',
+              ],
+            ],
+            "Clear this floor's requests",
+            ['call', 'Choose the next destination'],
+          ],
+        ],
+        ['Idle', ['']],
+      ],
+    ],
+  ]),
+  method('Choose the next destination', [
+    [
+      'if',
+      'Is the request list empty?',
+      ['state = Idle'],
+      [
+        'Pick the nearest request in the direction of travel',
+        ['if', 'destination > this floor?', ['state = Going up'], ['state = Going down']],
+      ],
+    ],
+  ]),
+];
+
+/** Elevator: a Case with four branches, a named fold region and two calls. */
+export const elevator: LocalizedSpec = { ko, en };

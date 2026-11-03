@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Block, Doc, Head, Seq } from '@ariadne-nsd/core';
+import type { Block, Doc, Head, Locale, Seq } from '@ariadne-nsd/core';
 import {
   assembleSvgFile,
   checkInvariants,
   createDoc,
+  locales,
   openSvgFile,
   parseModelJson,
   serializeModelJson,
 } from '@ariadne-nsd/core';
 
 import { binarySearch } from './binary-search';
-import type { BlockSpec, DiagramSpec } from './build-example';
+import type { BlockSpec, DiagramSpec, LocalizedSpec } from './build-example';
 import { dijkstra } from './dijkstra';
 import { elevator } from './elevator';
 import { examples } from './examples';
@@ -23,99 +24,142 @@ import { timerInterrupt } from './timer-interrupt';
 import { uartCase } from './uart-case';
 import { vendingMachine } from './vending-machine';
 
+/** A code-only example: the same diagrams and headers on every screen. */
+function same<T>(value: T): Readonly<Record<Locale, T>> {
+  return { ko: value, en: value };
+}
+
+// Hangul syllables and jamo: an English example has none (maintainer, 2026-11-03: "영어판은
+// 영어가 나와야지요").
+const hangul = /[ᄀ-ᇿ㄰-㆏가-힯]/u;
+
 // What each example must hold, as in the prototype (journal/assets/2026-10-10-ns-prototype.html):
-// the headers in order, and the number of blocks.
+// the headers in order on each screen, and the number of blocks.
 const expected: ReadonlyArray<{
   readonly id: string;
-  readonly heads: ReadonlyArray<Head>;
+  readonly heads: Readonly<Record<Locale, ReadonlyArray<Head>>>;
   readonly blocks: number;
-  readonly spec: ReadonlyArray<DiagramSpec>;
+  readonly spec: LocalizedSpec;
 }> = [
   {
     id: 'merge-sort',
-    heads: [{ kind: 'method', text: 'merge_sort(a, lo, hi)' }],
+    heads: same([{ kind: 'method', text: 'merge_sort(a, lo, hi)' }]),
     blocks: 15,
-    spec: mergeSort,
+    spec: same(mergeSort),
   },
   {
     id: 'dijkstra',
-    heads: [{ kind: 'method', text: 'dijkstra(graph, s)' }],
+    heads: same([{ kind: 'method', text: 'dijkstra(graph, s)' }]),
     blocks: 15,
-    spec: dijkstra,
+    spec: same(dijkstra),
   },
   {
     id: 'uart-case',
-    heads: [{ kind: 'event', text: 'UART 수신 인터럽트' }],
+    heads: {
+      ko: [{ kind: 'event', text: 'UART 수신 인터럽트' }],
+      en: [{ kind: 'event', text: 'UART receive interrupt' }],
+    },
     blocks: 13,
     spec: uartCase,
   },
   {
     id: 'timer-interrupt',
-    heads: [{ kind: 'event', text: 'TIM2 인터럽트 (1ms)' }],
+    heads: {
+      ko: [{ kind: 'event', text: 'TIM2 인터럽트 (1ms)' }],
+      en: [{ kind: 'event', text: 'TIM2 interrupt (1ms)' }],
+    },
     blocks: 17,
     spec: timerInterrupt,
   },
   {
     id: 'binary-search',
-    heads: [
+    heads: same([
       { kind: 'event', text: 'main()' },
       { kind: 'method', text: 'binary_search(a, n, key)' },
-    ],
+    ]),
     blocks: 17,
     spec: binarySearch,
   },
   {
     id: 'quicksort',
-    heads: [
+    heads: same([
       { kind: 'method', text: 'quicksort(a, lo, hi)' },
       { kind: 'method', text: 'partition(a, lo, hi)' },
-    ],
+    ]),
     blocks: 16,
-    spec: quicksort,
+    spec: same(quicksort),
   },
   {
     id: 'maze',
-    heads: [
+    heads: same([
       { kind: 'event', text: 'main()' },
       { kind: 'method', text: 'solve(maze, p)' },
-    ],
+    ]),
     blocks: 20,
     spec: maze,
   },
   {
     id: 'vending-machine',
-    heads: [
-      { kind: 'event', text: '동전이 들어오면' },
-      { kind: 'event', text: '음료 버튼을 누르면' },
-      { kind: 'method', text: '살 수 있는 음료에 불을 켠다' },
-    ],
+    heads: {
+      ko: [
+        { kind: 'event', text: '동전이 들어오면' },
+        { kind: 'event', text: '음료 버튼을 누르면' },
+        { kind: 'method', text: '살 수 있는 음료에 불을 켠다' },
+      ],
+      en: [
+        { kind: 'event', text: 'When a coin is inserted' },
+        { kind: 'event', text: 'When a drink button is pressed' },
+        { kind: 'method', text: 'Light up the drinks you can buy' },
+      ],
+    },
     blocks: 24,
     spec: vendingMachine,
   },
   {
     id: 'elevator',
-    heads: [
-      { kind: 'event', text: '층 버튼이 눌리면' },
-      { kind: 'event', text: '제어 주기마다 (100ms)' },
-      { kind: 'method', text: '다음 행선지를 정한다' },
-    ],
+    heads: {
+      ko: [
+        { kind: 'event', text: '층 버튼이 눌리면' },
+        { kind: 'event', text: '제어 주기마다 (100ms)' },
+        { kind: 'method', text: '다음 행선지를 정한다' },
+      ],
+      en: [
+        { kind: 'event', text: 'When a floor button is pressed' },
+        { kind: 'event', text: 'Every control cycle (100ms)' },
+        { kind: 'method', text: 'Choose the next destination' },
+      ],
+    },
     blocks: 28,
     spec: elevator,
   },
   {
     id: 'raft',
-    heads: [
-      { kind: 'event', text: '선거 타이머가 끝나면' },
-      { kind: 'event', text: '투표 요청을 받으면' },
-      { kind: 'event', text: '투표 응답을 받으면' },
-      { kind: 'event', text: '하트비트 타이머가 끝나면' },
-      { kind: 'event', text: '클라이언트 요청을 받으면' },
-      { kind: 'event', text: '로그 복제 요청을 받으면' },
-      { kind: 'event', text: '로그 복제 응답을 받으면' },
-      { kind: 'method', text: '모든 피어에게 로그를 보낸다' },
-      { kind: 'method', text: '커밋된 항목을 상태 기계에 적용한다' },
-      { kind: 'method', text: '팔로워로 물러난다' },
-    ],
+    heads: {
+      ko: [
+        { kind: 'event', text: '선거 타이머가 끝나면' },
+        { kind: 'event', text: '투표 요청을 받으면' },
+        { kind: 'event', text: '투표 응답을 받으면' },
+        { kind: 'event', text: '하트비트 타이머가 끝나면' },
+        { kind: 'event', text: '클라이언트 요청을 받으면' },
+        { kind: 'event', text: '로그 복제 요청을 받으면' },
+        { kind: 'event', text: '로그 복제 응답을 받으면' },
+        { kind: 'method', text: '모든 피어에게 로그를 보낸다' },
+        { kind: 'method', text: '커밋된 항목을 상태 기계에 적용한다' },
+        { kind: 'method', text: '팔로워로 물러난다' },
+      ],
+      en: [
+        { kind: 'event', text: 'When the election timer runs out' },
+        { kind: 'event', text: 'When a vote request arrives' },
+        { kind: 'event', text: 'When a vote reply arrives' },
+        { kind: 'event', text: 'When the heartbeat timer runs out' },
+        { kind: 'event', text: 'When a client request arrives' },
+        { kind: 'event', text: 'When a log replication request arrives' },
+        { kind: 'event', text: 'When a log replication reply arrives' },
+        { kind: 'method', text: 'Send the log to every peer' },
+        { kind: 'method', text: 'Apply committed entries to the state machine' },
+        { kind: 'method', text: 'Step down to follower' },
+      ],
+    },
     blocks: 74,
     spec: raft,
   },
@@ -151,6 +195,37 @@ function* seqBlocks(seq: Seq): Generator<Block> {
 
 function allBlocks(doc: Doc): Block[] {
   return doc.content.diagrams.flatMap((diagram) => [...seqBlocks(diagram.body)]);
+}
+
+// The document without its words: each diagram's id and kind, each block's id and kind in walk
+// order, and where the fold regions are. Both languages of an example must give the same.
+function docShape(doc: Doc): string[] {
+  const folds = (seq: Seq): string[] => [
+    ...seq.folds.map((fold) => `${fold.id}:${fold.first}-${fold.last}`),
+    ...seq.blocks.flatMap((block) => {
+      switch (block.kind) {
+        case 'process':
+        case 'call':
+          return [];
+        case 'if':
+          return [...folds(block.yes.body), ...folds(block.no.body)];
+        case 'case':
+          return [
+            ...block.arms.flatMap((arm) => folds(arm.body)),
+            ...(block.otherwise === null ? [] : folds(block.otherwise.body)),
+          ];
+        case 'while':
+        case 'doWhile':
+        case 'for':
+          return folds(block.body);
+      }
+    }),
+  ];
+  return doc.content.diagrams.flatMap((diagram) => [
+    `${diagram.id}:${diagram.head?.kind ?? 'none'}`,
+    ...[...seqBlocks(diagram.body)].map((block) => `${block.id}:${block.kind}`),
+    ...folds(diagram.body),
+  ]);
 }
 
 // Every string of the document, in one walk order: header, then each sequence's blocks
@@ -293,12 +368,29 @@ describe('examples', () => {
     });
 
     it('T-0325 · R-EDIT-25: has the diagrams, headers and blocks of the prototype', () => {
-      expect(doc.content.diagrams.map((diagram) => diagram.head)).toEqual(entry.heads);
-      expect(allBlocks(doc)).toHaveLength(entry.blocks);
+      for (const locale of locales) {
+        const built = example.build({ headStyle: 'title', locale });
+        expect(built.content.diagrams.map((diagram) => diagram.head)).toEqual(entry.heads[locale]);
+        expect(allBlocks(built)).toHaveLength(entry.blocks);
+      }
     });
 
     it('T-0326 · R-EDIT-25: keeps every text of the short notation as written', () => {
-      expect(docTexts(doc)).toEqual(specTexts(entry.spec));
+      for (const locale of locales) {
+        const built = example.build({ headStyle: 'title', locale });
+        expect(docTexts(built)).toEqual(specTexts(entry.spec[locale]));
+      }
+    });
+
+    it('T-0837 · R-EDIT-25: an English screen opens it in English, with no Hangul in any text', () => {
+      const texts = docTexts(doc);
+      expect(texts.filter((text) => hangul.test(text))).toEqual([]);
+    });
+
+    it('T-0838 · R-EDIT-25: a Korean screen opens the Korean one, with the blocks of the English one in the same places', () => {
+      const korean = example.build({ headStyle: 'title', locale: 'ko' });
+      expect(docTexts(korean)).toEqual(specTexts(entry.spec.ko));
+      expect(docShape(korean)).toEqual(docShape(doc));
     });
 
     it('T-0327 · R-EDIT-25: links every call block to a Method in the document', () => {

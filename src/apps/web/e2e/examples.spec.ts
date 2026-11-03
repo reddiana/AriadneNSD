@@ -113,3 +113,33 @@ test('T-0286 · BUG-05: Escape closes a menu opened with the mouse', async ({ pa
   await page.keyboard.press('Escape');
   await expect(menu).toHaveCount(0);
 });
+
+test('T-0835 · R-EDIT-25: an English screen opens the vending machine in English', async ({
+  page,
+}) => {
+  await openApp(page);
+  await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();
+  await page.locator(`${modal} [data-example="vending-machine"]`).click();
+  await expect(page).toHaveTitle('Vending machine.ns.svg – AriadneNSD');
+  const drawing = page.locator('.ans-canvas svg');
+  await expect(drawing.locator('text', { hasText: 'When a coin is inserted' })).toBeVisible();
+  expect(await drawing.locator('text').allTextContents()).not.toContainEqual(
+    expect.stringMatching(/[가-힯]/u),
+  );
+});
+
+test.describe('Korean screen', () => {
+  test.use({ locale: 'ko-KR' });
+
+  test('T-0836 · R-EDIT-25: a Korean screen opens the vending machine in Korean', async ({
+    page,
+  }) => {
+    await openApp(page);
+    await page.getByRole('toolbar').getByRole('button', { name: '예제' }).click();
+    await page.locator(`${modal} [data-example="vending-machine"]`).click();
+    await expect(page).toHaveTitle('자판기.ns.svg – AriadneNSD');
+    await expect(
+      page.locator('.ans-canvas svg text', { hasText: '동전이 들어오면' }).first(),
+    ).toBeVisible();
+  });
+});

@@ -1,12 +1,13 @@
 // The examples a user can open as a new document (R-EDIT-25): from Help › Examples… and the
 // first-visit modal. Moved from the prototype (journal/assets/2026-10-10-ns-prototype.html).
-// Block text stays as written whatever the UI language; only the name and the summary are
-// translated.
+// Each opens in the screen language: the name, the summary and, where the example has words in
+// it (sentences, comments, messages, header names), the block text too. Code stays code.
+// Maintainer, 2026-11-03: "영어판은 영어가 나와야지요".
 
-import type { Doc, Settings } from '@ariadne-nsd/core';
+import type { Doc, Locale, Settings } from '@ariadne-nsd/core';
 
 import { binarySearch } from './binary-search';
-import type { DiagramSpec } from './build-example';
+import type { DiagramSpec, LocalizedSpec } from './build-example';
 import { buildExample } from './build-example';
 import { dijkstra } from './dijkstra';
 import { elevator } from './elevator';
@@ -33,18 +34,32 @@ export type ExampleInfo = {
   readonly what: ExampleText;
   /**
    * Builds a new document with the header shape the user chose last (UX HS1), drawn in the
-   * opener's screen language like any new document (ADR-0041).
+   * opener's screen language like any new document (ADR-0041). The locale also picks the
+   * example's text: an English screen gets the English example.
    */
   readonly build: (settings: Pick<Settings, 'headStyle' | 'locale'>) => Doc;
 };
+
+/** The diagrams of an example for one screen language. Code-only examples have one version. */
+function diagramsFor(
+  diagrams: ReadonlyArray<DiagramSpec> | LocalizedSpec,
+  locale: Locale,
+): ReadonlyArray<DiagramSpec> {
+  return 'en' in diagrams ? diagrams[locale] : diagrams;
+}
 
 function example(
   id: string,
   name: ExampleText,
   what: ExampleText,
-  diagrams: ReadonlyArray<DiagramSpec>,
+  diagrams: ReadonlyArray<DiagramSpec> | LocalizedSpec,
 ): ExampleInfo {
-  return { id, name, what, build: (settings) => buildExample(diagrams, settings) };
+  return {
+    id,
+    name,
+    what,
+    build: (settings) => buildExample(diagramsFor(diagrams, settings.locale), settings),
+  };
 }
 
 /** The examples, in the order the picker shows them. */
@@ -64,7 +79,7 @@ export const examples: ReadonlyArray<ExampleInfo> = [
   example(
     'uart-case',
     { ko: 'UART 명령', en: 'UART commands' },
-    { ko: '갈래 넷의 Case', en: 'Case with four branches' },
+    { ko: '분기 넷의 Case', en: 'Case with four branches' },
     uartCase,
   ),
   example(
@@ -100,7 +115,7 @@ export const examples: ReadonlyArray<ExampleInfo> = [
   example(
     'elevator',
     { ko: '엘리베이터', en: 'Elevator' },
-    { ko: '갈래 넷 · 호출 둘 · 가장 넓음', en: 'Four branches · two calls · the widest' },
+    { ko: '분기 넷 · 호출 둘 · 가장 넓음', en: 'Four branches · two calls · the widest' },
     elevator,
   ),
   example(

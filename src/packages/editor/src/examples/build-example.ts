@@ -12,6 +12,7 @@ import type {
   Head,
   Id,
   IdGenerator,
+  Locale,
   Seq,
   Settings,
 } from '@ariadne-nsd/core';
@@ -35,6 +36,12 @@ export type DiagramSpec = {
   readonly head: Head;
   readonly body: ReadonlyArray<BlockSpec>;
 };
+
+/**
+ * An example written once per screen language: an English screen opens the English one, a Korean
+ * screen the Korean one. Both have the same blocks in the same places; only the text differs.
+ */
+export type LocalizedSpec = Readonly<Record<Locale, ReadonlyArray<DiagramSpec>>>;
 
 /** An Event diagram: started from outside, cannot be called. */
 export function event(text: string, body: ReadonlyArray<BlockSpec>): DiagramSpec {
