@@ -3,7 +3,9 @@
 // screen.
 import { expect, test } from '@playwright/test';
 
-test('BUG-03 · QA-19: the editor appears when indexedDB.open never answers', async ({ page }) => {
+test('T-0278 · BUG-03 · QA-19: the editor appears when indexedDB.open never answers', async ({
+  page,
+}) => {
   await page.addInitScript(() => {
     // An open request that fires no event at all.
     indexedDB.open = () => ({}) as IDBOpenDBRequest;
@@ -13,7 +15,9 @@ test('BUG-03 · QA-19: the editor appears when indexedDB.open never answers', as
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
 });
 
-test('BUG-03 · QA-19: a failure at start is shown on the boot screen', async ({ page }) => {
+test('T-0279 · BUG-03 · QA-19: a failure at start is shown on the boot screen', async ({
+  page,
+}) => {
   await page.addInitScript(() => {
     Object.defineProperty(window, 'crypto', { value: {} });
   });

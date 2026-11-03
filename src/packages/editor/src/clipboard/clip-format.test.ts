@@ -10,20 +10,20 @@ const clip = seq([
 ]);
 
 describe('clipboard formats (03-editor 3.3)', () => {
-  it('R-EDIT-10: copied blocks are indented lines for other programs', () => {
+  it('T-0200 · R-EDIT-10: copied blocks are indented lines for other programs', () => {
     expect(clipToText(clip, 'en')).toBe(
       ['read n', 'n > 0', '    true:', '        x', '    no:', 'running', '    tick'].join('\n'),
     );
     expect(clipToText(clip, 'ko').split('\n')[2]).toBe('    참:');
   });
 
-  it('R-EDIT-10: the model JSON reads back as the same blocks', () => {
+  it('T-0201 · R-EDIT-10: the model JSON reads back as the same blocks', () => {
     expect(clipFromJson(clipToJson(clip))).toEqual(clip);
     expect(clipFromJson('{"format":"nope"}')).toBeNull();
     expect(clipFromJson('not json')).toBeNull();
   });
 
-  it('AT-12: text from elsewhere becomes one process block per line', () => {
+  it('T-0202 · AT-12: text from elsewhere becomes one process block per line', () => {
     expect(clipFromText('first\r\n    second\n\n  ')).toEqual(
       seq([proc('b1', 'first'), proc('b2', 'second')]),
     );

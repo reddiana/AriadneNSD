@@ -37,7 +37,7 @@ beforeAll(async () => {
 });
 
 describe('subsetToWoff', () => {
-  it('R-FMT-03: the same code points give the same bytes, in any order and with duplicates', () => {
+  it('T-0502 · R-FMT-03: the same code points give the same bytes, in any order and with duplicates', () => {
     const first = subsetter.subsetToWoff(ttf, SAMPLE);
     const second = subsetter.subsetToWoff(ttf, SAMPLE);
     const shuffled = subsetter.subsetToWoff(ttf, [...SAMPLE].reverse().concat(SAMPLE));
@@ -45,7 +45,7 @@ describe('subsetToWoff', () => {
     expect(shuffled).toEqual(first);
   });
 
-  it('ADR-0039: writes a WOFF 1.0 header with no metadata or private block', () => {
+  it('T-0503: ADR-0039: writes a WOFF 1.0 header with no metadata or private block', () => {
     const woff = subsetter.subsetToWoff(ttf, SAMPLE);
     const header = readWoffHeader(woff);
     expect(header.signature).toBe('wOFF');
@@ -57,7 +57,7 @@ describe('subsetToWoff', () => {
     ]);
   });
 
-  it('ADR-0039: the table directory is sorted, aligned and decodes to the subset TTF', () => {
+  it('T-0504: ADR-0039: the table directory is sorted, aligned and decodes to the subset TTF', () => {
     const woff = subsetter.subsetToWoff(ttf, SAMPLE);
     const header = readWoffHeader(woff);
     const entries = readWoffDirectory(woff);
@@ -85,7 +85,7 @@ describe('subsetToWoff', () => {
     expect(header.totalSfntSize).toBe(sfntSize);
   });
 
-  it('ADR-0026: the subset maps exactly the requested characters the font has', () => {
+  it('T-0505: ADR-0026: the subset maps exactly the requested characters the font has', () => {
     const tables = decodeWoffTables(
       subsetter.subsetToWoff(ttf, [...SAMPLE, 0x6f22 /* 漢: not in the font */]),
     );
@@ -96,7 +96,7 @@ describe('subsetToWoff', () => {
     );
   });
 
-  it('02-layout 2.2: no hinting and no layout tables, so nothing kerns or ligates', () => {
+  it('T-0506: 02-layout 2.2: no hinting and no layout tables, so nothing kerns or ligates', () => {
     const tags = readWoffDirectory(subsetter.subsetToWoff(ttf, SAMPLE)).map((entry) => entry.tag);
     for (const tag of ['GSUB', 'GPOS', 'GDEF', 'kern', 'fpgm', 'prep', 'cvt ', 'hdmx']) {
       expect(tags).not.toContain(tag);
@@ -106,7 +106,7 @@ describe('subsetToWoff', () => {
     );
   });
 
-  it('ADR-0034: keeps the family name "AriadneNSD Mono" (D2Coding is an OFL Reserved Font Name)', () => {
+  it('T-0507: ADR-0034: keeps the family name "AriadneNSD Mono" (D2Coding is an OFL Reserved Font Name)', () => {
     const name =
       decodeWoffTables(subsetter.subsetToWoff(ttf, SAMPLE)).get('name') ?? new Uint8Array();
     expect(readName(name, 1)).toBe(blockFont.familyName);
@@ -114,7 +114,7 @@ describe('subsetToWoff', () => {
     expect(readName(name, 13)).toContain('SIL Open Font License');
   });
 
-  it('02-layout 2.2: Hangul 300 + ASCII is about 29 KB as WOFF', () => {
+  it('T-0508: 02-layout 2.2: Hangul 300 + ASCII is about 29 KB as WOFF', () => {
     const woff = subsetter.subsetToWoff(ttf, [...ASCII, ...HANGUL_300]);
     const ttfSize = subsetter.subsetTtf(ttf, [...ASCII, ...HANGUL_300]).byteLength;
     // Measured on 2026-11-01: TTF 49.9 KB, WOFF 28.8 KB.
@@ -123,7 +123,7 @@ describe('subsetToWoff', () => {
     expect(woff.byteLength).toBeLessThan(ttfSize * 0.7);
   });
 
-  it('02-layout 2.2: ASCII only is about 7 KB as WOFF', () => {
+  it('T-0509: 02-layout 2.2: ASCII only is about 7 KB as WOFF', () => {
     const woff = subsetter.subsetToWoff(ttf, ASCII);
     expect(woff.byteLength).toBeGreaterThan(4 * 1024);
     expect(woff.byteLength).toBeLessThan(10 * 1024);
@@ -133,14 +133,14 @@ describe('subsetToWoff', () => {
 describe('pinned output', () => {
   // Fails when harfbuzzjs, fflate or the zlib settings change the bytes of saved files.
   // That may be fine, but it must be a deliberate change (ADR-0039): update the hash then.
-  it('ADR-0039: the sample subset has the recorded SHA-256', () => {
+  it('T-0510: ADR-0039: the sample subset has the recorded SHA-256', () => {
     const woff = subsetter.subsetToWoff(ttf, SAMPLE);
     expect(createHash('sha256').update(woff).digest('hex')).toBe(
       'c2ae21c9ac44a2afbba7587fb2d8e96871fc16a1f9a2af591e6e2fdb0f3f6c26',
     );
   });
 
-  it('ADR-0039: encodeWoff of a subset TTF matches subsetToWoff', () => {
+  it('T-0511: ADR-0039: encodeWoff of a subset TTF matches subsetToWoff', () => {
     expect(encodeWoff(subsetter.subsetTtf(ttf, SAMPLE))).toEqual(
       subsetter.subsetToWoff(ttf, SAMPLE),
     );

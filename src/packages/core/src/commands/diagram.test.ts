@@ -28,14 +28,14 @@ import {
 } from './test-support';
 
 describe('editHead', () => {
-  it('R-BLK-10: sets the text of an Event header', () => {
+  it('T-0102 · R-BLK-10: sets the text of an Event header', () => {
     const content = contentWith(diagram('d1', event('Tick'), [proc('b1')]));
     const result = runOk(editHead, content, { diagram: 'd1', text: 'Timer 1 ms' });
     expect(diagramOf(result.content, 'd1').head).toEqual(event('Timer 1 ms'));
     expect(result.touched).toEqual(['d1']);
   });
 
-  it('R-BLK-11: renaming a Method leaves its call blocks pointing at it by id', () => {
+  it('T-0103 · R-BLK-11: renaming a Method leaves its call blocks pointing at it by id', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'x')]),
       diagram('d2', method('sort(a)'), [proc('b2')]),
@@ -45,13 +45,13 @@ describe('editHead', () => {
     expect(result.touched).toEqual(['d2']);
   });
 
-  it('01-model 4: the same text leaves the content as it is', () => {
+  it('T-0104: 01-model 4: the same text leaves the content as it is', () => {
     const content = contentWith(diagram('d1', event('Tick'), [proc('b1')]));
     const result = runOk(editHead, content, { diagram: 'd1', text: 'Tick' });
     expect(result.content).toBe(content);
   });
 
-  it('R-BLK-11: refuses an empty name, for an Event and for a Method without a name', () => {
+  it('T-0105 · R-BLK-11: refuses an empty name, for an Event and for a Method without a name', () => {
     const content = contentWith(
       diagram('d1', event('Tick'), [proc('b1')]),
       diagram('d2', method('sort(a)'), [proc('b2')]),
@@ -60,7 +60,7 @@ describe('editHead', () => {
     expectRefused(editHead, content, { diagram: 'd2', text: ' (a, b)' }, 'emptyHeadName');
   });
 
-  it('R-BLK-11: refuses a name another header has, Events and Methods together', () => {
+  it('T-0106 · R-BLK-11: refuses a name another header has, Events and Methods together', () => {
     const content = contentWith(
       diagram('d1', event('Tick'), [proc('b1')]),
       diagram('d2', method('sort(a)'), [proc('b2')]),
@@ -77,7 +77,7 @@ describe('editHead', () => {
     expectRefused(editHead, content, { diagram: 'd1', text: 'swap ' }, 'duplicateHeadName');
   });
 
-  it('R-BLK-11: names are case sensitive, and a header may keep its own name', () => {
+  it('T-0107 · R-BLK-11: names are case sensitive, and a header may keep its own name', () => {
     const content = contentWith(
       diagram('d1', event('Tick'), [proc('b1')]),
       diagram('d2', method('sort(a)'), [proc('b2')]),
@@ -87,7 +87,7 @@ describe('editHead', () => {
     expect(diagramOf(own.content, 'd2').head).toEqual(method('sort(a, n)'));
   });
 
-  it('R-BLK-07: removing the parentheses clears the arguments of the call blocks', () => {
+  it('T-0108 · R-BLK-07: removing the parentheses clears the arguments of the call blocks', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'x', 'r'), call('b2', 'd3', 'y')]),
       diagram('d2', method('sort(a)'), [proc('b3')]),
@@ -99,7 +99,7 @@ describe('editHead', () => {
     expect(result.touched).toEqual(['d2', 'b1']);
   });
 
-  it('R-BLK-07: adding parentheses fills empty arguments with the text inside them', () => {
+  it('T-0109 · R-BLK-07: adding parentheses fills empty arguments with the text inside them', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2'), whileBlock('b2', [call('b3', 'd2')])]),
       diagram('d2', method('reset'), [proc('b4')]),
@@ -110,7 +110,7 @@ describe('editHead', () => {
     expect(result.touched).toEqual(['d2', 'b1', 'b3']);
   });
 
-  it('R-BLK-07: written arguments stay when the parameters change', () => {
+  it('T-0110 · R-BLK-07: written arguments stay when the parameters change', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'v, 0, n')]),
       diagram('d2', method('sort(a, lo, hi)'), [proc('b2')]),
@@ -119,7 +119,7 @@ describe('editHead', () => {
     expect(blockOf(result.content, 'b1')).toBe(blockOf(content, 'b1'));
   });
 
-  it('refuses a diagram without a header, and an unknown diagram', () => {
+  it('T-0111: refuses a diagram without a header, and an unknown diagram', () => {
     const content = contentOf([proc('b1')]);
     expectRefused(editHead, content, { diagram: 'd1', text: 'Tick' }, 'noHead');
     expectRefused(editHead, content, { diagram: 'd9', text: 'Tick' }, 'notFound');
@@ -127,7 +127,7 @@ describe('editHead', () => {
 });
 
 describe('setHead', () => {
-  it('R-BLK-10: gives a diagram without a header an Event header with the default name', () => {
+  it('T-0112 · R-BLK-10: gives a diagram without a header an Event header with the default name', () => {
     const content = contentWith(
       diagram('d1', null, [proc('b1')]),
       diagram('d2', event('Event 1'), [proc('b2')]),
@@ -137,7 +137,7 @@ describe('setHead', () => {
     expect(result.touched).toEqual(['d1']);
   });
 
-  it('R-BLK-11: gives a Method header; the default name skips names in use', () => {
+  it('T-0113 · R-BLK-11: gives a Method header; the default name skips names in use', () => {
     const content = contentWith(
       diagram('d1', null, [proc('b1')]),
       diagram('d2', method('Method 1(a)'), [proc('b2')]),
@@ -147,7 +147,7 @@ describe('setHead', () => {
     expect(diagramOf(result.content, 'd1').head).toEqual(method('Method 3'));
   });
 
-  it('R-BLK-11: changes an Event to a Method and back, keeping the text', () => {
+  it('T-0114 · R-BLK-11: changes an Event to a Method and back, keeping the text', () => {
     const content = contentWith(diagram('d1', event('Tick'), [proc('b1')]));
     const toMethod = runOk(setHead, content, { diagram: 'd1', kind: 'method' });
     expect(diagramOf(toMethod.content, 'd1').head).toEqual(method('Tick'));
@@ -155,7 +155,7 @@ describe('setHead', () => {
     expect(diagramOf(back.content, 'd1').head).toEqual(event('Tick'));
   });
 
-  it('R-BLK-11: a Method that call blocks call cannot become an Event', () => {
+  it('T-0115 · R-BLK-11: a Method that call blocks call cannot become an Event', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2')]),
       diagram('d2', method('sort'), [proc('b2')]),
@@ -163,7 +163,7 @@ describe('setHead', () => {
     expectRefused(setHead, content, { diagram: 'd2', kind: 'event' }, 'methodHasCallers');
   });
 
-  it('R-BLK-11: changing the kind refuses a text that reads as a clashing or empty name', () => {
+  it('T-0116 · R-BLK-11: changing the kind refuses a text that reads as a clashing or empty name', () => {
     const content = contentWith(
       diagram('d1', event('sort(x)'), [proc('b1')]),
       diagram('d2', method('sort'), [proc('b2')]),
@@ -173,7 +173,7 @@ describe('setHead', () => {
     expectRefused(setHead, content, { diagram: 'd3', kind: 'method' }, 'emptyHeadName');
   });
 
-  it('R-BLK-07: removing a Method header turns its call blocks into lost ones', () => {
+  it('T-0117 · R-BLK-07: removing a Method header turns its call blocks into lost ones', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'v', 'r')]),
       diagram('d2', method(' sort (a)'), [proc('b2')]),
@@ -186,7 +186,7 @@ describe('setHead', () => {
     expect(result.touched).toEqual(['d2', 'b1']);
   });
 
-  it('invariant 7: a diagram left with neither header nor content disappears', () => {
+  it('T-0118: invariant 7: a diagram left with neither header nor content disappears', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [proc('b1')]),
       diagram('d2', method('Method 1'), [empty('b2')]),
@@ -195,13 +195,13 @@ describe('setHead', () => {
     expect(diagramIds(result.content)).toEqual(['d1']);
   });
 
-  it('invariant 7: the only diagram stays even with neither header nor content', () => {
+  it('T-0119: invariant 7: the only diagram stays even with neither header nor content', () => {
     const content = contentWith(diagram('d1', event('Event 1'), [empty('b1')]));
     const result = runOk(setHead, content, { diagram: 'd1', kind: null });
     expect(diagramIds(result.content)).toEqual(['d1']);
   });
 
-  it('01-model 4: the same kind leaves the content as it is', () => {
+  it('T-0120: 01-model 4: the same kind leaves the content as it is', () => {
     const content = contentWith(diagram('d1', event('Tick'), [proc('b1')]));
     expect(runOk(setHead, content, { diagram: 'd1', kind: 'event' }).content).toBe(content);
     const plain = contentOf([proc('b1')]);
@@ -211,7 +211,7 @@ describe('setHead', () => {
 });
 
 describe('newDiagram', () => {
-  it('R-EDIT-18: a new Method goes after the last Method', () => {
+  it('T-0121 · R-EDIT-18: a new Method goes after the last Method', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [proc('b1')]),
       diagram('d2', method('Method 1'), [proc('b2')]),
@@ -225,7 +225,7 @@ describe('newDiagram', () => {
     expect(result.touched).toEqual(['d4']);
   });
 
-  it('R-EDIT-18: a new Event goes after the last Event or diagram without a header', () => {
+  it('T-0122 · R-EDIT-18: a new Event goes after the last Event or diagram without a header', () => {
     const content = contentWith(
       diagram('d1', null, [proc('b1')]),
       diagram('d2', method('sort'), [proc('b2')]),
@@ -237,20 +237,20 @@ describe('newDiagram', () => {
     expect(diagramOf(result.content, 'd5').head).toEqual(event('Event 1'));
   });
 
-  it('R-EDIT-18: the first of its kind goes first (Event) or last (Method)', () => {
+  it('T-0123 · R-EDIT-18: the first of its kind goes first (Event) or last (Method)', () => {
     const methods = contentWith(diagram('d1', method('sort'), [proc('b1')]));
     expect(diagramIds(runOk(newDiagram, methods, { kind: 'event' }).content)).toEqual(['d2', 'd1']);
     const events = contentWith(diagram('d1', event('Main'), [proc('b1')]));
     expect(diagramIds(runOk(newDiagram, events, { kind: 'method' }).content)).toEqual(['d1', 'd2']);
   });
 
-  it('invariant 7: the blank diagram of a new document goes when another diagram comes', () => {
+  it('T-0124: invariant 7: the blank diagram of a new document goes when another diagram comes', () => {
     const content = contentOf([empty('b1')]);
     const result = runOk(newDiagram, content, { kind: 'method' });
     expect(diagramIds(result.content)).toEqual(['d2']);
   });
 
-  it('01-model 1.7: takes its ids from the given generator', () => {
+  it('T-0125: 01-model 1.7: takes its ids from the given generator', () => {
     const content = contentOf([proc('b1')]);
     const ids = createIdGenerator(content, ['d7', 'b7']);
     const result = runOk(newDiagram, content, { kind: 'event', ids });
@@ -259,7 +259,7 @@ describe('newDiagram', () => {
 });
 
 describe('deleteDiagram', () => {
-  it('R-EDIT-18: deletes a diagram; the call blocks calling it become lost', () => {
+  it('T-0126 · R-EDIT-18: deletes a diagram; the call blocks calling it become lost', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'v'), call('b2', 'd3')]),
       diagram('d2', method('sort(a)'), [call('b3', 'd2', 'a')]),
@@ -274,7 +274,7 @@ describe('deleteDiagram', () => {
     expect(result.touched).toEqual(['b1']);
   });
 
-  it('invariant 1: the only diagram cannot be deleted', () => {
+  it('T-0127: invariant 1: the only diagram cannot be deleted', () => {
     const content = contentWith(diagram('d1', event('Main'), [proc('b1')]));
     expectRefused(deleteDiagram, content, { diagram: 'd1' }, 'lastDiagram');
     expectRefused(deleteDiagram, content, { diagram: 'd9' }, 'notFound');
@@ -289,7 +289,7 @@ describe('moveDiagram', () => {
     diagram('d4', method('swap'), [proc('b4')]),
   );
 
-  it('R-EDIT-18: swaps with the previous diagram of its kind, skipping the others', () => {
+  it('T-0128 · R-EDIT-18: swaps with the previous diagram of its kind, skipping the others', () => {
     const up = runOk(moveDiagram, content, { diagram: 'd4', direction: 'up' });
     expect(diagramIds(up.content)).toEqual(['d1', 'd4', 'd3', 'd2']);
     expect(up.touched).toEqual(['d4']);
@@ -297,7 +297,7 @@ describe('moveDiagram', () => {
     expect(diagramIds(down.content)).toEqual(['d3', 'd2', 'd1', 'd4']);
   });
 
-  it('R-EDIT-18: refuses at either end of its kind', () => {
+  it('T-0129 · R-EDIT-18: refuses at either end of its kind', () => {
     expectRefused(moveDiagram, content, { diagram: 'd2', direction: 'up' }, 'atTop');
     expectRefused(moveDiagram, content, { diagram: 'd3', direction: 'down' }, 'atBottom');
     expectRefused(moveDiagram, content, { diagram: 'd9', direction: 'up' }, 'notFound');
@@ -305,7 +305,7 @@ describe('moveDiagram', () => {
 });
 
 describe('setSettings', () => {
-  it('R-LAY-10: changes the header shape', () => {
+  it('T-0130 · R-LAY-10: changes the header shape', () => {
     const content = contentOf([proc('b1')]);
     const result = runOk(setSettings, content, { headStyle: 'shape' });
     expect(result.content.settings).toEqual({
@@ -317,7 +317,7 @@ describe('setSettings', () => {
     expect(result.touched).toEqual([]);
   });
 
-  it('01-model 4: the same settings leave the content as it is', () => {
+  it('T-0131: 01-model 4: the same settings leave the content as it is', () => {
     const content = contentOf([proc('b1')]);
     expect(runOk(setSettings, content, { headStyle: 'title' }).content).toBe(content);
     expect(runOk(setSettings, content, {}).content).toBe(content);
@@ -325,7 +325,7 @@ describe('setSettings', () => {
 });
 
 describe('defaultHeadName', () => {
-  it('R-BLK-10: is "Event n" or "Method n" with the smallest unused n', () => {
+  it('T-0132 · R-BLK-10: is "Event n" or "Method n" with the smallest unused n', () => {
     const content = contentWith(
       diagram('d1', event('Event 1'), [proc('b1')]),
       diagram('d2', method('Event 2(x)'), [proc('b2')]),

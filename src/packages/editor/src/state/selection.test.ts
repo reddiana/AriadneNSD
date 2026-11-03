@@ -24,18 +24,18 @@ const content = contentOf(
 const index = indexDoc(content);
 
 describe('selection (03-editor 2)', () => {
-  it('R-EDIT-05 (ADR-0008): Shift+click deeper widens to the nearest common sequence', () => {
+  it('T-0264 · R-EDIT-05 (ADR-0008): Shift+click deeper widens to the nearest common sequence', () => {
     const widened = extendTo(index, selectBlock(index, 'a'), 'c');
     expect(selectedBlocks(index, widened)).toEqual(['a', 'w1']);
     const across = extendTo(index, selectBlock(index, 'e'), 'f');
     expect(selectedBlocks(index, across)).toEqual(['b1']);
   });
 
-  it('R-EDIT-05: Shift+click in another diagram selects only that block', () => {
+  it('T-0265 · R-EDIT-05: Shift+click in another diagram selects only that block', () => {
     expect(extendTo(index, selectBlock(index, 'a'), 'z')).toEqual(selectBlock(index, 'z'));
   });
 
-  it('R-EDIT-05: Shift+Down stays under one parent', () => {
+  it('T-0266 · R-EDIT-05: Shift+Down stays under one parent', () => {
     const one = extendBy(index, selectBlock(index, 'c'), 'down');
     expect(selectedBlocks(index, one)).toEqual(['c', 'd']);
     expect(extendBy(index, one, 'down')).toBeNull();
@@ -45,14 +45,14 @@ describe('selection (03-editor 2)', () => {
     ]);
   });
 
-  it('03-editor 2: a selection whose ids are gone is dropped', () => {
+  it('T-0267: 03-editor 2: a selection whose ids are gone is dropped', () => {
     const later = indexDoc(contentOf([proc('a')]));
     expect(validSelection(later, selectBlock(index, 'c'))).toBeNull();
     expect(validSelection(later, selectRange(index, 'a', 'w1'))).toEqual(selectBlock(later, 'a'));
     expect(validSelection(later, { kind: 'branchLabel', branch: 'r1' })).toBeNull();
   });
 
-  it('turns a block range into a command target', () => {
+  it('T-0268: turns a block range into a command target', () => {
     expect(targetOf(selectRange(index, 'w1', 'a'))).toEqual({
       kind: 'blocks',
       first: 'w1',

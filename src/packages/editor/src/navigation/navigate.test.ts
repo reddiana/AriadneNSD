@@ -48,14 +48,14 @@ const step = (direction: 'up' | 'down' | 'left' | 'right'): Navigation => ({
 });
 
 describe('keyboard navigation (03-editor 2.2)', () => {
-  it('R-EDIT-03: Down goes in drawn order but never into a side branch', () => {
+  it('T-0252 · R-EDIT-03: Down goes in drawn order but never into a side branch', () => {
     expect(from('a', step('down'))).toBe('b1');
     expect(from('b1', step('down'))).toBe('c');
     expect(from('d', step('down'))).toBe('f');
     expect(from('e', step('down'))).toBe('f');
   });
 
-  it('UX ND1: Down with nothing below selects the block holding this one; at the top, it stays', () => {
+  it('T-0253 · UX ND1: Down with nothing below selects the block holding this one; at the top, it stays', () => {
     expect(from('g', step('down'))).toBe('w1');
     // From the While, Down goes into its body again, as from any control block.
     expect(from('w1', step('down'))).toBe('g');
@@ -64,18 +64,18 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     expect(last.kind).toBe('stay');
   });
 
-  it('R-EDIT-03 (UX Q10): Up from the first block of a branch selects its label, then the If', () => {
+  it('T-0254 · R-EDIT-03 (UX Q10): Up from the first block of a branch selects its label, then the If', () => {
     expect(from('c', step('up'))).toBe('label:r1');
     const label = navigate(index, { kind: 'branchLabel', branch: 'r1' }, null, step('up'));
     expect(label.kind === 'select' ? label.selection : null).toEqual(selectBlock(index, 'b1'));
   });
 
-  it('R-EDIT-03: Up from below an If lands at the bottom of its leftmost branch', () => {
+  it('T-0255 · R-EDIT-03: Up from below an If lands at the bottom of its leftmost branch', () => {
     expect(from('f', step('up'))).toBe('d');
     expect(from('d', step('up'))).toBe('c');
   });
 
-  it('R-EDIT-03 (UX Q11): Left and Right cross branches, then leave the If', () => {
+  it('T-0256 · R-EDIT-03 (UX Q11): Left and Right cross branches, then leave the If', () => {
     expect(from('c', step('right'))).toBe('e');
     expect(from('d', step('right'))).toBe('e');
     expect(from('e', step('left'))).toBe('c');
@@ -87,7 +87,7 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     expect(from('a', step('left'))).toBe('stay');
   });
 
-  it('R-EDIT-03: on a branch label, Left and Right go to the next label, Down into the branch', () => {
+  it('T-0257 · R-EDIT-03: on a branch label, Left and Right go to the next label, Down into the branch', () => {
     const fromLabel = (direction: 'up' | 'down' | 'left' | 'right') =>
       navigate(index, { kind: 'branchLabel', branch: 'r1' }, null, step(direction));
     expect(fromLabel('right')).toEqual({
@@ -98,25 +98,25 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     expect(fromLabel('down')).toEqual({ kind: 'select', selection: selectBlock(index, 'c') });
   });
 
-  it('R-EDIT-03: Ctrl+Up / Down treat a control block as one block', () => {
+  it('T-0258 · R-EDIT-03: Ctrl+Up / Down treat a control block as one block', () => {
     expect(from('f', { kind: 'unit', direction: 'up' })).toBe('b1');
     expect(from('a', { kind: 'unit', direction: 'down' })).toBe('b1');
     expect(from('d', { kind: 'unit', direction: 'down' })).toBe('f');
     expect(from('c', { kind: 'unit', direction: 'up' })).toBe('b1');
   });
 
-  it('R-EDIT-03: Ctrl+Left / Right go to the side branch, or up and down outside one', () => {
+  it('T-0259 · R-EDIT-03: Ctrl+Left / Right go to the side branch, or up and down outside one', () => {
     expect(from('d', { kind: 'branch', direction: 'right' })).toBe('e');
     expect(from('e', { kind: 'branch', direction: 'right' })).toBe('stay');
     expect(from('a', { kind: 'branch', direction: 'right' })).toBe('b1');
   });
 
-  it('R-EDIT-03: gg and G select the first and last block of the diagram', () => {
+  it('T-0260 · R-EDIT-03: gg and G select the first and last block of the diagram', () => {
     expect(from('e', { kind: 'edge', end: 'first' })).toBe('a');
     expect(from('a', { kind: 'edge', end: 'last' })).toBe('g');
   });
 
-  it('R-EDIT-03: [[ and ]] go to the neighbouring diagram, if there is one', () => {
+  it('T-0261 · R-EDIT-03: [[ and ]] go to the neighbouring diagram, if there is one', () => {
     expect(from('a', { kind: 'diagram', direction: 'next' })).toBe('noDiagramThere');
     const two = indexDoc(contentOf([proc('a')], [proc('b'), proc('c')]));
     const result = navigate(two, selectBlock(two, 'a'), null, {
@@ -126,7 +126,7 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     expect(result).toEqual({ kind: 'select', selection: selectBlock(two, 'b') });
   });
 
-  it('interaction rules 2: with nothing selected, a move key starts at the last selected block', () => {
+  it('T-0262: interaction rules 2: with nothing selected, a move key starts at the last selected block', () => {
     expect(navigate(index, null, 'e', step('down'))).toEqual({
       kind: 'select',
       selection: selectBlock(index, 'e'),
@@ -137,7 +137,7 @@ describe('keyboard navigation (03-editor 2.2)', () => {
     });
   });
 
-  it('UX CD1: the empty default cell of a Case is reached from the last branch', () => {
+  it('T-0263 · UX CD1: the empty default cell of a Case is reached from the last branch', () => {
     const cases = indexDoc(
       contentOf([
         caseBlock('k1', [arm('r1', '1', [proc('x')]), arm('r2', '2', [proc('y')])], null),

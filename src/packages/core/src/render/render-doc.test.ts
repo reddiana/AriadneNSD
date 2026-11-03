@@ -54,13 +54,13 @@ const sample: Doc = docOf(
 );
 
 describe('render', () => {
-  it('R-FMT-03: the same model gives the same SVG text', () => {
+  it('T-0476 · R-FMT-03: the same model gives the same SVG text', () => {
     const first = renderDoc(sample, ko).svg.content;
     const second = renderDoc(structuredClone(sample), ko).svg.content;
     expect(second).toBe(first);
   });
 
-  it('01-file-format 2: draws into one g.ans-render with the bundled font first', () => {
+  it('T-0477: 01-file-format 2: draws into one g.ans-render with the bundled font first', () => {
     const { svg } = renderDoc(sample, en);
     expect(svg.content.startsWith('<g class="ans-render" transform="translate(.5 .5)"')).toBe(true);
     expect(svg.content).toContain(`font-family="'AriadneNSD Mono', D2Coding,`);
@@ -70,7 +70,7 @@ describe('render', () => {
     expect(svg.paper).toBe('#ffffff');
   });
 
-  it('visual design 3.3: uses the default theme colors', () => {
+  it('T-0478: visual design 3.3: uses the default theme colors', () => {
     const { svg } = renderDoc(sample, en);
     expect(svg.content).toContain('fill="#edf0f5" stroke="#5b77ad"'); // block.process, line.structure
     expect(svg.content).toContain('fill="#f6ebdc"'); // block.branch
@@ -78,14 +78,14 @@ describe('render', () => {
     expect(svg.content).toContain('fill="#4b5567"'); // text.secondary (branch labels)
   });
 
-  it('UX BH1: puts a header-colored halo behind the condition', () => {
+  it('T-0479 · UX BH1: puts a header-colored halo behind the condition', () => {
     const { svg } = renderDoc(sample, en);
     expect(svg.content).toContain(
       'text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke"',
     );
   });
 
-  it('R-LAY-09: draws the ∅ of an empty branch as a shape, not a character', () => {
+  it('T-0480 · R-LAY-09: draws the ∅ of an empty branch as a shape, not a character', () => {
     const { svg, scene } = renderDoc(sample, en);
     expect(svg.content).not.toContain('∅');
     const marks = scene.elements.filter((element) => element.kind === 'circle');
@@ -93,7 +93,7 @@ describe('render', () => {
     expect(marks.map((mark) => mark.blockId)).toEqual(['b7', 'b13']);
   });
 
-  it('UX CD1: draws the empty default cell of a Case without a default', () => {
+  it('T-0481 · UX CD1: draws the empty default cell of a Case without a default', () => {
     const { scene } = renderDoc(
       docOf(caseBlock('b1', 'k', [arm('r2', '1', [process('b3')])], null)),
       en,
@@ -102,7 +102,7 @@ describe('render', () => {
     expect(circles.map((circle) => circle.blockId)).toEqual(['b3', 'b1']);
   });
 
-  it('R-NFR-04: writes the fixed words in the given locale', () => {
+  it('T-0482 · R-NFR-04: writes the fixed words in the given locale', () => {
     const doc = docOf(
       ifBlock('b1', 'c', branch('r2', [process('b3')]), branch('r4', [process('b5')])),
     );
@@ -111,18 +111,18 @@ describe('render', () => {
     expect(renderDoc(doc, en).svg.content).toContain('>true</text>');
   });
 
-  it('escapes XML characters and keeps spaces', () => {
+  it('T-0483: escapes XML characters and keeps spaces', () => {
     const { svg } = renderDoc(docOf(process('b1', '  a < b && c > "d"')), en);
     expect(svg.content).toContain('xml:space="preserve">  a &lt; b &amp;&amp; c &gt; "d"</text>');
   });
 
-  it('every element of the scene names its block (ADR-0030)', () => {
+  it('T-0484: every element of the scene names its block (ADR-0030)', () => {
     const { scene } = renderDoc(sample, en);
     const ids = new Set(scene.elements.map((element) => element.blockId));
     expect([...ids].every((id) => id.startsWith('b'))).toBe(true);
   });
 
-  it('R-FMT-07: lists the used code points, fixed words included', () => {
+  it('T-0485 · R-FMT-07: lists the used code points, fixed words included', () => {
     const doc = docOf(
       ifBlock('b1', 'a<b', branch('r2', [process('b3', '값')]), branch('r4', [process('b5')])),
     );
@@ -133,14 +133,14 @@ describe('render', () => {
     );
   });
 
-  it('formats numbers with at most two decimals and no -0', () => {
+  it('T-0486: formats numbers with at most two decimals and no -0', () => {
     expect(formatNumber(104)).toBe('104');
     expect(formatNumber(80.5)).toBe('80.5');
     expect(formatNumber(1 / 3)).toBe('0.33');
     expect(formatNumber(-0.001)).toBe('0');
   });
 
-  it('QA-07: lays out and renders 500 blocks well inside the 100ms budget', () => {
+  it('T-0487 · QA-07: lays out and renders 500 blocks well inside the 100ms budget', () => {
     const doc = largeDoc(500);
     let best = Number.POSITIVE_INFINITY;
     for (let run = 0; run < 5; run += 1) {
@@ -168,7 +168,7 @@ describe('render: headers (visual design principle 2)', () => {
     },
   });
 
-  it('draws the Event hat as a closed curve in block.event', () => {
+  it('T-0488: draws the Event hat as a closed curve in block.event', () => {
     const { scene, svg } = renderDoc(withHead('shape', 'event'), en);
     const path = scene.elements.find((element) => element.kind === 'path');
     expect(path).toMatchObject({ blockId: 'd1', fill: '#e2efdf' });
@@ -176,13 +176,13 @@ describe('render: headers (visual design principle 2)', () => {
     expect(svg.content).toContain('>tick</text>');
   });
 
-  it('draws the Method arch across the width in block.call', () => {
+  it('T-0489: draws the Method arch across the width in block.call', () => {
     const { scene } = renderDoc(withHead('shape', 'method'), en);
     const path = scene.elements.find((element) => element.kind === 'path');
     expect(path).toMatchObject({ blockId: 'd1', fill: '#ebe7f4' });
   });
 
-  it('draws a header like a title: a muted label, a bold name and a rule, no fill', () => {
+  it('T-0490: draws a header like a title: a muted label, a bold name and a rule, no fill', () => {
     const { scene, svg } = renderDoc(withHead('title', 'method'), en);
     expect(scene.elements.some((element) => element.kind === 'path')).toBe(false);
     expect(svg.content).toContain('fill="#5a6476" xml:space="preserve">Method</text>');
@@ -260,7 +260,7 @@ describe('render: golden files (07-testing 3)', () => {
   ];
 
   for (const [name, doc] of cases) {
-    it(`R-FMT-03: ${name} matches its golden SVG`, async () => {
+    it(`T-0491 · R-FMT-03: ${name} matches its golden SVG`, async () => {
       const svg = standalone(renderDoc(doc, ko).svg);
       await expect(svg).toMatchFileSnapshot(`../../golden/render/${name}.svg`);
     });

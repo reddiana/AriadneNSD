@@ -38,7 +38,7 @@ const minimalJson = JSON.stringify({
 });
 
 describe('SVG file', () => {
-  it('01-file-format 2: assembles the documented structure', () => {
+  it('T-0425: 01-file-format 2: assembles the documented structure', () => {
     const file = assembleSvgFile({
       doc: docWithText('x'),
       drawing,
@@ -68,12 +68,12 @@ describe('SVG file', () => {
     expect(file).not.toContain('\r');
   });
 
-  it('R-FMT-03: the same parts give the same bytes', () => {
+  it('T-0426 · R-FMT-03: the same parts give the same bytes', () => {
     const parts = { doc: docWithText('같은 글'), drawing, fonts: [] };
     expect(assembleSvgFile(parts)).toBe(assembleSvgFile(parts));
   });
 
-  it('R-FMT-04: splits CDATA around ]]> and reads the text back whole', () => {
+  it('T-0427 · R-FMT-04: splits CDATA around ]]> and reads the text back whole', () => {
     const text = 'a]]>b]]>]]>c';
     const file = assembleSvgFile({ doc: docWithText(text), drawing, fonts: [] });
     expect(file).toContain('a]]]]><![CDATA[>b');
@@ -81,7 +81,7 @@ describe('SVG file', () => {
     expect(opened.ok && opened.value.doc).toEqual(docWithText(text));
   });
 
-  it('writes characters XML does not allow as JSON escapes', () => {
+  it('T-0428: writes characters XML does not allow as JSON escapes', () => {
     const text = `x${String.fromCharCode(0xfffe)}y${String.fromCharCode(0xffff, 1, 0xd800)}`;
     const file = assembleSvgFile({ doc: docWithText(text), drawing, fonts: [] });
     for (const code of [0xfffe, 0xffff, 1]) {
@@ -91,7 +91,7 @@ describe('SVG file', () => {
     expect(opened.ok && opened.value.doc).toEqual(docWithText(text));
   });
 
-  it('QA-04: opening and saving again gives the same model part', () => {
+  it('T-0429 · QA-04: opening and saving again gives the same model part', () => {
     const file = assembleSvgFile({
       doc: docWithText('i ← i + 1'),
       kept: { textKind: 'c99' },
@@ -107,7 +107,7 @@ describe('SVG file', () => {
     ).toBe(file);
   });
 
-  it('01-file-format 1: opens a .ns file the same way (the content is the same)', () => {
+  it('T-0430: 01-file-format 1: opens a .ns file the same way (the content is the same)', () => {
     expect(openSvgFile(wrap(model(`<![CDATA[${minimalJson}]]>`))).ok).toBe(true);
     expect(
       openSvgFile(
@@ -116,7 +116,7 @@ describe('SVG file', () => {
     ).toBe(true);
   });
 
-  it('01-file-format 3.2: joins CDATA sections and escaped text in the model element', () => {
+  it('T-0431: 01-file-format 3.2: joins CDATA sections and escaped text in the model element', () => {
     const escaped = minimalJson.replaceAll('<', '&lt;');
     const half = Math.floor(escaped.length / 2);
     const svg = wrap(
@@ -132,7 +132,7 @@ describe('SVG file', () => {
     });
   });
 
-  it('does not take block text that looks like markup for a model element', () => {
+  it('T-0432: does not take block text that looks like markup for a model element', () => {
     const file = assembleSvgFile({
       doc: docWithText('<metadata><ans:document version="1"></ans:document></metadata>'),
       drawing: {
@@ -144,12 +144,12 @@ describe('SVG file', () => {
     expect(openSvgFile(file).ok).toBe(true);
   });
 
-  it('accepts the model namespace with another prefix or declared on the root', () => {
+  it('T-0433: accepts the model namespace with another prefix or declared on the root', () => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:m="https://github.com/reddiana/AriadneNSD"><metadata><m:document version="1">${minimalJson.replaceAll('<', '&lt;')}</m:document></metadata></svg>`;
     expect(openSvgFile(svg).ok).toBe(true);
   });
 
-  it('R-FMT-06: a plain SVG without a model element cannot be edited', () => {
+  it('T-0434 · R-FMT-06: a plain SVG without a model element cannot be edited', () => {
     const cases = [
       '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>',
       wrap('<title>x</title>'),
@@ -164,14 +164,14 @@ describe('SVG file', () => {
     }
   });
 
-  it('ADR-0035: a prototype file is told apart, and cannot be edited', () => {
+  it('T-0435: ADR-0035: a prototype file is told apart, and cannot be edited', () => {
     const prototype = `<svg xmlns="http://www.w3.org/2000/svg"><metadata id="ariadne-nsd-model">{"version":0}</metadata></svg>`;
     expect(openSvgFile(prototype)).toMatchObject({ ok: false, reason: 'prototype' });
     const versionZero = wrap(model('{"format":"ariadne-nsd","version":0}', '0'));
     expect(openSvgFile(versionZero)).toMatchObject({ ok: false, reason: 'prototype' });
   });
 
-  it('QA-02: broken files are refused as damaged, never thrown', () => {
+  it('T-0436 · QA-02: broken files are refused as damaged, never thrown', () => {
     const cases = [
       wrap(model('{ "format": ')),
       wrap(model(`<![CDATA[${minimalJson}]]>`, '2')),
@@ -191,7 +191,7 @@ describe('SVG file', () => {
     }
   });
 
-  it('01-file-format 5: a file of a newer version asks for an update', () => {
+  it('T-0437: 01-file-format 5: a file of a newer version asks for an update', () => {
     const newer = minimalJson.replace('"version":1', '"version":2');
     expect(openSvgFile(wrap(model(newer.replaceAll('<', '&lt;'), '2')))).toMatchObject({
       ok: false,
@@ -199,7 +199,7 @@ describe('SVG file', () => {
     });
   });
 
-  it('finds the model element and its version', () => {
+  it('T-0438: finds the model element and its version', () => {
     expect(findModelElement(wrap(model('<![CDATA[{}]]>')))).toEqual({
       ok: true,
       element: { version: '1', text: '{}' },

@@ -6,7 +6,7 @@ import { canvas, command, openApp } from './support';
 
 const modal = '.ans-backdrop[data-kind="examples"] .ans-modal';
 
-test('R-EDIT-25: a first visit is welcomed with ten examples, a blank document and open file', async ({
+test('T-0280 · R-EDIT-25: a first visit is welcomed with ten examples, a blank document and open file', async ({
   page,
 }) => {
   await page.goto('./');
@@ -27,7 +27,7 @@ test('R-EDIT-25: a first visit is welcomed with ten examples, a blank document a
   await expect(page.locator(modal)).toHaveCount(0);
 });
 
-test('UX EX2: closing the welcome with Esc keeps the new document and does not ask again', async ({
+test('T-0281 · UX EX2: closing the welcome with Esc keeps the new document and does not ask again', async ({
   page,
 }) => {
   await page.goto('./');
@@ -41,7 +41,9 @@ test('UX EX2: closing the welcome with Esc keeps the new document and does not a
   await expect(page.locator(modal)).toHaveCount(0);
 });
 
-test('UX EX3: Help › Examples… opens the same modal with its own words', async ({ page }) => {
+test('T-0282 · UX EX3: Help › Examples… opens the same modal with its own words', async ({
+  page,
+}) => {
   await openApp(page);
   await expect(page.locator(modal)).toHaveCount(0);
   await page.getByRole('button', { name: 'Help' }).click();
@@ -53,7 +55,7 @@ test('UX EX3: Help › Examples… opens the same modal with its own words', asy
   await expect(page).toHaveTitle('Raft consensus.ns.svg – AriadneNSD');
 });
 
-test('UX EX3: the toolbar\'s "Examples" opens the examples modal', async ({ page }) => {
+test('T-0283 · UX EX3: the toolbar\'s "Examples" opens the examples modal', async ({ page }) => {
   await openApp(page);
   await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();
   const dialog = page.locator(modal);
@@ -66,7 +68,7 @@ test('UX EX3: the toolbar\'s "Examples" opens the examples modal', async ({ page
   expect(await command(page, 'file.new').count()).toBeGreaterThan(0);
 });
 
-test("BUG-02: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
+test("T-0284 · BUG-02: the toolbar's dropdown opens over the canvas, not inside the toolbar", async ({
   page,
 }) => {
   await openApp(page);
@@ -82,7 +84,9 @@ test("BUG-02: the toolbar's dropdown opens over the canvas, not inside the toolb
   expect(isOnTop).toBe(true);
 });
 
-test('BUG-01: a diagram larger than the window scrolls in the canvas', async ({ page }) => {
+test('T-0285 · BUG-01: a diagram larger than the window scrolls in the canvas', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1000, height: 600 });
   await openApp(page);
   await page.getByRole('toolbar').getByRole('button', { name: 'Examples' }).click();
@@ -101,7 +105,7 @@ test('BUG-01: a diagram larger than the window scrolls in the canvas', async ({ 
   expect(await area.evaluate((element) => element.scrollTop)).toBe(200);
 });
 
-test('BUG-05: Escape closes a menu opened with the mouse', async ({ page }) => {
+test('T-0286 · BUG-05: Escape closes a menu opened with the mouse', async ({ page }) => {
   await openApp(page);
   await page.getByRole('menubar').getByText('File', { exact: true }).click();
   const menu = page.getByRole('menu', { name: 'File' });

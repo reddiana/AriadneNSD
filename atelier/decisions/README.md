@@ -19,6 +19,7 @@ updated: 2026-10-25
 | [[dr-0012-decisions-in-atelier\|0012]] | 결정의 원본은 모두 `atelier/`에. 작은 UX 결정은 UX 결정 모음 하나에 | 승인 | |
 | [[dr-0016-requirement-ids\|0016]] | 요구사항은 모두 `R-` ID(`R-WEB-02`)를 받아 표에, ID는 불변, 철회한 것은 변경 기록으로 | 승인 | |
 | [[dr-0017-code-language-and-commits\|0017]] | 코드의 주석은 영어, 커밋은 Conventional Commits에 한국어 본문, 코딩 가이드는 `docs/07-coding-guide` | 승인 | |
+| [[dr-0022-test-ids\|0022]] | 테스트마다 ID(`T-0001`, 불변), 이름 앞의 다른 ID는 "확인하는 것", 테스트 목록은 한국어(번역 표) | 승인 | |
 
 ### 일하는 순서
 
@@ -57,6 +58,6 @@ updated: 2026-10-25
 | [[dr-0011-repo-name\|0011]] | GitHub 저장소 이름은 `AriadneNSD`로 한다 (패키지 · 플러그인 id는 `ariadne-nsd` 그대로) | 승인 | ADR-0028 |
 | [[dr-0019-bundled-font-name\|0019]] | 번들 글꼴의 이름은 `AriadneNSD Mono` (D2Coding은 OFL의 예약 이름, 비례폭은 `AriadneNSD Sans`) | 승인 | |
 
-새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0022부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
+새 결정은 [[dr-0000-template|DR 템플릿]]을 복사해서 다음 번호(0023부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
 상태(ADR · DR 같음): **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**

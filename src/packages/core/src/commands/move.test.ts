@@ -21,7 +21,7 @@ import {
 const range = (first: string, last = first) => ({ kind: 'blocks', first, last }) as const;
 
 describe('move up and down', () => {
-  it('R-EDIT-11: a block trades places with the block below or above', () => {
+  it('T-0156 · R-EDIT-11: a block trades places with the block below or above', () => {
     const content = contentOf([proc('b1'), proc('b2'), proc('b3')]);
     const down = runOk(move, content, { target: range('b1'), direction: 'down' });
     expect(idsIn(down.content, 'd1')).toEqual(['b2', 'b1', 'b3']);
@@ -31,14 +31,14 @@ describe('move up and down', () => {
     expect(up.touched).toEqual(['b2', 'b3']);
   });
 
-  it('R-EDIT-11: a block jumps over a control block and does not enter it', () => {
+  it('T-0157 · R-EDIT-11: a block jumps over a control block and does not enter it', () => {
     const content = contentOf([proc('b1'), whileBlock('b2', [proc('b3')])]);
     const result = runOk(move, content, { target: range('b1'), direction: 'down' });
     expect(idsIn(result.content, 'd1')).toEqual(['b2', 'b1']);
     expect(idsIn(result.content, 'b2')).toEqual(['b3']);
   });
 
-  it('R-EDIT-11: at the end of a sequence, blocks leave the control block holding them', () => {
+  it('T-0158 · R-EDIT-11: at the end of a sequence, blocks leave the control block holding them', () => {
     const content = contentOf([
       proc('b1'),
       ifBlock('b2', branch('r1', [proc('b3'), proc('b4')]), branch('r2', [proc('b5')])),
@@ -52,14 +52,14 @@ describe('move up and down', () => {
     expect(blockOf(up.content, 'b6')).toEqual(empty('b6'));
   });
 
-  it('R-EDIT-11: at the top or bottom of a diagram the move is refused', () => {
+  it('T-0159 · R-EDIT-11: at the top or bottom of a diagram the move is refused', () => {
     const content = contentOf([proc('b1'), proc('b2')]);
     expectRefused(move, content, { target: range('b1'), direction: 'up' }, 'atTop');
     expectRefused(move, content, { target: range('b2'), direction: 'down' }, 'atBottom');
     expectRefused(move, content, { target: range('b9'), direction: 'up' }, 'notFound');
   });
 
-  it('01-model 4.3: a block at the end of a fold region first steps out of it', () => {
+  it('T-0160: 01-model 4.3: a block at the end of a fold region first steps out of it', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2'), proc('b3')], [{ id: 'f1', first: 'b1', last: 'b2' }]),
     );
@@ -70,7 +70,7 @@ describe('move up and down', () => {
     expect(idsIn(again.content, 'd1')).toEqual(['b1', 'b3', 'b2']);
   });
 
-  it('01-model 4.3: a block jumps over a whole fold region next to it', () => {
+  it('T-0161: 01-model 4.3: a block jumps over a whole fold region next to it', () => {
     const content = contentOf(
       seq(
         [proc('b1'), proc('b2'), proc('b3'), proc('b4')],
@@ -84,7 +84,7 @@ describe('move up and down', () => {
     expect(idsIn(up.content, 'd1')).toEqual(['b1', 'b4', 'b2', 'b3']);
   });
 
-  it('01-model 4.3: a whole fold region moves with its name; a region around it keeps its ends', () => {
+  it('T-0162: 01-model 4.3: a whole fold region moves with its name; a region around it keeps its ends', () => {
     const content = contentOf(
       seq(
         [proc('b1'), proc('b2'), proc('b3')],
@@ -102,7 +102,7 @@ describe('move up and down', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b2-b3', 'f2:b1-b1']);
   });
 
-  it('01-model 4.3: blocks leaving a control block stay in the regions that hold it', () => {
+  it('T-0163: 01-model 4.3: blocks leaving a control block stay in the regions that hold it', () => {
     const content = contentOf(
       seq(
         [proc('b1'), whileBlock('b2', [proc('b3'), proc('b4')])],
@@ -124,14 +124,14 @@ describe('move left and right (branches)', () => {
     ),
   ]);
 
-  it('R-EDIT-11: a Case branch trades places with its neighbour, label and all', () => {
+  it('T-0164 · R-EDIT-11: a Case branch trades places with its neighbour, label and all', () => {
     const result = runOk(moveBranch, twoArms, { branch: 'r1', direction: 'right' });
     const moved = blockOf(result.content, 'b1');
     expect(moved.kind === 'case' ? moved.arms.map((a) => a.label) : null).toEqual(['B', 'A']);
     expect(result.touched).toEqual(['r1']);
   });
 
-  it('R-EDIT-11: moving a block sideways moves the nearest branch holding it', () => {
+  it('T-0165 · R-EDIT-11: moving a block sideways moves the nearest branch holding it', () => {
     const result = runOk(move, twoArms, { target: range('b4'), direction: 'left' });
     const moved = blockOf(result.content, 'b1');
     expect(moved.kind === 'case' ? moved.arms.map((a) => a.id) : null).toEqual(['r2', 'r1']);
@@ -143,14 +143,14 @@ describe('move left and right (branches)', () => {
     );
   });
 
-  it('R-EDIT-11: the default branch stays last; edges are refused', () => {
+  it('T-0166 · R-EDIT-11: the default branch stays last; edges are refused', () => {
     expectRefused(moveBranch, twoArms, { branch: 'r3', direction: 'left' }, 'defaultBranchFixed');
     expectRefused(moveBranch, twoArms, { branch: 'r2', direction: 'right' }, 'defaultBranchFixed');
     expectRefused(moveBranch, twoArms, { branch: 'r1', direction: 'left' }, 'atLeftmost');
     expectRefused(moveBranch, twoArms, { branch: 'r9', direction: 'left' }, 'notFound');
   });
 
-  it('R-EDIT-11: swapping If branches swaps the blocks, keeps labels in place, and notes the condition', () => {
+  it('T-0167 · R-EDIT-11: swapping If branches swaps the blocks, keeps labels in place, and notes the condition', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2')], 'yes'), branch('r2', [proc('b3')]), 'x > 0'),
     ]);

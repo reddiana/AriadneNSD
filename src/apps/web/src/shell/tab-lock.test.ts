@@ -38,7 +38,7 @@ async function settle(): Promise<void> {
 }
 
 describe('tab lock', () => {
-  it('06-web 2: the first tab edits; a later tab with the same file only views', async () => {
+  it('T-0389: 06-web 2: the first tab edits; a later tab with the same file only views', async () => {
     const channel = hub();
     const first = createTabLock(channel(), 'tab-1', { regained: () => undefined }, noWait);
     const second = createTabLock(channel(), 'tab-2', { regained: () => undefined }, noWait);
@@ -46,7 +46,7 @@ describe('tab lock', () => {
     expect(await second.claim('file-a')).toBe(false);
   });
 
-  it('06-web 2: different files do not block each other', async () => {
+  it('T-0390: 06-web 2: different files do not block each other', async () => {
     const channel = hub();
     const first = createTabLock(channel(), 'tab-1', { regained: () => undefined }, noWait);
     const second = createTabLock(channel(), 'tab-2', { regained: () => undefined }, noWait);
@@ -54,7 +54,7 @@ describe('tab lock', () => {
     expect(await second.claim('file-b')).toBe(true);
   });
 
-  it('03-editor 6.4: the viewing tab may edit again when the other tab closes', async () => {
+  it('T-0391: 03-editor 6.4: the viewing tab may edit again when the other tab closes', async () => {
     const channel = hub();
     let regained = 0;
     const first = createTabLock(channel(), 'tab-1', { regained: () => undefined }, noWait);
@@ -68,7 +68,7 @@ describe('tab lock', () => {
     expect(await third.claim('file-a')).toBe(false);
   });
 
-  it('moves a claim to the new file after save as', async () => {
+  it('T-0392: moves a claim to the new file after save as', async () => {
     const channel = hub();
     const first = createTabLock(channel(), 'tab-1', { regained: () => undefined }, noWait);
     const second = createTabLock(channel(), 'tab-2', { regained: () => undefined }, noWait);
@@ -79,7 +79,7 @@ describe('tab lock', () => {
     expect(await third.claim('file-b')).toBe(false);
   });
 
-  it('every claim succeeds without BroadcastChannel', async () => {
+  it('T-0393: every claim succeeds without BroadcastChannel', async () => {
     const lock = createTabLock(null, 'tab-1', { regained: () => undefined }, noWait);
     expect(await lock.claim('file-a')).toBe(true);
   });

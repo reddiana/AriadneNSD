@@ -8,18 +8,18 @@ function copy(key: string, usedAt: number): RecentFile {
 }
 
 describe('recent files', () => {
-  it('R-EXP-04: puts the last opened file first', () => {
+  it('T-0401 · R-EXP-04: puts the last opened file first', () => {
     const { list } = touchRecent([copy('a', 1), copy('b', 2)], copy('c', 3));
     expect(list.map((item) => item.key)).toEqual(['c', 'b', 'a']);
   });
 
-  it('R-EXP-04: keeps one entry per file and moves it to the top', () => {
+  it('T-0402 · R-EXP-04: keeps one entry per file and moves it to the top', () => {
     const { list } = touchRecent([copy('b', 2), copy('a', 1)], copy('a', 5));
     expect(list.map((item) => item.key)).toEqual(['a', 'b']);
     expect(list[0]?.usedAt).toBe(5);
   });
 
-  it('R-EXP-04: remembers ten files and reports the ones that fell off', () => {
+  it('T-0403 · R-EXP-04: remembers ten files and reports the ones that fell off', () => {
     const full = Array.from({ length: recentFilesLimit }, (_, index) =>
       copy(`f${String(index)}`, index),
     );
@@ -29,11 +29,11 @@ describe('recent files', () => {
     expect(dropped.map((item) => item.key)).toEqual(['f0']);
   });
 
-  it('forgets a file by key', () => {
+  it('T-0404: forgets a file by key', () => {
     expect(forgetRecent([copy('a', 1), copy('b', 2)], 'a').map((item) => item.key)).toEqual(['b']);
   });
 
-  it('orders stored entries newest first', () => {
+  it('T-0405: orders stored entries newest first', () => {
     expect(orderRecent([copy('a', 1), copy('b', 3), copy('c', 2)]).map((item) => item.key)).toEqual(
       ['b', 'c', 'a'],
     );

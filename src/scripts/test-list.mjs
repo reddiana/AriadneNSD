@@ -125,7 +125,7 @@ function areaOf(path) {
 const areaIndex = (name) => areas.findIndex((area) => area.name === name);
 const idPattern = String.raw`(?:AT|QA|BUG)-\d+|R-[A-Z]+-\d+|UX [A-Z]+\d+`;
 const leadingIds = new RegExp(
-  String.raw`^((?:${idPattern})(?:\s*·\s*(?:${idPattern}))*)(\s*\([^)]*\))?:\s*(.*)$`,
+  String.raw`^((?:${idPattern})(?:\s*[·,]\s*(?:${idPattern}))*)(\s*\([^)]*\))?:\s*(.*)$`,
 );
 const anyId = new RegExp(idPattern, 'g');
 
@@ -153,6 +153,27 @@ function titles(text, names) {
     'g',
   );
   return [...text.matchAll(pattern)].map((match) => match[2].replace(/\\(['"`])/g, '$1'));
+}
+
+/**
+ * Every test has its own id, `T-` and four digits, at the start of its name (`T-0412: …`, or
+ * `T-0412 · BUG-03: …` before the ids of what it checks), so that a test can be named in talk
+ * (maintainer, 2026-11-03: "ID가 있으면 어떤 테스트에 대해 정확하게 지목하고 논의를 할 수
+ * 있습니다"). An id never changes and is never used again; `scripts/test-ids.json` keeps the next
+ * number. `--assign-ids` gives the tests without one the next numbers, in the order of the list.
+ */
+const testIdFile = join(src, 'scripts/test-ids.json');
+const ownId = /^(T-\d{4})(?: · |: )/;
+const testCall = String.raw`(\b(?:test|it|bench)(?:\.each\([\s\S]*?\))?\(\s*)(['"\`])((?:\\.|(?!\2)[^\\])*)\2`;
+
+/** A test name split into its own id, the ids of what it checks and the rest. */
+function parseTest(name) {
+  const own = ownId.exec(name);
+  const rest = own === null ? name : name.slice(own[0].length);
+  const match = leadingIds.exec(rest);
+  if (match === null) return { id: own?.[1] ?? null, ids: [], what: rest };
+  const note = match[2] === undefined ? '' : ` ${match[2].trim()}`;
+  return { id: own?.[1] ?? null, ids: match[1].split(/\s*[·,]\s*/), what: `${match[3]}${note}` };
 }
 
 /** The file's opening comment, up to its first sentence or blank comment line. */
@@ -185,14 +206,15 @@ function type(path) {
   return integrationFiles.has(path) ? '통합' : '단위';
 }
 
-/** A wiki link for an id, with `\|` because it goes in a table. */
-function link(id) {
-  if (id.startsWith('AT-')) return `[[07-testing#4. MVP의 인수 테스트\\|${id}]]`;
-  if (id.startsWith('QA-')) return `[[03-quality-attribute-scenarios#1. 목록\\|${id}]]`;
-  if (id.startsWith('BUG-')) return `[[defects\\|${id}]]`;
-  if (id.startsWith('UX ')) return `[[ux-decisions\\|${id}]]`;
+/** A wiki link for an id, with `\|` when it goes in a table. */
+function link(id, inTable = true) {
+  const bar = inTable ? '\\|' : '|';
+  if (id.startsWith('AT-')) return `[[07-testing#4. MVP의 인수 테스트${bar}${id}]]`;
+  if (id.startsWith('QA-')) return `[[03-quality-attribute-scenarios#1. 목록${bar}${id}]]`;
+  if (id.startsWith('BUG-')) return `[[defects${bar}${id}]]`;
+  if (id.startsWith('UX ')) return `[[ux-decisions${bar}${id}]]`;
   const area = id.split('-')[1].toLowerCase();
-  return `[[01-requirements#^r-${area}\\|${id}]]`;
+  return `[[01-requirements#^r-${area}${bar}${id}]]`;
 }
 
 const cell = (text) => text.replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
@@ -203,7 +225,7 @@ const files = testFiles(join(src, 'apps'))
   .map((path) => {
     const rel = relative(src, path).replaceAll('\\', '/');
     const text = readFileSync(path, 'utf8').replaceAll('\r\n', '\n');
-    const tests = titles(text, 'test|it|bench');
+    const tests = titles(text, 'test|it|bench').map(parseTest);
     const describes = titles(text, 'describe|test\\.describe');
     const purpose = header(text) || describes.join(' · ');
     const refs = unique(
@@ -227,16 +249,59 @@ const files = testFiles(join(src, 'apps'))
       a.rel.localeCompare(b.rel),
   );
 
-const idTests = files.flatMap((file) =>
-  file.tests.flatMap((name) => {
-    const match = leadingIds.exec(name);
-    if (match === null) return [];
-    const ids = match[1].split(/\s*·\s*/);
-    const note = match[2] === undefined ? '' : ` ${match[2].trim()}`;
-    return [{ ids, what: `${match[3]}${note}`, file }];
-  }),
-);
-idTests.sort((a, b) => a.ids[0].localeCompare(b.ids[0], 'en', { numeric: true }));
+const allTests = files.flatMap((file) => file.tests.map((test) => ({ ...test, file })));
+const idTests = allTests.filter((test) => test.ids.length > 0);
+
+let nextId = 1;
+try {
+  nextId = JSON.parse(readFileSync(testIdFile, 'utf8')).next;
+} catch {
+  // No file yet: the first id is T-0001.
+}
+const format = (n) => `T-${String(n).padStart(4, '0')}`;
+
+if (process.argv.includes('--assign-ids')) {
+  let given = 0;
+  for (const file of files) {
+    const path = join(src, file.rel);
+    const before = readFileSync(path, 'utf8');
+    const after = before.replace(new RegExp(testCall, 'g'), (whole, call, quote, name) => {
+      if (ownId.test(name)) return whole;
+      const id = format(nextId);
+      nextId += 1;
+      given += 1;
+      const joint = leadingIds.test(name) ? ' · ' : ': ';
+      return `${call}${quote}${id}${joint}${name}${quote}`;
+    });
+    if (after !== before) writeFileSync(path, after);
+  }
+  writeFileSync(testIdFile, `${JSON.stringify({ next: nextId }, null, 2)}\n`);
+  console.log(`Gave ${String(given)} tests an id; the next is ${format(nextId)}.`);
+  process.exit(0);
+}
+
+const problems = [];
+const seen = new Map();
+for (const test of allTests) {
+  if (test.id === null) {
+    problems.push(`${test.file.rel}: "${test.what}" has no id`);
+    continue;
+  }
+  if (seen.has(test.id))
+    problems.push(`${test.id} is in ${seen.get(test.id)} and ${test.file.rel}`);
+  seen.set(test.id, test.file.rel);
+  if (Number(test.id.slice(2)) >= nextId)
+    problems.push(`${test.id} is not below the next id in scripts/test-ids.json`);
+}
+if (problems.length > 0) {
+  console.error(
+    [
+      ...problems,
+      'Run `node scripts/test-list.mjs --assign-ids` in src/ to give new tests ids.',
+    ].join('\n'),
+  );
+  process.exit(1);
+}
 
 function definedIds(docPath, prefix) {
   const text = readFileSync(join(repo, docPath), 'utf8');
@@ -274,7 +339,13 @@ function coveredBy(id) {
   const ways = [];
   const owners = files.filter((file) => file.refs.includes(id)).map((file) => `\`${file.rel}\``);
   if (owners.length > 0) ways.push(`파일: ${owners.join(', ')}`);
-  if (atOfQa.has(id)) ways.push(`인수 테스트: ${atOfQa.get(id).map(link).join(', ')}`);
+  if (atOfQa.has(id))
+    ways.push(
+      `인수 테스트: ${atOfQa
+        .get(id)
+        .map((id) => link(id))
+        .join(', ')}`,
+    );
   if (checks.has(id)) ways.push(`검사: ${checks.get(id)}`);
   return ways.length > 0 ? ways.join('<br>') : '없음';
 }
@@ -318,35 +389,35 @@ function ko(english) {
   return koTable[key] || '';
 }
 
-const idRow = ({ ids, what, file }) =>
-  `| ${cell(ko(what))} | ${ids.map(link).join(', ')} | ${file.type} | \`${file.rel}\` |`;
-const fileRow = (file) =>
-  `| \`${file.rel}\` | ${cell(ko(file.purpose))} | ${file.refs.map(link).join(', ') || '—'} | ${file.method} | ${file.type} | ${String(file.tests.length)} |`;
+const testRow = (test) =>
+  `| ${test.id} | ${cell(ko(test.what))} | ${test.ids.map((id) => link(id)).join(', ')} |`;
+
+/** One file: a line about the whole file, then one row per test. */
+const fileBlock = (file) => [
+  `#### \`${file.rel}\``,
+  '',
+  [
+    ko(file.purpose),
+    `${file.type} · ${file.method} · 테스트 ${String(file.tests.length)}개`,
+    ...(file.refs.length === 0
+      ? []
+      : [`파일 전체가 확인하는 것: ${file.refs.map((id) => link(id, false)).join(', ')}`]),
+  ].join('. ') + '.',
+  '',
+  '| ID | 테스트 | 확인하는 것 |',
+  '| --- | --- | --- |',
+  ...file.tests.map((test) => testRow({ ...test, file })),
+  '',
+];
 
 const areaSections = areas.flatMap((area, i) => {
   const of = files.filter((file) => file.area === area.name);
-  const withIds = idTests.filter((test) => test.file.area === area.name);
   return [
     `### 2.${String(i + 1)} ${area.name}`,
     '',
-    area.about,
+    `${area.about}. 파일 ${String(of.length)}개, 테스트 ${String(testCount(of))}개.`,
     '',
-    `파일 ${String(of.length)}개, 테스트 ${String(testCount(of))}개:`,
-    '',
-    '| 자리 | 무엇을 확인하나 | 확인하는 것 | 방법 | 유형 | 테스트 수 |',
-    '| --- | --- | --- | --- | --- | --- |',
-    ...of.map(fileRow),
-    '',
-    ...(withIds.length === 0
-      ? []
-      : [
-          `확인하는 것(ID)을 이름에 적은 테스트 ${String(withIds.length)}개:`,
-          '',
-          '| 테스트 | 확인하는 것 | 유형 | 자리 |',
-          '| --- | --- | --- | --- |',
-          ...withIds.map(idRow),
-          '',
-        ]),
+    ...of.flatMap(fileBlock),
   ];
 });
 
@@ -367,11 +438,12 @@ const lines = [
   '',
   '## 읽는 법',
   '',
-  '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(2장). 영역마다 먼저 테스트 파일을 한 줄씩, 그다음 확인하는 것의 ID를 이름에 적은 테스트를 한 줄씩 보입니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
+  '- **ID:** 테스트마다 `T-`와 네 자리 번호의 ID가 있습니다(테스트 코드의 이름 맨 앞). 번호는 바뀌지 않고, 지운 테스트의 번호는 다시 쓰지 않습니다.',
+  '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(2장). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 아래 한 줄에 파일이 무엇을 확인하는지, 유형 · 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
   '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
-  '- **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트에는 ID가 없습니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).',
-  '- **이름 규칙:** 테스트 코드에서는 테스트의 이름 앞에 그 테스트가 확인하는 것의 ID를 적습니다(`AT-04: …`, 여럿이면 `BUG-03 · QA-19: …`). 이 문서는 그 ID를 "확인하는 것" 칸에 옮기고, 이름의 나머지를 "테스트" 칸에 한국어로 적습니다. 파일의 "무엇을 확인하나"는 파일의 첫 주석(없으면 `describe`의 이름)을 옮긴 것입니다.',
+  '- **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).',
+  '- **이름 규칙:** 테스트 코드의 이름은 `T-0412: …`, 확인하는 것이 있으면 `T-0412 · BUG-03 · QA-19: …`입니다. 이 문서는 확인하는 것의 ID를 "확인하는 것" 칸에 옮기고, 나머지를 "테스트" 칸에 한국어로 적습니다.',
   '',
   '## 1. 요약',
   '',
@@ -386,7 +458,7 @@ const lines = [
   ...areaSections,
   '## 3. 테스트가 없는 ID',
   '',
-  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장 파일 표의 "확인하는 것" 칸), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
+  '문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 맡거나(2장의 "파일 전체가 확인하는 것"), 인수 테스트가 맡거나([[07-testing#4. MVP의 인수 테스트]]의 표), 테스트가 아닌 검사가 맡은 것은 그 길을 적습니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.',
   '',
   '| ID | 다른 길로 맡은 것 |',
   '| --- | --- |',
@@ -426,6 +498,6 @@ if (process.argv.includes('--check')) {
 } else {
   writeFileSync(outFile, output);
   console.log(
-    `Wrote ${relative(repo, outFile)}: ${String(files.length)} files, ${String(idTests.length)} tests with ids.`,
+    `Wrote ${relative(repo, outFile)}: ${String(files.length)} files, ${String(allTests.length)} tests.`,
   );
 }

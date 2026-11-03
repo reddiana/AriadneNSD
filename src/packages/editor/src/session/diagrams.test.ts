@@ -50,7 +50,7 @@ const sample = (): Content =>
   });
 
 describe('selecting a header (interaction rules 2 "키보드로 이동하고 삽입하기")', () => {
-  it('R-BLK-10: Up from the first block selects the header; Down goes back', () => {
+  it('T-0207 · R-BLK-10: Up from the first block selects the header; Down goes back', () => {
     const engine = testEngine(sample());
     select(engine, 'a');
     engine.keys('k');
@@ -65,7 +65,7 @@ describe('selecting a header (interaction rules 2 "키보드로 이동하고 삽
     expect(selected(engine)).toEqual(['a']);
   });
 
-  it('interaction rules 2: Left and Right on a header go to the side diagram, drawn order', () => {
+  it('T-0208: interaction rules 2: Left and Right on a header go to the side diagram, drawn order', () => {
     // Drawn order: Events and diagrams without a header (d1, d3), then Methods (d2).
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd1' });
@@ -82,7 +82,7 @@ describe('selecting a header (interaction rules 2 "키보드로 이동하고 삽
     expect(notice(engine)).toBe('notice.noDiagramThere');
   });
 
-  it('interaction rules 2: the first move key selects the header of the first diagram', () => {
+  it('T-0209: interaction rules 2: the first move key selects the header of the first diagram', () => {
     const engine = testEngine(sample());
     engine.keys('j');
     expect(engine.session.state.selection).toEqual({ kind: 'head', diagram: 'd1' });
@@ -92,7 +92,7 @@ describe('selecting a header (interaction rules 2 "키보드로 이동하고 삽
     expect(selected(engine)).toEqual(['b']);
   });
 
-  it('interaction rules 2: after Esc Esc on a header, a move key selects it again', () => {
+  it('T-0210: interaction rules 2: after Esc Esc on a header, a move key selects it again', () => {
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd2' });
     engine.keys('Escape', 'Escape');
@@ -103,7 +103,7 @@ describe('selecting a header (interaction rules 2 "키보드로 이동하고 삽
 });
 
 describe('editing a header name (interaction rules "Event 헤더", "Method 헤더")', () => {
-  it('R-BLK-10: Enter edits the name; accepting changes it in one undo step', () => {
+  it('T-0211 · R-BLK-10: Enter edits the name; accepting changes it in one undo step', () => {
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd1' });
     engine.keys('Enter');
@@ -118,7 +118,7 @@ describe('editing a header name (interaction rules "Event 헤더", "Method 헤�
     expect(engine.session.state.selection).toEqual({ kind: 'head', diagram: 'd1' });
   });
 
-  it('UX Q4: an empty name puts the old name back, closes and tells why', () => {
+  it('T-0212 · UX Q4: an empty name puts the old name back, closes and tells why', () => {
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd1' });
     engine.keys('c', 'c');
@@ -128,7 +128,7 @@ describe('editing a header name (interaction rules "Event 헤더", "Method 헤�
     expect(notice(engine)).toBe('reason.emptyHeadName');
   });
 
-  it('R-BLK-11: a clashing name opens the field again; Esc there keeps the old name', () => {
+  it('T-0213 · R-BLK-11: a clashing name opens the field again; Esc there keeps the old name', () => {
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd1' });
     engine.keys('Enter');
@@ -148,7 +148,7 @@ describe('editing a header name (interaction rules "Event 헤더", "Method 헤�
 });
 
 describe('header and diagram commands (interaction rules "새 Method로 빼기와 새 다이어그램")', () => {
-  it('R-BLK-10: e in a diagram without a header gives it one and edits its name', () => {
+  it('T-0214 · R-BLK-10: e in a diagram without a header gives it one and edits its name', () => {
     const engine = testEngine(sample());
     select(engine, 'e');
     engine.keys('e');
@@ -164,7 +164,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     });
   });
 
-  it('R-BLK-11: m on a header changes the kind; a called Method cannot become an Event', () => {
+  it('T-0215 · R-BLK-11: m on a header changes the kind; a called Method cannot become an Event', () => {
     const engine = testEngine(sample());
     engine.select({ kind: 'head', diagram: 'd1' });
     engine.keys('m');
@@ -179,7 +179,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(notice(called)).toBe('reason.methodHasCallers');
   });
 
-  it('R-EDIT-19: on blocks of a diagram with a header, m tells that extracting is not there yet', () => {
+  it('T-0216 · R-EDIT-19: on blocks of a diagram with a header, m tells that extracting is not there yet', () => {
     const engine = testEngine(sample());
     select(engine, 'a');
     engine.keys('m');
@@ -189,7 +189,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(engine.session.state.undo).toHaveLength(0);
   });
 
-  it('R-EDIT-18: E and M make a new diagram of that kind and edit its name', () => {
+  it('T-0217 · R-EDIT-18: E and M make a new diagram of that kind and edit its name', () => {
     const engine = testEngine(sample());
     select(engine, 'a');
     engine.keys('M');
@@ -208,7 +208,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     ]);
   });
 
-  it('R-BLK-07: removing a Method header makes its calls lost and selects the first block', () => {
+  it('T-0218 · R-BLK-07: removing a Method header makes its calls lost and selects the first block', () => {
     const engine = testEngine(
       withHeads(contentOf([call('k1', 'd2', 'v')], [proc('c')]), { d2: ['method', 'f(a)'] }),
     );
@@ -223,7 +223,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(headText(engine, 'd2')).toBeNull();
   });
 
-  it('invariant 7: a header removed from a diagram with nothing in it takes the diagram', () => {
+  it('T-0219: invariant 7: a header removed from a diagram with nothing in it takes the diagram', () => {
     const engine = testEngine(
       withHeads(contentOf([proc('a')], [empty('z')]), { d2: ['event', 'irq'] }),
     );
@@ -233,7 +233,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(engine.session.state.selection).toBeNull();
   });
 
-  it('R-EDIT-18: Shift+Delete deletes the diagram; the only one cannot be deleted', () => {
+  it('T-0220 · R-EDIT-18: Shift+Delete deletes the diagram; the only one cannot be deleted', () => {
     const engine = testEngine(
       withHeads(contentOf([call('k1', 'd2')], [proc('c')]), { d2: ['method', 'f'] }),
     );
@@ -247,7 +247,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(notice(engine)).toBe('reason.lastDiagram');
   });
 
-  it('UX Q6: Alt+arrows on a header move the diagram among its kind', () => {
+  it('T-0221 · UX Q6: Alt+arrows on a header move the diagram among its kind', () => {
     const engine = testEngine(
       withHeads(contentOf([proc('a')], [proc('b')], [proc('c')]), {
         d1: ['method', 'f'],
@@ -265,7 +265,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
 });
 
 describe('call blocks (interaction rules "호출 블록")', () => {
-  it('R-BLK-07: a c lists the Methods; the chosen one is called and its arguments typed', async () => {
+  it('T-0222 · R-BLK-07: a c lists the Methods; the chosen one is called and its arguments typed', async () => {
     const engine = testEngine(sample());
     select(engine, 'a');
     engine.keys('a', 'c');
@@ -298,7 +298,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(engine.session.state.undo).toHaveLength(2);
   });
 
-  it('R-BLK-07: "New Method, and call it" makes the Method and edits its name', async () => {
+  it('T-0223 · R-BLK-07: "New Method, and call it" makes the Method and edits its name', async () => {
     const engine = testEngine(sample());
     select(engine, 'b');
     engine.keys('A', 'c');
@@ -316,7 +316,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(engine.session.state.undo).toHaveLength(1);
   });
 
-  it('03-keymap: closing the list inserts nothing', async () => {
+  it('T-0224: 03-keymap: closing the list inserts nothing', async () => {
     const engine = testEngine(sample());
     select(engine, 'a');
     engine.run('block.insert.call');
@@ -325,7 +325,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(engine.session.state.undo).toHaveLength(0);
   });
 
-  it('interaction rules "호출 블록": a Method receiving nothing has the result field only', () => {
+  it('T-0225: interaction rules "호출 블록": a Method receiving nothing has the result field only', () => {
     const engine = testEngine(
       withHeads(contentOf([call('k1', 'd2')], [proc('c')]), { d2: ['method', 'reset'] }),
     );
@@ -341,7 +341,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(blockOf(engine, 'k1')).toMatchObject({ args: '', result: 'ok' });
   });
 
-  it('R-BLK-07: a call block that lost its target cannot be edited', () => {
+  it('T-0226 · R-BLK-07: a call block that lost its target cannot be edited', () => {
     const lost: Call = { ...call('k1', 'd1'), target: { kind: 'lost', lastName: 'f' } };
     const engine = testEngine(contentOf([lost]));
     select(engine, 'k1');
@@ -350,7 +350,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(notice(engine)).toBe('reason.lostTarget');
   });
 
-  it('R-BLK-07: changing the called Method starts at the current one and keeps the texts', async () => {
+  it('T-0227 · R-BLK-07: changing the called Method starts at the current one and keeps the texts', async () => {
     const engine = testEngine(
       withHeads(contentOf([call('k1', 'd2', 'v', 'r')], [proc('c')], [proc('e')]), {
         d2: ['method', 'f(a)'],

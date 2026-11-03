@@ -254,7 +254,7 @@ function specTexts(spec: ReadonlyArray<DiagramSpec>): string[] {
 }
 
 describe('examples', () => {
-  it('R-EDIT-25: lists the ten examples in order, each named in both languages', () => {
+  it('T-0321 · R-EDIT-25: lists the ten examples in order, each named in both languages', () => {
     expect(examples.map((example) => example.id)).toEqual(expected.map((entry) => entry.id));
     for (const example of examples) {
       expect(example.name.ko).not.toBe('');
@@ -271,32 +271,32 @@ describe('examples', () => {
     }
     const doc = example.build('title');
 
-    it('R-EDIT-25: keeps every invariant, with either header shape', () => {
+    it('T-0322 · R-EDIT-25: keeps every invariant, with either header shape', () => {
       expect(checkInvariants(doc.content)).toEqual([]);
       expect(checkInvariants(example.build('shape').content)).toEqual([]);
     });
 
-    it('R-EDIT-25: uses the given header shape and the settings and view of a new document', () => {
+    it('T-0323 · R-EDIT-25: uses the given header shape and the settings and view of a new document', () => {
       const shape = example.build('shape');
       expect(shape.content.settings).toEqual(createDoc({ headStyle: 'shape' }).content.settings);
       expect(doc.content.settings).toEqual(createDoc({ headStyle: 'title' }).content.settings);
       expect(doc.view).toEqual(createDoc().view);
     });
 
-    it('R-EDIT-25: builds the same document every time', () => {
+    it('T-0324 · R-EDIT-25: builds the same document every time', () => {
       expect(example.build('title')).toEqual(doc);
     });
 
-    it('R-EDIT-25: has the diagrams, headers and blocks of the prototype', () => {
+    it('T-0325 · R-EDIT-25: has the diagrams, headers and blocks of the prototype', () => {
       expect(doc.content.diagrams.map((diagram) => diagram.head)).toEqual(entry.heads);
       expect(allBlocks(doc)).toHaveLength(entry.blocks);
     });
 
-    it('R-EDIT-25: keeps every text of the short notation as written', () => {
+    it('T-0326 · R-EDIT-25: keeps every text of the short notation as written', () => {
       expect(docTexts(doc)).toEqual(specTexts(entry.spec));
     });
 
-    it('R-EDIT-25: links every call block to a Method in the document', () => {
+    it('T-0327 · R-EDIT-25: links every call block to a Method in the document', () => {
       const methods = new Set(
         doc.content.diagrams.filter((d) => d.head?.kind === 'method').map((d) => d.id),
       );
@@ -310,7 +310,7 @@ describe('examples', () => {
       }
     });
 
-    it('R-FMT-02: saves to model JSON and opens as the same document', () => {
+    it('T-0328 · R-FMT-02: saves to model JSON and opens as the same document', () => {
       const json = serializeModelJson(doc);
       const read = parseModelJson(json);
       if (!read.ok) {
@@ -320,7 +320,7 @@ describe('examples', () => {
       expect(serializeModelJson(read.value.doc, read.value.kept)).toBe(json);
     });
 
-    it('QA-04: saves to an SVG file and opens as the same document', () => {
+    it('T-0329 · QA-04: saves to an SVG file and opens as the same document', () => {
       const drawing = {
         width: 10,
         height: 10,

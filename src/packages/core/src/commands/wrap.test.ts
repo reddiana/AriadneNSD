@@ -22,7 +22,7 @@ import { unwrap, wrap } from './wrap';
 const range = (first: string, last = first) => ({ kind: 'blocks', first, last }) as const;
 
 describe('wrap', () => {
-  it('R-EDIT-06: wraps a contiguous range in a new While, in its place', () => {
+  it('T-0173 · R-EDIT-06: wraps a contiguous range in a new While, in its place', () => {
     const content = contentOf([proc('b1'), proc('b2'), proc('b3')]);
     const result = runOk(wrap, content, { target: range('b1', 'b2'), kind: 'while' });
     expect(idsIn(result.content, 'd1')).toEqual(['b4', 'b3']);
@@ -31,7 +31,7 @@ describe('wrap', () => {
     expect(result.touched).toEqual(['b4']);
   });
 
-  it('R-EDIT-06: an If takes the blocks in its true branch; the false branch is empty', () => {
+  it('T-0174 · R-EDIT-06: an If takes the blocks in its true branch; the false branch is empty', () => {
     const result = runOk(wrap, contentOf([proc('b1')]), { target: range('b1'), kind: 'if' });
     expect(blockOf(result.content, 'b2')).toEqual({
       id: 'b2',
@@ -42,7 +42,7 @@ describe('wrap', () => {
     });
   });
 
-  it('R-EDIT-06: a Case takes the blocks in its first branch, with a second branch and a default', () => {
+  it('T-0175 · R-EDIT-06: a Case takes the blocks in its first branch, with a second branch and a default', () => {
     const result = runOk(wrap, contentOf([proc('b1')]), { target: range('b1'), kind: 'case' });
     const made = blockOf(result.content, 'b2');
     expect(made).toMatchObject({
@@ -55,7 +55,7 @@ describe('wrap', () => {
     });
   });
 
-  it('R-EDIT-06: fold regions inside go in; a region of exactly the range stays around the wrapper', () => {
+  it('T-0176 · R-EDIT-06: fold regions inside go in; a region of exactly the range stays around the wrapper', () => {
     const content = contentOf(
       seq(
         [proc('b1'), proc('b2'), proc('b3')],
@@ -71,7 +71,7 @@ describe('wrap', () => {
     expect(foldsIn(result.content, 'b4')).toEqual(['f2:b2-b2']);
   });
 
-  it('R-EDIT-06: refuses a process block and a missing target', () => {
+  it('T-0177 · R-EDIT-06: refuses a process block and a missing target', () => {
     const content = contentOf([proc('b1')]);
     expectRefused(wrap, content, { target: range('b1'), kind: 'process' }, 'cannotWrapWithProcess');
     expectRefused(wrap, content, { target: range('b7'), kind: 'if' }, 'notFound');
@@ -79,14 +79,14 @@ describe('wrap', () => {
 });
 
 describe('unwrap', () => {
-  it('R-EDIT-07: removes the selected control block and leaves its blocks in place', () => {
+  it('T-0178 · R-EDIT-07: removes the selected control block and leaves its blocks in place', () => {
     const content = contentOf([proc('b1'), whileBlock('b2', [proc('b3'), proc('b4')]), proc('b5')]);
     const result = runOk(unwrap, content, { target: range('b2') });
     expect(idsIn(result.content, 'd1')).toEqual(['b1', 'b3', 'b4', 'b5']);
     expect(result.touched).toEqual(['b3', 'b4']);
   });
 
-  it('R-EDIT-07: an If or Case leaves its non-empty branches one after another', () => {
+  it('T-0179 · R-EDIT-07: an If or Case leaves its non-empty branches one after another', () => {
     const content = contentOf([
       caseBlock(
         'b1',
@@ -98,7 +98,7 @@ describe('unwrap', () => {
     expect(idsIn(result.content, 'd1')).toEqual(['b2', 'b4', 'b5']);
   });
 
-  it('R-EDIT-07 (UX Q8): with a block inside selected, the nearest control block holding it is removed', () => {
+  it('T-0180 · R-EDIT-07 (UX Q8): with a block inside selected, the nearest control block holding it is removed', () => {
     const content = contentOf([
       whileBlock('b1', [ifBlock('b2', branch('r1', [proc('b3')]), branch('r2', [empty('b4')]))]),
     ]);
@@ -106,14 +106,14 @@ describe('unwrap', () => {
     expect(idsIn(result.content, 'b1')).toEqual(['b3']);
   });
 
-  it('R-EDIT-07: wrap then unwrap gives back the same blocks', () => {
+  it('T-0181 · R-EDIT-07: wrap then unwrap gives back the same blocks', () => {
     const content = contentOf([proc('b1'), proc('b2')]);
     const wrapped = runOk(wrap, content, { target: range('b1', 'b2'), kind: 'doWhile' });
     const back = runOk(unwrap, wrapped.content, { target: range('b3') });
     expect(back.content).toEqual(content);
   });
 
-  it('R-EDIT-07: fold regions inside come out; a region around the block now spans its blocks', () => {
+  it('T-0182 · R-EDIT-07: fold regions inside come out; a region around the block now spans its blocks', () => {
     const content = contentOf(
       seq(
         [
@@ -127,7 +127,7 @@ describe('unwrap', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b3-b4', 'f2:b4-b4']);
   });
 
-  it('R-EDIT-07: a control block with only empty inside leaves an empty block if nothing else is left', () => {
+  it('T-0183 · R-EDIT-07: a control block with only empty inside leaves an empty block if nothing else is left', () => {
     const inserted = runOk(insertBlock, contentOf([empty('b1')]), {
       target: range('b1'),
       side: 'after',
@@ -138,7 +138,7 @@ describe('unwrap', () => {
     expect(result.touched).toEqual(['b5']);
   });
 
-  it('R-EDIT-07: refuses when there is no control block, and for call blocks (later)', () => {
+  it('T-0184 · R-EDIT-07: refuses when there is no control block, and for call blocks (later)', () => {
     expectRefused(unwrap, contentOf([proc('b1')]), { target: range('b1') }, 'noControlBlock');
     const call = contentOf([
       {

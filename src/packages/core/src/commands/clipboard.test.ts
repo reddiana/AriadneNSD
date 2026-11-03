@@ -30,7 +30,7 @@ describe('copy, cut and paste', () => {
     ),
   );
 
-  it('R-EDIT-10: copy takes whole subtrees and the fold regions inside the range', () => {
+  it('T-0089 · R-EDIT-10: copy takes whole subtrees and the fold regions inside the range', () => {
     const copied = copy(content, { target: range('b1', 'b2') });
     expect(copied.ok ? copied.clip.blocks.map((b) => b.id) : null).toEqual(['b1', 'b2']);
     expect(copied.ok ? copied.clip.folds.map((f) => f.id) : null).toEqual(['f1']);
@@ -40,7 +40,7 @@ describe('copy, cut and paste', () => {
     });
   });
 
-  it('R-EDIT-10: paste puts copies with new ids after the selected block', () => {
+  it('T-0090 · R-EDIT-10: paste puts copies with new ids after the selected block', () => {
     const copied = copy(content, { target: range('b2') });
     if (!copied.ok) {
       throw new Error('copy failed');
@@ -52,7 +52,7 @@ describe('copy, cut and paste', () => {
     expect(result.touched).toEqual(['b5']);
   });
 
-  it('01-model 1.7: pasted fold regions are mapped to the new ids', () => {
+  it('T-0091: 01-model 1.7: pasted fold regions are mapped to the new ids', () => {
     const copied = copy(content, { target: range('b1', 'b2') });
     if (!copied.ok) {
       throw new Error('copy failed');
@@ -66,7 +66,7 @@ describe('copy, cut and paste', () => {
     expect(foldsIn(result.content, 'd1')).toContain('f3:b5-b6');
   });
 
-  it('R-EDIT-10: paste on an empty block takes its place', () => {
+  it('T-0092 · R-EDIT-10: paste on an empty block takes its place', () => {
     const target = contentOf([
       ifBlock('b1', branch('r1', [empty('b2')]), branch('r2', [proc('b3')])),
     ]);
@@ -78,7 +78,7 @@ describe('copy, cut and paste', () => {
     expect(idsIn(result.content, 'r1')).toEqual(['b4', 'b5']);
   });
 
-  it('01-model 3.6: a pasted call to a Method not in this document loses its target', () => {
+  it('T-0093: 01-model 3.6: a pasted call to a Method not in this document loses its target', () => {
     const clip = seq([
       {
         id: 'b1',
@@ -100,7 +100,7 @@ describe('copy, cut and paste', () => {
     });
   });
 
-  it('R-EDIT-10: paste refuses an empty clip and a missing target', () => {
+  it('T-0094 · R-EDIT-10: paste refuses an empty clip and a missing target', () => {
     expectRefused(
       paste,
       content,
@@ -115,7 +115,7 @@ describe('copy, cut and paste', () => {
     );
   });
 
-  it('R-EDIT-10: cut gives the clip and deletes the blocks', () => {
+  it('T-0095 · R-EDIT-10: cut gives the clip and deletes the blocks', () => {
     run(cut, content, { target: range('b2', 'b4') });
     const result = cut(content, { target: range('b2', 'b4') });
     if (!result.ok) {

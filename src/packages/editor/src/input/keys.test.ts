@@ -15,7 +15,7 @@ const key = (code: string, modifiers: Partial<KeyInput> = {}): KeyInput => ({
 const normal = { mode: 'normal' as const, selection: 'blocks' as const };
 
 describe('reading keys (03-editor 4)', () => {
-  it('03-editor 4: letters are read by their place, so Korean input gives the same keys', () => {
+  it('T-0244: 03-editor 4: letters are read by their place, so Korean input gives the same keys', () => {
     expect(strokeOf(key('KeyJ'))).toBe('j');
     expect(strokeOf(key('KeyO', { shiftKey: true }))).toBe('O');
     expect(strokeOf(key('KeyX', { ctrlKey: true }))).toBe('Ctrl+X');
@@ -24,7 +24,7 @@ describe('reading keys (03-editor 4)', () => {
     expect(strokeOf(key('KeyH', { altKey: true }))).toBe('Alt+h');
   });
 
-  it('03-keymap: symbols, named keys and modifiers alone', () => {
+  it('T-0245: 03-keymap: symbols, named keys and modifiers alone', () => {
     expect(strokeOf(key('BracketLeft', { shiftKey: true }))).toBe('{');
     expect(strokeOf(key('BracketRight'))).toBe(']');
     expect(strokeOf(key('Slash', { shiftKey: true }))).toBe('?');
@@ -38,7 +38,7 @@ describe('reading keys (03-editor 4)', () => {
     expect(strokeOf(key('Lang1'))).toBeNull();
   });
 
-  it('R-EDIT-04 (UX K1): the first key of a sequence waits; the second runs the command', () => {
+  it('T-0246 · R-EDIT-04 (UX K1): the first key of a sequence waits; the second runs the command', () => {
     expect(readKey(keyBindings, null, 'd', normal)).toEqual({ kind: 'pending', first: 'd' });
     expect(readKey(keyBindings, 'd', 'd', normal)).toMatchObject({
       kind: 'command',
@@ -52,7 +52,7 @@ describe('reading keys (03-editor 4)', () => {
     });
   });
 
-  it('UX K1: a key that does not continue the sequence, or Esc, cancels it', () => {
+  it('T-0247 · UX K1: a key that does not continue the sequence, or Esc, cancels it', () => {
     expect(readKey(keyBindings, 'd', 'q', normal)).toEqual({
       kind: 'cancelled',
       keys: 'd q',
@@ -61,7 +61,7 @@ describe('reading keys (03-editor 4)', () => {
     expect(readKey(keyBindings, 'g', 'Escape', normal)).toMatchObject({ isEscape: true });
   });
 
-  it('03-keymap: o, O and x act on branches while a branch label is selected', () => {
+  it('T-0248: 03-keymap: o, O and x act on branches while a branch label is selected', () => {
     const onLabel = { mode: 'normal' as const, selection: 'branchLabel' as const };
     expect(readKey(keyBindings, null, 'o', onLabel)).toMatchObject({
       binding: { command: 'branch.insert' },
@@ -74,7 +74,7 @@ describe('reading keys (03-editor 4)', () => {
     });
   });
 
-  it('03-keymap: a p and A p insert a process block like o and O', () => {
+  it('T-0249: 03-keymap: a p and A p insert a process block like o and O', () => {
     expect(readKey(keyBindings, 'a', 'p', normal)).toMatchObject({
       binding: { command: 'block.insert.process' },
     });
@@ -83,7 +83,7 @@ describe('reading keys (03-editor 4)', () => {
     });
   });
 
-  it('03-keymap: in a range (v), d cuts at once and s waits for a kind', () => {
+  it('T-0250: 03-keymap: in a range (v), d cuts at once and s waits for a kind', () => {
     const visual = { mode: 'visual' as const, selection: 'blocks' as const };
     expect(readKey(keyBindings, null, 'd', visual)).toMatchObject({
       binding: { command: 'edit.cut' },
@@ -92,7 +92,7 @@ describe('reading keys (03-editor 4)', () => {
     expect(readKey(keyBindings, null, 'q', visual)).toEqual({ kind: 'unbound', keys: 'q' });
   });
 
-  it('03-editor 4: the key table gives each command its keys for display', () => {
+  it('T-0251: 03-editor 4: the key table gives each command its keys for display', () => {
     expect(keysOf(keyBindings, 'edit.cut')).toEqual(['d d', 'Ctrl+X']);
     expect(keysOf(keyBindings, 'edit.redo')).toEqual(['U', 'Ctrl+R', 'Ctrl+Y', 'Ctrl+Shift+Z']);
     expect(keysOf(keyBindings, 'select.clear')).toEqual(['Escape Escape']);

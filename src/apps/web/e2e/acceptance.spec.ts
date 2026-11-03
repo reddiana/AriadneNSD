@@ -91,7 +91,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await openApp(page);
   });
 
-  test('AT-01: makes a new diagram, inserts blocks and saves', async ({ page }) => {
+  test('T-0001 · AT-01: makes a new diagram, inserts blocks and saves', async ({ page }) => {
     await processBlocks(page, 'old');
     await command(page, 'file.new').click();
     await expect(drawnText(page, 'old')).toHaveCount(0);
@@ -107,7 +107,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(outline(modelOf(saved ?? '').diagrams[0]?.body ?? [])).toBe('W(i < n)[E] P(done)');
   });
 
-  test('AT-02: a saved file opened again is the same drawing and saves the same bytes', async ({
+  test('T-0002 · AT-02: a saved file opened again is the same drawing and saves the same bytes', async ({
     page,
   }) => {
     await processBlocks(page, 'read x', '한글 텍스트');
@@ -126,7 +126,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await writtenText(page, 'Untitled.ns.svg')).toBe(first);
   });
 
-  test('AT-03: six block kinds, wrap and unwrap, copy and paste, add and delete branches, edit an If label', async ({
+  test('T-0003 · AT-03: six block kinds, wrap and unwrap, copy and paste, add and delete branches, edit an If label', async ({
     page,
   }) => {
     await processBlocks(page, 'start', 'p1');
@@ -174,7 +174,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await savedOutline(page)).toContain('I(c1)[yes: E | N: E]');
   });
 
-  test('AT-04, R-NFR-05: AT-01 with the keyboard only', async ({ page }) => {
+  test('T-0004: AT-04, R-NFR-05: AT-01 with the keyboard only', async ({ page }) => {
     // No mouse: the keys go to the diagram from the start.
     await expect(canvas(page)).toBeFocused();
     await page.keyboard.press('Enter');
@@ -191,7 +191,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await savedOutline(page)).toBe('P(read x) I(x > 0)[Y: P(print) | N: P(none)]');
   });
 
-  test('AT-04: text typed right after a+i goes into the new block, even without a pause', async ({
+  test('T-0005 · AT-04: text typed right after a+i goes into the new block, even without a pause', async ({
     page,
   }) => {
     await page.keyboard.press('Enter');
@@ -203,7 +203,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await savedOutline(page)).toBe('P(first) I(x > 0)[Y: E | N: E]');
   });
 
-  test('AT-04: Ctrl+S while typing accepts the text and saves', async ({ page }) => {
+  test('T-0006 · AT-04: Ctrl+S while typing accepts the text and saves', async ({ page }) => {
     await page.keyboard.press('Enter');
     await page.keyboard.type('typed, not accepted yet');
     await page.keyboard.press('Control+S');
@@ -212,7 +212,9 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(outline(modelOf(text).diagrams[0]?.body ?? [])).toBe('P(typed, not accepted yet)');
   });
 
-  test('AT-05: an edit in a document of 500 blocks is drawn within 100 ms', async ({ page }) => {
+  test('T-0007 · AT-05: an edit in a document of 500 blocks is drawn within 100 ms', async ({
+    page,
+  }) => {
     await putFile(page, 'large.ns.svg', largeDocument(500));
     await command(page, 'file.open').click();
     await expect(page).toHaveTitle('large.ns.svg – AriadneNSD');
@@ -247,7 +249,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(sorted[2]).toBeLessThan(100);
   });
 
-  test('AT-06: a damaged file is not opened, the original stays and the editor keeps working', async ({
+  test('T-0008 · AT-06: a damaged file is not opened, the original stays and the editor keeps working', async ({
     page,
   }) => {
     await processBlocks(page, 'keep me');
@@ -263,7 +265,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(drawnText(page, 'still editing')).toBeVisible();
   });
 
-  test('AT-07: a failed save loses nothing; the next save writes it', async ({ page }) => {
+  test('T-0009 · AT-07: a failed save loses nothing; the next save writes it', async ({ page }) => {
     await processBlocks(page, 'first');
     await savedOutline(page);
     await page.evaluate(() => {
@@ -281,7 +283,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await savedOutline(page)).toBe('P(first) P(second)');
   });
 
-  test('AT-08: the saved file draws what the screen draws, with its font inside', async ({
+  test('T-0010 · AT-08: the saved file draws what the screen draws, with its font inside', async ({
     page,
   }) => {
     await processBlocks(page, 'read x', '한글과 English');
@@ -322,7 +324,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(size).toEqual(drawn);
   });
 
-  test('AT-09: exports a PNG at twice the drawing size', async ({ page }) => {
+  test('T-0011 · AT-09: exports a PNG at twice the drawing size', async ({ page }) => {
     await processBlocks(page, 'export me');
     await command(page, 'file.export.png').click();
     await expect(statusBar(page)).toContainText('Exported “Untitled.png”');
@@ -340,7 +342,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(png.height).toBe(drawn.height * 2);
   });
 
-  test('AT-10 (Chromium part): the same document saves to the same bytes in another tab', async ({
+  test('T-0012 · AT-10 (Chromium part): the same document saves to the same bytes in another tab', async ({
     page,
     context,
   }) => {
@@ -358,7 +360,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await writtenText(other, 'copy.ns.svg')).toBe(first);
   });
 
-  test('AT-11: moves a block by dragging, and inserts and wraps by dragging block icons', async ({
+  test('T-0013 · AT-11: moves a block by dragging, and inserts and wraps by dragging block icons', async ({
     page,
   }) => {
     await processBlocks(page, 'A', 'B', 'C');
@@ -396,7 +398,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(await savedOutline(page)).toBe('P(C) W(loop)[P(A)] P(B) I(dropped)[Y: E | N: E]');
   });
 
-  test('AT-12: pastes copied blocks as blocks, and plain text as one process block per line', async ({
+  test('T-0014 · AT-12: pastes copied blocks as blocks, and plain text as one process block per line', async ({
     page,
   }) => {
     await processBlocks(page, 'one');
@@ -418,7 +420,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     );
   });
 
-  test('AT-14 (Chromium part): auto save writes the original file 2 s after an edit', async ({
+  test('T-0015 · AT-14 (Chromium part): auto save writes the original file 2 s after an edit', async ({
     page,
   }) => {
     await processBlocks(page, 'first');
@@ -431,7 +433,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(outline(modelOf(text).diagrams[0]?.body ?? [])).toBe('P(first) P(auto)');
   });
 
-  test('AT-15: opens a file again from Recent Files', async ({ page }) => {
+  test('T-0016 · AT-15: opens a file again from Recent Files', async ({ page }) => {
     await processBlocks(page, 'remember me');
     await savedOutline(page);
     await command(page, 'file.new').click();
@@ -443,7 +445,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
   });
 
-  test('AT-16: finds a command in the command palette and runs it', async ({ page }) => {
+  test('T-0017 · AT-16: finds a command in the command palette and runs it', async ({ page }) => {
     await page.keyboard.press('Control+Shift+P');
     const palette = page.getByRole('combobox', { name: 'Command palette' });
     await expect(palette).toBeFocused();
@@ -459,7 +461,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(canvas(page)).toBeFocused();
   });
 
-  test('AT-17: ? opens the shortcut list, and Help opens the user guide', async ({
+  test('T-0018 · AT-17: ? opens the shortcut list, and Help opens the user guide', async ({
     page,
     context,
   }) => {
@@ -478,7 +480,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     expect(guide.url()).toMatch(/\/manual\/$/);
   });
 
-  test('undo and redo with keys and the toolbar', async ({ page }) => {
+  test('T-0019: undo and redo with keys and the toolbar', async ({ page }) => {
     await processBlocks(page, 'a', 'b');
     await page.keyboard.press('u');
     await expect(drawnText(page, 'b')).toHaveCount(0);
@@ -494,7 +496,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(drawnText(page, 'b')).toBeVisible();
   });
 
-  test('zoom with keys, Ctrl+wheel and the zoom menu', async ({ page }) => {
+  test('T-0020: zoom with keys, Ctrl+wheel and the zoom menu', async ({ page }) => {
     const zoomButton = page.locator('button[title="Zoom"]');
     await expect(zoomButton).toContainText('100%');
     await press(page, 'Shift+Equal', 'Shift+Equal');
@@ -515,7 +517,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(zoomButton).toContainText('100%');
   });
 
-  test('the context menu shows the commands for the selection', async ({ page }) => {
+  test('T-0021: the context menu shows the commands for the selection', async ({ page }) => {
     await processBlocks(page, 'a', 'b');
     await drawnText(page, 'a').click({ button: 'right' });
     const menu = page.getByRole('menu', { name: 'Context menu' });
@@ -540,7 +542,9 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await openApp(page);
   });
 
-  test('AT-02: a downloaded file opened again downloads the same bytes', async ({ page }) => {
+  test('T-0022 · AT-02: a downloaded file opened again downloads the same bytes', async ({
+    page,
+  }) => {
     await processBlocks(page, 'download', '내려받기');
     let downloading = page.waitForEvent('download');
     await page.keyboard.press('Control+S');
@@ -558,7 +562,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     expect(await readFile(await (await downloading).path(), 'utf8')).toBe(first);
   });
 
-  test('AT-07: Save As asks for the name in the editor, and cancelling keeps the edits', async ({
+  test('T-0023 · AT-07: Save As asks for the name in the editor, and cancelling keeps the edits', async ({
     page,
   }) => {
     await processBlocks(page, 'named');
@@ -577,7 +581,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await expect(page).toHaveTitle('renamed.ns.svg – AriadneNSD');
   });
 
-  test('AT-13: after a reload the local backup is restored', async ({ page }) => {
+  test('T-0024 · AT-13: after a reload the local backup is restored', async ({ page }) => {
     await processBlocks(page, 'not saved yet');
     // The backup is written 0.5 s after the last edit.
     await page.waitForTimeout(1000);
@@ -593,7 +597,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
   });
 
-  test('AT-14 (Chromium part): without File System Access, saving downloads and says so once', async ({
+  test('T-0025 · AT-14 (Chromium part): without File System Access, saving downloads and says so once', async ({
     page,
   }) => {
     await processBlocks(page, 'x');
@@ -607,7 +611,9 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
 test.describe('Korean screen', () => {
   test.use({ locale: 'ko-KR' });
 
-  test('R-NFR-04: menus, status bar and the drawing words are Korean', async ({ page }) => {
+  test('T-0026 · R-NFR-04: menus, status bar and the drawing words are Korean', async ({
+    page,
+  }) => {
     await openApp(page);
     await expect(page).toHaveTitle('제목 없음.ns.svg – AriadneNSD');
     await expect(selection(page)).toHaveText('빈 블록');

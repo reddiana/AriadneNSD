@@ -47,61 +47,61 @@ function nodeOf<K extends LayoutNode['kind']>(
 }
 
 describe('layout: blocks', () => {
-  it('02-layout 1.4: a process block is its text plus padding, at least 52px wide', () => {
+  it('T-0439: 02-layout 1.4: a process block is its text plus padding, at least 52px wide', () => {
     const result = layout(docOf(process('b1', wide)), en);
     expect(boxOf(result, 'b1')).toEqual({ x: 24, y: 24, width: 215, height: 32 });
     expect(result.width).toBe(24 + 215 + 24);
     expect(result.height).toBe(24 + 32 + 24);
   });
 
-  it('02-layout 1.5: a diagram is at least 160px wide; blocks take the full width', () => {
+  it('T-0440: 02-layout 1.5: a diagram is at least 160px wide; blocks take the full width', () => {
     const result = layout(docOf(process('b1', 'n > 0')), en);
     expect(boxOf(result, 'b1')).toEqual({ x: 24, y: 24, width: 160, height: 32 });
   });
 
-  it('R-LAY-01: a multi-line block grows by 18px a line', () => {
+  it('T-0441 · R-LAY-01: a multi-line block grows by 18px a line', () => {
     const result = layout(docOf(process('b1', 'a\nb\nc')), en);
     expect(boxOf(result, 'b1').height).toBe(3 * 18 + 2 * 7);
   });
 
-  it('02-layout 1.2: an empty block is one line high', () => {
+  it('T-0442: 02-layout 1.2: an empty block is one line high', () => {
     const result = layout(docOf(process('b1')), en);
     expect(boxOf(result, 'b1').height).toBe(32);
   });
 
-  it('02-layout 1.3: blocks of a sequence touch with no gap', () => {
+  it('T-0443: 02-layout 1.3: blocks of a sequence touch with no gap', () => {
     const result = layout(docOf(process('b1', 'a'), process('b2', 'b\nc'), process('b3')), en);
     expect(boxOf(result, 'b1')).toEqual({ x: 24, y: 24, width: 160, height: 32 });
     expect(boxOf(result, 'b2')).toEqual({ x: 24, y: 56, width: 160, height: 50 });
     expect(boxOf(result, 'b3')).toEqual({ x: 24, y: 106, width: 160, height: 32 });
   });
 
-  it('02-layout 1.4: a While has its header on top and its body 22px to the right', () => {
+  it('T-0444: 02-layout 1.4: a While has its header on top and its body 22px to the right', () => {
     const result = layout(docOf(whileBlock('b1', 'i < n', [process('b2', wide)])), en);
     expect(boxOf(result, 'b1')).toEqual({ x: 24, y: 24, width: 237, height: 64 });
     expect(nodeOf(result, 'loop', 'b1').head).toEqual({ x: 24, y: 24, width: 237, height: 32 });
     expect(boxOf(result, 'b2')).toEqual({ x: 46, y: 56, width: 215, height: 32 });
   });
 
-  it('02-layout 1.4: a Do-While has its header at the bottom', () => {
+  it('T-0445: 02-layout 1.4: a Do-While has its header at the bottom', () => {
     const result = layout(docOf(doWhileBlock('b1', 'i < n', [process('b2', wide)])), en);
     expect(nodeOf(result, 'loop', 'b1').head).toEqual({ x: 24, y: 56, width: 237, height: 32 });
     expect(boxOf(result, 'b2')).toEqual({ x: 46, y: 24, width: 215, height: 32 });
   });
 
-  it('UX FB1: a For is measured like a While', () => {
+  it('T-0446 · UX FB1: a For is measured like a While', () => {
     const asWhile = layout(docOf(whileBlock('b1', 'i ← 0..9', [process('b2', wide)])), en);
     const asFor = layout(docOf(forBlock('b1', 'i ← 0..9', [process('b2', wide)])), en);
     expect(asFor.boxes).toEqual(asWhile.boxes);
   });
 
-  it('02-layout 1.4: a loop header is as wide as its condition needs', () => {
+  it('T-0447: 02-layout 1.4: a loop header is as wide as its condition needs', () => {
     const result = layout(docOf(whileBlock('b1', wide, [process('b2')])), en);
     expect(boxOf(result, 'b1').width).toBe(215);
     expect(boxOf(result, 'b2').width).toBe(215 - 22);
   });
 
-  it('02-layout 1.4: an If header is the condition + padding + 16px label row high', () => {
+  it('T-0448: 02-layout 1.4: an If header is the condition + padding + 16px label row high', () => {
     const result = layout(
       docOf(ifBlock('b1', 'x > 0', branch('r2', [process('b3')]), branch('r4', [process('b5')]))),
       en,
@@ -115,7 +115,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'b5')).toEqual(boxOf(result, 'r4'));
   });
 
-  it('02-layout 1.4: an If is at least its condition + 2·pad-x + 70px wide', () => {
+  it('T-0449: 02-layout 1.4: an If is at least its condition + 2·pad-x + 70px wide', () => {
     const result = layout(
       docOf(ifBlock('b1', wide, branch('r2', [process('b3')]), branch('r4', [process('b5')]))),
       en,
@@ -123,7 +123,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'b1').width).toBe(195 + 20 + 70);
   });
 
-  it('R-LAY-02: an If is as wide as both branches side by side', () => {
+  it('T-0450 · R-LAY-02: an If is as wide as both branches side by side', () => {
     const result = layout(
       docOf(
         ifBlock(
@@ -140,7 +140,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'b5').width).toBe(215);
   });
 
-  it('02-layout 1.4: spare width goes to branches in proportion to their smallest widths', () => {
+  it('T-0451: 02-layout 1.4: spare width goes to branches in proportion to their smallest widths', () => {
     const narrow = 'x'.repeat(10); // 85px block
     const result = layout(
       docOf(
@@ -159,7 +159,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'r4').width).toBe(410 - 116);
   });
 
-  it('UX Q24: If branch labels follow the locale unless the user wrote one', () => {
+  it('T-0452 · UX Q24: If branch labels follow the locale unless the user wrote one', () => {
     const doc = docOf(
       ifBlock('b1', 'c', branch('r2', [process('b3')]), branch('r4', [process('b5')], '없음')),
     );
@@ -169,7 +169,7 @@ describe('layout: blocks', () => {
     expect([korean.yes.text, korean.no.text]).toEqual(['참', '없음']);
   });
 
-  it('02-layout 1.4: a long branch label widens its branch', () => {
+  it('T-0453: 02-layout 1.4: a long branch label widens its branch', () => {
     const label = 'x'.repeat(20); // 120px at 12px
     const result = layout(
       docOf(
@@ -180,7 +180,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'r2').width).toBeGreaterThanOrEqual(120 + 18);
   });
 
-  it('02-layout 1.4: a Case header is the condition + padding + 28px label row high', () => {
+  it('T-0454: 02-layout 1.4: a Case header is the condition + padding + 28px label row high', () => {
     const result = layout(
       docOf(
         caseBlock(
@@ -201,7 +201,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'b7')).toEqual({ x: 128, y: 84, width: 60, height: 32 });
   });
 
-  it('02-layout 1.4: a Case is at least its condition + 2·pad-x + 90px wide', () => {
+  it('T-0455: 02-layout 1.4: a Case is at least its condition + 2·pad-x + 90px wide', () => {
     const result = layout(
       docOf(
         caseBlock('b1', wide, [arm('r2', '1', [process('b3')])], branch('r4', [process('b5')])),
@@ -211,7 +211,7 @@ describe('layout: blocks', () => {
     expect(boxOf(result, 'b1').width).toBe(195 + 20 + 90);
   });
 
-  it('UX CD1: a Case without a default draws an empty default cell', () => {
+  it('T-0456 · UX CD1: a Case without a default draws an empty default cell', () => {
     const result = layout(docOf(caseBlock('b1', 'k', [arm('r2', '1', [process('b3')])], null)), en);
     const node = nodeOf(result, 'case', 'b1');
     expect(node.columns.map((column) => column.branchId)).toEqual(['r2', null]);
@@ -222,14 +222,14 @@ describe('layout: blocks', () => {
     expect(result.regions).toContainEqual({ kind: 'missingDefault', blockId: 'b1', box: cell });
   });
 
-  it('UX CD2: a Case with only a default has one column', () => {
+  it('T-0457 · UX CD2: a Case with only a default has one column', () => {
     const result = layout(docOf(caseBlock('b1', 'k', [], branch('r2', [process('b3')]))), en);
     const node = nodeOf(result, 'case', 'b1');
     expect(node.columns).toHaveLength(1);
     expect(boxOf(result, 'b3')).toEqual({ x: 24, y: 84, width: 160, height: 32 });
   });
 
-  it('UX E1: marks the only, empty block of a branch', () => {
+  it('T-0458 · UX E1: marks the only, empty block of a branch', () => {
     const result = layout(
       docOf(
         ifBlock('b1', 'c', branch('r2', [process('b3')]), branch('r4', [process('b5', 'x')])),
@@ -245,7 +245,7 @@ describe('layout: blocks', () => {
 });
 
 describe('layout: short branches (UX SB1)', () => {
-  it('UX SB1: shares the extra height equally; the last block takes the remainder', () => {
+  it('T-0459 · UX SB1: shares the extra height equally; the last block takes the remainder', () => {
     const result = layout(
       docOf(
         ifBlock(
@@ -267,7 +267,7 @@ describe('layout: short branches (UX SB1)', () => {
     expect(boxOf(result, 'b8').height).toBe(68);
   });
 
-  it('02-layout 1.3: a control block gives its extra height to its body, not its header', () => {
+  it('T-0460: 02-layout 1.3: a control block gives its extra height to its body, not its header', () => {
     const result = layout(
       docOf(
         ifBlock(
@@ -285,7 +285,7 @@ describe('layout: short branches (UX SB1)', () => {
 });
 
 describe('layout: click regions', () => {
-  it('02-layout 1.1: control blocks are clicked on the header, labels on their label row', () => {
+  it('T-0461: 02-layout 1.1: control blocks are clicked on the header, labels on their label row', () => {
     const result = layout(
       docOf(ifBlock('b1', 'c', branch('r2', [process('b3')]), branch('r4', [process('b5')]))),
       en,
@@ -311,7 +311,7 @@ describe('layout: click regions', () => {
     ]);
   });
 
-  it('02-layout 1.1: a Do-While is clicked on its bottom header', () => {
+  it('T-0462: 02-layout 1.1: a Do-While is clicked on its bottom header', () => {
     const result = layout(docOf(doWhileBlock('b1', 'w', [process('b2')])), en);
     expect(result.regions[0]).toEqual({
       kind: 'head',
@@ -343,7 +343,7 @@ const event = (text: string): Diagram['head'] => ({ kind: 'event', text });
 const method = (text: string): Diagram['head'] => ({ kind: 'method', text });
 
 describe('layout: headers (02-layout 1.5)', () => {
-  it('a shaped header is the hat (16px) + the text + 2·pad-y high, above the body', () => {
+  it('T-0463: a shaped header is the hat (16px) + the text + 2·pad-y high, above the body', () => {
     const result = layout(diagramsDoc('shape', [['d1', event('start'), 'x']]), en);
     const head = nodeOf(result, 'diagramHead', 'd1');
     expect(head.box).toEqual({ x: 24, y: 24, width: 160, height: 16 + 18 + 14 });
@@ -353,24 +353,24 @@ describe('layout: headers (02-layout 1.5)', () => {
     expect(result.diagrams[0]?.head).toEqual(head.box);
   });
 
-  it('a shaped header is at least its text + 2·pad-x + 24px wide', () => {
+  it('T-0464: a shaped header is at least its text + 2·pad-x + 24px wide', () => {
     const doc = diagramsDoc('shape', [['d1', method(wide), 'x']]);
     expect(nodeOf(layout(doc, en), 'diagramHead', 'd1').box.width).toBe(195 + 20 + 24);
   });
 
-  it('a header like a title is 16 + 18 + 6 = 40px high and needs no padding', () => {
+  it('T-0465: a header like a title is 16 + 18 + 6 = 40px high and needs no padding', () => {
     const doc = diagramsDoc('title', [['d1', method(wide), 'x']]);
     const head = nodeOf(layout(doc, en), 'diagramHead', 'd1');
     expect(head.box).toEqual({ x: 24, y: 24, width: 195, height: 40 });
   });
 
-  it('a diagram without a header has no header node and is clicked on its blocks', () => {
+  it('T-0466: a diagram without a header has no header node and is clicked on its blocks', () => {
     const result = layout(diagramsDoc('title', [['d1', null, 'x']]), en);
     expect(result.nodes.some((node) => node.kind === 'diagramHead')).toBe(false);
     expect(result.diagrams[0]?.head).toBeNull();
   });
 
-  it('02-layout 1.1: a header is clicked anywhere on it', () => {
+  it('T-0467: 02-layout 1.1: a header is clicked anywhere on it', () => {
     const result = layout(diagramsDoc('shape', [['d1', event('start'), 'x']]), en);
     expect(result.regions).toContainEqual({
       kind: 'diagramHead',
@@ -381,7 +381,7 @@ describe('layout: headers (02-layout 1.5)', () => {
 });
 
 describe('layout: several diagrams (02-layout 1.7)', () => {
-  it('puts Methods to the right of Events, 88px apart', () => {
+  it('T-0468: puts Methods to the right of Events, 88px apart', () => {
     const doc = diagramsDoc('title', [
       ['d1', method('sort(a)'), 'x'],
       ['d2', event('start'), 'x'],
@@ -392,7 +392,7 @@ describe('layout: several diagrams (02-layout 1.7)', () => {
     expect(result.width).toBe(24 + 160 + 88 + 160 + 24);
   });
 
-  it('keeps a diagram without a header in the Event group', () => {
+  it('T-0469: keeps a diagram without a header in the Event group', () => {
     const doc = diagramsDoc('title', [
       ['d1', null, 'x'],
       ['d2', method('f'), 'x'],
@@ -402,7 +402,7 @@ describe('layout: several diagrams (02-layout 1.7)', () => {
     expect(boxOf(result, 'd2').x).toBe(24 + 160 + 88);
   });
 
-  it('wraps a long group into columns so the picture is closest to 16 : 10', () => {
+  it('T-0470: wraps a long group into columns so the picture is closest to 16 : 10', () => {
     const doc = diagramsDoc(
       'title',
       Array.from(
@@ -417,7 +417,7 @@ describe('layout: several diagrams (02-layout 1.7)', () => {
     expect(Math.abs(ratio - 1.6)).toBeLessThan(0.6);
   });
 
-  it('stacks diagrams of one group top to bottom, 44px apart, while they fit', () => {
+  it('T-0471: stacks diagrams of one group top to bottom, 44px apart, while they fit', () => {
     const doc: Doc = {
       ...docOf(process('b1')),
       content: {
@@ -488,7 +488,7 @@ function contains(outer: Box, inner: Box): boolean {
 }
 
 describe('layout: properties', () => {
-  it('R-FMT-03: the same document gives the same layout', () => {
+  it('T-0472 · R-FMT-03: the same document gives the same layout', () => {
     fc.assert(
       fc.property(fc.array(blockArbitrary, { minLength: 1, maxLength: 4 }), (blocks) => {
         const doc = docOf(...blocks);
@@ -498,7 +498,7 @@ describe('layout: properties', () => {
     );
   });
 
-  it('02-layout 1.1: every box is whole px and inside its diagram', () => {
+  it('T-0473: 02-layout 1.1: every box is whole px and inside its diagram', () => {
     fc.assert(
       fc.property(fc.array(blockArbitrary, { minLength: 1, maxLength: 4 }), (blocks) => {
         const result = layout(docOf(...blocks), en);
@@ -519,7 +519,7 @@ describe('layout: properties', () => {
     );
   });
 
-  it('R-LAY-02: the blocks of a diagram body fill it exactly (it stays a rectangle)', () => {
+  it('T-0474 · R-LAY-02: the blocks of a diagram body fill it exactly (it stays a rectangle)', () => {
     fc.assert(
       fc.property(fc.array(blockArbitrary, { minLength: 1, maxLength: 4 }), (blocks) => {
         const result = layout(docOf(...blocks), en);
@@ -540,7 +540,7 @@ describe('layout: properties', () => {
 });
 
 describe('layout: size', () => {
-  it('lays out a document of 500 blocks', () => {
+  it('T-0475: lays out a document of 500 blocks', () => {
     const result = layout(largeDoc(500), en);
     expect(result.boxes.size).toBeGreaterThanOrEqual(500);
   });

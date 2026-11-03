@@ -18,7 +18,7 @@ function view(id: string, menu: CommandView['menu']): CommandView {
 }
 
 describe('menuEntries', () => {
-  it('03-editor 5.1: orders a menu by group and order and gathers submenus in place', () => {
+  it('T-0330: 03-editor 5.1: orders a menu by group and order and gathers submenus in place', () => {
     const commands = [
       view('block.unwrap', { menu: 'diagram', group: 1, order: 1 }),
       view('block.insert.if', { menu: 'diagram', group: 0, order: 1, submenu: 'insert' }),

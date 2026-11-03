@@ -29,7 +29,7 @@ test.describe('download flow (no File System Access)', () => {
     });
   });
 
-  test('R-ALL-03, R-WEB-02: a new document with an If block downloads and opens again', async ({
+  test('T-0333: R-ALL-03, R-WEB-02: a new document with an If block downloads and opens again', async ({
     page,
   }) => {
     await openApp(page);
@@ -56,7 +56,7 @@ test.describe('download flow (no File System Access)', () => {
     expect(await page.evaluate(() => document.title)).not.toContain('●');
   });
 
-  test('R-WEB-02: an SVG without a model is not opened, and the reason is shown', async ({
+  test('T-0334 · R-WEB-02: an SVG without a model is not opened, and the reason is shown', async ({
     page,
   }) => {
     await openApp(page);
@@ -73,7 +73,9 @@ test.describe('download flow (no File System Access)', () => {
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
   });
 
-  test('R-WEB-03: after a reload the unsaved changes can be restored', async ({ page }) => {
+  test('T-0335 · R-WEB-03: after a reload the unsaved changes can be restored', async ({
+    page,
+  }) => {
     await openApp(page);
     await command(page, 'block.insert.while').click();
     // The backup is written 0.5 s after the last edit.
@@ -130,7 +132,7 @@ test.describe('file handle flow (File System Access)', () => {
       return (await files.get(file)?.text()) ?? null;
     }, name);
 
-  test('R-WEB-02, R-EXP-04: saves to the file, then auto saves 2 s after the next edit', async ({
+  test('T-0336: R-WEB-02, R-EXP-04: saves to the file, then auto saves 2 s after the next edit', async ({
     page,
   }) => {
     await openApp(page);
@@ -155,7 +157,7 @@ test.describe('file handle flow (File System Access)', () => {
     await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
   });
 
-  test('R-EXP-01: exports a PNG at twice the drawing size', async ({ page }) => {
+  test('T-0337 · R-EXP-01: exports a PNG at twice the drawing size', async ({ page }) => {
     await openApp(page);
     await command(page, 'block.insert.if').click();
     await command(page, 'file.export.png').click();
@@ -175,7 +177,7 @@ test.describe('file handle flow (File System Access)', () => {
 });
 
 test.describe('two tabs', () => {
-  test('06-web 2: the second tab with the same file only views', async ({ context }) => {
+  test('T-0338: 06-web 2: the second tab with the same file only views', async ({ context }) => {
     await context.addInitScript(() => {
       const target = window as unknown as Record<string, unknown>;
       delete target.showOpenFilePicker;

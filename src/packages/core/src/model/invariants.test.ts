@@ -18,7 +18,7 @@ const numbers = (content: Content): ReadonlyArray<number> =>
   checkInvariants(content).map((v) => v.invariant);
 
 describe('checkInvariants', () => {
-  it('R-NFR-01: a valid document has no violations', () => {
+  it('T-0190 · R-NFR-01: a valid document has no violations', () => {
     const content = contentOf(
       seq(
         [
@@ -40,7 +40,7 @@ describe('checkInvariants', () => {
     }).not.toThrow();
   });
 
-  it('01-model 3.1: a document needs a diagram', () => {
+  it('T-0191: 01-model 3.1: a document needs a diagram', () => {
     const content: Content = { ...contentOf([proc('b1')]), diagrams: [] };
     expect(numbers(content)).toEqual([1]);
     expect(() => {
@@ -48,12 +48,12 @@ describe('checkInvariants', () => {
     }).toThrow(/invariant 1/);
   });
 
-  it('01-model 3.2: no sequence is empty', () => {
+  it('T-0192: 01-model 3.2: no sequence is empty', () => {
     expect(numbers(contentOf([]))).toEqual([2]);
     expect(numbers(contentOf([whileBlock('b1', [])]))).toEqual([2]);
   });
 
-  it('01-model 3.3: ids are unique across kinds of node', () => {
+  it('T-0193: 01-model 3.3: ids are unique across kinds of node', () => {
     expect(numbers(contentOf([proc('b1'), proc('b1')]))).toEqual([3]);
     expect(numbers(contentOf([proc('d1')]))).toEqual([3]);
     const branchClash = contentOf([
@@ -62,18 +62,18 @@ describe('checkInvariants', () => {
     expect(numbers(branchClash)).toEqual([3]);
   });
 
-  it('01-model 3.4: a Case needs a branch; Case without default or with only default is fine', () => {
+  it('T-0194: 01-model 3.4: a Case needs a branch; Case without default or with only default is fine', () => {
     expect(numbers(contentOf([caseBlock('b1', [], null)]))).toEqual([4]);
     expect(numbers(contentOf([caseBlock('b1', [arm('r1', '1', [proc('b2')])], null)]))).toEqual([]);
     expect(numbers(contentOf([caseBlock('b1', [], branch('r1', [proc('b2')]))]))).toEqual([]);
   });
 
-  it('01-model 3.4: an If without two branches (a broken file) is reported', () => {
+  it('T-0195: 01-model 3.4: an If without two branches (a broken file) is reported', () => {
     const broken = { id: 'b1', kind: 'if', text: '', yes: branch('r1', [proc('b2')]) };
     expect(numbers(contentOf([broken as unknown as Block]))).toEqual([4]);
   });
 
-  it('01-model 3.5: fold ends must be blocks of the sequence, in order', () => {
+  it('T-0196: 01-model 3.5: fold ends must be blocks of the sequence, in order', () => {
     const outside = contentOf(
       seq([whileBlock('b1', [proc('b2')]), proc('b3')], [{ id: 'f1', first: 'b2', last: 'b3' }]),
     );
@@ -84,7 +84,7 @@ describe('checkInvariants', () => {
     expect(numbers(reversed)).toEqual([5]);
   });
 
-  it('01-model 3.5: folds nest or stay apart, and no two have the same range', () => {
+  it('T-0197: 01-model 3.5: folds nest or stay apart, and no two have the same range', () => {
     const blocks = [proc('b1'), proc('b2'), proc('b3')];
     const crossing = contentOf(
       seq(blocks, [
@@ -109,7 +109,7 @@ describe('checkInvariants', () => {
     expect(numbers(apart)).toEqual([]);
   });
 
-  it('01-model 3.6: a local call names an existing Method', () => {
+  it('T-0198: 01-model 3.6: a local call names an existing Method', () => {
     const call = (diagram: string): Block => ({
       id: 'b2',
       kind: 'call',
@@ -138,7 +138,7 @@ describe('checkInvariants', () => {
     expect(numbers(withMethod)).toEqual([]);
   });
 
-  it('01-model 3.7: a blank diagram exists only when it is the only one', () => {
+  it('T-0199: 01-model 3.7: a blank diagram exists only when it is the only one', () => {
     expect(numbers(contentOf([empty('b1')]))).toEqual([]);
     const two: Content = {
       ...contentOf([proc('b1')]),

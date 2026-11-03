@@ -8,11 +8,11 @@ const packageVersion = (path: string): string =>
   (JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8')) as { version: string }).version;
 
 describe('app version', () => {
-  it('is a semantic version', () => {
+  it('T-0331: is a semantic version', () => {
     expect(editorVersion).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  it('matches the version of every package', () => {
+  it('T-0332: matches the version of every package', () => {
     for (const path of [
       '../package.json',
       '../../core/package.json',

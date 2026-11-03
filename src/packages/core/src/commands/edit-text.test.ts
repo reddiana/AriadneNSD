@@ -15,7 +15,7 @@ import {
 } from './test-support';
 
 describe('editText', () => {
-  it('R-EDIT-01: sets the text of a block, keeping the rest', () => {
+  it('T-0133 · R-EDIT-01: sets the text of a block, keeping the rest', () => {
     const content = contentOf([proc('b1'), whileBlock('b2', [proc('b3')], 'old')]);
     const result = runOk(editText, content, { node: 'b2', text: 'i < n' });
     expect(blockOf(result.content, 'b2')).toMatchObject({ kind: 'while', text: 'i < n' });
@@ -24,12 +24,12 @@ describe('editText', () => {
     expect(blockOf(result.content, 'b1')).toBe(blockOf(content, 'b1'));
   });
 
-  it('01-model 4.4: the same text leaves the content as it is', () => {
+  it('T-0134: 01-model 4.4: the same text leaves the content as it is', () => {
     const content = contentOf([proc('b1', 'x')]);
     expect(runOk(editText, content, { node: 'b1', text: 'x' }).content).toBe(content);
   });
 
-  it('R-EDIT-12: sets and clears an If branch label', () => {
+  it('T-0135 · R-EDIT-12: sets and clears an If branch label', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')], 'no')),
     ]);
@@ -41,7 +41,7 @@ describe('editText', () => {
     expect(ifNode.kind === 'if' ? 'label' in ifNode.no : null).toBe(false);
   });
 
-  it('R-EDIT-11: sets a Case branch label but not an empty one, nor the default label', () => {
+  it('T-0136 · R-EDIT-11: sets a Case branch label but not an empty one, nor the default label', () => {
     const content = contentOf([
       caseBlock('b1', [arm('r1', '1', [proc('b2')])], branch('r2', [proc('b3')])),
     ]);
@@ -51,7 +51,7 @@ describe('editText', () => {
     expectRefused(editText, content, { node: 'r2', text: 'other' }, 'defaultLabelFixed');
   });
 
-  it('R-EDIT-01: refuses a missing node, a diagram header and call blocks (later features)', () => {
+  it('T-0137 · R-EDIT-01: refuses a missing node, a diagram header and call blocks (later features)', () => {
     const content = contentOf([
       proc('b1'),
       {

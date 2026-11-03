@@ -29,7 +29,7 @@ const ifDoc: Doc = {
 };
 
 describe('model JSON serialization', () => {
-  it('01-file-format 3.3: writes the small example with 2-space indent and keys in table order', () => {
+  it('T-0408: 01-file-format 3.3: writes the small example with 2-space indent and keys in table order', () => {
     expect(serializeModelJson(ifDoc)).toBe(
       [
         '{',
@@ -88,7 +88,7 @@ describe('model JSON serialization', () => {
     );
   });
 
-  it('R-FMT-03: the same document gives the same text, whatever order the objects were built in', () => {
+  it('T-0409 · R-FMT-03: the same document gives the same text, whatever order the objects were built in', () => {
     const shuffled: Doc = {
       view: { resultSymbol: '←', bands: true, opened: [], folded: [] },
       content: {
@@ -99,7 +99,7 @@ describe('model JSON serialization', () => {
     expect(serializeModelJson(shuffled)).toBe(serializeModelJson(ifDoc));
   });
 
-  it('01-file-format 3.3: writes head, folds, labels, otherwise and siteFolds only when present', () => {
+  it('T-0410: 01-file-format 3.3: writes head, folds, labels, otherwise and siteFolds only when present', () => {
     const doc: Doc = {
       content: {
         settings: { textKind: 'plain', theme: 'default', headStyle: 'title' },
@@ -170,7 +170,7 @@ describe('model JSON serialization', () => {
     expect(withoutDefault).not.toContain('"folds"');
   });
 
-  it('01-model 2: writes only existing foldable ids, in document order, without duplicates', () => {
+  it('T-0411: 01-model 2: writes only existing foldable ids, in document order, without duplicates', () => {
     const doc: Doc = {
       ...ifDoc,
       view: { ...view, folded: ['r2', 'gone', 'b1', 'r1', 'r2', 'b99'] },
@@ -179,7 +179,7 @@ describe('model JSON serialization', () => {
     expect(json.view.folded).toEqual(['r1', 'r2']);
   });
 
-  it('01-file-format 3.1: the opened paths are in document order and only those that exist', () => {
+  it('T-0412: 01-file-format 3.1: the opened paths are in document order and only those that exist', () => {
     const call = (id: string, diagram: string): Block => ({
       id,
       kind: 'call',
@@ -206,7 +206,7 @@ describe('model JSON serialization', () => {
     expect(json.view.opened).toEqual([['b1'], ['b1', 'b3'], ['b2']]);
   });
 
-  it('01-file-format 3.3: writes back an unknown textKind kept from the file', () => {
+  it('T-0413: 01-file-format 3.3: writes back an unknown textKind kept from the file', () => {
     expect(serializeModelJson(ifDoc, { textKind: 'cobol' })).toContain('"textKind": "cobol"');
     expect(serializeModelJson(ifDoc)).toContain('"textKind": "plain"');
   });

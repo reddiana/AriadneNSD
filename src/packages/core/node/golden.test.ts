@@ -222,16 +222,16 @@ async function goldenNames(): Promise<ReadonlyArray<string>> {
 
 describe('golden files', () => {
   for (const { name, doc, kept, locale } of cases) {
-    it(`R-FMT-03: ${name} is saved as the golden file`, async () => {
+    it(`T-0352 · R-FMT-03: ${name} is saved as the golden file`, async () => {
       await expect(save(doc, kept, locale ?? 'en')).toMatchFileSnapshot(`../golden/${name}.ns.svg`);
     });
   }
 
-  it('every golden file has a case', async () => {
+  it('T-0353: every golden file has a case', async () => {
     expect(await goldenNames()).toEqual(cases.map((goldenCase) => goldenCase.name).sort());
   });
 
-  it('QA-04: every golden file opens and saves to the same bytes', async () => {
+  it('T-0354 · QA-04: every golden file opens and saves to the same bytes', async () => {
     for (const name of await goldenNames()) {
       const file = `${name}${suffix}`;
       const bytes = await readFile(new URL(file, goldenDirectory));
@@ -246,7 +246,7 @@ describe('golden files', () => {
 });
 
 describe('saved file size', () => {
-  it('QA-09: 100 blocks with 300 different Hangul syllables save to 300 KB or less', () => {
+  it('T-0355 · QA-09: 100 blocks with 300 different Hangul syllables save to 300 KB or less', () => {
     const syllables = Array.from({ length: 300 }, (_, index) =>
       String.fromCodePoint(0xac00 + index * 37),
     );

@@ -48,7 +48,7 @@ async function watchStart(page: Page): Promise<void> {
   });
 }
 
-test('QA-18: on a slow phone the editor shows within 3 s and the block font within 5 s', async ({
+test('T-0287 · QA-18: on a slow phone the editor shows within 3 s and the block font within 5 s', async ({
   page,
 }) => {
   await skipWelcome(page);
@@ -63,7 +63,7 @@ test('QA-18: on a slow phone the editor shows within 3 s and the block font with
   expect(times.font).toBeLessThan(5000);
 });
 
-test('QA-20: a first visit on a phone opens an example with a tap', async ({ page }) => {
+test('T-0288 · QA-20: a first visit on a phone opens an example with a tap', async ({ page }) => {
   await page.goto('./');
   const modal = page.locator('.ans-backdrop[data-kind="examples"] .ans-modal');
   await expect(modal.locator('h2')).toHaveText('Welcome to AriadneNSD');
@@ -72,7 +72,7 @@ test('QA-20: a first visit on a phone opens an example with a tap', async ({ pag
   await expect(page).toHaveTitle('Merge sort.ns.svg – AriadneNSD');
 });
 
-test('QA-20: on a phone a block is inserted from the toolbar and selected with a tap', async ({
+test('T-0289 · QA-20: on a phone a block is inserted from the toolbar and selected with a tap', async ({
   page,
 }) => {
   await skipWelcome(page);
@@ -91,7 +91,7 @@ test('QA-20: on a phone a block is inserted from the toolbar and selected with a
   await expect(selection(page)).toHaveText('Process block');
 });
 
-test('BUG-04 · QA-20: on a phone the toolbar shows "Examples", and a tap opens the modal', async ({
+test('T-0290 · BUG-04 · QA-20: on a phone the toolbar shows "Examples", and a tap opens the modal', async ({
   page,
 }) => {
   await skipWelcome(page);
@@ -104,7 +104,7 @@ test('BUG-04 · QA-20: on a phone the toolbar shows "Examples", and a tap opens 
   await expect(modal.locator('h2')).toHaveText('Open an Example');
 });
 
-test('QA-20: on a phone undo, redo, wrap and help are in the toolbar, with no bar at the bottom', async ({
+test('T-0291 · QA-20: on a phone undo, redo, wrap and help are in the toolbar, with no bar at the bottom', async ({
   page,
 }) => {
   await skipWelcome(page);

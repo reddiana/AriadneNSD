@@ -38,7 +38,7 @@ const boxOf = (id: string): Box => {
 const middle = (box: Box) => ({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
 
 describe('hit testing (03-editor 3.1)', () => {
-  it('R-EDIT-01: a click in a process block hits that block', () => {
+  it('T-0230 · R-EDIT-01: a click in a process block hits that block', () => {
     expect(hitTest(result, index, middle(boxOf('p1')))).toMatchObject({
       kind: 'block',
       block: 'p1',
@@ -49,7 +49,7 @@ describe('hit testing (03-editor 3.1)', () => {
     });
   });
 
-  it('R-EDIT-12: a branch label row beats the header around it', () => {
+  it('T-0231 · R-EDIT-12: a branch label row beats the header around it', () => {
     const region = result.regions.find((r) => r.kind === 'branchLabel' && r.branchId === 'r1');
     expect(region).toBeDefined();
     if (region !== undefined) {
@@ -60,13 +60,13 @@ describe('hit testing (03-editor 3.1)', () => {
     }
   });
 
-  it('03-editor 3.1: the strip of a loop, which has no click region, hits the loop', () => {
+  it('T-0232: 03-editor 3.1: the strip of a loop, which has no click region, hits the loop', () => {
     const box = boxOf('w1');
     const point = { x: box.x + 3, y: box.y + box.height - 3 };
     expect(hitTest(result, index, point)).toMatchObject({ kind: 'block', block: 'w1' });
   });
 
-  it('UX CD1: the empty default cell of a Case is hit', () => {
+  it('T-0233 · UX CD1: the empty default cell of a Case is hit', () => {
     const cell = result.regions.find((r) => r.kind === 'missingDefault');
     expect(cell).toBeDefined();
     if (cell !== undefined) {
@@ -77,13 +77,13 @@ describe('hit testing (03-editor 3.1)', () => {
     }
   });
 
-  it('03-editor 3.1: outside the diagrams nothing is hit', () => {
+  it('T-0234: 03-editor 3.1: outside the diagrams nothing is hit', () => {
     expect(hitTest(result, index, { x: 1, y: 1 })).toBeNull();
   });
 });
 
 describe('drop place (03-editor 3.2)', () => {
-  it('R-EDIT-09: the 8 px bands are between blocks, the rest is on the block', () => {
+  it('T-0235 · R-EDIT-09: the 8 px bands are between blocks, the rest is on the block', () => {
     const box = { x: 0, y: 0, width: 100, height: 40 };
     expect(zoneOf(box, { x: 50, y: 7 })).toBe('before');
     expect(zoneOf(box, { x: 50, y: 33 })).toBe('after');
@@ -93,7 +93,7 @@ describe('drop place (03-editor 3.2)', () => {
     expect(zoneOf(small, { x: 50, y: 11 })).toBe('after');
   });
 
-  it('R-EDIT-09: a new control block dropped on a block wraps it; a process goes after', () => {
+  it('T-0236 · R-EDIT-09: a new control block dropped on a block wraps it; a process goes after', () => {
     const p1 = boxOf('p1');
     const on = { x: middle(p1).x, y: p1.y + p1.height / 2 };
     expect(p1.height).toBeGreaterThanOrEqual(24);
@@ -108,7 +108,7 @@ describe('drop place (03-editor 3.2)', () => {
     expect(asProcess?.action).toMatchObject({ kind: 'insert', to: 'p1', blockKind: 'process' });
   });
 
-  it('R-EDIT-09: on one of the selected blocks the whole selection is wrapped', () => {
+  it('T-0237 · R-EDIT-09: on one of the selected blocks the whole selection is wrapped', () => {
     const selection = selectRange(index, 'p1', 'b1');
     const p1 = boxOf('p1');
     const drop = findDrop(
@@ -125,7 +125,7 @@ describe('drop place (03-editor 3.2)', () => {
     });
   });
 
-  it('R-EDIT-09: dragged blocks go between blocks, even into a control block', () => {
+  it('T-0238 · R-EDIT-09: dragged blocks go between blocks, even into a control block', () => {
     const source = {
       kind: 'blocks' as const,
       target: { kind: 'blocks' as const, first: 'p1', last: 'p1' },
@@ -143,7 +143,7 @@ describe('drop place (03-editor 3.2)', () => {
     expect(drop?.mark).toMatchObject({ kind: 'line', y: p3.y });
   });
 
-  it('R-EDIT-09: an empty block takes a drop whole; nothing drops into the dragged blocks', () => {
+  it('T-0239 · R-EDIT-09: an empty block takes a drop whole; nothing drops into the dragged blocks', () => {
     const drop = findDrop(
       result,
       index,
@@ -161,7 +161,7 @@ describe('drop place (03-editor 3.2)', () => {
     expect(findDrop(result, index, middle(boxOf('p2')), source, null)).toBeNull();
   });
 
-  it('UX CD1: a drop on the empty default cell makes the default branch', () => {
+  it('T-0240 · UX CD1: a drop on the empty default cell makes the default branch', () => {
     const cell = result.regions.find((r) => r.kind === 'missingDefault');
     const point = cell === undefined ? { x: -1, y: -1 } : middle(cell.box);
     const drop = findDrop(result, index, point, { kind: 'new', blockKind: 'process' }, null);
@@ -178,7 +178,7 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
   const headedLayout = layout(docOf(headed), { locale: 'en' });
   const head = headedLayout.diagrams[0]?.head ?? { x: -1, y: -1, width: 0, height: 0 };
 
-  it('R-BLK-10: a click on the header hits the header and selects it', () => {
+  it('T-0241 · R-BLK-10: a click on the header hits the header and selects it', () => {
     const hit = hitTest(headedLayout, headedIndex, middle(head));
     expect(hit).toMatchObject({ kind: 'diagramHead', diagram: 'd1' });
     expect(hit === null ? null : selectionOfHit(headedIndex, hit)).toEqual({
@@ -187,7 +187,7 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
     });
   });
 
-  it('visual design 7.1: the selected header is outlined whole; nothing drops on it', () => {
+  it('T-0242: visual design 7.1: the selected header is outlined whole; nothing drops on it', () => {
     // Like a title, the outline stands 4px outside so it does not cover the letters.
     expect(selectionBox(headedLayout, headedIndex, { kind: 'head', diagram: 'd1' })).toEqual({
       x: head.x - 4,
@@ -205,7 +205,7 @@ describe('diagram headers (R-BLK-10, R-BLK-11)', () => {
     expect(drop).toBeNull();
   });
 
-  it('03-editor 3.4: the header name field lies inside the header', () => {
+  it('T-0243: 03-editor 3.4: the header name field lies inside the header', () => {
     const box = fieldBox(headedLayout, { kind: 'head', diagram: 'd1' });
     expect(box).not.toBeNull();
     expect(box?.y).toBeGreaterThan(head.y);

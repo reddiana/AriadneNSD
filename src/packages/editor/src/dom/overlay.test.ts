@@ -5,7 +5,7 @@ import { selectBlock } from '../state/selection';
 import { overlayContent } from './overlay';
 
 describe('overlayContent', () => {
-  it('BUG-07: the selection outline covers the block lines equally on all four sides', () => {
+  it('T-0229 · BUG-07: the selection outline covers the block lines equally on all four sides', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     const { session } = engine;
     session.select(selectBlock(session.index(), 'b1'));

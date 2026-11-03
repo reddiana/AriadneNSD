@@ -4,7 +4,7 @@ import { checkInvariants } from '../model/invariants';
 import { createContent, createDoc } from './new-document';
 
 describe('new document', () => {
-  it('R-ALL-03: a new document has one diagram holding one empty block', () => {
+  it('T-0168 · R-ALL-03: a new document has one diagram holding one empty block', () => {
     const content = createContent();
     expect(content.diagrams).toEqual([
       {
@@ -16,7 +16,7 @@ describe('new document', () => {
     expect(checkInvariants(content)).toEqual([]);
   });
 
-  it('R-LAY-10 (UX HS1): the header shape defaults to title and can be passed in', () => {
+  it('T-0169 · R-LAY-10 (UX HS1): the header shape defaults to title and can be passed in', () => {
     expect(createContent().settings.headStyle).toBe('title');
     expect(createContent({ headStyle: 'shape' }).settings).toEqual({
       textKind: 'plain',
@@ -25,7 +25,7 @@ describe('new document', () => {
     });
   });
 
-  it('R-ALL-03: a new doc starts with nothing folded and the result symbol ←', () => {
+  it('T-0170 · R-ALL-03: a new doc starts with nothing folded and the result symbol ←', () => {
     expect(createDoc().view).toEqual({ folded: [], opened: [], bands: true, resultSymbol: '←' });
   });
 });

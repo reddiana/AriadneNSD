@@ -249,7 +249,7 @@ const drawing = {
 const formatOnly = (): null => null;
 
 describe('round trip', () => {
-  it('R-FMT-02: model JSON reads back as the same content, and writes the same text again', () => {
+  it('T-0422 · R-FMT-02: model JSON reads back as the same content, and writes the same text again', () => {
     fc.assert(
       fc.property(docAndKept, ({ doc, kept }) => {
         const json = serializeModelJson(doc, kept);
@@ -264,7 +264,7 @@ describe('round trip', () => {
     );
   });
 
-  it('QA-04: a saved SVG file opens as the same document and saves to the same bytes', () => {
+  it('T-0423 · QA-04: a saved SVG file opens as the same document and saves to the same bytes', () => {
     fc.assert(
       fc.property(docAndKept, ({ doc, kept }) => {
         const file = assembleSvgFile({ doc, kept, drawing, fonts: [] });
@@ -278,7 +278,7 @@ describe('round trip', () => {
     );
   });
 
-  it('QA-02: opening any text never throws', () => {
+  it('T-0424 · QA-02: opening any text never throws', () => {
     fc.assert(
       fc.property(fc.string(), docAndKept, fc.nat(), fc.nat(), (noise, { doc }, from, length) => {
         const file = assembleSvgFile({ doc, drawing, fonts: [] });

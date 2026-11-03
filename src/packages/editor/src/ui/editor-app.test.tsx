@@ -48,7 +48,7 @@ const editCommands = [
 ];
 
 describe('menu bar', () => {
-  it('03-editor 5.1: opens a menu with its items and the standard key, and runs a click', () => {
+  it('T-0293: 03-editor 5.1: opens a menu with its items and the standard key, and runs a click', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
@@ -63,7 +63,7 @@ describe('menu bar', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
-  it('03-editor 3: dims a command that does not apply and still runs it so the engine can tell why', () => {
+  it('T-0294: 03-editor 3: dims a command that does not apply and still runs it so the engine can tell why', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     fireEvent.click(screen.getByRole('button', { name: 'Diagram' }));
@@ -75,7 +75,7 @@ describe('menu bar', () => {
     expect(engine.ran).toEqual(['block.wrap.if']);
   });
 
-  it('UX W3: shows the file name with ● while unsaved', () => {
+  it('T-0295 · UX W3: shows the file name with ● while unsaved', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const name = screen.getByTestId('file-name');
@@ -86,7 +86,7 @@ describe('menu bar', () => {
     expect(name.textContent).toBe('example.ns.svg●');
   });
 
-  it('R-NFR-04: names the menus in the screen language', () => {
+  it('T-0296 · R-NFR-04: names the menus in the screen language', () => {
     renderApp(fakeEngine(editCommands), { locale: 'ko' });
     expect(screen.getByRole('button', { name: '편집' })).toBeTruthy();
     expect(screen.getByRole('button', { name: '다이어그램' })).toBeTruthy();
@@ -94,7 +94,7 @@ describe('menu bar', () => {
 });
 
 describe('toolbar block icons', () => {
-  it('R-EDIT-01: click inserts after, Shift+click before, Ctrl+click wraps; process cannot wrap', () => {
+  it('T-0297 · R-EDIT-01: click inserts after, Shift+click before, Ctrl+click wraps; process cannot wrap', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const ifIcon = screen.getByRole('button', { name: 'If' });
@@ -110,7 +110,7 @@ describe('toolbar block icons', () => {
     ]);
   });
 
-  it('R-EDIT-09: a press that moves past 4 px hands a drag to the engine instead of clicking', () => {
+  it('T-0298 · R-EDIT-09: a press that moves past 4 px hands a drag to the engine instead of clicking', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const ifIcon = screen.getByRole('button', { name: 'If' });
@@ -124,7 +124,7 @@ describe('toolbar block icons', () => {
     expect(engine.ran).toEqual([]);
   });
 
-  it('02-interaction-rules: the tooltip names the block and the keys that do the same', () => {
+  it('T-0299: 02-interaction-rules: the tooltip names the block and the keys that do the same', () => {
     renderApp(fakeEngine(editCommands));
     expect(screen.getByRole('button', { name: 'If' }).getAttribute('title')).toContain('(ai)');
   });
@@ -145,7 +145,7 @@ describe('command palette', () => {
     }),
   );
 
-  it('R-EDIT-24: finds commands by part of the name, recent ones first', () => {
+  it('T-0300 · R-EDIT-24: finds commands by part of the name, recent ones first', () => {
     expect(paletteRows(views, 'wrap', []).map((row) => row.id)).toEqual([
       'Wrap in If',
       'Wrap in While',
@@ -157,7 +157,7 @@ describe('command palette', () => {
     expect(paletteRows(views, '', []).length).toBe(4);
   });
 
-  it('R-EDIT-24: opens from its command, shows Vim keys, runs the picked row with Enter', () => {
+  it('T-0301 · R-EDIT-24: opens from its command, shows Vim keys, runs the picked row with Enter', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
@@ -174,7 +174,7 @@ describe('command palette', () => {
     expect(screen.queryByRole('combobox')).toBeNull();
   });
 
-  it('R-EDIT-24: moves with ↑ ↓ and closes with Esc without running', () => {
+  it('T-0302 · R-EDIT-24: moves with ↑ ↓ and closes with Esc without running', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
@@ -194,7 +194,7 @@ describe('command palette', () => {
 });
 
 describe('status bar', () => {
-  it('06-web 7: shows what is selected and the latest notice', () => {
+  it('T-0303: 06-web 7: shows what is selected and the latest notice', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     expect(screen.getByTestId('selection').textContent).toBe('Nothing selected');
@@ -208,7 +208,7 @@ describe('status bar', () => {
     expect(screen.getByRole('status').textContent).toContain('Copied 2 block(s).');
   });
 
-  it('04-visual-design 7.1: shows the editing mode and the zoom', () => {
+  it('T-0304: 04-visual-design 7.1: shows the editing mode and the zoom', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
@@ -218,7 +218,7 @@ describe('status bar', () => {
     expect(screen.getByRole('button', { name: /150%/ })).toBeTruthy();
   });
 
-  it('UX MD3: asks If ↔ Case with buttons and passes the answer to the engine', () => {
+  it('T-0305 · UX MD3: asks If ↔ Case with buttons and passes the answer to the engine', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const choose = vi.fn();
@@ -241,7 +241,7 @@ describe('status bar', () => {
 });
 
 describe('key hint', () => {
-  it('R-EDIT-04: lists the second keys when the engine says the hint is due, and hides after', () => {
+  it('T-0306 · R-EDIT-04: lists the second keys when the engine says the hint is due, and hides after', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
@@ -262,7 +262,7 @@ describe('key hint', () => {
 });
 
 describe('modals', () => {
-  it('R-EDIT-21: `?` opens the key table with Vim and standard columns, Esc closes it', () => {
+  it('T-0307 · R-EDIT-21: `?` opens the key table with Vim and standard columns, Esc closes it', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
@@ -275,7 +275,7 @@ describe('modals', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('UX W5: preferences show the user settings and write a change to the settings store', () => {
+  it('T-0308 · UX W5: preferences show the user settings and write a change to the settings store', () => {
     const settings = memorySettings();
     const engine = fakeEngine(editCommands, [
       {
@@ -305,7 +305,7 @@ describe('modals', () => {
     expect(settings.get('keyHint')).toBe(false);
   });
 
-  it('UX W5: document settings write through the engine', () => {
+  it('T-0309 · UX W5: document settings write through the engine', () => {
     const engine = fakeEngine(editCommands, [
       {
         id: 'headerStyle',
@@ -326,7 +326,7 @@ describe('modals', () => {
 });
 
 describe('canvas slot', () => {
-  it('ADR-0010: puts the engine element between the toolbar and the status bar', () => {
+  it('T-0310: ADR-0010: puts the engine element between the toolbar and the status bar', () => {
     renderApp(fakeEngine(editCommands));
     const canvas = screen.getByTestId('engine-canvas');
     expect(canvas.parentElement?.className).toBe('ans-canvas-slot');
@@ -342,7 +342,7 @@ describe('context menu', () => {
     ),
   ];
 
-  it('03-editor 5: lists the commands for the selection in menu order, with submenus', () => {
+  it('T-0311: 03-editor 5: lists the commands for the selection in menu order, with submenus', () => {
     const engine = fakeEngine(contextCommands);
     renderApp(engine);
     act(() => {
@@ -363,7 +363,7 @@ describe('context menu', () => {
     expect(screen.queryByRole('menu', { name: 'Context menu' })).toBeNull();
   });
 
-  it('closes on Esc', () => {
+  it('T-0312: closes on Esc', () => {
     const engine = fakeEngine(contextCommands);
     renderApp(engine);
     act(() => {
@@ -377,7 +377,7 @@ describe('context menu', () => {
 });
 
 describe('dialogs and notices from the shell', () => {
-  it('06-web 2: a dialog asks in a modal; the confirm button answers', () => {
+  it('T-0313: 06-web 2: a dialog asks in a modal; the confirm button answers', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const answers: (string | null)[] = [];
@@ -398,7 +398,7 @@ describe('dialogs and notices from the shell', () => {
     expect(answers).toEqual(['']);
   });
 
-  it('06-web 1: a text dialog answers the typed text, Esc cancels', () => {
+  it('T-0314: 06-web 1: a text dialog answers the typed text, Esc cancels', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const answers: (string | null)[] = [];
@@ -421,7 +421,7 @@ describe('dialogs and notices from the shell', () => {
     expect(answers).toEqual(['b.ns.svg', null]);
   });
 
-  it('06-web 7: a warning stays in the status bar until it is closed', () => {
+  it('T-0315: 06-web 7: a warning stays in the status bar until it is closed', () => {
     vi.useFakeTimers();
     try {
       const engine = fakeEngine(editCommands);
@@ -456,7 +456,7 @@ describe('picker (interaction rules "호출 블록")', () => {
     choose: (index: number | null) => answers.push(index),
   });
 
-  it('R-BLK-07: lists the Methods and "new Method"; j k move from the active one, Enter chooses', () => {
+  it('T-0316 · R-BLK-07: lists the Methods and "new Method"; j k move from the active one, Enter chooses', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const answers: (number | null)[] = [];
@@ -481,7 +481,7 @@ describe('picker (interaction rules "호출 블록")', () => {
     expect(answers).toEqual([0]);
   });
 
-  it('03-keymap: a digit chooses at once, Esc closes', () => {
+  it('T-0317: 03-keymap: a digit chooses at once, Esc closes', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     const answers: (number | null)[] = [];

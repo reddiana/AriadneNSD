@@ -7,24 +7,24 @@ const advance = (character: string): number =>
   advanceOf(blockFont.advances, character.codePointAt(0) ?? 0);
 
 describe('block font advance table', () => {
-  it('ADR-0034: Latin, Greek and Cyrillic are half width', () => {
+  it('T-0512: ADR-0034: Latin, Greek and Cyrillic are half width', () => {
     expect(advance('a')).toBe(500);
     expect(advance('é')).toBe(500);
     expect(advance('λ')).toBe(500);
     expect(advance('ж')).toBe(500);
   });
 
-  it('ADR-0034: Hangul and kana are full width', () => {
+  it('T-0513: ADR-0034: Hangul and kana are full width', () => {
     expect(advance('한')).toBe(1000);
     expect(advance('ア')).toBe(1000);
   });
 
-  it('02-layout 2.1: characters missing from the font count as full width', () => {
+  it('T-0514: 02-layout 2.1: characters missing from the font count as full width', () => {
     expect(advance('漢')).toBe(1000);
     expect(advance('😀')).toBe(1000);
   });
 
-  it('02-layout 2.1: ranges are sorted and do not overlap', () => {
+  it('T-0515: 02-layout 2.1: ranges are sorted and do not overlap', () => {
     const { ranges } = blockFont.advances;
     for (let index = 1; index < ranges.length; index += 1) {
       const previous = ranges[index - 1];
@@ -33,7 +33,7 @@ describe('block font advance table', () => {
     }
   });
 
-  it('02-layout 2.1: 13 px text widths match the design examples', () => {
+  it('T-0516: 02-layout 2.1: 13 px text widths match the design examples', () => {
     const px = (text: string): number => {
       let units = 0;
       for (const character of text) {

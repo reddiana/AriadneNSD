@@ -51,7 +51,7 @@ function countingSave(outcome: () => AutosaveOutcome): {
 }
 
 describe('local backup timer', () => {
-  it('R-WEB-03: writes once for edits within 0.5 s', () => {
+  it('T-0394 · R-WEB-03: writes once for edits within 0.5 s', () => {
     const clock = manualClock();
     let writes = 0;
     const backup = createDebounce(() => (writes += 1), backupDelay, clock);
@@ -64,7 +64,7 @@ describe('local backup timer', () => {
     expect(writes).toBe(1);
   });
 
-  it('R-WEB-03: flushes a pending write at once, and does nothing when none is pending', () => {
+  it('T-0395 · R-WEB-03: flushes a pending write at once, and does nothing when none is pending', () => {
     const clock = manualClock();
     let writes = 0;
     const backup = createDebounce(() => (writes += 1), backupDelay, clock);
@@ -77,7 +77,7 @@ describe('local backup timer', () => {
     expect(writes).toBe(1);
   });
 
-  it('cancels a pending write', () => {
+  it('T-0396: cancels a pending write', () => {
     const clock = manualClock();
     let writes = 0;
     const backup = createDebounce(() => (writes += 1), backupDelay, clock);
@@ -90,7 +90,7 @@ describe('local backup timer', () => {
 });
 
 describe('auto save timer', () => {
-  it('R-EXP-04: saves 2 s after the last change', async () => {
+  it('T-0397 · R-EXP-04: saves 2 s after the last change', async () => {
     const clock = manualClock();
     const saver = countingSave(() => 'saved');
     const autosave = createAutosave(saver.save, autosaveDelay, clock);
@@ -104,7 +104,7 @@ describe('auto save timer', () => {
     expect(saver.count()).toBe(1);
   });
 
-  it('R-EXP-04: a change while saving waits 2 s again after the save ends', async () => {
+  it('T-0398 · R-EXP-04: a change while saving waits 2 s again after the save ends', async () => {
     const clock = manualClock();
     let saves = 0;
     let finish: (outcome: AutosaveOutcome) => void = () => undefined;
@@ -130,7 +130,7 @@ describe('auto save timer', () => {
     expect(saves).toBe(2);
   });
 
-  it('06-web 2: stops when write permission is lost, until resumed', async () => {
+  it('T-0399: 06-web 2: stops when write permission is lost, until resumed', async () => {
     const clock = manualClock();
     let outcome: AutosaveOutcome = 'stop';
     const saver = countingSave(() => outcome);
@@ -150,7 +150,7 @@ describe('auto save timer', () => {
     expect(saver.count()).toBe(2);
   });
 
-  it('does not save after dispose', () => {
+  it('T-0400: does not save after dispose', () => {
     const clock = manualClock();
     const saver = countingSave(() => 'saved');
     const autosave = createAutosave(saver.save, autosaveDelay, clock);

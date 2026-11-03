@@ -3,7 +3,9 @@ import { expect, test } from '@playwright/test';
 
 import { canvas, drawnText, middleOf, openApp } from './support';
 
-test('BUG-08: a click on the empty canvas closes the key hint of a waiting a', async ({ page }) => {
+test('T-0203 · BUG-08: a click on the empty canvas closes the key hint of a waiting a', async ({
+  page,
+}) => {
   await openApp(page);
   const area = canvas(page);
   await area.focus();
@@ -19,7 +21,7 @@ test('BUG-08: a click on the empty canvas closes the key hint of a waiting a', a
   await expect(hint).toHaveCount(0);
 });
 
-test('UX CF2: with nothing selected the focus outline shows for a moment only', async ({
+test('T-0204 · UX CF2: with nothing selected the focus outline shows for a moment only', async ({
   page,
 }) => {
   await openApp(page);
@@ -41,7 +43,7 @@ test('UX CF2: with nothing selected the focus outline shows for a moment only', 
   await expect(area).toHaveClass(/ans-focus-flash/);
 });
 
-test('BUG-09: dragging a block does not select the drawn text', async ({ page }) => {
+test('T-0205 · BUG-09: dragging a block does not select the drawn text', async ({ page }) => {
   await openApp(page);
   await canvas(page).focus();
   await page.keyboard.press('Enter');
@@ -61,7 +63,7 @@ test('BUG-09: dragging a block does not select the drawn text', async ({ page })
   await page.mouse.up();
 });
 
-test('UX CM1: a right click on the empty canvas shows the File and Help menus', async ({
+test('T-0206 · UX CM1: a right click on the empty canvas shows the File and Help menus', async ({
   page,
 }) => {
   await openApp(page);

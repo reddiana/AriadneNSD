@@ -4,7 +4,7 @@ import { screenLocale } from './appearance';
 import { localeFromLanguageTag, shellMessage } from './messages';
 
 describe('screen language', () => {
-  it('R-NFR-04: Korean browsers get Korean, every other language English', () => {
+  it('T-0318 · R-NFR-04: Korean browsers get Korean, every other language English', () => {
     expect(localeFromLanguageTag('ko-KR')).toBe('ko');
     expect(localeFromLanguageTag('ko')).toBe('ko');
     expect(localeFromLanguageTag('en-US')).toBe('en');
@@ -12,14 +12,14 @@ describe('screen language', () => {
     expect(localeFromLanguageTag(undefined)).toBe('en');
   });
 
-  it('R-NFR-04: the preference wins over the browser language', () => {
+  it('T-0319 · R-NFR-04: the preference wins over the browser language', () => {
     expect(screenLocale('en', 'ko-KR')).toBe('en');
     expect(screenLocale('ko', 'en-US')).toBe('ko');
     expect(screenLocale(undefined, 'ko-KR')).toBe('ko');
     expect(screenLocale('fr', 'en-US')).toBe('en');
   });
 
-  it('fills placeholders and leaves unknown ones', () => {
+  it('T-0320: fills placeholders and leaves unknown ones', () => {
     expect(shellMessage('en', 'notice.exported', { name: 'a.png' })).toBe('Exported “a.png”.');
     expect(shellMessage('en', 'notice.exported')).toBe('Exported “{name}”.');
   });

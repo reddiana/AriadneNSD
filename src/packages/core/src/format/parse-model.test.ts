@@ -121,12 +121,12 @@ const fullDoc: Doc = {
 };
 
 describe('model JSON parsing', () => {
-  it('R-FMT-02: reads back every node kind as the same document', () => {
+  it('T-0414 · R-FMT-02: reads back every node kind as the same document', () => {
     const result = parseModelJson(serializeModelJson(fullDoc));
     expect(result).toEqual({ ok: true, value: { doc: fullDoc, kept: {} } });
   });
 
-  it('01-file-format 3.3: reads files that write empty lists and folds out', () => {
+  it('T-0415: 01-file-format 3.3: reads files that write empty lists and folds out', () => {
     const value = minimal();
     value.diagrams = [
       {
@@ -148,7 +148,7 @@ describe('model JSON parsing', () => {
     expect(result.ok).toBe(true);
   });
 
-  it('01-file-format 3.3: shows an unknown textKind as plain and keeps the value for saving', () => {
+  it('T-0416: 01-file-format 3.3: shows an unknown textKind as plain and keeps the value for saving', () => {
     const value = minimal();
     value.settings = { textKind: 'cobol', theme: 'midnight', headStyle: 'shape' };
     const result = parseModel(value);
@@ -166,21 +166,21 @@ describe('model JSON parsing', () => {
     expect(saved).toContain('"theme": "midnight"');
   });
 
-  it('01-file-format 7: a version 0 file is a prototype file and cannot be edited', () => {
+  it('T-0417: 01-file-format 7: a version 0 file is a prototype file and cannot be edited', () => {
     expect(parseModel({ ...minimal(), version: 0 })).toMatchObject({
       ok: false,
       reason: 'prototype',
     });
   });
 
-  it('01-file-format 5: a newer version cannot be edited and asks for an update', () => {
+  it('T-0418: 01-file-format 5: a newer version cannot be edited and asks for an update', () => {
     expect(parseModel({ ...minimal(), version: 2 })).toMatchObject({
       ok: false,
       reason: 'newerVersion',
     });
   });
 
-  it('QA-02: broken input is refused with a reason, never thrown', () => {
+  it('T-0419 · QA-02: broken input is refused with a reason, never thrown', () => {
     const broken: unknown[] = [
       null,
       42,
@@ -210,14 +210,14 @@ describe('model JSON parsing', () => {
     expect(parseModelJson('{ "format": ')).toMatchObject({ ok: false, reason: 'damaged' });
   });
 
-  it('01-model 2: keeps dangling view ids when reading (weak references)', () => {
+  it('T-0420: 01-model 2: keeps dangling view ids when reading (weak references)', () => {
     const value = minimal();
     value.view = { folded: ['r9'], opened: [['b9']], bands: true, resultSymbol: '←' };
     const result = parseModel(value);
     expect(result.ok && result.value.doc.view.folded).toEqual(['r9']);
   });
 
-  it('01-model 3: refuses a document that breaks the invariants, without repairing it', () => {
+  it('T-0421: 01-model 3: refuses a document that breaks the invariants, without repairing it', () => {
     const value = minimal();
     value.diagrams = [
       { id: 'd1', body: [{ id: 'b1', kind: 'process', text: '' }] },

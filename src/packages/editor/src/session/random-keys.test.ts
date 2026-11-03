@@ -20,7 +20,7 @@ const strokes = (
 
 describe('random keys (QA-01)', () => {
   for (const seed of [1, 2, 3]) {
-    it(`QA-01: 400 random keys keep the invariants and undo all the way back (seed ${String(seed)})`, async () => {
+    it(`T-0228 · QA-01: 400 random keys keep the invariants and undo all the way back (seed ${String(seed)})`, async () => {
       const start = contentOf([
         proc('b1'),
         ifBlock('b2', branch('r1', [proc('b3')]), branch('r2', [whileBlock('b4', [proc('b5')])])),

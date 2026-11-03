@@ -7,7 +7,7 @@ const bytes = (text: string): Uint8Array =>
   Uint8Array.from(text, (character) => character.charCodeAt(0));
 
 describe('base64', () => {
-  it('encodes the RFC 4648 test vectors', () => {
+  it('T-0406: encodes the RFC 4648 test vectors', () => {
     expect(encodeBase64(bytes(''))).toBe('');
     expect(encodeBase64(bytes('f'))).toBe('Zg==');
     expect(encodeBase64(bytes('fo'))).toBe('Zm8=');
@@ -17,7 +17,7 @@ describe('base64', () => {
     expect(encodeBase64(bytes('foobar'))).toBe('Zm9vYmFy');
   });
 
-  it('uses + and / for the high values', () => {
+  it('T-0407: uses + and / for the high values', () => {
     expect(encodeBase64(new Uint8Array([0xfb, 0xff, 0xbf]))).toBe('+/+/');
     expect(encodeBase64(new Uint8Array([0, 0, 0, 255]))).toBe('AAAA/w==');
   });

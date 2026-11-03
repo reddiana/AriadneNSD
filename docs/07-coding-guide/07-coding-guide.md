@@ -178,8 +178,8 @@ export function wrap(content: Content, args: WrapArgs): Result {
 
 ## 10. 테스트
 
-- 테스트 이름은 영어 문장으로, 확인하는 요구사항 · 시나리오 ID를 앞에 붙입니다: `it('R-EDIT-06: wraps a contiguous range in a new If block', …)`. ID로 찾을 수 있게 하려는 것입니다 → [[03-quality-attribute-scenarios]]
-- 테스트를 더하거나 이름을 바꾸면 [[08-test-list|테스트 목록]]에 쓸 한국어 번역도 채웁니다: `src/`에서 `node scripts/test-list.mjs --add-missing`으로 빈 번역을 `scripts/test-list-ko.json`에 더하고 채운 뒤 `pnpm test-list`. 번역이 빠지면 `pnpm check`가 실패합니다
+- 테스트 이름은 영어 문장으로, 맨 앞에 그 테스트의 ID(`T-` + 네 자리)를, 그 뒤에 확인하는 요구사항 · 시나리오 · 결함의 ID를 붙입니다: `it('T-0123 · R-EDIT-06: wraps a contiguous range in a new If block', …)`, 확인하는 것이 없으면 `it('T-0124: …')` → [[dr-0022-test-ids|DR-0022]]
+- 테스트를 더하면 `src/`에서 `node scripts/test-list.mjs --assign-ids`로 ID를 받고, `--add-missing`으로 [[08-test-list|테스트 목록]]에 쓸 빈 번역을 `scripts/test-list-ko.json`에 더해 채운 뒤 `pnpm test-list`. ID나 번역이 빠지면 `pnpm check`가 실패합니다. ID는 바꾸거나 다시 쓰지 않습니다
 - 버그를 고치면 그 버그를 다시 일으키는 테스트를 먼저 더합니다.
 - 층마다 무엇을 테스트하는지, 골든 파일의 규칙, 인수 테스트는 [[07-testing]]에 있습니다.
 

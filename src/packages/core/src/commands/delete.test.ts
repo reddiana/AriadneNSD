@@ -16,7 +16,7 @@ import {
 } from './test-support';
 
 describe('deleteBlocks', () => {
-  it('R-EDIT-01: deletes the selected range with what is inside', () => {
+  it('T-0096 · R-EDIT-01: deletes the selected range with what is inside', () => {
     const content = contentOf([proc('b1'), whileBlock('b2', [proc('b3')]), proc('b4')]);
     const result = runOk(deleteBlocks, content, {
       target: { kind: 'blocks', first: 'b1', last: 'b2' },
@@ -25,7 +25,7 @@ describe('deleteBlocks', () => {
     expect(result.touched).toEqual([]);
   });
 
-  it('01-model 4.1: a sequence left with no blocks gets one empty block', () => {
+  it('T-0097: 01-model 4.1: a sequence left with no blocks gets one empty block', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2'), proc('b3')]), branch('r2', [proc('b4')])),
     ]);
@@ -36,7 +36,7 @@ describe('deleteBlocks', () => {
     expect(result.touched).toEqual(['b5']);
   });
 
-  it('01-model 4.3: fold regions shrink to the blocks left, and go when none is left', () => {
+  it('T-0098: 01-model 4.3: fold regions shrink to the blocks left, and go when none is left', () => {
     const content = contentOf(
       seq(
         [proc('b1'), proc('b2'), proc('b3'), proc('b4')],
@@ -52,7 +52,7 @@ describe('deleteBlocks', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b1-b2']);
   });
 
-  it('R-EDIT-01: deleting a whole fold region deletes its blocks', () => {
+  it('T-0099 · R-EDIT-01: deleting a whole fold region deletes its blocks', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2'), proc('b3')], [{ id: 'f1', first: 'b2', last: 'b3' }]),
     );
@@ -61,7 +61,7 @@ describe('deleteBlocks', () => {
     expect(foldsIn(result.content, 'd1')).toEqual([]);
   });
 
-  it('R-EDIT-01: refuses to delete the only, empty block, and a missing target', () => {
+  it('T-0100 · R-EDIT-01: refuses to delete the only, empty block, and a missing target', () => {
     expectRefused(
       deleteBlocks,
       contentOf([empty('b1')]),
@@ -82,7 +82,7 @@ describe('deleteBlocks', () => {
     );
   });
 
-  it('R-EDIT-01: an empty block among others can be deleted', () => {
+  it('T-0101 · R-EDIT-01: an empty block among others can be deleted', () => {
     const result = runOk(deleteBlocks, contentOf([empty('b1'), proc('b2')]), {
       target: { kind: 'blocks', first: 'b1', last: 'b1' },
     });

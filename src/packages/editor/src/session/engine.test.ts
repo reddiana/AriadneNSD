@@ -35,7 +35,7 @@ const textOf = (engine: TestEngine, id: string): string | undefined => {
 };
 
 describe('inserting and editing text (AT-03)', () => {
-  it('R-EDIT-01: a + kind inserts after the selection and opens its text field', () => {
+  it('T-0027 · R-EDIT-01: a + kind inserts after the selection and opens its text field', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     select(engine, 'b1');
     engine.keys('a', 'i');
@@ -50,7 +50,7 @@ describe('inserting and editing text (AT-03)', () => {
     expect(bodyOf(engine)).toEqual(['b1', 'b2']);
   });
 
-  it('UX MD2: closing the text field with the same text leaves no undo step', () => {
+  it('T-0028 · UX MD2: closing the text field with the same text leaves no undo step', () => {
     const engine = testEngine(contentOf([proc('b1', 'x')]));
     select(engine, 'b1');
     engine.keys('Enter');
@@ -75,7 +75,7 @@ describe('inserting and editing text (AT-03)', () => {
       ['A', 'p'],
       ['b2', 'b1'],
     ],
-  ])('UX KP2: a process block (%j) goes next to an empty block too', (keys, body) => {
+  ])('T-0029 · UX KP2: a process block (%j) goes next to an empty block too', (keys, body) => {
     const engine = testEngine(contentOf([empty('b1')]));
     select(engine, 'b1');
     engine.keys(...keys);
@@ -83,14 +83,14 @@ describe('inserting and editing text (AT-03)', () => {
     expect(engine.session.state.editing?.field).toEqual({ kind: 'block', block: 'b2' });
   });
 
-  it('interaction rules 2: a control block on an empty block takes its place', () => {
+  it('T-0030: interaction rules 2: a control block on an empty block takes its place', () => {
     const engine = testEngine(contentOf([empty('b1')]));
     select(engine, 'b1');
     engine.keys('a', 'w');
     expect(bodyOf(engine)).toEqual(['b2']);
   });
 
-  it('interaction rules "블록 아이콘": with nothing selected, a block goes at the diagram end', () => {
+  it('T-0031: interaction rules "블록 아이콘": with nothing selected, a block goes at the diagram end', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.run('block.insert.while');
     expect(bodyOf(engine)).toEqual(['b1', 'b2']);
@@ -98,7 +98,7 @@ describe('inserting and editing text (AT-03)', () => {
 });
 
 describe('the selection after a command (03-editor 2.3)', () => {
-  it('UX Q19: after deleting, the next block, else the previous, else the holder', () => {
+  it('T-0032 · UX Q19: after deleting, the next block, else the previous, else the holder', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2'), whileBlock('b3', [proc('b4')])]));
     select(engine, 'b1');
     engine.keys('x');
@@ -111,7 +111,7 @@ describe('the selection after a command (03-editor 2.3)', () => {
     expect(selected(engine)).toEqual(['b2']);
   });
 
-  it('UX Q19: undo keeps the selection while what it names is still there', () => {
+  it('T-0033 · UX Q19: undo keeps the selection while what it names is still there', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     select(engine, 'b1');
     engine.keys('o');
@@ -124,7 +124,7 @@ describe('the selection after a command (03-editor 2.3)', () => {
     expect(selected(engine)).toEqual(['b2']);
   });
 
-  it('R-EDIT-06: wrapping selects the new block and opens its condition', () => {
+  it('T-0034 · R-EDIT-06: wrapping selects the new block and opens its condition', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     engine.select(selectRange(indexDoc(engine.content()), 'b1', 'b2'));
     engine.keys('s', 'w');
@@ -133,7 +133,7 @@ describe('the selection after a command (03-editor 2.3)', () => {
     expect(engine.session.state.editing?.field).toEqual({ kind: 'block', block: 'b3' });
   });
 
-  it('R-EDIT-07: unwrapping from inside keeps the selection and says what was removed', () => {
+  it('T-0035 · R-EDIT-07: unwrapping from inside keeps the selection and says what was removed', () => {
     const engine = testEngine(contentOf([whileBlock('b1', [proc('b2'), proc('b3')])]));
     select(engine, 'b2');
     engine.keys('d', 's');
@@ -145,7 +145,7 @@ describe('the selection after a command (03-editor 2.3)', () => {
     });
   });
 
-  it('R-EDIT-11: moving keeps the moved blocks selected', () => {
+  it('T-0036 · R-EDIT-11: moving keeps the moved blocks selected', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     select(engine, 'b2');
     engine.keys('Alt+k');
@@ -157,7 +157,7 @@ describe('the selection after a command (03-editor 2.3)', () => {
 });
 
 describe('the clipboard (AT-12)', () => {
-  it('R-EDIT-10: dd cuts, p pastes after the selection with new ids', async () => {
+  it('T-0037 · R-EDIT-10: dd cuts, p pastes after the selection with new ids', async () => {
     const engine = testEngine(contentOf([proc('b1', 'one'), proc('b2', 'two')]));
     select(engine, 'b1');
     engine.keys('d', 'd');
@@ -172,7 +172,7 @@ describe('the clipboard (AT-12)', () => {
     expect(selected(engine)).toEqual(['b3']);
   });
 
-  it('AT-12: text from another program becomes one process block per line', async () => {
+  it('T-0038 · AT-12: text from another program becomes one process block per line', async () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.clipboard.data = { text: 'first\n  second', json: null };
     select(engine, 'b1');
@@ -181,7 +181,7 @@ describe('the clipboard (AT-12)', () => {
     expect(bodyOf(engine).map((id) => textOf(engine, id))).toEqual(['first', 'second', 'b1']);
   });
 
-  it('AT-12: the custom format wins over the text', async () => {
+  it('T-0039 · AT-12: the custom format wins over the text', async () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.clipboard.data = {
       text: 'ignored',
@@ -196,7 +196,7 @@ describe('the clipboard (AT-12)', () => {
     ).toBe('while');
   });
 
-  it('interaction rules "붙여넣기": nothing selected pastes nothing', async () => {
+  it('T-0040: interaction rules "붙여넣기": nothing selected pastes nothing', async () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.clipboard.data = { text: 'x', json: null };
     engine.run('edit.paste');
@@ -205,7 +205,7 @@ describe('the clipboard (AT-12)', () => {
     expect(engine.session.chrome().notice?.message).toBe('reason.nothingSelected');
   });
 
-  it('03-keymap: v, then j j and y copies the range', async () => {
+  it('T-0041: 03-keymap: v, then j j and y copies the range', async () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2'), proc('b3')]));
     select(engine, 'b1');
     engine.keys('v', 'j', 'j', 'y');
@@ -225,7 +225,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
       ),
     ]);
 
-  it('R-EDIT-11: o on a branch label inserts a branch and opens its label', () => {
+  it('T-0042 · R-EDIT-11: o on a branch label inserts a branch and opens its label', () => {
     const engine = testEngine(caseContent());
     engine.select({ kind: 'branchLabel', branch: 'r1' });
     engine.keys('o');
@@ -236,7 +236,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     });
   });
 
-  it('UX MD3: deleting down to one branch asks to make an If; Esc keeps the Case', () => {
+  it('T-0043 · UX MD3: deleting down to one branch asks to make an If; Esc keeps the Case', () => {
     const engine = testEngine(caseContent());
     engine.select({ kind: 'branchLabel', branch: 'r1' });
     engine.keys('x');
@@ -247,7 +247,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
   });
 
-  it('UX MD3: inserting a branch on an If asks to make it a Case; Enter converts', () => {
+  it('T-0044 · UX MD3: inserting a branch on an If asks to make it a Case; Enter converts', () => {
     const engine = testEngine(
       contentOf([ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')]))]),
     );
@@ -259,7 +259,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     expect(engine.session.state.editing?.field.kind).toBe('branchLabel');
   });
 
-  it('R-EDIT-12: an If branch label opens with its drawn word', () => {
+  it('T-0045 · R-EDIT-12: an If branch label opens with its drawn word', () => {
     const engine = testEngine(
       contentOf([ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')]))]),
     );
@@ -271,7 +271,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     expect(block?.kind === 'if' ? block.yes.label : null).toBe('yes');
   });
 
-  it('UX CD1: typing into the empty default cell makes the default branch, one undo step', () => {
+  it('T-0046 · UX CD1: typing into the empty default cell makes the default branch, one undo step', () => {
     const engine = testEngine(contentOf([caseBlock('b1', [arm('r1', '1', [proc('b2')])], null)]));
     engine.select({ kind: 'missingDefault', block: 'b1' });
     engine.keys('Enter');
@@ -286,7 +286,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     expect(undone?.kind === 'case' ? undone.otherwise : 'not a case').toBeNull();
   });
 
-  it('UX CD1: inserting on the empty default cell makes the branch; deleting there does nothing', () => {
+  it('T-0047 · UX CD1: inserting on the empty default cell makes the branch; deleting there does nothing', () => {
     const engine = testEngine(contentOf([caseBlock('b1', [arm('r1', '1', [proc('b2')])], null)]));
     engine.select({ kind: 'missingDefault', block: 'b1' });
     engine.keys('x');
@@ -299,7 +299,7 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
 });
 
 describe('keys and modes (03-keymap)', () => {
-  it('interaction rules 2: Esc twice clears the selection; a move key comes back to it', () => {
+  it('T-0048: interaction rules 2: Esc twice clears the selection; a move key comes back to it', () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]));
     select(engine, 'b2');
     engine.keys('Escape');
@@ -311,7 +311,7 @@ describe('keys and modes (03-keymap)', () => {
     expect(selected(engine)).toEqual(['b2']);
   });
 
-  it('UX K1: the key hint shows 0.4 s after the first key; Esc cancels', () => {
+  it('T-0049 · UX K1: the key hint shows 0.4 s after the first key; Esc cancels', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     select(engine, 'b1');
     engine.keys('a');
@@ -327,7 +327,7 @@ describe('keys and modes (03-keymap)', () => {
     expect(engine.session.chrome().notice?.message).toBe('notice.keyCancelled');
   });
 
-  it('03-keymap: a Vim key the table lacks is reported, other keys go to the browser', () => {
+  it('T-0050: 03-keymap: a Vim key the table lacks is reported, other keys go to the browser', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     expect(engine.keys('q', 'Tab')).toEqual([true, false]);
     expect(engine.session.chrome().notice?.message).toEqual({
@@ -336,7 +336,7 @@ describe('keys and modes (03-keymap)', () => {
     });
   });
 
-  it('03-editor 1.1: zoom goes in 10% steps between 40% and 300%', () => {
+  it('T-0051: 03-editor 1.1: zoom goes in 10% steps between 40% and 300%', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.keys('+');
     expect(engine.session.state.zoom).toBe(1.1);
@@ -351,7 +351,7 @@ describe('keys and modes (03-keymap)', () => {
 });
 
 describe('view only (03-editor 6.4)', () => {
-  it('03-editor 6.4: editing commands are refused; moving and copying still work', async () => {
+  it('T-0052: 03-editor 6.4: editing commands are refused; moving and copying still work', async () => {
     const engine = testEngine(contentOf([proc('b1'), proc('b2')]), { readOnly: true });
     select(engine, 'b1');
     engine.keys('x');
@@ -366,7 +366,7 @@ describe('view only (03-editor 6.4)', () => {
     expect(cut?.when(engine.registry.context())).toBe('reason.readOnly');
   });
 
-  it('03-editor 5: the registry gives every command its keys and a title', () => {
+  it('T-0053: 03-editor 5: the registry gives every command its keys and a title', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     const cut = engine.registry.list().find((spec) => spec.id === 'edit.cut');
     expect(cut?.keys).toEqual(['d d', 'Ctrl+X']);

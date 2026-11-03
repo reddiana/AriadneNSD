@@ -161,7 +161,7 @@ function setup(options: { db?: BrowserDb; confirm?: boolean } = {}) {
 }
 
 describe('web shell', () => {
-  it('03-editor 6.1: adds new, open, recent files and export to the command list', async () => {
+  it('T-0344: 03-editor 6.1: adds new, open, recent files and export to the command list', async () => {
     const { shell, editor } = setup();
     await shell.start(editor);
     for (const id of Object.values(shellCommandIds).filter((value) => !value.endsWith('.'))) {
@@ -170,7 +170,7 @@ describe('web shell', () => {
     expect(editor.commands.specs.has('file.recent.empty')).toBe(true);
   });
 
-  it('UX W3: shows the name and ● in the tab title', async () => {
+  it('T-0345 · UX W3: shows the name and ● in the tab title', async () => {
     const { shell, editor, titles } = setup();
     await shell.start(editor);
     expect(titles.at(-1)).toBe('Untitled.ns.svg – AriadneNSD');
@@ -178,7 +178,7 @@ describe('web shell', () => {
     expect(titles.at(-1)).toBe('● Untitled.ns.svg – AriadneNSD');
   });
 
-  it('R-WEB-02: an SVG without a model does not replace the document, and says why', async () => {
+  it('T-0346 · R-WEB-02: an SVG without a model does not replace the document, and says why', async () => {
     const { shell, editor } = setup();
     await shell.start(editor);
     const before = editor.opened.length;
@@ -189,7 +189,7 @@ describe('web shell', () => {
     );
   });
 
-  it('R-WEB-02, R-EXP-04: opens a saved file and lists it as a browser copy', async () => {
+  it('T-0347: R-WEB-02, R-EXP-04: opens a saved file and lists it as a browser copy', async () => {
     const { shell, editor, db } = setup();
     await shell.start(editor);
     await shell.openFile(new File([savedFile], 'if.ns.svg'));
@@ -200,7 +200,7 @@ describe('web shell', () => {
     expect(editor.commands.specs.get('file.recent.1')?.title).toBe('if.ns.svg (browser copy)');
   });
 
-  it('R-WEB-03: writes a backup 0.5 s after an edit and removes it after saving', async () => {
+  it('T-0348 · R-WEB-03: writes a backup 0.5 s after an edit and removes it after saving', async () => {
     const { shell, editor, db, clock } = setup();
     await shell.start(editor);
     editor.edit();
@@ -216,7 +216,7 @@ describe('web shell', () => {
     expect(editor.status().dirty).toBe(false);
   });
 
-  it('R-WEB-03: at start, offers to restore the newest backup and opens it as unsaved', async () => {
+  it('T-0349 · R-WEB-03: at start, offers to restore the newest backup and opens it as unsaved', async () => {
     const db = memoryDb();
     await db.putBackup({ key: 'old', name: 'a.ns.svg', snapshot: '{"a":1}', savedAt: 1 });
     await db.putBackup({ key: 'new', name: 'b.ns.svg', snapshot: '{"b":2}', savedAt: 2 });
@@ -226,7 +226,7 @@ describe('web shell', () => {
     expect(editor.status()).toMatchObject({ name: 'b.ns.svg', dirty: true });
   });
 
-  it('R-WEB-03: a declined restore removes that backup', async () => {
+  it('T-0350 · R-WEB-03: a declined restore removes that backup', async () => {
     const db = memoryDb();
     await db.putBackup({ key: 'old', name: 'a.ns.svg', snapshot: '{"a":1}', savedAt: 1 });
     const { shell, editor } = setup({ db, confirm: false });
@@ -235,7 +235,7 @@ describe('web shell', () => {
     expect(await db.backups()).toHaveLength(0);
   });
 
-  it('03-editor 6.1: switching away from unsaved edits keeps them in the backup and says so', async () => {
+  it('T-0351: 03-editor 6.1: switching away from unsaved edits keeps them in the backup and says so', async () => {
     const { shell, editor, db } = setup();
     await shell.start(editor);
     editor.edit();

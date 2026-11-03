@@ -157,7 +157,7 @@ function apply(content: Content, op: Op): Result {
 }
 
 describe('commands, property-based', () => {
-  it('QA-01: any sequence of commands keeps the invariants and never changes its input', () => {
+  it('T-0171 · QA-01: any sequence of commands keeps the invariants and never changes its input', () => {
     const succeeded = new Map<string, number>();
     fc.assert(
       fc.property(fc.array(opArbitrary, { minLength: 20, maxLength: 60 }), (ops) => {
@@ -193,7 +193,7 @@ describe('commands, property-based', () => {
     }
   });
 
-  it('QA-01: ids stay unique even when the generator must avoid ids of the view state', () => {
+  it('T-0172 · QA-01: ids stay unique even when the generator must avoid ids of the view state', () => {
     fc.assert(
       fc.property(fc.array(fc.constantFrom(...kinds), { maxLength: 15 }), (list) => {
         let content = createContent();

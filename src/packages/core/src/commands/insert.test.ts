@@ -19,7 +19,7 @@ import {
 const blocks = { kind: 'blocks' } as const;
 
 describe('insertBlock', () => {
-  it('R-EDIT-01: inserts a process block after the selected block', () => {
+  it('T-0138 · R-EDIT-01: inserts a process block after the selected block', () => {
     const content = contentOf([proc('b1'), proc('b2')]);
     const result = runOk(insertBlock, content, {
       target: { ...blocks, first: 'b1', last: 'b1' },
@@ -31,7 +31,7 @@ describe('insertBlock', () => {
     expect(blockOf(result.content, 'b3')).toEqual({ id: 'b3', kind: 'process', text: '' });
   });
 
-  it('R-EDIT-01: inserts before the selection, and after the end of a range', () => {
+  it('T-0139 · R-EDIT-01: inserts before the selection, and after the end of a range', () => {
     const content = contentOf([proc('b1'), proc('b2'), proc('b3')]);
     const before = runOk(insertBlock, content, {
       target: { ...blocks, first: 'b3', last: 'b2' },
@@ -47,7 +47,7 @@ describe('insertBlock', () => {
     expect(idsIn(after.content, 'd1')).toEqual(['b1', 'b2', 'b4', 'b3']);
   });
 
-  it('R-BLK-01..06: a new control block has empty text and empty inner blocks', () => {
+  it('T-0140: R-BLK-01..06: a new control block has empty text and empty inner blocks', () => {
     const content = contentOf([proc('b1')]);
     const at = { target: { ...blocks, first: 'b1', last: 'b1' }, side: 'after' } as const;
     const ifResult = runOk(insertBlock, content, { ...at, kind: 'if' });
@@ -73,7 +73,7 @@ describe('insertBlock', () => {
     }
   });
 
-  it('R-EDIT-01: a control block inserted on an empty block takes its place', () => {
+  it('T-0141 · R-EDIT-01: a control block inserted on an empty block takes its place', () => {
     const content = contentOf([proc('b1'), empty('b2')]);
     const result = runOk(insertBlock, content, {
       target: { ...blocks, first: 'b2', last: 'b2' },
@@ -84,7 +84,7 @@ describe('insertBlock', () => {
     expect(result.touched).toEqual(['b3']);
   });
 
-  it('R-EDIT-01: a process block on an empty block changes nothing (the editor opens it)', () => {
+  it('T-0142 · R-EDIT-01: a process block on an empty block changes nothing (the editor opens it)', () => {
     const content = contentOf([empty('b1')]);
     const result = runOk(insertBlock, content, {
       target: { ...blocks, first: 'b1', last: 'b1' },
@@ -95,7 +95,7 @@ describe('insertBlock', () => {
     expect(result.touched).toEqual(['b1']);
   });
 
-  it('UX KP2: with besideEmpty a process block goes next to the empty block', () => {
+  it('T-0143 · UX KP2: with besideEmpty a process block goes next to the empty block', () => {
     const content = contentOf([empty('b1')]);
     const at = { target: { ...blocks, first: 'b1', last: 'b1' }, kind: 'process' } as const;
     const after = runOk(insertBlock, content, { ...at, side: 'after', besideEmpty: true });
@@ -105,7 +105,7 @@ describe('insertBlock', () => {
     expect(idsIn(before.content, 'd1')).toEqual(['b2', 'b1']);
   });
 
-  it('R-EDIT-01: inserts inside a branch when a block of the branch is selected', () => {
+  it('T-0144 · R-EDIT-01: inserts inside a branch when a block of the branch is selected', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')])),
     ]);
@@ -118,7 +118,7 @@ describe('insertBlock', () => {
     expect(idsIn(result.content, 'd1')).toEqual(['b1']);
   });
 
-  it('R-EDIT-01: with nothing selected, inserts at the end of the diagram', () => {
+  it('T-0145 · R-EDIT-01: with nothing selected, inserts at the end of the diagram', () => {
     const content = contentOf([proc('b1')]);
     const result = runOk(insertBlock, content, {
       target: { kind: 'diagramEnd', diagram: 'd1' },
@@ -128,7 +128,7 @@ describe('insertBlock', () => {
     expect(idsIn(result.content, 'd1')).toEqual(['b1', 'b2']);
   });
 
-  it('01-model 4.3 (UX MD1): a block inserted at the end of a fold joins it when a block inside was selected', () => {
+  it('T-0146: 01-model 4.3 (UX MD1): a block inserted at the end of a fold joins it when a block inside was selected', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2'), proc('b3')], [{ id: 'f1', first: 'b1', last: 'b2' }]),
     );
@@ -146,7 +146,7 @@ describe('insertBlock', () => {
     expect(foldsIn(before.content, 'd1')).toEqual(['f1:b4-b2']);
   });
 
-  it('01-model 4.3 (UX MD1): a block inserted next to a whole selected fold stays outside', () => {
+  it('T-0147: 01-model 4.3 (UX MD1): a block inserted next to a whole selected fold stays outside', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2'), proc('b3')], [{ id: 'f1', first: 'b1', last: 'b2' }]),
     );
@@ -159,7 +159,7 @@ describe('insertBlock', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b1-b2']);
   });
 
-  it('01-model 4.3: a block inserted between the ends of a fold is inside it', () => {
+  it('T-0148: 01-model 4.3: a block inserted between the ends of a fold is inside it', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2')], [{ id: 'f1', first: 'b1', last: 'b2' }]),
     );
@@ -172,7 +172,7 @@ describe('insertBlock', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b1-b2']);
   });
 
-  it('01-model 1.7: new ids come from the given generator', () => {
+  it('T-0149: 01-model 1.7: new ids come from the given generator', () => {
     const content = contentOf([proc('b1')]);
     const ids = createIdGenerator(content, ['b2', 'b3']);
     const result = runOk(insertBlock, content, {
@@ -184,7 +184,7 @@ describe('insertBlock', () => {
     expect(result.touched).toEqual(['b4']);
   });
 
-  it('R-EDIT-01: refuses a target that is not there or not contiguous', () => {
+  it('T-0150 · R-EDIT-01: refuses a target that is not there or not contiguous', () => {
     const content = contentOf([
       ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')])),
     ]);

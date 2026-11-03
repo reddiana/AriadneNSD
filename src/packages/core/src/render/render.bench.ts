@@ -15,13 +15,13 @@ describe('02-layout 4: 500 blocks', () => {
   const doc = largeDoc(500);
   const result = layout(doc, options);
 
-  it('QA-07: layout and scene + SVG text stay far inside the 100ms edit budget', async ({
+  it('T-0517 · QA-07: layout and scene + SVG text stay far inside the 100ms edit budget', async ({
     bench,
   }) => {
-    const layoutResult = await bench('layout', () => {
+    const layoutResult = await bench('T-0518: layout', () => {
       layout(doc, options);
     }).run();
-    const renderResult = await bench('scene + SVG text', () => {
+    const renderResult = await bench('T-0519: scene + SVG text', () => {
       toSvg(buildScene(result, defaultTheme));
     }).run();
     console.log(
