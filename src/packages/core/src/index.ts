@@ -63,8 +63,8 @@ export { defaultTheme, themeFor } from './render/theme';
 export type { RenderedSvg } from './render/to-svg';
 export { toSvg } from './render/to-svg';
 export { usedCodePoints } from './render/used-code-points';
-export type { Rendering } from './render/render-doc';
-export { renderDoc } from './render/render-doc';
+export type { Rendering, SavedDrawing } from './render/render-doc';
+export { renderDoc, savedDrawing } from './render/render-doc';
 
 // Invariants and editing commands (01-model 3, 4).
 export type { Violation } from './model/invariants';
@@ -152,3 +152,11 @@ export type {
 export { invariantCheck, parseModel, parseModelJson } from './format/parse-model';
 export type { Drawing, EmbeddedFont, SvgFileParts } from './format/svg-file';
 export { assembleImageSvg, assembleSvgFile, openSvgFile } from './format/svg-file';
+
+// Export: pure SVG, print and PDF (R-EXP-02, R-EXP-03), text as outlines (R-FMT-10).
+export type { SvgOptions } from './render/to-svg';
+export type { PlacedGlyph, TextElement } from './render/outline-text';
+export { glyphPathData, placeGlyphs, syntheticBoldWidth } from './render/outline-text';
+export type { Pagination, Paper, PrintPage } from './export/paginate';
+export { pageMargin, paginate, paperForLanguage, papers, pointsPerPixel } from './export/paginate';
+export { checkDrawing } from './format/svg-file';

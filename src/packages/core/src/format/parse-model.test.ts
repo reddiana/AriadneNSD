@@ -296,3 +296,41 @@ describe('the drawing language in the settings (ADR-0041)', () => {
     expect(parseModel(value)).toMatchObject({ ok: false, reason: 'damaged' });
   });
 });
+
+describe('text as outlines setting (R-FMT-10)', () => {
+  const withOutlines = (value: unknown): Record<string, unknown> => ({
+    ...minimal(),
+    settings: {
+      textKind: 'plain',
+      theme: 'default',
+      headStyle: 'shape',
+      locale: 'en',
+      textOutlines: value,
+    },
+  });
+
+  it('reads true as on, and false or no key as off', () => {
+    const on = parseModel(withOutlines(true));
+    const off = parseModel(withOutlines(false));
+    const absent = parseModel(minimal());
+    expect(on.ok && on.value.doc.content.settings.textOutlines).toBe(true);
+    expect(off.ok && 'textOutlines' in off.value.doc.content.settings).toBe(false);
+    expect(absent.ok && 'textOutlines' in absent.value.doc.content.settings).toBe(false);
+  });
+
+  it('refuses a value that is not true or false', () => {
+    expect(parseModel(withOutlines('yes'))).toMatchObject({ ok: false, reason: 'damaged' });
+  });
+
+  it('writes the key only when on, after the drawing language', () => {
+    const on = parseModel(withOutlines(true));
+    if (!on.ok) {
+      throw new Error(on.detail);
+    }
+    expect(serializeModelJson(on.value.doc)).toContain(
+      '"locale": "en",\n    "textOutlines": true\n',
+    );
+    const off = parseModel(minimal());
+    expect(off.ok && serializeModelJson(off.value.doc)).not.toContain('textOutlines');
+  });
+});

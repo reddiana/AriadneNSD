@@ -65,7 +65,14 @@ function modelJson(doc: Doc, kept: KeptSettings): unknown {
   return {
     format: formatName,
     version: currentFormatVersion,
-    settings: { textKind, theme: settings.theme, headStyle: settings.headStyle, locale },
+    settings: {
+      textKind,
+      theme: settings.theme,
+      headStyle: settings.headStyle,
+      locale,
+      // Omitted when off, so files without outlines stay as they were (01-file-format 3.3).
+      ...(settings.textOutlines === true ? { textOutlines: true } : {}),
+    },
     diagrams: doc.content.diagrams.map(diagramJson),
     view: viewJson(doc.content, doc.view),
   };

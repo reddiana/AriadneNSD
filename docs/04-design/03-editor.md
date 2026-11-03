@@ -249,7 +249,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 | 메뉴 | 묶음 (가로줄로 나눔) |
 | --- | --- |
-| 파일 | 새로 · 열기… · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG) ／ 환경 설정… |
+| 파일 | 새로 · 열기… · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 · 앞에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
 | 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
@@ -337,6 +337,8 @@ interface EditorHandle {
   chromeState(): ChromeState;                    // 상태 표시줄과 키 힌트가 보일 것
   onChromeState(listener: () => void): () => void;
   serialize(): Promise<string>;                  // 지금 문서의 .ns.svg 문자열 (저장 · 자동 저장). 서브셋 글꼴을 만들므로 비동기
+  serializeImage(): Promise<string>;             // 모델을 뺀 순수 SVG (R-EXP-02): serialize()와 같은 그림 · 글꼴에서 <metadata>만 없음
+  rendering(): Rendering;                        // 지금 그린 것(레이아웃 · 장면 · 그림): 셸의 인쇄 · PDF가 쓴다 (R-EXP-03)
   snapshot(): string;                            // 지금 문서의 모델 JSON (로컬 백업에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
   save(): Promise<WriteResult>;                  // "저장" 명령과 같음: serialize → store.write → 성공하면 dirty를 끈다
   setReadOnly(readOnly: boolean): void;
@@ -391,6 +393,8 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
 - 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
 - 문서 설정의 그림 문구의 언어(`document.locale`, 모델의 `settings.locale`)는 그림에 적는 고정 문구("참" · "거짓" 등)의 언어입니다. 레이아웃 · 렌더러 · 텍스트로 복사가 이 값을 읽고, 화면 언어(`ui.locale`)는 메뉴 · 알림에만 씁니다. 새 문서(`text: null`)와 예제는 지금의 화면 언어로 시작하고, `locale`이 없는 파일과 로컬 백업은 지금의 화면 언어로 엽니다. 이 값은 사용자 설정에 기억하지 않습니다 → [[0041-drawing-locale-in-document|ADR-0041]]
+- 문서 설정의 텍스트를 외곽선으로 저장(`document.textOutlines`, 모델의 `settings.textOutlines`, 기본은 끔)을 켜면 `serialize()` · `serializeImage()`가 그림의 텍스트를 번들 글꼴의 외곽선(path)으로 적습니다. 화면은 그대로 텍스트로 그리고, 외곽선을 읽는 코드(글리프 읽기)는 그때 처음 불러옵니다. 내용에 드는 설정이라 undo 대상입니다 → [[01-file-format#4. 그림 부분]], [[0042-export-pipeline|ADR-0042]]
+- 파일을 연 `open`(처음 문서 포함)은 그 파일의 그림 지문을 확인해, 다른 도구가 그림 부분을 고쳤으면 상태 표시줄에 경고합니다: "“{이름}”의 그림이 다른 도구로 고쳐져 모델과 다를 수 있습니다. 편집기는 모델을 보여 줍니다. 저장하면 그림을 모델로 다시 그리므로, 그림에서만 고친 것은 사라집니다." 문서는 저장 안 됨이 되지 않습니다. 로컬 백업 · 예제 · 새 문서는 확인하지 않습니다 → [[01-requirements#^r-fmt|R-FMT-09]], [[01-file-format#4.1 그림 지문]]
 - 문서 설정의 헤더 모양(`document.headStyle`)을 바꾸면 `editor`가 그 값을 사용자 설정 `editor.headStyle`에도 적고, 새 문서(`text: null`)는 그 값으로 시작합니다(없으면 `'title'`). 파일을 열 때는 파일의 값을 따르고 이 사용자 설정은 바꾸지 않습니다. 환경 설정 창에는 보이지 않는 값입니다 → [[ux-decisions#HS1. 머리 모양을 기억하고 기본은 제목처럼|HS1]]
 - 텍스트 폭은 셸이 주입하지 않습니다. `core`가 번들 글꼴의 advance 폭 테이블로 계산합니다 → [[0026-bundled-font-metrics|ADR-0026]]
 - `Message`는 카탈로그의 키(와 값)이거나, 셸이 자기 카탈로그로 만든 문자열입니다 → [[07-coding-guide#8. 화면의 문자열]]
@@ -403,7 +407,7 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 
 `editor`는 문서 하나만 압니다. 어떤 파일을 열지, 최근 파일을 어디에 기억할지, 창이나 탭을 몇 개 둘지는 셸이 정합니다(웹은 늘 하나 → [[05-screen-layout|화면 배치]], 데스크톱은 탭마다 `editor` 하나).
 
-- 새로 · 열기 · 최근 파일 · 내보내기(PNG) 명령은 셸이 `commands.register`로 더합니다. 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
+- 새로 · 열기 · 최근 파일 · 내보내기(PNG · SVG · PDF) · 인쇄 명령은 셸이 `commands.register`로 더합니다. 인쇄의 키 `Ctrl`+`P`는 4장의 키 표가 `file.print`로 보냅니다(그 명령을 더하지 않은 셸에서는 아무 일도 하지 않음). 그래서 메뉴 · 커맨드 팔레트 · 키 표에는 `editor`의 명령과 같이 보입니다.
 - 셸은 파일을 고르고 읽은 뒤 그 파일의 `DocumentStore`를 만들어 `open({ store, text })`을 호출합니다. 새 문서는 `text: null`이고, `editor`가 다이어그램 하나와 빈 블록 하나를 만듭니다([[01-requirements#^r-all|R-ALL-03]]).
 - 예제([[01-requirements#^r-edit|R-EDIT-25]])는 `editor`가 내보내는 예제 목록에서 셸이 문서를 만들어 `open({ store, text: null, doc })`로 엽니다. 파일 이름은 화면 언어로 적은 예제의 이름(`병합 정렬.ns.svg`, `Merge sort.ns.svg`)이고 원래 파일은 없습니다. 예제의 텍스트도 화면 언어를 따릅니다: 문장 · 주석 · 메시지 · 헤더의 이름처럼 말이 든 예제 일곱(UART 명령 · 타이머 인터럽트 · 이진 탐색 · 미로 찾기 · 자판기 · 엘리베이터 · Raft 합의)은 한국어판과 영어판이 있고 블록의 자리는 같습니다. 코드만 든 셋(병합 정렬 · 다익스트라 · 퀵소트)은 하나입니다. 셸이 넘기는 `locale`(그림 문구의 언어와 같은 값)로 고릅니다. 예제 모달과 그것을 여는 도움말 › 예제… · 툴바의 "예제"는 `editor`의 화면에 있고, 셸은 예제를 여는 법과 첫 방문인지를 넘깁니다 → [[05-screen-layout|화면 배치]]
 - 지금 문서가 저장 안 됨이면, 문서를 바꾸기 전에 셸이 묻습니다("저장할까요?"). 웹은 로컬 백업이 있어, 파일로 연 문서는 묻지 않고 바꾸고 원래 파일에는 들어가지 않았음을 알립니다(그 파일을 다시 열면 복원을 묻습니다). 한 번도 저장하지 않은 새 문서(새 문서, 예제)는 다시 꺼낼 길이 없어 `choose`로 묻습니다: 저장 · 버리고 열기 · 취소. 저장이 끝나지 않으면(저장 창을 닫음, 실패) 바꾸지 않고, 버리면 그 로컬 백업을 지웁니다 → [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]], [[02-interaction-rules#다른 문서를 열 때]]

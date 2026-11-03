@@ -14,7 +14,7 @@ updated: 2026-11-03
 배포 대상들이 주고받는 저장 파일, 곧 모델을 내장한 SVG의 형식입니다. 앱들 사이의 계약(호환성 계약)이므로, 웹 1.0 뒤에는 **형식 버전이 바뀔 때만** 수정합니다([[dr-0018-release-stages|DR-0018]]).
 
 - 관련 요구사항: [[01-requirements#3.4 파일 형식]]
-- 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴), [[0034-default-block-font|ADR-0034]](기본 블록 글꼴), [[0035-model-namespace-and-v0|ADR-0035]](모델 네임스페이스, 프로토타입 파일)
+- 관련 결정: [[0005-model-embedded-svg|ADR-0005]](모델 내장 SVG), [[0042-export-pipeline|ADR-0042]](그림 지문, 텍스트 외곽선), [[0006-file-extensions|ADR-0006]](확장자), [[0007-json-serialization|ADR-0007]](JSON), [[0014-drive-file-extension|ADR-0014]](Drive), [[0017-fold-name-in-model|ADR-0017]](접기 영역의 이름), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장, 뷰 상태), [[0021-event-and-method|ADR-0021]](Event와 Method), [[0022-call-name-follows-head|ADR-0022]](호출 블록), [[0026-bundled-font-metrics|ADR-0026]](서브셋 글꼴), [[0034-default-block-font|ADR-0034]](기본 블록 글꼴), [[0035-model-namespace-and-v0|ADR-0035]](모델 네임스페이스, 프로토타입 파일)
 - 모델의 구조는 [[03-architecture#3.4 문서 모델]]과 [[03-architecture#3.5 내용과 뷰 상태]]를 따릅니다. 필드 이름과 스키마는 [[01-model]] 설계에서 굳혔습니다(v1, 3장).
 
 > [!warning] 지금 상태
@@ -51,6 +51,7 @@ classDiagram
     class metadata
     class document["ans:document (모델 요소)"]
     document : version
+    document : drawing-sha256
     class cdata["CDATA (모델 JSON)"]
     class styleEl["style"]
     class fontface["@font-face (서브셋 글꼴, data URI)"]
@@ -70,7 +71,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="…" height="…" viewBox="…">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="…"><![CDATA[
 { "format": "ariadne-nsd", "version": 1, … }
     ]]></ans:document>
   </metadata>
@@ -87,6 +88,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 - 루트는 SVG 1.1 `<svg>` 요소다([[01-requirements#^r-fmt|R-FMT-01]]).
 - 모델 요소의 네임스페이스 URI는 `https://github.com/reddiana/AriadneNSD`이고 접두어는 `ans`다. 버전 번호는 넣지 않는다. 주소가 아니라 이름이므로, 저장소의 자리가 바뀌어도 그대로 둔다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 모델 요소의 이름은 `ans:document`다. 모델 요소는 `<metadata>` 안에 **정확히 하나** 있다. 모델 요소의 `version` 속성과 JSON의 `version` 필드는 같은 값이다. 다르면 깨진 파일(`damaged`)로 본다.
+- 모델 요소의 `drawing-sha256` 속성은 **그림 지문**이다: 이 파일에서 `<metadata>` 요소를 뺀 나머지(곧 순수 SVG)의 SHA-256(UTF-8, 소문자 16진수 64자)이다(4.1). 저장할 때 늘 적는다. 읽을 때 없어도 받는다(그 파일은 그림을 확인하지 않음).
 - **서브셋 글꼴:** 번들한 글꼴을 그 그림에 쓰인 문자만 남기도록 서브세팅해 `<style>`의 `@font-face`에 data URI로 넣는다. 그림의 `font-family`는 이 글꼴 다음에 폴백 글꼴 목록을 적는다 → [[0026-bundled-font-metrics|ADR-0026]], [[01-requirements#^r-fmt|R-FMT-07]]. 서브셋 글꼴도 같은 모델이면 같은 바이트여야 한다(3.1). 서브셋 글꼴의 형식은 **WOFF**(`font/woff`)다. 압축은 버전을 고정한 JS zlib 라이브러리로 한다 → [[0039-woff-subset-font|ADR-0039]]. 기본 블록 글꼴의 `font-family` 이름은 `AriadneNSD Mono`이다(D2Coding은 OFL의 예약 글꼴 이름이라 고친 글꼴에 쓰지 못함 → [[0034-default-block-font|ADR-0034]]). 서브셋에는 원래 글꼴의 이름 레코드(저작권 · OFL 고지)를 모두 남긴다
 - **종이:** 테마의 종이 색 사각형을 둔다(밝은 기본 테마는 흰색). 투명하게 두지 않는다. 그림의 색은 늘 테마의 색이다 → [[01-requirements#^r-fmt|R-FMT-08]], [[04-visual-design#2. 레이어와 출력]]
 - 그림 요소는 모델에서 생성한 파생 데이터일 뿐이며, 읽을 때 무시한다(단일 원천은 모델: [[01-requirements#^r-fmt|R-FMT-05]]). 저장되는 그림은 지금 화면 그대로이고 오버레이 레이어의 표시(선택 표시 등)는 넣지 않는다 → [[0018-save-as-shown|ADR-0018]]
@@ -99,7 +101,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 {
   "format": "ariadne-nsd",
   "version": 1,
-  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape", "locale": "ko" },
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "shape", "locale": "ko", "textOutlines": true },
   "diagrams": [
     {
       "id": "d1",
@@ -118,7 +120,7 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 
 | 묶음 | 무엇 | undo |
 | --- | --- | --- |
-| `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]) | 대상 |
+| `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]), 텍스트를 외곽선으로 저장([[01-requirements#^r-fmt\|R-FMT-10]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 헤더(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등(`kind`로 판별하는 유니온). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
 | 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 호출하면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]]에 있고, `external.file`에 무엇을 적는지만 정하지 않음 → [[01-requirements#^r-blk\|R-BLK-08]], [[01-requirements#^r-blk\|R-BLK-09]]). 이름 문자열을 복사해 갖지 않는다. 참조 대상이 없으면(dangling) 마지막에 보이던 이름을 보존한다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
@@ -161,7 +163,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 | 노드 | 필드 (순서대로) | 생략 |
 | --- | --- | --- |
 | 문서 | `format`(늘 `"ariadne-nsd"`) · `version` · `settings` · `diagrams` · `view` | 없음 |
-| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) · `locale`(`"en"` \| `"ko"`) | 없음 (읽을 때는 `locale`이 없어도 받는다) |
+| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) · `locale`(`"en"` \| `"ko"`) · `textOutlines`(`true`) | `textOutlines`는 끔(`false`)이면 (읽을 때는 `locale`이 없어도 받고, `textOutlines: false`도 받는다) |
 | 다이어그램 | `id` · `head` · `body` · `folds` | `head`는 헤더가 없으면, `folds`는 비면 |
 | `head` | `kind`(`"event"` \| `"method"`) · `text` | 없음 |
 | 처리 | `id` · `kind: "process"` · `text` | 없음 (빈 블록은 `text: ""`) |
@@ -185,6 +187,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 	- 없으면(이 필드가 생기기 전에 저장한 파일) 연 사람의 화면 언어로 읽는다. 마이그레이션은 두지 않고, 다음에 저장할 때 그 값을 적는다. 그래서 이런 파일은 처음 저장하는 사람의 화면 언어에 따라 바이트가 다르다. 한 번 저장한 뒤로는 같다.
 	- 모르는 값(뒤의 판이 더한 언어)은 연 사람의 화면 언어로 그리고, 받은 값은 `textKind`처럼 모델 밖에 따로 보존한다. 사용자가 그 문서의 그림 문구의 언어를 바꾸지 않았으면 저장할 때 보존한 값을 그대로 적는다.
 	- 문자열이 아니면 깨진 파일이다.
+- **`textOutlines`**: 텍스트를 외곽선으로 저장(4.3). `true`일 때만 적는다. `true` · `false`가 아니면 깨진 파일이다.
 - 헤더 · 호출 블록 · 여러 다이어그램 · 접기 영역은 MVP 뒤의 기능이지만 v1 형식에 들어 있다. 그 기능을 낼 때 뜻이 바뀌면(예: `external.file`에 무엇을 적는지 → [[01-model#미결정 사항]]) 버전을 올리고 마이그레이션을 둔다(5장).
 
 작은 예입니다. 처리 블록 하나와 If 하나가 든, 헤더 없는 다이어그램입니다.
@@ -215,7 +218,28 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 
 ## 4. 그림 부분
 
-그림 요소의 모습(색, 선, 타이포그래피, 치수)은 [[04-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<circle>`, `<text>`)과 클래스 이름은 [[02-layout#3. SVG 렌더링]]에서 정했다. 텍스트 외곽선 옵션([[01-requirements#^r-fmt|R-FMT-10]])은 아직 정하지 않았다(같은 절).
+그림 요소의 모습(색, 선, 타이포그래피, 치수)은 [[04-visual-design]]을 따른다. 요소 구성(`<rect>`, `<path>`, `<circle>`, `<text>`)과 클래스 이름은 [[02-layout#3. SVG 렌더링]]에서 정했다. 그림 부분은 `<metadata>`를 뺀 모든 것이다: 루트 `<svg>`의 속성, `<style>`(서브셋 글꼴), 종이, `<g class="ans-render">`.
+
+### 4.1 그림 지문
+
+다른 도구로 그림 부분만 고친 파일을 알아보기 위한 값이다([[01-requirements#^r-fmt|R-FMT-09]]) → [[0042-export-pipeline|ADR-0042]]
+
+- 쓰기: 파일 텍스트에서 `<metadata>` 요소의 줄(앞의 들여쓰기와 그 앞의 줄 바꿈부터 `</metadata>`까지)을 뺀 텍스트의 SHA-256을 모델 요소의 `drawing-sha256`에 적는다. 이 텍스트는 4.2의 순수 SVG와 바이트까지 같다.
+- 읽기: 같은 방법으로 다시 계산해 비교한다. 줄 바꿈은 LF로 바꾸고(CRLF로 바꿔 체크아웃한 파일은 고친 것이 아님), 앞의 BOM은 빼고 계산한다. `<metadata>`가 다른 마크업과 한 줄에 있으면 그 요소만 뺀다.
+- 결과는 셋이다: 같음, 다름(그림이 고쳐짐), 알 수 없음(지문이 없는 파일). 다르면 셸이 열면서 알린다(편집기는 모델로 그리고, 저장하면 그림이 모델로 다시 만들어짐 → [[03-editor#6. 셸과의 연결]]). 다르더라도 파일은 연다. 모델은 그대로 원본이다([[01-requirements#^r-fmt|R-FMT-05]]).
+- 모델만 고친 파일(JSON을 손으로 고침)은 지문이 같다. 그림 부분은 열 때 늘 모델에서 다시 그리므로 알릴 것이 없다.
+
+### 4.2 순수 SVG
+
+모델을 뺀 그림([[01-requirements#^r-exp|R-EXP-02]])은 저장 파일에서 `<metadata>` 요소만 뺀 것이다. 그림 · 서브셋 글꼴 · 종이 · 클래스 이름은 그대로 둔다. 그래서 같은 모델이면 같은 바이트이고(3.1), 저장 파일의 그림 지문과 같은 텍스트의 지문이다. 모델 요소가 없으므로 편집기로는 열리지 않는다(`noModel`, 1장). 확장자는 `.svg`다.
+
+### 4.3 텍스트 외곽선
+
+문서 설정 `textOutlines`가 켜져 있으면([[01-requirements#^r-fmt|R-FMT-10]]) 그림의 텍스트를 번들 글꼴의 글리프 외곽선(`<path>`)으로 적는다. 모델의 텍스트는 그대로다.
+
+- 텍스트 요소 하나가 `<path>` 하나(굵은 글자가 있으면 둘, 테두리가 있으면 그 아래에 획만 그린 것이 하나 더)가 된다. 좌표 규칙(소수 둘째 자리)은 다른 요소와 같다 → [[02-layout#3. SVG 렌더링]]
+- 번들 글꼴에 없는 문자가 든 텍스트 요소는 `<text>`로 남는다. 서브셋 글꼴에는 그런 요소의 문자만 넣는다. 남은 텍스트가 없으면 `@font-face`를 넣지 않는다(`<style>`은 빈 채로 둠).
+- 같은 모델이면 같은 바이트다(3.1). 외곽선은 판을 고정한 번들 글꼴에서 읽는다.
 
 ## 5. 버전 관리
 
@@ -250,6 +274,7 @@ sequenceDiagram
 
 ## 6. 미결정 사항
 
+아직 없음.
 
 ## 7. 프로토타입과 다른 곳
 

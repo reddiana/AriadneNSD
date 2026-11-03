@@ -38,7 +38,16 @@ export function documentFileName(name: string, fallback: string): string {
 
 /** The name of the exported PNG: `예제.ns.svg` → `예제.png`. */
 export function pngFileName(documentName: string): string {
-  return `${baseName(documentName)}.png`;
+  return exportFileName(documentName, 'png');
+}
+
+/**
+ * The name of an exported file: the document's name with the export's extension
+ * (`예제.ns.svg` → `예제.png`, `예제.svg`, `예제.pdf`). The pure SVG is `.svg`, not `.ns.svg`: it
+ * has no model and does not open as a document (R-EXP-02).
+ */
+export function exportFileName(documentName: string, kind: 'png' | 'svg' | 'pdf'): string {
+  return `${baseName(documentName)}.${kind}`;
 }
 
 /** The browser tab title: `● 예제.ns.svg – AriadneNSD` when unsaved (06-web 7, UX W3). */

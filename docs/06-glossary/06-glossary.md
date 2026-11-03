@@ -26,7 +26,7 @@ updated: 2026-11-03
 | Event | event | `kind: 'event'` | 문서 밖에서 시작되는 다이어그램(인터럽트, 타이머, 받은 메시지). 모자 모양 헤더를 단다. 호출 블록으로 호출할 수 없다 → [[0021-event-and-method\|ADR-0021]] |
 | Method | method | `kind: 'method'` | 호출 블록이 호출하는 다이어그램. 폭 전체에 걸친 낮은 아치 헤더를 단다. 헤더의 첫 여는 괄호 앞까지가 이름이고, 괄호 안이 받는 것이다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 본문 | body | `body` | 다이어그램 헤더 아래의 블록 목록. 반복 블록 안에서 반복되는 블록 목록도 본문이라고 한다 |
-| 문서 설정 | document settings | `settings` | 문서마다 정해 파일에 저장하고, 바꾸면 실행 취소의 대상인 것: 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양. 결과 기호도 문서마다 하나이고 파일에 저장되지만 뷰 상태다 |
+| 문서 설정 | document settings | `settings` | 문서마다 정해 파일에 저장하고, 바꾸면 실행 취소의 대상인 것: 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양, 텍스트를 외곽선으로 저장. 결과 기호도 문서마다 하나이고 파일에 저장되지만 뷰 상태다 |
 | 그림 문구의 언어 | language of drawn labels | `settings.locale` | 편집기가 그림에 적는 고정 문구(If의 "참" · "거짓", "⋯ 블록 n개", "(이름 없음)")의 언어. 문서 설정이다. 새 문서는 만든 사람의 화면 언어로 시작한다. 메뉴 · 알림은 화면 언어를 따른다 → [[0041-drawing-locale-in-document\|ADR-0041]] |
 
 ## 블록
@@ -122,5 +122,9 @@ updated: 2026-11-03
 | 렌더링 | rendering | 레이아웃 결과를 SVG로 그리는 것 |
 | 모델 내장 SVG | model-embedded SVG | 그림과 모델을 함께 담은 저장 파일(`.ns` / `.ns.svg`). 쓰인 문자만 추린 서브셋 글꼴도 들어간다 → [[01-file-format]] |
 | 서브셋 글꼴 | font subset | 번들한 글꼴에서 그 그림에 쓰인 문자만 추려 저장 파일에 넣은 것 → [[0026-bundled-font-metrics\|ADR-0026]]. 예전에는 "글꼴 조각"이라고 적었다 |
+| 텍스트 외곽선 | text outlines | 그림의 텍스트를 번들 글꼴의 글리프 모양(path)으로 적은 것. 문서 설정 "텍스트를 외곽선으로 저장"(`settings.textOutlines`)이 켜면 저장 파일 · 순수 SVG가, PDF는 늘 이렇게 그린다. 모델의 텍스트는 그대로다. 코드 이름은 `GlyphOutlines`(글꼴의 외곽선), `placeGlyphs`(놓기) → [[01-file-format#4.3 텍스트 외곽선]] |
+| 그림 지문 | drawing fingerprint | 저장 파일의 그림 부분(`<metadata>`를 뺀 나머지)의 SHA-256. 모델 요소의 `drawing-sha256`에 두고, 열 때 다시 계산해 다른 도구가 그림을 고쳤는지 안다. 코드 이름은 `checkDrawing` → [[01-file-format#4.1 그림 지문]] |
+| 순수 SVG | pure SVG | 저장 파일에서 모델(`<metadata>`)만 뺀 그림. 파일 › 내보내기 ▸ "SVG로 내보내기(그림만)"가 `.svg`로 저장하고, 편집기로는 열리지 않는다. 코드 이름은 `serializeImage` · `assembleImageSvg` → [[01-file-format#4.2 순수 SVG]] |
+| 페이지 나누기 · 인쇄 보기 | pagination · print view | PDF와 인쇄를 위해 그림을 인쇄 크기 그대로 종이 크기의 페이지로 자르는 것(`paginate`, 한 페이지는 `PrintPage`)과, 인쇄할 때만 보이는 그 페이지들의 화면(웹 셸의 `Printer`) → [[02-layout#5. 인쇄와 PDF의 페이지]], [[06-web#1.5 인쇄]] |
 | 셸 | shell | 배포 대상별로 편집기를 감싸는 래퍼 앱 (`src/apps/*` → [[0036-code-layout\|ADR-0036]]) |
 | 코어 | core | 배포 대상과 무관한 공통 로직 (`src/packages/core`) |

@@ -713,7 +713,11 @@ describe('the drawing language in the document (ADR-0041)', () => {
   it('T-0820: the setting is listed for the document settings, after the block text language', () => {
     const handle = makeIn('en');
     const specs = handle.settingsSchema.list().filter((spec) => spec.scope === 'document');
-    expect(specs.map((spec) => spec.id)).toEqual(['document.locale', 'document.headStyle']);
+    expect(specs.map((spec) => spec.id)).toEqual([
+      'document.locale',
+      'document.headStyle',
+      'document.textOutlines',
+    ]);
     expect(specs[0]).toMatchObject({
       title: 'setting.documentLocale',
       hint: 'setting.documentLocale.hint',

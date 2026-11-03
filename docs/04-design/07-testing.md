@@ -105,6 +105,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 - **사례:** 블록 종류마다 하나, 오늘 정한 레이아웃 규칙마다 하나(긴 조건과 빗금, 짧은 분기, default 없는 Case, 여러 다이어그램의 배치, 접기 영역, 펴 보기), 한글 · 영어 섞인 텍스트, 옛 형식 버전의 파일(QA-05)
 - **바이트 그대로:** 골든 파일은 git이 줄 끝을 바꾸지 않도록 텍스트로 다루지 않습니다(`.gitattributes`의 `src/packages/core/golden/** -text`).
 - **그림만의 골든:** 레이아웃 · 렌더러의 그림은 `golden/render/*.svg`에 따로 둡니다(모델과 글꼴 없이 그림만이라, GitHub에서 그림으로 보임).
+- **내보내기의 골든:** 순수 SVG와 PDF는 `golden/export/`에 둡니다(`sum.svg`, `sum.pdf`). PDF는 스트림을 압축하지 않고 써서(`isCompressed: false`) 텍스트로 읽힙니다. 텍스트 외곽선은 `.ns.svg` 골든의 `text-outlines*` 두 사례입니다. 갱신은 `.ns.svg` 골든과 같은 명령입니다(`node/export-golden.test.ts`).
 - **바꿀 때:** 그림이 바뀌는 것이 의도한 변경이면 갱신 명령으로 기대 파일을 다시 쓰고, 같은 커밋에 넣습니다. GitHub의 Pull Request는 SVG를 그림으로 보여 주므로, 리뷰어는 바뀌기 전과 뒤의 그림을 보고 판단합니다. 의도하지 않은 변경이면 테스트가 실패한 것이 맞습니다.
 - 갱신 명령: `.ns.svg` 골든은 `pnpm --filter @ariadne-nsd/core golden:update`(다시 쓴 뒤 같은 테스트를 한 번 더 돌림), 그림만의 골든은 Vitest의 스냅숏 갱신(`pnpm --filter @ariadne-nsd/core exec vitest run -u`)입니다. 둘 다 `src/`에서 실행합니다.
 - `.ns.svg` 골든의 테스트는 Node의 서브세팅(`node:fs`)을 쓰므로 `core`의 `src/` 밖(`packages/core/node/golden.test.ts`)에 둡니다. `core`의 코드는 Node 내장 모듈을 쓰지 않습니다([[07-coding-guide#1.5 dependency-cruiser]]).

@@ -11,7 +11,7 @@ import type {
   OpenedDocument,
   SettingsStore,
 } from '../editor-contract';
-import { exportPng } from '../files/export-command';
+import { exportPdf, exportPng, exportSvg } from '../files/export-command';
 import { chooseFileWithInput } from '../files/file-fallback';
 import { documentFileName, windowTitle } from '../files/file-name';
 import {
@@ -53,6 +53,9 @@ export const shellCommandIds = {
   newDocument: 'file.new',
   open: 'file.open',
   exportPng: 'file.export.png',
+  exportSvg: 'file.export.svg',
+  exportPdf: 'file.export.pdf',
+  print: 'file.print',
   recentPrefix: 'file.recent.',
 } as const;
 
@@ -72,6 +75,12 @@ export type WebShellOptions = {
   /** Sets the browser tab title. */
   readonly setTitle: (title: string) => void;
   readonly log: (detail: string) => void;
+  /** The bundled TTF, whose outlines draw the text of a PDF (R-EXP-03). Loaded once. */
+  readonly fontFile: () => Promise<Uint8Array>;
+  /** The browser's language (`navigator.language`): the paper of PDF and print. */
+  readonly languageTag: string;
+  /** File › Print… (R-EXP-03): `false` if the pages could not be made. */
+  readonly print: () => boolean;
 };
 
 /** The running shell. Create it with `createWebShell`, then `start` it with an editor. */
@@ -591,15 +600,64 @@ export function createWebShell(options: WebShellOptions): WebShell {
           if (editor === null) {
             return;
           }
-          await exportPng(editor, store.name, args, {
-            canWriteInPlace: options.canWriteInPlace,
-            notify: notices.show,
-            text,
-            log: options.log,
+          await exportPng(editor, store.name, args, exportHost());
+        },
+      },
+      {
+        id: shellCommandIds.exportSvg,
+        title: 'command.file.export.svg',
+        keys: [],
+        menu: { menu: 'file', group: 3, order: 2, submenu: 'export' },
+        edits: false,
+        when: () => true,
+        run: async () => {
+          if (editor === null) {
+            return;
+          }
+          await exportSvg(editor, store.name, exportHost());
+        },
+      },
+      {
+        id: shellCommandIds.exportPdf,
+        title: 'command.file.export.pdf',
+        keys: [],
+        menu: { menu: 'file', group: 3, order: 3, submenu: 'export' },
+        edits: false,
+        when: () => true,
+        run: async () => {
+          if (editor === null) {
+            return;
+          }
+          await exportPdf(editor, store.name, {
+            ...exportHost(),
+            fontFile: options.fontFile,
+            languageTag: options.languageTag,
           });
         },
       },
+      {
+        id: shellCommandIds.print,
+        title: 'command.file.print',
+        keys: ['Ctrl+P'],
+        menu: { menu: 'file', group: 3, order: 10 },
+        edits: false,
+        when: () => true,
+        run: () => {
+          if (!options.print()) {
+            notices.show(text('notice.printFailed'), 'warn');
+          }
+        },
+      },
     ];
+  }
+
+  function exportHost(): Parameters<typeof exportSvg>[2] {
+    return {
+      canWriteInPlace: options.canWriteInPlace,
+      notify: notices.show,
+      text,
+      log: options.log,
+    };
   }
 
   // --- Start ---

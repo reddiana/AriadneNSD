@@ -24,6 +24,9 @@ const english = {
   'command.file.download': 'Download',
   'command.file.saveAs': 'Save As…',
   'command.file.export.png': 'Export as PNG…',
+  'command.file.export.svg': 'Export as SVG (Drawing Only)…',
+  'command.file.export.pdf': 'Export as PDF…',
+  'command.file.print': 'Print…',
   // Edit
   'command.edit.undo': 'Undo',
   'command.edit.redo': 'Redo',
@@ -178,6 +181,8 @@ const english = {
   'notice.saveDenied': 'Could not save: permission was denied.',
   'notice.saveFailed': 'Could not save. The document is still here; try again.',
   'notice.openNoModel': 'This file has no AriadneNSD model, so it cannot be edited.',
+  'notice.drawingEdited':
+    'The drawing in “{name}” was changed by another tool and may not match the model. The editor shows the model. Saving draws the picture again from the model, so the changes made only to the drawing are lost.',
   'notice.openPrototype': 'This file was made by the prototype and cannot be opened.',
   'notice.openDamaged': 'This file is damaged and cannot be edited. The file was not changed.',
   'notice.openNewerVersion':
@@ -260,6 +265,8 @@ const english = {
   'setting.headStyle': 'Header shape',
   'setting.headStyle.title': 'Like a title',
   'setting.headStyle.shape': 'Hat · arch',
+  'setting.textOutlines': 'Save text as outlines',
+  'setting.textOutlines.hint': 'Every viewer shows the same glyphs. The file is larger.',
 } as const;
 
 /** The keys of the editor's messages. */
@@ -273,6 +280,9 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.file.download': '내려받기',
   'command.file.saveAs': '다른 이름으로 저장…',
   'command.file.export.png': 'PNG로 내보내기…',
+  'command.file.export.svg': 'SVG로 내보내기(그림만)…',
+  'command.file.export.pdf': 'PDF로 내보내기…',
+  'command.file.print': '인쇄…',
   'command.edit.undo': '실행 취소',
   'command.edit.redo': '다시 하기',
   'command.edit.cut': '잘라내기',
@@ -418,6 +428,8 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'notice.saveDenied': '저장하지 못했습니다: 권한이 없습니다.',
   'notice.saveFailed': '저장하지 못했습니다. 문서는 그대로 있으니 다시 해 보세요.',
   'notice.openNoModel': '이 파일에는 AriadneNSD 모델이 없어 편집할 수 없습니다.',
+  'notice.drawingEdited':
+    '“{name}”의 그림이 다른 도구로 고쳐져 모델과 다를 수 있습니다. 편집기는 모델을 보여 줍니다. 저장하면 그림을 모델로 다시 그리므로, 그림에서만 고친 것은 사라집니다.',
   'notice.openPrototype': '프로토타입이 만든 파일이라 열 수 없습니다.',
   'notice.openDamaged': '파일이 깨져 편집할 수 없습니다. 파일은 바꾸지 않았습니다.',
   'notice.openNewerVersion':
@@ -482,6 +494,8 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'setting.headStyle': '헤더 모양',
   'setting.headStyle.title': '제목처럼',
   'setting.headStyle.shape': '모자 · 아치',
+  'setting.textOutlines': '텍스트를 외곽선으로 저장',
+  'setting.textOutlines.hint': '어느 뷰어에서나 같은 글자 모양으로 보입니다. 파일이 커집니다.',
 };
 
 const catalogs: Readonly<Record<Locale, Readonly<Record<MessageKey, string>>>> = {

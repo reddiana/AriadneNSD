@@ -468,7 +468,30 @@
       asks whether to restore it. A document opened from a file keeps its local backup when you open
       another one; open that file again and it asks whether to restore it.
     </li>
-    <li><b>Export as PNG:</b> File › Export. It looks the same as the saved picture.</li>
+    <li>
+      <b>Export:</b> File › Export ▸ PNG, SVG or PDF. Each looks the same as the saved picture.
+      <b>SVG (Drawing Only)</b> is the saved picture without the model inside: it opens anywhere as
+      a picture, but not in AriadneNSD, so share it and keep the <code>.ns.svg</code> for editing.
+      <b>PDF</b> cuts a large diagram into pages at print size (A4, or Letter in the US and Canada),
+      between blocks where it can, and numbers them. Its text is drawn as shapes, so it cannot be
+      selected, and characters the bundled font lacks (such as Han characters) show as empty boxes;
+      print to PDF from the browser for those.
+    </li>
+    <li>
+      <b>Print:</b> File › Print… or <kbd>Ctrl</kbd>+<kbd>P</kbd>. The same pages as the PDF go to
+      the browser's print dialog, with only the diagram on them.
+    </li>
+    <li>
+      <b>Text as outlines:</b> Diagram › Document Settings › Save text as outlines. The saved
+      picture draws its text as shapes, so every viewer shows the same glyphs even where fonts in
+      files are not used. The text stays in the document, so you can still edit it; the file is
+      larger.
+    </li>
+    <li>
+      <b>A picture changed by another tool:</b> if the drawing in a file was edited in another
+      program (such as Inkscape), opening it says so. AriadneNSD always draws from the model inside,
+      and saving draws the picture again, so changes made only to the drawing are lost.
+    </li>
     <li>
       <b>New documents:</b> if you edited a new document that was never saved (a new one, or an
       example) and open another document, it first asks: "… is a new document that has never been

@@ -12,6 +12,10 @@ export const modelNamespace = 'https://github.com/reddiana/AriadneNSD';
 export type ModelElement = {
   readonly version: string | null;
   readonly text: string;
+  /** The `drawing-sha256` attribute: the fingerprint of the drawing part (R-FMT-09), if any. */
+  readonly drawingSha256: string | null;
+  /** Where the `<metadata>` element around it starts (`<`) and ends (after `>`) in the text. */
+  readonly metadata: { readonly start: number; readonly end: number };
 };
 
 /** What the scan found. */
@@ -29,6 +33,8 @@ type Frame = {
   readonly namespaces: ReadonlyMap<string, string>;
   readonly isMetadata: boolean;
   readonly isModel: boolean;
+  /** Where the start tag begins. */
+  readonly start: number;
 };
 
 const namePattern = /[A-Za-z_][\w.:-]*/y;
@@ -46,6 +52,8 @@ export function findModelElement(svg: string): ModelElementResult {
   const stack: Frame[] = [];
   const found: ModelElement[] = [];
   let modelVersion: string | null = null;
+  let modelSha256: string | null = null;
+  let metadataStart = -1;
   let modelText: string[] | null = null;
   let isRootSeen = false;
   let isPrototypeSeen = false;
@@ -56,6 +64,14 @@ export function findModelElement(svg: string): ModelElementResult {
       : { ok: false, reason: 'noModel', detail: `not an SVG file: ${detail}` };
   // A byte order mark (U+FEFF) may come before the XML.
   let at = svg.charCodeAt(0) === 0xfeff ? 1 : 0;
+
+  // The metadata range is completed when the `<metadata>` element ends.
+  const modelElement = (text: string, end: number): ModelElement => ({
+    version: modelVersion,
+    text,
+    drawingSha256: modelSha256,
+    metadata: { start: metadataStart, end },
+  });
 
   const addText = (raw: string): string | null => {
     if (modelText !== null) {
@@ -114,11 +130,17 @@ export function findModelElement(svg: string): ModelElementResult {
       if (match === null || top === undefined || match[1] !== top.name) {
         return damaged(`an end tag does not match at ${String(open)}`);
       }
+      at = endTagPattern.lastIndex;
       if (top.isModel && modelText !== null) {
-        found.push({ version: modelVersion, text: modelText.join('') });
+        found.push(modelElement(modelText.join(''), at));
         modelText = null;
       }
-      at = endTagPattern.lastIndex;
+      if (top.isMetadata && top.start === metadataStart) {
+        const last = found.at(-1);
+        if (last !== undefined) {
+          found[found.length - 1] = { ...last, metadata: { start: metadataStart, end: at } };
+        }
+      }
     } else {
       const tag = readStartTag(svg, open);
       if (tag === null) {
@@ -156,15 +178,17 @@ export function findModelElement(svg: string): ModelElementResult {
         local === 'document' && namespace === modelNamespace && parent?.isMetadata === true;
       if (isModel) {
         modelVersion = tag.attributes.get('version') ?? null;
+        modelSha256 = tag.attributes.get('drawing-sha256') ?? null;
+        metadataStart = parent.start;
         modelText = [];
       }
       if (tag.isEmpty) {
         if (isModel) {
-          found.push({ version: modelVersion, text: '' });
+          found.push(modelElement('', tag.end));
           modelText = null;
         }
       } else {
-        stack.push({ name: tag.name, namespaces, isMetadata, isModel });
+        stack.push({ name: tag.name, namespaces, isMetadata, isModel, start: open });
       }
     }
   }

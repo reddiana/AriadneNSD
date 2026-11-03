@@ -9,6 +9,7 @@ import { App } from './app';
 import { hasFileSystemAccess } from './files/file-system-access';
 import { thumbnailUrl } from './examples/thumbnail-urls';
 import { createSaveFonts } from './fonts/save-font';
+import { createPrinter } from './print/print-view';
 import { loadBlockFont } from './fonts/screen-font';
 import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
 import { createListeners } from './shell/listeners';
@@ -58,6 +59,13 @@ bootStep('database');
 const db = await openBrowserDb(log);
 bootStep('editor');
 
+// The wasm and the TTF for saving (2 MB, about 1 MB compressed) are fetched at the first edit, not
+// at start, and before the first save: a save dialog must open soon after the click that asks.
+const saveFonts = createSaveFonts();
+// File › Print… and the browser's own Print (R-EXP-03). It reads the editor made below, and
+// only when printing, after the start.
+const printer = createPrinter(window, () => editor.rendering(), navigator.language, log);
+
 const shell = createWebShell({
   db,
   settings,
@@ -73,6 +81,9 @@ const shell = createWebShell({
     document.title = title;
   },
   log,
+  fontFile: async () => (await saveFonts()).ttf,
+  languageTag: navigator.language,
+  print: printer.print,
 });
 
 const appearanceChanged = createListeners<Parameters<typeof watchAppearance>[0]>();
@@ -80,9 +91,6 @@ const appearance = watchAppearance(appearanceChanged.emit);
 const dragging = createListeners<(isDragging: boolean) => void>();
 
 const blockFontLoading = loadBlockFont();
-// The wasm and the TTF for saving (2 MB, about 1 MB compressed) are fetched at the first edit, not
-// at start, and before the first save: a save dialog must open soon after the click that asks.
-const saveFonts = createSaveFonts();
 const canvas = document.createElement('div');
 canvas.className = 'ans-web-canvas';
 const editor = createEditor({
