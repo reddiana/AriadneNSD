@@ -394,8 +394,9 @@ function ko(english) {
   return koTable[key] || '';
 }
 
+/** An empty "확인하는 것" cell shows `-`, and the column is centred (maintainer, 2026-11-03). */
 const testRow = (test) =>
-  `| ${test.id} | ${cell(ko(test.what))} | ${test.ids.map((id) => link(id)).join(', ')} |`;
+  `| ${test.id} | ${cell(ko(test.what))} | ${test.ids.map((id) => link(id)).join(', ') || '-'} |`;
 
 /**
  * The block id of a file's table (`^t-apps-web-e2e-boot-spec-ts`). Other documents link a test as
@@ -417,7 +418,7 @@ const fileBlock = (file) => [
   ].join('. ') + '.',
   '',
   '| ID | 테스트 | 확인하는 것 |',
-  '| --- | --- | --- |',
+  '| --- | --- | :---: |',
   ...file.tests.map((test) => testRow({ ...test, file })),
   '',
   `^${blockOf(file.rel)}`,
