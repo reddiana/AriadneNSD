@@ -26,6 +26,7 @@ import {
   writtenBlob,
   writtenText,
 } from './support';
+import { largeDocumentFile } from '../src/perf/large-document';
 
 /**
  * Waits for the last edit (the ● mark), saves with Ctrl+S to the fake file system, waits for the
@@ -68,29 +69,6 @@ async function processBlocks(page: Page, ...texts: ReadonlyArray<string>): Promi
     await page.keyboard.press('o');
     await typeText(page, text);
   }
-}
-
-/** A saved file with `count` process blocks, written like the app writes the model. */
-function largeDocument(count: number): string {
-  const body = Array.from({ length: count }, (_, index) => ({
-    id: `b${String(index + 1)}`,
-    kind: 'process',
-    text: `step ${String(index + 1)}`,
-  }));
-  const model = {
-    format: 'ariadne-nsd',
-    version: 1,
-    settings: { textKind: 'plain', theme: 'default', headStyle: 'shape' },
-    diagrams: [{ id: 'd1', body }],
-    view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
-  };
-  return [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">',
-    '  <metadata>',
-    `    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[${JSON.stringify(model)}]]></ans:document>`,
-    '  </metadata>',
-    '</svg>',
-  ].join('\n');
 }
 
 test.describe('in-memory files (Chromium: File System Access)', () => {
@@ -231,7 +209,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
   }) => {
     // Recording the coverage slows the page down: the time is measured by `pnpm e2e` only.
     test.skip(process.env.E2E_COVERAGE !== undefined, 'coverage recording slows the page down');
-    await putFile(page, 'large.ns.svg', largeDocument(500));
+    await putFile(page, 'large.ns.svg', largeDocumentFile(500));
     await command(page, 'file.open').click();
     await onThisComputer(page);
     await expect(page).toHaveTitle('large.ns.svg – AriadneNSD');
@@ -270,7 +248,7 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     page,
   }) => {
     await processBlocks(page, 'keep me');
-    const damaged = largeDocument(1).replace('"kind":"process"', '"kind":"nonsense"');
+    const damaged = largeDocumentFile(1).replace('"kind":"process"', '"kind":"nonsense"');
     await putFile(page, 'damaged.ns.svg', damaged);
     await command(page, 'file.open').click();
     await onThisComputer(page);
