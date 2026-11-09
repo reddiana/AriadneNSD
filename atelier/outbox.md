@@ -20,7 +20,7 @@ updated: 2026-11-10
 
 ### 요구사항 · 범위
 
-- [ ] 시안 M57 (2026-11-10): AI 넷(ChatGPT · Gemini · Grok · claude.ai)의 시험을 보고, JP1 ~ JP3 JSON을 붙여 넣어 열기(알아보는 기준, 알아본 뒤의 질문, 메뉴), RQ1 요청문 복사, GD1 안내서 손질, RQ2 요구사항의 자리. 메인테이너: "시안으로 보여 주세요. 그러나 다음 세션에서 읽어보겠습니다." → [[sketchbook]](M57), `journal/assets/2026-11-10-ai-paste-study.html`
+- [ ] 시안 M57 (2026-11-10): AI 넷(ChatGPT · Gemini · Grok · claude.ai)의 시험을 보고, JP1 ~ JP3 JSON을 붙여 넣어 열기(알아보는 기준, 알아본 뒤의 질문, 메뉴), RQ1 요청문 복사, GD1 안내서 손질, RQ2 요구사항의 자리. 메인테이너: "시안으로 보여 주세요. 그러나 다음 세션에서 읽어보겠습니다." → M57(https://claude.ai/artifact/QzYU7rsi5r15Xevc6XNgYm, `journal/assets/2026-11-10-ai-paste-study.html`)
 
 ### 조작 · 키
 

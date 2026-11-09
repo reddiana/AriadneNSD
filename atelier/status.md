@@ -22,6 +22,7 @@ updated: 2026-11-10
 | M51 | 사용법 전체 초안 (2026-11-02, 답을 기다림) | https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq | `journal/assets/2026-11-02-manual-full-study.html` (원본 `src/apps/manual`) |
 | M54 | 새 Method로 빼기 시안 (2026-11-03, 결정함: XM1 · XM2 · XM3 3번. 답을 기다림: Claude가 정해 둔 것의 표 → [[outbox#확인해 주세요]]) | https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n | `journal/assets/2026-11-03-extract-method-study.html` |
 | M55 | 브라우저 안의 문서 시안 (2026-11-03, 결정함: BS1 2번 · BS2 ~ BS4. 답을 기다림: Claude가 정해 둔 것의 표 → [[outbox#확인해 주세요]]) | https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV | `journal/assets/2026-11-03-browser-storage-study.html` |
+| M57 | AI 붙여넣기 · 요청문 · 안내서 손질 시안 (2026-11-10, 답을 기다림: 다음 세션 처음) | https://claude.ai/artifact/QzYU7rsi5r15Xevc6XNgYm | `journal/assets/2026-11-10-ai-paste-study.html` (만드는 스크립트 `…-build.mjs`) |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
