@@ -22,6 +22,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `packages/core/src/text/` · `layout/` · `render/`         | 텍스트 폭, 두 단계 레이아웃, 씬 빌드와 SVG 문자열                            |
 | `packages/core/src/format/`                               | 모델 JSON, SVG 파일의 조립과 열기                                    |
 | `packages/core/src/i18n/`                                 | 그림에 적는 고정 문구(참 · 거짓 …)                                     |
+| `packages/core/schema/`                                   | 모델 JSON의 JSON Schema(`model.schema.json`). 웹 빌드가 사이트의 `/model.schema.json`으로 낸다 |
 | `packages/core/golden/`                                   | 골든 파일(`.ns.svg` 하나가 입력이자 기대 출력), `golden/render/`는 그림만의 골든 |
 | `packages/core/node/`                                     | Node에서만 실행되는 테스트(골든 파일은 Node의 서브세터를 씀)                     |
 | `packages/fonts/assets/`                                  | 만들어 둔 글꼴 파일과 라이선스(`OFL.txt`)                               |
@@ -33,6 +34,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `packages/editor/src/ui/`                                 | 메뉴 바, 툴바, 상태 표시줄, 커맨드 팔레트, 모달, 컨텍스트 메뉴(React)              |
 | `packages/editor/src/contracts.ts`                        | 셸과의 계약(`EditorHandle`, `DocumentStore` …)                  |
 | `apps/web/src/shell/` · `files/` · `storage/` · `fonts/`  | 웹 셸, 파일 I/O · PNG 내보내기, IndexedDB · 설정, 글꼴 로딩              |
+| `apps/web/guide/`                                         | 다른 AI를 위한 안내서의 틀(`llms.txt`). 빌드가 core의 값 목록으로 채워 사이트의 `/llms.txt`로 낸다 |
 | `apps/web/e2e/`                                           | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`)                     |
 | `apps/web/scripts/`                                       | 번들 사이즈 체크(bundle size budget)                                                |
 

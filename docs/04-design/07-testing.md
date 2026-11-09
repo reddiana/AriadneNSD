@@ -3,7 +3,7 @@ title: 테스트 전략
 tags:
   - design
 status: 초안
-updated: 2026-11-03
+updated: 2026-11-10
 ---
 
 # 테스트 전략
@@ -109,6 +109,13 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 - **바꿀 때:** 그림이 바뀌는 것이 의도한 변경이면 갱신 명령으로 기대 파일을 다시 쓰고, 같은 커밋에 넣습니다. GitHub의 Pull Request는 SVG를 그림으로 보여 주므로, 리뷰어는 바뀌기 전과 뒤의 그림을 보고 판단합니다. 의도하지 않은 변경이면 테스트가 실패한 것이 맞습니다.
 - 갱신 명령: `.ns.svg` 골든은 `pnpm --filter @ariadne-nsd/core golden:update`(다시 쓴 뒤 같은 테스트를 한 번 더 돌림), 그림만의 골든은 Vitest의 스냅숏 갱신(`pnpm --filter @ariadne-nsd/core exec vitest run -u`)입니다. 둘 다 `src/`에서 실행합니다.
 - `.ns.svg` 골든의 테스트는 Node의 서브세팅(`node:fs`)을 쓰므로 `core`의 `src/` 밖(`packages/core/node/golden.test.ts`)에 둡니다. `core`의 코드는 Node 내장 모듈을 쓰지 않습니다([[07-coding-guide#1.5 dependency-cruiser]]).
+
+### 3.1 문서 속 예제(doctest)와 값 목록
+
+문서와 다른 AI를 위한 안내서가 형식과 어긋나지 않게, 그 안의 예제를 테스트로 돌립니다([[01-requirements#^r-web|R-WEB-10]]).
+
+- **예제:** `apps/web/src/files/doc-examples.test.ts`가 `/llms.txt`, 첫 화면 `index.html`의 AI용 안내, 파일 형식 명세(`docs/05-spec/`의 모든 문서)에서 ```` ```json ```` 블록과 공유 링크(`ns1.u.` · `j` · `d`)를 꺼내 앱의 `parseModel`(링크는 `readShareLink`)로 열고 JSON Schema로도 검사합니다. 블록 하나만 든 조각은 모델로 감싸 엽니다. 검사하지 않을 블록(`…`가 든 개요)은 바로 앞 줄에 `<!-- doctest: skip: 까닭 -->`을 달고, 달지 않은 블록이 열리지 않으면 실패합니다 → [[06-web#3.1 LLM · 에이전트를 위한 안내서]]
+- **값 목록:** 안내서의 값 목록(블록 종류, `textKind` · `theme` · `headStyle` · `locale` 등의 값)은 빌드가 core의 목록으로 채우고, 테스트도 채운 결과를 봅니다. JSON Schema의 `enum`은 `core/node/model-schema.test.ts`가 core의 목록과 같은지 확인하고, 골든 파일의 모델이 모두 스키마를 통과하는지도 봅니다.
 
 ## 4. MVP의 인수 테스트
 

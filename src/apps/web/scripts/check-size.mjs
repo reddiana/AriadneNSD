@@ -20,9 +20,12 @@ const budgetKb = 230;
 
 const dist = resolve(dirname(fileURLToPath(import.meta.url)), '../dist');
 
-/** Files the page or a script loads at once: `src`/`href` in HTML, static `import … from` in JS. */
+/**
+ * Files the page or a script loads at once: `src`/`href` in HTML, static `import … from` in JS.
+ * A `<link rel="alternate">` (the guide for AI assistants, /llms.txt) is not loaded by browsers.
+ */
 function linkedFiles(file) {
-  const text = readFileSync(file, 'utf8');
+  const text = readFileSync(file, 'utf8').replace(/<link\b[^>]*\brel="alternate"[^>]*>/g, '');
   const pattern = file.endsWith('.html')
     ? /(?:src|href)="(\.\/[^"]+)"/g
     : /(?:^|[;\s])import(?:[^"'()]*?from)?\s*["'](\.\.?\/[^"']+)["']/g;

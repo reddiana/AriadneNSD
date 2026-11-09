@@ -3,7 +3,7 @@ title: 웹
 tags:
   - design
 status: 초안
-updated: 2026-11-03
+updated: 2026-11-10
 ---
 
 # 웹
@@ -26,6 +26,7 @@ updated: 2026-11-03
 - 내보내기 · 인쇄: [[01-requirements#^r-exp|R-EXP-01]](PNG), [[01-requirements#^r-exp|R-EXP-02]](SVG), [[01-requirements#^r-exp|R-EXP-03]](PDF · 인쇄)
 - 화면: [[01-requirements#^r-edit|R-EDIT-21]](도움말), [[01-requirements#^r-edit|R-EDIT-24]](커맨드 팔레트), [[01-requirements#^r-nfr|R-NFR-04]](화면 언어)
 - 공유 URL과 보기 모드: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]] (3장)
+- LLM · 에이전트를 위한 안내서: [[01-requirements#^r-web|R-WEB-10]] (3.1)
 - Google Drive, AI 대화창: [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
 
 ## 1. 파일 열기·저장
@@ -156,13 +157,13 @@ updated: 2026-11-03
 https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yqRKUnGNov99R0qy...
 ```
 
-`#` 뒤가 링크의 몫입니다: `ns1`(링크 형식과 그 버전) · `d`(꾸림) · 내용, 그 사이는 `.`입니다.
+`#` 뒤가 링크의 몫입니다: `ns1`(링크 형식과 그 버전) · `d`(꾸림) · 내용, 그 사이는 `.`입니다. 앱이 만드는 링크는 언제나 `d`(또는 `j`)이고, 다른 AI가 손으로 쓰는 `u`는 읽기만 합니다(3.1 → [[ux-decisions#LG2. LLM이 만드는 링크의 꾸림|LG2]], [[ux-decisions#LG5. 사용자가 준 링크를 LLM이 읽는 길|LG5]]).
 
 | | 무엇 |
 | --- | --- |
 | 자리 | URL의 fragment(`#` 뒤). 브라우저가 서버로 보내지 않아 GitHub Pages의 로그에도 다른 사이트로 가는 리퍼러에도 실리지 않는다. 페이지 주소는 지금 페이지의 `origin` + `pathname`(query는 뺌) |
 | 내용 | UTF-8 JSON `{"name": "정렬.ns.svg", "model": {…}}`. `model`은 파일의 모델 JSON([[01-file-format]])을 들여쓰기 없이 쓴 것으로, 뷰 상태(접힘, 이름 띠 등)도 들어 있다. 그림과 서브셋 글꼴은 넣지 않는다(받는 쪽이 같은 렌더러로 그림) |
-| 꾸림 | 브라우저의 `CompressionStream('deflate-raw')`로 압축하고 base64url(패딩 없음)로 적는다(`d`). CompressionStream이 없는 브라우저는 압축하지 않고 적는다(`j`). 라이브러리를 더하지 않는다 |
+| 꾸림 | 브라우저의 `CompressionStream('deflate-raw')`로 압축하고 base64url(패딩 없음)로 적는다(`d`). CompressionStream이 없는 브라우저는 압축하지 않고 적는다(`j`). 라이브러리를 더하지 않는다. 읽을 때는 셋째 꾸림 `u`(JSON을 `encodeURIComponent`로 퍼센트 인코딩한 것)도 받는다. 압축이 없어 코드 없이 손으로 쓸 수 있고, 사람과 LLM이 그대로 읽는다. 앱은 `u`를 만들지 않는다 |
 | 버전 | `ns1.`이 링크 형식의 버전이다. `ns` + 다른 숫자로 시작하면 "더 새 버전의 AriadneNSD가 만든 링크"라고 알린다. 모델의 버전 규칙(옛 버전은 옮기고 더 새 버전은 거절)은 파일과 같다 |
 
 **링크를 만들 때**(`src/apps/web/src/files/share-command.ts`)
@@ -183,8 +184,9 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 **링크를 열 때**(`src/apps/web/src/files/share-link.ts`, 셸의 `start` · `openShareLink`)
 
 - 페이지가 fragment가 `ns` + 숫자 + `.`로 시작하는 주소로 열리면 공유 링크다. 그 밖의 fragment는 보지 않는다.
-- 링크는 누구나 만들 수 있는 입력이다(QA-21). 링크 길이가 1 MB를 넘으면 풀지 않는다. 스트림으로 풀며 16 MB를 넘는 순간 멈춘다(작은 링크가 크게 풀리는 zip bomb). JSON 봉투는 `name`(문자열)과 `model` 두 키만 받는다. `model`은 파일과 같은 검증 파서(`parseModel`)를 거치고, 이름은 파일 이름 규칙으로 다듬는다(비면 "제목 없음.ns.svg").
-- 열 수 없으면 지금 문서를 바꾸지 않고 까닭을 알린다: 손상(잘렸을 수 있음) · 너무 큼 · 더 새 버전 · 이 브라우저가 압축을 풀 수 없음. 페이지를 처음 열 때였으면 그 뒤로 평소처럼 시작한다(로컬 백업의 복원을 묻는다).
+- 링크는 누구나 만들 수 있는 입력이다(QA-21). 링크 길이가 1 MB를 넘으면 풀지 않는다. 스트림으로 풀며 16 MB를 넘는 순간 멈춘다(작은 링크가 크게 풀리는 zip bomb). `u`는 `decodeURIComponent`로 푼다. 풀린 글은 링크보다 길 수 없어 길이 한도가 그대로 크기 한도다. 퍼센트 인코딩이 틀리면 손상이다. JSON 봉투는 `name`(문자열)과 `model` 두 키만 받는다. `model`은 파일과 같은 검증 파서(`parseModel`)를 거치고, 이름은 파일 이름 규칙으로 다듬는다(비면 "제목 없음.ns.svg").
+- 열 수 없으면 지금 문서를 바꾸지 않고 `editor`의 모달(`confirm`, 제목은 "AriadneNSD")로 까닭을 알린다: 첫 줄은 손상(잘렸을 수 있음) · 너무 큼 · 더 새 버전 · 이 브라우저가 압축을 풀 수 없음 가운데 하나, 둘째 줄은 "까닭: …"(파서의 detail, 영어), 셋째 줄은 "이 링크를 AI가 만들었다면 까닭을 복사해 그 AI에게 붙여 주세요. 고친 링크를 다시 받을 수 있습니다." 버튼은 "닫기" / "까닭 복사"(기본). "까닭 복사"는 `AriadneNSD could not open the share link (<reason>): <detail>`과 안내서의 주소(`How to make a link that opens: …/llms.txt`)를 클립보드에 넣고 "까닭을 복사했습니다. 링크를 만든 AI에게 붙여 주세요."(`info`)를 알린다. 클립보드가 거절하면 그 글을 모달(`prompt`)에 넣어 손으로 복사하게 한다. JSON이 읽히지 않을 때 detail의 끝에는 문자열 밖의 괄호 수가 맞지 않음을 덧붙인다(`; it has 6 "{" but 5 "}"`). 손으로 쓴 링크의 흔한 실수가 닫는 괄호 하나라서다 → [[ux-decisions#LG6. 열지 못한 링크의 까닭|LG6]]
+- 페이지를 처음 열 때였으면 그 모달을 닫은 뒤에 평소처럼 시작한다(로컬 백업의 복원을 묻는다).
 - 열면 **한 번도 저장하지 않은 새 문서**로, 보기 모드에서 연다(문서 키도 새것). 로컬 백업을 쓰지 않고, 두 탭 잠금에 걸리지 않는다.
 - 페이지를 처음 열 때의 공유 링크는 로컬 백업의 "복원할까요?"보다 앞선다. 그 백업은 지우지 않고 다음에 링크 없이 열 때 묻는다. 처음 온 사람의 예제 모달도 띄우지 않는다 → [[ux-decisions#SH5. 링크를 열 때|SH5]]
 - 열린 탭의 주소창에 다른 공유 링크를 붙여 넣으면 fragment만 바뀐다(`hashchange`). 다른 문서를 열 때처럼 저장하지 않은 새 문서는 먼저 묻고([[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]]) 보기 모드로 연다.
@@ -194,6 +196,23 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 - 셸이 보기 모드인지를 가진다(`isViewing`, `onViewMode`). `editor`의 `EditorApp`은 `viewMode`(편집하기 버튼의 처리)를 받으면 메뉴 바 · 툴바 · 상태 표시줄 대신 보기 막대(`ViewBar`)를 그린다. 문서는 읽기 전용(`readOnly`)으로 열리므로 `editor`의 편집 명령은 "보기만 하는 중"의 이유로 거절된다. 선택 이동 · 접기 · 펴기 · 확대 · 스크롤은 된다(뷰 상태라서).
 - "편집하기"(`startEditing`)는 같은 문서를 다시 열지 않고 읽기 전용만 푼다. 그 뒤로는 저장하지 않은 새 문서의 규칙(로컬 백업, [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]])을 따른다.
 - 보기 모드가 끝나면(편집하기, 또는 다른 문서를 엶) 주소창에서 fragment를 지운다(`history.replaceState`). 편집한 뒤 새로 고치면 링크가 아니라 로컬 백업을 복원하게 하려는 것이다 → [[ux-decisions#SH4. 편집하기|SH4]]
+
+### 3.1 LLM · 에이전트를 위한 안내서
+
+다른 AI(ChatGPT · Claude · Gemini 같은 채팅 LLM, 코드 에이전트)는 이 편집기를 조작하지 못합니다. 대신 사용자에게 공유 링크를 만들어 주고, 사용자가 붙여 준 공유 링크를 읽게 합니다([[01-requirements#^r-web|R-WEB-10]]). 사람에게는 공유 링크 복사를, AI에게는 공유 링크를 주라고 추천하므로 둘이 같은 "누르면 열리는 링크"가 됩니다. 정한 과정 → [[ux-decisions#2026-11-10 LLM · 에이전트 안내서 (M56, 메인테이너가 추천안을 받아들임)|LG1 ~ LG6]]
+
+| 자리 | 무엇 | 원본 |
+| --- | --- | --- |
+| `/llms.txt` | 영어 안내서 하나(약 9 KB, 마크다운). 링크를 만드는 법(봉투 `{"name","model"}` → `#ns1.u.` + `encodeURIComponent`, 손으로 인코딩할 글자와 괄호 수 확인), 모델 JSON과 블록 일곱 가지의 표, 규칙 넷(id, 빈 `body` 없음, 보인 키만, 문자열 이스케이프), 예제(최댓값 찾기와 그 링크, Case), 링크가 열리지 않을 때 "까닭"을 받아 고치는 법, 사용자가 준 링크를 읽는 법(`u` · `j` · `d`), 코드를 돌리면 `d`를 만드는 법, 큰 문서는 파일로 | 틀 `src/apps/web/guide/llms.txt`. 빌드(웹의 Vite 플러그인)가 값 목록의 자리(`{{textKinds}}` 등)를 core의 목록으로 채워 사이트 루트에 낸다. 개발 서버도 같은 주소로 준다 |
+| `/model.schema.json` | 모델 JSON의 JSON Schema(draft 2020-12). 모양만 검사하고, 이 버전이 아는 값(텍스트 종류 · 테마 · 그림 문구의 언어)만 나열한다. 불변식(id는 한 번, 로컬 호출은 Method를, 접기 영역의 끝 블록, 빈 다이어그램)은 앱이 검사한다고 적는다. 안내서가 한 줄로 가리킨다 | `src/packages/core/schema/model.schema.json` (파서 곁에 둔다. 웹 빌드의 Vite 플러그인이 사이트 루트에 내고, 개발 서버도 같은 주소로 준다) |
+| 첫 화면 `index.html` | `<meta name="description">`(AI는 `/llms.txt`를 읽으라는 한 줄), `<link rel="alternate" type="text/markdown" href="/llms.txt">`, 그리고 `#root` 안의 `<section id="for-ai" hidden>`: "이 편집기는 조작할 수 없으니 공유 링크를 주라"는 말, 링크를 만드는 법의 요약, 규칙 넷, 아주 작은 예제(`abs(x)`의 모델과 링크), `/llms.txt`와 스키마의 주소 | `src/apps/web/index.html` (블록 종류의 목록은 빌드가 같은 방법으로 채운다) |
+
+- **첫 화면 안에 두는 까닭:** 첫 화면 HTML만 읽고 링크를 따라가지 않는 도구가 있다(2026-11-09, ChatGPT가 "로딩 화면만 확인되어" 그리지 못했다고 답함). 그래서 그 HTML 안에 링크를 만들 수 있는 요약을 바로 둔다. `hidden`이라 사람에게는 보이지 않고, 앱이 뜨면 React가 `#root`를 바꾸며 사라진다. 첫 내려받기는 gzip으로 약 2 KB 늘었다(213.9 → 215.9 KB, 그 가운데 `index.html`이 1.2 → 2.4 KB). `<link rel="alternate">`는 브라우저가 받지 않아 첫 내려받기에 세지 않는다(`scripts/check-size.mjs`).
+- **영어 하나:** 모든 LLM이 가장 정확히 따르는 말이고 필드 이름 · 예제가 이미 영어다. 실험에서 모델들은 영어 안내서를 읽고 한국어 사용자에게 한국어로 답하며 블록 글자도 한국어로 썼다. 메뉴 이름은 영어와 한국어 화면의 것을 함께 적는다.
+- **코드를 못 돌리는 AI와 `d` 링크:** 공유 링크 복사는 `d` 하나다([[ux-decisions#LG5. 사용자가 준 링크를 LLM이 읽는 길|LG5]]). 안내서는 코드를 돌리지 못하면 `d`의 내용을 짐작하지 말고 저장 파일(파일 › 저장, 모델 JSON이 `<metadata>` 안에 글로 있음)이나 모델 JSON을 청하라고 적는다.
+- **값 목록은 코드에서:** 안내서에 적는 값의 목록(블록 종류, `textKind` · `theme` · `headStyle` · `locale` · 헤더의 `kind` · `resultSymbol`의 값)은 손으로 적지 않고 틀의 자리로 둔다. 빌드가 core의 목록(`blockKinds` · `textKinds` · `themeIds` · `headStyles` · `locales` · `headKinds` · `resultSymbols`)으로 채운다(`src/apps/web/src/files/llms-guide.ts`). 형식이 고정된 값의 목록은 core의 `format/model-values.ts` 하나가 원본이고, `satisfies`로 모델의 타입과 맞춰 두어 종류를 더하고 목록을 잊으면 컴파일되지 않는다. 파서도 헤더의 `kind` · `headStyle` · `resultSymbol`을 이 목록으로 검사한다. 스키마의 `enum`은 손으로 적되, core의 테스트가 이 목록들과 같은지(순서까지) 본다.
+- **문서 속 예제를 테스트로(doctest):** `src/apps/web/src/files/doc-examples.test.ts`가 `/llms.txt`(채운 뒤), 첫 화면의 안내(채운 뒤), 파일 형식 명세(`docs/05-spec/`의 모든 문서)에서 ```` ```json ```` 블록과 공유 링크(`ns1.u.` · `ns1.j.` · `ns1.d.`)를 꺼내 앱과 같이 연다(`parseModel`, 링크는 `readShareLink` → `parseModel`). 모델 전체는 그대로, 봉투는 그 `model`을, 블록 하나는 모델로 감싸 열고, 스키마도 통과해야 한다. 그 밖의 블록("…"가 든 개요 등)은 바로 앞 줄에 `<!-- doctest: skip: 까닭 -->`을 달아야 하고, 달지 않으면 실패한다. 그래서 형식이 바뀌어 예제가 틀리면 `pnpm test`가 실패한다. 그 밖에 예제 링크가 옆에 보인 모델 그대로로 만든 것인지, 안내서가 적은 메뉴 · 버튼 이름이 셸 카탈로그의 것과 같은지, 링크 대신 주는 파일의 틀이 열리는지도 본다. core의 테스트는 골든 파일의 모델이 모두 스키마를 통과하는지, 파서가 거절하는 모양을 스키마도 거절하는지를 본다(`src/packages/core/node/model-schema.test.ts`).
+- **다른 AI 기능과의 관계:** 앱 안의 AI 대화창([[01-requirements#^r-web|R-WEB-07]], `P3`)은 사용자의 API 키로 앱이 직접 모델을 부르는 것이고, 이 안내서는 앱 밖의 AI가 링크로 그림을 건네는 것이다. 나중의 Claude skill([[01-requirements#^r-skill|R-SKILL-01]])은 이 안내서와 같은 형식(모델 JSON, `u` 또는 `d` 링크)을 쓴다.
 
 ## 4. Google Drive
 

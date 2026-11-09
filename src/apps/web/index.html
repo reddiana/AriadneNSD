@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AriadneNSD</title>
+    <meta
+      name="description"
+      content="AriadneNSD: a free Nassi–Shneiderman diagram (NSD) editor in the browser. AI assistants: read /llms.txt to give the user a share link that opens your diagram here."
+    />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="Guide for AI assistants" />
     <style>
       .ans-boot {
         font:
@@ -26,6 +31,33 @@
       <div class="ans-boot" id="ans-boot">
         <p id="ans-boot-text">AriadneNSD 불러오는 중… · Loading…</p>
       </div>
+      <!-- For tools that read this page as text (UX LG1). People never see it: hidden, and the app
+           replaces #root when it starts. The full guide is /llms.txt. -->
+      <section id="for-ai" hidden>
+        <h2>For AI assistants and agents</h2>
+        <p>
+          You cannot operate this editor. Give the user a share link instead: the whole diagram
+          travels in the link and opens here in view mode. Nothing is uploaded.
+        </p>
+        <p>
+          Link: https://ariadnensd.com/#ns1.u. + encodeURIComponent(envelope), the envelope being
+          {"name":"name.ns.svg","model":MODEL} without line breaks.
+        </p>
+        <p>
+          Rules: 1. ids d1, b1, r1 … each used once. 2. Every body holds a block (an empty one is
+          {"id":"b9","kind":"process","text":""}). 3. An If has both yes and no. 4. Only the keys of
+          the guide; the link has as many %7B as %7D and %5B as %5D.
+        </p>
+        <p>MODEL, smallest example, and its link:</p>
+        <pre>
+{"format":"ariadne-nsd","version":1,"settings":{"textKind":"plain","theme":"default","headStyle":"title","locale":"en"},"diagrams":[{"id":"d1","head":{"kind":"method","text":"abs(x)"},"body":[{"id":"b1","kind":"if","text":"x >= 0","yes":{"id":"r1","body":[{"id":"b2","kind":"process","text":"return x"}]},"no":{"id":"r2","body":[{"id":"b3","kind":"process","text":"return -x"}]}}]}],"view":{"folded":[],"opened":[],"bands":true,"resultSymbol":"←"}}</pre>
+        <pre>
+https://ariadnensd.com/#ns1.u.%7B%22name%22%3A%22abs.ns.svg%22%2C%22model%22%3A%7B%22format%22%3A%22ariadne-nsd%22%2C%22version%22%3A1%2C%22settings%22%3A%7B%22textKind%22%3A%22plain%22%2C%22theme%22%3A%22default%22%2C%22headStyle%22%3A%22title%22%2C%22locale%22%3A%22en%22%7D%2C%22diagrams%22%3A%5B%7B%22id%22%3A%22d1%22%2C%22head%22%3A%7B%22kind%22%3A%22method%22%2C%22text%22%3A%22abs%28x%29%22%7D%2C%22body%22%3A%5B%7B%22id%22%3A%22b1%22%2C%22kind%22%3A%22if%22%2C%22text%22%3A%22x%20%3E%3D%200%22%2C%22yes%22%3A%7B%22id%22%3A%22r1%22%2C%22body%22%3A%5B%7B%22id%22%3A%22b2%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22return%20x%22%7D%5D%7D%2C%22no%22%3A%7B%22id%22%3A%22r2%22%2C%22body%22%3A%5B%7B%22id%22%3A%22b3%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22return%20-x%22%7D%5D%7D%7D%5D%7D%5D%2C%22view%22%3A%7B%22folded%22%3A%5B%5D%2C%22opened%22%3A%5B%5D%2C%22bands%22%3Atrue%2C%22resultSymbol%22%3A%22%E2%86%90%22%7D%7D%7D</pre>
+        <p>
+          Blocks ({{blockKinds|plain}}), more examples, reading a link the user gives you:
+          https://ariadnensd.com/llms.txt · schema: https://ariadnensd.com/model.schema.json
+        </p>
+      </section>
     </div>
     <script>
       // Before the app draws itself (it replaces #root), say what is happening. If something
