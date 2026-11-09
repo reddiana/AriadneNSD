@@ -55,7 +55,7 @@ async function median(page: Page, command: string): Promise<number> {
 
 const commands = ['insert', 'delete', 'undo', 'redo', 'wrap', 'move', 'paste', 'text'];
 
-test('T-1127 · AT-05: the check mode times every command and leaves the local backup and settings alone', async ({
+test('T-1147 · AT-05: the check mode times every command and leaves the local backup and settings alone', async ({
   page,
   context,
 }) => {
@@ -91,7 +91,7 @@ test('T-1127 · AT-05: the check mode times every command and leaves the local b
   await expect(app.locator('.ans-document text').filter({ hasText: 'mine' })).toBeVisible();
 });
 
-test('T-1128 · AT-05: the check mode measures what T-0007 measures, within 100 ms here', async ({
+test('T-1148 · AT-05: the check mode measures what T-0007 measures, within 100 ms here', async ({
   page,
 }) => {
   // Recording the coverage slows the page down: the time is measured by `pnpm e2e` only.

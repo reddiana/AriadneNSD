@@ -33,7 +33,7 @@ function recordingStorage(initial: Readonly<Record<string, string>>): {
 }
 
 describe('the check mode writes nothing (AT-05)', () => {
-  it('T-1129: reads the user settings but keeps its own changes in memory', () => {
+  it('T-1149: reads the user settings but keeps its own changes in memory', () => {
     const { storage, writes } = recordingStorage({ 'ariadne-nsd.setting.ui.locale': '"ko"' });
     const settings = createSettingsStore(readOnlyStorage(storage), () => undefined);
     expect(settings.get('ui.locale')).toBe('ko');
@@ -46,7 +46,7 @@ describe('the check mode writes nothing (AT-05)', () => {
     expect(readOnlyStorage(null)).toBeNull();
   });
 
-  it('T-1130: refuses to save the measured document, so no file, backup or browser document is made', async () => {
+  it('T-1150: refuses to save the measured document, so no file, backup or browser document is made', async () => {
     const store = perfDocumentStore('perf.ns.svg');
     expect(store.canWriteInPlace).toBe(false);
     expect(await store.write('<svg/>')).toMatchObject({ ok: false, reason: 'denied' });
@@ -56,7 +56,7 @@ describe('the check mode writes nothing (AT-05)', () => {
     await expect(noSaveFonts()).rejects.toThrow('does not save');
   });
 
-  it('T-1131: copies into memory, not the system clipboard', async () => {
+  it('T-1151: copies into memory, not the system clipboard', async () => {
     const clipboard = memoryClipboard();
     expect(await clipboard.read()).toEqual({ text: null, json: null });
     expect(await clipboard.write({ text: 'step 1', json: '[]' })).toBe('memory');

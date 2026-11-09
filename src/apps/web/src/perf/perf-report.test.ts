@@ -39,7 +39,7 @@ function report(p95s: ReadonlyArray<number>): PerfReport {
 }
 
 describe('the check mode numbers (AT-05)', () => {
-  it('T-1132 · QA-07: the percentile is the nearest rank', () => {
+  it('T-1152 · QA-07: the percentile is the nearest rank', () => {
     const sorted = Array.from({ length: 20 }, (_, index) => index + 1);
     expect(percentile(sorted, 0.95)).toBe(19);
     expect(percentile(sorted, 0.5)).toBe(10);
@@ -48,7 +48,7 @@ describe('the check mode numbers (AT-05)', () => {
     expect(() => percentile([], 0.5)).toThrow();
   });
 
-  it('T-1133 · QA-07: a summary has the median, p95 and max, and passes at p95 ≤ 100 ms', () => {
+  it('T-1153 · QA-07: a summary has the median, p95 and max, and passes at p95 ≤ 100 ms', () => {
     const times = [...Array.from({ length: 28 }, () => 30), 99.9, 250];
     expect(summarize(times)).toEqual({ count: 30, median: 30, p95: 99.9, max: 250, isPass: true });
     expect(summarize([10, 20, 30, 40]).median).toBe(25);
@@ -58,7 +58,7 @@ describe('the check mode numbers (AT-05)', () => {
     expect(() => summarize([])).toThrow();
   });
 
-  it('T-1134: the device information leaves out what the browser does not tell', () => {
+  it('T-1154: the device information leaves out what the browser does not tell', () => {
     expect(device).toEqual({
       userAgent: 'Test|Browser/1.0',
       cores: 4,
@@ -76,7 +76,7 @@ describe('the check mode numbers (AT-05)', () => {
     expect(firefox.memoryGb).toBeNull();
   });
 
-  it('T-1135 · AT-05: the copied results are a Markdown list and table', () => {
+  it('T-1155 · AT-05: the copied results are a Markdown list and table', () => {
     const passed = report([]);
     expect(isReportPass(passed)).toBe(true);
     expect(formatLocalTime(passed.date)).toBe('2026-11-10 09:05');
@@ -106,7 +106,7 @@ describe('the check mode numbers (AT-05)', () => {
     );
   });
 
-  it('T-1136 · AT-05: one slow command fails the whole check, in both screen languages', () => {
+  it('T-1156 · AT-05: one slow command fails the whole check, in both screen languages', () => {
     const failed = report([3, 3, 3, 3, 120.25]);
     expect(isReportPass(failed)).toBe(false);
     const english = reportMarkdown(failed, 'en');
@@ -118,13 +118,13 @@ describe('the check mode numbers (AT-05)', () => {
     expect(korean).toContain('- 기기: CPU 코어: 4 · 메모리: 8 GB · 화면: 1366 × 768 @1.5x');
   });
 
-  it('T-1137 · QA-13 · R-NFR-04: the check mode catalog has every key in every language, same placeholders', () => {
+  it('T-1157 · QA-13 · R-NFR-04: the check mode catalog has every key in every language, same placeholders', () => {
     expect(catalogProblems(perfCatalogEntries())).toEqual([]);
   });
 });
 
 describe('the check mode plan (AT-05)', () => {
-  it('T-1138: ?perf opens the check mode, with or without other parameters', () => {
+  it('T-1158: ?perf opens the check mode, with or without other parameters', () => {
     expect(isPerfMode('?perf')).toBe(true);
     expect(isPerfMode('?perf=1&rounds=3')).toBe(true);
     expect(isPerfMode('?x=1&perf')).toBe(true);
@@ -132,7 +132,7 @@ describe('the check mode plan (AT-05)', () => {
     expect(isPerfMode('?performance')).toBe(false);
   });
 
-  it('T-1139 · QA-07: 500 blocks and 30 timed runs per command; rounds= and blocks= are for the tests', () => {
+  it('T-1159 · QA-07: 500 blocks and 30 timed runs per command; rounds= and blocks= are for the tests', () => {
     expect(perfPlanFrom('?perf')).toEqual(defaultPerfPlan);
     expect(defaultPerfPlan.blocks).toBe(500);
     expect(perfPlaces(500)).toEqual([2, 250, 499]);
@@ -147,7 +147,7 @@ describe('the check mode plan (AT-05)', () => {
     }
   });
 
-  it('T-1140 · QA-07: the large document has the asked number of process blocks', () => {
+  it('T-1160 · QA-07: the large document has the asked number of process blocks', () => {
     const text = largeDocumentFile(3);
     const json = /<!\[CDATA\[(.*)\]\]>/.exec(text)?.[1] ?? '';
     const model = JSON.parse(json) as { diagrams: [{ body: ReadonlyArray<unknown> }] };
