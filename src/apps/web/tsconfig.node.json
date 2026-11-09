@@ -13,6 +13,7 @@
     "playwright.config.ts",
     "playwright.manual.config.ts",
     "e2e",
+    "src/perf/large-document.ts",
     "manual-shots",
     "scripts/*.ts"
   ]
