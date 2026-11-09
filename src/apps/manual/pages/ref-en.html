@@ -642,6 +642,41 @@
   <p class="tip">AriadneNSD is not 1.0 yet. Files you save now may not open in later versions.</p>
 </section>
 
+<section id="ai">
+  <h2>Ask an AI to draw it</h2>
+  <p>
+    Ask an AI such as ChatGPT, Claude or Gemini something like "Draw bubble sort as an NS diagram
+    with https://ariadnensd.com", and it gives you a share link with the diagram in it. The AI
+    cannot operate this editor, but it reads the site's guide for AI assistants (<a
+      href="../llms.txt"
+      >llms.txt</a
+    >) and makes the link.
+  </p>
+  <ul>
+    <li>
+      <b>Click the link:</b> the diagram opens in view mode. "Edit" turns it into your own new
+      document.
+    </li>
+    <li>
+      <b>To have the AI change it:</b> after changing it in the app, paste the link from File › Copy
+      Share Link back to the AI. That link is compressed, so an AI that cannot run code may ask for
+      the saved file instead: attach the <code>.ns.svg</code> file from File › Save.
+    </li>
+    <li>
+      <b>If the link does not open:</b> the app says what was wrong (the reason). Press "Copy
+      Reason" and paste it to the AI that made the link to get a fixed one.
+    </li>
+    <li>
+      <b>If the AI answers something else:</b> add "Read https://ariadnensd.com/llms.txt and make a
+      share link".
+    </li>
+  </ul>
+  <p class="tip">
+    The diagram travels in the link itself, so AriadneNSD uploads nothing. What you send to an AI,
+    the link included, follows that AI service's rules.
+  </p>
+</section>
+
 <section id="commands">
   <h2>Command palette, context menu</h2>
   <p>
