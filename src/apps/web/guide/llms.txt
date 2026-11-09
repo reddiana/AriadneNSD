@@ -61,7 +61,7 @@ A body is an array of blocks, drawn top to bottom. The block kinds are {{blockKi
 - `text` is what is written in the block. Use `\n` for more lines. Write it in the user's language or as code.
 - If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
 - Case: every arm needs `label`. `otherwise` (the default branch) is optional; leave it out if there is none.
-- Call: `result` receives the return value (`""` for none), drawn as `result ← name(args)`. To call a Method in the same document, use `"target":{"kind":"local","diagram":"d2"}` where `d2` has a `method` head.
+- Call: a call block has **no `text`**. The name it calls goes in `target`, the arguments in `args` (a string). A call block with `text` does not open. `result` receives the return value (`""` for none), drawn as `result ← name(args)`. To call a Method in the same document, use `"target":{"kind":"local","diagram":"d2"}` where `d2` has a `method` head; a Method may call itself (recursion).
 
 ## Rules (a link that breaks one does not open)
 

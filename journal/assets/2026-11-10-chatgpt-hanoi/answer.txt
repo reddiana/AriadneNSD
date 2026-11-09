@@ -1,0 +1,61 @@
+(메인테이너가 붙여 준 ChatGPT 대화, 2026-11-10. 링크는 붙일 때 빠짐)
+
+https://ariadnensd.com 으로 하노이탑 알고리즘을 nsd로 그려주세요
+
+하노이탑(Tower of Hanoi)의 재귀 알고리즘을 AriadneNSD의 Nassi-Shneiderman Diagram(NSD) 형식으로 작성하겠습니다.
+
+원판이 \(n\)개일 때 다음 순서로 동작하도록 구성합니다.
+
+1. 원판이 1개이면 출발 기둥에서 목적 기둥으로 이동합니다.
+2. 그렇지 않으면 위의 \(n-1\)개 원판을 보조 기둥으로 이동합니다.
+3. 가장 큰 원판을 목적 기둥으로 이동합니다.
+4. 보조 기둥에 있는 \(n-1\)개 원판을 목적 기둥으로 이동합니다.
+
+하노이탑 NSD 다이어그램
+
+작성 완료
+
+[Informatik Aufgabe Nassi-Shneiderman-Diagramm? (Studium)] (gutefrage.net의 그림)
+
+AriadneNSD에서 열기
+
+ AriadneNSD에서 다이어그램 열기
+
+공유 링크에 다이어그램 데이터가 포함되어 있습니다. 사이트에서 보기 모드로 열립니다.
+
+알고리즘의 핵심
+
+- 종료 조건(Base case): `n == 1`
+- 재귀 호출(Recursive call): `hanoi(n-1, ...)` 두 번
+- 시간 복잡도: \(O(2^n)\)
+- 최소 이동 횟수: \(2^n-1\)
+
+다음 단계로 한글 블록 이름과 설명을 적용한 NSD 버전도 만들 수 있습니다.
+
+---
+AriadneNSD could not open the share link (damaged): diagrams[0].body[0].no.body[0]: unknown key "text"
+How to make a link that opens: https://ariadnensd.com/llms.txt
+
+오류 원인을 확인했습니다. 이전 링크는 AriadneNSD의 실제 JSON 규격과 맞지 않았습니다. 특히 재귀 호출 블록은 `text` 속성으로 작성하는 것이 아니라 `target`과 `args`로 표현해야 합니다.
+
+공식 가이드의 규격에 맞춰 수정하겠습니다.
+
+- `locale: "ko"`로 한글 인터페이스 적용
+- `if` 블록으로 종료 조건 표현
+- `call` 블록으로 재귀 호출 표현
+- 모든 블록과 분기에 고유 ID 부여
+- 공식 공유 링크 형식 사용
+
+출처: AriadneNSD 공식 AI 작성 가이드 (https://ariadnensd.com/llms.txt)
+
+수정된 공유 링크
+
+하노이탑 NSD 다이어그램
+
+ AriadneNSD에서 하노이탑 열기
+
+압축된 공식 공유 링크 형식(ns1.d)을 사용했습니다.
+
+(다이어그램의 JSON 모델: envelope.json의 model과 같음)
+
+링크를 열면 보기 모드로 표시되고, 편집하기를 누르면 직접 수정할 수 있습니다. 수정한 결과는 `파일 → 공유 링크 복사`로 저장하면 됩니다.

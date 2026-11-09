@@ -1,0 +1,12 @@
+{"name":"하노이탑.ns.svg","model":{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {"textKind": "plain","theme": "default","headStyle": "title","locale": "ko"},
+  "diagrams": [{"id": "d1","head": {"kind": "method","text": "하노이(n, 출발, 도착, 보조)"},
+    "body": [{"id": "b1","kind": "if","text": "n == 1",
+      "yes": {"id": "r1","body": [{"id": "b2","kind": "process","text": "원판 1을 출발 기둥에서 도착 기둥으로 이동"}]},
+      "no": {"id": "r2","body": [
+          {"id": "b3","kind": "call","target": {"kind": "local", "diagram": "d1"},"args": "n - 1, 출발, 보조, 도착","result": ""},
+          {"id": "b4","kind": "process","text": "원판 n을 출발 기둥에서 도착 기둥으로 이동"},
+          {"id": "b5","kind": "call","target": {"kind": "local", "diagram": "d1"},"args": "n - 1, 보조, 도착, 출발","result": ""}]}}]}],
+  "view": {"folded": [],"opened": [],"bands": true,"resultSymbol": "←"}}}
