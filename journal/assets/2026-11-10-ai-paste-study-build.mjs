@@ -1,0 +1,255 @@
+// M57: builds the study page on pasting an AI's JSON, the request text, and guide fixes.
+//   node journal/assets/2026-11-10-ai-paste-study-build.mjs   → 2026-11-10-ai-paste-study.html
+// The style is M56's (2026-11-09-llm-guide-build.mjs). The license note is added here, to this file only.
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const read = (name) => readFile(join(here, name), 'utf8');
+const esc = (text) =>
+  String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+
+// The style block is copied from M56's build script as it stands.
+const m56 = await read('2026-11-09-llm-guide-build.mjs');
+const style = /<style>[\s\S]*?<\/style>/.exec(m56)[0].replace(
+  '</style>',
+  `.mock .menu { display: flex; gap: 12px; padding: 5px 10px; border-bottom: 1px solid var(--line); background: var(--card); }
+.mock .menu span.on { color: var(--rec); font-weight: 600; }
+.mock .drop { border: 1px solid var(--line); border-radius: 6px; background: var(--card); margin: 4px 0 8px 6px; width: min(100%, 260px); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.mock .drop div { padding: 3px 10px; }
+.mock .drop div.hl { background: var(--rec-soft); color: var(--rec); font-weight: 600; }
+.mock .drop hr { border: 0; border-top: 1px solid var(--line); margin: 3px 0; }
+.mock .drop .key { float: right; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.nsd { border: 1.5px solid var(--fg); width: min(100%, 230px); font: 12px var(--mono); background: var(--card); }
+.nsd > div { border-top: 1px solid var(--fg); padding: 2px 6px; }
+.nsd > div:first-child { border-top: 0; }
+.nsd .sel { outline: 2px solid var(--rec); outline-offset: -2px; background: var(--rec-soft); }
+.nsd .new { background: var(--fail-soft); }
+.modal { border: 1px solid var(--line); border-radius: 10px; background: var(--card); padding: 12px 14px; width: min(100%, 340px); margin: 8px auto; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.modal b.t { display: block; margin-bottom: 4px; }
+.modal .btns { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; margin-top: 10px; }
+.modal .btn.def { background: var(--rec); color: var(--bg); border-color: var(--rec); }
+.modal textarea { width: 100%; height: 70px; font: 12px var(--mono); background: var(--code); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; }
+.dim { position: relative; background: repeating-linear-gradient(45deg, transparent 0 6px, var(--code) 6px 7px); padding: 6px; border-radius: 6px; }
+.before, .after { border-radius: 6px; padding: 8px 10px; margin: 6px 0; font: 13px/1.55 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.before { background: var(--fail-soft); }
+.after { background: var(--pass-soft); }
+.before::before { content: "변경 전  "; font-family: var(--sans); font-weight: 600; color: var(--fail); }
+.after::before { content: "변경 후  "; font-family: var(--sans); font-weight: 600; color: var(--pass); }
+.ph { background: var(--rec-soft); color: var(--rec); border: 1px dashed var(--rec); border-radius: 4px; padding: 0 4px; }
+</style>`,
+);
+
+const repo = (path) => `<code>${esc(path)}</code>`;
+
+// A small editor window: menu bar, optional dropdown, body.
+const mock = ({ title = '버블정렬.ns.svg', menuOn = '', drop = '', body = '' }) => `<div class="mock">
+  <div class="bar"><span>AriadneNSD — ${esc(title)}</span><span style="color:var(--muted)">●</span></div>
+  <div class="menu">${['파일', '편집', '보기', '도움말'].map((m) => `<span class="${m === menuOn ? 'on' : ''}">${m}</span>`).join('')}</div>
+  <div class="body">${drop}${body}</div>
+</div>`;
+const nsd = (rows) => `<div class="nsd">${rows.map(([t, c = '']) => `<div class="${c}">${esc(t)}</div>`).join('')}</div>`;
+const modal = (title, text, buttons, extra = '') => `<div class="modal"><b class="t">${esc(title)}</b><div>${text}</div>${extra}
+  <div class="btns">${buttons.map(([b, def]) => `<span class="btn${def ? ' def' : ''}">${esc(b)}</span>`).join('')}</div></div>`;
+
+const jsonLines = ['{"format":"ariadne-nsd",', '"version":1,', '"settings":{…},', '"diagrams":[{"id":"d1", …'];
+
+const html = `<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>M57 AI 붙여넣기 · 요청문 · 안내서 손질 시안</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+${style}
+</head>
+<body>
+<div class="wrap">
+<h1>M57 AI 붙여넣기 · 요청문 · 안내서 손질</h1>
+<p class="lead">2026-11-10. M56의 안내서(<code>/llms.txt</code>)를 배포한 뒤 AI 넷에게 그려 달라고 해 본 결과와, 거기서 나온 물음 여섯(JP1 ~ JP3, RQ1, GD1, RQ2). 물음마다 <span class="star">★ 추천</span>을 첫째에 두었습니다. 앞 시안: M56(<code>journal/assets/2026-11-09-llm-guide-study.html</code>).</p>
+
+<h2>AI 넷에게 해 본 시험</h2>
+<p>메인테이너의 부탁: <q>https://ariadnensd.com 으로 버블소트(하노이탑) 알고리즘을 nsd로 그려주세요</q>. 안내서를 따로 가리키지는 않았습니다.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>AI</th><th>한 일</th><th>링크</th><th>JSON</th><th>기록</th></tr></thead>
+<tbody>
+<tr class="pass"><td>ChatGPT<br>(하노이탑)</td><td>안내서를 읽고 링크를 줌. 첫 링크는 호출 블록에 <code>text</code>를 넣어 열리지 않았고, "오류 내용 복사"로 받은 글을 보고 스스로 고쳐 <code>d</code> 링크를 다시 줌</td><td><span class="mark">두 번째에 열림</span></td><td>고친 것은 맞음</td><td>${repo('journal/assets/2026-11-10-chatgpt-hanoi/')}</td></tr>
+<tr class="fail"><td>Gemini<br>(버블)</td><td>안내서대로 <code>u</code> 링크와 코드 블록의 JSON을 줌. Gemini 앱이 링크를 <code>google.com/search?q=…</code>로 감쌌고, 손 인코딩에서 마지막 블록 <code>"return arr"}</code>가 망가짐. 세는 반복을 <code>while</code>로 적음</td><td><span class="mark">열리지 않음</span></td><td>코드 블록은 맞음</td><td>${repo('journal/assets/2026-11-10-gemini-bubble/')}</td></tr>
+<tr class="fail"><td>Grok<br>(버블)</td><td>화면을 띄워 조작하려 함. 의사코드 · 상자 문자 그림 · 손으로 따라 할 순서만 줌. 첫 화면의 안내는 앱이 뜨면 사라져 보지 못함(지금은 <code>#root</code> 밖의 보이지 않는 글과 도움말 › "AI에게 그려 달라고 하기"를 더함, LG7)</td><td><span class="mark">없음</span></td><td>없음</td><td>${repo('journal/assets/2026-11-10-grok-bubble/')}</td></tr>
+<tr class="fail"><td>claude.ai</td><td>페이지를 읽지 않고 브라우저 조작을 하려다 연결이 없어 멈춤</td><td><span class="mark">없음</span></td><td>없음</td><td>(기록 없음)</td></tr>
+</tbody></table></div>
+<div class="card">
+<b>알게 된 것</b>
+<ul>
+<li>LLM이 쓴 <b>모델 JSON은 거의 늘 맞습니다.</b> 틀리는 곳은 JSON을 링크로 바꾸는 단계(손 인코딩)와, 채팅 앱이 링크를 바꾸는 일(Gemini의 Google 검색 감싸기)입니다.</li>
+<li>그러니 사용자가 <b>코드 블록의 JSON을 앱에 붙여 넣어 열 수 있으면</b> 링크가 깨져도 그림을 얻습니다(JP1 ~ JP3).</li>
+<li>페이지를 열지 않는 AI(claude.ai)나 화면부터 조작하려는 AI(Grok)에게는 사용자의 요청문에 <code>/llms.txt</code> 주소를 넣는 것이 유일한 길입니다(RQ1).</li>
+</ul>
+</div>
+<div class="flow">
+<div class="box"><b>1. 사용자의 요청</b>"…을 그려 주세요"</div><div class="arrow">→</div>
+<div class="box app"><b>2. AI가 JSON을 씀</b>거의 늘 맞음</div><div class="arrow">→</div>
+<div class="box bad"><b>3. 링크로 바꿈</b>손 인코딩에서 깨짐</div><div class="arrow">→</div>
+<div class="box bad"><b>4. 채팅 앱이 보임</b>링크를 감쌈 · 자름</div><div class="arrow">→</div>
+<div class="box app"><b>5. 앱에서 열림</b>3 · 4를 건너뛰는 길: JSON 붙여넣기</div>
+</div>
+
+<h2>지금의 붙여넣기와 부딪히는 곳</h2>
+<p>조작 규칙의 "붙여넣기"(<code>docs/02-ux-design/02-interaction-rules.md</code>, 인수 테스트 AT-12): 클립보드에 사용자 정의 형식(앱에서 복사한 블록)이 있으면 블록 그대로, <code>text/plain</code>만 있으면 <b>한 줄에 처리 블록 하나</b>가 선택한 블록 뒤에 붙습니다. 선택한 것이 없으면 붙이지 않습니다. 그래서 지금 AI가 준 JSON을 그냥 붙이면 아래처럼 됩니다. 의사코드 변환(R-CODE-01, <code>P2</code>)은 아직 없습니다.</p>
+<div class="opts">
+<div class="opt"><h4>지금: JSON의 줄마다 처리 블록</h4>
+${mock({ body: nsd([['i = 0'], ['for j = 0 to n - 2', 'sel'], ...jsonLines.map((l) => [l, 'new'])]) })}
+<p>붉은 칸이 붙은 블록. 코드 블록의 JSON이 여러 줄이면 블록도 여러 개입니다.</p></div>
+</div>
+
+<h2>결정할 물음</h2>
+
+<section class="q" id="JP1">
+<h3><span class="tag">JP1</span>붙여넣기에서 문서를 알아보는 기준</h3>
+<p>붙인 글(<code>text/plain</code>)이 AriadneNSD 문서인지 무엇으로 알아볼까요?</p>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 좁게: 우리 형식만</h4>
+<ul>
+<li>앞뒤 빈칸과 코드 울타리(<code>\`\`\`json</code> … <code>\`\`\`</code>)를 걷은 글 전체가 JSON 객체이고 <code>"format":"ariadne-nsd"</code>가 든 <b>모델 JSON</b></li>
+<li><code>{"name": …, "model": {…}}</code> <b>봉투</b>(공유 링크 속의 그것)</li>
+<li><code>https://ariadnensd.com/#ns1.</code>로 시작하는 <b>공유 링크</b> 한 줄. <code>https://www.google.com/search?q=</code>로 감싸진 것도 <code>q</code>를 풀어 알아봄</li>
+</ul>
+<p>그 밖의 글(JSON이 아닌 글, 다른 JSON)은 지금처럼 줄마다 처리 블록.</p></div>
+<div class="opt"><h4><span class="n">2</span>넓게: JSON이면 모두</h4><p>글 전체가 JSON으로 읽히면 문서로 보고 열어 봅니다. 우리 형식이 아니면 LG6의 모달로 까닭을 보입니다. 다른 도구의 JSON이나 코드 속 JSON 조각을 처리 블록으로 붙이고 싶은 사람이 막힙니다.</p></div>
+<div class="opt"><h4><span class="n">3</span>알아보지 않음</h4><p>붙여넣기는 그대로 두고, JSON은 JP3의 메뉴로만 엽니다. 부딪히지는 않지만 사용자가 붙여 넣었다가 블록 더미를 보는 일(위의 그림)은 남습니다.</p></div>
+</div>
+<p class="why"><b>추천 까닭:</b> 알아보는 표지가 <code>"format":"ariadne-nsd"</code>와 우리 주소라서, 사람이 손으로 쓴 글이 우연히 걸릴 일이 없습니다. 나중의 의사코드 변환(R-CODE-01)은 "JSON이 아닌 들여쓰기 글"을 받으므로 1번과 겹치지 않습니다. 그때는 "줄마다 처리 블록"의 자리를 의사코드 해석이 이어받고, 1번의 검사는 그 앞에 그대로 섭니다. Google 검색 감싸기를 푸는 것은 Gemini에서 실제로 본 일이고, 풀어도 결국 우리 링크인지 다시 봅니다.</p>
+</section>
+
+<section class="q" id="JP2">
+<h3><span class="tag">JP2</span>알아본 뒤의 동작</h3>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 묻기</h4>
+${mock({ body: `<div class="dim">${nsd([['i = 0'], ['for j = 0 to n - 2', 'sel']])}
+${modal('AriadneNSD', '이 글은 AriadneNSD 문서입니다. 새 문서로 열까요?', [['취소'], ['글로 붙이기'], ['새 문서로 열기', true]])}</div>` })}
+<ul>
+<li>기본 버튼은 "새 문서로 열기"(<code>Enter</code>). "글로 붙이기"는 지금처럼 줄마다 처리 블록(선택한 것이 없으면 이 버튼은 흐리게).</li>
+<li>선택한 것이 없을 때도 같은 질문입니다(지금은 아무 일도 없음).</li>
+<li>지금 문서가 한 번도 저장하지 않은 새 문서이고 저장 안 된 채면, "새 문서로 열기" 뒤에 US1의 모달(저장 · 버리고 열기 · 취소)이 이어집니다. 공유 링크를 열린 탭에 붙일 때와 같습니다. 파일로 연 문서는 묻지 않고 엽니다(임시 보관이 남음).</li>
+<li>열어 보니 깨졌으면 LG6과 같은 모달(까닭과 "오류 내용 복사")을 보입니다. 사용자는 그 글을 AI에게 붙여 고친 JSON을 받습니다.</li>
+</ul></div>
+<div class="opt"><h4><span class="n">2</span>묻지 않고 바로 열기</h4>
+${mock({ title: 'bubble_sort.ns.svg', body: nsd([['bubbleSort(arr)'], ['n = length(arr)'], ['for i = 0 to n - 2'], ['…']]) })}
+<p>빠르지만, JSON 조각을 블록으로 붙이려던 사람에게는 문서가 바뀌어 놀랍습니다(US1이 막아 주는 것은 저장하지 않은 새 문서일 때뿐).</p></div>
+<div class="opt"><h4><span class="n">3</span>블록으로만 붙이기</h4>
+${mock({ body: nsd([['i = 0'], ['for j = 0 to n - 2', 'sel'], ['n = length(arr)', 'new'], ['for i = 0 to n - 2', 'new'], ['…', 'new']]) })}
+<p>모델의 첫 다이어그램 블록을 선택한 블록 뒤에 붙입니다. 헤더 · 여러 다이어그램 · 설정이 사라지고, id가 겹치면 새로 매겨야 합니다. 선택한 것이 없으면 갈 곳이 없습니다.</p></div>
+</div>
+<p class="why"><b>추천 까닭:</b> 붙여넣기는 원래 "지금 문서에 더하기"라서, 문서를 바꾸는 일은 한 번 묻는 것이 맞습니다. 묻는 모달은 한 번의 <code>Enter</code>라 손이 거의 들지 않고, "글로 붙이기"로 옛 동작도 남습니다. 모달과 그 뒤의 US1 · LG6은 이미 있는 것을 다시 씁니다.</p>
+</section>
+
+<section class="q" id="JP3">
+<h3><span class="tag">JP3</span>메뉴의 길</h3>
+<p>붙여넣기가 아니어도 JSON을 열 길이 보여야 합니다(휴대폰에서 클립보드 권한이 없을 때, 무엇을 할지 모를 때).</p>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 파일 메뉴 "붙여 넣은 JSON으로 열기…"</h4>
+${mock({ menuOn: '파일', drop: `<div class="drop"><div>새 문서<span class="key">Ctrl+N</span></div><div>열기…<span class="key">Ctrl+O</span></div><div class="hl">붙여 넣은 JSON으로 열기…</div><div>예제…</div><hr><div>저장<span class="key">Ctrl+S</span></div><div>공유 링크 복사</div></div>` })}
+${modal('붙여 넣은 JSON으로 열기', 'AI가 준 모델 JSON이나 공유 링크를 붙여 넣으세요.', [['취소'], ['열기', true]], '<textarea readonly>{"format":"ariadne-nsd","version":1, …</textarea>')}
+<p>글 상자를 띄워 붙인 글을 JP1의 기준으로 엽니다. 커맨드 팔레트에도 같은 이름으로 둡니다. 영어 화면은 "Open from Pasted JSON…".</p></div>
+<div class="opt"><h4><span class="n">2</span>메뉴 없음</h4><p>붙여넣기(JP1 · JP2)만. 기능이 있는 줄 모르는 사람이 많고, 사용법과 안내서가 "어디에 붙이라"고 가리킬 이름이 없습니다.</p></div>
+<div class="opt"><h4><span class="n">3</span>열기 창 안의 탭</h4><p>BS1의 열기 창(이 컴퓨터의 파일 / 이 브라우저)에 "붙여 넣기"를 셋째로. 메뉴는 늘지 않지만 한 번 더 들어가야 하고, "열기"에서 글을 붙인다는 것이 덜 보입니다.</p></div>
+</div>
+<p class="why"><b>추천 까닭:</b> 안내서와 사용법이 "파일 › 붙여 넣은 JSON으로 열기…"라고 한 줄로 가리킬 수 있습니다(GD1의 셋째 문장). 글 상자는 붙여넣기 권한이 없는 브라우저에서도 됩니다. 이름의 낱말은 구현 때 화면 문구 규칙에 맞춥니다.</p>
+</section>
+
+<section class="q" id="RQ1">
+<h3><span class="tag">RQ1</span>요청문 복사</h3>
+<p>페이지를 읽지 않는 AI에게는 사용자의 요청문에 <code>/llms.txt</code> 주소가 들어야 합니다. 그 요청문을 앱이 건넬까요?</p>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 도움말 › "AI에게 그려 달라고 하기" + 사용법 꼭지의 복사 버튼</h4>
+${mock({ menuOn: '도움말', drop: '<div class="drop"><div>사용법</div><div class="hl">AI에게 그려 달라고 하기</div><div>단축키</div><hr><div>문제 알리기</div></div>' })}
+<div class="card" style="margin-top:8px"><b>사용법 › AI에게 그려 달라고 하기 (<code>#ai</code>)</b>
+<p>ChatGPT · Gemini · Claude 같은 AI에게 아래 글을 붙여 보내세요. <span class="ph">○○</span>만 바꾸면 됩니다.</p>
+<pre>https://ariadnensd.com/llms.txt 를 읽고, <span class="ph">○○</span>을 NS 차트로 그려 공유 링크와 모델 JSON을 주세요.</pre>
+<span class="btn">요청문 복사</span>
+<p style="font-size:13px;color:var(--muted)">링크가 열리지 않으면 AI가 준 JSON을 복사해 파일 › 붙여 넣은 JSON으로 열기… 에 붙이세요.</p></div>
+<p>메뉴는 이미 있습니다(LG7, 사용법의 꼭지를 엶). 더할 것은 꼭지 안의 요청문과 복사 버튼입니다. 영어 사용법에는:</p>
+<pre>Read https://ariadnensd.com/llms.txt, then draw <span class="ph">○○</span> as a Nassi–Shneiderman diagram and give me the share link and the model JSON.</pre></div>
+<div class="opt"><h4><span class="n">2</span>메뉴를 누르면 곧바로 요청문 복사</h4><p>한 번에 끝나지만, 무엇이 복사됐는지 · ○○을 바꿔야 한다는 것 · 링크가 깨질 때의 길이 보이지 않습니다. 메뉴가 사용법을 여는 지금의 동작(LG7)도 바뀝니다.</p></div>
+<div class="opt"><h4><span class="n">3</span>요청문 없이 사용법만 (지금)</h4><p>사용자가 스스로 "<code>/llms.txt</code>를 읽으라"고 써야 한다는 것을 알기 어렵습니다. 시험한 넷 가운데 둘은 그 한 줄이 없어 그리지 못했습니다.</p></div>
+</div>
+<h4 style="margin:12px 0 4px">○○ 자리를 어떻게 보일까</h4>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">a</span><span class="star">★</span> 글 속에 ○○ 그대로 + 색칠</h4><p>복사한 글에도 <code>○○</code>이 남아 AI 창에서 바꿉니다. 바꾸지 않고 보내도 AI가 "무엇을 그릴까요?"라고 되묻습니다.</p></div>
+<div class="opt"><h4><span class="n">b</span>입력 칸을 두고 채워서 복사</h4><p>"그릴 것: [버블 정렬]" 칸에 쓰면 그 글로 복사. 사용법 페이지(정적 HTML)에 작은 스크립트가 듭니다.</p></div>
+<div class="opt"><h4><span class="n">c</span>예시를 넣어 둠</h4><p>"버블 정렬을…"로 채워 두기. 그대로 보내면 원하지 않은 그림을 받습니다.</p></div>
+</div>
+<p class="why"><b>추천 까닭:</b> 요청문 한 줄이 페이지를 열지 않는 AI(claude.ai)와 화면부터 조작하는 AI(Grok) 모두에게 듣는 유일한 길입니다. "공유 링크와 모델 JSON"을 함께 청해 두면 링크가 깨져도 JSON을 붙여 열 수 있습니다(JP). 사용법 꼭지에 두면 글 · 버튼 · 깨질 때의 길이 한 화면에 보이고, 메뉴는 이미 그리로 갑니다.</p>
+</section>
+
+<section class="q" id="GD1">
+<h3><span class="tag">GD1</span>안내서 손질 (<code>src/apps/web/guide/llms.txt</code>)</h3>
+<p>더할 문장 셋. 영어 원문의 변경 전 → 후입니다. 물을 것은 "셋 다 더할지"와 "넷째(순서 바꾸기)를 할지"입니다. <span class="star">★</span> 셋 다 더하고 넷째도.</p>
+<h4>① 링크를 코드 블록에도 그대로 (단계 4)</h4>
+<div class="before">4. Give the link as a markdown link, and also show the model JSON in a code block, so the user can fix it if the link is cut.</div>
+<div class="after">4. Give the link as a markdown link, and also write the same link as plain text in a code block: some chat apps rewrite links (for example into a search link). Then show the model JSON in its own code block, so the user can open it even if the link breaks.</div>
+<h4>② 횟수를 세는 반복은 For (블록 설명)</h4>
+<div class="before">- \`text\` is what is written in the block. Use \`\\n\` for more lines. Write it in the user's language or as code.</div>
+<div class="after">- \`text\` is what is written in the block. Use \`\\n\` for more lines. Write it in the user's language or as code.
+- A loop that counts (\`i = 0 to n - 2\`) is a \`for\` block, not a \`while\`. Use \`while\` for a loop that tests a condition.</div>
+<h4>③ 링크가 안 열릴 때 사용자가 할 수 있는 일 (단계 5, JP가 들어가면)</h4>
+<div class="before">5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file.</div>
+<div class="after">5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file. If the link does not open, the user can copy the model JSON and paste it into the app (File › Open from Pasted JSON…, or just paste it on the page).</div>
+<h4>④ 코드를 돌릴 수 있으면 <code>d</code>를 — 더 앞으로</h4>
+<p>지금 "If you can run code"는 안내서 뒤쪽에 있어, 손 인코딩(단계 3)을 먼저 읽고 그대로 따르기 쉽습니다(Gemini · M56의 haiku 실패가 모두 손 인코딩). 단계 3을 이렇게 나눕니다.</p>
+<div class="before">3. Make the link: \`https://ariadnensd.com/#ns1.u.\` + encodeURIComponent(envelope JSON without line breaks).
+
+   If you cannot run code, percent-encode by hand. …</div>
+<div class="after">3. Make the link. If you can run code, run it: make the compressed \`d\` link (see "If you can run code" below), or \`https://ariadnensd.com/#ns1.u.\` + encodeURIComponent(envelope JSON without line breaks). Code does not drop brackets; hand encoding does.
+
+   Only if you cannot run code, percent-encode by hand. …</div>
+<p class="why"><b>추천 까닭:</b> ①은 Gemini의 Google 검색 감싸기를 사용자가 피해 가게 하고, ③과 함께 "링크는 깨져도 JSON은 남는다"는 시험의 결과를 길로 만듭니다. ②는 Gemini의 <code>while</code>을 보고 더하며, 그림이 열리기는 해도 NS 차트의 뜻이 달라집니다. ④는 문장 하나를 옮기는 것뿐이라 비용이 없습니다. ③만은 JP가 구현된 뒤에 넣습니다(없는 메뉴를 가리키지 않게). 고친 뒤에는 M56의 검사(<code>…-llm-guide-check.mjs</code>)로 다시 봅니다.</p>
+</section>
+
+<section class="q" id="RQ2">
+<h3><span class="tag">RQ2</span>요구사항</h3>
+<p>JSON 붙여넣어 열기를 요구사항의 어디에 둘까요?</p>
+<div class="opts">
+<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 새 요구사항 <code>R-WEB-11</code></h4>
+<pre>| R-WEB-11 | AI가 준 글로 열기: 모델 JSON이나 공유 링크를
+  붙여 넣어 새 문서로 연다
+  → 상세(02-interaction-rules 붙여넣기, 06-web) | P1 |</pre>
+<p>R-WEB-10(안내서) 바로 다음. 웹의 AI 길(R-WEB-05 공유 URL, R-WEB-10 안내서)과 나란히 놓입니다.</p></div>
+<div class="opt"><h4><span class="n">2</span>R-WEB-10의 상세에 둠</h4><p>"안내서"는 정적 파일이고 이것은 편집기의 동작이라, 한 요구사항에 둘이 섞입니다. 테스트(AT)가 가리킬 ID도 따로 없습니다.</p></div>
+<div class="opt"><h4><span class="n">3</span>새 요구사항 <code>R-EDIT-26</code></h4><p>붙여넣기(R-EDIT-10)의 이웃이라 편집 기능으로 읽힙니다. 다만 데스크톱 · Obsidian에서도 같은 것이 들지는 아직 정하지 않았고(파일 열기가 따로 있음), 계기가 웹의 AI 길입니다.</p></div>
+</div>
+<p class="why"><b>추천 까닭:</b> 요구사항 하나는 "무엇을" 한두 줄이므로 따로 둡니다. 계기와 쓰는 곳이 웹의 AI 길이라 R-WEB에 둡니다. 다른 배포 대상으로 넓히면 그때 R-EDIT로 옮기는 대신 그 대상의 요구사항을 새로 둡니다. 우선순위는 R-WEB-10과 같은 <code>P1</code>으로 제안합니다. AT-12에는 "AriadneNSD 문서인 글은 JP2의 질문"을 덧붙입니다.</p>
+</section>
+
+<h2>Claude가 정해 둔 세부 (확인만)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>무엇</th><th>정해 둔 것</th></tr></thead>
+<tbody>
+<tr><td>알아보는 글의 모양</td><td>글 전체가 하나여야 함: JSON 하나, 또는 링크 한 줄. 앞뒤의 빈칸 · 코드 울타리는 걷음. AI의 답 전체(설명 + 코드 블록)를 붙였을 때 코드 블록 하나를 골라 꺼내는 것은 하지 않음(오판을 피함)</td></tr>
+<tr><td>감싸진 링크</td><td><code>google.com/search?q=</code>만 풂(본 일). 다른 감싸기는 보면 더함</td></tr>
+<tr><td>새 문서의 이름</td><td>봉투의 <code>name</code>, 모델 JSON만이면 "제목 없음"(새 문서와 같음). 한 번도 저장하지 않은 새 문서로 열림(공유 링크로 연 문서와 같고, 보기 모드는 아님)</td></tr>
+<tr><td>실행 취소</td><td>새 문서로 연 것은 실행 취소로 되돌리지 않음(열기와 같음)</td></tr>
+</tbody></table></div>
+
+</div>
+</body>
+</html>
+`;
+
+const license = await new Promise((resolve, reject) => {
+  // The note's text lives in the license script; take it from there without running its main().
+  import('node:child_process').then(({ execFileSync }) => {
+    try {
+      resolve(
+        execFileSync('py', ['-X', 'utf8', '-c', 'import sys; sys.path.insert(0, sys.argv[1]); import importlib; m = importlib.import_module("2026-10-14-add-license-note"); sys.stdout.write(m.note())', here], {
+          encoding: 'utf8',
+        }),
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
+});
+
+await writeFile(join(here, '2026-11-10-ai-paste-study.html'), html.replace('</body>', `${license}</body>`));
+console.log('wrote 2026-11-10-ai-paste-study.html');
