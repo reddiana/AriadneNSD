@@ -208,7 +208,7 @@
   "06-web 7: writes the backup and asks \"Leave site?\" when the document is not saved": "06-web 7: 문서를 저장하지 않았으면 로컬 백업을 쓰고 \"사이트에서 나가시겠습니까?\"를 묻는다",
   "100 blocks with 300 different Hangul syllables save to 300 KB or less": "서로 다른 한글 음절 300자가 든 블록 100개를 저장하면 300 KB 이하다",
   "400 random keys keep the invariants and undo all the way back (seed ${String(seed)})": "무작위 키 400개를 눌러도 불변식이 지켜지고, 실행 취소로 처음까지 되돌아간다(시드 ${String(seed)})",
-  "500 blocks and 30 timed runs per command; rounds= changes only the runs": "블록 500개, 명령마다 잰 실행 30번. `rounds=`는 실행 횟수만 바꾼다",
+  "500 blocks and 30 timed runs per command; rounds= and blocks= are for the tests": "블록 500개, 명령마다 잰 실행 30번. `rounds=`와 `blocks=`는 테스트를 위한 것이다",
   "a + kind inserts after the selection and opens its text field": "`a` + 종류 글자는 선택 뒤에 블록을 삽입하고 텍스트 편집을 연다",
   "a block dropped on an empty block takes its place": "빈 블록 위에 드롭한 블록은 그 자리를 차지한다",
   "a block jumps over a control block and does not enter it": "블록은 제어 블록을 건너뛰고 그 안으로 들어가지 않는다",

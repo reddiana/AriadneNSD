@@ -2179,7 +2179,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1136 | 느린 명령 하나가 점검 전체를 불합격으로 만든다(두 화면 언어 모두) | [[01-requirements#^at\|AT-05]] |
 | T-1137 | 점검 모드의 카탈로그는 모든 키를 모든 언어로, 같은 자리표시로 갖는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1138 | `?perf`는 다른 매개변수가 있든 없든 점검 모드를 연다 | - |
-| T-1139 | 블록 500개, 명령마다 잰 실행 30번. `rounds=`는 실행 횟수만 바꾼다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1139 | 블록 500개, 명령마다 잰 실행 30번. `rounds=`와 `blocks=`는 테스트를 위한 것이다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 | T-1140 | 큰 문서에는 요청한 수의 처리 블록이 있다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 
 ^t-apps-web-src-perf-perf-report-test-ts

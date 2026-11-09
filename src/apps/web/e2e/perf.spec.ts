@@ -41,8 +41,8 @@ async function browserData(page: Page): Promise<string> {
 }
 
 /** Opens the check mode, starts it and waits for the result table. */
-async function measure(page: Page, rounds: number): Promise<void> {
-  await page.goto(`./?perf&rounds=${String(rounds)}`);
+async function measure(page: Page, search: string): Promise<void> {
+  await page.goto(`./?perf&${search}`);
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   await page.getByRole('button', { name: 'Start Measuring' }).click();
   await expect(page.locator('.ans-perf-verdict')).toBeVisible({ timeout: 60_000 });
@@ -68,13 +68,15 @@ test('T-1127 · AT-05: the check mode times every command and leaves the local b
   await expect.poll(async () => (await browserData(page)).includes('mine')).toBe(true);
   const before = await browserData(page);
 
-  await measure(page, 1);
+  // A small document and one run per place: this test checks the page, not the time, and runs
+  // while the coverage is recorded, next to tests that time the start.
+  await measure(page, 'rounds=1&blocks=12');
   await expect(page.locator('tr[data-command]')).toHaveCount(commands.length);
   for (const command of commands) {
     expect(await median(page, command)).toBeGreaterThan(0);
   }
   // The measured document is thrown away: the editor shows an empty one again.
-  await expect(page.locator('.ans-document text').filter({ hasText: 'step 250' })).toHaveCount(0);
+  await expect(page.locator('.ans-document text').filter({ hasText: /^step 6$/ })).toHaveCount(0);
   await page.getByRole('button', { name: 'Copy Results' }).click();
   await expect(page.getByText('Copied the results as a Markdown table.')).toBeVisible();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
@@ -82,10 +84,11 @@ test('T-1127 · AT-05: the check mode times every command and leaves the local b
   expect(copied).toContain('| Insert a process block | `o` |');
   expect(await browserData(page)).toBe(before);
 
-  // The app still has the user's document.
-  await page.goto('./');
-  await page.getByRole('dialog').getByRole('button', { name: 'Restore' }).click();
-  await expect(page.locator('.ans-document text').filter({ hasText: 'mine' })).toBeVisible();
+  // The app still has the user's document. In a new tab, so this page's coverage is kept.
+  const app = await context.newPage();
+  await app.goto('./');
+  await app.getByRole('dialog').getByRole('button', { name: 'Restore' }).click();
+  await expect(app.locator('.ans-document text').filter({ hasText: 'mine' })).toBeVisible();
 });
 
 test('T-1128 · AT-05: the check mode measures what T-0007 measures, within 100 ms here', async ({
@@ -93,7 +96,7 @@ test('T-1128 · AT-05: the check mode measures what T-0007 measures, within 100 
 }) => {
   // Recording the coverage slows the page down: the time is measured by `pnpm e2e` only.
   test.skip(process.env.E2E_COVERAGE !== undefined, 'coverage recording slows the page down');
-  await measure(page, 3);
+  await measure(page, 'rounds=3');
   // T-0007's bar: the median of an insert in the middle of 500 blocks is under 100 ms.
   for (const command of commands) {
     expect(await median(page, command)).toBeLessThan(100);

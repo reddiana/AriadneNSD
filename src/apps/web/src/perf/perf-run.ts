@@ -23,14 +23,21 @@ export type PerfPlan = {
 export const defaultPerfPlan: PerfPlan = { blocks: 500, rounds: 10, warmup: 2 };
 
 /**
- * The plan of a measuring from the page address: `?perf` alone is the plan of AT-05, and
- * `&rounds=` (1 ~ 100) changes the runs per place, for the browser test.
+ * The plan of a measuring from the page address: `?perf` alone is the plan of AT-05. For the
+ * browser tests, `&rounds=` (1 ~ 100) changes the runs per place and `&blocks=` (4 ~ 2000) the
+ * size of the document, so a test that only checks the page can be short and light.
  */
 export function perfPlanFrom(search: string): PerfPlan {
-  const rounds = Number(new URLSearchParams(search).get('rounds'));
-  return Number.isInteger(rounds) && rounds >= 1 && rounds <= 100
-    ? { ...defaultPerfPlan, rounds }
-    : defaultPerfPlan;
+  const parameters = new URLSearchParams(search);
+  const number = (name: string, min: number, max: number, fallback: number): number => {
+    const value = Number(parameters.get(name));
+    return Number.isInteger(value) && value >= min && value <= max ? value : fallback;
+  };
+  return {
+    ...defaultPerfPlan,
+    rounds: number('rounds', 1, 100, defaultPerfPlan.rounds),
+    blocks: number('blocks', 4, 2000, defaultPerfPlan.blocks),
+  };
 }
 
 /** The blocks the commands run on: near the start, the middle and near the end (1-based). */

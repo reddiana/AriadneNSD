@@ -132,14 +132,18 @@ describe('the check mode plan (AT-05)', () => {
     expect(isPerfMode('?performance')).toBe(false);
   });
 
-  it('T-1139 · QA-07: 500 blocks and 30 timed runs per command; rounds= changes only the runs', () => {
+  it('T-1139 · QA-07: 500 blocks and 30 timed runs per command; rounds= and blocks= are for the tests', () => {
     expect(perfPlanFrom('?perf')).toEqual(defaultPerfPlan);
     expect(defaultPerfPlan.blocks).toBe(500);
     expect(perfPlaces(500)).toEqual([2, 250, 499]);
     expect(perfPlaces(defaultPerfPlan.blocks).length * defaultPerfPlan.rounds).toBe(30);
     expect(perfPlanFrom('?perf&rounds=3')).toEqual({ ...defaultPerfPlan, rounds: 3 });
+    expect(perfPlanFrom('?perf&blocks=12')).toEqual({ ...defaultPerfPlan, blocks: 12 });
     for (const bad of ['0', '101', '2.5', 'many']) {
       expect(perfPlanFrom(`?perf&rounds=${bad}`)).toEqual(defaultPerfPlan);
+    }
+    for (const bad of ['3', '2001', 'all']) {
+      expect(perfPlanFrom(`?perf&blocks=${bad}`)).toEqual(defaultPerfPlan);
     }
   });
 
