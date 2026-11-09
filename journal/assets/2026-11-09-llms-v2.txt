@@ -1,0 +1,118 @@
+# AriadneNSD
+
+> AriadneNSD (https://ariadnensd.com/) is a free Nassi–Shneiderman diagram (NSD, structogram) editor that runs entirely in the browser. You cannot operate the editor, but you can hand the user a link that opens your diagram in it: the whole diagram travels inside the link, so no upload or account is needed.
+
+This guide is for language models and agents. It tells you how to write an AriadneNSD diagram as JSON and how to turn it into a link.
+
+## What to give the user: a share link
+
+Give the user a share link. It is the same kind of link the app makes with File › Copy Share Link (Korean screen: 파일 › 공유 링크 복사). The user only clicks it: the diagram opens in the app in view mode, and the Edit button (편집하기) makes it editable.
+
+1. Write the diagram as model JSON (below).
+2. Wrap it in an envelope: `{"name":"<file name>.ns.svg","model":<model JSON>}`. The name may be in the user's language (`버블정렬.ns.svg`).
+3. Make the link: `https://ariadnensd.com/#ns1.u.` + encodeURIComponent(envelope JSON without line breaks).
+
+   If you cannot run code, percent-encode by hand. Encode at least these characters:
+   space `%20`, `"` `%22`, `#` `%23`, `%` `%25`, `<` `%3C`, `>` `%3E`, `\` `%5C`, `^` `%5E`, `` ` `` `%60`, `{` `%7B`, `|` `%7C`, `}` `%7D`, `[` `%5B`, `]` `%5D`, `(` `%28`, `)` `%29`. Letters, digits and `-_.!~*':,;=+/?@&$` may stay as they are. Non-ASCII text (Korean, accents) may stay as it is; browsers encode it.
+4. Give the link as a markdown link, and also show the model JSON in a code block, so the user can fix it if the link is cut.
+5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file.
+
+## Model JSON
+
+```json
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": { "textKind": "plain", "theme": "default", "headStyle": "title", "locale": "en" },
+  "diagrams": [
+    { "id": "d1", "head": { "kind": "method", "text": "max(a, n)" }, "body": [ ...blocks... ] }
+  ],
+  "view": { "folded": [], "opened": [], "bands": true, "resultSymbol": "←" }
+}
+```
+
+- `settings.textKind`: the language of the text in blocks, for syntax colors only: `plain`, `c`, `cpp`, `java`, `javascript`, `python`, `bash`.
+- `settings.theme`: `default`, `dark`, `high-contrast` or `print`.
+- `settings.headStyle`: `title` (header drawn as a title) or `shape`.
+- `settings.locale`: `en` or `ko`. The language of the words the editor draws ("True"/"False", "default"). Use `ko` when the user writes Korean, otherwise `en`.
+- `view`: copy it exactly as above.
+- `diagrams[].head` is optional. `{"kind":"method","text":"name(params)"}` for a function, `{"kind":"event","text":"On click"}` for a handler. Leave `head` out for a plain diagram.
+
+## Blocks
+
+A body is an array of blocks, drawn top to bottom.
+
+| Block | JSON |
+| --- | --- |
+| Process (a statement) | `{"id":"b1","kind":"process","text":"x = 0"}` |
+| If | `{"id":"b2","kind":"if","text":"x > 0","yes":{"id":"r1","body":[...]},"no":{"id":"r2","body":[...]}}` |
+| Case (switch) | `{"id":"b3","kind":"case","text":"op","arms":[{"id":"r3","label":"'+'","body":[...]}],"otherwise":{"id":"r4","body":[...]}}` |
+| While (test first) | `{"id":"b4","kind":"while","text":"i < n","body":[...]}` |
+| Do-While (test last) | `{"id":"b5","kind":"doWhile","text":"while swapped","body":[...]}` |
+| For | `{"id":"b6","kind":"for","text":"for i = 0 to n - 1","body":[...]}` |
+| Call | `{"id":"b7","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
+
+- `text` is what is written in the block. Use `\n` for more lines. Write it in the user's language or as code.
+- If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
+- Case: every arm needs `label`. `otherwise` (the default branch) is optional; leave it out if there is none.
+- Call: `result` receives the return value (`""` for none), drawn as `result ← name(args)`. To call a Method in the same document, use `"target":{"kind":"local","diagram":"d2"}` where `d2` has a `method` head.
+
+## Rules (a link that breaks one does not open)
+
+1. Ids: diagrams `d1, d2, …`, blocks `b1, b2, …`, branches and arms `r1, r2, …`. A prefix and a whole number from 1, no leading zeros. Every id is used once in the whole document.
+2. Every `body` holds at least one block. An empty branch holds an empty process block: `{"id":"b9","kind":"process","text":""}`.
+3. Only the keys shown here. No other keys, no comments, no trailing commas.
+4. Plain JSON strings: escape `"` and `\` as `\"` and `\\`.
+
+## Example: find the largest value
+
+```json
+{"format":"ariadne-nsd","version":1,"settings":{"textKind":"plain","theme":"default","headStyle":"title","locale":"en"},"diagrams":[{"id":"d1","head":{"kind":"method","text":"max(a, n)"},"body":[{"id":"b1","kind":"process","text":"m = a[0]"},{"id":"b2","kind":"for","text":"for i = 1 to n - 1","body":[{"id":"b3","kind":"if","text":"a[i] > m","yes":{"id":"r1","body":[{"id":"b4","kind":"process","text":"m = a[i]"}]},"no":{"id":"r2","body":[{"id":"b5","kind":"process","text":""}]}}]},{"id":"b6","kind":"process","text":"return m"}]}],"view":{"folded":[],"opened":[],"bands":true,"resultSymbol":"←"}}
+```
+
+Its link (envelope `{"name":"max.ns.svg","model":…}`):
+
+https://ariadnensd.com/#ns1.u.%7B%22name%22%3A%22max.ns.svg%22%2C%22model%22%3A%7B%22format%22%3A%22ariadne-nsd%22%2C%22version%22%3A1%2C%22settings%22%3A%7B%22textKind%22%3A%22plain%22%2C%22theme%22%3A%22default%22%2C%22headStyle%22%3A%22title%22%2C%22locale%22%3A%22en%22%7D%2C%22diagrams%22%3A%5B%7B%22id%22%3A%22d1%22%2C%22head%22%3A%7B%22kind%22%3A%22method%22%2C%22text%22%3A%22max%28a%2C%20n%29%22%7D%2C%22body%22%3A%5B%7B%22id%22%3A%22b1%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22m%20%3D%20a%5B0%5D%22%7D%2C%7B%22id%22%3A%22b2%22%2C%22kind%22%3A%22for%22%2C%22text%22%3A%22for%20i%20%3D%201%20to%20n%20-%201%22%2C%22body%22%3A%5B%7B%22id%22%3A%22b3%22%2C%22kind%22%3A%22if%22%2C%22text%22%3A%22a%5Bi%5D%20%3E%20m%22%2C%22yes%22%3A%7B%22id%22%3A%22r1%22%2C%22body%22%3A%5B%7B%22id%22%3A%22b4%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22m%20%3D%20a%5Bi%5D%22%7D%5D%7D%2C%22no%22%3A%7B%22id%22%3A%22r2%22%2C%22body%22%3A%5B%7B%22id%22%3A%22b5%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22%22%7D%5D%7D%7D%5D%7D%2C%7B%22id%22%3A%22b6%22%2C%22kind%22%3A%22process%22%2C%22text%22%3A%22return%20m%22%7D%5D%7D%5D%2C%22view%22%3A%7B%22folded%22%3A%5B%5D%2C%22opened%22%3A%5B%5D%2C%22bands%22%3Atrue%2C%22resultSymbol%22%3A%22%E2%86%90%22%7D%7D%7D
+
+## Example: a Case
+
+```json
+{"id":"b1","kind":"case","text":"light","arms":[{"id":"r1","label":"red","body":[{"id":"b2","kind":"process","text":"stop"}]},{"id":"r2","label":"green","body":[{"id":"b3","kind":"process","text":"go"}]}],"otherwise":{"id":"r3","body":[{"id":"b4","kind":"process","text":"slow down"}]}}
+```
+
+## A link the user gives you
+
+Users paste links made by File › Copy Share Link and ask you to change the diagram. The part after `#` is `ns1.<packing>.<data>`:
+
+| Packing | How to read `<data>` |
+| --- | --- |
+| `u` | percent-decode it (decodeURIComponent) to the envelope JSON |
+| `j` | base64url (RFC 4648 §5, no `=` padding) → UTF-8 envelope JSON |
+| `d` | base64url → deflate-raw (RFC 1951, no zlib header) → UTF-8 envelope JSON. Python: `zlib.decompress(base64.urlsafe_b64decode(data + "=" * (-len(data) % 4)), -15)` |
+
+The app's own links are `d` (compressed). If you cannot run code, do not guess what a `d` link holds: say so, and ask the user to attach the saved file (File › Save; the model JSON is plain text inside its `<metadata>`) or to paste the model JSON. Then change the model, keep the ids that stay, give new blocks new ids (the next free number), and give a new `u` link as above.
+
+## If you can run code
+
+Make the same compressed link the app makes: `https://ariadnensd.com/#ns1.d.` + base64url(deflate-raw(UTF-8 envelope JSON)), base64url without `=` padding. In Python: `zlib.compressobj(9, zlib.DEFLATED, -15)` then `.compress(data) + .flush()`; in JavaScript: `new CompressionStream("deflate-raw")`. Check your link by reading it back with the table above.
+
+## A file instead of a link
+
+Very large diagrams (links over about 8,000 characters) are better as a file. Save this as `name.ns.svg`; the user opens it at https://ariadnensd.com/ (Open, or drag the file onto the page):
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="0" height="0" viewBox="0 0 0 0">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+...model JSON...
+    ]]></ans:document>
+  </metadata>
+</svg>
+```
+
+The editor draws the picture from the model; saving from the editor writes the full file.
+
+## More
+
+- File format: https://github.com/reddiana/AriadneNSD/blob/main/docs/05-spec/01-file-format.md
+- User manual: https://ariadnensd.com/manual/ko/
