@@ -1,0 +1,62 @@
+함께 바뀌어야 하는 곳의 지도 (co-change map) 조사 보고
+2026-11-10, 조사 에이전트(읽기만 함)가 쓴 것을 Claude가 저장소에 옮김. 결과의 원본은 docs/07-coding-guide 13장이 될 것.
+조사할 때 llms.txt, share-link.ts, 06-web.md, 스키마, vite.config.ts는 다른 에이전트가 고치는 중이었다.
+
+1. 묶음표 (원본 / 지금 맞추는 법 / 지금 보이는 어긋남 / 추천)
+
+1  모델·파서 ↔ 05-spec/01-file-format ↔ 04-design/01-model ↔ core/schema/model.schema.json ↔ llms.txt ↔ 사용법
+   원본: core/src/model/types.ts, core/src/format/*
+   자동: 골든 파일(core/node/golden.test.ts), 스키마 ↔ core 상수·파서(model-schema.test.ts), llms 예제와 링크를 파서와 스키마로 엶(llms-guide.test.ts). 손: 명세, 01-model, 사용법
+   어긋남: 명세의 json 예제(3장)를 여는 테스트가 없음(13장이 약속함)
+   추천: 테스트(명세 예제 열기) + co-change C1
+2  형식 버전과 마이그레이션. 원본 core의 version 1, format/migrations.ts. 손. 추천: 명세 머리말 format-version = core 상수를 테스트
+3  키 표 ↔ 키 바인딩 ↔ ? 목록 ↔ 사용법. 원본 editor/src/input/keys.ts
+   ? 목록은 실행 때 레지스트리에서 그림. 사용법의 manual/generated/keys-*.html은 manual-shots(Playwright)가 뽑지만 CI에서 돌지 않아 낡을 수 있음. 03-keymap은 손, 적는 법도 다름
+   추천: keys.ts의 키가 03-keymap에 있는지 테스트 + C2
+4  명령 목록 ↔ 메뉴 ↔ 커맨드 팔레트. 메뉴 · 팔레트는 레지스트리에서. 손: 03-editor 5장의 메뉴 표, manual/pages/ref-*.html. 추천: C3
+5  화면 문자열(i18n 카탈로그 넷) ↔ UX 문서의 인용. 자동: 언어마다 키와 자리표시자가 같음(T-0530~0535). 손: 문서의 인용. 추천: C10 + 점검표
+6  테마 색 ↔ 04-visual-design(문서 3장이 원본). 자동: 대비만
+   어긋남: dom/overlay.ts가 #d0500b · #b42318을 토큰 없이 씀, ui/styles.ts(11) · web.css(10)의 --ui-* 색이 팔레트 밖, 문서의 fill.mist #eceef2가 코드에 없음
+   추천: 문서 표의 토큰 | #hex를 읽어 theme.ts와 비교하는 테스트
+7  공유 링크 형식. 원본 web/src/files/share-link.ts. 자동: llms의 u 링크, share.spec.ts. 손: ADR-0043, 06-web 4장, llms의 설명. 추천: C4
+8  요구사항 ↔ 테스트 ID. 생성: test-list.mjs(--check가 pnpm check에). 어긋남 없음. UX ID(CB1 등)는 검사하지 않음. 추천: 모르는 R-/UX ID면 실패
+9  버전 번호. 원본 editor/src/version.ts. 자동: 패키지 넷(version.test.ts)
+   어긋남: apps/manual/package.json이 검사에서 빠짐, "이 버전에서 바뀐 것"(ui/messages.ts의 whatsNew.body)이 editorVersion과 묶여 있지 않음, CHANGELOG 없음
+   추천: 테스트 + C5
+10 크기 한도. 원본 check-size.mjs(230), share-command.ts(8 KB / 1 MB). 같은 값이 06-web 5장, 07-testing 4장, ci.yml 주석에. "지금 213 KB" 같은 측정값은 낡기 쉬움. 추천: C6, 측정값은 문서에서 빼기
+11 도구 설정 ↔ 코딩 가이드 · 테스트 설계. 손. 추천: C7, C7'
+12 의존성 ↔ 03-architecture 8.1 · 8.2(라이선스). 손. 추천: dependencies 이름마다 8.x에 있는지 테스트
+13 예제 ↔ 썸네일 ↔ 사용법. 썸네일은 sources.json의 해시로 낡으면 실패. 추천: 예제 ↔ 05-screen-layout · manual/pages
+14 아뜰리에의 메타 규칙: ADR/DR 목록, CLAUDE.md ↔ how-we-work. 추천: doc-check에 "목록에 없는 ADR/DR" 검사 + C8
+
+2. co-change 규칙 초안 (when 쪽이 바뀌었는데 then 쪽이 하나도 안 바뀌면 알림. 테스트 파일은 when에서 뺌)
+
+C1  core/src/model/**, core/src/format/{model-json,parse-model,svg-file,migrations,model-element}.ts → 05-spec/01-file-format, 04-design/01-model, core/schema/model.schema.json, llms.txt
+C1' 05-spec/**, core/schema/** → core/src/{model,format}/**
+C2  editor/src/input/keys.ts → 02-ux-design/03-keymap 그리고 manual/generated/keys-*.html
+C3  editor/src/commands/{spec,registry,editor-commands}.ts, editor/src/ui/{menu-model.ts,editor-app.tsx,command-ids.ts}, web/src/shell/web-shell.ts → 04-design/03-editor, manual/pages/ref-*.html
+C4  web/src/files/share-{link,command}.ts → 04-design/06-web, llms.txt, atelier/adr/0043-*
+C5  editor/src/version.ts → editor/src/ui/messages.ts
+C6  web/scripts/check-size.mjs → 06-web, 07-testing
+C7  src/{eslint,prettier}.config.js, .dependency-cruiser.cjs, tsconfig.base.json, .editorconfig → 07-coding-guide
+C7' src/scripts/coverage.mjs, .github/workflows/ci.yml → 07-testing
+C8  CLAUDE.md → atelier/how-we-work.md
+C9  core/src/render/theme.ts, editor/src/dom/overlay.ts, editor/src/ui/styles.ts → 02-ux-design/04-visual-design (6의 테스트가 생기기 전까지)
+C10 web/src/shell/messages.ts, editor/src/{i18n,ui}/messages.ts → 02-interaction-rules, 03-editor, 06-web (알림만)
+
+3. 둘 곳
+- 기계가 읽는 원본: src/scripts/co-change.json과 검사기 src/scripts/co-change.mjs (test-list.mjs 옆)
+- 사람이 읽는 표: docs/07-coding-guide 13장의 미완성 자리. co-change.mjs가 JSON에서 만들어 넣고 --check로 낡았는지 봄
+
+4. 검사
+- Claude 훅: 편집마다가 아니라 git commit을 실행할 때(PreToolUse, Bash, git commit), git diff --cached로. 알리면 고치거나 꼬리말
+- CI: 커밋 범위마다, 처음에는 경고만, 몇 주 뒤 실패로
+- 넘길 때: 커밋 메시지 꼬리말 "Co-change-skip: C2 — 까닭". ID마다 한 줄, 까닭 필수, * 금지
+- 값을 비교할 수 있는 것(2, 6, 8, 9, 12)은 co-change가 아니라 테스트로
+
+5. 바로 고칠 만한 것
+1) version.test.ts에 apps/manual을 더하고, whatsNew 본문이 editorVersion을 담는지 테스트
+2) ADR-0043에 u · j 꾸림 (작업 중인 에이전트의 몫)
+3) 명세 01-file-format의 JSON 예제를 여는 테스트
+4) overlay.ts와 UI 크롬의 색을 토큰으로 두거나 visual-design에 올리고, 문서에만 있는 fill.mist 정리
+5) 06-web 5장의 측정값("지금 213 KB")을 문서에서 빼거나 CI 출력을 가리키게
