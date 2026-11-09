@@ -18,7 +18,7 @@ Give the user a share link. It is the same kind of link the app makes with File 
 4. Give the link as a markdown link, and also show the model JSON in a code block, so the user can fix it if the link is cut.
 5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file.
 
-If a link does not open, the app says why and has a Copy Reason button (까닭 복사). When the user pastes a text that starts with `AriadneNSD could not open the share link`, it names what was wrong (often a position in the JSON, or how many brackets are missing): fix the JSON there and give a new link the same way.
+If a link does not open, the app says why and has a Copy Reason button (오류 내용 복사). When the user pastes a text that starts with `AriadneNSD could not open the share link`, it names what was wrong (often a position in the JSON, or how many brackets are missing): fix the JSON there and give a new link the same way.
 
 ## Model JSON
 
