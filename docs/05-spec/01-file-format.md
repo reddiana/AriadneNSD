@@ -6,7 +6,7 @@ tags:
   - spec
 status: 초안
 format-version: 1
-updated: 2026-11-03
+updated: 2026-11-10
 ---
 
 # 파일 형식 명세
@@ -96,8 +96,9 @@ UML 클래스 다이어그램으로 그린 XML 요소의 포함 관계입니다.
 
 ## 3. 모델 JSON
 
-맨 위의 구조는 아래와 같습니다.
+맨 위의 구조는 아래와 같습니다. 같은 구조의 JSON Schema(모양만, 이 버전이 아는 값만)가 `src/packages/core/schema/model.schema.json`에 있고 사이트에는 `/model.schema.json`으로 놓입니다 → [[06-web#3.1 LLM · 에이전트를 위한 안내서]]. 이 문서의 JSON 예제는 테스트가 꺼내 실제 파서로 엽니다([[07-testing#3.1 문서 속 예제(doctest)와 값 목록]]).
 
+<!-- doctest: skip: 구조의 개요라 "…"가 든다(아래 "작은 예"는 검사함) -->
 ```json
 {
   "format": "ariadne-nsd",

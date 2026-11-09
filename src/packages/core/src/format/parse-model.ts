@@ -21,6 +21,7 @@ import type {
 } from '../model/types';
 import { isTextKind } from '../text/syntax';
 import { migrations } from './migrations';
+import { headKinds, headStyles, resultSymbols } from './model-values';
 import type { KeptSettings, LoadedDoc } from './model-json';
 import { currentFormatVersion, formatName } from './model-json';
 
@@ -267,8 +268,8 @@ function readSettings(
   const textKind = readString(reader, 'settings.textKind', fields.textKind);
   // An unknown theme is drawn with the default theme by the renderer and kept as it is (3.3).
   const theme = readString(reader, 'settings.theme', fields.theme);
-  const { headStyle } = fields;
-  if (headStyle !== 'shape' && headStyle !== 'title') {
+  const headStyle = headStyles.find((style) => style === fields.headStyle);
+  if (headStyle === undefined) {
     return fail(reader, 'settings.headStyle', 'is not "shape" or "title"');
   }
   // A file without a locale (written before ADR-0041) is drawn in the opener's language.
@@ -321,8 +322,8 @@ function readHead(reader: Reader, at: string, value: unknown): Head | null {
   if (fields === null) {
     return null;
   }
-  const { kind } = fields;
-  if (kind !== 'event' && kind !== 'method') {
+  const kind = headKinds.find((each) => each === fields.kind);
+  if (kind === undefined) {
     return fail(reader, `${at}.kind`, 'is not "event" or "method"');
   }
   const text = readString(reader, `${at}.text`, fields.text);
@@ -549,11 +550,12 @@ function readView(reader: Reader, value: unknown): View | null {
   const opened = readArray(reader, 'view.opened', fields.opened, (item, at) =>
     readArray(reader, at, item, (id, idAt) => readBlockRef(reader, idAt, id)),
   );
-  const { bands, resultSymbol } = fields;
+  const { bands } = fields;
+  const resultSymbol = resultSymbols.find((symbol) => symbol === fields.resultSymbol);
   if (typeof bands !== 'boolean') {
     return fail(reader, 'view.bands', 'is not true or false');
   }
-  if (resultSymbol !== '←' && resultSymbol !== '=') {
+  if (resultSymbol === undefined) {
     return fail(reader, 'view.resultSymbol', 'is not "←" or "="');
   }
   if (folded === null || opened === null) {

@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ariadnensd.com/model.schema.json",
+  "title": "AriadneNSD model JSON, format version 1",
+  "description": "The shape of an AriadneNSD document's model JSON: the JSON inside a saved .ns.svg file and inside a share link. Spec: https://github.com/reddiana/AriadneNSD/blob/main/docs/05-spec/01-file-format.md (section 3). How to make a share link from it: https://ariadnensd.com/llms.txt. This schema checks the shape only, with the values this version knows; the app also checks the invariants: every id is used once in the whole document, a local call names a Method diagram, a fold's first and last blocks are in its sequence in that order, and a diagram with neither a header nor blocks is the only diagram.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "settings", "diagrams", "view"],
+  "properties": {
+    "format": { "const": "ariadne-nsd" },
+    "version": { "const": 1 },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textKind", "theme", "headStyle"],
+      "properties": {
+        "textKind": {
+          "description": "The language of the text in blocks, for syntax colors only.",
+          "enum": ["plain", "c", "cpp", "java", "javascript", "python", "bash"]
+        },
+        "theme": { "enum": ["default", "dark", "high-contrast", "print"] },
+        "headStyle": {
+          "description": "How headers are drawn: as a title above the diagram, or as a shape.",
+          "enum": ["title", "shape"]
+        },
+        "locale": {
+          "description": "The language of the words the editor draws (True/False, default). Left out: the opener's screen language.",
+          "enum": ["en", "ko"]
+        },
+        "textOutlines": {
+          "description": "Save the text as outlines. Written only when true.",
+          "type": "boolean"
+        }
+      }
+    },
+    "diagrams": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "body"],
+        "properties": {
+          "id": { "$ref": "#/$defs/diagramId" },
+          "head": {
+            "description": "Left out for a diagram without a header.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "text"],
+            "properties": {
+              "kind": { "enum": ["method", "event"] },
+              "text": { "type": "string" }
+            }
+          },
+          "body": { "$ref": "#/$defs/body" },
+          "folds": { "$ref": "#/$defs/folds" }
+        }
+      }
+    },
+    "view": {
+      "description": "How the document was being viewed. For a new document: {\"folded\":[],\"opened\":[],\"bands\":true,\"resultSymbol\":\"←\"}.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["folded", "opened", "bands", "resultSymbol"],
+      "properties": {
+        "folded": { "type": "array", "items": { "type": "string" } },
+        "opened": {
+          "type": "array",
+          "items": { "type": "array", "items": { "$ref": "#/$defs/blockId" } }
+        },
+        "bands": { "type": "boolean" },
+        "resultSymbol": { "enum": ["←", "="] }
+      }
+    }
+  },
+  "$defs": {
+    "diagramId": { "type": "string", "pattern": "^d[1-9][0-9]*$" },
+    "blockId": { "type": "string", "pattern": "^b[1-9][0-9]*$" },
+    "branchId": { "type": "string", "pattern": "^r[1-9][0-9]*$" },
+    "foldId": { "type": "string", "pattern": "^f[1-9][0-9]*$" },
+    "body": {
+      "description": "Blocks drawn top to bottom. Never empty: an empty branch holds an empty process block.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "folds": {
+      "description": "Fold regions over blocks of this sequence. May be left out when empty.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "first", "last"],
+        "properties": {
+          "id": { "$ref": "#/$defs/foldId" },
+          "first": { "$ref": "#/$defs/blockId" },
+          "last": { "$ref": "#/$defs/blockId" },
+          "name": { "type": "string" }
+        }
+      }
+    },
+    "branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "body"],
+      "properties": {
+        "id": { "$ref": "#/$defs/branchId" },
+        "label": { "description": "Replaces the drawn True/False or default.", "type": "string" },
+        "body": { "$ref": "#/$defs/body" },
+        "folds": { "$ref": "#/$defs/folds" }
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "body"],
+      "properties": {
+        "id": { "$ref": "#/$defs/branchId" },
+        "label": { "type": "string" },
+        "body": { "$ref": "#/$defs/body" },
+        "folds": { "$ref": "#/$defs/folds" }
+      }
+    },
+    "siteFold": {
+      "description": "A fold region over blocks seen inside an opened call block.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "via", "first", "last"],
+      "properties": {
+        "id": { "$ref": "#/$defs/foldId" },
+        "via": { "type": "array", "items": { "$ref": "#/$defs/blockId" } },
+        "first": { "$ref": "#/$defs/blockId" },
+        "last": { "$ref": "#/$defs/blockId" },
+        "name": { "type": "string" }
+      }
+    },
+    "callTarget": {
+      "oneOf": [
+        {
+          "description": "A Method diagram in this document.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "diagram"],
+          "properties": {
+            "kind": { "const": "local" },
+            "diagram": { "$ref": "#/$defs/diagramId" }
+          }
+        },
+        {
+          "description": "A name written in the block, not a diagram.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "name"],
+          "properties": {
+            "kind": { "const": "named" },
+            "name": { "type": "string" }
+          }
+        },
+        {
+          "description": "A Method in another file.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "file", "diagram", "lastName"],
+          "properties": {
+            "kind": { "const": "external" },
+            "file": { "type": "string" },
+            "diagram": { "$ref": "#/$defs/diagramId" },
+            "lastName": { "type": "string" }
+          }
+        },
+        {
+          "description": "A Method that is no longer there.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "lastName"],
+          "properties": {
+            "kind": { "const": "lost" },
+            "lastName": { "type": "string" },
+            "file": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "block": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "process" },
+            "text": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text", "yes", "no"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "if" },
+            "text": { "type": "string" },
+            "yes": { "$ref": "#/$defs/branch" },
+            "no": { "$ref": "#/$defs/branch" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text", "arms"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "case" },
+            "text": { "type": "string" },
+            "arms": { "type": "array", "items": { "$ref": "#/$defs/arm" } },
+            "otherwise": { "$ref": "#/$defs/branch" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text", "body"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "enum": ["while", "doWhile", "for"] },
+            "text": { "type": "string" },
+            "body": { "$ref": "#/$defs/body" },
+            "folds": { "$ref": "#/$defs/folds" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "target", "args", "result"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "call" },
+            "target": { "$ref": "#/$defs/callTarget" },
+            "args": { "type": "string" },
+            "result": {
+              "description": "Receives the return value; empty for none.",
+              "type": "string"
+            },
+            "siteFolds": { "type": "array", "items": { "$ref": "#/$defs/siteFold" } }
+          }
+        }
+      ]
+    }
+  }
+}

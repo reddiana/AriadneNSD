@@ -185,6 +185,13 @@ export type {
   ReadOptions,
 } from './format/parse-model';
 export { invariantCheck, parseModel, parseModelJson } from './format/parse-model';
+export {
+  blockKinds,
+  callTargetKinds,
+  headKinds,
+  headStyles,
+  resultSymbols,
+} from './format/model-values';
 export type { Drawing, EmbeddedFont, SvgFileParts } from './format/svg-file';
 export { assembleImageSvg, assembleSvgFile, openSvgFile } from './format/svg-file';
 

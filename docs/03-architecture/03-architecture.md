@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-11-09
+updated: 2026-11-10
 ---
 
 # 아키텍처 개요
@@ -462,6 +462,7 @@ sequenceDiagram
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
 | `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#2. 계층마다 무엇을 테스트하나]] |
 | 브라우저 E2E · 시각 회귀 | Playwright 1.64 | `src/apps/web/e2e/` | 〃 |
+| JSON Schema 검사 | Ajv 8 (draft 2020-12), 테스트에서만. 모델 JSON의 스키마와 골든 파일 · 문서 속 예제가 어긋나지 않는지 본다 | `packages/core`, `apps/web` | [[06-web#3.1 LLM · 에이전트를 위한 안내서]] |
 | 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | 〃 |
 | 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
