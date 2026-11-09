@@ -151,7 +151,7 @@ updated: 2026-11-10
 
 ## 3. 공유 URL과 보기 모드
 
-파일 › 공유 링크 복사([[01-requirements#^r-web|R-WEB-05]])는 다이어그램 전체를 링크 하나에 담아 클립보드에 복사합니다. 링크를 연 사람은 보기 모드([[01-requirements#^r-web|R-WEB-06]])로 보고, "편집하기"를 눌러 자기 새 문서로 고칩니다. 서버는 링크를 보지 않습니다. 형식과 그렇게 정한 까닭 → [[0043-share-link-in-fragment|ADR-0043]], 조작의 결정 → [[ux-decisions#2026-11-03 레인 4 (공유 URL · 보기 모드, 메인테이너가 추천안을 받아들임)|SH1 ~ SH6]]
+파일 › 공유 링크 복사([[01-requirements#^r-web|R-WEB-05]])는 다이어그램 전체를 링크 하나에 담아 클립보드에 복사합니다. 링크를 연 사람은 보기 모드([[01-requirements#^r-web|R-WEB-06]])로 보고, "편집하기"를 눌러 자기 새 문서로 고칩니다. 서버는 링크를 보지 않습니다. 형식과 그렇게 정한 까닭 → [[0043-share-link-in-fragment|ADR-0043]], 조작의 결정 → [[ux-decisions#2026-11-03 공유 URL · 보기 모드 (밤사이 에이전트가 만듦, 메인테이너가 추천안을 받아들임)|SH1 ~ SH6]]
 
 ```text
 https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yqRKUnGNov99R0qy...
