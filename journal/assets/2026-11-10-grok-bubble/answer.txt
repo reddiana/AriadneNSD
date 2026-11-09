@@ -1,0 +1,36 @@
+(메인테이너가 붙여 준 Grok 대화, 2026-11-10)
+
+https://ariadnensd.com 으로 버블소트 알고리즘을 nsd로 그려주세요
+
+**버블 정렬(Bubble Sort) 알고리즘의 Nassi-Shneiderman Diagram (NSD)입니다.**
+AriadneNSD(https://ariadnensd.com)에서 직접 그리는 방식으로 구성했습니다. (사이트 특성상 중첩 편집이 조금 까다로워 핵심 구조를 정확히 반영한 버전으로 정리했습니다.)
+
+### 표준 버블 정렬 의사코드 (NSD로 옮긴 버전)
+i ← 0
+while i < n - 1 do
+    j ← 0
+    while j < n - i - 1 do
+        if a[j] > a[j+1] then
+            swap(a[j], a[j+1])
+        end if
+        j ← j + 1
+    end while
+    i ← i + 1
+end while
+
+### NSD 구조 (시각적 표현)
+(상자 그리기 문자로 그린 그림. 줄이 어긋나 여기에는 옮기지 않음)
+
+### AriadneNSD에서 그리는 방법 (간단 가이드)
+
+1. https://ariadnensd.com 접속 후 **Blank document** 선택
+2. **While** 도구로 바깥쪽 루프 생성 → 조건: `i < n - 1`
+3. 몸체 안에 **Process**로 `j ← 0` 추가
+4. 그 아래 다시 **While** 도구로 안쪽 루프 → 조건: `j < n - i - 1`
+5. 안쪽 루프 몸체에 **If** 도구 삽입 → 조건: `a[j] > a[j+1]`
+6. true 쪽에 **Process**로 `swap(a[j], a[j+1])` 작성
+7. 안쪽 루프 끝에 `j ← j + 1`, 바깥쪽 루프 끝에 `i ← i + 1` 추가
+
+사이트에서 **Export as PNG** 또는 **Save**로 저장하시면 됩니다.
+
+필요하시면 더 최적화된 버전(조기 종료 플래그 포함)이나 다른 정렬 알고리즘 NSD도 만들어 드릴게요!
