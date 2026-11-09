@@ -1,7 +1,7 @@
 // The overlay layer (03-editor 1): the selection, the hover, the drop place and the dragged
 // blocks, drawn as one SVG over the document layer. Never saved (ADR-0018). Pure: a string.
 import type { Box, Id, LayoutResult, ThemeKind } from '@ariadne-nsd/core';
-import { geometry } from '@ariadne-nsd/core';
+import { geometry, primitiveColors } from '@ariadne-nsd/core';
 
 import type { Drop } from '../input/drop';
 import { union } from '../input/drop';
@@ -23,24 +23,27 @@ export type EditColors = Readonly<
  * they are drawn on the paper, so they follow the theme's kind, not the screen (UX TM4).
  */
 export const editColors: EditColors = {
-  'edit.select': '#d0500b',
-  'edit.hover': '#d0500b',
-  'edit.field': '#d0500b',
-  'edit.drop': '#d0500b',
-  'edit.error': '#b42318',
+  'edit.select': primitiveColors['orange.600'],
+  'edit.hover': primitiveColors['orange.600'],
+  'edit.field': primitiveColors['orange.600'],
+  'edit.drop': primitiveColors['orange.600'],
+  'edit.error': primitiveColors['red.700'],
   // The fold triangles are on the editing layer in the muted text color (visual design 3.3).
-  'edit.toggle': '#5a6476',
+  'edit.toggle': primitiveColors['ink.500'],
 };
 
-/** The edit layer colors on dark paper (the dark and high contrast themes, visual design 3.4). */
+/**
+ * The edit layer colors on dark paper (the dark and high contrast themes, visual design 3.4).
+ * The orange and red have no primitive of their own; the document's table gives their values.
+ */
 export const editColorsOnDark: EditColors = {
   'edit.select': '#f08a4b',
   'edit.hover': '#f08a4b',
   'edit.field': '#f08a4b',
   'edit.drop': '#f08a4b',
   'edit.error': '#ff7b72',
-  // The muted text color of the dark theme (`ink.300`).
-  'edit.toggle': '#a3acbc',
+  // The muted text color of the dark theme.
+  'edit.toggle': primitiveColors['ink.300'],
 };
 
 /** The edit layer colors for a theme's kind of paper. */

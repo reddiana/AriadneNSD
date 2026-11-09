@@ -132,6 +132,12 @@ const areas = [
       '그리기와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 재는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]',
     paths: ['.bench.ts', 'apps/web/src/perf/', 'apps/web/e2e/perf.spec.ts'],
   },
+  {
+    name: '문서와 코드의 정합성',
+    about:
+      '코드와 문서에 함께 적힌 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]',
+    paths: ['packages/core/node/docs-agree.test.ts', 'packages/editor/src/docs-agree.test.ts'],
+  },
 ];
 
 function areaOf(path) {
@@ -350,6 +356,51 @@ const defined = [
   ...definedIds('docs/01-requirements/01-requirements.md', 'AT'),
   ...definedIds('atelier/defects.md', 'BUG'),
 ];
+/**
+ * The requirement ids (the first cell of the requirement tables) and the UX decision ids (the
+ * headings `### K3. …` and `### Q1 · Q2. …`, the first cells of the table, the bold items
+ * `**CB1. …`, and ranges such as `FD1~FD10`). A test that names an id defined nowhere fails the
+ * script: a typo or a withdrawn requirement (DR-0016) would otherwise link to nothing.
+ */
+const requirementIds = new Set(
+  [
+    ...readFileSync(join(repo, 'docs/01-requirements/01-requirements.md'), 'utf8').matchAll(
+      /^\| (R-[A-Z]+-\d+) \|/gm,
+    ),
+  ].map((m) => m[1]),
+);
+function uxDecisionIds() {
+  const text = readFileSync(join(repo, 'atelier/decisions/ux-decisions.md'), 'utf8');
+  const ids = new Set();
+  const addAll = (part) => {
+    for (const range of part.matchAll(/\b([A-Z]+)(\d+)~\1?(\d+)\b/g)) {
+      for (let n = Number(range[2]); n <= Number(range[3]); n += 1) ids.add(`${range[1]}${n}`);
+    }
+    for (const id of part.matchAll(/\b[A-Z]+\d+(?:-[a-z])?\b/g)) ids.add(id[0]);
+  };
+  for (const line of text.split('\n')) {
+    const heading = /^#{2,4} (.*?)\./.exec(line);
+    const firstCell = /^\| ([^|]+) \|/.exec(line);
+    const bold = /^\s*- \*\*([A-Z]+\d+(?:-[a-z])?)\./.exec(line);
+    for (const part of [heading?.[1], firstCell?.[1], bold?.[1]]) if (part) addAll(part);
+  }
+  return ids;
+}
+const uxIds = uxDecisionIds();
+const knownIds = new Set(defined);
+const isKnown = (id) =>
+  id.startsWith('R-')
+    ? requirementIds.has(id)
+    : id.startsWith('UX ')
+      ? uxIds.has(id.slice(3))
+      : knownIds.has(id);
+for (const file of files) {
+  const refs = [...file.refs, ...file.tests.flatMap((test) => test.ids)];
+  for (const id of unique(refs).filter((each) => !isKnown(each))) {
+    problems.push(`${file.rel}: ${id} is not defined in the documents`);
+  }
+}
+
 const named = new Set(idTests.flatMap((test) => test.ids));
 const untested = defined.filter((id) => !named.has(id));
 

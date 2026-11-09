@@ -6,7 +6,7 @@ tags:
   - design
   - ux
 status: 초안
-updated: 2026-11-01
+updated: 2026-11-10
 ---
 
 # 시각 디자인
@@ -160,7 +160,7 @@ flowchart LR
 | `ink.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#343b48;border:1px solid #8888;vertical-align:-0.1em"></span> `#343b48` | 25 | `fill.snow` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `#fbfcfe` | 99 |
 | `ink.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `#4b5567` | 36 | `fill.slate` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `#edf0f5` | 95 |
 | `ink.550` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#555e70;border:1px solid #8888;vertical-align:-0.1em"></span> `#555e70` | 40 | `fill.sand` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `#f6ebdc` | 94 |
-| `ink.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `#5a6476` | 42 | `fill.mist` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#eceef2;border:1px solid #8888;vertical-align:-0.1em"></span> `#eceef2` | 94 |
+| `ink.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `#5a6476` | 42 | | | |
 | `slate.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `#5b77ad` | 50 | `fill.mint` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `#e2efdf` | 93 |
 | `blue.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f45d6` | 37 | `fill.lilac` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `#ebe7f4` | 92 |
 | `blue.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | 40 | `fill.sky` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `#dce6f6` | 91 |
@@ -218,6 +218,8 @@ flowchart LR
 | `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8ba7ff;border:1px solid #8888;vertical-align:-0.1em"></span> `#8ba7ff` | 버튼의 포커스, 상태 표시줄의 모드, 캔버스 포커스 |
 | `ui.accent-soft` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e4eafb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e4eafb` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232c45;border:1px solid #8888;vertical-align:-0.1em"></span> `#232c45` | 버튼에 호버 |
 | `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b35a10;border:1px solid #8888;vertical-align:-0.1em"></span> `#b35a10` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0a560;border:1px solid #8888;vertical-align:-0.1em"></span> `#f0a560` | 키 힌트의 왼쪽 줄 |
+| `ui.shadow` | `rgba(20, 30, 60, 0.18)` | `rgba(0, 0, 0, 0.5)` | 메뉴 · 키 힌트의 그림자 |
+| `ui.backdrop` | `rgba(20, 26, 34, 0.32)` | `rgba(0, 0, 0, 0.5)` | 모달 뒤를 덮는 막 |
 
 화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (배경 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1).
 
@@ -242,6 +244,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 인라인 에디터의 테두리 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f08a4b;border:1px solid #8888;vertical-align:-0.1em"></span> `#f08a4b` | 드래그할 때의 드롭 위치의 줄 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `red.700` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ff7b72;border:1px solid #8888;vertical-align:-0.1em"></span> `#ff7b72` | 받아들일 수 없는 입력 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.toggle` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.500` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a3acbc;border:1px solid #8888;vertical-align:-0.1em"></span> `ink.300` (<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a3acbc;border:1px solid #8888;vertical-align:-0.1em"></span> `#a3acbc`) | 펼침 삼각형 `▸` `▾` (밝은 · 어두운 기본 테마의 `text.muted`와 같음) |
 
 편집 레이어의 대비율(종이와 블록 배경 · 이름 띠 · 펴 보기의 띠 위, 가장 낮은 값 ~ 가장 높은 값): 선택 · 호버 · 드롭은 밝은 테마 3.05 ~ 4.34, 어두운 테마 4.80 ~ 7.00, 고대비 6.43 ~ 8.44, 흑백 인쇄 4.34. 오류는 밝은 테마 4.61 ~ 6.57, 어두운 테마 4.73 ~ 6.90, 고대비 6.35 ~ 8.33, 흑백 인쇄 6.57. 모두 3:1을 넘습니다(테두리와 줄이라 기준은 3:1).
 
@@ -516,11 +519,11 @@ flowchart LR
 
 ### 9.3 흑백 인쇄 팔레트의 값
 
-테마 `print`(흑백 인쇄)의 값입니다. 원시 토큰은 `white` · `black` · `gray.700`입니다.
+테마 `print`(흑백 인쇄)의 값입니다. 원시 토큰은 `white`(`#ffffff`) · `black`(`#000000`) · `gray.700`(`#404040`)입니다.
 
 | 의미 토큰 | 값 |
 | --- | --- |
-| 모든 `block.*`, `fold.band`, `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` |
+| `paper`, 모든 `block.*`, `fold.band`, `peek.fill`, `peek.halo`, `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` |
 | `line.structure`, `text.*`, `fold.edge`, `fold.name`, `peek.edge` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `#000000` |
 | `peek.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#404040;border:1px solid #8888;vertical-align:-0.1em"></span> `#404040` (대비율 10.4:1) |
 | `syntax.*` | `text.primary`와 같음 (강조 끔) |

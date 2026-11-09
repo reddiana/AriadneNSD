@@ -15,6 +15,9 @@ const palette = {
   'blue.700': '#1f45d6',
   'blue.600': '#2c55c9',
   'blue.500': '#4f74d6',
+  // The edit layer on light paper (visual design 3.4): the selection and the error.
+  'orange.600': '#d0500b',
+  'red.700': '#b42318',
   'violet.500': '#7a5fb8',
   'green.700': '#22702a',
   'amber.800': '#8a5a00',
@@ -69,7 +72,14 @@ const palette = {
   'deep.lilac-strong': '#2a1747',
 } as const;
 
-type PaletteToken = keyof typeof palette;
+/** A primitive color token (visual design 3.2), such as `ink.900`. */
+export type PaletteToken = keyof typeof palette;
+
+/**
+ * The primitive palette (visual design 3.2), for the layers that are not a theme: the edit layer
+ * picks its colors from it by the kind of paper (editor overlay). Documents use `Theme` instead.
+ */
+export const primitiveColors: Readonly<Record<PaletteToken, string>> = palette;
 
 /** The semantic and component color tokens of the document layer (visual design 3.3). */
 export type ColorToken =

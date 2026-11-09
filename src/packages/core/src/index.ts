@@ -74,8 +74,15 @@ export type {
 } from './layout/types';
 export type { PathSegment, Point, Scene, SceneElement, TextRun } from './render/scene';
 export { buildScene, drawingFontFamily } from './render/build-scene';
-export type { ColorToken, Theme, ThemeKind } from './render/theme';
-export { defaultTheme, isKnownTheme, themeFor, themeIds, themes } from './render/theme';
+export type { ColorToken, PaletteToken, Theme, ThemeKind } from './render/theme';
+export {
+  defaultTheme,
+  isKnownTheme,
+  primitiveColors,
+  themeFor,
+  themeIds,
+  themes,
+} from './render/theme';
 export type { RenderedSvg } from './render/to-svg';
 export { toSvg } from './render/to-svg';
 export { usedCodePoints } from './render/used-code-points';

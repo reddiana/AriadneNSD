@@ -2,6 +2,8 @@
 // same component works in every shell (Vite, the Obsidian plugin, tests) without a CSS loader.
 // Colours are the screen colour tokens of 04-visual-design 3.4; the scheme follows the host's
 // appearance (`data-scheme`), not the OS, because Obsidian has its own light/dark switch.
+// Colours are written only where a `--ui-*` token is defined; a test keeps them as the document's.
+import { defaultTheme } from '@ariadne-nsd/core';
 
 export const chromeCss = `
 .ans-app {
@@ -219,7 +221,7 @@ export const chromeCss = `
 }
 .ans-example-thumb {
   aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; overflow: hidden;
-  background: #ffffff; border: 1px solid var(--ui-line); border-radius: 4px;
+  background: ${defaultTheme.colors.paper}; border: 1px solid var(--ui-line); border-radius: 4px;
 }
 .ans-example-thumb svg, .ans-example-thumb img { width: 92%; height: 92%; object-fit: contain; }
 .ans-example-plain { background: var(--ui-accent-soft); color: var(--ui-accent); font-size: 30px; }
