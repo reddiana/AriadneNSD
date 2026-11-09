@@ -59,6 +59,12 @@ const english = {
   'link.unsupported':
     'This browser cannot open compressed share links. Open the link in a recent Chrome, Edge, Firefox or Safari.',
   'link.damaged': 'This share link is damaged (perhaps cut off) and cannot be opened.',
+  'link.failed':
+    '{message}\nReason: {detail}\nIf an AI made this link, copy the reason and paste it to that AI: it can fix the link.',
+  'link.copyReasonManually': 'The clipboard is not available. Copy this reason:',
+  'notice.reasonCopied': 'Copied the reason. Paste it to the AI that made the link.',
+  'choice.copyReason': 'Copy Reason',
+  'choice.close': 'Close',
   'notice.browserFull':
     'The browser’s storage is full, so it could not be saved. Save it to a file instead.',
   'notice.replace': '“{name}” already exists in this browser. Replace it?',
@@ -132,6 +138,12 @@ const korean: Record<ShellMessageKey, string> = {
   'link.unsupported':
     '이 브라우저는 압축한 공유 링크를 열 수 없습니다. 최신 Chrome · Edge · Firefox · Safari에서 여세요.',
   'link.damaged': '이 공유 링크는 손상되어(잘렸을 수 있습니다) 열 수 없습니다.',
+  'link.failed':
+    '{message}\n까닭: {detail}\n이 링크를 AI가 만들었다면 까닭을 복사해 그 AI에게 붙여 주세요. 고친 링크를 다시 받을 수 있습니다.',
+  'link.copyReasonManually': '클립보드를 쓸 수 없습니다. 이 까닭을 복사하세요:',
+  'notice.reasonCopied': '까닭을 복사했습니다. 링크를 만든 AI에게 붙여 주세요.',
+  'choice.copyReason': '까닭 복사',
+  'choice.close': '닫기',
   'notice.browserFull': '브라우저의 저장 공간이 모자라 저장하지 못했습니다. 파일로 저장해 주세요.',
   'notice.replace': '“{name}”이(가) 이 브라우저에 이미 있습니다. 바꿀까요?',
   'notice.deleteBrowser': '“{name}”을(를) 이 브라우저에서 삭제할까요? 되돌릴 수 없습니다.',

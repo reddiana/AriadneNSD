@@ -261,6 +261,8 @@ export type PickerItem = {
 export type Dialog = {
   readonly id: number;
   readonly message: Message;
+  /** The title bar's text. Absent: "Question". */
+  readonly title?: Message;
   /** `null` for a yes/no question; otherwise a text box that starts with this value. */
   readonly input: string | null;
   readonly confirm: Message;
@@ -327,10 +329,13 @@ export interface EditorHandle {
    * place for notices). `warn` stays until the next notice or until closed.
    */
   notify(message: Message, level?: Notice['level']): void;
-  /** Addition: asks a yes/no question in a modal. Resolves `true` for the confirm button. */
+  /**
+   * Addition: asks a yes/no question in a modal. Resolves `true` for the confirm button. `title`
+   * replaces "Question" in the title bar, for a modal that reports rather than asks (UX LG6).
+   */
   confirm(
     message: Message,
-    buttons?: { readonly confirm?: Message; readonly cancel?: Message },
+    buttons?: { readonly confirm?: Message; readonly cancel?: Message; readonly title?: Message },
   ): Promise<boolean>;
   /**
    * Addition: asks a question with three answers in a modal: the confirm button (the default),

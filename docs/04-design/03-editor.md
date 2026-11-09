@@ -3,7 +3,7 @@ title: 편집기
 tags:
   - design
 status: 초안
-updated: 2026-11-03
+updated: 2026-11-10
 ---
 
 # 편집기
@@ -358,7 +358,7 @@ interface EditorHandle {
   startBlockDrag(kind: ToolbarBlockKind, event: PointerEvent): void;  // 툴바의 블록 아이콘에서 드래그를 시작 (4px 넘게 움직인 뒤)
   focus(): void;                                 // 키보드 포커스를 다이어그램에, 편집 중이면 인라인 에디터에 (모달을 닫은 뒤)
   notify(message: Message, level?: 'info' | 'warn'): void;  // 셸의 알림을 상태 표시줄에 (알림은 이곳 하나 → 06-web 7)
-  confirm(message: Message, buttons?: { confirm?: Message; cancel?: Message }): Promise<boolean>;  // 모달로 예/아니오를 묻는다. 확인 버튼이면 true
+  confirm(message: Message, buttons?: { confirm?: Message; cancel?: Message; title?: Message }): Promise<boolean>;  // 모달로 예/아니오를 묻는다. 확인 버튼이면 true. title은 묻지 않고 알리는 모달의 제목 (LG6의 "AriadneNSD")
   choose(message: Message, buttons: { confirm: Message; other: Message; second?: Message; cancel?: Message }): Promise<'confirm' | 'other' | 'second' | 'cancel'>;  // 모달로 답이 셋(second가 있으면 넷)인 것을 묻는다 (US1의 저장 · 브라우저에 저장 · 버리고 열기 · 취소). 확인 버튼이 기본
   prompt(message: Message, value: string): Promise<string | null>;  // 모달로 글자를 묻는다 (value로 시작). 취소하면 null
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;  // 다이어그램이 컨텍스트 메뉴를 청했다 (오른쪽 클릭, Shift+F10 → 1장)
@@ -387,7 +387,8 @@ type Picker = {
 };
 type Dialog = {
   id: number;
-  message: Message;
+  message: Message;                              // 줄바꿈(\n)은 그대로 줄을 바꾼다
+  title?: Message;                               // 제목 막대의 글. 없으면 "질문"
   input: string | null;                          // null이면 예/아니오 물음, 아니면 이 값으로 시작하는 입력 칸
   confirm: Message;                              // 확인 버튼의 이름 ("복원")
   cancel: Message;                               // 취소 버튼의 이름 ("버리기")

@@ -299,7 +299,10 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
     dialog.answer(null);
   };
   return (
-    <Modal title={text('dialog.label')} onClose={cancel}>
+    <Modal
+      title={dialog.title === undefined ? text('dialog.label') : format(dialog.title)}
+      onClose={cancel}
+    >
       <form
         className="ans-dialog"
         onSubmit={(event) => {

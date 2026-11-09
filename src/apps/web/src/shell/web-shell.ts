@@ -1000,22 +1000,57 @@ export function createWebShell(options: WebShellOptions): WebShell {
     const read = await readShareLink(fragment, options.share.deflate);
     if (!read.ok) {
       if (read.reason !== 'notShareLink') {
-        options.log(`Cannot open the share link: ${read.reason}: ${read.detail}`);
-        notices.show(text(linkFailureMessage(read.reason)), 'warn');
+        await explainLinkFailure(linkFailureMessage(read.reason), read.reason, read.detail);
       }
       return null;
     }
     // The same validating parser as for a file (QA-02): a link is input from anyone.
     const parsed = parseModel(read.model, { locale });
     if (!parsed.ok) {
-      options.log(`Cannot open the share link: ${parsed.reason}: ${parsed.detail}`);
-      notices.show(
-        text(parsed.reason === 'newerVersion' ? 'link.newerVersion' : 'link.damaged'),
-        'warn',
+      await explainLinkFailure(
+        parsed.reason === 'newerVersion' ? 'link.newerVersion' : 'link.damaged',
+        parsed.reason,
+        parsed.detail,
       );
       return null;
     }
     return { doc: parsed.value.doc, name: documentFileName(read.name, text('file.untitled')) };
+  }
+
+  /**
+   * Says why a share link did not open, with the parser's detail (English), and offers to copy it
+   * (UX LG6): a link another AI made can then be fixed by that AI. Resolves when the modal closes.
+   */
+  async function explainLinkFailure(
+    message: ShellMessageKey,
+    reason: string,
+    detail: string,
+  ): Promise<void> {
+    options.log(`Cannot open the share link: ${reason}: ${detail}`);
+    if (editor === null) {
+      return;
+    }
+    const isCopying = await editor.confirm(
+      text('link.failed', { message: text(message), detail }),
+      {
+        confirm: text('choice.copyReason'),
+        cancel: text('choice.close'),
+        title: appName,
+      },
+    );
+    if (!isCopying) {
+      return;
+    }
+    const guide = new URL('llms.txt', `${options.share.page.origin}${options.share.page.pathname}`);
+    const reasonText = `AriadneNSD could not open the share link (${reason}): ${detail}\nHow to make a link that opens: ${guide.href}`;
+    try {
+      await options.share.copyText(Promise.resolve(reasonText));
+    } catch (error) {
+      options.log(`Copying the reason failed: ${String(error)}`);
+      await editor.prompt(text('link.copyReasonManually'), reasonText);
+      return;
+    }
+    notices.show(text('notice.reasonCopied'), 'info');
   }
 
   /** Opens a share link's document as a new document that was never saved, in view mode. */

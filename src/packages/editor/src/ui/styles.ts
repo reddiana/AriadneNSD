@@ -230,7 +230,7 @@ export const chromeCss = `
   .ans-example-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .ans-dialog { display: grid; gap: 10px; margin: 0; }
-.ans-dialog p { margin: 0; white-space: normal; }
+.ans-dialog p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
 .ans-dialog input {
   font: inherit; color: inherit; background: var(--ui-bg); border: 1px solid var(--ui-line);
   border-radius: 4px; padding: 4px 8px;

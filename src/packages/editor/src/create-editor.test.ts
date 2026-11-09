@@ -287,6 +287,19 @@ describe('the shell asks through the editor (03-editor 6 additions)', () => {
     expect(handle.chromeState().dialog).toBeNull();
   });
 
+  it('T-1131 · UX LG6: confirm may give the modal a title of its own', async () => {
+    const { handle } = make();
+    const answer = handle.confirm('The link did not open.', {
+      confirm: 'Copy',
+      title: 'AriadneNSD',
+    });
+    expect(handle.chromeState().dialog).toMatchObject({ title: 'AriadneNSD', confirm: 'Copy' });
+    handle.chromeState().dialog?.answer(null);
+    expect(await answer).toBe(false);
+    void handle.confirm('Sure?');
+    expect(handle.chromeState().dialog).not.toHaveProperty('title');
+  });
+
   it('T-0372: 06-web 1: prompt resolves with the typed text, or null when cancelled', async () => {
     const { handle } = make();
     const named = handle.prompt('File name:', 'a.ns.svg');

@@ -19,11 +19,11 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 5 | 45 | 225 | - | 275 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 161 | - | 196 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 27 | 42 | - | 91 |
-| [[#5. 파일\|파일]] | 16 | 151 | 213 | - | 380 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 28 | 42 | - | 92 |
+| [[#5. 파일\|파일]] | 17 | 154 | 228 | - | 399 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 148 | - | 150 |
 | [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 76 | 253 | 789 | 5 | 1123 |
+| 합계 | 77 | 257 | 804 | 5 | 1143 |
 
 ## 읽는 법
 
@@ -896,7 +896,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 91개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 92개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -967,7 +967,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 자리 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록"). Vitest + happy-dom · 테스트 27개.
+메뉴 바 · 툴바의 블록 아이콘 · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 자리 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록"). Vitest + happy-dom · 테스트 28개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -993,6 +993,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0311 | 03-editor 5: 선택에 맞는 명령을 메뉴 순서로, 하위 메뉴와 함께 보인다 | - |
 | T-0312 | `Esc`로 닫힌다 | - |
 | T-0313 | 06-web 2: 대화 상자는 모달로 묻고, 확인 버튼이 답한다 | - |
+| T-1127 | 알리는 모달은 제목을 따로 갖고, 메시지의 줄바꿈을 지킨다 | [[ux-decisions\|UX LG6]] |
 | T-0314 | 06-web 1: 텍스트 입력 대화 상자는 입력한 텍스트로 답하고, `Esc`는 취소한다 | - |
 | T-0825 | US1: 답이 셋인 물음은 셋째 버튼을 취소 앞에 보인다 | - |
 | T-0315 | 06-web 7: 경고는 닫을 때까지 상태 표시줄에 남는다 | - |
@@ -1126,7 +1127,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드 → [[01-file-format]], [[06-web]]. 파일 38개, 테스트 380개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 399개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1161,12 +1162,13 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [E2E] `apps/web/e2e/share.spec.ts`
 
-브라우저에서의 공유 링크와 보기 모드 (R-WEB-05, R-WEB-06). Playwright · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]].
+브라우저에서의 공유 링크와 보기 모드 (R-WEB-05, R-WEB-06). Playwright · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0892 | 보기 모드로 열리는 공유 링크를 복사하고, "편집하기"로 편집할 수 있게 된다 | - |
 | T-0893 | 손상된 공유 링크는 까닭을 말하고 평소처럼 편집 화면을 연다 | - |
+| T-1128 | 다른 AI가 손으로 쓴 링크(`u`)는 보기 모드로 열리고, 깨진 링크는 까닭을 보이고 복사한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG2]], [[ux-decisions\|UX LG6]] |
 | T-0894 | 열린 페이지의 주소창에 붙여 넣은 공유 링크는 보기 모드로 열린다 | - |
 
 ^t-apps-web-e2e-share-spec-ts
@@ -1205,7 +1207,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `apps/web/src/shell/web-shell.test.ts`
 
-웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 77개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
+웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 79개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1269,6 +1271,8 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0899 | 모델이 파일의 검사를 통과하지 못하는 링크는 열지 않는다 | - |
 | T-0900 | 나중에 연 링크는 편집한 새 문서를 바꾸기 전에 묻고, 그 뒤 보기 모드로 보인다 | - |
 | T-0901 | 다른 문서를 열면 보기 모드가 끝난다. 쓸 만한 이름이 없는 링크는 제목 없음이다 | - |
+| T-1129 | 열리지 않는 링크는 파서의 까닭을 보이고, 링크를 만든 AI에게 줄 수 있게 복사한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG6]] |
+| T-1130 | 까닭을 닫으면 아무것도 복사하지 않고, 클립보드가 거절하면 손으로 복사하게 까닭을 보인다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG6]] |
 | T-0941 | 첫 저장은 어디에 저장할지 묻고, 처음에는 이 컴퓨터 쪽이며, 이름은 첫 다이어그램의 헤더 이름이다 | [[01-requirements#^r-web\|R-WEB-09]], [[ux-decisions\|UX BS1]] |
 | T-0942 | Ctrl+S와 자동 저장은 브라우저 문서에 쓴다. 파일에 쓸 수 없는 브라우저에서도 | [[ux-decisions\|UX BS2]] |
 | T-0943 | 이미 있는 이름이면 바꿀지 묻고, 아니면 이름을 다시 묻는다 | [[01-requirements#^r-web\|R-WEB-09]] |
@@ -1304,7 +1308,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `packages/editor/src/create-editor.test.ts`
 
-셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 47개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
+셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 48개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1326,6 +1330,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0369 | 03-editor 5: 블록을 오른쪽 클릭하면 그 블록을 선택하고 컨텍스트 메뉴를 청한다 | - |
 | T-0370 | 06-web 7: 셸의 알림이 상태 표시줄에 보인다 | - |
 | T-0371 | 06-web 2: confirm은 대화 상자를 보이고 답으로 끝난다 | - |
+| T-1131 | `confirm`은 모달에 제목을 따로 줄 수 있다 | [[ux-decisions\|UX LG6]] |
 | T-0372 | 06-web 1: prompt는 입력한 텍스트로, 취소하면 null로 끝난다 | - |
 | T-0373 | 둘째 대화 상자가 첫째를 취소한다 | - |
 | T-0834 | US1: choose는 누른 버튼을 돌려준다: 확인, 셋째, 취소 | - |
@@ -1357,6 +1362,24 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0820 | 이 설정은 문서 설정의 목록에 블록 텍스트의 언어 바로 뒤에 있다 | - |
 
 ^t-packages-editor-src-create-editor-test-ts
+
+### [단위] `apps/web/src/files/doc-examples.test.ts`
+
+문서 속 예제를 테스트로 돌림(doctest). Vitest · 테스트 9개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1132 | `/llms.txt`와 첫 화면의 공유 링크는 모두 열리고 스키마를 통과한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG1]] |
+| T-1134 | `/llms.txt`의 JSON 예제는 모두 열리거나, 검사하지 않는 까닭을 밝힌다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
+| T-1144 | 파일 형식 명세의 JSON 예제와 공유 링크는 모두 열리거나, 검사하지 않는 까닭을 밝힌다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
+| T-1145 | 깨졌거나 모델이 아닌 JSON 예제는, 건너뛴다는 표시가 없으면 실패한다 | - |
+| T-1133 | 예제 링크마다 옆에 보인 모델 그대로로 만든 것이다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG1]] |
+| T-1146 | 안내서의 값 목록은 core의 목록으로 채워지고, 블록 표에는 모든 종류가 있다 | [[01-requirements#^r-web\|R-WEB-10]] |
+| T-1135 | 안내서가 링크 대신 주는 파일이 열린다 | [[01-requirements#^r-web\|R-WEB-10]] |
+| T-1136 | 첫 화면은 안내서를 가리키고, 짧은 안내를 앱의 루트 안에 숨겨 둔다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG1]] |
+| T-1137 | 앱이 보이는 메뉴와 버튼의 이름을 그대로 적는다 | [[01-requirements#^r-web\|R-WEB-10]] |
+
+^t-apps-web-src-files-doc-examples-test-ts
 
 ### [단위] `apps/web/src/files/export-command.test.ts`
 
@@ -1476,7 +1499,7 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ### [단위] `apps/web/src/files/share-link.test.ts`
 
-공유 링크의 형식 (R-WEB-05, ADR-0043). Vitest · 테스트 13개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-05]].
+공유 링크의 형식 (R-WEB-05, ADR-0043). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-05]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1491,6 +1514,9 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-0918 | JSON이 이름과 모델의 봉투가 아닌 링크는 손상되었다고 말한다 | - |
 | T-0919 | DecompressionStream이 없는 브라우저는 압축한 링크를 열 수 없다고 말한다 | - |
 | T-0920 | 꾸린 바이트가 풀리지 않는 링크는 손상되었다고 말한다 | - |
+| T-1138 | 다른 AI가 손으로 쓰는 퍼센트 인코딩 링크(`u`)를 읽는다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG2]] |
+| T-1139 | `u` 링크가 열리지 않는 까닭을 말한다: 잘못된 퍼센트 인코딩, 깨진 JSON, 빠진 괄호 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG6]] |
+| T-1140 | `u` 링크도 풀기 전에 같은 길이 한도로 막는다 | [[01-requirements#^r-web\|R-WEB-10]], [[03-quality-attribute-scenarios#1. 목록\|QA-21]] |
 | T-0921 | fragment를 query를 뺀 페이지 주소 뒤에 붙인다 | - |
 | T-0922 | base64url은 어떤 바이트든 왕복하고, 다른 글자는 거절한다 | - |
 
@@ -1697,6 +1723,18 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-1010 | PDF를 골든 파일로 저장한다 | - |
 
 ^t-packages-core-node-export-golden-test-ts
+
+### [단위] `packages/core/node/model-schema.test.ts`
+
+다른 AI와 에이전트를 위해 `/model.schema.json`에 두는 모델 JSON의 JSON Schema(R-WEB-10, UX LG3). Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-10]], [[ux-decisions|UX LG3]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1141 | 골든 파일의 모델은 모두 파서를 통과하듯 스키마도 통과한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
+| T-1142 | 스키마의 값 목록은 core의 목록과 같고 순서도 같다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
+| T-1143 | 파서가 거절하는 모양은 스키마도 거절한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
+
+^t-packages-core-node-model-schema-test-ts
 
 ### [단위] `packages/core/src/export/paginate.test.ts`
 
@@ -2171,6 +2209,5 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | [[03-quality-attribute-scenarios#1. 목록\|QA-14]] | 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[01-requirements#^at\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
-| [[03-quality-attribute-scenarios#1. 목록\|QA-21]] | 없음 |
 | [[defects#BUG-06\|BUG-06]] | 없음 |
 | [[defects#BUG-15\|BUG-15]] | 없음 |

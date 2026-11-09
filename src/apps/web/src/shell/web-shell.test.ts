@@ -50,6 +50,15 @@ type FakeEditor = EditorHandle & {
   choices: ('confirm' | 'other' | 'second' | 'cancel')[];
   /** What the next `prompt` answers. The suggested value when empty. */
   prompts: (string | null)[];
+  /** The yes/no questions the shell asked, oldest first, and the buttons they had. */
+  confirmed: {
+    message: string;
+    confirm: string | undefined;
+    cancel: string | undefined;
+    title: string | undefined;
+  }[];
+  /** The modals with a text to copy (`prompt`), oldest first. */
+  prompted: { message: string; value: string }[];
   /** The text `save` and `saveAs` write. */
   file: string;
   saveAs: () => Promise<WriteResult>;
@@ -73,6 +82,10 @@ function fakeEditor(answer: boolean): FakeEditor {
   const asked: string[] = [];
   const choices: ('confirm' | 'other' | 'second' | 'cancel')[] = [];
   const prompts: (string | null)[] = [];
+  const confirmed: FakeEditor['confirmed'] = [];
+  const prompted: FakeEditor['prompted'] = [];
+  const say = (message: unknown): string =>
+    typeof message === 'string' ? message : (message as { key: string }).key;
   const editor: FakeEditor = {
     file: savedFile,
     opened,
@@ -80,16 +93,28 @@ function fakeEditor(answer: boolean): FakeEditor {
     asked,
     choices,
     prompts,
+    confirmed,
+    prompted,
     notify: (message) => {
       notices.push(typeof message === 'string' ? message : message.key);
     },
-    confirm: () => Promise.resolve(answer),
+    confirm: (message, buttons) => {
+      confirmed.push({
+        message: say(message),
+        confirm: buttons?.confirm === undefined ? undefined : say(buttons.confirm),
+        cancel: buttons?.cancel === undefined ? undefined : say(buttons.cancel),
+        title: buttons?.title === undefined ? undefined : say(buttons.title),
+      });
+      return Promise.resolve(answer);
+    },
     choose: (message) => {
       asked.push(typeof message === 'string' ? message : message.key);
       return Promise.resolve(choices.shift() ?? 'cancel');
     },
-    prompt: (_message, value) =>
-      Promise.resolve(prompts.length === 0 ? value : (prompts.shift() ?? null)),
+    prompt: (message, value) => {
+      prompted.push({ message: say(message), value });
+      return Promise.resolve(prompts.length === 0 ? value : (prompts.shift() ?? null));
+    },
     commands: {
       specs,
       register(spec) {
@@ -189,6 +214,8 @@ type SetupOptions = {
   tabId?: string;
   persistStorage?: () => Promise<boolean>;
   isPrintable?: boolean;
+  /** The clipboard refuses every copy. */
+  isClipboardRefused?: boolean;
 };
 
 function setup(options: SetupOptions = {}) {
@@ -221,6 +248,9 @@ function setup(options: SetupOptions = {}) {
       page: { origin: 'https://ariadnensd.com', pathname: '/' },
       deflate: browserDeflate(),
       copyText: async (text) => {
+        if (options.isClipboardRefused === true) {
+          throw new Error('NotAllowedError');
+        }
         copied.push(await text);
       },
     },
@@ -1070,9 +1100,11 @@ describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
     shell.onViewMode((isViewing) => heard.push(isViewing));
     const fragment = await link();
     await shell.start(editor, fragment.slice(0, 20));
-    expect(editor.notices).toContain(
-      'This share link is damaged (perhaps cut off) and cannot be opened.',
+    // UX LG6: the reason, then the question about the backup, one after the other.
+    expect(editor.confirmed[0]?.message).toMatch(
+      /^This share link is damaged \(perhaps cut off\) and cannot be opened\.\nReason: the link does not unpack: /,
     );
+    expect(editor.confirmed[1]?.message).toMatch(/Restore them\?$/);
     expect(logs.some((line) => line.startsWith('Cannot open the share link: damaged'))).toBe(true);
     expect(editor.opened.at(-1)?.restored).toBe('{"a":1}');
     expect(shell.isViewing()).toBe(false);
@@ -1086,15 +1118,16 @@ describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
     const pack = (value: unknown) =>
       `ns1.j.${toBase64Url(new TextEncoder().encode(JSON.stringify({ name: 'x', model: value })))}`;
     await shell.openShareLink(pack({ format: 'ariadne-nsd', version: 1 }));
-    expect(editor.notices.at(-1)).toBe(
-      'This share link is damaged (perhaps cut off) and cannot be opened.',
+    expect(editor.confirmed.at(-1)?.message).toMatch(
+      /^This share link is damaged \(perhaps cut off\) and cannot be opened\.\nReason: settings: is not an object\n/,
     );
     await shell.openShareLink(pack({ ...(JSON.parse(model) as object), version: 99 }));
-    expect(editor.notices.at(-1)).toBe(
-      'This share link was made by a newer version of AriadneNSD. Reload the page to open it.',
+    expect(editor.confirmed.at(-1)?.message).toMatch(
+      /^This share link was made by a newer version of AriadneNSD\. Reload the page to open it\.\nReason: version 99 /,
     );
     await shell.openShareLink('ns9.d.abc');
-    expect(editor.notices.at(-1)).toMatch(/newer version/);
+    expect(editor.confirmed.at(-1)?.message).toMatch(/newer version/);
+    expect(editor.confirmed).toHaveLength(3);
     await shell.openShareLink('not-a-link');
     expect(editor.opened.length).toBe(opened);
   });
@@ -1121,6 +1154,47 @@ describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
     await shell.newDocument();
     expect(shell.isViewing()).toBe(false);
     expect(editor.status().readOnly).toBe(false);
+  });
+
+  it('T-1129 · R-WEB-10 · UX LG6: a link that does not open shows the parser’s reason and copies it for the AI that made it', async () => {
+    const { shell, editor, copied } = setup();
+    await shell.start(editor);
+    const opened = editor.opened.length;
+    // What another AI wrote by hand from /llms.txt, with the last "}" missing.
+    const envelope = JSON.stringify({ name: 'Max.ns.svg', model: JSON.parse(model) as unknown });
+    await shell.openShareLink(`ns1.u.${encodeURIComponent(envelope.slice(0, -1))}`);
+    expect(editor.opened.length).toBe(opened);
+    const [asked] = editor.confirmed;
+    expect(asked?.message).toMatch(
+      /\nReason: the link's JSON does not read: .*; it has \d+ "\{" but \d+ "\}"\nIf an AI made this link, copy the reason and paste it to that AI: it can fix the link\.$/,
+    );
+    expect(asked).toMatchObject({ confirm: 'Copy Reason', cancel: 'Close', title: 'AriadneNSD' });
+    expect(copied).toHaveLength(1);
+    expect(copied[0]).toMatch(
+      /^AriadneNSD could not open the share link \(damaged\): the link's JSON does not read: .*\nHow to make a link that opens: https:\/\/ariadnensd\.com\/llms\.txt$/,
+    );
+    expect(editor.notices.at(-1)).toBe('Copied the reason. Paste it to the AI that made the link.');
+  });
+
+  it('T-1130 · R-WEB-10 · UX LG6: closing the reason copies nothing; a refused clipboard shows the reason to copy by hand', async () => {
+    const closing = setup({ confirm: false });
+    await closing.shell.start(closing.editor);
+    await closing.shell.openShareLink('ns1.u.%E0%A4%A');
+    expect(closing.editor.confirmed.at(-1)?.message).toMatch(
+      /Reason: the link is not percent-encoded/,
+    );
+    expect(closing.copied).toHaveLength(0);
+
+    const refused = setup({ isClipboardRefused: true });
+    await refused.shell.start(refused.editor);
+    await refused.shell.openShareLink('ns1.u.%E0%A4%A');
+    expect(refused.editor.prompted.at(-1)).toMatchObject({
+      message: 'The clipboard is not available. Copy this reason:',
+      value: expect.stringMatching(
+        /^AriadneNSD could not open the share link \(damaged\)/,
+      ) as unknown,
+    });
+    expect(refused.logs.some((line) => line.startsWith('Copying the reason failed'))).toBe(true);
   });
 });
 

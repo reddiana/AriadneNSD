@@ -391,6 +391,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
       readonly other?: Message;
       readonly second?: Message;
       readonly cancel?: Message;
+      readonly title?: Message;
     },
   ): Promise<Answer> => {
     dialog?.answer(null);
@@ -412,6 +413,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
         confirm: buttons.confirm ?? 'choice.ok',
         cancel: buttons.cancel ?? 'choice.cancel',
         other: buttons.other ?? null,
+        ...(buttons.title === undefined ? {} : { title: buttons.title }),
         answer: (value) => {
           close(value === null ? null : { text: value });
         },

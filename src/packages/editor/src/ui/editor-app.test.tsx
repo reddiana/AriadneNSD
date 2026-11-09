@@ -425,6 +425,31 @@ describe('dialogs and notices from the shell', () => {
     expect(answers).toEqual(['']);
   });
 
+  it('T-1127 · UX LG6: a dialog that reports has its own title and keeps the lines of its message', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.setChrome({
+        dialog: {
+          id: 1,
+          title: 'AriadneNSD',
+          message: 'This share link is damaged.\nReason: the link is not base64url',
+          input: null,
+          confirm: 'Copy Reason',
+          cancel: 'Close',
+          other: null,
+          answer: () => undefined,
+          answerOther: () => undefined,
+        },
+      });
+    });
+    const dialog = screen.getByRole('dialog', { name: 'AriadneNSD' });
+    expect(within(dialog).getByText(/Reason: the link is not base64url/).textContent).toBe(
+      'This share link is damaged.\nReason: the link is not base64url',
+    );
+    expect(screen.queryByRole('dialog', { name: 'Question' })).toBeNull();
+  });
+
   it('T-0314: 06-web 1: a text dialog answers the typed text, Esc cancels', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);

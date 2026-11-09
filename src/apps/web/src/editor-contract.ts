@@ -114,7 +114,7 @@ export type EditorHandle = {
   /** Asks a yes/no question in the editor's modal. */
   confirm(
     message: Message,
-    buttons?: { readonly confirm?: Message; readonly cancel?: Message },
+    buttons?: { readonly confirm?: Message; readonly cancel?: Message; readonly title?: Message },
   ): Promise<boolean>;
   /**
    * Asks a question with three answers in the editor's modal (US1: save, discard, cancel), or
