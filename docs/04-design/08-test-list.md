@@ -22,8 +22,8 @@ status: 생성됨
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 27 | 42 | - | 91 |
 | [[#5. 파일\|파일]] | 16 | 151 | 213 | - | 380 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 148 | - | 150 |
-| [[#7. 성능\|성능]] | - | - | - | 5 | 5 |
-| 합계 | 76 | 253 | 789 | 5 | 1123 |
+| [[#7. 성능\|성능]] | 2 | - | 12 | 5 | 19 |
+| 합계 | 78 | 253 | 801 | 5 | 1137 |
 
 ## 읽는 법
 
@@ -2141,7 +2141,48 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 7. 성능
 
-그리기와 파일 열기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]. 파일 1개, 테스트 5개.
+그리기와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 재는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]. 파일 4개, 테스트 19개.
+
+### [E2E] `apps/web/e2e/perf.spec.ts`
+
+점검 모드(`?perf`, 06-web 9). Playwright · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1127 | 점검 모드는 모든 명령을 재고, 로컬 백업과 설정은 그대로 둔다 | [[01-requirements#^at\|AT-05]] |
+| T-1128 | 점검 모드는 T-0007이 재는 것을 재고, 여기서는 100ms 안이다 | [[01-requirements#^at\|AT-05]] |
+
+^t-apps-web-e2e-perf-spec-ts
+
+### [단위] `apps/web/src/perf/perf-ports.test.ts`
+
+점검 모드(`?perf`)가 웹 셸 대신 편집기에 주는 것. Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-05]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1129 | 사용자 설정을 읽지만 제 변경은 메모리에만 둔다 | - |
+| T-1130 | 잰 문서의 저장을 거절해, 파일 · 로컬 백업 · 브라우저 문서가 생기지 않는다 | - |
+| T-1131 | 시스템 클립보드가 아니라 메모리에 복사한다 | - |
+
+^t-apps-web-src-perf-perf-ports-test-ts
+
+### [단위] `apps/web/src/perf/perf-report.test.ts`
+
+점검 모드(`?perf`, AT-05)의 수치, 복사하는 결과, 계획. Vitest · 테스트 9개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-05]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1132 | 백분위수는 가장 가까운 순위(nearest rank)로 구한다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1133 | 요약에는 중앙값 · p95 · 최댓값이 있고, p95 ≤ 100ms이면 합격이다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1134 | 기기 정보에서 브라우저가 알려 주지 않는 것은 뺀다 | - |
+| T-1135 | 복사한 결과는 마크다운 목록과 표다 | [[01-requirements#^at\|AT-05]] |
+| T-1136 | 느린 명령 하나가 점검 전체를 불합격으로 만든다(두 화면 언어 모두) | [[01-requirements#^at\|AT-05]] |
+| T-1137 | 점검 모드의 카탈로그는 모든 키를 모든 언어로, 같은 자리표시로 갖는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1138 | `?perf`는 다른 매개변수가 있든 없든 점검 모드를 연다 | - |
+| T-1139 | 블록 500개, 명령마다 잰 실행 30번. `rounds=`는 실행 횟수만 바꾼다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1140 | 큰 문서에는 요청한 수의 처리 블록이 있다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+
+^t-apps-web-src-perf-perf-report-test-ts
 
 ### [성능] `packages/core/src/render/render.bench.ts`
 

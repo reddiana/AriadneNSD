@@ -127,15 +127,25 @@ const areas = [
   },
   {
     name: '성능',
-    about: '그리기와 파일 열기의 시간 예산(벤치마크) → [[03-quality-attribute-scenarios]]',
-    paths: ['.bench.ts'],
+    about:
+      '그리기와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 재는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]',
+    paths: ['.bench.ts', 'apps/web/src/perf/', 'apps/web/e2e/perf.spec.ts'],
   },
 ];
 
 function areaOf(path) {
-  const area = areas.find((a) =>
-    a.paths.some((p) => (p.startsWith('.') ? path.endsWith(p) : path.startsWith(p))),
-  );
+  // The most specific path wins: `apps/web/src/perf/` over the files area's `apps/web/src/`.
+  let area;
+  let matched = -1;
+  for (const candidate of areas) {
+    for (const p of candidate.paths) {
+      const isMatch = p.startsWith('.') ? path.endsWith(p) : path.startsWith(p);
+      if (isMatch && p.length > matched) {
+        area = candidate;
+        matched = p.length;
+      }
+    }
+  }
   if (area === undefined) {
     console.error(`${path} is in no area. Add it to \`areas\` in src/scripts/test-list.mjs.`);
     process.exit(1);

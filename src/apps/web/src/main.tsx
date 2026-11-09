@@ -11,6 +11,7 @@ import { thumbnailUrl } from './examples/thumbnail-urls';
 import { browserCopyText } from './files/share-command';
 import { browserDeflate, isShareLink } from './files/share-link';
 import { createSaveFonts } from './fonts/save-font';
+import { isPerfMode } from './perf/is-perf-mode';
 import { createPrinter } from './print/print-view';
 import { loadBlockFont } from './fonts/screen-font';
 import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
@@ -52,6 +53,16 @@ bootStep('settings');
 const root = document.getElementById('root');
 if (root === null) {
   throw new Error('Missing #root element in index.html');
+}
+
+// The check mode of AT-05 (`?perf`, 06-web 9) is a page of its own, fetched only when asked for.
+// It takes the place of the app: the rest of this module never runs, so there is no web shell
+// (local backup, auto save, recent files) and nothing is written.
+if (isPerfMode(window.location.search)) {
+  bootStep('perf');
+  const { startPerfMode } = await import('./perf/perf-page');
+  await startPerfMode(root);
+  await new Promise<never>(() => undefined);
 }
 
 const settings = createSettingsStore(browserLocalStorage(), log, window);
