@@ -2,7 +2,7 @@
 title: "ADR-0045: 내보내기는 한 장면에서: 자체 PDF 작성기, 번들 글꼴의 글리프 외곽선, 그림 지문"
 tags:
   - adr
-status: 제안됨
+status: 승인
 date: 2026-11-03
 supersedes:
 superseded-by:

@@ -2,7 +2,7 @@
 title: "ADR-0044: 문서에는 테마의 이름만 적고, 테마는 종이의 종류를 가진다"
 tags:
   - adr
-status: 제안됨
+status: 승인
 date: 2026-11-03
 supersedes:
 superseded-by:
