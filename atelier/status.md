@@ -29,6 +29,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 **0.2.0을 냈습니다(2026-11-04). MVP에 웹의 `P1` 기능을 모두 더한 판입니다. 웹 베타의 문턱은 메인테이너가 Firefox · Safari · 휴대폰에서 써 보고, 밤사이 Claude가 추천안으로 정한 것을 확인하는 일이 남았습니다.**
 
 - 앱: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 판은 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
+- 0.2.0 뒤에 더한 것(배포함, 판 번호는 그대로): LLM · 에이전트 안내서 `/llms.txt` · `/model.schema.json`, 공유 링크의 `u` 꾸림, 열지 못한 링크의 오류 내용 복사([[01-requirements#^r-web|R-WEB-10]]), AT-05 점검 모드 `?perf`, 문서와 코드의 정합성 검사([[07-coding-guide#13. 문서와 코드의 정합성]]), 모델 JSON 스키마 문서([[02-model-schema]]) → [[2026-11-09-01-llm-guide]]
 - 0.2.0에 더한 것: 접기 · 접기 영역, 새 Method로 빼기, 호출 블록 펴 보기 · 풀기 · 이름을 적는 호출 블록, 블록 텍스트의 언어 · 구문 강조, 테마 · 고대비 화면, 공유 링크 · 보기 모드, 브라우저 안의 문서, 그림만 담은 SVG · PDF · 인쇄 · 그림 지문 · 텍스트 외곽선 → [[2026-11-03-06-agents-bugs-locale-extract#매듭 뒤 (2026-11-03 밤 ~ 11-04)]]
 
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[07-testing]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
@@ -48,10 +49,9 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 ## 이번과 다음 세션에 할 것
 
 - [ ] **메인테이너: 0.2.0을 써 보기** https://ariadnensd.com/ (Chrome · Edge, 그리고 Firefox · Safari · 휴대폰). 도움말 › 이 버전에서 바뀐 것에 목록이 있습니다. 써 보며 11-03 밤에 에이전트들이 만든 기능에서 추천안으로 정한 것을 확인하기 → [[outbox#확인해 주세요]]
-- [ ] 에이전트 셋의 결과를 합치고 로컬로 보여 드리기: LLM · 에이전트 안내서([[01-requirements#^r-web|R-WEB-10]], 시안 M56), AT-05 점검 모드(`?perf`, worktree), 함께 바뀌는 곳의 조사([[07-coding-guide#13. 문서와 코드의 정합성]]) → [[2026-11-09-01-llm-guide]]
-- [ ] 그 뒤: 출시 전 LLM 시험을 [[07-testing]]에 → [[backlog#저장소 손질]]
-- [ ] 메인테이너: 배포한 뒤 ChatGPT · Grok에게 "https://ariadnensd.com 으로 버블소트 알고리즘을 nsd로 그려주세요"를 다시 해 보기
-- [ ] 메인테이너: AT-05를 점검 모드로 가진 기기에서 재기, 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
+- [ ] **다음 세션 처음: 시안 M57을 봄** (AI 넷의 시험 결과, JSON 붙여넣어 열기 · 요청문 복사 · 안내서 손질) → [[sketchbook]], [[outbox#정해 주세요]]
+- [ ] AT-05가 CPU 4배 감속에서 불합격(p95 280 ~ 750ms): 시간이 어디서 드는지 프로파일링한 뒤 증분 레이아웃을 할지 여쭙기(다른 에이전트가 돌지 않을 때 잼) → [[backlog#MVP 개발]]
+- [ ] 메인테이너: AT-05를 점검 모드(`https://ariadnensd.com/?perf`)로 가진 기기에서 재기, 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 다음 세션: outbox의 세션 06에 정한 것 7묶음 → [[outbox#확인해 주세요]]
 - [ ] 메인테이너: Windows 알림을 다시 켤지(밤에 `.claude/settings.local.json`의 `hooks`를 비워 둠)
 - [ ] 메인테이너가 사용법 전체 초안 M51을 봄 → [[backlog#웹 베타의 문턱]]
