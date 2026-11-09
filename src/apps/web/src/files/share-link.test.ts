@@ -1,11 +1,13 @@
 // The share link's format (R-WEB-05, ADR-0043): round trip, the version prefix, and input from
-// anyone: cut, changed, too long, or a small link that unpacks to too much.
+// anyone: cut, changed, too long, or a small link that unpacks to too much. The percent-encoded
+// `u` packing is what other AIs write from /llms.txt (R-WEB-10).
 
 import { createDoc, parseModel, serializeModelJson } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
 import type { Deflate } from './share-link';
 import {
+  bracketHint,
   browserDeflate,
   fromBase64Url,
   isShareLink,
@@ -159,6 +161,62 @@ describe('share link format', () => {
       ok: false,
       reason: 'damaged',
     });
+  });
+
+  it('T-1138 · R-WEB-10 · UX LG2: reads a percent-encoded (u) link, as another AI writes it by hand', async () => {
+    const envelope = JSON.stringify({
+      name: '버블 정렬.ns.svg',
+      model: JSON.parse(model) as unknown,
+    });
+    const read = await readShareLink(`${shareLinkPrefix}u.${encodeURIComponent(envelope)}`, null);
+    expect(read).toMatchObject({ ok: true, name: '버블 정렬.ns.svg' });
+    if (!read.ok) {
+      return;
+    }
+    const parsed = parseModel(read.model);
+    expect(parsed.ok && serializeModelJson(parsed.value.doc)).toBe(model);
+    // As the browser hands it over (`location.hash`): letters left raw by hand, Korean encoded.
+    const raw = envelope
+      .replaceAll('"', '%22')
+      .replaceAll(' ', '%20')
+      .replace(/[^ -~]/gu, (character) => encodeURIComponent(character));
+    expect(raw).toContain('{');
+    expect(await readShareLink(`${shareLinkPrefix}u.${raw}`, null)).toMatchObject({
+      ok: true,
+      name: '버블 정렬.ns.svg',
+    });
+    // The app never writes it: Copy Share Link stays `d` (UX LG5).
+    expect(await writeShareLink(model, 'a.ns.svg', deflate)).toMatch(/^ns1\.d\./);
+  });
+
+  it('T-1139 · R-WEB-10 · UX LG6: says why a u link does not open: bad percent-encoding, broken JSON, a missing bracket', async () => {
+    const envelope = JSON.stringify({ name: 'a.ns.svg', model: JSON.parse(model) as unknown });
+    const u = (text: string) => `${shareLinkPrefix}u.${text}`;
+    expect(await readShareLink(u('%7B%22name%E0%A4%A'), null)).toMatchObject({
+      ok: false,
+      reason: 'damaged',
+      detail: expect.stringContaining('not percent-encoded') as unknown,
+    });
+    expect(await readShareLink(u(encodeURIComponent(envelope.slice(0, -1))), null)).toMatchObject({
+      ok: false,
+      reason: 'damaged',
+      detail: expect.stringMatching(/JSON does not read: .*; it has 6 "\{" but 5 "\}"$/) as unknown,
+    });
+    expect(await readShareLink(u(encodeURIComponent('[1')), null)).toMatchObject({
+      detail: expect.stringMatching(/; it has 1 "\[" but 0 "\]"$/) as unknown,
+    });
+    expect(await readShareLink(u('%7B%22name%22%3A1%7D'), null)).toMatchObject({
+      reason: 'damaged',
+      detail: 'the link holds the keys name',
+    });
+    // Brackets inside strings, and escaped quotes, are not counted.
+    expect(bracketHint('{"a":"}\\"{["')).toBe('; it has 1 "{" but 0 "}"');
+    expect(bracketHint('{"a":[1]}')).toBe('');
+  });
+
+  it('T-1140 · R-WEB-10 · QA-21: a u link is held to the same length limit before it is decoded', async () => {
+    const fragment = `${shareLinkPrefix}u.${'%20'.repeat(maxShareLinkLength / 3)}`;
+    expect(await readShareLink(fragment, null)).toMatchObject({ ok: false, reason: 'tooLarge' });
   });
 
   it('T-0921: puts the fragment after the page address, without the query', () => {

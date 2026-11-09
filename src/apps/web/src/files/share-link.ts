@@ -6,6 +6,8 @@
 // `ns1` is the link format's version, `d` the packing (deflate-raw; `j` is the same JSON without
 // compression, for a browser without CompressionStream), and the rest the packed bytes in
 // base64url. The bytes are UTF-8 JSON: `{ "name": "…", "model": { …model JSON… } }`.
+// `u` is that JSON percent-encoded (encodeURIComponent): the packing another AI can write by hand
+// (R-WEB-10, /llms.txt). The app reads it but never writes it (UX LG2, LG5).
 // The link is input from anyone: its length is checked before it is unpacked, the unpacked size
 // is capped while it streams (a small link must not unpack to gigabytes), and the model goes
 // through the same validating parser as a file (`parseModel` in the shell).
@@ -22,8 +24,8 @@ export const maxShareLinkLength = 1024 * 1024;
 /** The most bytes a link may unpack to (the zip bomb guard). Far above any real document. */
 export const maxUnpackedBytes = 16 * 1024 * 1024;
 
-/** How the JSON is packed: deflate-raw, or as it is. */
-export type Packing = 'd' | 'j';
+/** How the JSON is packed: deflate-raw, as it is (base64url), or percent-encoded (read only). */
+export type Packing = 'd' | 'j' | 'u';
 
 /** Compresses and decompresses with deflate-raw. `null`: this browser has no streams for it. */
 export type Deflate = {
@@ -42,7 +44,7 @@ export type ShareLinkFailure =
   | 'tooLarge'
   /** Packed with deflate-raw, and this browser cannot unpack it. */
   | 'unsupported'
-  /** Cut off or changed: the bytes or the JSON do not read. */
+  /** Cut off or changed: the bytes, the percent-encoding or the JSON do not read. */
   | 'damaged';
 
 /** A share link's content: the document's name and its model (still to be validated). */
@@ -148,6 +150,16 @@ export async function readShareLink(
   }
   const rest = fragment.slice(shareLinkPrefix.length);
   const packing = rest.slice(0, 2);
+  if (packing === 'u.') {
+    // No unpacking: the text is never longer than the link, so the length check caps it.
+    let text: string;
+    try {
+      text = decodeURIComponent(rest.slice(2));
+    } catch (error) {
+      return failure('damaged', `the link is not percent-encoded: ${String(error)}`);
+    }
+    return readEnvelopeText(text);
+  }
   if (packing !== 'd.' && packing !== 'j.') {
     return failure('damaged', `unknown packing "${rest.slice(0, 1)}"`);
   }
@@ -173,11 +185,24 @@ export async function readShareLink(
 }
 
 function readEnvelope(bytes: Uint8Array): ReadShareLink {
+  let text: string;
+  try {
+    text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch (error) {
+    return failure('damaged', `the link is not UTF-8: ${String(error)}`);
+  }
+  return readEnvelopeText(text);
+}
+
+function readEnvelopeText(text: string): ReadShareLink {
   let value: unknown;
   try {
-    value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    value = JSON.parse(text);
   } catch (error) {
-    return failure('damaged', `the link's JSON does not read: ${String(error)}`);
+    return failure(
+      'damaged',
+      `the link's JSON does not read: ${String(error)}${bracketHint(text)}`,
+    );
   }
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return failure('damaged', 'the link does not hold an object');
@@ -191,6 +216,44 @@ function readEnvelope(bytes: Uint8Array): ReadShareLink {
     return failure('damaged', 'the name is not a string');
   }
   return { ok: true, name, model };
+}
+
+/**
+ * For JSON that does not parse: how its brackets are out of balance (outside strings), or `''`.
+ * A missing or extra closing bracket is the usual slip in a link written by hand (UX LG6), and
+ * the parser's position alone does not say which bracket.
+ */
+export function bracketHint(text: string): string {
+  const counts = new Map<string, number>();
+  let isInString = false;
+  let isEscaped = false;
+  for (const character of text) {
+    if (isInString) {
+      if (isEscaped) {
+        isEscaped = false;
+      } else if (character === '\\') {
+        isEscaped = true;
+      } else if (character === '"') {
+        isInString = false;
+      }
+    } else if (character === '"') {
+      isInString = true;
+    } else if ('{}[]'.includes(character)) {
+      counts.set(character, (counts.get(character) ?? 0) + 1);
+    }
+  }
+  const unbalanced: string[] = [];
+  for (const [open, close] of [
+    ['{', '}'],
+    ['[', ']'],
+  ] as const) {
+    const opened = counts.get(open) ?? 0;
+    const closed = counts.get(close) ?? 0;
+    if (opened !== closed) {
+      unbalanced.push(`${String(opened)} "${open}" but ${String(closed)} "${close}"`);
+    }
+  }
+  return unbalanced.length === 0 ? '' : `; it has ${unbalanced.join(' and ')}`;
 }
 
 function failure(reason: ShareLinkFailure, detail: string): ReadShareLink {
