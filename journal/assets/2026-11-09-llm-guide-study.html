@@ -402,8 +402,20 @@ https://ariadnensd.com/#ns1.d.fZLPSgMxEIdfZfidFNNi_QsL9QU89lj2kDWzbWo2Kcm0WspePf
 <section class="q" id="LG1">
 <h3><span class="tag">LG1</span>안내서의 자리와 언어</h3>
 <p>LLM이 <code>https://ariadnensd.com</code>을 받으면 첫 화면 HTML을 읽습니다. 지금은 "Loading…" 한 줄뿐입니다.</p>
+<blockquote><b>실제 사례 (2026-11-09, 메인테이너가 ChatGPT에게 같은 요청을 함):</b> "요청하신 AriadneNSD는 현재 페이지가 로딩 화면으로만 확인되어 제가 직접 다이어그램을 입력하거나 저장하지는 못했습니다."<br>알 수 있는 것 둘: ① ChatGPT는 첫 화면 HTML만 읽었고 <code>/llms.txt</code>를 찾아보지 않았다. ② 앱을 <b>조작</b>하려 했다. 그래서 첫 화면 HTML 안에 "조작하지 말고 공유 링크를 만들어 주라"는 말과 만드는 법의 요약이 바로 있어야 한다. 링크를 따라가지 않는 도구도 있기 때문이다.</blockquote>
 <div class="opts">
-<div class="opt rec"><h4><span class="n">1</span><span class="star">★</span> 영어 <code>/llms.txt</code> 하나 + 첫 화면 HTML이 가리킴</h4>
+<div class="opt rec"><h4><span class="n">4</span><span class="star">★</span> 1번 + 첫 화면 HTML 안에 짧은 안내를 바로</h4>
+<pre>&lt;!-- index.html, 앱이 뜨면 사라지는 자리 --&gt;
+&lt;section id="for-ai" hidden&gt;
+  For AI assistants: you cannot operate this editor.
+  Give the user a share link instead:
+  https://ariadnensd.com/#ns1.u.&lt;encodeURIComponent(
+    {"name":"x.ns.svg","model":&lt;model JSON&gt;})&gt;
+  Model JSON, blocks, rules, examples: /llms.txt
+  (a minimal example follows) …
+&lt;/section&gt;</pre>
+<p>사람의 화면에는 보이지 않고, HTML을 글로 읽는 도구에게만 보입니다. 예제 하나와 규칙 넷을 넣어 두 쪽(<code>hidden</code> 속성을 무시하는 도구, 따르는 도구) 모두에서 됩니다. 추천은 우선 이 넷째 안입니다(메인테이너의 ChatGPT 사례 뒤에 더함). 만들면 ChatGPT · Grok으로 다시 해 봅니다.</p></div>
+<div class="opt"><h4><span class="n">1</span> 영어 <code>/llms.txt</code> 하나 + 첫 화면 HTML이 가리킴</h4>
 <pre>&lt;!-- index.html --&gt;
 &lt;link rel="alternate" type="text/markdown"
       href="/llms.txt" title="Guide for AI assistants"&gt;
@@ -416,7 +428,7 @@ https://ariadnensd.com/#ns1.d.fZLPSgMxEIdfZfidFNNi_QsL9QU89lj2kDWzbWo2Kcm0WspePf
 <div class="opt"><h4><span class="n">2</span>영어 <code>/llms.txt</code> + 한국어 <code>/llms.ko.txt</code></h4><p>사람이 읽기는 좋지만, 같은 내용 둘을 맞춰 두어야 하고 LLM은 어느 쪽이든 잘 읽습니다.</p></div>
 <div class="opt"><h4><span class="n">3</span>사용법 안의 HTML 페이지만</h4><p><code>/manual/ko/ai.html</code>. 사람에게는 자연스럽지만 llms.txt 관례를 아는 도구가 찾지 못하고, HTML 둘레가 토큰을 먹습니다.</p></div>
 </div>
-<p class="why"><b>추천 까닭:</b> 영어는 모든 LLM이 가장 정확히 따르는 말이고, 필드 이름 · 예제가 이미 영어라 섞이지 않습니다. 실험의 모델들은 영어 안내서를 읽고 한국어 사용자에게 한국어로 답하며 블록 글자도 한국어로 썼습니다. 첫 화면이 가리키지 않으면 LLM은 <code>/llms.txt</code>를 찾아보지 않을 수 있습니다(관례일 뿐 표준이 아님). 크기는 약 9 KB로 한 번에 읽힙니다.</p>
+<p class="why"><b>추천 까닭 (4번):</b> ChatGPT 사례처럼 첫 화면만 읽는 도구에게는 가리키는 것만으로는 모자랍니다. 자세한 것은 <code>/llms.txt</code> 하나에만 두고, 첫 화면에는 그것으로도 링크를 만들 수 있는 요약만 둡니다. 아래는 1번과 공통인 까닭입니다.<br><b>공통:</b> 영어는 모든 LLM이 가장 정확히 따르는 말이고, 필드 이름 · 예제가 이미 영어라 섞이지 않습니다. 실험의 모델들은 영어 안내서를 읽고 한국어 사용자에게 한국어로 답하며 블록 글자도 한국어로 썼습니다. 첫 화면이 가리키지 않으면 LLM은 <code>/llms.txt</code>를 찾아보지 않을 수 있습니다(관례일 뿐 표준이 아님). 크기는 약 9 KB로 한 번에 읽힙니다.</p>
 </section>
 
 <section class="q" id="LG2">
