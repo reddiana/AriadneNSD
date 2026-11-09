@@ -115,6 +115,15 @@ details > summary { cursor: pointer; color: var(--rec); }
 <li>(덤) 모델 JSON의 <b>JSON Schema</b>: 도구 호출(구조화 출력)을 쓰는 에이전트용.</li>
 </ol>
 
+<h3><code>u</code> · <code>j</code> · <code>d</code>: 링크에 문서를 담는 방식</h3>
+<p>공유 링크는 <code>https://ariadnensd.com/#ns1.d.…</code>처럼 생겼습니다. <code>ns1</code>은 링크 형식의 판, 가운데 글자 하나가 <b>꾸림</b>(담는 방식), 그 뒤가 문서입니다. 셋 모두 안에 든 것은 같은 문서(모델 JSON)이고 담는 모양만 다릅니다.</p>
+<div class="table-wrap"><table>
+<tr><th>글자</th><th>뜻</th><th>링크의 모습</th><th>지금 앱</th><th>LLM이 손으로</th></tr>
+<tr><td><code>d</code></td><td><b>deflate</b>: 압축한 뒤 base64로</td><td><code>#ns1.d.fZLPSgMx…</code> (가장 짧음)</td><td>공유 링크 복사가 만드는 것. 읽음</td><td>못 만듦 (압축에 코드가 필요)</td></tr>
+<tr><td><code>j</code></td><td><b>JSON</b>: 압축 없이 base64로만</td><td><code>#ns1.j.eyJuYW1l…</code> (약 2배)</td><td>읽음 (압축을 못 하는 브라우저용)</td><td>어렵고 틀리기 쉬움</td></tr>
+<tr><td><code>u</code></td><td><b>URL 인코딩</b>: JSON을 그대로, 특수문자만 <code>%7B</code> 같은 글자로</td><td><code>#ns1.u.%7B%22name%22…</code> (약 3배)</td><td><b>아직 없음</b>, 새로 제안 (LG2)</td><td>만들 수 있음 (실험에서 확인)</td></tr>
+</table></div>
+
 <h3>추천하는 흐름</h3>
 <div class="flow">
   <div class="box"><b>1. 사용자 → LLM</b>"ariadnensd.com으로 버블 정렬을 그려 주세요"</div><div class="arrow">→</div>
