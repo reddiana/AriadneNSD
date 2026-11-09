@@ -203,11 +203,11 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | 자리 | 무엇 | 원본 |
 | --- | --- | --- |
-| `/llms.txt` | 영어 안내서 하나(약 10 KB, 마크다운). 링크를 만드는 법(봉투 `{"name","model"}` → `#ns1.u.` + `encodeURIComponent`, 손으로 인코딩할 글자와 괄호 수 확인), 모델 JSON과 블록 일곱 가지의 표, 규칙 넷(id, 빈 `body` 없음, 보인 키만, 문자열 이스케이프), 예제(최댓값 찾기와 그 링크, Case), 링크가 열리지 않을 때 "까닭"을 받아 고치는 법, 사용자가 준 링크를 읽는 법(`u` · `j` · `d`), 코드를 돌리면 `d`를 만드는 법, 큰 문서는 파일로 | 틀 `src/apps/web/guide/llms.txt`. 빌드(웹의 Vite 플러그인)가 값 목록의 자리(`{{textKinds}}` 등)를 core의 목록으로 채워 사이트 루트에 낸다. 개발 서버도 같은 주소로 준다 |
+| `/llms.txt` | 영어 안내서 하나(마크다운). 링크를 만드는 법(봉투 `{"name","model"}` → `#ns1.u.` + `encodeURIComponent`, 손으로 인코딩할 글자와 괄호 수 확인), 모델 JSON과 블록 일곱 가지의 표, 규칙 넷(id, 빈 `body` 없음, 보인 키만, 문자열 이스케이프), 예제(최댓값 찾기와 그 링크, Case), 링크가 열리지 않을 때 "까닭"을 받아 고치는 법, 사용자가 준 링크를 읽는 법(`u` · `j` · `d`), 코드를 돌리면 `d`를 만드는 법, 큰 문서는 파일로 | 틀 `src/apps/web/guide/llms.txt`. 빌드(웹의 Vite 플러그인)가 값 목록의 자리(`{{textKinds}}` 등)를 core의 목록으로 채워 사이트 루트에 낸다. 개발 서버도 같은 주소로 준다 |
 | `/model.schema.json` | 모델 JSON의 JSON Schema(draft 2020-12). 모양만 검사하고, 이 버전이 아는 값(텍스트 종류 · 테마 · 그림 문구의 언어)만 나열한다. 불변식(id는 한 번, 로컬 호출은 Method를, 접기 영역의 끝 블록, 빈 다이어그램)은 앱이 검사한다고 적는다. 안내서가 한 줄로 가리킨다 | `src/packages/core/schema/model.schema.json` (파서 곁에 둔다. 웹 빌드의 Vite 플러그인이 사이트 루트에 내고, 개발 서버도 같은 주소로 준다) |
 | 첫 화면 `index.html` | `<meta name="description">`(AI는 `/llms.txt`를 읽으라는 한 줄), `<link rel="alternate" type="text/markdown" href="/llms.txt">`, 그리고 `#root` 안의 `<section id="for-ai" hidden>`: "이 편집기는 조작할 수 없으니 공유 링크를 주라"는 말, 링크를 만드는 법의 요약, 규칙 넷, 아주 작은 예제(`abs(x)`의 모델과 링크), `/llms.txt`와 스키마의 주소 | `src/apps/web/index.html` (블록 종류의 목록은 빌드가 같은 방법으로 채운다) |
 
-- **첫 화면 안에 두는 까닭:** 첫 화면 HTML만 읽고 링크를 따라가지 않는 도구가 있다(2026-11-09, ChatGPT가 "로딩 화면만 확인되어" 그리지 못했다고 답함). 그래서 그 HTML 안에 링크를 만들 수 있는 요약을 바로 둔다. `hidden`이라 사람에게는 보이지 않고, 앱이 뜨면 React가 `#root`를 바꾸며 사라진다. 첫 내려받기는 gzip으로 약 2 KB 늘었다(213.9 → 215.9 KB, 그 가운데 `index.html`이 1.2 → 2.4 KB). `<link rel="alternate">`는 브라우저가 받지 않아 첫 내려받기에 세지 않는다(`scripts/check-size.mjs`).
+- **첫 화면 안에 두는 까닭:** 첫 화면 HTML만 읽고 링크를 따라가지 않는 도구가 있다(2026-11-09, ChatGPT가 "로딩 화면만 확인되어" 그리지 못했다고 답함). 그래서 그 HTML 안에 링크를 만들 수 있는 요약을 바로 둔다. `hidden`이라 사람에게는 보이지 않고, 앱이 뜨면 React가 `#root`를 바꾸며 사라진다. 그만큼 첫 내려받기가 늘지만 번들 사이즈 체크(5장)의 한도 안이다. `<link rel="alternate">`는 브라우저가 받지 않아 첫 내려받기에 세지 않는다(`scripts/check-size.mjs`).
 - **영어 하나:** 모든 LLM이 가장 정확히 따르는 말이고 필드 이름 · 예제가 이미 영어다. 실험에서 모델들은 영어 안내서를 읽고 한국어 사용자에게 한국어로 답하며 블록 글자도 한국어로 썼다. 메뉴 이름은 영어와 한국어 화면의 것을 함께 적는다.
 - **코드를 못 돌리는 AI와 `d` 링크:** 공유 링크 복사는 `d` 하나다([[ux-decisions#LG5. 사용자가 준 링크를 LLM이 읽는 길|LG5]]). 안내서는 코드를 돌리지 못하면 `d`의 내용을 짐작하지 말고 저장 파일(파일 › 저장, 모델 JSON이 `<metadata>` 안에 글로 있음)이나 모델 JSON을 청하라고 적는다.
 - **값 목록은 코드에서:** 안내서에 적는 값의 목록(블록 종류, `textKind` · `theme` · `headStyle` · `locale` · 헤더의 `kind` · `resultSymbol`의 값)은 손으로 적지 않고 틀의 자리로 둔다. 빌드가 core의 목록(`blockKinds` · `textKinds` · `themeIds` · `headStyles` · `locales` · `headKinds` · `resultSymbols`)으로 채운다(`src/apps/web/src/files/llms-guide.ts`). 형식이 고정된 값의 목록은 core의 `format/model-values.ts` 하나가 원본이고, `satisfies`로 모델의 타입과 맞춰 두어 종류를 더하고 목록을 잊으면 컴파일되지 않는다. 파서도 헤더의 `kind` · `headStyle` · `resultSymbol`을 이 목록으로 검사한다. 스키마의 `enum`은 손으로 적되, core의 테스트가 이 목록들과 같은지(순서까지) 본다.
@@ -222,20 +222,22 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 넘겨 준다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about`), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]])이 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 자리에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
 
-빌드 산출물(Vite, 2026-11-03)은 셋으로 나뉘어 내려옵니다.
+빌드 산출물(Vite)은 셋으로 나뉘어 내려옵니다.
 
-| 언제 | 무엇 | 크기 |
-| --- | --- | --- |
-| 페이지를 열 때 | JS 넷(React와 `core` · `editor` · 셸, 나중에 불러오는 PDF 작성기와 함께 쓰는 모듈 두 조각, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) | 531 KB + 66 KB + 8 KB + 13 KB (gzip 161 KB + 23 KB + 4 KB + 6 KB) |
-| 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) | 24 KB |
-| 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일 열 개(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 | 5 ~ 15 KB씩 |
-| 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각 37개(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] | 7 ~ 31 KB씩, 모두 617 KB |
-| 처음 저장 · 내보내기를 할 때(자동 저장이면 첫 편집 뒤) | 서브세팅 wasm(`hb-subset`) | 667 KB |
-| 〃 | 서브셋을 떠낼 번들 글꼴(TTF) | 1.34 MB |
-| 처음 PDF로 내보낼 때 | PDF 작성기와 글리프 읽기(번들 글꼴은 위의 것) | 11 KB (gzip 5 KB) |
-| 텍스트를 외곽선으로 저장하는 문서를 처음 저장할 때 | 글리프 읽기 | 4 KB (gzip 2 KB) |
+| 언제 | 무엇 |
+| --- | --- |
+| 페이지를 열 때 | JS 넷(React와 `core` · `editor` · 셸, 나중에 불러오는 PDF 작성기와 함께 쓰는 모듈 두 조각, 그리고 `fflate`. `fflate`는 `fonts`의 WOFF와 브라우저 문서의 zip이 함께 쓰는 조각) |
+| 〃 | 화면 글꼴의 조각 0(라틴 · 문장 부호 · 기호, woff2) |
+| 예제 모달을 열 때(첫 방문이면 바로) | 미리 그려 둔 예제의 썸네일(화면 언어의 것, WebP 그림). 페이지가 그리지 않고 브라우저가 이미지로 받아 그린다 |
+| 화면에 그 글자가 나올 때 | 화면 글꼴의 다른 조각(라틴 확장 · 그리스 · 키릴, 가나 · 자모, 한글) → [[0040-screen-font-slices\|ADR-0040]] |
+| 처음 저장 · 내보내기를 할 때(자동 저장이면 첫 편집 뒤) | 서브세팅 wasm(`hb-subset`) |
+| 〃 | 서브셋을 떠낼 번들 글꼴(TTF) |
+| 처음 PDF로 내보낼 때 | PDF 작성기와 글리프 읽기(번들 글꼴은 위의 것) |
+| 텍스트를 외곽선으로 저장하는 문서를 처음 저장할 때 | 글리프 읽기 |
 
-CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip, 지금 217 KB)이 230 KB 안인지 봅니다. 한도는 글꼴을 조각으로 나눈 뒤의 176 KB + 20%인 212 KB였고, 2026-11-04에 접기와 펴 보기가 들어와 첫 내려받기가 213 KB가 되어 230 KB로 올렸습니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올립니다.
+크기는 코드가 바뀔 때마다 달라지므로 이 문서에 적지 않습니다. 조각마다의 크기(원래 크기와 gzip)는 웹 빌드(`src/`에서 `pnpm --filter @ariadne-nsd/web build`)가 출력하고, 첫 방문에 내려받는 파일과 그 합은 번들 사이즈 체크(`node apps/web/scripts/check-size.mjs`, CI `check` job의 "번들 사이즈 체크" 단계)가 출력합니다.
+
+CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 조각 0, gzip)이 230 KB 안인지 봅니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올리고, 올린 경과는 그 스크립트의 머리 주석에 적습니다.
 
 > [!info] 미완성: 코드 스플리팅, 캐시 전략
 
@@ -264,7 +266,7 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 
 앱 주소에 `?perf`를 붙여 열면(`https://ariadnensd.com/?perf`) 편집기 대신 점검 모드가 뜹니다. 개발 환경이 없는 기기(오래된 노트북, 휴대폰)에서 사람이 인수 테스트 [[01-requirements#^at|AT-05]](블록 500개 문서에서 편집 응답, [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]])를 재는 페이지입니다. 개발 · 점검용이라 메뉴에서 가는 길은 없고 사용법에도 싣지 않습니다. 재는 법은 [[07-testing#5.1 기준 기기에서 AT-05 재기]]에 있습니다.
 
-- **불러오기:** `main.tsx`가 맨 앞에서 `?perf`를 보고, 그때만 점검 모드의 모듈(`src/apps/web/src/perf/`)을 동적 import로 불러옵니다. 첫 방문의 내려받기에는 주소를 보는 작은 함수만 듭니다(번들 사이즈 체크로 1 KB 늘어남). 점검 모드가 앱의 자리를 차지하면 `main.tsx`의 나머지는 실행되지 않습니다.
+- **불러오기:** `main.tsx`가 맨 앞에서 `?perf`를 보고, 그때만 점검 모드의 모듈(`src/apps/web/src/perf/`)을 동적 import로 불러옵니다. 첫 방문의 내려받기에는 주소를 보는 작은 함수만 듭니다. 점검 모드가 앱의 자리를 차지하면 `main.tsx`의 나머지는 실행되지 않습니다.
 - **화면:** 진짜 편집기(`EditorApp`, 앱과 같은 메뉴 · 툴바 · 그림) 위 오른쪽 아래에 패널 하나를 띄웁니다. 무엇을 재는지, 기준(명령마다 p95 100ms 이하), 다른 탭과 앱을 닫고 재는 동안 손대지 말라는 안내, 아무것도 저장하지 않는다는 말, "측정 시작" 버튼, 진행 막대, 결과입니다. 화면 언어는 사용자 설정을 따르고(영어 · 한국어), 글은 점검 모드만의 카탈로그(`perf-messages.ts`)에 있어 첫 방문에는 내려오지 않습니다. 모양은 편집기 UI의 것(모달 · 표 · 버튼, 화면 색 토큰)을 씁니다.
 - **문서:** 처리 블록 500개짜리 한 다이어그램을 스스로 만들어 엽니다. 만드는 함수(`large-document.ts`)는 브라우저 테스트 T-0007과 같은 것입니다.
 - **명령:** 8가지입니다. 처리 블록 넣기(`o`), 블록 지우기(`x`), 실행 취소(`u`), 다시 실행(`U`), 조건 블록으로 감싸기(`s i`), 아래로 이동(`Alt+j`), 블록 붙여넣기(`p`), 고친 글자 받아들이기(인라인 에디터에서 `Enter`). 문서의 앞(블록 2) · 가운데(250) · 끝(499)에서 명령마다 10번씩, 모두 30번 잽니다. 자리마다 앞의 2번은 웜업으로 버립니다. 시간을 재지 않는 준비 키(지우기 뒤의 실행 취소, `s`, `y y`, 인라인 에디터 열기)는 앞에 누르고, 한 번 잰 뒤에는 실행 취소로 같은 문서와 같은 선택으로 돌아갑니다(돌아가지 못하면 문서를 다시 엽니다).
