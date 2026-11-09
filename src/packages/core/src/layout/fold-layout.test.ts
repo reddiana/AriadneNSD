@@ -1,5 +1,5 @@
 // Layout and drawing of folded things, fold regions and opened call blocks (02-layout 1.6).
-import { describe, expect, it } from 'vitest';
+import { describe, expect, inject, it } from 'vitest';
 
 import type { Block, Call, Doc, FoldMark, Seq, View } from '../model/types';
 import { buildScene } from '../render/build-scene';
@@ -304,7 +304,8 @@ describe('opened call blocks and the time budget (QA-07, 03-architecture 7)', ()
       toSvg(buildScene(layout(doc), defaultTheme));
       best = Math.min(best, performance.now() - start);
     }
-    // 02-layout 4 measured 2,000 drawn blocks well under 50ms in a browser.
-    expect(best).toBeLessThan(100);
+    // 02-layout 4 measured 2,000 drawn blocks well under 50ms in a browser. Recording coverage
+    // slows the code down, so the time is checked by `pnpm test` only.
+    if (!inject('coverageRun')) expect(best).toBeLessThan(100);
   });
 });

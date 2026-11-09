@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, inject, it } from 'vitest';
 
 import type { Doc, TextKind } from '../model/types';
 import { textKinds } from '../text/syntax';
@@ -152,7 +152,8 @@ describe('render', () => {
       best = Math.min(best, performance.now() - start);
     }
     // 02-layout 4 measured about 1ms in a browser; this leaves room for slow CI machines.
-    expect(best).toBeLessThan(50);
+    // Recording coverage slows the code down, so the time is checked by `pnpm test` only.
+    if (!inject('coverageRun')) expect(best).toBeLessThan(50);
   });
 });
 

@@ -137,7 +137,7 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 - 벤치마크는 `pnpm test`에 들지 않습니다. `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 따로 돌립니다(`*.bench.ts`).
 - 지금 있는 문서 사이트의 빌드(`.github/workflows/pages.yml`)와는 따로 둡니다.
 - 커버리지(테스트가 실행한 코드 줄의 비율)는 `src/`에서 `pnpm coverage`로 잽니다. 패키지마다 단위 테스트(Vitest, V8)를 돌리고, 웹 E2E를 소스맵을 넣은 빌드로 돌려 Chromium의 JS 커버리지를 원래 소스 파일에 대어 본 뒤(`apps/web`의 `e2e:coverage`, `monocart-coverage-reports`), 둘을 줄마다 합칩니다. 어느 쪽이든 실행한 줄은 덮인 것으로 셉니다. 패키지마다의 표와, 테스트가 닿지 않은 줄이 많은 파일을 보여 줍니다.
-- 커버리지 하한: CI는 `coverage` job(`check`와 나란히)에서 `pnpm coverage:check`를 돌립니다. 패키지마다(`core` · `editor` · `fonts` · `apps/web`) 합친 줄 커버리지가 하한 90%보다 낮거나 테스트가 하나라도 실패하면 실패합니다. 리팩토링이 커버리지를 낮추지 않게 하려는 것입니다. 하한은 저절로 오르지 않으며, 커버리지가 올라 굳으면 `scripts/coverage.mjs`의 `floors`에서 손으로 올릴 수 있습니다. 커버리지를 재는 동안에는 페이지가 느려지므로, 시간을 재는 E2E(AT-05)는 `pnpm e2e`에서만 돕니다.
+- 커버리지 하한: CI는 `coverage` job(`check`와 나란히)에서 `pnpm coverage:check`를 돌립니다. 패키지마다(`core` · `editor` · `fonts` · `apps/web`) 합친 줄 커버리지가 하한 90%보다 낮거나 테스트가 하나라도 실패하면 실패합니다. 리팩토링이 커버리지를 낮추지 않게 하려는 것입니다. 하한은 저절로 오르지 않으며, 커버리지가 올라 굳으면 `scripts/coverage.mjs`의 `floors`에서 손으로 올릴 수 있습니다. 커버리지를 재는 동안에는 코드가 느려지므로, 시간을 재는 E2E(AT-05)는 `pnpm e2e`에서만 돌고, 시간을 재는 단위 테스트(T-0487 · T-1126, QA-07)는 커버리지를 기록할 때 시간 단언만 건너뜁니다(`packages/core/vitest.config.ts`의 `coverageRun`).
 
 ### 5.1 기준 기기에서 AT-05 재기
 
