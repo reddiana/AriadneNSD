@@ -18,7 +18,7 @@ updated: 2026-11-10
 
 ## 1. 도구가 강제하는 것
 
-모든 검사는 `src/`에서 `pnpm check` 하나로 돌고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[07-testing#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
+모든 검사는 `src/`에서 `pnpm check` 하나로 돌고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트 → 뽑아 만든 문서가 낡지 않았는지 → 13장), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[07-testing#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
 
 | 도구 | 무엇을 강제하나 | 설정 파일 (`src/` 기준) | 언제 |
 | --- | --- | --- | --- |
@@ -227,11 +227,36 @@ feat(core): 감싸기 명령(R-EDIT-06)
 | 함께 바뀌는 곳의 검사 | "이것을 바꾸면 저것도 본다"는 경로의 짝을 표로 두고, 한쪽만 바뀐 커밋을 검사가 알린다 | 커밋 · CI |
 | 사용자처럼 시험 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 주고 그림을 그리게 해, 낸 링크를 파서로 검사한다(시안 M56에서 한 실험) | 출시 전 |
 
-- 문서를 고칠 필요가 없는 변경도 있습니다. 그때는 검사를 끄지 말고, 넘기는 까닭을 커밋 메시지에 적습니다.
-- 뽑아 만든 파일은 손으로 고치지 않습니다. 원본을 고칩니다.
+- 뽑아 만든 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 뽑아 만든 문서(테스트 목록, 아래의 짝 표)가 원본과 다르면 `pnpm check`가 실패합니다.
 
-> [!info] 미완성: 함께 바뀌는 곳의 표
-> 짝의 표와 검사의 자리(문서 검사 훅, CI)는 아직 정하지 않았습니다. 코드와 문서를 훑어 짝을 찾는 중입니다(2026-11-10).
+### 13.1 함께 바뀌는 곳의 짝
+
+"이것이 바뀌면" 쪽의 파일이 바뀌었는데 "이것도 본다" 쪽의 파일이 하나도 바뀌지 않으면 검사가 알립니다. 원본은 `src/scripts/co-change.json`이고, 아래 표는 검사기 `src/scripts/co-change.mjs`가 그 파일에서 만들어 넣습니다(`--write`). `pnpm check`가 표가 낡았는지와 규칙의 경로가 실제 파일을 가리키는지 봅니다(`--check`).
+
+- **언제:** CI가 push와 Pull Request의 커밋 범위 전체를 한 번에 봅니다. 그래서 코드를 고친 뒤 같은 push의 다음 커밋에서 문서를 고쳐도 됩니다. 지금은 경고(`::warning`)만 하고 실패로 하지 않습니다. Claude Code는 `git commit`을 실행할 때 스테이지한 변경을 봅니다(훅 `.claude/hooks/co-change-commit.mjs`). 손으로는 `src/`에서 `node scripts/co-change.mjs`(스테이지한 변경)나 `node scripts/co-change.mjs --range A..B`(커밋 범위)입니다.
+- **테스트는 빼고:** 테스트 파일(`*.test.ts` · `*.spec.ts` · `*.bench.ts`, `e2e/` 아래)은 "이것이 바뀌면"에 세지 않습니다.
+- **넘기기:** 다른 쪽을 고칠 필요가 없는 변경도 있습니다. 그때는 규칙을 고치거나 검사를 끄지 말고, 커밋 메시지 끝에 꼬리말로 까닭을 적습니다. 규칙 하나에 한 줄이고, 까닭이 없거나 `*`로 모두 넘기면 그 꼬리말이 잘못이라고 알립니다.
+
+```text
+Co-change-skip: C2 — 명세에 링크만 더함
+```
+
+<!-- co-change:start -->
+
+| ID | 이것이 바뀌면 | 이것도 본다 | 까닭 |
+| --- | --- | --- | --- |
+| C1 | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/{model-json,parse-model,svg-file,migrations,model-element,model-values}.ts` | [[01-file-format]]<br>[[01-model]]<br>`src/packages/core/schema/model.schema.json`<br>`src/apps/web/guide/llms.txt` | 모델과 파일 형식의 코드가 바뀌면 명세 · 모델 설계 · JSON Schema · AI용 안내서가 같은 것을 말하는지 본다. 예제와 값 목록은 테스트가 보지만 글로 적은 규칙은 사람이 본다 |
+| C2 | [[01-file-format]]<br>`src/packages/core/schema/model.schema.json` | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/**` | 명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 넘긴다) |
+| C3 | `src/packages/editor/src/input/keys.ts` | [[03-keymap]]<br>`src/apps/manual/generated/keys-*.html` | 키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 돌지 않음)는 사람이 본다 |
+| C4 | `src/packages/editor/src/commands/{spec,registry,editor-commands}.ts`<br>`src/packages/editor/src/ui/{menu-model.ts,editor-app.tsx,command-ids.ts}`<br>`src/apps/web/src/shell/web-shell.ts` | [[03-editor]]<br>`src/apps/manual/pages/ref-*.html` | 메뉴와 커맨드 팔레트는 레지스트리에서 그려지지만, 편집기 설계의 메뉴 표와 사용법의 명령 목록은 손으로 적는다 |
+| C5 | `src/apps/web/src/files/share-{link,command}.ts` | [[06-web]]<br>`src/apps/web/guide/llms.txt`<br>[[0043-share-link-in-fragment\|ADR-0043]] | 공유 링크의 꼴은 웹 설계 · AI용 안내서 · ADR-0043이 함께 적는다. 링크 예제는 doctest가 열지만 설명은 사람이 본다 |
+| C6 | `src/apps/web/scripts/check-size.mjs` | [[06-web]]<br>[[07-testing]] | 번들 사이즈의 한도는 웹 설계 5장과 테스트 전략 5장에도 적혀 있다 |
+| C7 | `src/{eslint,prettier}.config.js`<br>`src/.prettierignore`<br>`src/.dependency-cruiser.cjs`<br>`src/tsconfig.base.json`<br>`.editorconfig` | [[07-coding-guide]] | 도구의 설정은 코딩 가이드 1장에 정의하고 설정 파일은 그 정의대로 만든다. 둘은 한 커밋으로 바꾼다 |
+| C8 | `src/scripts/coverage.mjs`<br>`.github/workflows/ci.yml` | [[07-testing]] | CI가 무엇을 언제 돌리는지와 커버리지의 하한은 테스트 전략 5장에 있다 |
+| C9 | `CLAUDE.md` | [[how-we-work]] | CLAUDE.md의 일하는 규칙은 방문자에게 보이는 how-we-work가 원본이다. 규칙을 바꾸면 거기도 맞춘다 |
+| C10 | `src/apps/web/src/shell/messages.ts`<br>`src/packages/editor/src/{i18n,ui}/messages.ts`<br>`src/packages/core/src/i18n/messages.ts` | [[02-interaction-rules]]<br>[[03-editor]]<br>[[06-web]]<br>`src/apps/manual/pages/**` | 설계 문서와 사용법이 화면의 문구를 그대로 인용한다. 언어마다의 키와 자리표시는 카탈로그 테스트가 보지만 인용은 사람이 본다 |
+
+<!-- co-change:end -->
 
 ## 미결정 사항
 

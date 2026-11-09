@@ -7,11 +7,14 @@
     "node": ">=24"
   },
   "scripts": {
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm test && pnpm test-list:check",
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm test && pnpm test-list:check && pnpm co-change:check",
     "coverage": "node scripts/coverage.mjs",
     "coverage:check": "node scripts/coverage.mjs --check",
     "test-list": "node scripts/test-list.mjs",
     "test-list:check": "node scripts/test-list.mjs --check",
+    "co-change": "node scripts/co-change.mjs",
+    "co-change:write": "node scripts/co-change.mjs --write",
+    "co-change:check": "node scripts/co-change.mjs --check",
     "typecheck": "pnpm -r --parallel typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",

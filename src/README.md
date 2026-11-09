@@ -57,11 +57,12 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 | ----------------------------------------------- | ----------------------------------------------------------- |
 | `pnpm dev`                                      | 웹 앱의 개발 서버(http://localhost:5173)                           |
 | `pnpm build`                                    | 웹 앱을 `apps/web/dist/`에 빌드                                   |
-| `pnpm check`                                    | 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트. CI도 이것을 실행함            |
+| `pnpm check`                                    | 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트 → 뽑아 만든 문서(테스트 목록 등)가 낡지 않았는지. CI도 이것을 실행함 |
 | `pnpm test`                                     | 단위 테스트만 (`pnpm --filter @ariadne-nsd/core test`처럼 패키지 하나만도) |
 | `pnpm e2e`                                      | 웹 앱을 빌드해 Chromium으로 E2E                                     |
 | `pnpm coverage`                                 | 단위 테스트와 E2E를 커버리지와 함께 돌려 패키지마다의 줄 커버리지(둘을 합침)를 보여 줌 |
 | `pnpm coverage:check`                           | 위와 같고, 한 패키지라도 90%보다 낮거나 테스트가 실패하면 실패. CI의 `coverage` job이 실행함 |
+| `pnpm co-change`                                | 스테이지한 변경에서 함께 바뀌어야 하는 곳의 짝을 검사(`--range A..B`로 커밋 범위, → 코딩 가이드 13.1) |
 | `pnpm format`                                   | Prettier로 코드 포맷을 맞춤                                         |
 | `pnpm lint` · `pnpm typecheck` · `pnpm deps`    | 검사를 하나씩                                                     |
 | `pnpm --filter @ariadne-nsd/core golden:update` | 골든 파일을 다시 만듦(의도한 변경일 때만)                                    |
