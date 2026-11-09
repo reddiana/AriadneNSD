@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-11-01
+updated: 2026-11-09
 ---
 
 # 아키텍처 개요
@@ -443,6 +443,9 @@ sequenceDiagram
 
 라이브러리 없이 직접 만드는 것: 문서 모델과 실행 취소(불변 문서 → [[0029-immutable-document-undo\|ADR-0029]]), JSON 직렬화([[0007-json-serialization\|ADR-0007]]), 레이아웃([[0037-two-pass-full-layout\|ADR-0037]]), SVG 렌더링([[0030-swappable-drawing\|ADR-0030]]), 구문 강조의 토크나이저([[0032-token-highlighting\|ADR-0032]]), 메시지 카탈로그(5장의 다국어). 모두 `core` 또는 `editor` 안에 있습니다. `core`는 브라우저 API와 DOM에 기대지 않습니다(3.3).
 
+> [!question] 미결정
+> - 데스크톱 프레임워크(Tauri / Electron) → [[0009-desktop-framework|ADR-0009]]
+
 ### 8.2 개발 도구
 
 배포되지 않고 개발 · 테스트 · 빌드에만 씁니다. 쓰는 법은 [[07-testing]]에 있습니다.
@@ -462,19 +465,6 @@ sequenceDiagram
 | 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | 〃 |
 | 린트 · 포맷 | ESLint 10(typescript-eslint 8) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
-
-### 8.3 문서와 저장소의 도구
-
-제품과 상관없이 이 저장소의 문서를 쓰고 배포하는 데 씁니다.
-
-| 할 일 | 도구 | 자리 |
-| --- | --- | --- |
-| 문서 읽기 · 편집 | Obsidian(속성, 위키링크, 콜아웃), Mermaid | `docs/` `atelier/` `journal/` `til/` |
-| 문서 사이트 | Quartz v4.5.2 (Node 22에서 빌드) | `site/`, `.github/workflows/pages.yml` → [[dr-0013-publish-docs-github-pages\|DR-0013]] |
-| 문서 검사 훅 · 스파이크 스크립트 | Python 3 | `.claude/hooks/doc-check.py`, `journal/assets/` |
-
-> [!question] 미결정
-> - 데스크톱 프레임워크(Tauri / Electron) → [[0009-desktop-framework|ADR-0009]]
 
 ## 9. 결정 목록
 

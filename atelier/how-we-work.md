@@ -2,7 +2,7 @@
 title: 일하는 방식
 tags:
   - plan
-updated: 2026-11-03
+updated: 2026-11-09
 ---
 
 # 일하는 방식
@@ -81,6 +81,13 @@ sequenceDiagram
 - **요구사항은 ID를 받습니다.** `R-WEB-02`처럼 영역과 번호를 붙이고, ID는 바뀌지 않습니다. 철회한 것은 [[requirement-changes|요구사항 변경 기록]]으로 옮깁니다 → [[dr-0016-requirement-ids|DR-0016]]
 - **정하지 않은 것도 밝힙니다.** `docs/`에는 아직 설계하지 않은 자리와 정하지 않은 물음을 콜아웃이나 "미결정 사항" 절에 적어, 읽는 사람이 어디까지 정해졌는지 알게 합니다.
 - **사람이 읽는 형식:** 메인테이너는 모든 문서를 Obsidian으로 읽습니다. 그림은 Mermaid나 이미지로 그리고, 같은 문서를 사이트(https://ariadnensd.com/about)에도 펴냅니다 → [[dr-0013-publish-docs-github-pages|DR-0013]]
+- **문서의 도구:** 제품과 상관없이 이 저장소의 문서를 쓰고 펴내는 데 쓰는 도구입니다.
+
+| 할 일 | 도구 | 자리 |
+| --- | --- | --- |
+| 문서 읽기 · 편집 | Obsidian(속성, 위키링크, 콜아웃), Mermaid | `docs/` `atelier/` `journal/` `til/` |
+| 문서 사이트 | Quartz v4.5.2 (Node 22에서 빌드) | `site/`, `.github/workflows/pages.yml` → [[dr-0013-publish-docs-github-pages\|DR-0013]] |
+| 문서 검사 훅 · 스파이크 스크립트 | Python 3 | `.claude/hooks/doc-check.py`, `journal/assets/` |
 
 ## 4. 그림으로 묻기
 
