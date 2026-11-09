@@ -141,6 +141,11 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## 저장소 손질
 
+- [ ] "레인"이라는 말을 풀어 쓰기: [[ux-decisions]]의 절 이름 다섯(과 그리로 가는 링크: [[outbox]] · [[06-web]] · ux-decisions의 표), [[status]] · [[backlog]] · [[defects]]의 글. `til/git-worktree`와 `journal/learning-claude-code`는 처음 나오는 곳에 "레인(lane): 나란히 가는 작업 줄" 풀이만. 세션 기록 · 타임라인은 그대로 (2026-11-10, 메인테이너: "네, 바꿔 주세요.")
+- [ ] 출시 전 점검에 "새 LLM에게 `/llms.txt`만 주고 그리게 해 파서로 검사"를 더하기 → [[07-testing#5. 도구와 CI]], [[07-coding-guide#13. 문서와 코드의 정합성]]
+- [ ] 함께 바뀌는 곳의 표와 검사(문서 검사 훅 또는 CI)를 만들기. 조사 결과로 초안을 메인테이너에게 보임 → [[07-coding-guide#13. 문서와 코드의 정합성]]
+- [ ] 라이선스 꼬리말이 없는 시안 21개(2026-10-22 ~ 11-03의 study · template)에 꼬리말을 넣을지 보기(2026-11-09 M56 에이전트가 발견, `journal/assets/2026-10-14-add-license-note.py`)
+- [ ] 시안 M56의 HTML에 Claude가 바로 더한 것(꾸림의 표, LG1의 ChatGPT 사례와 4번)을 만드는 스크립트 `journal/assets/2026-11-09-llm-guide-build.mjs`에도 넣기
 - [ ] 밤사이 레인의 worktree들(`.claude/worktrees/agent-*`, `wrapup-05`)과 그 브랜치를 정리한다. 세 개는 잠겨 있다(`git worktree list`). 모두 `main`에 합쳐졌는지 확인한 뒤 `git worktree remove`와 브랜치 삭제
 
 ## 출시 무렵과 그 뒤
