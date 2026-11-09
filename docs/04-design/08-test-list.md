@@ -20,11 +20,11 @@ status: 생성됨
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 5 | 45 | 225 | - | 275 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 161 | - | 196 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 28 | 43 | - | 93 |
-| [[#5. 파일\|파일]] | 17 | 154 | 228 | - | 399 |
+| [[#5. 파일\|파일]] | 17 | 154 | 229 | - | 400 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 148 | - | 150 |
 | [[#7. 성능\|성능]] | 2 | - | 12 | 5 | 19 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 9 | - | 9 |
-| 합계 | 79 | 257 | 826 | 5 | 1167 |
+| 합계 | 79 | 257 | 827 | 5 | 1168 |
 
 ## 읽는 법
 
@@ -1129,7 +1129,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 399개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 400개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1728,13 +1728,14 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/node/model-schema.test.ts`
 
-다른 AI와 에이전트를 위해 `/model.schema.json`에 두는 모델 JSON의 JSON Schema(R-WEB-10, UX LG3). Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-10]], [[ux-decisions|UX LG3]].
+다른 AI와 에이전트를 위해 `/model.schema.json`에 두는 모델 JSON의 JSON Schema(R-WEB-10, UX LG3). Vitest · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-10]], [[ux-decisions|UX LG3]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1141 | 골든 파일의 모델은 모두 파서를 통과하듯 스키마도 통과한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
 | T-1142 | 스키마의 값 목록은 core의 목록과 같고 순서도 같다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
 | T-1143 | 파서가 거절하는 모양은 스키마도 거절한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
+| T-1171 | 스키마가 보지 못하는 규칙(02-model-schema 3장)을 어긴 모델은 스키마를 통과하고 파서는 거절한다. 거꾸로 뒤의 판의 테마 이름은 파서가 받고 스키마는 거절한다 | [[01-requirements#^r-web\|R-WEB-10]], [[ux-decisions\|UX LG3]] |
 
 ^t-packages-core-node-model-schema-test-ts
 

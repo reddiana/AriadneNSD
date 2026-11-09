@@ -899,6 +899,7 @@
   "Page events (06-web 1, 7)": "페이지 이벤트(06-web 1, 7)",
   "Pages for print and PDF (R-EXP-03)": "인쇄와 PDF의 페이지",
   "parses ids and rejects other forms": "id를 읽고 다른 꼴은 거절한다",
+  "passes the models whose rules it cannot see, which the parser refuses (02-model-schema 3)": "스키마가 보지 못하는 규칙(02-model-schema 3장)을 어긴 모델은 스키마를 통과하고 파서는 거절한다. 거꾸로 뒤의 판의 테마 이름은 파서가 받고 스키마는 거절한다",
   "paste on an empty block takes its place": "빈 블록에 붙여넣으면 그 자리를 차지한다",
   "paste puts copies with new ids after the selected block": "붙여넣기는 새 id의 사본을 선택한 블록 뒤에 둔다",
   "paste refuses an empty clip and a missing target": "붙여넣기는 빈 클립과 없는 대상을 거절한다",

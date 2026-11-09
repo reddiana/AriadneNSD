@@ -15,7 +15,7 @@ superseded-by:
 > - 2026-11-01 (세션 04): 테스트 아키텍처(유형 · 테스트 더블 · 추적)를 [[07-testing#1. 테스트 아키텍처]]에 적었다. 테스트 목록 [[08-test-list]]은 스크립트(`src/scripts/test-list.mjs`)가 테스트 이름에서 만들고 `pnpm check`가 낡으면 실패한다. Playwright로 휴대폰 흉내(화면 · 터치)와 CPU · 망 감속(Chrome DevTools Protocol)도 쓴다
 > - 2026-11-03: 테스트마다 ID(`T-0001`)를 이름 맨 앞에 두고, 테스트 목록은 기능 영역 · 파일마다의 표로, 한국어 번역(`src/scripts/test-list-ko.json`)으로 적는다 → [[dr-0022-test-ids|DR-0022]]
 > - 2026-11-10: 개발 도구에 Ajv 8(JSON Schema 검사)을 더했다. 테스트에서만 쓴다(`core`, `apps/web`의 devDependency). 웹 빌드의 Vite 플러그인이 다른 AI를 위한 안내서를 core의 값 목록으로 채워 내고, 테스트가 문서 속 예제를 실제 파서로 연다(doctest) → [[07-testing#3.1 문서 속 예제(doctest)와 값 목록]]
-> - 2026-11-10: 문서와 코드의 정합성을 도구로 지킨다([[07-coding-guide#13. 문서와 코드의 정합성]]): 함께 바뀌는 곳의 짝을 검사하는 스크립트(`src/scripts/co-change.mjs`, CI의 `co-change` job은 경고만), 코드와 문서의 값을 견주는 테스트(`docs-agree.test.ts`), 테스트 이름의 ID가 문서에 정의되었는지의 검사(`test-list.mjs`). 커버리지 도구(`@vitest/coverage-v8`, `monocart-coverage-reports`)를 [[03-architecture#8.2 개발 도구]]에 올렸다
+> - 2026-11-10: 문서와 코드의 정합성을 도구로 지킨다([[07-coding-guide#13. 문서와 코드의 정합성]]): 함께 바뀌는 곳의 짝을 검사하는 스크립트(`src/scripts/co-change.mjs`, CI의 `co-change` job은 경고만), 코드와 문서의 값을 견주는 테스트(`docs-agree.test.ts`), 모델 JSON 스키마에서 만드는 문서([[02-model-schema]], `src/scripts/model-schema-doc.mjs`), 테스트 이름의 ID가 문서에 정의되었는지의 검사(`test-list.mjs`). 커버리지 도구(`@vitest/coverage-v8`, `monocart-coverage-reports`)를 [[03-architecture#8.2 개발 도구]]에 올렸다
 
 > [!info] 누가 무엇을 정했나
 > 시험 파일의 자리(T1), 코드 검사 도구(T2), 빌드 도구(T3)는 메인테이너가 시안 M40에서 골랐다(2026-10-25: "T1: 1 / T2: 1 / T3: 1", 모두 Claude의 추천). 시험 도구(Vitest, fast-check, Playwright, dependency-cruiser)는 품질 속성 시나리오에서 Claude가 후보로 적었고(2026-10-22), 2026-10-25에 확인을 받았다.

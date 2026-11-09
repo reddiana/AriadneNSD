@@ -116,6 +116,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 
 - **예제:** `apps/web/src/files/doc-examples.test.ts`가 `/llms.txt`, 첫 화면 `index.html`의 AI용 안내, 파일 형식 명세(`docs/05-spec/`의 모든 문서)에서 ```` ```json ```` 블록과 공유 링크(`ns1.u.` · `j` · `d`)를 꺼내 앱의 `parseModel`(링크는 `readShareLink`)로 열고 JSON Schema로도 검사합니다. 블록 하나만 든 조각은 모델로 감싸 엽니다. 검사하지 않을 블록(`…`가 든 개요)은 바로 앞 줄에 `<!-- doctest: skip: 까닭 -->`을 달고, 달지 않은 블록이 열리지 않으면 실패합니다 → [[06-web#3.1 LLM · 에이전트를 위한 안내서]]
 - **값 목록:** 안내서의 값 목록(블록 종류, `textKind` · `theme` · `headStyle` · `locale` 등의 값)은 빌드가 core의 목록으로 채우고, 테스트도 채운 결과를 봅니다. JSON Schema의 `enum`은 `core/node/model-schema.test.ts`가 core의 목록과 같은지 확인하고, 골든 파일의 모델이 모두 스키마를 통과하는지도 봅니다.
+- **스키마의 문서:** [[02-model-schema|모델 JSON 스키마]]는 `src/scripts/model-schema-doc.mjs`가 스키마와 그 한국어 설명(`model.schema.ko.json`)에서 만들고, `pnpm check`가 낡았거나 설명이 빠졌으면 실패합니다. 그 문서의 "스키마가 보지 못하는 규칙"마다 `core/node/model-schema.test.ts`가 스키마는 통과하고 파서는 거절하는 모델을 만들어 봅니다.
 
 ## 4. MVP의 인수 테스트
 

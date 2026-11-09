@@ -125,4 +125,70 @@ describe('model JSON Schema', () => {
       expect(validate(model), `change ${String(index)}`).toBe(false);
     }
   });
+
+  it('T-1171 · R-WEB-10 · UX LG3: passes the models whose rules it cannot see, which the parser refuses (02-model-schema 3)', () => {
+    const process = (id: string, text = 'x') => ({ id, kind: 'process', text });
+    const model = (diagrams: unknown[]) => ({
+      format: 'ariadne-nsd',
+      version: 1,
+      settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
+      diagrams,
+      view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
+    });
+    const withFolds = (folds: unknown[]) =>
+      model([{ id: 'd1', body: [process('b1'), process('b2'), process('b3')], folds }]);
+    const call = {
+      id: 'b2',
+      kind: 'call',
+      target: { kind: 'local', diagram: 'd1' },
+      args: '',
+      result: '',
+    };
+    const cases: ReadonlyArray<readonly [string, unknown]> = [
+      ['an id used twice (3)', model([{ id: 'd1', body: [process('b1'), process('b1')] }])],
+      [
+        'a Case without a branch (4)',
+        model([{ id: 'd1', body: [{ id: 'b1', kind: 'case', text: 'x', arms: [] }] }]),
+      ],
+      [
+        'a fold over a block of another sequence (5)',
+        withFolds([{ id: 'f1', first: 'b1', last: 'b9' }]),
+      ],
+      ['a fold that ends before it starts (5)', withFolds([{ id: 'f1', first: 'b3', last: 'b1' }])],
+      [
+        'two folds that cross (5)',
+        withFolds([
+          { id: 'f1', first: 'b1', last: 'b2' },
+          { id: 'f2', first: 'b2', last: 'b3' },
+        ]),
+      ],
+      [
+        'two folds over the same blocks (5)',
+        withFolds([
+          { id: 'f1', first: 'b1', last: 'b2' },
+          { id: 'f2', first: 'b1', last: 'b2' },
+        ]),
+      ],
+      [
+        'a local call to a diagram that is not a Method (6)',
+        model([{ id: 'd1', head: { kind: 'event', text: 'e' }, body: [process('b1'), call] }]),
+      ],
+      [
+        'a blank diagram beside another (7)',
+        model([
+          { id: 'd1', body: [process('b1')] },
+          { id: 'd2', body: [process('b2', '')] },
+        ]),
+      ],
+    ];
+    for (const [what, value] of cases) {
+      expect(errorsOf(value), what).toBe('');
+      expect(parseModelJson(JSON.stringify(value)).ok, what).toBe(false);
+    }
+    // The other way: the parser keeps a value of a newer version that the schema does not list.
+    const newer = model([{ id: 'd1', body: [process('b1')] }]);
+    newer.settings.theme = 'sepia';
+    expect(parseModelJson(JSON.stringify(newer)).ok).toBe(true);
+    expect(validate(newer)).toBe(false);
+  });
 });

@@ -1,0 +1,192 @@
+{
+  "document": {
+    "title": "문서",
+    "about": "모델 JSON의 맨 위 객체입니다. 저장 파일의 `<ans:document>` 안에, 공유 링크에는 봉투의 `model`로 담깁니다.",
+    "fields": {
+      "format": "형식의 이름. 늘 `\"ariadne-nsd\"`",
+      "version": "형식 버전. 이 판은 1이다. 더 높으면 앱이 새 판을 받으라고 알리고, 0은 프로토타입의 파일이라 열지 않는다",
+      "settings": "문서 설정",
+      "diagrams": "다이어그램의 목록. 그리는 순서다",
+      "view": "뷰 상태. 실행 취소의 대상이 아니다"
+    }
+  },
+  "settings": {
+    "title": "settings (문서 설정)",
+    "about": "문서와 함께 저장되어 파일을 받은 사람에게도 같게 보이는 설정입니다.",
+    "fields": {
+      "textKind": "블록 텍스트의 언어. 구문 강조의 색만 정하고 글꼴과 레이아웃은 바꾸지 않는다",
+      "theme": "테마의 이름. 색 값은 적지 않는다",
+      "headStyle": "헤더를 그리는 모양: 다이어그램 위의 제목처럼(`title`), 또는 모양으로(`shape`)",
+      "locale": "편집기가 그림에 적는 문구(참 · 거짓, default 등)의 언어. 없으면 연 사람의 화면 언어로 읽는다",
+      "textOutlines": "텍스트를 외곽선으로 저장한다. `true`일 때만 적는다"
+    }
+  },
+  "diagram": {
+    "title": "다이어그램",
+    "about": "헤더 하나(없을 수 있음)와 본문 블록들입니다.",
+    "fields": {
+      "id": "다이어그램의 id",
+      "head": "헤더. 헤더가 없는 다이어그램은 이 키를 적지 않는다",
+      "body": "본문의 블록들. 위에서 아래로 그린다",
+      "folds": "본문 줄의 접기 영역. 비면 적지 않는다"
+    }
+  },
+  "head": {
+    "title": "head (헤더)",
+    "about": "다이어그램의 머리입니다. Event는 일이 일어날 때의 흐름, Method는 호출 블록이 부를 수 있는 흐름입니다.",
+    "fields": {
+      "kind": "헤더의 종류",
+      "text": "헤더의 이름. Method면 그것을 부르는 호출 블록이 이 이름을 보인다"
+    }
+  },
+  "view": {
+    "title": "view (뷰 상태)",
+    "about": "문서를 어떻게 보고 있었는지입니다. 문서의 id를 약하게 가리켜, 없는 id가 있어도 깨진 파일이 아닙니다. 새 문서는 `{\"folded\":[],\"opened\":[],\"bands\":true,\"resultSymbol\":\"←\"}`입니다.",
+    "fields": {
+      "folded": "접힌 것(접기 영역, 펴 보인 곳의 접기 영역, If · Case의 분기, 반복 블록)의 id",
+      "opened": "그 자리에서 펴 보인 호출 블록의 경로. 바깥 호출 블록부터 안쪽으로 적는다",
+      "bands": "접기 영역 · 펴 보기의 이름 띠를 보이는가",
+      "resultSymbol": "호출 블록에서 결과와 호출 사이에 그리는 기호"
+    }
+  },
+  "block": {
+    "title": "블록",
+    "about": "`kind`로 가르는 다섯 꼴 가운데 하나입니다. 블록의 배열(`body`)은 비지 않습니다: 빈 분기에도 빈 처리 블록이 하나 있습니다.",
+    "fields": {}
+  },
+  "block.process": {
+    "title": "처리 블록",
+    "about": "글 한 줄 이상을 적는 상자입니다.",
+    "fields": {
+      "id": "블록의 id",
+      "kind": "블록의 종류",
+      "text": "블록의 텍스트. 빈 블록은 `\"\"`"
+    }
+  },
+  "block.if": {
+    "title": "If 블록",
+    "about": "조건과 두 분기입니다.",
+    "fields": {
+      "id": "블록의 id",
+      "kind": "블록의 종류",
+      "text": "조건",
+      "yes": "조건이 참일 때의 분기",
+      "no": "조건이 거짓일 때의 분기"
+    }
+  },
+  "block.case": {
+    "title": "Case 블록",
+    "about": "가를 값과 값마다의 분기, 그리고 default 분기입니다.",
+    "fields": {
+      "id": "블록의 id",
+      "kind": "블록의 종류",
+      "text": "가를 값",
+      "arms": "값마다의 분기. 왼쪽부터 그린다",
+      "otherwise": "default 분기. 없으면 적지 않는다"
+    }
+  },
+  "block.loop": {
+    "title": "반복 블록 (While · Do-While · For)",
+    "about": "조건 칸과 반복할 블록들입니다. While은 조건 칸이 위, Do-While은 아래입니다.",
+    "fields": {
+      "id": "블록의 id",
+      "kind": "블록의 종류",
+      "text": "조건(For는 반복의 머리)",
+      "body": "반복할 블록들",
+      "folds": "본문 줄의 접기 영역. 비면 적지 않는다"
+    }
+  },
+  "block.call": {
+    "title": "호출 블록",
+    "about": "다른 흐름을 부르는 블록입니다. 부르는 것의 이름은 복사해 갖지 않고 대상으로 가리킵니다.",
+    "fields": {
+      "id": "블록의 id",
+      "kind": "블록의 종류",
+      "target": "호출 대상",
+      "args": "인자",
+      "result": "반환값을 받는 곳. 없으면 `\"\"`",
+      "siteFolds": "이 호출 블록을 펴 보인 곳(안에 보이는 Method의 블록) 위의 접기 영역. 비면 적지 않는다"
+    }
+  },
+  "branch": {
+    "title": "분기 (yes · no · otherwise)",
+    "about": "If의 두 분기와 Case의 default 분기입니다.",
+    "fields": {
+      "id": "분기의 id",
+      "label": "그려지는 참 · 거짓이나 default 대신 쓰는 이름. 편집하지 않았으면 적지 않는다",
+      "body": "분기의 블록들",
+      "folds": "분기 줄의 접기 영역. 비면 적지 않는다"
+    }
+  },
+  "arm": {
+    "title": "Case의 분기 (arms의 원소)",
+    "about": "Case에서 값 하나의 분기입니다.",
+    "fields": {
+      "id": "분기의 id",
+      "label": "분기의 값. 그 분기의 라벨로 그린다",
+      "body": "분기의 블록들",
+      "folds": "분기 줄의 접기 영역. 비면 적지 않는다"
+    }
+  },
+  "fold": {
+    "title": "접기 영역 (folds의 원소)",
+    "about": "한 줄 안의 연속된 블록 범위와 그 이름입니다.",
+    "fields": {
+      "id": "접기 영역의 id",
+      "first": "범위의 처음 블록의 id",
+      "last": "범위의 끝 블록의 id",
+      "name": "이름. 없으면 적지 않는다"
+    }
+  },
+  "siteFold": {
+    "title": "펴 보인 곳의 접기 영역 (siteFolds의 원소)",
+    "about": "펴 보인 호출 블록 안에 보이는 Method의 블록 위에 만든 접기 영역입니다. 가장 바깥의 호출 블록에 속합니다.",
+    "fields": {
+      "id": "접기 영역의 id",
+      "via": "이 호출 블록 안에서 거쳐 펴 보인 안쪽 호출 블록의 id. 바로 안이면 `[]`",
+      "first": "범위의 처음 블록(부르는 Method의 블록)의 id. 없어지면 범위가 줄어든다",
+      "last": "범위의 끝 블록의 id",
+      "name": "이름. 없으면 적지 않는다"
+    }
+  },
+  "target": {
+    "title": "호출 대상",
+    "about": "`kind`로 가르는 네 꼴 가운데 하나입니다.",
+    "fields": {}
+  },
+  "target.local": {
+    "title": "호출 대상: local",
+    "about": "이 문서 안의 Method 다이어그램입니다.",
+    "fields": {
+      "kind": "대상의 종류",
+      "diagram": "부르는 Method 다이어그램의 id"
+    }
+  },
+  "target.named": {
+    "title": "호출 대상: named",
+    "about": "다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수 등).",
+    "fields": {
+      "kind": "대상의 종류",
+      "name": "블록에 적은 이름"
+    }
+  },
+  "target.external": {
+    "title": "호출 대상: external",
+    "about": "다른 파일의 Method입니다.",
+    "fields": {
+      "kind": "대상의 종류",
+      "file": "그 파일을 가리키는 값(무엇을 적는지는 아직 정하지 않음)",
+      "diagram": "그 파일 안 Method 다이어그램의 id",
+      "lastName": "마지막으로 본 Method의 이름. 파일을 읽지 못할 때 보인다"
+    }
+  },
+  "target.lost": {
+    "title": "호출 대상: lost",
+    "about": "가리키던 Method가 없어진 호출 블록입니다(다이어그램을 지움, 헤더를 뗌).",
+    "fields": {
+      "kind": "대상의 종류",
+      "lastName": "마지막으로 보인 이름",
+      "file": "다른 파일의 Method였으면 그 파일을 가리키던 값"
+    }
+  }
+}

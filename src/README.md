@@ -63,6 +63,7 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 | `pnpm coverage`                                 | 단위 테스트와 E2E를 커버리지와 함께 돌려 패키지마다의 줄 커버리지(둘을 합침)를 보여 줌 |
 | `pnpm coverage:check`                           | 위와 같고, 한 패키지라도 90%보다 낮거나 테스트가 실패하면 실패. CI의 `coverage` job이 실행함 |
 | `pnpm co-change`                                | 스테이지한 변경에서 함께 바뀌어야 하는 곳의 짝을 검사(`--range A..B`로 커밋 범위, → 코딩 가이드 13.1) |
+| `pnpm schema-doc`                               | 모델 JSON 스키마에서 `docs/05-spec/02-model-schema.md`를 만듦(번역은 `packages/core/schema/model.schema.ko.json`) |
 | `pnpm format`                                   | Prettier로 코드 포맷을 맞춤                                         |
 | `pnpm lint` · `pnpm typecheck` · `pnpm deps`    | 검사를 하나씩                                                     |
 | `pnpm --filter @ariadne-nsd/core golden:update` | 골든 파일을 다시 만듦(의도한 변경일 때만)                                    |
