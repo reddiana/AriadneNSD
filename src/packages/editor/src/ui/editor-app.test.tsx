@@ -91,6 +91,32 @@ describe('menu bar', () => {
     expect(screen.getByRole('button', { name: '편집' })).toBeTruthy();
     expect(screen.getByRole('button', { name: '다이어그램' })).toBeTruthy();
   });
+
+  it('T-1172 · UX LG7: Help › Ask an AI to Draw, after User Guide, opens the guide’s AI part in the screen language', () => {
+    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+    try {
+      for (const [locale, manualUrl, name] of [
+        ['en', 'manual/', 'Ask an AI to Draw'],
+        ['ko', 'manual/ko/', 'AI에게 그려 달라고 하기'],
+      ] as const) {
+        const engine = fakeEngine(editCommands);
+        renderApp(engine, { locale, manualUrl });
+        fireEvent.click(screen.getByRole('button', { name: locale === 'ko' ? '도움말' : 'Help' }));
+        const menu = within(screen.getByRole('menu'));
+        const askAi = menu.getByRole('menuitem', { name: new RegExp(`^${name}`) });
+        const items = menu.getAllByRole('menuitem');
+        expect(items[items.indexOf(askAi) - 1]?.textContent).toMatch(
+          locale === 'ko' ? /^사용법/ : /^User Guide/,
+        );
+        fireEvent.click(askAi);
+        expect(engine.ran).toEqual(['help.askAi']);
+        expect(open).toHaveBeenLastCalledWith(`${manualUrl}#ai`, '_blank', 'noopener');
+        cleanup();
+      }
+    } finally {
+      open.mockRestore();
+    }
+  });
 });
 
 describe('toolbar block icons', () => {

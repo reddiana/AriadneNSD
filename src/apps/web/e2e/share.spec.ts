@@ -144,3 +144,32 @@ test('T-0894: a share link pasted into the address bar of an open page opens in 
   }, new URL(link).hash);
   await expect(page.locator('.ans-viewbar')).toBeVisible();
 });
+
+test('T-1173 · R-WEB-10 · UX LG7: after the app starts, the note for AI tools stays outside #root, unseen, and Help opens the guide’s AI part', async ({
+  page,
+  context,
+}) => {
+  await openApp(page);
+  // The short guide inside #root is gone; the note outside it is in the DOM and the
+  // accessibility tree, but takes no room on the screen.
+  await expect(page.locator('#for-ai')).toHaveCount(0);
+  const note = page.locator('body > #for-ai-note');
+  await expect(note).toHaveCount(1);
+  await expect(note).toContainText('do not operate this editor');
+  await expect(note).toContainText('https://ariadnensd.com/llms.txt');
+  await expect(note).not.toHaveAttribute('hidden');
+  const box = await note.boundingBox();
+  expect(box?.width ?? 0).toBeLessThanOrEqual(1);
+  expect(box?.height ?? 0).toBeLessThanOrEqual(1);
+  expect(await note.evaluate((element) => getComputedStyle(element).display)).not.toBe('none');
+  expect(await page.locator('body').innerText()).toContain('do not operate this editor');
+
+  await page.getByRole('button', { name: 'Help', exact: true }).click();
+  const items = page.getByRole('menuitem');
+  await expect(items.nth(0)).toContainText('User Guide');
+  await expect(items.nth(1)).toContainText('Ask an AI to Draw');
+  const opening = context.waitForEvent('page');
+  await items.nth(1).click();
+  const guide = await opening;
+  expect(guide.url()).toMatch(/\/manual\/#ai$/);
+});

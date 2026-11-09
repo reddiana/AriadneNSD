@@ -54,6 +54,7 @@ export const uiCommandIds = {
   documentSettings: 'diagram.documentSettings',
   shortcuts: 'help.shortcuts',
   manual: 'help.manual',
+  askAi: 'help.askAi',
   whatsNew: 'help.whatsNew',
   about: 'help.about',
   examples: 'help.examples',

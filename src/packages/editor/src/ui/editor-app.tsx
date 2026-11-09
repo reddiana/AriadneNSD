@@ -60,7 +60,10 @@ export type EditorAppProps = {
   readonly settings: SettingsStore;
   /** Turns engine messages (command titles, reasons, notices) into text. Default: see `defaultFormatter`. */
   readonly formatMessage?: MessageFormatter;
-  /** Where Help › User Guide opens in a new tab (06-web 7: the site's `/manual/`). */
+  /**
+   * Where Help › User Guide opens in a new tab (06-web 7: the site's `/manual/`). Help › Ask an AI
+   * to Draw opens its `#ai` part.
+   */
   readonly manualUrl?: string;
   /**
    * The examples (R-EDIT-25): how the shell opens one as a new document, and whether to welcome
@@ -102,7 +105,8 @@ type UiCommand = {
   readonly title: UiMessageKey;
   readonly keys: ReadonlyArray<string>;
   readonly menu: MenuPlace;
-  readonly open: Popup | 'manual';
+  /** `manual` opens the user guide, `manualAi` its part on asking an AI (`#ai`), in a new tab. */
+  readonly open: Popup | 'manual' | 'manualAi';
 };
 
 // Group 90 puts these after the engine's own groups of the same menu (03-editor 5.1).
@@ -136,10 +140,18 @@ const uiCommands: ReadonlyArray<UiCommand> = [
     open: 'manual',
   },
   {
+    // For a user whose AI tried to operate the screen (UX LG7).
+    id: uiCommandIds.askAi,
+    title: 'cmd.askAi',
+    keys: [],
+    menu: { menu: 'help', group: 0, order: 1 },
+    open: 'manualAi',
+  },
+  {
     id: uiCommandIds.shortcuts,
     title: 'cmd.shortcuts',
     keys: ['?'],
-    menu: { menu: 'help', group: 0, order: 1 },
+    menu: { menu: 'help', group: 0, order: 2 },
     open: 'shortcuts',
   },
   {
@@ -264,7 +276,7 @@ export function EditorApp({
         id: uiCommandIds.examples,
         title: () => uiMessage(locale, 'cmd.examples'),
         keys: [],
-        menu: { menu: 'help', group: 0, order: 2 },
+        menu: { menu: 'help', group: 0, order: 3 },
         edits: false,
         when: () => true,
         run: () => {
@@ -302,7 +314,9 @@ export function EditorApp({
         when: () => true,
         run: () => {
           if (command.open === 'manual') window.open(manualUrl, '_blank', 'noopener');
-          else openPopup(command.open);
+          else if (command.open === 'manualAi') {
+            window.open(`${manualUrl}#ai`, '_blank', 'noopener');
+          } else openPopup(command.open);
         },
       };
       return handle.commands.register(spec);

@@ -185,6 +185,8 @@ export function renderApp(
     /** View mode (R-WEB-06) with its "Edit" button. */
     readonly onEdit?: () => void;
     readonly places?: PlacesHost;
+    /** Where Help › User Guide opens (the web shell gives the one in the screen language). */
+    readonly manualUrl?: string;
   } = {},
 ) {
   const canvas = document.createElement('div');
@@ -199,6 +201,7 @@ export function renderApp(
       settings={options.settings ?? memorySettings()}
       {...(options.onEdit === undefined ? {} : { viewMode: { onEdit: options.onEdit } })}
       {...(options.places === undefined ? {} : { places: options.places })}
+      {...(options.manualUrl === undefined ? {} : { manualUrl: options.manualUrl })}
     />,
   );
 }
