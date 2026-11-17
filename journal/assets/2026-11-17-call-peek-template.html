@@ -1,0 +1,145 @@
+<title>M59 펴 보인 호출 블록</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 시안 페이지: 글은 좁게, 그림 카드는 격자로. 그림은 앱의 렌더러가 그린 SVG 그대로. */
+{{FONT}}
+:root {
+  --bg: #f6f7f9;
+  --paper: #ffffff;
+  --fg: #1d2330;
+  --muted: #5d6676;
+  --line: #d9dee7;
+  --accent: #5b4a9a;
+  --accent-soft: #eeeaf7;
+  --star: #b4690e;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+    --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+  --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.7; font-size: 15px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.75rem; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 44px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); text-wrap: balance; }
+h3 { font-size: 1.05rem; margin: 0 0 6px; }
+p, li { max-width: 72ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--paper); max-width: 80ch; }
+.fig { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.cap { color: var(--muted); font-size: 0.88rem; margin: 6px 0 0; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; align-items: start; }
+.row > * { min-width: 0; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 14px; min-width: 0; }
+.card.rec { border: 2px solid var(--star); }
+.n { font-family: var(--font-mono); font-weight: 700; color: var(--accent); margin-right: 6px; }
+.star { color: var(--star); font-weight: 700; }
+.card ul { padding-left: 18px; margin: 8px 0 0; font-size: 0.9rem; }
+.card p { font-size: 0.92rem; margin: 6px 0; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--paper); font-size: 0.9rem; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 500; }
+.scenes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 392px), 1fr)); gap: 10px; margin-top: 10px; }
+.scenes .fig { padding: 4px; }
+.scenes .lab { font-size: 0.82rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+<h1>M59 펴 보인 호출 블록</h1>
+<p class="sub">2026-11-17 · inbox "3. 기능"의 항목. 그림은 모두 앱의 렌더러(<code>@ariadne-nsd/core</code>)가 그렸고, 안마다의 차이만 시안 스크립트가 덧칠했습니다. 물음은 아래 CP1 하나입니다.</p>
+
+<blockquote>호출블록을 확장했는데 가시성이 안 좋습니다. [[04-visual-design#5. 기하와 해부도]]를 잘 따랐나요? 그렇다면 디자인을 바꿉시다. 바깥 선이 일반 블록 선과 동일하면 좋겠습니다. (메인테이너, inbox 2026-11-17)</blockquote>
+
+<h2>1. 지금 모습과 그렇게 정한 까닭</h2>
+<p>지금 모습은 설계대로입니다. 04-visual-design 6장 선의 표 3번: "1px 점선(6 긋고 4 띄움) <code>peek.edge</code> + 띠. 블록의 바깥 선에서 1px 안. 그 아래에 3px 흰 줄(<code>peek.halo</code>)을 깔아 안쪽 블록의 선을 지움".</p>
+<blockquote>
+<b>Q15-a. 둘을 가르는 법. → 다시 정함 (2026-10-13): 선의 모양과 색.</b> 흑백 인쇄에서도 실선과 점선으로 갈린다.<br>
+<b>T2. 펴 보인 호출 블록. → 정함 (2026-10-13): 가는 점선 테두리.</b> 띠만 두면 겹쳐 폈을 때 안쪽 호출 블록의 끝이 보이지 않는다.<br>
+2026-10-11의 "왼쪽 세로 막대"는 접기 영역이 겹치거나 이어질 때 알아보기 어려웠다.<br>
+<span class="cap">ux-decisions 4.1 호출 블록 펴 보기 (R6), 원칙 5 "펴 보인 호출 블록이 접기 영역보다 가벼운 것은 … 다른 곳에 있는 것을 여기서 잠깐 본다"</span>
+</blockquote>
+<div class="row">
+  <div><div class="fig">{{now}}</div><p class="cap">지금: 홍월님의 그림과 같은 장면(main()에서 <code>binary_search</code>를 펴 봄)</p></div>
+  <div><div class="fig">{{nowNested}}</div><p class="cap">지금: 펴 보인 안에서 <code>mid_of</code>를 또 펴 봄(T2의 장면)</p></div>
+  <div><div class="fig">{{nowFolds}}</div><p class="cap">지금: 접기 영역(파란 굵은 테두리)과 함께</p></div>
+</div>
+<p class="cap">알게 된 것: <code>size.peek-inset</code>(4px)은 문서에 "펴 보인 호출 블록 안의 블록이 들어가는 깊이"로 적혀 있지만, 지금 레이아웃은 안쪽 블록을 들이지 않습니다(<code>placePeek</code>가 <code>framed: false</code>). 안에 든 접기 영역만 틈을 둡니다. 그래서 "들여쓰기를 남기는 안"은 따로 두지 않았습니다.</p>
+
+<h2>2. CP1 바깥 선을 일반 블록 선으로 하면, 펴 보인 곳을 무엇으로 가를까</h2>
+<p>네 안 모두 바깥은 일반 블록 선(<code>line.structure</code> 1px 실선)이고, 점선과 흰 줄은 없앱니다. 띠(보라, Method 이름이 굵게)와 회색 글자(<code>peek.text</code>)는 그대로입니다. 다른 것은 펴 보인 곳의 끝까지를 무엇으로 보이느냐입니다. 카드마다 세 장면: 홍월님의 장면 · 겹쳐 펴 봄 · 접기 영역과 함께.</p>
+
+<div class="card" id="o1">
+  <h3><span class="n">1</span>띠만</h3>
+  <p>지금에서 점선과 흰 줄만 뺌. 가장 조용함. 펴 보인 곳이 어디서 끝나는지는 회색 글자로만 보임. 겹쳐 폈을 때 안쪽(<code>mid_of</code>)의 끝이 보이지 않음(T2가 걱정한 그대로).</p>
+  <ul><li>바꾸는 곳: 6장 선의 표 3번, 3.3의 <code>peek.edge</code> · <code>peek.halo</code> 줄과 <code>size.peek-halo</code>를 지움</li></ul>
+  <div class="scenes">
+    <div><div class="lab">장면</div><div class="fig">{{band}}</div></div>
+    <div><div class="lab">겹쳐 펴 봄</div><div class="fig">{{bandNested}}</div></div>
+    <div><div class="lab">접기 영역과</div><div class="fig">{{bandFolds}}</div></div>
+  </div>
+</div>
+
+<div class="card" id="o2" style="margin-top:14px">
+  <h3><span class="n">2</span>안쪽 배경을 호출 블록의 연보라로</h3>
+  <p>Method의 블록들이 호출 블록의 배경색(<code>block.call</code>)으로 칠해져, 펴 보인 곳 전체가 "큰 호출 블록"으로 읽힘. 끝이 또렷함. 대신 Method 안의 반복 · 분기의 배경색이 사라지고(모양은 남음), 겹쳐 폈을 때 안쪽의 끝은 띠로만 보이며, 흑백 인쇄에서는 배경이 없어 1번과 같아짐.</p>
+  <ul><li>바꾸는 곳: 1번 + 3.3의 <code>peek.fill</code>을 <code>fill.lilac</code>으로, 그 뜻을 "안쪽 블록의 배경"으로</li></ul>
+  <div class="scenes">
+    <div><div class="lab">장면</div><div class="fig">{{tint}}</div></div>
+    <div><div class="lab">겹쳐 펴 봄</div><div class="fig">{{tintNested}}</div></div>
+    <div><div class="lab">접기 영역과</div><div class="fig">{{tintFolds}}</div></div>
+  </div>
+</div>
+
+<div class="card" id="o3" style="margin-top:14px">
+  <h3><span class="n">3</span>왼쪽에 보라 세로 줄</h3>
+  <p>띠 아래부터 펴 보인 곳의 끝까지 왼쪽 안쪽에 3px 보라 줄. 겹쳐 펴면 줄이 따로 서서 안쪽의 끝이 보임. 흑백 인쇄에서도 남음. 대신 접기 영역 안에 놓이면 파란 3px 테두리 바로 옆에 서서 둘이 붙어 보임(2026-10-11에 "왼쪽 세로 막대"를 버린 까닭과 닮음).</p>
+  <ul><li>바꾸는 곳: 1번 + <code>peek.edge</code>의 뜻을 "왼쪽 세로 줄"로, 새 치수 <code>size.peek-bar</code> 3px</li></ul>
+  <div class="scenes">
+    <div><div class="lab">장면</div><div class="fig">{{bar}}</div></div>
+    <div><div class="lab">겹쳐 펴 봄</div><div class="fig">{{barNested}}</div></div>
+    <div><div class="lab">접기 영역과</div><div class="fig">{{barFolds}}</div></div>
+  </div>
+</div>
+
+<div class="card rec" id="o4" style="margin-top:14px">
+  <h3><span class="n">4</span><span class="star">★ 추천</span> 연보라 배경 + 왼쪽 세로 줄 (2 + 3)</h3>
+  <p>배경이 펴 보인 곳 전체를 덩어리로 보이고, 세로 줄이 겹쳐 편 안쪽의 끝과 흑백 인쇄를 맡음. 접기 영역 안에서도 배경 덕에 파란 테두리와 섞이지 않음. 네 안 가운데 장식이 가장 많지만, 바깥 선은 일반 블록과 같아 그림의 뼈대가 더 깨끗해짐.</p>
+  <ul>
+    <li>추천의 까닭: 원칙 2("뜻은 모양이 나르고, 색은 거들기만")에서 세로 줄이 모양, 배경이 거드는 색. T2(겹쳐 편 끝)와 Q15-a(흑백 인쇄)의 요구를 둘 다 지킴</li>
+    <li>바꾸는 곳: 2번 + 3번</li>
+  </ul>
+  <div class="scenes">
+    <div><div class="lab">장면</div><div class="fig">{{both}}</div></div>
+    <div><div class="lab">겹쳐 펴 봄</div><div class="fig">{{bothNested}}</div></div>
+    <div><div class="lab">접기 영역과</div><div class="fig">{{bothFolds}}</div></div>
+    <div><div class="lab">어두운 테마</div><div class="fig">{{bothDark}}</div></div>
+    <div><div class="lab">고대비</div><div class="fig">{{bothHc}}</div></div>
+    <div><div class="lab">흑백 인쇄</div><div class="fig">{{bothPrint}}</div></div>
+  </div>
+</div>
+
+<h2>3. 견주어 보기</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>1 띠만</th><th>2 배경</th><th>3 세로 줄</th><th>4 배경 + 세로 줄 ★</th></tr></thead>
+<tbody>
+<tr><td>바깥 선이 일반 블록 선</td><td>예</td><td>예</td><td>예</td><td>예</td></tr>
+<tr><td>펴 보인 곳의 끝이 보임</td><td>회색 글자로만</td><td>또렷함</td><td>또렷함</td><td>또렷함</td></tr>
+<tr><td>겹쳐 편 안쪽의 끝 (T2)</td><td>안 보임</td><td>띠로만</td><td>보임</td><td>보임</td></tr>
+<tr><td>흑백 인쇄 (Q15-a)</td><td>회색 글자로만</td><td>회색 글자로만</td><td>보임</td><td>보임</td></tr>
+<tr><td>접기 영역 안에서</td><td>섞이지 않음</td><td>섞이지 않음</td><td>파란 테두리에 붙어 보임</td><td>배경으로 갈림</td></tr>
+<tr><td>Method의 반복 · 분기 배경색</td><td>남음</td><td>연보라로 바뀜</td><td>남음</td><td>연보라로 바뀜</td></tr>
+</tbody></table></div>
+<p class="cap">고르신 안은 04-visual-design(6장 선의 표, 3.3 · 3.5 · 3.6의 <code>peek.*</code>, 5장 치수)과 ux-decisions(Q15-a · T2를 다시 정함)에 반영한 뒤 렌더러를 고칩니다. 접기 영역 이름 띠 아래 선이 빠진 결함(BUG-16)은 다른 에이전트가 고치는 중이라 이 그림에도 남아 있을 수 있습니다.</p>
+</div>
