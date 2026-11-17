@@ -255,7 +255,9 @@ function foldFrame(ctx: Painter, node: Extract<LayoutNode, { kind: 'foldFrame' }
     width: bandBox.width,
     height: bandBox.height,
     fill: colors['fold.band'],
-    stroke: colors['fold.band'],
+    // The band is painted over the blocks, so it draws the structure line under itself
+    // (BUG-16); its other edges lie under the 3px border.
+    stroke: colors['line.structure'],
     strokeWidth: structureWidth,
   });
   const name = node.name.lines[0] ?? '';

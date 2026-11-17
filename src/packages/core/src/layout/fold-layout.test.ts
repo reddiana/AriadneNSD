@@ -4,7 +4,7 @@ import { describe, expect, inject, it } from 'vitest';
 import type { Block, Call, Doc, FoldMark, Seq, View } from '../model/types';
 import { buildScene } from '../render/build-scene';
 import { branch, docOf, ifBlock, inLocale, largeDoc, process, whileBlock } from '../render/testing';
-import { defaultTheme } from '../render/theme';
+import { defaultTheme, themes } from '../render/theme';
 import { toSvg } from '../render/to-svg';
 import { defaultFoldName, layout } from './layout';
 import { placeSiteFolds, shownItems, shownView, splitScreenId, topLevel } from './shown';
@@ -163,6 +163,42 @@ describe('fold regions (R-EDIT-14, R-EDIT-23)', () => {
     const svg = toSvg(scene).content;
     expect(svg).toContain('font-style="italic"');
     expect(svg).toContain('>z</text>');
+  });
+
+  it('T-1174 · BUG-16: an unfolded region keeps the structure line under its name band', () => {
+    const lineUnderBand = (doc: Doc, theme = defaultTheme): boolean => {
+      const result = layout(doc);
+      const frame = nodeOf(result, 'foldFrame', 'f1');
+      const bottom = frame.band.y + frame.band.height;
+      const scene = buildScene(result, theme);
+      const at = scene.elements.findIndex(
+        (element) =>
+          element.blockId === 'f1' &&
+          element.kind === 'rect' &&
+          element.fill === theme.colors['fold.band'],
+      );
+      // Painted over the blocks, the band must draw the line itself, or its edge hides theirs.
+      const band = scene.elements[at];
+      return (
+        band?.kind === 'rect' &&
+        band.y + band.height === bottom &&
+        band.stroke === theme.colors['line.structure'] &&
+        band.strokeWidth === 1
+      );
+    };
+    const region: FoldMark = { id: 'f1', first: 'b1', last: 'b2' };
+    expect(lineUnderBand(withFolds(docOf(...blocks), [region]))).toBe(true);
+    const firstIsIf = docOf(twoBranches, process('b5', 'e'));
+    expect(lineUnderBand(withFolds(firstIsIf, [{ id: 'f1', first: 'b1', last: 'b5' }]))).toBe(true);
+    const firstIsLoop = docOf(whileBlock('b1', 'i < n', [process('b2', 'a')]), process('b3', 'b'));
+    expect(lineUnderBand(withFolds(firstIsLoop, [{ id: 'f1', first: 'b1', last: 'b3' }]))).toBe(
+      true,
+    );
+    const nested = withFolds(docOf(...blocks), [region, { id: 'f2', first: 'b1', last: 'b1' }]);
+    expect(lineUnderBand(nested)).toBe(true);
+    for (const theme of themes) {
+      expect(lineUnderBand(withFolds(docOf(...blocks), [region]), theme)).toBe(true);
+    }
   });
 });
 

@@ -429,6 +429,7 @@
   "an open dialog that gives no file gives null": "파일을 주지 않은 열기 대화 상자는 null을 준다",
   "an SVG without a model does not replace the document, and says why": "모델이 없는 SVG는 문서를 바꾸지 않고, 까닭을 알린다",
   "an SVG without a model is not opened, and the reason is shown": "모델이 없는 SVG는 열지 않고, 까닭을 보인다",
+  "an unfolded region keeps the structure line under its name band": "펼친 접기 영역은 이름 띠 아래의 구조선을 그린다",
   "an unknown branch has no label text": "모르는 분기에는 라벨 텍스트가 없다",
   "an unterminated string ends at the line, an unterminated comment at the text": "닫지 않은 문자열은 그 줄에서, 닫지 않은 주석은 텍스트의 끝에서 끝난다",
   "another key closes the question and then works as usual": "다른 키는 질문을 닫고 평소대로 동작한다",
