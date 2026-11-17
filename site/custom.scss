@@ -58,3 +58,11 @@ body[data-slug="about"] article {
     }
   }
 }
+
+// draw.io 그림(*.drawio.svg)은 배경이 투명하고 글자가 검정으로 고정되어 있다.
+// 어두운 테마에서도 흰 종이 위에 보이게 한다(Obsidian은 .obsidian/snippets/drawio-white.css).
+img[src$=".drawio.svg"] {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 0;
+}
