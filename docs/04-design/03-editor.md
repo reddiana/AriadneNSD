@@ -58,7 +58,7 @@ updated: 2026-11-10
 
 ## 2. 상태와 선택
 
-`editor`가 기억하는 것은 아래 하나입니다. 파일에 들어가는 것은 `doc`뿐이고, 나머지는 메모리에만 있습니다(→ [[03-architecture#3.3 의존 규칙]]).
+`editor`가 기억하는 것은 아래 하나입니다. 파일에 들어가는 것은 `doc`뿐이고, 나머지는 메모리에만 있습니다(→ [[03-architecture#4.3 의존 규칙]]).
 
 ```ts
 type EditorState = {
@@ -169,7 +169,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 ### 3.1 히트 테스트
 
-마우스가 무엇을 가리키는지는 DOM이 아니라 `LayoutResult`로 계산합니다(→ [[03-architecture#3.3 의존 규칙]]).
+마우스가 무엇을 가리키는지는 DOM이 아니라 `LayoutResult`로 계산합니다(→ [[03-architecture#4.3 의존 규칙]]).
 
 - 마우스 좌표를 문서 좌표로 바꿉니다(스크롤, 확대 배율, 캔버스의 여백을 뺌).
 - 상자는 [[02-layout]]이 `LayoutResult`에 담는 **클릭 영역**입니다. 제어 블록은 조건 칸만, 펴진 접기 영역과 펴 보인 호출 블록은 띠만, 분기 라벨은 그 칸의 라벨 줄입니다 → [[02-layout#1.1 두 단계]]
@@ -277,7 +277,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 ## 6. 셸과의 연결
 
-`editor`와 셸 사이의 인터페이스는 방향이 다른 두 쌍입니다 → [[03-architecture#3.2 editor와 셸의 인터페이스]]
+`editor`와 셸 사이의 인터페이스는 방향이 다른 두 쌍입니다 → [[03-architecture#4.2 editor와 셸의 인터페이스]]
 
 | 방향 | 인터페이스 | 정의 | 구현 | 사용 | 결정 |
 | --- | --- | --- | --- | --- | --- |

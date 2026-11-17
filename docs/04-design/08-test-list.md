@@ -2255,7 +2255,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1163 | 원시 팔레트가 토큰 하나하나 문서와 같다 | [[01-requirements#^r-lay\|R-LAY-08]] |
 | T-1164 | 테마(밝은 기본 · 어두운 · 고대비)마다 모든 토큰의 색이 문서의 그 테마 표와 같다 | [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
 | T-1165 | 흑백 인쇄 테마가 9.3절의 표와 같다 | [[01-requirements#^r-lay\|R-LAY-08]] |
-| T-1166 | 제품에 들어가는 라이브러리는 모두 8.1에, 개발 도구는 모두 8.2에 있다 | - |
+| T-1166 | 제품에 들어가는 라이브러리는 모두 9.1에, 개발 도구는 모두 9.2에 있다 | - |
 
 ^t-packages-core-node-docs-agree-test-ts
 

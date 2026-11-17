@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-11-10
+updated: 2026-11-17
 ---
 
 # 아키텍처 개요
@@ -39,7 +39,7 @@ updated: 2026-11-10
 | 제약 | 근거 |
 | --- | --- |
 | 구현 언어는 TypeScript | [[0003-typescript\|ADR-0003]] |
-| 웹 · Obsidian 플러그인 · 데스크톱을 먼저 만든다. Google Drive는 웹 위에 얹고, Confluence · IDE 플러그인 · Claude skill이 뒤에 붙는다(→ 6장) | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]], [[0036-code-layout\|ADR-0036]] |
+| 웹 · Obsidian 플러그인 · 데스크톱을 먼저 만든다. Google Drive는 웹 위에 얹고, Confluence · IDE 플러그인 · Claude skill이 뒤에 붙는다(→ 7장) | [[0002-three-targets-shared-core\|ADR-0002]], [[0012-google-drive-integration\|ADR-0012]], [[0036-code-layout\|ADR-0036]] |
 | 개발 순서는 웹 → Obsidian → 데스크톱. Google Drive 연동은 이 셋을 모두 만든 뒤에 만든다 | [[dr-0002-development-order\|DR-0002]] |
 | 저장 형식은 모델을 내장한 SVG, 모델의 직렬화 형식은 JSON | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]] |
 | 웹은 백엔드 서버 없는 정적 사이트 | [[01-requirements#^r-web\|R-WEB-01]] |
@@ -78,7 +78,121 @@ flowchart LR
 
 오른쪽의 "외부 SVG 뷰어"가 이 제품에서 특별한 손님입니다. 우리 코드가 하나도 돌지 않는 곳에서 파일이 그림으로 열립니다. 그래서 렌더링에 필요한 것(색, 서브셋 글꼴)은 모두 파일 안에 자기 완결적으로 들어 있어야 합니다.
 
-## 3. 구성 요소
+## 3. 실행 중의 모습
+
+웹 앱이 브라우저 탭 하나에서 돌 때, 무엇이 살아 있고 무엇이 무엇과 어떤 방식으로 이야기하는지를 보이는 C&C 뷰(Component & Connector View)입니다. 웹 셸을 기준으로 그렸습니다. 다른 셸(Obsidian · 데스크톱)에서는 웹 셸 덩어리와 바깥(회색) 상자만 바뀌고, 셸과 `editor` 사이의 커넥터(C-11 · C-12 · C-15)는 같습니다.
+
+실행 중의 모습이라, 바깥과 이야기하는 셸을 바깥 가까이 아래에 둡니다. 의존의 방향은 4.1의 그림을 보세요.
+
+그림은 draw.io 원본을 내장한 SVG(`assets/cc-view-web-overview.drawio.svg`, `assets/cc-view-web.drawio.svg`)이고, 고칠 때는 draw.io로 엽니다. 노테이션과 배치를 고른 과정은 시안 M58(https://claude.ai/artifact/SdY22rP1VtVofLojccBd87, `journal/assets/2026-11-17-cc-view-study.html`)에 있습니다.
+
+### 3.1 한눈에
+
+![[cc-view-web-overview.drawio.svg]]
+
+- `editor`가 사용자의 입력을 받아 `core`의 순수 함수를 부르고, `core`는 글자 폭과 서브셋을 `fonts`에 묻습니다. 모두 같은 스레드의 함수 호출입니다.
+- 웹 셸이 `editor`를 만들고 문서를 줍니다. `editor`는 문서의 상태를 셸에 알립니다.
+- 브라우저 저장소와 정적 호스팅에 닿는 것은 셸과 `fonts`뿐이고, 모두 기다리는 비동기 호출입니다. 사용자 설정(C-19, localStorage)만 동기입니다.
+
+### 3.2 자세히
+
+![[cc-view-web.drawio.svg]]
+
+선 위의 C-01 … 은 커넥터 ID이고, 3.5의 표와 짝입니다. 편집의 길(C-01 → C-10)이 가운데 줄을 왼쪽에서 오른쪽으로 지나갑니다.
+
+### 3.3 표기법
+
+| 구분 | 표기 | 뜻 |
+| --- | --- | --- |
+| 컴포넌트 | 사각형(모서리 각짐) | 수동 컴포넌트: 불릴 때만 일한다 |
+| 컴포넌트 | 양쪽 이중 세로선 사각형 | 능동 컴포넌트: 이벤트 리스너 · 타이머로 스스로 움직인다(스레드가 따로 있지는 않음 → 3.6) |
+| 컴포넌트 | 파란 사각형 | 우리 코드 가운데 상태를 가진 것(`editor` · 웹 셸) |
+| 컴포넌트 | 초록 사각형 | 우리 코드 가운데 순수 함수(`core` · `fonts`): 같은 입력이면 같은 출력 |
+| 컴포넌트 | 회색 사각형 · 원통 | 브라우저와 바깥(우리 코드가 아님). 원통은 영속 저장소 |
+| 컴포넌트 | 막대 사람 | 사람(액터) |
+| 포트 | ■ 검은 사각형 | 보내는 쪽(요청 · 이벤트를 내보냄) |
+| 포트 | □ 흰 사각형 | 받는 쪽(서비스를 제공하거나 이벤트를 받음) |
+| 커넥터 | 검정 실선, 채운 화살표 | 함수 호출: 같은 스레드 안의 동기 호출 |
+| 커넥터 | 파랑 굵은 실선, 열린 화살표 | 비동기 호출: 브라우저 API · HTTP를 Promise로 기다림 |
+| 커넥터 | 주황 점선, 열린 화살표 | 알림: 이벤트 · 콜백(보내는 쪽은 받는 쪽을 기다리지 않음) |
+| 커넥터 | 보라 일점쇄선, 양쪽 화살표 | 메시지: BroadcastChannel로 탭끼리 주고받음 |
+| 경계 | 굵은 긴 점선 상자 | 프로세스 경계(브라우저 탭 하나) |
+| 경계 | 가는 점선 상자 | 모듈 경계(패키지, 코드 소유 단위. 4.1의 패키지와 같음) |
+
+### 3.4 컴포넌트
+
+코드의 경로는 `src/`에서 본 것입니다.
+
+| 컴포넌트 | 유형 | 코드 | 언제 살아 있나 | 하는 일 |
+| --- | --- | --- | --- | --- |
+| 웹 셸 | 수동 · 조립 | `apps/web/src/shell/web-shell.ts` | 늘 | `editor`를 만들고 문서를 줌, 셸 명령(새로 · 열기 · 내보내기), 알림 |
+| 타이머 | 능동 | `apps/web/src/shell/timers.ts` | 편집한 뒤 | 자동 저장(2초 뒤), 로컬 백업(0.5초 안의 편집을 한 번에) |
+| 공유 링크 | 능동 | `apps/web/src/files/share-link.ts`, `main.tsx` | 시작할 때 · `hashchange` | fragment를 풀어 문서로 엶 |
+| 탭 잠금 | 능동 | `apps/web/src/shell/tab-lock.ts` | 문서를 열 때 | 같은 문서를 연 탭이 있으면 나중 탭은 보기만 |
+| 파일 어댑터 | 수동 | `apps/web/src/files/web-document-store.ts` | 열기 · 저장 | `DocumentStore` 구현: File System Access, 내려받기, 브라우저 문서 |
+| 화면 글꼴 로더 | 수동 | `apps/web/src/fonts/screen-font.ts` | 그 글자가 처음 나올 때 | 글꼴 조각(woff2)을 `FontFace`로 등록 → [[0040-screen-font-slices\|ADR-0040]] |
+| 저장 글꼴 로더 | 수동 | `apps/web/src/fonts/save-font.ts` | 처음 저장 · PDF | 서브셋을 떠낼 TTF를 받음 |
+| 입력 | 능동 | `packages/editor/src/input/` | 늘 | DOM 이벤트 → 키맵 → 명령 id |
+| 주변 UI | 수동 | `packages/editor/src/ui/` (React) | 늘 | 메뉴 · 툴바 · 모달 · 상태 표시줄 |
+| 명령 레지스트리 | 수동 | `packages/editor/src/commands/` | 늘 | id로 실행. 셸 명령도 같은 목록 → [[0033-command-list-for-shells\|ADR-0033]] |
+| 세션 | 수동 · 상태 | `packages/editor/src/session/` | 문서 하나 | 지금 문서, undo 스택, 선택 |
+| 캔버스 뷰 | 수동 | `packages/editor/src/dom/canvas-view.ts`, `overlay.ts` | 바뀔 때마다 | 레이아웃 · 렌더링 결과를 DOM에 넣고 선택 오버레이를 덧그림 |
+| 저장 | 수동 | `packages/editor/src/save/` | 저장 · 백업 | 저장할 SVG 텍스트를 만듦 |
+| 편집 명령 · 레이아웃 · 렌더러 · 파일 형식 | 순수 함수 | `packages/core/src/commands` · `layout` · `render` · `format` | 불릴 때 | 문서 → 새 문서, 위치, SVG, 직렬화 → 4.1의 표 |
+| advance 폭 테이블 | 순수 함수 | `packages/fonts` | 불릴 때 | 글자마다의 폭 |
+| 서브세팅 | 순수 함수 (wasm) | `packages/fonts/browser` | 처음 저장 때 받음 | 쓰인 문자만 남긴 글꼴 |
+
+### 3.5 커넥터
+
+| ID | 유형 | 보내는 쪽 → 받는 쪽 | 무엇 | 동기성 |
+| --- | --- | --- | --- | --- |
+| C-01 | 알림 | 사용자 → 입력 | 키 · 마우스 · 터치 이벤트 | DOM 이벤트 |
+| C-02 | 함수 호출 | 입력 → 명령 레지스트리 | 키맵이 고른 명령 id를 실행 | 동기 |
+| C-03 | 함수 호출 | 주변 UI → 명령 레지스트리 | 메뉴 · 툴바 · 커맨드 팔레트도 같은 id로 | 동기 |
+| C-04 | 함수 호출 | 명령 레지스트리 → 세션 | 명령을 지금 문서에 적용 | 동기 |
+| C-05 | 함수 호출 | 세션 → 편집 명령 | `command(내용, 인자)` → 새 내용, 불변식 검사 | 동기 |
+| C-06 | 알림 | 세션 → 캔버스 뷰 | 문서 · 뷰 상태 · 선택이 바뀜 | 동기 콜백 |
+| C-07 | 함수 호출 | 캔버스 뷰 → 레이아웃 | `layout(문서, 뷰 상태)` → 블록 id → bounding box | 동기 |
+| C-08 | 함수 호출 | 레이아웃 → advance 폭 테이블 | 텍스트 폭 | 동기 |
+| C-09 | 함수 호출 | 캔버스 뷰 → 렌더러 | `render(레이아웃, 테마)` → SVG | 동기 |
+| C-10 | 함수 호출 | 캔버스 뷰 → DOM | SVG를 넣고 오버레이를 덧그림 | 동기, 화면은 다음 프레임 |
+| C-11 | 알림 | 세션 → 웹 셸 | `EditorHandle`: 이름 · 저장 안 됨 · 읽기 전용 | 동기 콜백 |
+| C-12 | 함수 호출 | 웹 셸 → 저장 | 저장 텍스트와 스냅숏 받기(자동 저장 · 백업) | 비동기(처음엔 글꼴을 기다림) |
+| C-13 | 함수 호출 | 저장 → 파일 형식 | `serialize(문서, 뷰 상태)` | 동기 |
+| C-14 | 함수 호출 | 파일 형식 → 서브세팅 | 쓰인 문자의 서브셋 글꼴 | 동기(wasm을 받은 뒤) |
+| C-15 | 함수 호출 | 세션 → 파일 어댑터 | `DocumentStore`: 열기 · 저장 · 다른 이름으로 | 비동기 |
+| C-16 | 비동기 호출 | 파일 어댑터 → 로컬 파일 | File System Access(Chromium), 그 밖엔 내려받기 | Promise |
+| C-17 | 비동기 호출 | 파일 어댑터 → IndexedDB | 브라우저 문서 읽기 · 쓰기 | Promise |
+| C-18 | 비동기 호출 | 타이머 → IndexedDB | 로컬 백업, 최근 파일 | Promise. 3초 안에 열리지 않으면 메모리로 |
+| C-19 | 함수 호출 | 웹 셸 → localStorage | 사용자 설정 | 동기 |
+| C-20 | 메시지 | 탭 잠금 ↔ 다른 탭 | 이 문서를 연 탭이 있는가 | BroadcastChannel |
+| C-21 | 알림 | 주소창 → 공유 링크 | 시작할 때의 fragment, `hashchange` | DOM 이벤트 |
+| C-22 | 함수 호출 | 공유 링크 → 웹 셸 | 푼 문서를 보기 모드로 엶 | 동기 |
+| C-23 | 비동기 호출 | 화면 글꼴 로더 → 정적 호스팅 | 글꼴 조각 woff2 | HTTP, 그 글자가 처음 나올 때 |
+| C-24 | 비동기 호출 | 서브세팅 → 정적 호스팅 | 서브세팅 wasm | HTTP, 처음 저장 때 |
+| C-25 | 비동기 호출 | 저장 글꼴 로더 → 정적 호스팅 | 서브셋을 떠낼 TTF | HTTP, 처음 저장 · PDF 때 |
+| C-26 | 비동기 호출 | 주변 UI → 시스템 클립보드 | 복사(공유 링크, 오류 내용) | Promise |
+
+### 3.6 스레드
+
+모두 브라우저 탭의 메인 스레드 하나에서 돌고, Web Worker는 쓰지 않습니다. 능동 컴포넌트도 스레드가 따로 있는 것이 아니라 이벤트 루프에 리스너 · 타이머를 걸어 둔 것입니다.
+
+- 편집 응답의 길(C-01 → C-10)은 처음부터 끝까지 동기입니다. 이 길의 시간은 모두 메인 스레드를 막고, [[01-requirements#^at|AT-05]]의 p95에 그대로 쌓입니다.
+- 기다리는 일은 I/O(C-16 ~ C-18, C-23 ~ C-26)뿐입니다. 기다리는 동안 화면은 움직입니다.
+- 서브세팅 wasm도 메인 스레드에서 돕니다. 큰 문서를 처음 저장할 때 잠깐 멈출 수 있습니다.
+
+### 3.7 커넥터와 품질 속성
+
+| 품질 속성 시나리오 | 지나는 커넥터 | 이 그림에서 보이는 것 |
+| --- | --- | --- |
+| [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] 편집 반응 시간 | C-01 → C-10 | 모두 메인 스레드의 동기 호출. 측정 구간을 C-05 · C-07 · C-09 · C-10으로 나눌 수 있다 |
+| [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]] 어디서 저장해도 같은 파일 | C-12 → C-14 | 저장의 길에서 상태를 가진 컴포넌트는 세션뿐이고, 나머지는 순수 함수(초록) |
+| [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] 저장 실패 | C-16의 실패, C-18 | 파일 쓰기가 실패해도 로컬 백업은 다른 커넥터로 따로 남는다 |
+| [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]] 휴대폰에서 시작하는 시간 | C-23 · C-24 · C-25 | HTTP는 필요할 때만. 시작에 꼭 필요한 것은 앱 번들과 글꼴 조각 0 |
+| [[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음\|QA-19]] 시작이 막혀도 빈 화면은 없음 | C-18 | IndexedDB가 3초 안에 답하지 않으면 메모리로 계속한다 |
+| [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] 새 셸 붙이기 | C-11 · C-12 · C-15 | 셸이 바뀌어도 `editor` 쪽 커넥터는 이 셋뿐 |
+
+## 4. 구성 요소
 
 공통 패키지와 배포 대상별 셸(shell: 플랫폼마다 `editor`를 감싸는 호스트 애플리케이션)로 나눈 모노레포입니다. → [[0002-three-targets-shared-core|ADR-0002]]
 
@@ -115,7 +229,7 @@ AriadneNSD/
 
 `core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(저장소에서는 `src/packages/core/src/model/` …). 나중의 대상(Confluence, IDE 플러그인)은 만들 때 `apps/` 아래에 폴더를 더합니다. 테스트 파일과 골든 파일의 자리는 [[07-testing]], 빌드 도구는 [[0038-build-and-test-tools|ADR-0038]]에 있습니다.
 
-### 3.1 패키지 의존
+### 4.1 패키지 의존
 
 ```mermaid
 classDiagram
@@ -157,7 +271,7 @@ UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의�
 
 나중의 대상: `apps/confluence` · `apps/vscode` · `apps/intellij`(→ `editor`), `skills/ariadne-nsd`(셸이 아님) → [[0036-code-layout|ADR-0036]]
 
-### 3.2 editor와 셸의 인터페이스
+### 4.2 editor와 셸의 인터페이스
 
 ```mermaid
 classDiagram
@@ -211,19 +325,19 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 - **제공 인터페이스**로 `editor`는 명령 레지스트리와 설정 스키마를 노출합니다. 셸은 이것을 자기 툴바 · 메뉴 · 설정 창으로 렌더링하거나, 호스트 프로그램의 확장 지점(명령 팔레트 · 컨텍스트 메뉴 · 설정 화면: Obsidian, VSCode, IntelliJ)에 등록합니다. 명령의 실행 진입점은 하나(`id`로 실행)입니다. 셸도 자기 명령(새로 · 열기 · 최근 파일)을 같은 목록에 더합니다.
 	- `EditorHandle`: 셸이 `editor`를 만들면 받는 핸들입니다. 문서를 바꾸고(`open`), 저장하고, 문서의 상태(이름 · 저장 안 됨 · 읽기 전용)를 알립니다. `editor`는 문서 하나만 알고, 어떤 파일을 열지와 자동 저장 · 로컬 백업의 타이머는 셸이 맡습니다 → [[03-editor#6.1 새로 · 열기 · 최근 파일]], [[03-editor#6.3 자동 저장과 로컬 백업은 셸이 맡는다]]
 
-### 3.3 의존 규칙
+### 4.3 의존 규칙
 
-- 의존은 3.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. 패키지 사이의 방향은 CI의 import 검사(`src/.dependency-cruiser.cjs`)가 지킨다([[0036-code-layout|ADR-0036]]). `core` 안의 모듈 폴더 사이는 지금 순환만 막는다(같은 설정의 `no-circular`).
+- 의존은 4.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. 패키지 사이의 방향은 CI의 import 검사(`src/.dependency-cruiser.cjs`)가 지킨다([[0036-code-layout|ADR-0036]]). `core` 안의 모듈 폴더 사이는 지금 순환만 막는다(같은 설정의 `no-circular`).
 
 - `core`와 `fonts`는 **DOM과 브라우저 API에 의존하지 않는다.** Node에서 그대로 실행하고 테스트한다.
 - 텍스트 폭은 `core`가 `fonts`의 advance 폭 테이블로 직접 계산한다. 브라우저의 텍스트 측정 API(Canvas `measureText` 등)를 쓰지 않는다. → [[0026-bundled-font-metrics|ADR-0026]]
-- 플랫폼 의존 기능은 3.2의 필요 인터페이스 두 개로만 들어온다. → [[0031-shell-interfaces|ADR-0031]]
+- 플랫폼 의존 기능은 4.2의 필요 인터페이스 두 개로만 들어온다. → [[0031-shell-interfaces|ADR-0031]]
 - `editor`는 **렌더링 백엔드 인터페이스 하나**를 통해서만 화면에 그린다. 지금의 구현체는 렌더러가 만든 SVG 문자열을 DOM에 그대로 삽입한다([[0030-swappable-drawing|ADR-0030]]). 히트 테스트(클릭한 곳이 어느 블록인가)와 선택 오버레이의 위치는 DOM을 조회하지 않고 레이아웃 결과(블록 id → bounding box 맵)로 계산한다. 그래서 화면 렌더링을 UI 프레임워크로 바꾸더라도 백엔드 구현체 하나만 교체한다.
 - `editor`는 문서에 대한 상태를 파일 밖에 영속하지 않는다. 파일 밖에 영속하는 것은 사용자 설정(화면 언어, 자동 저장, 키 힌트 등 → [[05-screen-layout|화면 배치]]의 환경 설정)뿐이다(웹 셸은 그 밖에 로컬 백업 · 최근 파일을 브라우저에 둔다 → [[06-web#2. 로컬 백업과 자동 저장]]).
 
 > [!info] 미완성: `core` 안 모듈 폴더(model · commands · text · layout · render · format · i18n) 사이의 방향. 정하면 이 절에 적고 `src/.dependency-cruiser.cjs`에 규칙으로 더한다.
 
-### 3.4 문서 모델
+### 4.4 문서 모델
 
 파일 하나는 다이어그램 여러 개를 담은 문서 하나입니다. 아래는 개념 모델이고, 타입 정의는 [[01-model#1. 타입]]에 있습니다.
 
@@ -286,7 +400,7 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 - **접기 영역**(`FoldMark`)은 한 줄 안의 연속된 블록 범위에 이름을 붙인 마커다. 중첩될 수 있다. 블록을 감싸는 컨테이너 노드가 아니라 줄에 붙은 주석(annotation)이라, 블록 트리는 접기 영역과 무관하게 같다. → [[0017-fold-name-in-model|ADR-0017]]
 - 블록과 다이어그램, 접기 영역은 모두 **안정 id**(문서가 바뀌어도 유지되는 식별자)를 갖는다. 선택, 접힘, 호출 대상은 모두 id로 참조한다.
 
-### 3.5 내용과 뷰 상태
+### 4.5 내용과 뷰 상태
 
 파일에는 두 가지가 구분되어 들어갑니다. → [[0018-save-as-shown|ADR-0018]]
 
@@ -301,9 +415,9 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 - 인라인으로 펴 보인 호출 블록 안에서 만든 접기 영역([[01-requirements#^r-edit|R-EDIT-16]])은 그 호출 블록에 속한 **내용**이다. Method의 블록을 id로 참조한다.
 - 화면의 줌과 스크롤 위치, 선택은 파일에 저장하지 않는다. `editor`의 메모리 상태다.
 
-## 4. 주요 흐름
+## 5. 주요 흐름
 
-### 4.1 편집
+### 5.1 편집
 
 ```mermaid
 sequenceDiagram
@@ -331,7 +445,7 @@ sequenceDiagram
 - 선택 하이라이트처럼 편집 중에만 보이는 표시는 렌더러가 그리지 않는다. `editor`가 렌더러의 SVG 위에 오버레이 레이어로 따로 그린다. 그래서 화면의 그림과 저장되는 그림이 같은 렌더러에서 나온다.
 - 펴 보인 호출 블록은 레이아웃이 Method의 블록을 그 자리에 다시 배치해 그린다. 문서는 바뀌지 않는다.
 
-### 4.2 저장과 열기
+### 5.2 저장과 열기
 
 ```mermaid
 sequenceDiagram
@@ -360,7 +474,7 @@ sequenceDiagram
 - **열기:** SVG에서 모델 JSON만 역직렬화한다. 그림 요소와 서브셋 글꼴은 읽지 않고, 그림은 모델에서 다시 렌더링한다. 옛 스키마 버전이면 버전별 마이그레이션을 차례로 적용한다. 모델이 없거나 깨졌으면 편집할 수 없다고 알리고 원본 파일은 건드리지 않는다.
 - 자세한 형식은 [[01-file-format]]에 있다.
 
-## 5. 공통 관심사
+## 6. 공통 관심사
 
 | 관심사 | 방침 |
 | --- | --- |
@@ -374,7 +488,7 @@ sequenceDiagram
 | 키 입력 | 키맵은 하나이고 표준 키 위에 Vim 키를 더한다. 키 바인딩은 표 하나에 둔다. 메뉴와 툴바도 같은 명령 레지스트리에서 생성한다. → [[dr-0009-vim-keys\|DR-0009]], [[03-keymap]], [[0033-command-list-for-shells\|ADR-0033]] |
 | 오류 처리 | 깨진 파일은 "편집 불가" 안내로 끝내고, 원본 파일은 덮어쓰지 않는다. 예상하지 못한 예외는 문제 알리기 보고서에 담는다. → [[01-requirements#^r-rep\|R-REP-01]] |
 
-## 6. 배포 구성
+## 7. 배포 구성
 
 | 대상 | 셸 | 코드의 자리 | 저장 확장자 | 결정 |
 | --- | --- | --- | --- | --- |
@@ -395,9 +509,9 @@ sequenceDiagram
 - "AriadneNSD로 열기"는 `.ns`와 `.ns.svg`를 모두 엽니다. 실제 판별은 다른 대상과 같이 모델 요소가 있는지로 합니다([[01-file-format#1. 확장자와 판별]]).
 - Drive의 "새로 만들기"로 만드는 파일은 `.ns.svg`입니다. Drive의 미리보기와 썸네일이 SVG로 그려 주기 때문입니다. 이미 있는 파일을 열어 저장할 때는 파일 이름을 바꾸지 않습니다.
 
-셸이 하는 일은 3.2의 필요 인터페이스(`DocumentStore`, `SettingsStore` → [[0031-shell-interfaces|ADR-0031]])를 구현하고, 제공 인터페이스(`CommandRegistry`, `SettingsSchema` → [[0033-command-list-for-shells|ADR-0033]])를 호스트 플랫폼의 메뉴 · 설정 화면에 등록하는 것뿐입니다. 셸은 위 표의 대상마다 하나씩이고(Google Drive는 웹 셸 안, Claude skill은 셸이 아님), 뒤에 붙는 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델 사이의 양방향 변환(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
+셸이 하는 일은 4.2의 필요 인터페이스(`DocumentStore`, `SettingsStore` → [[0031-shell-interfaces|ADR-0031]])를 구현하고, 제공 인터페이스(`CommandRegistry`, `SettingsSchema` → [[0033-command-list-for-shells|ADR-0033]])를 호스트 플랫폼의 메뉴 · 설정 화면에 등록하는 것뿐입니다. 셸은 위 표의 대상마다 하나씩이고(Google Drive는 웹 셸 안, Claude skill은 셸이 아님), 뒤에 붙는 대상도 같은 인터페이스를 구현하면 붙습니다. IDE 플러그인은 예외일 수 있습니다. 읽고 쓰는 것이 `.ns` 파일이 아니라 소스 코드라서, 코드와 모델 사이의 양방향 변환(→ [[01-requirements#3.6 코드 연동]])이 셸과 `core` 사이에 더 필요합니다. 그 자리는 아직 설계하지 않았습니다.
 
-## 7. 위험과 검증이 필요한 사항
+## 8. 위험과 검증이 필요한 사항
 
 > [!success] 텍스트 폭 측정과 "같은 모델 → 같은 SVG" (2026-10-13 스파이크로 확인)
 > 레이아웃은 텍스트 폭에 따라 달라지는데, 텍스트 폭은 실행 환경(Obsidian, 브라우저 종류, 데스크톱 웹뷰, OS 글꼴)마다 다릅니다. 기기의 글꼴로 측정하면 같은 줄이 33px까지 달랐습니다.
@@ -421,11 +535,11 @@ sequenceDiagram
 > [!note] 웹의 파일 덮어쓰기 지원 범위
 > 원래 파일에 덮어쓰기(File System Access API)는 Chromium 계열에서만 되고, Firefox · Safari는 내려받기로 저장합니다 → [[06-web#1. 파일 열기·저장]]
 
-## 8. 기술 스택
+## 9. 기술 스택
 
 제품에 쓰는 언어 · 라이브러리 · 플랫폼 API와 개발 도구입니다. 고른 이유는 각 ADR에 있습니다. 패키지의 정확한 버전은 `src/pnpm-lock.yaml`에 고정되어 있고, 이 표에는 `package.json`에 적은 버전을 적습니다. 저장 파일의 바이트에 영향을 주는 것(`harfbuzzjs`, `fflate`)과 TypeScript는 범위 없이 정확한 버전입니다.
 
-### 8.1 제품에 들어가는 것
+### 9.1 제품에 들어가는 것
 
 사용자에게 배포되는 코드와 데이터입니다. 제품의 라이선스(Apache-2.0)와 함께 배포할 수 있는지가 기준이라 라이선스를 함께 적습니다.
 
@@ -441,12 +555,12 @@ sequenceDiagram
 | 데스크톱 | Tauri 또는 Electron (미정) | `apps/desktop` | — | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
 | Google Drive | Google Drive API(`drive.file` 범위) | `apps/web` 안 | — | [[0012-google-drive-integration\|ADR-0012]] |
 
-라이브러리 없이 직접 만드는 것: 문서 모델과 실행 취소(불변 문서 → [[0029-immutable-document-undo\|ADR-0029]]), JSON 직렬화([[0007-json-serialization\|ADR-0007]]), 레이아웃([[0037-two-pass-full-layout\|ADR-0037]]), SVG 렌더링([[0030-swappable-drawing\|ADR-0030]]), 구문 강조의 토크나이저([[0032-token-highlighting\|ADR-0032]]), 메시지 카탈로그(5장의 다국어). 모두 `core` 또는 `editor` 안에 있습니다. `core`는 브라우저 API와 DOM에 기대지 않습니다(3.3).
+라이브러리 없이 직접 만드는 것: 문서 모델과 실행 취소(불변 문서 → [[0029-immutable-document-undo\|ADR-0029]]), JSON 직렬화([[0007-json-serialization\|ADR-0007]]), 레이아웃([[0037-two-pass-full-layout\|ADR-0037]]), SVG 렌더링([[0030-swappable-drawing\|ADR-0030]]), 구문 강조의 토크나이저([[0032-token-highlighting\|ADR-0032]]), 메시지 카탈로그(6장의 다국어). 모두 `core` 또는 `editor` 안에 있습니다. `core`는 브라우저 API와 DOM에 기대지 않습니다(4.3).
 
 > [!question] 미결정
 > - 데스크톱 프레임워크(Tauri / Electron) → [[0009-desktop-framework|ADR-0009]]
 
-### 8.2 개발 도구
+### 9.2 개발 도구
 
 배포되지 않고 개발 · 테스트 · 빌드에만 씁니다. 쓰는 법은 [[07-testing]]에 있습니다.
 
@@ -468,6 +582,6 @@ sequenceDiagram
 | 커버리지 | `@vitest/coverage-v8`(단위 테스트, V8), `monocart-coverage-reports`(E2E에서 잰 Chromium의 커버리지를 소스 파일에 대어 봄) | `src/scripts/coverage.mjs`, `src/apps/web` | [[07-testing#5. 도구와 CI]] |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 
-## 9. 결정 목록
+## 10. 결정 목록
 
 모든 ADR은 [[atelier/adr/README|ADR 목록]]에 있습니다. 아키텍처가 아닌 결정은 결정 기록(DR)에 있습니다 → [[atelier/decisions/README|DR 목록]]. 아직 "제안됨"인 것은 데스크톱 프레임워크([[0009-desktop-framework|ADR-0009]])입니다. UI 프레임워크는 React로 정했습니다([[0010-ui-framework|ADR-0010]], 2026-10-18).

@@ -1,3 +1,6 @@
+// 처음 그림을 만든 스크립트. 2026-11-17부터 원본은 `docs/03-architecture/assets/*.drawio.svg`이고 draw.io로 고친다.
+// 다시 돌리면 손으로 고친 것이 사라진다.
+//
 // Builds the C&C view of the AriadneNSD web app as draw.io files (M58).
 // Usage: node 2026-11-17-cc-view-build.mjs <outDir>
 // Writes cc-view-a.drawio (shell above editor, straight lines) and cc-view-b.drawio
@@ -288,16 +291,17 @@ function build(layout) {
     const style = `rounded=0;strokeColor=#1d2330;fillColor=${dir === 'out' ? '#1d2330' : '#ffffff'};`;
     vertex(pid, '', style, x - P / 2, y - P / 2, P, P);
   }
-  legend(layout.legend, vertex);
+  legend(layout.legend, vertex, new Set(layout.legendSkip ?? []));
   const xml = `<mxfile><diagram name="C&amp;C view (web)" id="cc-${layout.name}"><mxGraphModel grid="0" page="0" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`;
   return { xml, ...check(routes, boxes, conns) };
 }
 
-function legend([lx, ly], vertex) {
+function legend([lx, ly], vertex, skip) {
   const txt = 'text;html=0;align=left;verticalAlign=middle;' + FONT + 'fontSize=11;';
-  vertex('lg-box', '표기법', 'rounded=0;fillColor=#ffffff;strokeColor=#5d6676;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1;' + FONT, lx, ly, 300, legendHeight);
+  vertex('lg-box', '표기법', 'rounded=0;fillColor=#ffffff;strokeColor=#5d6676;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1;' + FONT, lx, ly, 300, legendHeight - 40 * skip.size);
   let y = ly + 40;
   const row = (id, draw, text, h = 30) => {
+    if (skip.has(id)) return;
     draw(lx + 14, y, h);
     vertex(`lg-t-${id}`, text, txt, lx + 104, y, 186, h);
     y += h + 10;
@@ -347,7 +351,8 @@ const OVERVIEW = {
     ['C-15', 'call', 'editor', 'shell'],
     ['C-12', 'call', 'shell', 'editor'],
     ['C-11', 'notify', 'editor', 'shell'],
-    ['C-16 ~ 19', 'async', 'shell', 'stores'],
+    ['C-16 ~ 18', 'async', 'shell', 'stores'],
+    ['C-19', 'call', 'shell', 'stores'],
     ['C-23 · 25', 'async', 'shell', 'host'],
     ['C-24', 'async', 'fonts', 'host'],
   ],
@@ -358,7 +363,8 @@ const OVERVIEW = {
     'C-15': [[200, 185], [200, 300]],
     'C-12': [[250, 300], [250, 185]],
     'C-11': [[300, 185], [300, 300]],
-    'C-16 ~ 19': [[250, 370], [250, 490]],
+    'C-16 ~ 18': [[220, 370], [220, 490]],
+    'C-19': [[290, 370], [290, 490]],
     'C-23 · 25': [[340, 335], [760, 335], [760, 495]],
     'C-24': [[980, 185], [980, 495]],
   },
@@ -366,6 +372,7 @@ const OVERVIEW = {
     ['tab', '브라우저 탭 · 프로세스', 120, 60, 960, 360, 'process'],
   ],
   legend: [1130, 20],
+  legendSkip: ['act', 'msg', 'mod'],
 };
 
 

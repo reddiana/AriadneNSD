@@ -8,7 +8,7 @@ updated: 2026-11-01
 
 # Obsidian 플러그인
 
-Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스(`DocumentStore`, `SettingsStore`)를 구현하고 제공 인터페이스(`CommandRegistry`, `SettingsSchema`)를 Obsidian의 확장 지점에 등록합니다. Obsidian에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
+Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#4.2 editor와 셸의 인터페이스|아키텍처 4.2]]의 필요 인터페이스(`DocumentStore`, `SettingsStore`)를 구현하고 제공 인터페이스(`CommandRegistry`, `SettingsSchema`)를 Obsidian의 확장 지점에 등록합니다. Obsidian에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
 
 코드: `src/apps/obsidian` (→ [[0036-code-layout|ADR-0036]])
 
@@ -126,7 +126,7 @@ sequenceDiagram
 
 > [!info] 미완성: Obsidian의 밝기 변경 이벤트를 받아 화면 색을 바꾸는 방법 ([[01-requirements#^r-obs-3|R-OBS-10]])
 
-> [!warning] 위험: 번들 글꼴과 서브세팅 wasm을 `main.js`에 인라인하면 플러그인 번들이 커진다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
+> [!warning] 위험: 번들 글꼴과 서브세팅 wasm을 `main.js`에 인라인하면 플러그인 번들이 커진다 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
 
 ## 6. 배포
 

@@ -16,7 +16,7 @@ superseded-by:
 
 ## 결정 기준
 
-- 같은 모델이면 같은 SVG가 나와야 한다. 텍스트 폭 측정이 환경에 따라 달라지면 안 된다. ([[01-requirements#^r-nfr|R-NFR-02]], [[03-architecture#7. 위험과 검증이 필요한 사항]])
+- 같은 모델이면 같은 SVG가 나와야 한다. 텍스트 폭 측정이 환경에 따라 달라지면 안 된다. ([[01-requirements#^r-nfr|R-NFR-02]], [[03-architecture#8. 위험과 검증이 필요한 사항]])
 - 파일 대화상자, OS 파일 연결을 지원해야 한다. ([[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-03]])
 - 설치 파일 크기
 - 자동 업데이트 지원 ([[01-requirements#^r-dsk|R-DSK-05]])
@@ -40,7 +40,7 @@ superseded-by:
 코드는 `src/apps/desktop`에 둔다(Tauri면 그 안에 `src-tauri/`가 생긴다) → [[0036-code-layout|ADR-0036]]
 
 > [!question] 결정 전 확인할 것
-> - 텍스트 폭 차이는 [[0026-bundled-font-metrics|ADR-0026]]으로 풀렸다: `core`가 번들 글꼴의 메트릭으로 폭을 계산하므로 저장되는 파일은 웹뷰 엔진과 상관없이 같다. 남은 것은 WebKit 웹뷰(macOS, Linux)에서 그린 글자가 계산한 폭과 맞는지(렌더링 오차)뿐이다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
+> - 텍스트 폭 차이는 [[0026-bundled-font-metrics|ADR-0026]]으로 풀렸다: `core`가 번들 글꼴의 메트릭으로 폭을 계산하므로 저장되는 파일은 웹뷰 엔진과 상관없이 같다. 남은 것은 WebKit 웹뷰(macOS, Linux)에서 그린 글자가 계산한 폭과 맞는지(렌더링 오차)뿐이다 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
 > - 지원할 OS 범위 (Windows만? macOS·Linux 포함?)
 
 ## 결과

@@ -1,7 +1,7 @@
 // Facts written both in the code and in a document, compared value by value (coding guide 13):
 // the format version in the file format spec's front matter, the colors of the visual design
 // (04-visual-design 3 and 9.3) against the palette and the themes, and the libraries of every
-// package against the technology stack of the architecture (03-architecture 8.1 and 8.2).
+// package against the technology stack of the architecture (03-architecture 9.1 and 9.2).
 //
 // It lives outside src/ because it reads the documents with node:fs (core-no-node-builtins).
 import { readFileSync } from 'node:fs';
@@ -142,8 +142,8 @@ describe('the visual design', () => {
 describe('the technology stack', () => {
   const architecture = read('docs/03-architecture/03-architecture.md');
   const stack = (heading: string): string => section(architecture, heading).join('\n');
-  const shipped = stack('### 8.1');
-  const tools = stack('### 8.2');
+  const shipped = stack('### 9.1');
+  const tools = stack('### 9.2');
 
   type Manifest = {
     readonly dependencies?: Readonly<Record<string, string>>;
@@ -168,19 +168,19 @@ describe('the technology stack', () => {
   const isOwnOrTypes = (name: string): boolean =>
     name.startsWith('@ariadne-nsd/') || name.startsWith('@types/');
 
-  it('T-1166: every library the product ships is in 8.1, and every development tool in 8.2', () => {
+  it('T-1166: every library the product ships is in 9.1, and every development tool in 9.2', () => {
     const missing: string[] = [];
     for (const { path, manifest } of manifests) {
       for (const name of Object.keys(manifest.dependencies ?? {}).filter((n) => !isOwnOrTypes(n))) {
         if (!names(shipped, name)) {
-          missing.push(`${path}: dependency ${name} is not in 8.1`);
+          missing.push(`${path}: dependency ${name} is not in 9.1`);
         }
       }
       for (const name of Object.keys(manifest.devDependencies ?? {}).filter(
         (n) => !isOwnOrTypes(n),
       )) {
         if (!names(tools, name)) {
-          missing.push(`${path}: devDependency ${name} is not in 8.2`);
+          missing.push(`${path}: devDependency ${name} is not in 9.2`);
         }
       }
     }

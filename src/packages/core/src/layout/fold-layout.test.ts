@@ -271,7 +271,7 @@ describe('opened call blocks (R-EDIT-15, R-EDIT-16)', () => {
   });
 });
 
-describe('opened call blocks and the time budget (QA-07, 03-architecture 7)', () => {
+describe('opened call blocks and the time budget (QA-07, 03-architecture 8)', () => {
   it('T-1126: peek: 2,000 blocks drawn through opened calls lay out and render inside the budget', () => {
     const big = largeDoc(500);
     const [body] = big.content.diagrams;

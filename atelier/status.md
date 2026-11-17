@@ -29,7 +29,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 **0.2.0을 냈습니다(2026-11-04). MVP에 웹의 `P1` 기능을 모두 더한 판입니다. 웹 베타의 문턱은 메인테이너가 Firefox · Safari · 휴대폰에서 써 보고, 밤사이 Claude가 추천안으로 정한 것을 확인하는 일이 남았습니다.**
 
-- 앱: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 판은 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#8. 기술 스택]]
+- 앱: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 판은 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#9. 기술 스택]]
 - 0.2.0 뒤에 더한 것(배포함, 판 번호는 그대로): LLM · 에이전트 안내서 `/llms.txt` · `/model.schema.json`, 공유 링크의 `u` 꾸림, 열지 못한 링크의 오류 내용 복사([[01-requirements#^r-web|R-WEB-10]]), AT-05 점검 모드 `?perf`, 문서와 코드의 정합성 검사([[07-coding-guide#13. 문서와 코드의 정합성]]), 모델 JSON 스키마 문서([[02-model-schema]]) → [[2026-11-09-01-llm-guide]]
 - 0.2.0에 더한 것: 접기 · 접기 영역, 새 Method로 빼기, 호출 블록 펴 보기 · 풀기 · 이름을 적는 호출 블록, 블록 텍스트의 언어 · 구문 강조, 테마 · 고대비 화면, 공유 링크 · 보기 모드, 브라우저 안의 문서, 그림만 담은 SVG · PDF · 인쇄 · 그림 지문 · 텍스트 외곽선 → [[2026-11-03-06-agents-bugs-locale-extract#매듭 뒤 (2026-11-03 밤 ~ 11-04)]]
 
@@ -67,5 +67,5 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 - 요구사항: [[01-requirements#6. 미결정 사항]] (블록 글자의 종류 목록, 블록 글자가 지원하는 문자, Event를 일으키는 블록, IDE 플러그인이 다루는 언어, AI 대화창의 키 보관, 쓰이지 않는 Method, 웹 광고의 자리)
 - UX 설계의 물음: [[02-interaction-rules#9. 미결정 사항]] (정한 것은 [[ux-decisions|UX 결정 모음]])
-- 아키텍처: [[03-architecture#7. 위험과 검증이 필요한 사항]] (Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), 제안됨 상태의 ADR → [[atelier/adr/README|ADR 목록]]
+- 아키텍처: [[03-architecture#8. 위험과 검증이 필요한 사항]] (Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), 제안됨 상태의 ADR → [[atelier/adr/README|ADR 목록]]
 - Obsidian 플러그인: [[04-obsidian-plugin#미결정 사항]]

@@ -597,7 +597,7 @@
   "every JSON example and share link in the file format spec opens, or says why it is not checked": "파일 형식 명세의 JSON 예제와 공유 링크는 모두 열리거나, 검사하지 않는 까닭을 밝힌다",
   "every JSON example in /llms.txt opens, or says why it is not checked": "`/llms.txt`의 JSON 예제는 모두 열리거나, 검사하지 않는 까닭을 밝힌다",
   "every key of the key table is in the keymap document": "키 표의 모든 키가 단축키 문서에 있다",
-  "every library the product ships is in 8.1, and every development tool in 8.2": "제품에 들어가는 라이브러리는 모두 8.1에, 개발 도구는 모두 8.2에 있다",
+  "every library the product ships is in 9.1, and every development tool in 9.2": "제품에 들어가는 라이브러리는 모두 9.1에, 개발 도구는 모두 9.2에 있다",
   "every share link in /llms.txt and in the first page opens and passes the schema": "`/llms.txt`와 첫 화면의 공유 링크는 모두 열리고 스키마를 통과한다",
   "examples · $id": "예제 · $id",
   "Export and print in the browser (06-web 1.2, 1.4 to 1.6)": "브라우저에서의 내보내기와 인쇄",

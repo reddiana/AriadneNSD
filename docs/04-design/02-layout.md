@@ -63,7 +63,7 @@ flowchart LR
 
 - 세 단계는 모두 순수 함수입니다. 같은 입력이면 같은 출력이 나옵니다(결정적 출력 → [[01-requirements#^r-fmt|R-FMT-03]]).
 - 색과 모양의 판단은 모두 씬 빌드(`buildScene`)에서 합니다. SVG 출력(`toSvg`)은 씬을 문자열로 옮길 뿐입니다. 그래서 출력 단계만 교체할 수 있습니다(렌더링 백엔드 → [[0030-swappable-drawing|ADR-0030]]).
-- `editor`는 히트 테스트와 선택 오버레이의 위치를 SVG DOM이 아니라 `LayoutResult`로 계산합니다 → [[03-architecture#3.3 의존 규칙]]
+- `editor`는 히트 테스트와 선택 오버레이의 위치를 SVG DOM이 아니라 `LayoutResult`로 계산합니다 → [[03-architecture#4.3 의존 규칙]]
 - 같은 장면(`Scene`)이 출력 셋으로 갑니다: 화면과 저장 파일의 SVG(`toSvg`), 텍스트를 외곽선으로 바꾼 SVG(`toSvg(scene, { outlines })`, 3장), PDF(`writePdf`, 5장). 장면을 두 번 만들지 않으므로 셋의 모습이 같습니다 → [[0045-export-pipeline|ADR-0045]]
 
 ## 1. 레이아웃 알고리즘
@@ -273,7 +273,7 @@ MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 - 측정한 곳: 메인테이너의 컴퓨터, Microsoft Edge 156(Chromium) / Windows, 세 번 측정한 값의 범위. 스파이크 M39(https://claude.ai/artifact/SRbqzTEA12ZVKc61YcKCXd, 사본 `journal/assets/2026-10-25-layout-perf-spike.html`, 결과 `…-results.txt`)
 - 스파이크는 이 문서의 두 단계(1.1)와 분기 폭 · 짧은 분기의 규칙을 그대로 실행했습니다. 접기 영역의 테두리, 펴 보기, 구문 강조, 클릭 영역은 넣지 않았습니다.
 - 기준 기기(4년 된 보급형 노트북)에서는 아직 측정하지 않았습니다. 그래도 500개에서 느린 5%가 목표의 3분의 1 아래라 여유가 있습니다.
-- 펴 보인 호출 블록 때문에 그려지는 블록이 2,000개가 되어도 중앙값은 50ms 아래였습니다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
+- 펴 보인 호출 블록 때문에 그려지는 블록이 2,000개가 되어도 중앙값은 50ms 아래였습니다 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
 - 제품 코드의 벤치마크는 `src/packages/core/src/render/render.bench.ts`이고 `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 돌립니다 → [[07-testing#5. 도구와 CI]]
 
 ## 5. 인쇄와 PDF의 페이지

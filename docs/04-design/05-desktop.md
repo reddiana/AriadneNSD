@@ -8,7 +8,7 @@ updated: 2026-11-01
 
 # 데스크톱 앱
 
-데스크톱 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#3.2 editor와 셸의 인터페이스|아키텍처 3.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 데스크톱에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
+데스크톱 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architecture#4.2 editor와 셸의 인터페이스|아키텍처 4.2]]의 필요 인터페이스를 구현하고 제공 인터페이스를 사용합니다. 데스크톱에서의 구현은 [[0031-shell-interfaces|ADR-0031]] · [[0033-command-list-for-shells|ADR-0033]]에서 정했습니다.
 
 코드: `src/apps/desktop` (→ [[0036-code-layout|ADR-0036]])
 
@@ -42,5 +42,5 @@ updated: 2026-11-01
 
 ## 미결정 사항
 
-- [ ] 프레임워크: Electron 또는 Tauri → [[0009-desktop-framework|ADR-0009]](제안됨). 텍스트 폭은 `core`가 번들 글꼴로 계산하므로 저장되는 파일은 웹뷰 엔진과 상관없이 같습니다. 남은 것은 WebKit 웹뷰(macOS, Linux)가 그린 글자가 계산한 폭과 맞는지입니다 → [[03-architecture#7. 위험과 검증이 필요한 사항]]
+- [ ] 프레임워크: Electron 또는 Tauri → [[0009-desktop-framework|ADR-0009]](제안됨). 텍스트 폭은 `core`가 번들 글꼴로 계산하므로 저장되는 파일은 웹뷰 엔진과 상관없이 같습니다. 남은 것은 WebKit 웹뷰(macOS, Linux)가 그린 글자가 계산한 폭과 맞는지입니다 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
 - [ ] 지원할 운영체제의 범위(Windows만, 또는 macOS · Linux도)

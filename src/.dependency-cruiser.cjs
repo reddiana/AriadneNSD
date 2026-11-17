@@ -1,4 +1,4 @@
-// Coding guide 1.5 (docs/07-coding-guide), architecture 3.3.
+// Coding guide 1.5 (docs/07-coding-guide), architecture 4.3.
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
   forbidden: [
