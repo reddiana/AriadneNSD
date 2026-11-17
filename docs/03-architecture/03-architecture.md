@@ -87,8 +87,6 @@ AriadneNSD의 앱 셋은 따로 설치하고 따로 실행하는 프로그램입
 
 실행 중의 모습이라, 바깥과 이야기하는 셸을 바깥 가까이 아래에 둡니다. 의존의 방향은 4.1의 그림을 보세요.
 
-그림은 draw.io 원본을 내장한 SVG(`assets/cc-view-web-overview.drawio.svg`, `assets/cc-view-web.drawio.svg`)이고, 고칠 때는 draw.io로 엽니다. 노테이션과 배치를 고른 과정은 시안 M58(https://claude.ai/artifact/SdY22rP1VtVofLojccBd87, `journal/assets/2026-11-17-cc-view-study.html`)에 있습니다.
-
 ### 3.1 한눈에
 
 ![[cc-view-web-overview.drawio.svg]]

@@ -87,6 +87,7 @@ sequenceDiagram
 | 할 일 | 도구 | 자리 |
 | --- | --- | --- |
 | 문서 읽기 · 편집 | Obsidian(속성, 위키링크, 콜아웃), Mermaid | `docs/` `atelier/` `journal/` `til/` |
+| 노테이션이 정해진 그림(C&C 뷰) | draw.io. 원본을 내장한 SVG(`*.drawio.svg`) 하나가 그림이면서 원본이라, draw.io나 Obsidian의 `drawio-obsidian` 플러그인으로 열어 고칩니다. 처음 그림은 스크립트(`journal/assets/2026-11-17-cc-view-build.mjs`)로 만들었고 다시 돌리지 않습니다. 노테이션과 배치를 고른 과정은 시안 M58 → [[sketchbook]] | `docs/03-architecture/assets/` |
 | 문서 사이트 | Quartz v4.5.2 (Node 22에서 빌드) | `site/`, `.github/workflows/pages.yml` → [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 | 문서 검사 훅 · 스파이크 스크립트 | Python 3 | `.claude/hooks/doc-check.py`, `journal/assets/` |
 
