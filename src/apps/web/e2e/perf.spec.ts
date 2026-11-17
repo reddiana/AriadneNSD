@@ -75,6 +75,9 @@ test('T-1147 · AT-05: the check mode times every command and leaves the local b
   for (const command of commands) {
     expect(await median(page, command)).toBeGreaterThan(0);
   }
+  // QA-07's segments: one row per command, a time in every segment's cell.
+  await expect(page.locator('tr[data-segments]')).toHaveCount(commands.length);
+  await expect(page.locator('tr[data-segments="insert"] td')).toHaveCount(9);
   // The measured document is thrown away: the editor shows an empty one again.
   await expect(page.locator('.ans-document text').filter({ hasText: /^step 6$/ })).toHaveCount(0);
   await page.getByRole('button', { name: 'Copy Results' }).click();
@@ -82,6 +85,10 @@ test('T-1147 · AT-05: the check mode times every command and leaves the local b
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expect(copied).toContain('## Check mode: edit response time (AT-05)');
   expect(copied).toContain('| Insert a process block | `o` |');
+  expect(copied).toContain('### Segments (p95, ms)');
+  expect(copied).toContain(
+    '| Command | Key | Edit | Check | Layout | Drawing | Notify | DOM | Browser |',
+  );
   expect(await browserData(page)).toBe(before);
 
   // The app still has the user's document. In a new tab, so this page's coverage is kept.

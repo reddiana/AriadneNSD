@@ -11,6 +11,15 @@ import type { RenderedSvg } from './to-svg';
 import { toSvg } from './to-svg';
 import { usedCodePoints } from './used-code-points';
 
+/**
+ * Runs a named part of the work and may time it: the check mode (`?perf`, 06-web 9) passes one
+ * to split an edit's time into the segments of QA-07. The default only runs it.
+ */
+export type PhaseTimer = <T>(phase: string, run: () => T) => T;
+
+/** Runs the work untimed. */
+export const untimed: PhaseTimer = (_phase, run) => run();
+
 /** Everything one rendering produces. */
 export type Rendering = {
   /** For hit testing and the overlay layer (03-editor 3.1). */
@@ -27,11 +36,18 @@ export type Rendering = {
  * The fixed words are in the document's drawing language `settings.locale` (ADR-0041), and block
  * text is highlighted in the language `settings.textKind` (R-LAY-07).
  */
-export function renderDoc(doc: Doc): Rendering {
-  const result = layout(doc);
+export function renderDoc(doc: Doc, time: PhaseTimer = untimed): Rendering {
+  const result = time('layout', () => layout(doc));
   const { settings } = doc.content;
-  const scene = buildScene(result, themeFor(settings.theme), settings.textKind);
-  return { layout: result, scene, svg: toSvg(scene), codePoints: usedCodePoints(scene) };
+  const scene = time('scene', () =>
+    buildScene(result, themeFor(settings.theme), settings.textKind),
+  );
+  return time('svg', () => ({
+    layout: result,
+    scene,
+    svg: toSvg(scene),
+    codePoints: usedCodePoints(scene),
+  }));
 }
 
 /** The drawing part of a saved file and the code points its subset font must hold. */

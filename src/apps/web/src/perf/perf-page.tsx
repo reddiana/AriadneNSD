@@ -31,11 +31,17 @@ import {
   reportMarkdown,
   responseLimitMs,
   rowCells,
+  segmentCells,
+  segmentColumnTitles,
+  segmentConnectorCells,
+  segmentP95s,
   summarize,
   verdictText,
 } from './perf-report';
 import type { PerfPlan, PerfProgress } from './perf-run';
 import { measureEdits, perfPlaces, perfPlanFrom } from './perf-run';
+import type { PhaseRecorder } from './perf-segments';
+import { createPhaseRecorder } from './perf-segments';
 
 /** The panel's own layout; colours and parts are the editor UI's (`.ans-modal`, `.ans-keytable`). */
 const perfCss = `
@@ -50,6 +56,9 @@ const perfCss = `
 .ans-perf-verdict { font-weight: 600; }
 .ans-perf-verdict[data-pass='false'], .ans-perf td[data-pass='false'] { color: var(--ui-warn); }
 .ans-perf-table td:nth-child(n + 3), .ans-perf-table th:nth-child(n + 3) { text-align: right; }
+.ans-perf-segments td:nth-child(n + 2), .ans-perf-segments th:nth-child(n + 2) { text-align: right; }
+.ans-perf-segments small { color: var(--ui-muted); font-weight: normal; white-space: nowrap; }
+.ans-perf h3 { margin: 8px 0 0; font-size: 1em; }
 .ans-perf-facts { margin: 0; padding-left: 18px; color: var(--ui-muted); overflow-wrap: anywhere; }
 .ans-perf textarea { width: 100%; min-height: 120px; font: 12px monospace; }
 `;
@@ -209,6 +218,34 @@ function Results(props: {
           ))}
         </tbody>
       </table>
+      <h3>{perfMessage(locale, 'perf.segments.title')}</h3>
+      <p className="ans-note">{perfMessage(locale, 'perf.segments.note')}</p>
+      <table className="ans-keytable ans-perf-table ans-perf-segments">
+        <thead>
+          <tr>
+            {segmentColumnTitles(locale).map((title, index) => (
+              <th key={title}>
+                {title}
+                {segmentConnectorCells()[index] === '' ? null : (
+                  <>
+                    <br />
+                    <small>{segmentConnectorCells()[index]}</small>
+                  </>
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {report.segments.map((row) => (
+            <tr key={row.command} data-segments={row.command}>
+              {segmentCells(row, locale).map((cell, index) => (
+                <td key={index}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <ul className="ans-perf-facts">
         {facts.map(([title, value]) => (
           <li key={title}>
@@ -238,12 +275,13 @@ function Results(props: {
 async function measureReport(
   handle: EditorHandle,
   host: HTMLElement,
+  phases: PhaseRecorder,
   plan: PerfPlan,
   onProgress: (progress: PerfProgress) => void,
 ): Promise<PerfReport> {
   const store = perfDocumentStore('perf.ns.svg');
   try {
-    const samples = await measureEdits({ handle, host, store }, plan, onProgress);
+    const samples = await measureEdits({ handle, host, store, phases }, plan, onProgress);
     const places = perfPlaces(plan.blocks).length;
     return {
       version: editorVersion,
@@ -254,7 +292,11 @@ async function measureReport(
       warmup: places * plan.warmup,
       rows: perfCommandIds.map((command) => ({
         command,
-        summary: summarize(samples.get(command) ?? []),
+        summary: summarize((samples.get(command) ?? []).map((run) => run.total)),
+      })),
+      segments: perfCommandIds.map((command) => ({
+        command,
+        p95: segmentP95s((samples.get(command) ?? []).map((run) => run.segments)),
       })),
     };
   } finally {
@@ -280,6 +322,8 @@ export async function startPerfMode(root: HTMLElement): Promise<void> {
   const fontLoading = loadBlockFont();
   const canvas = document.createElement('div');
   canvas.className = 'ans-web-canvas';
+  // The editor times its parts only here, for the segments of QA-07 (06-web 9).
+  const phases = createPhaseRecorder(() => performance.now());
   const editor = createEditor({
     host: canvas,
     settings,
@@ -291,6 +335,7 @@ export async function startPerfMode(root: HTMLElement): Promise<void> {
     log: (text) => {
       log(text);
     },
+    time: phases.time,
   });
   const plan = perfPlanFrom(window.location.search);
   const style = document.createElement('style');
@@ -309,7 +354,7 @@ export async function startPerfMode(root: HTMLElement): Promise<void> {
         locale={locale}
         scheme={appearance.scheme}
         plan={plan}
-        measure={(onProgress) => measureReport(editor, canvas, plan, onProgress)}
+        measure={(onProgress) => measureReport(editor, canvas, phases, plan, onProgress)}
         copyText={(text) => navigator.clipboard.writeText(text)}
       />
     </StrictMode>,

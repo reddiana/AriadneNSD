@@ -20,11 +20,11 @@ status: 생성됨
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 5 | 45 | 225 | - | 275 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 161 | - | 196 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 29 | 43 | - | 94 |
-| [[#5. 파일\|파일]] | 18 | 154 | 229 | - | 401 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 149 | - | 151 |
-| [[#7. 성능\|성능]] | 2 | - | 12 | 5 | 19 |
+| [[#5. 파일\|파일]] | 18 | 155 | 229 | - | 402 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 150 | - | 152 |
+| [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 9 | - | 9 |
-| 합계 | 80 | 258 | 828 | 5 | 1171 |
+| 합계 | 80 | 259 | 832 | 5 | 1176 |
 
 ## 읽는 법
 
@@ -1130,7 +1130,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 401개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 402개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1312,10 +1312,11 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `packages/editor/src/create-editor.test.ts`
 
-셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 48개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
+셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 49개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
+| T-1175 | 06-web 9: 단계 타이머를 주면 명령 하나가 명령부터 DOM 반영까지 제 부분들의 시간을 잰다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 | T-0356 | 새 문서에는 빈 블록 하나가 선택되어 있고, 바뀐 것이 없는 상태다 | [[01-requirements#^r-all\|R-ALL-03]] |
 | T-0357 | 03-editor 6.2: 바뀌면 문서가 바뀐 상태가 되고 셸에 알린다 | - |
 | T-0358 | 저장하면 모델이 든 파일을 쓰고, 다시 열면 같은 내용이다 | [[01-requirements#^r-fmt\|R-FMT-01]] |
@@ -1895,7 +1896,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 151개.
+블록의 크기와 자리, SVG로 그리기, 테마 색의 대비, 글자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 조각 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 152개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -2009,10 +2010,11 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ### [단위] `packages/core/src/render/render-doc.test.ts`
 
-렌더링 · 렌더링: 헤더(시각 디자인 원칙 2) · 렌더링: 구문 강조(R-LAY-07) · 렌더링: 골든 파일(07-testing 3). Vitest · 테스트 21개. 파일 전체가 확인하는 것: [[01-requirements#^r-lay|R-LAY-07]].
+렌더링 · 렌더링: 헤더(시각 디자인 원칙 2) · 렌더링: 구문 강조(R-LAY-07) · 렌더링: 골든 파일(07-testing 3). Vitest · 테스트 22개. 파일 전체가 확인하는 것: [[01-requirements#^r-lay|R-LAY-07]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
+| T-1176 | 단계 타이머는 레이아웃 · 씬 · SVG를 차례로 보고, 결과는 바꾸지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 | T-0476 | 같은 모델은 같은 SVG 텍스트를 준다 | [[01-requirements#^r-fmt\|R-FMT-03]] |
 | T-0477 | 01-file-format 2: g.ans-render 하나에 번들 글꼴을 앞세워 그린다 | - |
 | T-0478 | 시각 디자인 3.3: 기본 테마의 색을 쓴다 | - |
@@ -2185,7 +2187,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 7. 성능
 
-그리기와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 재는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]. 파일 4개, 테스트 19개.
+그리기와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 재는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]. 파일 5개, 테스트 22개.
 
 ### [E2E] `apps/web/e2e/perf.spec.ts`
 
@@ -2227,6 +2229,18 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1160 | 큰 문서에는 요청한 수의 처리 블록이 있다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 
 ^t-apps-web-src-perf-perf-report-test-ts
+
+### [단위] `apps/web/src/perf/perf-segments.test.ts`
+
+점검 모드가 편집 하나를 나누는 QA-07의 구간 (06-web 9). Vitest · 테스트 3개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1177 | 잰 부분의 시간에서 그 안의 부분은 뺀다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1178 | 구간을 더하면 전체 시간이고, 입력과 브라우저는 남은 시간을 가진다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1179 | 구간마다 실행들에 걸친 제 p95가 있다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+
+^t-apps-web-src-perf-perf-segments-test-ts
 
 ### [성능] `packages/core/src/render/render.bench.ts`
 

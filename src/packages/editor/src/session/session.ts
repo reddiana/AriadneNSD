@@ -9,6 +9,7 @@ import type {
   KeptSettings,
   Note,
   OkResult,
+  PhaseTimer,
   Reason,
   Rendering,
   Result,
@@ -27,6 +28,7 @@ import {
   headParams,
   renderDoc,
   siteFoldOf,
+  untimed,
 } from '@ariadne-nsd/core';
 
 import type { ClipboardData } from '../clipboard/clip-format';
@@ -79,6 +81,10 @@ export type SessionOptions = {
   /** Unexpected errors and invariant violations (coding guide 5), for the problem report. */
   readonly log: (text: string, detail?: unknown) => void;
   readonly keyBindings: ReadonlyArray<KeyBinding>;
+  /**
+   * Times the parts of an edit for the check mode (QA-07's segments, 06-web 9). Default: untimed.
+   */
+  readonly time?: PhaseTimer;
 };
 
 /** How a document is put into the session. */
@@ -125,13 +131,16 @@ export class EditorSession {
   private isHintShown = false;
   /** Runs a command by id (the registry). Set by the editor after the registry is made. */
   runCommand: (id: string, args?: unknown) => void = () => undefined;
+  /** Times the parts of an edit (the check mode); the view times its drawing with it too. */
+  readonly time: PhaseTimer;
 
   constructor(
     doc: Doc,
     private readonly options: SessionOptions,
     load: LoadOptions,
   ) {
-    this.rendered = renderDoc(doc);
+    this.time = options.time ?? untimed;
+    this.rendered = this.render(doc);
     this.indexed = indexDoc(doc.content);
     this.saved = load.isDirty ? null : doc;
     this.keptSettings = load.kept;
@@ -200,9 +209,16 @@ export class EditorSession {
 
   private setState(state: EditorState): void {
     this.current = state;
-    for (const listener of [...this.listeners]) {
-      listener(state);
-    }
+    this.time('notify', () => {
+      for (const listener of [...this.listeners]) {
+        listener(state);
+      }
+    });
+  }
+
+  /** Lays out and draws a document (timed in the check mode). */
+  private render(doc: Doc): Rendering {
+    return renderDoc(doc, this.time);
   }
 
   /** Calls the listeners again without a change (the notice or the question changed). */
@@ -216,7 +232,7 @@ export class EditorSession {
     this.noticeValue = null;
     this.keptSettings = load.kept;
     this.saved = load.isDirty ? null : doc;
-    this.rendered = renderDoc(doc);
+    this.rendered = this.render(doc);
     this.indexed = indexDoc(doc.content);
     this.clearPending();
     this.setState({
@@ -251,7 +267,7 @@ export class EditorSession {
 
   /** Draws the document again, for example after a user setting of the screen changed. */
   rerender(): void {
-    this.rendered = renderDoc(this.current.doc);
+    this.rendered = this.render(this.current.doc);
     this.setState({ ...this.current, layout: this.rendered.layout });
   }
 
@@ -442,7 +458,7 @@ export class EditorSession {
    */
   setView(view: View, selection?: Selection | null): void {
     const doc: Doc = { content: this.current.doc.content, view };
-    this.rendered = renderDoc(doc);
+    this.rendered = this.render(doc);
     const next = selection === undefined ? this.current.selection : selection;
     this.setState({
       ...withSelection(this.current, validSelection(this.index(), next, this.shownOf(doc))),
@@ -508,7 +524,7 @@ export class EditorSession {
   apply(content: Content, after: After, isAmend = false): boolean {
     const view = after.view ?? this.current.doc.view;
     if (content !== this.current.doc.content) {
-      const violations = checkInvariants(content);
+      const violations = this.time('check', () => checkInvariants(content));
       if (violations.length > 0) {
         this.options.log('A command broke the model invariants', violations);
         this.notify('notice.internalError', 'warn');
@@ -520,7 +536,7 @@ export class EditorSession {
         ? this.current.doc
         : { content, view };
     if (doc !== this.current.doc) {
-      this.rendered = renderDoc(doc);
+      this.rendered = this.render(doc);
     }
     const index = indexDoc(content);
     const selection = validSelection(index, after.selection, this.shownOf(doc));
@@ -592,7 +608,7 @@ export class EditorSession {
       this.current,
       direction,
       (doc) => {
-        this.rendered = renderDoc(doc);
+        this.rendered = this.render(doc);
         return this.rendered.layout;
       },
       this.isDirty,
@@ -782,6 +798,12 @@ export class EditorSession {
    * when it opened runs nothing, so it leaves no undo step.
    */
   commitEditing(text: string): void {
+    this.time('command', () => {
+      this.commitText(text);
+    });
+  }
+
+  private commitText(text: string): void {
     const editing = this.current.editing;
     if (editing === null) {
       return;

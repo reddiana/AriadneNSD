@@ -1,5 +1,8 @@
 // The command list (03-editor 5, ADR-0033): one entry per command, shared by menus, the toolbar,
 // the context menu, the command palette and the key table. Running happens in one place.
+import type { PhaseTimer } from '@ariadne-nsd/core';
+import { untimed } from '@ariadne-nsd/core';
+
 import type { CommandContext, CommandRegistry, CommandSpec } from '../contracts';
 import type { KeyBinding } from '../input/keys';
 import { keysOf } from '../input/keys';
@@ -15,6 +18,8 @@ export type RegistryOptions = {
   readonly beforeRun: (id: string) => void;
   /** An exception from a command: a bug. Logged; the document is left as it was. */
   readonly onError: (error: unknown, id: string) => void;
+  /** Times a command's run for the check mode (QA-07's segments). Default: untimed. */
+  readonly time?: PhaseTimer;
 };
 
 /** A registry with a way to say "applies now may have changed". */
@@ -95,7 +100,7 @@ export function createRegistry(options: RegistryOptions): EditorRegistry {
         return;
       }
       try {
-        const running = spec.run(ctx, args);
+        const running = (options.time ?? untimed)('command', () => spec.run(ctx, args));
         if (running instanceof Promise) {
           void (async () => {
             try {

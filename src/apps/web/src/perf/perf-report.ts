@@ -5,6 +5,8 @@ import type { Locale } from '@ariadne-nsd/core';
 
 import type { PerfMessageKey } from './perf-messages';
 import { perfMessage } from './perf-messages';
+import type { PerfSegmentId } from './perf-segments';
+import { perfSegmentConnectors, perfSegmentIds } from './perf-segments';
 
 /** QA-07: an edit shows within 100 ms at p95. */
 export const responseLimitMs = 100;
@@ -118,6 +120,23 @@ export function deviceInfo(
 /** One measured command in the report. */
 export type PerfRow = { readonly command: PerfCommandId; readonly summary: Summary };
 
+/** One command's segments in the report: the p95 of each segment (ms) over the same runs. */
+export type PerfSegmentRow = {
+  readonly command: PerfCommandId;
+  readonly p95: Readonly<Record<PerfSegmentId, number>>;
+};
+
+/** The p95 of each segment over a command's runs. */
+export function segmentP95s(
+  runs: ReadonlyArray<Readonly<Record<PerfSegmentId, number>>>,
+): Readonly<Record<PerfSegmentId, number>> {
+  const entries = perfSegmentIds.map((segment) => {
+    const sorted = runs.map((run) => run[segment]).sort((a, b) => a - b);
+    return [segment, sorted.length === 0 ? 0 : percentile(sorted, 0.95)] as const;
+  });
+  return Object.fromEntries(entries) as Record<PerfSegmentId, number>;
+}
+
 /** Everything the result table and the copied Markdown show. */
 export type PerfReport = {
   readonly version: string;
@@ -129,6 +148,8 @@ export type PerfReport = {
   readonly samples: number;
   readonly warmup: number;
   readonly rows: ReadonlyArray<PerfRow>;
+  /** The same commands split into the segments of QA-07 (06-web 9). */
+  readonly segments: ReadonlyArray<PerfSegmentRow>;
 };
 
 /** Whether every command passes. */
@@ -203,7 +224,28 @@ export function columnTitles(locale: Locale): ReadonlyArray<string> {
   );
 }
 
-/** The results as Markdown: a title, the facts as a list, and the table ("Copy Results"). */
+/** The column titles of the segment table: command, then each segment. */
+export function segmentColumnTitles(locale: Locale): ReadonlyArray<string> {
+  return [
+    perfMessage(locale, 'perf.column.command'),
+    ...perfSegmentIds.map((segment) => perfMessage(locale, `perf.segment.${segment}`)),
+  ];
+}
+
+/** The connectors under each segment title (03-architecture 3.5); empty for the browser's part. */
+export function segmentConnectorCells(): ReadonlyArray<string> {
+  return ['', ...perfSegmentIds.map((segment) => perfSegmentConnectors[segment])];
+}
+
+/** The cells of one row of the segment table. */
+export function segmentCells(row: PerfSegmentRow, locale: Locale): ReadonlyArray<string> {
+  return [
+    commandTitle(row.command, locale),
+    ...perfSegmentIds.map((segment) => formatMs(row.p95[segment])),
+  ];
+}
+
+/** The results as Markdown: a title, the facts as a list, and the tables ("Copy Results"). */
 export function reportMarkdown(report: PerfReport, locale: Locale): string {
   const say = (key: PerfMessageKey): string => perfMessage(locale, key);
   const line = (cells: ReadonlyArray<string>): string =>
@@ -224,6 +266,15 @@ export function reportMarkdown(report: PerfReport, locale: Locale): string {
     ...report.rows.map((row) =>
       line(rowCells(row, locale).map((cell, index) => (index === 1 ? `\`${cell}\`` : cell))),
     ),
+    '',
+    `### ${say('perf.segments.title')}`,
+    '',
+    say('perf.segments.note'),
+    '',
+    line(segmentColumnTitles(locale)),
+    line(segmentColumnTitles(locale).map(() => '---')),
+    line(segmentConnectorCells()),
+    ...report.segments.map((row) => line(segmentCells(row, locale))),
     '',
   ].join('\n');
 }

@@ -155,7 +155,22 @@ updated: 2026-11-01
 
 - **아키텍처:** 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리를 구분해 낼 수 있다. 증분 레이아웃(메모이제이션)을 할지는 측정해서 정한다 → [[0029-immutable-document-undo|ADR-0029]], [[02-layout#4. 성능]]
 - **테스트:** 성능 벤치마크. 블록 500개 문서에서 대표 명령 20가지를 각 100번 실행해 p95를 측정한다. Node에서 `core`만(레이아웃 + 렌더링, 목표의 절반인 50ms 이하를 제안)과 브라우저에서 화면 갱신까지(Playwright, 성능 타임라인)로 나눈다. **실행할 때:** 모든 커밋(Node, 결과를 기록해 느려지면 알림), 출시 전(기준 기기)
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1152]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1153]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1159]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1160]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 14개([[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1147]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1148]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1155]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1156]])
+- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-1176]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1152]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1153]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1159]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1160]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 15개([[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). `apps/web/src/perf/perf-segments.test.ts`의 테스트 3개([[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts|T-1177]] ~ T-1179). 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1147]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1148]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1155]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1156]])
+- **측정 구간:** 입력부터 화면까지의 길을 [[03-architecture#3. 실행 중의 모습|C&C 뷰]]의 커넥터로 나눈다. 점검 모드([[06-web#9. 점검 모드]])가 명령마다 구간별 p95를 보인다. 예산은 기준 기기에서의 p95이고, 합격은 지금처럼 전체 p95로만 가른다(구간 예산은 어디를 고칠지 찾는 기준).
+
+| 구간 | 커넥터 | 시작 → 끝 (코드의 자리) | 예산 | 검증 |
+| --- | --- | --- | --- | --- |
+| 입력 | C-01 ~ C-04 | 키 이벤트 → 명령 실행 직전. 키 처리(`EditorSession.handleKey` · `readKey`)와 아래 구간에 들지 않은 동기 작업. 키 처리 시간에서 잰 구간을 뺀 나머지 | 2ms | [[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
+| 편집 명령 | C-04 · C-05 | 명령의 실행(`registry.run`의 `spec.run`, 글자는 `EditorSession.commitEditing`)에서 아래 구간을 뺀 것. 새 내용 · 색인 · 선택을 만듦 | 8ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 불변식 검사 | C-05 | `EditorSession.apply`의 `checkInvariants` | 4ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 레이아웃 | C-07 · C-08 | `renderDoc`의 `layout` (글자 폭 포함) | 12ms | [[08-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[08-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
+| 그림 | C-09 | `renderDoc`의 `buildScene` + `toSvg` | 14ms | [[08-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[08-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
+| 알림 | C-06 · C-11 | `EditorSession.setState`가 부르는 리스너(셸에 알림, 인라인 에디터, 다음 프레임 예약) | 10ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| DOM 반영 | C-10 | 첫 프레임의 `CanvasView.draw`: 문서 레이어의 `innerHTML`, 오버레이, 선택 상자 | 20ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 브라우저 | (우리 코드 밖) | 그 뒤 두 번째 프레임까지: 스타일 · 레이아웃 · 페인트와 화면 주사율의 기다림. 그 시간에서 잰 구간을 뺀 나머지 | 30ms | [[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
+
+- 예산의 근거: `core`의 구간(편집 명령 ~ 그림)은 잰 값에 여유를 두고 38ms, 화면 쪽(알림 · DOM 반영 · 브라우저)에 60ms를 둔다. 브라우저 몫은 60Hz 화면의 한 프레임(17ms)을 기다리는 시간을 품어야 해서 가장 크다. 레이아웃 12 · 그림 14ms는 Node의 벤치마크 한도(각 p99 20ms, T-0517)보다 좁다. 브라우저에서 기준 기기의 값이기 때문이다.
+- **잰 값 (2026-11-17, 개발 기계의 Chromium, 명령마다 30번):** 감속 없이는 모든 명령이 p95 34 ~ 35ms로 합격이고, `core`의 구간을 다 더해도 4ms 아래다. CPU 4배 감속(기준 기기 대신)에서는 8가지 모두 불합격(p95 173 ~ 267ms)이다. `core`의 구간은 각 15ms 아래로 예산 안이고, 시간은 DOM 반영(27 ~ 136ms)과 브라우저(53 ~ 199ms)가 먹는다. 문서 레이어 전체를 바꿔 넣고 브라우저가 블록 500개의 SVG를 다시 레이아웃 · 페인트하는 시간이다. 그래서 증분 레이아웃보다 화면 쪽(바뀐 곳만 DOM에 반영하기)이 고칠 곳이다 → [[backlog#MVP 개발]]
 - **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-08 여는 시간 (제안)
@@ -201,7 +216,7 @@ updated: 2026-11-01
 
 - **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[03-architecture#4.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트용 가짜 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 본다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 48개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0356]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
+- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 49개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[03-architecture#7. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 바꾸기

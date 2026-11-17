@@ -86,8 +86,8 @@ export {
 export type { RenderedSvg } from './render/to-svg';
 export { toSvg } from './render/to-svg';
 export { usedCodePoints } from './render/used-code-points';
-export type { Rendering, SavedDrawing } from './render/render-doc';
-export { renderDoc, savedDrawing } from './render/render-doc';
+export type { PhaseTimer, Rendering, SavedDrawing } from './render/render-doc';
+export { renderDoc, savedDrawing, untimed } from './render/render-doc';
 
 // Invariants and editing commands (01-model 3, 4).
 export type { Violation } from './model/invariants';

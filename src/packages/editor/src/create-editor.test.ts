@@ -47,6 +47,34 @@ afterEach(() => {
 });
 
 describe('the shell contract (03-editor 6, QA-10)', () => {
+  it('T-1175 · QA-07: 06-web 9: with a phase timer, a command times its parts from the command to the DOM', async () => {
+    const phases: string[] = [];
+    const host = document.createElement('div');
+    document.body.append(host);
+    const handle = createEditor({
+      host,
+      settings: memorySettings(),
+      appearance: { scheme: 'light', uiFont: 'sans-serif' },
+      doc: { store: memoryStore(), text: null },
+      fonts: fakeFonts,
+      clipboard: memoryClipboard(),
+      time: (phase, run) => {
+        phases.push(phase);
+        return run();
+      },
+    });
+    handles.push(handle);
+    await tick();
+    phases.length = 0;
+    handle.commands.run('block.insert.while');
+    expect(phases).toEqual(
+      expect.arrayContaining(['command', 'check', 'layout', 'scene', 'svg', 'notify']),
+    );
+    expect(phases[0]).toBe('command');
+    await tick();
+    expect(phases).toContain('dom');
+  });
+
   it('T-0356 · R-ALL-03: a new document has one empty block, selected, and is not dirty', () => {
     const { handle } = make();
     expect(handle.status()).toEqual({

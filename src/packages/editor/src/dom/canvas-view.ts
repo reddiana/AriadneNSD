@@ -198,6 +198,12 @@ export class CanvasView {
 
   /** Draws what changed: the document layer only when the rendering changed (03-editor 1.2). */
   draw(): void {
+    this.session.time('dom', () => {
+      this.drawNow();
+    });
+  }
+
+  private drawNow(): void {
     if (this.frame !== null) {
       cancelAnimationFrame(this.frame);
       this.frame = null;

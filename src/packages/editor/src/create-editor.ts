@@ -1,5 +1,5 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
-import type { Doc, KeptSettings, Locale, Settings } from '@ariadne-nsd/core';
+import type { Doc, KeptSettings, Locale, PhaseTimer, Settings } from '@ariadne-nsd/core';
 import {
   checkDrawing,
   createDoc,
@@ -65,6 +65,11 @@ export type EditorOptions = {
   readonly clipboard?: ClipboardPort;
   /** Addition: unexpected errors, for the problem report (R-REP-01). Default: nowhere. */
   readonly log?: (text: string, detail?: unknown) => void;
+  /**
+   * Addition: times the parts of an edit (the check mode `?perf` splits QA-07 into segments,
+   * 06-web 9). Default: untimed.
+   */
+  readonly time?: PhaseTimer;
 };
 
 /**
@@ -298,6 +303,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
       isKeyHintEnabled: () => settings.get<boolean>(settingIds.keyHint) !== false,
       log,
       keyBindings,
+      ...(options.time === undefined ? {} : { time: options.time }),
     },
     first.ok
       ? {
@@ -332,6 +338,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
       log(`Command ${id} threw`, error);
       session.notify('notice.internalError', 'warn');
     },
+    time: session.time,
   });
   session.runCommand = (id, args) => {
     registry.run(id, args);

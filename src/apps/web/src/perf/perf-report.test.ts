@@ -35,6 +35,19 @@ function report(p95s: ReadonlyArray<number>): PerfReport {
       command,
       summary: summarize([1, 2, p95s[index] ?? 3]),
     })),
+    segments: perfCommandIds.map((command) => ({
+      command,
+      p95: {
+        input: 0.1,
+        command: 0.4,
+        check: 0.3,
+        layout: 1,
+        draw: 0.5,
+        notify: 0.2,
+        dom: 0.6,
+        paint: 1,
+      },
+    })),
   };
 }
 
@@ -101,6 +114,24 @@ describe('the check mode numbers (AT-05)', () => {
         '| Move down | `Alt+j` | 2.0 | 3.0 | 3.0 | Pass |',
         '| Paste a block | `p` | 2.0 | 3.0 | 3.0 | Pass |',
         '| Accept an edited text | `Enter` | 2.0 | 3.0 | 3.0 | Pass |',
+        '',
+        '### Segments (p95, ms)',
+        '',
+        'The same runs split along the path of an edit (QA-07, the connectors of the C&C view under each title). Each column is that segment’s own p95, so a row does not add up to the command’s p95.',
+        '',
+        '| Command | Key | Edit | Check | Layout | Drawing | Notify | DOM | Browser |',
+        '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+        '|  | C-01 ~ C-04 | C-04 · C-05 | C-05 | C-07 · C-08 | C-09 | C-06 · C-11 | C-10 |  |',
+        ...[
+          'Insert a process block',
+          'Delete a block',
+          'Undo',
+          'Redo',
+          'Wrap in If',
+          'Move down',
+          'Paste a block',
+          'Accept an edited text',
+        ].map((title) => `| ${title} | 0.1 | 0.4 | 0.3 | 1.0 | 0.5 | 0.2 | 0.6 | 1.0 |`),
         '',
       ].join('\n'),
     );

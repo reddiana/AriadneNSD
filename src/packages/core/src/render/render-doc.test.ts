@@ -58,6 +58,16 @@ const sample: Doc = docOf(
 );
 
 describe('render', () => {
+  it('T-1176 · QA-07: a phase timer sees the layout, the scene and the SVG, in order, and changes nothing', () => {
+    const phases: string[] = [];
+    const timed = renderDoc(sample, (phase, run) => {
+      phases.push(phase);
+      return run();
+    });
+    expect(phases).toEqual(['layout', 'scene', 'svg']);
+    expect(timed.svg.content).toBe(renderDoc(sample).svg.content);
+  });
+
   it('T-0476 · R-FMT-03: the same model gives the same SVG text', () => {
     const first = renderDoc(inLocale(sample, 'ko')).svg.content;
     const second = renderDoc(inLocale(structuredClone(sample), 'ko')).svg.content;

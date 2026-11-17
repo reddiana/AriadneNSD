@@ -8,6 +8,8 @@ import type { DocumentStore, EditorHandle } from '@ariadne-nsd/editor';
 import { largeDocumentBlockId, largeDocumentFile } from './large-document';
 import type { PerfCommandId } from './perf-report';
 import { perfCommandIds } from './perf-report';
+import type { PerfSegmentId, PhaseRecorder } from './perf-segments';
+import { splitRun } from './perf-segments';
 
 /** How much to measure. */
 export type PerfPlan = {
@@ -52,11 +54,21 @@ export type PerfProgress = {
   readonly total: number;
 };
 
-/** The editor to measure, the element it draws in, and the store of the measured document. */
+/**
+ * The editor to measure, the element it draws in, the store of the measured document, and the
+ * recorder the editor times its parts with (`createEditor({ time: phases.time })`).
+ */
 export type PerfTarget = {
   readonly handle: EditorHandle;
   readonly host: HTMLElement;
   readonly store: DocumentStore;
+  readonly phases: PhaseRecorder;
+};
+
+/** One timed run: its whole time and that time split into the segments (ms). */
+export type RunSample = {
+  readonly total: number;
+  readonly segments: Readonly<Record<PerfSegmentId, number>>;
 };
 
 /** The parts of a key event the editor reads (`strokeOf`). */
@@ -101,19 +113,19 @@ function press(target: HTMLElement, key: Key): void {
 /**
  * Times the commands. Each run starts from the same document with the same block selected:
  * what a run changed is undone (or, failing that, the document opened again) before the next.
- * Resolves the measured times (ms) of each command; rejects when a command did not change the
+ * Resolves each command's runs (the whole time and its segments, ms); rejects when a command did not change the
  * drawing, which would make its time meaningless.
  */
 export async function measureEdits(
   target: PerfTarget,
   plan: PerfPlan,
   onProgress: (progress: PerfProgress) => void,
-): Promise<ReadonlyMap<PerfCommandId, ReadonlyArray<number>>> {
-  const { handle, host, store } = target;
+): Promise<ReadonlyMap<PerfCommandId, ReadonlyArray<RunSample>>> {
+  const { handle, host, store, phases } = target;
   const text = largeDocumentFile(plan.blocks);
   const places = perfPlaces(plan.blocks);
   const total = places.length * perfCommandIds.length * (plan.warmup + plan.rounds);
-  const samples = new Map<PerfCommandId, number[]>(perfCommandIds.map((id) => [id, []]));
+  const samples = new Map<PerfCommandId, RunSample[]>(perfCommandIds.map((id) => [id, []]));
 
   const find = (selector: string): HTMLElement => {
     const element = host.querySelector<HTMLElement>(selector);
@@ -179,12 +191,12 @@ export async function measureEdits(
     press(on, key);
     await frames(2);
   };
-  /** Presses the key of the command and times it. */
+  /** Presses the key of the command and times it, whole and in segments. */
   const timed = async (
     command: PerfCommandId,
     key: Key,
     on: HTMLElement = canvas(),
-  ): Promise<number> => {
+  ): Promise<RunSample> => {
     let isChanged = false;
     const observer = new MutationObserver(() => {
       isChanged = true;
@@ -195,18 +207,25 @@ export async function measureEdits(
       attributes: true,
       characterData: true,
     });
+    phases.reset();
     const start = performance.now();
     press(on, key);
+    const sync = performance.now() - start;
+    const syncParts = phases.totals();
     await frames(2);
     const elapsed = performance.now() - start;
+    const allParts = phases.totals();
     isChanged ||= observer.takeRecords().length > 0;
     observer.disconnect();
     if (!isChanged) {
       throw new Error(`“${command}” did not change the drawing`);
     }
-    return elapsed;
+    return {
+      total: elapsed,
+      segments: splitRun({ sync, total: elapsed, syncParts, allParts }),
+    };
   };
-  const run = async (command: PerfCommandId): Promise<number> => {
+  const run = async (command: PerfCommandId): Promise<RunSample> => {
     switch (command) {
       case 'insert':
         return timed(command, keys.o);

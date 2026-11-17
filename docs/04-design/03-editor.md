@@ -296,6 +296,7 @@ function createEditor(options: {
   screenFontUrl?: string;                        // 화면에 쓸 블록 글꼴(woff2)의 주소
   clipboard?: ClipboardPort;                     // 없으면 시스템 클립보드(막히면 메모리)
   log?: (text: string, detail?: unknown) => void; // 예상하지 못한 오류 → 문제 알리기 보고서의 로그 (R-REP-01)
+  time?: PhaseTimer;                             // 편집의 부분(명령 · 검사 · 레이아웃 · 그림 · 알림 · DOM)마다 시간을 잼. 점검 모드만 줌 (06-web 9)
 }): EditorHandle;
 
 type OpenedDocument = {

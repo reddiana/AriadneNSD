@@ -51,6 +51,17 @@ const english = {
   'perf.command.move': 'Move down',
   'perf.command.paste': 'Paste a block',
   'perf.command.text': 'Accept an edited text',
+  'perf.segments.title': 'Segments (p95, ms)',
+  'perf.segments.note':
+    'The same runs split along the path of an edit (QA-07, the connectors of the C&C view under each title). Each column is that segment’s own p95, so a row does not add up to the command’s p95.',
+  'perf.segment.input': 'Key',
+  'perf.segment.command': 'Edit',
+  'perf.segment.check': 'Check',
+  'perf.segment.layout': 'Layout',
+  'perf.segment.draw': 'Drawing',
+  'perf.segment.notify': 'Notify',
+  'perf.segment.dom': 'DOM',
+  'perf.segment.paint': 'Browser',
 } as const;
 
 /** The key of a check mode screen string. */
@@ -101,6 +112,17 @@ const korean: Record<PerfMessageKey, string> = {
   'perf.command.move': '아래로 이동',
   'perf.command.paste': '블록 붙여넣기',
   'perf.command.text': '고친 글자 받아들이기',
+  'perf.segments.title': '구간별 p95 (ms)',
+  'perf.segments.note':
+    '같은 실행을 편집의 길을 따라 나눈 것입니다(QA-07, 제목 아래는 C&C 뷰의 커넥터). 칸마다 그 구간만의 p95라서, 한 줄을 더해도 명령의 p95가 되지 않습니다.',
+  'perf.segment.input': '입력',
+  'perf.segment.command': '편집 명령',
+  'perf.segment.check': '불변식 검사',
+  'perf.segment.layout': '레이아웃',
+  'perf.segment.draw': '그림',
+  'perf.segment.notify': '알림',
+  'perf.segment.dom': 'DOM 반영',
+  'perf.segment.paint': '브라우저',
 };
 
 const catalogs: Record<Locale, Record<PerfMessageKey, string>> = { en: english, ko: korean };
