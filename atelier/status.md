@@ -55,7 +55,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - [ ] **다음 세션 처음: 시안 M59의 CP1을 정함** (펴 보인 호출 블록의 바깥을 일반 블록 선으로 할 때 무엇으로 가를까, inbox "3. 기능"의 항목) → [[sketchbook]]
 - [ ] **다음 세션 처음: 시안 M57을 봄** (AI 넷의 시험 결과, JSON 붙여넣어 열기 · 요청문 복사 · 안내서 손질) → [[sketchbook]], [[outbox#정해 주세요]]
 - [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 조금 고침. 고친 뒤 Claude가 PNG로 보고 [[03-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
-- [ ] AT-05가 CPU 4배 감속에서 불합격(p95 280 ~ 750ms): 시간이 어디서 드는지 프로파일링한 뒤 증분 레이아웃을 할지 여쭙기(다른 에이전트가 돌지 않을 때 잼) → [[backlog#MVP 개발]]
+- [ ] AT-05: 측정 구간으로 다시 재니 병목은 레이아웃이 아니라 화면 쪽(DOM 반영 · 브라우저 그리기, 4배 감속에서 p95 173 ~ 267ms). "바뀐 블록만 DOM에 반영"을 할지 여쭙기 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간]], [[backlog#MVP 개발]]
 - [ ] 메인테이너: AT-05를 점검 모드(`https://ariadnensd.com/?perf`)로 가진 기기에서 재기, 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 다음 세션: outbox의 세션 06에 정한 것 7묶음 → [[outbox#확인해 주세요]]
 - [ ] 메인테이너: Windows 알림을 다시 켤지(밤에 `.claude/settings.local.json`의 `hooks`를 비워 둠)
