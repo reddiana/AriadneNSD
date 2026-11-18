@@ -562,6 +562,137 @@ describe('CanvasView: the inline editor (03-editor 3.4)', () => {
   });
 });
 
+describe('CanvasView: the selection outline while the inline editor is open (visual design 7.1)', () => {
+  /** Lets the view redraw by itself: these tests must not depend on a `draw()` of their own. */
+  const nextFrame = (): Promise<void> =>
+    new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
+
+  const hasOutline = (made: Made): boolean =>
+    made.host.querySelector('.ans-overlay')?.innerHTML.includes('stroke-width="3"') === true;
+
+  const ifContent = (): Content =>
+    contentOf([ifBlock('i1', branch('y', [proc('p1')], 'yes'), branch('n', [proc('p2')], 'no'))]);
+
+  it('T-1302: goes when the editor opens and comes back when the text is accepted, on the same selection', async () => {
+    const made = make(three());
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'b1'));
+    await nextFrame();
+    expect(hasOutline(made)).toBe(true);
+    const selection = session.state.selection;
+    key(made.canvas, { code: 'KeyI' });
+    await nextFrame();
+    expect(hasOutline(made)).toBe(false);
+    expect(session.state.selection).toBe(selection);
+    key(editorOf(made), { key: 'Enter' });
+    await nextFrame();
+    expect(hasOutline(made)).toBe(true);
+    expect(session.state.selection).toEqual(selection);
+  });
+
+  it('T-1303: comes back when the editing is cancelled', async () => {
+    const made = make(three());
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'b1'));
+    session.startEditing({ kind: 'block', block: 'b1' }, 'end');
+    await nextFrame();
+    expect(hasOutline(made)).toBe(false);
+    session.cancelEditing();
+    await nextFrame();
+    expect(hasOutline(made)).toBe(true);
+  });
+
+  it('T-1304: is not drawn around a whole If while its condition is edited', async () => {
+    const made = make(ifContent());
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'i1'));
+    session.startEditing({ kind: 'block', block: 'i1' }, 'end');
+    await nextFrame();
+    expect(hasOutline(made)).toBe(false);
+  });
+
+  it('T-1305: stays away when Tab moves to the other field of a call block', async () => {
+    const made = make(
+      contentOf([
+        {
+          id: 'c1',
+          kind: 'call',
+          target: { kind: 'named', name: 'sort' },
+          args: 'xs',
+          result: 'ys',
+          siteFolds: [],
+        },
+      ]),
+    );
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'c1'));
+    session.startEditing({ kind: 'call', block: 'c1', part: 'args' }, 'end');
+    await nextFrame();
+    expect(hasOutline(made)).toBe(false);
+    key(editorOf(made), { key: 'Tab', code: 'Tab' });
+    await nextFrame();
+    expect(session.state.editing?.field).toMatchObject({ kind: 'call', part: 'result' });
+    expect(hasOutline(made)).toBe(false);
+  });
+
+  it('T-1306: stays away while a refused header name is open and comes back after Esc', async () => {
+    const base = contentOf([proc('b1')], [proc('b2')]);
+    const made = make({
+      ...base,
+      diagrams: base.diagrams.map((diagram, order) => ({
+        ...diagram,
+        head: { kind: 'event', text: order === 0 ? 'a' : 'b' },
+      })),
+    });
+    const { session } = made.engine;
+    const diagram = base.diagrams[0]?.id ?? '';
+    made.engine.select({ kind: 'head', diagram });
+    session.startEditing({ kind: 'head', diagram }, 'end');
+    session.commitEditing('b');
+    await nextFrame();
+    expect(session.state.editing?.isRejected).toBe(true);
+    expect(hasOutline(made)).toBe(false);
+    key(editorOf(made), { key: 'Escape' });
+    await nextFrame();
+    expect(session.state.editing).toBeNull();
+    expect(hasOutline(made)).toBe(true);
+  });
+
+  it('T-1307: is not drawn on a selected branch label while that label is edited', async () => {
+    const made = make(ifContent());
+    const { session } = made.engine;
+    made.engine.select({ kind: 'branchLabel', branch: 'y' });
+    session.startEditing({ kind: 'branchLabel', branch: 'y' }, 'selectAll');
+    await nextFrame();
+    expect(hasOutline(made)).toBe(false);
+  });
+
+  it('T-1308: stays on a selected block in the branch while the label of the branch is edited elsewhere', async () => {
+    const made = make(ifContent());
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'p1'));
+    made.engine.run('edit.branchLabel');
+    await nextFrame();
+    expect(session.state.editing?.field).toEqual({ kind: 'branchLabel', branch: 'y' });
+    expect(hasOutline(made)).toBe(true);
+  });
+
+  it('T-1309: leaves the place menus and the key hint open at unchanged', async () => {
+    const made = make(three());
+    const { session } = made.engine;
+    made.engine.select(selectBlock(session.index(), 'b1'));
+    const anchor = made.view.selectionAnchor();
+    expect(anchor).not.toBeNull();
+    session.startEditing({ kind: 'block', block: 'b1' }, 'end');
+    await nextFrame();
+    expect(made.view.selectionAnchor()).toEqual(anchor);
+  });
+});
+
 describe('CanvasView: the wheel (interaction rules 2)', () => {
   it('T-0625: Ctrl+wheel zooms by 10% around the pointer', () => {
     const made = make(three());

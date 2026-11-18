@@ -231,6 +231,7 @@ export class CanvasView {
       layout: state.layout,
       index: this.session.index(),
       selection: state.selection,
+      editing: state.editing?.field ?? null,
       hover: this.hover,
       drop: this.drag?.drop ?? null,
       dragged: this.drag?.source.kind === 'blocks' ? this.drag.source.blocks : [],

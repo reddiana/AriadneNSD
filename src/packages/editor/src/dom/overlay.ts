@@ -56,6 +56,8 @@ export type OverlayInput = {
   readonly layout: LayoutResult;
   readonly index: DocIndex;
   readonly selection: Selection | null;
+  /** The field the inline editor is open on. Default: none. */
+  readonly editing?: EditField | null;
   /** The block under the pointer, or `null`. */
   readonly hover: Id | null;
   readonly drop: Drop | null;
@@ -219,6 +221,11 @@ function n(value: number): string {
   return String(Math.round(value * 100) / 100);
 }
 
+/** Whether two boxes share some area; boxes that only touch do not. */
+function overlaps(a: Box, b: Box): boolean {
+  return a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+}
+
 /**
  * A fold triangle in its click box (interaction rules 4): `▾` while open, `▸` while folded.
  * Only on the editing layer, so it is never saved (UX Q2).
@@ -269,7 +276,10 @@ export function overlayContent(input: OverlayInput): string {
     }
   }
   const box = selectionBox(layout, index, input.selection);
-  if (box !== null) {
+  const editing = input.editing ?? null;
+  const field = editing === null ? null : fieldBox(layout, editing);
+  // The inline editor has its own outline: two are not drawn in one place (visual design 7.1).
+  if (box !== null && (field === null || !overlaps(box, field))) {
     parts.push(insetRect(box, 0, 3, colors['edit.select']));
   }
   const drop = input.drop;

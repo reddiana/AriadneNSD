@@ -170,6 +170,27 @@ describe('overlayContent: what the edit layer draws', () => {
       '<rect x="12" y="22" width="97" height="37" fill="none" stroke="#d0500b" stroke-width="2"/>',
     );
   });
+
+  it('T-1310: draws no selection outline over the open inline editor, and no hover on that block either', () => {
+    const content = contentOf([proc('b1'), proc('b2')]);
+    const { index } = overlayOf(content);
+    const { svg } = overlayOf(content, {
+      selection: selectBlock(index, 'b1'),
+      hover: 'b1',
+      editing: { kind: 'block', block: 'b1' },
+    });
+    expect(svg).toBe('');
+  });
+
+  it('T-1311: keeps the selection outline of a block the inline editor does not cover', () => {
+    const content = contentOf([proc('b1'), proc('b2')]);
+    const { index } = overlayOf(content);
+    const { svg } = overlayOf(content, {
+      selection: selectBlock(index, 'b1'),
+      editing: { kind: 'block', block: 'b2' },
+    });
+    expect(svg).toContain('stroke-width="3"');
+  });
 });
 
 describe('selectionBox', () => {
