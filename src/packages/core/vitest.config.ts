@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 /**
  * True while the run records coverage (`pnpm coverage`, which passes `--coverage.enabled`).
  * Recording slows the code down, so the tests that time it (QA-07) skip their time assertions
- * then, as the browser test T-0007 does (07-testing 5).
+ * then, as the browser test T-0007 does (02-test-architecture 5).
  */
 const isCoverageRun = process.argv.some((arg) => arg.startsWith('--coverage'));
 

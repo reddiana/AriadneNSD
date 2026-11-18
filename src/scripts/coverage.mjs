@@ -1,4 +1,4 @@
-// How much of the code the tests run, the unit and the browser tests together (07-testing).
+// How much of the code the tests run, the unit and the browser tests together (02-test-architecture).
 // Runs each package's Vitest tests with V8 coverage, then the browser tests with coverage
 // (apps/web `e2e:coverage`), and joins the two by source line: a line is covered when either ran
 // it. Prints a table per package and the files with the most lines that no test runs.
@@ -16,7 +16,7 @@ const e2eFile = 'apps/web/coverage-e2e/coverage-final.json';
 const argument = (name) => process.argv[process.argv.indexOf(name) + 1];
 const fileCount = process.argv.includes('--files') ? Number(argument('--files')) : 20;
 const isCheck = process.argv.includes('--check');
-/** The least share of lines (unit and browser tests together) each package keeps, in % (07-testing 5). */
+/** The least share of lines (unit and browser tests together) each package keeps, in % (02-test-architecture 5). */
 const floors = new Map(packages.map((dir) => [dir, 90]));
 let hasFailedRun = false;
 

@@ -66,4 +66,4 @@ flowchart LR
 이 글은 코드가 없던 2026-10-11에, 요구사항과 아키텍처 문서([[03-architecture]])가 나눈 대로 만들었을 때를 생각하며 썼습니다.
 
 > [!note] 2026-11-01, MVP 코드에서는
-> MVP 코드도 이렇게 나뉘었습니다. 꾸밈의 크기는 레이아웃의 한 자리(`src/packages/core/src/layout/geometry.ts`의 치수 토큰)에, 색은 테마(`src/packages/core/src/render/theme.ts`)에 있습니다. "이 모델이면 이 SVG가 나온다"를 보는 시험은 골든 파일(`src/packages/core/golden/`)입니다 → [[07-testing]]
+> MVP 코드도 이렇게 나뉘었습니다. 꾸밈의 크기는 레이아웃의 한 자리(`src/packages/core/src/layout/geometry.ts`의 치수 토큰)에, 색은 테마(`src/packages/core/src/render/theme.ts`)에 있습니다. "이 모델이면 이 SVG가 나온다"를 보는 시험은 골든 파일(`src/packages/core/golden/`)입니다 → [[02-test-architecture]]

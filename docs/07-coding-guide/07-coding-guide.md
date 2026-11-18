@@ -13,12 +13,12 @@ updated: 2026-11-10
 > [!info] 읽는 법
 > - 규칙은 둘로 나뉩니다. 도구가 강제하는 것(1장)은 도구의 설정까지 여기에 정의하고, 설정 파일은 이 정의대로 만듭니다. 도구가 잡지 못하는 것(2장부터)만 글로 적습니다.
 > - 설정 파일과 이 문서가 다르면 둘 중 하나가 틀린 것입니다. 바꿀 때는 둘을 한 커밋으로 함께 바꿉니다.
-> - 어떤 도구를 쓰는지는 [[0038-build-and-test-tools|ADR-0038]]과 [[03-architecture#9. 기술 스택]], 테스트를 어떻게 짜는지는 [[07-testing]]에 있습니다.
+> - 어떤 도구를 쓰는지는 [[0038-build-and-test-tools|ADR-0038]]과 [[03-architecture#9. 기술 스택]], 테스트를 어떻게 짜는지는 [[02-test-architecture]]에 있습니다.
 > - 주석은 영어, 커밋 메시지는 Conventional Commits에 한국어 본문입니다 → [[dr-0017-code-language-and-commits|DR-0017]]
 
 ## 1. 도구가 강제하는 것
 
-모든 검사는 `src/`에서 `pnpm check` 하나로 돌고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트 → 뽑아 만든 문서가 낡지 않았는지 → 13장), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[07-testing#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
+모든 검사는 `src/`에서 `pnpm check` 하나로 돌고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트 → 뽑아 만든 문서가 낡지 않았는지 → 13장), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[02-test-architecture#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
 
 | 도구 | 무엇을 강제하나 | 설정 파일 (`src/` 기준) | 언제 |
 | --- | --- | --- | --- |
@@ -103,7 +103,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ### 1.6 테스트 도구
 
-파일의 자리와 이름은 [[07-testing]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 돌고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 적습니다.
+파일의 자리와 이름은 [[02-test-architecture]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 돌고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 적습니다.
 
 ## 2. 이름 짓기
 
@@ -183,7 +183,7 @@ export function wrap(content: Content, args: WrapArgs): Result {
 - 테스트 이름은 영어 문장으로, 맨 앞에 그 테스트의 ID(`T-` + 네 자리)를, 그 뒤에 확인하는 요구사항 · 시나리오 · 결함의 ID를 붙입니다: `it('T-0123 · R-EDIT-06: wraps a contiguous range in a new If block', …)`, 확인하는 것이 없으면 `it('T-0124: …')` → [[dr-0022-test-ids|DR-0022]]
 - 테스트를 더하면 `src/`에서 `node scripts/test-list.mjs --assign-ids`로 ID를 받고, `--add-missing`으로 [[08-test-list|테스트 목록]]에 쓸 빈 번역을 `scripts/test-list-ko.json`에 더해 채운 뒤 `pnpm test-list`. ID나 번역이 빠지면 `pnpm check`가 실패합니다. ID는 바꾸거나 다시 쓰지 않습니다
 - 버그를 고치면 그 버그를 다시 일으키는 테스트를 먼저 더합니다.
-- 층마다 무엇을 테스트하는지, 골든 파일의 규칙, 인수 테스트는 [[07-testing]]에 있습니다.
+- 층마다 무엇을 테스트하는지, 골든 파일의 규칙, 인수 테스트는 [[02-test-architecture]]에 있습니다.
 
 ## 11. 커밋
 
@@ -225,7 +225,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 | 원본에서 뽑기 | 같은 사실은 원본 하나에만 적고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[08-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
 | 예제를 테스트로 | 문서에 든 예제 JSON과 공유 링크를 테스트가 꺼내 실제 파서로 연다. 대상: `/llms.txt`, 첫 화면 HTML 안의 AI용 안내, 파일 형식 명세([[01-file-format]]). 스키마는 골든 파일로 검사한다 | `pnpm test` |
 | 함께 바뀌는 곳의 검사 | "이것을 바꾸면 저것도 본다"는 경로의 짝을 표로 두고, 한쪽만 바뀐 커밋을 검사가 알린다 | 커밋 · CI |
-| 사용자처럼 시험 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 주고 그림을 그리게 해, 낸 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[07-testing#5.2 새 LLM으로 안내서 시험하기]] | 출시 전 |
+| 사용자처럼 시험 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 주고 그림을 그리게 해, 낸 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 시험하기]] | 출시 전 |
 
 - 뽑아 만든 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 뽑아 만든 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 짝 표)가 원본과 다르면 `pnpm check`가 실패합니다.
 - 값을 견줄 수 있는 것은 짝의 검사가 아니라 테스트로 봅니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[03-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
@@ -251,9 +251,9 @@ Co-change-skip: C2 — 명세에 링크만 더함
 | C3 | `src/packages/editor/src/input/keys.ts` | [[03-keymap]]<br>`src/apps/manual/generated/keys-*.html` | 키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 돌지 않음)는 사람이 본다 |
 | C4 | `src/packages/editor/src/commands/{spec,registry,editor-commands}.ts`<br>`src/packages/editor/src/ui/{menu-model.ts,editor-app.tsx,command-ids.ts}`<br>`src/apps/web/src/shell/web-shell.ts` | [[03-editor]]<br>`src/apps/manual/pages/ref-*.html` | 메뉴와 커맨드 팔레트는 레지스트리에서 그려지지만, 편집기 설계의 메뉴 표와 사용법의 명령 목록은 손으로 적는다 |
 | C5 | `src/apps/web/src/files/share-{link,command}.ts` | [[06-web]]<br>`src/apps/web/guide/llms.txt`<br>[[0043-share-link-in-fragment\|ADR-0043]] | 공유 링크의 꼴은 웹 설계 · AI용 안내서 · ADR-0043이 함께 적는다. 링크 예제는 doctest가 열지만 설명은 사람이 본다 |
-| C6 | `src/apps/web/scripts/check-size.mjs` | [[06-web]]<br>[[07-testing]] | 번들 사이즈의 한도는 웹 설계 5장과 테스트 전략 5장에도 적혀 있다 |
+| C6 | `src/apps/web/scripts/check-size.mjs` | [[06-web]]<br>[[02-test-architecture]] | 번들 사이즈의 한도는 웹 설계 5장과 테스트 아키텍처 5장에도 적혀 있다 |
 | C7 | `src/{eslint,prettier}.config.js`<br>`src/.prettierignore`<br>`src/.dependency-cruiser.cjs`<br>`src/tsconfig.base.json`<br>`.editorconfig` | [[07-coding-guide]] | 도구의 설정은 코딩 가이드 1장에 정의하고 설정 파일은 그 정의대로 만든다. 둘은 한 커밋으로 바꾼다 |
-| C8 | `src/scripts/coverage.mjs`<br>`.github/workflows/ci.yml` | [[07-testing]] | CI가 무엇을 언제 돌리는지와 커버리지의 하한은 테스트 전략 5장에 있다 |
+| C8 | `src/scripts/coverage.mjs`<br>`.github/workflows/ci.yml` | [[02-test-architecture]] | CI가 무엇을 언제 돌리는지와 커버리지의 하한은 테스트 아키텍처 5장에 있다 |
 | C9 | `CLAUDE.md` | [[how-we-work]] | CLAUDE.md의 일하는 규칙은 방문자에게 보이는 how-we-work가 원본이다. 규칙을 바꾸면 거기도 맞춘다 |
 | C10 | `src/apps/web/src/shell/messages.ts`<br>`src/packages/editor/src/{i18n,ui}/messages.ts`<br>`src/packages/core/src/i18n/messages.ts` | [[02-interaction-rules]]<br>[[03-editor]]<br>[[06-web]]<br>`src/apps/manual/pages/**` | 설계 문서와 사용법이 화면의 문구를 그대로 인용한다. 언어마다의 키와 자리표시는 카탈로그 테스트가 보지만 인용은 사람이 본다 |
 

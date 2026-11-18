@@ -423,7 +423,7 @@ describe('layout: several diagrams (02-layout 1.7)', () => {
   });
 });
 
-// Property tests over random trees of MVP blocks (07-testing 2).
+// Property tests over random trees of MVP blocks (02-test-architecture 2).
 
 let counter = 0;
 const nextId = (prefix: string): string => `${prefix}${String((counter += 1))}`;

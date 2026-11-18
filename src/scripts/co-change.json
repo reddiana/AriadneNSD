@@ -50,8 +50,8 @@
     {
       "id": "C6",
       "when": ["src/apps/web/scripts/check-size.mjs"],
-      "then": ["docs/04-design/06-web.md", "docs/04-design/07-testing.md"],
-      "why": "번들 사이즈의 한도는 웹 설계 5장과 테스트 전략 5장에도 적혀 있다"
+      "then": ["docs/04-design/06-web.md", "docs/03-architecture/02-test-architecture.md"],
+      "why": "번들 사이즈의 한도는 웹 설계 5장과 테스트 아키텍처 5장에도 적혀 있다"
     },
     {
       "id": "C7",
@@ -68,8 +68,8 @@
     {
       "id": "C8",
       "when": ["src/scripts/coverage.mjs", ".github/workflows/ci.yml"],
-      "then": ["docs/04-design/07-testing.md"],
-      "why": "CI가 무엇을 언제 돌리는지와 커버리지의 하한은 테스트 전략 5장에 있다"
+      "then": ["docs/03-architecture/02-test-architecture.md"],
+      "why": "CI가 무엇을 언제 돌리는지와 커버리지의 하한은 테스트 아키텍처 5장에 있다"
     },
     {
       "id": "C9",

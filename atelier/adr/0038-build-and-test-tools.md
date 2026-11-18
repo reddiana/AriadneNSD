@@ -11,10 +11,10 @@ superseded-by:
 # ADR-0038: 빌드는 Vite(웹) · esbuild(Obsidian), 시험은 Vitest · fast-check · Playwright, 코드 검사는 ESLint + Prettier로 하고, 시험 파일은 소스 옆에 둔다
 
 > [!NOTE] 이후 변경
-> - 2026-11-01: 코드의 뼈대를 만들며 버전을 정했다: TypeScript 6.0.3(7은 typescript-eslint가 아직 받지 않음), Node 24 이상(CI도 24), pnpm 12.16.1, Vite 8, Vitest 5, Playwright 1.64, ESLint 10. `editor`의 화면 테스트에는 가짜 DOM으로 happy-dom, React 컴포넌트에는 `@testing-library/react`를 더했다. CI는 웹의 첫 내려받기 크기 예산(540 KB)도 본다 → [[03-architecture#9.2 개발 도구]], [[07-testing#5. 도구와 CI]], [[07-coding-guide#1. 도구가 강제하는 것]]
-> - 2026-11-01 (세션 04): 테스트 아키텍처(유형 · 테스트 더블 · 추적)를 [[07-testing#1. 테스트 아키텍처]]에 적었다. 테스트 목록 [[08-test-list]]은 스크립트(`src/scripts/test-list.mjs`)가 테스트 이름에서 만들고 `pnpm check`가 낡으면 실패한다. Playwright로 휴대폰 흉내(화면 · 터치)와 CPU · 망 감속(Chrome DevTools Protocol)도 쓴다
+> - 2026-11-01: 코드의 뼈대를 만들며 버전을 정했다: TypeScript 6.0.3(7은 typescript-eslint가 아직 받지 않음), Node 24 이상(CI도 24), pnpm 12.16.1, Vite 8, Vitest 5, Playwright 1.64, ESLint 10. `editor`의 화면 테스트에는 가짜 DOM으로 happy-dom, React 컴포넌트에는 `@testing-library/react`를 더했다. CI는 웹의 첫 내려받기 크기 예산(540 KB)도 본다 → [[03-architecture#9.2 개발 도구]], [[02-test-architecture#5. 도구와 CI]], [[07-coding-guide#1. 도구가 강제하는 것]]
+> - 2026-11-01 (세션 04): 테스트 아키텍처(유형 · 테스트 더블 · 추적)를 [[02-test-architecture#1. 테스트 아키텍처]]에 적었다. 테스트 목록 [[08-test-list]]은 스크립트(`src/scripts/test-list.mjs`)가 테스트 이름에서 만들고 `pnpm check`가 낡으면 실패한다. Playwright로 휴대폰 흉내(화면 · 터치)와 CPU · 망 감속(Chrome DevTools Protocol)도 쓴다
 > - 2026-11-03: 테스트마다 ID(`T-0001`)를 이름 맨 앞에 두고, 테스트 목록은 기능 영역 · 파일마다의 표로, 한국어 번역(`src/scripts/test-list-ko.json`)으로 적는다 → [[dr-0022-test-ids|DR-0022]]
-> - 2026-11-10: 개발 도구에 Ajv 8(JSON Schema 검사)을 더했다. 테스트에서만 쓴다(`core`, `apps/web`의 devDependency). 웹 빌드의 Vite 플러그인이 다른 AI를 위한 안내서를 core의 값 목록으로 채워 내고, 테스트가 문서 속 예제를 실제 파서로 연다(doctest) → [[07-testing#3.1 문서 속 예제(doctest)와 값 목록]]
+> - 2026-11-10: 개발 도구에 Ajv 8(JSON Schema 검사)을 더했다. 테스트에서만 쓴다(`core`, `apps/web`의 devDependency). 웹 빌드의 Vite 플러그인이 다른 AI를 위한 안내서를 core의 값 목록으로 채워 내고, 테스트가 문서 속 예제를 실제 파서로 연다(doctest) → [[02-test-architecture#3.1 문서 속 예제(doctest)와 값 목록]]
 > - 2026-11-10: 문서와 코드의 정합성을 도구로 지킨다([[07-coding-guide#13. 문서와 코드의 정합성]]): 함께 바뀌는 곳의 짝을 검사하는 스크립트(`src/scripts/co-change.mjs`, CI의 `co-change` job은 경고만), 코드와 문서의 값을 견주는 테스트(`docs-agree.test.ts`), 모델 JSON 스키마에서 만드는 문서([[02-model-schema]], `src/scripts/model-schema-doc.mjs`), 테스트 이름의 ID가 문서에 정의되었는지의 검사(`test-list.mjs`). 커버리지 도구(`@vitest/coverage-v8`, `monocart-coverage-reports`)를 [[03-architecture#9.2 개발 도구]]에 올렸다
 
 > [!info] 누가 무엇을 정했나
@@ -66,7 +66,7 @@ superseded-by:
 | 코드 검사 · 모양 맞추기 | ESLint(typescript-eslint) + Prettier | 저장소 맨 위 설정 하나씩 |
 | CI | GitHub Actions | `.github/workflows/` |
 
-쓰는 법(시험의 층, 골든 파일의 규칙, 인수 시험, CI의 순서)은 [[07-testing]]에 있다.
+쓰는 법(시험의 층, 골든 파일의 규칙, 인수 시험, CI의 순서)은 [[02-test-architecture]]에 있다.
 
 ## 결과
 

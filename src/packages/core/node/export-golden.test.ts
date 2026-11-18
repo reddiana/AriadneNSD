@@ -1,4 +1,4 @@
-// Golden files of the exports (07-testing 3): the pure SVG (R-EXP-02) and the PDF (R-EXP-03,
+// Golden files of the exports (02-test-architecture 3): the pure SVG (R-EXP-02) and the PDF (R-EXP-03,
 // written uncompressed so the file reads as text) of one document, compared byte for byte.
 // Update them with the core golden files: pnpm --filter @ariadne-nsd/core golden:update
 import { blockFont, readGlyphOutlines } from '@ariadne-nsd/fonts';

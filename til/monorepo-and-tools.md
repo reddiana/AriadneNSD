@@ -42,7 +42,7 @@ updated: 2026-10-25
 ## AriadneNSD에서는
 
 - 코드는 모두 `src/` 아래에 있고 `src/`가 워크스페이스의 뿌리다. 화살표는 `apps/web → packages/editor → packages/core → packages/fonts`(쓰는 쪽 → 쓰이는 쪽) → [[03-architecture#4. 구성 요소]]
-- `core`에는 화면(DOM)이 없어서 Node에서 바로 시험한다 → [[07-testing]]
+- `core`에는 화면(DOM)이 없어서 Node에서 바로 시험한다 → [[02-test-architecture]]
 
 ## 더 읽을거리
 

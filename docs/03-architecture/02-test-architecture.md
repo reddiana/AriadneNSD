@@ -1,12 +1,12 @@
 ---
-title: 테스트 전략
+title: 테스트 아키텍처
 tags:
-  - design
+  - architecture
 status: 초안
-updated: 2026-11-10
+updated: 2026-11-18
 ---
 
-# 테스트 전략
+# 테스트 아키텍처
 
 AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(유형 · 테스트 더블 · 추적), 계층마다 무엇을 테스트하나, 저장되는 SVG의 골든 파일, MVP의 인수 테스트, 도구와 CI. 테스트의 종류는 [[03-quality-attribute-scenarios#3. 테스트 전략|품질 속성 시나리오 3장]]에서 시나리오마다 정했고, 도구는 [[0038-build-and-test-tools|ADR-0038]]에서 정했습니다. 기능마다의 세부 테스트는 그 기능을 개발하기 직전에 씁니다.
 

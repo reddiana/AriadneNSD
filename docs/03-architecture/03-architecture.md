@@ -32,7 +32,7 @@ updated: 2026-11-17
 5. **성능:** 블록 500개에서 편집 응답 100ms 이내. [[01-requirements#^r-nfr|R-NFR-03]] (QA-07~09)
 6. **변경 용이성:** 새 배포 대상, 렌더링 백엔드, 블록 종류, 화면 언어를 추가할 때 수정하는 곳이 정해진 한 곳이다. [[0002-three-targets-shared-core|ADR-0002]], [[0030-swappable-drawing|ADR-0030]] (QA-10~13)
 
-품질 목표마다 그것을 만든 결정은 [[#10.1 품질 목표별 결정 지도]]에, 민감점과 상충점은 [[#8.1 민감점]] · [[#8.2 상충점]]에 있습니다. 품질 목표마다 측정할 수 있는 시나리오와 합격 기준, 그것을 만족시키는 이 문서의 구조, 확인할 테스트는 [[03-quality-attribute-scenarios|품질 속성 시나리오(QAS)]]에 있습니다. 구조를 바꿀 때는 그 문서에서 영향받는 시나리오를 찾아 봅니다.
+품질 목표마다 그것을 만든 결정은 [[#10.1 품질 목표별 결정 지도]]에, 민감점과 상충점은 [[#8.1 민감점]] · [[#8.2 상충점]]에 있습니다. 품질 목표마다 측정할 수 있는 시나리오와 합격 기준, 그것을 만족시키는 이 문서의 구조, 확인할 테스트는 [[03-quality-attribute-scenarios|품질 속성 시나리오(QAS)]]에 있습니다. 구조를 바꿀 때는 그 문서에서 영향받는 시나리오를 찾아 봅니다. 테스트를 어떤 유형으로 나누고 무엇을 진짜로 두며 CI에서 어떻게 돌리는지는 [[02-test-architecture|테스트 아키텍처]]에 있습니다.
 
 **제약**
 
@@ -211,7 +211,7 @@ AriadneNSD/
 └─ .github/workflows/        CI
 ```
 
-`core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(저장소에서는 `src/packages/core/src/model/` …). 나중의 대상(Confluence, IDE 플러그인)은 만들 때 `apps/` 아래에 폴더를 더합니다. 테스트 파일과 골든 파일의 자리는 [[07-testing]], 빌드 도구는 [[0038-build-and-test-tools|ADR-0038]]에 있습니다.
+`core`는 패키지 하나이고, 아래 표의 모듈은 `core` 패키지 안의 폴더입니다(저장소에서는 `src/packages/core/src/model/` …). 나중의 대상(Confluence, IDE 플러그인)은 만들 때 `apps/` 아래에 폴더를 더합니다. 테스트 파일과 골든 파일의 자리는 [[02-test-architecture]], 빌드 도구는 [[0038-build-and-test-tools|ADR-0038]]에 있습니다.
 
 ### 4.1 패키지 의존
 
@@ -653,7 +653,7 @@ sequenceDiagram
 
 ### 9.2 개발 도구
 
-배포되지 않고 개발 · 테스트 · 빌드에만 씁니다. 쓰는 법은 [[07-testing]]에 있습니다.
+배포되지 않고 개발 · 테스트 · 빌드에만 씁니다. 쓰는 법은 [[02-test-architecture]]에 있습니다.
 
 | 할 일 | 도구 | 자리 | 근거 |
 | --- | --- | --- | --- |
@@ -665,12 +665,12 @@ sequenceDiagram
 | 단위 테스트 · 벤치마크 | Vitest 5 | 소스 옆 `*.test.ts`, `*.bench.ts` | 〃 |
 | 속성 기반 테스트 · 퍼징 | fast-check 4 (Vitest 안에서) | 소스 옆 | 〃 |
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
-| `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[07-testing#2. 계층마다 무엇을 테스트하나]] |
+| `editor`의 화면 테스트 | happy-dom(가짜 DOM) + `@testing-library/react` | `packages/editor` | [[02-test-architecture#2. 계층마다 무엇을 테스트하나]] |
 | 브라우저 E2E · 시각 회귀 | Playwright 1.64 (`@playwright/test`) | `src/apps/web/e2e/` | 〃 |
 | JSON Schema 검사 | Ajv 8 (draft 2020-12), 테스트에서만. 모델 JSON의 스키마와 골든 파일 · 문서 속 예제가 어긋나지 않는지 본다 | `packages/core`, `apps/web` | [[06-web#3.1 LLM · 에이전트를 위한 안내서]] |
 | 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | [[0038-build-and-test-tools\|ADR-0038]] |
 | 린트 · 포맷 | ESLint 10(typescript-eslint 8, `@eslint/js`, `globals`, React 코드의 `eslint-plugin-react-hooks`) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |
-| 커버리지 | `@vitest/coverage-v8`(단위 테스트, V8), `monocart-coverage-reports`(E2E에서 잰 Chromium의 커버리지를 소스 파일에 대어 봄) | `src/scripts/coverage.mjs`, `src/apps/web` | [[07-testing#5. 도구와 CI]] |
+| 커버리지 | `@vitest/coverage-v8`(단위 테스트, V8), `monocart-coverage-reports`(E2E에서 잰 Chromium의 커버리지를 소스 파일에 대어 봄) | `src/scripts/coverage.mjs`, `src/apps/web` | [[02-test-architecture#5. 도구와 CI]] |
 | CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 
 ## 10. 결정 목록

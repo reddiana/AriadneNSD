@@ -7,7 +7,7 @@
 // 될 수 있습니다"). Every test file belongs to one area by its path (`areas` below); a new file
 // that matches none fails the script. In each area, every file is listed once with its count, and
 // a test whose name starts with ids (`AT-04: …`, `BUG-03 · QA-19: …`, `R-NFR-04: …`, `UX EX3: …`)
-// is listed on its own. The ids defined in the documents (QA in the scenarios, AT in 07-testing,
+// is listed on its own. The ids defined in the documents (QA in the scenarios, AT in the requirements,
 // BUG in the defect log) that no test names are listed at the end.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
@@ -552,7 +552,7 @@ const lines = [
   '',
   '# 테스트 목록',
   '',
-  '지금 코드에 있는 테스트의 목록입니다. 무엇을 왜 어떻게 테스트하는지의 원칙은 [[07-testing]], 품질 속성 시나리오는 [[03-quality-attribute-scenarios]], 결함은 [[defects|결함 기록]]에 있습니다.',
+  '지금 코드에 있는 테스트의 목록입니다. 무엇을 왜 어떻게 테스트하는지의 원칙은 [[02-test-architecture]], 품질 속성 시나리오는 [[03-quality-attribute-scenarios]], 결함은 [[defects|결함 기록]]에 있습니다.',
   '',
   '> [!info] 이 문서는 손으로 고치지 않습니다',
   '> `src/scripts/test-list.mjs`가 테스트의 이름과 테스트 파일의 첫 주석에서 만듭니다(`src/`에서 `pnpm test-list`). `pnpm check`가 이 문서가 코드와 다르면 실패하므로, 테스트를 더하거나 바꾸면 이 문서도 같은 커밋에서 바뀝니다. 테스트 코드의 이름과 주석은 영어이고(→ [[dr-0017-code-language-and-commits|DR-0017]]), 이 문서에는 한국어로 옮겨 적습니다. 번역은 `src/scripts/test-list-ko.json`에 있고, 번역이 빠진 테스트가 있으면 `pnpm check`가 실패합니다.',
@@ -567,7 +567,7 @@ const lines = [
   '',
   '- **ID:** 테스트마다 `T-`와 네 자리 번호의 ID가 있습니다(테스트 코드의 이름 맨 앞). 번호는 바뀌지 않고, 지운 테스트의 번호는 다시 쓰지 않습니다.',
   '- **영역:** 테스트를 그것이 확인하는 기능으로 묶었습니다(영역마다 한 절). 영역 안에서는 테스트 파일마다 제목 하나와 표 하나입니다. 제목 앞에는 유형을 말머리로 붙이고(`[E2E]`), 제목 아래 한 줄에 파일이 무엇을 확인하는지, 방법, 파일 전체가 확인하는 것을 적고, 표에는 그 파일의 테스트를 한 줄씩 적습니다. 어느 파일이 어느 영역인지는 스크립트의 표(`areas`)가 정합니다.',
-  '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[07-testing#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
+  '- **유형:** **단위**는 모듈 하나(가짜 없이 함수와 그 결과), **통합**은 모듈 여럿을 함께(`editor`와 `core`를 가짜 셸이나 가짜 DOM 위에서, 골든 파일의 열기 → 저장), **E2E**는 사용자 관점(빌드한 웹 앱을 브라우저에서 열고 클릭 · 키 · 탭으로), **성능**은 벤치마크입니다. 사람이 하는 **수동** 점검은 [[02-test-architecture#5. 도구와 CI]]의 출시 전 점검표에 있습니다.',
   '- **방법:** 테스트 도구와 기법(Vitest, 속성 기반, 골든 파일, Playwright)',
   '- **확인하는 것:** 그 테스트가 확인하는 요구사항(`R-`), 품질 속성 시나리오(`QA-`), 인수 테스트(`AT-`), 결함(`BUG-`), UX 결정(`UX`)의 ID입니다. 테스트 여럿이 같은 것을 확인하면 같은 ID가 여러 줄에 나옵니다(예: 결함 하나를 테스트 둘이 확인).',
   '- **이름 규칙:** 테스트 코드의 이름은 `T-0412: …`, 확인하는 것이 있으면 `T-0412 · BUG-03 · QA-19: …`입니다. 이 문서는 확인하는 것의 ID를 "확인하는 것" 칸에 옮기고, 나머지를 "테스트" 칸에 한국어로 적습니다.',

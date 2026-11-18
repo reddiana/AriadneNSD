@@ -1,4 +1,4 @@
-// How much of the code the browser tests run (07-testing). Builds with source maps, runs every
+// How much of the code the browser tests run (02-test-architecture). Builds with source maps, runs every
 // browser test with `E2E_COVERAGE` set (e2e/fixtures.ts saves each page's V8 coverage) and maps
 // the coverage back to the source files. Writes coverage-e2e/coverage-final.json (istanbul) and
 // coverage-e2e/coverage-summary.json, and prints the totals.
