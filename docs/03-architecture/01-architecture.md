@@ -176,11 +176,11 @@ AriadneNSD의 앱 셋은 따로 설치하고 따로 실행하는 프로그램입
 | 품질 속성 시나리오 | 경유하는 커넥터 | 이 그림에서 보이는 것 |
 | --- | --- | --- |
 | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] 편집 반응 시간 | C-01 → C-10 | 모두 메인 스레드의 동기 호출. 이 커넥터로 나눈 측정 구간과 예산은 [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]에 있다 |
-| [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]] 어디서 저장해도 같은 파일 | C-12 → C-14 | 저장의 길에서 상태를 가진 컴포넌트는 세션뿐이고, 나머지는 순수 함수(초록) |
+| [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]] 결정적 저장 출력 | C-12 → C-14 | 저장의 길에서 상태를 가진 컴포넌트는 세션뿐이고, 나머지는 순수 함수(초록) |
 | [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] 저장 실패 | C-16의 실패, C-18 | 파일 쓰기가 실패해도 로컬 백업은 다른 커넥터로 따로 남는다 |
-| [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]] 휴대폰에서 시작하는 시간 | C-23 · C-24 · C-25 | HTTP는 필요할 때만. 시작에 꼭 필요한 것은 앱 번들과 글꼴 슬라이스 0 |
-| [[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음\|QA-19]] 시작이 막혀도 빈 화면은 없음 | C-18 | IndexedDB가 3초 안에 답하지 않으면 메모리로 계속한다 |
-| [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] 새 셸 붙이기 | C-11 · C-12 · C-15 | 셸이 바뀌어도 `editor` 쪽 커넥터는 이 셋뿐 |
+| [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]] 모바일 시작 시간 | C-23 · C-24 · C-25 | HTTP는 필요할 때만. 시작에 꼭 필요한 것은 앱 번들과 글꼴 슬라이스 0 |
+| [[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지\|QA-19]] 초기화 장애 시 빈 화면 방지 | C-18 | IndexedDB가 3초 안에 답하지 않으면 메모리로 계속한다 |
+| [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]] 셸 확장성 | C-11 · C-12 · C-15 | 셸이 바뀌어도 `editor` 쪽 커넥터는 이 셋뿐 |
 
 ## 4. 구성 요소
 
@@ -521,9 +521,9 @@ sequenceDiagram
 - `DocumentStore`의 쓰기는 실패를 값(`cancelled` · `denied` · `failed`)으로 반환합니다 → [[03-editor#6. 셸과의 연결]]
 - 다시 열면 로컬 백업이 "지난번 내용을 복원할까요?"로 돌아옵니다 → [[06-web#2. 로컬 백업과 자동 저장]]
 
-### 5.5 시작이 막힘
+### 5.5 초기화 장애
 
-[[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음|QA-19]]의 흐름입니다. 브라우저 저장소가 응답하지 않아도 편집 화면은 뜹니다.
+[[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지|QA-19]]의 흐름입니다. 브라우저 저장소가 응답하지 않아도 편집 화면은 뜹니다.
 
 ```mermaid
 sequenceDiagram
@@ -614,11 +614,11 @@ sequenceDiagram
 
 | ID | 민감점 | 관련 결정 | 영향받는 시나리오 | 메커니즘 |
 | --- | --- | --- | --- | --- |
-| S-01 | 폭 계산의 올림 규칙 | [[0026-bundled-font-metrics\|ADR-0026]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로\|QA-04]] | advance 폭의 합을 정수 px로 올리는 규칙 한 줄이 바뀌면 모든 다이어그램의 좌표, 곧 저장 파일의 바이트가 바뀐다. 골든 파일이 이것을 지킨다 |
-| S-02 | 서브셋 글꼴에 든 문자 수 | [[0026-bundled-font-metrics\|ADR-0026]], [[0039-woff-subset-font\|ADR-0039]] | [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] | 파일 크기가 쓰인 문자 수에 비례한다. 한글 800자면 압축 전 114 KB(위 콜아웃) |
+| S-01 | 폭 계산의 올림 규칙 | [[0026-bundled-font-metrics\|ADR-0026]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]] | advance 폭의 합을 정수 px로 올리는 규칙 한 줄이 바뀌면 모든 다이어그램의 좌표, 곧 저장 파일의 바이트가 바뀐다. 골든 파일이 이것을 지킨다 |
+| S-02 | 서브셋 글꼴에 든 문자 수 | [[0026-bundled-font-metrics\|ADR-0026]], [[0039-woff-subset-font\|ADR-0039]] | [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] | 파일 크기가 쓰인 문자 수에 비례한다. 한글 800자면 압축 전 114 KB(위 콜아웃) |
 | S-03 | 문서 레이어를 전체 교체하기 | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] | 블록 하나를 고쳐도 렌더링 결과 전체를 `innerHTML`로 바꾸므로(C-10), DOM 반영과 브라우저 레이아웃 · 페인트가 블록 수에 비례한다. CPU 4배 감속에서 응답 시간의 대부분이 여기서 든다(QA-07의 측정 구간) |
-| S-04 | 저장소 열기의 시간 제한(3초) | [[06-web#2. 로컬 백업과 자동 저장]] | [[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음\|QA-19]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] | 짧으면 느린 기기에서 로컬 백업 없이 메모리로 시작하고, 길면 시작 화면이 길어진다 |
-| S-05 | 공유 링크의 한도(8 KB 경고, 1 MB, 풀 때 16 MB) | [[0043-share-link-in-fragment\|ADR-0043]] | [[03-quality-attribute-scenarios#QA-21 믿을 수 없는 공유 링크\|QA-21]] | 한도가 크면 꾸민 링크가 메모리를 쓰고, 작으면 큰 다이어그램을 링크로 나누지 못한다 |
+| S-04 | 저장소 열기의 시간 제한(3초) | [[06-web#2. 로컬 백업과 자동 저장]] | [[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지\|QA-19]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] | 짧으면 느린 기기에서 로컬 백업 없이 메모리로 시작하고, 길면 시작 화면이 길어진다 |
+| S-05 | 공유 링크의 한도(8 KB 경고, 1 MB, 풀 때 16 MB) | [[0043-share-link-in-fragment\|ADR-0043]] | [[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]] | 한도가 크면 꾸민 링크가 메모리를 쓰고, 작으면 큰 다이어그램을 링크로 나누지 못한다 |
 
 ### 8.2 상충점
 
@@ -626,10 +626,10 @@ sequenceDiagram
 
 | ID | 얻은 것 | 내준 것 | 관련 결정 | 지금의 대응 |
 | --- | --- | --- | --- | --- |
-| T-01 | 어디서 저장해도 같은 파일 · 어디서나 같은 그림([[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]]) | 첫 로딩과 파일의 크기([[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]]) | [[0026-bundled-font-metrics\|ADR-0026]], [[0034-default-block-font\|ADR-0034]] | 화면 글꼴은 슬라이스로 필요할 때만 받고([[0040-screen-font-slices\|ADR-0040]]), 저장 파일에는 쓰인 문자만 WOFF로 넣는다([[0039-woff-subset-font\|ADR-0039]]) |
-| T-02 | 렌더링 백엔드를 바꿀 수 있음, 단순함([[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 바꾸기\|QA-11]]) | 큰 문서의 편집 반응([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | 렌더러는 SVG 문자열 하나를 내고 뷰는 통째로 넣는다(S-03). 바뀐 블록만 반영하려면 백엔드 인터페이스가 넓어진다 |
+| T-01 | 결정적 저장 출력 · 렌더링 이식성([[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]]) | 첫 로딩과 파일의 크기([[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]]) | [[0026-bundled-font-metrics\|ADR-0026]], [[0034-default-block-font\|ADR-0034]] | 화면 글꼴은 슬라이스로 필요할 때만 받고([[0040-screen-font-slices\|ADR-0040]]), 저장 파일에는 쓰인 문자만 WOFF로 넣는다([[0039-woff-subset-font\|ADR-0039]]) |
+| T-02 | 렌더링 백엔드를 바꿀 수 있음, 단순함([[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]]) | 큰 문서의 편집 반응([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | 렌더러는 SVG 문자열 하나를 내고 뷰는 통째로 넣는다(S-03). 바뀐 블록만 반영하려면 백엔드 인터페이스가 넓어진다 |
 | T-03 | Obsidian에서 일반 SVG와 같은 파일로 쓰임 | Obsidian 업데이트에 대한 견고성 | [[0005-model-embedded-svg\|ADR-0005]], [[0006-file-extensions\|ADR-0006]] | `.ns.svg`만 가로채는 데 비공개 내부 API를 쓴다(위 콜아웃) → [[04-obsidian-plugin#1. `.ns.svg` 파일 열기]] |
-| T-04 | 서버 없는 정적 웹([[01-requirements#^r-web\|R-WEB-01]])과 공유 | 공유할 수 있는 문서의 크기([[03-quality-attribute-scenarios#QA-21 믿을 수 없는 공유 링크\|QA-21]]) | [[0043-share-link-in-fragment\|ADR-0043]] | 문서를 링크의 fragment에 압축해 담고, 큰 문서는 파일로 공유하라고 알린다 |
+| T-04 | 서버 없는 정적 웹([[01-requirements#^r-web\|R-WEB-01]])과 공유 | 공유할 수 있는 문서의 크기([[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]]) | [[0043-share-link-in-fragment\|ADR-0043]] | 문서를 링크의 fragment에 압축해 담고, 큰 문서는 파일로 공유하라고 알린다 |
 | T-05 | 정합성과 단순한 실행 취소([[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]]) | 편집마다의 메모리 · 시간([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0029-immutable-document-undo\|ADR-0029]] | 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리는 함께 쓴다 |
 
 ## 9. 기술 스택
@@ -690,11 +690,11 @@ sequenceDiagram
 | 품질 목표 | 시나리오 | 결정 |
 | --- | --- | --- |
 | 1. 정합성 | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]], [[03-quality-attribute-scenarios#QA-02 깨진 파일 열기\|QA-02]] | [[0004-structure-editor\|ADR-0004]], [[0008-contiguous-selection\|ADR-0008]], [[0022-call-name-follows-head\|ADR-0022]], [[0029-immutable-document-undo\|ADR-0029]] |
-| 2. 호환성 · 결정성 | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로\|QA-04]], [[03-quality-attribute-scenarios#QA-05 옛 파일 열기\|QA-05]] | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]], [[0017-fold-name-in-model\|ADR-0017]], [[0018-save-as-shown\|ADR-0018]], [[0026-bundled-font-metrics\|ADR-0026]], [[0035-model-namespace-and-v0\|ADR-0035]], [[0037-two-pass-full-layout\|ADR-0037]], [[0041-drawing-locale-in-document\|ADR-0041]], [[0042-text-kind-keeps-block-font\|ADR-0042]] |
-| 3. 이식성 | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] | [[0005-model-embedded-svg\|ADR-0005]], [[0018-save-as-shown\|ADR-0018]], [[0026-bundled-font-metrics\|ADR-0026]], [[0034-default-block-font\|ADR-0034]], [[0039-woff-subset-font\|ADR-0039]], [[0044-document-themes\|ADR-0044]], [[0045-export-pipeline\|ADR-0045]] |
-| 4. 테스트 가능성 | [[03-quality-attribute-scenarios#QA-14 DOM 없이 테스트\|QA-14]] | [[0030-swappable-drawing\|ADR-0030]], [[0036-code-layout\|ADR-0036]], [[0038-build-and-test-tools\|ADR-0038]], [[dr-0022-test-ids\|DR-0022]] |
-| 5. 성능 | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]], [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)\|QA-08]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]] | [[0029-immutable-document-undo\|ADR-0029]], [[0037-two-pass-full-layout\|ADR-0037]], [[0039-woff-subset-font\|ADR-0039]], [[0040-screen-font-slices\|ADR-0040]] |
-| 6. 변경 용이성 | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]], [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 바꾸기\|QA-11]], [[03-quality-attribute-scenarios#QA-12 블록 종류 추가\|QA-12]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]] | [[0002-three-targets-shared-core\|ADR-0002]], [[0003-typescript\|ADR-0003]], [[0030-swappable-drawing\|ADR-0030]], [[0031-shell-interfaces\|ADR-0031]], [[0033-command-list-for-shells\|ADR-0033]], [[0036-code-layout\|ADR-0036]] |
+| 2. 호환성 · 결정성 | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]], [[03-quality-attribute-scenarios#QA-05 하위 호환성\|QA-05]] | [[0005-model-embedded-svg\|ADR-0005]], [[0007-json-serialization\|ADR-0007]], [[0017-fold-name-in-model\|ADR-0017]], [[0018-save-as-shown\|ADR-0018]], [[0026-bundled-font-metrics\|ADR-0026]], [[0035-model-namespace-and-v0\|ADR-0035]], [[0037-two-pass-full-layout\|ADR-0037]], [[0041-drawing-locale-in-document\|ADR-0041]], [[0042-text-kind-keeps-block-font\|ADR-0042]] |
+| 3. 이식성 | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] | [[0005-model-embedded-svg\|ADR-0005]], [[0018-save-as-shown\|ADR-0018]], [[0026-bundled-font-metrics\|ADR-0026]], [[0034-default-block-font\|ADR-0034]], [[0039-woff-subset-font\|ADR-0039]], [[0044-document-themes\|ADR-0044]], [[0045-export-pipeline\|ADR-0045]] |
+| 4. 테스트 가능성 | [[03-quality-attribute-scenarios#QA-14 DOM 독립 테스트 용이성\|QA-14]] | [[0030-swappable-drawing\|ADR-0030]], [[0036-code-layout\|ADR-0036]], [[0038-build-and-test-tools\|ADR-0038]], [[dr-0022-test-ids\|DR-0022]] |
+| 5. 성능 | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]], [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)\|QA-08]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]] | [[0029-immutable-document-undo\|ADR-0029]], [[0037-two-pass-full-layout\|ADR-0037]], [[0039-woff-subset-font\|ADR-0039]], [[0040-screen-font-slices\|ADR-0040]] |
+| 6. 변경 용이성 | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]], [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]], [[03-quality-attribute-scenarios#QA-12 블록 종류 추가\|QA-12]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]] | [[0002-three-targets-shared-core\|ADR-0002]], [[0003-typescript\|ADR-0003]], [[0030-swappable-drawing\|ADR-0030]], [[0031-shell-interfaces\|ADR-0031]], [[0033-command-list-for-shells\|ADR-0033]], [[0036-code-layout\|ADR-0036]] |
 
 ### 10.2 추적
 
@@ -703,49 +703,49 @@ sequenceDiagram
 | 결정 | 지키는 시나리오 | 비고 |
 | --- | --- | --- |
 | [[0001-record-architecture-decisions\|ADR-0001]] | 없음 | 일하는 방식(결정을 기록하는 법) |
-| [[0002-three-targets-shared-core\|ADR-0002]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] |  |
+| [[0002-three-targets-shared-core\|ADR-0002]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]] |  |
 | [[0003-typescript\|ADR-0003]] | [[03-quality-attribute-scenarios#QA-12 블록 종류 추가\|QA-12]] | 판별 유니온의 완전성 검사 |
 | [[0004-structure-editor\|ADR-0004]] | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]] |  |
-| [[0005-model-embedded-svg\|ADR-0005]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
-| [[0006-file-extensions\|ADR-0006]] | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
-| [[0007-json-serialization\|ADR-0007]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-05 옛 파일 열기\|QA-05]] |  |
+| [[0005-model-embedded-svg\|ADR-0005]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
+| [[0006-file-extensions\|ADR-0006]] | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
+| [[0007-json-serialization\|ADR-0007]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-05 하위 호환성\|QA-05]] |  |
 | [[0008-contiguous-selection\|ADR-0008]] | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]] |  |
-| [[0009-desktop-framework\|ADR-0009]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] | 제안됨 |
-| [[0010-ui-framework\|ADR-0010]] | [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 바꾸기\|QA-11]] | 캔버스는 React 밖 |
-| [[0012-google-drive-integration\|ADR-0012]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] |  |
-| [[0014-drive-file-extension\|ADR-0014]] | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
+| [[0009-desktop-framework\|ADR-0009]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]] | 제안됨 |
+| [[0010-ui-framework\|ADR-0010]] | [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]] | 캔버스는 React 밖 |
+| [[0012-google-drive-integration\|ADR-0012]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]] |  |
+| [[0014-drive-file-extension\|ADR-0014]] | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
 | [[0016-fold-state-outside-file\|ADR-0016]] | 없음 | 대체됨 |
-| [[0017-fold-name-in-model\|ADR-0017]] | [[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로\|QA-04]] |  |
-| [[0018-save-as-shown\|ADR-0018]] | [[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로\|QA-04]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
+| [[0017-fold-name-in-model\|ADR-0017]] | [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]] |  |
+| [[0018-save-as-shown\|ADR-0018]] | [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
 | [[0021-event-and-method\|ADR-0021]] | 없음 | 기능의 결정(Event와 Method) |
 | [[0022-call-name-follows-head\|ADR-0022]] | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]] |  |
-| [[0026-bundled-font-metrics\|ADR-0026]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
+| [[0026-bundled-font-metrics\|ADR-0026]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
 | [[0029-immutable-document-undo\|ADR-0029]] | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]], [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] |  |
-| [[0030-swappable-drawing\|ADR-0030]] | [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 바꾸기\|QA-11]] |  |
-| [[0031-shell-interfaces\|ADR-0031]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]] |  |
+| [[0030-swappable-drawing\|ADR-0030]] | [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]] |  |
+| [[0031-shell-interfaces\|ADR-0031]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]] |  |
 | [[0032-token-highlighting\|ADR-0032]] | 없음 | 기능의 결정(구문 강조) |
-| [[0033-command-list-for-shells\|ADR-0033]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]], [[03-quality-attribute-scenarios#QA-15 키보드만으로\|QA-15]] |  |
-| [[0034-default-block-font\|ADR-0034]] | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]] |  |
-| [[0035-model-namespace-and-v0\|ADR-0035]] | [[03-quality-attribute-scenarios#QA-05 옛 파일 열기\|QA-05]] |  |
-| [[0036-code-layout\|ADR-0036]] | [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]], [[03-quality-attribute-scenarios#QA-14 DOM 없이 테스트\|QA-14]] |  |
-| [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] |  |
-| [[0038-build-and-test-tools\|ADR-0038]] | [[03-quality-attribute-scenarios#QA-14 DOM 없이 테스트\|QA-14]] |  |
+| [[0033-command-list-for-shells\|ADR-0033]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]], [[03-quality-attribute-scenarios#QA-15 키보드 접근성\|QA-15]] |  |
+| [[0034-default-block-font\|ADR-0034]] | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]] |  |
+| [[0035-model-namespace-and-v0\|ADR-0035]] | [[03-quality-attribute-scenarios#QA-05 하위 호환성\|QA-05]] |  |
+| [[0036-code-layout\|ADR-0036]] | [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]], [[03-quality-attribute-scenarios#QA-14 DOM 독립 테스트 용이성\|QA-14]] |  |
+| [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] |  |
+| [[0038-build-and-test-tools\|ADR-0038]] | [[03-quality-attribute-scenarios#QA-14 DOM 독립 테스트 용이성\|QA-14]] |  |
 | [[0039-woff-subset-font\|ADR-0039]] | [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]] |  |
-| [[0040-screen-font-slices\|ADR-0040]] | [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]] |  |
-| [[0041-drawing-locale-in-document\|ADR-0041]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]] |  |
-| [[0042-text-kind-keeps-block-font\|ADR-0042]] | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]] |  |
-| [[0043-share-link-in-fragment\|ADR-0043]] | [[03-quality-attribute-scenarios#QA-21 믿을 수 없는 공유 링크\|QA-21]] |  |
-| [[0044-document-themes\|ADR-0044]] | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] |  |
-| [[0045-export-pipeline\|ADR-0045]] | [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]] | 내보내기도 화면과 같은 장면에서 |
+| [[0040-screen-font-slices\|ADR-0040]] | [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]] |  |
+| [[0041-drawing-locale-in-document\|ADR-0041]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]] |  |
+| [[0042-text-kind-keeps-block-font\|ADR-0042]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]] |  |
+| [[0043-share-link-in-fragment\|ADR-0043]] | [[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]] |  |
+| [[0044-document-themes\|ADR-0044]] | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] |  |
+| [[0045-export-pipeline\|ADR-0045]] | [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] | 내보내기도 화면과 같은 장면에서 |
 
 | 패키지 | 지키는 시나리오 |
 | --- | --- |
-| `packages/fonts` | [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]] |
-| `packages/core` | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]], [[03-quality-attribute-scenarios#QA-02 깨진 파일 열기\|QA-02]], [[03-quality-attribute-scenarios#QA-03 어디서 저장해도 같은 파일\|QA-03]], [[03-quality-attribute-scenarios#QA-04 열고 바로 저장하면 그대로\|QA-04]], [[03-quality-attribute-scenarios#QA-05 옛 파일 열기\|QA-05]], [[03-quality-attribute-scenarios#QA-06 어디서나 같은 그림\|QA-06]], [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 바꾸기\|QA-11]], [[03-quality-attribute-scenarios#QA-12 블록 종류 추가\|QA-12]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]], [[03-quality-attribute-scenarios#QA-14 DOM 없이 테스트\|QA-14]] |
-| `packages/editor` | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]], [[03-quality-attribute-scenarios#QA-10 새 셸 붙이기\|QA-10]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]], [[03-quality-attribute-scenarios#QA-15 키보드만으로\|QA-15]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] |
-| `apps/web` | [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)\|QA-08]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]], [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간\|QA-18]], [[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음\|QA-19]], [[03-quality-attribute-scenarios#QA-20 휴대폰에서 쓰기\|QA-20]], [[03-quality-attribute-scenarios#QA-21 믿을 수 없는 공유 링크\|QA-21]] |
+| `packages/fonts` | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]] |
+| `packages/core` | [[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]], [[03-quality-attribute-scenarios#QA-02 깨진 파일 열기\|QA-02]], [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]], [[03-quality-attribute-scenarios#QA-05 하위 호환성\|QA-05]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]], [[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]], [[03-quality-attribute-scenarios#QA-12 블록 종류 추가\|QA-12]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]], [[03-quality-attribute-scenarios#QA-14 DOM 독립 테스트 용이성\|QA-14]] |
+| `packages/editor` | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]], [[03-quality-attribute-scenarios#QA-10 셸 확장성\|QA-10]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가\|QA-13]], [[03-quality-attribute-scenarios#QA-15 키보드 접근성\|QA-15]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] |
+| `apps/web` | [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)\|QA-08]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]], [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]], [[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지\|QA-19]], [[03-quality-attribute-scenarios#QA-20 모바일 사용성\|QA-20]], [[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]] |
 
 점검한 결과(2026-11-17):
 
-- 결정이 가리키지 않는 시나리오: [[03-quality-attribute-scenarios#QA-16 고대비|QA-16]] · [[03-quality-attribute-scenarios#QA-19 시작이 막혀도 빈 화면은 없음|QA-19]] · [[03-quality-attribute-scenarios#QA-20 휴대폰에서 쓰기|QA-20]]은 ADR이 없고, 설계 문서([[04-visual-design]], [[06-web]], [[05-screen-layout|화면 배치]])와 UX 결정만 있다. [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)|QA-08]]은 전용 결정 없이 열기의 흐름(5.2)에 기댄다. [[03-quality-attribute-scenarios#QA-15 키보드만으로|QA-15]]의 키 표는 ADR이 아니라 DR이다([[dr-0009-vim-keys|DR-0009]]).
+- 결정이 가리키지 않는 시나리오: [[03-quality-attribute-scenarios#QA-16 고대비|QA-16]] · [[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지|QA-19]] · [[03-quality-attribute-scenarios#QA-20 모바일 사용성|QA-20]]은 ADR이 없고, 설계 문서([[04-visual-design]], [[06-web]], [[05-screen-layout|화면 배치]])와 UX 결정만 있다. [[03-quality-attribute-scenarios#QA-08 여는 시간 (제안)|QA-08]]은 전용 결정 없이 열기의 흐름(5.2)에 기댄다. [[03-quality-attribute-scenarios#QA-15 키보드 접근성|QA-15]]의 키 표는 ADR이 아니라 DR이다([[dr-0009-vim-keys|DR-0009]]).
 - 시나리오를 가리키지 않는 결정: [[0001-record-architecture-decisions|ADR-0001]](일하는 방식), [[0016-fold-state-outside-file|ADR-0016]](대체됨), [[0021-event-and-method|ADR-0021]] · [[0032-token-highlighting|ADR-0032]](기능의 결정). 품질 속성이 아니라 기능 요구사항에서 나온 결정이라 빈 곳으로 보지 않는다.

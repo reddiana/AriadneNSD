@@ -43,7 +43,7 @@ updated: 2026-11-01
 | QA-16 | 접근성 | 고대비 화면 색과 흑백 팔레트는 정해진 대비를 지킨다 | [[01-requirements#^r-nfr\|R-NFR-05]] | 중 | 하 | 낮음 |
 | QA-17 | 신뢰성 | 저장에 실패해도 편집한 내용을 잃지 않는다 | UC-06 최소 보장 | 상 | 중 | 높음 |
 | QA-18 | 성능 | 느린 휴대폰과 모바일 망에서 웹의 편집 화면이 정해진 시간 안에 보인다 | [[01-requirements#^r-nfr\|R-NFR-09]] | 중 | 상 | 중간 |
-| QA-19 | 신뢰성 | 시작하다 막히거나 실패해도 빈 화면으로 남지 않는다 | [[01-requirements#^r-nfr\|R-NFR-10]] | 상 | 중 | 높음 |
+| QA-19 | 신뢰성 | 초기화 중 응답 지연이나 오류가 발생해도 빈 화면으로 남지 않는다 | [[01-requirements#^r-nfr\|R-NFR-10]] | 상 | 중 | 높음 |
 | QA-20 | 호환성 · 사용성 | 휴대폰(Android의 Chrome)에서 터치로 열고 편집한다 | [[01-requirements#^r-nfr\|R-NFR-08]] | 중 | 중 | 중간 |
 | QA-21 | 보안 · 신뢰성 | 깨지거나 꾸민 공유 링크를 열어도 편집기는 죽지 않고, 작은 링크가 메모리를 다 쓰지 않는다 | [[01-requirements#^r-web\|R-WEB-05]] | 상 | 중 | 높음 |
 
@@ -83,7 +83,7 @@ updated: 2026-11-01
 - **테스트:** 퍼징(올바른 파일을 무작위로 망가뜨린 입력 + 손으로 만든 깨진 파일 묶음). 열기 뒤 원본 파일의 해시가 같은지 검증한다. **실행할 때:** 모든 커밋(짧게), 매일 밤(길게)
 - **테스트 ID:** [[08-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[01-requirements#^at|AT-06]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
 
-### QA-03 어디서 저장해도 같은 파일
+### QA-03 결정적 저장 출력
 
 | 부분 | 내용 |
 | --- | --- |
@@ -100,7 +100,7 @@ updated: 2026-11-01
 - **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
 - **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
-### QA-04 열고 바로 저장하면 그대로
+### QA-04 저장 왕복 무손실
 
 | 부분 | 내용 |
 | --- | --- |
@@ -117,7 +117,7 @@ updated: 2026-11-01
 - **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
 - **알아 둘 것:** 화면 언어가 달라도 같다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 문서 설정의 언어를 따르기 때문이다([[0041-drawing-locale-in-document|ADR-0041]]). 그림의 언어가 적히지 않은 옛 파일만, 처음 저장할 때 연 사람의 화면 언어가 더해진다
 
-### QA-05 옛 파일 열기
+### QA-05 하위 호환성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -133,7 +133,7 @@ updated: 2026-11-01
 - **테스트:** 형식 버전을 올릴 때마다 그 버전의 골든 파일을 저장소에 고정해 두고(삭제하지 않음), 모두 여는 테스트. **실행할 때:** 모든 커밋
 - **테스트 ID:** 없음
 
-### QA-06 어디서나 같은 그림
+### QA-06 렌더링 이식성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -213,7 +213,7 @@ updated: 2026-11-01
 - **테스트:** 번들 사이즈 체크(bundle size budget, 빌드 산출물과 골든 문서의 저장 결과 크기를 측정하고, 넘으면 실패). **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-packages-core-node-golden-test-ts|T-0355]]. 테스트가 아닌 검사: 번들 사이즈 체크 `apps/web/scripts/check-size.mjs` (CI의 웹 빌드 뒤)
 
-### QA-10 새 셸 붙이기
+### QA-10 셸 확장성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -230,7 +230,7 @@ updated: 2026-11-01
 - **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 49개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[01-architecture#7. 배포 구성]]
 
-### QA-11 렌더링 백엔드 바꾸기
+### QA-11 렌더링 백엔드 교체 용이성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -278,7 +278,7 @@ updated: 2026-11-01
 - **테스트:** 정적 분석: UI 코드(`.tsx`)의 JSX에 쓴 글자와 `title` · `aria-label` · `placeholder` · `alt` 속성의 글자를 ESLint가 차단한다(번역하지 않는 제품 이름과 확장자는 이름 붙은 상수로). 카탈로그 넷(그림 · 엔진 · UI · 웹 셸)이 언어마다 모든 키를 가지는지는 타입 검사가 검증한다. 단위 테스트는 빈 문자열이 없는지, `{name}` 자리표시가 언어마다 같은지, 엔진과 UI 카탈로그에 같은 키가 없는지 검증한다. 언어 목록은 `core`의 `locales` 한 줄이다. **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[08-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
 
-### QA-14 DOM 없이 테스트
+### QA-14 DOM 독립 테스트 용이성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -294,7 +294,7 @@ updated: 2026-11-01
 - **테스트:** `core` · `fonts`의 TypeScript 설정에서 `lib`에 `dom`을 빼서, 쓰면 컴파일이 실패하게 한다. CI가 Node에서만 단위 테스트를 실행한다. **실행할 때:** 모든 커밋
 - **테스트 ID:** 테스트가 아닌 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`)
 
-### QA-15 키보드만으로
+### QA-15 키보드 접근성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -342,7 +342,7 @@ updated: 2026-11-01
 - **테스트:** 실패하는 테스트 더블 `DocumentStore`로 저장하고, 문서 · "저장 안 됨" 표시 · 알림을 보는 테스트. **실행할 때:** 모든 커밋
 - **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-07]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0009]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0023]])
 
-### QA-18 휴대폰에서 시작하는 시간
+### QA-18 모바일 시작 시간
 
 | 부분 | 내용 |
 | --- | --- |
@@ -358,7 +358,7 @@ updated: 2026-11-01
 - **테스트:** E2E(Playwright, Android 폰 흉내 + CPU · 네트워크 감속). 편집 화면과 블록 글꼴이 보인 때를 재어 합격 기준과 견준다. 원인을 나눠 보는 재기 스크립트 `src/apps/web/scripts/measure-startup.mjs`. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
 - **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
-### QA-19 시작이 막혀도 빈 화면은 없음
+### QA-19 초기화 장애 시 빈 화면 방지
 
 | 부분 | 내용 |
 | --- | --- |
@@ -374,7 +374,7 @@ updated: 2026-11-01
 - **테스트:** E2E(응답하지 않는 `indexedDB.open`, 시작 중 오류를 흉내). **실행할 때:** 모든 커밋
 - **테스트 ID:** `apps/web/e2e/boot.spec.ts`의 테스트 2개([[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] ~ T-0279)
 
-### QA-20 휴대폰에서 쓰기
+### QA-20 모바일 사용성
 
 | 부분 | 내용 |
 | --- | --- |
@@ -390,7 +390,7 @@ updated: 2026-11-01
 - **테스트:** E2E(Playwright의 Android 폰 흉내: 화면 크기 · 터치 · user agent). 실제 휴대폰은 출시 점검표. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
 - **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
-### QA-21 믿을 수 없는 공유 링크
+### QA-21 비신뢰 공유 링크 입력 처리
 
 | 부분 | 내용 |
 | --- | --- |

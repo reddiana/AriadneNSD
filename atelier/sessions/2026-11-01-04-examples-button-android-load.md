@@ -89,12 +89,12 @@ date: 2026-11-01
 
 - [x] 휴대폰의 비기능 요구사항과 QAS에서 Claude가 정한 것 (2026-11-01 세션 04 → [[2026-11-01-04-examples-button-android-load]])
 	- [[01-requirements#^r-nfr|R-NFR-08]] ~ [[01-requirements#^r-nfr|R-NFR-10]]을 모두 `P0`(MVP에 듦)으로. 휴대폰은 Android의 Chrome만(iPhone의 Safari는 넣지 않음)
-	- QA-18의 합격 기준(제안값): CPU 4배 느림 + slow 4G에서 편집 화면 3초, 블록 글꼴까지 5초 → [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간]]
+	- QA-18의 합격 기준(제안값): CPU 4배 느림 + slow 4G에서 편집 화면 3초, 블록 글꼴까지 5초 → [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간]]
 	- 시작이 15초를 넘거나 오류가 나면 "AriadneNSD를 시작하지 못했습니다. 이 화면을 찍어 알려 주세요."와 멈춘 단계 · 오류 · 브라우저 정보를 보임. 저장소 열기는 3초 제한 → [[06-web#7. 웹에서의 화면]]
 - [x] 툴바의 "예제"를 모달로 바꾸며 정한 문구 (2026-11-01 세션 04): 툴바에서 연 모달에는 맨 아래 문구가 없고, 환영 모달에만 "예제는 툴바의 “예제”와 도움말 › 예제…로 다시 열 수 있습니다." → [[ux-decisions#EX4. 툴바의 예제는 모달로|EX4]]
 - [x] 테스트 목록의 유형 나누기 (2026-11-01 세션 04): 통합으로 본 파일 여덟은 스크립트(`src/scripts/test-list.mjs`의 `integrationFiles`)에 적은 목록이고, 나머지 Vitest 파일은 단위. 결함 번호는 `BUG-01`처럼 두 자리 → [[02-test-architecture#1. 테스트 아키텍처]], [[defects]]
 
-QA-18의 기준은 제안값에서 확정으로 바꿈 → [[03-quality-attribute-scenarios#QA-18 휴대폰에서 시작하는 시간]]
+QA-18의 기준은 제안값에서 확정으로 바꿈 → [[03-quality-attribute-scenarios#QA-18 모바일 시작 시간]]
 
 ## 다음 할 것
 
