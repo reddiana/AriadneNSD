@@ -78,6 +78,21 @@ describe('glyphPathData', () => {
     );
   });
 
+  it('T-1316 · BUG-15: leans a slanted run about the baseline and leaves a regular run upright', () => {
+    const element = text({
+      runs: [
+        { text: 'a', weight: 400, isItalic: true },
+        { text: 'b', weight: 400 },
+      ],
+    });
+    const glyphs = placeGlyphs(element, outlines) ?? [];
+    // The same places as upright text; 7px above the baseline leans 7 / 4 = 1.75px to the right.
+    expect(glyphs.map((glyph) => glyph.x)).toEqual([10, 15]);
+    expect(glyphPathData(glyphs, String)).toBe(
+      'M10 20L14 20Q15.75 13 11.75 13Z' + 'M15 20L19 20Q19 13 15 13Z',
+    );
+  });
+
   it('T-1049: covers the box the layout measured for the text', () => {
     const element = text({ runs: [{ text: 'abc', weight: 400 }] });
     const numbers = glyphPathData(placeGlyphs(element, outlines) ?? [], String)
@@ -150,6 +165,29 @@ describe('toSvg with outlines', () => {
     expect(paths).toHaveLength(2);
     expect(paths[0]).toMatch(/^<path d="M10 20.*M20 20.*" fill="#1f45d6"\/>$/);
     expect(paths[1]).toMatch(/^<path d="M15 20[^M]*" fill="#151a22"\/>$/);
+  });
+
+  it('T-1317 · BUG-15: slants the halo and the synthetic bold of a slanted bold run with its glyphs', () => {
+    const element = text({
+      runs: [{ text: 'a', weight: 600, isItalic: true }],
+      halo: { color: '#ffffff', width: 2 },
+    });
+    const paths = toSvg(scene([element]), { outlines })
+      .content.split('\n')
+      .filter((line) => line.startsWith('<path'));
+    expect(paths).toHaveLength(2);
+    for (const path of paths) {
+      expect(path).toContain('d="M10 20L14 20Q15.75 13 11.75 13Z"');
+    }
+    expect(paths[1]).toContain('fill="#151a22" stroke="#151a22"');
+    expect(toSvg(scene([element]), { outlines }).content).not.toContain('font-style');
+  });
+
+  it('T-1318 · BUG-15: rounds slanted coordinates to two decimals like every other coordinate', () => {
+    const element = text({ fontSize: 13.3, runs: [{ text: 'a', weight: 400, isItalic: true }] });
+    const { content } = toSvg(scene([element]), { outlines });
+    // Unrounded: L15.32 20, Q17.6475 10.69, 12.3275 10.69.
+    expect(content).toContain('d="M10 20L15.32 20Q17.65 10.69 12.33 10.69Z"');
   });
 
   it('T-1053: keeps as text an element with a character the font lacks, and only that one', () => {

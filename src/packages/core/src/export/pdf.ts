@@ -4,7 +4,7 @@
 import type { Glyph, GlyphCommand, GlyphOutlines } from '@ariadne-nsd/fonts';
 import { zlibCompress } from '@ariadne-nsd/fonts';
 
-import { placeGlyphs, syntheticBoldWidth } from '../render/outline-text';
+import { placeGlyphs, slantedCommands, syntheticBoldWidth } from '../render/outline-text';
 import type { PlacedGlyph, TextElement } from '../render/outline-text';
 import type { PathSegment, Point, Scene, SceneElement } from '../render/scene';
 import type { Pagination } from './paginate';
@@ -223,7 +223,7 @@ function textOps(element: TextElement, forms: GlyphForms): ReadonlyArray<string>
     mode: 'fill' | 'stroke' | 'both',
     strokeWidth: number,
   ): string => {
-    const name = forms.use(glyph.glyph, mode);
+    const name = forms.use(glyph.glyph, mode, glyph.isItalic);
     if (name === null) {
       return '';
     }
@@ -270,7 +270,7 @@ function pageNumberOps(
   const y = pagination.margin / 2 - pageNumberSize / 3;
   const out = [`q ${color(pageNumberColor, 'rg')}`];
   for (const glyph of glyphs) {
-    const name = forms.use(glyph, 'fill');
+    const name = forms.use(glyph, 'fill', false);
     if (name !== null) {
       out.push(`q ${num(scale)} 0 0 ${num(scale)} ${num(x)} ${num(y)} cm /${name} Do Q`);
     }
@@ -281,8 +281,9 @@ function pageNumberOps(
 }
 
 /**
- * Each glyph is written once, as a form XObject, and drawn where it is used. One form per glyph
- * and paint mode: filled, stroked (the halo), or both (synthetic bold).
+ * Each glyph is written once, as a form XObject, and drawn where it is used. One form per glyph,
+ * paint mode (filled, stroked for the halo, or both for synthetic bold) and slant. The slant is in
+ * the outline and not in the matrix that places the form, so strokes keep their round pen.
  */
 class GlyphForms {
   readonly outlines: GlyphOutlines;
@@ -297,21 +298,23 @@ class GlyphForms {
   }
 
   /** The form's resource name, or `null` for a glyph with no outline (a space). */
-  use(glyph: Glyph, mode: 'fill' | 'stroke' | 'both'): string | null {
+  use(glyph: Glyph, mode: 'fill' | 'stroke' | 'both', isItalic: boolean): string | null {
     if (glyph.commands.length === 0) {
       return null;
     }
-    let byMode = this.names.get(glyph);
-    if (byMode === undefined) {
-      byMode = new Map();
-      this.names.set(glyph, byMode);
+    let byPaint = this.names.get(glyph);
+    if (byPaint === undefined) {
+      byPaint = new Map();
+      this.names.set(glyph, byPaint);
     }
-    let name = byMode.get(mode);
+    const paint = isItalic ? `${mode} italic` : mode;
+    let name = byPaint.get(paint);
     if (name === undefined) {
       name = `G${String(this.forms.length + 1)}`;
       const operator = mode === 'fill' ? 'f' : mode === 'stroke' ? 'S' : 'B';
-      this.forms.push({ name, body: `${glyphPath(glyph.commands)} ${operator}` });
-      byMode.set(mode, name);
+      const commands = isItalic ? slantedCommands(glyph.commands) : glyph.commands;
+      this.forms.push({ name, body: `${glyphPath(commands)} ${operator}` });
+      byPaint.set(paint, name);
     }
     return name;
   }

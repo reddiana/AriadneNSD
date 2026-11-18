@@ -2,7 +2,7 @@
 title: 결함 기록
 tags:
   - plan
-updated: 2026-11-17
+updated: 2026-11-19
 ---
 
 # 결함 기록
@@ -31,7 +31,7 @@ updated: 2026-11-17
 | [[#BUG-12\|BUG-12]] | 2026-11-03 | 분기 라벨 · 빈 default 칸에서 `Ctrl`+`←` `→`가 If · Case 블록에서 출발함(If의 오른쪽 라벨에서 `Ctrl`+`→`를 누르면 왼쪽 분기의 첫 블록으로 감) | 고침 |
 | [[#BUG-13\|BUG-13]] | 2026-11-03 | 호출 블록을 텍스트로 복사하면 Method 이름이 빠짐(`ys ← MergeSort(xs)`가 `ys xs`로, 결과 · 인자가 없으면 빈 줄로) | 고침 |
 | [[#BUG-14\|BUG-14]] | 2026-11-03 | 드래그한 블록을 제자리에 드롭하면 바뀐 것도 실행 취소 단계도 없는데 드롭 함수가 "문서가 바뀜"(`true`)을 돌려줌 | 고침 |
-| [[#BUG-15\|BUG-15]] | 2026-11-04 | 텍스트 외곽선으로 저장한 그림과 PDF에서 기울임 텍스트(이름 없는 접기 영역의 기본 이름, 접힌 분기의 "⋯ 블록 n개")가 바로 선 글자로 나옴 | 열림 |
+| [[#BUG-15\|BUG-15]] | 2026-11-04 | 텍스트 외곽선으로 저장한 그림과 PDF에서 기울임 텍스트(이름 없는 접기 영역의 기본 이름, 접힌 분기의 "⋯ 블록 n개")가 바로 선 글자로 나옴 | 고침 |
 | [[#BUG-16\|BUG-16]] | 2026-11-17 | 접기 영역을 펼치면 이름 띠와 첫 블록 사이의 선이 빠짐(프로토타입에는 있음) | 고침 |
 
 ## BUG-01
@@ -141,9 +141,16 @@ updated: 2026-11-17
 
 - **찾은 사람:** Claude(2026-11-04, 11-03 밤에 에이전트들이 만든 접기 묶음과 내보내기 묶음을 합친 뒤 → [[2026-11-03-06-agents-bugs-locale-extract#매듭 뒤 (2026-11-03 밤 ~ 11-04)]])
 - **증상의 자세한 모습:** 화면과 보통의 저장 그림은 기울임(`font-style="italic"`)으로 그리지만, 텍스트 외곽선(문서 설정 → [[ux-decisions#OL1. 텍스트 외곽선은 문서 설정|OL1]])과 PDF([[ux-decisions#PD1. PDF는 앱이 바로 만든다|PD1]])는 바로 선 글자로 그림. 레이아웃과 글자 폭은 그대로라 자리는 어긋나지 않음
-- **원인(짐작):** 외곽선과 PDF는 번들 글꼴(보통 굵기 하나)의 글리프를 그대로 쓰고, 기울임 글꼴이 없어 장면의 기울임 표시를 따르지 않음 → [[0045-export-pipeline|ADR-0045]]. 두 에이전트가 나란히 만들어 서로의 것을 보지 못함
-- **고친 곳:** 아직 없음. 글리프를 기울여(skew) 그릴지, 기울임 글꼴을 번들할지 정해야 함
-- **회귀 테스트:** 아직 없음(고칠 때 더함)
+- **원인:** 외곽선과 PDF는 번들 글꼴(보통 굵기 하나)의 글리프를 그대로 쓰고, 기울임 글꼴이 없어 장면의 기울임 표시(`TextRun.isItalic`)를 따르지 않음 → [[0045-export-pipeline|ADR-0045]]. 두 에이전트가 나란히 만들어 서로의 것을 보지 못함
+- **고친 곳:** 글리프 외곽선을 기준선 기준으로 기울여 그림 → [[ux-decisions#SL1. 외곽선과 PDF도 기울여 그린다|SL1]]. `packages/core/src/render/outline-text.ts`: 놓인 글리프가 런의 기울임을 보유하고 `slantedCommands`가 외곽선을 기울임(`glyphPathData`가 사용). `packages/core/src/export/pdf.ts`: 기울인 글리프를 별도의 폼 XObject로 씀
+- **회귀 테스트:**
+	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1316]] 기울임 런은 기준선을 기준으로 기울이고 보통 런은 바로 세워 둔다 (단위, `packages/core/src/render/outline-text.test.ts`)
+	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1317]] 굵은 기울임 런의 테두리와 합성 굵게를 글리프와 함께 기울인다 (단위, 같은 파일)
+	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1318]] 기울인 좌표도 다른 좌표처럼 소수 둘째 자리로 반올림한다 (단위, 같은 파일)
+	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1312]] 기울임 런의 외곽선을 기울이고 보통 텍스트는 바로 세워 둔다 (단위, `packages/core/src/export/pdf.test.ts`)
+	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1313]] 한 요소의 기울임 런과 보통 런을 각자의 폼으로 그린다 (단위, 같은 파일)
+	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1314]] 합성 굵게도 글리프와 함께 기울인다 (단위, 같은 파일)
+	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1315]] 기울인 글리프를 바로 선 글리프와 같은 자리에 놓고, 다시 만들어도 같은 바이트다 (단위, 같은 파일)
 
 ## BUG-16
 

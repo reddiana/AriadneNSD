@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { Block } from '../model/types';
 import { renderDoc } from '../render/render-doc';
+import type { TextRun } from '../render/scene';
 import { docOf, process } from '../render/testing';
 import { paginate, papers } from './paginate';
 import { writePdf } from './pdf';
@@ -76,5 +77,59 @@ describe('writePdf', () => {
   it('T-1021: gives the same bytes for the same drawing', () => {
     expect(pdfOf(many(40))).toBe(pdfOf(many(40)));
     expect(pdfOf(many(40))).not.toBe(pdfOf(many(41)));
+  });
+});
+
+describe('writePdf with slanted text', () => {
+  /** An uncompressed PDF of one block, each text run replaced by the runs of `restyle`. */
+  function plainPdfOf(restyle: (run: TextRun) => ReadonlyArray<TextRun>): string {
+    const rendering = renderDoc(docOf(process('b1', 'ab')));
+    const scene = {
+      ...rendering.scene,
+      elements: rendering.scene.elements.map((element) =>
+        element.kind === 'text' ? { ...element, runs: element.runs.flatMap(restyle) } : element,
+      ),
+    };
+    const pagination = paginate(rendering.layout, papers.a4);
+    const options = { title: 'Sort', isCompressed: false };
+    return String.fromCharCode(...writePdf(scene, pagination, outlines, options));
+  }
+  const asIs = (run: TextRun): ReadonlyArray<TextRun> => [run];
+  const italic = (run: TextRun): ReadonlyArray<TextRun> => [{ ...run, isItalic: true }];
+  /** The triangle's outline as written in a form, upright and leaning 1/4 to the right. */
+  const upright = '0 0 m 400 0 l 333.333 266.667 266.667 500 200 700 c h';
+  const slanted = '0 0 m 400 0 l 400 266.667 391.667 500 375 700 c h';
+  /** Where each glyph is put: its matrix without the form's name. */
+  const placements = (pdf: string): string[] =>
+    [...pdf.matchAll(/q (\S+ 0 0 \S+ \S+ \S+) cm \/G\d+ Do Q/g)].map((match) => match[1] ?? '');
+
+  it('T-1312 · BUG-15: leans the outline of a slanted run and leaves regular text upright', () => {
+    const pdf = plainPdfOf(italic);
+    expect(pdf).toContain(`${slanted} f`);
+    expect(pdf).not.toContain(`${upright} f`);
+    expect(plainPdfOf(asIs)).toContain(`${upright} f`);
+    expect(plainPdfOf(asIs)).not.toContain(`${slanted} f`);
+  });
+
+  it('T-1313 · BUG-15: draws a slanted run and a regular run of one element with their own forms', () => {
+    const pdf = plainPdfOf((run) => [
+      { ...run, text: 'a', isItalic: true },
+      { ...run, text: 'b' },
+    ]);
+    expect(pdf.match(/\/Subtype \/Form/g)).toHaveLength(2);
+    expect(pdf).toContain(`${slanted} f`);
+    expect(pdf).toContain(`${upright} f`);
+  });
+
+  it('T-1314 · BUG-15: slants synthetic bold with its glyphs', () => {
+    const pdf = plainPdfOf((run) => [{ ...run, weight: 600, isItalic: true }]);
+    expect(pdf).toContain(`${slanted} B`);
+    expect(pdf).not.toContain(`${upright} B`);
+  });
+
+  it('T-1315 · BUG-15: puts slanted glyphs where upright ones go, and gives the same bytes again', () => {
+    expect(placements(plainPdfOf(italic)).length).toBeGreaterThan(0);
+    expect(placements(plainPdfOf(italic))).toEqual(placements(plainPdfOf(asIs)));
+    expect(plainPdfOf(italic)).toBe(plainPdfOf(italic));
   });
 });
