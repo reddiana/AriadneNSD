@@ -110,6 +110,47 @@ describe('hitting folded things and opened calls (03-editor 3.1)', () => {
     });
   });
 
+  it('T-1362 · R-EDIT-15: the label of a branch in an opened call is selected as that label', () => {
+    const content = base();
+    const [d1, d2] = content.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    const doc: Doc = {
+      content: {
+        ...content,
+        diagrams: [
+          d1,
+          {
+            ...d2,
+            body: {
+              blocks: [ifBlock('i9', branch('r8', [proc('p8')]), branch('r9', [proc('p9')]))],
+              folds: [],
+            },
+          },
+        ],
+      },
+      view: { folded: [], opened: [['c1']], bands: true, resultSymbol: '←' },
+    };
+    const result = layout(doc);
+    const shown = shownIndexOf(doc);
+    const real = indexDoc(doc.content);
+    const label = result.regions.find(
+      (region) => region.kind === 'branchLabel' && region.branchId === 'c1/r9',
+    );
+    const box = label?.box ?? { x: 0, y: 0, width: 0, height: 0 };
+    const hit = hitTest(result, shown.index, middle(box));
+    const selection = hit === null ? null : selectionOfHit(shown, real, hit);
+    expect(selection).toEqual({
+      kind: 'peek',
+      path: ['c1'],
+      anchor: 'i9',
+      focus: 'i9',
+      branch: 'r9',
+    });
+    expect(selectionBox(result, real, selection)).toEqual(box);
+  });
+
   it('T-1112: overlay: fold triangles are drawn on the editing layer only, not in the saved drawing', () => {
     const doc = docWith({ folded: ['f1'], opened: [['c1']] });
     const rendering = renderDoc(doc);

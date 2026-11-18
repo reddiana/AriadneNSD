@@ -6,6 +6,7 @@ import { geometry, primitiveColors } from '@ariadne-nsd/core';
 import type { Drop } from '../input/drop';
 import { union } from '../input/drop';
 import type { DocIndex } from '../model/doc-index';
+import { screenIdIn } from '../model/shown-index';
 import type { EditField } from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import { selectedBlocks, selectedScreenIds } from '../state/selection';
@@ -77,6 +78,13 @@ export function selectionBox(
 ): Box | null {
   if (selection === null) {
     return null;
+  }
+  if (selection.kind === 'peek' && selection.branch !== undefined) {
+    const label = screenIdIn(selection.path, selection.branch);
+    return (
+      layout.regions.find((region) => region.kind === 'branchLabel' && region.branchId === label)
+        ?.box ?? null
+    );
   }
   switch (selection.kind) {
     case 'blocks':

@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 6 | 45 | 255 | - | 306 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 174 | - | 209 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 7 | 45 | 262 | - | 314 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 175 | - | 210 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 31 | 43 | - | 96 |
 | [[#5. 파일\|파일]] | 18 | 155 | 233 | - | 406 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 155 | - | 157 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 81 | 261 | 885 | 5 | 1232 |
+| 합계 | 82 | 261 | 893 | 5 | 1241 |
 
 ## 읽는 법
 
@@ -76,7 +76,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 306개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 314개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -91,7 +91,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ### [E2E] `apps/web/e2e/folding.spec.ts`
 
-브라우저에서 접기와 호출 블록 펴 보기 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11, R-EDIT-15, R-EDIT-08). Playwright · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-08]].
+브라우저에서 접기와 호출 블록 펴 보기 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11, R-EDIT-15, R-EDIT-08). Playwright · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-08]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -99,6 +99,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-1067 | fold: While에서 f는 본문을 한 줄로 접고, 방향키는 그것을 블록 하나로 지나간다 | - |
 | T-1068 | peek: f는 호출 블록을 그 위치에 펴 보이고(보기만), ds는 그것을 Method의 블록들로 바꾼다 | - |
 | T-1323 | 펴 보인 호출 블록에서 접어도 Method는 그대로이고, Method에서 접어도 펴 보인 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1361 | Method에서 접힌 채 가져온 반복문의 본문을 펴 보인 호출 블록에서만 펴고 다시 접는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 
 ^t-apps-web-e2e-folding-spec-ts
 
@@ -529,7 +530,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 22개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB13]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 29개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB13]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -551,6 +552,13 @@ id. Vitest · 테스트 5개.
 | T-1351 | 펴 보인 호출 블록을 삭제했다가 실행 취소하면 접힘이 돌아오고, 그동안 파일에는 남지 않는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1352 | 복사해 붙인 호출 블록은 펼 때의 Method 접힘으로 열린다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1353 | 새 블록은 호출 자리의 접힘이 가리키는 id를 다시 쓰지 않는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1354 | 펴 보인 곳에서 If를 접으면 그 호출 블록 자리의 분기만 접힌다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1355 | 분기 라벨에서 접으면 그 분기만 접히고, 접힌 줄에서 다시 펴진다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1356 | 반복문 본문의 블록에서 `zc`는 본문을 접고 `zo`는 펴며, 접힌 뒤의 `zc`는 바깥의 호출 블록을 접는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1357 | Method에서 접힌 채 가져온 분기를 그 자리에서 펴면 저장한 뒤에도 펴진 채로 남는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1358 | 겹쳐 펴 보인 호출 블록의 분기는 경로마다 따로 접힌다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1359 | 그 자리에서 접힌 선택은 접힌 줄에 남고, 이동 키로 지나갔다 돌아올 수 있다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1360 | 본문 전체가 Method의 접기 영역 하나이면 그 자리에서 그 접기 영역을 접고, `zd`는 Method의 접기 영역을 없애지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1093 | inline: 호출 블록에서 ds는 그 위치에 Method의 블록을 접힌 모습 그대로 넣는다 | - |
 | T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
 | T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |
@@ -611,7 +619,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 209개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 210개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -827,12 +835,13 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/input/hit-shown.test.ts`
 
-접힌 것, 접기 영역, 펴 보인 호출 블록에서 클릭이 가리키는 것과 오버레이가 두르는 것 (03-editor 3.1, 조작 규칙 4). Vitest · 테스트 3개.
+접힌 것, 접기 영역, 펴 보인 호출 블록에서 클릭이 가리키는 것과 오버레이가 두르는 것 (03-editor 3.1, 조작 규칙 4). Vitest · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1110 | hit: 펼침 삼각형이 띠보다 먼저이고, 띠는 접기 영역을, 접힌 줄은 그 분기를 선택한다 | - |
 | T-1111 | hit: 펴 보인 블록은 보이는 대로 선택하고, 띠는 호출 블록을 선택한다 | - |
+| T-1362 | 펴 보인 호출 블록 안의 분기 라벨을 클릭하면 그 라벨이 선택된다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1112 | overlay: 펼침 삼각형은 편집 레이어에만 그리고, 저장되는 렌더링 결과에는 없다 | - |
 
 ^t-packages-editor-src-input-hit-shown-test-ts

@@ -6,6 +6,7 @@ import type { Content, Id, Path, Seq, View } from '@ariadne-nsd/core';
 import {
   foldRange,
   headName,
+  isFoldedAt,
   makeFold,
   makeSiteFold,
   placeSiteFolds,
@@ -35,11 +36,15 @@ import type { Applies } from './spec';
 import { always, spec } from './spec';
 
 /**
- * One thing that folds: a branch or loop body (its owner), a fold region, or a call block opened
- * in place (its call path, outermost first).
+ * One thing that folds: a branch or loop body, a fold region, or a call block opened in place
+ * (its call path, outermost first).
  */
 type FoldItem =
-  | { readonly kind: 'seq'; readonly owner: Id }
+  | {
+      readonly kind: 'seq';
+      /** Its entry in `View.folded`: a Method's branch seen in an opened call is `b4/r3`. */
+      readonly entry: Id;
+    }
   | {
       readonly kind: 'fold';
       readonly fold: Id;
@@ -89,11 +94,17 @@ function wholeRegion(seq: Seq): Id | null {
   return whole?.id ?? null;
 }
 
+/** The entry of a Method's branch or loop body seen through `path` (ADR-0046). */
+function seqEntry(path: Path, owner: Id): Id {
+  return path.length === 0 ? owner : sitePrefix(path) + owner;
+}
+
 /**
  * A control block folds its inside (R-EDIT-13): every branch of an If or Case that can fold, or
- * a loop's body. A branch that is all one fold region folds that region instead.
+ * a loop's body. A branch that is all one fold region folds that region instead. Inside an opened
+ * call block all of it folds at this call site only (`path`, UX CB13).
  */
-function controlTarget(index: DocIndex, block: Id): FoldTarget | null {
+function controlTarget(index: DocIndex, block: Id, path: Path = []): FoldTarget | null {
   const place = index.blocks.get(block);
   if (place === undefined) {
     return null;
@@ -102,16 +113,16 @@ function controlTarget(index: DocIndex, block: Id): FoldTarget | null {
   for (const child of childSeqs(place.block)) {
     const region = wholeRegion(child.seq);
     if (region !== null) {
-      items.push({ kind: 'fold', fold: region, entry: region });
+      items.push(...foldTarget(index, region, path).items);
     } else if (isFoldableSeq(child.seq)) {
-      items.push({ kind: 'seq', owner: child.owner });
+      items.push({ kind: 'seq', entry: seqEntry(path, child.owner) });
     }
   }
   return items.length === 0 ? null : { items, afterClose: null };
 }
 
 /** The target folding a whole branch or loop body: it is then selected as its row. */
-function seqTarget(index: DocIndex, owner: Id): FoldTarget | null {
+function seqTarget(index: DocIndex, owner: Id, path: Path = []): FoldTarget | null {
   const seq = index.seqs.get(owner)?.seq;
   const first = seq?.blocks[0];
   const last = seq?.blocks.at(-1);
@@ -119,8 +130,11 @@ function seqTarget(index: DocIndex, owner: Id): FoldTarget | null {
     return null;
   }
   return {
-    items: [{ kind: 'seq', owner }],
-    afterClose: selectRange(index, first.id, last.id),
+    items: [{ kind: 'seq', entry: seqEntry(path, owner) }],
+    afterClose:
+      path.length === 0
+        ? selectRange(index, first.id, last.id)
+        : { kind: 'peek', path, anchor: first.id, focus: last.id },
   };
 }
 
@@ -204,17 +218,18 @@ function around(
 }
 
 /**
- * The fold regions of the call site `path` that hold the blocks `lo..hi` of the called Method's
- * sequence `owner`, nearest first, walking out to the Method's body (R-EDIT-16). A block inside
- * does not fold the Method's own regions and branches; a selected region of the Method does.
+ * What holds the blocks `lo..hi` of the called Method's sequence `start` at the call site `path`,
+ * nearest first, walking out to the Method's body (UX CB13): the site's regions around them, and
+ * the branch or loop body they are in. A region of the Method folds from a block inside only when
+ * it is that whole body; otherwise it folds when it is selected itself (R-EDIT-16).
  */
-function siteOutward(
+function peekOutward(
   index: DocIndex,
   path: Path,
   start: Id,
   from: number,
   to: number,
-): ReadonlyArray<Id> {
+): ReadonlyArray<FoldTarget> {
   const [outermost] = path;
   const call = outermost === undefined ? undefined : index.blocks.get(outermost)?.block;
   const inner = index.blocks.get(path.at(-1) ?? '')?.block;
@@ -230,7 +245,7 @@ function siteOutward(
     method.body,
     call.siteFolds.filter((fold) => fold.via.join(' ') === via.join(' ')),
   );
-  const found: Id[] = [];
+  const found: FoldTarget[] = [];
   let owner: Id = start;
   let lo = from;
   let hi = to;
@@ -244,9 +259,16 @@ function siteOutward(
       ...ranges
         .filter((range) => range.lo <= lo && hi <= range.hi)
         .sort((a, b) => a.hi - a.lo - (b.hi - b.lo))
-        .map((range) => range.fold.id),
+        .map((range) => foldTarget(index, range.fold.id, path)),
     );
-    const holder = place.holder === null ? undefined : index.blocks.get(place.holder);
+    if (place.holder === null) {
+      break;
+    }
+    const body = bodyTarget(index, owner, place.seq, path);
+    if (body !== null) {
+      found.push(body);
+    }
+    const holder = index.blocks.get(place.holder);
     if (holder === undefined) {
       break;
     }
@@ -257,11 +279,43 @@ function siteOutward(
   return found;
 }
 
+/** Folding a whole branch or loop body at a call site: the region that is all of it, or itself. */
+function bodyTarget(index: DocIndex, owner: Id, seq: Seq, path: Path): FoldTarget | null {
+  const region = wholeRegion(seq);
+  if (region !== null) {
+    return foldTarget(index, region, path);
+  }
+  return isFoldableSeq(seq) ? seqTarget(index, owner, path) : null;
+}
+
+/** Where the fold region `fold` shown at the call site `path` lies: its sequence and range. */
+function regionPlace(
+  index: DocIndex,
+  fold: Id,
+  path: Path,
+): { readonly owner: Id; readonly lo: number; readonly hi: number } | null {
+  const call = index.blocks.get(path[0] ?? '')?.block;
+  const site = call?.kind === 'call' ? call.siteFolds.find((item) => item.id === fold) : undefined;
+  const marked = foldBlocks(index, fold);
+  const first = index.blocks.get(site?.first ?? marked[0] ?? '');
+  const last = index.blocks.get(site?.last ?? marked.at(-1) ?? '');
+  const end = first ?? last;
+  if (end === undefined) {
+    return null;
+  }
+  const other = last?.owner === end.owner ? last : end;
+  return {
+    owner: end.owner,
+    lo: Math.min(end.index, other.index),
+    hi: Math.max(end.index, other.index),
+  };
+}
+
 /**
  * Everything a fold command could act on for the selection, nearest first (UX Q20): what is
  * selected when it folds or opens, otherwise what holds it. A folded row or cell that is selected
- * comes first, so folding it again unfolds it. Inside an opened call block that is a region of
- * this call site, else the opened call block holding it (UX 4.1).
+ * comes first, so folding it again unfolds it. Inside an opened call block the same order holds
+ * at that call site, and the opened call block holding it comes last (UX 4.1, UX CB13).
  */
 export function foldTargets(
   index: DocIndex,
@@ -276,12 +330,15 @@ export function foldTargets(
     case 'head':
       return [];
     case 'peek':
-      return peekTargets(index, selection);
+      return peekTargets(index, view, selection);
     case 'fold': {
       const path = foldPath(selection);
       const self = foldTarget(index, selection.fold, path);
       if (path.length > 0) {
-        return [self, callTarget(index, path)];
+        const place = regionPlace(index, selection.fold, path);
+        const around =
+          place === null ? [] : peekOutward(index, path, place.owner, place.lo, place.hi);
+        return unique([self, ...around, callTarget(index, path)]);
       }
       const owner = index.folds.get(selection.fold);
       const seq = owner === undefined ? undefined : index.seqs.get(owner)?.seq;
@@ -345,10 +402,13 @@ export function foldTargets(
   }
 }
 
+/** What a fold command acts on inside an opened call block: as outside, at this site (UX CB13). */
 function peekTargets(
   index: DocIndex,
+  view: View,
   selection: Extract<Selection, { kind: 'peek' }>,
 ): FoldTarget[] {
+  const { path, branch } = selection;
   const ids = peekBlocks(index, selection);
   const [first] = ids;
   const a = first === undefined ? undefined : index.blocks.get(first);
@@ -357,20 +417,39 @@ function peekTargets(
     return [];
   }
   const targets: FoldTarget[] = [];
-  if (ids.length === 1 && isOpenable(index, first)) {
-    targets.push(callTarget(index, [...selection.path, first]));
+  const labelled = branch === undefined ? undefined : index.branches.get(branch);
+  if (branch !== undefined && labelled !== undefined) {
+    // The label of a branch folds that branch (UX FD6).
+    const own = bodyTarget(index, branch, labelled.branch.body, path);
+    if (own !== null) {
+      targets.push(own);
+    }
+  } else {
+    const seq = index.seqs.get(a.owner)?.seq;
+    const isWhole = seq !== undefined && a.index === 0 && b.index === seq.blocks.length - 1;
+    if (isWhole && isFoldedAt(new Set(view.folded), sitePrefix(path), a.owner)) {
+      // The row of a folded branch is selected: folding it again unfolds it.
+      const row = seqTarget(index, a.owner, path);
+      if (row !== null) {
+        targets.push(row);
+      }
+    }
+    if (ids.length === 1) {
+      const inside = isOpenable(index, first)
+        ? callTarget(index, [...path, first])
+        : controlTarget(index, first, path);
+      if (inside !== null) {
+        targets.push(inside);
+      }
+    }
   }
-  for (const fold of siteOutward(index, selection.path, a.owner, a.index, b.index)) {
-    targets.push(foldTarget(index, fold, selection.path));
-  }
-  targets.push(callTarget(index, selection.path));
-  return targets;
+  targets.push(...peekOutward(index, path, a.owner, a.index, b.index), callTarget(index, path));
+  return unique(targets);
 }
 
 function itemKey(item: FoldItem): string {
   switch (item.kind) {
     case 'seq':
-      return item.owner;
     case 'fold':
       return item.entry;
     case 'call':
@@ -397,7 +476,6 @@ function samePath(a: Path, b: Path): boolean {
 function isClosed(view: View, item: FoldItem): boolean {
   switch (item.kind) {
     case 'seq':
-      return view.folded.includes(item.owner);
     case 'fold':
       return view.folded.includes(item.entry);
     case 'call':
@@ -472,7 +550,12 @@ export function regionToRemove(index: DocIndex, selection: Selection | null): To
   );
   for (const target of targets) {
     const [item] = target.items;
-    if (target.items.length === 1 && item?.kind === 'fold') {
+    // Inside an opened call block a Method's own region folds, but it is removed in the Method.
+    if (
+      target.items.length === 1 &&
+      item?.kind === 'fold' &&
+      (selection.kind !== 'peek' || index.siteFolds.has(item.fold))
+    ) {
       return { fold: item.fold };
     }
   }

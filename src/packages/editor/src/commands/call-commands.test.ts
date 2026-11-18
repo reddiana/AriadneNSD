@@ -4,7 +4,7 @@ import type { Block, Content, Doc } from '@ariadne-nsd/core';
 import { serializeModelJson } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
-import { contentOf, proc, testEngine } from '../engine-test-support';
+import { branch, contentOf, ifBlock, proc, seq, testEngine } from '../engine-test-support';
 import type { TestEngine } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
 import { selectBlock, selectFold } from '../state/selection';
@@ -388,6 +388,175 @@ describe('the folding of an opened call block is its own (UX CB13, ADR-0046)', (
     const ids = engine.session.ids();
     expect(ids.next('block')).toBe('b91');
     expect(ids.next('branch')).toBe('r92');
+  });
+});
+
+describe('branches and loop bodies fold where a call block is opened (UX CB13, ADR-0046)', () => {
+  /**
+   * d1: c1 and c3 call the Method d2.
+   * d2: If i1 { r1: p1, p2 | r2: p3, p4 }, While w1 { p5, p6 }, c2 → d2.
+   */
+  const branching = (): Content => {
+    const base = contentOf(
+      [call('c1', 'd2'), call('c3', 'd2')],
+      [
+        ifBlock(
+          'i1',
+          branch('r1', [proc('p1'), proc('p2')]),
+          branch('r2', [proc('p3'), proc('p4')]),
+        ),
+        { id: 'w1', kind: 'while', text: 'w', body: seq([proc('p5'), proc('p6')]) },
+        call('c2', 'd2'),
+      ],
+    );
+    const [d1, d2] = base.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    return { ...base, diagrams: [d1, { ...d2, head: { kind: 'method', text: 'm()' } }] };
+  };
+
+  const opened = (content: Content = branching()): TestEngine => {
+    const engine = testEngine(content);
+    select(engine, 'c1');
+    engine.keys('f');
+    return engine;
+  };
+
+  const peek = (path: ReadonlyArray<string>, anchor: string, focus = anchor) => ({
+    kind: 'peek' as const,
+    path,
+    anchor,
+    focus,
+  });
+
+  const folded = (engine: TestEngine): ReadonlyArray<string> =>
+    engine.session.state.doc.view.folded;
+
+  /** Whether block `id` of the Method is hidden where it is shown through `path`. */
+  const isHidden = (engine: TestEngine, path: ReadonlyArray<string>, id: string): boolean =>
+    engine.session.shown().hiddenBy.has([...path, id].join('/'));
+
+  it('T-1354 · R-EDIT-15: folding an If there folds its branches at this call only', () => {
+    const engine = opened();
+    select(engine, 'c3');
+    engine.keys('f');
+    engine.select(peek(['c1'], 'i1'));
+    engine.keys('z', 'a');
+    expect(folded(engine)).toEqual(expect.arrayContaining(['c1/r1', 'c1/r2']));
+    expect(folded(engine)).not.toContain('r1');
+    expect(folded(engine)).not.toContain('c3/r1');
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(true);
+    expect(isHidden(engine, ['c3'], 'p1')).toBe(false);
+    expect(isHidden(engine, [], 'p1')).toBe(false);
+    expect(engine.session.state.doc.view.opened).toContainEqual(['c1']);
+    expect(engine.session.state.undo).toHaveLength(0);
+    engine.keys('z', 'a');
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(false);
+  });
+
+  it('T-1355 · R-EDIT-15: the label of a branch folds that branch; its folded row unfolds it again', () => {
+    const engine = opened();
+    engine.select({ ...peek(['c1'], 'i1'), branch: 'r2' });
+    engine.keys('f');
+    expect(isHidden(engine, ['c1'], 'p3')).toBe(true);
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(false);
+    expect(engine.session.state.selection).toEqual(peek(['c1'], 'p3', 'p4'));
+    engine.keys('f');
+    expect(isHidden(engine, ['c1'], 'p3')).toBe(false);
+    expect(engine.session.state.doc.view.opened).toEqual([['c1']]);
+  });
+
+  it('T-1356 · R-EDIT-15: zc on a block in a loop body folds the body, zo unfolds it, and the next zc closes outward', () => {
+    const engine = opened();
+    engine.select(peek(['c1'], 'p5'));
+    engine.keys('z', 'c');
+    expect(isHidden(engine, ['c1'], 'p5')).toBe(true);
+    expect(engine.session.state.selection).toEqual(peek(['c1'], 'p5', 'p6'));
+    engine.keys('z', 'o');
+    expect(isHidden(engine, ['c1'], 'p5')).toBe(false);
+    engine.keys('z', 'c');
+    engine.keys('z', 'c');
+    expect(engine.session.state.doc.view.opened).toEqual([]);
+    expect(notice(engine)).toBe('notice.closed');
+  });
+
+  it('T-1357 · R-EDIT-15: a branch taken folded from the Method unfolds there, and stays so after saving', () => {
+    const engine = testEngine(branching());
+    engine.session.setView({ ...engine.session.state.doc.view, folded: ['r1'] });
+    select(engine, 'c1');
+    engine.keys('f');
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(true);
+    engine.select(peek(['c1'], 'p1', 'p2'));
+    engine.keys('f');
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(false);
+    expect(isHidden(engine, [], 'p1')).toBe(true);
+    const { content, view } = engine.session.state.doc;
+    const written = JSON.parse(serializeModelJson({ content, view })) as { view: Doc['view'] };
+    const next = testEngine(content);
+    next.session.load(
+      { content, view: written.view },
+      { kept: {}, selection: null, isDirty: false, readOnly: false },
+    );
+    expect(isHidden(next, ['c1'], 'p1')).toBe(false);
+    expect(isHidden(next, [], 'p1')).toBe(true);
+  });
+
+  it('T-1358 · R-EDIT-15: a call block opened inside another folds its branches per path', () => {
+    const engine = opened();
+    engine.select(peek(['c1'], 'c2'));
+    engine.keys('f');
+    engine.select(peek(['c1', 'c2'], 'i1'));
+    engine.keys('f');
+    expect(folded(engine)).toContain('c1/c2/r1');
+    expect(isHidden(engine, ['c1', 'c2'], 'p1')).toBe(true);
+    expect(isHidden(engine, ['c1'], 'p1')).toBe(false);
+  });
+
+  it('T-1359 · R-EDIT-15: a selection folded away there stays on its row and survives other view changes', () => {
+    const engine = opened();
+    engine.select(peek(['c1'], 'p5', 'p6'));
+    engine.keys('f');
+    expect(engine.session.state.selection).toEqual(peek(['c1'], 'p5', 'p6'));
+    engine.keys('j');
+    expect(engine.session.state.selection).toEqual(peek(['c1'], 'c2'));
+    engine.keys('k');
+    expect(engine.session.state.selection).toEqual(peek(['c1'], 'p5', 'p6'));
+  });
+
+  it("T-1360 · R-EDIT-16: a body that is all one region of the Method folds that region there, and zd leaves the Method's region", () => {
+    const base = branching();
+    const [d1, d2] = base.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    const whole = seq([proc('p5'), proc('p6')]);
+    const engine = opened({
+      ...base,
+      diagrams: [
+        d1,
+        {
+          ...d2,
+          body: {
+            ...d2.body,
+            blocks: d2.body.blocks.map((block) =>
+              block.id === 'w1'
+                ? {
+                    ...block,
+                    body: { ...whole, folds: [{ id: 'f9', first: 'p5', last: 'p6', name: 'all' }] },
+                  }
+                : block,
+            ),
+          },
+        },
+      ],
+    });
+    engine.select(peek(['c1'], 'p5'));
+    engine.keys('z', 'd');
+    expect(notice(engine)).toBe('reason.noFoldRegion');
+    engine.keys('z', 'c');
+    expect(folded(engine)).toContain('c1/f9');
+    expect(folded(engine)).not.toContain('f9');
   });
 });
 

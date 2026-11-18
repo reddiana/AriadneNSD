@@ -204,3 +204,58 @@ test('T-1323 · R-EDIT-15: folding in an opened call block leaves the Method as 
   await page.keyboard.press('x');
   await expect(statusBar(page)).toContainText('cannot be edited');
 });
+
+test('T-1361 · R-EDIT-15: a loop body taken folded from the Method unfolds and folds again in the opened call block only', async ({
+  page,
+}) => {
+  await openApp(page);
+  await canvas(page).focus();
+  await page.keyboard.press('Enter');
+  await typeText(page, 'start');
+  // A Method "sort" whose two blocks are the body of a While, folded.
+  await page.keyboard.press('Shift+M');
+  await typeText(page, 'sort');
+  await page.keyboard.press('j');
+  await page.keyboard.press('Enter');
+  await typeText(page, 'one');
+  await page.keyboard.press('o');
+  await typeText(page, 'two');
+  await page.keyboard.press('k');
+  await page.keyboard.press('Shift+ArrowDown');
+  await page.keyboard.press('s');
+  await page.keyboard.press('w');
+  await typeText(page, 'i < n');
+  await page.keyboard.press('f');
+  const rows = page.locator('.ans-document text').filter({ hasText: /^2 blocks$/ });
+  const ones = page.locator('.ans-document text').filter({ hasText: /^one$/ });
+  await expect(rows).toHaveCount(1);
+  // A call of it after "start", opened in place: the body comes folded.
+  const start = await middleOf(drawnText(page, 'start'));
+  await page.mouse.click(start.x, start.y);
+  await page.keyboard.press('a');
+  await page.keyboard.press('c');
+  await expect(page.getByRole('menu', { name: 'Method to call' })).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.ans-inline-editor')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('f');
+  await expect(rows).toHaveCount(2);
+  await expect(ones).toHaveCount(0);
+
+  // Double-clicking the row in the call block unfolds it there; the Method stays folded.
+  const row = await middleOf(rows.first());
+  await page.mouse.dblclick(row.x, row.y);
+  await expect(rows).toHaveCount(1);
+  await expect(ones).toHaveCount(1);
+  await expect(page.locator('.ans-statusbar')).toContainText('Unfolded.');
+
+  // The fold keys work on it too, and the call block stays open.
+  await page.keyboard.press('z');
+  await page.keyboard.press('c');
+  await expect(rows).toHaveCount(2);
+  await expect(ones).toHaveCount(0);
+  await page.keyboard.press('z');
+  await page.keyboard.press('o');
+  await expect(rows).toHaveCount(1);
+  await expect(ones).toHaveCount(1);
+});

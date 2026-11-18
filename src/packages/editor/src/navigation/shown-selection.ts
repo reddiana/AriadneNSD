@@ -38,6 +38,12 @@ export function toShown(
     case 'blocks':
       return shownRange(shown, selection.anchor, selection.focus);
     case 'peek':
+      if (
+        selection.branch !== undefined &&
+        shown.index.branches.has(screenIdIn(selection.path, selection.branch))
+      ) {
+        return { kind: 'branchLabel', branch: screenIdIn(selection.path, selection.branch) };
+      }
       return shownRange(
         shown,
         screenIdIn(selection.path, selection.anchor),
@@ -102,7 +108,7 @@ export function fromShown(
         return selection;
       }
       const block = real.branches.get(meaning.id)?.block.id;
-      return block === undefined ? null : peekOf(meaning.path, block);
+      return block === undefined ? null : { ...peekOf(meaning.path, block), branch: meaning.id };
     }
     case 'missingDefault': {
       const meaning = shown.meanings.get(selection.block);
@@ -115,7 +121,7 @@ export function fromShown(
   }
 }
 
-function peekOf(path: ReadonlyArray<Id>, id: Id): Selection {
+function peekOf(path: ReadonlyArray<Id>, id: Id): Extract<Selection, { kind: 'peek' }> {
   return { kind: 'peek', path, anchor: id, focus: id };
 }
 

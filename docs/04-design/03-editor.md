@@ -82,7 +82,7 @@ type Selection =
   | { kind: 'branchLabel'; branch: Id }                      // 분기 라벨 (If · Case) → 조작 규칙 "분기 라벨 선택"
   | { kind: 'fold'; fold: Id; path?: Path }                  // 접기 영역 전체 (이름 띠나 접힌 칸). 펴 보인 호출 블록 안이면 그 경로
   | { kind: 'missingDefault'; block: Id }                    // default가 없는 Case에 그려 둔 빈 default 칸 (UX CD1)
-  | { kind: 'peek'; path: Path; anchor: Id; focus: Id };     // 펴 보인 호출 블록 안의 블록들: 경로와 Method의 한 줄 안의 범위
+  | { kind: 'peek'; path: Path; anchor: Id; focus: Id; branch?: Id }; // 펴 보인 호출 블록 안의 블록들: 경로와 Method의 한 줄 안의 범위. `branch`는 If · Case `anchor`의 분기 라벨을 선택한 것
 type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가진 노드(다이어그램 · 블록 · 분기)와 자리
 ```
 
@@ -92,7 +92,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 - 선택은 언제나 **id**로 기록합니다. 내용이 바뀌어 id가 사라지면 그 선택은 풀립니다(`null`). 위치(몇 번째)로 기록하지 않는 이유는 undo · 이동 뒤에도 같은 것을 가리키게 하려는 것입니다.
 - 펴 보인 블록(호출 블록 안에 보이는 Method의 블록)의 **화면 id**는 펴 보인 호출 블록의 경로를 `/`로 이은 뒤에 모델의 id를 붙인 문자열입니다(예: `b4/b17`, 겹쳐 폈으면 `b4/b9/b17`). 모델의 id가 아니라 화면(`LayoutResult`, 보이는 나무)에만 있는 id입니다. 선택은 화면 id가 아니라 경로와 모델의 id로 기록합니다(`peek`의 `path` · `anchor` · `focus`, `fold`의 `path`) → [[01-model#2. 뷰 상태]], [[ux-decisions#CB3. 펴 보인 블록의 화면 id|CB3]]
 - 펴 보인 블록을 선택했을 때 내용을 바꾸는 명령(`edits: true`)은 적용되지 않고 "편집할 수 없다"고 알립니다. 그 자리의 접기 영역을 만들고 풀고 이름을 바꾸는 명령만 됩니다(`CommandSpec`을 만들 때 `onPeek`). 복사 · 접기 · 펴기 · 이동은 됩니다.
-- 펴 보인 곳에서 Method의 접기 영역을 접으면 뷰 상태의 `folded`에 경로를 앞에 붙인 항목(`b4/f1`)을 넣고 빼므로 Method와 다른 호출 블록은 바뀌지 않습니다. 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다 그려지는 호출 경로에 접힘을 채웁니다 → [[01-model#2. 뷰 상태]]
+- 펴 보인 곳에서 Method의 접기 영역, 분기, 반복 블록의 본문을 접으면 뷰 상태의 `folded`에 경로를 앞에 붙인 항목(`b4/f1`, `b4/r3`)을 넣고 빼므로 Method와 다른 호출 블록은 바뀌지 않습니다. 접기 명령의 대상은 펴 보인 곳 밖과 같은 차례로 찾고, 맨 끝에 그것을 담은 호출 블록을 둡니다(`commands/fold-commands.ts`의 `foldTargets`). 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다 그려지는 호출 경로에 접힘을 채웁니다 → [[01-model#2. 뷰 상태]]
 
 ### 2.1 범위를 넓히기 (자동 확장)
 

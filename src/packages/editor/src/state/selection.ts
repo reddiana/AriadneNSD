@@ -21,7 +21,8 @@ export type SeqRef = { readonly owner: Id; readonly slot: string };
  *   An addition to 03-editor 2, which does not list it.
  * - `peek`: blocks of a called Method shown inside an opened call block (R-EDIT-15): a range of
  *   one sequence of that Method, seen through the call path `path` (outermost first). They can
- *   be selected and copied, not edited.
+ *   be selected, copied and folded there, not edited. `branch` is set when the label of that
+ *   branch of the If or Case `anchor` is what is selected (UX CB13).
  */
 export type Selection =
   | { readonly kind: 'blocks'; readonly seq: SeqRef; readonly anchor: Id; readonly focus: Id }
@@ -29,7 +30,13 @@ export type Selection =
   | { readonly kind: 'branchLabel'; readonly branch: Id }
   | { readonly kind: 'fold'; readonly fold: Id; readonly path?: Path }
   | { readonly kind: 'missingDefault'; readonly block: Id }
-  | { readonly kind: 'peek'; readonly path: Path; readonly anchor: Id; readonly focus: Id };
+  | {
+      readonly kind: 'peek';
+      readonly path: Path;
+      readonly anchor: Id;
+      readonly focus: Id;
+      readonly branch?: Id;
+    };
 
 /** The kinds of selection, for the context menu (03-editor 5 `context`). */
 export type SelectionKind = Selection['kind'];
@@ -62,7 +69,8 @@ export function selectFold(fold: Id, path: Path): Selection {
 /**
  * The selection if everything it names still exists, otherwise `null` (03-editor 2: a selection
  * whose id is gone is dropped). A range whose ends are no longer in one sequence shrinks to its
- * anchor. A fold region or blocks inside an opened call must still be shown (`shown`).
+ * anchor. A fold region or blocks inside an opened call must still be shown (`shown`), or be
+ * folded into something shown there.
  */
 export function validSelection(
   index: DocIndex,
@@ -119,12 +127,20 @@ function validPeek(
   if (anchor === undefined) {
     return null;
   }
-  const kept =
-    focus?.owner === anchor.owner ? selection : { ...selection, focus: selection.anchor };
+  const { branch, ...blocks } = selection;
+  const range = focus?.owner === anchor.owner ? blocks : { ...blocks, focus: selection.anchor };
+  const isLabelShown =
+    branch !== undefined &&
+    index.branches.get(branch)?.block.id === selection.anchor &&
+    (shown === undefined || shown.index.branches.has(screenIdIn(selection.path, branch)));
+  const kept = isLabelShown ? { ...range, branch } : range;
   if (shown === undefined) {
     return kept;
   }
-  const isShown = (id: Id): boolean => shown.index.blocks.has(screenIdIn(selection.path, id));
+  const isShown = (id: Id): boolean => {
+    const screen = screenIdIn(selection.path, id);
+    return shown.index.blocks.has(screen) || shown.hiddenBy.has(screen);
+  };
   if (!isShown(kept.anchor)) {
     return null;
   }
