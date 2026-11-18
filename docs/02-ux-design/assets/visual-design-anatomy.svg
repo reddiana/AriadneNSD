@@ -86,5 +86,17 @@
 <polygon points="409,689 409,697 414,693" fill="#5a6476"/>
 <text x="648" y="699" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이름이 없으면</text>
 <text x="648" y="713" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">기본 이름을 기울임</text>
+<text x="70" y="620" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">헤더 모양 "제목처럼"</text>
+<text x="70" y="652" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="12" fill="#5a6476">Event</text>
+<text x="70" y="669" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22" font-weight="600">TIM2 인터럽트</text>
+<rect x="70" y="680" width="230" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
+<text x="80" y="700" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">tick++;</text>
+<path d="M60 640 V680 M57 640 H63 M57 656 H63 M57 674 H63 M57 680 H63" stroke="#c2410c" stroke-width="1" fill="none"/>
+<text x="54" y="652" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="end">라벨 16</text>
+<text x="54" y="669" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="end">이름 18</text>
+<text x="54" y="683" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="end">틈 6</text>
+<text x="310" y="664" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">높이 40</text>
+<text x="310" y="684" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">아랫줄 1px</text>
+<text x="70" y="730" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">글자는 왼쪽 선에 붙음(padX 없음), 배경은 칠하지 않음</text>
 </g>
 </svg>
