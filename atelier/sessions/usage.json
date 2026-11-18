@@ -1,0 +1,139 @@
+{
+  "days": {
+    "2026-10-22": {
+      "sessions": 2,
+      "minutes": 110,
+      "requests": 226,
+      "input": 470,
+      "cacheWrite": 626802,
+      "cacheRead": 40965996,
+      "output": 204008
+    },
+    "2026-10-24": {
+      "sessions": 1,
+      "minutes": 1,
+      "requests": 6,
+      "input": 12,
+      "cacheWrite": 39366,
+      "cacheRead": 352538,
+      "output": 3892
+    },
+    "2026-10-25": {
+      "sessions": 11,
+      "minutes": 718,
+      "requests": 1107,
+      "input": 2220,
+      "cacheWrite": 3320643,
+      "cacheRead": 247736465,
+      "output": 1059495
+    },
+    "2026-10-26": {
+      "sessions": 1,
+      "minutes": 25,
+      "requests": 38,
+      "input": 76,
+      "cacheWrite": 58218,
+      "cacheRead": 10731094,
+      "output": 32954
+    },
+    "2026-10-31": {
+      "sessions": 3,
+      "minutes": 191,
+      "requests": 373,
+      "input": 830,
+      "cacheWrite": 946962,
+      "cacheRead": 74349202,
+      "output": 327522
+    },
+    "2026-11-01": {
+      "sessions": 5,
+      "minutes": 546,
+      "requests": 2479,
+      "input": 5191,
+      "cacheWrite": 8375542,
+      "cacheRead": 612235709,
+      "output": 2708950
+    },
+    "2026-11-02": {
+      "sessions": 4,
+      "minutes": 207,
+      "requests": 355,
+      "input": 783,
+      "cacheWrite": 818378,
+      "cacheRead": 85950385,
+      "output": 366610
+    },
+    "2026-11-03": {
+      "sessions": 16,
+      "minutes": 643,
+      "requests": 3074,
+      "input": 6353,
+      "cacheWrite": 7706887,
+      "cacheRead": 653407048,
+      "output": 2441737
+    },
+    "2026-11-04": {
+      "sessions": 1,
+      "minutes": 76,
+      "requests": 603,
+      "input": 1249,
+      "cacheWrite": 1158837,
+      "cacheRead": 226428799,
+      "output": 408909
+    },
+    "2026-11-09": {
+      "sessions": 1,
+      "minutes": 34,
+      "requests": 192,
+      "input": 404,
+      "cacheWrite": 1435988,
+      "cacheRead": 21572852,
+      "output": 295959
+    },
+    "2026-11-10": {
+      "sessions": 1,
+      "minutes": 177,
+      "requests": 794,
+      "input": 1653,
+      "cacheWrite": 1702509,
+      "cacheRead": 175438401,
+      "output": 599550
+    },
+    "2026-11-14": {
+      "sessions": 2,
+      "minutes": 2,
+      "requests": 0,
+      "input": 0,
+      "cacheWrite": 0,
+      "cacheRead": 0,
+      "output": 0
+    },
+    "2026-11-17": {
+      "sessions": 1,
+      "minutes": 88,
+      "requests": 361,
+      "input": 806,
+      "cacheWrite": 731874,
+      "cacheRead": 101174134,
+      "output": 326585
+    },
+    "2026-11-18": {
+      "sessions": 1,
+      "minutes": 97,
+      "requests": 211,
+      "input": 462,
+      "cacheWrite": 1940060,
+      "cacheRead": 42760596,
+      "output": 450611
+    },
+    "2026-11-19": {
+      "sessions": 1,
+      "minutes": 95,
+      "requests": 269,
+      "input": 583,
+      "cacheWrite": 3042724,
+      "cacheRead": 95189363,
+      "output": 636718
+    }
+  }
+}
