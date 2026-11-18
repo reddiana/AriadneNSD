@@ -543,15 +543,18 @@ describe('frames inside frames through control blocks (02-layout 1.6, UX NF1)', 
     expect(gaps(result, 'f2', 'f3')).toMatchObject({ right: 4, bottom: 4 });
   });
 
-  it.each(frames)('T-1378 · UX NF1: %s: a frame followed by a block does not reach the bottom', (inner) => {
-    const loop: Block = {
-      ...whileBlock('c1', 'w', []),
-      body: framed(inner, [process('p9', 'after')]),
-    };
-    const gap = gaps(layout(docWith('fold', inner, [loop])), 'fo', innerId('fold', inner));
-    expect(gap.right).toBe(4);
-    expect(gap.bottom).toBeGreaterThan(4);
-  });
+  it.each(frames)(
+    'T-1378 · UX NF1: %s: a frame followed by a block does not reach the bottom',
+    (inner) => {
+      const loop: Block = {
+        ...whileBlock('c1', 'w', []),
+        body: framed(inner, [process('p9', 'after')]),
+      };
+      const gap = gaps(layout(docWith('fold', inner, [loop])), 'fo', innerId('fold', inner));
+      expect(gap.right).toBe(4);
+      expect(gap.bottom).toBeGreaterThan(4);
+    },
+  );
 
   it.each(frames)(
     'T-1379 · UX NF1: %s: a control block followed by a block does not reach the bottom',
