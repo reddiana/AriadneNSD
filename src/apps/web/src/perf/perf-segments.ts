@@ -23,7 +23,7 @@ export const perfSegmentIds = [
 /** One of the segments. */
 export type PerfSegmentId = (typeof perfSegmentIds)[number];
 
-/** The connectors of the C&C view each segment covers (03-architecture 3.5). */
+/** The connectors of the C&C view each segment covers (03-architecture 3.4). */
 export const perfSegmentConnectors: Readonly<Record<PerfSegmentId, string>> = {
   input: 'C-01 ~ C-04',
   command: 'C-04 · C-05',
