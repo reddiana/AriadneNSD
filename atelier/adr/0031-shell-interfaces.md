@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-19: 다른 문서를 읽지 못해도 그 호출 블록을 "이어진 곳 없음"으로 저장하지 않는다. 저장되는 그림은 실선 그대로이고, 찾을 수 없다는 표시는 편집 레이어에만 그린다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]
 > - 2026-11-10: 셸이 부르는 `editor`의 `confirm`이 모달의 제목(`title`)을 받게 되었고, 모달의 메시지는 줄바꿈을 지킨다. 열지 못한 공유 링크의 까닭을 묻지 않고 알리는 모달에 쓴다 → [[03-editor#6. 셸과의 연결]], [[ux-decisions#LG6. 열지 못한 링크의 까닭|LG6]]
 > - 2026-11-03: 웹 셸에 브라우저 문서(파일 없이 그 브라우저의 IndexedDB에 저장한 문서, [[01-requirements#^r-web|R-WEB-09]])가 생겨, `DocumentStore`가 문서가 사는 곳(`place`: 파일 또는 브라우저)을 알리고, 쓰기 실패에 셸의 문장(`WriteResult.message`)을 실을 수 있게 되었다. `editor`의 `choose`는 넷째 버튼을 받는다. 어디서 열고 저장할지는 `editor`의 열기 · 저장 창(`EditorApp`의 `places`)으로 셸이 묻는다 → [[03-editor#6. 셸과의 연결]], [[06-web#1.3 브라우저 문서]]
 > - 2026-11-03: `createEditor`가 받는 화면 언어의 기본값은 새 문서의 그림 문구의 언어(문서 설정)도 정한다. 그림의 고정 문구는 화면 언어가 아니라 문서 설정을 따른다 → [[0041-drawing-locale-in-document|ADR-0041]], [[03-editor#6. 셸과의 연결]]
