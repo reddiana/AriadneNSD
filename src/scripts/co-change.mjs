@@ -142,7 +142,7 @@ export function ruleTable(rules) {
   return [
     tableStart,
     '',
-    '| ID | 이것이 바뀌면 | 이것도 본다 | 까닭 |',
+    '| ID | 이것이 바뀌면 | 이것도 검증한다 | 이유 |',
     '| --- | --- | --- | --- |',
     ...rules.map(
       (rule) =>
