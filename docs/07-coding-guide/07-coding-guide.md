@@ -103,7 +103,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ### 1.6 테스트 도구
 
-파일의 위치와 이름은 [[02-test-architecture]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 실행되고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 기록합니다.
+파일의 위치와 이름은 [[02-test-architecture]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 실행되고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 넣습니다.
 
 ## 2. 이름 짓기
 
@@ -128,7 +128,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ## 4. 데이터와 상태
 
-- **문서는 불변입니다.** 모델의 타입은 `readonly` 필드와 `ReadonlyArray`로 기록하고, 명령은 새 객체를 만들어 반환합니다. 바뀌지 않은 하위 트리는 그대로 공유합니다 → [[0029-immutable-document-undo|ADR-0029]]
+- **문서는 불변입니다.** 모델의 타입은 `readonly` 필드와 `ReadonlyArray`로 선언하고, 명령은 새 객체를 만들어 반환합니다. 바뀌지 않은 하위 트리는 그대로 공유합니다 → [[0029-immutable-document-undo|ADR-0029]]
 - **편집 명령은 순수 함수입니다**: `(content, args) => Result`. 시간, 난수, I/O를 쓰지 않습니다. 새 id도 인자로 받은 id 생성기로 만듭니다(같은 입력이면 같은 출력 → 골든 파일) → [[01-model#4. 편집 명령]]
 - `core`에는 클래스를 두지 않고 타입과 함수로 씁니다. 상태를 가진 것(`editor`의 세션, 셸의 저장소)은 클래스나 클로저로 둡니다.
 - `type`을 기본으로 씁니다. 셸이 구현하는 계약(`DocumentStore` 등 → [[03-editor#6. 셸과의 연결]])은 `interface`로 씁니다.
@@ -225,7 +225,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 | 원본에서 생성 | 같은 사실은 원본 하나에만 기록하고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[08-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
 | 예제를 테스트로 | 문서에 든 예제 JSON과 공유 링크를 테스트가 꺼내 실제 파서로 연다. 대상: `/llms.txt`, 첫 화면 HTML 안의 AI용 안내, 파일 형식 명세([[01-file-format]]). 스키마는 골든 파일로 검사한다 | `pnpm test` |
 | 함께 바뀌는 곳의 검사 | "이것을 바꾸면 저것도 검증한다"는 경로의 쌍을 표로 두고, 한쪽만 바뀐 커밋을 검사가 알린다 | 커밋 · CI |
-| 사용자처럼 테스트 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 제공해 다이어그램을 생성하게 해, 낸 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 테스트하기]] | 출시 전 |
+| 사용자처럼 테스트 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 제공해 다이어그램을 생성하게 하고, 그 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 테스트하기]] | 출시 전 |
 
 - 생성된 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 생성된 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 쌍 표)가 원본과 다르면 `pnpm check`가 실패합니다.
 - 값을 견줄 수 있는 것은 쌍의 검사가 아니라 테스트로 검증합니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[03-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
