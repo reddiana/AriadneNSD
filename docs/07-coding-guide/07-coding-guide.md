@@ -232,7 +232,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 ### 13.1 함께 바뀌는 곳의 쌍
 
-"이것이 바뀌면" 쪽의 파일이 바뀌었는데 "이것도 검증한다" 쪽의 파일이 하나도 바뀌지 않으면 검사가 알립니다. 원본은 `src/scripts/co-change.json`이고, 아래 표는 검사기 `src/scripts/co-change.mjs`가 그 파일에서 만들어 넣습니다(`--write`). `pnpm check`가 표가 최신 상태인지와 규칙의 경로가 실제 파일을 가리키는지 검증합니다(`--check`).
+"이것이 바뀌면" 쪽의 파일이 바뀌었는데 "이것도 확인한다" 쪽의 파일이 하나도 바뀌지 않으면 검사가 알립니다. 원본은 `src/scripts/co-change.json`이고, 아래 표는 검사기 `src/scripts/co-change.mjs`가 그 파일에서 만들어 넣습니다(`--write`). `pnpm check`가 표가 최신 상태인지와 규칙의 경로가 실제 파일을 가리키는지 검증합니다(`--check`).
 
 - **언제:** CI가 push와 Pull Request의 커밋 범위 전체를 한 번에 검증합니다. 그래서 코드를 고친 뒤 같은 push의 다음 커밋에서 문서를 고쳐도 됩니다. 지금은 경고(`::warning`)만 하고 실패로 하지 않습니다. Claude Code는 `git commit`을 실행할 때 스테이지한 변경을 검증합니다(훅 `.claude/hooks/co-change-commit.mjs`). 손으로는 `src/`에서 `node scripts/co-change.mjs`(스테이지한 변경)나 `node scripts/co-change.mjs --range A..B`(커밋 범위)입니다.
 - **테스트는 빼고:** 테스트 파일(`*.test.ts` · `*.spec.ts` · `*.bench.ts`, `e2e/` 아래)은 "이것이 바뀌면"에 세지 않습니다.
@@ -244,7 +244,7 @@ Co-change-skip: C2 — 명세에 링크만 더함
 
 <!-- co-change:start -->
 
-| ID | 이것이 바뀌면 | 이것도 검증한다 | 이유 |
+| ID | 이것이 바뀌면 | 이것도 확인한다 | 이유 |
 | --- | --- | --- | --- |
 | C1 | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/{model-json,parse-model,svg-file,migrations,model-element,model-values}.ts` | [[01-file-format]]<br>[[01-model]]<br>`src/packages/core/schema/model.schema.json`<br>`src/apps/web/guide/llms.txt` | 모델과 파일 형식의 코드가 바뀌면 명세 · 모델 설계 · JSON Schema · AI용 안내서가 같은 것을 말하는지 검증한다. 예제와 값 목록은 테스트가 검증하지만 문서로 기술한 규칙은 사람이 검증한다 |
 | C2 | [[01-file-format]]<br>`src/packages/core/schema/model.schema.json` | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/**` | 명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 건너뛴다) |

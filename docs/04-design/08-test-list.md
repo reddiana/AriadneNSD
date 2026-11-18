@@ -150,7 +150,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0552 | 입력란 %j는 열 수 없다: %s | - |
 | T-0553 | 보기 전용에서는 입력란이 열리지 않는다 | - |
 | T-0554 | 입력란이 열린 동안 다이어그램의 키는 입력란에 위임한다 | - |
-| T-0555 | 모르는 분기에는 라벨 텍스트가 없다 | - |
+| T-0555 | 정의되지 않은 분기에는 라벨 텍스트가 없다 | - |
 | T-0556 | `[` · `]`의 키 힌트 제목, 그리고 다른 키에는 없음 | - |
 
 ^t-packages-editor-src-session-engine-test-ts
@@ -171,7 +171,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0061 | 분기가 꼭 하나이고 default가 있는 Case만 바뀐다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0062 | If는 참과 default 사이에 새 분기가 든 Case가 된다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0063 | default가 없는 Case에 빈 default 분기를 준다 | [[ux-decisions\|UX CD1]] |
-| T-0064 | default가 있는 Case, 다른 블록, 모르는 id는 거절한다 | [[ux-decisions\|UX CD1]] |
+| T-0064 | default가 있는 Case, 다른 블록, 정의되지 않은 id는 거절한다 | [[ux-decisions\|UX CD1]] |
 
 ^t-packages-core-src-commands-branch-test-ts
 
@@ -188,7 +188,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0069 | 이름을 적어 호출한 블록은 적힌 그대로 편집한다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-0070 | 01-model 4: 같은 텍스트면 내용은 그대로다 | - |
 | T-0071 | 대상을 잃은 호출 블록은 편집할 수 없다 | [[01-requirements#^r-blk\|R-BLK-07]] |
-| T-0072 | 호출 블록이 아닌 블록과 모르는 블록은 거절한다 | - |
+| T-0072 | 호출 블록이 아닌 블록과 정의되지 않은 블록은 거절한다 | - |
 | T-0073 | 01-model 1.5: 대상을 잃은 호출 블록이 다시 Method를 호출하며 적은 것을 지킨다 | - |
 | T-0074 | 01-model 1.5: Method를 바꾸며 인자와 결과를 지킨다 | - |
 | T-0075 | 빈 인자는 새 Method의 매개변수를 받는다 | [[01-requirements#^r-blk\|R-BLK-07]] |
@@ -254,7 +254,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0108 | 괄호를 삭제하면 호출 블록의 인자가 비워진다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0109 | 괄호를 더하면 빈 인자가 괄호 안의 텍스트로 채워진다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0110 | 매개변수가 바뀌어도 적은 인자는 남는다 | [[01-requirements#^r-blk\|R-BLK-07]] |
-| T-0111 | 헤더 없는 다이어그램과 모르는 다이어그램은 거절한다 | - |
+| T-0111 | 헤더 없는 다이어그램과 정의되지 않은 다이어그램은 거절한다 | - |
 | T-0112 | 헤더 없는 다이어그램에 기본 이름의 Event 헤더를 단다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0113 | Method 헤더를 달고, 기본 이름은 쓰고 있는 이름을 건너뛴다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0114 | Event를 Method로, 다시 Event로 바꾸며 텍스트를 지킨다 | [[01-requirements#^r-blk\|R-BLK-11]] |

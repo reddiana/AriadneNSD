@@ -87,7 +87,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 ```
 
 - `missingDefault`를 선택하고 텍스트를 적거나 블록을 삽입하면, `editor`가 `addDefaultBranch`와 그 편집을 undo 한 단계로 실행합니다 → [[01-model#4.1 내용을 바꾸는 명령]], [[ux-decisions#CD1. default가 없는 Case|CD1]]
-- 상태 밖에, 세션은 연 파일에서 모델이 담지 못한 설정 값(모르는 `textKind`)을 별도로 보유했다가 저장할 때 다시 기록합니다 → [[01-file-format#3.3 노드별 필드]]
+- 상태 밖에, 세션은 연 파일에서 모델이 담지 못한 설정 값(지원하지 않는 `textKind`)을 별도로 보유했다가 저장할 때 다시 기록합니다 → [[01-file-format#3.3 노드별 필드]]
 
 - 선택은 언제나 **id**로 기록합니다. 내용이 바뀌어 id가 사라지면 그 선택은 풀립니다(`null`). 위치(몇 번째)로 기록하지 않는 이유는 undo · 이동 뒤에도 같은 것을 가리키게 하려는 것입니다.
 - 펴 보인 블록(호출 블록 안에 보이는 Method의 블록)의 **화면 id**는 펴 보인 호출 블록의 경로를 `/`로 이은 뒤에 모델의 id를 붙인 문자열입니다(예: `b4/b17`, 겹쳐 폈으면 `b4/b9/b17`). 모델의 id가 아니라 화면(`LayoutResult`, 보이는 나무)에만 있는 id입니다. 선택은 화면 id가 아니라 경로와 모델의 id로 기록합니다(`peek`의 `path` · `anchor` · `focus`, `fold`의 `path`) → [[01-model#2. 뷰 상태]], [[ux-decisions#CB3. 펴 보인 블록의 화면 id|CB3]]
