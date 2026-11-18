@@ -39,7 +39,7 @@ Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[03-architect
 
 **확장자 등록만으로는 안 된다.** `registerExtensions(["ns.svg"])`는 오류 없이 등록되지만 효과가 없습니다. Obsidian은 `a.ns.svg`의 확장자를 마지막 점 뒤의 `svg`로 보고, `svg`에 등록된 이미지 뷰 타입(`image`)으로 엽니다.
 
-**가로채기:** `WorkspaceLeaf.prototype.setViewState`를 래핑(몽키 패치)해서, 열려는 뷰 타입이 `image`이고 파일 이름이 `.ns.svg`로 끝나면 뷰 타입을 NS 편집기 뷰로 바꿔 원래 메서드에 넘깁니다. Excalidraw 플러그인이 `.excalidraw.md`를 여는 방식과 같습니다.
+**가로채기:** `WorkspaceLeaf.prototype.setViewState`를 래핑(몽키 패치)해서, 열려는 뷰 타입이 `image`이고 파일 이름이 `.ns.svg`로 끝나면 뷰 타입을 NS 편집기 뷰로 바꿔 원래 메서드에 전달합니다. Excalidraw 플러그인이 `.excalidraw.md`를 여는 방식과 같습니다.
 
 ```mermaid
 sequenceDiagram
