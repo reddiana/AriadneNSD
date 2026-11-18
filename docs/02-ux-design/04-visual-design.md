@@ -137,6 +137,7 @@ flowchart LR
 - 테마의 종이 색 사각형(밝은 기본 테마에서는 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper`) 하나. 투명하게 두지 않습니다. 어두운 뷰어에서도 원칙 4가 지켜집니다.
 - 그림 둘레 여백 24px.
 - 쓰인 문자만 추린 번들 글꼴과 대체 글꼴 목록 → [[01-requirements#^r-fmt|R-FMT-07]]
+- 모델: `<metadata>` 안의 `<ans:document>` 요소에 모델 JSON을 CDATA로 넣고, 형식 버전(`version`)과 그림 지문(`drawing-sha256`)을 속성으로 둡니다 → [[01-file-format#4.1 그림 지문]]. 내보내기의 순수 SVG(그림만)에는 `<metadata>`가 없어 다시 열어 편집할 수 없습니다 → [[01-file-format#4.2 순수 SVG]]
 - 기호 `⋯`와 `∅`는 **도형(path)으로** 그립니다. 호출 블록의 결과 기호 `←`는 **문자로** 그립니다. 저장 파일의 서브셋 글꼴에 그 글리프가 포함되므로 앱이 없는 뷰어에서도 보이고, 텍스트로 선택 · 복사 · 검색할 수 있습니다 → [[ux-decisions#AR1. 호출 블록의 결과 기호는 문자로|AR1]]. 펼침 삼각형(`▸` `▾`)은 편집 레이어에만 그리므로 저장되는 그림에 들어가지 않습니다 → [[ux-decisions#Q1 · Q2. 고치기를 시작하는 방법과 더블클릭|Q2]]
 - 편집 레이어의 표시는 하나도 들어가지 않습니다.
 - 문서 설정의 "텍스트를 외곽선으로 저장"을 켜면 글꼴에 있는 글자를 도형(path)으로 저장합니다 → [[01-requirements#^r-fmt|R-FMT-10]]
@@ -432,6 +433,7 @@ flowchart LR
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 오른쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
+| 영역을 선택하는 중 (`v` `V`) | 선택 테두리는 여러 블록을 선택한 것과 같음. 상태 표시줄 오른쪽에 `-- 영역 --` | 편집 (UI) | `edit.select` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 중복될 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 항상 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄(12px, `ui.panel` 배경, 1px `ui.line` 테두리, 반지름 4px) | 편집 | | 있음 |
