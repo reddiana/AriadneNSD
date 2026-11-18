@@ -1,0 +1,97 @@
+<title>M60 펴 보인 호출 블록의 테두리</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 시안 페이지: M59와 같은 틀. 그림은 앱의 렌더러가 그린 SVG 그대로. */
+{{FONT}}
+:root {
+  --bg: #f6f7f9;
+  --paper: #ffffff;
+  --fg: #1d2330;
+  --muted: #5d6676;
+  --line: #d9dee7;
+  --accent: #5b4a9a;
+  --accent-soft: #eeeaf7;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+    --accent: #b9a6ee; --accent-soft: #241f36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+  --accent: #b9a6ee; --accent-soft: #241f36; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.7; font-size: 15px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.75rem; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 44px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); text-wrap: balance; }
+p, li { max-width: 72ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--paper); max-width: 80ch; }
+.fig { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 4px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.lab { font-size: 0.86rem; font-weight: 500; margin: 0 0 4px; }
+.cap { color: var(--muted); font-size: 0.88rem; margin: 6px 0 0; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; align-items: start; }
+.row > * { min-width: 0; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--paper); font-size: 0.9rem; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 500; }
+.chip { display: inline-block; width: 0.9em; height: 0.9em; border: 1px solid var(--line); vertical-align: -1px; margin-right: 4px; }
+</style>
+
+<div class="wrap">
+<h1>M60 펴 보인 호출 블록의 테두리</h1>
+<p class="sub">2026-11-18 · 그림은 모두 앱의 렌더러(<code>@ariadne-nsd/core</code>)가 그렸고, 펴 보인 호출 블록만 시안 스크립트가 접기 영역과 같은 방식으로 다시 칠했습니다.</p>
+
+<blockquote>호출블록 펼치기는 접기영역 펼치기에서 선과 띠 색상만 보라색 계열로 해주세요. (메인테이너, 2026-11-18)</blockquote>
+
+<h2>1. 지금과 바꾼 뒤</h2>
+<div class="row">
+  <div><p class="lab">지금</p><div class="fig">{{now}}</div><p class="cap">보라 점선 테두리, 안쪽 글자는 회색</p></div>
+  <div><p class="lab">바꾼 뒤</p><div class="fig">{{after}}</div><p class="cap">보라 3px 실선 테두리, 안쪽 글자는 일반 블록과 같음</p></div>
+</div>
+
+<h2>2. 접기 영역과 나란히</h2>
+<p>모양과 치수는 같고 색만 다릅니다.</p>
+<div class="row">
+  <div><p class="lab">펼친 접기 영역 (지금 앱의 모습)</p><div class="fig">{{foldTwin}}</div></div>
+  <div><p class="lab">펼친 호출 블록 (바꾼 뒤)</p><div class="fig">{{after}}</div></div>
+</div>
+
+<h2>3. 바뀌는 것</h2>
+<div class="tbl"><table>
+<thead><tr><th>부분</th><th>펼친 접기 영역</th><th>지금의 호출 블록</th><th>바꾼 뒤의 호출 블록</th></tr></thead>
+<tbody>
+<tr><td>테두리</td><td><span class="chip" style="background:#4f74d6"></span>3px 실선, 파랑</td><td><span class="chip" style="background:#7a5fb8"></span>1px 점선 + 3px 흰 줄</td><td><span class="chip" style="background:#7a5fb8"></span>3px 실선, 보라</td></tr>
+<tr><td>띠의 배경</td><td><span class="chip" style="background:#e6ecfb"></span>연파랑</td><td><span class="chip" style="background:#ddd4ef"></span>연보라</td><td><span class="chip" style="background:#ddd4ef"></span>연보라 (그대로)</td></tr>
+<tr><td>띠의 글자</td><td><span class="chip" style="background:#2c55c9"></span>진파랑</td><td><span class="chip" style="background:#555e70"></span>회색</td><td><span class="chip" style="background:#5f459f"></span>진보라 (새 색)</td></tr>
+<tr><td>안쪽 글자</td><td>일반 글자색</td><td>회색</td><td>일반 글자색</td></tr>
+</tbody></table></div>
+
+<h2>4. 겹칠 때</h2>
+<div class="row">
+  <div><p class="lab">펴 보인 안에서 또 펴 봄</p><div class="fig">{{nested}}</div></div>
+  <div><p class="lab">접기 영역과 함께</p><div class="fig">{{withFolds}}</div></div>
+</div>
+
+<h2>5. 테마</h2>
+<div class="row">
+  <div><p class="lab">어두운 테마</p><div class="fig">{{dark}}</div></div>
+  <div><p class="lab">고대비</p><div class="fig">{{hc}}</div></div>
+</div>
+
+<h2>6. 흑백 인쇄에서는 둘의 모양이 같아집니다</h2>
+<p>색이 없으면 테두리와 띠로는 구별되지 않고, 띠의 글자로만 구별됩니다. 호출 블록의 띠에는 호출문이, 접기 영역의 띠에는 영역 이름이 적힙니다. 2026-10-13의 Q15-a는 "흑백 인쇄에서도 실선과 점선으로 갈린다"였으므로, 이 안을 고르면 Q15-a를 다시 정하게 됩니다.</p>
+<div class="row">
+  <div><p class="lab">펼친 접기 영역, 흑백 인쇄</p><div class="fig">{{foldPrint}}</div></div>
+  <div><p class="lab">펼친 호출 블록, 흑백 인쇄</p><div class="fig">{{print}}</div></div>
+</div>
+</div>
