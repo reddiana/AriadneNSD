@@ -91,6 +91,23 @@ flowchart LR
 - 블록 id → bounding box. 접힌 분기 안의 블록은 그 접힌 줄의 상자를 받습니다(선택하면 분기 전체가 선택되므로)
 - **클릭 영역**: 상자와 따로, 그 블록을 누르는 곳. 제어 블록은 조건 칸만, 펴진 접기 영역과 펴 보인 호출 블록은 띠만, 분기 라벨은 그 칸의 이름 줄, 접힌 줄과 접힌 칸은 그 칸 전체, 펼침 삼각형은 띠 · 접힌 칸의 왼쪽 끝 18px. `editor`가 클릭과 호버를 이것으로 구분합니다
 - 펴 보인 호출 블록 안에 렌더링한 것의 id는 **화면 id**입니다: 호출 블록의 경로를 `/`로 이은 뒤에 모델의 id를 붙입니다(`b4/b17`, 겹쳐 폈으면 `b4/b9/b17`). 같은 Method가 여러 곳에 펴 보여도 상자가 섞이지 않습니다 → [[03-editor#2. 상태와 선택]]
+- **렌더링 노드**(`nodes`): 렌더링할 것의 목록입니다. 순서가 곧 칠하는 순서이고(바깥을 안쪽보다 먼저, 테두리는 그 안의 블록 뒤에), `buildScene`은 이 목록만 읽어 장면을 만듭니다. 텍스트를 측정하거나 모델을 읽지 않습니다.
+
+| `kind` | 무엇 | 담는 것 |
+| --- | --- | --- |
+| `process` | 처리 블록 | 상자, 배치한 텍스트, 분기의 하나뿐인 빈 블록(`∅`)인지 |
+| `call` | 호출 블록 | 상자, 호출 블록의 텍스트(결과 · 이름 · 인자), 참조 대상을 잃었는지 |
+| `loop` | While · Do-While · For | 상자, 조건 칸(While · For는 위, Do-While은 아래), 텍스트 |
+| `if` | If | 상자, 조건 칸, 텍스트, 빗금의 꼭짓점 x, 참 · 거짓의 분기 라벨 |
+| `case` | Case | 상자, 조건 칸, 텍스트, 분기의 열(default 열이 맨 뒤) |
+| `foldedSeq` | 접힌 분기 · 반복문의 본문 | 상자, "n개" 문구 |
+| `foldCell` | 접힌 접기 영역 | 상자, 이름, 이름을 붙였는지 |
+| `foldFrame` | 펴진 접기 영역(이름 띠가 켜졌을 때) | 상자, 이름 띠, 이름, 이름을 붙였는지. 안의 블록보다 뒤에 칠함 |
+| `peek` | 펴 보인 호출 블록 | 상자, 띠, 호출 블록의 텍스트. 안의 블록보다 뒤에 칠함 |
+| `diagramHead` | 다이어그램의 헤더 | 상자, 종류(Event · Method), 모양(`shape` · `title`), 텍스트 |
+| `missingDefault` | default가 없는 Case의 빈 default 칸 | 상자, 그 Case의 id |
+
+- **클릭 영역**(`regions`)의 종류: `block`(처리 · 호출 블록의 상자 전체), `head`(제어 블록의 조건 칸), `branchLabel`(분기의 라벨 줄. default가 없는 Case의 빈 default는 `branchId`가 `null`), `missingDefault`(빈 default 칸), `diagramHead`(다이어그램의 헤더), `foldedSeq`(접힌 줄), `fold`(접기 영역의 이름 띠나 접힌 칸), `peekBand`(펴 보인 호출 블록의 띠), `toggle`(펼침 삼각형: 접기 영역인지 호출 블록인지, 대상 id, 지금 펴져 있는지). 목록은 바깥이 먼저이고, 한 점을 담는 영역이 여럿이면 `editor`의 히트 테스트가 가장 작은 영역을 고릅니다 → [[03-editor#3.1 히트 테스트]]
 
 ### 1.2 텍스트의 크기
 
@@ -227,6 +244,17 @@ D2Coding 1.4.0(unitsPerEm 1000)의 문자 폭은 **두 가지뿐**입니다: 반
 MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 
 - **SVG 요소와 클래스:** 그림 요소는 `<g class="ans-render">` 하나이고, 전체를 반 픽셀 옮기며(`translate(.5 .5)` → [[04-visual-design#9.1 픽셀에 맞추기]]), `font-family`(번들 글꼴 다음에 폴백 목록)와 `font-kerning:none`을 그 요소에 지정합니다. 안에는 `<rect>`(칸) · `<path>`(선, 빗금) · `<circle>`(`∅`) · `<text>`(굵은 부분과 구문 강조의 색은 `<tspan>` → 3.1)만 두고, 색은 클래스가 아니라 `fill` · `stroke` 값으로 지정합니다(`src/packages/core/src/render/to-svg.ts`) → [[01-file-format#4. 그림 부분]]
+- **요소별 출력:** 숫자는 좌표 규칙대로 기록합니다. 값이 없는 속성은 쓰지 않습니다.
+
+| 요소 | 속성 |
+| --- | --- |
+| 칸 `<rect>` | `x` `y` `width` `height` `fill` `stroke` `stroke-width`, `shape-rendering="crispEdges"`(가로세로 선이 픽셀에 맞게) |
+| 선 `<path>` | `d`(`M` · `L`), `fill="none"`, `stroke`, `stroke-width`. 점선은 `stroke-dasharray`, 둥근 끝은 `stroke-linecap="round"` |
+| 도형 `<path>` | `d`(`M` · `L` · `C`, 끝에 `Z`로 닫음), `fill`, `stroke`, `stroke-width` |
+| 원 `<circle>` (`∅`) | `cx` `cy` `r`, `fill="none"`, `stroke`, `stroke-width` |
+| 텍스트 `<text>` | `x` `y` `font-size` `fill`, `xml:space="preserve"`(빈칸을 그대로). `text-anchor`는 시작 정렬이면 생략. 테두리(`halo`)가 있으면 `stroke`, 테두리 두께의 2배인 `stroke-width`, `stroke-linejoin="round"`, `paint-order="stroke"` |
+| 텍스트 런 `<tspan>` | 기본과 다른 것만: `font-weight`, `fill`, `font-style="italic"`. 다른 것이 없으면 `<tspan>`을 쓰지 않음 |
+
 - **디자인 토큰 맵:** `buildScene()`이 테마(토큰 이름 → 색 값, `src/packages/core/src/render/theme.ts`)를 받아 문서 레이어를 렌더링합니다. 테마는 넷(`themes`: `default` · `dark` · `high-contrast` · `print`)이고, 저마다 종이의 종류(`kind`: `light` · `dark`)를 가집니다. `themeFor(id)`는 지원하지 않는 이름에 기본 테마를 반환합니다. 오버레이 레이어는 `editor`가 테마의 종류에 맞는 편집 색으로 따로 렌더링합니다(`src/packages/editor/src/dom/overlay.ts`, [[0044-document-themes|ADR-0044]]) → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#9. 렌더링 규칙|9. 렌더링 규칙]](픽셀 스냅)
 - **고정 문구의 로캘:** `layout()`이 문서 설정의 그림 문구의 언어(`settings.locale`)를 읽어, 렌더링 결과에 표시하는 고정 문구("참" · "거짓" 등)를 `core`의 메시지 카탈로그(`src/packages/core/src/i18n/messages.ts`)에서 고릅니다. 화면 언어는 받지 않습니다. 그래서 같은 문서는 화면 언어와 상관없이 같은 렌더링 결과가 됩니다 → [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]
 
@@ -253,6 +281,17 @@ MVP 코드(2026-11-01)에서 정한 그림 부분의 형식입니다.
 | JavaScript · TypeScript (`javascript`) | `//` · `/* */` | `"…"` · `'…'` · `` `…` ``(여러 줄) | TypeScript의 키워드(`interface` · `type` 등)도 키워드. 타입 이름(`number` · `string`)은 변수 이름으로도 흔해 칠하지 않음 |
 | Python (`python`) | `#` | `"…"` · `'…'` · `"""…"""` · `'''…'''`(여러 줄). 접두사(`f"…"` · `rb'…'`)까지 한 문자열 | `//`는 나눗셈이라 주석이 아님 |
 | Bash (`bash`) | 토큰 처음의 `#`만(`${#a}` · `a#b`는 주석이 아님) | `"…"` · `'…'`(둘 다 여러 줄. `'…'` 안의 백슬래시는 이스케이프가 아님) | 예약어와 그처럼 쓰는 내장 명령(`local` · `export` · `return` 등). `$`는 이름의 일부 |
+
+언어마다의 키워드입니다(`src/packages/core/src/text/syntax.ts`).
+
+| 언어 | 키워드 |
+| --- | --- |
+| C | `auto` `break` `case` `char` `const` `continue` `default` `do` `double` `else` `enum` `extern` `float` `for` `goto` `if` `inline` `int` `long` `register` `restrict` `return` `short` `signed` `sizeof` `static` `struct` `switch` `typedef` `union` `unsigned` `void` `volatile` `while` `_Bool` `_Complex` `_Imaginary` `_Alignas` `_Alignof` `_Atomic` `_Generic` `_Noreturn` `_Static_assert` `_Thread_local` `alignas` `alignof` `bool` `constexpr` `false` `nullptr` `static_assert` `thread_local` `true` `typeof` `typeof_unqual` |
+| C++ | `alignas` `alignof` `and` `and_eq` `asm` `auto` `bitand` `bitor` `bool` `break` `case` `catch` `char` `char8_t` `char16_t` `char32_t` `class` `co_await` `co_return` `co_yield` `compl` `concept` `const` `const_cast` `consteval` `constexpr` `constinit` `continue` `decltype` `default` `delete` `do` `double` `dynamic_cast` `else` `enum` `explicit` `export` `extern` `false` `final` `float` `for` `friend` `goto` `if` `inline` `int` `long` `mutable` `namespace` `new` `noexcept` `not` `not_eq` `nullptr` `operator` `or` `or_eq` `override` `private` `protected` `public` `register` `reinterpret_cast` `requires` `return` `short` `signed` `sizeof` `static` `static_assert` `static_cast` `struct` `switch` `template` `this` `thread_local` `throw` `true` `try` `typedef` `typeid` `typename` `union` `unsigned` `using` `virtual` `void` `volatile` `wchar_t` `while` `xor` `xor_eq` |
+| Java | `abstract` `assert` `boolean` `break` `byte` `case` `catch` `char` `class` `const` `continue` `default` `do` `double` `else` `enum` `extends` `final` `finally` `float` `for` `goto` `if` `implements` `import` `instanceof` `int` `interface` `long` `native` `new` `package` `private` `protected` `public` `return` `short` `static` `strictfp` `super` `switch` `synchronized` `this` `throw` `throws` `transient` `try` `void` `volatile` `while` `true` `false` `null` `var` `record` `yield` `sealed` `permits` |
+| JavaScript · TypeScript | `async` `await` `break` `case` `catch` `class` `const` `continue` `debugger` `default` `delete` `do` `else` `export` `extends` `false` `finally` `for` `function` `if` `import` `in` `instanceof` `let` `new` `null` `of` `return` `static` `super` `switch` `this` `throw` `true` `try` `typeof` `undefined` `var` `void` `while` `with` `yield` `abstract` `as` `declare` `enum` `implements` `interface` `keyof` `namespace` `private` `protected` `public` `readonly` `satisfies` `type` |
+| Python | `False` `None` `True` `and` `as` `assert` `async` `await` `break` `class` `continue` `def` `del` `elif` `else` `except` `finally` `for` `from` `global` `if` `import` `in` `is` `lambda` `nonlocal` `not` `or` `pass` `raise` `return` `try` `while` `with` `yield` `match` `case` |
+| Bash | `if` `then` `else` `elif` `fi` `case` `esac` `for` `select` `while` `until` `do` `done` `in` `function` `time` `break` `continue` `return` `exit` `local` `export` `readonly` `declare` |
 
 - 닫지 않은 문자열은 그 줄의 끝까지(여러 줄 문자열은 텍스트의 끝까지), 닫지 않은 블록 주석은 텍스트의 끝까지입니다.
 - 숫자는 토큰의 처음에서만 셉니다(`x1`의 `1`은 이름). `0x1F` · `1.5e-3f` · `.5`처럼 접두사 · 지수 · 접미사까지 한 숫자이고, 범위 `1..10`의 점은 숫자가 아닙니다.

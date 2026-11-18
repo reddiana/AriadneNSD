@@ -48,6 +48,7 @@ type Settings = {
   theme: ThemeId;        // 그림의 색 묶음 → [[04-visual-design#8. 테마]]
   headStyle: 'shape' | 'title';  // 헤더 모양: 모자 · 아치 그대로, 또는 제목처럼 → [[01-requirements#^r-lay|R-LAY-10]]
   locale: Locale;        // 그림 문구의 언어: 그림에 적는 고정 문구("참" · "거짓" 등)의 언어 → [[0041-drawing-locale-in-document|ADR-0041]]
+  textOutlines?: boolean; // 저장 파일의 텍스트를 번들 글꼴의 외곽선으로 기록한다. 없으면 끔 → [[01-requirements#^r-fmt|R-FMT-10]]
 };
 type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';  // 일반 텍스트, C, C++, Java, JavaScript · TypeScript, Python, Bash
 type ThemeId = string;   // 테마의 이름: 'default' · 'dark' · 'high-contrast' · 'print'. 지원하지 않는 이름은 기본 테마로 그리고 그대로 둔다 (ADR-0044)
@@ -310,7 +311,9 @@ type Target =                                        // 명령이 적용되는 �
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 슬롯)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |
-| 호출 | 호출할 것 바꾸기 | `target`만 바꾸고 `args` · `result`는 남긴다. 이름을 적어 호출하게 바꾸는 것은 `nameCallTarget`(이 자리의 접기 영역은 없어진다) |
+| 호출 | 호출 블록 삽입 (`insertCall`) | 같은 문서의 Method를 호출하는 호출 블록을 삽입한다(빈 블록이면 그것을 바꾼다). `args`는 그 Method의 괄호 안 텍스트로 시작하고 `result`는 빈 채다. Method가 아니면 `wrongKind`. `touched`는 새 호출 블록 |
+| | 새 Method를 만들고 호출 (`newMethodAndCall`) | 빈 Method(Method의 맨 뒤)와 그것을 호출하는 호출 블록을 undo 한 단계로 만든다. 이름을 전달하면 헤더 이름의 규칙으로 검사한다(`emptyHeadName` · `duplicateHeadName`). `touched`는 새 다이어그램, 새 호출 블록 |
+| | 호출할 것 바꾸기 (`setCallTarget`) | `target`을 바꾸고 `args` · `result`는 남긴다. 다만 `args`가 비어 있으면 새 Method의 괄호 안 텍스트로 채우고, 호출 위치의 접기 영역(`siteFolds`)은 비운다(이전 Method의 블록을 가리키므로). Method가 아니면 `wrongKind`, 이미 호출하는 Method면 바뀌는 것이 없다. 이름을 적어 호출하게 바꾸는 것은 `nameCallTarget`(이 자리의 접기 영역은 없어진다) |
 | | 이름을 적는 호출 블록 삽입 (`insertNamedCall`) | `named` 대상의 호출 블록을 삽입한다([[01-requirements#^r-blk\|R-BLK-08]]). 이름은 한 줄, 앞뒤 공백 없이. 보통 빈 이름으로 넣고 `editor`가 이름 칸을 연다 |
 | | 인자 · 결과 · 이름 편집 (`editCall`) | 이름(`name`)은 `named` 대상에만 기록한다(아니면 `wrongKind`). 한 번 적은 이름을 비우면 `emptyCallName` |
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
