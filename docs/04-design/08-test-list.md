@@ -21,10 +21,10 @@ status: 생성됨
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 175 | - | 210 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 31 | 43 | - | 97 |
 | [[#5. 파일\|파일]] | 18 | 157 | 235 | - | 410 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 155 | - | 157 |
+| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 83 | 263 | 902 | 5 | 1253 |
+| 합계 | 83 | 263 | 911 | 5 | 1262 |
 
 ## 읽는 법
 
@@ -1976,7 +1976,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 6. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 157개.
+블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 166개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -2001,7 +2001,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ### [단위] `packages/core/src/layout/fold-layout.test.ts`
 
-접힌 것, 접기 영역, 펴 보인 호출 블록의 레이아웃과 렌더링 (02-layout 1.6). Vitest · 테스트 17개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+접힌 것, 접기 영역, 펴 보인 호출 블록의 레이아웃과 렌더링 (02-layout 1.6). Vitest · 테스트 26개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[ux-decisions|UX NF1]], [[03-quality-attribute-scenarios#1. 목록|QA-07]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2021,6 +2021,15 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1180 | peek: 띠의 텍스트는 보라색이고 Method 이름은 굵다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1181 | peek: 안쪽 블록은 다른 곳과 같은 글자색과 구문 강조로 렌더링한다 | [[01-requirements#^r-edit\|R-EDIT-15]], [[01-requirements#^r-lay\|R-LAY-07]] |
 | T-1125 | peek: 펴 보인 곳의 접기 영역은 남은 블록으로 줄고, 걸쳐 겹치면 렌더링하지 않는다 | - |
+| T-1375 | %s > 제어 블록 > %s, %s: 바깥 테두리의 변에 닿는 쪽만 4px 들어간다 | [[ux-decisions\|UX NF1]] |
+| T-1376 | %s > While > If > %s: 제어 블록을 두 겹 거쳐도 들어간다 | [[ux-decisions\|UX NF1]] |
+| T-1377 | 여러 겹이어도 테두리마다 바로 바깥 테두리와의 틈을 지킨다 | [[ux-decisions\|UX NF1]] |
+| T-1378 | %s: 뒤에 블록이 있는 테두리는 아래 변에 닿지 않는다 | [[ux-decisions\|UX NF1]] |
+| T-1379 | %s: 뒤에 블록이 있는 제어 블록은 아래 변에 닿지 않는다 | [[ux-decisions\|UX NF1]] |
+| T-1380 | %s: Do-While의 본문은 아래 변에 닿지 않는다 | [[ux-decisions\|UX NF1]] |
+| T-1381 | 들어간 만큼 바깥이 늘어나 안쪽 테두리의 폭은 줄지 않는다 | [[ux-decisions\|UX NF1]] |
+| T-1382 | 이름 띠의 히트 영역이 들어간 테두리를 따른다 | [[ux-decisions\|UX NF1]] |
+| T-1383 | 테두리가 아닌 블록은 테두리에 붙은 채로 있다 | [[ux-decisions\|UX NF1]] |
 | T-1126 | peek: 펴 보인 호출 블록으로 렌더링되는 블록 2,000개도 예산 안에서 레이아웃하고 렌더링한다 | - |
 
 ^t-packages-core-src-layout-fold-layout-test-ts

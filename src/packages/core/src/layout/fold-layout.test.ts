@@ -3,7 +3,19 @@ import { describe, expect, inject, it } from 'vitest';
 
 import type { Block, Call, Doc, FoldMark, Seq, View } from '../model/types';
 import { buildScene } from '../render/build-scene';
-import { branch, docOf, ifBlock, inLocale, largeDoc, process, whileBlock } from '../render/testing';
+import {
+  arm,
+  branch,
+  caseBlock,
+  docOf,
+  doWhileBlock,
+  ifBlock,
+  inLocale,
+  largeDoc,
+  process,
+  seq,
+  whileBlock,
+} from '../render/testing';
 import { defaultTheme, themes } from '../render/theme';
 import { toSvg } from '../render/to-svg';
 import { defaultFoldName, layout } from './layout';
@@ -359,6 +371,231 @@ describe('opened call blocks (R-EDIT-15, R-EDIT-16)', () => {
         shownView({ folded: ['f5'], opened: [], bands: false, resultSymbol: '←' }),
       )[0]?.kind,
     ).toBe('fold');
+  });
+});
+
+describe('frames inside frames through control blocks (02-layout 1.6, UX NF1)', () => {
+  type Frame = 'fold' | 'call';
+  const frames: ReadonlyArray<Frame> = ['fold', 'call'];
+
+  const callTo = (id: string, diagram: string): Call => ({
+    id,
+    kind: 'call',
+    target: { kind: 'local', diagram },
+    args: '',
+    result: '',
+    siteFolds: [],
+  });
+
+  /** A sequence that starts with the inner frame: fold region `fi` or opened call block `ci`. */
+  const framed = (inner: Frame, after: ReadonlyArray<Block> = [], text = 'inside'): Seq =>
+    inner === 'fold'
+      ? {
+          blocks: [process('p1', text), ...after],
+          folds: [{ id: 'fi', first: 'p1', last: 'p1' }],
+        }
+      : seq(callTo('ci', 'dm'), ...after);
+
+  const other = (id: string): Block[] => [process(id, 'other')];
+  const inBranch = (id: string, body: Seq) => ({ ...branch(id, []), body });
+  const inArm = (id: string, body: Seq) => ({ ...arm(id, id, []), body });
+
+  /** Where the inner frame lies in a control block, and the frame's sides that place reaches. */
+  const places: ReadonlyArray<
+    readonly [string, (body: Seq) => Block, { left: boolean; right: boolean }]
+  > = [
+    ['While', (body) => ({ ...whileBlock('c1', 'w', []), body }), { left: false, right: true }],
+    [
+      'If, left branch',
+      (body) => ifBlock('c1', 'x', inBranch('r1', body), branch('r2', other('o1'))),
+      { left: true, right: false },
+    ],
+    [
+      'If, right branch',
+      (body) => ifBlock('c1', 'x', branch('r1', other('o1')), inBranch('r2', body)),
+      { left: false, right: true },
+    ],
+    [
+      'Case, first branch',
+      (body) =>
+        caseBlock(
+          'c1',
+          'x',
+          [inArm('a1', body), arm('a2', '2', other('o1'))],
+          branch('r9', other('o2')),
+        ),
+      { left: true, right: false },
+    ],
+    [
+      'Case, middle branch',
+      (body) =>
+        caseBlock(
+          'c1',
+          'x',
+          [arm('a1', '1', other('o1')), inArm('a2', body)],
+          branch('r9', other('o2')),
+        ),
+      { left: false, right: false },
+    ],
+    [
+      'Case, default branch',
+      (body) => caseBlock('c1', 'x', [arm('a1', '1', other('o1'))], inBranch('r9', body)),
+      { left: false, right: true },
+    ],
+    [
+      'Case without a default, last branch',
+      (body) => caseBlock('c1', 'x', [arm('a1', '1', other('o1')), inArm('a2', body)], null),
+      { left: false, right: false },
+    ],
+  ];
+
+  const method = (id: string, text: string, body: Seq) => ({
+    id,
+    head: { kind: 'method' as const, text },
+    body,
+  });
+
+  /** The blocks in the outer frame: fold region `fo` over them, or the Method of call `co`. */
+  const docWith = (outer: Frame, inner: Frame, blocks: ReadonlyArray<Block>): Doc => {
+    const called = method('dm', 'inner()', seq(process('m1', 'called')));
+    const [first] = blocks;
+    const last = blocks.at(-1);
+    if (first === undefined || last === undefined) {
+      throw new Error('no blocks');
+    }
+    if (outer === 'fold') {
+      const base = withFolds(docOf(...blocks), [{ id: 'fo', first: first.id, last: last.id }]);
+      const content = { ...base.content, diagrams: [...base.content.diagrams, called] };
+      return withView({ ...base, content }, { opened: inner === 'call' ? [['ci']] : [] });
+    }
+    const base = docOf(callTo('co', 'dout'));
+    const content = {
+      ...base.content,
+      diagrams: [...base.content.diagrams, method('dout', 'outer()', seq(...blocks)), called],
+    };
+    return withView(
+      { ...base, content },
+      { opened: inner === 'call' ? [['co'], ['co', 'ci']] : [['co']] },
+    );
+  };
+
+  const outerId = (outer: Frame): string => (outer === 'fold' ? 'fo' : 'co');
+  const innerId = (outer: Frame, inner: Frame): string =>
+    (outer === 'fold' ? '' : 'co/') + (inner === 'fold' ? 'fi' : 'ci');
+
+  /** The distance from each side of the outer frame to the same side of the inner frame. */
+  const gaps = (result: LayoutResult, outside: string, inside: string) => {
+    const a = boxOf(result, outside);
+    const b = boxOf(result, inside);
+    return {
+      left: b.x - a.x,
+      right: a.x + a.width - (b.x + b.width),
+      bottom: a.y + a.height - (b.y + b.height),
+    };
+  };
+
+  const pairs = frames.flatMap((outer) =>
+    frames.flatMap((inner) =>
+      places.map(([name, wrap, reaches]) => [outer, inner, name, wrap, reaches] as const),
+    ),
+  );
+
+  it.each(pairs)(
+    'T-1375 · UX NF1: %s > control block > %s, in %s: inset 4px at the sides the place reaches',
+    (outer, inner, _name, wrap, reaches) => {
+      const result = layout(docWith(outer, inner, [wrap(framed(inner))]));
+      const gap = gaps(result, outerId(outer), innerId(outer, inner));
+      expect(gap.left === 4).toBe(reaches.left);
+      expect(gap.right === 4).toBe(reaches.right);
+      expect(gap.left).toBeGreaterThanOrEqual(4);
+      expect(gap.right).toBeGreaterThanOrEqual(4);
+      expect(gap.bottom).toBe(4);
+    },
+  );
+
+  it.each(frames.flatMap((outer) => frames.map((inner) => [outer, inner] as const)))(
+    'T-1376 · UX NF1: %s > While > If > %s: the inset goes through two control blocks',
+    (outer, inner) => {
+      const loop: Block = {
+        ...whileBlock('c2', 'w', []),
+        body: seq(ifBlock('c1', 'x', branch('r1', other('o1')), inBranch('r2', framed(inner)))),
+      };
+      const result = layout(docWith(outer, inner, [loop]));
+      const gap = gaps(result, outerId(outer), innerId(outer, inner));
+      expect(gap.right).toBe(4);
+      expect(gap.bottom).toBe(4);
+      expect(gap.left).toBeGreaterThan(4);
+    },
+  );
+
+  it('T-1377 · UX NF1: every frame keeps the gap to the frame right around it, several deep', () => {
+    const innermost: Seq = {
+      blocks: [process('p2', 'deep')],
+      folds: [{ id: 'f3', first: 'p2', last: 'p2' }],
+    };
+    const middle: Seq = {
+      blocks: [{ ...whileBlock('c2', 'w', []), body: innermost }],
+      folds: [{ id: 'f2', first: 'c2', last: 'c2' }],
+    };
+    const loop: Block = { ...whileBlock('c1', 'w', []), body: middle };
+    const result = layout(withFolds(docOf(loop), [{ id: 'f1', first: 'c1', last: 'c1' }]));
+    expect(gaps(result, 'f1', 'f2')).toMatchObject({ right: 4, bottom: 4 });
+    expect(gaps(result, 'f2', 'f3')).toMatchObject({ right: 4, bottom: 4 });
+  });
+
+  it.each(frames)('T-1378 · UX NF1: %s: a frame followed by a block does not reach the bottom', (inner) => {
+    const loop: Block = {
+      ...whileBlock('c1', 'w', []),
+      body: framed(inner, [process('p9', 'after')]),
+    };
+    const gap = gaps(layout(docWith('fold', inner, [loop])), 'fo', innerId('fold', inner));
+    expect(gap.right).toBe(4);
+    expect(gap.bottom).toBeGreaterThan(4);
+  });
+
+  it.each(frames)(
+    'T-1379 · UX NF1: %s: a control block followed by a block does not reach the bottom',
+    (inner) => {
+      const loop: Block = { ...whileBlock('c1', 'w', []), body: framed(inner) };
+      const result = layout(docWith('fold', inner, [loop, process('p9', 'after')]));
+      const gap = gaps(result, 'fo', innerId('fold', inner));
+      expect(gap.right).toBe(4);
+      expect(gap.bottom).toBeGreaterThan(4);
+    },
+  );
+
+  it.each(frames)('T-1380 · UX NF1: %s: a Do-While body does not reach the bottom', (inner) => {
+    const loop: Block = { ...doWhileBlock('c1', 'w', []), body: framed(inner) };
+    const gap = gaps(layout(docWith('fold', inner, [loop])), 'fo', innerId('fold', inner));
+    expect(gap.right).toBe(4);
+    expect(gap.bottom).toBeGreaterThan(4);
+  });
+
+  it('T-1381 · UX NF1: the frames grow by the inset, so the frame inside keeps its width', () => {
+    const text = 'a long line of text that decides the width of everything around it';
+    const alone = layout(
+      withFolds(docOf(process('p1', text)), [{ id: 'fi', first: 'p1', last: 'p1' }]),
+    );
+    const loop: Block = { ...whileBlock('c1', 'w', []), body: framed('fold', [], text) };
+    const result = layout(docWith('fold', 'fold', [loop]));
+    expect(boxOf(result, 'fi').width).toBe(boxOf(alone, 'fi').width);
+  });
+
+  it('T-1382 · UX NF1: the hit region of the name band follows the inset frame', () => {
+    const loop: Block = { ...whileBlock('c1', 'w', []), body: framed('fold') };
+    const result = layout(docWith('fold', 'fold', [loop]));
+    const inner = boxOf(result, 'fi');
+    const band = result.regions.find((region) => region.kind === 'fold' && region.foldId === 'fi');
+    expect(band?.box).toMatchObject({ x: inner.x, y: inner.y, width: inner.width });
+  });
+
+  it('T-1383 · UX NF1: blocks that are not frames stay against the frame', () => {
+    const loop: Block = { ...whileBlock('c1', 'w', []), body: seq(process('p1', 'plain')) };
+    const result = layout(withFolds(docOf(loop), [{ id: 'fo', first: 'c1', last: 'c1' }]));
+    const outer = boxOf(result, 'fo');
+    const block = boxOf(result, 'p1');
+    expect(outer.x + outer.width).toBe(block.x + block.width);
+    expect(outer.y + outer.height).toBe(block.y + block.height);
   });
 });
 
