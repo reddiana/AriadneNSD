@@ -96,7 +96,10 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 
 ### 2.1 범위를 넓히기 (자동 확장)
 
-`Shift`+클릭과 `Shift`+`↑` `↓`는 같은 함수를 씁니다 → [[0008-contiguous-selection|ADR-0008]], [[02-interaction-rules#여러 블록 선택]]
+`Shift`+클릭과 `Shift`+`↑` `↓`는 다른 함수를 씁니다. 둘 다 결과는 한 줄에 이어진 범위입니다 → [[0008-contiguous-selection|ADR-0008]], [[02-interaction-rules#여러 블록 선택]]
+
+- `Shift`+클릭은 `extendTo`입니다. 두 블록의 조상을 견주어 둘을 함께 담는 가장 가까운 줄까지 범위를 넓힙니다(깊이가 달라도 됩니다).
+- `Shift`+`↑` `↓`(와 범위 선택의 `j` `k`)는 `extendBy`입니다. 지금 줄 안에서 범위의 끝을 한 블록 옮기고, 줄의 끝이면 넓히지 않고 "같은 부모 안에서만 영역을 넓힐 수 있습니다."를 알립니다.
 
 1. 처음 선택한 블록 `a`와 새로 가리킨 블록 `b`의 조상 목록(자기부터 다이어그램까지, 블록과 줄이 번갈아)을 구합니다.
 2. 두 목록이 처음 엇갈리는 곳 바로 위의 **같은 줄**을 찾습니다.
@@ -121,7 +124,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 | --- | --- |
 | 삽입 · 붙여넣기 · 감싸기 · 이동 | `touched`(삽입한 것, 감싼 새 블록, 이동한 것) |
 | 삭제 · 잘라내기 | 삭제한 범위의 다음 블록 → 앞 블록 → 담고 있던 블록 (삭제 **전**에 계산해 둔다) |
-| 풀기 | 남은 안의 블록들. 안쪽에서 풀었으면 선택한 것 그대로 |
+| 풀기 | 남은 안의 블록들. 안쪽에서 풀었으면 선택한 것 그대로(접기 영역도 그대로). 분기 라벨 · 빈 default 칸에서 풀었으면 남은 안의 블록들 |
 | 새 Method로 빼기 | 새 Method의 헤더(이름 칸을 엶). 이름 칸을 닫으면 그 위치에 남은 호출 블록(`touched`의 둘째) → [[ux-decisions#XM2. 빼고 난 뒤의 선택과 화면\|XM2]] |
 | 실행 취소 · 다시 하기 | 선택한 것이 남아 있으면 그대로, 없으면 `null` |
 
@@ -173,7 +176,9 @@ type Extracted = { call: Id; count: number };        // 그 위치에 남은 호
 
 ## 3. 입력에서 명령까지
 
-키 · 마우스 · 메뉴 · 툴바 · 커맨드 팔레트는 모두 **명령 id 하나**로 모입니다. 실행은 한 곳(`run(id, args)`)에서 합니다 → [[0033-command-list-for-shells|ADR-0033]]
+키 · 메뉴 · 툴바 · 컨텍스트 메뉴 · 커맨드 팔레트는 모두 **명령 id 하나**로 모입니다. 실행은 한 곳(`run(id, args)`)에서 합니다 → [[0033-command-list-for-shells|ADR-0033]]
+
+명령 목록을 거치지 않는 입력이 셋 있습니다. 드롭은 대상을 드래그 중에 이미 검사하므로 `runDrop`이 세션의 `commit`을 직접 호출하고, 더블클릭 편집은 세션의 `startEditing`으로 칸을 열며, 문서 설정 창은 `EditorHandle.setDocumentSetting`을 호출합니다.
 
 ```mermaid
 sequenceDiagram
@@ -237,7 +242,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 4px 넘게 움직여야 드래그로 판정합니다. 그 전에 떼면 클릭입니다.
 - **드롭 위치 계산:** 가리킨 블록 상자의 위쪽 8px과 아래쪽 8px 띠는 "그 블록의 앞 · 뒤 사이", 나머지는 "블록 위"입니다. 블록의 높이가 24px보다 작으면 위아래를 반씩 나눠 "사이"만 둡니다. 분기의 빈 블록(`∅`)은 전체가 "빈 블록 위"입니다.
 - 드래그하는 동안 오버레이 레이어에 놓을 결과를 렌더링합니다: 사이면 가로줄 + 양 끝 눈금, 블록 위면 그 블록의 테두리 + 커서 곁의 텍스트("If로 감싸기"). 드롭할 수 없으면 아무것도 렌더링하지 않고 커서를 금지 모양으로 바꿉니다.
-- 놓으면 이동 · 삽입 · 감싸기 명령 가운데 하나를 `run`합니다. 드래그 자체는 명령이 아니라서, 놓기 전에 `Esc`를 누르면 아무 일도 없습니다.
+- 놓으면 `runDrop`이 이동 · 삽입 · 감싸기 편집 명령 가운데 하나를 세션의 `commit`으로 실행합니다(명령 목록의 `run`과 `when`을 거치지 않습니다. 대상은 드래그 중에 검사합니다). 드래그 자체는 명령이 아니라서, 놓기 전에 `Esc`를 누르면 아무 일도 없습니다.
 - 캔버스 가장자리 32px 안으로 드래그하면 그쪽으로 자동 스크롤합니다.
 
 ### 3.3 클립보드
@@ -253,7 +258,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 ### 3.4 텍스트 편집
 
 - 인라인 에디터는 `<textarea>` 하나를 다시 씁니다. 편집할 상자의 위치(`LayoutResult`)에 배율을 곱해 놓고, 블록 글꼴과 같은 글꼴 · 크기로 둡니다.
-- 칸을 열고 닫을 때까지가 명령 하나입니다. 닫을 때 텍스트 편집 명령을 한 번 `run`합니다. 처음과 같으면 실행하지 않습니다 → [[01-model#4.4 텍스트 편집과 undo]]
+- 칸을 열고 닫을 때까지가 명령 하나입니다. 닫을 때 세션이 텍스트 편집 명령을 한 번 실행합니다(명령 목록의 `run`을 거치지 않습니다). 처음과 같으면 실행하지 않습니다 → [[01-model#4.4 텍스트 편집과 undo]]
 - 비울 수 없는 칸을 비우면 기본 텍스트로 되돌리고 닫습니다. 헤더의 이름이 중복될 때만 칸을 다시 엽니다 → [[02-interaction-rules#텍스트 편집]]. 다시 연 칸은 테두리를 `edit.error`로 그리고(→ [[04-visual-design#7.1 상태 표]]), 그 칸의 `Esc`만 편집 전의 이름으로 되돌리고 닫습니다.
 - 새 Method로 빼기가 연 이름 칸(`Editing.extracted`)은 닫을 때의 `editHead`를 빼기의 실행 취소 단계에 합칩니다(새 단계를 추가하지 않음). 그래서 빼기와 이름이 실행 취소 한 단계입니다. 칸을 닫으면(`Enter` · `Esc` · 다른 곳 클릭) 남은 호출 블록을 선택하고, 중복되는 이름이면 다른 헤더처럼 칸을 다시 엽니다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
 - 호출 블록의 칸(인자 · 결과)도 같은 `<textarea>`를 씁니다. 위치는 세로 이중선의 안쪽이고, 빈 칸에는 칸의 이름("인자" · "결과")을 흐리게 보입니다. `Tab`으로 칸을 바꾸면 적은 것을 기억해 두고, 닫을 때 두 칸을 `editCall` 한 번으로 실행합니다. 그래서 두 칸을 고쳐도 실행 취소 한 단계입니다 → [[02-interaction-rules#호출 블록]]
@@ -473,7 +478,8 @@ type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
 
 - 읽기 · 쓰기는 비동기(`Promise`)입니다. 파일 · 네트워크 · 권한 묻기가 끼기 때문입니다. 설정 읽기는 시작할 때 다 읽어 두어 동기입니다(렌더링해야 할 때 기다리지 않게).
 - 오류는 던지지 않고 값(`WriteResult`, `null`)으로 반환합니다. 사용자가 저장 창을 닫은 것(`cancelled`)은 오류가 아닙니다.
-- 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`) → [[ux-decisions#W5. 설정|W5]]
+- 설정의 범위가 둘입니다: `user`(환경 설정, `SettingsStore`)와 `document`(문서 설정, 모델의 `settings`와 뷰 상태의 결과 기호) → [[ux-decisions#W5. 설정|W5]]
+- 문서 설정의 결과 기호(`document.resultSymbol`, 모델의 `view.resultSymbol`)는 뷰 상태입니다. `setDocumentSetting`이 세션의 `setView`로 바꾸므로 실행 취소 스택에 저장하지 않고, 다른 뷰 상태처럼 저장 안 됨(`dirty`)을 켭니다. 읽기 전용이면 다른 문서 설정처럼 거절합니다.
 - 문서 설정의 블록 텍스트의 언어(`document.textKind`, 모델의 `settings.textKind`)는 문서 설정 목록의 맨 위입니다. 값은 `core`의 `textKinds` 목록이고, 렌더러만 이 값을 읽습니다(구문 강조 → [[02-layout#3.1 구문 강조]]). 새 문서는 언제나 `'plain'`입니다 → [[ux-decisions#TK2. 문서 설정의 자리와 이름|TK2]]
 - 문서 설정의 그림 문구의 언어(`document.locale`, 모델의 `settings.locale`)는 렌더링 결과에 표시하는 고정 문구("참" · "거짓" 등)의 언어입니다. 레이아웃 · 렌더러 · 텍스트로 복사가 이 값을 읽고, 화면 언어(`ui.locale`)는 메뉴 · 알림에만 씁니다. 새 문서(`text: null`)와 예제는 지금의 화면 언어로 시작하고, `locale`이 없는 파일과 로컬 백업은 지금의 화면 언어로 엽니다. 이 값은 사용자 설정에 기억하지 않습니다 → [[0041-drawing-locale-in-document|ADR-0041]]
 - 문서 설정의 텍스트를 외곽선으로 저장(`document.textOutlines`, 모델의 `settings.textOutlines`, 기본은 끔)을 켜면 `serialize()` · `serializeImage()`가 렌더링 결과의 텍스트를 번들 글꼴의 외곽선(path)으로 직렬화합니다. 화면은 그대로 텍스트로 그리고, 외곽선을 읽는 코드(글리프 읽기)는 그때 처음 로드합니다. 내용에 드는 설정이라 undo 대상입니다 → [[01-file-format#4. 그림 부분]], [[0045-export-pipeline|ADR-0045]]
@@ -607,7 +613,7 @@ type PlacesHost = {
 
 ### 6.6 설정 목록
 
-`SettingsSchema.list()`가 반환하는 설정입니다. 사용자 설정은 `SettingsStore`에, 문서 설정은 모델의 `settings`에 저장합니다. 문서 설정은 문서 설정 창에 이 순서로 보입니다.
+`SettingsSchema.list()`가 반환하는 설정입니다. 사용자 설정은 `SettingsStore`에, 문서 설정은 모델의 `settings`에(결과 기호만 뷰 상태 `view.resultSymbol`에) 저장합니다. 문서 설정은 문서 설정 창에 이 순서로 보입니다.
 
 ```ts
 type SettingSpec = {
@@ -631,6 +637,7 @@ type SettingSpec = {
 | `document.locale` (그림 문구의 언어) | `document` | `en` · `ko` | `en` |
 | `document.headStyle` (헤더 모양) | `document` | `title` · `shape` | `title` |
 | `document.textOutlines` (텍스트를 외곽선으로 저장) | `document` | 켬 · 끔 | 끔 |
+| `document.resultSymbol` (결과 기호) | `document` | `core`의 `resultSymbols` (`←` · `=`) | `←` |
 | `document.theme` (테마) | `document` | `core`의 `themeIds` | `default` |
 
 ## 미결정 사항
