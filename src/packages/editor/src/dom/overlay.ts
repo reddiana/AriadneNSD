@@ -228,11 +228,16 @@ function overlaps(a: Box, b: Box): boolean {
 
 /**
  * A fold triangle in its click box (interaction rules 4): `▾` while open, `▸` while folded.
- * Only on the editing layer, so it is never saved (UX Q2).
+ * Only on the editing layer, so it is never saved (UX Q2). `▾` is centered in its band; `▸` is in
+ * a folded cell, level with the first line of the name (UX FD11, BUG-17).
  */
 function triangle(box: Box, isOpen: boolean, color: string): string {
   const cx = box.x + box.width / 2 + 1;
-  const cy = box.y + Math.min(box.height, geometry['size.band']) / 2;
+  const cy =
+    box.y +
+    (isOpen
+      ? Math.min(box.height, geometry['size.band']) / 2
+      : geometry['space.pad-y'] + geometry['space.line'] / 2);
   const points = isOpen
     ? [
         [cx - 4, cy - 2],

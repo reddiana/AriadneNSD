@@ -33,6 +33,7 @@ updated: 2026-11-19
 | [[#BUG-14\|BUG-14]] | 2026-11-03 | 드래그한 블록을 제자리에 드롭하면 바뀐 것도 실행 취소 단계도 없는데 드롭 함수가 "문서가 바뀜"(`true`)을 돌려줌 | 고침 |
 | [[#BUG-15\|BUG-15]] | 2026-11-04 | 텍스트 외곽선으로 저장한 그림과 PDF에서 기울임 텍스트(이름 없는 접기 영역의 기본 이름, 접힌 분기의 "⋯ 블록 n개")가 바로 선 글자로 나옴 | 고침 |
 | [[#BUG-16\|BUG-16]] | 2026-11-17 | 접기 영역을 펼치면 이름 띠와 첫 블록 사이의 선이 빠짐(프로토타입에는 있음) | 고침 |
+| [[#BUG-17\|BUG-17]] | 2026-11-19 | 접힌 접기 영역의 펼침 삼각형(`▸`)이 이름보다 7px 위에 붙음 | 고침 |
 
 ## BUG-01
 
@@ -158,3 +159,10 @@ updated: 2026-11-19
 - **원인:** 펼친 접기 영역의 이름 띠는 안의 블록보다 나중에 그린다(테두리가 블록의 바깥 선을 덮도록). 그런데 띠의 사각형이 테두리 선을 띠 배경색(`fold.band`)으로 그려, 첫 블록의 윗선을 지웠다. 프로토타입은 띠 아래에 구조선을 따로 그렸고, 펴 보인 호출 블록의 띠는 구조선 색으로 그린다
 - **고친 곳:** `packages/core/src/render/build-scene.ts`의 `foldFrame`: 띠의 테두리를 `line.structure`로 그림. 띠의 위 · 양옆 선은 3px 테두리 아래에 깔려 보이지 않음
 - **회귀 테스트:** [[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1174]] 펼친 접기 영역은 이름 띠 아래의 구조선을 그린다(첫 블록이 처리 · If · 반복일 때, 겹친 접기 영역, 테마 넷) (단위, `packages/core/src/layout/fold-layout.test.ts`)
+
+## BUG-17
+
+- **찾은 사람:** 메인테이너(2026-11-19: "접힌 접기 영역의 작은 삼각형 위치가 위쪽에 붙어있는데, 의도한 것인가요?")
+- **원인:** 펼침 삼각형의 세로 중심을 이름 띠(18px)의 가운데로 계산하는 식을 접힌 칸에도 썼다. 그래서 삼각형의 중심은 칸 위에서 9px, 이름 첫 줄의 가운데는 16px이 되어 7px 어긋났다
+- **고친 곳:** `packages/editor/src/dom/overlay.ts`의 `triangle`: 접힌 칸의 `▸`는 이름 첫 줄의 가운데(`space.pad-y` + `space.line` / 2 = 16px)에 둠. 이름 띠와 펴 보기 띠의 `▾`는 그대로(9px). 편집 레이어만 바뀌므로 저장되는 그림은 같음 → [[ux-decisions#FD11. 접힌 칸의 펼침 삼각형 자리|FD11]]
+- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1320]] 접힌 칸의 삼각형은 이름과 나란하다, [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1321]] 이름이 여러 줄이어도 첫 줄에 둔다, [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1322]] 이름 띠의 삼각형은 띠의 가운데에 그대로 둔다 (단위, `packages/editor/src/dom/overlay.test.ts`)

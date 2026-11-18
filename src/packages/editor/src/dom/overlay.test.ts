@@ -1,5 +1,5 @@
 import type { Block, Box, ColorToken, Content, LayoutResult } from '@ariadne-nsd/core';
-import { geometry, themes } from '@ariadne-nsd/core';
+import { geometry, layout as layoutOf, themes } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -7,12 +7,14 @@ import {
   branch,
   caseBlock,
   contentOf,
+  docOf,
   ifBlock,
   proc,
   seq,
   testEngine,
 } from '../engine-test-support';
 import type { DocIndex } from '../model/doc-index';
+import { indexDoc } from '../model/doc-index';
 import { selectBlock, selectRange } from '../state/selection';
 import type { OverlayInput } from './overlay';
 import {
@@ -95,6 +97,56 @@ function boxOf(layout: LayoutResult, id: string): Box {
   if (box === undefined) throw new Error(`no box ${id}`);
   return box;
 }
+
+describe('overlayContent: the fold triangle (UX FD11)', () => {
+  /** A diagram with the fold region `f1` over `b1`; `isFolded` folds it. */
+  const foldedContent = (name: string): Content => {
+    const base = contentOf([proc('b1')]);
+    return {
+      ...base,
+      diagrams: base.diagrams.map((diagram) => ({
+        ...diagram,
+        body: { ...diagram.body, folds: [{ id: 'f1', first: 'b1', last: 'b1', name }] },
+      })),
+    };
+  };
+
+  /** How far below the top of `f1` the triangle's center is. */
+  const triangleCenter = (content: Content, isFolded: boolean): number => {
+    const doc = docOf(content);
+    const layout = layoutOf({ ...doc, view: { ...doc.view, folded: isFolded ? ['f1'] : [] } });
+    const svg = overlayContent({
+      layout,
+      index: indexDoc(content),
+      selection: null,
+      hover: null,
+      drop: null,
+      dragged: [],
+      paper: '#fff',
+    });
+    const points = /<polygon points="([^"]+)"/.exec(svg)?.[1]?.split(' ') ?? [];
+    const ys = points.map((point) => Number(point.split(',')[1]));
+    // `▸` has its tip at the center; `▾` has its flat top 2px above the center.
+    const center = isFolded ? (ys[2] ?? NaN) : (ys[0] ?? NaN) + 2;
+    return center - boxOf(layout, 'f1').y;
+  };
+
+  const firstLineMiddle = geometry['space.pad-y'] + geometry['space.line'] / 2;
+
+  it('T-1320 · BUG-17: in a folded cell the triangle is level with the name', () => {
+    expect(triangleCenter(foldedContent('log'), true)).toBe(firstLineMiddle);
+  });
+
+  it('T-1321 · BUG-17: with a name of several lines the triangle stays on the first line', () => {
+    expect(triangleCenter(foldedContent(['log', 'send', 'retry'].join('\n')), true)).toBe(
+      firstLineMiddle,
+    );
+  });
+
+  it('T-1322 · BUG-17: on a name band the triangle stays in the middle of the band', () => {
+    expect(triangleCenter(foldedContent('log'), false)).toBe(geometry['size.band'] / 2);
+  });
+});
 
 describe('overlayContent: what the edit layer draws', () => {
   it('T-0648: draws nothing when nothing is selected, hovered, dropped or dragged', () => {

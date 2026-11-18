@@ -77,13 +77,13 @@
 <text x="410" y="612" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">20</text>
 <rect x="400" y="626" width="230" height="36" fill="#fbfcfe" stroke="#5b77ad" stroke-width="1"/>
 <text x="420" y="646" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">로그 남기기</text>
-<polygon points="409,631 409,639 414,635" fill="#5a6476"/>
+<polygon points="409,638 409,646 414,642" fill="#5a6476"/>
 <path d="M640 626 V662 M637 626 H643 M637 662 H643" stroke="#c2410c" stroke-width="1" fill="none"/>
 <text x="648" y="641" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">높이 36</text>
 <text x="648" y="655" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">= 18 + 14 + 4</text>
 <rect x="400" y="684" width="230" height="36" fill="#fbfcfe" stroke="#5b77ad" stroke-width="1"/>
 <text x="420" y="704" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22" font-style="italic">adc_start(CH0); 외 1개</text>
-<polygon points="409,689 409,697 414,693" fill="#5a6476"/>
+<polygon points="409,696 409,704 414,700" fill="#5a6476"/>
 <text x="648" y="699" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이름이 없으면</text>
 <text x="648" y="713" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">기본 이름을 기울임</text>
 <text x="70" y="620" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">헤더 모양 "제목처럼"</text>
