@@ -1,5 +1,5 @@
 // The segments of an edit's time (QA-07's measuring segments, 06-web 9): the check mode splits
-// each timed run along the path of the C&C view (03-architecture 3), from the key to the frame
+// each timed run along the path of the C&C view (01-architecture 3), from the key to the frame
 // after the drawing changed. The editor and `core` time their parts with a `PhaseTimer`; the
 // recorder here adds the times up, each part without the parts inside it. Pure but for the clock.
 
@@ -23,7 +23,7 @@ export const perfSegmentIds = [
 /** One of the segments. */
 export type PerfSegmentId = (typeof perfSegmentIds)[number];
 
-/** The connectors of the C&C view each segment covers (03-architecture 3.4). */
+/** The connectors of the C&C view each segment covers (01-architecture 3.4). */
 export const perfSegmentConnectors: Readonly<Record<PerfSegmentId, string>> = {
   input: 'C-01 ~ C-04',
   command: 'C-04 · C-05',

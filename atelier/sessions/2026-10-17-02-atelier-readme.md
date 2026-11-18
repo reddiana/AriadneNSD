@@ -58,11 +58,11 @@ date: 2026-10-17
 
 ## 결정 (이어서)
 
-- A1 → [[03-architecture#4. 구성 요소]], [[0026-bundled-font-metrics|ADR-0026]] 이후 변경
-- A2 → [[03-architecture#3.1 문서 모델]], [[0022-call-name-follows-head|ADR-0022]] 이후 변경
+- A1 → [[01-architecture#4. 구성 요소]], [[0026-bundled-font-metrics|ADR-0026]] 이후 변경
+- A2 → [[01-architecture#3.1 문서 모델]], [[0022-call-name-follows-head|ADR-0022]] 이후 변경
 - A3 → [[0017-fold-name-in-model|ADR-0017]] 이후 변경
 - A4 → [[0029-immutable-document-undo|ADR-0029]]
-- A5 → [[0030-swappable-drawing|ADR-0030]], [[03-architecture]]의 의존 규칙
+- A5 → [[0030-swappable-drawing|ADR-0030]], [[01-architecture]]의 의존 규칙
 
 ## 발견한 위험
 

@@ -1,7 +1,7 @@
 // Facts written both in the code and in a document, compared value by value (coding guide 13):
 // the format version in the file format spec's front matter, the colors of the visual design
 // (04-visual-design 3 and 9.3) against the palette and the themes, and the libraries of every
-// package against the technology stack of the architecture (03-architecture 9.1 and 9.2).
+// package against the technology stack of the architecture (01-architecture 9.1 and 9.2).
 //
 // It lives outside src/ because it reads the documents with node:fs (core-no-node-builtins).
 import { readFileSync } from 'node:fs';
@@ -140,7 +140,7 @@ describe('the visual design', () => {
 });
 
 describe('the technology stack', () => {
-  const architecture = read('docs/03-architecture/03-architecture.md');
+  const architecture = read('docs/03-architecture/01-architecture.md');
   const stack = (heading: string): string => section(architecture, heading).join('\n');
   const shipped = stack('### 9.1');
   const tools = stack('### 9.2');

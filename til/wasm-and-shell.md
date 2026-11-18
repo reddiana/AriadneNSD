@@ -37,7 +37,7 @@ updated: 2026-11-01
 
 > "셀은 블록을 말하나요?"
 
-아닙니다. **셸**(shell, 껍데기)은 같은 편집기를 각 배포 대상에 붙이는 **배포 대상마다의 바깥 프로그램**입니다. 먼저 만드는 것은 웹 · Obsidian · 데스크톱의 셋(`apps/web`, `apps/obsidian`, `apps/desktop`)이고, 나중에 Confluence와 IDE 플러그인(VSCode, IntelliJ)이 더해집니다. 셸은 셋이 아니라 배포 대상의 수만큼 있습니다([[03-architecture#7. 배포 구성]]). 아래 그림은 먼저 만드는 셋만 그렸습니다. 표의 칸을 뜻하는 "셀(cell)"과 소리가 비슷해 헷갈리기 쉽습니다.
+아닙니다. **셸**(shell, 껍데기)은 같은 편집기를 각 배포 대상에 붙이는 **배포 대상마다의 바깥 프로그램**입니다. 먼저 만드는 것은 웹 · Obsidian · 데스크톱의 셋(`apps/web`, `apps/obsidian`, `apps/desktop`)이고, 나중에 Confluence와 IDE 플러그인(VSCode, IntelliJ)이 더해집니다. 셸은 셋이 아니라 배포 대상의 수만큼 있습니다([[01-architecture#7. 배포 구성]]). 아래 그림은 먼저 만드는 셋만 그렸습니다. 표의 칸을 뜻하는 "셀(cell)"과 소리가 비슷해 헷갈리기 쉽습니다.
 
 ```mermaid
 flowchart TB

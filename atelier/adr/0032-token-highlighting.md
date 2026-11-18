@@ -12,16 +12,16 @@ superseded-by:
 
 > [!NOTE] 이후 변경
 > - 2026-11-03: 처음의 언어를 일반 텍스트 · C · C++ · Java · JavaScript · TypeScript · Python · Bash로 정하고 구현했다. 렉서는 `src/packages/core/src/text/syntax.ts`이고, 문자열과 숫자는 한 색(`syntax.literal`)이다 → [[0042-text-kind-keeps-block-font|ADR-0042]], [[02-layout#3.1 구문 강조]]
-> - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[03-architecture]]
+> - 2026-10-22: 용어를 SW 엔지니어의 말로 고쳤다(뜻은 그대로). → [[01-architecture]]
 
 ## 배경
 
-블록 글자의 종류(문장 / C / Java / Python / Bash 등)는 문서마다 하나 고르고([[01-requirements#^r-lay|R-LAY-06]]), 그 종류에 맞춰 구문 강조를 한다([[01-requirements#^r-lay|R-LAY-07]]). 블록 하나의 글자는 코드 한 조각이라 문법상 완전하지 않다. While 블록의 `i < n`이 그런 예다. [[03-architecture]]의 초안(2026-10-13)에 Claude가 "종류마다 토크나이저 하나"라고 적었고, 2026-10-17에 시안 M20의 A7로 물었다.
+블록 글자의 종류(문장 / C / Java / Python / Bash 등)는 문서마다 하나 고르고([[01-requirements#^r-lay|R-LAY-06]]), 그 종류에 맞춰 구문 강조를 한다([[01-requirements#^r-lay|R-LAY-07]]). 블록 하나의 글자는 코드 한 조각이라 문법상 완전하지 않다. While 블록의 `i < n`이 그런 예다. [[01-architecture]]의 초안(2026-10-13)에 Claude가 "종류마다 토크나이저 하나"라고 적었고, 2026-10-17에 시안 M20의 A7로 물었다.
 
 ## 결정 기준
 
 - 불완전한 코드 조각에도 늘 강조가 적용된다
-- 편집기 번들 크기가 작다(글꼴과 wasm이 이미 크다 → [[03-architecture#8. 위험과 검증이 필요한 사항]])
+- 편집기 번들 크기가 작다(글꼴과 wasm이 이미 크다 → [[01-architecture#8. 위험과 검증이 필요한 사항]])
 - 종류를 더하기 쉽다
 
 ## 검토한 대안

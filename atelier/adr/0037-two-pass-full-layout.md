@@ -25,7 +25,7 @@ superseded-by:
 
 - 같은 모델이면 같은 좌표, 같은 SVG([[01-requirements#^r-fmt|R-FMT-03]], QA-03)
 - 블록 500개에서 편집 응답 100ms 이내(QA-07)
-- `core`는 DOM과 브라우저 API를 쓰지 않는다([[03-architecture#4.3 의존 규칙]]). Node에서 그대로 시험할 수 있어야 한다
+- `core`는 DOM과 브라우저 API를 쓰지 않는다([[01-architecture#4.3 의존 규칙]]). Node에서 그대로 시험할 수 있어야 한다
 - 이해하고 고치기 쉬울 것. 메인테이너는 프론트엔드가 처음이다
 
 ## 검토한 대안

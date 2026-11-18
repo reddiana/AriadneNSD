@@ -48,7 +48,7 @@ Claude가 버그 후보 1 · 2를 직접 고치는 동안 메인테이너가 기
 
 - CI에 따로 된 job `coverage`, 패키지마다 하한 90%. Claude는 지금 값보다 1%p 낮게를 추천했고, 메인테이너는 "모두 90%"를 고름(`cdab701`)
 - 하한에 모자라던 `apps/web`에 단위 테스트 T-0802 ~ T-0809(리스너 · 화면 밝기 · 저장용 글꼴, `50e4f2b`)
-- E2E 쪽이 낮게 나오던 까닭: 여러 줄 문장의 첫 줄만 세었음. 가장 안쪽 문장으로 세게 고침(`75f5bec`). 합친 값 core 95.0 · editor 97.3 · fonts 96.8 · web 97.9% → [[07-testing#6. 지금의 커버리지]]
+- E2E 쪽이 낮게 나오던 까닭: 여러 줄 문장의 첫 줄만 세었음. 가장 안쪽 문장으로 세게 고침(`75f5bec`). 합친 값 core 95.0 · editor 97.3 · fonts 96.8 · web 97.9% → [[coverage]]
 - 인수 테스트 T-0002가 커버리지 실행에서 한 번 실패, 다시 돌리면 통과 → [[backlog#MVP 개발]]에서 지켜봄(`627bf37`)
 
 ## ADR-0041과 US1을 만듦
@@ -200,7 +200,7 @@ Claude가 버그 후보 1 · 2를 직접 고치는 동안 메인테이너가 기
 >
 > - [x] 일하는 방식 문서 [[how-we-work]]의 내용과 자리 → 그대로(2026-11-03 세션 06). 에이전트 항목과 그림의 병렬을 더함(inbox의 "로컬에서 보기"를 둘 곳으로 새로 만듦)
 > - [x] [[0041-drawing-locale-in-document|ADR-0041]]을 승인으로 바꿀지 → 승인(2026-11-03 세션 06). 구현은 에이전트에게
-> - [x] 커버리지: `pnpm coverage`(단위 Vitest V8 + E2E Chromium, 줄마다 합침), 숫자는 [[07-testing#6. 지금의 커버리지]]에 손으로 옮김(생성 문서로 하지 않음) → 그대로, 더해 CI의 coverage job에 패키지마다 하한 90%(2026-11-03 세션 06)
+> - [x] 커버리지: `pnpm coverage`(단위 Vitest V8 + E2E Chromium, 줄마다 합침), 숫자는 [[coverage]]에 손으로 옮김(생성 문서로 하지 않음) → 그대로, 더해 CI의 coverage job에 패키지마다 하한 90%(2026-11-03 세션 06)
 > - [x] QA-13: JSX에 글자를 직접 쓰면 막는 ESLint 규칙, 화면 언어 목록을 `core`의 `locales` 하나로 → [[07-coding-guide]] 8장 → 그대로(2026-11-03 세션 06)
 > - [x] 번역 에이전트가 뜻을 짐작해 옮긴 테스트 이름 몇(예: "두 번째 비춤은 1초를 처음부터 다시 센다", "줄이 옮겨진 범위는 새 소유자로 다시 적힌다") → [[08-test-list]] → 둘을 테스트 코드에 맞춰 고치기로(2026-11-03 세션 06)
 >
@@ -209,7 +209,7 @@ Claude가 버그 후보 1 · 2를 직접 고치는 동안 메인테이너가 기
 > - [x] 2026-11-03 세션 02에 Claude가 정한 것 (→ [[2026-11-03-02-inbox-atelier-til-views]]) → 답(2026-11-03 세션 06): [[01-requirements#^r-ide|R-IDE-08]]은 `P2`로 올림(IDE 플러그인과 함께), 5.2의 AT 표는 그대로
 > 	- 논리 · 물리 뷰 [[01-requirements#^r-ide|R-IDE-08]]의 우선순위를 `P3`(IDE 플러그인 `P2`의 기본기 뒤)로
 > 	- 요구사항 5.2 "MVP의 인수 기준"은 `R-` ID가 아닌 `AT-` ID의 표(블록 ID `^at`). 표와 주 둘은 07-testing 4장에서 그대로 옮김
-> - [x] [[07-testing#1.2 유형과 구성 요소]]의 그림을 SVG로 다시 그린 모양 (2026-11-03 세션 02의 매듭 뒤 → [[2026-11-03-02-inbox-atelier-til-views]]): 720 × 368, `visual-design-anatomy.svg`와 같은 글꼴 · 바탕. 배치는 Mermaid 판과 같게(E2E ⊃ 통합 ⊃ 단위(core · fonts · editor의 순수 함수) · editor · 웹 셸, 그 밖에 브라우저). 사이트에서는 확인함, Obsidian에서 봐 주기 → `docs/04-design/assets/testing-types-components.svg` → 그대로(2026-11-03 세션 06)
+> - [x] [[02-test-architecture#1.2 유형과 구성 요소]]의 그림을 SVG로 다시 그린 모양 (2026-11-03 세션 02의 매듭 뒤 → [[2026-11-03-02-inbox-atelier-til-views]]): 720 × 368, `visual-design-anatomy.svg`와 같은 글꼴 · 바탕. 배치는 Mermaid 판과 같게(E2E ⊃ 통합 ⊃ 단위(core · fonts · editor의 순수 함수) · editor · 웹 셸, 그 밖에 브라우저). 사이트에서는 확인함, Obsidian에서 봐 주기 → `docs/04-design/assets/testing-types-components.svg` → 그대로(2026-11-03 세션 06)
 > - [x] MVP 다음의 단계에서 Claude가 정한 것 (2026-11-02 → [[2026-11-02-01-release-stages]], [[dr-0018-release-stages|DR-0018]]) → 모두 그대로(2026-11-03 세션 06)
 > 	- 웹 베타와 웹 1.0의 문턱에 넣은 항목(DR-0018의 "결정"). 고르신 것은 다섯 물음이고, 문턱의 목록은 Claude가 짰음
 > 	- 우선순위 `P3`의 뜻 "출시 뒤"를 "웹 베타 뒤"로 → [[01-requirements]]
@@ -272,7 +272,7 @@ Claude가 버그 후보 1 · 2를 직접 고치는 동안 메인테이너가 기
 > - [x] README 첫 화면에 넣은 것 (2026-10-31): 소개 아래에 그림 둘(M41의 5 · 7번, 머리 모양 "제목처럼")을 나란히, 사이트 본문 폭에 맞게 폭 300 · 291px, 그 아래 버튼(TIP 콜아웃, 2026-10-31 세션 02에 채운 버튼 그림으로 → 시안 M42. 2026-11-01에 프로토타입 버튼을 MVP 버튼(`/app/`)으로 바꿈). 7번의 `mid = (lo + hi) // 2`는 프로토타입의 구문 강조가 `//`를 C 주석으로 칠해 `>> 1`로 바꿈. 5번의 안쪽 반복은 For 블록으로 그림 → `README.md` → 모두 그대로(2026-11-03 세션 06)
 > - [x] Obsidian에서 시퀀스 다이어그램의 활성 막대가 연해졌는지 봐 주기 (2026-10-31 세션 02). CSS 조각 `.obsidian/snippets/mermaid-activation.css`를 만들어 켜 두었음. 그대로면 설정 → 모양 → CSS 조각에서 `mermaid-activation`을 켜기. `.obsidian/`은 git에 들지 않아 다른 PC에는 없음 → [[2026-10-31-02-readme-polish-activation]] → 쓰며 문제 없어 닫음(2026-11-03 세션 06)
 > - [x] 요구사항 ID를 바꾼 것을 Obsidian에서 봐 주기 (2026-10-25 세션 06) → [[2026-10-25-06-requirement-ids]], [[dr-0016-requirement-ids|DR-0016]] → 쓰며 문제 없어 닫음(2026-11-03 세션 06)
-> 	- 다른 문서의 요구사항 링크(예: [[03-architecture]]의 [[01-requirements#^r-nfr|R-NFR-01]])를 누르면 그 표로 가는가, 마우스를 올리면 표가 미리 보이는가. 사이트에서는 그 줄로 가는 것을 로컬 빌드로 확인함
+> 	- 다른 문서의 요구사항 링크(예: [[01-architecture]]의 [[01-requirements#^r-nfr|R-NFR-01]])를 누르면 그 표로 가는가, 마우스를 올리면 표가 미리 보이는가. 사이트에서는 그 줄로 가는 것을 로컬 빌드로 확인함
 > 	- 요구사항인지 Claude가 가른 것: 절의 소개, 참고 모델, MVP 범위, 미결정 사항은 ID를 매기지 않음. 절 머리글 속 문장 아홉은 요구사항으로 보고 표로 옮김([[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-gd|R-GD-05]], [[01-requirements#^r-cf|R-CF-02]], [[01-requirements#^r-ide|R-IDE-07]], [[01-requirements#^r-edit|R-EDIT-22]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-rep|R-REP-03]], 그리고 핵심 원칙 `R-CORE` · 배포 대상 `R-TGT`)
 > 	- 블록은 블록 종류 표와 합치며 처리 · If · While · Do-While · Case · For · 호출 … 순서로 번호를 매김(`R-BLK-01~14`)
 > 	- DR-0016은 같은 세션에서 다듬어 push 전에 고쳐 씀(새 DR을 따로 만들지 않음). 체크박스는 없앰(구현의 진행은 개발 때 정함)

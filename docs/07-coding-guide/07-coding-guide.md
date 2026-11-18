@@ -13,7 +13,7 @@ updated: 2026-11-10
 > [!info] 읽는 법
 > - 규칙은 둘로 나뉩니다. 도구가 강제하는 것(1장)은 도구의 설정까지 여기에 정의하고, 설정 파일은 이 정의대로 만듭니다. 도구가 검출하지 못하는 것(2장부터)만 문서로 기술합니다.
 > - 설정 파일과 이 문서가 다르면 둘 중 하나가 틀린 것입니다. 바꿀 때는 둘을 한 커밋으로 함께 바꿉니다.
-> - 어떤 도구를 쓰는지는 [[0038-build-and-test-tools|ADR-0038]]과 [[03-architecture#9. 기술 스택]], 테스트를 어떻게 짜는지는 [[02-test-architecture]]에 있습니다.
+> - 어떤 도구를 쓰는지는 [[0038-build-and-test-tools|ADR-0038]]과 [[01-architecture#9. 기술 스택]], 테스트를 어떻게 짜는지는 [[02-test-architecture]]에 있습니다.
 > - 주석은 영어, 커밋 메시지는 Conventional Commits에 한국어 본문입니다 → [[dr-0017-code-language-and-commits|DR-0017]]
 
 ## 1. 도구가 강제하는 것
@@ -60,7 +60,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 | `noImplicitOverride` · `noFallthroughCasesInSwitch` | true | |
 | `verbatimModuleSyntax` | true | 타입만 가져올 때 `import type`을 강제 |
 | `target` · `module` · `moduleResolution` | `ES2022` · `ESNext` · `Bundler` | Vite · esbuild로 묶음 |
-| `lib` | `core` · `fonts`: `["ES2022"]`(DOM 없음), `editor` · 앱: `["ES2022", "DOM", "DOM.Iterable"]` | `core`가 DOM에 기대지 못하게(QA-14 → [[03-architecture#4.3 의존 규칙]]) |
+| `lib` | `core` · `fonts`: `["ES2022"]`(DOM 없음), `editor` · 앱: `["ES2022", "DOM", "DOM.Iterable"]` | `core`가 DOM에 기대지 못하게(QA-14 → [[01-architecture#4.3 의존 규칙]]) |
 | `types` | `[]` (패키지가 필요한 것만 더함. 예: Node 쪽 코드의 `@types/node`) | 쓰지 않는 전역 타입이 새어 들지 않게 |
 | `isolatedModules` · `esModuleInterop` · `skipLibCheck` · `forceConsistentCasingInFileNames` · `resolveJsonModule` · `noEmit` | true | 묶는 것은 Vite · esbuild가 하고 `tsc`는 검사만 |
 
@@ -88,7 +88,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ### 1.5 dependency-cruiser
 
-[[03-architecture#4.3 의존 규칙]]을 기계가 지키게 합니다.
+[[01-architecture#4.3 의존 규칙]]을 기계가 지키게 합니다.
 
 | 규칙 | 금지하는 것 |
 | --- | --- |
@@ -118,7 +118,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ### 3.1 패키지
 
-패키지의 위치와 이름은 [[0036-code-layout|ADR-0036]]대로입니다(`@ariadne-nsd/core` …). 패키지 안은 기능별 폴더입니다(`core/src/model/`, `commands/`, `text/`, `layout/`, `render/`, `format/` → [[03-architecture#4. 구성 요소]]).
+패키지의 위치와 이름은 [[0036-code-layout|ADR-0036]]대로입니다(`@ariadne-nsd/core` …). 패키지 안은 기능별 폴더입니다(`core/src/model/`, `commands/`, `text/`, `layout/`, `render/`, `format/` → [[01-architecture#4. 구성 요소]]).
 
 ### 3.2 내보내기와 가져오기
 
@@ -139,7 +139,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 - **예상한 실패는 값으로 반환합니다.** 명령의 사전 조건 불만족은 `{ ok: false, reason }`, 저장 실패는 `WriteResult`처럼 이유를 유니온으로 둡니다 → [[01-model#4. 편집 명령]], [[03-editor#6. 셸과의 연결]]. 사용자가 취소한 것(`cancelled`)은 실패가 아닙니다.
 - **예외는 버그에만 던집니다.** 불변식 위반처럼 "일어나면 안 되는 것"입니다. 명령의 경계(`editor`의 명령 실행)에서 catch해 문서를 되돌리고 문제 알리기 보고서의 로그에 남깁니다.
 - 예외를 catch해서 아무것도 하지 않는(`catch {}`) 코드는 쓰지 않습니다.
-- 파일 · 클립보드 같은 외부 입력은 `unknown`으로 받아 검증한 뒤에 모델로 씁니다. 깨진 파일은 "편집 불가"로 끝내고 원본을 덮어쓰지 않습니다 → [[03-architecture#6. 공통 관심사]]
+- 파일 · 클립보드 같은 외부 입력은 `unknown`으로 받아 검증한 뒤에 모델로 씁니다. 깨진 파일은 "편집 불가"로 끝내고 원본을 덮어쓰지 않습니다 → [[01-architecture#6. 공통 관심사]]
 
 ## 6. 비동기
 
@@ -167,7 +167,7 @@ export function wrap(content: Content, args: WrapArgs): Result {
 
 ## 8. 화면의 문자열
 
-- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 렌더링 결과에 표시하는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그(화면 언어가 아니라 문서 설정의 언어로 고름 → [[0041-drawing-locale-in-document|ADR-0041]]), 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 전달합니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#6. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
+- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 렌더링 결과에 표시하는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그(화면 언어가 아니라 문서 설정의 언어로 고름 → [[0041-drawing-locale-in-document|ADR-0041]]), 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 전달합니다. 영어와 한국어를 함께 둡니다 → [[01-architecture#6. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
 - 개발자에게만 보이는 문자열(예외 메시지, 로그)은 영어로 직접 씁니다.
 - `.tsx`의 JSX에 문자열을 직접 쓰면(텍스트, `title` · `aria-label` · `placeholder` · `alt` 속성) ESLint가 차단합니다. 번역하지 않는 문자열(제품 이름, 파일 확장자)은 이름 붙은 상수로 두고 `{productName}`처럼 넣습니다.
 - 화면 언어의 목록은 `core`의 `locales` 하나입니다(문서 설정의 그림 문구의 언어도 같은 목록). 언어를 더하면 이 목록에 한 줄, 카탈로그마다 그 언어의 문자열을 더합니다. 빠진 키는 타입 검사가, 빈 문자열과 언어마다 다른 `{name}` 자리표시는 카탈로그 테스트가 찾습니다 → [[03-quality-attribute-scenarios#QA-13 화면 언어 추가|QA-13]]
@@ -212,8 +212,8 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 ## 12. 의존성 추가
 
-- 제품에 들어가는 라이브러리(`dependencies`)를 더하려면 먼저 [[03-architecture#9.1 제품에 들어가는 것]]에 라이선스와 함께 올리고, 기술 선택이면 ADR을 씁니다. 라이선스는 Apache-2.0과 함께 배포할 수 있어야 합니다(MIT, BSD, Apache-2.0, OFL 등).
-- 개발 도구(`devDependencies`)는 [[03-architecture#9.2 개발 도구]]에 올립니다.
+- 제품에 들어가는 라이브러리(`dependencies`)를 더하려면 먼저 [[01-architecture#9.1 제품에 들어가는 것]]에 라이선스와 함께 올리고, 기술 선택이면 ADR을 씁니다. 라이선스는 Apache-2.0과 함께 배포할 수 있어야 합니다(MIT, BSD, Apache-2.0, OFL 등).
+- 개발 도구(`devDependencies`)는 [[01-architecture#9.2 개발 도구]]에 올립니다.
 - 버전은 `pnpm-lock.yaml`로 고정합니다. 저장 파일의 바이트에 영향을 주는 라이브러리(서브세팅, 압축)는 범위 없이 정확한 버전으로 명시합니다(`"fflate": "0.8.3"`) → [[0039-woff-subset-font|ADR-0039]]
 
 ## 13. 문서와 코드의 정합성
@@ -228,7 +228,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 | 사용자처럼 테스트 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 제공해 다이어그램을 생성하게 하고, 그 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 테스트하기]] | 출시 전 |
 
 - 생성된 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 생성된 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 쌍 표)가 원본과 다르면 `pnpm check`가 실패합니다.
-- 값을 견줄 수 있는 것은 쌍의 검사가 아니라 테스트로 검증합니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[03-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
+- 값을 견줄 수 있는 것은 쌍의 검사가 아니라 테스트로 검증합니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[01-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
 
 ### 13.1 함께 바뀌는 곳의 쌍
 

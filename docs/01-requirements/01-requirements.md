@@ -12,7 +12,7 @@ updated: 2026-11-10
 # 요구사항
 
 NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항입니다. 이 문서는 **무엇을** 만드는지만 다룹니다. 요구사항 하나는 한두 줄입니다.
-그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[01-ux-overview]], [[02-interaction-rules]])에(결정은 → [[ux-decisions|UX 결정 모음]]), **왜** 그렇게 정했는지는 [[atelier/adr/README|ADR]]에, **어떻게** 만드는지는 [[03-architecture]]와 상세 설계 문서에 있습니다.
+그 기능이 **사용자에게 어떻게 보이고 어떤 규칙으로 움직이는지**는 UX 설계([[01-ux-overview]], [[02-interaction-rules]])에(결정은 → [[ux-decisions|UX 결정 모음]]), **왜** 그렇게 정했는지는 [[atelier/adr/README|ADR]]에, **어떻게** 만드는지는 [[01-architecture]]와 상세 설계 문서에 있습니다.
 
 > [!info] 읽는 법
 > - 우선순위: `P0` = 필수 · `P1` = 1차 확장 · `P2` = 나중에 · `P3` = 웹 베타 뒤. 요구사항 표의 "우선순위" 칸에 적습니다. 우선순위는 **기능의 우선순위**입니다. `P0`은 "그 배포 대상을 낼 때 꼭 있어야 하는 것"이고, 배포 대상을 내는 순서(웹 → Obsidian → 데스크톱)는 [[dr-0002-development-order|DR-0002]]가 정합니다. MVP는 웹의 `P0`입니다([[#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]).

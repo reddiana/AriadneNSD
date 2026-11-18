@@ -38,7 +38,7 @@ date: 2026-10-22
 >   (use "git add <file>..." to update what will be committed)
 >   (use "git restore <file>..." to discard changes in working directory)
 >         modified:   atelier/inbox.md
->         modified:   docs/03-architecture/03-architecture.md
+>         modified:   docs/03-architecture/01-architecture.md
 >         modified:   docs/04-design/02-layout.md
 >
 > no changes added to commit (use "git add" and/or "git commit -a")
@@ -73,7 +73,7 @@ date: 2026-10-22
 
 ### 4. SW 엔지니어의 말과 UML
 
-- Claude가 [[03-architecture]]를 견본으로 고쳤다: 용어(명령 레지스트리, 필요 · 제공 인터페이스, 씬 빌드, 서브셋 글꼴, 토크나이저, 뷰 상태, 불변식, 구조적 공유, 히트 테스트 …), UML 패키지 · 컴포넌트(인터페이스 넷) · 클래스 다이어그램, 컨텍스트 그림의 범례. 절 번호가 바뀌어(3.1 → 3.4, 3.2 → 3.5) 링크를 고쳤다
+- Claude가 [[01-architecture]]를 견본으로 고쳤다: 용어(명령 레지스트리, 필요 · 제공 인터페이스, 씬 빌드, 서브셋 글꼴, 토크나이저, 뷰 상태, 불변식, 구조적 공유, 히트 테스트 …), UML 패키지 · 컴포넌트(인터페이스 넷) · 클래스 다이어그램, 컨텍스트 그림의 범례. 절 번호가 바뀌어(3.1 → 3.4, 3.2 → 3.5) 링크를 고쳤다
 - 메인테이너가 Obsidian에서 보고 "봤어요. 이대로 전체에 적용해 주세요."
 - 나눠 맡긴 에이전트 넷이 ADR 0001~0010 · 0012~0033, 04-design 셋 · 셋 + 05-spec을 동시에 고쳤다. Claude가 모아 링크(새로 깨진 것 0), 그림 14개(모두 그려짐), 옛 용어가 남은 제목 셋([[01-model]])을 확인하고, 0031 · 0033의 "방향" 문장을 다시 썼다
 - 확인을 하나씩 받음(메인테이너: "선택하는 인터페이스로 하나씩 물어봐주세요."):

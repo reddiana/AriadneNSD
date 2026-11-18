@@ -30,11 +30,11 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 **0.2.0을 냈습니다(2026-11-04). MVP에 웹의 `P1` 기능을 모두 더한 판입니다. 웹 베타의 문턱은 메인테이너가 Firefox · Safari · 휴대폰에서 써 보고, 밤사이 Claude가 추천안으로 정한 것을 확인하는 일이 남았습니다.**
 
-- 앱: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 판은 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[03-architecture#9. 기술 스택]]
+- 앱: https://ariadnensd.com/ (사이트의 첫 화면이 앱. 사용법은 `/manual/` · `/manual/ko/`, 소개는 `/about` → [[dr-0021-domain-and-front-page|DR-0021]]). 판은 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release). 코드는 `src/` → `src/README.md`, 규칙은 [[07-coding-guide]], 기술은 [[01-architecture#9. 기술 스택]]
 - 0.2.0 뒤에 더한 것(배포함, 판 번호는 그대로): LLM · 에이전트 안내서 `/llms.txt` · `/model.schema.json`, 공유 링크의 `u` 꾸림, 열지 못한 링크의 오류 내용 복사([[01-requirements#^r-web|R-WEB-10]]), AT-05 점검 모드 `?perf`, 문서와 코드의 정합성 검사([[07-coding-guide#13. 문서와 코드의 정합성]]), 모델 JSON 스키마 문서([[02-model-schema]]) → [[2026-11-09-01-llm-guide]]
 - 0.2.0에 더한 것: 접기 · 접기 영역, 새 Method로 빼기, 호출 블록 펴 보기 · 풀기 · 이름을 적는 호출 블록, 블록 텍스트의 언어 · 구문 강조, 테마 · 고대비 화면, 공유 링크 · 보기 모드, 브라우저 안의 문서, 그림만 담은 SVG · PDF · 인쇄 · 그림 지문 · 텍스트 외곽선 → [[2026-11-03-06-agents-bugs-locale-extract#매듭 뒤 (2026-11-03 밤 ~ 11-04)]]
 
-- 아키텍처 문서에 실행 중의 모습(C&C 뷰, 웹)을 새 장으로 넣음(2026-11-17) → [[03-architecture#3. 실행 중의 모습]]
+- 아키텍처 문서에 실행 중의 모습(C&C 뷰, 웹)을 새 장으로 넣음(2026-11-17) → [[01-architecture#3. 실행 중의 모습]]
 - 요구사항 · UX 설계 · 아키텍처 · 상세 설계(모델 [[01-model]], 레이아웃 [[02-layout]], 편집기 [[03-editor]], 웹 [[06-web]], 테스트 전략 [[02-test-architecture]], 파일 형식 [[01-file-format]])가 있습니다 → [[docs/README#문서 지도|문서 지도]]
 - MVP 다음은 웹 베타 → 웹 1.0입니다. 앱은 `0.2.0`이고(GitHub Releases에 Pre-release로 올림), 웹 1.0 전에는 파일 형식이 바뀔 수 있습니다. 1.0 전에 남은 것 → [[backlog#웹 1.0의 문턱]] → [[01-requirements#5.1 MVP 다음의 단계]], [[dr-0018-release-stages|DR-0018]]
 - MVP는 웹의 `P0`입니다 → [[01-requirements#5. MVP 범위]], [[dr-0015-mvp-scope|DR-0015]]. 조작(M43), 웹 화면(M44), 서브셋 글꼴 WOFF(M45 → [[0039-woff-subset-font|ADR-0039]]), 파일에 남는 이름([[01-file-format#3.3 노드별 필드]]), 편집기와 셸의 경계([[03-editor#6. 셸과의 연결]])를 정했습니다
@@ -54,7 +54,7 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 - [ ] **메인테이너: 0.2.0을 써 보기** https://ariadnensd.com/ (Chrome · Edge, 그리고 Firefox · Safari · 휴대폰). 도움말 › 이 버전에서 바뀐 것에 목록이 있습니다. 써 보며 11-03 밤에 에이전트들이 만든 기능에서 추천안으로 정한 것을 확인하기 → [[outbox#확인해 주세요]]
 - [ ] **다음 세션 처음: 시안 M59의 CP1을 정함** (펴 보인 호출 블록의 바깥을 일반 블록 선으로 할 때 무엇으로 가를까, inbox "3. 기능"의 항목) → [[sketchbook]]
 - [ ] **다음 세션 처음: 시안 M57을 봄** (AI 넷의 시험 결과, JSON 붙여넣어 열기 · 요청문 복사 · 안내서 손질) → [[sketchbook]], [[outbox#정해 주세요]]
-- [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 조금 고침. 고친 뒤 Claude가 PNG로 보고 [[03-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
+- [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 조금 고침. 고친 뒤 Claude가 PNG로 보고 [[01-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
 - [ ] AT-05: 측정 구간으로 다시 재니 병목은 레이아웃이 아니라 화면 쪽(DOM 반영 · 브라우저 그리기, 4배 감속에서 p95 173 ~ 267ms). "바뀐 블록만 DOM에 반영"을 할지 여쭙기 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간]], [[backlog#MVP 개발]]
 - [ ] 메인테이너: AT-05를 점검 모드(`https://ariadnensd.com/?perf`)로 가진 기기에서 재기, 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 다음 세션: outbox의 세션 06에 정한 것 7묶음 → [[outbox#확인해 주세요]]
@@ -71,5 +71,5 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 
 - 요구사항: [[01-requirements#6. 미결정 사항]] (블록 글자의 종류 목록, 블록 글자가 지원하는 문자, Event를 일으키는 블록, IDE 플러그인이 다루는 언어, AI 대화창의 키 보관, 쓰이지 않는 Method, 웹 광고의 자리)
 - UX 설계의 물음: [[02-interaction-rules#9. 미결정 사항]] (정한 것은 [[ux-decisions|UX 결정 모음]])
-- 아키텍처: [[03-architecture#8. 위험과 검증이 필요한 사항]] (Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), 제안됨 상태의 ADR → [[atelier/adr/README|ADR 목록]]
+- 아키텍처: [[01-architecture#8. 위험과 검증이 필요한 사항]] (Obsidian에 wasm 싣기, 펴 보인 호출 블록과 성능), 제안됨 상태의 ADR → [[atelier/adr/README|ADR 목록]]
 - Obsidian 플러그인: [[04-obsidian-plugin#미결정 사항]]

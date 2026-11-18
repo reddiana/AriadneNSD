@@ -232,7 +232,7 @@ export function segmentColumnTitles(locale: Locale): ReadonlyArray<string> {
   ];
 }
 
-/** The connectors under each segment title (03-architecture 3.4); empty for the browser's part. */
+/** The connectors under each segment title (01-architecture 3.4); empty for the browser's part. */
 export function segmentConnectorCells(): ReadonlyArray<string> {
   return ['', ...perfSegmentIds.map((segment) => perfSegmentConnectors[segment])];
 }

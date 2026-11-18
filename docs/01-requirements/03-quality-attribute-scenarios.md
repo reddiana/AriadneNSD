@@ -12,7 +12,7 @@ updated: 2026-11-01
 
 # 품질 속성 시나리오
 
-[[01-requirements#4. 비기능 요구사항|비기능 요구사항]]을 **측정할 수 있는 시나리오**로 다듬은 문서입니다. 아키텍처([[03-architecture]])는 이 시나리오들을 만족하도록 구성되어 있어야 하고, 시나리오마다 그것을 확인할 테스트가 있어야 합니다.
+[[01-requirements#4. 비기능 요구사항|비기능 요구사항]]을 **측정할 수 있는 시나리오**로 다듬은 문서입니다. 아키텍처([[01-architecture]])는 이 시나리오들을 만족하도록 구성되어 있어야 하고, 시나리오마다 그것을 확인할 테스트가 있어야 합니다.
 
 > [!info] 읽는 법
 > - 시나리오는 SEI(Bass · Clements · Kazman, *Software Architecture in Practice*)의 여섯 부분으로 씁니다: **자극원**(누가 · 무엇이), **자극**(무슨 일), **환경**(어떤 상황에서), **대상**(시스템의 어느 부분), **응답**(시스템이 하는 일), **응답 측정**(합격 기준).
@@ -63,7 +63,7 @@ updated: 2026-11-01
 | 응답 측정 | 무작위 명령열 테스트에서 불변식 위반 **0건** (제안값: 명령열 10,000개 × 길이 200) |
 | 목표의 근거 | 위반 0건: 불변식을 어긴 문서는 저장하면 다른 앱에서 열리지 않으므로 하나도 허용할 수 없다. 명령열 10,000개 × 길이 200은 근거 없음(제안값) |
 
-- **아키텍처:** 명령은 문서를 받아 새 문서를 반환하는 순수 함수이고, 새 문서를 만들 때마다 불변식을 검사한다. 위반하는 문서는 만들어지지 않는다 → [[03-architecture#6. 공통 관심사]], [[0029-immutable-document-undo|ADR-0029]], [[01-model#3. 불변식]]
+- **아키텍처:** 명령은 문서를 받아 새 문서를 반환하는 순수 함수이고, 새 문서를 만들 때마다 불변식을 검사한다. 위반하는 문서는 만들어지지 않는다 → [[01-architecture#6. 공통 관심사]], [[0029-immutable-document-undo|ADR-0029]], [[01-model#3. 불변식]]
 - **테스트:** 속성 기반 테스트(property-based test, 예: fast-check). 무작위 문서와 무작위 명령열을 만들어 매 단계 불변식을 검사한다. 실패하면 가장 짧은 반례로 줄여 회귀 테스트에 추가한다. **실행할 때:** 모든 커밋(CI)
 - **테스트 ID:** `packages/core/src/commands/properties.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-commands-properties-test-ts|T-0171]] ~ T-0172). `packages/editor/src/session/random-keys.test.ts`의 테스트 1개([[08-test-list#^t-packages-editor-src-session-random-keys-test-ts|T-0228]])
 
@@ -79,7 +79,7 @@ updated: 2026-11-01
 | 응답 측정 | 퍼징 입력에서 처리되지 않은 예외 **0건**, 원본 파일의 바이트 변화 **0건** |
 | 목표의 근거 | 0건: 사용자의 파일을 망가뜨리거나 편집기가 죽는 일은 한 번도 허용할 수 없다([[01-requirements#^r-fmt\|R-FMT-06]]) |
 
-- **아키텍처:** 역직렬화할 때도 편집 명령과 같은 불변식 검사를 한다. 열기는 읽기만 한다 → [[01-file-format#5. 버전 관리]], [[03-architecture#5.2 저장과 열기]]
+- **아키텍처:** 역직렬화할 때도 편집 명령과 같은 불변식 검사를 한다. 열기는 읽기만 한다 → [[01-file-format#5. 버전 관리]], [[01-architecture#5.2 저장과 열기]]
 - **테스트:** 퍼징(올바른 파일을 무작위로 망가뜨린 입력 + 손으로 만든 깨진 파일 묶음). 열기 뒤 원본 파일의 해시가 같은지 검증한다. **실행할 때:** 모든 커밋(짧게), 매일 밤(길게)
 - **테스트 ID:** [[08-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[01-requirements#^at|AT-06]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
 
@@ -95,10 +95,10 @@ updated: 2026-11-01
 | 응답 측정 | 골든 문서 묶음의 저장 결과 SHA-256이 모든 환경에서 **100% 일치** |
 | 목표의 근거 | 100%: 그림은 git으로 관리되므로 한 바이트만 달라도 바꾸지 않은 그림에 diff가 생긴다([[01-requirements#^r-nfr\|R-NFR-02]]의 "불필요한 git diff 방지") |
 
-- **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 조회하지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[03-architecture#6. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
+- **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 조회하지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[01-architecture#6. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** 골든 파일 테스트. 대표 문서 묶음(한글 · 영문 · 기호, 블록 종류 모두, 접힘 · 펴 보기 포함)을 저장해 저장소의 기대 파일과 바이트로 비교한다. 같은 테스트를 Node와 각 브라우저(Playwright)에서 실행한다. **실행할 때:** 모든 커밋(Node, Chromium), 출시 전(모든 브라우저와 Obsidian)
 - **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
-- **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
+- **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-04 열고 바로 저장하면 그대로
 
@@ -145,7 +145,7 @@ updated: 2026-11-01
 | 응답 측정 | SVG 1.1 검증 오류 **0건**. 빠진 문자(대체 글꼴로 그려진 문자) **0개**. 기준 그림과의 픽셀 차이 **1% 이하**(제안값, 안티앨리어싱 차이를 허용) |
 | 목표의 근거 | 0건 · 0개: 우리 코드가 없는 뷰어(GitHub · 노트 · 인쇄)에서 그림이 달라지면 저장 형식의 뜻이 없다. 픽셀 차이 1%는 근거 없음(제안값: 브라우저마다의 안티앨리어싱만 허용하려는 값) |
 
-- **아키텍처:** 쓰인 문자만 남긴 서브셋 글꼴과 문서 테마의 색을 파일 안에 포함한다. 편집 중에만 보이는 표시는 오버레이 레이어라 저장되지 않는다 → [[0026-bundled-font-metrics|ADR-0026]], [[0018-save-as-shown|ADR-0018]], [[03-architecture#5.2 저장과 열기]]
+- **아키텍처:** 쓰인 문자만 남긴 서브셋 글꼴과 문서 테마의 색을 파일 안에 포함한다. 편집 중에만 보이는 표시는 오버레이 레이어라 저장되지 않는다 → [[0026-bundled-font-metrics|ADR-0026]], [[0018-save-as-shown|ADR-0018]], [[01-architecture#5.2 저장과 열기]]
 - **테스트:** 시각 회귀 테스트. 골든 문서를 각 브라우저에서 이미지로 열어(Playwright 스크린샷) 기준 그림과 픽셀로 비교한다. SVG 1.1 검증기로 문법을 검증한다. GitHub · Drive · Obsidian은 수동 점검표. **실행할 때:** 모든 커밋(Chromium), 출시 전(나머지)
 - **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-08]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0010]])
 
@@ -164,7 +164,7 @@ updated: 2026-11-01
 - **아키텍처:** 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리를 구분해 낼 수 있다. 증분 레이아웃(메모이제이션)을 할지는 측정해서 정한다 → [[0029-immutable-document-undo|ADR-0029]], [[02-layout#4. 성능]]
 - **테스트:** 성능 벤치마크. 블록 500개 문서에서 대표 명령 20가지를 각 100번 실행해 p95를 측정한다. Node에서 `core`만(레이아웃 + 렌더링, 목표의 절반인 50ms 이하를 제안)과 브라우저에서 화면 갱신까지(Playwright, 성능 타임라인)로 나눈다. **실행할 때:** 모든 커밋(Node, 결과를 기록해 느려지면 알림), 출시 전(기준 기기)
 - **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-1176]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1152]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1153]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1159]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1160]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 17개([[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). `apps/web/src/perf/perf-segments.test.ts`의 테스트 3개([[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts|T-1177]] ~ T-1179). 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1147]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1148]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1155]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1156]])
-- **측정 구간:** 입력부터 화면까지의 경로를 [[03-architecture#3. 실행 중의 모습|C&C 뷰]]의 커넥터로 나눈다. 점검 모드([[06-web#9. 점검 모드]])가 명령마다 구간별 p95를 보인다. 예산은 기준 기기에서의 p95이고, 합격은 지금처럼 전체 p95로만 가른다(구간 예산은 어디를 고칠지 찾는 기준).
+- **측정 구간:** 입력부터 화면까지의 경로를 [[01-architecture#3. 실행 중의 모습|C&C 뷰]]의 커넥터로 나눈다. 점검 모드([[06-web#9. 점검 모드]])가 명령마다 구간별 p95를 보인다. 예산은 기준 기기에서의 p95이고, 합격은 지금처럼 전체 p95로만 가른다(구간 예산은 어디를 고칠지 찾는 기준).
 
 | 구간 | 커넥터 | 시작 → 끝 (코드의 자리) | 예산 | 검증 |
 | --- | --- | --- | --- | --- |
@@ -179,7 +179,7 @@ updated: 2026-11-01
 
 - 예산의 근거: `core`의 구간(편집 명령 ~ 그림)은 측정값에 여유를 두고 38ms, 화면 쪽(알림 · DOM 반영 · 브라우저)에 60ms를 둔다. 브라우저 구간은 60Hz 화면의 한 프레임(17ms)을 기다리는 시간을 품어야 해서 가장 크다. 레이아웃 12 · 그림 14ms는 Node의 벤치마크 한도(각 p99 20ms, T-0517)보다 좁다. 브라우저에서 기준 기기의 값이기 때문이다.
 - **측정값 (2026-11-17, 개발 기계의 Chromium, 명령마다 30번):** 감속 없이는 모든 명령이 p95 34 ~ 35ms로 합격이고, `core`의 구간을 다 더해도 4ms 아래다. CPU 4배 감속(기준 기기 대신)에서는 8가지 모두 불합격(p95 173 ~ 267ms)이다. `core`의 구간은 각 15ms 아래로 예산 안이고, 시간은 DOM 반영(27 ~ 136ms)과 브라우저(53 ~ 199ms)가 차지한다. 문서 레이어를 전체 교체하고 브라우저가 블록 500개의 SVG를 다시 레이아웃 · 페인트하는 시간이다. 그래서 증분 레이아웃보다 화면 쪽(바뀐 곳만 DOM에 반영하기)이 고칠 곳이다 → [[backlog#MVP 개발]]
-- **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[03-architecture#8. 위험과 검증이 필요한 사항]]
+- **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-08 여는 시간 (제안)
 
@@ -193,7 +193,7 @@ updated: 2026-11-01
 | 응답 측정 | **1초 이하** (제안값) |
 | 목표의 근거 | 1초: 기다리는 동안 생각의 흐름이 끊기지 않는 한계(Nielsen의 1초)에서 가져온 제안값 |
 
-- **아키텍처:** 열 때는 모델 JSON만 읽고 그림 부분과 서브셋 글꼴은 읽지 않는다 → [[03-architecture#5.2 저장과 열기]]
+- **아키텍처:** 열 때는 모델 JSON만 읽고 그림 부분과 서브셋 글꼴은 읽지 않는다 → [[01-architecture#5.2 저장과 열기]]
 - **테스트:** QA-07과 같은 벤치마크에 열기를 더했다. Node에서 `core`만: 저장한 파일(블록 500개, 실제 서브셋 글꼴만 한 글꼴 자리를 넣음)을 열어 검사하고 레이아웃 · 그리기까지 p99 100ms 이하. 화면에 붙여 편집할 수 있게 되기까지는 브라우저에서 측정한다(아직 없음). **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0540]]
 
@@ -209,7 +209,7 @@ updated: 2026-11-01
 | 응답 측정 | 저장 파일 **300 KB 이하**, Obsidian `main.js` **3 MB 이하** (둘 다 제안값) |
 | 목표의 근거 | 근거 없음(제안값) |
 
-- **아키텍처:** 편집기에는 기본 블록 글꼴 D2Coding 보통 굵기 하나를 번들한다. 한자를 뺀 문자(라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나)를 포함하고, woff2로 약 328 KB다 → [[0034-default-block-font|ADR-0034]]. 웹은 이것을 문자 범위의 슬라이스 38개로 나눠 화면에 나온 문자의 슬라이스만 받는다 → [[0040-screen-font-slices|ADR-0040]]. 저장 파일에는 쓰인 문자만 추린 서브셋 글꼴을 포함한다. 서브셋이 300 KB 안에 드는지는 정하지 않음 → [[03-architecture#8. 위험과 검증이 필요한 사항]], [[02-layout]]
+- **아키텍처:** 편집기에는 기본 블록 글꼴 D2Coding 보통 굵기 하나를 번들한다. 한자를 뺀 문자(라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나)를 포함하고, woff2로 약 328 KB다 → [[0034-default-block-font|ADR-0034]]. 웹은 이것을 문자 범위의 슬라이스 38개로 나눠 화면에 나온 문자의 슬라이스만 받는다 → [[0040-screen-font-slices|ADR-0040]]. 저장 파일에는 쓰인 문자만 추린 서브셋 글꼴을 포함한다. 서브셋이 300 KB 안에 드는지는 정하지 않음 → [[01-architecture#8. 위험과 검증이 필요한 사항]], [[02-layout]]
 - **테스트:** 번들 사이즈 체크(bundle size budget, 빌드 산출물과 골든 문서의 저장 결과 크기를 측정하고, 넘으면 실패). **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-packages-core-node-golden-test-ts|T-0355]]. 테스트가 아닌 검사: 번들 사이즈 체크 `apps/web/scripts/check-size.mjs` (CI의 웹 빌드 뒤)
 
@@ -225,10 +225,10 @@ updated: 2026-11-01
 | 응답 측정 | `core` · `editor` · `fonts`의 변경 **0줄** |
 | 목표의 근거 | 0줄: 시나리오의 뜻 그대로다. 배포 대상이 일곱이라([[01-requirements#2. 배포 대상]]) 셸마다 공통 코드를 고치면 앞의 대상이 깨진다 |
 
-- **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[03-architecture#4.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
+- **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[01-architecture#4.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트 더블 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 검증한다. **실행할 때:** 모든 커밋
 - **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 49개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
-- **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[03-architecture#7. 배포 구성]]
+- **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[01-architecture#7. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 바꾸기
 
@@ -242,7 +242,7 @@ updated: 2026-11-01
 | 응답 측정 | `core`의 변경 **0줄**. QA-03 · QA-06의 골든 파일 바이트 변화 **0건**. 히트 테스트와 선택 오버레이의 테스트가 그대로 통과 |
 | 목표의 근거 | 0줄 · 0건: 시나리오의 뜻 그대로다. 저장 파일이 바뀌면 QA-03을 어긴다 |
 
-- **아키텍처:** 씬 빌드와 SVG 출력을 나눈 렌더러, 렌더링 백엔드 인터페이스 하나, DOM이 아니라 레이아웃 결과로 하는 히트 테스트 → [[0030-swappable-drawing|ADR-0030]], [[03-architecture#4.3 의존 규칙]]
+- **아키텍처:** 씬 빌드와 SVG 출력을 나눈 렌더러, 렌더링 백엔드 인터페이스 하나, DOM이 아니라 레이아웃 결과로 하는 히트 테스트 → [[0030-swappable-drawing|ADR-0030]], [[01-architecture#4.3 의존 규칙]]
 - **테스트:** 히트 테스트와 오버레이 위치를 레이아웃 결과만으로 확인하는 단위 테스트(DOM 없음). 렌더링 백엔드 인터페이스에 대한 계약 테스트(같은 씬 → 같은 화면 요소). **실행할 때:** 모든 커밋
 - **테스트 ID:** 없음
 
@@ -274,7 +274,7 @@ updated: 2026-11-01
 | 응답 측정 | 코드의 변경 **0줄**(언어 목록 한 줄 제외). 화면에 카탈로그 밖의 텍스트 **0개** |
 | 목표의 근거 | 0줄: 시나리오의 뜻 그대로다(번역은 카탈로그만 고친다) |
 
-- **아키텍처:** 화면의 텍스트는 `editor`, 그림에 적는 텍스트는 `core`가 한 곳씩에서 관리한다 → [[03-architecture#6. 공통 관심사]]
+- **아키텍처:** 화면의 텍스트는 `editor`, 그림에 적는 텍스트는 `core`가 한 곳씩에서 관리한다 → [[01-architecture#6. 공통 관심사]]
 - **테스트:** 정적 분석: UI 코드(`.tsx`)의 JSX에 쓴 글자와 `title` · `aria-label` · `placeholder` · `alt` 속성의 글자를 ESLint가 차단한다(번역하지 않는 제품 이름과 확장자는 이름 붙은 상수로). 카탈로그 넷(그림 · 엔진 · UI · 웹 셸)이 언어마다 모든 키를 가지는지는 타입 검사가 검증한다. 단위 테스트는 빈 문자열이 없는지, `{name}` 자리표시가 언어마다 같은지, 엔진과 UI 카탈로그에 같은 키가 없는지 검증한다. 언어 목록은 `core`의 `locales` 한 줄이다. **실행할 때:** 모든 커밋
 - **테스트 ID:** [[08-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[08-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
 
@@ -290,7 +290,7 @@ updated: 2026-11-01
 | 응답 측정 | `core` · `fonts`에서 DOM · 브라우저 API를 쓰는 곳 **0곳**. 단위 테스트 전체 **1분 이하**(제안값) |
 | 목표의 근거 | 0곳: 시나리오의 뜻 그대로다. 1분은 근거 없음(제안값: 커밋마다 실행해도 작업이 끊기지 않을 시간) |
 
-- **아키텍처:** `core`와 `fonts`는 DOM과 브라우저 API에 의존하지 않는다 → [[03-architecture#4.3 의존 규칙]]
+- **아키텍처:** `core`와 `fonts`는 DOM과 브라우저 API에 의존하지 않는다 → [[01-architecture#4.3 의존 규칙]]
 - **테스트:** `core` · `fonts`의 TypeScript 설정에서 `lib`에 `dom`을 빼서, 쓰면 컴파일이 실패하게 한다. CI가 Node에서만 단위 테스트를 실행한다. **실행할 때:** 모든 커밋
 - **테스트 ID:** 테스트가 아닌 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`)
 
@@ -322,7 +322,7 @@ updated: 2026-11-01
 | 응답 측정 | 텍스트와 배경의 대비 **7:1 이상**(WCAG AAA, 제안값), 선과 배경은 **3:1 이상** |
 | 목표의 근거 | 7:1은 WCAG 2.x의 텍스트 대비 AAA, 3:1은 WCAG 2.1의 비텍스트 대비(1.4.11) 기준이다 |
 
-- **아키텍처:** 색은 토큰 맵으로 렌더러에 전달하고, 테마와 화면 색은 다른 맵이다 → [[03-architecture#6. 공통 관심사]], [[04-visual-design#8. 테마]]
+- **아키텍처:** 색은 토큰 맵으로 렌더러에 전달하고, 테마와 화면 색은 다른 맵이다 → [[01-architecture#6. 공통 관심사]], [[04-visual-design#8. 테마]]
 - **테스트:** 토큰 표에서 쌍(텍스트 · 배경, 선 · 배경)의 대비를 계산하는 단위 테스트. 지금은 밝은 기본 테마만 있어, 그 테마의 [[04-visual-design#3.3 밝은 기본 테마|3.3절]] 기준(텍스트 4.5:1, 선 3:1)을 종이와 블록 배경 여섯 위에서 검증한다. 고대비 화면 색과 흑백 인쇄 팔레트가 생기면 같은 테스트에 이 시나리오의 기준(7:1)으로 더한다. **실행할 때:** 모든 커밋
 - **테스트 ID:** `packages/core/src/render/theme.test.ts`의 테스트 11개([[08-test-list#^t-packages-core-src-render-theme-test-ts|T-0536]] ~ T-0986)
 
