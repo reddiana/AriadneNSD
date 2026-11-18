@@ -21,11 +21,11 @@
 <rect x="400" y="106" width="150" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
 <rect x="550" y="106" width="80" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
 <path d="M640 90 V106 M637 90 H643 M637 106 H643" stroke="#c2410c" stroke-width="1" fill="none"/>
-<text x="645" y="101.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">갈래 이름 줄 16</text>
+<text x="645" y="101.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">분기 라벨 줄 16</text>
 <path d="M400 150 H406 M400 147 V153 M406 147 V153" stroke="#c2410c" stroke-width="1" fill="none"/>
 <text x="403.0" y="162" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">6</text>
-<text x="400" y="180" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">빗금의 꼭짓점 = 두 갈래의 경계</text>
-<text x="400" y="194" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">조건은 그 위 가운데, 갈래 이름은 12px</text>
+<text x="400" y="180" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">빗금의 꼭짓점 = 두 분기의 경계</text>
+<text x="400" y="194" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">조건은 그 위 가운데, 분기 라벨은 12px</text>
 <text x="70" y="226" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">While (Do-While은 조건 칸이 아래)</text>
 <rect x="70" y="250" width="230" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1"/>
 <text x="80" y="270" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">j &lt; hi</text>
@@ -54,15 +54,14 @@
 <text x="80" y="556" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">partition(a, lo, hi)</text>
 <text x="70" y="586" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">Method는 폭 전체의 낮은 아치, 색은 호출 블록과 같음</text>
 <text x="400" y="396" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">펴진 접기 영역 · 펴 보인 호출 블록</text>
-<rect x="400" y="420" width="230" height="18" fill="#eceef2"/>
-<line x1="400" y1="438" x2="630" y2="438" stroke="#5b77ad" stroke-width="1"/>
-<text x="410" y="433" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="12" fill="#343b48" font-weight="600">▾ 센서 읽기</text>
 <rect x="400" y="438" width="230" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
 <text x="410" y="458" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">adc_start(CH0);</text>
-<rect x="400.5" y="420.5" width="229" height="49" fill="none" stroke="#343b48" stroke-width="2"/>
+<rect x="400" y="420" width="230" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1"/>
+<text x="420" y="433" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="12" fill="#2c55c9" font-weight="600">센서 읽기</text>
+<rect x="401" y="421" width="228" height="48" fill="none" stroke="#4f74d6" stroke-width="3"/>
 <path d="M640 420 V438 M637 420 H643 M637 438 H643" stroke="#c2410c" stroke-width="1" fill="none"/>
 <text x="645" y="432.5" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">띠 18</text>
-<text x="636" y="460" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">테두리 2px 실선</text>
+<text x="636" y="460" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">테두리 3px 실선</text>
 <rect x="400" y="510" width="230" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
 <rect x="400" y="510" width="230" height="18" fill="#ddd4ef" stroke="#5b77ad" stroke-width="1"/>
 <text x="420" y="523" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="12" fill="#5f459f">p ← <tspan font-weight="600">partition</tspan>(a, lo)</text>

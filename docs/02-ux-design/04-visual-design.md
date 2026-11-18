@@ -6,7 +6,7 @@ tags:
   - design
   - ux
 status: 초안
-updated: 2026-11-10
+updated: 2026-11-18
 ---
 
 # 시각 디자인
@@ -16,11 +16,11 @@ updated: 2026-11-10
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]], [[01-requirements#^r-nfr|R-NFR-07]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
 > - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 맡습니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
-> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 테마 넷(밝은 · 어두운 · 고대비 · 흑백 인쇄)과 고대비 화면 색이 2026-11-03에 들어갔습니다(8장). 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습 가운데 이 문서에 명세만 있는 것은 받아들일 수 없는 입력(오류)뿐입니다. MVP 뒤의 기능 가운데 접기와 펴 보기의 모습은 2026-11-03에 코드에 들어왔습니다(7장). 프로토타입(66번째 버전)과 다른 곳은 11장에 있습니다.
+> - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 테마 넷(밝은 · 어두운 · 고대비 · 흑백 인쇄)과 고대비 화면 색이 2026-11-03에 들어갔습니다(8장). 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습은 모두 코드에 들어 있습니다. MVP 뒤의 기능 가운데 접기와 펴 보기의 모습은 2026-11-03에 코드에 들어왔습니다(7장). 명세와 지금 코드가 다른 곳은 11장에 있습니다.
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
-> - 그림은 모두 프로토타입에서 찍거나 스크립트로 그린 것이고, 언제든 다시 만들 수 있습니다: `journal/assets/2026-11-01-docs-shots.mjs`(화면, 프로토타입 65번째 버전에서 2026-11-01에 다시 찍음. 그 전은 `2026-10-16-visual-design-shots.mjs`로 60번째 버전에서), `2026-10-17-visual-anatomy.py`(해부도), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산)
+> - 그림은 화면에서 찍거나 스크립트로 그린 것입니다: `journal/assets/2026-11-18-visual-design-marks.test.ts`(7.2의 문서 레이어 그림, 앱의 렌더러로 그림), `2026-11-01-docs-shots.mjs`(그 밖의 화면, 프로토타입에서 찍어 글꼴과 세부가 MVP와 다를 수 있음), `2026-10-17-color-check.py`(대비 · 색각 · 명도 계산). 해부도는 SVG를 직접 고칩니다
 > - **용어.**
 > 	- **대비율**은 WCAG 2.2의 contrast ratio(상대 휘도의 비)입니다. 텍스트는 4.5:1(AA, 1.4.3), 뜻을 가진 선과 도형은 3:1(1.4.11)이 기준입니다.
 > 	- **테마**는 그림의 색 묶음입니다. 문서마다 선택하고 파일과 함께 갑니다. 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄의 넷이 있습니다. **화면 색**은 툴바 · 캔버스 배경 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
@@ -74,7 +74,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 그림 위의 모든 표시는 **문서 레이어**(파일에 저장됨)와 **편집 레이어**(화면에만 있음) 가운데 하나에 속합니다. 사용자는 화면을 보고 언제나 "이것이 파일에 들어가는가"를 알 수 있어야 합니다. 그래서 이렇게 약속합니다.
 
 > [!important] 레이어의 약속
-> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 레이어에 둘(펴진 접기 영역은 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500`, 펴 보인 호출 블록은 보라 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.500`, 둘 다 맨 위에 띠), 편집 레이어에 하나(선택한 것 · 인라인 에디터, 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`, 띠 없음)뿐이다. 그 밖의 문서 레이어의 색(1px 구조선의 회청, 키워드의 파랑 텍스트)은 두르는 표시가 아니므로 편집 레이어와 헷갈리지 않는다.
+> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 레이어에 둘(펴진 접기 영역은 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500`, 펴 보인 호출 블록은 보라 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.500`, 둘 다 맨 위에 띠), 편집 레이어에 하나(선택한 것 · 인라인 에디터 · 블록 위 드롭 표시, 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`, 띠 없음)뿐이다. 그 밖의 문서 레이어의 색(1px 구조선의 회청, 키워드의 파랑 텍스트)은 두르는 표시가 아니므로 편집 레이어와 헷갈리지 않는다.
 
 | 구분하는 것 | 펴진 접기 영역 (문서 레이어) | 선택 하이라이트 (편집 레이어) |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | 인쇄 | 인쇄됨 | 인쇄되지 않음. 그래서 흑백 인쇄 팔레트에서 둘이 같은 검정이 되어도 문제없음 |
 
 - 근거: 접기 영역과 선택 하이라이트가 같은 파랑이면 선택 하이라이트가 저장되는 테두리처럼 보입니다(52번째 버전까지 그랬음). 그래서 둘 가운데 하나는 파랑이 아니어야 하고, 접기 영역은 파랑으로 두고 선택 하이라이트를 주황으로 했습니다([[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-d]]). 주황은 블록 배경 위에서 3:1을 지키려고 시안의 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e8590c;border:1px solid #8888;vertical-align:-0.1em"></span> `#e8590c`보다 조금 진한 값입니다. 선택한 과정 → M19 접기 영역 색 시안 B · S1: https://claude.ai/artifact/R6G68CKoUa8aKsj8rhsRW9, 사본 `journal/assets/2026-10-17-fold-color-study.html`
-- 확인: 저장된 SVG에 편집 레이어의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`)이 한 번도 나오지 않고, 굵기 2px 이상의 선은 모두 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge`나 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge`의 색인가. 프로토타입 테스트가 확인합니다.
+- 확인: 저장된 SVG에 편집 레이어의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`)이 한 번도 나오지 않고, 조건 텍스트의 배경색 테두리(`size.text-halo`)를 뺀 굵기 2px 이상의 선은 모두 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge`나 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge`의 색인가.
 
 ### 원칙 4. 문서는 종이다
 
@@ -93,7 +93,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 - 종이의 그림자는 화면에만 그립니다(편집 화면의 문서 레이어 둘레, 저장 파일 · PNG에는 없음). 모서리는 반지름 4px로 둥글리고, 그림자는 두 겹입니다: 가까이 진한 것(`0 1px 3px`, 불투명도 12%)과 멀리 옅은 것(`0 6px 20px`, 6%), 색은 남색 바탕(`rgb(20, 30, 60)`). 밝은 화면 · 어두운 화면이 같습니다 → [[03-editor#1. 화면 구성]]
 
 > [!example] 밝은 화면 색과 어두운 화면 색
-> 메뉴 바 · 툴바 · 상태 표시줄은 화면 색을 따르고, 가운데의 종이는 그대로입니다. 프로토타입 66번째 버전의 화면입니다(배치는 [[05-screen-layout|화면 배치]]).
+> 메뉴 바 · 툴바 · 상태 표시줄은 화면 색을 따르고, 가운데의 종이는 그대로입니다. 프로토타입 66번째 버전에서 찍은 화면이라 세부가 MVP와 다를 수 있습니다(배치는 [[05-screen-layout|화면 배치]]).
 >
 > ![[visual-design-screen-light.png|640]]
 > ![[visual-design-screen-dark.png|640]]
@@ -137,8 +137,9 @@ flowchart LR
 - 테마의 종이 색 사각형(밝은 기본 테마에서는 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.paper`) 하나. 투명하게 두지 않습니다. 어두운 뷰어에서도 원칙 4가 지켜집니다.
 - 그림 둘레 여백 24px.
 - 쓰인 문자만 추린 번들 글꼴과 대체 글꼴 목록 → [[01-requirements#^r-fmt|R-FMT-07]]
-- 기호(`⋯` `←` `∅`)는 **도형(path)으로** 그립니다. 문자로 두면 글꼴에 그 기호가 없는 뷰어에서 깨집니다. 프로토타입은 아직 일부를 문자로 그립니다(11장). 펼침 삼각형(`▸` `▾`)은 편집 레이어에만 그리므로 저장되는 그림에 들어가지 않습니다 → [[ux-decisions#Q1 · Q2. 고치기를 시작하는 방법과 더블클릭|Q2]]
+- 기호(`⋯` `←` `∅`)는 **도형(path)으로** 그립니다. 문자로 두면 글꼴에 그 기호가 없는 뷰어에서 깨집니다. 지금 코드는 `←`를 문자로 그립니다(11장). 펼침 삼각형(`▸` `▾`)은 편집 레이어에만 그리므로 저장되는 그림에 들어가지 않습니다 → [[ux-decisions#Q1 · Q2. 고치기를 시작하는 방법과 더블클릭|Q2]]
 - 편집 레이어의 표시는 하나도 들어가지 않습니다.
+- 문서 설정의 "텍스트를 외곽선으로 저장"을 켜면 글꼴에 있는 글자를 도형(path)으로 저장합니다 → [[01-requirements#^r-fmt|R-FMT-10]]
 
 ## 3. 디자인 토큰
 
@@ -209,14 +210,14 @@ flowchart LR
 | --- | --- | --- | --- |
 | `ui.bg` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#eef1f6;border:1px solid #8888;vertical-align:-0.1em"></span> `#eef1f6` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#12151b;border:1px solid #8888;vertical-align:-0.1em"></span> `#12151b` | 종이 바깥의 배경 |
 | `ui.dots` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d3d9e4;border:1px solid #8888;vertical-align:-0.1em"></span> `#d3d9e4` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#262c37;border:1px solid #8888;vertical-align:-0.1em"></span> `#262c37` | 배경의 점 무늬 (18px 간격) |
-| `ui.panel` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1a1e26;border:1px solid #8888;vertical-align:-0.1em"></span> `#1a1e26` | 툴바, 사이드 패널, 메뉴 |
+| `ui.panel` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1a1e26;border:1px solid #8888;vertical-align:-0.1em"></span> `#1a1e26` | 메뉴 바, 툴바, 상태 표시줄, 메뉴, 모달, 키 힌트 |
 | `ui.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1c2230;border:1px solid #8888;vertical-align:-0.1em"></span> `#1c2230` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e5e8ee;border:1px solid #8888;vertical-align:-0.1em"></span> `#e5e8ee` | 화면 텍스트 |
 | `ui.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `#5a6476` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#9aa3b3;border:1px solid #8888;vertical-align:-0.1em"></span> `#9aa3b3` | 보조 텍스트 |
 | `ui.line` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d4dbe6;border:1px solid #8888;vertical-align:-0.1em"></span> `#d4dbe6` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2b313c;border:1px solid #8888;vertical-align:-0.1em"></span> `#2b313c` | 화면의 구분선 |
-| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8ba7ff;border:1px solid #8888;vertical-align:-0.1em"></span> `#8ba7ff` | 버튼의 포커스, 상태 표시줄의 모드, 캔버스 포커스 |
-| `ui.accent-soft` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e4eafb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e4eafb` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232c45;border:1px solid #8888;vertical-align:-0.1em"></span> `#232c45` | 버튼에 호버 |
-| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b35a10;border:1px solid #8888;vertical-align:-0.1em"></span> `#b35a10` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0a560;border:1px solid #8888;vertical-align:-0.1em"></span> `#f0a560` | 키 힌트의 왼쪽 줄 |
-| `ui.shadow` | `rgba(20, 30, 60, 0.18)` | `rgba(0, 0, 0, 0.5)` | 메뉴 · 키 힌트의 그림자 |
+| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `#2c55c9` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8ba7ff;border:1px solid #8888;vertical-align:-0.1em"></span> `#8ba7ff` | 포커스, 상태 표시줄의 모드, 캔버스 포커스, 기본 버튼, 링크 |
+| `ui.accent-soft` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e4eafb;border:1px solid #8888;vertical-align:-0.1em"></span> `#e4eafb` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#232c45;border:1px solid #8888;vertical-align:-0.1em"></span> `#232c45` | 호버와 고른 항목의 배경 |
+| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b35a10;border:1px solid #8888;vertical-align:-0.1em"></span> `#b35a10` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f0a560;border:1px solid #8888;vertical-align:-0.1em"></span> `#f0a560` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
+| `ui.shadow` | `rgba(20, 30, 60, 0.18)` | `rgba(0, 0, 0, 0.5)` | 메뉴 · 키 힌트 · 모달의 그림자 |
 | `ui.backdrop` | `rgba(20, 26, 34, 0.32)` | `rgba(0, 0, 0, 0.5)` | 모달 뒤를 덮는 막 |
 
 화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.23 / 8.93 (배경 위. `ui.warn`은 3px 줄로만 써서 기준은 3:1).
@@ -228,8 +229,8 @@ flowchart LR
 | `ui.text` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#000000;border:1px solid #8888;vertical-align:-0.1em"></span> `#000000` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff` | 화면 텍스트 |
 | `ui.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3d4554;border:1px solid #8888;vertical-align:-0.1em"></span> `#3d4554` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#c5ccd8;border:1px solid #8888;vertical-align:-0.1em"></span> `#c5ccd8` | 보조 텍스트 |
 | `ui.line` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#6b7486;border:1px solid #8888;vertical-align:-0.1em"></span> `#6b7486` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8790a0;border:1px solid #8888;vertical-align:-0.1em"></span> `#8790a0` | 화면의 구분선 (패널 위 3:1 이상) |
-| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 버튼의 포커스, 상태 표시줄의 모드, 캔버스 포커스 |
-| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8f4508;border:1px solid #8888;vertical-align:-0.1em"></span> `#8f4508` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄 |
+| `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 포커스, 상태 표시줄의 모드, 캔버스 포커스, 기본 버튼, 링크 |
+| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8f4508;border:1px solid #8888;vertical-align:-0.1em"></span> `#8f4508` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
 
 고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.line` 4.70 / 5.19, `ui.warn` 6.14 / 10.54 (배경 위). 텍스트는 모두 7:1을 넘습니다.
 
@@ -313,36 +314,35 @@ flowchart LR
 
 ### 4.2 텍스트의 역할
 
-그림 안의 텍스트는 모두 아래 표의 한 줄에 해당합니다. "블록 글꼴"은 4.3절에서 문서가 선택한 글꼴(고정폭 또는 비례폭), "비례폭"은 언제나 비례폭입니다.
+그림 안의 텍스트는 모두 아래 표의 한 줄에 해당합니다. 글꼴은 모두 블록 글꼴(4.3절) 하나입니다.
 
 | 역할 | 단계 | 글꼴 | 굵기 · 모양 | 색 |
 | --- | --- | --- | --- | --- |
 | 블록 텍스트 | 본문 | 블록 글꼴 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary`, 구문 강조는 `syntax.*` |
 | 호출 블록 | 본문 | 블록 글꼴 | Method 이름만 굵게(600) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
 | 접힌 접기 영역의 이름 | 본문 | 블록 글꼴 | 보통. 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
-| 분기 라벨 ("참" · "거짓", Case 분기) | 보조 | 비례폭 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` |
-| 접기 영역의 이름 띠 | 보조 | 비례폭 | 굵게(600). 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` |
+| 분기 라벨 ("참" · "거짓", Case 분기) | 보조 | 블록 글꼴 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4b5567;border:1px solid #8888;vertical-align:-0.1em"></span> `text.secondary` |
+| 접기 영역의 이름 띠 | 보조 | 블록 글꼴 | 굵게(600). 이름이 없으면 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` |
 | 펴 보기의 띠 | 보조 | 블록 글꼴 | 호출 블록처럼 Method 이름만 굵게 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5f459f;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.name` |
-| 접힌 제어 블록 분기 ("⋯ 블록 n개") | 보조 | 비례폭 | 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
+| 접힌 제어 블록 분기 ("⋯ 블록 n개") | 보조 | 블록 글꼴 | 기울임 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
 | 빈 분기의 `∅` | 본문 | 도형 (글자 크기에 맞춤) | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
+| 헤더 모양 "모자 · 아치"의 이름 | 본문 | 블록 글꼴 | 보통, 구문 강조 없음 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
 | 헤더 모양 "제목처럼"의 이름 | 본문 | 블록 글꼴 | 굵게(600) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` |
-| 헤더 모양 "제목처럼"의 라벨 (`Event` · `Method`) | 보조 | 비례폭 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
+| 헤더 모양 "제목처럼"의 라벨 (`Event` · `Method`) | 보조 | 블록 글꼴 | 보통 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` |
 
 - 한글은 획이 많아 같은 크기의 영문보다 작게 읽힙니다. 그래서 그림 안의 가장 작은 텍스트를 **12px(인쇄 9pt)**로 둡니다. 52번째 버전까지 있던 11px(인쇄 8.25pt)은 없앴습니다.
-- 굵기는 보통(400)과 굵게(600)만 씁니다. 굵게는 이름(호출 블록의 Method 이름, 접기 영역의 이름, "제목처럼" 헤더의 이름)에만 씁니다. 이름이 없으면 기울임으로 "아직 이름이 없다"를 보입니다.
+- 굵기는 보통(400)과 굵게(600)만 씁니다. 굵게는 이름(호출 블록의 Method 이름, 펴진 접기 영역의 이름 띠, "제목처럼" 헤더의 이름)에만 씁니다. 이름이 없으면 기울임으로 "아직 이름이 없다"를 보입니다.
 
 ### 4.3 글꼴
 
 | 자리 | 글꼴 | 정하는 것 |
 | --- | --- | --- |
-| 블록 글꼴 (블록 텍스트, 호출 블록, 접힌 접기 영역의 이름, 펴 보기의 띠) | 고정폭 (기본 블록 글꼴) | 고정. 블록 텍스트의 언어와 상관없음 → [[0042-text-kind-keeps-block-font\|ADR-0042]] |
-| 비례폭 (분기 라벨, 접기 영역의 이름 띠, "⋯ 블록 n개") | 비례폭 | 고정 |
+| 그림의 모든 텍스트 | 고정폭 (기본 블록 글꼴) | 고정. 블록 텍스트의 언어와 상관없음 → [[0042-text-kind-keeps-block-font\|ADR-0042]] |
 | 화면 | 배포 대상의 기본 글꼴 | 배포 대상 (Obsidian이면 Obsidian의 글꼴) |
 
 - **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 싣고 한자는 싣지 않습니다 → [[0034-default-block-font|ADR-0034]]
 - 번들한 글꼴 파일 안의 이름(패밀리 이름)은 `AriadneNSD Mono`입니다. "D2Coding"은 OFL의 예약 글꼴 이름(Reserved Font Name)이라, 문자를 추려 고친 글꼴에는 쓸 수 없습니다. 고정폭 글꼴의 관례(JetBrains Mono 등)를 따른 이름이고, 비례폭 글꼴을 번들하면 `AriadneNSD Sans`로 합니다 → [[dr-0019-bundled-font-name|DR-0019]]. 그림의 `font-family`는 이 이름 다음에 폴백 글꼴 목록을 적습니다 → [[01-file-format#2. 문서 구조]]
-- 글꼴은 하나뿐입니다. 블록 텍스트의 언어가 일반 텍스트여도, 위 표의 "비례폭" 자리(분기 라벨 등)도 D2Coding으로 그립니다. 언어를 바꾸면 색만 바뀌고 블록의 폭은 그대로라, MVP로 저장한 파일(일반 텍스트)도 그대로 열립니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
-- 프로토타입은 IBM Plex Mono · IBM Plex Sans KR을 씁니다.
+- 글꼴은 하나뿐입니다. 언어를 바꾸면 색만 바뀌고 블록의 폭은 그대로라, MVP로 저장한 파일(일반 텍스트)도 그대로 열립니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 블록 텍스트의 공백은 그대로 둡니다(`white-space: pre`). 코드의 들여쓰기가 그림에서도 보여야 합니다.
 - 폭은 번들한 글꼴의 폭 표로 계산합니다. 커닝을 끄고, 정수 px로 올립니다 → [[0026-bundled-font-metrics|ADR-0026]]
 
@@ -387,19 +387,20 @@ flowchart LR
 
 - 블록은 서로 맞붙습니다(NS 차트의 표기). 블록 사이에 틈을 두지 않습니다.
 - 텍스트의 기준선은 그 줄(`space.line` 18px)의 아래 끝에서 5px 위입니다. If · Case의 조건 텍스트는 블록 텍스트보다 2px 더 위에 둡니다. 분기 라벨의 기준선은 조건 칸의 아래 끝에서 5px 위입니다(프로토타입의 그림과 같음).
-- 빈 분기의 `∅`는 지름 7px의 원과 빗금이고 선은 1.1px입니다. 빗금은 원 밖으로 양쪽 1px씩 나갑니다 → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
-- If · Case의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 조건 칸의 폭과 높이는 늘리지 않으므로(폭은 텍스트 + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **조건 칸의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
+- 빈 분기의 `∅`는 지름 7px의 원과 빗금이고 선은 1.1px입니다. 빗금의 양 끝은 원을 둘러싼 사각형보다 가로세로로 1px씩 더 나갑니다 → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
+- If · Case의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 조건 칸의 폭과 높이는 늘리지 않으므로(최소 폭은 텍스트 + 양옆 여백 20px + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **조건 칸의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
 - 펴진 접기 영역의 안쪽 블록은 테두리에 붙습니다. 테두리 안에 다른 테두리(겹친 접기 영역, 펴 보인 호출 블록)가 들어가면 `size.nest-gap`만큼 띄웁니다. 겹치거나 이어져도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]]
+- 토큰이 없는 작은 값: 접힌 줄의 세 점이 차지하는 자리 16px, 펼침 삼각형의 클릭 영역의 폭 18px, 한 줄에서 맞붙은 두 테두리 사이에 더하는 높이 2px(경계선 1px + `size.nest-gap`). 헤더 모양 "제목처럼"의 라벨은 기준선이 라벨 줄의 아래 끝에서 4px 위입니다.
 
 ## 6. 선
 
 | 두드러짐 | 무엇 | 레이어 | 선 | 인쇄 |
 | --- | --- | --- | --- | --- |
-| 1 (가장 강함) | 인라인 에디터 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` + 흰 배경 + 커서 | — |
+| 1 (가장 강함) | 인라인 에디터 | 편집 | 2px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` + 종이 색 배경(테마의 `paper`) + 커서 | — |
 | 1 | 선택한 블록 · 범위 | 편집 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select`. 배경은 칠하지 않음 | — |
 | 2 | 펴진 접기 영역 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 2.25pt |
 | 2 | 펴 보인 호출 블록 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` + 띠. 가운데가 블록의 바깥 선에서 1px 안 | 2.25pt |
-| 3 | 구조: 블록의 경계, 빗금, "제목처럼" 헤더의 아랫줄 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
+| 3 | 구조: 블록의 경계, 빗금, Case의 분기 세로선, 호출 블록의 세로 이중선, 이름 띠 · 펴 보기 띠의 아랫줄, "제목처럼" 헤더의 아랫줄 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
 | — | 호버 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음) | — |
 
 - 선택 하이라이트에 배경을 칠하지 않는 이유: 옅은 파랑을 덮으면 블록 배경의 색조가 흐려지고(원칙 2), 구조선의 대비가 2:1 아래로 떨어집니다(원칙 1).
@@ -412,7 +413,7 @@ flowchart LR
 | 상태 | 모습 | 레이어 | 토큰 | MVP |
 | --- | --- | --- | --- | --- |
 | 기본 | 2 ~ 6장 그대로 | 문서 | | 있음 |
-| 펴진 접기 영역 | 테두리 + 이름 띠(이름, 굵게). 이름 띠를 끄면 접기 영역이 없는 것과 똑같음. 편집할 때는 이름 앞에 펼침 삼각형 `▾`(편집 레이어, 저장되지 않음) | 문서 | `fold.*` | 있음 (2026-11-03) |
+| 펴진 접기 영역 | 테두리 + 이름 띠(이름, 굵게) + 띠 아래 1px 구조선(`line.structure`). 이름 띠를 끄면 접기 영역이 없는 것과 똑같음. 편집할 때는 이름 앞에 펼침 삼각형 `▾`(편집 레이어, 저장되지 않음) | 문서 | `fold.*` | 있음 (2026-11-03) |
 | 접힌 접기 영역 | 한 줄 칸 + 이름. 편집할 때는 이름 앞에 펼침 삼각형 `▸`(편집 레이어, 저장되지 않음) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 있음 (2026-11-03) |
 | 접힌 제어 블록의 분기 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 (2026-11-03) |
 | 펴 보인 호출 블록 | 3px 테두리 + 띠(호출 블록의 텍스트. 편집할 때는 앞에 펼침 삼각형 `▾`, 편집 레이어). 펴진 접기 영역과 모양이 같고 색이 보라다. 안의 텍스트는 다른 블록과 같다. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 있음 (2026-11-03) |
@@ -423,16 +424,16 @@ flowchart LR
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 왼쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
+| 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 오른쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 늘 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
-| 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄 | 편집 | | 있음 |
-| 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝 4px 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
-| 블록 위에 드롭 (감싸기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리 + 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
+| 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄(12px, `ui.panel` 배경, 1px `ui.line` 테두리, 반지름 4px) | 편집 | | 있음 |
+| 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝에 줄의 위아래로 4px씩(길이 8px, 굵기 2px) 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
+| 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
 | 빈 분기 | If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
-| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름. 글자가 다이어그램의 왼쪽 선에 붙어 있으므로 선택 테두리는 헤더 바깥으로 4px 넓혀 글자를 덮지 않음 | 문서 | `text.*`, `line.structure` | 있음 |
-| 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 선택 바로 아래(선택의 왼쪽 아래 모서리에서 4px 아래)에 키 힌트. 맨 위에 첫 키와 묶음 이름(`ui.muted`), 그 아래에 한 줄에 하나씩 이어 누를 키(고정폭 굵게 `ui.accent`)와 명령 이름(`ui.text`). 배경 `ui.panel`, 테두리 1px `ui.line`, 왼쪽 띠 3px `ui.warn`, 그림자. 아래에 자리가 모자라면 선택 위로 뒤집고, 창 밖으로 나가지 않게 밀어 넣음 → [[03-keymap]], [[ux-decisions#K3. 두 키 조합의 안내 자리 (다시)\|K3]] | 편집 (UI) | `ui.*` | 있음 |
+| 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름. 글자가 다이어그램의 왼쪽 선에 붙어 있으므로 선택 테두리는 왼쪽 · 위 · 오른쪽으로 4px 넓혀(아래는 그대로) 글자를 덮지 않음 | 문서 | `text.*`, `line.structure` | 있음 |
+| 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 선택 바로 아래(선택의 왼쪽 아래 모서리에서 4px 아래)에 키 힌트. 맨 위에 첫 키와 묶음 이름(`ui.muted`), 그 아래에 한 줄에 하나씩 이어 누를 키(화면 글꼴 굵게 `ui.accent`)와 명령 이름(`ui.text`). 배경 `ui.panel`, 테두리 1px `ui.line`, 왼쪽 띠 3px `ui.warn`, 그림자. 아래에 자리가 모자라면 선택 위로 뒤집고, 창 밖으로 나가지 않게 밀어 넣음 → [[03-keymap]], [[ux-decisions#K3. 두 키 조합의 안내 자리 (다시)\|K3]] | 편집 (UI) | `ui.*` | 있음 |
 
 **겹칠 때의 규칙:**
 
@@ -479,7 +480,7 @@ flowchart LR
 - 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 모르는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 그대로 두어 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
 - **종류**(밝음 · 어두움)는 종이의 밝기입니다. 편집 레이어(선택 · 호버 · 드롭 위치 · 인라인 에디터)는 화면 색이 아니라 이 종류를 따릅니다(3.4절) → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
 - **흑백 인쇄**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나입니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 펴진 접기 영역과 펴 보인 호출 블록은 모양이 같아지고 띠의 글자(영역 이름과 호출문)로 구별합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]. 값은 9.3절에 있습니다.
-- **화면 색**(툴바, 사이드 패널, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번). 반대로 밝은 화면에 어두운 테마의 종이도 놓입니다.
+- **화면 색**(메뉴 바, 툴바, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번). 반대로 밝은 화면에 어두운 테마의 종이도 놓입니다.
 - **고대비**([[01-requirements#^r-nfr|R-NFR-07]])는 두 곳에 나뉩니다. 화면은 운영체제가 더 높은 대비를 요청할 때(`prefers-contrast: more`) 고대비 화면 색으로 바뀝니다(3.4절). 그림은 문서의 테마로 고대비를 고릅니다(3.6절). 운영체제의 설정이 문서의 테마를 바꾸지는 않습니다. 바꾸면 저장되는 그림과 다른 사람이 보는 그림이 달라지기 때문입니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
 - 테마가 바꿀 수 없는 것: 5장의 치수, 6장의 선 굵기, 블록의 모양, 글꼴(원칙 6).
 
@@ -506,7 +507,7 @@ flowchart LR
 | 편집 화면 100% | 화면의 1 CSS px | 9.1의 규칙으로 곧음 |
 | 편집 화면 40 ~ 300% | 배율만큼 굵어짐 | 벡터로 다시 그리므로 흐려지지 않음. 선 굵기도 함께 커짐(그림의 비례를 지킴) |
 | 고해상도 화면 (2배) | 물리 2픽셀 | 반 픽셀 문제가 사라짐 |
-| Obsidian 노트에 넣은 SVG | 노트 폭에 맞춰 줄어들 수 있음 | 50%까지 줄면 1px 선이 옅어짐. 선은 0.5px까지, 텍스트는 6.5px까지 내려감 |
+| Obsidian 노트에 넣은 SVG | 노트 폭에 맞춰 줄어들 수 있음 | 50%까지 줄면 1px 선이 옅어짐. 선은 0.5px까지, 본문은 6.5px, 보조 텍스트는 6px까지 내려감 |
 | PDF와 인쇄 | 0.75pt (96dpi 기준) | 가장 가는 선 0.75pt, 가장 작은 텍스트 9pt |
 
 ### 9.3 흑백 인쇄 팔레트의 값
@@ -542,7 +543,7 @@ flowchart LR
 | --- | --- | --- |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.31 | 쓰이지 않음 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.16 | 쓰이지 않음 |
-| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.19 | 쓰이지 않음 |
+| <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.19 | 글자로는 쓰이지 않음. 같은 색의 펼침 삼각형(`edit.toggle`)은 이 띠 위에 그리며, 도형이라 기준은 3:1 |
 
 ### 10.2 색각 이상과 흑백
 
@@ -560,19 +561,20 @@ flowchart LR
 
 ### 10.3 키보드와 포커스
 
-- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스 안쪽 테두리가 1초만 보입니다(포커스가 올 때, 빈 곳을 클릭할 때, 아무 일도 하지 않은 키를 누를 때). 환경 설정의 "캔버스 포커스 테두리 늘 보이기"를 켜면 늘 보입니다. 늘 보이는 방식이 있어 WCAG 2.4.7(포커스가 보이는 방식이 하나는 있어야 함)을 채웁니다. 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 배경(`ui.bg`) 위에 그립니다. 종이 위에서는 어두운 테마의 `ui.accent`가 2.3:1밖에 되지 않습니다 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다|CF2]]
+- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스 안쪽 테두리가 1초만 보입니다(포커스가 올 때, 빈 곳을 클릭할 때, 아무 일도 하지 않은 키를 누를 때). 환경 설정의 "캔버스 포커스 테두리 늘 보이기"를 켜면 늘 보입니다. 늘 보이는 방식이 있어 WCAG 2.4.7(포커스가 보이는 방식이 하나는 있어야 함)을 채웁니다. 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 배경(`ui.bg`) 위에 그립니다. 밝은 종이 위에서는 어두운 화면 색의 `ui.accent`가 2.3:1밖에 되지 않습니다 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다|CF2]]
 - 편집 레이어의 모든 표시는 색과 함께 모양(테두리, 줄, 커서, 상태 표시줄의 텍스트)로도 알립니다.
 
-## 11. 지금 프로토타입과 다른 곳
+## 11. 명세와 지금 코드가 다른 곳
 
-명세가 앞서 있고 프로토타입(66번째 버전)이 따라오지 못한 곳입니다. 프로토타입은 버리는 코드이므로, 개발에서는 이 문서를 따릅니다. 66번째 버전에는 웹 화면(메뉴 바, 블록 아이콘이 있는 툴바, 커맨드 팔레트, 문서 설정 · 환경 설정 모달, 단축키 모달)이 들어 있습니다. 화면의 아이콘과 색은 아직 정하지 않았습니다([[05-screen-layout|화면 배치]]).
+이 문서의 명세와 지금 코드의 동작이 다른 곳입니다. 어느 쪽에 맞출지는 정하지 않았습니다.
 
-- `⋯` `←` 기호가 문자로 들어갑니다(2장: 도형으로 그릴 것).
-- 호버, 드래그 앤 드롭(드롭 위치, 블록 위에 드롭, 드롭할 수 없는 곳), 받아들일 수 없는 입력의 모습이 없습니다(7장). 툴바의 블록 아이콘은 누르기 · `Shift`+클릭 · `Ctrl`+클릭만 되고 드래그할 수 없습니다.
-- 펴 보기의 흰 줄(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ffffff;border:1px solid #8888;vertical-align:-0.1em"></span> `#ffffff`)과 배경이 토큰이 아니라 코드에 적힌 값입니다.
-- 글꼴은 IBM Plex를 웹 글꼴로 불러오며, 번들하지 않습니다. 명세의 기본 블록 글꼴은 D2Coding입니다.
-- 테마를 선택할 수 없습니다. 늘 밝은 기본 테마입니다.
-- 프로토타입 코드에는 토큰의 이름이 없고 짧은 이름(`COL.edge` 등)을 씁니다. MVP 코드는 토큰의 이름을 그대로 씁니다(`theme.ts`, `overlay.ts`).
+- 호출 블록의 결과 기호 `←`를 문자로 그립니다(2장의 명세는 도형).
+- 인라인 에디터가 열려도 그 블록의 선택 하이라이트를 그립니다(7.1절의 명세는 그리지 않음).
+- 텍스트를 외곽선으로 저장한 그림과 PDF에서는 기울임이 빠집니다(4.2절의 명세는 이름 없는 접기 영역과 "⋯ 블록 n개"를 기울임) → [[defects#BUG-15]]
+- 상태 표시줄의 알림 텍스트는 색이 바뀌지 않습니다(9.4절의 명세는 1.6초 동안 `ui.accent`). `info` 알림은 6초 뒤 사라지고, `warn` 알림은 닫거나 다음 알림이 올 때까지 남습니다.
+- 키 힌트의 가로 자리는 선택의 왼쪽 끝에서 최대 24px 안입니다(7.1절의 명세는 왼쪽 아래 모서리).
+- 다른 문서의 Method를 호출하는 호출 블록은 파일을 찾아보지 않아 늘 실선으로 그립니다(1장과 7.1절의 명세는 다른 문서를 찾을 수 없으면 이중선이 점선).
+- `ui.warn`을 글자로도 씁니다. 밝은 화면의 배경 위에서 4.23:1이라 텍스트의 기준(4.5:1)에 닿지 않습니다(3.4절의 명세는 3px 줄로만 씀).
 
 ## 12. 미결정 사항
 
