@@ -149,6 +149,49 @@ updated: 2026-11-10
 
 > [!info] 미완성: 로컬 백업의 크기 한도(브라우저가 저장소를 비울 때)와, 보관할 문서 수의 한도.
 
+### 2.1 브라우저 저장소의 구조
+
+**IndexedDB.** 데이터베이스는 `ariadne-nsd-web`(버전 2)이고 저장소는 셋이며, 모두 `keyPath`가 `key`(문서 키, 1장)입니다.
+
+| 저장소 | 레코드 | 쓰는 곳 |
+| --- | --- | --- |
+| `recent` | `key`, `name`, `usedAt`(밀리초), `source`(`{ kind: 'handle', handle }` · `{ kind: 'copy', text }` · `{ kind: 'browser' }`) | 최근 파일(1.1) |
+| `backups` | `key`, `name`, `snapshot`(`editor.snapshot()`의 모델 JSON), `savedAt`(밀리초), `handle?`(Chromium: 복원한 문서를 원래 파일에 저장하려고 보유) | 로컬 백업(2장) |
+| `documents` | `key`, `name`(확장자 없이), `text`(파일과 같은 SVG 문자열), `savedAt`(밀리초), `size`(UTF-8 바이트) | 브라우저 문서(1.3) |
+
+**localStorage.** 키는 접두사 `ariadne-nsd.setting.` 뒤에 설정의 id를 쓰고, 값은 JSON입니다. 사용자 설정([[03-editor#6.6 설정 목록]])과 웹 셸의 값 `web.downloadNoticeShown`(내려받기 안내를 보였는가), `web.placeSide`(마지막에 고른 쪽), `web.persistAsked`(영구 저장을 요청했는가), `examples.welcomed`(환영 모달에 답했는가), `editor.headStyle`(마지막에 고른 헤더 모양)을 둡니다. 다른 탭이 값을 바꾸면 `storage` 이벤트로 받아 같은 값을 보입니다. 깨진 값은 로그에 남기고 무시합니다. 저장소를 쓸 수 없으면(사이트 데이터 차단) 그 페이지의 메모리에서만 동작합니다.
+
+**두 탭 잠금.** 같은 문서를 두 탭에서 편집하지 않게 `BroadcastChannel`(`ariadne-nsd-documents`)로 통신합니다(`shell/tab-lock.ts`). 메시지는 셋이고 모두 문서 키와 보낸 탭의 id를 담습니다.
+
+| 메시지 | 뜻 |
+| --- | --- |
+| `who` | 이 문서를 누가 편집하는가 |
+| `mine` | 내가 편집한다(소유한 탭의 응답) |
+| `released` | 놓았다 |
+
+```mermaid
+sequenceDiagram
+    participant A as 먼저 연 탭
+    participant B as 나중에 연 탭
+    B->>+A: who(key)
+    A-->>-B: mine(key)
+    Note over B: 150ms 안에 mine을 받음: 읽기 전용으로 대기
+    A->>+B: released(key)
+    B->>+A: who(key)
+    Note over A: 소유하지 않으므로 응답 없음
+    deactivate A
+    Note over B: 150ms 동안 mine이 없음: 편집 가능으로 전환
+    deactivate B
+```
+
+- 문서를 열 때 `claim`이 `who`를 보내고 150ms 기다립니다. 그동안 `mine`이 오지 않으면 소유합니다. 오면 읽기 전용으로 열고 기다립니다.
+- 기다리는 탭은 `released`를 받으면 다시 물어 확인한 뒤에 소유합니다. 여러 탭이 기다려도 한 탭만 소유하게 하려는 것입니다.
+- 다른 문서로 바꾸거나 탭을 닫으면 `released`를 보냅니다. "다른 이름으로 저장"으로 키가 바뀌면 묻지 않고 소유를 옮깁니다(`rename`).
+- 페이지가 뒤로 · 앞으로 캐시에 들어가면(`pagehide`의 `persisted`) 잠금을 놓지 않습니다. 돌아왔을 때 그대로 이어 편집하기 위해서입니다.
+- `BroadcastChannel`이 없는 브라우저에서는 항상 소유합니다.
+
+**시작할 때의 복원.** 공유 링크로 열지 않았으면 셸이 로컬 백업 가운데 `savedAt`이 가장 큰 것 하나를 복원할지 묻습니다. 버리면 그 백업을 지웁니다. 복원하면 그 문서의 원래 위치를 차례로 찾습니다: 백업의 파일 핸들, 같은 키의 브라우저 문서, 최근 파일의 브라우저 사본, 없으면 원래 위치가 없는 문서입니다.
+
 ## 3. 공유 URL과 보기 모드
 
 파일 › 공유 링크 복사([[01-requirements#^r-web|R-WEB-05]])는 다이어그램 전체를 링크 하나에 담아 클립보드에 복사합니다. 링크를 연 사람은 보기 모드([[01-requirements#^r-web|R-WEB-06]])로 보고, "편집하기"를 눌러 자기 새 문서로 고칩니다. 서버는 링크를 보지 않습니다. 형식과 그렇게 정한 이유 → [[0043-share-link-in-fragment|ADR-0043]], 조작의 결정 → [[ux-decisions#2026-11-03 공유 URL · 보기 모드 (밤사이 에이전트가 만듦, 메인테이너가 추천안을 받아들임)|SH1 ~ SH6]]
@@ -276,6 +319,30 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 - **결과:** 맨 위에 전체 판정(모든 명령의 p95가 100ms 이하이면 합격), 명령마다 중앙값 · p95(가장 가까운 순위) · 최댓값 · 판정의 표, 명령마다 구간별 p95의 표(제목 아래에 C&C 뷰의 커넥터, 구간마다 제 p95라서 한 줄을 더해도 명령의 p95가 되지 않음), 앱 버전, 날짜, 문서와 횟수, 브라우저(`userAgent`), 기기(`navigator.hardwareConcurrency`, 있으면 `navigator.deviceMemory`, 화면 크기와 픽셀 비율)입니다. "결과 복사"는 같은 것을 마크다운(목록과 표)으로 클립보드에 넣습니다. 클립보드를 쓸 수 없으면 텍스트 상자에 보여 손으로 복사하게 합니다.
 - **아무것도 쓰지 않음:** 웹 셸을 만들지 않으므로 로컬 백업 · 자동 저장 · 최근 파일 · 브라우저 문서 · 탭 사이의 알림이 없고, IndexedDB를 열지도 않습니다. 설정은 `localStorage`에서 읽기만 하고 바꾼 것은 메모리에 둡니다. 문서의 `DocumentStore`는 저장을 거절하고(`denied`), 저장 글꼴을 받지 않으며, 클립보드는 메모리 안의 것이라 사용자의 클립보드를 건드리지 않습니다. 측정한 문서는 끝나면 버리고 빈 새 문서를 엽니다. 이것은 단위 테스트와 E2E(점검 전후로 `localStorage`와 IndexedDB 전체가 같은지)가 지킵니다.
 - 주소의 `rounds=`(1 ~ 100)는 위치마다의 측정 횟수를, `blocks=`(4 ~ 2000)는 문서의 블록 수를 바꿉니다. 브라우저 테스트가 짧고 가볍게 실행하려고 씁니다(AT-05의 측정은 둘 다 없이).
+
+## 10. 모듈과 시작 순서
+
+`src/apps/web/src`의 구성입니다.
+
+| 위치 | 담당 |
+| --- | --- |
+| `main.tsx` | 시작 순서. 설정 · 데이터베이스 · 편집기 · 셸을 만들어 서로 연결한다 |
+| `app.tsx` | 최상위 React 컴포넌트. `EditorApp`과 파일을 끌어 올 때의 안내를 렌더링한다 |
+| `editor-contract.ts` | 셸이 사용하는 `editor`의 좁은 계약. 셸의 모듈은 이 타입만 읽고, `main.tsx`가 실제 `editor`와 연결한다 |
+| `shell/` | 웹 셸: 명령과 문서 전환(`web-shell.ts`), 열기 · 저장 창(`places.ts`), 두 탭 잠금(`tab-lock.ts`), 페이지 이벤트(`page-events.ts`), 화면 밝기(`appearance.ts`), 셸의 문구(`messages.ts`) |
+| `storage/` | 브라우저 저장소: IndexedDB(`browser-db.ts`), 최근 파일 · 브라우저 문서의 규칙(`recent-files.ts` · `browser-documents.ts`), 설정(`settings-store.ts`) |
+| `files/` | 파일과 내보내기: `DocumentStore` 구현(`web-document-store.ts`), File System Access와 내려받기(`file-system-access.ts` · `file-fallback.ts`), PNG · PDF, 공유 링크, zip |
+| `print/` · `examples/` · `fonts/` · `perf/` | 인쇄 전용 보기(1.6), 예제와 썸네일, 글꼴의 로드, 점검 모드(9장) |
+
+시작 순서입니다. 단계마다 이름을 남겨, 시작하지 못하면 어느 단계에서 멈췄는지 시작 화면에 표시합니다(7장).
+
+1. 설정: `SettingsStore`를 만들고 화면 언어를 정합니다. `?perf`면 점검 모드로 가고 여기서 끝납니다.
+2. 데이터베이스: IndexedDB를 엽니다(2장의 3초 제한).
+3. 편집기와 셸: 공유 링크(URL의 프래그먼트)를 읽고, `editor`와 웹 셸을 만듭니다.
+4. 렌더링: React 화면을 렌더링합니다.
+5. 셸 시작(`shell.start`): 셸의 명령을 등록하고, 최근 파일을 읽고, 탭 잠금을 얻은 뒤, 공유 링크를 열거나 로컬 백업의 복원을 묻습니다(2.1).
+6. 글꼴: 블록 글꼴을 기다립니다.
+7. 준비 완료: `<html data-ready="true">`로 표시합니다.
 
 ## 미결정 사항
 

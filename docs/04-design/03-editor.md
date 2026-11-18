@@ -125,6 +125,52 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 | 새 Method로 빼기 | 새 Method의 헤더(이름 칸을 엶). 이름 칸을 닫으면 그 위치에 남은 호출 블록(`touched`의 둘째) → [[ux-decisions#XM2. 빼고 난 뒤의 선택과 화면\|XM2]] |
 | 실행 취소 · 다시 하기 | 선택한 것이 남아 있으면 그대로, 없으면 `null` |
 
+### 2.4 인라인 에디터의 상태
+
+`EditorState.editing`은 인라인 에디터가 열려 있는 동안의 상태입니다(`state/editor-state.ts`).
+
+```ts
+type Editing = {
+  field: EditField;                 // 어느 칸을 편집하는가
+  initial: string;                  // 칸을 연 때의 텍스트. 닫을 때 같으면 명령을 실행하지 않는다
+  text: string;                     // 칸이 시작하는 텍스트: initial, 또는 비우고 새로 쓰기(cc)의 ''
+  caret: Caret;
+  call?: { args: string; result: string; name?: string };  // 호출 블록의 칸들에 지금까지 입력한 것. 닫을 때 editCall 한 번으로 기록
+  isRejected?: boolean;             // 이름이 중복되어 다시 연 칸. Esc는 편집 전의 이름으로 되돌림
+  extracted?: Extracted;            // 새 Method로 빼기가 연 이름 칸. 이름을 빼기의 undo 단계에 합침
+  joinsLast?: true;                 // 만든 직후의 접기 영역 이름. 만들기의 undo 단계에 합침
+};
+type EditField =
+  | { kind: 'block'; block: Id }                     // 처리 블록의 텍스트, 제어 블록의 조건
+  | { kind: 'branchLabel'; branch: Id }              // If · Case의 분기 라벨
+  | { kind: 'missingDefault'; block: Id }            // 빈 default 칸. 입력하면 default 분기가 생김
+  | { kind: 'head'; diagram: Id }                    // 다이어그램의 헤더
+  | { kind: 'call'; block: Id; part: CallPart }      // 호출 블록의 칸 하나
+  | { kind: 'fold'; fold: Id; path?: Path };         // 접기 영역의 이름. path는 펴 보인 곳의 접기 영역
+type CallPart = 'args' | 'result' | 'name';          // 이름 칸은 이름을 적는 호출 블록에만
+type Caret = 'selectAll' | 'start' | 'end';          // 커서의 시작 위치
+type Extracted = { call: Id; count: number };        // 그 위치에 남은 호출 블록, 뺀 블록의 수
+```
+
+### 2.5 세션
+
+`EditorSession`(`session/session.ts`)이 편집의 중심입니다. `EditorState`를 하나 보유하고, 문서를 바꾸는 모든 경로가 이 클래스를 지납니다. 명령의 실행은 명령 목록이 담당하고(3장), 세션은 명령이 호출하는 기능을 제공합니다.
+
+| 메서드 | 하는 일 |
+| --- | --- |
+| `commit(result, after)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(Case를 If로 바꿀지 묻기, 조건을 확인하라는 알림)도 처리합니다 |
+| `apply(content, after)` | 내용을 undo 한 단계로 바꿉니다. 내용이 바뀌었으면 먼저 불변식을 검사하고(3장), 다음 선택 · 뷰 상태와 인라인 에디터(`After`)를 적용합니다 |
+| `setView(view, selection?)` | 뷰 상태만 바꿉니다. undo 단계를 만들지 않습니다 |
+| `select(selection)` | 선택을 바꿉니다. 없어진 id를 가리키는 선택은 버립니다(`validSelection`) |
+| `handleKey(stroke)` | 다이어그램 영역의 키 하나를 읽습니다. 처리했는지를 반환합니다(4장) |
+| `startEditing` · `commitEditing` · `cancelEditing` · `switchCallPart` | 인라인 에디터를 열고, 닫고, 호출 블록의 칸을 바꿉니다(3.4) |
+| `history(direction)` | 실행 취소 · 다시 하기 |
+| `load(doc, options)` | 문서를 전체 교체합니다. undo를 비우고 선택은 옵션의 값으로 둡니다 |
+| `notify(message, level?)` · `refuse(reason)` · `ask(question, choices)` | 상태 표시줄의 알림, 명령이 거절한 이유, 버튼이 달린 물음 |
+| `index()` · `shown()` | 모델의 색인과 보이는 나무(2.2)를 계산합니다. 문서가 바뀔 때까지 재사용합니다 |
+
+세션을 만드는 옵션(`SessionOptions`)은 클립보드, 타이머, 키 힌트를 보일지, 로그, 키 표, 시간 측정기입니다. 문서를 받을 때의 옵션(`LoadOptions`)은 파일에서 읽어 보유할 설정 값(`kept`), 처음 선택, 저장 안 됨 여부, 읽기 전용 여부입니다. 명령이 끝난 뒤의 처리(`After`)는 다음 선택, 함께 바꿀 뷰 상태, 바로 열 인라인 에디터입니다.
+
 ## 3. 입력에서 명령까지
 
 키 · 마우스 · 메뉴 · 툴바 · 커맨드 팔레트는 모두 **명령 id 하나**로 모입니다. 실행은 한 곳(`run(id, args)`)에서 합니다 → [[0033-command-list-for-shells|ADR-0033]]
@@ -167,6 +213,10 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 편집 명령은 `core`의 순수 함수입니다. `when`을 지나도 명령이 사전 조건으로 거절할 수 있습니다(`{ ok: false, reason }`). 결과의 타입은 [[01-model#4. 편집 명령]]에 있습니다. 선택은 명령의 인자로 전달하고, 명령은 선택을 바꾸지 않습니다. 선택은 2.3의 규칙으로 `editor`가 정합니다.
 - "적용되는가"(`when`)는 지금의 `EditorState`를 받는 함수입니다. 메뉴의 흐린 항목, 커맨드 팔레트의 흐린 줄, 툴바의 꺼진 버튼이 모두 이것을 씁니다.
 - 실행하면 안 되는 상태(펴 보인 블록에 내용 명령)는 명령이 아니라 `when`이 차단하고, 이유를 알립니다("막지 않고 알린다" → [[01-ux-overview#2. UX 원칙]]).
+- `run` 앞뒤의 처리입니다.
+	- **앞(`beforeRun`):** 인라인 에디터가 열려 있으면 먼저 입력한 대로 편집을 완료합니다. 그래서 명령은 항상 편집이 끝난 문서에서 실행됩니다.
+	- **내용을 바꾸기 전(`apply`):** 새 내용의 불변식을 검사합니다(`checkInvariants`). 위반이면 버그이므로 문서를 그대로 두고, 로그에 남기고 "내부 오류" 알림(`notice.internalError`)을 보입니다.
+	- **예외(`onError`):** 명령이 던진 예외(비동기 명령의 거부 포함)를 받아 로그에 남기고 같은 알림을 보입니다 → [[07-coding-guide#5. 오류 처리]]
 
 ### 3.1 히트 테스트
 
@@ -276,6 +326,21 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 [[05-screen-layout|화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 다섯(For 없음 → [[ux-decisions#TB1. 툴바에 For를 두지 않는다|TB1]]) ／ 감싸기 ▾ · 확대 ▾ · 예제(예제 모달을 엶). "확대 ▾" 버튼에는 텍스트 대신 지금 배율(`100%`)을 표시합니다. 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
 
+### 5.3 명령 id 목록
+
+| 묶음 | 명령 id |
+| --- | --- |
+| 삽입 | `block.insert.<kind>` · `block.insertBefore.<kind>` (`process` `if` `case` `while` `for` `doWhile`), `block.insert.call` · `block.insertBefore.call` |
+| 감싸기 · 풀기 | `block.wrap.<kind>` (`if` `case` `while` `for` `doWhile`), `block.unwrap` |
+| 분기 | `branch.insert` · `branch.insertBefore` · `branch.delete`, `branch.convertIfToCase` · `branch.convertCaseToIf` |
+| 편집 | `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste` · `edit.pasteBefore` · `edit.delete`, `edit.text` · `edit.textStart` · `edit.textClear` · `edit.branchLabel`, `edit.move.up` · `edit.move.down` · `edit.move.left` · `edit.move.right`, `edit.commandPalette` |
+| 선택 · 이동 | `select.up` · `select.down` · `select.left` · `select.right`, `select.unitUp` · `select.unitDown`, `select.branchLeft` · `select.branchRight`, `select.first` · `select.last`, `select.previousDiagram` · `select.nextDiagram`, `select.extendUp` · `select.extendDown`, `select.visual`, `select.clear` |
+| 호출 | `call.setTarget` · `call.goTo` |
+| 다이어그램 | `diagram.event` · `diagram.method` · `diagram.removeHead`, `diagram.extractMethod`, `diagram.newEvent` · `diagram.newMethod` · `diagram.delete`, `diagram.documentSettings` |
+| 접기 · 보기 | `view.fold.toggle` · `view.fold.open` · `view.fold.close`, `fold.make` · `fold.remove`, `view.bands`, `view.zoom.in` · `view.zoom.out` · `view.zoom.reset` |
+| 파일 | `file.save` · `file.saveAs`, `file.preferences`. 웹 셸이 더하는 것: `file.new` · `file.open` · `file.recent.<n>`, `file.export.png` · `file.export.svg` · `file.export.pdf`, `file.print`, `file.share` |
+| 도움말 | `help.shortcuts` · `help.manual` · `help.askAi` · `help.whatsNew` · `help.about` · `help.examples`, `example.<id>`(예제 하나를 여는 명령. 커맨드 팔레트에 보임) |
+
 ## 6. 셸과의 연결
 
 `editor`와 셸 사이의 인터페이스는 방향이 다른 두 쌍입니다 → [[01-architecture#4.2 editor와 셸의 인터페이스]]
@@ -365,6 +430,7 @@ interface EditorHandle {
   choose(message: Message, buttons: { confirm: Message; other: Message; second?: Message; cancel?: Message }): Promise<'confirm' | 'other' | 'second' | 'cancel'>;  // 모달로 답이 셋(second가 있으면 넷)인 것을 묻는다 (US1의 저장 · 브라우저에 저장 · 버리고 열기 · 취소). 확인 버튼이 기본
   prompt(message: Message, value: string): Promise<string | null>;  // 모달로 글자를 묻는다 (value로 시작). 취소하면 null
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;  // 다이어그램이 컨텍스트 메뉴를 청했다 (오른쪽 클릭, Shift+F10 → 1장)
+  popupAnchor(): { x: number; y: number; top: number };  // 키보드로 여는 팝업의 위치(페이지 좌표): 선택한 것의 바로 아래, 선택이 없으면 캔버스의 왼쪽 위. top은 선택의 위쪽 끝으로, 아래에 공간이 없는 팝업은 이 위로 뒤집는다
   dispose(): void;
 }
 type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number; place: 'file' | 'browser' };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름. place: store의 place
@@ -438,17 +504,30 @@ sequenceDiagram
     participant E as editor
     participant F as 브라우저 파일 · IndexedDB
     U->>+S: 파일 ▸ 열기
+    S->>+E: 열기 · 저장 창 (places)
+    E-->>-S: 이 컴퓨터의 파일 / 이 브라우저의 문서
     S->>+F: 파일 선택 창
     F-->>-S: 파일 핸들 · 텍스트
-    opt 지금 문서가 한 번도 저장하지 않은 새 문서이고 저장 안 됨 (US1)
-        S->>+E: choose(먼저 저장할까요?)
-        E-->>-S: 저장 / 버리고 열기 / 취소
+    S->>S: 열 수 있는 파일인가 (openSvgFile)
+    alt 열 수 없음
+        S-->>U: 이유를 상태 표시줄에 알림 (문서는 그대로)
+    else 열 수 있음
+        opt 지금 문서가 한 번도 저장하지 않은 새 문서이고 저장 안 됨 (US1)
+            S->>+E: choose(먼저 저장할까요?)
+            E-->>-S: 저장 / 브라우저에 저장 / 버리고 열기 / 취소
+        end
+        S->>+F: 문서 키 찾기, 로컬 백업 읽기
+        F-->>-S: 키 · 백업
+        opt 이 문서의 로컬 백업이 있음
+            S->>+E: confirm(지난번 내용을 복원할까요?)
+            E-->>-S: 복원 / 버리기
+        end
+        S->>S: DocumentStore를 만들고 탭 잠금 (06-web 2.1)
+        S->>+E: open({ store, text, readOnly?, restored? })
+        E-->>-S: onStatus(name, dirty)
+        S->>F: 최근 파일에 더함
+        S-->>-U: 메뉴 바에 파일 이름
     end
-    S->>S: DocumentStore를 만든다
-    S->>+E: open({ store, text })
-    E-->>-S: onStatus(name, dirty: false)
-    S->>F: 최근 파일에 더함
-    S-->>-U: 메뉴 바에 파일 이름
 ```
 
 ### 6.2 editor가 셸에 알리는 것
@@ -477,6 +556,82 @@ sequenceDiagram
 
 - 웹: 같은 파일을 다른 탭이 편집하고 있으면 셸이 `setReadOnly(true)`를 호출합니다. 그 탭이 닫히면 `false`로 되돌리고 알립니다 → [[06-web#2. 로컬 백업과 자동 저장]]
 - 상태 표시줄에 "보기만 하는 중"과 그 이유를 둡니다.
+
+### 6.5 주변 UI와 셸의 계약
+
+주변 UI(메뉴 바 · 툴바 · 모달)는 React 컴포넌트 `EditorApp` 하나이고, 셸은 이것을 렌더링할 때 아래를 전달합니다(`ui/editor-app.tsx`, `ui/places-modal.tsx`).
+
+```ts
+type EditorAppProps = {
+  handle: EditorHandle;             // createEditor가 만든 것
+  canvas: HTMLElement;              // createEditor의 host. 캔버스 위치로 옮긴다
+  locale: Locale;                   // 화면 언어
+  appearance: Appearance;
+  settings: SettingsStore;          // 파일 › 환경 설정…이 읽고 쓰는 사용자 설정
+  formatMessage?: MessageFormatter; // 메시지를 문자열로 바꾸는 함수. 없으면 기본
+  manualUrl?: string;               // 도움말 › 사용법이 새 탭으로 여는 주소
+  examples?: ExamplesHost;          // 없으면 예제 모달이 없다
+  viewMode?: { onEdit(): void };    // 있으면 보기 모드: 메뉴 바 · 툴바 · 상태 표시줄 대신 막대 하나
+  places?: PlacesHost;              // 없으면 열기 · 저장 창이 없다
+};
+type ExamplesHost = {
+  open(id: string): void;           // 예제 하나를 새 문서로 연다
+  isFirstVisit: boolean;            // 처음 온 사람이면 환영 모달을 띄운다
+  onWelcomed(): void;               // 환영 모달을 닫았다
+  thumbnailUrl?(id: string, locale: Locale): string | undefined;  // 미리 렌더링한 썸네일. 없으면 모달이 직접 렌더링
+};
+type PlaceSide = 'computer' | 'browser';
+type BrowserDocumentInfo = { key: string; name: string; savedAt: number; size: number };
+type PlacesRequest = {
+  id: number;                       // 새 요청이면 모달을 새로 시작한다
+  mode: 'open' | 'save';
+  side: PlaceSide;                  // 처음 보일 쪽
+  name: string;                     // 저장: 이름 칸의 처음 값
+  currentKey: string | null;        // 지금 연 문서의 키 (목록에서 굵게)
+  isDownload: boolean;              // 저장: 이 컴퓨터 쪽이 내려받기인가 (Firefox · Safari)
+};
+type PlacesAnswer =
+  | { kind: 'computer' } | { kind: 'open'; key: string } | { kind: 'save'; name: string } | null;  // null: 닫음
+type PlacesHost = {
+  request(): PlacesRequest | null;
+  onRequest(listener: () => void): () => void;
+  answer(answer: PlacesAnswer): void;
+  documents(): Promise<ReadonlyArray<BrowserDocumentInfo>>;  // 최신순
+  rename(key: string): Promise<void>;
+  exportDocument(key: string): Promise<void>;
+  remove(key: string): Promise<void>;   // 묻고 나서 삭제
+  exportAll(): Promise<void>;
+  importFiles(): Promise<void>;
+};
+```
+
+### 6.6 설정 목록
+
+`SettingsSchema.list()`가 반환하는 설정입니다. 사용자 설정은 `SettingsStore`에, 문서 설정은 모델의 `settings`에 저장합니다. 문서 설정은 문서 설정 창에 이 순서로 보입니다.
+
+```ts
+type SettingSpec = {
+  id: string;
+  title: Message;
+  hint?: Message;                   // 이름 아래의 흐린 한 줄 설명
+  values: unknown[];                // 허용 값
+  valueTitles?: Message[];          // 값의 표시 이름
+  defaultValue: unknown;
+  scope: 'user' | 'document';
+};
+```
+
+| id | 범위 | 값 | 기본값 |
+| --- | --- | --- | --- |
+| `ui.locale` (화면 언어) | `user` | `en` · `ko` | `en` |
+| `editor.keyHint` (키 힌트) | `user` | 켬 · 끔 | 켬 |
+| `editor.focusOutline` (캔버스 포커스 테두리 항상 보이기) | `user` | 켬 · 끔 | 끔 |
+| `file.autoSave` (자동 저장) | `user` | 켬 · 끔 | 켬 |
+| `document.textKind` (블록 텍스트의 언어) | `document` | `core`의 `textKinds` | `plain` |
+| `document.locale` (그림 문구의 언어) | `document` | `en` · `ko` | `en` |
+| `document.headStyle` (헤더 모양) | `document` | `title` · `shape` | `title` |
+| `document.textOutlines` (텍스트를 외곽선으로 저장) | `document` | 켬 · 끔 | 끔 |
+| `document.theme` (테마) | `document` | `core`의 `themeIds` | `default` |
 
 ## 미결정 사항
 
