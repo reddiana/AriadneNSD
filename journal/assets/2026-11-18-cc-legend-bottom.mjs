@@ -23,18 +23,20 @@ const diagrams = [
     file: 'cc-view-web-overview.drawio.svg',
     box: { x: 40, y: 600, width: 1040 },
     rows: [
-      ['pas', 'pure', 'ext'],
-      ['store', 'port', 'proc'],
+      ['pas', 'store', 'port'],
+      ['state', 'pure', 'ext'],
       ['call', 'async', 'notify'],
+      ['proc'],
     ],
   },
   {
     file: 'cc-view-web.drawio.svg',
     box: { x: 40, y: 890, width: 1540 },
     rows: [
-      ['pas', 'act', 'pure', 'ext'],
-      ['store', 'port', 'proc', 'mod'],
+      ['pas', 'act', 'store', 'port'],
+      ['state', 'pure', 'ext'],
       ['call', 'async', 'notify', 'msg'],
+      ['proc', 'mod'],
     ],
   },
 ];
@@ -43,6 +45,7 @@ const diagrams = [
 const swatchCells = {
   pas: ['lg-pas'],
   act: ['lg-act'],
+  state: ['lg-state'],
   pure: ['lg-pure'],
   ext: ['lg-ext'],
   store: ['lg-store'],
@@ -136,9 +139,40 @@ function geometryOf(model, id) {
   return { x: numberAttribute(tag, 'x'), y: numberAttribute(tag, 'y') };
 }
 
-function moveLegend(source, { box, rows }) {
+/**
+ * Separates shape from color in the legend: the passive and active swatches turn white (they show
+ * the shape only), and a blue swatch says what blue means. Does nothing the second time.
+ */
+function separateShapeFromColor(source) {
+  if (source.includes('id="lg-state"')) return source;
   let model = source;
-  const columns = rows[0].length;
+  const stateSwatch = readCell(model, 'lg-pas').replace('id="lg-pas"', 'id="lg-state"');
+  const stateText = readCell(model, 'lg-t-pure')
+    .replace('id="lg-t-pure"', 'id="lg-t-state"')
+    .replace(/\bvalue="[^"]*"/, 'value="상태를 가진 우리 코드&#xa;(editor · 웹 셸)"');
+  for (const id of ['lg-pas', 'lg-act']) {
+    // The overview has no active component.
+    if (!model.includes(`id="${id}"`)) continue;
+    const white = readCell(model, id)
+      .replace(/fillColor=[^;"]*/, 'fillColor=#ffffff')
+      .replace(/strokeColor=[^;"]*/, 'strokeColor=#1d2330');
+    model = model.replace(cellPattern(id), () => white);
+  }
+  const pure = readCell(model, 'lg-t-pure');
+  return model.replace(cellPattern('lg-t-pure'), () => `${pure}${stateSwatch}${stateText}`);
+}
+
+function moveLegend(source, { box, rows }) {
+  let model = separateShapeFromColor(source);
+  // The blue swatch stands beside its text as the passive swatch stands beside its own.
+  const swatch = geometryOf(model, 'lg-pas');
+  const swatchText = geometryOf(model, 'lg-t-pas');
+  const stateText = geometryOf(model, 'lg-t-state');
+  model = setGeometry(model, 'lg-state', {
+    x: stateText.x + swatch.x - swatchText.x,
+    y: stateText.y + swatch.y - swatchText.y,
+  });
+  const columns = Math.max(...rows.map((row) => row.length));
   const columnWidth = Math.floor((box.width - 2 * padding) / columns);
   model = setGeometry(model, 'lg-box', {
     x: box.x,
