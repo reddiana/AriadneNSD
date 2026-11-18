@@ -18,10 +18,11 @@ title: Inbox
 # 2. 배포 대상
 
 # 3. 기능
+- "도움말>AriadneNSD에 대하여"에 문서(https://ariadnensd.com/about)와 repo 링크를 넣어주세요
 ## MVP
 ### 추가/변경 요건
 - 호출블록을 확장했는데 가시성이 안 좋습니다. [[04-visual-design#5. 기하와 해부도]]를 잘 따랐나요? 그렇다면 디자인을 바꿉시다. 바깥 선이 일반 블록 선과 동일하면 좋겠습니다.
-![[Pasted image 20261117215313.png]]
+![[2026-11-17-call-peek-before.png]]
 
 # 4. 나의 결정
 
@@ -29,5 +30,8 @@ title: Inbox
 # 6. 결함
 
 # 7. 기타
+- [[03-architecture#3. 실행 중의 모습]] C&C view에서 표기법 범례를 우측 말고 하단에 해주세요. publish된 page에서 제한된 폭 때문에 내용이 너무 작게 보여요.
+- [[07-testing]]은 03-architecture로 옮겨주세요. 테스트아키텍처입니다.
+- [[07-testing#6. 지금의 커버리지]]는 아뜰리에의 적당한 곳으로 옮겨주세요.
 
 ## 매뉴얼
