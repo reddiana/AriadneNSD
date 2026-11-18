@@ -24,7 +24,7 @@ export const chromeCss = `
 @media (prefers-contrast: more) {
   .ans-app {
     --ui-text: #000000; --ui-muted: #3d4554; --ui-line: #6b7486; --ui-accent: #1f3fb8;
-    --ui-warn: #8f4508;
+    --ui-warn: #7f3c06;
   }
   .ans-app[data-scheme='dark'] {
     --ui-text: #ffffff; --ui-muted: #c5ccd8; --ui-line: #8790a0; --ui-accent: #a8bdff;

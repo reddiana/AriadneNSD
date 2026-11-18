@@ -230,9 +230,9 @@ flowchart LR
 | `ui.muted` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#3d4554;border:1px solid #8888;vertical-align:-0.1em"></span> `#3d4554` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#c5ccd8;border:1px solid #8888;vertical-align:-0.1em"></span> `#c5ccd8` | 보조 텍스트 |
 | `ui.line` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#6b7486;border:1px solid #8888;vertical-align:-0.1em"></span> `#6b7486` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8790a0;border:1px solid #8888;vertical-align:-0.1em"></span> `#8790a0` | 화면의 구분선 (패널 위 3:1 이상) |
 | `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 포커스, 상태 표시줄의 모드, 캔버스 포커스, 기본 버튼, 링크 |
-| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8f4508;border:1px solid #8888;vertical-align:-0.1em"></span> `#8f4508` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
+| `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7f3c06;border:1px solid #8888;vertical-align:-0.1em"></span> `#7f3c06` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
 
-고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.line` 4.70 / 5.19, `ui.warn` 6.14 / 10.54 (배경 위). 텍스트는 모두 7:1을 넘습니다.
+고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.line` 4.70 / 5.19, `ui.warn` 7.27 / 10.54 (배경 위). 텍스트는 모두 7:1을 넘습니다.
 
 편집 레이어의 표시는 종이 위에 그려지므로, 화면 색이 아니라 **테마의 종류**(종이가 밝은가 어두운가)를 따릅니다. 밝은 종이(밝은 테마 · 흑백 인쇄)에는 주황 `orange.600`을, 어두운 종이(어두운 테마 · 고대비)에는 더 밝은 주황을 씁니다. 인라인 에디터의 바탕과 글자도 그 테마의 `paper` · `text.primary`이고, 자리 표시 글자는 `text.muted`입니다 → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
 
@@ -567,9 +567,7 @@ flowchart LR
 
 ## 11. 명세와 지금 코드가 다른 곳
 
-이 문서의 명세와 지금 코드의 동작이 다른 곳입니다. 어느 쪽에 맞출지는 정하지 않았습니다.
-
-- 고대비 화면 색의 밝은 화면에서 `ui.warn` 글자의 대비는 배경 위 6.14:1, 패널 위 6.95:1입니다. 3.4절의 "텍스트는 모두 7:1을 넘습니다"에 미달합니다.
+지금은 명세와 코드가 다른 곳이 없습니다.
 
 ## 12. 미결정 사항
 

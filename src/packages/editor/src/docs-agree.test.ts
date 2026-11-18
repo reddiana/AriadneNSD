@@ -181,7 +181,7 @@ describe('the screen and edit layer colors', () => {
     expect(rest.match(/#[0-9a-f]{3,8}\b|rgba?\(/gi)).toBeNull();
   });
 
-  it('T-1319 · UX WC1: ui.warn as text keeps 4.5:1 on the background and the panel in every screen color set', () => {
+  it('T-1319 · UX WC1: ui.warn as text keeps 4.5:1 on the background and the panel, and 7:1 in high contrast', () => {
     /** WCAG 2.2 contrast ratio of two `#rrggbb` colors. */
     const contrast = (a: string, b: string): number => {
       const luminance = (hex: string): number => {
@@ -204,21 +204,35 @@ describe('the screen and edit layer colors', () => {
         paint: declarations(base, '.ans-app', 'ui'),
         warn: base,
         selector: '.ans-app',
+        minimum: 4.5,
       },
-      { name: 'dark', paint: declarations(base, dark, 'ui'), warn: base, selector: dark },
+      {
+        name: 'dark',
+        paint: declarations(base, dark, 'ui'),
+        warn: base,
+        selector: dark,
+        minimum: 4.5,
+      },
       {
         name: 'light, more',
         paint: declarations(base, '.ans-app', 'ui'),
         warn: more,
         selector: '.ans-app',
+        minimum: 7,
       },
-      { name: 'dark, more', paint: declarations(base, dark, 'ui'), warn: more, selector: dark },
+      {
+        name: 'dark, more',
+        paint: declarations(base, dark, 'ui'),
+        warn: more,
+        selector: dark,
+        minimum: 7,
+      },
     ];
-    for (const { name, paint, warn, selector } of sets) {
+    for (const { name, paint, warn, selector, minimum } of sets) {
       const text = declarations(warn, selector, 'ui').get('ui.warn') ?? '';
       for (const back of ['ui.bg', 'ui.panel']) {
         const ratio = contrast(text, paint.get(back) ?? '');
-        expect(ratio, `${name}: ui.warn on ${back}`).toBeGreaterThanOrEqual(4.5);
+        expect(ratio, `${name}: ui.warn on ${back}`).toBeGreaterThanOrEqual(minimum);
       }
     }
   });
