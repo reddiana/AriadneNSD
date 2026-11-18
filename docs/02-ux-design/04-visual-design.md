@@ -14,7 +14,7 @@ updated: 2026-11-18
 > [!abstract] 이 문서는
 > **AriadneNSD가 어떻게 보이는가**를 정한 명세입니다. 원칙, 디자인 토큰(색 · 타이포그래피 · 치수), 블록의 해부도, 상태마다의 모습, 테마, 렌더링 규칙, 접근성 검증을 담습니다.
 > - **입력:** [[01-requirements]]의 [[01-requirements#1. 핵심 원칙|핵심 원칙]](주 사용자는 실무의 설계 문서 작성자), [[01-requirements#3.3 레이아웃 · 렌더링|3.3 레이아웃 · 렌더링]], [[01-requirements#^r-fmt|R-FMT-08]], [[01-requirements#^r-nfr|R-NFR-05]], [[01-requirements#^r-nfr|R-NFR-07]]. 결정의 근거는 [[dr-0003-default-visual-style|DR-0003]](기본 스타일), [[0018-save-as-shown|ADR-0018]](화면 그대로 저장), [[0026-bundled-font-metrics|ADR-0026]](글꼴 번들)입니다.
-> - **짝이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 담당합니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
+> - **쌍이 되는 문서:** 사용자와 조작의 원칙은 [[01-ux-overview]], 무엇을 누르면 어떻게 되는지는 [[02-interaction-rules]], 질문과 결정은 [[ux-decisions]]에 있습니다. 이 문서는 그 규칙이 **어떤 모습으로** 보이는지를 담당합니다. 색 · 선 굵기 · 글자 크기의 값은 이 문서에만 적고, 다른 문서는 이 문서를 가리킵니다.
 > - **이 문서를 쓰는 곳:** 렌더러의 테마 구조([[02-layout#3. SVG 렌더링]]), 편집기 화면([[03-editor]]), 배포 대상마다의 테마 연동([[04-obsidian-plugin#5. 테마 연동]]).
 > - **지금 상태:** 초안입니다. MVP 코드(2026-11-01)가 이 문서를 따릅니다. 토큰은 이 문서의 이름 그대로 문서 레이어는 `src/packages/core/src/render/theme.ts`, 편집 레이어는 `src/packages/editor/src/dom/overlay.ts`에 있습니다. 테마 넷(밝은 · 어두운 · 고대비 · 흑백 인쇄)과 고대비 화면 색이 2026-11-03에 들어갔습니다(8장). 디자인 시스템 관점의 독립 검토를 두 번 받아, 대비와 레이어 구분을 수정하고 빠진 명세를 채웠습니다. MVP 범위의 모습은 모두 코드에 들어 있습니다. MVP 뒤의 기능 가운데 접기와 펴 보기의 모습은 2026-11-03에 코드에 들어왔습니다(7장). 명세와 지금 코드가 다른 곳은 11장에 있습니다.
 
@@ -45,7 +45,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 블록 종류는 색이 없어도 모양만으로 구분됩니다. 흑백으로 인쇄해도, 색을 구분하지 못하는 사람이 보아도 뜻이 같아야 합니다(WCAG 1.4.1).
 
-예외는 하나, **For와 While**입니다. 둘은 같은 반복이고 NS 차트 표준도 같은 모양으로 그립니다. For는 조건 칸의 텍스트(`for …`)로 가릅니다. 텍스트는 흑백에서도 읽히므로 WCAG 1.4.1(색에만 기대지 않음)은 지켜집니다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
+예외는 하나, **For와 While**입니다. 둘은 같은 반복이고 NS 차트 표준도 같은 모양으로 그립니다. For는 조건 칸의 텍스트(`for …`)로 구분합니다. 텍스트는 흑백에서도 읽히므로 WCAG 1.4.1(색에만 기대지 않음)은 지켜집니다 → [[ux-decisions#FB1. For 블록의 모양|FB1]]
 
 | 블록 | 모양 (의미 전달) | 배경 (보조) |
 | --- | --- | --- |
@@ -66,7 +66,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
   >
   > ![[visual-design-head-shape.png|380]] ![[visual-design-head-title.png|380]]
 
-- If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 헤더와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 겹치지 않게 정했습니다 → [[0021-event-and-method|ADR-0021]]
+- If · Case · 반복 · 처리의 모양은 표준(DIN 66261, Nassi와 Shneiderman의 원 논문)을 따릅니다. Event · Method 헤더와 접기 표시는 표준에 없는 어휘라, 표준의 모양과 중복되지 않게 정했습니다 → [[0021-event-and-method|ADR-0021]]
 - 확인: 흑백과 색각 이상 세 가지로 본 그림에서 모든 블록 종류가 구분되는가(10.2절). 적색맹으로 보면 If와 Event의 배경은 거의 같은 색(ΔE 1.1)이 되지만, 모양이 다르므로 원칙은 지켜집니다.
 
 ### 원칙 3. 문서의 표시와 편집의 표시는 다른 레이어다
@@ -102,7 +102,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 화면에서 눈에 띄는 순서는 "사용자가 지금 다루는 것 → 사용자가 묶거나 펴 본 것 → 구조"입니다. 두드러짐은 색의 채도, 선 굵기, 선 모양을 함께 써서 만듭니다. 같은 두드러짐의 표시가 다른 뜻을 갖지 않습니다. 선 굵기의 표는 6장에 있습니다.
 
-- 펴 보인 호출 블록은 펴진 접기 영역과 두드러짐이 같습니다. 모양이 같고 색(보라 · 파랑)으로 가릅니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]], 시안 M60: https://claude.ai/artifact/Gwz1JEezrZMY9w2pYKYNi6, 사본 `journal/assets/2026-11-18-call-peek-frame-study.html`
+- 펴 보인 호출 블록은 펴진 접기 영역과 두드러짐이 같습니다. 모양이 같고 색(보라 · 파랑)으로 구분합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]], 시안 M60: https://claude.ai/artifact/Gwz1JEezrZMY9w2pYKYNi6, 사본 `journal/assets/2026-11-18-call-peek-frame-study.html`
 - 펴 보인 곳 안의 접기 영역은 보통 접기 영역과 **똑같이** 그립니다. 같은 것은 어디서나 같게 보여야 한다는 메인테이너의 결정입니다([[ux-decisions#4.1 호출 블록 펴 보기 (R6)|P1]], 시안 M11).
 - 확인: 그림을 흐리게 보았을 때(블러 테스트) 선택한 것 → 접기 영역 · 펴 보인 호출 블록 → 나머지 순서로 보이는가.
 
@@ -200,7 +200,7 @@ flowchart LR
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `fill.lilac-strong` | 펴 보인 호출 블록의 띠 배경 | | |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5f459f;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.name` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5f459f;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.700` | 펴 보인 호출 블록의 띠 텍스트 | 5.19 (띠 위) | 4.5:1 |
 
-- 구문 강조는 블록 텍스트를 단어로 갈라 예약어는 `syntax.keyword`, 주석은 `syntax.comment`, 문자열과 숫자는 `syntax.literal`로 칠합니다. 그 밖의 단어는 `text.primary`입니다. 블록 텍스트의 언어가 "일반 텍스트"면 칠하지 않습니다 → [[0032-token-highlighting|ADR-0032]]. 칠하는 것은 처리 블록의 텍스트와 조건 칸이고, 헤더의 이름 · 분기 라벨 · 호출 블록은 칠하지 않습니다([[ux-decisions#SY1. 칠하는 텍스트|SY1]]). 굵기와 기울임은 쓰지 않으므로 강조해도 폭은 그대로입니다. 언어마다의 규칙 → [[02-layout#3.1 구문 강조]]
+- 구문 강조는 블록 텍스트를 토큰으로 분리해 예약어는 `syntax.keyword`, 주석은 `syntax.comment`, 문자열과 숫자는 `syntax.literal`로 칠합니다. 그 밖의 단어는 `text.primary`입니다. 블록 텍스트의 언어가 "일반 텍스트"면 칠하지 않습니다 → [[0032-token-highlighting|ADR-0032]]. 칠하는 것은 처리 블록의 텍스트와 조건 칸이고, 헤더의 이름 · 분기 라벨 · 호출 블록은 칠하지 않습니다([[ux-decisions#SY1. 칠하는 텍스트|SY1]]). 굵기와 기울임은 쓰지 않으므로 강조해도 폭은 그대로입니다. 언어마다의 규칙 → [[02-layout#3.1 구문 강조]]
 - 분기 라벨은 구문 강조의 색(<span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f45d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.700`)을 쓰지 않습니다. 구조의 텍스트가 코드의 일부처럼 보이지 않게 하려는 것입니다.
 - 펴 보인 블록의 텍스트는 다른 블록과 같은 색이고 구문 강조도 같습니다. "편집할 수 없다"는 것은 보라색 테두리와 띠가 알립니다.
 
@@ -276,7 +276,7 @@ flowchart LR
 
 ### 3.6 고대비 테마
 
-검은 종이에 흰 선과 흰 글자입니다([[01-requirements#^r-nfr|R-NFR-07]]). 블록 배경은 블록 종류의 색상을 아주 어둡게 남겨, 색이 거드는 몫(원칙 2)은 그대로 둡니다. 텍스트와 뜻을 가진 선이 모두 **7:1**(WCAG 1.4.6, AAA)을 넘습니다. Windows의 대비 테마("야간 하늘")처럼 검은 바탕이 고대비 화면의 관례라 어두운 쪽으로 정했습니다. 흰 종이에 검정이 필요하면 흑백 인쇄(9.3절, 21:1)가 그 몫입니다 → [[ux-decisions#TM1. 테마는 넷 (밝은 · 어두운 · 고대비 · 흑백 인쇄)|TM1]]
+검은 종이에 흰 선과 흰 글자입니다([[01-requirements#^r-nfr|R-NFR-07]]). 블록 배경은 블록 종류의 색상을 아주 어둡게 남겨, 색이 보조하는 영역(원칙 2)은 그대로 둡니다. 텍스트와 뜻을 가진 선이 모두 **7:1**(WCAG 1.4.6, AAA)을 넘습니다. Windows의 대비 테마("야간 하늘")처럼 검은 바탕이 고대비 화면의 관례라 어두운 쪽으로 정했습니다. 흰 종이에 검정이 필요하면 흑백 인쇄(9.3절, 21:1)가 그 역할입니다 → [[ux-decisions#TM1. 테마는 넷 (밝은 · 어두운 · 고대비 · 흑백 인쇄)|TM1]]
 
 | 의미 · 구성 요소 토큰 | → 원시 | 대비율 | 기준 |
 | --- | --- | --- | --- |
@@ -340,7 +340,7 @@ flowchart LR
 | 그림의 모든 텍스트 | 고정폭 (기본 블록 글꼴) | 고정. 블록 텍스트의 언어와 상관없음 → [[0042-text-kind-keeps-block-font\|ADR-0042]] |
 | 화면 | 배포 대상의 기본 글꼴 | 배포 대상 (Obsidian이면 Obsidian의 글꼴) |
 
-- **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 싣고 한자는 싣지 않습니다 → [[0034-default-block-font|ADR-0034]]
+- **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 포함하고 한자는 포함하지 않습니다 → [[0034-default-block-font|ADR-0034]]
 - 번들한 글꼴 파일 안의 이름(패밀리 이름)은 `AriadneNSD Mono`입니다. "D2Coding"은 OFL의 예약 글꼴 이름(Reserved Font Name)이라, 문자를 추려 고친 글꼴에는 쓸 수 없습니다. 고정폭 글꼴의 관례(JetBrains Mono 등)를 따른 이름이고, 비례폭 글꼴을 번들하면 `AriadneNSD Sans`로 합니다 → [[dr-0019-bundled-font-name|DR-0019]]. 그림의 `font-family`는 이 이름 다음에 폴백 글꼴 목록을 적습니다 → [[01-file-format#2. 문서 구조]]
 - 글꼴은 하나뿐입니다. 언어를 바꾸면 색만 바뀌고 블록의 폭은 그대로라, MVP로 저장한 파일(일반 텍스트)도 그대로 열립니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 블록 텍스트의 공백은 그대로 둡니다(`white-space: pre`). 코드의 들여쓰기가 그림에서도 보여야 합니다.
@@ -425,8 +425,8 @@ flowchart LR
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 오른쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
-| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 겹칠 때만 → [[02-interaction-rules#Event 헤더]]) |
-| 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 늘 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
+| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 중복될 때만 → [[02-interaction-rules#Event 헤더]]) |
+| 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 항상 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄(12px, `ui.panel` 배경, 1px `ui.line` 테두리, 반지름 4px) | 편집 | | 있음 |
 | 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝에 줄의 위아래로 4px씩(길이 8px, 굵기 2px) 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
@@ -477,7 +477,7 @@ flowchart LR
 | 흑백 인쇄 (Black and white print) | `print` | 밝음 | 9.3절 | 21:1 |
 
 - 새 문서는 밝은 테마로 시작합니다. 테마를 바꾸는 것은 문서를 고치는 것이라 실행 취소의 대상이고, 저장하지 않은 표시(`●`)가 붙습니다. 저장되는 그림은 고른 테마 그대로입니다(화면 그대로 저장, [[0018-save-as-shown|ADR-0018]]) → [[ux-decisions#TM2. 테마는 문서 설정의 한 줄|TM2]], [[ux-decisions#TM3. 테마를 바꾸는 것은 실행 취소의 대상|TM3]]
-- 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 모르는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 그대로 두어 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
+- 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 지원하지 않는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 그대로 두어 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
 - **종류**(밝음 · 어두움)는 종이의 밝기입니다. 편집 레이어(선택 · 호버 · 드롭 위치 · 인라인 에디터)는 화면 색이 아니라 이 종류를 따릅니다(3.4절) → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
 - **흑백 인쇄**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나입니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 펴진 접기 영역과 펴 보인 호출 블록은 모양이 같아지고 띠의 글자(영역 이름과 호출문)로 구별합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]. 값은 9.3절에 있습니다.
 - **화면 색**(메뉴 바, 툴바, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번). 반대로 밝은 화면에 어두운 테마의 종이도 놓입니다.
@@ -498,7 +498,7 @@ flowchart LR
 - 그림 전체를 반 픽셀 옮깁니다(`translate(.5 .5)`). 그러면 정수 좌표에 놓은 1px 선이 한 픽셀 줄을 꼭 채웁니다.
 - **홀수 굵기**(1px, 3px)의 선은 가운데가 반 픽셀에, **짝수 굵기**(2px)의 선은 가운데가 정수 픽셀에 오게 놓습니다. 그래서 3px인 접기 영역 테두리와 선택 하이라이트는 블록의 경계에서 1px 안에 가운데를 둡니다.
 - 가로세로 사각형에만 `shape-rendering="crispEdges"`를 씁니다. 빗금과 곡선은 안티앨리어싱 그대로 둡니다.
-- 테두리 안의 테두리는 1px 틈을 두므로, 겹치거나 이어져도 선이 한 덩어리로 뭉개지지 않습니다.
+- 테두리 안의 테두리는 1px 틈을 두므로, 겹치거나 이어져도 선이 하나로 뭉개지지 않습니다.
 
 ### 9.2 배율과 출력
 
@@ -535,11 +535,11 @@ flowchart LR
 
 ### 10.1 대비율
 
-3.3 · 3.5 · 3.6 · 9.3절의 표가 결과입니다. 네 테마의 모든 텍스트와 뜻을 가진 선이, 쓰이는 모든 배경에서 기준을 넘습니다. 밝은 테마 · 어두운 테마 · 흑백 인쇄는 AA(텍스트 4.5:1, 선 3:1), 고대비는 텍스트와 선 모두 7:1입니다. 편집 레이어의 표시는 네 테마 모두에서 3:1을 넘습니다(3.4절). 단위 테스트(`theme.test.ts`, `overlay.test.ts`)가 테마마다 이 기준을 확인하므로, 테마의 색을 바꾸면 기준에 미달하는 짝이 바로 드러납니다. 기준에 미달하는 짝은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 호출 블록의 띠 위에는 구문 강조가 없습니다(띠의 텍스트는 `peek.name` 한 색).
+3.3 · 3.5 · 3.6 · 9.3절의 표가 결과입니다. 네 테마의 모든 텍스트와 뜻을 가진 선이, 쓰이는 모든 배경에서 기준을 넘습니다. 밝은 테마 · 어두운 테마 · 흑백 인쇄는 AA(텍스트 4.5:1, 선 3:1), 고대비는 텍스트와 선 모두 7:1입니다. 편집 레이어의 표시는 네 테마 모두에서 3:1을 넘습니다(3.4절). 단위 테스트(`theme.test.ts`, `overlay.test.ts`)가 테마마다 이 기준을 확인하므로, 테마의 색을 바꾸면 기준에 미달하는 쌍이 바로 드러납니다. 기준에 미달하는 쌍은 실제로 함께 쓰이지 않는 짝뿐입니다. 예를 들어 펴 보인 호출 블록의 띠 위에는 구문 강조가 없습니다(띠의 텍스트는 `peek.name` 한 색).
 
-밝은 테마에서 기준에 미달하는 짝:
+밝은 테마에서 기준에 미달하는 쌍:
 
-| 짝 | 대비율 | 쓰임 |
+| 쌍 | 대비율 | 쓰임 |
 | --- | --- | --- |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#22702a;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.comment` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.31 | 쓰이지 않음 |
 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#8a5a00;border:1px solid #8888;vertical-align:-0.1em"></span> `syntax.literal` / <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ddd4ef;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.band` | 4.16 | 쓰이지 않음 |
@@ -553,7 +553,7 @@ flowchart LR
 > ![[visual-design-vision-grayscale.png|300]] ![[visual-design-vision-deuteranopia.png|300]]
 > ![[visual-design-vision-protanopia.png|300]] ![[visual-design-vision-tritanopia.png|300]]
 
-| 색이 가까워지는 짝 | 보통 ΔE | 가장 가까울 때 | 그래도 구분되는 이유 |
+| 색이 가까워지는 쌍 | 보통 ΔE | 가장 가까울 때 | 그래도 구분되는 이유 |
 | --- | --- | --- | --- |
 | If 배경 / Event 배경 | 8.7 | 적색맹 1.1 | 빗금과 모자 |
 | 반복 배경 / 호출 배경 | 5.2 | 적색맹 2.5 | 왼쪽 띠와 세로 이중선 |
@@ -561,7 +561,7 @@ flowchart LR
 
 ### 10.3 키보드와 포커스
 
-- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스 안쪽 테두리가 1초만 보입니다(포커스가 올 때, 빈 곳을 클릭할 때, 아무 일도 하지 않은 키를 누를 때). 환경 설정의 "캔버스 포커스 테두리 늘 보이기"를 켜면 늘 보입니다. 늘 보이는 방식이 있어 WCAG 2.4.7(포커스가 보이는 방식이 하나는 있어야 함)을 채웁니다. 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 배경(`ui.bg`) 위에 그립니다. 밝은 종이 위에서는 어두운 화면 색의 `ui.accent`가 2.3:1밖에 되지 않습니다 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다|CF2]]
+- 선택한 블록의 테두리가 키보드 포커스의 자리입니다. 선택한 것이 없으면 캔버스 안쪽 테두리가 1초만 보입니다(포커스가 올 때, 빈 곳을 클릭할 때, 아무 일도 하지 않은 키를 누를 때). 환경 설정의 "캔버스 포커스 테두리 늘 보이기"를 켜면 항상 보입니다. 항상 보이는 방식이 있어 WCAG 2.4.7(포커스가 보이는 방식이 하나는 있어야 함)을 채웁니다. 캔버스 포커스 테두리(`ui.accent`)는 종이가 아니라 종이 바깥의 배경(`ui.bg`) 위에 그립니다. 밝은 종이 위에서는 어두운 화면 색의 `ui.accent`가 2.3:1밖에 되지 않습니다 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다|CF2]]
 - 편집 레이어의 모든 표시는 색과 함께 모양(테두리, 줄, 커서, 상태 표시줄의 텍스트)로도 알립니다.
 
 ## 11. 명세와 지금 코드가 다른 곳
@@ -573,15 +573,15 @@ flowchart LR
 - 텍스트를 외곽선으로 저장한 그림과 PDF에서는 기울임이 빠집니다(4.2절의 명세는 이름 없는 접기 영역과 "⋯ 블록 n개"를 기울임) → [[defects#BUG-15]]
 - 상태 표시줄의 알림 텍스트는 색이 바뀌지 않습니다(9.4절의 명세는 1.6초 동안 `ui.accent`). `info` 알림은 6초 뒤 사라지고, `warn` 알림은 닫거나 다음 알림이 올 때까지 남습니다.
 - 키 힌트의 가로 자리는 선택의 왼쪽 끝에서 최대 24px 안입니다(7.1절의 명세는 왼쪽 아래 모서리).
-- 다른 문서의 Method를 호출하는 호출 블록은 파일을 찾아보지 않아 늘 실선으로 그립니다(1장과 7.1절의 명세는 다른 문서를 찾을 수 없으면 이중선이 점선).
+- 다른 문서의 Method를 호출하는 호출 블록은 파일을 찾아보지 않아 항상 실선으로 그립니다(1장과 7.1절의 명세는 다른 문서를 찾을 수 없으면 이중선이 점선).
 - `ui.warn`을 글자로도 씁니다. 밝은 화면의 배경 위에서 4.23:1이라 텍스트의 기준(4.5:1)에 미달합니다(3.4절의 명세는 3px 줄로만 씀).
 
 ## 12. 미결정 사항
 
 - 비례폭 글꼴(분기 라벨 등의 자리, 그리고 블록 텍스트를 문장으로 쓰는 문서). 아직 없다. 들인다면 블록 텍스트의 언어가 아닌 다른 문서 설정으로 고르게 한다. 그래야 이미 저장한 파일이 다시 배치되지 않는다 ([[0034-default-block-font|ADR-0034]], [[0042-text-kind-keeps-block-font|ADR-0042]])
 - 화면의 나머지(툴바, 메뉴, 모달, 설정 화면, 아이콘)의 모습. 배포 대상마다 그 앱의 모습을 따를지, 공통 모습을 둘지. 웹의 배치는 [[05-screen-layout|화면 배치]]에서 정했고, 아이콘의 그림과 색이 남았습니다
-- 이름이 겹친 헤더에 붙이는 표시의 모양 ([[01-requirements#^r-blk|R-BLK-10]])
+- 이름이 중복된 헤더에 붙이는 표시의 모양 ([[01-requirements#^r-blk|R-BLK-10]])
 - 어두운 화면 색에서 종이를 화면에서만 조금 어둡게 할지 (저장되는 색은 그대로)
 - 화면에서만 그림을 고대비로 보는 "보기 전용" 선택(저장되는 그림과 다른 사람의 화면은 문서의 테마 그대로)을 둘지. 지금은 고대비가 필요하면 문서의 테마를 고대비로 바꾼다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
-- 운영체제의 강제 색 모드(`forced-colors: active`, Windows의 대비 테마)에서 그림을 그대로 둘지, 운영체제의 색으로 바꿀지. 지금은 따로 다루지 않는다(시험하지 않음)
+- 운영체제의 강제 색 모드(`forced-colors: active`, Windows의 대비 테마)에서 그림을 그대로 둘지, 운영체제의 색으로 바꿀지. 지금은 따로 다루지 않는다(테스트하지 않음)
 - 사용자가 테마를 더 만들 수 있게 할지(사용자 정의 테마)
