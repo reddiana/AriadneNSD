@@ -655,3 +655,7 @@ MVP에 드는 조작의 미결정을 한 번에 정했다(메인테이너: "mvp 
 ### AR1. 호출 블록의 결과 기호는 문자로
 
 **정함 (2026-11-19, 1번): 호출 블록의 결과 기호 `←`는 도형이 아니라 문자로 그린다.** 저장 파일의 서브셋 글꼴에 `←`(U+2190)의 글리프가 포함되므로 앱이 없는 뷰어에서도 깨지지 않고, 텍스트로 선택 · 복사 · 검색할 수 있다. 견준 것: 2 도형(path)으로 그림. 견준 안과 그림 → 시안 M62 https://claude.ai/artifact/FsPsd7WoByF58CeRNpoGKL · 사본 `journal/assets/2026-11-19-result-arrow-study.html`. 지금의 규칙 → [[04-visual-design#2. 레이어와 출력]]
+
+### NT1. 상태 표시줄의 알림은 나타날 때 색을 바꾸지 않는다
+
+**정함 (2026-11-19, 1번): 상태 표시줄의 알림은 나타날 때 색을 바꾸지 않는다.** 견준 것: 2 1.6초 동안 강조색(`ui.accent`)으로 보였다가 돌아옴. 견준 안과 그림 → 시안 M64 https://claude.ai/artifact/TUshhZRjFRG4uWKDj4qLSH · 사본 `journal/assets/2026-11-19-status-notice-study.html`. 지금의 규칙 → [[04-visual-design#9.4 움직임]]
