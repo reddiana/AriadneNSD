@@ -243,7 +243,13 @@ export function DocumentSettingsModal({ onClose }: { readonly onClose: () => voi
   );
 }
 
-/** Help › About AriadneNSD. */
+const aboutDocsUrl = 'https://ariadnensd.com/about';
+const repositoryUrl = 'https://github.com/reddiana/AriadneNSD';
+
+/**
+ * Help › About AriadneNSD. The links are plain anchors: every shell's web view opens them on its
+ * own, so the editor needs no port to the shell for them.
+ */
 export function AboutModal({ onClose }: { readonly onClose: () => void }): ReactElement {
   const { text } = useChrome();
   return (
@@ -251,6 +257,14 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
       <p>{text('about.body')}</p>
       <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
       <p className="ans-note">{text('about.preview')}</p>
+      <p className="ans-about-links">
+        <a href={aboutDocsUrl} target="_blank" rel="noopener noreferrer">
+          {text('about.docs')}
+        </a>
+        <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
+          {text('about.repository')}
+        </a>
+      </p>
     </Modal>
   );
 }

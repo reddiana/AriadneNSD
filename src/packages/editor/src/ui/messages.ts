@@ -52,6 +52,8 @@ const en = {
   'about.body': 'A Nassi-Shneiderman diagram editor.',
   'about.version': 'Version {version}',
   'about.preview': 'Before version 1.0, files you save may not open in later versions.',
+  'about.docs': 'Documentation',
+  'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
     '0.2.0 brings the features planned for web 1.0:\n' +
@@ -182,6 +184,8 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.body': 'NS 차트(Nassi-Shneiderman Diagram) 편집기.',
   'about.version': '버전 {version}',
   'about.preview': '1.0 전에 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
+  'about.docs': '문서',
+  'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':
     '0.2.0은 웹 1.0에 넣기로 한 기능을 담았습니다.\n' +

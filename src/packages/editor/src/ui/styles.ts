@@ -172,6 +172,8 @@ export const chromeCss = `
 .ans-modal .ans-close:hover { background: var(--ui-accent-soft); }
 .ans-modal-body { padding: 12px 14px; overflow: auto; display: grid; gap: 10px; }
 .ans-note { color: var(--ui-muted); margin: 0; }
+.ans-about-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
+.ans-about-links a { color: var(--ui-accent); }
 .ans-field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .ans-field-title { display: grid; gap: 2px; }
 .ans-field-hint { color: var(--ui-muted); font-size: 12px; }

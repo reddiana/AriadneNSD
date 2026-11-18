@@ -301,6 +301,50 @@ describe('modals', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
+  it('T-1300 · UX W4: About links to the documentation and the repository in a new tab, in the screen language', () => {
+    for (const [locale, title, docs, repository] of [
+      ['en', 'About AriadneNSD', 'Documentation', 'GitHub repository'],
+      ['ko', 'AriadneNSD에 대하여', '문서', 'GitHub 저장소'],
+    ] as const) {
+      const engine = fakeEngine(editCommands);
+      renderApp(engine, { locale });
+      act(() => {
+        engine.handle.commands.run('help.about');
+      });
+      const dialog = within(screen.getByRole('dialog', { name: title }));
+      for (const [name, href] of [
+        [docs, 'https://ariadnensd.com/about'],
+        [repository, 'https://github.com/reddiana/AriadneNSD'],
+      ] as const) {
+        const link = dialog.getByRole('link', { name });
+        expect(link.getAttribute('href')).toBe(href);
+        expect(link.getAttribute('target')).toBe('_blank');
+        expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+      }
+      cleanup();
+    }
+  });
+
+  it('T-1301 · UX W4: the About links take the keyboard focus, and Esc on a link closes the modal', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.handle.commands.run('help.about');
+    });
+    const dialog = screen.getByRole('dialog', { name: 'About AriadneNSD' });
+    const links = within(dialog).getAllByRole('link');
+    expect(links).toHaveLength(2);
+    for (const link of links) {
+      expect(link.hasAttribute('tabindex')).toBe(false);
+      link.focus();
+      expect(document.activeElement).toBe(link);
+    }
+    fireEvent.keyDown(within(dialog).getByRole('link', { name: 'Documentation' }), {
+      key: 'Escape',
+    });
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
   it('T-0308 · UX W5: preferences show the user settings and write a change to the settings store', () => {
     const settings = memorySettings();
     const engine = fakeEngine(editCommands, [
