@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 import type { Page } from '@playwright/test';
 
 import { expect, test } from './fixtures';
-import { canvas, command, onThisComputer, openApp } from './support';
+import { acceptDownloadName, canvas, command, onThisComputer, openApp } from './support';
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -35,8 +35,9 @@ async function exportAs(page: Page, name: string): Promise<string> {
 async function savedText(page: Page): Promise<string> {
   const downloading = page.waitForEvent('download');
   await command(page, 'file.save').click();
-  // A first save asks where (R-WEB-09, UX BS1).
+  // A first save asks where (R-WEB-09, UX BS1), then for the file name (06-web 1).
   await onThisComputer(page);
+  await acceptDownloadName(page);
   return readFile(await (await downloading).path(), 'utf8');
 }
 

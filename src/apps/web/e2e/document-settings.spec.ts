@@ -95,6 +95,27 @@ test('T-0976 · R-LAY-08 · R-NFR-07: the theme recolors the drawing and the inl
   await expect(paper).toHaveAttribute('fill', '#ffffff');
 });
 
+test('T-1370 · R-BLK-08: the result symbol is chosen in Document Settings, marks the document unsaved and is no undo step', async ({
+  page,
+}) => {
+  await openApp(page);
+  await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
+  await page.getByRole('button', { name: 'Diagram', exact: true }).click();
+  await page.getByRole('menuitem', { name: /Document Settings/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Document Settings' });
+  const symbol = dialog.getByLabel('Result symbol');
+  await expect(symbol.locator('option')).toHaveText(['←', '=']);
+  await symbol.selectOption({ label: '=' });
+  await expect(page).toHaveTitle('● Untitled.ns.svg – AriadneNSD');
+
+  await page.keyboard.press('Escape');
+  await canvas(page).focus();
+  await page.keyboard.press('Control+z');
+  await page.getByRole('button', { name: 'Diagram', exact: true }).click();
+  await page.getByRole('menuitem', { name: /Document Settings/ }).click();
+  await expect(dialog.getByLabel('Result symbol')).toHaveValue('1');
+});
+
 test('T-0977 · R-NFR-07: the screen colors follow the OS asking for more contrast', async ({
   page,
 }) => {

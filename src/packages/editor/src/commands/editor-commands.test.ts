@@ -151,9 +151,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
   },
   'edit.delete': {
     none: 'reason.nothingSelected',
-    label: 'reason.undecidedOnBranchLabel',
-    armLabel: 'reason.undecidedOnBranchLabel',
-    defaultLabel: 'reason.undecidedOnBranchLabel',
     missing: 'reason.noDefaultToDelete',
   },
   'edit.text': {
@@ -207,10 +204,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     p1: 'reason.noControlBlock',
     p6: 'reason.noControlBlock',
     range: 'reason.noControlBlock',
-    label: 'reason.nothingSelected',
-    armLabel: 'reason.nothingSelected',
-    defaultLabel: 'reason.nothingSelected',
-    missing: 'reason.nothingSelected',
     head: 'reason.notOnHead',
   },
   'branch.insert': {
@@ -400,6 +393,118 @@ describe('the Event and Method command titles (interaction rules "새 Method로 
     ['p6', 'diagram.event', 'command.diagram.event'],
   ] as const)('T-0562: with %s selected, %s is called %s', (place, id, expected) => {
     expect(title(engineAt(place), id)).toBe(expected);
+  });
+});
+
+describe('unwrap on what is not a block (UX Q8)', () => {
+  // d1: fold region t1 over p1; while w1 { fold region f1 over a; b }; call c1 -> d2
+  // d2: Method "m(x)" { fold region f2 over p6, p7 }
+  const withRegions = (): Content =>
+    withHeads(
+      {
+        ...contentOf([]),
+        diagrams: [
+          {
+            id: 'd1',
+            head: null,
+            body: {
+              blocks: [
+                proc('p1'),
+                {
+                  id: 'w1',
+                  kind: 'while',
+                  text: 'w',
+                  body: {
+                    blocks: [proc('a'), proc('b')],
+                    folds: [{ id: 'f1', first: 'a', last: 'a' }],
+                  },
+                },
+                call('c1', 'd2'),
+              ],
+              folds: [{ id: 't1', first: 'p1', last: 'p1' }],
+            },
+          },
+          {
+            id: 'd2',
+            head: null,
+            body: {
+              blocks: [proc('p6'), proc('p7')],
+              folds: [{ id: 'f2', first: 'p6', last: 'p7' }],
+            },
+          },
+        ],
+      },
+      { d2: ['method', 'm(x)'] },
+    );
+
+  /** The engine with the call block c1 opened, so the Method's region f2 is shown inside it. */
+  const opened = (): TestEngine => {
+    const engine = testEngine(withRegions());
+    engine.select(selectBlock(indexDoc(engine.content()), 'c1'));
+    engine.keys('z', 'o');
+    return engine;
+  };
+
+  it('T-1363 · UX Q8: on a branch label it unwraps the If and selects the blocks that came out', () => {
+    const engine = engineAt('label');
+    engine.keys('d', 's');
+    expect(bodyOf(engine, 'd1').slice(0, 3)).toEqual(['p1', 'p2', 'p3']);
+    expect(selected(engine)).toEqual(['p2', 'p3']);
+    expect(notice(engine)).toMatchObject({ key: 'notice.unwrapped' });
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1364 · UX Q8: on the empty default cell it unwraps the Case', () => {
+    const engine = engineAt('missing');
+    engine.run('block.unwrap');
+    expect(bodyOf(engine, 'd1')).not.toContain('k1');
+    expect(selected(engine)).toEqual(['p4']);
+  });
+
+  it('T-1365 · UX Q8: on a fold region it unwraps the loop holding it and keeps the region selected', () => {
+    const engine = testEngine(withRegions());
+    engine.select({ kind: 'fold', fold: 'f1' });
+    engine.run('block.unwrap');
+    expect(bodyOf(engine, 'd1')).toEqual(['p1', 'a', 'b', 'c1']);
+    expect(engine.session.state.selection).toEqual({ kind: 'fold', fold: 'f1' });
+  });
+
+  it('T-1366 · UX Q8: a fold region no control block holds has nothing to unwrap', () => {
+    const engine = testEngine(withRegions());
+    engine.select({ kind: 'fold', fold: 't1' });
+    expect(applies(engine, 'block.unwrap')).toBe('reason.noControlBlock');
+  });
+
+  it('T-1367 · R-EDIT-15: a fold region shown in an opened call block cannot be unwrapped', () => {
+    const engine = opened();
+    engine.select({ kind: 'fold', fold: 'f2', path: ['c1'] });
+    expect(engine.session.state.selection?.kind).toBe('fold');
+    expect(applies(engine, 'block.unwrap')).toBe('reason.peekReadOnly');
+  });
+
+  it('T-1368 · R-EDIT-15: copying a fold region shown in an opened call block copies its blocks', async () => {
+    const engine = opened();
+    engine.select({ kind: 'fold', fold: 'f2', path: ['c1'] });
+    engine.run('edit.copy');
+    await engine.settle();
+    expect(notice(engine)).toEqual({ key: 'notice.copied', params: { count: 2 } });
+  });
+
+  it('T-1369: interaction rules: Delete in the menu on a branch label deletes the branch, as the keys do', () => {
+    const engine = testEngine(
+      contentOf([
+        caseBlock(
+          'k1',
+          [arm('a1', '1', [proc('p1')]), arm('a2', '2', [proc('p2')])],
+          branch('o1', [proc('p3')]),
+        ),
+      ]),
+    );
+    engine.select({ kind: 'branchLabel', branch: 'a1' });
+    engine.run('edit.delete');
+    const k1 = engine.session.index().blocks.get('k1')?.block;
+    expect(k1?.kind === 'case' ? k1.arms.map((item) => item.id) : []).toEqual(['a2']);
+    expect(engine.session.state.selection).toEqual({ kind: 'branchLabel', branch: 'a2' });
   });
 });
 

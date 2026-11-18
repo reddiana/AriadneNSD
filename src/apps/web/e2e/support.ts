@@ -56,6 +56,14 @@ export async function onThisComputer(page: Page): Promise<void> {
   await expect(modal).toHaveCount(0);
 }
 
+/** Accepts the file name a download asks for (06-web 1), keeping the suggested name. */
+export async function acceptDownloadName(page: Page): Promise<void> {
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('File name to download');
+  await dialog.getByRole('button', { name: 'OK' }).click();
+  await expect(dialog).toHaveCount(0);
+}
+
 /** Takes the File System Access pickers away: the download flow of Firefox and Safari. */
 export async function useDownloads(page: Page): Promise<void> {
   await page.addInitScript(() => {

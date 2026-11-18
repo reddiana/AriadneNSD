@@ -175,20 +175,20 @@ export class WebDocumentStore implements DocumentStore {
     }
     if (this.canWriteInPlace || (this.isNew && this.#host.chooseSavePlace !== undefined)) {
       // A new document's first save asks where, like Save As (06-web 1 table, UX BS1).
-      return this.#isQuiet ? { ok: false, reason: 'denied' } : this.#saveAs(svg, this.#name, true);
+      return this.#isQuiet ? { ok: false, reason: 'denied' } : this.#saveAs(svg, this.#name);
     }
     return this.#download(this.#name, svg);
   }
 
   async writeAs(svg: string, suggestedName: string): Promise<WriteResult> {
-    return this.#saveAs(svg, suggestedName, false);
+    return this.#saveAs(svg, suggestedName);
   }
 
   /**
-   * Asks where (when the shell has browser documents), then writes there. A new document's first
-   * save that goes to this computer downloads at once in Firefox and Safari, as before (06-web 1).
+   * Asks where (when the shell has browser documents), then writes there. On this computer,
+   * Firefox and Safari ask for a name and download, also on a new document's first save (06-web 1).
    */
-  async #saveAs(svg: string, suggestedName: string, isFirstSave: boolean): Promise<WriteResult> {
+  async #saveAs(svg: string, suggestedName: string): Promise<WriteResult> {
     const { chooseSavePlace } = this.#host;
     if (chooseSavePlace !== undefined) {
       const place = await chooseSavePlace({
@@ -203,9 +203,6 @@ export class WebDocumentStore implements DocumentStore {
       if (place.kind === 'browser') {
         return this.#writeBrowser(place.key, place.name, svg);
       }
-    }
-    if (isFirstSave && !this.canWriteInPlace) {
-      return this.#download(this.#name, svg);
     }
     return this.#writeAsFile(svg, suggestedName);
   }

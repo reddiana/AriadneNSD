@@ -8,7 +8,7 @@ import type { Page } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
 import { expect, test } from './fixtures';
-import { onThisComputer } from './support';
+import { acceptDownloadName, onThisComputer } from './support';
 
 async function openApp(page: Page): Promise<void> {
   // The first visit's examples modal would cover the editor (UX EX2).
@@ -74,6 +74,7 @@ test.describe('download flow (no File System Access)', () => {
     const downloading = page.waitForEvent('download');
     await command(page, 'file.save').click();
     await onThisComputer(page);
+    await acceptDownloadName(page);
     const download = await downloading;
     expect(download.suggestedFilename()).toBe('Untitled.ns.svg');
     await expect(page.getByText('This browser cannot write to the original file')).toBeVisible();
@@ -249,6 +250,7 @@ async function sampleDocument(page: Page): Promise<string> {
   const downloading = page.waitForEvent('download');
   await command(page, 'file.save').click();
   await onThisComputer(page);
+  await acceptDownloadName(page);
   return readFile(await (await downloading).path(), 'utf8');
 }
 

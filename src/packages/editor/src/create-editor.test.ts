@@ -839,6 +839,7 @@ describe('the drawing language in the document (ADR-0041)', () => {
       'document.locale',
       'document.headStyle',
       'document.textOutlines',
+      'document.resultSymbol',
       'document.theme',
     ]);
     expect(specs[1]).toMatchObject({

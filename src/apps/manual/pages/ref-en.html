@@ -489,6 +489,13 @@
     their size and place. Process blocks and conditions are colored; headers, branch labels and
     calls are not. The saved file and PNG have the same colors. A new document starts as Plain text.
   </p>
+  <p class="tip">
+    "Result symbol" in Document Settings is the symbol between a call's result and the call (<code
+      >←</code
+    >
+    or <code>=</code>). It is set per document and saved in the file. Like folding, it is about how
+    the document is shown, so it is not an undo step. A new document starts with <code>←</code>.
+  </p>
 </section>
 
 <section id="theme">
@@ -570,7 +577,8 @@
     <li>
       <b>Save:</b> <kbd>Ctrl</kbd>+<kbd>S</kbd>; Save As is
       <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. Chrome and Edge write to the original file and
-      save automatically after the first save. Firefox and Safari download the file on each save.
+      save automatically after the first save. Firefox and Safari download the file on each save,
+      and ask for its name on a new document's first save.
     </li>
     <li>
       <b>Documents in this browser:</b> on "This Browser", give the document a name and save it

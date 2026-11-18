@@ -289,7 +289,7 @@ function bodyTarget(index: DocIndex, owner: Id, seq: Seq, path: Path): FoldTarge
 }
 
 /** Where the fold region `fold` shown at the call site `path` lies: its sequence and range. */
-function regionPlace(
+export function regionPlace(
   index: DocIndex,
   fold: Id,
   path: Path,

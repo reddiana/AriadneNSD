@@ -73,13 +73,14 @@ import type { Selection } from '../state/selection';
 import {
   diagramOf,
   extendBy,
+  foldPath,
   peekBlocks,
   selectBlock,
   selectRange,
   selectedBlocks,
   targetOf,
 } from '../state/selection';
-import { foldCommands, isOpenable } from './fold-commands';
+import { foldCommands, isOpenable, regionPlace } from './fold-commands';
 import type { Applies } from './spec';
 import { always, commandTitle, spec } from './spec';
 
@@ -181,6 +182,26 @@ function branchOfSelection(index: DocIndex, selection: Selection | null): Found<
   }
   const branch = branchAround(index, first);
   return branch === null ? { reason: 'reason.selectInBranch' } : { value: branch };
+}
+
+/**
+ * The control block unwrap takes off when what is selected is not a block range (UX Q8): the If or
+ * Case of a branch label or of the empty default cell, or the block holding a fold region. `null`
+ * for other selections, for a region at the top of a diagram and for one seen in an opened call
+ * block, which cannot be edited there.
+ */
+function unwrapHolder(index: DocIndex, selection: Selection | null): Id | null {
+  if (selection?.kind === 'branchLabel') {
+    return index.branches.get(selection.branch)?.block.id ?? null;
+  }
+  if (selection?.kind === 'missingDefault') {
+    return selection.block;
+  }
+  if (selection?.kind !== 'fold' || foldPath(selection).length > 0) {
+    return null;
+  }
+  const owner = index.folds.get(selection.fold);
+  return owner === undefined ? null : (index.seqs.get(owner)?.holder ?? null);
 }
 
 /** `true` when found, otherwise the reason: the `when` of a command. */
@@ -521,6 +542,14 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       if (state.selection?.kind === 'head') {
         return 'reason.notOnHead';
       }
+      if (unwrapHolder(index(), state.selection) !== null) {
+        return true;
+      }
+      if (state.selection?.kind === 'fold' && foldPath(state.selection).length === 0) {
+        return index().folds.has(state.selection.fold)
+          ? 'reason.noControlBlock'
+          : 'reason.nothingSelected';
+      }
       if (state.selection?.kind !== 'blocks') {
         return 'reason.nothingSelected';
       }
@@ -540,11 +569,16 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       return seqOfBlock(ix, first).holder === null ? 'reason.noControlBlock' : true;
     },
     run: (state) => {
+      const ix = index();
+      const outer = unwrapHolder(ix, state.selection);
+      if (outer !== null) {
+        runUnwrapHolder(outer, state.selection);
+        return;
+      }
       const target = targetOf(state.selection);
       if (target === null) {
         return;
       }
-      const ix = index();
       const selected = selectedBlocks(ix, state.selection);
       const [only] = selected;
       const onlyBlock = only === undefined ? undefined : ix.blocks.get(only)?.block;
@@ -570,8 +604,32 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       }
     },
     menu: { menu: 'diagram', group: 2, order: 10 },
-    context: ['blocks'],
+    context: ['blocks', 'branchLabel', 'fold', 'missingDefault'],
   });
+
+  /**
+   * Takes off the control block `holder` around a selection that is not a block range (UX Q8). A
+   * fold region comes out with its blocks and stays selected; a branch label or the empty default
+   * cell goes with the block, so what came out is selected instead.
+   */
+  const runUnwrapHolder = (holder: Id, selection: Selection | null): void => {
+    const removed = index().blocks.get(holder)?.block;
+    const result = unwrap(content(), {
+      target: { kind: 'blocks', first: holder, last: holder },
+      ids: session.ids(),
+    });
+    const isApplied = session.commit(result, (ok) => ({
+      selection:
+        selection?.kind === 'fold' && indexDoc(ok.content).folds.has(selection.fold)
+          ? selection
+          : selectTouched(ok.content, ok.touched),
+    }));
+    if (isApplied && removed !== undefined) {
+      session.notify(
+        message('notice.unwrapped', { kind: kindNames[removed.kind] ?? removed.kind }),
+      );
+    }
+  };
 
   /**
    * Replaces a call block with its Method's blocks (R-EDIT-08). The copies show the way the
@@ -718,20 +776,35 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     session.notify(where === 'memory' ? 'notice.clipboardLocal' : notice);
   };
 
+  /** What copy takes: blocks shown in an opened call, a region shown there, or the selection. */
+  const copyTarget = (selection: Selection | null): Target | null => {
+    const peeked = peekBlocks(index(), selection);
+    const [first] = peeked;
+    const last = peeked.at(-1);
+    if (first !== undefined && last !== undefined) {
+      return { kind: 'blocks', first, last };
+    }
+    if (selection?.kind !== 'fold' || foldPath(selection).length === 0) {
+      return targetOf(selection);
+    }
+    const place = regionPlace(index(), selection.fold, foldPath(selection));
+    const blocks = place === null ? undefined : index().seqs.get(place.owner)?.seq.blocks;
+    const from = place === null ? undefined : blocks?.[place.lo];
+    const to = place === null ? undefined : blocks?.[place.hi];
+    return from === undefined || to === undefined
+      ? null
+      : { kind: 'blocks', first: from.id, last: to.id };
+  };
+
   const copySpec = spec('edit.copy', {
     edits: false,
     // Blocks shown in an opened call are copied as the Method has them (R-EDIT-15).
     when: (state) =>
       state.selection?.kind === 'peek' ? true : blocksOnly('reason.nothingToCopy')(state),
     run: async (state) => {
-      const peeked = peekBlocks(index(), state.selection);
-      const [first] = peeked;
-      const last = peeked.at(-1);
-      const target =
-        first !== undefined && last !== undefined
-          ? ({ kind: 'blocks', first, last } as const)
-          : targetOf(state.selection);
+      const target = copyTarget(state.selection);
       if (target === null) {
+        session.notify('reason.nothingToCopy', 'warn');
         return;
       }
       const copied = copy(content(), { target });
@@ -857,12 +930,19 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const deleteSpec = spec('edit.delete', {
     edits: true,
-    // On a header, Delete removes the header (03-keymap).
+    // On a header, Delete removes the header (03-keymap); on a branch label, the branch, as the
+    // keys do (interaction rules "분기 라벨 선택").
     when: (state) =>
-      state.selection?.kind === 'head' ? true : blocksOnly('reason.noDefaultToDelete')(state),
+      state.selection?.kind === 'head' || state.selection?.kind === 'branchLabel'
+        ? true
+        : blocksOnly('reason.noDefaultToDelete')(state),
     run: (state) => {
       if (state.selection?.kind === 'head') {
         session.runCommand('diagram.removeHead');
+        return;
+      }
+      if (state.selection?.kind === 'branchLabel') {
+        session.runCommand('branch.delete');
         return;
       }
       const target = targetOf(state.selection);

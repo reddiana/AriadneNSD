@@ -8,6 +8,7 @@ import {
   locales,
   openSvgFile,
   parseModelJson,
+  resultSymbols,
   setSettings,
   textKinds,
   themeIds,
@@ -85,13 +86,17 @@ export const settingIds = {
   headStyle: 'editor.headStyle',
 } as const;
 
-/** The document setting ids (scope `document`): the model's `settings` (UX W5). */
+/**
+ * The document setting ids (scope `document`): the model's `settings` (UX W5), and the result
+ * symbol, which is saved in the file as view state (`view.resultSymbol`).
+ */
 export const documentSettingIds = {
   headStyle: 'document.headStyle',
   locale: 'document.locale',
   textKind: 'document.textKind',
   theme: 'document.theme',
   textOutlines: 'document.textOutlines',
+  resultSymbol: 'document.resultSymbol',
 } as const;
 
 /** The settings the editor knows. `file.autoSave` is used by the web shell. */
@@ -160,6 +165,15 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
     hint: 'setting.textOutlines.hint',
     values: [false, true],
     defaultValue: false,
+    scope: 'document',
+  },
+  {
+    // View state saved in the file: changing it is not an undo step (interaction rules "실행 취소").
+    id: documentSettingIds.resultSymbol,
+    title: 'setting.resultSymbol',
+    hint: 'setting.resultSymbol.hint',
+    values: resultSymbols,
+    defaultValue: '←',
     scope: 'document',
   },
   {
@@ -640,6 +654,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
           return current.theme;
         case documentSettingIds.textOutlines:
           return current.textOutlines === true;
+        case documentSettingIds.resultSymbol:
+          return session.state.doc.view.resultSymbol;
         default:
           return undefined;
       }
@@ -649,6 +665,14 @@ export function createEditor(options: EditorOptions): EditorHandle {
       const next = changedSettings(content.settings, id, value);
       if (session.state.readOnly) {
         session.notify('reason.readOnly', 'warn');
+        return;
+      }
+      if (id === documentSettingIds.resultSymbol) {
+        const symbol = resultSymbols.find((item) => item === value);
+        const shown = session.state.doc.view;
+        if (symbol !== undefined && symbol !== shown.resultSymbol) {
+          session.setView({ ...shown, resultSymbol: symbol });
+        }
         return;
       }
       if (next === null) {

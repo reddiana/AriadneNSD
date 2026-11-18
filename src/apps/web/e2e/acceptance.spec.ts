@@ -12,6 +12,7 @@ import {
   drawnText,
   middleOf,
   modelOf,
+  acceptDownloadName,
   onThisComputer,
   openApp,
   placesModal,
@@ -546,6 +547,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     let downloading = page.waitForEvent('download');
     await page.keyboard.press('Control+S');
     await onThisComputer(page);
+    await acceptDownloadName(page);
     const first = await readFile(await (await downloading).path(), 'utf8');
 
     await command(page, 'file.new').click();
@@ -605,6 +607,7 @@ test.describe('downloads (Firefox and Safari: no File System Access)', () => {
     const downloading = page.waitForEvent('download');
     await command(page, 'file.save').click();
     await onThisComputer(page);
+    await acceptDownloadName(page);
     await downloading;
     await expect(statusBar(page)).toContainText('This browser cannot write to the original file');
   });

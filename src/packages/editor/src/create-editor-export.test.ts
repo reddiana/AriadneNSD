@@ -132,6 +132,34 @@ describe('text as outlines (R-FMT-10)', () => {
   });
 });
 
+describe('the result symbol (interaction rules "호출 블록")', () => {
+  it('T-1373 · R-BLK-08: is a document setting saved in the file, and not an undo step', async () => {
+    const { handle, store } = make();
+    const spec = handle.settingsSchema.list().find((item) => item.id === 'document.resultSymbol');
+    expect(spec).toMatchObject({ scope: 'document', values: ['←', '='], defaultValue: '←' });
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('←');
+    handle.setDocumentSetting(documentSettingIds.resultSymbol, '=');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
+    expect(handle.status().dirty).toBe(true);
+    expect(handle.state().undo).toHaveLength(0);
+    handle.commands.run('edit.undo');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
+    await handle.save();
+    expect(store.written.at(-1) ?? '').toContain('"resultSymbol": "="');
+    expect(handle.status().dirty).toBe(false);
+  });
+
+  it('T-1374 · R-BLK-08: the same symbol, another value and a view-only document change nothing', () => {
+    const { handle } = make();
+    handle.setDocumentSetting(documentSettingIds.resultSymbol, '←');
+    handle.setDocumentSetting(documentSettingIds.resultSymbol, ':=');
+    expect(handle.status().dirty).toBe(false);
+    handle.setReadOnly(true);
+    handle.setDocumentSetting(documentSettingIds.resultSymbol, '=');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('←');
+  });
+});
+
 describe('a drawing changed by another tool (R-FMT-09)', () => {
   async function savedText(): Promise<string> {
     const { handle } = make();

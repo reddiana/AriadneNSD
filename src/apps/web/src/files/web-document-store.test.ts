@@ -348,14 +348,29 @@ describe('web document store: documents in this browser (R-WEB-09)', () => {
     });
     // A new document's first save asks where too, in every browser.
     expect(await closed.write('<svg/>')).toEqual({ ok: false, reason: 'cancelled' });
-    // On this computer it then downloads under its name at once, without asking for a name.
+  });
+
+  it('T-1371: 06-web 1: the first save to this computer asks for a name, then downloads', async () => {
     const first = new WebDocumentStore(
       browserHost([], { kind: 'computer' }).value,
       'k',
       'Untitled.ns.svg',
       { kind: 'none' },
     );
-    expect(await first.write('<svg/>')).toEqual({ ok: true, name: 'Untitled.ns.svg' });
+    expect(await first.write('<svg/>')).toEqual({ ok: true, name: 'renamed-Untitled.ns.svg' });
+    expect(download).toHaveBeenLastCalledWith('renamed-Untitled.ns.svg', '<svg/>', 'image/svg+xml');
+  });
+
+  it('T-1372: 06-web 1: cancelling the name of the first save saves nothing', async () => {
+    const written: Written[] = [];
+    const cancelling: StoreHost = {
+      ...browserHost(written, { kind: 'computer' }).value,
+      askDownloadName: () => Promise.resolve(null),
+    };
+    const store = new WebDocumentStore(cancelling, 'k', 'Untitled.ns.svg', { kind: 'none' });
+    expect(await store.write('<svg/>')).toEqual({ ok: false, reason: 'cancelled' });
+    expect(store.isNew).toBe(true);
+    expect(written).toEqual([]);
   });
 
   it('T-0939 · R-WEB-09: a failed browser write keeps the document where it was', async () => {
