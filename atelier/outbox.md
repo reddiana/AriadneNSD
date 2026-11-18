@@ -69,7 +69,6 @@ updated: 2026-11-17
 	- [[ux-decisions#CB9. 호출하는 Method로 가기|CB9]] `gd`는 Method의 헤더나 원래 블록으로
 	- [[ux-decisions#CB10. 펴 보인 곳의 접기 영역이 걸칠 때|CB10]] 펴 보인 곳에서 걸치는 접기 영역은 만들지 않고 알림
 	- [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]] 복사한 호출 블록은 Method 이름을 담아, 붙인 문서의 같은 이름 Method를 부름
-	- [[ux-decisions#CB12. 펴 보인 곳에서 Method의 접힘을 바꾸면|CB12]] 펴 보인 곳에서 바꾼 Method의 접힘은 Method와 그것을 펴 보인 모든 곳에
 - [ ] 블록 텍스트의 언어 · 구문 강조 → [[ux-decisions#2026-11-03 블록 텍스트의 언어 · 구문 강조 (밤사이 에이전트가 만듦, 메인테이너가 추천안을 받아들임)|블록 텍스트의 언어 · 구문 강조의 절]]
 	- [[ux-decisions#TK1. 처음의 언어 목록|TK1]] 일반 텍스트 · C · C++ · Java · JavaScript/TypeScript · Python · Bash
 	- [[ux-decisions#TK2. 문서 설정의 자리와 이름|TK2]] 문서 설정의 맨 위 "블록 텍스트의 언어"

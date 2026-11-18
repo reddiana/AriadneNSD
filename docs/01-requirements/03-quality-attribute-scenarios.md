@@ -103,7 +103,7 @@ updated: 2026-11-19
 
 - **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 조회하지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[01-architecture#6. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** 골든 파일 테스트. 대표 문서 묶음(한글 · 영문 · 기호, 블록 종류 모두, 접힘 · 펴 보기 포함)을 저장해 저장소의 기대 파일과 바이트로 비교한다. 같은 테스트를 Node와 각 브라우저(Playwright)에서 실행한다. **실행할 때:** 모든 커밋(Node, Chromium), 출시 전(모든 브라우저와 Obsidian)
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
+- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. `packages/core/src/model/site-folded.test.ts`의 테스트 18개([[08-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
 - **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-04 저장 왕복 무손실
@@ -122,7 +122,7 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** QA-03과 같다. 뷰 상태도 파일에 들어 있어 열 때 그대로 복원된다 → [[0018-save-as-shown|ADR-0018]]
 - **테스트:** 골든 파일 왕복 테스트. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
+- **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. `packages/core/src/model/site-folded.test.ts`의 테스트 18개([[08-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
 - **알아 둘 것:** 화면 언어가 달라도 같다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 문서 설정의 언어를 따르기 때문이다([[0041-drawing-locale-in-document|ADR-0041]]). 그림의 언어가 적히지 않은 옛 파일만, 처음 저장할 때 연 사람의 화면 언어가 더해진다
 
 ### QA-05 하위 호환성
