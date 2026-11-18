@@ -132,7 +132,7 @@ sequenceDiagram
 
 정한 것 → [[0036-code-layout|ADR-0036]]
 
-- 플러그인 id는 `ariadne-nsd`, 이름은 `AriadneNSD`다. 이름에 설명을 붙여 보여야 하는 곳에서는 `AriadneNSD: NS Diagram Editor`로 기록한다 → [[dr-0005-product-name|DR-0005]]
+- 플러그인 id는 `ariadne-nsd`, 이름은 `AriadneNSD`다. 이름에 설명을 붙여 보여야 하는 곳에서는 `AriadneNSD: NS Diagram Editor`로 표기한다 → [[dr-0005-product-name|DR-0005]]
 - `manifest.json`의 원본은 `src/apps/obsidian/`에 둔다. 저장소 맨 위에 그 사본과 `versions.json`(플러그인 버전 → 최소 Obsidian 버전)을 둔다. Obsidian 커뮤니티 플러그인 목록이 저장소 맨 위의 `manifest.json`을 읽기 때문이다.
 - 버전을 올리는 스크립트가 원본을 맨 위로 복사하고 `versions.json`을 갱신한다. 둘이 다르면 CI가 실패한다.
 - GitHub Actions가 빌드해 GitHub Release에 `main.js` · `manifest.json` · `styles.css`를 올린다. 커뮤니티 플러그인 목록은 Release에서 이 파일을 받아 간다.
@@ -142,6 +142,6 @@ sequenceDiagram
 ## 미결정 사항
 
 - [ ] 새 파일의 이름과 저장 위치 (제안: Obsidian의 "첨부 파일 폴더" 설정을 따르고, 이름은 `노트이름-diagram-1.ns.svg`처럼 자동 생성)
-- [ ] 아무것도 렌더링하지 않고 탭을 닫았을 때 (제안: 파일을 삭제하고 노트에 삽입하지 않음)
+- [ ] 아무것도 작성하지 않고 탭을 닫았을 때 (제안: 파일을 삭제하고 노트에 삽입하지 않음)
 - [ ] 편집 중 저장 시점 (탭을 닫을 때만 / 편집할 때마다 자동 저장)
 

@@ -114,7 +114,7 @@ const areas = [
   {
     name: '레이아웃 · 그리기 · 글자',
     about:
-      '블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 재기, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
+      '블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
     paths: [
       'packages/core/src/layout/',
       'packages/core/src/render/render-doc',
@@ -129,7 +129,7 @@ const areas = [
   {
     name: '성능',
     about:
-      '렌더링와 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 측정하는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]',
+      '렌더링과 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 측정하는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]',
     paths: ['.bench.ts', 'apps/web/src/perf/', 'apps/web/e2e/perf.spec.ts'],
   },
   {
