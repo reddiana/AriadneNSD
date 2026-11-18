@@ -75,6 +75,10 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 - [[llms-txt-and-doc-consistency]] — llms.txt(LLM용 안내서), 공유 링크의 꾸림 d · j · u, 문서와 코드의 정합성을 지키는 넷, 화면의 응답 시간 재기, hidden과 보이지 않는 글, 커밋을 막는 훅 (2026-11-10)
 - [[github-pages-site]] — GitHub Pages로 문서 사이트 펴내기: 저장소 하나에 사이트 하나, 정적 사이트 생성기 Quartz, GitHub Actions, 첫 화면은 README로, custom.scss, 주소가 저절로 링크가 될 때 (2026-10-18, 링크 공유 그림(og:image)과 페이스북의 캐시 2026-10-25)
 
+### 작업 환경
+
+- [[lock-screen-and-sleep]] — 화면 잠금과 절전의 차이, 긴 작업을 맡기고 자리를 비울 때 (2026-11-19)
+
 ### 오픈소스 운영
 
 - [[open-source-licenses]] — 오픈소스 라이선스 고르기: MIT · Apache-2.0 · GPL, `NOTICE` 파일, 글에는 CC BY, 라이선스와 상표의 차이 (2026-10-11)
