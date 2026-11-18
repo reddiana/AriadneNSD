@@ -181,6 +181,48 @@ describe('the screen and edit layer colors', () => {
     expect(rest.match(/#[0-9a-f]{3,8}\b|rgba?\(/gi)).toBeNull();
   });
 
+  it('T-1319 · UX WC1: ui.warn as text keeps 4.5:1 on the background and the panel in every screen color set', () => {
+    /** WCAG 2.2 contrast ratio of two `#rrggbb` colors. */
+    const contrast = (a: string, b: string): number => {
+      const luminance = (hex: string): number => {
+        const channel = (offset: number): number => {
+          const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+          return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+        };
+        return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+      };
+      const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+      return (light + 0.05) / (dark + 0.05);
+    };
+    const at = chromeCss.indexOf('@media (prefers-contrast: more)');
+    const [base, more] = [chromeCss.slice(0, at), chromeCss.slice(at)];
+    const dark = ".ans-app[data-scheme='dark']";
+    // High contrast changes ui.warn but neither ui.bg nor ui.panel.
+    const sets = [
+      {
+        name: 'light',
+        paint: declarations(base, '.ans-app', 'ui'),
+        warn: base,
+        selector: '.ans-app',
+      },
+      { name: 'dark', paint: declarations(base, dark, 'ui'), warn: base, selector: dark },
+      {
+        name: 'light, more',
+        paint: declarations(base, '.ans-app', 'ui'),
+        warn: more,
+        selector: '.ans-app',
+      },
+      { name: 'dark, more', paint: declarations(base, dark, 'ui'), warn: more, selector: dark },
+    ];
+    for (const { name, paint, warn, selector } of sets) {
+      const text = declarations(warn, selector, 'ui').get('ui.warn') ?? '';
+      for (const back of ['ui.bg', 'ui.panel']) {
+        const ratio = contrast(text, paint.get(back) ?? '');
+        expect(ratio, `${name}: ui.warn on ${back}`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+
   it('T-1169 · R-NFR-07: the web page around the editor uses the same screen colors', () => {
     const css = read('src/apps/web/src/web.css');
     const sheets = [

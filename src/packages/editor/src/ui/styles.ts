@@ -9,7 +9,7 @@ export const chromeCss = `
 .ans-app {
   --ui-bg: #eef1f6; --ui-dots: #d3d9e4; --ui-panel: #ffffff; --ui-text: #1c2230;
   --ui-muted: #5a6476; --ui-line: #d4dbe6; --ui-accent: #2c55c9; --ui-accent-soft: #e4eafb;
-  --ui-warn: #b35a10; --ui-shadow: rgba(20, 30, 60, 0.18); --ui-backdrop: rgba(20, 26, 34, 0.32);
+  --ui-warn: #ad560f; --ui-shadow: rgba(20, 30, 60, 0.18); --ui-backdrop: rgba(20, 26, 34, 0.32);
   position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0;
   background: var(--ui-bg); color: var(--ui-text);
   font-family: var(--ans-ui-font, system-ui, sans-serif); font-size: 13px; line-height: 18px;

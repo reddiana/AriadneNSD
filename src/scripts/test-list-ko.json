@@ -1231,6 +1231,7 @@
   "turns the page for a wide drawing when that needs fewer pages": "넓은 다이어그램은 페이지가 적게 나오면 가로로 돌린다",
   "typing into the empty default cell makes the default branch, one undo step": "빈 default 칸에 텍스트를 입력하면 default 분기가 생기고, 실행 취소 한 단계다",
   "typing keeps the editor at least as high as its field": "텍스트를 입력하는 동안 편집기는 적어도 그 입력란만큼 높다",
+  "ui.warn as text keeps 4.5:1 on the background and the panel in every screen color set": "`ui.warn` 글자가 모든 화면 색(밝은 · 어두운, 보통 · 고대비)의 배경과 패널 위에서 4.5:1을 넘는다",
   "undo and redo with keys and the toolbar": "키와 툴바로 실행 취소 · 다시 실행",
   "undo keeps the selection while what it names is still there": "실행 취소는 선택한 것이 아직 있으면 선택을 지킨다",
   "undo or redo with nothing to step says so and returns false": "되돌릴 것이 없는 실행 취소나 다시 실행은 그렇다고 알리고 false를 반환한다",
