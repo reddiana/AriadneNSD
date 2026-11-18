@@ -164,7 +164,9 @@ function separateShapeFromColor(source) {
 
 /** What the notation means, said in the legend so the document's text can describe the system. */
 const legendTexts = {
-  'lg-t-act': '능동 컴포넌트: 이벤트 · 타이머로&#xa;스스로 움직임 (스레드는 따로 없음)',
+  'lg-t-pas': '수동 컴포넌트: 호출될 때만 동작',
+  'lg-t-act': '능동 컴포넌트: 이벤트 · 타이머로&#xa;스스로 동작 (별도 스레드 없음)',
+  'lg-t-ext': '브라우저 · 외부&#xa;(우리 코드가 아님)',
   'lg-t-pure': '순수 함수 (core · fonts):&#xa;같은 입력이면 같은 출력',
   'lg-t-notify': '알림 (이벤트 · 콜백):&#xa;보내는 쪽은 기다리지 않음',
   'lg-t-mod': '모듈 경계: 4.1의 패키지,&#xa;코드 소유 단위',

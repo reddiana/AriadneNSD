@@ -59,7 +59,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 
 ### 1.4 추적: 테스트 이름의 ID
 
-- 테스트마다 ID(`T-0123`)가 이름 맨 앞에 있고, 바뀌지 않습니다 → [[dr-0022-test-ids|DR-0022]]. 그 뒤에 테스트가 확인하는 것의 ID를 적습니다: 요구사항 `R-`, 품질 속성 시나리오 `QA-`, 인수 테스트 `AT-`, 결함 `BUG-`, UX 결정 `UX`(`T-0123 · AT-04: …`, 여럿이면 `T-0124 · BUG-03 · QA-19: …`). 파일 전체가 한 근거를 맡으면 파일의 첫 주석에 적습니다.
+- 테스트마다 ID(`T-0123`)가 이름 맨 앞에 있고, 바뀌지 않습니다 → [[dr-0022-test-ids|DR-0022]]. 그 뒤에 테스트가 확인하는 것의 ID를 적습니다: 요구사항 `R-`, 품질 속성 시나리오 `QA-`, 인수 테스트 `AT-`, 결함 `BUG-`, UX 결정 `UX`(`T-0123 · AT-04: …`, 여럿이면 `T-0124 · BUG-03 · QA-19: …`). 파일 전체가 한 근거를 담당하면 파일의 첫 주석에 적습니다.
 - [[08-test-list|테스트 목록]]은 스크립트(`src/scripts/test-list.mjs`)가 이 이름과 주석에서 만듭니다. `pnpm check`가 목록이 코드와 다르면 실패하므로 목록은 언제나 지금의 코드와 같습니다. 테스트 코드의 이름은 영어이고, 목록에는 한국어 번역(`src/scripts/test-list-ko.json`)으로 적습니다.
 - 목록의 끝에는 문서에 정의되었으나 이름에 그 ID를 단 테스트가 없는 것이 나옵니다. 사람이 보는 것이거나 아직 빈 곳입니다.
 
@@ -120,7 +120,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 
 ## 4. MVP의 인수 테스트
 
-MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)는 [[01-requirements#5.2 MVP의 인수 기준|요구사항 5.2]]에 있습니다. 그것을 확인하는 테스트는 [[08-test-list#1. 인수 테스트|테스트 목록 1장]]에 있습니다.
+MVP를 출시하기 전에 모두 통과해야 하는 인수 테스트(AT-01 ~ AT-17)는 [[01-requirements#5.2 MVP의 인수 기준|요구사항 5.2]]에 있습니다. 그것을 확인하는 테스트는 [[08-test-list#1. 인수 테스트|테스트 목록 1장]]에 있습니다.
 
 ## 5. 도구와 CI
 
@@ -135,15 +135,15 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 | 출시 전 | 기준 기기에서 성능(AT-05, 점검 모드 `?perf` → 5.1), 수동 점검표(AT-08 · AT-10), 새 LLM에게 `/llms.txt`만 주고 그리게 해 낸 링크를 앱의 파서로 검사(→ 5.2) | — |
 
 - 테스트가 하나라도 실패하면 `main`에 합치지 않습니다.
-- CI는 `.github/workflows/ci.yml`이고 Node 24, `pnpm install --frozen-lockfile`로 돕니다. E2E가 실패하면 Playwright 보고서를 7일 남깁니다.
+- CI는 `.github/workflows/ci.yml`이고 Node 24, `pnpm install --frozen-lockfile`로 실행됩니다. E2E가 실패하면 Playwright 보고서를 7일 남깁니다.
 - 벤치마크는 `pnpm test`에 들지 않습니다. `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 따로 돌립니다(`*.bench.ts`).
 - 지금 있는 문서 사이트의 빌드(`.github/workflows/pages.yml`)와는 따로 둡니다.
-- 커버리지(테스트가 실행한 코드 줄의 비율)는 `src/`에서 `pnpm coverage`로 잽니다. 패키지마다 단위 테스트(Vitest, V8)를 돌리고, 웹 E2E를 소스맵을 넣은 빌드로 돌려 Chromium의 JS 커버리지를 원래 소스 파일에 대어 본 뒤(`apps/web`의 `e2e:coverage`, `monocart-coverage-reports`), 둘을 줄마다 합칩니다. 어느 쪽이든 실행한 줄은 덮인 것으로 셉니다. 패키지마다의 표와, 테스트가 닿지 않은 줄이 많은 파일을 보여 줍니다.
-- 커버리지 하한: CI는 `coverage` job(`check`와 나란히)에서 `pnpm coverage:check`를 돌립니다. 패키지마다(`core` · `editor` · `fonts` · `apps/web`) 합친 줄 커버리지가 하한 90%보다 낮거나 테스트가 하나라도 실패하면 실패합니다. 리팩토링이 커버리지를 낮추지 않게 하려는 것입니다. 마지막으로 잰 숫자는 [[coverage]]에 있습니다. 하한은 저절로 오르지 않으며, 커버리지가 올라 굳으면 `scripts/coverage.mjs`의 `floors`에서 손으로 올릴 수 있습니다. 커버리지를 재는 동안에는 코드가 느려지므로, 시간을 재는 E2E(AT-05)는 `pnpm e2e`에서만 돌고, 시간을 재는 단위 테스트(T-0487 · T-1126, QA-07)는 커버리지를 기록할 때 시간 단언만 건너뜁니다(`packages/core/vitest.config.ts`의 `coverageRun`).
+- 커버리지(테스트가 실행한 코드 줄의 비율)는 `src/`에서 `pnpm coverage`로 측정합니다. 패키지마다 단위 테스트(Vitest, V8)를 돌리고, 웹 E2E를 소스맵을 넣은 빌드로 돌려 Chromium의 JS 커버리지를 원래 소스 파일에 매핑한 뒤(`apps/web`의 `e2e:coverage`, `monocart-coverage-reports`), 둘을 줄마다 합칩니다. 어느 쪽이든 실행한 줄은 커버된 것으로 집계합니다. 패키지마다의 표와, 테스트가 실행하지 않은 줄이 많은 파일을 보여 줍니다.
+- 커버리지 하한: CI는 `coverage` job(`check`와 나란히)에서 `pnpm coverage:check`를 돌립니다. 패키지마다(`core` · `editor` · `fonts` · `apps/web`) 합친 줄 커버리지가 하한 90%보다 낮거나 테스트가 하나라도 실패하면 실패합니다. 리팩토링이 커버리지를 낮추지 않게 하려는 것입니다. 마지막으로 측정한 수치는 [[coverage]]에 있습니다. 하한은 저절로 오르지 않으며, 커버리지가 올라 굳으면 `scripts/coverage.mjs`의 `floors`에서 손으로 올릴 수 있습니다. 커버리지를 측정하는 동안에는 코드가 느려지므로, 시간을 측정하는 E2E(AT-05)는 `pnpm e2e`에서만 실행되고, 시간을 측정하는 단위 테스트(T-0487 · T-1126, QA-07)는 커버리지를 기록할 때 시간 단언만 건너뜁니다(`packages/core/vitest.config.ts`의 `coverageRun`).
 
-### 5.1 기준 기기에서 AT-05 재기
+### 5.1 기준 기기에서 AT-05 측정하기
 
-[[01-requirements#^at|AT-05]](블록 500개 문서에서 편집 응답이 100ms 안)는 E2E(T-0007)가 개발 기계의 Chromium에서 보고, 출시 전에 사람이 기준 기기([[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]]: 4년 된 보급형 노트북, 예: 4코어 CPU · 8 GB, Chrome)에서 한 번 더 잽니다. 블록을 손으로 만들거나 시계로 재지 않습니다. 앱이 스스로 문서를 만들고 재는 점검 모드가 있습니다 → [[06-web#9. 점검 모드]]
+[[01-requirements#^at|AT-05]](블록 500개 문서에서 편집 응답이 100ms 안)는 E2E(T-0007)가 개발 기계의 Chromium에서 보고, 출시 전에 사람이 기준 기기([[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]]: 4년 된 보급형 노트북, 예: 4코어 CPU · 8 GB, Chrome)에서 한 번 더 측정합니다. 블록을 손으로 만들거나 시계로 측정하지 않습니다. 앱이 스스로 문서를 생성하고 측정하는 점검 모드가 있습니다 → [[06-web#9. 점검 모드]]
 
 1. 기준 기기에서 다른 탭과 앱을 닫고, 노트북이면 충전기를 꽂습니다.
 2. Chrome으로 `https://ariadnensd.com/?perf`를 엽니다(개발 중이면 `http://localhost:5173/?perf`). 개발 환경은 필요 없습니다.
@@ -153,7 +153,7 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 
 - 시간의 정의는 T-0007과 같습니다(키부터 문서 레이어가 바뀐 뒤의 프레임까지). 그래서 화면 주사율에 묶여, 60Hz 화면이면 가장 빨라도 17 ~ 33ms입니다.
 - 결과의 둘째 표는 같은 실행의 구간별 p95입니다. 불합격이면 어느 구간이 [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]]의 구간 예산을 넘는지 봅니다.
-- 개발 기계에서 느린 기기를 흉내 내려면 `src/apps/web`에서 앱을 빌드해 띄우고(`pnpm build`, `pnpm preview --port 4173`) `node scripts/perf-measure.mjs --throttle=4`를 돌립니다. Chromium의 CPU 감속(4배)을 걸고 점검 모드를 돌려 두 표를 마크다운으로 찍습니다. 다른 무거운 일이 돌지 않을 때만 믿습니다.
+- 개발 기계에서 느린 기기를 흉내 내려면 `src/apps/web`에서 앱을 빌드해 띄우고(`pnpm build`, `pnpm preview --port 4173`) `node scripts/perf-measure.mjs --throttle=4`를 돌립니다. Chromium의 CPU 감속(4배)을 걸고 점검 모드를 실행해 두 표를 마크다운으로 출력합니다. 다른 무거운 작업이 실행되지 않을 때만 결과를 신뢰합니다.
 - 휴대폰에서도 같은 주소로 잴 수 있습니다. 기준은 같지만, 합격 여부를 가르는 것은 기준 기기의 결과입니다.
 - 점검 모드는 아무것도 저장하지 않습니다. 그 브라우저의 로컬 백업 · 최근 파일 · 브라우저 문서 · 설정은 그대로입니다.
 - 브라우저 테스트도 점검 모드를 돌려 봅니다: 측정이 끝나 표가 나오는지와 저장소를 건드리지 않는지(T-1147, 커버리지 기록 중에도), 개발 기계에서 명령마다 중앙값이 100ms 안인지(T-1148, `pnpm e2e`에서만).
@@ -163,9 +163,9 @@ MVP를 내놓기 전에 모두 지나야 하는 인수 테스트(AT-01 ~ AT-17)�
 다른 AI를 위한 안내서 `/llms.txt`([[01-requirements#^r-web|R-WEB-10]] → [[06-web#3.1 LLM · 에이전트를 위한 안내서]])는 예제를 doctest가 열지만(3.1), 안내서만 읽은 LLM이 정말 열리는 링크를 만드는지는 사용자처럼 해 봐야 압니다. 출시 전에, 안내서를 바꾼 판이면 한 번 더 합니다. 시안 M56의 실험(2026-11-09, 23번)과 같은 방법입니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]
 
 1. 이 저장소와 대화를 모르는 새 대화에서, 크기가 다른 LLM 몇(예: Claude의 haiku · sonnet · opus, ChatGPT, Gemini)에게 배포한 `/llms.txt` 하나만 주고 그림을 청합니다. 조건 · 반복 · Case · 호출이 고루 들게 몇 가지(이진 탐색, 버블 정렬, `switch`)를, 그리고 공유 링크 복사로 만든 링크를 주고 고쳐 달라는 것도 합니다.
-2. 답을 그대로 `journal/assets/2026-11-09-llm-guide-runs/`에 `*.md`로 두고, 저장소 맨 위에서 `node journal/assets/2026-11-09-llm-guide-check.mjs`를 돌립니다. 답 속의 링크와 모델 JSON을 앱과 같은 길(`readShareLink` → `parseModel`)로 열어 보고, 채팅 앱이 자를 글자가 링크에 남았는지도 봅니다.
+2. 답을 그대로 `journal/assets/2026-11-09-llm-guide-runs/`에 `*.md`로 두고, 저장소 맨 위에서 `node journal/assets/2026-11-09-llm-guide-check.mjs`를 돌립니다. 답 속의 링크와 모델 JSON을 앱과 같은 경로(`readShareLink` → `parseModel`)로 열어 보고, 채팅 앱이 자를 글자가 링크에 남았는지도 봅니다.
 3. 열리지 않은 것이 있으면 앱이 보인 까닭을 보고 안내서를 고친 뒤 다시 합니다. 결과(모델마다 열림 · 안 열림과 까닭)는 출시 기록(세션 기록)에 남깁니다.
 
 ## 미결정 사항
 
-- [ ] Obsidian 플러그인을 자동으로 테스트할 길이 있는지(Obsidian 셸을 설계할 때) → [[04-obsidian-plugin]]
+- [ ] Obsidian 플러그인을 자동으로 테스트할 방법이 있는지(Obsidian 셸을 설계할 때) → [[04-obsidian-plugin]]
