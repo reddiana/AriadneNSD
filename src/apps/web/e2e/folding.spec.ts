@@ -147,3 +147,60 @@ test('T-1068: peek: f opens a call block in place (view only); ds replaces it wi
   await expect(ones).toHaveCount(2);
   await expect(selection(page)).toHaveText('2 blocks');
 });
+
+test('T-1323 · R-EDIT-15: folding in an opened call block leaves the Method as it is, and folding in the Method leaves the opened call block', async ({
+  page,
+}) => {
+  await openApp(page);
+  await canvas(page).focus();
+  await page.keyboard.press('Enter');
+  await typeText(page, 'start');
+  // A Method "sort" whose two blocks are a fold region "pair", unfolded.
+  await page.keyboard.press('Shift+M');
+  await typeText(page, 'sort');
+  await page.keyboard.press('j');
+  await page.keyboard.press('Enter');
+  await typeText(page, 'one');
+  await page.keyboard.press('o');
+  await typeText(page, 'two');
+  await page.keyboard.press('k');
+  await page.keyboard.press('Shift+ArrowDown');
+  await page.keyboard.press('z');
+  await page.keyboard.press('f');
+  await typeText(page, 'pair');
+  await page.keyboard.press('f');
+  // A call of it after "start", opened in place.
+  const start = await middleOf(drawnText(page, 'start'));
+  await page.mouse.click(start.x, start.y);
+  await page.keyboard.press('a');
+  await page.keyboard.press('c');
+  await expect(page.getByRole('menu', { name: 'Method to call' })).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.ans-inline-editor')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('f');
+  const ones = page.locator('.ans-document text').filter({ hasText: /^one$/ });
+  await expect(ones).toHaveCount(2);
+
+  // Folded in the opened call block: the Method still shows its blocks.
+  await page.keyboard.press('j');
+  await expect(selection(page)).toHaveText('Fold region "pair"');
+  await page.keyboard.press('f');
+  await expect(ones).toHaveCount(1);
+
+  // Folded in the Method too, then unfolded in the opened call block: the Method stays folded.
+  const inMethod = await middleOf(drawnText(page, 'one'));
+  await page.mouse.click(inMethod.x, inMethod.y);
+  await page.keyboard.press('f');
+  await expect(ones).toHaveCount(0);
+  const cell = await middleOf(drawnText(page, 'pair'));
+  await page.mouse.click(cell.x, cell.y);
+  await page.keyboard.press('f');
+  await expect(ones).toHaveCount(1);
+
+  // What is left is the block shown in the call block, which cannot be edited.
+  const shown = await middleOf(drawnText(page, 'one'));
+  await page.mouse.click(shown.x, shown.y);
+  await page.keyboard.press('x');
+  await expect(statusBar(page)).toContainText('cannot be edited');
+});

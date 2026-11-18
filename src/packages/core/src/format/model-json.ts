@@ -1,21 +1,17 @@
 // Model JSON serialization: docs/05-spec/01-file-format.md, section 3.
 import type { Locale } from '../i18n/messages';
-import { contentIds } from '../model/id';
+import { existingPaths, seqFoldableIds, siteFoldedEntries } from '../model/site-folded';
 import type {
   Arm,
   Block,
   Branch,
   Call,
   CallTarget,
-  Content,
   Diagram,
   Doc,
   FoldMark,
-  Id,
-  Path,
   Seq,
   SiteFold,
-  View,
 } from '../model/types';
 
 /** The value of the `format` field. */
@@ -74,7 +70,7 @@ function modelJson(doc: Doc, kept: KeptSettings): unknown {
       ...(settings.textOutlines === true ? { textOutlines: true } : {}),
     },
     diagrams: doc.content.diagrams.map(diagramJson),
-    view: viewJson(doc.content, doc.view),
+    view: viewJson(doc),
   };
 }
 
@@ -191,146 +187,14 @@ function targetJson(target: CallTarget): unknown {
 
 // View state (01-model 2): weak references. Only existing ids are written, in document order.
 
-function viewJson(content: Content, view: View): unknown {
+function viewJson(doc: Doc): unknown {
+  const { content, view } = doc;
   const folded = new Set(view.folded);
+  const foldable = content.diagrams.flatMap((diagram) => [...seqFoldableIds(diagram.body, true)]);
   return {
-    folded: [...foldableIds(content)].filter((id) => folded.has(id)),
-    opened: openedPaths(content, view.opened),
+    folded: [...foldable.filter((id) => folded.has(id)), ...siteFoldedEntries(doc)],
+    opened: existingPaths(content, view.opened),
     bands: view.bands,
     resultSymbol: view.resultSymbol,
   };
-}
-
-/**
- * Lists the ids that can be folded, in document order: fold regions, site fold regions,
- * branches of If and Case, and loop blocks.
- */
-function* foldableIds(content: Content): Generator<Id> {
-  for (const diagram of content.diagrams) {
-    yield* seqFoldableIds(diagram.body);
-  }
-}
-
-function* seqFoldableIds(seq: Seq): Generator<Id> {
-  for (const block of seq.blocks) {
-    yield* blockFoldableIds(block);
-  }
-  for (const fold of seq.folds) {
-    yield fold.id;
-  }
-}
-
-function* blockFoldableIds(block: Block): Generator<Id> {
-  switch (block.kind) {
-    case 'process':
-      return;
-    case 'if':
-      yield block.yes.id;
-      yield* seqFoldableIds(block.yes.body);
-      yield block.no.id;
-      yield* seqFoldableIds(block.no.body);
-      return;
-    case 'case':
-      for (const arm of block.arms) {
-        yield arm.id;
-        yield* seqFoldableIds(arm.body);
-      }
-      if (block.otherwise !== null) {
-        yield block.otherwise.id;
-        yield* seqFoldableIds(block.otherwise.body);
-      }
-      return;
-    case 'while':
-    case 'doWhile':
-    case 'for':
-      yield block.id;
-      yield* seqFoldableIds(block.body);
-      return;
-    case 'call':
-      for (const fold of block.siteFolds) {
-        yield fold.id;
-      }
-      return;
-  }
-}
-
-/**
- * Keeps the opened paths that still exist, without duplicates, in document order.
- * A path exists when every id is a call block, and each inner one is in the Method that the
- * call block before it calls (a local target). Paths through other documents are not designed
- * yet (01-model, open questions), so they are not kept.
- */
-function openedPaths(content: Content, opened: ReadonlyArray<Path>): Id[][] {
-  const calls = new Map<Id, { readonly call: Call; readonly diagram: Id }>();
-  for (const diagram of content.diagrams) {
-    for (const call of callsIn(diagram.body)) {
-      calls.set(call.id, { call, diagram: diagram.id });
-    }
-  }
-  const order = new Map<Id, number>();
-  let index = 0;
-  for (const id of contentIds(content)) {
-    order.set(id, index);
-    index += 1;
-  }
-  const exists = (path: Path): boolean =>
-    path.length > 0 &&
-    path.every((id, at) => {
-      const here = calls.get(id);
-      if (here === undefined) {
-        return false;
-      }
-      const outer = at === 0 ? undefined : calls.get(path[at - 1] ?? '');
-      return (
-        outer === undefined ||
-        (outer.call.target.kind === 'local' && outer.call.target.diagram === here.diagram)
-      );
-    });
-  const unique = new Map<string, Id[]>();
-  for (const path of opened) {
-    if (exists(path)) {
-      unique.set(path.join(' '), [...path]);
-    }
-  }
-  return [...unique.values()].sort((left, right) => comparePaths(left, right, order));
-}
-
-function comparePaths(left: Path, right: Path, order: ReadonlyMap<Id, number>): number {
-  const length = Math.min(left.length, right.length);
-  for (let at = 0; at < length; at += 1) {
-    const difference = (order.get(left[at] ?? '') ?? 0) - (order.get(right[at] ?? '') ?? 0);
-    if (difference !== 0) {
-      return difference;
-    }
-  }
-  return left.length - right.length;
-}
-
-function* callsIn(seq: Seq): Generator<Call> {
-  for (const block of seq.blocks) {
-    switch (block.kind) {
-      case 'process':
-        break;
-      case 'if':
-        yield* callsIn(block.yes.body);
-        yield* callsIn(block.no.body);
-        break;
-      case 'case':
-        for (const arm of block.arms) {
-          yield* callsIn(arm.body);
-        }
-        if (block.otherwise !== null) {
-          yield* callsIn(block.otherwise.body);
-        }
-        break;
-      case 'while':
-      case 'doWhile':
-      case 'for':
-        yield* callsIn(block.body);
-        break;
-      case 'call':
-        yield block;
-        break;
-    }
-  }
 }

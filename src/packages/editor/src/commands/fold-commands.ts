@@ -10,6 +10,7 @@ import {
   makeSiteFold,
   placeSiteFolds,
   removeFold,
+  sitePrefix,
 } from '@ariadne-nsd/core';
 
 import type { CommandSpec } from '../contracts';
@@ -39,7 +40,12 @@ import { always, spec } from './spec';
  */
 type FoldItem =
   | { readonly kind: 'seq'; readonly owner: Id }
-  | { readonly kind: 'fold'; readonly fold: Id }
+  | {
+      readonly kind: 'fold';
+      readonly fold: Id;
+      /** Its entry in `View.folded`: a Method's region seen in an opened call is `b4/f1`. */
+      readonly entry: Id;
+    }
   | { readonly kind: 'call'; readonly path: Path };
 
 /**
@@ -96,7 +102,7 @@ function controlTarget(index: DocIndex, block: Id): FoldTarget | null {
   for (const child of childSeqs(place.block)) {
     const region = wholeRegion(child.seq);
     if (region !== null) {
-      items.push({ kind: 'fold', fold: region });
+      items.push({ kind: 'fold', fold: region, entry: region });
     } else if (isFoldableSeq(child.seq)) {
       items.push({ kind: 'seq', owner: child.owner });
     }
@@ -118,8 +124,13 @@ function seqTarget(index: DocIndex, owner: Id): FoldTarget | null {
   };
 }
 
-function foldTarget(fold: Id, path: Path): FoldTarget {
-  return { items: [{ kind: 'fold', fold }], afterClose: selectFold(fold, path) };
+/**
+ * Folding a fold region. Inside an opened call block a region of the Method folds at this call
+ * site only; a region of the site is the site's already (ADR-0046).
+ */
+function foldTarget(index: DocIndex, fold: Id, path: Path): FoldTarget {
+  const entry = path.length === 0 || index.siteFolds.has(fold) ? fold : sitePrefix(path) + fold;
+  return { items: [{ kind: 'fold', fold, entry }], afterClose: selectFold(fold, path) };
 }
 
 /** Opening or closing the call block `path.at(-1)` seen through the rest of the path. */
@@ -152,7 +163,7 @@ function outward(index: DocIndex, start: Id, from: number, to: number): FoldTarg
     }
     const seq = place.seq;
     for (const fold of around(seq, seq.folds, lo, hi)) {
-      targets.push(foldTarget(fold, []));
+      targets.push(foldTarget(index, fold, []));
     }
     if (place.holder === null) {
       break;
@@ -194,8 +205,8 @@ function around(
 
 /**
  * The fold regions of the call site `path` that hold the blocks `lo..hi` of the called Method's
- * sequence `owner`, nearest first, walking out to the Method's body (R-EDIT-16). The Method's own
- * regions and branches are the Method's and are left alone here.
+ * sequence `owner`, nearest first, walking out to the Method's body (R-EDIT-16). A block inside
+ * does not fold the Method's own regions and branches; a selected region of the Method does.
  */
 function siteOutward(
   index: DocIndex,
@@ -268,7 +279,7 @@ export function foldTargets(
       return peekTargets(index, selection);
     case 'fold': {
       const path = foldPath(selection);
-      const self = foldTarget(selection.fold, path);
+      const self = foldTarget(index, selection.fold, path);
       if (path.length > 0) {
         return [self, callTarget(index, path)];
       }
@@ -290,7 +301,7 @@ export function foldTargets(
       const region = wholeRegion(seq);
       const own =
         region !== null
-          ? foldTarget(region, [])
+          ? foldTarget(index, region, [])
           : isFoldableSeq(seq)
             ? seqTarget(index, selection.branch)
             : null;
@@ -350,7 +361,7 @@ function peekTargets(
     targets.push(callTarget(index, [...selection.path, first]));
   }
   for (const fold of siteOutward(index, selection.path, a.owner, a.index, b.index)) {
-    targets.push(foldTarget(fold, selection.path));
+    targets.push(foldTarget(index, fold, selection.path));
   }
   targets.push(callTarget(index, selection.path));
   return targets;
@@ -361,7 +372,7 @@ function itemKey(item: FoldItem): string {
     case 'seq':
       return item.owner;
     case 'fold':
-      return item.fold;
+      return item.entry;
     case 'call':
       return item.path.join('/');
   }
@@ -388,7 +399,7 @@ function isClosed(view: View, item: FoldItem): boolean {
     case 'seq':
       return view.folded.includes(item.owner);
     case 'fold':
-      return view.folded.includes(item.fold);
+      return view.folded.includes(item.entry);
     case 'call':
       return !view.opened.some((path) => samePath(path, item.path));
   }
@@ -498,8 +509,15 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
       const blocks = foldBlocks(index(), selection.fold);
       const [first] = blocks;
       const last = blocks.at(-1);
-      selection =
-        first === undefined || last === undefined ? null : selectRange(index(), first, last);
+      const path = foldPath(selection);
+      if (first === undefined || last === undefined) {
+        selection = null;
+      } else {
+        selection =
+          path.length === 0
+            ? selectRange(index(), first, last)
+            : { kind: 'peek', path, anchor: first, focus: last };
+      }
     }
     session.setView(view, selection);
     const [only] = target.items;

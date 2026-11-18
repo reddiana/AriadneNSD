@@ -24,9 +24,12 @@ import {
   editCall,
   editHead,
   editText,
+  forgetRetargeted,
   headName,
   headParams,
+  pathSeparator,
   renderDoc,
+  settleSiteFolds,
   siteFoldOf,
   untimed,
 } from '@ariadne-nsd/core';
@@ -114,6 +117,12 @@ export type After = {
 /** The key hint shows this long after the first key of a sequence (UX K1). */
 export const keyHintDelay = 400;
 
+/** The document with every drawn call site holding its own folding (ADR-0046). */
+function settled(doc: Doc): Doc {
+  const view = settleSiteFolds(doc.content, doc.view);
+  return view === doc.view ? doc : { content: doc.content, view };
+}
+
 /** The editing session. One per open document view. */
 export class EditorSession {
   private current: EditorState;
@@ -135,10 +144,11 @@ export class EditorSession {
   readonly time: PhaseTimer;
 
   constructor(
-    doc: Doc,
+    opened: Doc,
     private readonly options: SessionOptions,
     load: LoadOptions,
   ) {
+    const doc = settled(opened);
     this.time = options.time ?? untimed;
     this.rendered = this.render(doc);
     this.indexed = indexDoc(doc.content);
@@ -227,7 +237,8 @@ export class EditorSession {
   }
 
   /** Puts another document in. Undo, redo and the selection start empty (03-editor 6). */
-  load(doc: Doc, load: LoadOptions): void {
+  load(opened: Doc, load: LoadOptions): void {
+    const doc = settled(opened);
     this.closeQuestion();
     this.noticeValue = null;
     this.keptSettings = load.kept;
@@ -457,7 +468,7 @@ export class EditorSession {
    * selection becomes `selection` (when given), dropped if it is no longer shown.
    */
   setView(view: View, selection?: Selection | null): void {
-    const doc: Doc = { content: this.current.doc.content, view };
+    const doc = settled({ content: this.current.doc.content, view });
     this.rendered = this.render(doc);
     const next = selection === undefined ? this.current.selection : selection;
     this.setState({
@@ -497,7 +508,8 @@ export class EditorSession {
    */
   ids(): IdGenerator {
     const { content, view } = this.current.doc;
-    return createIdGenerator(content, [...view.folded, ...view.opened.flat()]);
+    const named = view.folded.flatMap((entry) => entry.split(pathSeparator));
+    return createIdGenerator(content, [...named, ...view.opened.flat()]);
   }
 
   /**
@@ -522,7 +534,15 @@ export class EditorSession {
    * document is left as it was and the problem is logged (coding guide 5).
    */
   apply(content: Content, after: After, isAmend = false): boolean {
-    const view = after.view ?? this.current.doc.view;
+    const view = settleSiteFolds(
+      content,
+      forgetRetargeted(
+        this.current.doc.content,
+        content,
+        after.view ?? this.current.doc.view,
+        false,
+      ),
+    );
     if (content !== this.current.doc.content) {
       const violations = this.time('check', () => checkInvariants(content));
       if (violations.length > 0) {
@@ -604,6 +624,7 @@ export class EditorSession {
 
   /** Undo or redo one step. The selection stays if what it names is still there (UX Q19). */
   history(direction: 'undo' | 'redo'): boolean {
+    const before = this.current.doc.content;
     const stepped = stepHistory(
       this.current,
       direction,
@@ -618,11 +639,24 @@ export class EditorSession {
       return false;
     }
     const index = indexDoc(stepped.content);
+    const state = this.withStepView(stepped.state, before);
     this.setState({
-      ...stepped.state,
-      selection: validSelection(index, stepped.state.selection, this.shownOf(stepped.state.doc)),
+      ...state,
+      selection: validSelection(index, state.selection, this.shownOf(state.doc)),
     });
     return true;
+  }
+
+  /** The view after an undo or redo: call sites that now call something else start over. */
+  private withStepView(state: EditorState, before: Content): EditorState {
+    const { content, view } = state.doc;
+    const next = settleSiteFolds(content, forgetRetargeted(before, content, view, true));
+    if (next === view) {
+      return state;
+    }
+    const doc: Doc = { content, view: next };
+    this.rendered = this.render(doc);
+    return { ...state, doc, dirty: this.isDirty(doc), layout: this.rendered.layout };
   }
 
   // The inline editor (03-editor 3.4).

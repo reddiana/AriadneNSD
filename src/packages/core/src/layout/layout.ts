@@ -23,6 +23,7 @@ import type { TextSize } from '../text/measure-text';
 import type { CallTextContext } from './call-text';
 import { callParts, callText } from './call-text';
 import { geometry } from './geometry';
+import { isFoldedAt } from '../model/site-folded';
 import type { ShownAt, ShownFold, ShownItem, ShownView } from './shown';
 import {
   countBlocks,
@@ -504,7 +505,7 @@ function measureBlockOnce(context: Context, block: Block, at: ShownAt): Measure 
  * otherwise its sequence.
  */
 function measureBody(context: Context, owner: Id, seq: Seq, at: ShownAt): Size {
-  if (context.shown.folded.has(owner)) {
+  if (isFoldedAt(context.shown.folded, at.prefix, owner)) {
     return {
       width:
         padX + foldedDotsRoom + measureLine(foldedWords(context, seq), fontSizes.secondary) + padX,
@@ -915,7 +916,7 @@ function placeBody(
   at: ShownAt,
   isBranch: boolean,
 ): void {
-  if (!context.shown.folded.has(owner)) {
+  if (!isFoldedAt(context.shown.folded, at.prefix, owner)) {
     placeSeq(context, seq, box, at, 0, isBranch);
     return;
   }

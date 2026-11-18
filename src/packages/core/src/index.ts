@@ -44,6 +44,13 @@ export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';
 export type { Token, TokenKind } from './text/syntax';
 export { isTextKind, textKinds, tokenize, tokenLines } from './text/syntax';
+export {
+  foldedAfterInline,
+  forgetRetargeted,
+  isFoldedAt,
+  settleSiteFolds,
+  sitePrefix,
+} from './model/site-folded';
 export { geometry } from './layout/geometry';
 export { defaultFoldName, foldLabel, headLabel, layout } from './layout/layout';
 export type { ShownAt, ShownFold, ShownItem, ShownView, SiteRange } from './layout/shown';

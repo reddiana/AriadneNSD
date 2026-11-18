@@ -1,6 +1,7 @@
 // Call blocks opened in place, their call sites' fold regions, replacing a call with its Method,
 // and calls by a written name (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08).
-import type { Block, Content } from '@ariadne-nsd/core';
+import type { Block, Content, Doc } from '@ariadne-nsd/core';
+import { serializeModelJson } from '@ariadne-nsd/core';
 import { describe, expect, it } from 'vitest';
 
 import { contentOf, proc, testEngine } from '../engine-test-support';
@@ -148,7 +149,7 @@ describe('fold regions at an opened call site (R-EDIT-16)', () => {
     expect(made?.kind === 'call' ? made.siteFolds : null).toEqual([
       { id: 'f2', via: [], first: 'c2', last: 'c2' },
     ]);
-    expect(engine.session.state.doc.view.folded).toEqual(['f2']);
+    expect(engine.session.state.doc.view.folded).toEqual(['c1/', 'f2']);
     expect(engine.session.state.editing?.field).toEqual({ kind: 'fold', fold: 'f2', path: ['c1'] });
     engine.session.commitEditing('tail');
     expect(engine.session.state.undo).toHaveLength(1);
@@ -175,9 +176,218 @@ describe('fold regions at an opened call site (R-EDIT-16)', () => {
     expect(notice(engine)).toBe('reason.methodFoldHere');
     engine.keys('Enter');
     expect(notice(engine)).toBe('reason.methodFoldHere');
-    // Folding it there folds the Method's region, which every call shows (01-model 2).
+    // Folding it there folds it at this call only (01-model 2, ADR-0046).
     engine.keys('f');
-    expect(engine.session.state.doc.view.folded).toEqual(['f1']);
+    expect(engine.session.state.doc.view.folded).toEqual(['c1/', 'c1/f1']);
+  });
+});
+
+describe('the folding of an opened call block is its own (UX CB13, ADR-0046)', () => {
+  /** d1: c1 and c3 call the Method d2 of `sample`. */
+  const twoCalls = (): Content => {
+    const base = sample();
+    const [d1, d2] = base.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    return {
+      ...base,
+      diagrams: [{ ...d1, body: { ...d1.body, blocks: [call('c1', 'd2'), call('c3', 'd2')] } }, d2],
+    };
+  };
+
+  const open = (engine: TestEngine, id: string): void => {
+    select(engine, id);
+    engine.keys('f');
+  };
+
+  /** Folds or unfolds the Method's region as seen through `path` (`[]`: in the Method). */
+  const toggleRegion = (engine: TestEngine, path: ReadonlyArray<string>): void => {
+    engine.select(selectFold('f1', path));
+    engine.keys('f');
+  };
+
+  /** Whether the Method's block p6 is hidden where it is shown through `path`. */
+  const isHidden = (engine: TestEngine, path: ReadonlyArray<string>): boolean =>
+    engine.session.shown().hiddenBy.has([...path, 'p6'].join('/'));
+
+  const foldInMethod = (engine: TestEngine): void => {
+    engine.session.setView({
+      ...engine.session.state.doc.view,
+      folded: [...engine.session.state.doc.view.folded, 'f1'],
+    });
+  };
+
+  /** What a saved file brings back: the view as written. The ids here are not in the file's form. */
+  const reopened = (engine: TestEngine): TestEngine => {
+    const { content, view } = engine.session.state.doc;
+    const written = JSON.parse(serializeModelJson({ content, view })) as { view: Doc['view'] };
+    const next = testEngine(content);
+    next.session.load(
+      { content, view: written.view },
+      { kept: {}, selection: null, isDirty: false, readOnly: false },
+    );
+    return next;
+  };
+
+  it('T-1342 · R-EDIT-15: opening for the first time takes what the Method has folded at that moment', () => {
+    const engine = testEngine(twoCalls());
+    foldInMethod(engine);
+    open(engine, 'c1');
+    expect(isHidden(engine, ['c1'])).toBe(true);
+  });
+
+  it('T-1343 · R-EDIT-15: folding in an opened call block leaves the Method and the other call blocks as they are', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    open(engine, 'c3');
+    toggleRegion(engine, ['c1']);
+    expect(isHidden(engine, ['c1'])).toBe(true);
+    expect(isHidden(engine, ['c3'])).toBe(false);
+    expect(isHidden(engine, [])).toBe(false);
+    expect(engine.session.state.undo).toHaveLength(0);
+  });
+
+  it('T-1344 · R-EDIT-15: folding in the Method leaves the opened call blocks as they are', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    toggleRegion(engine, []);
+    expect(isHidden(engine, [])).toBe(true);
+    expect(isHidden(engine, ['c1'])).toBe(false);
+  });
+
+  it('T-1345 · R-EDIT-15: a call block opened inside another keeps its folding per path', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    engine.select({ kind: 'peek', path: ['c1'], anchor: 'c2', focus: 'c2' });
+    engine.keys('f');
+    toggleRegion(engine, ['c1', 'c2']);
+    expect(isHidden(engine, ['c1', 'c2'])).toBe(true);
+    expect(isHidden(engine, ['c1'])).toBe(false);
+    expect(isHidden(engine, [])).toBe(false);
+  });
+
+  it('T-1346 · R-EDIT-15: closing and opening again shows the folding last seen there, also after saving', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    select(engine, 'c1');
+    engine.keys('f');
+    expect(engine.session.state.doc.view.opened).toEqual([]);
+    // The Method changes while the call block is closed: nothing is taken again.
+    toggleRegion(engine, []);
+    toggleRegion(engine, []);
+    const next = reopened(engine);
+    open(next, 'c1');
+    expect(isHidden(next, ['c1'])).toBe(true);
+    expect(isHidden(next, [])).toBe(false);
+  });
+
+  it('T-1347 · R-EDIT-15: a call block unfolded while the Method stays folded stays unfolded after saving', () => {
+    const engine = testEngine(twoCalls());
+    foldInMethod(engine);
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    const next = reopened(engine);
+    expect(isHidden(next, ['c1'])).toBe(false);
+    expect(isHidden(next, [])).toBe(true);
+  });
+
+  it('T-1348 · R-FMT-11: a file saved before shows its opened call blocks as they were and saves the same', () => {
+    const engine = testEngine(twoCalls());
+    const old: Doc = {
+      content: twoCalls(),
+      view: { folded: ['f1'], opened: [['c1']], bands: true, resultSymbol: '←' },
+    };
+    engine.session.load(old, { kept: {}, selection: null, isDirty: false, readOnly: false });
+    expect(isHidden(engine, ['c1'])).toBe(true);
+    expect(engine.session.state.dirty).toBe(false);
+    expect(serializeModelJson(engine.session.state.doc)).toBe(serializeModelJson(old));
+    // From then on it is its own: unfolding the Method leaves it folded.
+    toggleRegion(engine, []);
+    expect(isHidden(engine, [])).toBe(false);
+    expect(isHidden(engine, ['c1'])).toBe(true);
+  });
+
+  it('T-1349 · UX CB8: replacing an opened call block folds the copies as they were shown there', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    select(engine, 'c1');
+    engine.keys('d', 's');
+    const body = engine.content().diagrams[0]?.body;
+    const region = body?.folds[0]?.id ?? '';
+    expect(engine.session.state.doc.view.folded).toContain(region);
+    expect(engine.session.state.doc.view.folded).not.toContain('f1');
+  });
+
+  it('T-1350 · R-BLK-07: a call block that calls another Method starts over from that Method', async () => {
+    const base = twoCalls();
+    const engine = testEngine({
+      ...base,
+      diagrams: [
+        ...base.diagrams,
+        {
+          id: 'd3',
+          head: { kind: 'method', text: 'n()' },
+          body: {
+            blocks: [proc('p8')],
+            folds: [{ id: 'f3', first: 'p8', last: 'p8' }],
+          },
+        },
+      ],
+    });
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    engine.session.setView({
+      ...engine.session.state.doc.view,
+      folded: [...engine.session.state.doc.view.folded, 'f3'],
+    });
+    select(engine, 'c1');
+    engine.run('call.setTarget');
+    engine.picker()?.choose(1);
+    await engine.settle();
+    const folded = engine.session.state.doc.view.folded;
+    expect(folded).toContain('c1/f3');
+    expect(folded).not.toContain('c1/f1');
+  });
+
+  it('T-1351 · R-EDIT-15: deleting an opened call block and undoing brings its folding back; the file keeps none meanwhile', () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    select(engine, 'c1');
+    engine.keys('x');
+    expect(serializeModelJson(engine.session.state.doc)).not.toContain('c1/');
+    engine.keys('u');
+    expect(isHidden(engine, ['c1'])).toBe(true);
+  });
+
+  it('T-1352 · R-EDIT-15: a pasted copy of a call block opens with what the Method has folded then', async () => {
+    const engine = testEngine(twoCalls());
+    open(engine, 'c1');
+    toggleRegion(engine, ['c1']);
+    select(engine, 'c1');
+    engine.keys('y', 'y');
+    await engine.settle();
+    select(engine, 'c3');
+    engine.keys('p');
+    await engine.settle();
+    const pasted = engine.content().diagrams[0]?.body.blocks[2]?.id ?? '';
+    open(engine, pasted);
+    expect(isHidden(engine, [pasted])).toBe(false);
+    expect(isHidden(engine, ['c1'])).toBe(true);
+  });
+
+  it('T-1353 · R-EDIT-15: a new block never takes an id still named by the folding of a call site', () => {
+    const engine = testEngine(twoCalls());
+    engine.session.setView({
+      ...engine.session.state.doc.view,
+      folded: ['b90/', 'b90/r91'],
+    });
+    const ids = engine.session.ids();
+    expect(ids.next('block')).toBe('b91');
+    expect(ids.next('branch')).toBe('r92');
   });
 });
 

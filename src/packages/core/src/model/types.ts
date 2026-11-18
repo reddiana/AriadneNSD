@@ -233,7 +233,11 @@ export type SiteFold = {
  * layout ignores them, and serialization writes only existing ids (01-model 2).
  */
 export type View = {
-  /** Folded things: fold regions (FoldMark, SiteFold), branches (If, Case), loop blocks (body). */
+  /**
+   * Folded things: fold regions (FoldMark, SiteFold), branches (If, Case), loop blocks (body).
+   * Inside an opened call block a Method's own are written behind the call path (`b4/r3`), and
+   * `b4/` says that the call site has its own folding (ADR-0046, `site-folded.ts`).
+   */
   readonly folded: ReadonlyArray<Id>;
   /** Call blocks opened inline. A nested one is written as a path. */
   readonly opened: ReadonlyArray<Path>;

@@ -1,14 +1,10 @@
 // What a sequence shows (02-layout 1.6): its blocks grouped by the fold regions marked on it, the
 // regions of an opened call site included (01-model 1.6). The layout draws this structure and the
 // editor walks it, so both see the same regions with the same ids.
+import { innerSeqs, isFoldedAt, pathSeparator } from '../model/site-folded';
 import type { Block, Call, Diagram, Id, Seq, SiteFold, View } from '../model/types';
 
-/**
- * Inside an opened call block every drawn id is written behind the path of the call blocks it
- * was opened through: `b4/b17` is block `b17` of the Method that call block `b4` calls, and
- * `b4/b9/b17` the same block seen through `b9`, a call opened inside `b4` (03-editor 2).
- */
-export const pathSeparator = '/';
+export { innerSeqs, pathSeparator };
 
 /** The screen id of `id` drawn behind `prefix` (`''` outside opened calls, else `b4/`). */
 export function screenId(prefix: string, id: Id): Id {
@@ -150,26 +146,6 @@ export function placeSiteFolds(
   return places;
 }
 
-/** The sequences directly inside a block, left to right. */
-export function innerSeqs(block: Block): ReadonlyArray<Seq> {
-  switch (block.kind) {
-    case 'process':
-    case 'call':
-      return [];
-    case 'if':
-      return [block.yes.body, block.no.body];
-    case 'case':
-      return [
-        ...block.arms.map((arm) => arm.body),
-        ...(block.otherwise === null ? [] : [block.otherwise.body]),
-      ];
-    case 'while':
-    case 'doWhile':
-    case 'for':
-      return [block.body];
-  }
-}
-
 type Candidate = {
   readonly lo: number;
   readonly hi: number;
@@ -228,7 +204,7 @@ export function shownItems(seq: Seq, at: ShownAt, view: ShownView): ReadonlyArra
   }
   // Outer regions first: by start, then the longer one.
   accepted.sort((left, right) => left.lo - right.lo || right.hi - left.hi);
-  return nest(seq, accepted, 0, seq.blocks.length - 1, null, view);
+  return nest(seq, accepted, 0, seq.blocks.length - 1, null, view, at);
 }
 
 function nest(
@@ -238,6 +214,7 @@ function nest(
   to: number,
   around: Candidate | null,
   view: ShownView,
+  at: ShownAt,
 ): ShownItem[] {
   const items: ShownItem[] = [];
   let index = from;
@@ -251,8 +228,12 @@ function nest(
       index += 1;
       continue;
     }
-    const inner = nest(seq, ranges, region.lo, region.hi, region, view);
-    const isFolded = view.folded.has(region.fold.id);
+    const inner = nest(seq, ranges, region.lo, region.hi, region, view, at);
+    // A region of the call site is the site's already; a Method's is kept per site (ADR-0046).
+    const isFolded =
+      region.fold.site === null
+        ? isFoldedAt(view.folded, at.prefix, region.fold.id)
+        : view.folded.has(region.fold.id);
     if (!isFolded && !view.bands) {
       items.push(...inner);
     } else {

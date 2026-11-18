@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 5 | 45 | 225 | - | 275 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 6 | 45 | 255 | - | 306 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 174 | - | 209 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 22 | 31 | 43 | - | 96 |
 | [[#5. 파일\|파일]] | 18 | 155 | 233 | - | 406 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 155 | - | 157 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 80 | 261 | 855 | 5 | 1201 |
+| 합계 | 81 | 261 | 885 | 5 | 1232 |
 
 ## 읽는 법
 
@@ -76,7 +76,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 24개, 테스트 275개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 306개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -91,13 +91,14 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ### [E2E] `apps/web/e2e/folding.spec.ts`
 
-브라우저에서 접기와 호출 블록 펴 보기 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11, R-EDIT-15, R-EDIT-08). Playwright · 테스트 3개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-08]].
+브라우저에서 접기와 호출 블록 펴 보기 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11, R-EDIT-15, R-EDIT-08). Playwright · 테스트 4개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-08]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1066 | fold region: zf는 선택한 블록을 이름 붙은 칸으로 접고, 펼침 삼각형이 펴며, 파일이 그것을 저장한다 | - |
 | T-1067 | fold: While에서 f는 본문을 한 줄로 접고, 방향키는 그것을 블록 하나로 지나간다 | - |
 | T-1068 | peek: f는 호출 블록을 그 위치에 펴 보이고(보기만), ds는 그것을 Method의 블록들로 바꾼다 | - |
+| T-1323 | 펴 보인 호출 블록에서 접어도 Method는 그대로이고, Method에서 접어도 펴 보인 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 
 ^t-apps-web-e2e-folding-spec-ts
 
@@ -485,6 +486,33 @@ id. Vitest · 테스트 5개.
 
 ^t-packages-core-src-model-invariants-test-ts
 
+### [단위] `packages/core/src/model/site-folded.test.ts`
+
+펴 보인 호출 자리마다 따로 두는 접힘(01-model 2, ADR-0046). Vitest · 테스트 18개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-03]], [[03-quality-attribute-scenarios#1. 목록|QA-04]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1324 | 처음 그려지는 호출 자리는 지금 Method의 접힘을 가져오고, 그 Method의 id만 가져온다 | - |
+| T-1325 | 접힘을 가진 호출 자리는 뒤에 Method가 어떻게 바뀌어도 그대로다 | - |
+| T-1326 | 아직 접힘이 없는 호출 자리는 Method의 접힘으로 보인다 | - |
+| T-1327 | 닫힌 호출 블록 안의 호출 블록은 그려질 때 접힘을 가져오고 그 전에는 가져오지 않는다 | - |
+| T-1328 | 겹쳐 펴 보인 호출 블록은 경로마다 자기 접힘을 가진다 | - |
+| T-1329 | 호출 자리에 접힌 것이 없는 문서는 호출 자리의 접힘이 없는 문서와 같은 바이트로 저장된다 | - |
+| T-1330 | Method와 똑같이 접힌 호출 자리는 기록하지 않는다. 파일을 열면 다시 가져온다 | - |
+| T-1331 | Method와 다르게 접힌 호출 자리는 경로를 앞에 붙여 문서 순서로 기록한다 | - |
+| T-1332 | Method는 접힌 채 펴 둔 호출 자리는 자기 접힘을 갖는다는 표시를 기록한다 | - |
+| T-1333 | 닫힌 호출 자리의 접힘은 파일에 남고, 다시 저장해도 바이트가 같다 | - |
+| T-1334 | 없어진 호출 자리, Method에 없는 id, 갈 수 없는 경로는 기록하지 않는다 | - |
+| T-1335 | 호출 대상이 없어진 호출 자리는 기록하지 않는다 | - |
+| T-1336 | 다른 버전의 파일에 정의되지 않은 항목이 있어도 열리고 그려진다 | - |
+| T-1337 | 호출 블록이 다른 Method를 호출하면 그 호출 블록을 지나는 경로의 접힘만 버린다 | - |
+| T-1338 | Method를 삭제해 호출 대상이 없어져도 접힘은 남고, 삭제를 실행 취소하면 돌아온다 | - |
+| T-1339 | 대상이 없어진 호출 블록이 Method를 호출하게 되면 접힘을 처음부터 가져온다 | - |
+| T-1340 | 호출 블록을 풀면 사본이 그 자리에 보이던 대로 접힌다 | - |
+| T-1341 | 접힘이 없는 닫힌 호출 블록을 풀면 사본이 Method처럼 접힌다 | - |
+
+^t-packages-core-src-model-site-folded-test-ts
+
 ### [단위] `packages/editor/src/clipboard/clip-format.test.ts`
 
 클립보드 형식(03-editor 3.3). Vitest · 테스트 5개.
@@ -501,7 +529,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 10개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 22개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB13]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -511,6 +539,18 @@ id. Vitest · 테스트 5개.
 | T-1090 | peek: 호출 블록에서 gd는 그 Method로 가고, 이름을 적는 호출 블록에는 갈 곳이 없다 | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1092 | peek: Method의 접기 영역은 펴 보인 곳에서 풀거나 이름을 바꿀 수 없다 | - |
+| T-1342 | 처음 펼 때 그 순간의 Method 접힘을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1343 | 펴 보인 호출 블록에서 접어도 Method와 다른 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1344 | Method에서 접어도 펴 보인 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1345 | 겹쳐 펴 보인 안쪽 호출 블록은 경로마다 접힘을 따로 가진다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1346 | 닫았다가 다시 펴면 저장한 뒤에도 그 자리에서 마지막으로 본 접힘이 보인다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1347 | Method는 접힌 채 호출 블록에서 편 것은 저장한 뒤에도 펴진 채다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1348 | 이전에 저장한 파일의 펴 보인 호출 블록은 그때 모습 그대로 보이고 저장해도 같다 | [[01-requirements#^r-fmt\|R-FMT-11]] |
+| T-1349 | 펴 보인 호출 블록을 풀면 사본이 그 자리에 보이던 대로 접힌다 | [[ux-decisions\|UX CB8]] |
+| T-1350 | 호출 대상을 바꾼 호출 블록은 새 Method의 접힘을 처음부터 가져온다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-1351 | 펴 보인 호출 블록을 삭제했다가 실행 취소하면 접힘이 돌아오고, 그동안 파일에는 남지 않는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1352 | 복사해 붙인 호출 블록은 펼 때의 Method 접힘으로 열린다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
+| T-1353 | 새 블록은 호출 자리의 접힘이 가리키는 id를 다시 쓰지 않는다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1093 | inline: 호출 블록에서 ds는 그 위치에 Method의 블록을 접힌 모습 그대로 넣는다 | - |
 | T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
 | T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |

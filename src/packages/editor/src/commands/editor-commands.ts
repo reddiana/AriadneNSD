@@ -23,6 +23,7 @@ import {
   deleteBranch,
   deleteDiagram,
   extractMethod,
+  foldedAfterInline,
   headName,
   headParams,
   inlineCall,
@@ -574,8 +575,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   /**
    * Replaces a call block with its Method's blocks (R-EDIT-08). The copies show the way the
-   * Method's blocks were shown at this call: folded where the originals are folded, the regions
-   * of this call site folded as they were, calls opened inside it still opened (UX CB8).
+   * Method's blocks were shown at this call: folded as they were here, the regions of this call
+   * site folded as they were, calls opened inside it still opened (UX CB8, ADR-0046).
    */
   const runInline = (call: Id, view: View): void => {
     const block = index().blocks.get(call)?.block;
@@ -588,13 +589,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       return;
     }
     const renamed = result.renamed;
-    const folded = [
-      ...view.folded,
-      ...view.folded.flatMap((id) => {
-        const copy = renamed.get(id);
-        return copy === undefined ? [] : [copy];
-      }),
-    ];
+    const folded = foldedAfterInline(content(), view, call, renamed);
     const opened = view.opened.flatMap((path) => {
       if (path[0] !== call) {
         return [path];

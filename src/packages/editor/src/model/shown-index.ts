@@ -16,6 +16,7 @@ import type {
 } from '@ariadne-nsd/core';
 import {
   insideCall,
+  isFoldedAt,
   pathSeparator,
   screenId,
   shownItems,
@@ -98,7 +99,7 @@ export function shownIndexOf(doc: Doc): ShownIndex {
   };
 
   const body = (owner: Id, seq: Seq, at: ShownAt): Seq => {
-    if (view.folded.has(owner)) {
+    if (isFoldedAt(view.folded, at.prefix, owner)) {
       const id = rowId(screenId(at.prefix, owner));
       meanings.set(id, { kind: 'row', owner, path: pathOf(at) });
       for (const block of seq.blocks) {
