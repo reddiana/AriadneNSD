@@ -247,12 +247,11 @@ describe('opened call blocks (R-EDIT-15, R-EDIT-16)', () => {
     );
   };
 
-  it("T-1122: peek: an opened call block shows the Method's blocks behind its id, grey, under a band", () => {
+  it("T-1122: peek: an opened call block shows the Method's blocks behind its id, under a band", () => {
     const result = layout(doc({ opened: [['b1']] }));
     const peek = nodeOf(result, 'peek', 'b1');
     expect(peek.name).toBe('sort');
     expect(boxOf(result, 'b1/b10').y).toBe(peek.box.y + 18);
-    expect(nodeOf(result, 'process', 'b1/b10').isPeeked).toBe(true);
     expect(nodeOf(result, 'foldFrame', 'b1/f1').name.lines).toEqual(['here']);
     expect(result.nodes.some((node) => node.kind === 'call' && node.id === 'b1')).toBe(false);
     expect(result.regions).toContainEqual({ kind: 'peekBand', blockId: 'b1', box: peek.band });
@@ -260,17 +259,73 @@ describe('opened call blocks (R-EDIT-15, R-EDIT-16)', () => {
 
   it('T-1123: peek: a call opened inside an opened call has a path; a closed one is a call block', () => {
     const result = layout(doc({ opened: [['b1'], ['b1', 'b13']] }));
-    expect(nodeOf(result, 'peek', 'b1/b13').isPeeked).toBe(true);
+    expect(nodeOf(result, 'peek', 'b1/b13').id).toBe('b1/b13');
     expect(boxOf(result, 'b1/b13/b10')).toBeDefined();
-    expect(nodeOf(layout(doc({ opened: [['b1']] })), 'call', 'b1/b13').isPeeked).toBe(true);
+    expect(nodeOf(layout(doc({ opened: [['b1']] })), 'call', 'b1/b13').id).toBe('b1/b13');
   });
 
-  it('T-1124: peek: the dashed border and the band are drawn in the peek colors', () => {
-    const scene = buildScene(layout(doc({ opened: [['b1']] })), defaultTheme);
-    const dashed = scene.elements.find(
-      (element) => element.kind === 'polyline' && element.blockId === 'b1' && element.dash !== null,
+  it('T-1124: peek: the border and the band have the shape of a fold frame in the peek colors', () => {
+    const result = layout(doc({ opened: [['b1']] }));
+    const { box, band } = nodeOf(result, 'peek', 'b1');
+    const own = buildScene(result, defaultTheme).elements.filter(
+      (element) => element.blockId === 'b1',
     );
-    expect(dashed).toMatchObject({ stroke: defaultTheme.colors['peek.edge'], dash: [6, 4] });
+    expect(own.some((element) => element.kind === 'polyline')).toBe(false);
+    expect(own).toContainEqual({
+      kind: 'rect',
+      blockId: 'b1',
+      ...band,
+      fill: defaultTheme.colors['peek.band'],
+      stroke: defaultTheme.colors['line.structure'],
+      strokeWidth: 1,
+    });
+    expect(own.at(-1)).toEqual({
+      kind: 'rect',
+      blockId: 'b1',
+      x: box.x + 1,
+      y: box.y + 1,
+      width: box.width - 2,
+      height: box.height - 2,
+      fill: 'none',
+      stroke: defaultTheme.colors['peek.edge'],
+      strokeWidth: 3,
+    });
+  });
+
+  it("T-1180 · R-EDIT-15: peek: the band's words are violet with the Method's name bold", () => {
+    const scene = buildScene(layout(doc({ opened: [['b1']] })), defaultTheme);
+    const words = scene.elements.find(
+      (element) => element.kind === 'text' && element.blockId === 'b1',
+    );
+    expect(words).toMatchObject({ fill: defaultTheme.colors['peek.name'] });
+    expect(words?.kind === 'text' ? words.runs : []).toContainEqual({ text: 'sort', weight: 600 });
+  });
+
+  it('T-1181 · R-EDIT-15 · R-LAY-07: peek: the blocks inside are written and highlighted as anywhere else', () => {
+    const base = doc({ opened: [['b1']] });
+    const diagrams = base.content.diagrams.map((diagram) => ({
+      ...diagram,
+      body: {
+        ...diagram.body,
+        blocks: diagram.body.blocks.map((block) =>
+          block.id === 'b10' ? process('b10', 'return 1;') : block,
+        ),
+      },
+    }));
+    const scene = buildScene(
+      layout({ ...base, content: { ...base.content, diagrams } }),
+      defaultTheme,
+      'c',
+    );
+    const inside = scene.elements.find(
+      (element) => element.kind === 'text' && element.blockId === 'b1/b10',
+    );
+    expect(inside).toMatchObject({ fill: defaultTheme.colors['text.primary'] });
+    expect(inside?.kind === 'text' ? inside.runs : []).toContainEqual({
+      text: 'return',
+      weight: 400,
+      fill: defaultTheme.colors['syntax.keyword'],
+    });
   });
 
   it('T-1125: peek: site regions shrink to the blocks left and are left out when they would cross', () => {

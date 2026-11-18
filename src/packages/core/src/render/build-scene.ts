@@ -42,9 +42,6 @@ const band = geometry['size.band'];
 const bandTextX = geometry['size.band-text-x'] + geometry['size.band-icon-room'];
 const foldEdge = geometry['size.fold-edge'];
 const foldIconRoom = geometry['size.fold-icon-room'];
-const peekHalo = geometry['size.peek-halo'];
-/** The dashed border of an opened call block: 6 drawn, 4 left out (visual design 6). */
-const peekDash: readonly [number, number] = [6, 4];
 
 /**
  * Builds the scene of a laid-out document with a theme. All color and shape decisions are made
@@ -112,12 +109,12 @@ function paint(ctx: Painter, node: LayoutNode): void {
     case 'process':
       rect(ctx, node.id, node.box, colors['block.process']);
       blockText(
-        written(ctx, node),
+        ctx,
         node.id,
         node.text,
         node.box.x + padX,
         node.box.y + padY,
-        ink(ctx, node),
+        ctx.colors['text.primary'],
       );
       if (node.isEmptyBranch) {
         emptyMark(ctx, node.id, node.box);
@@ -136,12 +133,12 @@ function paint(ctx: Painter, node: LayoutNode): void {
     case 'loop':
       rect(ctx, node.id, node.box, colors['block.loop']);
       blockText(
-        written(ctx, node),
+        ctx,
         node.id,
         node.text,
         node.head.x + padX,
         node.head.y + padY,
-        ink(ctx, node),
+        ctx.colors['text.primary'],
       );
       return;
     case 'if':
@@ -163,19 +160,6 @@ function paint(ctx: Painter, node: LayoutNode): void {
       peek(ctx, node);
       return;
   }
-}
-
-/** The text color of a node: grey inside an opened call block (visual design 3.3 `peek.text`). */
-function ink(ctx: Painter, node: { readonly isPeeked?: true }): string {
-  return node.isPeeked === true ? ctx.colors['peek.text'] : ctx.colors['text.primary'];
-}
-
-/**
- * The painter for a node's text: an opened Method's blocks (a peek) are not highlighted
- * (visual design 7.1, UX SY1).
- */
-function written(ctx: Painter, node: { readonly isPeeked?: true }): Painter {
-  return node.isPeeked === true && ctx.textKind !== 'plain' ? { ...ctx, textKind: 'plain' } : ctx;
 }
 
 /** Slanted text for what has no name of its own yet (visual design 4.2). */
@@ -220,7 +204,7 @@ function foldedSeq(ctx: Painter, node: Extract<LayoutNode, { kind: 'foldedSeq' }
 function foldCell(ctx: Painter, node: Extract<LayoutNode, { kind: 'foldCell' }>): void {
   const { box } = node;
   rect(ctx, node.id, box, ctx.colors['block.folded']);
-  const fill = ink(ctx, node);
+  const fill = ctx.colors['text.primary'];
   node.name.lines.forEach((text, index) => {
     if (text === '') {
       return;
@@ -289,51 +273,26 @@ function foldFrame(ctx: Painter, node: Extract<LayoutNode, { kind: 'foldFrame' }
 }
 
 /**
- * An opened call block (visual design 6): a white 3px line under a 1px dashed border 1px inside
- * the outer line, which hides the outer lines of the blocks inside so the dashes stand alone,
- * and the band with the call's text on top. The double bars are not drawn while it is open.
+ * An opened call block (visual design 6, UX Q15-a): the shape of an unfolded fold region in the
+ * violet colors. The band with the call's text on top and a 3px border whose middle is 1px inside
+ * the box. The double bars are not drawn while it is open. Painted after the blocks inside.
  */
 function peek(ctx: Painter, node: Extract<LayoutNode, { kind: 'peek' }>): void {
   const colors = ctx.colors;
   const { box, band: bandBox } = node;
-  const inner: ReadonlyArray<Point> = [
-    [box.x + 1, box.y + 1],
-    [box.x + box.width - 1, box.y + 1],
-    [box.x + box.width - 1, box.y + box.height - 1],
-    [box.x + 1, box.y + box.height - 1],
-    [box.x + 1, box.y + 1],
-  ];
-  ctx.elements.push(
-    {
-      kind: 'polyline',
-      blockId: node.id,
-      points: inner,
-      stroke: colors['peek.halo'],
-      strokeWidth: peekHalo,
-      dash: null,
-      isRoundCap: false,
-    },
-    {
-      kind: 'rect',
-      blockId: node.id,
-      x: bandBox.x,
-      y: bandBox.y,
-      width: bandBox.width,
-      height: bandBox.height,
-      fill: colors['peek.band'],
-      stroke: colors['line.structure'],
-      strokeWidth: structureWidth,
-    },
-    {
-      kind: 'polyline',
-      blockId: node.id,
-      points: inner,
-      stroke: colors['peek.edge'],
-      strokeWidth: structureWidth,
-      dash: peekDash,
-      isRoundCap: false,
-    },
-  );
+  ctx.elements.push({
+    kind: 'rect',
+    blockId: node.id,
+    x: bandBox.x,
+    y: bandBox.y,
+    width: bandBox.width,
+    height: bandBox.height,
+    fill: colors['peek.band'],
+    // As in foldFrame: the structure line under the band (BUG-16); the other edges lie under
+    // the 3px border.
+    stroke: colors['line.structure'],
+    strokeWidth: structureWidth,
+  });
   const runs: TextRun[] = [
     { text: node.before, weight: 400 },
     { text: node.name, weight: 600 },
@@ -346,9 +305,21 @@ function peek(ctx: Painter, node: Extract<LayoutNode, { kind: 'peek' }>): void {
     y: bandBox.y + band - baselineFromLineBottom,
     anchor: 'start',
     fontSize: fontSizes.secondary,
-    fill: colors['peek.text'],
+    fill: colors['peek.name'],
     runs,
     halo: null,
+  });
+  const offset = (foldEdge - 1) / 2;
+  ctx.elements.push({
+    kind: 'rect',
+    blockId: node.id,
+    x: box.x + offset,
+    y: box.y + offset,
+    width: box.width - 2 * offset,
+    height: box.height - 2 * offset,
+    fill: 'none',
+    stroke: colors['peek.edge'],
+    strokeWidth: foldEdge,
   });
 }
 
@@ -467,7 +438,7 @@ function call(ctx: Painter, node: Extract<LayoutNode, { kind: 'call' }>): void {
     y: baseline(box.y + padY, 0),
     anchor: 'start',
     fontSize: fontSizes.body,
-    fill: ink(ctx, node),
+    fill: ctx.colors['text.primary'],
     runs,
     halo: null,
   });
@@ -482,7 +453,7 @@ function ifHead(ctx: Painter, node: Extract<LayoutNode, { kind: 'if' }>): void {
     [node.splitX, head.y + head.height],
     [head.x + head.width, head.y],
   ]);
-  condition(written(ctx, node), node.id, node.text, head, node.splitX, ink(ctx, node));
+  condition(ctx, node.id, node.text, head, node.splitX, ctx.colors['text.primary']);
   branchLabel(ctx, node.id, node.yes, head, 'start');
   branchLabel(ctx, node.id, node.no, head, 'end');
 }
@@ -515,7 +486,7 @@ function caseHead(ctx: Painter, node: Extract<LayoutNode, { kind: 'case' }>): vo
       ]);
     }
   }
-  condition(written(ctx, node), node.id, node.text, head, defaultX, ink(ctx, node));
+  condition(ctx, node.id, node.text, head, defaultX, ctx.colors['text.primary']);
   for (const column of columns) {
     // Arm labels go on the left of their cell, the default's on the right (UX Q25).
     branchLabel(ctx, node.id, column.label, head, column.isDefault ? 'end' : 'start');

@@ -35,9 +35,8 @@ export const geometry = {
   'size.nest-gap': 1,
   // size.fold-edge + size.nest-gap: how deep a frame inside a fold region's frame sits.
   'size.nest-inset': 4,
-  // The white line under the dashed border (size.peek-halo) + size.nest-gap.
+  // size.fold-edge + size.nest-gap: how deep a frame inside an opened call block's frame sits.
   'size.peek-inset': 4,
-  'size.peek-halo': 3,
   'space.diagram': 44,
   'space.kind-gap': 88,
   'space.paper': 24,

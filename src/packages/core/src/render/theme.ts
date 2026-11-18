@@ -9,7 +9,6 @@ const palette = {
   'ink.900': '#151a22',
   'ink.700': '#343b48',
   'ink.600': '#4b5567',
-  'ink.550': '#555e70',
   'ink.500': '#5a6476',
   'slate.500': '#5b77ad',
   'blue.700': '#1f45d6',
@@ -18,6 +17,7 @@ const palette = {
   // The edit layer on light paper (visual design 3.4): the selection and the error.
   'orange.600': '#d0500b',
   'red.700': '#b42318',
+  'violet.700': '#5f459f',
   'violet.500': '#7a5fb8',
   'green.700': '#22702a',
   'amber.800': '#8a5a00',
@@ -33,13 +33,13 @@ const palette = {
   // Dark: the dark default theme (visual design 3.5).
   'ink.50': '#e6e9ef',
   'ink.200': '#b4bccb',
-  'ink.250': '#b0b8c6',
   'ink.300': '#a3acbc',
   'slate.300': '#7d93c4',
   'blue.200': '#a9c0ff',
   'blue.300': '#9db8ff',
   'blue.400': '#7f9cf0',
   'violet.300': '#a58be0',
+  'violet.150': '#cdbcf5',
   'green.300': '#82c98a',
   'amber.300': '#e3b862',
   'night.paper': '#171a21',
@@ -55,13 +55,12 @@ const palette = {
   black: '#000000',
   white: '#ffffff',
   'gray.100': '#f0f0f0',
-  'gray.150': '#dcdcdc',
   'gray.200': '#d6d6d6',
-  'gray.700': '#404040',
   'sky.200': '#9fd0ff',
   'sky.300': '#6cb6ff',
   'cyan.200': '#8fd0ff',
   'violet.200': '#d2a8ff',
+  'violet.100': '#e3c9ff',
   'green.200': '#7ee08a',
   'yellow.300': '#ffd84d',
   'deep.snow': '#0f0f0f',
@@ -101,10 +100,8 @@ export type ColorToken =
   | 'fold.band'
   | 'fold.name'
   | 'peek.edge'
-  | 'peek.fill'
-  | 'peek.halo'
   | 'peek.band'
-  | 'peek.text';
+  | 'peek.name';
 
 /**
  * Whether a theme's paper is light or dark (visual design 8). The edit layer picks its colors by
@@ -141,10 +138,8 @@ const light: Mapping = {
   'fold.band': 'fill.ice',
   'fold.name': 'blue.600',
   'peek.edge': 'violet.500',
-  'peek.fill': 'fill.paper',
-  'peek.halo': 'fill.paper',
   'peek.band': 'fill.lilac-strong',
-  'peek.text': 'ink.550',
+  'peek.name': 'violet.700',
 };
 
 /** The dark default theme (visual design 3.5): the same hues on dark paper, AA kept. */
@@ -167,10 +162,8 @@ const dark: Mapping = {
   'fold.band': 'night.ice',
   'fold.name': 'blue.200',
   'peek.edge': 'violet.300',
-  'peek.fill': 'night.paper',
-  'peek.halo': 'night.paper',
   'peek.band': 'night.lilac-strong',
-  'peek.text': 'ink.250',
+  'peek.name': 'violet.150',
 };
 
 /** The high contrast theme (visual design 3.6, R-NFR-07): 7:1 for texts and lines. */
@@ -193,10 +186,8 @@ const highContrast: Mapping = {
   'fold.band': 'deep.sky',
   'fold.name': 'sky.200',
   'peek.edge': 'violet.200',
-  'peek.fill': 'black',
-  'peek.halo': 'black',
   'peek.band': 'deep.lilac-strong',
-  'peek.text': 'gray.150',
+  'peek.name': 'violet.100',
 };
 
 /**
@@ -222,10 +213,8 @@ const print: Mapping = {
   'fold.band': 'white',
   'fold.name': 'black',
   'peek.edge': 'black',
-  'peek.fill': 'white',
-  'peek.halo': 'white',
   'peek.band': 'white',
-  'peek.text': 'gray.700',
+  'peek.name': 'black',
 };
 
 function theme(id: ThemeId, kind: ThemeKind, mapping: Mapping): Theme {

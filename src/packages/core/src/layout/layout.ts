@@ -617,11 +617,6 @@ function measureCall(context: Context, block: Call, at: ShownAt): Measure {
 
 // Pass 2: place (outside in).
 
-/** Marks a node as drawn inside an opened call block. */
-function peeked(at: ShownAt): { readonly isPeeked?: true } {
-  return at.prefix === '' ? {} : { isPeeked: true };
-}
-
 /**
  * Places a sequence in its box. Every block gets the full width. When the box is taller than the
  * blocks, the leftover height is shared equally and the last item takes the remainder
@@ -727,7 +722,6 @@ function placeFold(
       box,
       name: placedText(measure.name),
       isNamed: measure.isNamed,
-      ...peeked(at),
     });
     context.regions.push(
       { kind: 'fold', foldId: fold.screenId, isFolded: true, box },
@@ -834,7 +828,6 @@ function placeBlock(
           box,
           text: placedText(measure.text),
           isEmptyBranch,
-          ...peeked(at),
         });
         context.regions.push({ kind: 'block', blockId: id, box });
       }
@@ -849,11 +842,10 @@ function placeBlock(
           name: measure.name,
           after: measure.after,
           isLost: block.target.kind === 'lost',
-          ...peeked(at),
         });
         context.regions.push({ kind: 'block', blockId: id, box });
       } else if (measure.kind === 'peek') {
-        placePeek(context, id, box, measure, at);
+        placePeek(context, id, box, measure);
       }
       return;
     case 'while':
@@ -882,7 +874,6 @@ function placePeek(
   id: Id,
   box: Box,
   measure: Extract<Measure, { kind: 'peek' }>,
-  at: ShownAt,
 ): void {
   const bandBox: Box = { x: box.x, y: box.y, width: box.width, height: band };
   context.regions.push(
@@ -905,7 +896,6 @@ function placePeek(
     before: measure.before,
     name: measure.name,
     after: measure.after,
-    ...peeked(at),
   });
 }
 
@@ -935,7 +925,6 @@ function placeBody(
     id,
     box,
     text: foldedWords(context, seq),
-    ...peeked(at),
   });
   context.regions.push({ kind: 'foldedSeq', owner: id, box });
   for (const block of seq.blocks) {
@@ -966,7 +955,6 @@ function placeLoop(
     box,
     head,
     text: placedText(measure.text),
-    ...peeked(at),
   });
   context.regions.push({ kind: 'head', blockId: id, box: head });
   // Extra height goes to the body, not the header (02-layout 1.3).
@@ -1044,7 +1032,6 @@ function placeIf(
     splitX: noBox.x,
     yes,
     no,
-    ...peeked(at),
   });
   context.regions.push({ kind: 'head', blockId: id, box: head });
   const rowHeight = geometry['size.if-label'];
@@ -1098,7 +1085,6 @@ function placeCase(
     head,
     text: placedText(measure.text),
     columns,
-    ...peeked(at),
   });
   context.regions.push({ kind: 'head', blockId: id, box: head });
   const rowHeight = geometry['size.case-label'];
@@ -1115,7 +1101,7 @@ function placeCase(
     }
     if (branch === null) {
       // A Case without a default draws an empty default cell, measured as an empty block (UX CD1).
-      context.nodes.push({ kind: 'missingDefault', caseId: id, box: column, ...peeked(at) });
+      context.nodes.push({ kind: 'missingDefault', caseId: id, box: column });
       context.regions.push({ kind: 'missingDefault', blockId: id, box: column });
     } else {
       placeBranch(context, branch, column, at);

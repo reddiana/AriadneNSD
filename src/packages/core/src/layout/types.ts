@@ -30,12 +30,6 @@ export type CaseColumn = {
   readonly label: BranchLabel;
 };
 
-/**
- * Set on what is drawn inside an opened call block (R-EDIT-15): its text is grey and it cannot
- * be edited (visual design 3.3 `peek.text`). Left out elsewhere.
- */
-export type Peeked = { readonly isPeeked?: true };
-
 /** The words of a call block in three parts: the result and its symbol, the name, the arguments. */
 export type CallWords = {
   /** Text before the bold name (result and result symbol). */
@@ -50,23 +44,22 @@ export type CallWords = {
  * Inside an opened call block the ids are screen ids (`b4/b17`, `shown.ts`).
  */
 export type LayoutNode =
-  | (Peeked & {
+  | {
       readonly kind: 'process';
       readonly id: Id;
       readonly box: Box;
       readonly text: PlacedText;
       /** The only, empty block of an If or Case branch: drawn with `∅` (UX E1, R-LAY-09). */
       readonly isEmptyBranch: boolean;
+    }
+  | (CallWords & {
+      readonly kind: 'call';
+      readonly id: Id;
+      readonly box: Box;
+      /** The target is lost: the double bars are dashed. */
+      readonly isLost: boolean;
     })
-  | (Peeked &
-      CallWords & {
-        readonly kind: 'call';
-        readonly id: Id;
-        readonly box: Box;
-        /** The target is lost: the double bars are dashed. */
-        readonly isLost: boolean;
-      })
-  | (Peeked & {
+  | {
       readonly kind: 'loop';
       readonly id: Id;
       readonly loop: 'while' | 'doWhile' | 'for';
@@ -74,8 +67,8 @@ export type LayoutNode =
       /** The header: on top for While and For, at the bottom for Do-While (02-layout 1.4). */
       readonly head: Box;
       readonly text: PlacedText;
-    })
-  | (Peeked & {
+    }
+  | {
       readonly kind: 'if';
       readonly id: Id;
       readonly box: Box;
@@ -85,8 +78,8 @@ export type LayoutNode =
       readonly splitX: number;
       readonly yes: BranchLabel;
       readonly no: BranchLabel;
-    })
-  | (Peeked & {
+    }
+  | {
       readonly kind: 'case';
       readonly id: Id;
       readonly box: Box;
@@ -94,8 +87,8 @@ export type LayoutNode =
       readonly text: PlacedText;
       /** The arms in order, then the default column (always last). */
       readonly columns: ReadonlyArray<CaseColumn>;
-    })
-  | (Peeked & {
+    }
+  | {
       /**
        * A folded branch or loop body: one row "⋯ n blocks" in its place (R-EDIT-13). `id` is the
        * branch's id, or the loop block's for its body.
@@ -105,8 +98,8 @@ export type LayoutNode =
       readonly box: Box;
       /** The words after the dots, in the drawing language. */
       readonly text: string;
-    })
-  | (Peeked & {
+    }
+  | {
       /** A folded fold region: one cell with its name (R-EDIT-14). `id` is the region's. */
       readonly kind: 'foldCell';
       readonly id: Id;
@@ -114,7 +107,7 @@ export type LayoutNode =
       readonly name: PlacedText;
       /** Without a name of its own the default name is drawn slanted (visual design 4.2). */
       readonly isNamed: boolean;
-    })
+    }
   | {
       /**
        * An unfolded fold region with name bands on: a thick border and the name band on top
@@ -127,17 +120,16 @@ export type LayoutNode =
       readonly name: PlacedText;
       readonly isNamed: boolean;
     }
-  | (Peeked &
-      CallWords & {
-        /**
-         * An opened call block (R-EDIT-15): a thin dashed border and a band with the call's
-         * text; the called Method's blocks are drawn inside. Painted after them.
-         */
-        readonly kind: 'peek';
-        readonly id: Id;
-        readonly box: Box;
-        readonly band: Box;
-      })
+  | (CallWords & {
+      /**
+       * An opened call block (R-EDIT-15): a 3px border and a band with the call's
+       * text; the called Method's blocks are drawn inside. Painted after them.
+       */
+      readonly kind: 'peek';
+      readonly id: Id;
+      readonly box: Box;
+      readonly band: Box;
+    })
   | {
       /**
        * The header of a diagram (02-layout 1.5): an Event hat or Method arch (`shape`), or a
@@ -150,12 +142,12 @@ export type LayoutNode =
       readonly box: Box;
       readonly text: PlacedText;
     }
-  | (Peeked & {
+  | {
       /** The empty default cell drawn for a Case without a default branch (UX CD1). */
       readonly kind: 'missingDefault';
       readonly caseId: Id;
       readonly box: Box;
-    });
+    };
 
 /**
  * A click region: the place that selects something, separate from its bounding box

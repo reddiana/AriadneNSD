@@ -38,7 +38,6 @@ const textOnBlocks: ReadonlyArray<ColorToken> = [
   'syntax.keyword',
   'syntax.comment',
   'syntax.literal',
-  'peek.text',
 ];
 
 const linesOnBlocks: ReadonlyArray<ColorToken> = ['line.structure', 'fold.edge', 'peek.edge'];
@@ -50,7 +49,7 @@ const otherPairs: ReadonlyArray<{
   readonly min: number;
 }> = [
   { fore: 'fold.name', back: 'fold.band', min: 4.5 },
-  { fore: 'peek.text', back: 'peek.band', min: 4.5 },
+  { fore: 'peek.name', back: 'peek.band', min: 4.5 },
 ];
 
 describe('the light default theme (visual design 3.3)', () => {
@@ -154,10 +153,15 @@ describe('every theme (visual design 8, R-LAY-08, R-NFR-07)', () => {
     for (const back of blockBackgrounds) {
       expect(colors[back], back).toBe('#ffffff');
     }
-    for (const fore of ['line.structure', 'text.primary', 'fold.edge', 'peek.edge'] as const) {
+    for (const fore of [
+      'line.structure',
+      'text.primary',
+      'fold.edge',
+      'peek.edge',
+      'peek.name',
+    ] as const) {
       expect(colors[fore], fore).toBe('#000000');
     }
     expect(colors['syntax.keyword']).toBe(colors['text.primary']);
-    expect(contrast(colors['peek.text'], colors.paper)).toBeCloseTo(10.4, 1);
   });
 });
