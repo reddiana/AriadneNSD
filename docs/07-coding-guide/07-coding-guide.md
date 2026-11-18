@@ -18,7 +18,7 @@ updated: 2026-11-10
 
 ## 1. 도구가 강제하는 것
 
-모든 검사는 `src/`에서 `pnpm check` 하나로 돌고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트 → 뽑아 만든 문서가 낡지 않았는지 → 13장), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[02-test-architecture#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
+모든 검사는 `src/`에서 `pnpm check` 하나로 실행되고(타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 테스트 → 생성된 문서가 낡지 않았는지 → 13장), CI가 같은 명령을 실행합니다. CI는 이와 나란히 패키지마다의 커버리지가 하한(90%) 이상인지도 검사합니다(`pnpm coverage:check` → [[02-test-architecture#5. 도구와 CI]]). 하나라도 실패하면 병합하지 않습니다.
 
 | 도구 | 무엇을 강제하나 | 설정 파일 (`src/` 기준) | 언제 |
 | --- | --- | --- | --- |
@@ -103,7 +103,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 ### 1.6 테스트 도구
 
-파일의 자리와 이름은 [[02-test-architecture]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 돌고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 적습니다.
+파일의 자리와 이름은 [[02-test-architecture]]대로입니다: 단위 테스트는 소스 옆 `*.test.ts`, 벤치마크는 `*.bench.ts`, 골든 파일은 패키지의 `golden/`, E2E는 `apps/web/e2e/`. Vitest의 `globals`는 끄고 `describe` · `it` · `expect`를 가져와 씁니다. 테스트는 Node 환경에서 실행되고, DOM이 필요한 `editor`의 테스트만 파일 맨 위에 `// @vitest-environment happy-dom`을 적습니다.
 
 ## 2. 이름 짓기
 
@@ -139,12 +139,12 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 - **예상한 실패는 값으로 반환합니다.** 명령의 사전 조건 불만족은 `{ ok: false, reason }`, 저장 실패는 `WriteResult`처럼 이유를 유니온으로 둡니다 → [[01-model#4. 편집 명령]], [[03-editor#6. 셸과의 연결]]. 사용자가 취소한 것(`cancelled`)은 실패가 아닙니다.
 - **예외는 버그에만 던집니다.** 불변식 위반처럼 "일어나면 안 되는 것"입니다. 명령의 경계(`editor`의 명령 실행)에서 잡아 문서를 되돌리고 문제 알리기 보고서의 로그에 남깁니다.
 - 예외를 잡아서 아무것도 하지 않는(`catch {}`) 코드는 쓰지 않습니다.
-- 파일 · 클립보드 같은 바깥 입력은 `unknown`으로 받아 검증한 뒤에 모델로 씁니다. 깨진 파일은 "편집 불가"로 끝내고 원본을 덮어쓰지 않습니다 → [[03-architecture#6. 공통 관심사]]
+- 파일 · 클립보드 같은 외부 입력은 `unknown`으로 받아 검증한 뒤에 모델로 씁니다. 깨진 파일은 "편집 불가"로 끝내고 원본을 덮어쓰지 않습니다 → [[03-architecture#6. 공통 관심사]]
 
 ## 6. 비동기
 
 - `async` / `await`를 씁니다. `.then()` 사슬은 쓰지 않습니다.
-- I/O(파일, IndexedDB, 클립보드)는 셸과 `editor`의 가장자리에만 있습니다. `core`는 동기 함수만 둡니다.
+- I/O(파일, IndexedDB, 클립보드)는 셸과 `editor`의 경계에만 있습니다. `core`는 동기 함수만 둡니다.
 
 ## 7. 주석
 
@@ -167,7 +167,7 @@ export function wrap(content: Content, args: WrapArgs): Result {
 
 ## 8. 화면의 문자열
 
-- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 그림에 적는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그(화면 언어가 아니라 문서 설정의 언어로 고름 → [[0041-drawing-locale-in-document|ADR-0041]]), 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 넘깁니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#6. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
+- 사용자에게 보이는 문자열은 코드에 직접 쓰지 않고 메시지 카탈로그의 키로 씁니다. UI 문자열은 `editor`의 카탈로그, 그림에 적는 고정 문구("참" · "거짓" 등)는 `core`의 카탈로그(화면 언어가 아니라 문서 설정의 언어로 고름 → [[0041-drawing-locale-in-document|ADR-0041]]), 셸만 쓰는 문자열(파일 열기 · 저장 · 로컬 백업의 알림 등)은 그 셸의 카탈로그(웹은 `apps/web/src/shell/messages.ts`)입니다. 셸은 자기 카탈로그로 만든 문자열을 `editor`에 그대로 전달합니다. 영어와 한국어를 함께 둡니다 → [[03-architecture#6. 공통 관심사]], [[01-requirements#^r-nfr|R-NFR-04]]
 - 개발자에게만 보이는 문자열(예외 메시지, 로그)은 영어로 직접 씁니다.
 - `.tsx`의 JSX에 글자를 직접 쓰면(텍스트, `title` · `aria-label` · `placeholder` · `alt` 속성) ESLint가 막습니다. 번역하지 않는 글(제품 이름, 파일 확장자)은 이름 붙은 상수로 두고 `{productName}`처럼 넣습니다.
 - 화면 언어의 목록은 `core`의 `locales` 하나입니다(문서 설정의 그림 문구의 언어도 같은 목록). 언어를 더하면 이 목록에 한 줄, 카탈로그마다 그 언어의 글을 더합니다. 빠진 키는 타입 검사가, 빈 글과 언어마다 다른 `{name}` 자리표시는 카탈로그 테스트가 찾습니다 → [[03-quality-attribute-scenarios#QA-13 화면 언어 추가|QA-13]]
@@ -222,12 +222,12 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 | 방법 | 무엇을 | 언제 |
 | --- | --- | --- |
-| 원본에서 뽑기 | 같은 사실은 원본 하나에만 적고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[08-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
+| 원본에서 생성 | 같은 사실은 원본 하나에만 적고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[08-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
 | 예제를 테스트로 | 문서에 든 예제 JSON과 공유 링크를 테스트가 꺼내 실제 파서로 연다. 대상: `/llms.txt`, 첫 화면 HTML 안의 AI용 안내, 파일 형식 명세([[01-file-format]]). 스키마는 골든 파일로 검사한다 | `pnpm test` |
 | 함께 바뀌는 곳의 검사 | "이것을 바꾸면 저것도 본다"는 경로의 짝을 표로 두고, 한쪽만 바뀐 커밋을 검사가 알린다 | 커밋 · CI |
 | 사용자처럼 시험 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 주고 그림을 그리게 해, 낸 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 시험하기]] | 출시 전 |
 
-- 뽑아 만든 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 뽑아 만든 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 짝 표)가 원본과 다르면 `pnpm check`가 실패합니다.
+- 생성된 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 생성된 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 짝 표)가 원본과 다르면 `pnpm check`가 실패합니다.
 - 값을 견줄 수 있는 것은 짝의 검사가 아니라 테스트로 봅니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[03-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
 
 ### 13.1 함께 바뀌는 곳의 짝
@@ -236,7 +236,7 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 - **언제:** CI가 push와 Pull Request의 커밋 범위 전체를 한 번에 봅니다. 그래서 코드를 고친 뒤 같은 push의 다음 커밋에서 문서를 고쳐도 됩니다. 지금은 경고(`::warning`)만 하고 실패로 하지 않습니다. Claude Code는 `git commit`을 실행할 때 스테이지한 변경을 봅니다(훅 `.claude/hooks/co-change-commit.mjs`). 손으로는 `src/`에서 `node scripts/co-change.mjs`(스테이지한 변경)나 `node scripts/co-change.mjs --range A..B`(커밋 범위)입니다.
 - **테스트는 빼고:** 테스트 파일(`*.test.ts` · `*.spec.ts` · `*.bench.ts`, `e2e/` 아래)은 "이것이 바뀌면"에 세지 않습니다.
-- **넘기기:** 다른 쪽을 고칠 필요가 없는 변경도 있습니다. 그때는 규칙을 고치거나 검사를 끄지 말고, 커밋 메시지 끝에 꼬리말로 까닭을 적습니다. 규칙 하나에 한 줄이고, 까닭이 없거나 `*`로 모두 넘기면 그 꼬리말이 잘못이라고 알립니다.
+- **건너뛰기:** 다른 쪽을 고칠 필요가 없는 변경도 있습니다. 그때는 규칙을 고치거나 검사를 끄지 말고, 커밋 메시지 끝에 꼬리말로 까닭을 적습니다. 규칙 하나에 한 줄이고, 까닭이 없거나 `*`로 모두 건너뛰면 그 꼬리말이 잘못이라고 알립니다.
 
 ```text
 Co-change-skip: C2 — 명세에 링크만 더함
@@ -247,8 +247,8 @@ Co-change-skip: C2 — 명세에 링크만 더함
 | ID | 이것이 바뀌면 | 이것도 본다 | 까닭 |
 | --- | --- | --- | --- |
 | C1 | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/{model-json,parse-model,svg-file,migrations,model-element,model-values}.ts` | [[01-file-format]]<br>[[01-model]]<br>`src/packages/core/schema/model.schema.json`<br>`src/apps/web/guide/llms.txt` | 모델과 파일 형식의 코드가 바뀌면 명세 · 모델 설계 · JSON Schema · AI용 안내서가 같은 것을 말하는지 본다. 예제와 값 목록은 테스트가 보지만 글로 적은 규칙은 사람이 본다 |
-| C2 | [[01-file-format]]<br>`src/packages/core/schema/model.schema.json` | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/**` | 명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 넘긴다) |
-| C3 | `src/packages/editor/src/input/keys.ts` | [[03-keymap]]<br>`src/apps/manual/generated/keys-*.html` | 키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 돌지 않음)는 사람이 본다 |
+| C2 | [[01-file-format]]<br>`src/packages/core/schema/model.schema.json` | `src/packages/core/src/model/**`<br>`src/packages/core/src/format/**` | 명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 건너뛴다) |
+| C3 | `src/packages/editor/src/input/keys.ts` | [[03-keymap]]<br>`src/apps/manual/generated/keys-*.html` | 키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 실행되지 않음)는 사람이 본다 |
 | C4 | `src/packages/editor/src/commands/{spec,registry,editor-commands}.ts`<br>`src/packages/editor/src/ui/{menu-model.ts,editor-app.tsx,command-ids.ts}`<br>`src/apps/web/src/shell/web-shell.ts` | [[03-editor]]<br>`src/apps/manual/pages/ref-*.html` | 메뉴와 커맨드 팔레트는 레지스트리에서 그려지지만, 편집기 설계의 메뉴 표와 사용법의 명령 목록은 손으로 적는다 |
 | C5 | `src/apps/web/src/files/share-{link,command}.ts` | [[06-web]]<br>`src/apps/web/guide/llms.txt`<br>[[0043-share-link-in-fragment\|ADR-0043]] | 공유 링크의 꼴은 웹 설계 · AI용 안내서 · ADR-0043이 함께 적는다. 링크 예제는 doctest가 열지만 설명은 사람이 본다 |
 | C6 | `src/apps/web/scripts/check-size.mjs` | [[06-web]]<br>[[02-test-architecture]] | 번들 사이즈의 한도는 웹 설계 5장과 테스트 아키텍처 5장에도 적혀 있다 |

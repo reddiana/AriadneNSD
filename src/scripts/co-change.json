@@ -19,13 +19,13 @@
       "id": "C2",
       "when": ["docs/05-spec/01-file-format.md", "src/packages/core/schema/model.schema.json"],
       "then": ["src/packages/core/src/model/**", "src/packages/core/src/format/**"],
-      "why": "명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 넘긴다)"
+      "why": "명세와 스키마는 파서와의 약속이다. 그것만 바뀌었으면 코드가 아직 따르지 않을 수 있다(글만 다듬었으면 꼬리말로 건너뛴다)"
     },
     {
       "id": "C3",
       "when": ["src/packages/editor/src/input/keys.ts"],
       "then": ["docs/02-ux-design/03-keymap.md", "src/apps/manual/generated/keys-*.html"],
-      "why": "키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 돌지 않음)는 사람이 본다"
+      "why": "키가 단축키 문서에 있는지는 테스트가 보지만, 키가 가리키는 명령과 사용법의 키 표(manual-shots가 만들고 CI에서는 실행되지 않음)는 사람이 본다"
     },
     {
       "id": "C4",
