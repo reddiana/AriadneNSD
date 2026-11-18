@@ -162,8 +162,30 @@ function separateShapeFromColor(source) {
   return model.replace(cellPattern('lg-t-pure'), () => `${pure}${stateSwatch}${stateText}`);
 }
 
+/** What the notation means, said in the legend so the document's text can describe the system. */
+const legendTexts = {
+  'lg-t-act': '능동 컴포넌트: 이벤트 · 타이머로&#xa;스스로 움직임 (스레드는 따로 없음)',
+  'lg-t-pure': '순수 함수 (core · fonts):&#xa;같은 입력이면 같은 출력',
+  'lg-t-notify': '알림 (이벤트 · 콜백):&#xa;보내는 쪽은 기다리지 않음',
+  'lg-t-mod': '모듈 경계: 4.1의 패키지,&#xa;코드 소유 단위',
+};
+
+function setValue(model, id, value) {
+  const changed = readCell(model, id).replace(/\bvalue="[^"]*"/, () => `value="${value}"`);
+  return model.replace(cellPattern(id), () => changed);
+}
+
+function writeLegendTexts(source) {
+  let model = source;
+  for (const [id, value] of Object.entries(legendTexts)) {
+    if (model.includes(`id="${id}"`)) model = setValue(model, id, value);
+  }
+  const boxes = model.includes('id="lg-act"') ? '상자의 모양은 수동 · 능동, 색은 코드의 성격' : '상자의 색은 코드의 성격';
+  return setValue(model, 'lg-note', `${boxes}&#xa;선 위의 C-01 … 은 커넥터 ID (3.4의 표)`);
+}
+
 function moveLegend(source, { box, rows }) {
-  let model = separateShapeFromColor(source);
+  let model = writeLegendTexts(separateShapeFromColor(source));
   // The blue swatch stands beside its text as the passive swatch stands beside its own.
   const swatch = geometryOf(model, 'lg-pas');
   const swatchText = geometryOf(model, 'lg-t-pas');
