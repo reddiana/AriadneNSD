@@ -298,9 +298,9 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 - 처음 온 사람에게 예제 모달을 한 번 띄웁니다([[05-screen-layout|화면 배치]]의 예제). 그 브라우저에서 답했는지는 사용자 설정 `examples.welcomed`(localStorage)에 둡니다. 모달이 떠 있는 동안 키보드 포커스는 모달에 있어 `Esc`로 닫힙니다. 예제의 썸네일은 셸이 미리 렌더링해 둔 이미지(`src/apps/web/src/examples/thumbnails/`, 예제 · 화면 언어마다 하나)를 `ExamplesHost.thumbnailUrl`로 전달해, 모달이 예제 열 개를 레이아웃하지 않게 합니다. 첫 방문의 편집 화면이 CPU 6배 느림에서 0.5초 넘게 빨리 뜹니다. 이미지는 렌더러가 생성한 SVG(쓰인 문자의 서브셋 글꼴이 든)를 Chromium으로 WebP로 바꾼 것입니다(최대 440 × 248 픽셀, 노트북 화면의 썸네일 칸의 두 배). SVG를 그대로 두면 브라우저가 그 안의 문자를 메인 스레드에서 배치하고 그려, 썸네일 열 개가 채워지기까지 CPU 6배 느림에서 1.5초쯤 더 걸리고 그동안 글꼴 슬라이스도 늦게 왔습니다. WebP는 메인 스레드 밖에서 풀립니다. 크기는 같습니다(한 언어 열 개에 약 84 KB). 어느 SVG로 만들었는지는 `sources.json`에 해시로 남겨, 예제나 렌더러가 바뀌어 썸네일이 최신 상태가 아니면 테스트가 브라우저 없이 실패하고, `pnpm --filter @ariadne-nsd/web thumbnails`로 다시 만듭니다. 미리 렌더링한 이미지가 없는 셸에서는 모달이 직접 렌더링합니다.
 - 저장 안 된 채 브라우저 탭을 닫으려 하면 묻습니다(브라우저의 "나가시겠습니까?"). 로컬 백업이 있어 내용을 잃지는 않습니다.
 - 환경 설정은 그 브라우저의 저장소(`localStorage`)에 남습니다.
-- **툴바 아이콘**은 명령의 `toolbar.icon` id로 고릅니다: `file.new` · `file.open` · `file.save` · `file.export`, `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste`, `block.process` · `block.if` · `block.case` · `block.while` · `block.for` · `block.doWhile`, 그리고 드롭다운의 `wrap` · `zoom`과 예제 모달을 여는 `examples`. 블록 아이콘 말고는 24 × 24 격자의 선 아이콘입니다(임시). 아이콘이 없는 id는 명령 이름을 텍스트로 보입니다. 툴팁은 명령 이름과 키이고, 지금 적용되지 않으면 그 이유입니다.
+- **툴바 아이콘**은 명령의 `toolbar.icon` id로 고릅니다: `file.new` · `file.open` · `file.save` · `file.export`, `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste`, `block.process` · `block.if` · `block.case` · `block.while` · `block.for` · `block.doWhile`, 그리고 드롭다운의 `zoom`과 예제 모달을 여는 `examples`. 블록 아이콘은 블록의 모양과 색을 줄인 22 × 16 그림(`BlockIcon`, 밝은 테마의 색)이고, "감싸기 ▾"의 아이콘(`WrapIcon`)도 같은 방식으로 분기 색의 테두리 안에 처리 색의 블록을 그립니다 → [[ux-decisions#TB2. 감싸기 ▾의 아이콘|TB2]]. 나머지는 24 × 24 격자의 선 아이콘입니다(임시). 아이콘이 없는 id는 명령 이름을 텍스트로 보입니다. 툴팁은 명령 이름과 키이고, 지금 적용되지 않으면 그 이유입니다.
 
-> [!info] 미완성: 툴바 아이콘(블록 아이콘 말고)의 디자인을 정하는 것. 지금 아이콘은 임시입니다.
+> [!info] 미완성: 툴바 아이콘(블록 아이콘과 감싸기 말고)의 디자인을 정하는 것. 지금 아이콘은 임시입니다.
 
 ## 8. 로그
 

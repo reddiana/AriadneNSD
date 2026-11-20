@@ -156,6 +156,58 @@ describe('toolbar block icons', () => {
   });
 });
 
+describe('toolbar wrap dropdown', () => {
+  const wrapSpecs = (applies: true | 'reason.nothingSelected') =>
+    (['if', 'while'] as const).map((kind, order) =>
+      spec({
+        id: `block.wrap.${kind}`,
+        title: `command.block.wrap.${kind}`,
+        menu: { menu: 'diagram', group: 2, order, submenu: 'wrap' },
+        when: () => applies,
+      }),
+    );
+
+  it('T-1385 · UX TB2: the wrap icon is a 22 × 16 block-style picture with a solid inner box', () => {
+    renderApp(fakeEngine(wrapSpecs(true)));
+    const icon = screen.getByRole('button', { name: 'Wrap' }).querySelector('svg');
+    expect(icon?.getAttribute('class')).toBe('ans-block-icon');
+    expect([icon?.getAttribute('width'), icon?.getAttribute('height')]).toEqual(['22', '16']);
+    const boxes = [...(icon?.querySelectorAll('rect') ?? [])];
+    expect(boxes).toHaveLength(2);
+    expect(boxes.some((box) => box.hasAttribute('stroke-dasharray'))).toBe(false);
+  });
+
+  it('T-1386 · UX TB3: with nothing to wrap the button is dimmed, tells why and runs a wrap command instead of opening', () => {
+    for (const locale of ['en', 'ko'] as const) {
+      const engine = fakeEngine(wrapSpecs('reason.nothingSelected'));
+      renderApp(engine, { locale });
+      const button = screen.getByRole('button', { name: locale === 'ko' ? '감싸기' : 'Wrap' });
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      expect(button.getAttribute('title')).toBe(
+        locale === 'ko' ? '먼저 블록을 선택하세요.' : 'Select a block first.',
+      );
+      fireEvent.click(button);
+      // Enter and Space on a button arrive as a click with detail 0.
+      fireEvent.click(button, { detail: 0 });
+      expect(screen.queryByRole('menu')).toBeNull();
+      expect(engine.ran).toEqual(['block.wrap.if', 'block.wrap.if']);
+      cleanup();
+    }
+  });
+
+  it('T-1387 · UX TB3: with something to wrap the button opens the list of wrap commands', () => {
+    const engine = fakeEngine(wrapSpecs(true));
+    renderApp(engine);
+    const button = screen.getByRole('button', { name: 'Wrap' });
+    expect(button.hasAttribute('aria-disabled')).toBe(false);
+    expect(button.getAttribute('title')).toBe('Wrap');
+    fireEvent.click(button);
+    const menu = screen.getByRole('menu', { name: 'Wrap' });
+    expect(within(menu).getAllByRole('menuitem')).toHaveLength(2);
+    expect(engine.ran).toEqual([]);
+  });
+});
+
 describe('command palette', () => {
   const views: ReadonlyArray<CommandView> = ['Undo', 'Cut', 'Wrap in If', 'Wrap in While'].map(
     (title) => ({

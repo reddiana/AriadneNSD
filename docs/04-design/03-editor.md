@@ -329,7 +329,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 ### 5.2 툴바
 
-[[05-screen-layout|화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 다섯(For 없음 → [[ux-decisions#TB1. 툴바에 For를 두지 않는다|TB1]]) ／ 감싸기 ▾ · 확대 ▾ · 예제(예제 모달을 엶). "확대 ▾" 버튼에는 텍스트 대신 지금 배율(`100%`)을 표시합니다. 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
+[[05-screen-layout|화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 다섯(For 없음 → [[ux-decisions#TB1. 툴바에 For를 두지 않는다|TB1]]) ／ 감싸기 ▾ · 확대 ▾ · 예제(예제 모달을 엶). "확대 ▾" 버튼에는 텍스트 대신 지금 배율(`100%`)을 표시합니다. "감싸기 ▾"(`DropdownButton`의 `isDimmedWhenNoneApply`)는 감싸기 명령 다섯이 모두 `when`에서 이유를 반환하면 `aria-disabled`로 흐려지고, 툴팁은 첫 감싸기 명령의 이유입니다. 누르면 목록을 열지 않고 그 명령을 실행해, 레지스트리가 이유를 상태 표시줄에 알립니다(흐린 메뉴 항목과 같음 → [[ux-decisions#TB3. 감쌀 것이 없을 때의 감싸기 ▾|TB3]]). 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
 
 ### 5.3 명령 id 목록
 

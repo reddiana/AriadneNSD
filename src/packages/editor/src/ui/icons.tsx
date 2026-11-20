@@ -1,5 +1,6 @@
 // Inline SVG icons. The block icons are the blocks' own shapes and colours made small
-// (06-web 7, sketch M44); the other toolbar icons are plain strokes in the text colour.
+// (06-web 7, sketch M44), and so is "감싸기 ▾" (UX TB2); the other toolbar icons are plain
+// strokes in the text colour.
 
 import type { ReactElement } from 'react';
 
@@ -86,6 +87,24 @@ export function BlockIcon({ kind }: { readonly kind: ToolbarBlockKind }): ReactE
   );
 }
 
+/**
+ * The icon of "감싸기 ▾": a block in a frame, drawn like the block icons (UX TB2, sketch M68).
+ */
+export function WrapIcon(): ReactElement {
+  return (
+    <svg
+      className="ans-block-icon"
+      width={width}
+      height={height}
+      viewBox={`0 0 ${String(width)} ${String(height)}`}
+      aria-hidden="true"
+    >
+      {frame(fill.branch)}
+      <rect x="5.5" y="4.5" width="11" height="7" fill={fill.process} stroke={line} />
+    </svg>
+  );
+}
+
 // Stroke paths on a 24 × 24 grid, keyed by the toolbar icon id the registry gives.
 const strokePaths: Readonly<Record<string, string>> = {
   'file.new': 'M6 3h8l4 4v14H6z M14 3v4h4 M12 11v6 M9 14h6',
@@ -97,7 +116,6 @@ const strokePaths: Readonly<Record<string, string>> = {
   'edit.cut': 'M6 20a2.5 2.5 0 1 0 0-.1 M18 20a2.5 2.5 0 1 0 0-.1 M7.5 18L17 4 M16.5 18L7 4',
   'edit.copy': 'M9 9h11v11H9z M5 15H4V4h11v1',
   'edit.paste': 'M8 5H5v16h14V5h-3 M9 3h6v4H9z',
-  wrap: 'M4 6h16v12H4z M8 9h8v6H8z',
   zoom: 'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5',
   menu: 'M4 7h16 M4 12h16 M4 17h16',
   help: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7v.5 M12 17v.5',

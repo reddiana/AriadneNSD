@@ -11,7 +11,7 @@ import { byPlace, groupRuns } from './command-view';
 import type { DropdownItem } from './dropdown';
 import { Dropdown } from './dropdown';
 import type { ToolbarBlockKind } from './engine-api';
-import { BlockIcon, hasStrokeIcon, StrokeIcon } from './icons';
+import { BlockIcon, hasStrokeIcon, StrokeIcon, WrapIcon } from './icons';
 import { displayKey, menuKey } from './keys';
 import { useChrome, useChromeState, useCommands } from './use-engine';
 
@@ -157,21 +157,31 @@ export function DropdownButton({
   commands,
   caption,
   className = '',
+  isDimmedWhenNoneApply = false,
 }: {
-  readonly icon: string;
+  readonly icon: ReactElement;
   readonly label: string;
   /** Text on the button instead of the label (the zoom shows "100%"). */
   readonly caption?: string;
   readonly commands: ReadonlyArray<CommandView>;
   readonly className?: string;
+  /**
+   * When no command applies, the button is dimmed like a command button: its tooltip is the
+   * first command's reason, and a click runs that command instead of opening the list, so the
+   * registry tells why in the status bar ("막지 않고 알린다", UX TB3).
+   */
+  readonly isDimmedWhenNoneApply?: boolean;
 }): ReactElement | null {
+  const { run } = useChrome();
   const [open, setOpen] = useState<{ byKeyboard: boolean } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const close = useRef(() => {
     setOpen(null);
   }).current;
   useOutsideClose(rootRef, open !== null, close);
-  if (commands.length === 0) return null;
+  const first = commands[0];
+  if (first === undefined) return null;
+  const isDimmed = isDimmedWhenNoneApply && commands.every((command) => !command.isEnabled);
   const items: DropdownItem[] = commands.map((command) => ({ kind: 'command', group: 0, command }));
   return (
     <div className={`ans-tool-root ${className}`} ref={rootRef}>
@@ -179,17 +189,24 @@ export function DropdownButton({
         type="button"
         className="ans-tool"
         aria-haspopup="menu"
-        aria-expanded={open !== null}
-        title={label}
+        aria-expanded={open !== null && !isDimmed}
+        aria-disabled={isDimmed || undefined}
+        // The tooltip holds the reason, so the name stays the label (narrow screens hide it).
+        aria-label={isDimmed ? label : undefined}
+        title={isDimmed ? (first.reason ?? label) : label}
         onClick={(event) => {
+          if (isDimmed) {
+            run(first.id);
+            return;
+          }
           setOpen(open ? null : { byKeyboard: event.detail === 0 });
         }}
       >
-        <StrokeIcon icon={icon} />
+        {icon}
         <span className="ans-tool-label">{caption ?? label}</span>
         <StrokeIcon icon="chevron" size={10} />
       </button>
-      {open && (
+      {open && !isDimmed && (
         <Dropdown
           items={items}
           label={label}
@@ -315,13 +332,14 @@ export function Toolbar(): ReactElement {
       })}
       <span className="ans-sep" aria-hidden="true" />
       <DropdownButton
-        icon="wrap"
+        icon={<WrapIcon />}
         label={text('toolbar.wrap')}
         commands={wrapCommands(commands)}
         className="ans-icon-on-narrow"
+        isDimmedWhenNoneApply
       />
       <DropdownButton
-        icon="zoom"
+        icon={<StrokeIcon icon="zoom" />}
         label={text('toolbar.zoom')}
         caption={`${String(Math.round(zoomLevel * 100))}%`}
         commands={zoom}

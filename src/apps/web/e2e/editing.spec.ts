@@ -1,5 +1,6 @@
 // Editing commands in the browser that the acceptance tests do not cover: extracting blocks into
-// a new Method (R-EDIT-19, interaction rules "새 Method로 빼기와 새 다이어그램").
+// a new Method (R-EDIT-19, interaction rules "새 Method로 빼기와 새 다이어그램") and the toolbar's
+// "감싸기 ▾" when there is nothing to wrap (UX TB3).
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
@@ -108,4 +109,25 @@ test('T-0840 · R-EDIT-19 · UX XM3: in a diagram without a header m asks; Esc c
   await expect(statusBar(page)).toContainText('Extracted 1 block(s) into a new Method.');
   await typeText(page, 'work');
   await expect(selection(page)).toHaveText('Call block');
+});
+
+test('T-1384 · UX TB3: with nothing selected Wrap ▾ is dimmed and a click tells why in the status bar instead of opening', async ({
+  page,
+}) => {
+  await openApp(page);
+  const wrap = page.locator('.ans-toolbar').getByRole('button', { name: 'Wrap', exact: true });
+  // A new document's empty block is selected: the list opens.
+  await expect(wrap).not.toHaveAttribute('aria-disabled', 'true');
+  await wrap.click();
+  await expect(page.getByRole('menu', { name: 'Wrap' })).toBeVisible();
+  await canvas(page).focus();
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('menu', { name: 'Wrap' })).toHaveCount(0);
+  await expect(wrap).toHaveAttribute('aria-disabled', 'true');
+  await expect(wrap).toHaveAttribute('title', 'Select a block first.');
+  // Playwright waits for an aria-disabled button to be enabled; a person can still press it.
+  await wrap.click({ force: true });
+  await expect(statusBar(page)).toContainText('Select a block first.');
+  await expect(page.getByRole('menu')).toHaveCount(0);
 });
