@@ -95,7 +95,7 @@ inbox 원문<br>
 
 <div class="option">
 <h3><span class="n">2</span>블록 아이콘처럼 색을 칠함, 안쪽은 점선(선택한 블록)</h3>
-<p>여섯 블록 아이콘과 같은 그림 말투입니다. 다만 색이 든 그림이 일곱 개가 되어 "이것도 넣는 블록인가?"로 읽힐 수 있고, While 아이콘과 닮았습니다.</p>
+<p>다섯 블록 아이콘과 같은 그림 말투입니다. 다만 색이 든 그림이 여섯 개가 되어 "이것도 넣는 블록인가?"로 읽힐 수 있고, While 아이콘과 닮았습니다.</p>
 <div class="scene"><div class="app" data-scene="ws1-2"></div></div>
 </div>
 
@@ -165,7 +165,8 @@ const wrapIcons = {
   ws1_2: `<svg width="22" height="16" viewBox="0 0 22 16">${frame(fill.branch)}<rect x="5.5" y="4.5" width="11" height="7" fill="${fill.process}" stroke="${line}" stroke-dasharray="2 1.5"/></svg>`,
   ws1_3: stroke(paths.wrap, 22),
 };
-const blocks = ['process', 'if', 'case', 'while', 'for', 'doWhile']
+// 툴바의 블록 아이콘은 다섯(For는 While과 아이콘이 같아 툴바에 두지 않음, UX 결정 TB1)
+const blocks = ['process', 'if', 'case', 'while', 'doWhile']
   .map((k) => `<span class="ans-tool">${blockIcon(k)}</span>`).join('');
 const menuItems = ['If', 'Case', 'While', 'For', 'Do-While']
   .map((k) => `<li class="ans-item">${k}로 감싸기</li>`).join('');
