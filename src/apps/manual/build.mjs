@@ -18,6 +18,7 @@ await rm(dist, { recursive: true, force: true });
 await mkdir(new URL('ko/', dist), { recursive: true });
 await cp(new URL('img/', root), new URL('img/', dist), { recursive: true });
 await cp(new URL('pages/style.css', root), new URL('style.css', dist));
+await cp(new URL('pages/copy.js', root), new URL('copy.js', dist));
 
 for (const { lang, out } of pages) {
   const page = await readFile(new URL(`pages/${lang}.html`, root), 'utf8');

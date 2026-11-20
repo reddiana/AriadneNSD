@@ -199,6 +199,8 @@ describe('the guide for AI assistants', () => {
       expect(guide).toContain(shellMessage(locale, 'command.share'));
       expect(guide).toContain(shellMessage(locale, 'choice.copyReason'));
     }
+    // The menu for a link that does not open (UX JP3, GD1): the guide names the English one.
+    expect(guide).toContain(shellMessage('en', 'command.openPasted'));
     expect(guide).toContain(`${site}model.schema.json`);
   });
 });

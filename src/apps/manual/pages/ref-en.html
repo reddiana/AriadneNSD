@@ -204,9 +204,10 @@
   <p>
     Moving swaps the selection with the block above or below. Moving past the end takes it out of
     the block that holds it. To put it inside another block, drag and drop it there, or cut and
-    paste. Text copied from another program pastes as one process block per line. Blocks copied into
-    another program become indented text; a call block reads as drawn,
-    <code>result ← name(arguments)</code>.
+    paste. Text copied from another program pastes as one process block per line; if the text is a
+    whole AriadneNSD document (model JSON or a share link), the app asks whether to open it as a new
+    document instead (<a href="#ai">Ask an AI to draw it</a>). Blocks copied into another program
+    become indented text; a call block reads as drawn, <code>result ← name(arguments)</code>.
   </p>
   <div class="pair">
     <figure>
@@ -636,6 +637,13 @@
       instead.
     </li>
     <li>
+      <b>Open from pasted JSON:</b> File › Open from Pasted JSON… opens the model JSON or a share
+      link pasted into its box as a new document you can edit. It is for what an AI gave you (<a
+        href="#ai"
+        >Ask an AI to draw it</a
+      >).
+    </li>
+    <li>
       <b>New documents:</b> if you edited a new document that was never saved (a new one, or an
       example) and open another document, it first asks: "… is a new document that has never been
       saved. Once another document opens, it cannot be brought back. Save it first?" "Save"
@@ -655,12 +663,26 @@
 <section id="ai">
   <h2>Ask an AI to draw it</h2>
   <p>
-    Ask an AI such as ChatGPT, Claude or Gemini something like "Draw bubble sort as an NS diagram
-    with https://ariadnensd.com", and it gives you a share link with the diagram in it. The AI
-    cannot operate this editor, but it reads the site's guide for AI assistants (<a
+    Paste the text below to an AI such as ChatGPT, Gemini or Claude and send it. Only change
+    <mark>○○</mark> to what you want drawn.
+  </p>
+  <div class="request">
+    <p id="ai-request">
+      Read https://ariadnensd.com/llms.txt, then draw <mark>○○</mark> as a Nassi–Shneiderman diagram
+      and give me the share link and the model JSON.
+    </p>
+    <button type="button" data-copy="ai-request" data-copied="Copied">Copy Request</button>
+  </div>
+  <p>
+    The AI cannot operate this editor, but it reads the site's guide for AI assistants (<a
       href="../llms.txt"
       >llms.txt</a
-    >) and makes the link. Help › Ask an AI to Draw opens this part too.
+    >) and makes a share link with the diagram in it. With the guide's address in the request, an AI
+    that does not open pages follows it too. Help › Ask an AI to Draw opens this part too.
+  </p>
+  <p>
+    If the link does not open, copy the JSON the AI gave and paste it into File › Open from Pasted
+    JSON….
   </p>
   <ul>
     <li>
@@ -668,17 +690,20 @@
       document.
     </li>
     <li>
+      <b>Paste the JSON:</b> into the box of File › Open from Pasted JSON…, or right on the editing
+      screen. There the app asks "The pasted text is an AriadneNSD document. Open it as a new
+      document?": "Open as New Document" (<kbd>Enter</kbd>) opens it as a new document you can edit,
+      and "Paste as Text" pastes a process block per line as before. A pasted share link works the
+      same.
+    </li>
+    <li>
       <b>To have the AI change it:</b> after changing it in the app, paste the link from File › Copy
       Share Link back to the AI. That link is compressed, so an AI that cannot run code may ask for
       the saved file instead: attach the <code>.ns.svg</code> file from File › Save.
     </li>
     <li>
-      <b>If the link does not open:</b> the app says what was wrong (the reason). Press "Copy
-      Reason" and paste it to the AI that made the link to get a fixed one.
-    </li>
-    <li>
-      <b>If the AI answers something else:</b> add "Read https://ariadnensd.com/llms.txt and make a
-      share link".
+      <b>If the link or the JSON does not open:</b> the app says what was wrong (the reason). Press
+      "Copy Reason" and paste it to the AI that made it to get a fixed one.
     </li>
   </ul>
   <p class="tip">

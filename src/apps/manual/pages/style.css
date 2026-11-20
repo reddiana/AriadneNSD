@@ -208,6 +208,39 @@ a {
   gap: 8px;
   max-width: 66ch;
 }
+/* The request to copy for an AI (UX RQ1): the text, ○○ marked, and a copy button. */
+.request {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 14px;
+  max-width: 66ch;
+}
+.request p {
+  flex: 1 1 30ch;
+  font-family: var(--mono);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.request button {
+  font: inherit;
+  font-size: 14px;
+  color: var(--bg);
+  background: var(--accent);
+  border: 0;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+mark {
+  background: #ffe58a;
+  color: #1b2129;
+  border-radius: 3px;
+  padding: 0 2px;
+}
 .tip {
   background: var(--soft);
   border-radius: 6px;

@@ -10,13 +10,13 @@ Give the user a share link. It is the same kind of link the app makes with File 
 
 1. Write the diagram as model JSON (below).
 2. Wrap it in an envelope: `{"name":"<file name>.ns.svg","model":<model JSON>}`. The name may be in the user's language (`버블정렬.ns.svg`).
-3. Make the link: `https://ariadnensd.com/#ns1.u.` + encodeURIComponent(envelope JSON without line breaks).
+3. Make the link. If you can run code, run it: make the compressed `d` link (see "If you can run code" below), or `https://ariadnensd.com/#ns1.u.` + encodeURIComponent(envelope JSON without line breaks). Code does not drop brackets; hand encoding does.
 
-   If you cannot run code, percent-encode by hand. Encode at least these characters:
+   Only if you cannot run code, percent-encode by hand. Encode at least these characters:
    space `%20`, `"` `%22`, `#` `%23`, `%` `%25`, `<` `%3C`, `>` `%3E`, `\` `%5C`, `^` `%5E`, `` ` `` `%60`, `{` `%7B`, `|` `%7C`, `}` `%7D`, `[` `%5B`, `]` `%5D`, `(` `%28`, `)` `%29`. Letters, digits and `-_.!~*':,;=+/?@&$` may stay as they are. Non-ASCII text (Korean, accents) may stay as it is; browsers encode it.
    Make the link last, from the exact JSON you show in the code block, piece by piece. Then check it: the link must have as many `%7B` as `%7D` and as many `%5B` as `%5D`. A missing or extra bracket is the most common reason a link does not open.
-4. Give the link as a markdown link, and also show the model JSON in a code block, so the user can fix it if the link is cut.
-5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file.
+4. Give the link as a markdown link, and also write the same link as plain text in a code block: some chat apps rewrite links (for example into a search link). Then show the model JSON in its own code block, so the user can open it even if the link breaks.
+5. Tell the user, in one or two sentences: the link opens in view mode, Edit makes it editable; after changing it, File › Copy Share Link makes a new link to keep, share, or paste back to you (or another assistant) for more changes; File › Save keeps it as a file. If the link does not open, the user can copy the model JSON and paste it into the app (File › Open from Pasted JSON…, or just paste it on the page).
 
 If a link does not open, the app says why and has a Copy Reason button (오류 내용 복사). When the user pastes a text that starts with `AriadneNSD could not open the share link`, it names what was wrong (often a position in the JSON, or how many brackets are missing): fix the JSON there and give a new link the same way.
 
@@ -59,6 +59,7 @@ A body is an array of blocks, drawn top to bottom. The block kinds are {{blockKi
 | Call | `{"id":"b7","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
 
 - `text` is what is written in the block. Use `\n` for more lines. Write it in the user's language or as code.
+- A loop that counts (`i = 0 to n - 2`) is a `for` block, not a `while`. Use `while` for a loop that tests a condition.
 - If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
 - Case: every arm needs `label`. `otherwise` (the default branch) is optional; leave it out if there is none.
 - Call: a call block has **no `text`**. The name it calls goes in `target`, the arguments in `args` (a string). A call block with `text` does not open. `result` receives the return value (`""` for none), drawn as `result ← name(args)`. To call a Method in the same document, use `"target":{"kind":"local","diagram":"d2"}` where `d2` has a `method` head; a Method may call itself (recursion).
