@@ -87,14 +87,16 @@ inbox 원문<br>
 
 <h2><span class="n">WS1</span>감싸기 아이콘의 크기</h2>
 
-<div class="option rec">
-<h3><span class="n">1</span>블록 아이콘과 같은 22 × 16 테두리, 선은 글자색 <span class="star">★ 추천</span></h3>
+<blockquote><b>결정(2026-11-21, 메인테이너):</b> WS1은 2번, 안쪽 네모는 점선 대신 실선("2번 색을 칠함이 좋은데 안의 박스를 점선 말고 실선으로 합시다"). WS2는 1번. 아래 그림의 2번은 실선으로 고친 모습이고, WS2의 그림은 처음 추천했던 1번 아이콘으로 그린 것입니다.</blockquote>
+
+<div class="option">
+<h3><span class="n">1</span>블록 아이콘과 같은 22 × 16 테두리, 선은 글자색 (처음 추천)</h3>
 <p>블록 아이콘과 바깥 테두리의 크기와 선 굵기(1px)가 같습니다. 색은 다른 명령 아이콘처럼 글자색이라서 "블록"이 아니라 "명령"으로 읽힙니다. 안쪽 네모는 감쌀 블록입니다.</p>
 <div class="scene"><div class="app" data-scene="ws1-1"></div></div>
 </div>
 
-<div class="option">
-<h3><span class="n">2</span>블록 아이콘처럼 색을 칠함, 안쪽은 점선(선택한 블록)</h3>
+<div class="option rec">
+<h3><span class="n">2</span>블록 아이콘처럼 색을 칠함, 안쪽은 실선 <span class="star">★ 결정</span></h3>
 <p>다섯 블록 아이콘과 같은 그림 말투입니다. 다만 색이 든 그림이 여섯 개가 되어 "이것도 넣는 블록인가?"로 읽힐 수 있고, While 아이콘과 닮았습니다.</p>
 <div class="scene"><div class="app" data-scene="ws1-2"></div></div>
 </div>
@@ -162,7 +164,7 @@ const paths = {
 const wrapIcons = {
   now: stroke(paths.wrap),
   ws1_1: `<svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="15"/><rect x="5.5" y="4.5" width="11" height="7"/></svg>`,
-  ws1_2: `<svg width="22" height="16" viewBox="0 0 22 16">${frame(fill.branch)}<rect x="5.5" y="4.5" width="11" height="7" fill="${fill.process}" stroke="${line}" stroke-dasharray="2 1.5"/></svg>`,
+  ws1_2: `<svg width="22" height="16" viewBox="0 0 22 16">${frame(fill.branch)}<rect x="5.5" y="4.5" width="11" height="7" fill="${fill.process}" stroke="${line}"/></svg>`,
   ws1_3: stroke(paths.wrap, 22),
 };
 // 툴바의 블록 아이콘은 다섯(For는 While과 아이콘이 같아 툴바에 두지 않음, UX 결정 TB1)
