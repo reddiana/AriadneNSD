@@ -1,0 +1,192 @@
+<title>M68 툴바의 감싸기 버튼</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 시안 페이지: M61 ~ M67과 같은 틀. 툴바 그림은 앱의 CSS(styles.ts)와 아이콘(icons.tsx)을 그대로 옮겨 2배로 키운 것. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --fg: #1d2330; --muted: #5d6676; --line: #d9dee7;
+  --accent: #5b4a9a; --accent-soft: #eeeaf7; --star: #b4690e;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+  /* 앱의 밝은 테마 토큰 (styles.ts) */
+  --ui-bg: #eef1f6; --ui-panel: #ffffff; --ui-text: #1c2230; --ui-muted: #5a6476;
+  --ui-line: #d4dbe6; --ui-accent: #2c55c9; --ui-accent-soft: #e4eafb;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+    --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; color-scheme: dark;
+    --ui-bg: #12151b; --ui-panel: #1a1e26; --ui-text: #e5e8ee; --ui-muted: #9aa3b3;
+    --ui-line: #2b313c; --ui-accent: #8ba7ff; --ui-accent-soft: #232c45;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+  --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; color-scheme: dark;
+  --ui-bg: #12151b; --ui-panel: #1a1e26; --ui-text: #e5e8ee; --ui-muted: #9aa3b3;
+  --ui-line: #2b313c; --ui-accent: #8ba7ff; --ui-accent-soft: #232c45;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.7; font-size: 15px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.75rem; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); text-wrap: balance; }
+p, li { max-width: 72ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--paper); max-width: 80ch; }
+.option { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-top: 14px; min-width: 0; }
+.option.rec { border: 2px solid var(--star); }
+.option h3 { font-size: 1rem; margin: 0 0 4px; }
+.option p { margin: 0 0 10px; font-size: 0.92rem; color: var(--muted); }
+.stage { font-size: 0.82rem; color: var(--muted); margin: 10px 0 3px; }
+.n { display: inline-block; min-width: 1.5em; text-align: center; font-family: var(--font-mono); font-weight: 700; color: var(--paper); background: var(--accent); border-radius: 4px; margin-right: 6px; }
+.star { color: var(--star); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--paper); font-size: 0.9rem; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 500; }
+
+/* ── 앱의 툴바를 옮긴 것 ── */
+.scene { overflow-x: auto; }
+.app { zoom: 2; display: inline-block; font-family: system-ui, "Malgun Gothic", sans-serif; font-size: 13px; color: var(--ui-text); }
+.ans-toolbar { display: flex; align-items: center; gap: 2px; padding: 4px 8px; background: var(--ui-panel);
+  border: 1px solid var(--ui-line); }
+.ans-sep { width: 1px; height: 20px; margin: 0 6px; background: var(--ui-line); flex: none; }
+.ans-tool { display: inline-flex; align-items: center; justify-content: center; gap: 3px; min-width: 28px; height: 28px;
+  padding: 0 5px; background: none; border: 1px solid transparent; border-radius: 4px; color: var(--ui-text); flex: none; font: inherit; }
+.ans-tool.hover { background: var(--ui-accent-soft); }
+.ans-tool[aria-disabled='true'] { color: var(--ui-muted); }
+.ans-tool[aria-disabled='true'] svg { opacity: 0.45; }
+.ans-tool-label { font-size: 12px; }
+.ans-tool-root { position: relative; }
+.ans-dropdown { position: absolute; top: 30px; left: 0; z-index: 2; margin: 0; padding: 4px 0; list-style: none; min-width: 150px;
+  background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+.ans-item { display: block; padding: 3px 14px 3px 24px; font-size: 12px; white-space: nowrap; color: var(--ui-muted); }
+.ans-statusbar { display: flex; align-items: center; height: 22px; padding: 0 8px; font-size: 11px; background: var(--ui-panel);
+  border: 1px solid var(--ui-line); border-top: none; color: var(--ui-text); }
+.with-menu { padding-bottom: 120px; }
+.pointer { position: absolute; left: 22px; top: 18px; width: 0; height: 0; border-left: 5px solid var(--ui-text);
+  border-top: 3px solid transparent; border-bottom: 3px solid transparent; transform: rotate(-60deg); }
+.legend { font-size: 0.85rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+<h1>M68 툴바의 감싸기 버튼</h1>
+<p class="sub">2026-11-21 · inbox의 두 건. 툴바 그림은 앱의 CSS와 아이콘 코드를 그대로 옮겨 <b>2배로 키운</b> 것입니다(<code>src/packages/editor/src/ui/styles.ts</code> · <code>icons.tsx</code>).</p>
+
+<blockquote>
+inbox 원문<br>
+· 툴바에서 감싸기 아이콘의 크기를 블록아이콘 레벨로 키워주세요.<br>
+· 감쌀만한 블록 선택이 없을 때는 감싸기 아이콘을 disable 시키세요.
+</blockquote>
+
+<h2>지금 모습</h2>
+<p>블록 아이콘은 <code>22 × 16</code>px 그림이고, 감싸기 아이콘은 <code>16 × 16</code>px 칸에 그린 선 아이콘입니다. 실제로 그려진 네모는 약 <code>11 × 8</code>px라서 블록 아이콘의 절반쯤입니다. 감싸기 버튼은 선택이 없어도 언제나 진하게 보이고, 누르면 메뉴가 열립니다. 메뉴의 다섯 항목은 흐리게 보이며, 누르면 상태 표시줄에 "먼저 블록을 선택하세요."가 나옵니다.</p>
+<div class="scene"><div class="app" data-scene="now"></div></div>
+
+<h2><span class="n">WS1</span>감싸기 아이콘의 크기</h2>
+
+<div class="option rec">
+<h3><span class="n">1</span>블록 아이콘과 같은 22 × 16 테두리, 선은 글자색 <span class="star">★ 추천</span></h3>
+<p>블록 아이콘과 바깥 테두리의 크기와 선 굵기(1px)가 같습니다. 색은 다른 명령 아이콘처럼 글자색이라서 "블록"이 아니라 "명령"으로 읽힙니다. 안쪽 네모는 감쌀 블록입니다.</p>
+<div class="scene"><div class="app" data-scene="ws1-1"></div></div>
+</div>
+
+<div class="option">
+<h3><span class="n">2</span>블록 아이콘처럼 색을 칠함, 안쪽은 점선(선택한 블록)</h3>
+<p>여섯 블록 아이콘과 같은 그림 말투입니다. 다만 색이 든 그림이 일곱 개가 되어 "이것도 넣는 블록인가?"로 읽힐 수 있고, While 아이콘과 닮았습니다.</p>
+<div class="scene"><div class="app" data-scene="ws1-2"></div></div>
+</div>
+
+<div class="option">
+<h3><span class="n">3</span>지금 그림을 그대로 키움 (22 × 22 칸)</h3>
+<p>코드에서 크기 숫자만 바꿉니다. 그려진 네모는 약 <code>15 × 11</code>px로 커지지만 블록 아이콘보다 여전히 작고, 선 굵기(약 1.5px)가 블록 아이콘과 다릅니다.</p>
+<div class="scene"><div class="app" data-scene="ws1-3"></div></div>
+</div>
+
+<h2><span class="n">WS2</span>감쌀 것이 선택되지 않았을 때</h2>
+<p>앱에는 "막지 않고 알린다"는 원칙이 있습니다(<code>01-ux-overview</code> 2장). 할 수 없는 명령은 흐리게 보이지만, 누르면 아무 일도 하지 않고 그 이유를 상태 표시줄에 알립니다. 블록 아이콘을 포함해 다른 툴바 버튼도 이렇게 동작합니다. 그림은 아무것도 선택하지 않은 채 감싸기 버튼을 누른 직후입니다(WS1은 1번으로 그림).</p>
+
+<div class="option rec">
+<h3><span class="n">1</span>흐리게. 누르면 메뉴를 열지 않고 이유를 알림 <span class="star">★ 추천</span></h3>
+<p>다른 흐린 버튼과 같습니다. 메뉴를 열어도 고를 것이 없으므로, 여는 대신 바로 이유를 알립니다.</p>
+<div class="scene"><div class="app" data-scene="ws2-1"></div></div>
+</div>
+
+<div class="option">
+<h3><span class="n">2</span>흐리게. 누르면 메뉴는 열리고 다섯 항목이 모두 흐림</h3>
+<p>메뉴를 펴 보면 어떤 감싸기가 있는지 알 수 있습니다. 다만 이유를 보려면 항목을 한 번 더 눌러야 합니다.</p>
+<div class="scene"><div class="app with-menu" data-scene="ws2-2"></div></div>
+</div>
+
+<div class="option">
+<h3><span class="n">3</span>흐리게. 눌러도 아무 반응 없음 (HTML <code>disabled</code>)</h3>
+<p>가장 흔한 "비활성"입니다. 그러나 왜 안 되는지 알 길이 없어 앱의 원칙과 어긋나고, 키보드 포커스도 건너뜁니다.</p>
+<div class="scene"><div class="app" data-scene="ws2-3"></div></div>
+</div>
+
+<h2>언제 "감쌀 것이 있다"고 볼까</h2>
+<p>감싸기 메뉴의 다섯 명령(If · Case · While · For · Do-While로 감싸기)이 모두 할 수 없을 때 버튼을 흐리게 합니다. 하나라도 할 수 있으면 진하게 둡니다. 그래서 따로 조건을 만들지 않고, 메뉴 항목이 흐려지는 조건을 그대로 따릅니다.</p>
+<div class="tbl"><table>
+<tr><th>선택</th><th>버튼</th><th>누르면(WS2 1번)</th></tr>
+<tr><td>없음</td><td>흐림</td><td>"먼저 블록을 선택하세요."</td></tr>
+<tr><td>헤더(Event · Method)</td><td>흐림</td><td>"헤더는 감쌀 수 없습니다."</td></tr>
+<tr><td>블록 하나, 또는 한 부모 아래 이웃한 블록들</td><td>진함</td><td>메뉴가 열림</td></tr>
+<tr><td>떨어진 블록들</td><td>흐림</td><td>"한 부모 아래 이웃한 블록을 선택하세요."</td></tr>
+</table></div>
+<p class="legend">상태 표시줄의 문구는 앱에 이미 있는 이유 문구입니다. 실제로 어느 것이 나오는지는 명령의 조건이 정합니다.</p>
+</div>
+
+<script>
+// 앱의 icons.tsx를 옮긴 것
+const fill = { process: '#edf0f5', branch: '#f6ebdc', loop: '#dce6f6' };
+const line = '#5b77ad';
+const W = 22, H = 16;
+const frame = (bg) => `<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" fill="${bg}" stroke="${line}"/>`;
+const shapes = {
+  process: frame(fill.process),
+  if: frame(fill.process) + `<rect x=".5" y=".5" width="21" height="7" fill="${fill.branch}" stroke="${line}"/><path d="M.5 .5 L11 7.5 L21.5 .5 M11 7.5 V15.5" fill="none" stroke="${line}"/>`,
+  case: frame(fill.process) + `<rect x=".5" y=".5" width="21" height="7" fill="${fill.branch}" stroke="${line}"/><path d="M.5 .5 L15.8 7.5 L21.5 .5 M5.3 7.5 V15.5 M10.6 7.5 V15.5 M15.8 7.5 V15.5" fill="none" stroke="${line}"/>`,
+  while: frame(fill.loop) + `<rect x="5.5" y="5.5" width="16" height="10" fill="${fill.process}" stroke="${line}"/>`,
+  for: frame(fill.loop) + `<rect x="5.5" y="5.5" width="16" height="10" fill="${fill.process}" stroke="${line}"/><path d="M2 2.5 h3 M2 4 h3" stroke="${line}" stroke-width=".8"/>`,
+  doWhile: frame(fill.loop) + `<rect x="5.5" y=".5" width="16" height="10" fill="${fill.process}" stroke="${line}"/>`,
+};
+const blockIcon = (k) => `<svg width="22" height="16" viewBox="0 0 22 16">${shapes[k]}</svg>`;
+const stroke = (d, size = 16) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+const paths = {
+  wrap: 'M4 6h16v12H4z M8 9h8v6H8z',
+  zoom: 'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5',
+  chevron: 'M7 10l5 5 5-5',
+};
+const wrapIcons = {
+  now: stroke(paths.wrap),
+  ws1_1: `<svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="15"/><rect x="5.5" y="4.5" width="11" height="7"/></svg>`,
+  ws1_2: `<svg width="22" height="16" viewBox="0 0 22 16">${frame(fill.branch)}<rect x="5.5" y="4.5" width="11" height="7" fill="${fill.process}" stroke="${line}" stroke-dasharray="2 1.5"/></svg>`,
+  ws1_3: stroke(paths.wrap, 22),
+};
+const blocks = ['process', 'if', 'case', 'while', 'for', 'doWhile']
+  .map((k) => `<span class="ans-tool">${blockIcon(k)}</span>`).join('');
+const menuItems = ['If', 'Case', 'While', 'For', 'Do-While']
+  .map((k) => `<li class="ans-item">${k}로 감싸기</li>`).join('');
+
+function toolbar(icon, { disabled = false, hover = false, menu = false } = {}) {
+  const attrs = `class="ans-tool${hover ? ' hover' : ''}"${disabled ? ' aria-disabled="true"' : ''}`;
+  return `<div class="ans-toolbar">${blocks}<span class="ans-sep"></span>
+    <span class="ans-tool-root"><span ${attrs}>${icon}<span class="ans-tool-label">감싸기</span>${stroke(paths.chevron, 10)}</span>
+    ${menu ? `<ul class="ans-dropdown">${menuItems}</ul>` : ''}</span>
+    <span class="ans-tool">${stroke(paths.zoom)}<span class="ans-tool-label">100%</span>${stroke(paths.chevron, 10)}</span></div>`;
+}
+const status = (text) => `<div class="ans-statusbar">${text}</div>`;
+
+const scenes = {
+  'now': toolbar(wrapIcons.now),
+  'ws1-1': toolbar(wrapIcons.ws1_1),
+  'ws1-2': toolbar(wrapIcons.ws1_2),
+  'ws1-3': toolbar(wrapIcons.ws1_3),
+  'ws2-1': toolbar(wrapIcons.ws1_1, { disabled: true, hover: true }) + status('먼저 블록을 선택하세요.'),
+  'ws2-2': toolbar(wrapIcons.ws1_1, { disabled: true, hover: true, menu: true }) + status('&nbsp;'),
+  'ws2-3': toolbar(wrapIcons.ws1_1, { disabled: true }) + status('&nbsp;'),
+};
+for (const el of document.querySelectorAll('[data-scene]')) el.innerHTML = scenes[el.dataset.scene];
+</script>
