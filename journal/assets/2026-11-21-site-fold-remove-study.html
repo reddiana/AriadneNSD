@@ -74,14 +74,16 @@ th { background: var(--accent-soft); font-weight: 500; }
 메인테이너: "호출블록을 펼치기한 내부에서 접기영역이 설정되어있을 때, 접기영역 해제가 안 됩니다." 이어서 "각자 따로 동작하기로 했던 것으로 기억합니다. 당연히 풀 수 있어야합니다. 호출블록을 펼칠 때 메소드의 접기영역을 가져오기는 하지만 그것은 처음 펼칠 때 뿐입니다."
 </blockquote>
 
+<blockquote><b>결정(2026-11-21, 메인테이너): SF1 2번.</b> "접기영역은 가시성과 강조를 위한 것입니다. 다이어그램의 진정한 내용이 아니에요. 따라서 메소드에서 변경한 것을 호출블록 펼침에 적용할 필요가 없습니다." 그래서 처음 펼 때 가져온 접기 영역의 복사는 펴기와 함께 다룹니다. CB13의 접힘을 가져오는 것과 같은 층이고, 아래 2번의 "펴기만 해도 파일이 바뀐다"는 걱정은 접기 영역이 내용이 아니므로 받아들입니다.</blockquote>
+
 <h2>지금 모습</h2>
 <p>펴 보인 곳 안의 접기 영역은 두 가지입니다. <b>이 자리의 접기 영역</b>(펴 보인 곳에서 만든 것)은 풀 수 있습니다. <b>Method의 접기 영역</b>은 Method의 것을 비춰 보일 뿐이라 풀거나 이름을 바꿀 수 없고, 이유를 알립니다(<code>02-interaction-rules</code> "펴 보인 곳의 접기 영역", 테스트 T-1092). CB13이 "처음 펼 때만 가져오고 그 뒤로 따로"라고 정한 것은 <b>접힘</b>(접혀 있나 펴져 있나)뿐이고, 접기 영역 자체(있고 없음, 이름)는 정하지 않았습니다.</p>
 <div class="scene" data-scene="now"></div>
 
 <h2><span class="n">SF1</span>펴 보인 곳에서 Method의 접기 영역을 풀면</h2>
 
-<div class="option rec">
-<h3><span class="n">1</span>이 자리에서만 사라짐. 손대지 않은 것은 Method를 따름 <span class="star">★ 추천</span></h3>
+<div class="option">
+<h3><span class="n">1</span>이 자리에서만 사라짐. 손대지 않은 것은 Method를 따름 (처음 추천)</h3>
 <p>펴 보인 곳에서 Method의 접기 영역을 풀면 그 호출 블록 자리에서만 사라집니다. Method와 다른 호출 블록에는 그대로 있습니다. 풀지 않은 것은 지금처럼 Method를 따라갑니다(Method에서 이름을 바꾸면 여기도 바뀜). 이름 바꾸기도 같은 규칙: 이 자리에서 바꾸면 이 자리만 바뀌고, 그 뒤로는 Method의 이름을 따르지 않습니다.</p>
 <div class="scene" data-scene="o1"></div>
 <ul class="note">
@@ -90,8 +92,8 @@ th { background: var(--accent-soft); font-weight: 500; }
 </ul>
 </div>
 
-<div class="option">
-<h3><span class="n">2</span>처음 펼 때 Method의 접기 영역을 이 자리로 복사</h3>
+<div class="option rec">
+<h3><span class="n">2</span>처음 펼 때 Method의 접기 영역을 이 자리로 복사 <span class="star">★ 결정</span></h3>
 <p>CB13의 접힘과 같은 원리를 접기 영역에도 씁니다. 처음 펴는 순간 Method의 접기 영역이 모두 이 자리의 접기 영역이 되고, 그 뒤로는 서로 모릅니다. Method에 새로 만든 접기 영역은 이미 펴 본 호출 블록에는 나타나지 않습니다.</p>
 <div class="scene" data-scene="o2"></div>
 <ul class="note">
