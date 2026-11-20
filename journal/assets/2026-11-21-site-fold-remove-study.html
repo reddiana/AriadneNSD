@@ -142,7 +142,7 @@ const scenes = {
   o3: pane('Method partition — 함께 풀림', method(b('pivot = a[hi]') + b('i = lo'))) +
       pane('펴 보인 곳 — 풀림', caller(b('pivot = a[hi]') + b('i = lo') + b('return i'), status('Method partition의 접기 영역 "준비"를 풀었습니다. 호출하는 모든 곳에 적용됩니다.'))),
   o4: pane('Method partition', method(prep())) +
-      pane('펴 보인 곳 — 풀리지 않음', caller(prep() + b('return i'), status('Method의 접기 영역입니다. Method에서 푸세요. (호출하는 Method로 가기: gd)'))),
+      pane('펴 보인 곳 — 풀리지 않음', caller(prep() + b('return i'), status('Method의 접기 영역입니다. Method에서 푸세요.'))),
 };
 for (const el of document.querySelectorAll('[data-scene]')) el.innerHTML = scenes[el.dataset.scene];
 </script>
