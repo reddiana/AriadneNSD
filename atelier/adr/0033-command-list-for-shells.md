@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0033: editor가 제공 인터페이스 CommandRegistry · SettingsSchema를 노출하고, 셸은 그것을 호스트의 확장 지점에 등록한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-21: 웹 셸이 파일 메뉴에 "붙여넣은 JSON으로 열기…"(`file.openPasted`)를 더한다. `editor`의 모달(`Dialog`)은 넷째 버튼을 흐리게 하고(`isSecondDisabled`) 입력 칸을 여러 줄로(`isMultiline`) 할 수 있다 → [[ux-decisions#JP3. 메뉴로 여는 길|JP3]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-03: `EditorHandle`에 답이 셋인 물음 `choose`가 생겼다(셸이 저장하지 않은 새 문서를 두고 다른 문서를 열 때 저장 · 버리고 열기 · 취소를 묻는다) → [[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때|US1]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-03: 설정 스키마의 항목(`SettingSpec`)에 흐린 한 줄 설명(`hint`)이 생겼다. 첫 쓰임은 문서 설정의 "그림 문구의 언어"다 → [[0041-drawing-locale-in-document|ADR-0041]], [[03-editor#6. 셸과의 연결]]
 > - 2026-11-01: MVP 코드에서 `EditorHandle`이 커졌다(`state` · `onChange` · `chromeState` · `documentSetting` · `startBlockDrag` · `focus` 등). `open`은 열었는지를 돌려주고 `serialize`는 비동기다. `CommandRegistry`에 `context()`, `CommandSpec`에 `checked`, 메뉴 자리에 하위 메뉴(`submenu`)가 생겼다. 셸이 더하는 명령은 새로 · 열기 · 최근 파일 · 내보내기다 → [[03-editor#5. 명령 목록과 메뉴]], [[03-editor#6. 셸과의 연결]]

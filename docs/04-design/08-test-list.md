@@ -16,15 +16,15 @@ status: 생성됨
 
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| [[#1. 인수 테스트\|인수 테스트]] | 26 | - | - | - | 26 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 269 | - | 322 |
+| [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 274 | - | 327 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 175 | - | 210 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 34 | 43 | - | 100 |
-| [[#5. 파일\|파일]] | 18 | 157 | 235 | - | 410 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 36 | 43 | - | 102 |
+| [[#5. 파일\|파일]] | 18 | 166 | 241 | - | 425 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 84 | 266 | 911 | 5 | 1266 |
+| 합계 | 85 | 277 | 922 | 5 | 1289 |
 
 ## 읽는 법
 
@@ -37,11 +37,11 @@ status: 생성됨
 
 ## 1. 인수 테스트
 
-MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[01-requirements#5.2 MVP의 인수 기준]]. 파일 1개, 테스트 26개.
+MVP를 받아들이는 기준(AT-01 ~ AT-17)을, 빌드한 웹 앱을 브라우저에서 열고 사용자처럼 조작해 확인합니다 → [[01-requirements#5.2 MVP의 인수 기준]]. 파일 1개, 테스트 27개.
 
 ### [E2E] `apps/web/e2e/acceptance.spec.ts`
 
-MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서, 배포용 빌드로. Playwright · 테스트 26개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-01]], [[01-requirements#^at|AT-17]].
+MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서, 배포용 빌드로. Playwright · 테스트 27개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-01]], [[01-requirements#^at|AT-17]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -59,6 +59,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0012 | 같은 문서는 다른 탭에서도 같은 바이트로 저장된다(Chromium 쪽) | [[01-requirements#^at\|AT-10]] |
 | T-0013 | 블록을 드래그해 이동하고, 블록 아이콘을 드래그해 삽입하고 감싼다 | [[01-requirements#^at\|AT-11]] |
 | T-0014 | 복사한 블록은 블록으로, 일반 텍스트는 한 줄에 처리 블록 하나로 붙여넣는다 | [[01-requirements#^at\|AT-12]] |
+| T-1388 | 다른 AI가 준 모델 JSON을 붙여넣으면 묻고 나서 새 문서로 연다 | [[01-requirements#^at\|AT-12]], [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 | T-0015 | 자동 저장은 편집하고 2초 뒤에 원래 파일에 쓴다(Chromium 쪽) | [[01-requirements#^at\|AT-14]] |
 | T-0016 | 최근 파일에서 파일을 다시 연다 | [[01-requirements#^at\|AT-15]] |
 | T-0017 | 커맨드 팔레트에서 명령을 찾아 실행한다 | [[01-requirements#^at\|AT-16]] |
@@ -76,7 +77,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 322개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 327개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -569,7 +570,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
-명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 27개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q8]].
+명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 32개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -600,6 +601,11 @@ id. Vitest · 테스트 5개.
 | T-0573 | 호출 대상으로 "새 Method"를 고르면 Method를 만들고 그 이름을 편집하며, 실행 취소 한 단계다 | - |
 | T-0574 | 호출 대상 목록을 닫으면 아무것도 바뀌지 않는다 | - |
 | T-0575 | %s(%s)의 다이어그램을 삭제하면 렌더링된 순서로 다음 다이어그램을 선택한다: %j | - |
+| T-1389 | 붙여넣은 문서는 먼저 묻고, "새 문서로 열기"는 그것을 열며 지금 문서는 그대로 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1390 | "텍스트로 붙여넣기"는 지금처럼 줄마다 처리 블록을 붙이고, 취소는 아무것도 하지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1391 | 선택한 것이 없으면 "텍스트로 붙여넣기"를 흐리게 하여 묻고, 그 밖의 텍스트는 먼저 선택하라고 알린다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
@@ -967,7 +973,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 100개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 102개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1039,7 +1045,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록"). Vitest + happy-dom · 테스트 34개.
+메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 36개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1077,6 +1083,8 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0315 | 06-web 7: 경고는 닫을 때까지 상태 표시줄에 남는다 | - |
 | T-0316 | Method들과 "새 Method"를 보이고, `j` · `k`는 지금 것에서 움직이며 `Enter`가 고른다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 | - |
+| T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
+| T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
@@ -1206,7 +1214,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 40개, 테스트 410개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 425개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1289,7 +1297,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `apps/web/src/shell/web-shell.test.ts`
 
-웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09). Vitest · 테스트 79개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]].
+웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09) · 웹 셸: 텍스트로 붙여넣은 문서(R-WEB-11). Vitest · 테스트 85개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]], [[01-requirements#^r-web|R-WEB-11]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1372,6 +1380,12 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0955 | "브라우저에 저장"이 실패하면 새 문서에 머문다 | [[ux-decisions\|UX US1]] |
 | T-0956 | 브라우저 문서의 로컬 백업은 그 브라우저 문서로 복원된다 | [[01-requirements#^r-web\|R-WEB-03]] |
 | T-0957 | 다른 탭에서 연 브라우저 문서는 이 탭에서 보기만 한다 | [[01-requirements#^r-web\|R-WEB-09]] |
+| T-1396 | 붙여넣은 텍스트 가운데 무엇이 문서인지 편집기에 알린다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1397 | 모델 JSON은 제목 없는 새 문서로(편집할 수 있고 저장 안 됨이 아님), 봉투는 그 이름으로 연다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1398 | 붙여넣은 공유 링크는 편집할 수 있는 새 문서로 열리고, 편집한 새 문서가 있으면 먼저 묻는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1399 | 파일의 검증을 통과하지 못한 붙여넣은 모델은 AI에게 줄 오류 내용을 복사할 수 있게 보인다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX LG6]] |
+| T-1400 | 파일 › 붙여넣은 JSON으로 열기…는 여러 줄 입력 칸으로 받아 붙여넣은 것을 연다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP3]] |
+| T-1401 | 문서가 아닌 텍스트는 이유를 알리고, 읽히지 않는 JSON이면 괄호 수를 덧붙인다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP3]] |
 
 ^t-apps-web-src-shell-web-shell-test-ts
 
@@ -1390,7 +1404,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `packages/editor/src/create-editor.test.ts`
 
-셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 49개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
+셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 텍스트로 붙여넣은 문서(R-WEB-11) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 52개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1417,6 +1431,9 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0372 | 06-web 1: prompt는 입력한 텍스트로, 취소하면 null로 끝난다 | - |
 | T-0373 | 둘째 대화 상자가 첫째를 취소한다 | - |
 | T-0834 | US1: choose는 누른 버튼을 반환한다: 확인, 셋째, 취소 | - |
+| T-1402 | 문서를 붙여넣으면 제목이 AriadneNSD인 모달로 묻고, "새 문서로 열기"는 그것을 연다 | [[ux-decisions\|UX JP2]] |
+| T-1403 | 선택한 것이 없어도 같은 질문이 오고, "텍스트로 붙여넣기"는 흐리며 아무 일도 하지 않는다 | [[ux-decisions\|UX JP2]] |
+| T-1404 | prompt는 제목, 확인 버튼, 여러 줄 입력 칸을 받을 수 있다 | [[ux-decisions\|UX JP3]] |
 | T-0374 | 마지막에 고른 모양을 기억하고 새 문서가 그 모양으로 시작한다 | [[ux-decisions\|UX HS1]] |
 | T-0375 | 파일을 열면 그 파일의 모양을 지키고, 기억해 둔 모양은 바꾸지 않는다 | [[ux-decisions\|UX HS1]] |
 | T-0376 | 호출 블록을 삽입할 때 화면 상태로 묻고, 답하면 삽입한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
@@ -1562,6 +1579,21 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 | T-0767 | 파일과 폴더를 가린다 | - |
 
 ^t-apps-web-src-files-file-system-access-test-ts
+
+### [단위] `apps/web/src/files/pasted-document.test.ts`
+
+붙여넣은 텍스트에서 AriadneNSD 문서 알아보기(R-WEB-11, UX JP1). Vitest · 테스트 6개. 파일 전체가 확인하는 것: [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1405 | 모델 JSON은 앞뒤에 공백이나 코드 펜스가 있어도 문서다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1406 | 공유 링크의 봉투는 그 이름을 가진 문서다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1407 | 사이트나 지금 페이지의 공유 링크는 문서다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1408 | 채팅 앱이 Google 검색으로 감싼 링크는 꺼내서 본다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1409 | 그 밖의 텍스트는 문서가 아니다: 문장, 다른 JSON, JSON 조각, 문장 속의 링크 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
+| T-1410 | 텍스트가 문서가 아닌 이유를 알리고, 읽히지 않는 JSON이면 괄호 수를 덧붙인다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP3]] |
+
+^t-apps-web-src-files-pasted-document-test-ts
 
 ### [단위] `apps/web/src/files/share-command.test.ts`
 

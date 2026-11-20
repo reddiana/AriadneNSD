@@ -5,7 +5,7 @@ aliases:
 tags:
   - requirements
 status: 초안
-updated: 2026-11-01
+updated: 2026-11-21
 ---
 
 # 유즈케이스
@@ -127,6 +127,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1a. Obsidian에서 일반 `.svg`를 열면 AriadneNSD가 아니라 Obsidian의 기본 동작으로 열린다
 - 1b. Obsidian에서 이름이 바뀌어 `.ns`가 빠진 파일도 모델이 들어 있으면 편집 메뉴가 생긴다
 - 1c. 공유 URL을 열면 보기 모드로 시작하고, 버튼 하나로 편집으로 넘어간다 → [[06-web#3. 공유 URL과 보기 모드]]
+- 1e. 다른 AI가 준 모델 JSON이나 공유 링크를 붙여넣는다(웹: 편집 화면에 붙여넣기, 또는 파일 › 붙여넣은 JSON으로 열기…): 새 문서로 열지 묻고, 편집할 수 있는 새 문서로 연다 → [[06-web#3.2 붙여넣은 문서]]
 - 1d. 같은 파일이 이미 다른 창이나 탭에 열려 있다: 웹은 나중에 연 탭에 알리고 보기만 하게 한다 → [[06-web#2. 로컬 백업과 자동 저장]]. 다른 배포 대상은 미결정(6장)
 - 3a. 모델이 없거나 깨진 파일: 편집할 수 없다고 알리고 끝난다. 그림을 거꾸로 읽어 모델을 만들지 않는다
 - 3b. 옛 형식 버전의 파일: 지금 형식으로 바꿔 읽는다. 원본이 언제 새 형식이 되는지는 미결정(6장). 프로토타입이 저장한 `version: 0` 파일은 바꿔 읽지 않고 3a와 같이 다룬다 → [[0035-model-namespace-and-v0|ADR-0035]]
@@ -140,7 +141,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 편집을 시작할 때마다
 
-**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-blk|R-BLK-09]], [[01-requirements#^r-nfr|R-NFR-02]]
+**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-blk|R-BLK-09]], [[01-requirements#^r-nfr|R-NFR-02]]
 
 ### UC-03 블록을 편집한다
 

@@ -377,6 +377,86 @@ describe('the shell asks through the editor (03-editor 6 additions)', () => {
   });
 });
 
+describe('a document pasted as text (R-WEB-11)', () => {
+  function makePasting(text: string) {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const clipboard = memoryClipboard();
+    clipboard.data = { text, json: null };
+    const opened: string[] = [];
+    const handle = createEditor({
+      host,
+      settings: memorySettings(),
+      appearance: { scheme: 'light', uiFont: 'sans-serif' },
+      doc: { store: memoryStore(), text: null },
+      fonts: fakeFonts,
+      clipboard,
+      pastedDocument: {
+        isDocument: (pasted) => pasted.startsWith('{"format"'),
+        open: (pasted) => {
+          opened.push(pasted);
+          return Promise.resolve();
+        },
+      },
+    });
+    handles.push(handle);
+    return { handle, opened };
+  }
+
+  it('T-1402 · UX JP2: pasting a document asks in a modal titled AriadneNSD; "Open as New Document" opens it', async () => {
+    const { handle, opened } = makePasting('{"format":"ariadne-nsd"}');
+    handle.commands.run('edit.paste');
+    await tick();
+    expect(handle.chromeState().dialog).toMatchObject({
+      title: 'AriadneNSD',
+      message: 'question.pastedDocument',
+      confirm: 'choice.openAsNew',
+      second: 'choice.pasteAsText',
+      cancel: 'choice.cancel',
+    });
+    // A new document has its empty block selected, so "Paste as Text" is not dimmed.
+    expect(handle.chromeState().dialog).not.toHaveProperty('isSecondDisabled');
+    handle.chromeState().dialog?.answer('');
+    await tick();
+    expect(opened).toEqual(['{"format":"ariadne-nsd"}']);
+  });
+
+  it('T-1403 · UX JP2: with nothing selected the same question comes, and "Paste as Text" is dimmed and does nothing', async () => {
+    const { handle, opened } = makePasting('{"format":"ariadne-nsd"}');
+    handle.commands.run('select.clear');
+    expect(handle.state().selection).toBeNull();
+    handle.commands.run('edit.paste');
+    await tick();
+    const dialog = handle.chromeState().dialog;
+    expect(dialog).toMatchObject({ isSecondDisabled: true });
+    dialog?.answerSecond?.();
+    expect(handle.chromeState().dialog).not.toBeNull();
+    handle.chromeState().dialog?.answer(null);
+    await tick();
+    expect(opened).toEqual([]);
+    expect(handle.chromeState().dialog).toBeNull();
+  });
+
+  it('T-1404 · UX JP3: prompt may have a title, a confirm button and a box of several lines', async () => {
+    const { handle } = make();
+    const answer = handle.prompt('Paste it:', '', {
+      title: 'Open from Pasted JSON',
+      confirm: 'Open',
+      isMultiline: true,
+    });
+    expect(handle.chromeState().dialog).toMatchObject({
+      title: 'Open from Pasted JSON',
+      confirm: 'Open',
+      input: '',
+      isMultiline: true,
+    });
+    handle.chromeState().dialog?.answer('{}');
+    expect(await answer).toBe('{}');
+    void handle.prompt('File name:', 'a.ns.svg');
+    expect(handle.chromeState().dialog).not.toHaveProperty('isMultiline');
+  });
+});
+
 describe('the header shape (R-LAY-10, UX HS1)', () => {
   it('T-0374 · UX HS1: the shape chosen last is remembered and new documents start with it', () => {
     const values: Record<string, unknown> = {};

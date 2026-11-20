@@ -5,7 +5,13 @@ import type { ClipboardData } from './clipboard/clip-format';
 import { editorCommands } from './commands/editor-commands';
 import type { EditorRegistry } from './commands/registry';
 import { createRegistry } from './commands/registry';
-import type { DocumentStore, PickerItem, SettingsStore, WriteResult } from './contracts';
+import type {
+  DocumentStore,
+  PastedDocumentPort,
+  PickerItem,
+  SettingsStore,
+  WriteResult,
+} from './contracts';
 import type { EditorMessage } from './i18n/messages';
 import { keyBindings } from './input/keys';
 import type { ClipboardPort, LoadOptions } from './session/session';
@@ -169,8 +175,18 @@ export type TestEngine = {
   content(): Content;
 };
 
+/** What a test gives the engine in place of the shell (R-WEB-11, UX JP1 · JP2). */
+export type TestPorts = {
+  readonly pastedDocument?: PastedDocumentPort;
+  readonly askPastedDocument?: (canPasteText: boolean) => Promise<'open' | 'text' | 'cancel'>;
+};
+
 /** Makes a test engine on a content. */
-export function testEngine(content: Content, load: Partial<LoadOptions> = {}): TestEngine {
+export function testEngine(
+  content: Content,
+  load: Partial<LoadOptions> = {},
+  ports: TestPorts = {},
+): TestEngine {
   const clipboard = memoryClipboard();
   const timers = manualTimers();
   const logs: string[] = [];
@@ -228,6 +244,7 @@ export function testEngine(content: Content, load: Partial<LoadOptions> = {}): T
           },
         };
       }),
+    ...ports,
   })) {
     registry.register(spec);
   }

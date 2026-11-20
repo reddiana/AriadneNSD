@@ -51,7 +51,14 @@ import {
   clipToJson,
   clipToText,
 } from '../clipboard/clip-format';
-import type { CommandSpec, MenuPlace, PickerItem, ToolbarPlace, WriteResult } from '../contracts';
+import type {
+  CommandSpec,
+  MenuPlace,
+  PastedDocumentPort,
+  PickerItem,
+  ToolbarPlace,
+  WriteResult,
+} from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
@@ -103,6 +110,16 @@ export type CommandDeps = {
     items: ReadonlyArray<PickerItem>,
     active: number,
   ) => Promise<number | null>;
+  /**
+   * Addition: the shell that opens a pasted document (R-WEB-11, UX JP1). Absent: pasted text is
+   * always blocks, and paste needs a selection.
+   */
+  readonly pastedDocument?: PastedDocumentPort;
+  /**
+   * Addition: asks whether to open a pasted document as a new document (UX JP2). "Paste as Text"
+   * is dimmed when `canPasteText` is false (nothing selected). Absent: opens without asking.
+   */
+  readonly askPastedDocument?: (canPasteText: boolean) => Promise<'open' | 'text' | 'cancel'>;
 };
 
 /** The block kinds in toolbar and menu order (06-web 7). */
@@ -852,8 +869,26 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
   // A paste reads the system clipboard asynchronously. Saving waits for it, so Ctrl+V then
   // Ctrl+S saves the pasted document, not the one before it.
   let pendingPaste: Promise<void> = Promise.resolve();
-  const pasteNow = async (side: Side): Promise<void> => {
+  const pasteNow = async (side: Side, release: () => void): Promise<void> => {
     const data = await deps.clipboard.read();
+    // A whole AriadneNSD document pasted as text (the model JSON or a share link from another
+    // AI) opens as a new document after asking (UX JP1 · JP2). Blocks copied in the app come with
+    // the custom format and paste as they are.
+    const pasted = deps.pastedDocument;
+    if (data.json === null && data.text !== null && pasted?.isDocument(data.text) === true) {
+      // Saving no longer waits: the modals that follow may save (UX US1).
+      release();
+      const canPasteText = session.state.selection !== null;
+      const answer =
+        deps.askPastedDocument === undefined ? 'open' : await deps.askPastedDocument(canPasteText);
+      if (answer === 'open') {
+        await pasted.open(data.text);
+        return;
+      }
+      if (answer === 'cancel') {
+        return;
+      }
+    }
     const clip =
       (data.json === null ? null : clipFromJson(data.json)) ??
       (data.text === null ? null : clipFromText(data.text));
@@ -892,15 +927,26 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
       return;
     }
     const target = targetOf(selection);
-    if (target !== null) {
-      session.commit(paste(content(), { target, side, clip, names, ids: session.ids() }), after);
+    if (target === null) {
+      if (selection === null) {
+        // Paste runs without a selection only to look for a pasted document (UX JP2).
+        session.notify('reason.nothingSelected', 'warn');
+      }
+      return;
     }
+    session.commit(paste(content(), { target, side, clip, names, ids: session.ids() }), after);
   };
 
   const runPaste = async (side: Side): Promise<void> => {
-    const pasting = pasteNow(side);
-    pendingPaste = pasting.catch(() => undefined);
-    await pasting;
+    let release = (): void => undefined;
+    pendingPaste = new Promise((resolve) => {
+      release = resolve;
+    });
+    try {
+      await pasteNow(side, release);
+    } finally {
+      release();
+    }
   };
 
   const pasteSpec = (side: Side, id: string, order: number, toolbar?: ToolbarPlace): CommandSpec =>
@@ -913,6 +959,10 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
         }
         if (selection?.kind === 'head') {
           return 'reason.cannotPasteOnHead';
+        }
+        if (selection === null && deps.pastedDocument !== undefined) {
+          // The clipboard may hold a document to open (UX JP2); otherwise it says why.
+          return true;
         }
         return selection?.kind === 'blocks' ||
           selection?.kind === 'missingDefault' ||

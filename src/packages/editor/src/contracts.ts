@@ -73,6 +73,20 @@ export type OpenedDocument = {
   readonly doc?: Doc;
 };
 
+/**
+ * Addition: a shell that opens a document pasted as text (R-WEB-11): the model JSON or a share
+ * link another AI gave (UX JP1). The editor asks before it opens one (UX JP2).
+ */
+export type PastedDocumentPort = {
+  /** Whether the whole text is a document this shell opens. Synchronous: no parsing beyond it. */
+  isDocument(text: string): boolean;
+  /**
+   * Opens it as a new document, as opening a share link does (asks first about an unsaved new
+   * document, UX US1; says why when it does not open, UX LG6). Resolves when done or given up.
+   */
+  open(text: string): Promise<void>;
+};
+
 /** The screen brightness and UI font from the host (03-editor 6). */
 export type Appearance = { readonly scheme: 'light' | 'dark'; readonly uiFont: string };
 
@@ -271,12 +285,23 @@ export type Dialog = {
   readonly other: Message | null;
   /** A fourth button between "cancel" and "do it" (`choose` with `second`). Absent: none. */
   readonly second?: Message;
+  /** Addition: the fourth button is shown dimmed and does nothing (UX JP2 "Paste as Text"). */
+  readonly isSecondDisabled?: boolean;
+  /** Addition: the text box has several lines (UX JP3: pasted JSON). Enter adds a line. */
+  readonly isMultiline?: boolean;
   /** The user's answer: the text (or `''` for a yes/no question), or `null` when cancelled. */
   answer(value: string | null): void;
   /** The user pressed the third button (`other`). */
   answerOther(): void;
   /** The user pressed the fourth button (`second`). */
   answerSecond?: () => void;
+};
+
+/** Addition: how `prompt` looks (UX JP3). */
+export type PromptOptions = {
+  readonly title?: Message;
+  readonly confirm?: Message;
+  readonly isMultiline?: boolean;
 };
 
 /** Where the context menu opens, in page (client) coordinates. */
@@ -351,8 +376,11 @@ export interface EditorHandle {
       readonly cancel?: Message;
     },
   ): Promise<'confirm' | 'other' | 'second' | 'cancel'>;
-  /** Addition: asks for a text in a modal. Resolves `null` when cancelled. */
-  prompt(message: Message, value: string): Promise<string | null>;
+  /**
+   * Addition: asks for a text in a modal. Resolves `null` when cancelled. `options` names the
+   * title and the confirm button, and asks for a box of several lines (UX JP3).
+   */
+  prompt(message: Message, value: string, options?: PromptOptions): Promise<string | null>;
   /** Addition: the diagram asks for the context menu (right click, Shift+F10). */
   onContextMenu(listener: (request: ContextMenuRequest) => void): () => void;
   /**

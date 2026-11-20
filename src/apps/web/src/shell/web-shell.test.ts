@@ -57,8 +57,8 @@ type FakeEditor = EditorHandle & {
     cancel: string | undefined;
     title: string | undefined;
   }[];
-  /** The modals with a text to copy (`prompt`), oldest first. */
-  prompted: { message: string; value: string }[];
+  /** The modals with a text box (`prompt`), oldest first, with their options. */
+  prompted: { message: string; value: string; options?: unknown }[];
   /** The text `save` and `saveAs` write. */
   file: string;
   saveAs: () => Promise<WriteResult>;
@@ -111,8 +111,12 @@ function fakeEditor(answer: boolean): FakeEditor {
       asked.push(typeof message === 'string' ? message : message.key);
       return Promise.resolve(choices.shift() ?? 'cancel');
     },
-    prompt: (message, value) => {
-      prompted.push({ message: say(message), value });
+    prompt: (message, value, options) => {
+      prompted.push({
+        message: say(message),
+        value,
+        ...(options === undefined ? {} : { options }),
+      });
       return Promise.resolve(prompts.length === 0 ? value : (prompts.shift() ?? null));
     },
     commands: {
@@ -1552,5 +1556,115 @@ describe('web shell: documents in this browser (R-WEB-09)', () => {
     second.placeAnswers.push({ kind: 'open', key: 'b1' });
     await second.shell.openFromPicker();
     expect(second.editor.opened.at(-1)?.readOnly).toBe(true);
+  });
+});
+
+describe('web shell: documents pasted as text (R-WEB-11)', () => {
+  const model = serializeModelJson(newDoc);
+  const envelope = JSON.stringify({ name: 'Pasted.ns.svg', model: JSON.parse(model) as unknown });
+
+  it('T-1396 · R-WEB-11 · UX JP1: tells the editor which pasted texts are documents', () => {
+    const { shell } = setup();
+    expect(shell.pastedDocument.isDocument(model)).toBe(true);
+    expect(shell.pastedDocument.isDocument(`\`\`\`json\n${envelope}\n\`\`\``)).toBe(true);
+    expect(shell.pastedDocument.isDocument('https://ariadnensd.com/#ns1.d.abc')).toBe(true);
+    expect(shell.pastedDocument.isDocument('x = 0\ny = 1')).toBe(false);
+    expect(shell.pastedDocument.isDocument('{"a":1}')).toBe(false);
+  });
+
+  it('T-1397 · R-WEB-11 · UX JP2: opens the model JSON as an untitled new document, editable and clean, and the envelope by its name', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    await shell.pastedDocument.open(model);
+    expect(editor.opened.at(-1)).toMatchObject({ text: null });
+    expect(editor.opened.at(-1)?.readOnly).toBeUndefined();
+    expect(editor.opened.at(-1)?.doc?.content).toEqual(newDoc.content);
+    expect(editor.status()).toMatchObject({
+      name: 'Untitled.ns.svg',
+      readOnly: false,
+      dirty: false,
+    });
+    expect(shell.isViewing()).toBe(false);
+    await shell.pastedDocument.open(envelope);
+    expect(editor.status().name).toBe('Pasted.ns.svg');
+  });
+
+  it('T-1398 · R-WEB-11 · UX JP2: a pasted share link opens as an editable new document; an edited new document is asked about first', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    editor.edit();
+    editor.choices.push('cancel');
+    const fragment = await writeShareLink(model, 'Linked.ns.svg', browserDeflate());
+    const opened = editor.opened.length;
+    await shell.pastedDocument.open(`https://ariadnensd.com/#${fragment}`);
+    expect(editor.asked).toHaveLength(1);
+    expect(editor.opened.length).toBe(opened);
+    editor.choices.push('other');
+    await shell.pastedDocument.open(`https://ariadnensd.com/#${fragment}`);
+    expect(editor.status()).toMatchObject({ name: 'Linked.ns.svg', readOnly: false });
+    expect(shell.isViewing()).toBe(false);
+  });
+
+  it('T-1399 · R-WEB-11 · UX JP2 · UX LG6: a pasted model that does not pass the file checks shows the reason to copy for the AI', async () => {
+    const { shell, editor, copied } = setup();
+    await shell.start(editor);
+    const opened = editor.opened.length;
+    await shell.pastedDocument.open('{"format":"ariadne-nsd","version":1}');
+    expect(editor.opened.length).toBe(opened);
+    expect(editor.confirmed.at(-1)).toMatchObject({
+      confirm: 'Copy Reason',
+      cancel: 'Close',
+      title: 'AriadneNSD',
+    });
+    expect(editor.confirmed.at(-1)?.message).toMatch(
+      /^This model JSON is damaged and cannot be opened\.\nReason: settings: is not an object\nIf an AI wrote this text, copy the reason and paste it to that AI: it can fix the JSON\.$/,
+    );
+    expect(copied.at(-1)).toMatch(
+      /^AriadneNSD could not open the pasted text \(damaged\): settings: /,
+    );
+    expect(editor.notices.at(-1)).toBe(
+      'Copied the reason. Paste it to the AI that wrote the text.',
+    );
+    await shell.pastedDocument.open(
+      JSON.stringify({ ...(JSON.parse(model) as object), version: 99 }),
+    );
+    expect(editor.confirmed.at(-1)?.message).toMatch(/^This document was made by a newer version/);
+  });
+
+  it('T-1400 · R-WEB-11 · UX JP3: File › Open from Pasted JSON… asks in a box of several lines and opens what was pasted', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const spec = editor.commands.specs.get(shellCommandIds.openPasted);
+    expect(spec).toMatchObject({
+      title: 'Open from Pasted JSON…',
+      menu: { menu: 'file', group: 1, order: 3 },
+      edits: false,
+    });
+    editor.prompts.push(envelope);
+    await spec?.run(undefined);
+    expect(editor.prompted.at(-1)).toEqual({
+      message: 'Paste the model JSON or the share link an AI gave you.',
+      value: '',
+      options: { title: 'Open from Pasted JSON', confirm: 'Open', isMultiline: true },
+    });
+    expect(editor.status().name).toBe('Pasted.ns.svg');
+    // Cancelled or empty: nothing happens.
+    const opened = editor.opened.length;
+    editor.prompts.push(null, '  ');
+    await spec?.run(undefined);
+    await spec?.run(undefined);
+    expect(editor.opened.length).toBe(opened);
+    expect(editor.confirmed).toHaveLength(0);
+  });
+
+  it('T-1401 · R-WEB-11 · UX JP3: text that is not a document says why, with the brackets of JSON that does not read', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor);
+    const spec = editor.commands.specs.get(shellCommandIds.openPasted);
+    editor.prompts.push(model.trim().slice(0, -1));
+    await spec?.run(undefined);
+    expect(editor.confirmed.at(-1)?.message).toMatch(
+      /^This text is not an AriadneNSD document \(model JSON or share link\)\.\nReason: the JSON does not read: .*; it has \d+ "\{" but \d+ "\}"\n/,
+    );
   });
 });

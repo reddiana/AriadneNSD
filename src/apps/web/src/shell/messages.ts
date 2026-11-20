@@ -65,6 +65,17 @@ const english = {
   'notice.reasonCopied': 'Copied the reason. Paste it to the AI that made the link.',
   'choice.copyReason': 'Copy Reason',
   'choice.close': 'Close',
+  'command.openPasted': 'Open from Pasted JSON…',
+  'paste.title': 'Open from Pasted JSON',
+  'paste.prompt': 'Paste the model JSON or the share link an AI gave you.',
+  'choice.open': 'Open',
+  'paste.notDocument': 'This text is not an AriadneNSD document (model JSON or share link).',
+  'paste.newerVersion':
+    'This document was made by a newer version of AriadneNSD. Reload the page to open it.',
+  'paste.damaged': 'This model JSON is damaged and cannot be opened.',
+  'notice.pasteReasonCopied': 'Copied the reason. Paste it to the AI that wrote the text.',
+  'paste.failed':
+    '{message}\nReason: {detail}\nIf an AI wrote this text, copy the reason and paste it to that AI: it can fix the JSON.',
   'notice.browserFull':
     'The browser’s storage is full, so it could not be saved. Save it to a file instead.',
   'notice.replace': '“{name}” already exists in this browser. Replace it?',
@@ -144,6 +155,17 @@ const korean: Record<ShellMessageKey, string> = {
   'notice.reasonCopied': '오류 내용을 복사했습니다. 링크를 만든 AI에게 붙여 주세요.',
   'choice.copyReason': '오류 내용 복사',
   'choice.close': '닫기',
+  'command.openPasted': '붙여넣은 JSON으로 열기…',
+  'paste.title': '붙여넣은 JSON으로 열기',
+  'paste.prompt': 'AI가 준 모델 JSON이나 공유 링크를 붙여넣으세요.',
+  'choice.open': '열기',
+  'paste.notDocument': '이 텍스트는 AriadneNSD 문서(모델 JSON이나 공유 링크)가 아닙니다.',
+  'paste.newerVersion':
+    '이 문서는 더 새 버전의 AriadneNSD가 만든 것입니다. 페이지를 새로 고친 뒤 여세요.',
+  'paste.damaged': '이 모델 JSON은 손상되어 열 수 없습니다.',
+  'notice.pasteReasonCopied': '오류 내용을 복사했습니다. 그 텍스트를 쓴 AI에게 붙여 주세요.',
+  'paste.failed':
+    '{message}\n오류 내용: {detail}\n이 텍스트를 AI가 썼다면 오류 내용을 복사해 그 AI에게 붙여 주세요. 고친 JSON을 다시 받을 수 있습니다.',
   'notice.browserFull': '브라우저의 저장 공간이 모자라 저장하지 못했습니다. 파일로 저장해 주세요.',
   'notice.replace': '“{name}”이(가) 이 브라우저에 이미 있습니다. 바꿀까요?',
   'notice.deleteBrowser': '“{name}”을(를) 이 브라우저에서 삭제할까요? 되돌릴 수 없습니다.',

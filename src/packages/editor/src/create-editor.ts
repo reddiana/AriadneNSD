@@ -26,6 +26,7 @@ import type {
   DocumentStore,
   EditorHandle,
   OpenedDocument,
+  PastedDocumentPort,
   Picker,
   PickerItem,
   SaveFonts,
@@ -64,6 +65,11 @@ export type EditorOptions = {
   readonly screenFontUrl?: string;
   /** Addition: the clipboard; by default the system clipboard with a fallback in memory. */
   readonly clipboard?: ClipboardPort;
+  /**
+   * Addition: the shell that opens a document pasted as text (R-WEB-11, UX JP1 · JP2). Absent:
+   * pasted text always becomes blocks.
+   */
+  readonly pastedDocument?: PastedDocumentPort;
   /** Addition: unexpected errors, for the problem report (R-REP-01). Default: nowhere. */
   readonly log?: (text: string, detail?: unknown) => void;
   /**
@@ -281,6 +287,9 @@ function openMessage(reason: 'noModel' | 'prototype' | 'damaged' | 'newerVersion
   }
 }
 
+/** The product name, the title of the modal for a pasted document (UX JP2, as UX LG6). */
+const productName = 'AriadneNSD';
+
 const browserTimers: Timers = {
   set: (callback, milliseconds) => setTimeout(callback, milliseconds),
   clear: (handle) => {
@@ -413,6 +422,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
       readonly second?: Message;
       readonly cancel?: Message;
       readonly title?: Message;
+      readonly isSecondDisabled?: boolean;
+      readonly isMultiline?: boolean;
     },
   ): Promise<Answer> => {
     dialog?.answer(null);
@@ -435,6 +446,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
         cancel: buttons.cancel ?? 'choice.cancel',
         other: buttons.other ?? null,
         ...(buttons.title === undefined ? {} : { title: buttons.title }),
+        ...(buttons.isMultiline === true ? { isMultiline: true } : {}),
         answer: (value) => {
           close(value === null ? null : { text: value });
         },
@@ -445,8 +457,11 @@ export function createEditor(options: EditorOptions): EditorHandle {
           ? {}
           : {
               second: buttons.second,
+              ...(buttons.isSecondDisabled === true ? { isSecondDisabled: true } : {}),
               answerSecond: () => {
-                close('second');
+                if (buttons.isSecondDisabled !== true) {
+                  close('second');
+                }
               },
             }),
       };
@@ -554,6 +569,21 @@ export function createEditor(options: EditorOptions): EditorHandle {
       view?.zoomTo(zoom);
     },
     pick,
+    ...(options.pastedDocument === undefined
+      ? {}
+      : {
+          pastedDocument: options.pastedDocument,
+          // UX JP2: "Open as New Document" is the default; "Paste as Text" needs a selection.
+          askPastedDocument: async (canPasteText: boolean) => {
+            const answer = await ask('question.pastedDocument', null, {
+              confirm: 'choice.openAsNew',
+              second: 'choice.pasteAsText',
+              title: productName,
+              isSecondDisabled: !canPasteText,
+            });
+            return answer === null ? 'cancel' : answer === 'second' ? 'text' : 'open';
+          },
+        }),
   })) {
     registry.register(spec);
   }
@@ -708,8 +738,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
       const answer = await ask(value, null, buttons);
       return answer === null ? 'cancel' : typeof answer === 'string' ? answer : 'confirm';
     },
-    prompt: async (value, initial) => {
-      const answer = await ask(value, initial, {});
+    prompt: async (value, initial, promptOptions = {}) => {
+      const answer = await ask(value, initial, promptOptions);
       return answer === null || typeof answer === 'string' ? null : answer.text;
     },
     popupAnchor: () => {

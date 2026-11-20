@@ -129,8 +129,19 @@ export type EditorHandle = {
       readonly cancel?: Message;
     },
   ): Promise<'confirm' | 'other' | 'second' | 'cancel'>;
-  /** Asks for a text in the editor's modal; `null` when cancelled. */
-  prompt(message: Message, value: string): Promise<string | null>;
+  /**
+   * Asks for a text in the editor's modal; `null` when cancelled. `options`: the title, the
+   * confirm button, and a box of several lines (UX JP3).
+   */
+  prompt(
+    message: Message,
+    value: string,
+    options?: {
+      readonly title?: Message;
+      readonly confirm?: Message;
+      readonly isMultiline?: boolean;
+    },
+  ): Promise<string | null>;
 };
 
 /** The two sides of the open · save modal (UX BS1). */

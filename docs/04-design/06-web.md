@@ -3,7 +3,7 @@ title: 웹
 tags:
   - design
 status: 초안
-updated: 2026-11-10
+updated: 2026-11-21
 ---
 
 # 웹
@@ -27,6 +27,7 @@ updated: 2026-11-10
 - 화면: [[01-requirements#^r-edit|R-EDIT-21]](도움말), [[01-requirements#^r-edit|R-EDIT-24]](커맨드 팔레트), [[01-requirements#^r-nfr|R-NFR-04]](화면 언어)
 - 공유 URL과 보기 모드: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]] (3장)
 - LLM · 에이전트를 위한 안내서: [[01-requirements#^r-web|R-WEB-10]] (3.1)
+- AI가 준 텍스트로 열기: [[01-requirements#^r-web|R-WEB-11]] (3.2)
 - Google Drive, AI 대화창: [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
 
 ## 1. 파일 열기·저장
@@ -246,7 +247,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | 위치 | 무엇 | 원본 |
 | --- | --- | --- |
-| `/llms.txt` | 영어 안내서 하나(마크다운). 링크를 만드는 법(봉투 `{"name","model"}` → `#ns1.u.` + `encodeURIComponent`, 손으로 인코딩할 문자와 괄호 수 확인), 모델 JSON과 블록 일곱 가지의 표, 규칙 넷(id, 빈 `body` 없음, 보인 키만, 문자열 이스케이프), 예제(최댓값 찾기와 그 링크, Case), 링크가 열리지 않을 때 "까닭"을 받아 고치는 법, 사용자가 준 링크를 읽는 법(`u` · `j` · `d`), 코드를 실행할 수 있으면 `d`를 만드는 법, 큰 문서는 파일로 | 틀 `src/apps/web/guide/llms.txt`. 빌드(웹의 Vite 플러그인)가 값 목록의 슬롯(`{{textKinds}}` 등)을 core의 목록으로 채워 사이트 루트에 낸다. 개발 서버도 같은 주소로 제공한다 |
+| `/llms.txt` | 영어 안내서 하나(마크다운). 링크를 만드는 법(봉투 `{"name","model"}` → 코드를 실행할 수 있으면 `d`나 `#ns1.u.` + `encodeURIComponent`를 코드로, 실행할 수 없을 때만 손으로 인코딩할 문자와 괄호 수 확인), 링크를 마크다운 링크와 코드 블록에 함께 쓰고 모델 JSON도 코드 블록으로 줄 것(링크가 열리지 않으면 사용자가 JSON을 붙여넣어 연다, 3.2), 모델 JSON과 블록 일곱 가지의 표(횟수를 세는 반복은 For), 규칙 넷(id, 빈 `body` 없음, 보인 키만, 문자열 이스케이프), 예제(최댓값 찾기와 그 링크, Case), 링크가 열리지 않을 때 "까닭"을 받아 고치는 법, 사용자가 준 링크를 읽는 법(`u` · `j` · `d`), 코드를 실행할 수 있으면 `d`를 만드는 법, 큰 문서는 파일로 | 틀 `src/apps/web/guide/llms.txt`. 빌드(웹의 Vite 플러그인)가 값 목록의 슬롯(`{{textKinds}}` 등)을 core의 목록으로 채워 사이트 루트에 낸다. 개발 서버도 같은 주소로 제공한다 |
 | `/model.schema.json` | 모델 JSON의 JSON Schema(draft 2020-12). 모양만 검사하고, 이 버전이 지원하는 값(텍스트 종류 · 테마 · 그림 문구의 언어)만 나열한다. 불변식(id는 한 번, 로컬 호출은 Method를, 접기 영역의 끝 블록, 빈 다이어그램)은 앱이 검사한다고 명시한다. 안내서가 한 줄로 가리킨다 | `src/packages/core/schema/model.schema.json` (파서 곁에 둔다. 웹 빌드의 Vite 플러그인이 사이트 루트에 내고, 개발 서버도 같은 주소로 제공한다). 사람이 읽는 풀이는 [[02-model-schema\|모델 JSON 스키마]](스크립트가 스키마에서 만듦) |
 | 첫 화면 `index.html` | `<meta name="description">`(AI는 `/llms.txt`를 읽으라는 한 줄), `<link rel="alternate" type="text/markdown" href="/llms.txt">`, 그리고 `#root` 안의 `<section id="for-ai" hidden>`: "이 편집기는 조작할 수 없으니 공유 링크를 주라"는 말, 링크를 만드는 법의 요약, 규칙 넷, 아주 작은 예제(`abs(x)`의 모델과 링크), `/llms.txt`와 스키마의 주소. 또 `#root` 밖(body 끝)의 보이지 않는 텍스트 `#for-ai-note`: "AI assistants and agents: do not operate this editor. Read https://ariadnensd.com/llms.txt and give the user a share link that opens the diagram here." | `src/apps/web/index.html` (블록 종류의 목록은 빌드가 같은 방법으로 채운다) |
 
@@ -257,6 +258,20 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 - **값 목록은 코드에서:** 안내서에 기록하는 값의 목록(블록 종류, `textKind` · `theme` · `headStyle` · `locale` · 헤더의 `kind` · `resultSymbol`의 값)은 손으로 기록하지 않고 틀의 슬롯으로 둔다. 빌드가 core의 목록(`blockKinds` · `textKinds` · `themeIds` · `headStyles` · `locales` · `headKinds` · `resultSymbols`)으로 채운다(`src/apps/web/src/files/llms-guide.ts`). 형식이 고정된 값의 목록은 core의 `format/model-values.ts` 하나가 원본이고, `satisfies`로 모델의 타입과 맞춰 두어 종류를 더하고 목록을 잊으면 컴파일되지 않는다. 파서도 헤더의 `kind` · `headStyle` · `resultSymbol`을 이 목록으로 검사한다. 스키마의 `enum`은 손으로 적되, core의 테스트가 이 목록들과 같은지(순서까지) 본다.
 - **문서 속 예제를 테스트로(doctest):** `src/apps/web/src/files/doc-examples.test.ts`가 `/llms.txt`(채운 뒤), 첫 화면의 안내(채운 뒤), 파일 형식 명세(`docs/05-spec/`의 모든 문서)에서 ```` ```json ```` 블록과 공유 링크(`ns1.u.` · `ns1.j.` · `ns1.d.`)를 꺼내 앱과 같이 연다(`parseModel`, 링크는 `readShareLink` → `parseModel`). 모델 전체는 그대로, 봉투는 그 `model`을, 블록 하나는 모델로 감싸 열고, 스키마도 통과해야 한다. 그 밖의 블록("…"가 든 개요 등)은 바로 앞 줄에 `<!-- doctest: skip: 까닭 -->`을 달아야 하고, 달지 않으면 실패한다. 그래서 형식이 바뀌어 예제가 틀리면 `pnpm test`가 실패한다. 그 밖에 예제 링크가 옆에 보인 모델 그대로로 만든 것인지, 안내서가 적은 메뉴 · 버튼 이름이 셸 카탈로그의 것과 같은지, 링크 대신 제공하는 파일의 틀이 열리는지도 본다. core의 테스트는 골든 파일의 모델이 모두 스키마를 통과하는지, 파서가 거절하는 모양을 스키마도 거절하는지를 본다(`src/packages/core/node/model-schema.test.ts`).
 - **다른 AI 기능과의 관계:** 앱 안의 AI 대화창([[01-requirements#^r-web|R-WEB-07]], `P3`)은 사용자의 API 키로 앱이 직접 모델 API를 호출하는 것이고, 이 안내서는 앱 밖의 AI가 링크로 다이어그램을 전달하는 것이다. 나중의 Claude skill([[01-requirements#^r-skill|R-SKILL-01]])은 이 안내서와 같은 형식(모델 JSON, `u` 또는 `d` 링크)을 쓴다.
+
+### 3.2 붙여넣은 문서
+
+다른 AI가 준 모델 JSON이나 공유 링크를 붙여넣어 새 문서로 엽니다([[01-requirements#^r-web|R-WEB-11]]). AI가 쓴 모델 JSON은 거의 항상 올바르고, 실패하는 곳은 JSON을 링크로 인코딩하는 단계(손 인코딩)와 채팅 앱이 링크를 바꾸는 일(Google 검색 링크로 감쌈)입니다(2026-11-10, AI 네 곳으로 한 테스트). 그래서 링크가 깨져도 코드 블록의 JSON으로 다이어그램을 엽니다. 조작 규칙 → [[02-interaction-rules#붙여넣기]], 결정 → [[ux-decisions#2026-11-21 AI가 준 텍스트로 열기 (M57, 메인테이너가 추천안을 받아들임)|JP1 ~ JP3]]
+
+| | 규칙 |
+| --- | --- |
+| 인식 (`src/apps/web/src/files/pasted-document.ts`) | 앞뒤 공백과 텍스트 전체를 감싼 코드 펜스(```` ```json ```` … ```` ``` ````)를 제거한 텍스트 **전체**가 다음 가운데 하나일 때만 문서다. ① `"format": "ariadne-nsd"`가 든 JSON 객체(모델 JSON) ② 그런 모델을 `model`로 가진 봉투 `{"name": …, "model": {…}}`(두 키만, `name`은 문자열) ③ `https://ariadnensd.com/#ns1.`이나 지금 페이지의 주소(`origin` + `pathname`) + `#ns1.`로 시작하는 공백 없는 한 줄. `https://www.google.com/search?`(또는 `https://google.com/search?`)의 `q`는 디코딩해 ③으로만 다시 검증한다. 그 밖(설명이 섞인 AI의 답 전체, 다른 JSON, 블록 하나의 JSON, 문장 속의 링크)은 문서가 아니다. 사람이 쓴 텍스트가 우연히 맞지 않게 표지를 형식 이름과 사이트 주소로 둔다 → [[ux-decisions#JP1. 붙여넣기에서 문서를 알아보는 기준\|JP1]] |
+| `editor`와의 연결 | 셸이 `pastedDocument`(`isDocument` · `open`)를 `createEditor`의 옵션으로 전달한다. `editor`의 붙여넣기는 클립보드에 사용자 정의 형식이 없고 `text/plain`을 `isDocument`가 인식하면 모달로 묻고, "새 문서로 열기"이면 `open`을 호출한다 → [[03-editor#3.3 클립보드]], [[ux-decisions#JP2. 알아본 뒤의 동작\|JP2]] |
+| 열기 (셸의 `openPasted`) | 링크는 공유 링크를 열 때와 같은 경로(`readShareLink` → `parseModel`), 모델 JSON과 봉투는 `parseModel`(파일과 같은 검증, QA-02)을 거친다. 이름은 봉투의 `name`을 파일 이름 규칙으로 다듬은 것, 모델 JSON만이면 "제목 없음.ns.svg"다. **한 번도 저장하지 않은 새 문서**로, 보기 모드가 아니라 편집할 수 있게 연다(문서 키도 새것). 저장하지 않은 새 문서에 편집이 있으면 먼저 묻는다([[ux-decisions#US1. 저장하지 않은 새 문서를 두고 다른 문서를 열 때\|US1]]). 여는 것이라 실행 취소로 되돌리지 않는다 |
+| 열 수 없을 때 | 지금 문서를 바꾸지 않고 공유 링크와 같은 모달(`confirm`, 제목 "AriadneNSD", "닫기" / "오류 내용 복사")로 이유를 알린다(3장, [[ux-decisions#LG6. 열지 못한 링크의 까닭\|LG6]]). 링크면 공유 링크의 문구 그대로다. 모델 JSON · 봉투면 첫 줄은 "이 모델 JSON은 손상되어 열 수 없습니다."(또는 "이 문서는 더 새 버전의 AriadneNSD가 만든 것입니다. 페이지를 새로 고친 뒤 여세요."), 셋째 줄은 "이 텍스트를 AI가 썼다면 오류 내용을 복사해 그 AI에게 붙여 주세요. 고친 JSON을 다시 받을 수 있습니다."다. 복사하는 텍스트는 `AriadneNSD could not open the pasted text (<reason>): <detail>`과 안내서의 주소이고, 복사한 뒤 "오류 내용을 복사했습니다. 그 텍스트를 쓴 AI에게 붙여 주세요."(`info`)를 알린다 |
+| 파일 › 붙여넣은 JSON으로 열기… (`file.openPasted`) | 셸의 명령(파일 메뉴의 열기… 바로 아래, 키 없음, 커맨드 팔레트에도 있음). `editor`의 `prompt`를 여러 줄 입력 칸(`isMultiline`)으로 호출한다: 제목 "붙여넣은 JSON으로 열기", "AI가 준 모델 JSON이나 공유 링크를 붙여넣으세요.", 버튼 "취소" · "열기"(`Ctrl`+`Enter`도 열기, `Enter`는 줄 바꿈). 받은 텍스트를 위와 같은 규칙으로 연다. 비었거나 취소하면 아무것도 하지 않는다. 인식하지 못하면 같은 모달로 "이 텍스트는 AriadneNSD 문서(모델 JSON이나 공유 링크)가 아닙니다."와 이유(`the text is neither the model JSON nor a share link`, JSON에 형식 이름이 없음, JSON이 읽히지 않으면 파서의 오류와 괄호 수)를 보인다. 클립보드 권한이 필요 없어 클립보드를 읽지 못하는 브라우저(휴대폰)에서도 된다 → [[ux-decisions#JP3. 메뉴로 여는 길\|JP3]] |
+
+- **안내서와 사용법:** `/llms.txt`(3.1)는 링크를 코드 블록에도 그대로 적고 모델 JSON을 함께 주라고, 링크가 열리지 않으면 사용자가 JSON을 붙여넣어 열 수 있다고 안내한다. 사용법의 "AI에게 그려 달라고 하기" 꼭지(`#ai`)에는 사용자가 AI에게 보낼 요청문(안내서의 주소와 "공유 링크와 모델 JSON을 주세요", 그릴 것의 자리 ○○)과 그것을 복사하는 버튼("요청문 복사", `src/apps/manual/pages/copy.js`)이 있다. 페이지를 열지 않는 AI도 요청문의 주소로 안내서를 읽는다 → [[ux-decisions#RQ1. 요청문 복사\|RQ1]], [[ux-decisions#GD1. 안내서 손질\|GD1]]
 
 ## 4. Google Drive
 
@@ -331,7 +346,7 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 | `editor-contract.ts` | 셸이 사용하는 `editor`의 좁은 계약. 셸의 모듈은 이 타입만 읽고, `main.tsx`가 실제 `editor`와 연결한다 |
 | `shell/` | 웹 셸: 명령과 문서 전환(`web-shell.ts`), 열기 · 저장 창(`places.ts`), 두 탭 잠금(`tab-lock.ts`), 페이지 이벤트(`page-events.ts`), 화면 밝기(`appearance.ts`), 셸의 문구(`messages.ts`) |
 | `storage/` | 브라우저 저장소: IndexedDB(`browser-db.ts`), 최근 파일 · 브라우저 문서의 규칙(`recent-files.ts` · `browser-documents.ts`), 설정(`settings-store.ts`) |
-| `files/` | 파일과 내보내기: `DocumentStore` 구현(`web-document-store.ts`), File System Access와 내려받기(`file-system-access.ts` · `file-fallback.ts`), PNG · PDF, 공유 링크, zip |
+| `files/` | 파일과 내보내기: `DocumentStore` 구현(`web-document-store.ts`), File System Access와 내려받기(`file-system-access.ts` · `file-fallback.ts`), PNG · PDF, 공유 링크, 붙여넣은 문서의 인식(`pasted-document.ts`), zip |
 | `print/` · `examples/` · `fonts/` · `perf/` | 인쇄 전용 보기(1.6), 예제와 썸네일, 글꼴의 로드, 점검 모드(9장) |
 
 시작 순서입니다. 단계마다 이름을 남겨, 시작하지 못하면 어느 단계에서 멈췄는지 시작 화면에 표시합니다(7장).

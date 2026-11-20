@@ -128,6 +128,8 @@ const editor = createEditor({
   doc: shell.initialDocument(),
   fonts: saveFonts,
   locale,
+  // The model JSON or a share link another AI gave, pasted on the page (R-WEB-11, UX JP1).
+  pastedDocument: shell.pastedDocument,
   log: (text, detail) => {
     log(detail === undefined ? text : `${text}: ${describe(detail)}`);
   },

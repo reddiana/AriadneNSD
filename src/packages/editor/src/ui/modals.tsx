@@ -297,11 +297,13 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
   const { format, text } = useChrome();
   const [value, setValue] = useState(dialog.input ?? '');
   const inputRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
+    const field = inputRef.current ?? textAreaRef.current;
+    if (field) {
+      field.focus();
+      field.select();
     } else {
       confirmRef.current?.focus();
     }
@@ -325,7 +327,26 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
         }}
       >
         <p>{format(dialog.message)}</p>
-        {dialog.input !== null && (
+        {dialog.input !== null && dialog.isMultiline === true && (
+          // Several lines (UX JP3): Enter adds a line, Ctrl+Enter answers.
+          <textarea
+            ref={textAreaRef}
+            rows={8}
+            spellCheck={false}
+            aria-label={format(dialog.message)}
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                accept();
+              }
+            }}
+          />
+        )}
+        {dialog.input !== null && dialog.isMultiline !== true && (
           <input
             ref={inputRef}
             type="text"
@@ -353,6 +374,7 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
           {dialog.second !== undefined && (
             <button
               type="button"
+              disabled={dialog.isSecondDisabled === true}
               onClick={() => {
                 dialog.answerSecond?.();
               }}

@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-21: `createEditor`가 선택적인 필요 인터페이스 `pastedDocument`(`PastedDocumentPort`: `isDocument` · `open`)를 받게 되었다. 붙여넣은 텍스트가 AriadneNSD 문서(모델 JSON · 공유 링크)이면 `editor`가 새 문서로 열지 묻고, 여는 일은 셸이 한다. 셸이 부르는 `prompt`는 제목 · 확인 버튼 · 여러 줄 입력 칸을 받는다 → [[01-requirements#^r-web|R-WEB-11]], [[03-editor#3.3 클립보드]], [[ux-decisions#JP2. 알아본 뒤의 동작|JP2]]
 > - 2026-11-19: 다른 문서를 읽지 못해도 그 호출 블록을 "이어진 곳 없음"으로 저장하지 않는다. 저장되는 그림은 실선 그대로이고, 찾을 수 없다는 표시는 편집 레이어에만 그린다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]
 > - 2026-11-10: 셸이 부르는 `editor`의 `confirm`이 모달의 제목(`title`)을 받게 되었고, 모달의 메시지는 줄바꿈을 지킨다. 열지 못한 공유 링크의 까닭을 묻지 않고 알리는 모달에 쓴다 → [[03-editor#6. 셸과의 연결]], [[ux-decisions#LG6. 열지 못한 링크의 까닭|LG6]]
 > - 2026-11-03: 웹 셸에 브라우저 문서(파일 없이 그 브라우저의 IndexedDB에 저장한 문서, [[01-requirements#^r-web|R-WEB-09]])가 생겨, `DocumentStore`가 문서가 사는 곳(`place`: 파일 또는 브라우저)을 알리고, 쓰기 실패에 셸의 문장(`WriteResult.message`)을 실을 수 있게 되었다. `editor`의 `choose`는 넷째 버튼을 받는다. 어디서 열고 저장할지는 `editor`의 열기 · 저장 창(`EditorApp`의 `places`)으로 셸이 묻는다 → [[03-editor#6. 셸과의 연결]], [[06-web#1.3 브라우저 문서]]

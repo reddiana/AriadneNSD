@@ -238,6 +238,11 @@ const english = {
   'choice.keepCase': 'Keep the Case',
   'choice.ok': 'OK',
   'choice.cancel': 'Cancel',
+  // The modal for a pasted document (UX JP2).
+  'question.pastedDocument':
+    'The pasted text is an AriadneNSD document. Open it as a new document?',
+  'choice.openAsNew': 'Open as New Document',
+  'choice.pasteAsText': 'Paste as Text',
 
   // What is selected.
   'selection.process': 'Process block',
@@ -532,6 +537,9 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'choice.keepCase': 'Case 그대로 두기',
   'choice.ok': '확인',
   'choice.cancel': '취소',
+  'question.pastedDocument': '붙여넣은 텍스트는 AriadneNSD 문서입니다. 새 문서로 열까요?',
+  'choice.openAsNew': '새 문서로 열기',
+  'choice.pasteAsText': '텍스트로 붙여넣기',
   'selection.process': '처리 블록',
   'selection.empty': '빈 블록',
   'selection.if': 'If 블록',

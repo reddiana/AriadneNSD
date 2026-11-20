@@ -418,6 +418,60 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     );
   });
 
+  test('T-1388 · AT-12 · R-WEB-11 · UX JP2: pasting the model JSON another AI gave asks, then opens it as a new document', async ({
+    page,
+  }) => {
+    await processBlocks(page, 'mine');
+    // The model JSON as a chat AI shows it: in a code block, indented.
+    const model = {
+      format: 'ariadne-nsd',
+      version: 1,
+      settings: { textKind: 'plain', theme: 'default', headStyle: 'title', locale: 'en' },
+      diagrams: [
+        {
+          id: 'd1',
+          head: { kind: 'method', text: 'sum(a)' },
+          body: [{ id: 'b1', kind: 'process', text: 'from the AI' }],
+        },
+      ],
+      view: { folded: [], opened: [], bands: true, resultSymbol: '←' },
+    };
+    const pasted = ['```json', JSON.stringify(model, null, 2), '```'].join('\n');
+    await page.evaluate((text) => navigator.clipboard.writeText(text), pasted);
+    await drawnText(page, 'mine').click();
+    await page.keyboard.press('Control+V');
+    const question = page.getByRole('dialog', { name: 'AriadneNSD' });
+    await expect(question).toContainText(
+      'The pasted text is an AriadneNSD document. Open it as a new document?',
+    );
+    // Cancel keeps the document as it is.
+    await question.getByRole('button', { name: 'Cancel' }).click();
+    await expect(question).toHaveCount(0);
+    await expect(drawnText(page, 'from the AI')).toHaveCount(0);
+
+    // Enter is "Open as New Document". The edited new document is asked about first (UX US1).
+    await drawnText(page, 'mine').click();
+    await page.keyboard.press('Control+V');
+    await expect(question.getByRole('button', { name: 'Paste as Text' })).toBeEnabled();
+    await page.keyboard.press('Enter');
+    const saveFirst = page.getByRole('dialog').filter({ hasText: 'never been saved' });
+    await saveFirst.getByRole('button', { name: 'Discard and Open' }).click();
+    await expect(drawnText(page, 'from the AI')).toBeVisible();
+    await expect(drawnText(page, 'mine')).toHaveCount(0);
+    await expect(page).toHaveTitle('Untitled.ns.svg – AriadneNSD');
+    await expect(page.locator('.ans-menubar')).toBeVisible();
+
+    // File › Open from Pasted JSON… opens a share link pasted in its box (UX JP3).
+    await page.getByRole('button', { name: 'File', exact: true }).click();
+    await page.getByRole('menuitem', { name: 'Open from Pasted JSON…' }).click();
+    const box = page.getByRole('dialog', { name: 'Open from Pasted JSON' }).getByRole('textbox');
+    const envelope = JSON.stringify({ name: 'From link.ns.svg', model });
+    await box.fill(`https://ariadnensd.com/#ns1.u.${encodeURIComponent(envelope)}`);
+    await page.getByRole('button', { name: 'Open', exact: true }).click();
+    await expect(page).toHaveTitle('From link.ns.svg – AriadneNSD');
+    await expect(drawnText(page, 'from the AI')).toBeVisible();
+  });
+
   test('T-0015 · AT-14 (Chromium part): auto save writes the original file 2 s after an edit', async ({
     page,
   }) => {

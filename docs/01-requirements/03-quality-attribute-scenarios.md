@@ -247,7 +247,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[01-architecture#4.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트 더블 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 검증한다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 49개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
+- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 52개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[01-architecture#7. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 교체 용이성

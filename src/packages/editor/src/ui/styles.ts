@@ -235,6 +235,11 @@ export const chromeCss = `
 }
 .ans-dialog { display: grid; gap: 10px; margin: 0; }
 .ans-dialog p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.ans-dialog textarea {
+  font: inherit; color: inherit; background: var(--ui-bg);
+  border: 1px solid var(--ui-line); border-radius: 4px; padding: 4px 8px; resize: vertical;
+  width: min(560px, 80vw); box-sizing: border-box;
+}
 .ans-dialog input {
   font: inherit; color: inherit; background: var(--ui-bg); border: 1px solid var(--ui-line);
   border-radius: 4px; padding: 4px 8px;

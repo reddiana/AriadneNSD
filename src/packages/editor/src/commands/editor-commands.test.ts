@@ -647,3 +647,112 @@ describe('rarer ways the commands run (02-interaction-rules)', () => {
     },
   );
 });
+
+describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () => {
+  const documentText = '{"format":"ariadne-nsd","version":1}';
+
+  /** An engine whose shell recognizes `documentText`, with the answers the question gets. */
+  const pastingEngine = (place: Place, answers: ('open' | 'text' | 'cancel')[]) => {
+    const opened: string[] = [];
+    const asked: boolean[] = [];
+    const engine = testEngine(
+      sample(),
+      {},
+      {
+        pastedDocument: {
+          isDocument: (text) => text === documentText,
+          open: (text) => {
+            opened.push(text);
+            return Promise.resolve();
+          },
+        },
+        askPastedDocument: (canPasteText) => {
+          asked.push(canPasteText);
+          return Promise.resolve(answers.shift() ?? 'cancel');
+        },
+      },
+    );
+    engine.select(selectionAt(engine.content(), place));
+    return { engine, opened, asked };
+  };
+
+  it('T-1389 · R-WEB-11 · UX JP2: a pasted document asks first; "Open as New Document" opens it and leaves this document as it is', async () => {
+    const { engine, opened, asked } = pastingEngine('p1', ['open']);
+    engine.clipboard.data = { text: documentText, json: null };
+    const before = engine.content();
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(asked).toEqual([true]);
+    expect(opened).toEqual([documentText]);
+    expect(engine.content()).toBe(before);
+    expect(engine.session.state.undo).toHaveLength(0);
+  });
+
+  it('T-1390 · R-WEB-11 · UX JP2: "Paste as Text" pastes a process block per line as before; cancel does nothing', async () => {
+    const { engine, opened } = pastingEngine('p1', ['text', 'cancel']);
+    engine.clipboard.data = { text: documentText, json: null };
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(bodyOf(engine, 'd1').slice(0, 2)).toEqual(['p1', selected(engine)[0]]);
+    const before = engine.content();
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(engine.content()).toBe(before);
+    expect(opened).toEqual([]);
+  });
+
+  it('T-1391 · R-WEB-11 · UX JP2: with nothing selected, paste asks with "Paste as Text" dimmed; other text says to select first', async () => {
+    const { engine, opened, asked } = pastingEngine('none', ['open']);
+    expect(applies(engine, 'edit.paste')).toBe(true);
+    engine.clipboard.data = { text: documentText, json: null };
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(asked).toEqual([false]);
+    expect(opened).toEqual([documentText]);
+    engine.clipboard.data = { text: 'x = 0', json: null };
+    const before = engine.content();
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(engine.content()).toBe(before);
+    expect(notice(engine)).toBe('reason.nothingSelected');
+  });
+
+  it('T-1392 · R-WEB-11 · UX JP1: blocks copied in the app and other text paste without asking', async () => {
+    const { engine, asked } = pastingEngine('p1', []);
+    engine.run('edit.copy');
+    await engine.settle();
+    // The custom format wins, even with a document in the text.
+    engine.clipboard.data = { ...engine.clipboard.data, text: documentText };
+    engine.run('edit.paste');
+    await engine.settle();
+    engine.clipboard.data = { text: 'a\nb', json: null };
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(asked).toEqual([]);
+    expect(engine.session.state.undo).toHaveLength(2);
+  });
+
+  it('T-1393 · R-WEB-11 · UX JP2: saving does not wait for the question about a pasted document', async () => {
+    let answer: (value: 'cancel') => void = () => undefined;
+    const engine = testEngine(
+      sample(),
+      {},
+      {
+        pastedDocument: { isDocument: () => true, open: () => Promise.resolve() },
+        askPastedDocument: () =>
+          new Promise((resolve) => {
+            answer = resolve;
+          }),
+      },
+    );
+    engine.select(selectionAt(engine.content(), 'p1'));
+    engine.clipboard.data = { text: documentText, json: null };
+    engine.run('edit.paste');
+    await engine.settle();
+    engine.run('file.save');
+    await engine.settle();
+    expect(engine.saves).toHaveLength(1);
+    answer('cancel');
+    await engine.settle();
+  });
+});

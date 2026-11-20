@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { paletteRows } from './command-palette';
+import type { Dialog } from './engine-api';
 import type { CommandView } from './command-view';
 import { fakeEngine, memorySettings, renderApp, spec } from './test-support';
 
@@ -696,5 +697,58 @@ describe('picker (interaction rules "호출 블록")', () => {
     fireEvent.keyDown(menu, { key: '3' });
     fireEvent.keyDown(menu, { key: 'Escape' });
     expect(answers).toEqual([2, null]);
+  });
+});
+
+describe('the dialog modal', () => {
+  const dialogOf = (fields: Partial<Dialog>, answers: unknown[]): Dialog => ({
+    id: 1,
+    message: 'question.pastedDocument',
+    input: null,
+    confirm: 'choice.openAsNew',
+    cancel: 'choice.cancel',
+    other: null,
+    answer: (value) => answers.push(value),
+    answerOther: () => answers.push('other'),
+    answerSecond: () => answers.push('second'),
+    ...fields,
+  });
+
+  it('T-1394 · UX JP2: the question about a pasted document dims "Paste as Text" when it cannot paste', () => {
+    const answers: unknown[] = [];
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.setChrome({
+        dialog: dialogOf({ second: 'choice.pasteAsText', isSecondDisabled: true }, answers),
+      });
+    });
+    const dialog = within(screen.getByRole('dialog'));
+    const buttons = dialog.getAllByRole('button').map((button) => button.textContent);
+    expect(buttons.slice(-3)).toEqual(['Cancel', 'Paste as Text', 'Open as New Document']);
+    const pasteAsText = dialog.getByRole('button', { name: 'Paste as Text' });
+    expect(pasteAsText).toHaveProperty('disabled', true);
+    fireEvent.click(pasteAsText);
+    expect(answers).toEqual([]);
+    fireEvent.click(dialog.getByRole('button', { name: 'Open as New Document' }));
+    expect(answers).toEqual(['']);
+  });
+
+  it('T-1395 · UX JP3: a text box of several lines keeps Enter for a new line and answers with Ctrl+Enter', () => {
+    const answers: unknown[] = [];
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.setChrome({
+        dialog: dialogOf({ message: 'Paste it:', input: '', isMultiline: true }, answers),
+      });
+    });
+    const box = screen.getByRole('textbox', { name: 'Paste it:' });
+    expect(box.tagName).toBe('TEXTAREA');
+    fireEvent.change(box, { target: { value: '{\n}' } });
+    fireEvent.keyDown(box, { key: 'Enter' });
+    expect(answers).toEqual([]);
+    fireEvent.keyDown(box, { key: 'Enter', ctrlKey: true });
+    expect(answers).toEqual(['{\n}']);
   });
 });

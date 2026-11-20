@@ -39,6 +39,7 @@ import {
 } from '../files/file-system-access';
 import type { ShareHost } from '../files/share-command';
 import { copyShareLink } from '../files/share-command';
+import { readPastedDocument, recognizePastedDocument } from '../files/pasted-document';
 import type { ShareLinkFailure } from '../files/share-link';
 import { readShareLink } from '../files/share-link';
 import type { SavePlace, SaveSubject, StoreOrigin, Written } from '../files/web-document-store';
@@ -84,6 +85,7 @@ export const shellCommandIds = {
   open: 'file.open',
   exportPng: 'file.export.png',
   share: 'file.share',
+  openPasted: 'file.openPasted',
   exportSvg: 'file.export.svg',
   exportPdf: 'file.export.pdf',
   print: 'file.print',
@@ -141,6 +143,14 @@ export type WebShell = {
   readonly openDropped: (transfer: DataTransfer) => void;
   /** Opens a share link's fragment (the URL's `#…`) in view mode, as a new document (R-WEB-05). */
   readonly openShareLink: (fragment: string) => Promise<void>;
+  /**
+   * A document pasted as text (R-WEB-11, UX JP1): the editor's paste asks the shell whether the
+   * text is one, then has it opened as a new document (UX JP2). Give it to `createEditor`.
+   */
+  readonly pastedDocument: {
+    readonly isDocument: (text: string) => boolean;
+    readonly open: (text: string) => Promise<void>;
+  };
   /** Whether the document is shown in view mode (R-WEB-06). */
   readonly isViewing: () => boolean;
   /** Hears when view mode starts or ends. Returns the unsubscribe. */
@@ -1025,13 +1035,15 @@ export function createWebShell(options: WebShellOptions): WebShell {
     message: ShellMessageKey,
     reason: string,
     detail: string,
+    subject: 'link' | 'paste' = 'link',
   ): Promise<void> {
-    options.log(`Cannot open the share link: ${reason}: ${detail}`);
+    const what = subject === 'link' ? 'the share link' : 'the pasted text';
+    options.log(`Cannot open ${what}: ${reason}: ${detail}`);
     if (editor === null) {
       return;
     }
     const isCopying = await editor.confirm(
-      text('link.failed', { message: text(message), detail }),
+      text(subject === 'link' ? 'link.failed' : 'paste.failed', { message: text(message), detail }),
       {
         confirm: text('choice.copyReason'),
         cancel: text('choice.close'),
@@ -1042,7 +1054,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       return;
     }
     const guide = new URL('llms.txt', `${options.share.page.origin}${options.share.page.pathname}`);
-    const reasonText = `AriadneNSD could not open the share link (${reason}): ${detail}\nHow to make a link that opens: ${guide.href}`;
+    const reasonText = `AriadneNSD could not open ${what} (${reason}): ${detail}\nHow to make a link that opens: ${guide.href}`;
     try {
       await options.share.copyText(Promise.resolve(reasonText));
     } catch (error) {
@@ -1050,7 +1062,10 @@ export function createWebShell(options: WebShellOptions): WebShell {
       await editor.prompt(text('link.copyReasonManually'), reasonText);
       return;
     }
-    notices.show(text('notice.reasonCopied'), 'info');
+    notices.show(
+      text(subject === 'link' ? 'notice.reasonCopied' : 'notice.pasteReasonCopied'),
+      'info',
+    );
   }
 
   /** Opens a share link's document as a new document that was never saved, in view mode. */
@@ -1069,6 +1084,79 @@ export function createWebShell(options: WebShellOptions): WebShell {
       return;
     }
     await openShared(shared, leave);
+  }
+
+  // --- Documents pasted as text (R-WEB-11, UX JP1 · JP2 · JP3) ---
+
+  function isPastedDocument(pasted: string): boolean {
+    return recognizePastedDocument(pasted, options.share.page) !== null;
+  }
+
+  /**
+   * The document in a pasted text, checked like a file; or `null` after saying why not (UX LG6).
+   * A share link opens as a link; the model JSON alone is untitled.
+   */
+  async function readPasted(pasted: string): Promise<{ doc: Doc; name: string } | null> {
+    const read = readPastedDocument(pasted, options.share.page);
+    if (!read.ok) {
+      await explainLinkFailure('paste.notDocument', 'notDocument', read.detail, 'paste');
+      return null;
+    }
+    if (read.pasted.kind === 'link') {
+      return readShared(read.pasted.fragment);
+    }
+    // The same validating parser as for a file (QA-02): pasted text is input from anyone.
+    const parsed = parseModel(read.pasted.model, { locale });
+    if (!parsed.ok) {
+      await explainLinkFailure(
+        parsed.reason === 'newerVersion' ? 'paste.newerVersion' : 'paste.damaged',
+        parsed.reason,
+        parsed.detail,
+        'paste',
+      );
+      return null;
+    }
+    const name = read.pasted.kind === 'envelope' ? read.pasted.name : '';
+    return { doc: parsed.value.doc, name: documentFileName(name, text('file.untitled')) };
+  }
+
+  /**
+   * Opens a pasted document as a new document that was never saved, editable (not view mode).
+   * An edited new document is asked about first, as for a share link (UX US1). Not undoable: it
+   * is opening, not an edit.
+   */
+  async function openPasted(pasted: string): Promise<void> {
+    const read = await readPasted(pasted);
+    if (read === null) {
+      return;
+    }
+    const leave = await mayLeave();
+    if (leave === null) {
+      return;
+    }
+    await switchTo(
+      newStore(options.newKey(), read.name, { kind: 'none' }),
+      null,
+      undefined,
+      leave,
+      read.doc,
+    );
+  }
+
+  /** File › Open from Pasted JSON… (UX JP3): a box to paste into, then the same as a paste. */
+  async function openFromPastedText(): Promise<void> {
+    if (editor === null) {
+      return;
+    }
+    const pasted = await editor.prompt(text('paste.prompt'), '', {
+      title: text('paste.title'),
+      confirm: text('choice.open'),
+      isMultiline: true,
+    });
+    if (pasted === null || pasted.trim() === '') {
+      return;
+    }
+    await openPasted(pasted);
   }
 
   function startEditing(): void {
@@ -1118,6 +1206,15 @@ export function createWebShell(options: WebShellOptions): WebShell {
         edits: false,
         when: () => true,
         run: openFromPicker,
+      },
+      {
+        id: shellCommandIds.openPasted,
+        title: text('command.openPasted'),
+        keys: [],
+        menu: { menu: 'file', group: 1, order: 3 },
+        edits: false,
+        when: () => true,
+        run: openFromPastedText,
       },
       {
         id: shellCommandIds.exportPng,
@@ -1278,6 +1375,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     openFile,
     openDropped,
     openShareLink,
+    pastedDocument: { isDocument: isPastedDocument, open: openPasted },
     isViewing: () => isViewing,
     onViewMode: (listener) => {
       viewListeners.add(listener);
