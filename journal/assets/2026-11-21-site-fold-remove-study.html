@@ -1,0 +1,148 @@
+<title>M69 펴 보인 곳에서 Method의 접기 영역 풀기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 시안 페이지: M61 ~ M68과 같은 틀. 그림은 앱의 색(접기 영역 파랑, 펴 보기 보라)을 따른 손그림. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --fg: #1d2330; --muted: #5d6676; --line: #d9dee7;
+  --accent: #5b4a9a; --accent-soft: #eeeaf7; --star: #b4690e;
+  --nsd-line: #5b77ad; --nsd-fill: #edf0f5; --fold: #2c55c9; --fold-soft: #e4eafb; --peek: #7a4fc4; --peek-soft: #efe8fa;
+  --gone: #b3261e;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+    --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a;
+    --nsd-line: #8ea6d6; --nsd-fill: #1f2530; --fold: #8ba7ff; --fold-soft: #1f2840; --peek: #b48cf0; --peek-soft: #2a2140;
+    --gone: #ff8a80; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+  --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a;
+  --nsd-line: #8ea6d6; --nsd-fill: #1f2530; --fold: #8ba7ff; --fold-soft: #1f2840; --peek: #b48cf0; --peek-soft: #2a2140;
+  --gone: #ff8a80; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.7; font-size: 15px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.75rem; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); text-wrap: balance; }
+p, li { max-width: 72ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--paper); max-width: 80ch; }
+.option { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-top: 14px; min-width: 0; }
+.option.rec { border: 2px solid var(--star); }
+.option h3 { font-size: 1rem; margin: 0 0 4px; }
+.option p, .option li { font-size: 0.92rem; }
+.option .note { color: var(--muted); }
+.n { display: inline-block; min-width: 1.5em; text-align: center; font-family: var(--font-mono); font-weight: 700; color: var(--paper); background: var(--accent); border-radius: 4px; margin-right: 6px; }
+.star { color: var(--star); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--paper); font-size: 0.88rem; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 500; }
+
+/* 장면: 왼쪽 Method, 오른쪽 그것을 펴 보인 호출 블록 */
+.scene { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 10px 0; }
+.pane { min-width: 0; }
+.pane .cap { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+.nsd { font: 13px var(--font-mono); border: 1.5px solid var(--nsd-line); background: var(--paper); }
+.nsd .head { padding: 3px 8px; border-bottom: 1.5px solid var(--nsd-line); font-weight: 700; }
+.blk { padding: 3px 8px; border-top: 1px solid var(--nsd-line); background: var(--nsd-fill); }
+.nsd > .blk:first-of-type, .fold > .blk:first-of-type, .peek > .blk:first-of-type { border-top: 0; }
+.fold { margin: 2px; border: 2px solid var(--fold); background: var(--fold-soft); }
+.fold .band { padding: 0 6px; font: 600 12px var(--font-body); color: var(--fold); }
+.fold.site { border-style: solid; }
+.fold.gone { border: 2px dashed var(--gone); background: none; }
+.fold.gone .band { color: var(--gone); text-decoration: line-through; }
+.peek { margin: 0; border: 3px solid var(--peek); background: var(--peek-soft); }
+.peek > .band { padding: 0 6px; font: 600 12px var(--font-body); color: var(--peek); }
+.blk + .fold, .fold + .blk { border-top: 1px solid var(--nsd-line); }
+.mark { font: 600 11px var(--font-body); color: var(--star); margin-left: 6px; }
+.status { font-size: 0.8rem; margin-top: 4px; padding: 2px 8px; border: 1px solid var(--line); background: var(--paper); }
+</style>
+
+<div class="wrap">
+<h1>M69 펴 보인 곳에서 Method의 접기 영역 풀기</h1>
+<p class="sub">2026-11-21 · 메인테이너의 결함 신고에서 나온 물음 SF1. 그림은 앱의 색(접기 영역 파랑, 펴 보인 호출 블록 보라)을 따른 손그림입니다.</p>
+
+<blockquote>
+메인테이너: "호출블록을 펼치기한 내부에서 접기영역이 설정되어있을 때, 접기영역 해제가 안 됩니다." 이어서 "각자 따로 동작하기로 했던 것으로 기억합니다. 당연히 풀 수 있어야합니다. 호출블록을 펼칠 때 메소드의 접기영역을 가져오기는 하지만 그것은 처음 펼칠 때 뿐입니다."
+</blockquote>
+
+<h2>지금 모습</h2>
+<p>펴 보인 곳 안의 접기 영역은 두 가지입니다. <b>이 자리의 접기 영역</b>(펴 보인 곳에서 만든 것)은 풀 수 있습니다. <b>Method의 접기 영역</b>은 Method의 것을 비춰 보일 뿐이라 풀거나 이름을 바꿀 수 없고, 이유를 알립니다(<code>02-interaction-rules</code> "펴 보인 곳의 접기 영역", 테스트 T-1092). CB13이 "처음 펼 때만 가져오고 그 뒤로 따로"라고 정한 것은 <b>접힘</b>(접혀 있나 펴져 있나)뿐이고, 접기 영역 자체(있고 없음, 이름)는 정하지 않았습니다.</p>
+<div class="scene" data-scene="now"></div>
+
+<h2><span class="n">SF1</span>펴 보인 곳에서 Method의 접기 영역을 풀면</h2>
+
+<div class="option rec">
+<h3><span class="n">1</span>이 자리에서만 사라짐. 손대지 않은 것은 Method를 따름 <span class="star">★ 추천</span></h3>
+<p>펴 보인 곳에서 Method의 접기 영역을 풀면 그 호출 블록 자리에서만 사라집니다. Method와 다른 호출 블록에는 그대로 있습니다. 풀지 않은 것은 지금처럼 Method를 따라갑니다(Method에서 이름을 바꾸면 여기도 바뀜). 이름 바꾸기도 같은 규칙: 이 자리에서 바꾸면 이 자리만 바뀌고, 그 뒤로는 Method의 이름을 따르지 않습니다.</p>
+<div class="scene" data-scene="o1"></div>
+<ul class="note">
+<li>파일: 호출 블록에 "이 자리에서 뺀 Method 접기 영역의 id" 목록과 "이 자리에서 바꾼 이름"을 더합니다(<code>siteFolds</code> 옆). 파일 형식이 바뀌므로 ADR을 씁니다.</li>
+<li>풀기 · 이름 바꾸기는 내용 변경이라 실행 취소됩니다. 펴기만 해서는 파일이 바뀌지 않습니다.</li>
+</ul>
+</div>
+
+<div class="option">
+<h3><span class="n">2</span>처음 펼 때 Method의 접기 영역을 이 자리로 복사</h3>
+<p>CB13의 접힘과 같은 원리를 접기 영역에도 씁니다. 처음 펴는 순간 Method의 접기 영역이 모두 이 자리의 접기 영역이 되고, 그 뒤로는 서로 모릅니다. Method에 새로 만든 접기 영역은 이미 펴 본 호출 블록에는 나타나지 않습니다.</p>
+<div class="scene" data-scene="o2"></div>
+<ul class="note">
+<li>홍월님이 기억한 규칙과 가장 가깝습니다.</li>
+<li>다만 펴기는 지금 뷰 상태(실행 취소 대상 아님)인데, 복사는 내용(파일의 <code>siteFolds</code>)을 바꿉니다. 그래서 "펴기만 했는데 저장 안 됨 표시(●)가 뜨는" 일이 생기거나, 펴기를 실행 취소 대상으로 바꿔야 합니다.</li>
+</ul>
+</div>
+
+<div class="option">
+<h3><span class="n">3</span>풀면 Method에서 풀림 (확인 모달)</h3>
+<p>"Method 'partition'의 접기 영역 '준비'를 풉니다. 이 Method를 호출하는 모든 곳에서 사라집니다." 묻고 풉니다. "펴 보인 블록은 편집할 수 없다"는 규칙에 예외가 생깁니다.</p>
+<div class="scene" data-scene="o3"></div>
+</div>
+
+<div class="option">
+<h3><span class="n">4</span>지금대로 풀 수 없음. 알림에 Method로 가는 길</h3>
+<p>상태 표시줄: "Method의 접기 영역입니다. Method에서 푸세요." 그리고 호출하는 Method로 가기(CB9)로 바로 갑니다. "각자 따로"는 접힘에만 남습니다.</p>
+<div class="scene" data-scene="o4"></div>
+</div>
+
+<h2>견줌</h2>
+<div class="tbl"><table>
+<tr><th></th><th>1 ★</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><td>펴 보인 곳에서 풀 수 있나</td><td>예, 이 자리만</td><td>예, 이 자리만</td><td>예, 모든 곳</td><td>아니요</td></tr>
+<tr><td>Method에서 이름을 바꾸면 펴 보인 곳은</td><td>따라감(이 자리에서 손댄 것 빼고)</td><td>그대로(처음 펼 때 이름)</td><td>따라감</td><td>따라감</td></tr>
+<tr><td>Method에 새로 만든 접기 영역은</td><td>보임</td><td>이미 펴 본 곳에는 안 보임</td><td>보임</td><td>보임</td></tr>
+<tr><td>펴기만 해도 파일이 바뀌나</td><td>아니요</td><td>예</td><td>아니요</td><td>아니요</td></tr>
+<tr><td>파일 형식 · ADR</td><td>필드 더함 · ADR</td><td>펴기의 성격이 바뀜 · ADR</td><td>없음</td><td>없음</td></tr>
+</table></div>
+<p class="note">추천 까닭: 홍월님이 원하신 "풀 수 있다"와 "각자 따로"를 지키면서, 펴기만 해서는 파일이 바뀌지 않는다는 지금의 원칙(뷰 상태와 내용의 구분, ADR-0018)을 깨지 않습니다. 손댄 것만 이 자리의 것이 되므로, 펴 보기가 Method를 "비춰 보는 창"이라는 성격도 남습니다.</p>
+</div>
+
+<script>
+const b = (t) => `<div class="blk">${t}</div>`;
+const fold = (name, inner, cls = '') => `<div class="fold ${cls}"><div class="band">▾ ${name}</div>${inner}</div>`;
+const method = (folds) => `<div class="nsd"><div class="head">partition(a, lo, hi)</div>${folds}${b('return i')}</div>`;
+const prep = (cls = '', name = '준비') => fold(name, b('pivot = a[hi]') + b('i = lo'), cls);
+const caller = (inside, extra = '') => `<div class="nsd"><div class="head">quicksort(a, lo, hi)</div>${b('if lo &lt; hi')}<div class="peek"><div class="band">▾ p = partition(a, lo, hi)</div>${inside}</div>${b('quicksort(a, lo, p - 1)')}</div>${extra}`;
+const pane = (cap, html) => `<div class="pane"><div class="cap">${cap}</div>${html}</div>`;
+const status = (t) => `<div class="status">${t}</div>`;
+const scenes = {
+  now: pane('Method partition', method(prep())) +
+       pane('quicksort에서 펴 보인 partition — 풀기를 누르면', caller(prep() + b('return i'), status('Method의 접기 영역은 여기서 풀 수 없습니다.'))),
+  o1: pane('Method partition (그대로)', method(prep())) +
+      pane('펴 보인 곳 — 이 자리에서 풂', caller(b('pivot = a[hi]') + b('i = lo') + b('return i'), status('접기 영역 "준비"를 이 자리에서 풀었습니다.'))),
+  o2: pane('Method partition — 펴 본 뒤 이름을 "초기화"로 바꿈', method(prep('', '초기화'))) +
+      pane('펴 보인 곳 — 처음 펼 때 복사한 "준비"가 그대로, 풀 수 있음', caller(prep('site') + b('return i'))),
+  o3: pane('Method partition — 함께 풀림', method(b('pivot = a[hi]') + b('i = lo'))) +
+      pane('펴 보인 곳 — 풀림', caller(b('pivot = a[hi]') + b('i = lo') + b('return i'), status('Method partition의 접기 영역 "준비"를 풀었습니다. 호출하는 모든 곳에 적용됩니다.'))),
+  o4: pane('Method partition', method(prep())) +
+      pane('펴 보인 곳 — 풀리지 않음', caller(prep() + b('return i'), status('Method의 접기 영역입니다. Method에서 푸세요. (호출하는 Method로 가기: gd)'))),
+};
+for (const el of document.querySelectorAll('[data-scene]')) el.innerHTML = scenes[el.dataset.scene];
+</script>
