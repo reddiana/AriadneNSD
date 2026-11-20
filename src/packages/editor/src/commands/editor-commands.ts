@@ -24,6 +24,7 @@ import {
   deleteDiagram,
   extractMethod,
   foldedAfterInline,
+  hasOwnSite,
   headName,
   headParams,
   inlineCall,
@@ -40,6 +41,7 @@ import {
   paste,
   setCallTarget,
   setHead,
+  sitePrefix,
   unwrap,
   wrap,
 } from '@ariadne-nsd/core';
@@ -658,7 +660,11 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     const target = block?.kind === 'call' ? block.target : null;
     const head =
       target?.kind === 'local' ? (index().diagrams.get(target.diagram)?.head ?? null) : null;
-    const result = inlineCall(content(), { block: call, ids: session.ids() });
+    const result = inlineCall(content(), {
+      block: call,
+      ids: session.ids(),
+      ownRegions: hasOwnSite(new Set(view.folded), sitePrefix([call])),
+    });
     if (!result.ok) {
       session.refuse(result.reason);
       return;

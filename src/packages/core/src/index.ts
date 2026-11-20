@@ -47,6 +47,7 @@ export { isTextKind, textKinds, tokenize, tokenLines } from './text/syntax';
 export {
   foldedAfterInline,
   forgetRetargeted,
+  hasOwnSite,
   isFoldedAt,
   settleSiteFolds,
   sitePrefix,

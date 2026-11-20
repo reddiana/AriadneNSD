@@ -1,10 +1,27 @@
 // What is folded inside opened call blocks (01-model 2, ADR-0046). Every path of call blocks keeps
 // its own folding, written into `View.folded` behind the path:
-//   `b4/`     the call site `b4` has its own folding (taken from the Method when first opened)
-//   `b4/r3`   branch, loop block or fold region `r3` of the called Method is folded at `b4`
+//   `b4/`     the call site `b4` has its own folding and its own fold regions, both taken from
+//             the Method when first opened (ADR-0047)
+//   `b4/r3`   branch or loop block `r3` of the called Method is folded at `b4`
+// The fold regions of a call site are content: when it is first opened, the Method's regions are
+// copied into `Call.siteFolds`, and from then on the Method's regions are not drawn there.
 // Older versions read these entries as ids that do not exist, which the view state allows.
-import { contentIds } from './id';
-import type { Block, Call, Content, Diagram, Doc, Id, Path, Seq, View } from './types';
+import { mapCalls } from '../commands/tree';
+import type { IdGenerator } from './id';
+import { contentIds, createIdGenerator } from './id';
+import type {
+  Block,
+  Call,
+  Content,
+  Diagram,
+  Doc,
+  FoldMark,
+  Id,
+  Path,
+  Seq,
+  SiteFold,
+  View,
+} from './types';
 
 /**
  * Inside an opened call block every drawn id is written behind the path of the call blocks it
@@ -23,7 +40,37 @@ export function sitePrefix(path: Path): string {
  * own folding yet (a file saved before ADR-0046, read but not settled) shows the Method's.
  */
 export function isFoldedAt(folded: ReadonlySet<Id>, prefix: string, id: Id): boolean {
-  return prefix !== '' && folded.has(prefix) ? folded.has(prefix + id) : folded.has(id);
+  return hasOwnSite(folded, prefix) ? folded.has(prefix + id) : folded.has(id);
+}
+
+/**
+ * Whether the call site shown behind `prefix` has its own folding and fold regions (`b4/`): the
+ * Method's regions were copied there and are no longer drawn at it (ADR-0047). A site without it
+ * (not opened yet, or a file saved before) draws the Method's regions.
+ */
+export function hasOwnSite(folded: ReadonlySet<Id>, prefix: string): boolean {
+  return prefix !== '' && folded.has(prefix);
+}
+
+/** The fold regions marked on a sequence and on every sequence inside it, in document order. */
+export function regionsIn(seq: Seq): FoldMark[] {
+  const found: FoldMark[] = [];
+  const visit = (inner: Seq): void => {
+    for (const block of inner.blocks) {
+      for (const child of innerSeqs(block)) {
+        visit(child);
+      }
+    }
+    found.push(...inner.folds);
+  };
+  visit(seq);
+  return found;
+}
+
+/** The branches and loop blocks of a sequence that can fold, fold regions left out. */
+function controlFoldableIds(seq: Seq): Id[] {
+  const regions = new Set(regionsIn(seq).map((fold) => fold.id));
+  return [...seqFoldableIds(seq, false)].filter((id) => !regions.has(id));
 }
 
 /** The sequences directly inside a block, left to right. */
@@ -200,12 +247,16 @@ function openedKeys(view: View): ReadonlySet<string> {
 }
 
 /**
- * Gives every call site that is drawn and has no folding of its own the Method's folding as it is
- * now: the first opening, or a file saved before ADR-0046. Returns the same view if there is none.
+ * Gives every call site that is drawn and has no folding of its own the Method's folding and fold
+ * regions as they are now: the first opening, or a file saved before ADR-0047 (ADR-0046, ADR-0047).
+ * The regions are copied into the outermost call block's `siteFolds` with new ids, folded where the
+ * Method's are folded; a region the site already has with the same range is not copied again.
+ * Returns the same document if there is nothing to take, the same content if no region was copied.
  */
-export function settleSiteFolds(content: Content, view: View): View {
+export function settleSiteFolds(doc: Doc): Doc {
+  const { content, view } = doc;
   if (view.opened.length === 0) {
-    return view;
+    return doc;
   }
   const folded = new Set(view.folded);
   const opened = openedKeys(view);
@@ -213,23 +264,66 @@ export function settleSiteFolds(content: Content, view: View): View {
     (path) => !folded.has(sitePrefix(path)) && isShownPath(path, opened),
   );
   if (waiting.length === 0) {
-    return view;
+    return doc;
   }
   const places = callPlaces(content);
   const added = new Set<Id>();
+  const copies = new Map<Id, SiteFold[]>();
+  let ids: IdGenerator | null = null;
   for (const path of waiting) {
     const method = methodAt(content, places, path);
-    if (method !== null) {
-      const prefix = sitePrefix(path);
-      added.add(prefix);
-      for (const id of seqFoldableIds(method.body, false)) {
-        if (folded.has(id)) {
-          added.add(prefix + id);
-        }
+    const outermost = places.get(path[0] ?? '')?.call;
+    if (method === null || outermost === undefined) {
+      continue;
+    }
+    const prefix = sitePrefix(path);
+    added.add(prefix);
+    for (const id of controlFoldableIds(method.body)) {
+      if (folded.has(id)) {
+        added.add(prefix + id);
+      }
+    }
+    const via = path.slice(1);
+    const here = [...outermost.siteFolds, ...(copies.get(outermost.id) ?? [])].filter((fold) =>
+      sameIds(fold.via, via),
+    );
+    for (const region of regionsIn(method.body)) {
+      if (here.some((fold) => fold.first === region.first && fold.last === region.last)) {
+        continue;
+      }
+      ids ??= createIdGenerator(content, [
+        ...view.folded.flatMap((entry) => entry.split(pathSeparator)),
+        ...view.opened.flat(),
+      ]);
+      const copy: SiteFold = {
+        id: ids.next('fold'),
+        via,
+        first: region.first,
+        last: region.last,
+        ...(region.name === undefined ? {} : { name: region.name }),
+      };
+      here.push(copy);
+      copies.set(outermost.id, [...(copies.get(outermost.id) ?? []), copy]);
+      if (folded.has(region.id)) {
+        added.add(copy.id);
       }
     }
   }
-  return added.size === 0 ? view : { ...view, folded: [...view.folded, ...added] };
+  if (added.size === 0) {
+    return doc;
+  }
+  const next =
+    copies.size === 0
+      ? content
+      : mapCalls(content, (call) => {
+          const more = copies.get(call.id);
+          return more === undefined ? call : { ...call, siteFolds: [...call.siteFolds, ...more] };
+        });
+  return { content: next, view: { ...view, folded: [...view.folded, ...added] } };
+}
+
+function sameIds(a: ReadonlyArray<Id>, b: ReadonlyArray<Id>): boolean {
+  return a.length === b.length && a.every((id, index) => id === b[index]);
 }
 
 /** The Method a target opens, `null` for a target that opens none. */
@@ -313,8 +407,9 @@ export function foldedAfterInline(
 
 /**
  * The entries of the call sites' folding a file keeps, in document order (01-file-format 3.1).
- * A site says nothing when opening the file would give it the same folding again: it is drawn and
- * folded like the Method, or it is closed with nothing folded here and in the Method. Sites that
+ * A site says nothing when opening the file would give it the same folding again: its Method has no
+ * fold regions to copy (ADR-0047), and it is drawn and folded like the Method, or it is closed with
+ * nothing folded here and in the Method. Sites that
  * no longer exist and ids no longer in the Method are not written.
  */
 export function siteFoldedEntries(doc: Doc): ReadonlyArray<Id> {
@@ -334,11 +429,14 @@ export function siteFoldedEntries(doc: Doc): ReadonlyArray<Id> {
       return [];
     }
     const prefix = sitePrefix(path);
-    const ids = [...seqFoldableIds(method.body, false)];
+    const ids = controlFoldableIds(method.body);
     const here = ids.filter((id) => folded.has(prefix + id));
     const there = ids.filter((id) => folded.has(id));
     const isSame = here.length === there.length && here.every((id, at) => id === there[at]);
-    const isKept = isShownPath(path, opened) ? !isSame : here.length > 0 || there.length > 0;
+    // A Method with fold regions would give them again at the next opening (ADR-0047).
+    const isKept =
+      regionsIn(method.body).length > 0 ||
+      (isShownPath(path, opened) ? !isSame : here.length > 0 || there.length > 0);
     return isKept ? [prefix, ...here.map((id) => prefix + id)] : [];
   });
 }

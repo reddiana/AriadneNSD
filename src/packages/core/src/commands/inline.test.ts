@@ -75,6 +75,36 @@ describe('replacing a call block with its Method (R-EDIT-08)', () => {
     expect(inner.kind === 'call' ? inner.siteFolds.map((fold) => fold.via) : null).toEqual([[]]);
   });
 
+  it("T-1411: inline: a call site with its own regions brings only those, not the Method's (ADR-0047)", () => {
+    const sited = contentWith(
+      diagram('d1', null, [
+        withSiteFolds(call('b2', 'd2'), [
+          { id: 'f7', via: [], first: 'b10', last: 'b11', name: 'renamed' },
+          { id: 'f8', via: ['b13'], first: 'b10', last: 'b10' },
+        ]),
+      ]),
+      content.diagrams[1] ?? diagram('d2', method('x'), [proc('b9')]),
+    );
+    const result = runOk(inlineCall, sited, { block: 'b2', ownRegions: true });
+    // f7 is the site's copy of f1, renamed there: it comes in with its name, and f1 does not.
+    const copy = result.renamed.get('f7') ?? '';
+    expect(foldsIn(result.content, 'd1')).toEqual([
+      `${copy}:${result.renamed.get('b10') ?? ''}-${result.renamed.get('b11') ?? ''}`,
+    ]);
+    expect(result.renamed.has('f1')).toBe(false);
+    const inner = blockOf(result.content, result.renamed.get('b13') ?? '');
+    expect(inner.kind === 'call' ? inner.siteFolds.map((fold) => fold.first) : null).toEqual([
+      'b10',
+    ]);
+    // A site that removed the copy brings no region at all.
+    const removed = contentWith(
+      diagram('d1', null, [call('b2', 'd2')]),
+      content.diagrams[1] ?? diagram('d2', method('x'), [proc('b9')]),
+    );
+    const bare = runOk(inlineCall, removed, { block: 'b2', ownRegions: true });
+    expect(foldsIn(bare.content, 'd1')).toEqual([]);
+  });
+
   it('T-1081: inline: unwrap does the same on one call block; a call that calls nothing here is refused', () => {
     const viaUnwrap = runOk(unwrap, content, {
       target: { kind: 'blocks', first: 'b2', last: 'b2' },

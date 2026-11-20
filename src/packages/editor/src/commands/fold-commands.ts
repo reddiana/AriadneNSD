@@ -94,6 +94,40 @@ function wholeRegion(seq: Seq): Id | null {
   return whole?.id ?? null;
 }
 
+/**
+ * The fold region that is exactly the whole sequence where it is shown: outside opened calls one
+ * of its own, at an opened call site one of the site's (the Method's are not drawn there, ADR-0047).
+ */
+function wholeRegionAt(index: DocIndex, seq: Seq, path: Path): Id | null {
+  if (path.length === 0) {
+    return wholeRegion(seq);
+  }
+  const last = seq.blocks.length - 1;
+  const whole = (siteRangesAt(index, path).get(seq) ?? []).find(
+    (range) => range.lo === 0 && range.hi === last,
+  );
+  return whole?.fold.id ?? null;
+}
+
+/** The regions of the call site `path` by the sequence of the called Method they are on. */
+function siteRangesAt(index: DocIndex, path: Path): ReturnType<typeof placeSiteFolds> {
+  const [outermost] = path;
+  const call = outermost === undefined ? undefined : index.blocks.get(outermost)?.block;
+  const inner = index.blocks.get(path.at(-1) ?? '')?.block;
+  if (call?.kind !== 'call' || inner?.kind !== 'call' || inner.target.kind !== 'local') {
+    return new Map();
+  }
+  const method = index.diagrams.get(inner.target.diagram);
+  if (method === undefined) {
+    return new Map();
+  }
+  const via = path.slice(1);
+  return placeSiteFolds(
+    method.body,
+    call.siteFolds.filter((fold) => fold.via.join(' ') === via.join(' ')),
+  );
+}
+
 /** The entry of a Method's branch or loop body seen through `path` (ADR-0046). */
 function seqEntry(path: Path, owner: Id): Id {
   return path.length === 0 ? owner : sitePrefix(path) + owner;
@@ -111,7 +145,7 @@ function controlTarget(index: DocIndex, block: Id, path: Path = []): FoldTarget 
   }
   const items: FoldItem[] = [];
   for (const child of childSeqs(place.block)) {
-    const region = wholeRegion(child.seq);
+    const region = wholeRegionAt(index, child.seq, path);
     if (region !== null) {
       items.push(...foldTarget(index, region, path).items);
     } else if (isFoldableSeq(child.seq)) {
@@ -220,8 +254,8 @@ function around(
 /**
  * What holds the blocks `lo..hi` of the called Method's sequence `start` at the call site `path`,
  * nearest first, walking out to the Method's body (UX CB13): the site's regions around them, and
- * the branch or loop body they are in. A region of the Method folds from a block inside only when
- * it is that whole body; otherwise it folds when it is selected itself (R-EDIT-16).
+ * the branch or loop body they are in (a region that is that whole body in its place). The
+ * Method's own regions are not drawn there: the site has copies of them (R-EDIT-16, ADR-0047).
  */
 function peekOutward(
   index: DocIndex,
@@ -230,21 +264,7 @@ function peekOutward(
   from: number,
   to: number,
 ): ReadonlyArray<FoldTarget> {
-  const [outermost] = path;
-  const call = outermost === undefined ? undefined : index.blocks.get(outermost)?.block;
-  const inner = index.blocks.get(path.at(-1) ?? '')?.block;
-  if (call?.kind !== 'call' || inner?.kind !== 'call' || inner.target.kind !== 'local') {
-    return [];
-  }
-  const method = index.diagrams.get(inner.target.diagram);
-  if (method === undefined) {
-    return [];
-  }
-  const via = path.slice(1);
-  const placed = placeSiteFolds(
-    method.body,
-    call.siteFolds.filter((fold) => fold.via.join(' ') === via.join(' ')),
-  );
+  const placed = siteRangesAt(index, path);
   const found: FoldTarget[] = [];
   let owner: Id = start;
   let lo = from;
@@ -281,7 +301,7 @@ function peekOutward(
 
 /** Folding a whole branch or loop body at a call site: the region that is all of it, or itself. */
 function bodyTarget(index: DocIndex, owner: Id, seq: Seq, path: Path): FoldTarget | null {
-  const region = wholeRegion(seq);
+  const region = wholeRegionAt(index, seq, path);
   if (region !== null) {
     return foldTarget(index, region, path);
   }
@@ -524,8 +544,9 @@ type ToRemove = { readonly fold: Id } | { readonly reason: EditorMessage };
 
 /**
  * The fold region a "remove" acts on (interaction rules "접기 · 펼치기" 풀기): the selected region,
- * or the smallest region holding the selection. Inside an opened call block only regions of that
- * call site can go; the Method's own are removed in the Method (R-EDIT-16).
+ * or the smallest region holding the selection. Inside an opened call block the regions of that
+ * call site go, the copies of the Method's included (ADR-0047); a region of the Method itself is
+ * not drawn there, so it is refused only if a caller names one (R-EDIT-16).
  */
 export function regionToRemove(index: DocIndex, selection: Selection | null): ToRemove {
   if (selection === null) {
@@ -550,7 +571,7 @@ export function regionToRemove(index: DocIndex, selection: Selection | null): To
   );
   for (const target of targets) {
     const [item] = target.items;
-    // Inside an opened call block a Method's own region folds, but it is removed in the Method.
+    // Inside an opened call block only a region of the call site is drawn and can go.
     if (
       target.items.length === 1 &&
       item?.kind === 'fold' &&

@@ -52,7 +52,13 @@ import type {
   EditorState,
   Extracted,
 } from '../state/editor-state';
-import { clampZoom, stepHistory, withContent, withSelection } from '../state/editor-state';
+import {
+  clampZoom,
+  stepHistory,
+  undoLimit,
+  withContent,
+  withSelection,
+} from '../state/editor-state';
 import type { Selection } from '../state/selection';
 import {
   foldPath,
@@ -117,10 +123,12 @@ export type After = {
 /** The key hint shows this long after the first key of a sequence (UX K1). */
 export const keyHintDelay = 400;
 
-/** The document with every drawn call site holding its own folding (ADR-0046). */
+/**
+ * The document with every drawn call site holding its own folding and fold regions (ADR-0046,
+ * ADR-0047). Copying the Method's regions changes the content.
+ */
 function settled(doc: Doc): Doc {
-  const view = settleSiteFolds(doc.content, doc.view);
-  return view === doc.view ? doc : { content: doc.content, view };
+  return settleSiteFolds(doc);
 }
 
 /** The editing session. One per open document view. */
@@ -471,9 +479,22 @@ export class EditorSession {
     const doc = settled({ content: this.current.doc.content, view });
     this.rendered = this.render(doc);
     const next = selection === undefined ? this.current.selection : selection;
+    const isCopied = doc.content !== this.current.doc.content;
+    const state = withSelection(
+      this.current,
+      validSelection(isCopied ? indexDoc(doc.content) : this.index(), next, this.shownOf(doc)),
+    );
+    // Opening a call block for the first time copies the Method's fold regions there: a content
+    // change, so one undo step of its own (ADR-0047). While view only it is not a step.
+    const undo =
+      isCopied && !this.current.readOnly
+        ? [...state.undo.slice(-(undoLimit - 1)), this.current.doc.content]
+        : state.undo;
     this.setState({
-      ...withSelection(this.current, validSelection(this.index(), next, this.shownOf(doc))),
+      ...state,
       doc,
+      undo,
+      redo: isCopied && !this.current.readOnly ? [] : state.redo,
       dirty: this.current.readOnly ? this.current.dirty : this.isDirty(doc),
       layout: this.rendered.layout,
       revision: this.current.revision + 1,
@@ -533,16 +554,17 @@ export class EditorSession {
    * Replaces the content (one undo step), unless it breaks an invariant: that is a bug, so the
    * document is left as it was and the problem is logged (coding guide 5).
    */
-  apply(content: Content, after: After, isAmend = false): boolean {
-    const view = settleSiteFolds(
-      content,
-      forgetRetargeted(
+  apply(changed: Content, after: After, isAmend = false): boolean {
+    // A call site the change shows for the first time takes the Method's regions in the same step.
+    const { content, view } = settleSiteFolds({
+      content: changed,
+      view: forgetRetargeted(
         this.current.doc.content,
-        content,
+        changed,
         after.view ?? this.current.doc.view,
         false,
       ),
-    );
+    });
     if (content !== this.current.doc.content) {
       const violations = this.time('check', () => checkInvariants(content));
       if (violations.length > 0) {
@@ -638,8 +660,8 @@ export class EditorSession {
       this.notify(direction === 'undo' ? 'reason.nothingToUndo' : 'reason.nothingToRedo');
       return false;
     }
-    const index = indexDoc(stepped.content);
     const state = this.withStepView(stepped.state, before);
+    const index = indexDoc(state.doc.content);
     this.setState({
       ...state,
       selection: validSelection(index, state.selection, this.shownOf(state.doc)),
@@ -647,14 +669,19 @@ export class EditorSession {
     return true;
   }
 
-  /** The view after an undo or redo: call sites that now call something else start over. */
+  /**
+   * The view after an undo or redo: call sites that now call something else start over. Regions
+   * they take from their Method join the step undone or redone (ADR-0047).
+   */
   private withStepView(state: EditorState, before: Content): EditorState {
     const { content, view } = state.doc;
-    const next = settleSiteFolds(content, forgetRetargeted(before, content, view, true));
-    if (next === view) {
+    const doc = settleSiteFolds({
+      content,
+      view: forgetRetargeted(before, content, view, true),
+    });
+    if (doc.content === content && doc.view === view) {
       return state;
     }
-    const doc: Doc = { content, view: next };
     this.rendered = this.render(doc);
     return { ...state, doc, dirty: this.isDirty(doc), layout: this.rendered.layout };
   }

@@ -75,7 +75,7 @@ updated: 2026-11-18
 | 접힌 칸 | folded region row | 접힌 접기 영역이 줄어든 한 칸. 이름이 보인다. 편집할 때는 앞에 펼침 삼각형 `▸` |
 | 접힌 줄 | folded lane row | 접힌 제어 블록의 분기 자리에 보이는 한 줄. "⋯ 블록 n개"가 보인다 |
 | 펴 보기 | expand in place | 호출 블록 자리에 호출하는 Method의 블록을 보기로만 보여 주는 것. 펴 보인 블록은 편집할 수 없다 → [[02-interaction-rules#호출 블록 펴 보기]] |
-| 펴 보인 곳의 접기 영역 | site fold region | 펴 보인 호출 블록 자리에만 있는 접기 영역. Method의 원본에는 없다 → [[02-interaction-rules#펴 보인 곳의 접기 영역]] |
+| 펴 보인 곳의 접기 영역 | site fold region | 펴 보인 호출 블록 자리에만 있는 접기 영역. Method의 원본에는 없다. 처음 펼 때 Method의 접기 영역을 복사한 것도 이것이다 → [[02-interaction-rules#펴 보인 곳의 접기 영역]] |
 | 화면 id | screen id | 펴 보인 호출 블록 안에 그린 것의 id. 펴 보인 호출 블록의 경로를 `/`로 이은 뒤에 모델의 id를 붙인다(`b4/b17`). 같은 Method를 여러 곳에서 펴 보여도 섞이지 않는다 → [[03-editor#2. 상태와 선택]] |
 | 보이는 구조 | shown structure | 줄 하나가 지금 보이는 모습: 블록과 그 줄의 접기 영역을 묶은 나무(펴 보인 곳의 접기 영역 포함). 레이아웃이 그리고 `editor`가 키보드 이동에 쓴다. 코드 이름은 `ShownItem`(core), 다이어그램 전체의 나무는 `ShownIndex`(editor) → [[02-layout#1.6 테두리가 있는 것]] |
 

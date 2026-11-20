@@ -186,6 +186,7 @@ type SiteFold = {
 - 펴 보인 블록은 문서에 사본으로 있지 않습니다(인라인 전개는 레이아웃 단계의 일이며 모델을 바꾸지 않음). 레이아웃이 Method의 블록을 그 위치에 다시 배치해 렌더링할 뿐입니다 → [[01-architecture#5.1 편집]]
 - 그래서 이 자리의 접기 영역은 **가장 바깥 호출 블록**에 합성되고, 중첩해 편 안쪽이면 `via`로 경로를 기록합니다. 호출 블록을 삭제하면 함께 사라집니다.
 - Method가 바뀌어 `first`나 `last`가 dangling id가 되어도 갱신하지 않습니다. 레이아웃 때 남은 블록으로 범위를 줄이고, 하나도 남지 않으면 렌더링하지 않습니다 → [[02-interaction-rules#펴 보인 곳의 접기 영역]]
+- 호출 블록을 처음 펼 때 Method의 접기 영역(`FoldMark`, 안쪽 줄의 것까지)을 이름과 함께 새 id의 `SiteFold`로 복사합니다. 그 경로의 `via`를 붙이고, 그 자리에 `first` · `last`가 같은 영역이 이미 있으면 복사하지 않습니다. 복사한 뒤 그 자리(뷰 상태의 표시 `b4/`가 있는 자리, 2장)에는 Method의 `FoldMark`를 렌더링하지 않고 `SiteFold`만 렌더링합니다. 그 뒤 Method의 `FoldMark`가 바뀌어도 이 사본은 바뀌지 않습니다 → [[0047-copy-method-folds-at-first-open|ADR-0047]], [[ux-decisions#CB14. 펴 보인 곳의 접기 영역은 처음 펼 때 복사한다|CB14]]
 
 ### 1.7 id
 
@@ -213,8 +214,8 @@ type Path = Id[];      // [바깥 호출 블록 id, 그 안에서 편 호출 블
 - 뷰 상태는 내용의 id를 참조하는 별도 구조입니다. 떼어 내면 "모두 펼친 그림"이 됩니다.
 - **dangling id를 참조해도 오류가 아닙니다**(약한 참조). undo로 내용이 앞으로 돌아가면, 뷰 상태에 지금 없는 id가 남을 수 있습니다. 레이아웃은 없는 id를 무시하고, 직렬화할 때는 있는 id만 기록합니다. 그래서 뷰 상태는 undo 스택과 독립적으로 바뀌어도 일관성이 깨지지 않습니다.
 - 펴 보인 블록 안의 접힘은 호출 경로마다 따로 저장합니다 → [[0046-site-folding-in-view|ADR-0046]], [[ux-decisions#CB13. 펴 보인 곳의 접힘은 그 자리의 것|CB13]]
-	- `b4/`는 경로 `b4`가 자기 접힘을 갖는다는 표시이고, `b4/r3`은 그 자리에서 Method의 분기 · 반복 블록 · 접기 영역 `r3`이 접혀 있다는 뜻입니다. 겹쳐 폈으면 `b4/b9/r3`입니다. 이 자리의 접기 영역(`SiteFold`)은 자리마다 id가 다르므로 경로 없이 적습니다. 분기와 반복 블록의 본문도 Method의 접기 영역과 같은 방식으로 자리마다 접힙니다.
-	- 표시가 없는 경로는 아직 접힘을 가져오지 않은 자리로, Method의 접힘으로 그립니다. `editor`의 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다, 그려지는 경로 가운데 표시가 없는 것에 그 순간의 Method 접힘을 복사합니다(`settleSiteFolds`).
+	- `b4/`는 경로 `b4`가 자기 접힘과 자기 접기 영역을 갖는다는 표시이고, `b4/r3`은 그 자리에서 Method의 분기 · 반복 블록 `r3`이 접혀 있다는 뜻입니다. 겹쳐 폈으면 `b4/b9/r3`입니다. 이 자리의 접기 영역(`SiteFold`, Method에서 복사한 것 포함)은 자리마다 id가 다르므로 경로 없이 적습니다.
+	- 표시가 없는 경로는 아직 접힘과 접기 영역을 가져오지 않은 자리로, Method의 접힘과 접기 영역으로 그립니다. `editor`의 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다, 그려지는 경로 가운데 표시가 없는 것에 그 순간의 Method 접힘을 복사하고 Method의 접기 영역을 `SiteFold`로 복사합니다(`settleSiteFolds`, 1.6). 접기 영역의 복사는 내용을 바꾸므로, 호출 블록을 펼 때 일어나면 실행 취소 단계 하나가 되고, 명령이나 실행 취소 · 다시 실행 뒤에 일어나면 그 단계에 묶이며, 문서를 열 때와 보기 모드에서는 단계를 만들지 않습니다 → [[0047-copy-method-folds-at-first-open|ADR-0047]]
 	- 호출 대상이 다른 Method로 바뀌면 그 호출 블록을 지나는 경로의 항목을 버립니다(`forgetRetargeted`). 호출 블록이나 Method를 삭제해도 항목은 세션에 남아, 실행 취소하면 접힘이 돌아옵니다. 직렬화할 때는 있는 경로만 기록합니다. 호출 블록을 풀면 그 자리의 접힘을 사본으로 옮깁니다(`foldedAfterInline`).
 - 결과 기호를 뷰 상태에 두는 이유는 [[ux-decisions#Q9. 실행 취소의 대상 (R7)|Q9]]에 있습니다.
 
@@ -305,7 +306,7 @@ type Target =                                        // 명령이 적용되는 �
 | | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 호출하고, 없으면 그 이름을 `lastName`으로 간직한 `lost`가 된다. 이름이 없으면 id가 같은 Method를 호출하고, 없으면 `lost`(불변식 6) |
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
-| | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named` · `external` · `lost`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
+| | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named` · `external` · `lost`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 위치에 그 Method를 호출하는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 반환한다. 안의 호출 블록은 호출하던 대상을 그대로 호출한다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
 | 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
@@ -322,7 +323,7 @@ type Target =                                        // 명령이 적용되는 �
 | | 헤더 이름 편집 | 중복되거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 (`makeFold`) | [[02-interaction-rules#접기 · 펼치기]]. 한 줄의 연속 범위에 `FoldMark`를 붙인다. 이름은 없이 시작한다(`editor`가 바로 이름 칸을 연다). 같은 범위가 이미 있으면 `foldExists`, 다른 접기 영역의 끝에 걸치면 `foldsCross`(불변식 5). `touched`는 새 접기 영역 |
-| | 펴 보인 곳의 접기 영역 만들기 (`makeSiteFold`) | [[02-interaction-rules#펴 보인 곳의 접기 영역]]. 가장 바깥 호출 블록의 `siteFolds`에 `via` 경로와 함께 둔다. Method는 바뀌지 않는다. 두 끝이 Method의 다른 줄이면 `notContiguous`, 같은 위치에 같은 범위가 있으면 `foldExists` |
+| | 펴 보인 곳의 접기 영역 만들기 (`makeSiteFold`) | [[02-interaction-rules#펴 보인 곳의 접기 영역]]. 가장 바깥 호출 블록의 `siteFolds`에 `via` 경로와 함께 둔다. Method는 바뀌지 않는다. 두 끝이 Method의 다른 줄이면 `notContiguous`, 같은 자리의 접기 영역(Method에서 복사한 것 포함)과 같은 범위면 `foldExists`, 끝이 걸치면 `foldsCross`. Method의 접기 영역은 그 자리에 그려지지 않으므로 검사하지 않는다 |
 | | 풀기 (`removeFold`) | 접기 영역(펴 보인 곳의 것도)과 그 이름을 없앤다. 블록은 그대로다. `touched`는 그 영역의 처음과 끝 블록 |
 | | 이름 편집 (`renameFold`, 텍스트 편집 `editText`) | 이름을 바꾼다. 빈 이름은 이름을 지워 기본 이름이 다시 보이게 한다 |
 | 문서 설정 | 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양 | |

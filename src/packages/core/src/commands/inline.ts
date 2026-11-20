@@ -22,6 +22,12 @@ import type { OkResult, Result, WithIds } from './types';
 export type InlineCallArgs = WithIds & {
   /** The call block to replace. */
   readonly block: Id;
+  /**
+   * The call site has its own fold regions (`b4/` in the view, ADR-0047): the Method's regions
+   * were copied into its `siteFolds`, so only those come in. Left out, the Method's regions come in
+   * too (a call never opened).
+   */
+  readonly ownRegions?: boolean;
 };
 
 /**
@@ -37,7 +43,8 @@ export type InlineResult =
  * rules "감싸기 · 풀기"). The texts are copied as the Method has them; the call's arguments and
  * result are dropped (UX Q16). The fold regions of this call site become fold regions of the
  * copied blocks (interaction rules "펴 보인 곳의 접기 영역"); those of calls opened further in
- * go with the copies of those calls. Calls inside keep calling what they called. Only a call of
+ * go with the copies of those calls. A call site with its own regions (`ownRegions`) brings only
+ * those, not the Method's (ADR-0047). Calls inside keep calling what they called. Only a call of
  * a Method of this document can be replaced (`notCallable`, UX Q17).
  * Touched: the copied blocks.
  */
@@ -66,13 +73,14 @@ export function inlineCall(content: Content, args: InlineCallArgs): InlineResult
     for (const { fold, lo, hi } of ranges) {
       const first = seq.blocks[lo];
       const last = seq.blocks[hi];
-      if (first !== undefined && last !== undefined && !clashes(seq, added, lo, hi)) {
+      const kept = args.ownRegions === true ? [] : seq.folds;
+      if (first !== undefined && last !== undefined && !clashes(kept, seq, added, lo, hi)) {
         added.push({ ...withoutVia(fold), first: first.id, last: last.id });
       }
     }
     marks.set(seq, added);
   }
-  const copier: Copier = { ids, renamed, marks, deeper };
+  const copier: Copier = { ids, renamed, marks, deeper, methodRegions: args.ownRegions !== true };
   const copied = copySeq(copier, method.body);
   const next = updateSeq(content, entry.owner, (seq) =>
     replaceRange(seq, entry.index, entry.index, copied),
@@ -85,8 +93,14 @@ export function inlineCall(content: Content, args: InlineCallArgs): InlineResult
 }
 
 /** Whether a new region `lo..hi` would repeat or cross a region already on the sequence. */
-function clashes(seq: Seq, added: ReadonlyArray<FoldMark>, lo: number, hi: number): boolean {
-  return [...seq.folds, ...added].some((fold) => {
+function clashes(
+  kept: ReadonlyArray<FoldMark>,
+  seq: Seq,
+  added: ReadonlyArray<FoldMark>,
+  lo: number,
+  hi: number,
+): boolean {
+  return [...kept, ...added].some((fold) => {
     const range = foldRange({ blocks: seq.blocks, folds: [] }, fold);
     if (range === null) {
       return false;
@@ -112,12 +126,15 @@ type Copier = {
   readonly marks: ReadonlyMap<Seq, ReadonlyArray<FoldMark>>;
   /** Site regions of calls opened further in: they go with the copies of those calls. */
   readonly deeper: ReadonlyArray<SiteFold>;
+  /** Whether the Method's own regions come in too (the call site has none of its own). */
+  readonly methodRegions: boolean;
 };
 
 function copySeq(copier: Copier, seq: Seq): Seq {
   const blocks = seq.blocks.map((block) => copyBlock(copier, block));
   const folds: FoldMark[] = [];
-  for (const fold of [...seq.folds, ...(copier.marks.get(seq) ?? [])]) {
+  const own = copier.methodRegions ? seq.folds : [];
+  for (const fold of [...own, ...(copier.marks.get(seq) ?? [])]) {
     const first = copier.renamed.get(fold.first);
     const last = copier.renamed.get(fold.last);
     if (first !== undefined && last !== undefined) {
@@ -166,7 +183,17 @@ function siteFoldsOf(copier: Copier, block: Call): ReadonlyArray<SiteFold> {
   const moved = copier.deeper
     .filter((fold) => fold.via[0] === block.id)
     .map((fold) => ({ ...fold, via: fold.via.slice(1) }));
-  return [...block.siteFolds, ...moved].map((fold) => {
+  // What was shown through the outer call wins over the same range the inner call had itself.
+  const own = block.siteFolds.filter(
+    (fold) =>
+      !moved.some(
+        (other) =>
+          other.via.join(' ') === fold.via.join(' ') &&
+          other.first === fold.first &&
+          other.last === fold.last,
+      ),
+  );
+  return [...own, ...moved].map((fold) => {
     const id = copier.ids.next('fold');
     copier.renamed.set(fold.id, id);
     return { ...fold, id };

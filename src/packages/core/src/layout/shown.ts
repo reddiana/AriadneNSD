@@ -1,7 +1,7 @@
 // What a sequence shows (02-layout 1.6): its blocks grouped by the fold regions marked on it, the
 // regions of an opened call site included (01-model 1.6). The layout draws this structure and the
 // editor walks it, so both see the same regions with the same ids.
-import { innerSeqs, isFoldedAt, pathSeparator } from '../model/site-folded';
+import { hasOwnSite, innerSeqs, isFoldedAt, pathSeparator } from '../model/site-folded';
 import type { Block, Call, Diagram, Id, Seq, SiteFold, View } from '../model/types';
 
 export { innerSeqs, pathSeparator };
@@ -153,9 +153,10 @@ type Candidate = {
 };
 
 /**
- * The shown items of a sequence. Regions marked on it come first; regions of the call site join
- * where they nest with those and are left out where they would cross one or repeat its range
- * (invariant 5 holds for the Method, not for what the site adds).
+ * The shown items of a sequence. Regions marked on it come first, except at a call site that has
+ * its own regions (ADR-0047); regions of the call site join where they nest with those and are
+ * left out where they would cross one or repeat its range (invariant 5 holds for the Method, not
+ * for what the site adds).
  */
 export function shownItems(seq: Seq, at: ShownAt, view: ShownView): ReadonlyArray<ShownItem> {
   const accepted: Candidate[] = [];
@@ -167,7 +168,9 @@ export function shownItems(seq: Seq, at: ShownAt, view: ShownView): ReadonlyArra
         (lo < other.lo && other.lo <= hi && hi < other.hi),
     );
   const position = new Map<Id, number>(seq.blocks.map((block, index) => [block.id, index]));
-  for (const fold of seq.folds) {
+  // A call site with its own regions has copies of the Method's; the Method's are not drawn there.
+  const marks = hasOwnSite(view.folded, at.prefix) ? [] : seq.folds;
+  for (const fold of marks) {
     const a = position.get(fold.first);
     const b = position.get(fold.last);
     if (a === undefined || b === undefined || a > b || isClash(a, b)) {

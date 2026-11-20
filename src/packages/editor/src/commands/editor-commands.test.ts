@@ -437,7 +437,7 @@ describe('unwrap on what is not a block (UX Q8)', () => {
       { d2: ['method', 'm(x)'] },
     );
 
-  /** The engine with the call block c1 opened, so the Method's region f2 is shown inside it. */
+  /** The engine with the call block c1 opened: f3, its copy of the Method's region f2, is shown. */
   const opened = (): TestEngine => {
     const engine = testEngine(withRegions());
     engine.select(selectBlock(indexDoc(engine.content()), 'c1'));
@@ -477,14 +477,14 @@ describe('unwrap on what is not a block (UX Q8)', () => {
 
   it('T-1367 · R-EDIT-15: a fold region shown in an opened call block cannot be unwrapped', () => {
     const engine = opened();
-    engine.select({ kind: 'fold', fold: 'f2', path: ['c1'] });
+    engine.select({ kind: 'fold', fold: 'f3', path: ['c1'] });
     expect(engine.session.state.selection?.kind).toBe('fold');
     expect(applies(engine, 'block.unwrap')).toBe('reason.peekReadOnly');
   });
 
   it('T-1368 · R-EDIT-15: copying a fold region shown in an opened call block copies its blocks', async () => {
     const engine = opened();
-    engine.select({ kind: 'fold', fold: 'f2', path: ['c1'] });
+    engine.select({ kind: 'fold', fold: 'f3', path: ['c1'] });
     engine.run('edit.copy');
     await engine.settle();
     expect(notice(engine)).toEqual({ key: 'notice.copied', params: { count: 2 } });

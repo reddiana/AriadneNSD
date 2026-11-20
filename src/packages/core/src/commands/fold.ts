@@ -85,9 +85,9 @@ export type MakeSiteFoldArgs = WithIds & {
  * Makes a fold region that exists only where a call block is opened (R-EDIT-16): the called
  * Method is not changed and other calls of it do not show the region. The blocks must be in one
  * sequence of the Method that the path ends in (`notContiguous` otherwise). It must nest with
- * the Method's regions and the regions already at this place, or it could not be shown: the same
- * range is refused (`foldExists`), and so is one crossing an end (`foldsCross`). Touched: the new
- * region.
+ * the regions already at this place, the copies of the Method's included (ADR-0047), or it could
+ * not be shown: the same range is refused (`foldExists`), and so is one crossing an end
+ * (`foldsCross`). Touched: the new region.
  */
 export function makeSiteFold(content: Content, args: MakeSiteFoldArgs): Result {
   const index = indexContent(content);
@@ -115,9 +115,10 @@ export function makeSiteFold(content: Content, args: MakeSiteFoldArgs): Result {
   }
   const firstId = seq.blocks[lo]?.id ?? args.first;
   const lastId = seq.blocks[hi]?.id ?? args.last;
-  // It must nest with the Method's regions and with this site's, or it could not be shown.
+  // It must nest with this site's regions, or it could not be shown. The Method's are not drawn
+  // at a site with its own regions (ADR-0047), so they do not count.
   const here = call.siteFolds.filter((fold) => sameIds(fold.via, args.via));
-  const clash = foldClash(seq, lo, hi) ?? foldClash({ blocks: seq.blocks, folds: here }, lo, hi);
+  const clash = foldClash({ blocks: seq.blocks, folds: here }, lo, hi);
   if (clash !== null) {
     return fail(clash.code, clash.fold);
   }

@@ -58,21 +58,48 @@ const viewOf = (view: Partial<View>): View => ({
   ...view,
 });
 
-const docOf = (view: Partial<View>): Doc => ({ content, view: viewOf(view) });
+const docOf = (view: Partial<View>, of: Content = content): Doc => ({
+  content: of,
+  view: viewOf(view),
+});
+
+/** `content` with no fold region in the Method d2. */
+const plain: Content = {
+  ...content,
+  diagrams: content.diagrams.map((diagram) =>
+    diagram.id === 'd2' ? { ...diagram, body: { ...diagram.body, folds: [] } } : diagram,
+  ),
+};
+
+/** The site fold regions of call block `id`. */
+const siteFoldsOf = (of: Content, id: string): unknown => {
+  for (const diagram of of.diagrams) {
+    const found = diagram.body.blocks.find((block) => block.id === id);
+    if (found?.kind === 'call') {
+      return found.siteFolds;
+    }
+  }
+  return null;
+};
+
+/** Settles the document with this view. */
+const settle = (view: Partial<View>, of: Content = content): Doc =>
+  settleSiteFolds(docOf(view, of));
 
 const savedFolded = (doc: Doc): unknown =>
   (JSON.parse(serializeModelJson(doc)) as { view: { folded: unknown } }).view.folded;
 
 describe('taking the folding from the Method (ADR-0046)', () => {
   it('T-1324: a call site first shown takes what the Method has folded now, and only its own ids', () => {
-    const view = settleSiteFolds(content, viewOf({ folded: ['f1', 'r1'], opened: [['b1']] }));
-    expect(view.folded).toEqual(['f1', 'r1', 'b1/', 'b1/r1', 'b1/f1']);
+    const { view } = settle({ folded: ['f1', 'r1'], opened: [['b1']] });
+    // f2 is the copy of the Method's region f1, folded as f1 is (ADR-0047).
+    expect(view.folded).toEqual(['f1', 'r1', 'b1/', 'b1/r1', 'f2']);
   });
 
   it('T-1325: a call site that has its folding keeps it, whatever the Method does later', () => {
-    const view = viewOf({ folded: ['f1', 'b1/'], opened: [['b1']] });
-    expect(settleSiteFolds(content, view)).toBe(view);
-    expect(isFoldedAt(new Set(view.folded), 'b1/', 'f1')).toBe(false);
+    const doc = docOf({ folded: ['r1', 'b1/'], opened: [['b1']] });
+    expect(settleSiteFolds(doc)).toBe(doc);
+    expect(isFoldedAt(new Set(doc.view.folded), 'b1/', 'r1')).toBe(false);
   });
 
   it('T-1326: a call site without its folding yet shows the folding of the Method', () => {
@@ -81,44 +108,122 @@ describe('taking the folding from the Method (ADR-0046)', () => {
   });
 
   it('T-1327: a call inside a closed call block takes its folding when it is drawn, not before', () => {
-    const closed = viewOf({ folded: ['f1'], opened: [['b1', 'b8']] });
-    expect(settleSiteFolds(content, closed)).toBe(closed);
-    const drawn = settleSiteFolds(content, { ...closed, opened: [['b1'], ['b1', 'b8']] });
-    expect(drawn.folded).toContain('b1/b8/f1');
+    const closed = docOf({ folded: ['r1'], opened: [['b1', 'b8']] });
+    expect(settleSiteFolds(closed)).toBe(closed);
+    const drawn = settle({ folded: ['r1'], opened: [['b1'], ['b1', 'b8']] });
+    expect(drawn.view.folded).toContain('b1/b8/r1');
   });
 
   it('T-1328: each path of nested call blocks has a folding of its own', () => {
     const doc = docOf({
-      folded: ['b1/', 'b1/f1', 'b1/b8/'],
+      folded: ['b1/', 'b1/r1', 'b1/b8/'],
       opened: [['b1'], ['b1', 'b8']],
     });
     const result = layout(doc);
     const ids = result.nodes.flatMap((node) => ('id' in node ? [node.id] : []));
-    expect(ids).toContain('b1/f1');
-    expect(ids).toContain('b1/b8/b3');
-    expect(ids).not.toContain('b1/b3');
+    expect(ids).toContain('b1/b8/b5');
+    expect(ids).not.toContain('b1/b5');
+  });
+});
+
+describe("copying the Method's fold regions at the first opening (ADR-0047)", () => {
+  const ids = (doc: Doc): string[] =>
+    layout(doc).nodes.flatMap((node) => ('id' in node ? [node.id] : []));
+
+  it("T-1412: a call site first shown copies the Method's regions into the outermost call, folded as the Method's, per path", () => {
+    const doc = settle({ folded: ['f1'], opened: [['b1'], ['b1', 'b8']] });
+    expect(siteFoldsOf(doc.content, 'b1')).toEqual([
+      { id: 'f2', via: [], first: 'b3', last: 'b3' },
+      { id: 'f3', via: ['b8'], first: 'b3', last: 'b3' },
+    ]);
+    expect(doc.view.folded).toEqual(['f1', 'b1/', 'f2', 'b1/b8/', 'f3']);
+    // The Method and the other call block are left as they are.
+    expect(siteFoldsOf(doc.content, 'b2')).toEqual([]);
+    expect(doc.content.diagrams[1]).toBe(content.diagrams[1]);
+  });
+
+  it('T-1413: the copy keeps the name; a range the site already has and a site with its folding take nothing', () => {
+    const named: Content = {
+      ...content,
+      diagrams: content.diagrams.map((diagram) =>
+        diagram.id === 'd2'
+          ? {
+              ...diagram,
+              body: {
+                ...diagram.body,
+                folds: [
+                  { id: 'f1', first: 'b3', last: 'b3', name: 'start' },
+                  { id: 'f4', first: 'b4', last: 'b8', name: 'rest' },
+                ],
+              },
+            }
+          : diagram.id === 'd1'
+            ? {
+                ...diagram,
+                body: {
+                  folds: [],
+                  blocks: [
+                    {
+                      ...call('b1', 'd2'),
+                      siteFolds: [{ id: 'f9', via: [], first: 'b3', last: 'b3' }],
+                    } as Block,
+                    call('b2', 'd2'),
+                  ],
+                },
+              }
+            : diagram,
+      ),
+    };
+    const doc = settle({ opened: [['b1'], ['b2']], folded: ['b2/'] }, named);
+    expect(siteFoldsOf(doc.content, 'b1')).toEqual([
+      { id: 'f9', via: [], first: 'b3', last: 'b3' },
+      { id: 'f10', via: [], first: 'b4', last: 'b8', name: 'rest' },
+    ]);
+    expect(siteFoldsOf(doc.content, 'b2')).toEqual([]);
+  });
+
+  it("T-1414: a call site with its own regions does not draw the Method's; one without them (not settled) does", () => {
+    const settled = settle({ opened: [['b1']] });
+    expect(ids(settled)).toContain('b1/f2');
+    expect(ids(settled)).not.toContain('b1/f1');
+    const before = docOf({ opened: [['b1']] });
+    expect(ids(before)).toContain('b1/f1');
+  });
+
+  it('T-1415: a call site of a Method with regions keeps its mark in the file, so opening again copies nothing', () => {
+    const doc = settle({ opened: [['b1']] });
+    expect(savedFolded(doc)).toEqual(['b1/']);
+    const file = serializeModelJson(doc);
+    const opened = parseModelJson(file);
+    expect(opened.ok).toBe(true);
+    if (opened.ok) {
+      const again = settleSiteFolds(opened.value.doc);
+      expect(again).toBe(opened.value.doc);
+      expect(serializeModelJson(again)).toBe(file);
+    }
   });
 });
 
 describe('what the file keeps (QA-03, QA-04)', () => {
   it('T-1329: a document with nothing folded at its call sites is written as if they had no folding', () => {
-    const before = docOf({ opened: [['b1']] });
-    const after = docOf({ folded: ['b1/', 'b2/'], opened: [['b1']] });
+    const before = docOf({ opened: [['b1']] }, plain);
+    const after = docOf({ folded: ['b1/', 'b2/'], opened: [['b1']] }, plain);
     expect(serializeModelJson(after)).toBe(serializeModelJson(before));
   });
 
   it('T-1330: a call site folded like the Method writes nothing: opening the file takes it again', () => {
-    const before = docOf({ folded: ['f1'], opened: [['b1']] });
-    const after = { ...before, view: settleSiteFolds(content, before.view) };
+    const before = docOf({ folded: ['r1'], opened: [['b1']] }, plain);
+    const after = settleSiteFolds(before);
+    expect(after.view.folded).toEqual(['r1', 'b1/', 'b1/r1']);
     expect(serializeModelJson(after)).toBe(serializeModelJson(before));
   });
 
   it('T-1331: a call site folded differently is written behind its path, in document order', () => {
-    const folded = ['b2/', 'b2/r2', 'b1/', 'b1/f1', 'b1/r1'];
+    const folded = ['b2/', 'b2/r2', 'b1/', 'b1/r2', 'b1/r1'];
     expect(savedFolded(docOf({ folded, opened: [['b1'], ['b2']] }))).toEqual([
       'b1/',
       'b1/r1',
-      'b1/f1',
+      'b1/r2',
       'b2/',
       'b2/r2',
     ]);
@@ -129,16 +234,16 @@ describe('what the file keeps (QA-03, QA-04)', () => {
   });
 
   it('T-1333: a closed call site keeps its folding in the file, and saving again gives the same bytes', () => {
-    const doc = docOf({ folded: ['f1', 'b1/', 'b1/f1'] });
+    const doc = docOf({ folded: ['r1', 'b1/', 'b1/r1'] });
     const file = serializeModelJson(doc);
-    expect(savedFolded(doc)).toEqual(['f1', 'b1/', 'b1/f1']);
+    expect(savedFolded(doc)).toEqual(['r1', 'b1/', 'b1/r1']);
     const opened = parseModelJson(file);
     expect(opened.ok && serializeModelJson(opened.value.doc)).toBe(file);
   });
 
   it('T-1334: call sites that are gone, ids not in the Method and other paths are not written', () => {
-    const folded = ['b99/', 'b99/f1', 'b1/', 'b1/r99', 'b1/b9', 'b9/', 'b9/f1', 'b1/f1'];
-    expect(savedFolded(docOf({ folded, opened: [['b1']] }))).toEqual(['b1/', 'b1/f1']);
+    const folded = ['b99/', 'b99/r1', 'b1/', 'b1/r99', 'b1/b9', 'b9/', 'b9/r1', 'b1/r1', 'b1/f1'];
+    expect(savedFolded(docOf({ folded, opened: [['b1']] }))).toEqual(['b1/', 'b1/r1']);
   });
 
   it('T-1335: a call site whose target is lost writes nothing', () => {
