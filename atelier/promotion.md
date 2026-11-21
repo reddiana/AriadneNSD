@@ -96,22 +96,21 @@ draft: true
 
 **본문:**
 
-NS 차트(Nassi–Shneiderman Diagram) 편집기를 만들어서 웹 베타로 공개합니다.
+(GeekNews 글의 형식을 따름: 글머리표만, 명사형 끝맺음, 핵심 말만 굵게, 들여쓰기 한 단계. 본 글 https://news.hada.io/topic?id=33664)
 
-NS 차트로 표현할 수 있는 것은 플로우차트로도 모두 표현할 수 있습니다. 다만 플로우차트는 지면을 많이 차지한다는 단점이 있습니다. 한편 NS 차트는 그리려면 연필과 지우개가 필요하지요. 한번에 그리기 힘들어 지우고 줄맞춰서 다시 그리기를 반복해야합니다. NS 차트 툴이 없으면 복잡한 로직은 그리기 힘들었습니다. 
-
-AriadneNSD는 상자를 직접 그리는 게 아니라 블록을 골라서 for · if로 감싸는 식이라, 줄 맞추고 상자 크기 맞추는 일은 없습니다. 저장하면 `.ns.svg`가 나오는데, 보통 SVG라 README에 그냥 넣으면 그림으로 보이고 편집기에서 다시 열면 고칠 수 있습니다(drawio-obsidian 방식을 따라 했습니다).
-
-써 보시라고 알고리즘 22개를 그려 놨습니다. KMP, 유니온 파인드, 레드블랙 트리 삽입, 에드먼즈-카프, N-Queen 같은 것들이고, 그림마다 편집기로 바로 열립니다.
-
-Claude 쓰시는 분은 스킬을 깔면 "이 함수 NS 차트로 그려 줘" 하면 그려 줍니다.
-
-백엔드만 하던 사람이 Claude Code로 처음 만들어 본 프론트엔드입니다. 설계 문서랑 세션 기록도 다 공개해 뒀습니다: https://ariadnensd.com/about
-
-- 앱: https://ariadnensd.com/
-- GitHub: https://github.com/reddiana/AriadneNSD
-
-아직 베타입니다. 버그와 의견을 알려 주시면 감사하겠습니다.
+- 알고리즘을 **NS 차트**(Nassi–Shneiderman Diagram)로 그리는 웹 편집기, 베타로 공개
+- NS 차트는 플로우차트와 같은 것을 표현하면서 **지면은 훨씬 적게** 차지하지만, 손으로는 줄 맞추고 지우기를 반복해야 해서 복잡한 로직은 그리기 어려웠음
+- 상자를 직접 그리지 않고 **블록을 골라 for · if로 감싸는** 방식이라 줄 · 상자 크기 맞추기가 필요 없음
+- 저장 형식 `.ns.svg`는 **보통 SVG**
+	- README · 문서에 그대로 넣으면 그림으로 보임
+	- 편집기에서 다시 열면 고칠 수 있음(drawio-obsidian 방식)
+- **알고리즘 22개**를 그려 둔 갤러리 제공
+	- KMP, 유니온 파인드, 레드블랙 트리 삽입, 에드먼즈-카프, N-Queen 등
+	- 그림마다 편집기로 바로 열어 고쳐 볼 수 있음
+- **Claude 스킬** 제공: "이 함수 NS 차트로 그려 줘"라고 하면 그림과 공유 링크를 만듦
+- 백엔드 개발자가 **Claude Code로 처음 만든 프론트엔드**, 설계 문서와 세션 기록까지 모두 공개
+- 앱 https://ariadnensd.com/ · GitHub https://github.com/reddiana/AriadneNSD · 소개 https://ariadnensd.com/about
+- 아직 베타라 버그 · 의견 환영
 
 ## 초안 2: Hacker News (Show HN)
 
