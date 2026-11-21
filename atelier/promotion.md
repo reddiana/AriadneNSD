@@ -13,7 +13,7 @@ updated: 2026-11-22
 ## 방향
 
 - 대상: 알고리즘에 관심이 많은 프로그래머(2026-11-22 메인테이너).
-- 첫 수: 알고리즘 갤러리 `https://ariadnensd.com/gallery/`(M70 G3, 21개)를 만들고 그 페이지를 앞세운 글 한 편. → [[status#정한 것이 어디까지 갔나]]
+- 첫 수: 알고리즘 갤러리 `https://ariadnensd.com/gallery/`(M70 G3, 22개)를 만들고 그 페이지를 앞세운 글 한 편. → [[status#정한 것이 어디까지 갔나]]
 - 갈고리 둘: ① 알고리즘을 구조로 읽기, ② 코드를 주면 그려 주는 Claude 스킬.
 - 정보처리기사 이야기는 쓰지 않는다. 알고리즘에 관심 많은 한국 개발자는 오히려 정보처리기사를 얕보는 경향이 있다(2026-11-22 메인테이너).
 - 덧붙일 이야기: 백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱이고, 설계 문서 · 결정 기록 · 세션 기록이 모두 공개되어 있음. Show HN에서는 이쪽이 더 끌릴 수도 있음.
@@ -38,14 +38,14 @@ updated: 2026-11-22
 
 **본문:**
 
-반복과 분기를 들여쓰기 대신 상자의 겹침으로 보여 주는 NS 차트(Nassi–Shneiderman Diagram)를 그리는 웹 편집기를 만들었습니다. 지금 웹 베타입니다.
+프로그램의 제어 흐름과 논리적 구조를 직관적인 사각형 블록 형태로 표현하는 NS 차트(Nassi–Shneiderman Diagram)를 그리는 웹 편집기를 만들었습니다. 지금 웹 베타입니다.
 
 - 블록을 고르고 반복 · 분기로 감싸는 **구조 편집**이라, 상자를 끌어 맞출 필요 없이 레이아웃이 저절로 맞춰집니다. 키보드만으로도 그립니다.
 - 저장 파일(`.ns.svg`)은 그냥 SVG 그림이라 GitHub README · 블로그 · 위키에 넣으면 그대로 보입니다. 그 파일을 편집기에서 다시 열면 블록 단위로 고칠 수 있어서, 그림(PNG)과 편집용 파일을 따로 챙길 필요가 없습니다.
 - 설치도 서버도 없이 브라우저에서 열리고, 내 컴퓨터의 파일에 저장합니다. 공유 링크로 다이어그램을 통째로 주고받을 수 있습니다.
 - Claude 스킬을 설치하면 "이 함수를 NS 차트로 그려 줘"로 코드에서 다이어그램을 만들 수 있습니다.
 
-알고리즘 갤러리에 고전(힙 정렬, KMP, 유니온 파인드, 위상 정렬, 배낭 DP …)부터 레드블랙 트리 삽입, A*, 최대 유량, 하노이 탑, N-Queen까지 21개를 그려 두었습니다. 그림마다 편집기에서 바로 열립니다. 코드로 읽을 때와 구조로 읽을 때 어떻게 다른지 봐 주시면 좋겠습니다.
+알고리즘 갤러리에 고전(힙 정렬, KMP, 유니온 파인드, 위상 정렬, 배낭 DP …)부터 레드블랙 트리 삽입, A*, 최대 유량, 하노이 탑, N-Queen까지 22개를 그려 두었습니다. 그림마다 편집기에서 바로 열립니다. 코드로 읽을 때와 구조로 읽을 때 어떻게 다른지 봐 주시면 좋겠습니다.
 
 백엔드 개발자가 Claude Code와 함께 처음 만든 프론트엔드 앱이고, 요구사항 · 설계 문서와 결정 기록, 세션 기록까지 모두 공개되어 있습니다: https://ariadnensd.com/about
 
@@ -66,7 +66,7 @@ Hi HN, I built a web editor for Nassi–Shneiderman diagrams (structograms), the
 
 You don't draw boxes. You select blocks and wrap them in loops or branches, and the layout follows. It works from the keyboard. The saved file is an `.ns.svg`: a plain SVG that renders anywhere (GitHub READMEs included) and also carries the diagram, so the editor can open it again. It runs in the browser with no install and no server; files stay on your disk, and a share link carries the whole diagram in the URL.
 
-The gallery has 21 algorithms drawn with it, from KMP and union-find to red-black tree insertion, A*, Edmonds–Karp and N-Queens. Each one opens in the editor. I'm curious whether reading an algorithm as nested structure helps you the way it helps me.
+The gallery has 22 algorithms drawn with it, from KMP and union-find to red-black tree insertion, A*, Edmonds–Karp and N-Queens. Each one opens in the editor. I'm curious whether reading an algorithm as nested structure helps you the way it helps me.
 
 There is also a Claude skill: ask "draw this function as an NS chart" and you get the file and a link.
 
@@ -76,7 +76,7 @@ It's a beta, so the file format may still change before 1.0. Code: https://githu
 
 ## 초안 3: Reddit (r/algorithms · r/compsci)
 
-**Title:** I drew 21 classic algorithms as Nassi–Shneiderman diagrams (KMP, red-black insert, A*, max flow…)
+**Title:** I drew 22 classic algorithms as Nassi–Shneiderman diagrams (KMP, red-black insert, A*, max flow…)
 
 **Body:**
 
@@ -88,8 +88,8 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 ## 올리기 전에 확인할 것
 
-- [ ] 갤러리가 사이트에 있고, 21개 모두 "편집기에서 열기"가 열림
-- [ ] 글의 숫자(21개)와 이름이 갤러리와 같음
+- [ ] 갤러리가 사이트에 있고, 22개 모두 "편집기에서 열기"가 열림
+- [ ] 글의 숫자(22개)와 이름이 갤러리와 같음
 - [ ] 갤러리 주소로 공유했을 때의 미리보기 그림(OG 이미지)
 - [ ] 휴대폰에서 갤러리와 앱이 열림
 
