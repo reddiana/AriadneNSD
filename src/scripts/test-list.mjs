@@ -462,8 +462,9 @@ const counts = [
 /**
  * The Korean of the English texts that come from the code (maintainer, 2026-11-03: "코드는 그대로
  * 두세요. 문서에만 한국어로 번역해달라는 말입니다"). The code stays English (DR-0017); the
- * document is Korean. An English text without Korean fails the script; `--add-missing` adds the
- * missing ones with an empty value and drops the unused ones, and Claude fills them in.
+ * document is Korean. An English text without Korean shows in English; `--strict` fails on it
+ * (run at the session's wrap-up), and `--add-missing` adds the missing ones with an empty value
+ * and drops the unused ones, and Claude fills them in.
  */
 const koFile = join(src, 'scripts/test-list-ko.json');
 let koTable = {};
@@ -477,7 +478,8 @@ function ko(english) {
   const key = english.replace(/\s+/g, ' ').trim();
   if (key === '') return '';
   wanted.add(key);
-  return koTable[key] || '';
+  // Not yet translated: the English shows until the Korean is filled in at the session's wrap-up.
+  return koTable[key] || english;
 }
 
 /** An empty "확인하는 것" cell shows `-`, and the column is centred (maintainer, 2026-11-03). */
@@ -636,7 +638,13 @@ if (process.argv.includes('--add-missing')) {
   console.log(`${String(missing.length)} texts need Korean in ${relative(src, koFile)}.`);
   process.exit(0);
 }
-if (missing.length > 0 || unused.length > 0) {
+// The translations are filled in once, at the wrap-up (maintainer, 2026-11-21): only `--strict`
+// fails on them. Without it the English stands in and a line says how many are left.
+if ((missing.length > 0 || unused.length > 0) && !process.argv.includes('--strict')) {
+  console.log(
+    `${relative(src, koFile)}: ${String(missing.length)} texts wait for Korean, ${String(unused.length)} are unused (filled in at the wrap-up: \`pnpm test-list:strict\`).`,
+  );
+} else if (missing.length > 0 || unused.length > 0) {
   console.error(
     `${relative(src, koFile)}: ${String(missing.length)} texts have no Korean, ${String(unused.length)} are unused. Run \`node scripts/test-list.mjs --add-missing\` and fill in the Korean.`,
   );

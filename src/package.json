@@ -12,6 +12,7 @@
     "coverage:check": "node scripts/coverage.mjs --check",
     "test-list": "node scripts/test-list.mjs",
     "test-list:check": "node scripts/test-list.mjs --check",
+    "test-list:strict": "node scripts/test-list.mjs --check --strict",
     "schema-doc": "node scripts/model-schema-doc.mjs",
     "schema-doc:check": "node scripts/model-schema-doc.mjs --check",
     "co-change": "node scripts/co-change.mjs",

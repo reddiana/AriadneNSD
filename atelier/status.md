@@ -22,7 +22,6 @@ updated: 2026-11-19
 | M51 | 사용법 전체 초안 (2026-11-02, 답을 기다림) | https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq | `journal/assets/2026-11-02-manual-full-study.html` (원본 `src/apps/manual`) |
 | M54 | 새 Method로 빼기 시안 (2026-11-03, 결정함: XM1 · XM2 · XM3 3번. 답을 기다림: Claude가 정해 둔 것의 표 → [[outbox#확인해 주세요]]) | https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n | `journal/assets/2026-11-03-extract-method-study.html` |
 | M55 | 브라우저 안의 문서 시안 (2026-11-03, 결정함: BS1 2번 · BS2 ~ BS4. 답을 기다림: Claude가 정해 둔 것의 표 → [[outbox#확인해 주세요]]) | https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV | `journal/assets/2026-11-03-browser-storage-study.html` |
-| M57 | AI 붙여넣기 · 요청문 · 안내서 손질 시안 (2026-11-10, 답을 기다림: 다음 세션 처음) | https://claude.ai/artifact/QzYU7rsi5r15Xevc6XNgYm | `journal/assets/2026-11-10-ai-paste-study.html` (만드는 스크립트 `…-build.mjs`) |
 claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 있습니다(2026-10-25에 M17 · M18 · M28 · M29 · M30까지 확인 → [[sketchbook]]).
 
 ## 지금 단계
@@ -48,14 +47,25 @@ claude.ai의 시안 페이지는 "링크가 있는 누구나"로 공개되어 �
 > [!note] 용어
 > **프로토타입**은 요구사항이 맞는지 확인하려고 만들고 버리는 것, **MVP**는 개발을 거쳐 처음 내놓는 제품입니다. → [[spike-prototype-mvp]]
 
+## 정한 것이 어디까지 갔나
+
+결정마다 지금 어디에 있는지입니다. 결정하거나 에이전트가 커밋할 때마다 Claude가 고칩니다. "로컬 앱"은 http://localhost:5173 (`pnpm dev`), "사이트"는 https://ariadnensd.com/ 입니다. 사이트에 올라가 메인테이너가 확인한 줄은 마무리 때 지웁니다.
+
+| 결정 | 정한 곳 | 지금 | 커밋 |
+| --- | --- | --- | --- |
+| 감싸기 버튼: 블록 아이콘 크기 · 감쌀 것이 없으면 흐리게 | M68, [[ux-decisions\|TB2 · TB3]] | 로컬 앱에 있음 | `ece7e51` |
+| AI가 준 JSON · 링크를 붙여넣어 열기, 요청문 복사, 안내서 손질 | M57, [[01-requirements#^r-web\|R-WEB-11]] | 로컬 앱에 있음 | `ebb0186` `edd5241` |
+| 펴 보인 곳의 접기 영역: 처음 펼 때 Method에서 복사, 그 뒤 그 자리의 것 | M69 SF1, [[0047-copy-method-folds-at-first-open\|ADR-0047]] · [[ux-decisions\|CB14]] | 로컬 앱에 있음 | `4a6fb9a` |
+| 펴 보인 곳 안에서 여러 블록 선택 (결함) | 메인테이너 신고 | 로컬 앱에 있음 | `26e1fe3` |
+| 모든 접고 펴기(펴 보기 포함)를 실행 취소 대상으로 | 메인테이너 (2026-11-21) | 구현 중 (에이전트) | |
+| 일하는 방식: 작은 결정은 한 줄, 번역 · 전체 검사는 push 전에 한 번, 이 표 | 메인테이너 (2026-11-21) | 문서에 반영함 (CLAUDE.md · [[how-we-work]]) | |
+
 ## 이번과 다음 세션에 할 것
 
 - [ ] **다음 세션 처음: `pnpm check`의 시간 테스트 T-0171 · T-1126을 안정시킴.** 테스트 파일을 나란히 돌릴 때 실패한다. GitHub CI는 통과했다 → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 어젯밤 Claude가 정한 것을 확인하기 → [[outbox#확인해 주세요]]
-- [ ] inbox의 감싸기 아이콘 두 건(크기, 비활성화)을 검토하기
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
 - [ ] **메인테이너: 0.2.0을 써 보기** https://ariadnensd.com/ (Chrome · Edge, 그리고 Firefox · Safari · 휴대폰). 도움말 › 이 버전에서 바뀐 것에 목록이 있습니다. 써 보며 11-03 밤에 에이전트들이 만든 기능에서 추천안으로 정한 것을 확인하기 → [[outbox#확인해 주세요]]
-- [ ] **다음 세션 처음: 시안 M57을 봄** (AI 넷의 시험 결과, JSON 붙여넣어 열기 · 요청문 복사 · 안내서 손질) → [[sketchbook]], [[outbox#정해 주세요]]
 - [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 조금 고침. 고친 뒤 Claude가 PNG로 보고 [[01-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
 - [ ] AT-05: 측정 구간으로 다시 재니 병목은 레이아웃이 아니라 화면 쪽(DOM 반영 · 브라우저 그리기, 4배 감속에서 p95 173 ~ 267ms). "바뀐 블록만 DOM에 반영"을 할지 여쭙기 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간]], [[backlog#MVP 개발]]
 - [ ] 메인테이너: AT-05를 점검 모드(`https://ariadnensd.com/?perf`)로 가진 기기에서 재기, 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
