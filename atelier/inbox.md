@@ -28,6 +28,5 @@ title: Inbox
 ## 웹 베타
 
 # 7. 기타
-- [[CONTRIBUTING]]에 우리가 MVP하고 있다고 나와있네요.
 
 ## 매뉴얼

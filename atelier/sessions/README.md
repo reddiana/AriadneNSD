@@ -67,3 +67,4 @@ updated: 2026-10-25
 - [[2026-11-21-03-call-without-method|2026-11-21 Method가 없는 호출 블록: 다른 문서 호출 철회, 잃은 호출은 이름 호출로, gd로 Method 만들기]]
 - [[2026-11-21-04-claude-skill|2026-11-21 Claude skill의 첫 판: 범위 A · B · C, R-SKILL-01 ~ 03 P2, Release zip + 플러그인 마켓플레이스(ADR-0050), 테스트 목록은 99번, 붙여넣은 이미지와 줄 끝 문자]]
 - [[2026-11-22-01-release-and-crisp-lines|2026-11-22 v0.4.0(스킬 zip), 스킬을 처음 써 보기와 문장마다 블록, README의 스킬 설치, 정수가 아닌 배율의 선 굵기(BUG-19)]]
+- [[2026-11-22-02-promotion-gallery|2026-11-22 홍보 준비: 알고리즘 갤러리(M70 G3, 22개, 정확성 검사), GeekNews · Show HN · Reddit 초안]]

@@ -54,7 +54,7 @@ updated: 2026-11-22
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 홍보: 알고리즘 갤러리(사이트 페이지, 그림마다 편집기 링크) → 글 초안(한국어 · 영어) → 메인테이너가 GeekNews Show GN · Show HN · Reddit에 올림 (2026-11-22 메인테이너가 고름)
+- [ ] 메인테이너: 사이트의 갤러리(https://ariadnensd.com/gallery/ko/)를 보고 [[promotion#올리기 전에 확인할 것]] → GeekNews에 올림, 그다음 Show HN · Reddit
 - [ ] 메인테이너: claude.ai에 v0.4.0의 `ariadne-nsd.zip`을 올려 써 보기, "문장마다 블록"을 담은 다음 판(0.5.0)을 언제 낼지 → [[backlog#Claude skill]]
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
