@@ -156,4 +156,4 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 ## 올린 기록
 
-아직 없습니다.
+- 2026-11-22 02:15 [AriadneNSD - NS 차트 편집기 | GeekNews](https://news.hada.io/topic?id=37587)
