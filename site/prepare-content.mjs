@@ -10,7 +10,8 @@
 // - 별칭에 인라인 코드나 `#`가 든 위키링크는 마크다운 링크로 바꾼다. Quartz v4.5.2는 이런 위키링크를 링크로 만들지 못한다.
 // - 첫 칸이 ID(R-WEB-02 등)인 표의 줄에 그 ID의 앵커를 달고, 요구사항 표로 가는 링크를 그 줄로 돌린다(2026-10-25 → DR-0016).
 // - 본문이 `# 제목`으로 시작하지 않는 문서에는 제목을 넣는다. 사이트는 본문의 제목만 보여 준다(quartz.layout.ts).
-// - 소개 페이지(about.md, 주소 /about)는 저장소 맨 위의 README.md로 만든다(README가 원본). 사이트의 첫 화면(/)은
+// - 소개 페이지(about.md, 주소 /about)는 저장소 맨 위의 한국어 README.ko.md로 만든다(README.ko.md가 원본, 2026-11-22에
+//   GitHub 첫 화면 README.md는 영어로 바꿈). 사이트의 첫 화면(/)은
 //   앱이라서 Quartz의 index는 만들지 않는다(2026-11-02 → DR-0021). GitHub에서만 맞는 곳
 //   (<!-- site:skip --> … <!-- /site:skip -->)은 빼고, 저장소 경로 링크와 그림 경로를 사이트에 맞게 바꾼다.
 import fs from "node:fs"
@@ -187,9 +188,9 @@ for (const rel of publishedFiles) {
 }
 buildHome()
 
-// README.md → about.md
+// README.ko.md → about.md
 function buildHome() {
-  let md = fs.readFileSync(path.join(repo, "README.md"), "utf8")
+  let md = fs.readFileSync(path.join(repo, "README.ko.md"), "utf8")
   md = md.replace(/<!-- site:skip -->[\s\S]*?<!-- \/site:skip -->\n?/g, "")
   // 그림: journal/assets/의 파일을 content/brand/로 옮기고 그 자리를 가리킨다
   fs.mkdirSync(path.join(content, "brand"), { recursive: true })

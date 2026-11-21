@@ -1,3 +1,7 @@
+<!-- site:skip -->
+[English](README.md) | 한국어
+<!-- /site:skip -->
+
 <p align="center">
   <img src="journal/assets/2026-10-10-logo-aegean-lady-rounded.svg" width="160" alt="AriadneNSD 로고: 크노소스 벽화의 여인">
 </p>
@@ -6,7 +10,7 @@
   <img src="journal/assets/2026-10-11-wordmark-n1-warm-grey.svg" width="340" alt="AriadneNSD">
 </h1>
 
-NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일은 어디서나 열리는 SVG 그림이면서, 다시 열어 편집할 수 있는 원본입니다.
+NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)) 편집기입니다. 블록을 고르고 감싸는 **구조 편집**으로 차트를 그리면, 레이아웃은 자동으로 맞춰집니다. 저장 파일(`.ns.svg`)은 그냥 SVG라서 README나 블로그에 넣으면 그림으로 보이고, 같은 파일을 편집기에서 다시 열면 고칠 수 있습니다. 그림과 편집용 파일을 따로 챙기지 않아도 됩니다.
 
 <p align="center" style="display:flex;justify-content:center;align-items:flex-start;gap:16px;flex-wrap:wrap">
   <img src="journal/assets/2026-11-02-readme-dijkstra.ns.svg" width="300" hspace="4" alt="NS 차트 예: 다익스트라 최단 경로">
@@ -18,6 +22,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 > **웹 베타를 브라우저에서 바로 써 볼 수 있습니다:**<br>
 > <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-21-readme-beta-button.svg" height="32" alt="AriadneNSD Beta" align="absmiddle"></a><br>
 > 웹 베타입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
+> 이름난 알고리즘을 NS 차트로 그려 모은 [알고리즘 갤러리](https://ariadnensd.com/gallery/ko/)도 있습니다.<br>
 > Claude를 쓴다면 [AriadneNSD 스킬](https://ariadnensd.com/manual/ko/#claude-skill)을 설치해 대화 중에 다이어그램을 만들고, 코드를 그리고, 받은 다이어그램을 고칠 수 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
 
