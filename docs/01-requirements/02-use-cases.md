@@ -351,8 +351,8 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 | 유즈케이스 | 요구사항 |
 | --- | --- |
-| 코드와 다이어그램을 오간다 (IDE) | [[01-requirements#^r-ide\|R-IDE-03]], [[01-requirements#^r-ide\|R-IDE-04]], [[01-requirements#^r-ide\|R-IDE-05]], [[01-requirements#^r-ide\|R-IDE-06]], [[01-requirements#^r-code\|R-CODE-01]], [[01-requirements#^r-code\|R-CODE-02]], [[01-requirements#^r-code\|R-CODE-03]] |
-| 말로 다이어그램을 그린다 (AI) | [[01-requirements#^r-web\|R-WEB-07]], [[01-requirements#^r-skill\|R-SKILL-01]] |
+| 코드와 다이어그램을 오간다 (IDE) | [[01-requirements#^r-ide\|R-IDE-03]], [[01-requirements#^r-ide\|R-IDE-04]], [[01-requirements#^r-ide\|R-IDE-05]], [[01-requirements#^r-ide\|R-IDE-06]], [[01-requirements#^r-code\|R-CODE-01]], [[01-requirements#^r-code\|R-CODE-02]], [[01-requirements#^r-code\|R-CODE-03]], [[01-requirements#^r-skill\|R-SKILL-02]] |
+| 말로 다이어그램을 그린다 (AI) | [[01-requirements#^r-web\|R-WEB-07]], [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-skill\|R-SKILL-03]] |
 | Confluence 페이지에 넣어 보인다 | [[01-requirements#^r-cf\|R-CF-01]] (UC-07과 같은 흐름) |
 | 다른 도구의 파일을 가져온다 | [[01-requirements#^r-exp\|R-EXP-05]] |
 | 실행을 따라가며 본다 (교육용) | [[01-requirements#^r-code\|R-CODE-04]] |
