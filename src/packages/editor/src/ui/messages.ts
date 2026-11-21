@@ -58,12 +58,10 @@ const en = {
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
-    '0.3.0 is the first web beta.\n' +
-    '- A call block whose Method is missing looks like any other, and its name, arguments and result can be edited\n' +
-    '- gd on a call block (or right-click › Make Method) creates the Method it names\n' +
-    "- Inline Method and Delete: puts the Method's blocks at every call site and deletes the Method\n" +
-    '- When another tab is editing the same document, the top right says so\n' +
-    '- The About window shows the full addresses of the documentation and the repository',
+    '0.4.0 adds the AriadneNSD skill for Claude.\n' +
+    '- Claude can draw a diagram, turn code into one, and read or edit a .ns.svg file, giving back a file or a share link\n' +
+    '- In Claude Code, install it from the plugin marketplace; in claude.ai, upload ariadne-nsd.zip from the GitHub release\n' +
+    "- The manual's AI section tells how",
   'modal.close': 'Close',
   'contextMenu.label': 'Context menu',
   'dialog.label': 'Question',
@@ -187,12 +185,10 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':
-    '0.3.0은 웹 베타의 첫 판입니다.\n' +
-    '- Method가 없는 호출 블록도 보통 모양이고, 이름 · 인자 · 결과를 고칠 수 있음\n' +
-    '- 호출 블록에서 gd(또는 우클릭 › Method 만들기)로 가리키는 Method를 만듦\n' +
-    '- Method 풀어 넣고 지우기: 모든 호출 자리에 풀어 넣고 Method를 지움\n' +
-    '- 같은 문서를 다른 탭에서 편집 중이면 우상단에 그 까닭을 보임\n' +
-    '- 정보 창에 문서 · 저장소의 전체 주소',
+    '0.4.0은 Claude용 AriadneNSD 스킬을 더했습니다.\n' +
+    '- Claude가 다이어그램을 그리고, 코드를 다이어그램으로 옮기고, .ns.svg 파일을 읽고 고쳐 파일이나 공유 링크로 돌려줌\n' +
+    '- Claude Code는 플러그인 마켓플레이스에서 설치, claude.ai는 GitHub Release의 ariadne-nsd.zip을 올림\n' +
+    '- 자세한 것은 사용법의 AI 꼭지',
   'modal.close': '닫기',
   'contextMenu.label': '컨텍스트 메뉴',
   'dialog.label': '질문',
