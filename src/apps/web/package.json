@@ -15,7 +15,8 @@
     "e2e": "playwright test",
     "e2e:coverage": "node scripts/e2e-coverage.mjs",
     "manual-shots": "playwright test -c playwright.manual.config.ts",
-    "thumbnails": "vitest run --config scripts/vitest.scripts.config.ts"
+    "thumbnails": "vitest run --config scripts/vitest.scripts.config.ts write-thumbnails",
+    "gallery-images": "vitest run --config scripts/vitest.scripts.config.ts gallery-images"
   },
   "dependencies": {
     "@ariadne-nsd/core": "workspace:*",

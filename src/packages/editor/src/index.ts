@@ -63,3 +63,7 @@ export type { ExampleInfo, ExampleText } from './examples/examples';
 export { examples } from './examples/examples';
 export type { SubsetToWoff } from './examples/thumbnail';
 export { exampleThumbnailSvg } from './examples/thumbnail';
+
+// The algorithm gallery's diagrams, for the gallery page's generated images and links.
+export type { GalleryCategory, GalleryEntry } from './gallery/gallery';
+export { gallery } from './gallery/gallery';
