@@ -29,6 +29,7 @@ import type {
   PastedDocumentPort,
   Picker,
   PickerItem,
+  ReadOnlyReason,
   SaveFonts,
   SettingSpec,
   SettingsSchema,
@@ -368,10 +369,12 @@ export function createEditor(options: EditorOptions): EditorHandle {
   };
 
   // Status for the shell (03-editor 6.2).
+  let readOnlyReason: ReadOnlyReason | undefined = options.doc.readOnlyReason;
   const status = (): DocStatus => ({
     name: store.name,
     dirty: session.state.dirty,
     readOnly: session.state.readOnly,
+    ...(session.state.readOnly && readOnlyReason !== undefined ? { readOnlyReason } : {}),
     revision: session.state.revision,
     place: store.place ?? 'file',
   });
@@ -383,6 +386,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
       next.name !== lastStatus.name ||
       next.dirty !== lastStatus.dirty ||
       next.readOnly !== lastStatus.readOnly ||
+      next.readOnlyReason !== lastStatus.readOnlyReason ||
       next.revision !== lastStatus.revision ||
       next.place !== lastStatus.place
     ) {
@@ -625,6 +629,7 @@ export function createEditor(options: EditorOptions): EditorHandle {
         return false;
       }
       store = opened.store;
+      readOnlyReason = opened.readOnlyReason;
       session.load(read.doc, {
         kept: read.kept,
         selection: read.selection,
@@ -664,7 +669,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
     rendering: () => session.rendering,
     snapshot: () => snapshotDocument({ doc: session.state.doc, kept: session.kept }),
     save,
-    setReadOnly: (readOnly) => {
+    setReadOnly: (readOnly, reason) => {
+      readOnlyReason = readOnly ? reason : undefined;
       session.setReadOnly(readOnly);
       emitStatus();
     },

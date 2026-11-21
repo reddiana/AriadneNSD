@@ -159,7 +159,14 @@ export function MenuBar(): ReactElement {
             ●
           </span>
         )}
-        {status.readOnly && <span className="ans-read-only">{text('status.readOnly')}</span>}
+        {status.readOnly &&
+          (status.readOnlyReason === 'otherTab' ? (
+            <span className="ans-read-only" title={text('status.readOnly.otherTab.hint')}>
+              {text('status.readOnly.otherTab')}
+            </span>
+          ) : (
+            <span className="ans-read-only">{text('status.readOnly')}</span>
+          ))}
       </span>
     </div>
   );

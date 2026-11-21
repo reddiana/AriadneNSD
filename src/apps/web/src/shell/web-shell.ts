@@ -11,6 +11,7 @@ import type {
   EditorHandle,
   OpenedDocument,
   PlaceSide,
+  ReadOnlyReason,
   SettingsStore,
   WriteResult,
 } from '../editor-contract';
@@ -200,6 +201,8 @@ export function createWebShell(options: WebShellOptions): WebShell {
   const missingKeys = new Set<string>();
   let lastRevision = -1;
   let isReadOnly = false;
+  /** Why it is view only, when another tab holds the file (a share link has no reason to tell). */
+  let readOnlyReason: ReadOnlyReason | undefined;
   /** View mode (R-WEB-06): a share link's document, read only, without the editing UI. */
   let isViewing = false;
   const viewListeners = new Set<(isViewing: boolean) => void>();
@@ -214,6 +217,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     {
       regained: () => {
         isReadOnly = false;
+        readOnlyReason = undefined;
         editor?.setReadOnly(false);
         notices.show(text('notice.otherTabClosed'), 'info');
       },
@@ -458,7 +462,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
   /** Refreshes the name and chip in the editor after the store changed under it. */
   function refreshStatus(): void {
     // setReadOnly emits the status again, which reads the store's name and place.
-    editor?.setReadOnly(isReadOnly);
+    editor?.setReadOnly(isReadOnly, readOnlyReason);
   }
 
   async function renameBrowserDocument(key: string): Promise<void> {
@@ -802,6 +806,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     store = next;
     const isOwner = await lock.claim(next.key);
     isReadOnly = !isOwner || isView;
+    readOnlyReason = isOwner ? undefined : 'otherTab';
     setViewing(isView);
     autosave.dispose();
     autosave = createAutosave(autosaveOnce, autosaveDelay, options.clock);
@@ -810,6 +815,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
       store: next,
       text: fileText,
       ...(isReadOnly ? { readOnly: true } : {}),
+      ...(readOnlyReason === undefined ? {} : { readOnlyReason }),
       ...(restored === undefined ? {} : { restored }),
       ...(doc === undefined ? {} : { doc }),
     });
@@ -1166,6 +1172,7 @@ export function createWebShell(options: WebShellOptions): WebShell {
     setViewing(false);
     // A share link's document has a key of its own, so no other tab holds it.
     isReadOnly = false;
+    readOnlyReason = undefined;
     editor.setReadOnly(false);
   }
 
@@ -1317,6 +1324,10 @@ export function createWebShell(options: WebShellOptions): WebShell {
     registerRecent();
     const claimed = await lock.claim(store.key);
     isReadOnly = !claimed;
+    readOnlyReason = claimed ? undefined : 'otherTab';
+    if (isReadOnly) {
+      handle.setReadOnly(true, readOnlyReason);
+    }
     onStatus(handle.status());
     const shared = fragment === undefined ? null : await readShared(fragment);
     if (shared === null) {

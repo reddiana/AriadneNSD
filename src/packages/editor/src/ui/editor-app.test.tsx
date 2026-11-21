@@ -751,4 +751,25 @@ describe('the dialog modal', () => {
     fireEvent.keyDown(box, { key: 'Enter', ctrlKey: true });
     expect(answers).toEqual(['{\n}']);
   });
+
+  it('T-1447: 06-web 2: the view-only label tells why when another tab edits the file, and a tooltip says how to leave', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.setStatus({ readOnly: true });
+    });
+    const plain = document.querySelector('.ans-read-only');
+    expect(plain?.textContent).toBe('View only');
+    expect(plain?.getAttribute('title')).toBeNull();
+    act(() => {
+      engine.setStatus({ readOnly: true, readOnlyReason: 'otherTab' });
+    });
+    const label = document.querySelector('.ans-read-only');
+    expect(label?.textContent).toBe('View only · editing in another tab');
+    expect(label?.getAttribute('title')).toBe('Close that tab to edit here.');
+    act(() => {
+      engine.setStatus({ readOnly: false });
+    });
+    expect(document.querySelector('.ans-read-only')).toBeNull();
+  });
 });

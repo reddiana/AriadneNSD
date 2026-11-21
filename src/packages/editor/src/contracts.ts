@@ -55,6 +55,9 @@ export interface SettingsStore {
   onChange(listener: (key: string) => void): () => void;
 }
 
+/** Why a document is view only, when the shell knows: another tab holds the file (06-web 2). */
+export type ReadOnlyReason = 'otherTab';
+
 /** A document to open (03-editor 6). */
 export type OpenedDocument = {
   readonly store: DocumentStore;
@@ -62,6 +65,8 @@ export type OpenedDocument = {
   readonly text: string | null;
   /** View only (03-editor 6.4). */
   readonly readOnly?: boolean;
+  /** Why it is view only; only read when `readOnly` is true. */
+  readonly readOnlyReason?: ReadOnlyReason;
   /** Model JSON from the local backup (`snapshot()`); opened instead of `text`, as dirty. */
   readonly restored?: string;
   /**
@@ -195,6 +200,8 @@ export type DocStatus = {
   readonly name: string;
   readonly dirty: boolean;
   readonly readOnly: boolean;
+  /** Why it is view only, when the shell said so (`setReadOnly`, `open`); else absent. */
+  readonly readOnlyReason?: ReadOnlyReason;
   /** Grows by one whenever the content or the view state changes. */
   readonly revision: number;
   /** Addition: the store's `place` (`file` when it has none). */
@@ -338,7 +345,8 @@ export interface EditorHandle {
   snapshot(): string;
   /** "Save": serialize → `store.write` → on success the document is no longer dirty. */
   save(): Promise<WriteResult>;
-  setReadOnly(readOnly: boolean): void;
+  /** `reason` tells the user why (the top-right label); it is dropped when `readOnly` is false. */
+  setReadOnly(readOnly: boolean, reason?: ReadOnlyReason): void;
   setAppearance(appearance: Appearance): void;
   /** The value of a document setting (`scope: 'document'`). */
   documentSetting(id: string): unknown;

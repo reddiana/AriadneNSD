@@ -31,6 +31,7 @@ export type {
   PickerItem,
   PromptOptions,
   Question,
+  ReadOnlyReason,
   SaveFonts,
   SettingSpec,
   SettingsSchema,

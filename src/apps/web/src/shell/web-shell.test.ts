@@ -137,6 +137,7 @@ function fakeEditor(answer: boolean): FakeEditor {
         name: next.store.name,
         dirty: next.restored !== undefined,
         readOnly: next.readOnly === true,
+        readOnlyReason: next.readOnly === true ? next.readOnlyReason : undefined,
       });
       return true;
     },
@@ -169,9 +170,13 @@ function fakeEditor(answer: boolean): FakeEditor {
       }
       return result;
     },
-    setReadOnly: (readOnly) => {
+    setReadOnly: (readOnly, reason) => {
       // The engine's status reads the store's name, so a renamed store shows here too.
-      update({ readOnly, ...(doc === null ? {} : { name: doc.store.name }) });
+      update({
+        readOnly,
+        readOnlyReason: readOnly ? reason : undefined,
+        ...(doc === null ? {} : { name: doc.store.name }),
+      });
     },
     setAppearance: () => undefined,
     edit: () => {
@@ -1036,11 +1041,35 @@ describe('web shell: export, language, tabs', () => {
     expect(second.editor.status().readOnly).toBe(false);
     expect(second.editor.notices.at(-1)).toBe('The other tab closed. You can edit this file now.');
   });
+
+  it('T-1444: 06-web 2: a tab locked by another tab tells the editor why it is view only, and drops the reason when it regains the lock', async () => {
+    const connect = hub();
+    const db = memoryDb();
+    const first = setup({ db, channel: connect(), tabId: 'one' });
+    await first.shell.start(first.editor);
+    await first.shell.openFile(new File([savedFile], 'shared.ns.svg'));
+    const second = setup({ db, channel: connect(), tabId: 'two' });
+    await second.shell.start(second.editor);
+    await second.shell.openFile(new File([savedFile], 'shared.ns.svg'));
+    expect(second.editor.opened.at(-1)?.readOnlyReason).toBe('otherTab');
+    expect(second.editor.status()).toMatchObject({ readOnly: true, readOnlyReason: 'otherTab' });
+    await first.shell.newDocument();
+    await settle();
+    expect(second.editor.status().readOnly).toBe(false);
+    expect(second.editor.status().readOnlyReason).toBeUndefined();
+  });
 });
 
 describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
   const model = serializeModelJson(newDoc);
   const link = (name = 'Shared.ns.svg') => writeShareLink(model, name, browserDeflate());
+
+  it('T-1446: 06-web 6: a share link opened in view mode has no reason to tell', async () => {
+    const { shell, editor } = setup();
+    await shell.start(editor, await link());
+    expect(editor.status()).toMatchObject({ readOnly: true });
+    expect(editor.status().readOnlyReason).toBeUndefined();
+  });
 
   it('T-0895: adds "Copy Share Link" to the file menu and copies a link that opens the document', async () => {
     const { shell, editor, copied } = setup();

@@ -45,12 +45,16 @@ export type SettingsStore = {
   onChange(listener: (key: string) => void): () => void;
 };
 
+/** Why a document is view only: another tab holds the file (06-web 2). */
+export type ReadOnlyReason = 'otherTab';
+
 /** What the shell gives `open` (03-editor 6). */
 export type OpenedDocument = {
   readonly store: DocumentStore;
   /** `.ns.svg` or `.ns` text. `null`: a new document (R-ALL-03). */
   readonly text: string | null;
   readonly readOnly?: boolean;
+  readonly readOnlyReason?: ReadOnlyReason;
   /** A local backup's snapshot (model JSON). Opened instead of `text`, as dirty (03-editor 6.3). */
   readonly restored?: string;
   /** A ready-made document (an example, R-EDIT-25), opened new and clean instead of `text`. */
@@ -62,6 +66,7 @@ export type DocStatus = {
   readonly name: string;
   readonly dirty: boolean;
   readonly readOnly: boolean;
+  readonly readOnlyReason?: ReadOnlyReason;
   readonly revision: number;
 };
 
@@ -106,7 +111,7 @@ export type EditorHandle = {
   rendering(): Rendering;
   snapshot(): string;
   save(): Promise<WriteResult>;
-  setReadOnly(readOnly: boolean): void;
+  setReadOnly(readOnly: boolean, reason?: ReadOnlyReason): void;
   setAppearance(appearance: Appearance): void;
   /** Shows a message in the editor's status bar (the one place for notices, 06-web 7). */
   notify(message: Message, level?: 'info' | 'warn'): void;
