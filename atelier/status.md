@@ -50,7 +50,8 @@ updated: 2026-11-22
 | Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스 · [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)의 zip. Claude Code에서 설치해 써 봄, claude.ai는 아직) | `091fe6b` `b6adcf6` `7992933` `dc6d15a` |
 | BUG-19 두꺼운 외곽선: 배율이 정수가 아닐 때(110% 등) 1px 선이 2px로 (결함) | 메인테이너 신고 (2026-11-21 inbox, 2026-11-22 재현 `atelier/sessions/assets/2026-11-22-thick-outline-zoom-110.png`) | 사이트에 있음(메인테이너가 로컬에서 확인) | `70deffa` |
 | 스킬: 처리 블록 하나에 문장 하나(줄바꿈으로 묶지 않음) | 메인테이너 (2026-11-22), [[ux-decisions\|SK1]] | 사이트에 있음(설치한 사람에게는 다음 판부터) | `3d59f98` |
-| 알고리즘 갤러리 `/gallery/`: G3 목록 + 큰 그림, 22개(앱 예제 6 + 고전 · 어려운 · 재미 16) | 메인테이너 (2026-11-22), M70 | 로컬 앱에 있음(정확성 검사 통과 `17fc681`) | `56c1529` `0756e96` |
+| 알고리즘 갤러리 `/gallery/`: G3 목록 + 큰 그림, 22개(앱 예제 6 + 고전 · 어려운 · 재미 16) | 메인테이너 (2026-11-22), M70 | 사이트에 있음(https://ariadnensd.com/gallery/ko/, 정확성 검사 통과 `17fc681`) | `56c1529` `0756e96` |
+| README: 영어가 대문(`README.md`), 한국어는 `README.ko.md`(사이트 `/about`), `.ns.svg` 설명 문구, 영어 그림 | 메인테이너 (2026-11-22) | 사이트에 있음 | `b0c5b0f` `29ef4e9` |
 
 ## 이번과 다음 세션에 할 것
 
