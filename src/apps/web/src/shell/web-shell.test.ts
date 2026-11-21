@@ -71,8 +71,14 @@ function fakeEditor(answer: boolean): FakeEditor {
   let status: DocStatus = { name: '', dirty: false, readOnly: false, revision: 0 };
   const listeners = new Set<(status: DocStatus) => void>();
   const specs = new Map<string, CommandSpec>();
-  const update = (next: Partial<DocStatus>): void => {
-    status = { ...status, ...next, revision: status.revision + 1 };
+  // `readOnlyReason: undefined` clears the reason (the status has no key then, like the engine's).
+  const update = (next: { readonly [K in keyof DocStatus]?: DocStatus[K] | undefined }): void => {
+    const { readOnlyReason, ...rest } = { ...status, ...next };
+    status = {
+      ...(rest as Omit<DocStatus, 'readOnlyReason'>),
+      ...(readOnlyReason === undefined ? {} : { readOnlyReason }),
+      revision: status.revision + 1,
+    };
     for (const listener of listeners) {
       listener(status);
     }

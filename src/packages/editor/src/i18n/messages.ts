@@ -233,7 +233,7 @@ const english = {
     'Opened {name} for the {count}th time. A Method that calls itself opens without end.',
   'notice.closed': 'Closed the call block.',
   'notice.inlined': 'Replaced the call block with the blocks of {name}.',
-  'notice.methodInlined': 'Inlined at {count} call sites and deleted {name}.',
+  'notice.methodInlined': 'Inlined {name} at every call site ({count}) and deleted it.',
 
   // Questions in the status bar (UX MD3).
   'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',

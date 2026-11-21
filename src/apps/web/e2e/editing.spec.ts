@@ -178,7 +178,7 @@ test('T-1456: Inline Method and Delete from the context menu puts the blocks bac
   const menu = page.getByRole('menu', { name: 'Context menu' });
   await page.keyboard.press('Shift+F10');
   await menu.getByRole('menuitem', { name: /^Inline Method and Delete/ }).click();
-  await expect(statusBar(page)).toContainText('Inlined at 1 call sites and deleted work.');
+  await expect(statusBar(page)).toContainText('Inlined work at every call site (1) and deleted it.');
   await expect(drawnText(page, 'work')).toHaveCount(0);
   await expect(drawnText(page, 'step')).toHaveCount(1);
   await expect(selection(page)).toHaveText('Process block');
