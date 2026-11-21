@@ -2057,65 +2057,65 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ### [단위] `skills/ariadne-nsd/src/bundle.test.ts`
 
-The built script, plugin/skills/ariadne-nsd/scripts/nsd.mjs, is what the skill runs. Vitest · 테스트 2개.
+빌드한 스크립트 plugin/skills/ariadne-nsd/scripts/nsd.mjs가 스킬이 실행하는 것이다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1472 | is the build of the current sources (run `pnpm --filter @ariadne-nsd/skill build` after a change) | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1473 | runs with plain node in an empty folder: save, link and read give back the model | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1472 | 지금 소스를 빌드한 것이다(바꾼 뒤에는 `pnpm --filter @ariadne-nsd/skill build`를 실행) | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1473 | 빈 폴더에서 node만으로 돈다: save · link · read가 모델을 되돌려 준다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
 
 ^t-skills-ariadne-nsd-src-bundle-test-ts
 
 ### [단위] `skills/ariadne-nsd/src/cli.test.ts`
 
-The script's command line (R-SKILL-01). Vitest · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
+스크립트의 명령줄 (R-SKILL-01). Vitest · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1464 | check prints the size and the next free ids, as text or JSON | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1465 | save writes the file named by -o, --name or the first Method, and link and read take it back | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1466 | link --json gives the url and its length | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1467 | a bad model fails with exit code 1, the parser’s detail and what to do next | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1468 | a bad command line fails with exit code 2 and the usage; help prints it | - |
+| T-1464 | check는 크기와 다음 빈 id를 텍스트나 JSON으로 출력한다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1465 | save는 -o · --name · 첫 Method로 이름 지은 파일을 쓰고, link와 read가 그것을 다시 읽는다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1466 | link --json은 주소와 그 길이를 준다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1467 | 잘못된 모델은 종료 코드 1과 파서의 오류 내용, 다음에 할 일을 내며 실패한다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1468 | 잘못된 명령줄은 종료 코드 2와 사용법을 내며 실패하고, help는 사용법을 출력한다 | - |
 
 ^t-skills-ariadne-nsd-src-cli-test-ts
 
 ### [단위] `skills/ariadne-nsd/src/engine.test.ts`
 
-The skill's script makes what the app makes (R-SKILL-01). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
+스킬의 스크립트는 앱이 만드는 것과 같은 것을 만든다 (R-SKILL-01). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1457 | the app’s parser opens it to the same document, and its drawing is the app’s | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1458 | a document with text as outlines is saved with outlines and opens | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-fmt\|R-FMT-10]] |
-| T-1459 | is the app’s d link, and the web shell reads it back to the same model | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-web\|R-WEB-05]] |
-| T-1460 | a link made with another base opens that page | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1461 | reads model JSON, an envelope, every link packing and a saved file to the same model | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1462 | says what is wrong in the parser’s words: the JSON with its brackets, the model with its path, the link with its reason | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1463 | names a document after its first Method, and counts the next free ids | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1457 | 앱의 파서가 같은 문서로 열고, 그림은 앱이 그린 것과 같다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1458 | 글자를 외곽선으로 그리는 문서는 외곽선으로 저장되고 열린다 | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-fmt\|R-FMT-10]] |
+| T-1459 | 앱의 d 링크이고, 웹 셸이 같은 모델로 읽는다 | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-web\|R-WEB-05]] |
+| T-1460 | 다른 기본 주소로 만든 링크는 그 페이지를 연다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1461 | 모델 JSON, 봉투, 모든 링크 방식, 저장 파일을 같은 모델로 읽는다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1462 | 무엇이 틀렸는지 파서의 말로 알린다: JSON은 괄호와 함께, 모델은 경로와 함께, 링크는 까닭과 함께 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1463 | 문서 이름을 첫 Method에서 짓고 다음 빈 id를 센다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
 
 ^t-skills-ariadne-nsd-src-engine-test-ts
 
 ### [단위] `skills/ariadne-nsd/src/plugin.test.ts`
 
-The skill ships two ways (docs/04-design/07-claude-skill.md). Vitest · 테스트 2개.
+스킬은 두 길로 배포된다 (docs/04-design/07-claude-skill.md). Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1474 | the marketplace lists the plugin, the plugin holds the skill’s SKILL.md, and its version is the package’s | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1475 | OFL.txt, LICENSE and NOTICE are byte-identical copies of their sources, and the zip contains them | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1474 | 마켓플레이스에 플러그인이 있고, 플러그인에 스킬의 SKILL.md가 있으며, 버전이 패키지와 같다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1475 | OFL.txt · LICENSE · NOTICE는 원본과 바이트까지 같은 사본이고 zip에 들어 있다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
 
 ^t-skills-ariadne-nsd-src-plugin-test-ts
 
 ### [단위] `skills/ariadne-nsd/src/skill-doc.test.ts`
 
-The skill's documents, run as tests (doctest, as for /llms.txt). Vitest · 테스트 3개.
+스킬의 문서를 테스트로 돌린다 (doctest, /llms.txt처럼). Vitest · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1469 | every JSON example in SKILL.md and its references opens and passes the schema, or says why it is not checked | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1470 | SKILL.md names core’s lists of values, and its block table has every kind | [[01-requirements#^r-skill\|R-SKILL-01]] |
-| T-1471 | SKILL.md has the front matter a skill needs, and every file it links to exists | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1469 | SKILL.md와 참고 문서의 JSON 예제는 모두 열리고 스키마를 통과하거나, 검사하지 않는 까닭을 적는다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1470 | SKILL.md가 core의 값 목록을 그대로 적고, 블록 표에 모든 종류가 있다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1471 | SKILL.md에 스킬에 필요한 머리말이 있고, 링크한 파일이 모두 있다 | [[01-requirements#^r-skill\|R-SKILL-01]] |
 
 ^t-skills-ariadne-nsd-src-skill-doc-test-ts
 
