@@ -35,7 +35,7 @@ TypeScript로 기술합니다. 모든 값은 불변 객체(readonly)로 다룹�
 ```ts
 type Doc = {
   content: Content;   // 내용: undo 대상
-  view: View;         // 뷰 상태: undo 대상이 아님 (2장)
+  view: View;         // 뷰 상태: 접힘 · 펴 보기는 undo 대상, 이름 띠 · 결과 기호는 아님 (2장)
 };
 
 type Content = {
@@ -57,7 +57,7 @@ type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의
 
 - `TextKind`는 유니온이라 파일에 기록된 지원하지 않는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 다시 기록합니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 지원하지 않는 이름도 그대로 담습니다. `Locale`도 유니온이라, 지원하지 않는 언어가 기록된 파일은 연 사람의 화면 언어로 그리고 받은 값은 `TextKind`처럼 모델 밖에 두었다가 다시 기록합니다. `locale`이 없는 파일(ADR-0041 전에 저장한 파일)은 연 사람의 화면 언어로 엽니다.
 
-- 내용과 뷰 상태를 처음부터 나눠 둡니다. undo 스택에는 `content`의 스냅숏만 저장됩니다.
+- 내용과 뷰 상태를 처음부터 나눠 둡니다. undo 스택에는 `Doc`(내용과 뷰 상태)의 스냅숏이 저장되고, 되돌릴 때 이름 띠와 결과 기호는 지금 값을 둡니다 → [[0048-folding-is-undoable|ADR-0048]]
 - 화면의 줌 · 스크롤 위치, 선택, UI 언어(화면 언어)는 모델에 없습니다. `editor`의 메모리 상태입니다. 렌더링 결과에 표시하는 고정 문구의 언어는 화면 언어와 따로, 문서 설정 `locale`입니다.
 
 ### 1.2 다이어그램과 헤더
@@ -212,12 +212,12 @@ type Path = Id[];      // [바깥 호출 블록 id, 그 안에서 편 호출 블
 ```
 
 - 뷰 상태는 내용의 id를 참조하는 별도 구조입니다. 떼어 내면 "모두 펼친 그림"이 됩니다.
-- **dangling id를 참조해도 오류가 아닙니다**(약한 참조). undo로 내용이 앞으로 돌아가면, 뷰 상태에 지금 없는 id가 남을 수 있습니다. 레이아웃은 없는 id를 무시하고, 직렬화할 때는 있는 id만 기록합니다. 그래서 뷰 상태는 undo 스택과 독립적으로 바뀌어도 일관성이 깨지지 않습니다.
+- **dangling id를 참조해도 오류가 아닙니다**(약한 참조). undo로 내용이 앞으로 돌아가면, 뷰 상태에 지금 없는 id가 남을 수 있습니다. 레이아웃은 없는 id를 무시하고, 직렬화할 때는 있는 id만 기록합니다. undo 스택의 스냅숏이 담은 접힘이 그 뒤의 내용과 어긋나도 일관성이 깨지지 않습니다.
 - 펴 보인 블록 안의 접힘은 호출 경로마다 따로 저장합니다 → [[0046-site-folding-in-view|ADR-0046]], [[ux-decisions#CB13. 펴 보인 곳의 접힘은 그 자리의 것|CB13]]
 	- `b4/`는 경로 `b4`가 자기 접힘과 자기 접기 영역을 갖는다는 표시이고, `b4/r3`은 그 자리에서 Method의 분기 · 반복 블록 `r3`이 접혀 있다는 뜻입니다. 겹쳐 폈으면 `b4/b9/r3`입니다. 이 자리의 접기 영역(`SiteFold`, Method에서 복사한 것 포함)은 자리마다 id가 다르므로 경로 없이 적습니다.
-	- 표시가 없는 경로는 아직 접힘과 접기 영역을 가져오지 않은 자리로, Method의 접힘과 접기 영역으로 그립니다. `editor`의 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다, 그려지는 경로 가운데 표시가 없는 것에 그 순간의 Method 접힘을 복사하고 Method의 접기 영역을 `SiteFold`로 복사합니다(`settleSiteFolds`, 1.6). 접기 영역의 복사는 내용을 바꾸므로, 호출 블록을 펼 때 일어나면 실행 취소 단계 하나가 되고, 명령이나 실행 취소 · 다시 실행 뒤에 일어나면 그 단계에 묶이며, 문서를 열 때와 보기 모드에서는 단계를 만들지 않습니다 → [[0047-copy-method-folds-at-first-open|ADR-0047]]
+	- 표시가 없는 경로는 아직 접힘과 접기 영역을 가져오지 않은 자리로, Method의 접힘과 접기 영역으로 그립니다. `editor`의 세션은 문서를 받거나 뷰 상태 · 내용이 바뀔 때마다, 그려지는 경로 가운데 표시가 없는 것에 그 순간의 Method 접힘을 복사하고 Method의 접기 영역을 `SiteFold`로 복사합니다(`settleSiteFolds`, 1.6). 접기 영역의 복사는 내용을 바꾸므로, 호출 블록을 펼 때 일어나면 그 펴 보기와 실행 취소 한 단계가 되고([[0048-folding-is-undoable|ADR-0048]]), 명령이나 실행 취소 · 다시 실행 뒤에 일어나면 그 단계에 묶이며, 문서를 열 때와 보기 모드에서는 단계를 만들지 않습니다 → [[0047-copy-method-folds-at-first-open|ADR-0047]]
 	- 호출 대상이 다른 Method로 바뀌면 그 호출 블록을 지나는 경로의 항목을 버립니다(`forgetRetargeted`). 호출 블록이나 Method를 삭제해도 항목은 세션에 남아, 실행 취소하면 접힘이 돌아옵니다. 직렬화할 때는 있는 경로만 기록합니다. 호출 블록을 풀면 그 자리의 접힘을 사본으로 옮깁니다(`foldedAfterInline`).
-- 결과 기호를 뷰 상태에 두는 이유는 [[ux-decisions#Q9. 실행 취소의 대상 (R7)|Q9]]에 있습니다.
+- 결과 기호를 뷰 상태에 두는 이유는 [[ux-decisions#Q9. 실행 취소의 대상 (R7)|Q9]]에 있습니다. 접힘(`folded`)과 펴 보기(`opened`)는 실행 취소의 대상이고, 이름 띠(`bands`)와 결과 기호는 대상이 아닙니다 → [[ux-decisions#UN1. 접고 펴기도 실행 취소의 대상|UN1]], [[0048-folding-is-undoable|ADR-0048]]
 
 ## 3. 불변식
 
@@ -259,14 +259,14 @@ sequenceDiagram
         else 통과
             V-->>-C: 통과
             C-->>-E: { ok: true, content, touched }
-            E->>+H: push(앞의 content)
+            E->>+H: push(앞의 Doc)
             H-->>-E: 넣음
             Note over E: touched로 다음 선택을 정하고 다시 그림
         end
     end
 ```
 
-UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화살표는 반환, `alt`는 조건 분기, 세로 막대는 실행 중(activation)입니다. 뷰 명령(4.2)은 같은 경로를 거치지만 undo 스택에 push하지 않습니다.
+UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화살표는 반환, `alt`는 조건 분기, 세로 막대는 실행 중(activation)입니다. 뷰 명령(4.2)은 편집 명령과 불변식 검사를 거치지 않고, 접힘 · 펴 보기가 바뀌었을 때만 앞의 `Doc`을 undo 스택에 push합니다.
 
 ```ts
 type Command<A> = (content: Content, args: A) => Result;
@@ -284,7 +284,7 @@ type Target =                                        // 명령이 적용되는 �
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 반환합니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
 - `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
-- **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 내용을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
+- **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 `Doc`(내용과 뷰 상태)을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
 - 명령 안에서 줄(`Seq`)은 따로 id가 없으므로 그 주인(다이어그램 · 분기 · 반복 블록)의 id로 가리킵니다.
 
@@ -331,7 +331,7 @@ type Target =                                        // 명령이 적용되는 �
 
 ### 4.2 보기 명령
 
-뷰 상태(`View`)만 바꿉니다. undo 스택에 남지 않지만 dirty 표시("저장 안 됨")는 뜹니다.
+뷰 상태(`View`)만 바꿉니다. 접기 · 펴기와 펴 보기는 명령 하나가 undo 한 단계이고, 이름 띠 켜고 끄기와 결과 기호 바꾸기는 undo 스택에 남지 않습니다. 어느 것이든 dirty 표시("저장 안 됨")는 뜹니다(보기 모드에서는 둘 다 없음) → [[0048-folding-is-undoable|ADR-0048]]
 
 | 명령 | 규칙 |
 | --- | --- |

@@ -43,12 +43,13 @@ describe('folding control blocks (R-EDIT-13)', () => {
     expect(folded(engine)).toEqual(['r1']);
     expect(selected(engine)).toEqual(['b2']);
     expect(notice(engine)).toBe('notice.folded');
-    // A view change: no undo step, but the document is unsaved (UX Q9).
-    expect(engine.session.state.undo).toHaveLength(0);
+    // Folding is one undo step, and the document is unsaved (UX Q9a, ADR-0048).
+    expect(engine.session.state.undo).toHaveLength(1);
     expect(engine.session.state.dirty).toBe(true);
     engine.keys('z', 'a');
     expect(folded(engine)).toEqual([]);
     expect(notice(engine)).toBe('notice.unfolded');
+    expect(engine.session.state.undo).toHaveLength(2);
   });
 
   it('T-1098: fold: folding from a block in a branch folds that branch and selects its row', () => {
@@ -228,5 +229,81 @@ describe('the file keeps folds as shown (R-FMT-11)', () => {
       expect(opened.value.doc.view.folded).toEqual(['r1', 'f1']);
       expect(opened.value.doc.content.diagrams[0]?.body.folds[0]?.name).toBe('start');
     }
+  });
+});
+
+describe('folding and unfolding are undo steps (UX Q9a, ADR-0048)', () => {
+  it('T-1426: fold undo: u unfolds what f folded and U folds it again; back where it was saved, the document is unchanged', () => {
+    const engine = testEngine(ifContent);
+    select(engine, 'b2');
+    engine.keys('f');
+    expect(folded(engine)).toEqual(['r1']);
+    engine.keys('u');
+    expect(folded(engine)).toEqual([]);
+    expect(engine.session.state.dirty).toBe(false);
+    // The selection stays where it is still drawn (UX Q19).
+    expect(selected(engine)).toEqual(['b2']);
+    engine.keys('U');
+    expect(folded(engine)).toEqual(['r1']);
+    expect(engine.session.state.dirty).toBe(true);
+  });
+
+  it('T-1427: fold undo: an edit after folding is undone first, keeping the fold; the next undo unfolds', () => {
+    const engine = testEngine(ifContent);
+    select(engine, 'b2');
+    engine.keys('f');
+    select(engine, 'b6');
+    engine.keys('x');
+    expect(engine.content().diagrams[0]?.body.blocks).toHaveLength(2);
+    engine.keys('u');
+    expect(engine.content().diagrams[0]?.body.blocks).toHaveLength(3);
+    expect(folded(engine)).toEqual(['r1']);
+    engine.keys('u');
+    expect(folded(engine)).toEqual([]);
+  });
+
+  it('T-1428: fold undo: a fold region made and folded at once goes away unfolded in one undo step', () => {
+    const engine = testEngine(ifContent);
+    engine.select(selectRange(indexDoc(ifContent), 'b1', 'b2'));
+    engine.keys('z', 'f');
+    engine.session.commitEditing('start');
+    expect(folded(engine)).toEqual(['f1']);
+    engine.keys('u');
+    expect(engine.content().diagrams[0]?.body.folds).toEqual([]);
+    expect(folded(engine)).toEqual([]);
+    expect(engine.session.state.undo).toHaveLength(0);
+  });
+
+  it('T-1429: fold undo: the name bands are no undo step, and undoing a fold keeps them as they are', () => {
+    const engine = testEngine(ifContent);
+    select(engine, 'b2');
+    engine.keys('f');
+    engine.session.runCommand('view.bands');
+    expect(engine.session.state.doc.view.bands).toBe(false);
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.keys('u');
+    expect(folded(engine)).toEqual([]);
+    expect(engine.session.state.doc.view.bands).toBe(false);
+  });
+
+  it('T-1430: fold undo: folding while view only is no undo step and leaves the document as saved', () => {
+    const engine = testEngine(ifContent);
+    engine.session.setReadOnly(true);
+    select(engine, 'b2');
+    engine.keys('f');
+    expect(folded(engine)).toEqual(['r1']);
+    expect(engine.session.state.undo).toHaveLength(0);
+    expect(engine.session.state.dirty).toBe(false);
+  });
+
+  it('T-1431: fold undo: a fold after an undo empties the redo', () => {
+    const engine = testEngine(ifContent);
+    select(engine, 'b6');
+    engine.keys('x');
+    engine.keys('u');
+    expect(engine.session.state.redo).toHaveLength(1);
+    select(engine, 'b2');
+    engine.keys('f');
+    expect(engine.session.state.redo).toHaveLength(0);
   });
 });

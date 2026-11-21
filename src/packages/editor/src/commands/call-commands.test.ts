@@ -322,15 +322,17 @@ describe("the Method's fold regions copied at the first opening (UX CB14, ADR-00
     expect(engine.session.state.undo).toHaveLength(2);
   });
 
-  it('T-1419 · R-EDIT-16: undoing the copy takes the regions away there; the call stays open and takes nothing again', () => {
+  it('T-1419 · R-EDIT-16: undoing the first opening closes the call and takes the copied regions away; redo brings both back', () => {
     const engine = testEngine(sample());
     openCall(engine, 'c1');
     expect(engine.session.state.dirty).toBe(true);
     engine.keys('u');
-    expect(engine.session.state.doc.view.opened).toEqual([['c1']]);
+    // The opening and the copy are one step (ADR-0047, ADR-0048).
+    expect(engine.session.state.doc.view.opened).toEqual([]);
     expect(siteFolds(engine, 'c1')).toEqual([]);
     expect(shownRegions(engine, 'c1/')).toEqual([]);
     engine.keys('U');
+    expect(engine.session.state.doc.view.opened).toEqual([['c1']]);
     expect(siteFolds(engine, 'c1')).toEqual([
       { id: 'f2', via: [], first: 'p6', last: 'p7', name: 'pair' },
     ]);
@@ -426,7 +428,8 @@ describe('the folding of an opened call block is its own (UX CB13, ADR-0046)', (
     expect(isHidden(engine, ['c1'])).toBe(true);
     expect(isHidden(engine, ['c3'])).toBe(false);
     expect(isHidden(engine, [])).toBe(false);
-    expect(engine.session.state.undo).toHaveLength(steps);
+    // Folding is one undo step (ADR-0048).
+    expect(engine.session.state.undo).toHaveLength(steps + 1);
   });
 
   it('T-1344 · R-EDIT-15: folding in the Method leaves the opened call blocks as they are', () => {
@@ -635,6 +638,7 @@ describe('branches and loop bodies fold where a call block is opened (UX CB13, A
     select(engine, 'c3');
     engine.keys('f');
     engine.select(peek(['c1'], 'i1'));
+    const steps = engine.session.state.undo.length;
     engine.keys('z', 'a');
     expect(folded(engine)).toEqual(expect.arrayContaining(['c1/r1', 'c1/r2']));
     expect(folded(engine)).not.toContain('r1');
@@ -643,7 +647,7 @@ describe('branches and loop bodies fold where a call block is opened (UX CB13, A
     expect(isHidden(engine, ['c3'], 'p1')).toBe(false);
     expect(isHidden(engine, [], 'p1')).toBe(false);
     expect(engine.session.state.doc.view.opened).toContainEqual(['c1']);
-    expect(engine.session.state.undo).toHaveLength(0);
+    expect(engine.session.state.undo).toHaveLength(steps + 1);
     engine.keys('z', 'a');
     expect(isHidden(engine, ['c1'], 'p1')).toBe(false);
   });

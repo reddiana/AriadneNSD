@@ -10,13 +10,13 @@ export type Id = string;
 
 // 1.1 Document
 
-/** A document: the content (undoable) and the view state (not undoable). */
+/** A document: the content and the view state. Undo stores snapshots of both (ADR-0048). */
 export type Doc = {
   readonly content: Content;
   readonly view: View;
 };
 
-/** The undoable part of a document. Undo stores snapshots of this. */
+/** What a document says: the blocks, texts and settings. Every change is an undo step. */
 export type Content = {
   readonly settings: Settings;
   /** Ordered. At least one (invariant 1). */
@@ -229,8 +229,9 @@ export type SiteFold = {
 // 2. View state
 
 /**
- * The view state. Not undoable. It refers to content ids weakly: dangling ids are not errors,
- * layout ignores them, and serialization writes only existing ids (01-model 2).
+ * The view state. Folding and opening are undo steps; the bands and the result symbol are not
+ * (ADR-0048). It refers to content ids weakly: dangling ids are not errors, layout ignores them,
+ * and serialization writes only existing ids (01-model 2).
  */
 export type View = {
   /**

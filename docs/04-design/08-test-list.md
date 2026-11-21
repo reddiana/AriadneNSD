@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 285 | - | 338 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 291 | - | 344 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 36 | 43 | - | 102 |
 | [[#5. 파일\|파일]] | 18 | 166 | 241 | - | 425 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 85 | 277 | 934 | 5 | 1301 |
+| 합계 | 85 | 277 | 940 | 5 | 1307 |
 
 ## 읽는 법
 
@@ -77,7 +77,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 338개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 344개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -551,7 +551,7 @@ id. Vitest · 테스트 5개.
 | T-1424 | v then j k widens the range there as with blocks outside | - |
 | T-1417 | Method에서 나중에 접기 영역을 바꿔도 이미 펴 본 호출 자리에는 전달되지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1418 | 펴 보인 호출 블록 안에서 편 호출 블록은 그 경로의 접기 영역을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
-| T-1419 | 복사를 실행 취소하면 그 자리의 접기 영역이 사라지고, 호출 블록은 펴진 채 다시 가져오지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
+| T-1419 | undoing the first opening closes the call and takes the copied regions away; redo brings both back | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1420 | 보기 모드에서 펴면 복사는 실행 취소 단계가 아니고 문서를 바뀐 것으로 표시하지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1342 | 처음 펼 때 그 순간의 Method 접힘을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1343 | 펴 보인 호출 블록에서 접어도 Method와 다른 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
@@ -622,7 +622,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/fold-commands.test.ts`
 
-접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 13개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]].
+접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 19개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[ux-decisions|UX Q9]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -639,6 +639,12 @@ id. Vitest · 테스트 5개.
 | T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
 | T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
 | T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
+| T-1426 | fold undo: u unfolds what f folded and U folds it again; back where it was saved, the document is unchanged | - |
+| T-1427 | fold undo: an edit after folding is undone first, keeping the fold; the next undo unfolds | - |
+| T-1428 | fold undo: a fold region made and folded at once goes away unfolded in one undo step | - |
+| T-1429 | fold undo: the name bands are no undo step, and undoing a fold keeps them as they are | - |
+| T-1430 | fold undo: folding while view only is no undo step and leaves the document as saved | - |
+| T-1431 | fold undo: a fold after an undo empties the redo | - |
 
 ^t-packages-editor-src-commands-fold-commands-test-ts
 

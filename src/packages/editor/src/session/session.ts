@@ -54,8 +54,9 @@ import type {
 } from '../state/editor-state';
 import {
   clampZoom,
+  isSameFolding,
+  pushUndo,
   stepHistory,
-  undoLimit,
   withContent,
   withSelection,
 } from '../state/editor-state';
@@ -471,9 +472,11 @@ export class EditorSession {
   }
 
   /**
-   * Changes the view state: what is folded, opened and banded (01-model 2). Not an undo step, but
-   * the document is changed (unsaved), except while it is view only (03-editor 6.4). The
-   * selection becomes `selection` (when given), dropped if it is no longer shown.
+   * Changes the view state: what is folded, opened and banded (01-model 2). A change of what is
+   * folded or opened is one undo step (ADR-0048); the name bands and the result symbol are not.
+   * Either way the document is changed (unsaved). While it is view only (03-editor 6.4) nothing
+   * is a step and the document stays as saved. The selection becomes `selection` (when given),
+   * dropped if it is no longer shown.
    */
   setView(view: View, selection?: Selection | null): void {
     const doc = settled({ content: this.current.doc.content, view });
@@ -484,17 +487,15 @@ export class EditorSession {
       this.current,
       validSelection(isCopied ? indexDoc(doc.content) : this.index(), next, this.shownOf(doc)),
     );
-    // Opening a call block for the first time copies the Method's fold regions there: a content
-    // change, so one undo step of its own (ADR-0047). While view only it is not a step.
-    const undo =
-      isCopied && !this.current.readOnly
-        ? [...state.undo.slice(-(undoLimit - 1)), this.current.doc.content]
-        : state.undo;
+    // Folding, unfolding, opening and closing is one undo step (ADR-0048). Opening a call block
+    // for the first time copies the Method's fold regions there: the same step (ADR-0047).
+    const isStep =
+      !this.current.readOnly && (isCopied || !isSameFolding(this.current.doc.view, doc.view));
     this.setState({
       ...state,
       doc,
-      undo,
-      redo: isCopied && !this.current.readOnly ? [] : state.redo,
+      undo: isStep ? pushUndo(this.current) : state.undo,
+      redo: isStep ? [] : state.redo,
       dirty: this.current.readOnly ? this.current.dirty : this.isDirty(doc),
       layout: this.rendered.layout,
       revision: this.current.revision + 1,

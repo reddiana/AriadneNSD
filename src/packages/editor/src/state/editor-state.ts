@@ -65,9 +65,12 @@ export type Extracted = { readonly call: Id; readonly count: number };
 /** The editor's state (03-editor 2). Immutable: every change makes a new object. */
 export type EditorState = {
   readonly doc: Doc;
-  /** Snapshots of the content only; the view state is not undoable (01-model 4.4). */
-  readonly undo: ReadonlyArray<Content>;
-  readonly redo: ReadonlyArray<Content>;
+  /**
+   * Snapshots of the document: the content with its folding (ADR-0048). Undo brings back both;
+   * the name bands and the result symbol stay as they are now (01-model 4.4).
+   */
+  readonly undo: ReadonlyArray<Doc>;
+  readonly redo: ReadonlyArray<Doc>;
   readonly selection: Selection | null;
   /**
    * After the selection is cleared, a move key starts here (interaction rules 2): a block, or a
@@ -134,11 +137,31 @@ export function withSelection(state: EditorState, selection: Selection | null): 
   };
 }
 
+/** Whether two views fold and open the same things (what an undo step keeps, ADR-0048). */
+export function isSameFolding(a: View, b: View): boolean {
+  return (
+    a === b ||
+    (sameItems(a.folded, b.folded) &&
+      a.opened.length === b.opened.length &&
+      a.opened.every((path, at) => sameItems(path, b.opened[at] ?? [])))
+  );
+}
+
+function sameItems(a: ReadonlyArray<string>, b: ReadonlyArray<string>): boolean {
+  return a === b || (a.length === b.length && a.every((item, at) => item === b[at]));
+}
+
+/** Pushes the document as it is now on the undo stack: one step. */
+export function pushUndo(state: EditorState): ReadonlyArray<Doc> {
+  return [...state.undo.slice(-(undoLimit - 1)), state.doc];
+}
+
 /**
- * A new content from a command: the old content goes on the undo stack and redo is emptied.
- * The same content object means nothing changed: nothing is pushed (01-model 4). `isAmend`
- * keeps the undo stack as it is, so the change joins the last step. `view` changes the view
- * state with it (a new fold region folds at once); the view is never an undo step.
+ * A new content from a command: the document as it was goes on the undo stack and redo is
+ * emptied. The same content object means nothing changed: nothing is pushed (01-model 4).
+ * `isAmend` keeps the undo stack as it is, so the change joins the last step. `view` changes the
+ * view state with it (a new fold region folds at once): the same step, so undo brings back the
+ * folding too (ADR-0048).
  */
 export function withContent(
   state: EditorState,
@@ -158,14 +181,26 @@ export function withContent(
     ...withSelection(state, selection),
     doc,
     // An amend joins the last undo step instead of making one (the name typed after an extract).
-    undo:
-      isAmend || !isContentChanged
-        ? state.undo
-        : [...state.undo.slice(-(undoLimit - 1)), state.doc.content],
+    undo: isAmend || !isContentChanged ? state.undo : pushUndo(state),
     redo: isContentChanged ? [] : state.redo,
     dirty: isDirty(doc),
     layout,
     revision: state.revision + 1,
+  };
+}
+
+/**
+ * The document an undo step brings back: its content and folding, with the name bands and the
+ * result symbol as they are now, which are not undone (ADR-0048).
+ */
+function restored(step: Doc, now: View): Doc {
+  const { view } = step;
+  if (view.bands === now.bands && view.resultSymbol === now.resultSymbol) {
+    return step;
+  }
+  return {
+    content: step.content,
+    view: { ...view, bands: now.bands, resultSymbol: now.resultSymbol },
   };
 }
 
@@ -177,20 +212,21 @@ export function stepHistory(
   isDirty: (doc: Doc) => boolean,
 ): { readonly state: EditorState; readonly content: Content } | null {
   const from = direction === 'undo' ? state.undo : state.redo;
-  const content = from.at(-1);
-  if (content === undefined) {
+  const step = from.at(-1);
+  if (step === undefined) {
     return null;
   }
   const rest = from.slice(0, -1);
   const pushed = direction === 'undo' ? state.redo : state.undo;
-  const doc: Doc = { content, view: state.doc.view };
+  const doc = restored(step, state.doc.view);
+  const { content } = doc;
   return {
     content,
     state: {
       ...state,
       doc,
-      undo: direction === 'undo' ? rest : [...pushed, state.doc.content],
-      redo: direction === 'undo' ? [...pushed, state.doc.content] : rest,
+      undo: direction === 'undo' ? rest : [...pushed, state.doc],
+      redo: direction === 'undo' ? [...pushed, state.doc] : rest,
       dirty: isDirty(doc),
       layout: layoutOf(doc),
       revision: state.revision + 1,
