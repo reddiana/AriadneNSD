@@ -18,14 +18,14 @@ status: 생성됨
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 307 | - | 362 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 180 | - | 215 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 43 | - | 103 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 280 | 976 | 5 | 1348 |
+| 합계 | 87 | 280 | 980 | 5 | 1352 |
 
 ## 읽는 법
 
@@ -669,7 +669,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 211개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 15개, 테스트 215개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -755,7 +755,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/canvas-view.test.ts`
 
-다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 71개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
+다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 72개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -764,6 +764,7 @@ id. Vitest · 테스트 5개.
 | T-0588 | 선택한 것이 있는지와 포커스 테두리를 지키는지를 표시한다 | - |
 | T-0589 | 스테이지의 크기를 다이어그램과 줌으로 정하고, 둘레에 캔버스 여백을 둔다 | - |
 | T-0590 | dispose는 캔버스를 없애고 듣기를 멈춘다 | - |
+| T-1482 | snaps the lines to whole device pixels at the zoom and the device pixel ratio, and back at 100% | - |
 | T-0591 | 블록을 클릭하면 그 블록을 선택하고 캔버스에 포커스를 준다 | - |
 | T-0592 | 빈 캔버스를 클릭하면 선택을 풀고 포커스 테두리를 1초 동안 비춘다 | [[ux-decisions\|UX CF2]] |
 | T-0593 | 포커스 테두리가 보이는 동안 다시 비추면 1초를 처음부터 다시 센다 | [[ux-decisions\|UX CF2]] |
@@ -832,6 +833,18 @@ id. Vitest · 테스트 5개.
 | T-0647 | 보기 전용에서는 툴바의 드래그가 시작되지 않고, 상태 표시줄이 이유를 알린다 | - |
 
 ^t-packages-editor-src-dom-canvas-view-test-ts
+
+### [단위] `packages/editor/src/dom/crisp-lines.test.ts`
+
+Even straight lines on the screen at any scale (visual design 9.1, 9.2). Vitest + happy-dom · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1480 | gives every width a whole number of device pixels, at least one, at any scale | - |
+| T-1481 | snaps crisp-edged shapes and straight unfilled paths, leaves diagonals, and clears the width where none is needed | - |
+| T-1483 | tells paths of horizontal and vertical lines from diagonals and curves | - |
+
+^t-packages-editor-src-dom-crisp-lines-test-ts
 
 ### [단위] `packages/editor/src/dom/overlay.test.ts`
 

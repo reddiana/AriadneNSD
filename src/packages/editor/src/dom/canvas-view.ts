@@ -20,6 +20,7 @@ import type { Selection } from '../state/selection';
 import { extendPeekTo, extendTo, selectBlock, selectedBlocks, targetOf } from '../state/selection';
 import type { EditColors } from './overlay';
 import { editColorsFor, fieldBox, overlayContent, selectionBox } from './overlay';
+import { snapCrispStrokes } from './crisp-lines';
 import { canvasMargin } from './styles';
 
 /** What the view needs. */
@@ -97,9 +98,16 @@ export class CanvasView {
   private readonly dragLabel: HTMLDivElement;
   private readonly events = new AbortController();
   private readonly unsubscribe: () => void;
-  private drawn: { rendering: unknown; zoom: number; selection: Selection | null | undefined } = {
+  private drawn: {
+    rendering: unknown;
+    zoom: number;
+    /** Device pixels per drawing unit that the crisp lines were snapped to. */
+    scale: number;
+    selection: Selection | null | undefined;
+  } = {
     rendering: null,
     zoom: 0,
+    scale: 0,
     selection: undefined,
   };
   private frame: number | null = null;
@@ -138,6 +146,7 @@ export class CanvasView {
     options.host.append(this.canvas);
     this.setAppearance(options.appearance);
     this.listen();
+    this.watchPixelRatio();
     this.unsubscribe = options.session.subscribe((state) => {
       // The inline editor opens at once, not at the next frame: keys typed right after `a i`
       // must go into the text, not run as commands on the diagram.
@@ -189,6 +198,32 @@ export class CanvasView {
     this.dragLabel.style.fontFamily = appearance.uiFont;
   }
 
+  /** Device pixels per CSS pixel: browser zoom and display scaling. */
+  private pixelRatio(): number {
+    return this.canvas.ownerDocument.defaultView?.devicePixelRatio ?? 1;
+  }
+
+  /**
+   * Draws again when the device pixel ratio changes (browser zoom, a move to another display), so
+   * the lines are snapped to the new pixels. A media query matches only one ratio, so each change
+   * watches the next one.
+   */
+  private watchPixelRatio(): void {
+    const window = this.canvas.ownerDocument.defaultView;
+    if (window === null || typeof window.matchMedia !== 'function') {
+      return;
+    }
+    const query = window.matchMedia(`(resolution: ${String(window.devicePixelRatio)}dppx)`);
+    query.addEventListener(
+      'change',
+      () => {
+        this.watchPixelRatio();
+        this.schedule();
+      },
+      { once: true, signal: this.events.signal },
+    );
+  }
+
   private schedule(): void {
     this.frame ??= requestAnimationFrame(() => {
       this.frame = null;
@@ -212,8 +247,9 @@ export class CanvasView {
     const rendering = this.session.rendering;
     const svg = rendering.svg;
     const zoom = state.zoom;
-    if (rendering !== this.drawn.rendering || zoom !== this.drawn.zoom) {
-      if (rendering !== this.drawn.rendering) {
+    const isNewRendering = rendering !== this.drawn.rendering;
+    if (isNewRendering || zoom !== this.drawn.zoom) {
+      if (isNewRendering) {
         this.documentLayer.innerHTML = drawingMarkup(svg);
         this.applyTheme();
       }
@@ -226,6 +262,12 @@ export class CanvasView {
       this.overlay.setAttribute('height', String(svg.height));
       this.overlay.setAttribute('viewBox', svg.viewBox);
       this.drawn = { ...this.drawn, rendering, zoom };
+    }
+    // Lines of one width at any zoom and device pixel ratio (crisp-lines.ts).
+    const scale = zoom * this.pixelRatio();
+    if (isNewRendering || scale !== this.drawn.scale) {
+      snapCrispStrokes(this.documentLayer, scale);
+      this.drawn = { ...this.drawn, scale };
     }
     this.overlay.innerHTML = overlayContent({
       layout: state.layout,

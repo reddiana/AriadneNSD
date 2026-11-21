@@ -177,6 +177,38 @@ describe('CanvasView: the layers', () => {
   });
 });
 
+describe('CanvasView: even lines at any scale (visual design 9.1, 9.2)', () => {
+  /** The stroke widths of the document layer's crisp-edged rectangles, as drawn. */
+  function crispWidths(made: Made): string[] {
+    const rects = made.host.querySelectorAll<SVGElement>(
+      '.ans-document rect[shape-rendering="crispEdges"]',
+    );
+    return [...rects].map((rect) => rect.style.strokeWidth);
+  }
+
+  it('T-1482: snaps the lines to whole device pixels at the zoom and the device pixel ratio, and back at 100%', () => {
+    const made = make(three());
+    made.view.draw();
+    expect(crispWidths(made).length).toBeGreaterThan(1);
+    expect(new Set(crispWidths(made))).toEqual(new Set(['']));
+    made.engine.session.setZoom(1.1);
+    made.view.draw();
+    expect(new Set(crispWidths(made))).toEqual(new Set([`${String(1 / 1.1)}px`]));
+    Object.defineProperty(window, 'devicePixelRatio', { value: 1.25, configurable: true });
+    try {
+      made.engine.session.setZoom(1.2);
+      made.view.draw();
+      // 1.2 × 1.25 = 1.5 device pixels per unit: the 1px lines become 2 device pixels.
+      expect(new Set(crispWidths(made))).toEqual(new Set([`${String(2 / 1.5)}px`]));
+    } finally {
+      Object.defineProperty(window, 'devicePixelRatio', { value: 1, configurable: true });
+    }
+    made.engine.session.setZoom(1);
+    made.view.draw();
+    expect(new Set(crispWidths(made))).toEqual(new Set(['']));
+  });
+});
+
 describe('CanvasView: clicks (interaction rules 2)', () => {
   it('T-0591: a click on a block selects it and focuses the canvas', () => {
     const made = make(three());
