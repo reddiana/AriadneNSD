@@ -14,6 +14,9 @@ updated: 2026-11-19
 
 ## MVP 개발
 
+- [ ] 새 안내서(`llms.txt`, 2026-11-21의 GD1)로 AI 넷(ChatGPT · Gemini · Grok · claude.ai)에게 다시 그려 달라고 해 보기. M56 검사기(`journal/assets/2026-11-09-llm-guide-check.mjs`)는 새 답이 있어야 돈다 → 시안 M57
+- [ ] [[05-screen-layout]]의 MVP 스크린숏을 다시 찍기: 감싸기 아이콘이 바뀜(TB2)
+
 MVP는 웹의 `P0` 항목입니다([[01-requirements#5. MVP 범위]]). 시작 전에 정할 것은 2026-11-01에 모두 정했습니다(파일에 남는 이름 → [[01-file-format#3.3 노드별 필드]], 서브셋 글꼴 WOFF → [[0039-woff-subset-font|ADR-0039]], 편집기와 셸의 경계 → [[03-editor#6. 셸과의 연결]]). 정한 과정은 [[2026-10-31-03-prototype-64]]에 있습니다.
 
 

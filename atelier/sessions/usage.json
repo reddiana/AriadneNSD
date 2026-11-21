@@ -128,12 +128,30 @@
     },
     "2026-11-19": {
       "sessions": 1,
-      "minutes": 193,
-      "requests": 404,
-      "input": 876,
-      "cacheWrite": 4273868,
-      "cacheRead": 153836235,
-      "output": 977895
+      "minutes": 199,
+      "requests": 409,
+      "input": 886,
+      "cacheWrite": 4286363,
+      "cacheRead": 154518960,
+      "output": 981508
+    },
+    "2026-11-20": {
+      "sessions": 1,
+      "minutes": 3,
+      "requests": 6,
+      "input": 14,
+      "cacheWrite": 50810,
+      "cacheRead": 385016,
+      "output": 3090
+    },
+    "2026-11-21": {
+      "sessions": 3,
+      "minutes": 70,
+      "requests": 514,
+      "input": 1066,
+      "cacheWrite": 1364293,
+      "cacheRead": 114391837,
+      "output": 357929
     }
   }
 }
