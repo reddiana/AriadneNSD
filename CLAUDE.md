@@ -56,6 +56,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 	- 답이 필요 없는 보고는 그 대상의 문서에(예: 로고는 `logo-source`의 "남은 확인").
 	- 제품에 대한 열린 질문은 `docs/`의 미결정 절이 원본. `atelier/`에 다시 풀어 적지 않는다.
 - 정한 일(코드 수정, 테스트, ID · 번역, 문서 정리)은 백그라운드 에이전트에게 맡기고 Claude는 메인테이너와 대화를 이어 간다. 같은 파일을 쓰는 일은 한 에이전트에 묶거나 앞 커밋을 기다리게 한다. 에이전트는 커밋만, push · `status` · `outbox` · 세션 기록은 Claude → [[how-we-work#2. 세션의 리듬]]
+	- 정한 일은 보이는 변경(코드 · 테스트)만 먼저 한다. **정리**(`docs/` · ADR · DR · UX 결정 · 테스트 목록에 반영, 쓰지 않게 된 코드와 형식 걷어 내기)는 메인테이너가 하자고 할 때나 매듭 · 마무리 때(아래 7번) 한다. 그 전의 커밋은 `Co-change-skip: … — 정리 때 맞춤`, 미룬 정리는 `status.md`의 그 결정 줄에 "정리 남음"으로.
 	- 에이전트는 바뀐 패키지의 테스트 · 타입 검사 · lint만. 전체 검사(`pnpm check` 전체, `pnpm e2e`, 커버리지)는 매듭 · 마무리 때 push 전에 Claude가 한 번.
 	- 테스트 목록의 한국어 번역(`src/scripts/test-list-ko.json`)은 에이전트가 채우지 않는다. 매듭 · 마무리 때 Claude가 `pnpm test-list:strict`로 남은 것을 한 번에 채운다.
 	- 작은 조작 · 화면 결정은 UX 결정 한 항목과 설계 문서 한 줄로 끝낸다. ADR과 "이후 변경" 콜아웃은 코드 구조 · 모델 · 파일 형식 · 기술 선택이 바뀔 때만.
@@ -88,7 +89,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 4. `journal/timeline.md`에 전환점을 더한다. 메인테이너의 요청 원문을 짧게 인용한다.
 5. 메인테이너(Claude Code 초보자)가 Claude Code나 AI와 일하는 법을 새로 배웠으면 `journal/learning-claude-code.md`에 더한다.
 6. 기술을 설명했으면 `til/`에 정리한다.
-7. 결정은 `docs/`와 ADR · DR에 반영하고, 세션 기록과 상태 문서에는 링크만.
+7. 정리: 결정은 `docs/`와 ADR · DR에 반영하고(미뤄 둔 정리를 모두 여기서), 세션 기록과 상태 문서에는 링크만.
 8. push 전 전체 검사: `pnpm test-list:strict`로 번역을 채우고, `pnpm check` 전체와 `pnpm e2e`. 실패하면 고치거나 알린다. 시간 테스트(T-0171 · T-1126)는 다른 일이 돌지 않을 때만 믿는다.
 9. 바뀐 파일을 모두 커밋하고 push한다. push한 뒤 `status.md`의 "정한 것이 어디까지 갔나"의 그 줄들을 "사이트에 있음"으로.
 10. 정리를 다 마치면(push까지) 보고한 뒤 대화를 비운다(`/clear`: `mcp__ccd_session_mgmt__clear_session`에 `session_id: "self"`). 매듭이든 마무리든 같다. 비운 뒤는 새 세션이고 세션 기록도 그날의 다음 번호로 새로 쓴다(앞 기록에 덧붙이지 않음). 정리가 끝나지 않았으면(검사 실패, 답을 기다림) 비우지 않는다.
