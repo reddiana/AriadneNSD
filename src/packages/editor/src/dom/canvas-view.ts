@@ -17,7 +17,7 @@ import type { EditorSession } from '../session/session';
 import type { Editing, EditField } from '../state/editor-state';
 import { clampZoom } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import { extendTo, selectBlock, selectedBlocks, targetOf } from '../state/selection';
+import { extendPeekTo, extendTo, selectBlock, selectedBlocks, targetOf } from '../state/selection';
 import type { EditColors } from './overlay';
 import { editColorsFor, fieldBox, overlayContent, selectionBox } from './overlay';
 import { canvasMargin } from './styles';
@@ -697,8 +697,8 @@ export class CanvasView {
       this.options.run('view.fold.toggle');
       return;
     }
-    // Only blocks of the model are dragged and widen a range; folded rows, fold regions and
-    // shown blocks of an opened call are selected as they are.
+    // Only blocks of the model are dragged; they and the blocks shown in an opened call widen a
+    // range with Shift. Folded rows and fold regions are selected as they are.
     const isModelBlock = hit.kind === 'block' && index.blocks.has(hit.block);
     const selected = selectedBlocks(index, state.selection);
     const isInRange =
@@ -707,6 +707,9 @@ export class CanvasView {
       ancestorsOf(index, hit.block).some((id) => selected.includes(id));
     if (event.shiftKey && isModelBlock) {
       this.session.select(extendTo(index, state.selection, hit.block));
+    } else if (event.shiftKey && clicked?.kind === 'peek') {
+      // Inside an opened call block the range widens the same way, at that call path.
+      this.session.select(extendPeekTo(index, state.selection, clicked));
     } else if (!isInRange) {
       this.session.select(clicked);
     }

@@ -233,6 +233,55 @@ describe('fold regions at an opened call site (R-EDIT-16)', () => {
   });
 });
 
+describe('a range of blocks inside an opened call block (interaction rules 2, R-EDIT-16)', () => {
+  /** sample with the Method's region f1 removed, so p6 · p7 · c2 can make a region. */
+  const plainSample = (): Content => {
+    const base = sample();
+    return {
+      ...base,
+      diagrams: base.diagrams.map((diagram) =>
+        diagram.id === 'd2' ? { ...diagram, body: { ...diagram.body, folds: [] } } : diagram,
+      ),
+    };
+  };
+
+  it('T-1423: Shift+Down widens the range there, stops at the end of the sequence, and zf makes a region of it', () => {
+    const engine = testEngine(plainSample());
+    openCall(engine, 'c1');
+    engine.select({ kind: 'peek', path: ['c1'], anchor: 'p6', focus: 'p6' });
+    engine.keys('Shift+ArrowDown');
+    expect(engine.session.state.selection).toEqual({
+      kind: 'peek',
+      path: ['c1'],
+      anchor: 'p6',
+      focus: 'p7',
+    });
+    engine.keys('Shift+ArrowDown');
+    engine.keys('Shift+ArrowDown');
+    expect(notice(engine)).toBe('notice.sameParentOnly');
+    expect(engine.session.state.selection).toMatchObject({ anchor: 'p6', focus: 'c2' });
+    engine.keys('Shift+ArrowUp');
+    expect(engine.session.state.selection).toMatchObject({ anchor: 'p6', focus: 'p7' });
+    engine.keys('z', 'f');
+    expect(notice(engine)).toBe('notice.siteFoldMade');
+    expect(siteFolds(engine, 'c1')).toEqual([{ id: 'f1', via: [], first: 'p6', last: 'p7' }]);
+  });
+
+  it('T-1424: v then j k widens the range there as with blocks outside', () => {
+    const engine = testEngine(plainSample());
+    openCall(engine, 'c1');
+    engine.select({ kind: 'peek', path: ['c1'], anchor: 'p7', focus: 'p7' });
+    engine.keys('v');
+    expect(engine.session.state.mode).toBe('visual');
+    engine.keys('j');
+    expect(engine.session.state.selection).toMatchObject({ anchor: 'p7', focus: 'c2' });
+    engine.keys('k', 'k');
+    expect(engine.session.state.selection).toMatchObject({ anchor: 'p7', focus: 'p6' });
+    engine.keys('Escape');
+    expect(engine.session.state.mode).toBe('normal');
+  });
+});
+
 describe("the Method's fold regions copied at the first opening (UX CB14, ADR-0047)", () => {
   it('T-1417 · R-EDIT-16: what the Method does to its regions later does not reach a call site already opened', () => {
     const engine = testEngine(sample());

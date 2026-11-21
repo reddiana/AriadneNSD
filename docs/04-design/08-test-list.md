@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 283 | - | 336 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 175 | - | 210 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 285 | - | 338 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 36 | 43 | - | 102 |
 | [[#5. 파일\|파일]] | 18 | 166 | 241 | - | 425 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 85 | 277 | 931 | 5 | 1298 |
+| 합계 | 85 | 277 | 934 | 5 | 1301 |
 
 ## 읽는 법
 
@@ -77,7 +77,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 336개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 338개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -537,7 +537,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 33개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 35개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -547,6 +547,8 @@ id. Vitest · 테스트 5개.
 | T-1090 | peek: 호출 블록에서 gd는 그 Method로 가고, 이름을 적는 호출 블록에는 갈 곳이 없다 | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1416 | peek: 그 자리로 복사한 Method의 접기 영역은 그 호출 블록에서만 풀고 이름을 바꾼다 | - |
+| T-1423 | Shift+Down widens the range there, stops at the end of the sequence, and zf makes a region of it | - |
+| T-1424 | v then j k widens the range there as with blocks outside | - |
 | T-1417 | Method에서 나중에 접기 영역을 바꿔도 이미 펴 본 호출 자리에는 전달되지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1418 | 펴 보인 호출 블록 안에서 편 호출 블록은 그 경로의 접기 영역을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1419 | 복사를 실행 취소하면 그 자리의 접기 영역이 사라지고, 호출 블록은 펴진 채 다시 가져오지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
@@ -642,7 +644,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 210개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 14개, 테스트 211개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -728,7 +730,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/canvas-view.test.ts`
 
-다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 70개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
+다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 71개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -743,6 +745,7 @@ id. Vitest · 테스트 5개.
 | T-0594 | 선택이 있으면 캔버스에 포커스를 줘도 테두리를 비추지 않는다 | [[ux-decisions\|UX CF2]] |
 | T-0595 | 어느 버튼이든 기다리던 첫 키를 버리고, 주 버튼만 선택한다 | [[ux-decisions\|UX K4]] |
 | T-0596 | `Shift`+클릭은 클릭한 블록까지 선택을 넓힌다 | [[01-requirements#^r-edit\|R-EDIT-05]] |
+| T-1425 | a shift click inside an opened call block widens the range there; elsewhere it selects only the clicked block | - |
 | T-0597 | 선택한 범위 안을 클릭하면 놓을 때까지 범위를 지키고, 그다음 클릭한 블록을 선택한다 | - |
 | T-0598 | 블록을 클릭하면 열린 인라인 편집기를 먼저 확정한다 | - |
 | T-0599 | 호버 테두리는 포인터를 따르고, 포인터가 캔버스를 떠나면 없어진다 | - |

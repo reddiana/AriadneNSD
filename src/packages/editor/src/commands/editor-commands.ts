@@ -1185,7 +1185,11 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     navigationSpec('select.nextDiagram', { kind: 'diagram', direction: 'next' }),
     spec('select.visual', {
       edits: false,
-      when: (state) => (state.selection?.kind === 'blocks' ? true : 'reason.nothingSelected'),
+      // Blocks shown inside an opened call block widen the same way (interaction rules 2).
+      when: (state) =>
+        state.selection?.kind === 'blocks' || state.selection?.kind === 'peek'
+          ? true
+          : 'reason.nothingSelected',
       run: () => {
         session.setMode('visual');
         session.notify('notice.visual');

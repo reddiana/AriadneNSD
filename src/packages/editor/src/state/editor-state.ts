@@ -130,7 +130,7 @@ export function withSelection(state: EditorState, selection: Selection | null): 
     ...state,
     selection,
     lastSelected: selection === null && remembered !== null ? remembered : state.lastSelected,
-    mode: selection?.kind === 'blocks' ? state.mode : 'normal',
+    mode: selection?.kind === 'blocks' || selection?.kind === 'peek' ? state.mode : 'normal',
   };
 }
 

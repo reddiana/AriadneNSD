@@ -311,19 +311,64 @@ export function extendTo(index: DocIndex, selection: Selection | null, to: Id): 
 }
 
 /**
+ * Widens a selection inside an opened call block to also hold `to`, a selection made there by a
+ * click (Shift+click, interaction rules "여러 블록 선택"). It works as `extendTo` within the
+ * called Method when both are at the same call path; otherwise only `to` is selected.
+ */
+export function extendPeekTo(
+  index: DocIndex,
+  selection: Selection | null,
+  to: Selection,
+): Selection {
+  if (
+    to.kind !== 'peek' ||
+    selection?.kind !== 'peek' ||
+    !samePath(selection.path, to.path) ||
+    !index.blocks.has(selection.anchor) ||
+    !index.blocks.has(to.focus)
+  ) {
+    return to;
+  }
+  const toAncestors = ancestorsOf(index, to.focus);
+  for (const a of ancestorsOf(index, selection.anchor)) {
+    const owner = placeOf(index, a).owner;
+    const b = toAncestors.find((id) => placeOf(index, id).owner === owner);
+    if (b !== undefined) {
+      return { kind: 'peek', path: selection.path, anchor: a, focus: b };
+    }
+  }
+  return to;
+}
+
+function samePath(a: Path, b: Path): boolean {
+  return a.length === b.length && a.every((id, at) => id === b[at]);
+}
+
+/**
  * Moves the focus end of a block range one block up or down in its sequence (Shift+↑ ↓, `v`
- * then `j` `k`). Returns `null` at the end of the sequence: a range stays under one parent.
+ * then `j` `k`), also a range shown inside an opened call block. Returns `null` at the end of the
+ * sequence: a range stays under one parent.
  */
 export function extendBy(
   index: DocIndex,
   selection: Selection | null,
   direction: 'up' | 'down',
 ): Selection | null {
-  if (selection?.kind !== 'blocks') {
+  if (selection?.kind !== 'blocks' && selection?.kind !== 'peek') {
+    return null;
+  }
+  if (!index.blocks.has(selection.focus)) {
     return null;
   }
   const focus = placeOf(index, selection.focus);
   const seq = seqOfBlock(index, selection.focus).seq;
   const next = seq.blocks[focus.index + (direction === 'down' ? 1 : -1)];
-  return next === undefined ? null : { ...selection, focus: next.id };
+  if (next === undefined) {
+    return null;
+  }
+  if (selection.kind === 'peek') {
+    // A branch label selected is the If or Case itself once the range grows.
+    return { kind: 'peek', path: selection.path, anchor: selection.anchor, focus: next.id };
+  }
+  return { ...selection, focus: next.id };
 }

@@ -234,6 +234,48 @@ describe('CanvasView: clicks (interaction rules 2)', () => {
     expect(made.engine.session.state.selection).toMatchObject({ anchor: 'b1', focus: 'b3' });
   });
 
+  it('T-1425: a shift click inside an opened call block widens the range there; elsewhere it selects only the clicked block', () => {
+    const base = contentOf(
+      [
+        proc('b1'),
+        {
+          id: 'c1',
+          kind: 'call',
+          target: { kind: 'local', diagram: 'd2' },
+          args: '',
+          result: '',
+          siteFolds: [],
+        },
+      ],
+      [proc('p6'), proc('p7'), proc('p8')],
+    );
+    const made = make({
+      ...base,
+      diagrams: base.diagrams.map((diagram) =>
+        diagram.id === 'd2' ? { ...diagram, head: { kind: 'method', text: 'm()' } } : diagram,
+      ),
+    });
+    made.engine.select(selectBlock(made.engine.session.index(), 'c1'));
+    made.engine.keys('f');
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'c1/p6'));
+    pointer(made.canvas, 'pointerup', middleOf(made, 'c1/p6'));
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'c1/p8'), { shiftKey: true });
+    expect(made.engine.session.state.selection).toEqual({
+      kind: 'peek',
+      path: ['c1'],
+      anchor: 'p6',
+      focus: 'p8',
+    });
+    pointer(made.canvas, 'pointerup', middleOf(made, 'c1/p8'));
+    // The Method's own block is another place: only it is selected.
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'p7'), { shiftKey: true });
+    expect(made.engine.session.state.selection).toMatchObject({
+      kind: 'blocks',
+      anchor: 'p7',
+      focus: 'p7',
+    });
+  });
+
   it('T-0597: a click inside a selected range keeps the range until release, then selects the clicked block', () => {
     const made = make(three());
     made.engine.select(selectRange(made.engine.session.index(), 'b1', 'b3'));

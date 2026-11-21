@@ -1082,7 +1082,9 @@ export class EditorSession {
       ...this.current,
       mode: 'normal',
       selection:
-        selection?.kind === 'blocks' ? { ...selection, anchor: selection.focus } : selection,
+        selection?.kind === 'blocks' || selection?.kind === 'peek'
+          ? { ...selection, anchor: selection.focus }
+          : selection,
     });
   }
 
