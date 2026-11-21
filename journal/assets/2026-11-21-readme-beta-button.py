@@ -1,6 +1,9 @@
 # README의 웹 베타 버튼 그림을 만든다 (MVP 버튼과 같은 모양, 글자만 바꿈).
 # 글자는 Pretendard(SIL OFL 1.1)의 글꼴 모양을 선(path)으로 옮겨, GitHub · 사이트 · Obsidian 어디서나 같은 모양이 되게 한다.
 # 쓰는 법: python journal/assets/2026-11-21-readme-beta-button.py   (fonttools가 필요: pip install fonttools)
+#         설치한 글꼴을 읽지 못하면 받은 글꼴 파일을 가리킨다: PRETENDARD_BOLD=경로/Pretendard-Bold.otf
+#         (2026-11-21에는 C:/Windows/Fonts의 것을 읽을 권한이 없어 공식 저장소 v1.3.9의 OTF로 만듦)
+import os
 import pathlib
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
@@ -10,7 +13,7 @@ here = pathlib.Path(__file__).parent
 FONTS = pathlib.Path("C:/Windows/Fonts")
 
 def text_path(font_file, text, size, x0, baseline):
-    f = TTFont(FONTS / font_file)
+    f = TTFont(os.environ.get("PRETENDARD_BOLD") or FONTS / font_file)
     gs, cmap, hmtx = f.getGlyphSet(), f.getBestCmap(), f["hmtx"]
     s = size / f["head"].unitsPerEm
     pen = SVGPathPen(gs)

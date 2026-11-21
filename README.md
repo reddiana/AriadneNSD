@@ -16,7 +16,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 > [!TIP]
 > **웹 베타를 브라우저에서 바로 써 볼 수 있습니다:**<br>
-> <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-01-readme-mvp-button.svg" height="32" alt="AriadneNSD MVP" align="absmiddle"></a><br>
+> <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-21-readme-beta-button.svg" height="32" alt="AriadneNSD Beta" align="absmiddle"></a><br>
 > 웹 베타입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
 
