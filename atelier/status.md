@@ -47,15 +47,14 @@ updated: 2026-11-22
 | 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release) | `c28b3f8` |
 | 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
-| Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스는 main에서, zip은 [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)에. 써 보지 못함) | `091fe6b` `b6adcf6` `7992933` `dc6d15a` |
-| 두꺼운 외곽선: 배율이 정수가 아닐 때(110% 등) 맞닿은 선이 2px로 (결함) | 메인테이너 신고 (2026-11-21 inbox, 2026-11-22 재현 `atelier/sessions/assets/2026-11-22-thick-outline-zoom-110.png`) | 로컬 앱에 있음. 정리 남음(04-visual-design 9.1 · 9.2, ux-decisions) | `70deffa` |
-| 스킬: 처리 블록 하나에 문장 하나(줄바꿈으로 묶지 않음) | 메인테이너 (2026-11-22) | 로컬에 있음(push 전, 설치한 사람에게는 다음 판부터). 정리 남음(07-claude-skill · ux-decisions) | `3d59f98` |
+| Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스 · [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)의 zip. Claude Code에서 설치해 써 봄, claude.ai는 아직) | `091fe6b` `b6adcf6` `7992933` `dc6d15a` |
+| BUG-19 두꺼운 외곽선: 배율이 정수가 아닐 때(110% 등) 1px 선이 2px로 (결함) | 메인테이너 신고 (2026-11-21 inbox, 2026-11-22 재현 `atelier/sessions/assets/2026-11-22-thick-outline-zoom-110.png`) | 사이트에 있음(메인테이너가 로컬에서 확인) | `70deffa` |
+| 스킬: 처리 블록 하나에 문장 하나(줄바꿈으로 묶지 않음) | 메인테이너 (2026-11-22), [[ux-decisions\|SK1]] | 사이트에 있음(설치한 사람에게는 다음 판부터) | `3d59f98` |
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너: v0.3.0 웹 베타를 널리 알림
-- [ ] 메인테이너: 스킬 설치해 써 보기 — Claude Code(`/plugin marketplace add reddiana/AriadneNSD` → `/plugin install ariadne-nsd@ariadne-nsd`), claude.ai(v0.4.0의 `ariadne-nsd.zip`) → [[backlog#Claude skill]]
-- [ ] inbox의 두꺼운 외곽선 결함(예제 다섯)을 함께 검토
+- [ ] 메인테이너: 웹 베타(v0.4.0)와 스킬을 널리 알림
+- [ ] 메인테이너: claude.ai에 v0.4.0의 `ariadne-nsd.zip`을 올려 써 보기, "문장마다 블록"을 담은 다음 판(0.5.0)을 언제 낼지 → [[backlog#Claude skill]]
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]

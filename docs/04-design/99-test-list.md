@@ -764,7 +764,7 @@ id. Vitest · 테스트 5개.
 | T-0588 | 선택한 것이 있는지와 포커스 테두리를 지키는지를 표시한다 | - |
 | T-0589 | 스테이지의 크기를 다이어그램과 줌으로 정하고, 둘레에 캔버스 여백을 둔다 | - |
 | T-0590 | dispose는 캔버스를 없애고 듣기를 멈춘다 | - |
-| T-1482 | snaps the lines to whole device pixels at the zoom and the device pixel ratio, and back at 100% | - |
+| T-1482 | 확대 배율과 devicePixelRatio에서 선을 화면 픽셀의 정수배로 맞추고, 100%로 돌아오면 되돌림 | - |
 | T-0591 | 블록을 클릭하면 그 블록을 선택하고 캔버스에 포커스를 준다 | - |
 | T-0592 | 빈 캔버스를 클릭하면 선택을 풀고 포커스 테두리를 1초 동안 비춘다 | [[ux-decisions\|UX CF2]] |
 | T-0593 | 포커스 테두리가 보이는 동안 다시 비추면 1초를 처음부터 다시 센다 | [[ux-decisions\|UX CF2]] |
@@ -836,13 +836,13 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/crisp-lines.test.ts`
 
-Even straight lines on the screen at any scale (visual design 9.1, 9.2). Vitest + happy-dom · 테스트 3개.
+어느 배율에서도 화면의 곧은 선은 고른 굵기 (시각 디자인 9.1, 9.2). Vitest + happy-dom · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1480 | gives every width a whole number of device pixels, at least one, at any scale | - |
-| T-1481 | snaps crisp-edged shapes and straight unfilled paths, leaves diagonals, and clears the width where none is needed | - |
-| T-1483 | tells paths of horizontal and vertical lines from diagonals and curves | - |
+| T-1480 | 어느 배율에서도 모든 굵기를 화면 픽셀의 정수배(적어도 1)로 | - |
+| T-1481 | crispEdges 도형과 채우지 않은 곧은 패스는 맞추고, 대각선은 그대로 두며, 필요 없는 곳은 굵기를 지움 | - |
+| T-1483 | 가로 · 세로 선만의 패스와 대각선 · 곡선의 패스를 가름 | - |
 
 ^t-packages-editor-src-dom-crisp-lines-test-ts
 
@@ -2555,3 +2555,4 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[01-requirements#^at\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
 | [[defects#BUG-06\|BUG-06]] | 없음 |
+| [[defects#BUG-19\|BUG-19]] | 없음 |

@@ -2,7 +2,7 @@
 title: Outbox
 tags:
   - plan
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Outbox
@@ -96,6 +96,11 @@ updated: 2026-11-21
 - [ ] 다른 탭이 편집 중일 때의 라벨 · 툴팁 문구(하단 상태 줄의 라벨은 그대로) → [[ux-decisions#RO1. 다른 탭이 편집 중일 때의 보기만 하는 중|RO1]]
 - [ ] 정보 창: 이름표 아래에 전체 주소 → [[ux-decisions]] W4
 - [ ] Claude skill에서 에이전트가 정한 것: 번들 방식(파일 하나를 커밋, 실행 중 스키마 검사 없음), 이름 없을 때 첫 Method 이름, 마켓플레이스 이름 `ariadne-nsd`(설치 `ariadne-nsd@ariadne-nsd`), manifest의 author `reddiana` · `Apache-2.0` · `development`, 버전은 plugin.json에만 → [[0050-claude-skill-bundle-and-distribution|ADR-0050]], [[07-claude-skill]]
+
+### 2026-11-22 세션에 Claude(에이전트)가 정한 것
+
+- [ ] README의 "Claude 스킬" 절의 문구와 자리(웹 베타 상자 아래) → [README](https://github.com/reddiana/AriadneNSD#claude-스킬)
+- [ ] BUG-19의 고침: 화면의 선 굵기를 화면 픽셀의 정수배로 올림(150%에서 1px 선이 2px), 좌표는 맞추지 않음, 대각선은 그대로 → [[defects#BUG-19]], [[04-visual-design]]
 
 ## 알아만 두세요
 

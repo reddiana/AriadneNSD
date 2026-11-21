@@ -139,8 +139,10 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## Claude skill
 
-- [ ] 실제로 써 보기: claude.ai에 zip 올리기(샌드박스의 Node 버전 확인, 20 이상), GitHub에서 `/plugin marketplace add reddiana/AriadneNSD` → [[07-claude-skill]]
-- [ ] 다음 판을 낼 때 `release.yml`이 zip을 붙이는지 확인(v0.3.0에는 스킬이 없음)
+- [ ] 실제로 써 보기: claude.ai에 zip 올리기(샌드박스의 Node 버전 확인, 20 이상). Claude Code의 마켓플레이스 설치는 됨(2026-11-22) → [[07-claude-skill]]
+- [ ] 다음 판(0.5.0)으로 "문장마다 블록"(`3d59f98`)을 설치한 사람에게 보내기
+- [ ] claude.ai의 플러그인 검색(Anthropic Directory)에 제출할지: 제출처 · 심사 기준 알아보기
+- [ ] 사용법 AI 꼭지에 데스크톱 앱의 `/plugin` 창 안내 한 줄
 - [ ] 다음 판 후보: core의 편집 명령(`extractMethod` · `inlineCall` 등)을 `nsd.mjs`의 명령으로 내놓을지. 지금은 Claude가 JSON을 직접 고침
 - [ ] 커버리지 대상과 버전 일치 검사에 스킬 패키지를 넣을지
 - [ ] 뒤로 미룬 기능: D 차트 → 코드([[01-requirements#^r-code|R-CODE-02]]), E 코드와 문서의 차트가 어긋났는지 검사, F 문제 내기 · 채점 (2026-11-21, 메인테이너가 A · B · C를 먼저 고름)

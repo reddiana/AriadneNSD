@@ -26,17 +26,6 @@ title: Inbox
 # 5. 질문/요청
 # 6. 결함
 ## 웹 베타
-- 외곽선이 두껍게 나오는 경우가 있음
-	- 예제의 UART 수신 인터럽트
-	  ![[2026-11-21-thick-outline-uart-isr.png]]
-	- 예제의 이진탐색
-	  ![[2026-11-21-thick-outline-binary-search.png]]
-	- 예제의 퀵소트
-	  ![[2026-11-21-thick-outline-quicksort.png]]
-	- 예제 자판기
-	  ![[2026-11-21-thick-outline-vending-machine.png]]
-	- 예제 엘리베이터
-	  ![[2026-11-21-thick-outline-elevator.png]]
 
 # 7. 기타
 
