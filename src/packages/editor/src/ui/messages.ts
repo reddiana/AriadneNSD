@@ -58,17 +58,12 @@ const en = {
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
-    '0.2.0 brings the features planned for web 1.0:\n' +
-    '- Fold control blocks and named fold regions; folds are saved in the file\n' +
-    '- Extract selected blocks to a new Method; expand a call block in place, or unwrap it\n' +
-    '- Call blocks that only name what they call (library functions)\n' +
-    '- Block text language and syntax highlighting\n' +
-    '- Document themes (light, dark, high contrast, black-and-white print) and a high-contrast screen\n' +
-    '- Share links that open in view mode\n' +
-    '- Documents kept in the browser, without a file\n' +
-    '- Export to picture-only SVG and PDF, print, and text as outlines\n' +
-    '- A notice when another tool changed only the picture of a file\n' +
-    '- Fixes for problems found while using 0.1.0',
+    '0.3.0 is the first web beta.\n' +
+    '- A call block whose Method is missing looks like any other, and its name, arguments and result can be edited\n' +
+    '- gd on a call block (or right-click › Make Method) creates the Method it names\n' +
+    "- Inline Method and Delete: puts the Method's blocks at every call site and deletes the Method\n" +
+    '- When another tab is editing the same document, the top right says so\n' +
+    '- The About window shows the full addresses of the documentation and the repository',
   'modal.close': 'Close',
   'contextMenu.label': 'Context menu',
   'dialog.label': 'Question',
@@ -192,17 +187,12 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':
-    '0.2.0은 웹 1.0에 넣기로 한 기능을 담았습니다.\n' +
-    '- 제어 블록 접기와 이름을 붙인 접기 영역. 접힌 모습은 파일에 저장됩니다\n' +
-    '- 고른 블록을 새 Method로 빼기, 호출 블록을 그 자리에서 펴 보기 · 풀기\n' +
-    '- 이름만 적는 호출 블록(라이브러리 함수 등)\n' +
-    '- 블록 텍스트의 언어와 구문 강조\n' +
-    '- 문서의 테마(밝은 · 어두운 · 고대비 · 흑백 인쇄)와 고대비 화면\n' +
-    '- 보기 모드로 열리는 공유 링크\n' +
-    '- 파일 없이 브라우저에 두는 문서\n' +
-    '- 그림만 담은 SVG · PDF 내보내기, 인쇄, 텍스트 외곽선\n' +
-    '- 다른 도구가 그림만 고친 파일을 열면 알림\n' +
-    '- 0.1.0을 쓰며 찾은 문제의 수정',
+    '0.3.0은 웹 베타의 첫 판입니다.\n' +
+    '- Method가 없는 호출 블록도 보통 모양이고, 이름 · 인자 · 결과를 고칠 수 있음\n' +
+    '- 호출 블록에서 gd(또는 우클릭 › Method 만들기)로 가리키는 Method를 만듦\n' +
+    '- Method 풀어 넣고 지우기: 모든 호출 자리에 풀어 넣고 Method를 지움\n' +
+    '- 같은 문서를 다른 탭에서 편집 중이면 우상단에 그 까닭을 보임\n' +
+    '- 정보 창에 문서 · 저장소의 전체 주소',
   'modal.close': '닫기',
   'contextMenu.label': '컨텍스트 메뉴',
   'dialog.label': '질문',

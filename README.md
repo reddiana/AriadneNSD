@@ -12,16 +12,16 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
   <img src="journal/assets/2026-11-02-readme-dijkstra.ns.svg" width="300" hspace="4" alt="NS 차트 예: 다익스트라 최단 경로">
   <img src="journal/assets/2026-11-02-readme-merge-sort.ns.svg" width="286" hspace="4" alt="NS 차트 예: 병합 정렬">
 </p>
-<p align="center"><sub>MVP로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
+<p align="center"><sub>AriadneNSD로 그린 NS 차트: 다익스트라 최단 경로(왼쪽)와 병합 정렬(오른쪽)</sub></p>
 
 > [!TIP]
-> **MVP를 브라우저에서 바로 써 볼 수 있습니다:**<br>
+> **웹 베타를 브라우저에서 바로 써 볼 수 있습니다:**<br>
 > <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-01-readme-mvp-button.svg" height="32" alt="AriadneNSD MVP" align="absmiddle"></a><br>
-> 첫 출시(MVP)의 웹 버전입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
+> 웹 베타입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
 
 > [!NOTE]
-> **지금은 첫 출시(MVP)인 웹 버전을 개발하고 있습니다.** 요구사항 · 아키텍처 · 상세 설계를 바탕으로 코드를 [`src/`](src/README.md)에서 만들고 있고, 만든 것은 위의 MVP 주소에 올라갑니다. Obsidian 플러그인과 데스크톱 앱은 아직 설계 단계입니다.
+> **지금은 웹 베타입니다.** 요구사항 · 아키텍처 · 상세 설계를 바탕으로 코드를 [`src/`](src/README.md)에서 만들고 있고, 만든 것은 위의 주소에 올라갑니다. Obsidian 플러그인과 데스크톱 앱은 아직 설계 단계입니다.
 
 ## 이 저장소를 읽는 법
 
@@ -50,8 +50,8 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 | 단계 | 버전 | 무엇을 | 저장한 파일 |
 | --- | --- | --- | --- |
-| **웹 MVP** (지금) | 0.1 · 0.2 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기(0.1). 0.2에서 아래 1.0의 기능을 먼저 더했습니다. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
-| 웹 베타 | 0.x | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| 웹 MVP | 0.1 · 0.2 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기(0.1). 0.2에서 아래 1.0의 기능을 먼저 더했습니다. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| **웹 베타** (지금) | 0.3부터 | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | Obsidian 베타 | 0.x | 웹 베타와 함께 시작합니다. BRAT 플러그인으로 GitHub에서 바로 설치합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | 웹 1.0 | 1.0 | 접기, Method로 빼기, 호출 블록 펴 보기, 구문 강조, 테마, 공유 URL, PDF · 인쇄, 고대비 화면. 키 배치가 굳습니다 | **뒤의 모든 버전이 엽니다** |
 | Obsidian 1.0 | | Obsidian 커뮤니티 플러그인 목록에 올립니다 | 뒤의 모든 버전이 엽니다 |
@@ -66,7 +66,8 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 
 1. **설계:** 요구사항부터 UX · 아키텍처 · 상세 설계까지 문서로 먼저 썼습니다. 결정의 근거는 결정 기록(ADR · DR)으로, 세션마다 의논한 것은 세션 기록으로 남깁니다.
 2. **시안과 프로토타입:** 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐고, 버릴 프로토타입으로 요구사항을 써 보았습니다. 페이지마다 무엇을 견주어 왜 골랐는지 적혀 있습니다: [`atelier/sketchbook.md`](atelier/sketchbook.md)
-3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈고, 웹 1.0의 기능을 더한 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)이 지금 판입니다. 지금은 써 보며 다듬고 있습니다.
+3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈고, 웹 1.0의 기능을 더한 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)까지 냈습니다.
+4. **웹 베타:** [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0)부터 널리 알리고 써 보며 다듬습니다.
 
 처음부터 지금까지의 흐름은 [`journal/timeline.md`](journal/timeline.md)에, AI와 일하는 법을 배워 간 기록은 [`journal/learning-claude-code.md`](journal/learning-claude-code.md)에 있습니다.
 
