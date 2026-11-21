@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # 현재 상태
@@ -25,7 +25,7 @@ updated: 2026-11-21
 
 **웹 베타 0.3.0을 냈습니다(2026-11-21).** 베타 동안 웹의 `P1`을 다듬고 Obsidian 베타(BRAT)를 시작합니다. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
 
-- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0)(Pre-release, 웹 베타). 1.0 전에는 파일 형식이 바뀔 수 있음
+- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)(Pre-release, 웹 베타, Claude skill의 zip 포함). 1.0 전에는 파일 형식이 바뀔 수 있음
 - 코드 `src/` → `src/README.md`, 규칙 [[07-coding-guide]], 문서 지도 [[docs/README#문서 지도|문서 색인]]
 - 테스트: 단위 · 통합 1,685개, E2E 83개(2026-11-19), 커버리지 → [[coverage]], 결함 → [[defects]]
 
@@ -47,12 +47,12 @@ updated: 2026-11-21
 | 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release) | `c28b3f8` |
 | 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
-| Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스는 main에서, zip은 다음 Release부터. 써 보지 못함) | `091fe6b` `b6adcf6` `7992933` |
+| Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스는 main에서, zip은 [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)에. 써 보지 못함) | `091fe6b` `b6adcf6` `7992933` `dc6d15a` |
 
 ## 이번과 다음 세션에 할 것
 
 - [ ] 메인테이너: v0.3.0 웹 베타를 널리 알림
-- [ ] 메인테이너: push 뒤 Claude Code에서 스킬 설치해 써 보기(`/plugin marketplace add reddiana/AriadneNSD` → `/plugin install ariadne-nsd@ariadne-nsd`), 새 판을 낼지 → [[backlog#Claude skill]]
+- [ ] 메인테이너: 스킬 설치해 써 보기 — Claude Code(`/plugin marketplace add reddiana/AriadneNSD` → `/plugin install ariadne-nsd@ariadne-nsd`), claude.ai(v0.4.0의 `ariadne-nsd.zip`) → [[backlog#Claude skill]]
 - [ ] inbox의 두꺼운 외곽선 결함(예제 다섯)을 함께 검토
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
