@@ -52,13 +52,13 @@ updated: 2026-11-22
 | 스킬: 처리 블록 하나에 문장 하나(줄바꿈으로 묶지 않음) | 메인테이너 (2026-11-22), [[ux-decisions\|SK1]] | 사이트에 있음(설치한 사람에게는 다음 판부터) | `3d59f98` |
 | 알고리즘 갤러리 `/gallery/`: G3 목록 + 큰 그림, 22개(앱 예제 6 + 고전 · 어려운 · 재미 16) | 메인테이너 (2026-11-22), M70 | 사이트에 있음(https://ariadnensd.com/gallery/ko/, 정확성 검사 통과 `17fc681`) | `56c1529` `0756e96` |
 | README: 영어가 대문(`README.md`), 한국어는 `README.ko.md`(사이트 `/about`), `.ns.svg` 설명 문구, 영어 그림 | 메인테이너 (2026-11-22) | 사이트에 있음 | `b0c5b0f` `29ef4e9` |
-| 사이트 왼쪽 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(`/gallery/ko/`) | 메인테이너 (2026-11-22) | 사이트에 있음. 링크로 들어가면 SPA가 가로채 갤러리 스크립트가 돌지 않던 것 고침: 로컬 앱에 있음 | `e75e0f3` `c4cb34f` |
+| 사이트 왼쪽 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(`/gallery/ko/`) | 메인테이너 (2026-11-22) | 사이트에 있음(SPA가 갤러리 링크를 가로채지 않게 고침) | `e75e0f3` `c4cb34f` |
 | 앱 도움말 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(한국어 `gallery/ko/`, 영어 `gallery/`), T-1491 | 메인테이너 (2026-11-22), [[ux-decisions\|GL2]] | 사이트에 있음 | `82fa479` |
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너: GeekNews · HN · Reddit 계정을 미리 만들기(새 계정 제한) → [[promotion#지금 바로: 계정을 미리 만들기]]
-- [ ] 메인테이너: 사이트의 갤러리(https://ariadnensd.com/gallery/ko/)를 보고 [[promotion#올리기 전에 확인할 것]] → GeekNews에 올림, 그다음 Show HN · Reddit
+- [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
+- [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: claude.ai에 v0.4.0의 `ariadne-nsd.zip`을 올려 써 보기, "문장마다 블록"을 담은 다음 판(0.5.0)을 언제 낼지 → [[backlog#Claude skill]]
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)

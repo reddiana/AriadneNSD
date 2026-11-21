@@ -69,3 +69,4 @@ updated: 2026-10-25
 - [[2026-11-22-01-release-and-crisp-lines|2026-11-22 v0.4.0(스킬 zip), 스킬을 처음 써 보기와 문장마다 블록, README의 스킬 설치, 정수가 아닌 배율의 선 굵기(BUG-19)]]
 - [[2026-11-22-02-promotion-gallery|2026-11-22 홍보 준비: 알고리즘 갤러리(M70 G3, 22개, 정확성 검사), GeekNews · Show HN · Reddit 초안]]
 - [[2026-11-22-03-first-post-guide|2026-11-22 처음 올리는 사람의 단계별 안내(GeekNews · HN · Reddit), GeeksforGeeks는 뺌, 홍보 문서는 사이트에서 뺌, 갤러리로 가는 링크(사이트 메뉴 · 앱 도움말, GL2)]]
+- [[2026-11-22-04-gallery-spa-geeknews-mail|2026-11-22 갤러리 링크를 SPA가 가로채던 것, GeekNews를 GN 형식으로 다시 올림, report 메일을 클라우드 예약 작업으로]]
