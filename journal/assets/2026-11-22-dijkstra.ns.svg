@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="315" height="552" viewBox="0 0 315 552">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="7a6d3a99f666b143b8c4635096f60addf572f1c65eeee03f8e200f08912f7080"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "dijkstra(G, s)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "for",
+          "text": "for each v in G.V",
+          "body": [
+            {
+              "id": "b2",
+              "kind": "process",
+              "text": "dist[v] = ∞"
+            },
+            {
+              "id": "b3",
+              "kind": "process",
+              "text": "prev[v] = none"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "dist[s] = 0"
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "Q = 우선순위 큐(G.V, 키 dist)"
+        },
+        {
+          "id": "b6",
+          "kind": "while",
+          "text": "Q가 비어 있지 않음",
+          "body": [
+            {
+              "id": "b7",
+              "kind": "call",
+              "target": {
+                "kind": "named",
+                "name": "Q.extractMin"
+              },
+              "args": "",
+              "result": "u"
+            },
+            {
+              "id": "b8",
+              "kind": "for",
+              "text": "for each (v, w) in G.adj[u]",
+              "body": [
+                {
+                  "id": "b9",
+                  "kind": "process",
+                  "text": "alt = dist[u] + w"
+                },
+                {
+                  "id": "b10",
+                  "kind": "if",
+                  "text": "alt < dist[v]",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b11",
+                        "kind": "process",
+                        "text": "dist[v] = alt"
+                      },
+                      {
+                        "id": "b12",
+                        "kind": "process",
+                        "text": "prev[v] = u"
+                      },
+                      {
+                        "id": "b13",
+                        "kind": "call",
+                        "target": {
+                          "kind": "named",
+                          "name": "Q.decreaseKey"
+                        },
+                        "args": "v, alt",
+                        "result": ""
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r2",
+                    "body": [
+                      {
+                        "id": "b14",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "return dist, prev"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">dijkstra(G, s)</tspan></text>
+<path d="M24 64 L291 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="267" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">for each v in G.V</text>
+<rect x="46" y="96" width="245" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="116" font-size="13" fill="#151a22" xml:space="preserve">dist[v] = ∞</text>
+<rect x="46" y="128" width="245" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="148" font-size="13" fill="#151a22" xml:space="preserve">prev[v] = none</text>
+<rect x="24" y="160" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">dist[s] = 0</text>
+<rect x="24" y="192" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">Q = 우선순위 큐(G.V, 키 dist)</text>
+<rect x="24" y="224" width="267" height="272" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="244" font-size="13" fill="#151a22" xml:space="preserve">Q가 비어 있지 않음</text>
+<rect x="46" y="256" width="245" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 256 L53 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M284 256 L284 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="276" font-size="13" fill="#151a22" xml:space="preserve">u ← <tspan font-weight="600">Q.extractMin</tspan></text>
+<rect x="46" y="288" width="245" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="308" font-size="13" fill="#151a22" xml:space="preserve">for each (v, w) in G.adj[u]</text>
+<rect x="68" y="320" width="223" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="340" font-size="13" fill="#151a22" xml:space="preserve">alt = dist[u] + w</text>
+<rect x="68" y="352" width="223" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 352 L239 400 L291 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="238.5" y="370" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">alt &lt; dist[v]</text>
+<text x="74" y="395" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="285" y="395" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="68" y="400" width="171" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="420" font-size="13" fill="#151a22" xml:space="preserve">dist[v] = alt</text>
+<rect x="68" y="432" width="171" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="452" font-size="13" fill="#151a22" xml:space="preserve">prev[v] = u</text>
+<rect x="68" y="464" width="171" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M75 464 L75 496" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M232 464 L232 496" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="85" y="484" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Q.decreaseKey</tspan>(v, alt)</text>
+<rect x="239" y="400" width="52" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="265" cy="448" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M260.5 452.5 L269.5 443.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="496" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="516" font-size="13" fill="#151a22" xml:space="preserve">return dist, prev</text>
+</g>
+</svg>

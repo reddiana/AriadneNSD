@@ -21,6 +21,21 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 > Claude를 쓴다면 [AriadneNSD 스킬](https://ariadnensd.com/manual/ko/#claude-skill)을 설치해 대화 중에 다이어그램을 만들고, 코드를 그리고, 받은 다이어그램을 고칠 수 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
 
+## Claude 스킬
+
+Claude에게 "이 함수를 NS 차트로 그려 줘"라고 하면 `.ns.svg` 파일과 공유 링크를 만들어 줍니다. 코드를 다이어그램으로 옮기고, 받은 다이어그램을 읽고 고칠 수도 있습니다. 한 번 설치하면 따로 부르지 않아도 Claude가 알아서 씁니다.
+
+**Claude Code:** 터미널에서 두 명령을 차례로 실행합니다(마켓플레이스 등록 → 설치). 대화창에서 `/plugin marketplace add …`로도 되고, 데스크톱 앱에서는 `/plugin`이 플러그인 창을 여니 거기서 `reddiana/AriadneNSD`를 추가합니다.
+
+```sh
+claude plugin marketplace add reddiana/AriadneNSD
+claude plugin install ariadne-nsd@ariadne-nsd
+```
+
+**claude.ai:** [최신 Release](https://github.com/reddiana/AriadneNSD/releases)에서 `ariadne-nsd.zip`을 받아 Settings › Capabilities › Skills에 올립니다("Code execution and file creation"을 켜 두어야 합니다).
+
+자세한 것은 [사용법의 AI 꼭지](https://ariadnensd.com/manual/ko/#claude-skill)에 있습니다.
+
 > [!NOTE]
 > **지금은 웹 베타입니다.** 요구사항 · 아키텍처 · 상세 설계를 바탕으로 코드를 [`src/`](src/README.md)에서 만들고 있고, 만든 것은 위의 주소에 올라갑니다. Obsidian 플러그인과 데스크톱 앱은 아직 설계 단계입니다.
 
