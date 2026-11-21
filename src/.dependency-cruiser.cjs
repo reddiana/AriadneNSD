@@ -72,9 +72,10 @@ module.exports = {
     },
     {
       name: 'no-deep-import',
-      comment: 'Import another package only through its index.ts (coding guide 3.2).',
+      comment:
+        'Import another package only through its index.ts (coding guide 3.2). The gallery check (apps/gallery/verify, a dev tool that is not shipped) reads the block specs of the gallery diagrams, which the index does not export.',
       severity: 'error',
-      from: { path: '^(packages|apps)/([^/]+)/' },
+      from: { path: '^(packages|apps)/([^/]+)/', pathNot: '^apps/gallery/verify/' },
       to: {
         path: '^packages/([^/]+)/src/',
         pathNot: ['^packages/$2/src/', '^packages/[^/]+/src/index\\.ts$'],

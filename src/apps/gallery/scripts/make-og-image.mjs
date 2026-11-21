@@ -2,13 +2,12 @@
 // three of the diagrams. Like site/make-og-image.mjs it is not run on every build: run it again
 // when the diagrams or the logo change, and commit the PNG.
 //   node apps/gallery/scripts/make-og-image.mjs   (in src/, after pnpm install)
-// It borrows Playwright's Chromium from apps/web, which renders the diagrams' embedded fonts.
+// Playwright's Chromium renders the diagrams' embedded fonts (the same version as apps/web's).
 import { readFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
+
+import { chromium } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
-const require = createRequire(new URL('../web/package.json', root));
-const { chromium } = require('@playwright/test');
 
 const asset = async (url, type) =>
   `data:${type};base64,${(await readFile(url)).toString('base64')}`;
