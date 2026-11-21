@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="528" height="504" viewBox="0 0 528 504">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="754c405f31c44a41b515d204a42a7a1713a879efc4c9539c332a4db8c1b84a1a"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "bfs(grid, start, goal)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "dist = {start: 0}"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "q = deque([start])"
+        },
+        {
+          "id": "b3",
+          "kind": "while",
+          "text": "q",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "process",
+              "text": "p = q.popleft()"
+            },
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "p == goal",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "return dist[p]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b8",
+              "kind": "for",
+              "text": "for d in (N, E, S, W)",
+              "body": [
+                {
+                  "id": "b9",
+                  "kind": "process",
+                  "text": "n = p + d"
+                },
+                {
+                  "id": "b10",
+                  "kind": "if",
+                  "text": "grid.open(n) and n not in dist",
+                  "yes": {
+                    "id": "r3",
+                    "body": [
+                      {
+                        "id": "b11",
+                        "kind": "process",
+                        "text": "dist[n] = dist[p] + 1    # first arrival is the shortest"
+                      },
+                      {
+                        "id": "b12",
+                        "kind": "process",
+                        "text": "q.append(n)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b13",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "return -1    # unreachable"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">bfs(grid, start, goal)</tspan></text>
+<path d="M24 64 L504 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="480" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">dist = {start: 0}</text>
+<rect x="24" y="96" width="480" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">q = deque([start])</text>
+<rect x="24" y="128" width="480" height="320" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">q</text>
+<rect x="46" y="160" width="458" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="180" font-size="13" fill="#151a22" xml:space="preserve">p = q.popleft()</text>
+<rect x="46" y="192" width="458" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 192 L358 240 L504 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="358" y="210" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p == goal</text>
+<text x="52" y="235" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="498" y="235" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="240" width="312" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="260" font-size="13" fill="#151a22" xml:space="preserve">return dist[p]</text>
+<rect x="358" y="240" width="146" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="431" cy="256" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M426.5 260.5 L435.5 251.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="272" width="458" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">for d in (N, E, S, W)</text>
+<rect x="68" y="304" width="436" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="324" font-size="13" fill="#151a22" xml:space="preserve">n = p + d</text>
+<rect x="68" y="336" width="436" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 336 L452 384 L504 336" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="396.5" y="354" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">grid.open(n) and n not in dist</text>
+<text x="74" y="379" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="498" y="379" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="384" width="384" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="404" font-size="13" fill="#151a22" xml:space="preserve">dist[n] = dist[p] + 1    # first arrival is the shortest</text>
+<rect x="68" y="416" width="384" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="436" font-size="13" fill="#151a22" xml:space="preserve">q.append(n)</text>
+<rect x="452" y="384" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="478" cy="416" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M473.5 420.5 L482.5 411.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="448" width="480" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="468" font-size="13" fill="#151a22" xml:space="preserve">return -1    # unreachable</text>
+</g>
+</svg>

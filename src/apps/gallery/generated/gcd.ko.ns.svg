@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="796" height="412" viewBox="0 0 796 412">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="bd0101cf15e0f3568cb11aaa7ca9fdbb2b2326f2ef9b6b85a91239ec41817b92"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "240, 46",
+          "result": "g"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "print(g)    # 2"
+        },
+        {
+          "id": "b3",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "240, 46",
+          "result": "g, x, y"
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "print(x, y)    # -9 47: 240·(-9) + 46·47 = 2"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "gcd(a, b)"
+      },
+      "body": [
+        {
+          "id": "b5",
+          "kind": "while",
+          "text": "b != 0",
+          "body": [
+            {
+              "id": "b6",
+              "kind": "process",
+              "text": "a, b = b, a % b    # gcd(a, b) = gcd(b, a mod b)"
+            }
+          ]
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "return a"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "ext_gcd(a, b)"
+      },
+      "body": [
+        {
+          "id": "b8",
+          "kind": "if",
+          "text": "b == 0",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "process",
+                "text": "return a, 1, 0"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b11",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "b, a % b",
+          "result": "g, x, y"
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "return g, y, x - (a // b) * y    # 거꾸로 대입한다"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAABN4AAsAAAAAG3AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAFUAAABgaxdDC2NtYXAAAAFgAAAAvQAAARQc0L0xZ2FzcAAAAiAAAAAQAAAAEAAXAAlnbHlmAAACMAAADWkAABHA3Oy+yWhlYWQAAA+cAAAANgAAADY67EFKaGhlYQAAD9QAAAAfAAAAJAblAutobXR4AAAP9AAAAHYAAADEW1oLpWxvY2EAABBsAAAAbAAAAGxqPG8LbWF4cAAAENgAAAAcAAAAIABfAYBuYW1lAAAQ9AAAAmwAAAWisvBt9nBvc3QAABNgAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgagWgYGBSANBkGeEW4MDgwKV2OYg/5nMSxgbgeq4WAAqWNg4mPaBqQUGBgBwdcQwwAAAHjaY2BgYAJiZiAWAZKMYJoFRDHYMCgwsDDIMCgyKDOoMugyGDGYMJgzWDHYMrgy+DLEM6QyZDIUMBQxlDFUMmxXnLCmYP2OTU82M+yIOd568vIZi6sx//8DTVEA69Zg0AfqNmOwhOtOZEhnyAXqLmGowKX7/8P/D/7f/3/3/53/t//f+n/z//X/F/6f/L/j//b/2/5v/r/p/8b/G/4X35sdvCeg1NfLV9/9isUas3jj31o3wP4gGwAAmgtSnQAAAAAAAAMACAACABAAAf//AAN42nVXCXAb13ne95bEihdAHIvFTSyWuAmQwGJ3ARIAL4AACJAUKRAiddCmRB2M5cR2dE0s27riVKmbyHFmXHfqpo1S2x0rlpzIsh1l7DpRbGvkdpRxEjWu0zqTunXdppOOM5kkFh/zL0DGUpxIfHh7vP3f9x/f//+PwtSzq6soh69TNKWjKKNIC4zJLMZlKeETPJrv3WkZCoa6usLhrq4Qvk6aHukK1W8p+LKNsqD38VnKTnWpXzKiAoMR6kNQ6kMR1cHBq3/Is7vZMfPull3WncySK+/cDWOBuc220LJ9wPFJOz776KOPpi6lrsE/mOTvfIdqppqoDvRL/CJgM1JOKkIpFIWQgBiTFgsen5TIYjFuZhIAlDUBZvSnnv+SbKugM48ZPXFXOt/4HU85nPCHAh976HTgb6zswH9zyi37uVKhSw5w48VqX3e1l3ylfjPmlgPmUkl91AeAqAdWD6Jn8IcUB1YwuTDHClFaxaCIrJb+sVOeEgtSLc3z6ZpUEKdkJ8pk7j+wx9favevQidzIsf07u1t9S/fcC5LGQNKBhiSUiGK/JLpoFpRiBClLI/sfFXXvPUsgauf+YyO5E4d2gag9B+5XUUnUMfQy5sE7FGL8ZjMnKBoN41d8Pr/CwY/IyLLCMehl4XOYweU2vsDzDwsVwfsg3UyX2zwjnu6HUWt2LjgT+Ko5wmaLBq8hOx/cGDzDRcxDRdiBp0bQm9gKcUAZJZEVWYEVJEH64fiFC+MX0Ozly8WrV9V1W1YPoSL1LGWmKC6exRBZfh84SQYfqcoJW9xKkLN2tBncHkHyZSf9cwan18SZWjaYDOZgKh0uSk5VowzqQM+jeYgGCrG8hJ4nD6L5SgXeDK2+jC7gt9U3nIDEL80g3+Qw7YT7MEWjK/gViG0r5QGca1t6ogBDNsZlQOKnzWajR8OBiYy+3yztc0iTMXEiYVteyuSbcRP9Q23Umx5pQpj+gR2/8vQL209Wfb7qye0vPL1y4rOPeDI28rzPg1Nf+LKQtKHCRhXpLNWJ3sAXKQNFKZKoF7Q0eBDMLepF9u7PoQ5vMKRv75231o52lrCmzWI2MeOmhHXlTEn9egi+/kf8PYh4sKu8biaG4UFpJQuhpTKTGebnxa13GbtClq8gGzl6yeK1awcTnqk+PFLm+PktvsH+pOvVQuG/XPGY5JZFu1vlrBtk/wcga6W0sJWKR3UaGJOhReTbuXXrLPlfxLW89Bq+SEbzX/vaBKpaySX1S5FqQq+DJb1UCr70AQbApKJz4Y9Mmm0CtByLgAZi3dVReKHF6DHziLOnX9DTbD7cN9bLWcVyfHRjWLuB9UjjMe+Qi7zXYYccE3F0tNvCXe4eZwfepjX0lWo+V8CTnu4Va4NCZvtdCf/c7MSAoO0YJw/ZU71OV2+/3Z6KOJ2RftVyKdDuEminAbsLRl7i2Z9u+XfyJjreiRfzE6oWYdDiZdBCUHMJ+Mas5jogxhp8QF1XpwnSiHENPLumzHQ7l3SUZzTmfCSej5issfHY6EyPtoXtlivx7oHfdjgAeNjW1mIJ8XzE2e4u6TqPf7or4O6fjgP87vTC3Yng/Gwl5elAlx0DMbcjOuBy94etjh4FkH2dcqIhdAPYBOxX1tgBuHz6m66/vp6L1+fda7fojrULkNRNnUPX0DmIfqbBlGaVLddIFZ2FcS6X+3Yup1prBqz1fbAW8NfL6yG6Gv/R98kxdJC8gzrIByjYiZ8ovTFO1PUWWP8vjahGtED7WVowikZOgR+BltC+yfGJVn3VvrDQ2rp4u6mqRYT8GrWk/Ss38BPkRVlGhZUtmPaDpBDkuSur31T5Wsd2hSxOZDKqfyLA1/PYRrVTQUAlMRrI4OCiLPauMUEv+AXVXWoCUZQ1LqDFwzExGHLEvWbyi8C0OLd1ksbcRLQ0Oz75lzExVPFfT5mYnkggbPEnfjpp4fZuJ5dGQ76JfH6qw6odlDgn7D0Ee7+Kf0R1qnsrda83yiDEgHJTmPuhtOmBOrL8iN4VsCSTmTgftrUeE3NBQ2eooBh8vE2D6OlNyFB4m5f97LblvbfZwrLjrd7yQm98sdLbarDpkvhVcoP3gjWGYd/nII8CQb3smm71CgaVpMGzRggq6DlX3v/pQ86Bzf3+UVe7MyWE+oXOzu6BnkLsgY02w58dzSyN+Q3WioXtkgqBUEF0JkCvKMi/sK6XWlfqdbFuVYmGXUAV1apaep0EaLHVFubjGTFpCXUZj/kLBrRpmkYauxAwKPmAzhDMoaxDDttu27u8jfXLPEp7edS00p/U2Qyt0fJiIrJQ6YOdQ7DzZdBMA1kDOgQJlGHqloQ4a9gXauRH5DvxPrN0h+l4rBTlyEtaXg56JzztnrKcrik2mzyDNtInPvu6J1ONeZsD+YTLapvizP7iznRmR86r6rm6B/S0USZKTQZ/wF7QVJYkDaNpbKXIoDfk40bHUC+0aFHnDDtYn0uvMQe7PRFb26niaM9MshDUmXrycV/WhDVTZrGa6d5ob29xCT40wCeDnD44GnMNyR5XOKonz+1caC3S2D+6LZGYG/Yh5BFS5NDIJ8YDRn2F0bVvWM/vF8EfwHOvoF8LML0aUmvpFF3cFEhYwl2GTZv0hUgsI3R0osT0kLUn6yU/g7D5lbvHnZrsVfmiynoJr1AtFAuiIZ3zar2Rbs4fKHqaHH/s4OaA3R5QB9aSQj6P9uefdgQCDhgqJked23bIjxRqgABA6ya89VLk6kxErDXX5edaJugN2jazXdc8CRftJnsnM1HE2jgX8qLXqubecZE8jyreuKOdC8oucgWu+5xt1qDsIFcRkd2CyoCGRSwft0h9q1ssMtGkL/2hSRDJuaPrFlGj/VWIOaPalSq3pnXsX29sIf5/m57qNRh7J9P9U70mdR5WlOERWaZDxcVkcrEYChV3KMpiKZRbXrh9757FhWXV3qu7Qbr9j+YIIwQSVFNALWbp9R0faeFCfHxETlqCLsMR/0iDSoyd9xmUsWCnsSf/zs1MIpe9/H/ip+pE6ikvyr0LZdAKUXvAQj8AraCHMnKq9JuSA2z5TY3GHpTc/LCtnRtydyt+UxVrdxkCPNupn9FBNsh5VxABOTlKg87hb9UtvZZrIFxESVHbN73aLCvonCltG5tZXq4++eSkJazfMaTrGCsiKX8ycDZP3pxqbwE5WZBzAWvrPS+wqJFM6nlkjc7ZjzkM4u6NhseQk+DfewxRNtDtJyALyKFAMYHSIhpvtN0/d2HzC/P37Yui/QRDKXkIVjph5VuwEioWMgp+RjD6RU4RUfjc4gP33/bMk4sHDt+OjGTlyhVEfwgnCOhRwV8/gi8s0BmuV3sF5KtVi1Yznm+wXWttcXbr9JcWHmCYe+ae1XV5I069cDrXzNhCGfQu+SubDe1eIZHBgKFJxXuWehsV0eF633sTz85G3e6oOlCoMUdhLaK+jD5AV4Gf0MtBuw31FXruU6Ey+jw5WA4hp/dUeHyiAsGEqbnVe+lRuh2qthW2AR6DOfXNWVptT8BH8biigU7d/U+12sodcw9uT7ZmDqf3PD72UEH7+lW0s4wWbnwKvfduz13Hv1jGaBz/M7l0J+xfXj1KP47fUbtJBC0oNHsAl4FEAcKhQ/roEX4ROPVjFNXqvkAemiOfQQzL4usobOLQ3OTfTZZjlfNbS+Ru9MVS6cx0Obr97DRgPgKYz9cxq2cWoZ7FRARa6lVLw/lHEOjzj9dqj994Az1BvrG06ynJOTm3EDmPlghHP0zOIF2JpG1tJUgiDMg7CPJmQJ5OPbco0JSAwDVBzar0uny9eBAN/Tc/++cRy8j4lBd/qnZftXpfbRlXx8kQ11pgOlo1/4c+IN30XeQiqqo+K6/eACtchaygSoWG96aGB+6ug5ttOE3smCb/j47ceAYdeQ+ZTpbJ+ydLZ0BfOIseWD1V9w4NftdB/yjW+2foMhtJlwYjGm/thTGn5pn1TtiHf14Dz12eRV+anSWfRPHZjCBkZuPx2awgZGdjwxtZn+zmJT+7kW4nPWQa7dt5D7l26BDtdaemY/HplBvmeAzm0vQIL/tYWM+PTFOAKLf6GfoEYOsCXEnA5aI5Bg42cOzw3xI+Gqh4AgMHnZveihr0llFUkrak/ImQUJkse1L5o8tl3cDe1PLZ0SPFZvF/arUzkb/fE5/7qmQdnZrvlcb2z8bpBYw+tEZD3dpBd1UU0jFv+6Clsm2vrIbe8IGfrPxtX2GHccy4WPQM9Hlb87pYfj4ZBTtWwI5PAVYb5aJ80CFEAW8DkHo8vRWuGkjN9ZTKijR4TKUP+u78AVnaF01/flQpHL49Z0remVx+evhkYUOavIs6yS/wm6drtdOnV67hvho5gk6i745EBrkhX1+ZS7OZfKUbozyWdiD72M/ew4Z/W9mKMpUnKOhRiqt/UUem9s12qhdOCNCSGsGvXhj0xyrJR8cb1clQt+qxSUMssHwRu8hmJP11qqrY7Uo1tT57E7xOxye8azM+pEI9svLtzejnuL9YPFEsEtoehQP+QNRujw7AQT9qH+u0CwaDx67X2z0Gg2DvPEYu41fIayvf+tfTvwPe3aWnAAAAAAEAAAABCj3/+aUvXw889SALA+gAAAAA0ablrQAAAADm5g3p/4H/CQO/A4kAAAAIAAIAAAAAAAB42mNgZGBgDvovxRDA/OJ/4//dzPtBIihAFwCiNgbVAHjaY/zCwADFG4GYG4hZgLgeiN2A2BSIFYE4CohtgdgBiLWBOBTKVgBiYyC2hIqvBWIVIA4CYgkg1gJiXahaRyDWg4qBaJAYCMtAaZhYOhC7ALEdEEsBsSzUDWuAmJH5BUMEgzdDDUMZkCxlcGHwYfAAAEZlOC8AAAAAAAAAAAAdAE4AoQDGAOwBHQExAVUBYgFvAaoByQH3AhQCZgJ3AsQC6QL9AxUDOgNHA4UDwQPxBC4EZQS5BN8FAwVCBWgFlwXTBfcGGwZBBlYGbwaZBq8GxQbwBx8HRwdzB5QH4gg4CIUI4HjaY2BkYGAwZfjCIMXQxcAD5iEAMwMjACxRAeB42p1TS24TQRB99phPAkQoUnYRakUsQApDbCCLZBUwKEYJQThCAbGZ+IcVx7bGHgILtiw4AVfgBEjAAjaGE3AIDsCKBe/V9JAPliCoNTOvq6urXr2qAXAeIwTIFSaI3xfmPM7hQqHgcR5TwQ+PA3SC1x4XEAZPPD6BpSC7exLz+cz/FPr5Vx6fxly+7vEEHucnPZ7EKFf2+AxKuWmPz+ISvnt8Dm/wwOMpLGLW8DTjzAIfZ0Zv373EMtyXi19nvm0ZGn76/OEn0VMMufoYYAlXuXrEDXTRJOrypIM2amYZ8B3SGqOFTd5r0+Jwx/s5VImaRHuI6NOgJfU4HKFOS0JcJ46Jh4wk3yoqWON3w+c/GHntUIR5Wh7a7QHt8nEokpmerJq0lqyGmH7PeVrjPsQO90er3rMV0jvCM4st35ge6a1d8kuwbfnFSJU6lFHCLeI643epimMPGvwmrFkaOHZolUgM21Zxj6cxLX0ykDbSaZdW5axbZV3unKkr5mncfbviviBKjEWTtyKixOIMcNls4u2wYlVHjNrl2T3yL7OWR6ZIC1fINKISDveN6Y5mAneNYXq+an0Uc92RVR5Vs+l83bipNw2uZWZYYVduM64zTaSd3uKXdulPtdL5iLwOLdsPTf10TtQ5VSCNUpaZ8n/PFo5VYN3Oelb/wU6Nm6frfBas6pv0a9NTnEq0lfiHFfldwLWxWdzvPEcn4njeyv3/zI6TWRr2OVnyadnfodmt2UQpbhE3qFmKFv9Rf81gh0vdzaJmM6//KPZTL8/9f13dVrUt46m6tslLHhvMusmMFWxxX+F5DeEvoCjqIXjaY2BmAIP/FQxWQIoRwkMAACgAAbYAAA==); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L330 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="306" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M323 64 L323 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve">g ← <tspan font-weight="600">gcd</tspan>(240, 46)</text>
+<rect x="24" y="96" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">print(g)    # 2</text>
+<rect x="24" y="128" width="306" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 128 L31 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M323 128 L323 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="148" font-size="13" fill="#151a22" xml:space="preserve">g, x, y ← <tspan font-weight="600">ext_gcd</tspan>(240, 46)</text>
+<rect x="24" y="160" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">print(x, y)    # -9 47: 240·(-9) + 46·47 = 2</text>
+<text x="418" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="418" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">gcd(a, b)</tspan></text>
+<path d="M418 64 L772 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="418" y="64" width="354" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="84" font-size="13" fill="#151a22" xml:space="preserve">b != 0</text>
+<rect x="440" y="96" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="450" y="116" font-size="13" fill="#151a22" xml:space="preserve">a, b = b, a % b    # gcd(a, b) = gcd(b, a mod b)</text>
+<rect x="418" y="128" width="354" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="148" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<text x="418" y="216" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="418" y="233" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">ext_gcd(a, b)</tspan></text>
+<path d="M418 244 L763 244" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="418" y="244" width="345" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M418 244 L653 292 L763 244" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="653" y="262" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">b == 0</text>
+<text x="424" y="287" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="757" y="287" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="418" y="292" width="235" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="312" font-size="13" fill="#151a22" xml:space="preserve">return a, 1, 0</text>
+<rect x="653" y="292" width="110" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="708" cy="308" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M703.5 312.5 L712.5 303.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="418" y="324" width="345" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M425 324 L425 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M756 324 L756 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="435" y="344" font-size="13" fill="#151a22" xml:space="preserve">g, x, y ← <tspan font-weight="600">ext_gcd</tspan>(b, a % b)</text>
+<rect x="418" y="356" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="376" font-size="13" fill="#151a22" xml:space="preserve">return g, y, x - (a // b) * y    # 거꾸로 대입한다</text>
+</g>
+</svg>

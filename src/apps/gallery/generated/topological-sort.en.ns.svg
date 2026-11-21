@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="588" height="650" viewBox="0 0 588 650">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="de814623c1733ae11e3f9dbf0cc7c2c0fe53561194620c4d10495936094fcfcd"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "topo_sort(graph)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "indeg = {v: 0 for v in graph}"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for u in graph",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b4",
+                  "kind": "process",
+                  "text": "indeg[v] += 1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "q = deque(v for v in graph if indeg[v] == 0)    # vertices with no incoming edge"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "order = []"
+        },
+        {
+          "id": "b7",
+          "kind": "while",
+          "text": "q",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "order.append(u)"
+            },
+            {
+              "id": "b10",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "indeg[v] -= 1"
+                },
+                {
+                  "id": "b12",
+                  "kind": "if",
+                  "text": "indeg[v] == 0",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b13",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r2",
+                    "body": [
+                      {
+                        "id": "b14",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "if",
+          "text": "len(order) < len(graph)",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b16",
+                "kind": "process",
+                "text": "return None    # there is a cycle"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b17",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return order"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b2",
+          "name": "Count incoming edges"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">topo_sort(graph)</tspan></text>
+<path d="M24 64 L564 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="82" width="540" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="102" font-size="13" fill="#151a22" xml:space="preserve">indeg = {v: 0 for v in graph}</text>
+<rect x="24" y="114" width="540" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for u in graph</text>
+<rect x="46" y="146" width="518" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="166" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="178" width="496" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="198" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] += 1</text>
+<rect x="24" y="64" width="540" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="77" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Count incoming edges</tspan></text>
+<rect x="25" y="65" width="538" height="144" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="210" width="540" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="230" font-size="13" fill="#151a22" xml:space="preserve">q = deque(v for v in graph if indeg[v] == 0)    # vertices with no incoming edge</text>
+<rect x="24" y="242" width="540" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="262" font-size="13" fill="#151a22" xml:space="preserve">order = []</text>
+<rect x="24" y="274" width="540" height="240" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="294" font-size="13" fill="#151a22" xml:space="preserve">q</text>
+<rect x="46" y="306" width="518" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="326" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="46" y="338" width="518" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="358" font-size="13" fill="#151a22" xml:space="preserve">order.append(u)</text>
+<rect x="46" y="370" width="518" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="390" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="402" width="496" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="422" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] -= 1</text>
+<rect x="68" y="434" width="496" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 434 L385 482 L564 434" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="385" y="452" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">indeg[v] == 0</text>
+<text x="74" y="477" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="558" y="477" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="482" width="317" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="502" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="385" y="482" width="179" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="474.5" cy="498" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M470 502.5 L479 493.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="514" width="540" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 514 L466 562 L564 514" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="466" y="532" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">len(order) &lt; len(graph)</text>
+<text x="30" y="557" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="558" y="557" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="562" width="442" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="582" font-size="13" fill="#151a22" xml:space="preserve">return None    # there is a cycle</text>
+<rect x="466" y="562" width="98" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="515" cy="578" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M510.5 582.5 L519.5 573.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="594" width="540" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="614" font-size="13" fill="#151a22" xml:space="preserve">return order</text>
+</g>
+</svg>

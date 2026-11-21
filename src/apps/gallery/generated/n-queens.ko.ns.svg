@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="848" height="472" viewBox="0 0 848 472">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="ec54c933d8f3c9ba164bc0ade47123a9ebc34e839364c2b2f714e594dec12d6e"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = 8"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "board, solutions = [], []"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "cols, diag1, diag2 = set(), set(), set()"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "0",
+          "result": ""
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "print(len(solutions))    # 92가지"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "place(row)"
+      },
+      "body": [
+        {
+          "id": "b6",
+          "kind": "if",
+          "text": "row == n",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": "solutions.append(board[:])    # 여왕을 다 놓았다"
+              },
+              {
+                "id": "b8",
+                "kind": "process",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b10",
+          "kind": "for",
+          "text": "for c in range(n)",
+          "body": [
+            {
+              "id": "b11",
+              "kind": "if",
+              "text": "c in cols or row - c in diag1 or row + c in diag2",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": "continue    # 공격받는 칸"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b14",
+              "kind": "process",
+              "text": "board.append(c)    # 놓아 본다"
+            },
+            {
+              "id": "b15",
+              "kind": "process",
+              "text": "cols.add(c); diag1.add(row - c); diag2.add(row + c)"
+            },
+            {
+              "id": "b16",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "row + 1",
+              "result": ""
+            },
+            {
+              "id": "b17",
+              "kind": "process",
+              "text": "board.pop()    # 되돌린다"
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L304 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = 8</text>
+<rect x="24" y="96" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">board, solutions = [], []</text>
+<rect x="24" y="128" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">cols, diag1, diag2 = set(), set(), set()</text>
+<rect x="24" y="160" width="280" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 160 L31 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M297 160 L297 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(0)</text>
+<rect x="24" y="192" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">print(len(solutions))    # 92가지</text>
+<text x="392" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="392" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place(row)</tspan></text>
+<path d="M392 64 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="392" y="64" width="432" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M392 64 L766 112 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="766" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">row == n</text>
+<text x="398" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="818" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="392" y="112" width="374" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="132" font-size="13" fill="#151a22" xml:space="preserve">solutions.append(board[:])    # 여왕을 다 놓았다</text>
+<rect x="392" y="144" width="374" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="164" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="766" y="112" width="58" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="795" cy="144" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M790.5 148.5 L799.5 139.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="392" y="176" width="432" height="272" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="196" font-size="13" fill="#151a22" xml:space="preserve">for c in range(n)</text>
+<rect x="414" y="208" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M414 208 L733 256 L824 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="654.5" y="226" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c in cols or row - c in diag1 or row + c in diag2</text>
+<text x="420" y="251" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="818" y="251" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="414" y="256" width="319" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="276" font-size="13" fill="#151a22" xml:space="preserve">continue    # 공격받는 칸</text>
+<rect x="733" y="256" width="91" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="778.5" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M774 276.5 L783 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="414" y="288" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="308" font-size="13" fill="#151a22" xml:space="preserve">board.append(c)    # 놓아 본다</text>
+<rect x="414" y="320" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="340" font-size="13" fill="#151a22" xml:space="preserve">cols.add(c); diag1.add(row - c); diag2.add(row + c)</text>
+<rect x="414" y="352" width="410" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M421 352 L421 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M817 352 L817 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="431" y="372" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(row + 1)</text>
+<rect x="414" y="384" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="404" font-size="13" fill="#151a22" xml:space="preserve">board.pop()    # 되돌린다</text>
+<rect x="414" y="416" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="436" font-size="13" fill="#151a22" xml:space="preserve">cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)</text>
+</g>
+</svg>

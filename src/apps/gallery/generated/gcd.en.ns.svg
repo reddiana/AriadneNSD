@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="796" height="412" viewBox="0 0 796 412">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="8002c04b91b02f955106f8db9cffc030121a92fb518a8b971513b8b087ff42bf"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "240, 46",
+          "result": "g"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "print(g)    # 2"
+        },
+        {
+          "id": "b3",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "240, 46",
+          "result": "g, x, y"
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "print(x, y)    # -9 47: 240·(-9) + 46·47 = 2"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "gcd(a, b)"
+      },
+      "body": [
+        {
+          "id": "b5",
+          "kind": "while",
+          "text": "b != 0",
+          "body": [
+            {
+              "id": "b6",
+              "kind": "process",
+              "text": "a, b = b, a % b    # gcd(a, b) = gcd(b, a mod b)"
+            }
+          ]
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "return a"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "ext_gcd(a, b)"
+      },
+      "body": [
+        {
+          "id": "b8",
+          "kind": "if",
+          "text": "b == 0",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "process",
+                "text": "return a, 1, 0"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b11",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "b, a % b",
+          "result": "g, x, y"
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "return g, y, x - (a // b) * y    # substitute back"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L330 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="306" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M323 64 L323 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve">g ← <tspan font-weight="600">gcd</tspan>(240, 46)</text>
+<rect x="24" y="96" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">print(g)    # 2</text>
+<rect x="24" y="128" width="306" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 128 L31 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M323 128 L323 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="148" font-size="13" fill="#151a22" xml:space="preserve">g, x, y ← <tspan font-weight="600">ext_gcd</tspan>(240, 46)</text>
+<rect x="24" y="160" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">print(x, y)    # -9 47: 240·(-9) + 46·47 = 2</text>
+<text x="418" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="418" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">gcd(a, b)</tspan></text>
+<path d="M418 64 L772 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="418" y="64" width="354" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="84" font-size="13" fill="#151a22" xml:space="preserve">b != 0</text>
+<rect x="440" y="96" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="450" y="116" font-size="13" fill="#151a22" xml:space="preserve">a, b = b, a % b    # gcd(a, b) = gcd(b, a mod b)</text>
+<rect x="418" y="128" width="354" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="148" font-size="13" fill="#151a22" xml:space="preserve">return a</text>
+<text x="418" y="216" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="418" y="233" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">ext_gcd(a, b)</tspan></text>
+<path d="M418 244 L763 244" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="418" y="244" width="345" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M418 244 L653 292 L763 244" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="653" y="262" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">b == 0</text>
+<text x="424" y="287" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="757" y="287" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="418" y="292" width="235" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="312" font-size="13" fill="#151a22" xml:space="preserve">return a, 1, 0</text>
+<rect x="653" y="292" width="110" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="708" cy="308" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M703.5 312.5 L712.5 303.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="418" y="324" width="345" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M425 324 L425 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M756 324 L756 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="435" y="344" font-size="13" fill="#151a22" xml:space="preserve">g, x, y ← <tspan font-weight="600">ext_gcd</tspan>(b, a % b)</text>
+<rect x="418" y="356" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="428" y="376" font-size="13" fill="#151a22" xml:space="preserve">return g, y, x - (a // b) * y    # substitute back</text>
+</g>
+</svg>

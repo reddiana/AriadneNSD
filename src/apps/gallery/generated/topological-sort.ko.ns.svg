@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="556" height="650" viewBox="0 0 556 650">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="97460507309bc251bac498c3681c2ef883e0f960a1d5bc09e2b67c8031b427cf"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "topo_sort(graph)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "indeg = {v: 0 for v in graph}"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for u in graph",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b4",
+                  "kind": "process",
+                  "text": "indeg[v] += 1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "q = deque(v for v in graph if indeg[v] == 0)    # 들어오는 간선이 없는 정점"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "order = []"
+        },
+        {
+          "id": "b7",
+          "kind": "while",
+          "text": "q",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "order.append(u)"
+            },
+            {
+              "id": "b10",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "indeg[v] -= 1"
+                },
+                {
+                  "id": "b12",
+                  "kind": "if",
+                  "text": "indeg[v] == 0",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b13",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r2",
+                    "body": [
+                      {
+                        "id": "b14",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "if",
+          "text": "len(order) < len(graph)",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b16",
+                "kind": "process",
+                "text": "return None    # 사이클이 있다"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b17",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return order"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b2",
+          "name": "들어오는 간선 세기"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">topo_sort(graph)</tspan></text>
+<path d="M24 64 L532 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="82" width="508" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="102" font-size="13" fill="#151a22" xml:space="preserve">indeg = {v: 0 for v in graph}</text>
+<rect x="24" y="114" width="508" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for u in graph</text>
+<rect x="46" y="146" width="486" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="166" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="178" width="464" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="198" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] += 1</text>
+<rect x="24" y="64" width="508" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="77" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">들어오는 간선 세기</tspan></text>
+<rect x="25" y="65" width="506" height="144" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="210" width="508" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="230" font-size="13" fill="#151a22" xml:space="preserve">q = deque(v for v in graph if indeg[v] == 0)    # 들어오는 간선이 없는 정점</text>
+<rect x="24" y="242" width="508" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="262" font-size="13" fill="#151a22" xml:space="preserve">order = []</text>
+<rect x="24" y="274" width="508" height="240" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="294" font-size="13" fill="#151a22" xml:space="preserve">q</text>
+<rect x="46" y="306" width="486" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="326" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="46" y="338" width="486" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="358" font-size="13" fill="#151a22" xml:space="preserve">order.append(u)</text>
+<rect x="46" y="370" width="486" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="390" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="402" width="464" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="422" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] -= 1</text>
+<rect x="68" y="434" width="464" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 434 L364 482 L532 434" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="364" y="452" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">indeg[v] == 0</text>
+<text x="74" y="477" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="526" y="477" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="68" y="482" width="296" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="502" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="364" y="482" width="168" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="448" cy="498" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M443.5 502.5 L452.5 493.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="514" width="508" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 514 L433 562 L532 514" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="433" y="532" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">len(order) &lt; len(graph)</text>
+<text x="30" y="557" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="526" y="557" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="562" width="409" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="582" font-size="13" fill="#151a22" xml:space="preserve">return None    # 사이클이 있다</text>
+<rect x="433" y="562" width="99" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="482.5" cy="578" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M478 582.5 L487 573.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="594" width="508" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="614" font-size="13" fill="#151a22" xml:space="preserve">return order</text>
+</g>
+</svg>

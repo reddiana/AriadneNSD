@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="686" height="654" viewBox="0 0 686 654">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="957ecdb1edec9d152755ca067147c65b6d088e94105b5f66e29a5c1e6a521a11"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "knapsack(w, v, W)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(w)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "dp = [[0] * (W + 1) for _ in range(n + 1)]    # best value of the first i items within weight c"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i in range(1, n + 1)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "for",
+              "text": "for c in range(W + 1)",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "dp[i][c] = dp[i - 1][c]    # leave item i out"
+                },
+                {
+                  "id": "b6",
+                  "kind": "if",
+                  "text": "w[i - 1] <= c",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b7",
+                        "kind": "process",
+                        "text": "take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # put item i in"
+                      },
+                      {
+                        "id": "b8",
+                        "kind": "if",
+                        "text": "take > dp[i][c]",
+                        "yes": {
+                          "id": "r2",
+                          "body": [
+                            {
+                              "id": "b9",
+                              "kind": "process",
+                              "text": "dp[i][c] = take"
+                            }
+                          ]
+                        },
+                        "no": {
+                          "id": "r3",
+                          "body": [
+                            {
+                              "id": "b10",
+                              "kind": "process",
+                              "text": ""
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b11",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "items, c = [], W"
+        },
+        {
+          "id": "b13",
+          "kind": "for",
+          "text": "for i in range(n, 0, -1)",
+          "body": [
+            {
+              "id": "b14",
+              "kind": "if",
+              "text": "dp[i][c] != dp[i - 1][c]",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": "items.append(i - 1)    # this item was taken"
+                  },
+                  {
+                    "id": "b16",
+                    "kind": "process",
+                    "text": "c -= w[i - 1]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return dp[n][W], items"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b3",
+          "last": "b3",
+          "name": "Fill the table"
+        },
+        {
+          "id": "f2",
+          "first": "b12",
+          "last": "b13",
+          "name": "Read the chosen items back"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">knapsack(w, v, W)</tspan></text>
+<path d="M24 64 L662 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="638" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(w)</text>
+<rect x="24" y="96" width="638" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">dp = [[0] * (W + 1) for _ in range(n + 1)]    # best value of the first i items within weight c</text>
+<rect x="24" y="146" width="638" height="256" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, n + 1)</text>
+<rect x="46" y="178" width="616" height="224" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">for c in range(W + 1)</text>
+<rect x="68" y="210" width="594" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="230" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = dp[i - 1][c]    # leave item i out</text>
+<rect x="68" y="242" width="594" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 242 L595 290 L662 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="595" y="260" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">w[i - 1] &lt;= c</text>
+<text x="74" y="285" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="656" y="285" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="290" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="310" font-size="13" fill="#151a22" xml:space="preserve">take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # put item i in</text>
+<rect x="68" y="322" width="527" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 322 L434 370 L595 322" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="434" y="340" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">take &gt; dp[i][c]</text>
+<text x="74" y="365" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="589" y="365" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="370" width="366" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="390" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = take</text>
+<rect x="434" y="370" width="161" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="514.5" cy="386" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M510 390.5 L519 381.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="595" y="290" width="67" height="112" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="628.5" cy="346" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M624 350.5 L633 341.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="128" width="638" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="141" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Fill the table</tspan></text>
+<rect x="25" y="129" width="636" height="272" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="422" width="638" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="442" font-size="13" fill="#151a22" xml:space="preserve">items, c = [], W</text>
+<rect x="24" y="454" width="638" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="474" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n, 0, -1)</text>
+<rect x="46" y="486" width="616" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 486 L573 534 L662 486" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="573" y="504" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">dp[i][c] != dp[i - 1][c]</text>
+<text x="52" y="529" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="656" y="529" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="534" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="554" font-size="13" fill="#151a22" xml:space="preserve">items.append(i - 1)    # this item was taken</text>
+<rect x="46" y="566" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="586" font-size="13" fill="#151a22" xml:space="preserve">c -= w[i - 1]</text>
+<rect x="573" y="534" width="89" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="617.5" cy="566" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M613 570.5 L622 561.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="404" width="638" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="417" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Read the chosen items back</tspan></text>
+<rect x="25" y="405" width="636" height="192" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="598" width="638" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="618" font-size="13" fill="#151a22" xml:space="preserve">return dp[n][W], items</text>
+</g>
+</svg>

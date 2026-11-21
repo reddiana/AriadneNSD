@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="760" height="488" viewBox="0 0 760 488">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="a5f49b8c3663300d0119660613fb656d7676a73d0917c0875e6142beab185148"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "heap_sort(a)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(a)"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for i in range(n // 2 - 1, -1, -1)",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, i, n",
+              "result": ""
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "for",
+          "text": "for end in range(n - 1, 0, -1)",
+          "body": [
+            {
+              "id": "b5",
+              "kind": "process",
+              "text": "a[0], a[end] = a[end], a[0]    # largest to the back"
+            },
+            {
+              "id": "b6",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, 0, end",
+              "result": ""
+            }
+          ]
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b2",
+          "last": "b2",
+          "name": "Build a max-heap"
+        },
+        {
+          "id": "f2",
+          "first": "b4",
+          "last": "b4",
+          "name": "Take them out one by one"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "sift_down(a, i, n)"
+      },
+      "body": [
+        {
+          "id": "b7",
+          "kind": "while",
+          "text": "True",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "largest = i"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "l, r = 2 * i + 1, 2 * i + 2"
+            },
+            {
+              "id": "b10",
+              "kind": "if",
+              "text": "l < n and a[l] > a[largest]",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "largest = l"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "if",
+              "text": "r < n and a[r] > a[largest]",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "process",
+                    "text": "largest = r"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b16",
+              "kind": "if",
+              "text": "largest == i",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": "return    # heap order holds"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b18",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b19",
+              "kind": "process",
+              "text": "a[i], a[largest] = a[largest], a[i]"
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "i = largest"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">heap_sort(a)</tspan></text>
+<path d="M24 64 L404 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="380" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(a)</text>
+<rect x="24" y="114" width="380" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n // 2 - 1, -1, -1)</text>
+<rect x="46" y="146" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 146 L53 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M397 146 L397 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="166" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, i, n)</text>
+<rect x="24" y="96" width="380" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="109" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Build a max-heap</tspan></text>
+<rect x="25" y="97" width="378" height="80" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="198" width="380" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="218" font-size="13" fill="#151a22" xml:space="preserve">for end in range(n - 1, 0, -1)</text>
+<rect x="46" y="230" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="250" font-size="13" fill="#151a22" xml:space="preserve">a[0], a[end] = a[end], a[0]    # largest to the back</text>
+<rect x="46" y="262" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 262 L53 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M397 262 L397 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="282" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, 0, end)</text>
+<rect x="24" y="180" width="380" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="193" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Take them out one by one</tspan></text>
+<rect x="25" y="181" width="378" height="112" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<text x="448" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="448" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down(a, i, n)</tspan></text>
+<path d="M448 64 L736 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="448" y="64" width="288" height="400" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="458" y="84" font-size="13" fill="#151a22" xml:space="preserve">True</text>
+<rect x="470" y="96" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="116" font-size="13" fill="#151a22" xml:space="preserve">largest = i</text>
+<rect x="470" y="128" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="148" font-size="13" fill="#151a22" xml:space="preserve">l, r = 2 * i + 1, 2 * i + 2</text>
+<rect x="470" y="160" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 160 L640 208 L736 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="638" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt; n and a[l] &gt; a[largest]</text>
+<text x="476" y="203" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="730" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="208" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="228" font-size="13" fill="#151a22" xml:space="preserve">largest = l</text>
+<rect x="640" y="208" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="688" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M683.5 228.5 L692.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="240" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 240 L640 288 L736 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="638" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; n and a[r] &gt; a[largest]</text>
+<text x="476" y="283" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="730" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="288" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="308" font-size="13" fill="#151a22" xml:space="preserve">largest = r</text>
+<rect x="640" y="288" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="688" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M683.5 308.5 L692.5 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="320" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 320 L682 368 L736 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="682" y="338" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">largest == i</text>
+<text x="476" y="363" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="730" y="363" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="368" width="212" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="388" font-size="13" fill="#151a22" xml:space="preserve">return    # heap order holds</text>
+<rect x="682" y="368" width="54" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="709" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M704.5 388.5 L713.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="400" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="420" font-size="13" fill="#151a22" xml:space="preserve">a[i], a[largest] = a[largest], a[i]</text>
+<rect x="470" y="432" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="452" font-size="13" fill="#151a22" xml:space="preserve">i = largest</text>
+</g>
+</svg>

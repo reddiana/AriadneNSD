@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="601" height="654" viewBox="0 0 601 654">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b281007d9e1c5d67deefd22629c9ec102fdc80226852ce2a0a4488f954fc0199"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "knapsack(w, v, W)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(w)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "dp = [[0] * (W + 1) for _ in range(n + 1)]    # 앞 i개로 무게 c까지 담는 최대 가치"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i in range(1, n + 1)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "for",
+              "text": "for c in range(W + 1)",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "dp[i][c] = dp[i - 1][c]    # i번째를 넣지 않는다"
+                },
+                {
+                  "id": "b6",
+                  "kind": "if",
+                  "text": "w[i - 1] <= c",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b7",
+                        "kind": "process",
+                        "text": "take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # i번째를 넣는다"
+                      },
+                      {
+                        "id": "b8",
+                        "kind": "if",
+                        "text": "take > dp[i][c]",
+                        "yes": {
+                          "id": "r2",
+                          "body": [
+                            {
+                              "id": "b9",
+                              "kind": "process",
+                              "text": "dp[i][c] = take"
+                            }
+                          ]
+                        },
+                        "no": {
+                          "id": "r3",
+                          "body": [
+                            {
+                              "id": "b10",
+                              "kind": "process",
+                              "text": ""
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b11",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "items, c = [], W"
+        },
+        {
+          "id": "b13",
+          "kind": "for",
+          "text": "for i in range(n, 0, -1)",
+          "body": [
+            {
+              "id": "b14",
+              "kind": "if",
+              "text": "dp[i][c] != dp[i - 1][c]",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": "items.append(i - 1)    # 이 물건을 넣었다"
+                  },
+                  {
+                    "id": "b16",
+                    "kind": "process",
+                    "text": "c -= w[i - 1]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return dp[n][W], items"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b3",
+          "last": "b3",
+          "name": "표 채우기"
+        },
+        {
+          "id": "f2",
+          "first": "b12",
+          "last": "b13",
+          "name": "고른 물건 되짚기"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">knapsack(w, v, W)</tspan></text>
+<path d="M24 64 L577 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="553" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(w)</text>
+<rect x="24" y="96" width="553" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">dp = [[0] * (W + 1) for _ in range(n + 1)]    # 앞 i개로 무게 c까지 담는 최대 가치</text>
+<rect x="24" y="146" width="553" height="256" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, n + 1)</text>
+<rect x="46" y="178" width="531" height="224" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">for c in range(W + 1)</text>
+<rect x="68" y="210" width="509" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="230" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = dp[i - 1][c]    # i번째를 넣지 않는다</text>
+<rect x="68" y="242" width="509" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 242 L521 290 L577 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="521" y="260" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">w[i - 1] &lt;= c</text>
+<text x="74" y="285" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="571" y="285" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="68" y="290" width="453" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="310" font-size="13" fill="#151a22" xml:space="preserve">take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # i번째를 넣는다</text>
+<rect x="68" y="322" width="453" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 322 L382 370 L521 322" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="382" y="340" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">take &gt; dp[i][c]</text>
+<text x="74" y="365" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="515" y="365" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="68" y="370" width="314" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="390" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = take</text>
+<rect x="382" y="370" width="139" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="451.5" cy="386" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M447 390.5 L456 381.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="521" y="290" width="56" height="112" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="549" cy="346" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M544.5 350.5 L553.5 341.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="128" width="553" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="141" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">표 채우기</tspan></text>
+<rect x="25" y="129" width="551" height="272" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="422" width="553" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="442" font-size="13" fill="#151a22" xml:space="preserve">items, c = [], W</text>
+<rect x="24" y="454" width="553" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="474" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n, 0, -1)</text>
+<rect x="46" y="486" width="531" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 486 L496 534 L577 486" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="489" y="504" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">dp[i][c] != dp[i - 1][c]</text>
+<text x="52" y="529" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="571" y="529" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="534" width="450" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="554" font-size="13" fill="#151a22" xml:space="preserve">items.append(i - 1)    # 이 물건을 넣었다</text>
+<rect x="46" y="566" width="450" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="586" font-size="13" fill="#151a22" xml:space="preserve">c -= w[i - 1]</text>
+<rect x="496" y="534" width="81" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="536.5" cy="566" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M532 570.5 L541 561.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="404" width="553" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="417" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">고른 물건 되짚기</tspan></text>
+<rect x="25" y="405" width="551" height="192" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="598" width="553" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="618" font-size="13" fill="#151a22" xml:space="preserve">return dp[n][W], items</text>
+</g>
+</svg>

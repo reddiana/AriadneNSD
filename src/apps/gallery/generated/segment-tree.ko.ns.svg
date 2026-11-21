@@ -1,0 +1,439 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1136" height="912" viewBox="0 0 1136 912">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="88bd0db788393080899e308628d595bae877209350076cb0e5df96fb9cbd721d"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "a = [5, 8, 6, 3, 2, 7, 2, 6]"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "n = len(a)"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "tree = [0] * (4 * n)    # 노드 k의 자식은 2k와 2k + 1"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "1, 0, n - 1",
+          "result": ""
+        },
+        {
+          "id": "b5",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "1, 0, n - 1, 2, 5",
+          "result": "s"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "print(s)    # 18"
+        },
+        {
+          "id": "b7",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d4"
+          },
+          "args": "1, 0, n - 1, 3, 10",
+          "result": ""
+        },
+        {
+          "id": "b8",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "1, 0, n - 1, 2, 5",
+          "result": "s"
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "print(s)    # 25"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "build(node, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b10",
+          "kind": "if",
+          "text": "lo == hi",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b11",
+                "kind": "process",
+                "text": "tree[node] = a[lo]"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b12",
+                "kind": "process",
+                "text": "mid = (lo + hi) // 2"
+              },
+              {
+                "id": "b13",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d2"
+                },
+                "args": "2 * node, lo, mid",
+                "result": ""
+              },
+              {
+                "id": "b14",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d2"
+                },
+                "args": "2 * node + 1, mid + 1, hi",
+                "result": ""
+              },
+              {
+                "id": "b15",
+                "kind": "process",
+                "text": "tree[node] = tree[2 * node] + tree[2 * node + 1]"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "query(node, lo, hi, l, r)"
+      },
+      "body": [
+        {
+          "id": "b16",
+          "kind": "if",
+          "text": "r < lo or hi < l",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b17",
+                "kind": "process",
+                "text": "return 0    # 겹치지 않는다"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b18",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b19",
+          "kind": "if",
+          "text": "l <= lo and hi <= r",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b20",
+                "kind": "process",
+                "text": "return tree[node]    # 구간 안에 다 들어온다"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b21",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b22",
+          "kind": "process",
+          "text": "mid = (lo + hi) // 2"
+        },
+        {
+          "id": "b23",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "2 * node, lo, mid, l, r",
+          "result": "left"
+        },
+        {
+          "id": "b24",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "2 * node + 1, mid + 1, hi, l, r",
+          "result": "right"
+        },
+        {
+          "id": "b25",
+          "kind": "process",
+          "text": "return left + right"
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "method",
+        "text": "update(node, lo, hi, i, x)"
+      },
+      "body": [
+        {
+          "id": "b26",
+          "kind": "if",
+          "text": "lo == hi",
+          "yes": {
+            "id": "r7",
+            "body": [
+              {
+                "id": "b27",
+                "kind": "process",
+                "text": "tree[node] = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r8",
+            "body": [
+              {
+                "id": "b28",
+                "kind": "process",
+                "text": "mid = (lo + hi) // 2"
+              },
+              {
+                "id": "b29",
+                "kind": "if",
+                "text": "i <= mid",
+                "yes": {
+                  "id": "r9",
+                  "body": [
+                    {
+                      "id": "b30",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d4"
+                      },
+                      "args": "2 * node, lo, mid, i, x",
+                      "result": ""
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r10",
+                  "body": [
+                    {
+                      "id": "b31",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d4"
+                      },
+                      "args": "2 * node + 1, mid + 1, hi, i, x",
+                      "result": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b32",
+                "kind": "process",
+                "text": "tree[node] = tree[2 * node] + tree[2 * node + 1]"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L389 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">a = [5, 8, 6, 3, 2, 7, 2, 6]</text>
+<rect x="24" y="96" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">n = len(a)</text>
+<rect x="24" y="128" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">tree = [0] * (4 * n)    # 노드 k의 자식은 2k와 2k + 1</text>
+<rect x="24" y="160" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 160 L31 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 160 L382 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(1, 0, n - 1)</text>
+<rect x="24" y="192" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 192 L31 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 192 L382 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="212" font-size="13" fill="#151a22" xml:space="preserve">s ← <tspan font-weight="600">query</tspan>(1, 0, n - 1, 2, 5)</text>
+<rect x="24" y="224" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="244" font-size="13" fill="#151a22" xml:space="preserve">print(s)    # 18</text>
+<rect x="24" y="256" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 256 L31 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 256 L382 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="276" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(1, 0, n - 1, 3, 10)</text>
+<rect x="24" y="288" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 288 L31 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 288 L382 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="308" font-size="13" fill="#151a22" xml:space="preserve">s ← <tspan font-weight="600">query</tspan>(1, 0, n - 1, 2, 5)</text>
+<rect x="24" y="320" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="340" font-size="13" fill="#151a22" xml:space="preserve">print(s)    # 25</text>
+<text x="477" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="477" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build(node, lo, hi)</tspan></text>
+<path d="M477 64 L946 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="477" y="64" width="469" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 64 L614 112 L946 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="614" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">lo == hi</text>
+<text x="483" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="940" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="112" width="137" height="128" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="132" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = a[lo]</text>
+<rect x="614" y="112" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="624" y="132" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="614" y="144" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M621 144 L621 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M939 144 L939 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="631" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(2 * node, lo, mid)</text>
+<rect x="614" y="176" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M621 176 L621 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M939 176 L939 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="631" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(2 * node + 1, mid + 1, hi)</text>
+<rect x="614" y="208" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="624" y="228" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
+<text x="477" y="296" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="477" y="313" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">query(node, lo, hi, l, r)</tspan></text>
+<path d="M477 324 L835 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="477" y="324" width="358" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 324 L760 372 L835 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="760" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
+<text x="483" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="829" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="372" width="283" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # 겹치지 않는다</text>
+<rect x="760" y="372" width="75" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="797.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M793 392.5 L802 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="404" width="358" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 404 L783 452 L835 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="763" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
+<text x="483" y="447" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="829" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="452" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # 구간 안에 다 들어온다</text>
+<rect x="783" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="809" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M804.5 472.5 L813.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="484" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="504" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="477" y="516" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M484 516 L484 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M828 516 L828 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="494" y="536" font-size="13" fill="#151a22" xml:space="preserve">left ← <tspan font-weight="600">query</tspan>(2 * node, lo, mid, l, r)</text>
+<rect x="477" y="548" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M484 548 L484 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M828 548 L828 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="494" y="568" font-size="13" fill="#151a22" xml:space="preserve">right ← <tspan font-weight="600">query</tspan>(2 * node + 1, mid + 1, hi, l, r)</text>
+<rect x="477" y="580" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="600" font-size="13" fill="#151a22" xml:space="preserve">return left + right</text>
+<text x="477" y="668" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="477" y="685" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update(node, lo, hi, i, x)</tspan></text>
+<path d="M477 696 L1112 696" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="477" y="696" width="635" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 696 L588 744 L1112 696" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="588" y="714" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">lo == hi</text>
+<text x="483" y="739" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1106" y="739" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="744" width="111" height="144" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="764" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = x</text>
+<rect x="588" y="744" width="524" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="598" y="764" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="588" y="776" width="524" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M588 776 L824 824 L1112 776" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="824" y="794" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">i &lt;= mid</text>
+<text x="594" y="819" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1106" y="819" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="588" y="824" width="236" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M595 824 L595 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M817 824 L817 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="605" y="844" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(2 * node, lo, mid, i, x)</text>
+<rect x="824" y="824" width="288" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M831 824 L831 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1105 824 L1105 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="841" y="844" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(2 * node + 1, mid + 1, hi, i, x)</text>
+<rect x="588" y="856" width="524" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="598" y="876" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
+</g>
+</svg>

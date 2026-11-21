@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="767" height="488" viewBox="0 0 767 488">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="9c9f1257c104c7c89236fc0869ce88f1e180abbc38536b397e1efd8b3a0832bd"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "heap_sort(a)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(a)"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for i in range(n // 2 - 1, -1, -1)",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, i, n",
+              "result": ""
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "for",
+          "text": "for end in range(n - 1, 0, -1)",
+          "body": [
+            {
+              "id": "b5",
+              "kind": "process",
+              "text": "a[0], a[end] = a[end], a[0]    # 가장 큰 것을 맨 뒤로"
+            },
+            {
+              "id": "b6",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, 0, end",
+              "result": ""
+            }
+          ]
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b2",
+          "last": "b2",
+          "name": "최대 힙 만들기"
+        },
+        {
+          "id": "f2",
+          "first": "b4",
+          "last": "b4",
+          "name": "하나씩 꺼내 뒤에 놓기"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "sift_down(a, i, n)"
+      },
+      "body": [
+        {
+          "id": "b7",
+          "kind": "while",
+          "text": "True",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "largest = i"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "l, r = 2 * i + 1, 2 * i + 2"
+            },
+            {
+              "id": "b10",
+              "kind": "if",
+              "text": "l < n and a[l] > a[largest]",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "largest = l"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "if",
+              "text": "r < n and a[r] > a[largest]",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "process",
+                    "text": "largest = r"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b16",
+              "kind": "if",
+              "text": "largest == i",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": "return    # 힙 조건을 지킴"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b18",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b19",
+              "kind": "process",
+              "text": "a[i], a[largest] = a[largest], a[i]"
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "i = largest"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">heap_sort(a)</tspan></text>
+<path d="M24 64 L411 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="387" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(a)</text>
+<rect x="24" y="114" width="387" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n // 2 - 1, -1, -1)</text>
+<rect x="46" y="146" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 146 L53 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M404 146 L404 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="166" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, i, n)</text>
+<rect x="24" y="96" width="387" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="109" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">최대 힙 만들기</tspan></text>
+<rect x="25" y="97" width="385" height="80" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="198" width="387" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="218" font-size="13" fill="#151a22" xml:space="preserve">for end in range(n - 1, 0, -1)</text>
+<rect x="46" y="230" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="250" font-size="13" fill="#151a22" xml:space="preserve">a[0], a[end] = a[end], a[0]    # 가장 큰 것을 맨 뒤로</text>
+<rect x="46" y="262" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 262 L53 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M404 262 L404 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="282" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, 0, end)</text>
+<rect x="24" y="180" width="387" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="193" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">하나씩 꺼내 뒤에 놓기</tspan></text>
+<rect x="25" y="181" width="385" height="112" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<text x="455" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="455" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down(a, i, n)</tspan></text>
+<path d="M455 64 L743 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="455" y="64" width="288" height="400" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="465" y="84" font-size="13" fill="#151a22" xml:space="preserve">True</text>
+<rect x="477" y="96" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="116" font-size="13" fill="#151a22" xml:space="preserve">largest = i</text>
+<rect x="477" y="128" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="148" font-size="13" fill="#151a22" xml:space="preserve">l, r = 2 * i + 1, 2 * i + 2</text>
+<rect x="477" y="160" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 160 L647 208 L743 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="645" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt; n and a[l] &gt; a[largest]</text>
+<text x="483" y="203" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="737" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="208" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="228" font-size="13" fill="#151a22" xml:space="preserve">largest = l</text>
+<rect x="647" y="208" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="695" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M690.5 228.5 L699.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="240" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 240 L647 288 L743 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="645" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; n and a[r] &gt; a[largest]</text>
+<text x="483" y="283" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="737" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="288" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="308" font-size="13" fill="#151a22" xml:space="preserve">largest = r</text>
+<rect x="647" y="288" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="695" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M690.5 308.5 L699.5 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="320" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 320 L686 368 L743 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="686" y="338" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">largest == i</text>
+<text x="483" y="363" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="737" y="363" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="368" width="209" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="388" font-size="13" fill="#151a22" xml:space="preserve">return    # 힙 조건을 지킴</text>
+<rect x="686" y="368" width="57" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="714.5" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M710 388.5 L719 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="400" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="420" font-size="13" fill="#151a22" xml:space="preserve">a[i], a[largest] = a[largest], a[i]</text>
+<rect x="477" y="432" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="452" font-size="13" fill="#151a22" xml:space="preserve">i = largest</text>
+</g>
+</svg>

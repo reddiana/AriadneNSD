@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="841" height="376" viewBox="0 0 841 376">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b06e20ba71f045f9c629aeae2c0db87256e264943869d6f08ec62da225d0a3c9"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "int a[] = {2, 3, 5, 7, 11, 13, 17};"
+        },
+        {
+          "id": "b2",
+          "kind": "doWhile",
+          "text": "key != 0",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "process",
+              "text": "key = read_int();"
+            },
+            {
+              "id": "b4",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, 7, key",
+              "result": "i"
+            },
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "i >= 0",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "printf(\"found at %d\\n\", i);"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "printf(\"not found\\n\");"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "binary_search(a, n, key)"
+      },
+      "body": [
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "lo = 0;"
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "hi = n - 1;"
+        },
+        {
+          "id": "b10",
+          "kind": "while",
+          "text": "lo <= hi",
+          "body": [
+            {
+              "id": "b11",
+              "kind": "process",
+              "text": "mid = lo + (hi - lo) / 2;"
+            },
+            {
+              "id": "b12",
+              "kind": "if",
+              "text": "a[mid] == key",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": "return mid;"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "if",
+                    "text": "a[mid] < key",
+                    "yes": {
+                      "id": "r5",
+                      "body": [
+                        {
+                          "id": "b15",
+                          "kind": "process",
+                          "text": "lo = mid + 1;"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r6",
+                      "body": [
+                        {
+                          "id": "b16",
+                          "kind": "process",
+                          "text": "hi = mid - 1;"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b17",
+          "kind": "process",
+          "text": "return -1;"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L405 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="381" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">int a[] = {2, 3, 5, 7, 11, 13, 17};</text>
+<rect x="24" y="96" width="381" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="260" font-size="13" fill="#151a22" xml:space="preserve">key != 0</text>
+<rect x="46" y="96" width="359" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="116" font-size="13" fill="#151a22" xml:space="preserve">key = read_int();</text>
+<rect x="46" y="128" width="359" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 128 L53 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M398 128 L398 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="148" font-size="13" fill="#151a22" xml:space="preserve">i ← <tspan font-weight="600">binary_search</tspan>(a, 7, key)</text>
+<rect x="46" y="160" width="359" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 160 L242 208 L405 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="242" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">i &gt;= 0</text>
+<text x="52" y="203" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="399" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="208" width="196" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="228" font-size="13" fill="#151a22" xml:space="preserve">printf("found at %d\n", i);</text>
+<rect x="242" y="208" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="252" y="228" font-size="13" fill="#151a22" xml:space="preserve">printf("not found\n");</text>
+<text x="493" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="493" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">binary_search(a, n, key)</tspan></text>
+<path d="M493 64 L817 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="493" y="64" width="324" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="503" y="84" font-size="13" fill="#151a22" xml:space="preserve">lo = 0;</text>
+<rect x="493" y="96" width="324" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="503" y="116" font-size="13" fill="#151a22" xml:space="preserve">hi = n - 1;</text>
+<rect x="493" y="128" width="324" height="192" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="503" y="148" font-size="13" fill="#151a22" xml:space="preserve">lo &lt;= hi</text>
+<rect x="515" y="160" width="302" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="525" y="180" font-size="13" fill="#151a22" xml:space="preserve">mid = lo + (hi - lo) / 2;</text>
+<rect x="515" y="192" width="302" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M515 192 L607 240 L817 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="607" y="210" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[mid] == key</text>
+<text x="521" y="235" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="811" y="235" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="515" y="240" width="92" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="525" y="260" font-size="13" fill="#151a22" xml:space="preserve">return mid;</text>
+<rect x="607" y="240" width="210" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M607 240 L712 288 L817 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="712" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[mid] &lt; key</text>
+<text x="613" y="283" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="811" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="607" y="288" width="105" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="617" y="308" font-size="13" fill="#151a22" xml:space="preserve">lo = mid + 1;</text>
+<rect x="712" y="288" width="105" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="722" y="308" font-size="13" fill="#151a22" xml:space="preserve">hi = mid - 1;</text>
+<rect x="493" y="320" width="324" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="503" y="340" font-size="13" fill="#151a22" xml:space="preserve">return -1;</text>
+</g>
+</svg>

@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="848" height="472" viewBox="0 0 848 472">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="7584fd58ab3969d93e8cdefb5e9edb4e0be420bd91ad71bc47eece65d0f7fea2"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = 8"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "board, solutions = [], []"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "cols, diag1, diag2 = set(), set(), set()"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "0",
+          "result": ""
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "print(len(solutions))    # 92 solutions"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "place(row)"
+      },
+      "body": [
+        {
+          "id": "b6",
+          "kind": "if",
+          "text": "row == n",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": "solutions.append(board[:])    # every queen placed"
+              },
+              {
+                "id": "b8",
+                "kind": "process",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b10",
+          "kind": "for",
+          "text": "for c in range(n)",
+          "body": [
+            {
+              "id": "b11",
+              "kind": "if",
+              "text": "c in cols or row - c in diag1 or row + c in diag2",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": "continue    # attacked square"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b14",
+              "kind": "process",
+              "text": "board.append(c)    # try it here"
+            },
+            {
+              "id": "b15",
+              "kind": "process",
+              "text": "cols.add(c); diag1.add(row - c); diag2.add(row + c)"
+            },
+            {
+              "id": "b16",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "row + 1",
+              "result": ""
+            },
+            {
+              "id": "b17",
+              "kind": "process",
+              "text": "board.pop()    # take it back"
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L304 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = 8</text>
+<rect x="24" y="96" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">board, solutions = [], []</text>
+<rect x="24" y="128" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">cols, diag1, diag2 = set(), set(), set()</text>
+<rect x="24" y="160" width="280" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 160 L31 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M297 160 L297 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(0)</text>
+<rect x="24" y="192" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">print(len(solutions))    # 92 solutions</text>
+<text x="392" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="392" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place(row)</tspan></text>
+<path d="M392 64 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="392" y="64" width="432" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M392 64 L767 112 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="767" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">row == n</text>
+<text x="398" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="818" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="392" y="112" width="375" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="132" font-size="13" fill="#151a22" xml:space="preserve">solutions.append(board[:])    # every queen placed</text>
+<rect x="392" y="144" width="375" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="164" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="767" y="112" width="57" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="795.5" cy="144" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M791 148.5 L800 139.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="392" y="176" width="432" height="272" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="196" font-size="13" fill="#151a22" xml:space="preserve">for c in range(n)</text>
+<rect x="414" y="208" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M414 208 L742 256 L824 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="654.5" y="226" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c in cols or row - c in diag1 or row + c in diag2</text>
+<text x="420" y="251" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="818" y="251" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="414" y="256" width="328" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="276" font-size="13" fill="#151a22" xml:space="preserve">continue    # attacked square</text>
+<rect x="742" y="256" width="82" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="783" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M778.5 276.5 L787.5 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="414" y="288" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="308" font-size="13" fill="#151a22" xml:space="preserve">board.append(c)    # try it here</text>
+<rect x="414" y="320" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="340" font-size="13" fill="#151a22" xml:space="preserve">cols.add(c); diag1.add(row - c); diag2.add(row + c)</text>
+<rect x="414" y="352" width="410" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M421 352 L421 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M817 352 L817 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="431" y="372" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(row + 1)</text>
+<rect x="414" y="384" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="404" font-size="13" fill="#151a22" xml:space="preserve">board.pop()    # take it back</text>
+<rect x="414" y="416" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="436" font-size="13" fill="#151a22" xml:space="preserve">cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)</text>
+</g>
+</svg>

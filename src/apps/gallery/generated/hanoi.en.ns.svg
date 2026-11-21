@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="801" height="264" viewBox="0 0 801 264">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="2595390b67da52c42157376caebf84665061ef94d3c002596841b65b8eab1b2e"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = 3    # 2**3 - 1 = 7 moves"
+        },
+        {
+          "id": "b2",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n, \"A\", \"C\", \"B\"",
+          "result": ""
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "hanoi(n, src, dst, via)"
+      },
+      "body": [
+        {
+          "id": "b3",
+          "kind": "if",
+          "text": "n == 0",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b6",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n - 1, src, via, dst",
+          "result": ""
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "print(f\"disk {n}: {src} -> {dst}\")    # the n - 1 above wait on via"
+        },
+        {
+          "id": "b8",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n - 1, via, dst, src",
+          "result": ""
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L233 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="209" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = 3    # 2**3 - 1 = 7 moves</text>
+<rect x="24" y="96" width="209" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 96 L31 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M226 96 L226 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="116" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n, "A", "C", "B")</text>
+<text x="321" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="321" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi(n, src, dst, via)</tspan></text>
+<path d="M321 64 L777 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="321" y="64" width="456" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M321 64 L563 112 L777 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="563" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
+<text x="327" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="771" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="321" y="112" width="242" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="331" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="563" y="112" width="214" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="670" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M665.5 132.5 L674.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="321" y="144" width="456" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M328 144 L328 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M770 144 L770 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="338" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n - 1, src, via, dst)</text>
+<rect x="321" y="176" width="456" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="331" y="196" font-size="13" fill="#151a22" xml:space="preserve">print(f"disk {n}: {src} -&gt; {dst}")    # the n - 1 above wait on via</text>
+<rect x="321" y="208" width="456" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M328 208 L328 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M770 208 L770 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="338" y="228" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n - 1, via, dst, src)</text>
+</g>
+</svg>

@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="870" height="472" viewBox="0 0 870 472">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="792dd303afc64c4a6c087e6672e6aa5150422600be43089221d7e3359942ab34"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "kmp_search(text, pat)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "pat",
+          "result": "pi"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "matches, k = [], 0"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i, c in enumerate(text)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "while",
+              "text": "k > 0 and c != pat[k]",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "k = pi[k - 1]    # 패턴 안에서 물러난다"
+                }
+              ]
+            },
+            {
+              "id": "b6",
+              "kind": "if",
+              "text": "c == pat[k]",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "k += 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b8",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b9",
+              "kind": "if",
+              "text": "k == len(pat)",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "process",
+                    "text": "matches.append(i - k + 1)    # 찾았다"
+                  },
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "k = pi[k - 1]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b13",
+          "kind": "process",
+          "text": "return matches"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "prefix_function(p)"
+      },
+      "body": [
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "pi = [0] * len(p)    # p[:i+1]의 접두사이자 접미사인 가장 긴 길이"
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "k = 0"
+        },
+        {
+          "id": "b16",
+          "kind": "for",
+          "text": "for i in range(1, len(p))",
+          "body": [
+            {
+              "id": "b17",
+              "kind": "while",
+              "text": "k > 0 and p[i] != p[k]",
+              "body": [
+                {
+                  "id": "b18",
+                  "kind": "process",
+                  "text": "k = pi[k - 1]"
+                }
+              ]
+            },
+            {
+              "id": "b19",
+              "kind": "if",
+              "text": "p[i] == p[k]",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b20",
+                    "kind": "process",
+                    "text": "k += 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b21",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b22",
+              "kind": "process",
+              "text": "pi[i] = k"
+            }
+          ]
+        },
+        {
+          "id": "b23",
+          "kind": "process",
+          "text": "return pi"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAABdUAAsAAAAAIlgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAFQAAABgaxVA12NtYXAAAAFcAAAA7gAAAXwdOZQ+Z2FzcAAAAkwAAAAQAAAAEAAXAAlnbHlmAAACXAAAEPAAABgM/1HuEWhlYWQAABNMAAAANgAAADY67EFKaGhlYQAAE4QAAAAfAAAAJAblAuhobXR4AAATpAAAAIUAAADaWKwOqGxvY2EAABQsAAAAiAAAAIijo6n9bWF4cAAAFLQAAAAcAAAAIABtAYBuYW1lAAAU0AAAAmwAAAWisvBt9nBvc3QAABc8AAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgYGEKEApMEgyDPCjcGBQeGyBnPQ/yyGBcztQGkOBpA6BiY+pm1ASoGBEQC7URCLeNpjYGBgAmJmIBYBkoxgmoUxA0iHMTgwsDKIMSgyKDPoMRgyWDHYMfgyRDPEMsQzJDJkMhQwlDJUKE5Yw7CmYJ3JOosNczY92RKw/c1um90/Dqw5KHPU42jE0QvHI46XHK84PuH40hOCJy+fsThjd9Hkssb//0DzFYDmajAYAM21QTI3mSGboYh8c/8//P/g/53/t/9f/n/p/5H/2/9v+7/1/5b/m/9v+r/x//p7M0I0g3cFfg/84j/R18v7voeLy1cXK/t2ewmrt1b3rNItHlgctThksdpiuoWOWbYJuwmTPq+uFDhUaAAApXJ8zAAAAAAAAwAIAAIAEAAB//8AA3jajVgJdFvVmX73vliKbXmRtTxbsmw/P+1epaenJyeSbMuWJVveYsuyncWJ4yV2FlJCQkKSAyEby+nQZAIToKVQGAgzAUIhEEo4UGgKCTAz6dDAlOlwOuQUSikczumcMJDoev77JIdA6IB1rq90dPX9///9630MZn4+N4fa8TsMyxQxjE5kBbXeKHr9ks8uVKt+vaG0xeWurKypqax043fIgkOVbuUjA7/MZ0rRn/FjjJmppL9UizIstaAsQVaWLNLFwVf/FDVMGzqM07lTZRPqyYqoZRrWmHqlaSx3xeLya8z4scOHDzedbDoLf7D5X3mFQcxNc9ejJ/BFhgN8fQXmDEI9K/nCWBYNhezvLP4+MSalgjwfTEkxsc9vQaHQjVvW2POsU1v3tEdu3jxhzbNPbtoBSB2AtCWDhHz12CGJFaxBX4jVghRmkflboXZsmgSoic03R9r3bJ0CqDVbboSfMxJzM3oJ82A3g9QOo5ETZJVK7ZDtdofMwT9R7ffLnBq9JNyC1TiRz8d4/qDQLdj2szlsIr86Um09iPLCI64B54PGOkM4XmIrCY+6+l0PcXXGljhI4JkIeguXAcOMThINokEwCJIgnes6frzrOBo6dSr+xhv03NK5rSjO/JwxMgznDWPwmcNul3x+0WukxglLq2QXV1aQX1JVLUj2cK9jpMRi03P63IX6EqOrKVgTlyzUohAqQCfQKMQAgwy8hE6Q/Wi0uxu+OcJUoDbmeaqJnMVVCdX2I/VVVfV0rc9s9Qz8toZh0Rn8MsRRGVMNmmeVqK4Hxfw6rx90c7BGo65axQFpOvsXk+vLpV6P2OMzzU6Gojl4AXuusN4WjCxAmP2tGb989LkVe5N2e3LviueOpvfsO1QdMpET9mrcdMedQsCEYv1U9yGmGL2Jn2VKQENJ1AqFLPgUHCBqRcO1t6ACm8ut1TSMlqV2FXdiVX6pUa/u0vvK0g910hh+nLGgFnQJ7IPIuNJC7RXvH5/PgPl9OvsRrcu+AT18cxfROzjKqBkmR0BINCCE3pkhv0bSNHkbeXOQB5VpyP+Qd0GqlTmGzqJjwBmcpoznUNbPkiR6DNax9vYX2tupbQJgvpLBlBGSRIQEK6oj/z6NmsjrM2pkRxoN+ZD8Gz1bCjz8R4YHxAqsw8AKOlHHyfBPYCW0vrerJ0+bNI+N5eWNr9InCxEh/4tyg470JfwI+YXfj2LppZh1ANLuue3oAXwho5sANPJa9MDp0+R9fKE1rWpld8KZJJzZlD2j5SnvEtpE3j99Gl+4tLcVf9kKZ9yQc2fmnqZRpdh3hoz3hEKU9TqIlCexidEwLoaxSWqVykCLThjbwHOUdq3gEFSUeogcWc7UIjUa3+YRXe5yr81IPnMuEUeW9bKY66nvHOrqvdsjursd7zTp1bV1zppSh++/e0u5mRXkZJvb3hON9hWUFTZLnAW0agXZz0BuVYFkQ1ZGGINQqC52kFOIDVBqRK+MnqmIOq7balk8vMjRVqGxNAnuRUJxsXVxbcxzU7+p5NZdockOR0lZd6mhUoo53THR4gPb6gH/OH6bKaa20VoDqmetk1iQAnFJrStkM4kRxmg8z1TDe0NioNRdqbvZEStBg0tYpDILzhI56iwqcbWjcLm/xrRyZna5weHnUdDGowXpRYEiU0lefWLcVzfW3QiS3SD5FFimYmy0HktgjFr2VmCDgc+YBEmhWJyRu+fP6sl1+t2eznqOvFjI+122nmpNdcIfTMkmk38A9bN79p2uDiU9thxn1FdRZurjjI74RDC0ut0GPEYh3l7C55SKSt1joGVKCy9JzFQgzoCedrrtzqNHk9u3D/SbGgx4R1lNXX2UxNAvolJPNDe/g/I1twb4MjF6ZtE8X/MuUBjzS5JKrcqoLPuBP8hspazYlSKOxossNeUGe4VWZXRZq+tM+bfF22oHAjFXkb426rWH9VjVZxSTIWu/WZNbIdjRYj7g4rSuNk9Fi7+6oqZeS56ZGMuLs9jRttznG2m1I1QtNJGtkbVdTp22W12kWUjzqwXsfRb8CvbaBC2NSFAT7BW1NGSBZfTsoNNXWlNZMjiojdV5QkJBMfItaSmrDdvIefwquVBVW9XU20Djn2K9iNNMLmOg+QMZpmTQlfUH1R8gu++5fthpNjvpwoUkFo2izdGj5U5nOSyqUxfg/BV0guqMdIJDTbNVK4uo9D9n/7ltcPA3M6iZ/OaLjqdBeup9OD8J50/C+QIqFWISPAbhT3PXnltw070O5zX47fSd+XnRxirsiVIJ5UpVMUNtZ1DGTDB53klffytySu4iQ1l7pYPL7WEXFuYbzUU5vfBGozcXq3viuNDLuW3otaSxoUskJ1C3zVuu4Vz+CnIG3jda8stc/nLyBiL+KoHGWIbz0qs5V0R9jfOeBdrOb5KOSHtV/TznNC9fhezQ0WlFzuaAAgLR5JgfeCBTvwz2NZToGnqDi/oa9HRvleXWiN/PuuPjgcB43O2Or5bl8U53++zYqpk142Oz1KNz04BuzmS9nMk2BREU1kGoQgMHrcUwOy/xUC7n5r0Rf6DUVVGy0xHJJL3azNtL5A5Xsa42+ocrc56csvEf4EeVlK9NjPsbxhJgFWLWAEO/BatgAtBxFP2KMgYin1apzC6pim81abiWKqvs0Cdx4VSJkzcUaweKoG6129KIAM5iYOd50B9AZWN2/rs8Syhzl0IOzGCZuUlJv1jNMC+2tfZEosuH7L2CpkBwOLSOhiLeZzX5XGXVgYSzPtm4u9wsOIxe3hKVWjq0uq7conxVZYXWVFpalG+2NlY6A0JxSfkSak07o0LH8POKv7O1WaknslJb9LSCoWP6oKljYHY2eeRIb2mNdnVLUUFHHEnRvc7HouStPk0u4IQB5zguVOZGqBaZ4qvU3Wz5C18VNpBfb2biBlkIvhw3iLEAw+8C1nyOCTqHyEGO1Rwbv+nGlU8cGd+ybRXSkfSZM4i9qEytiLkT/RW9AdkN0xsMgryBh2nwNncC3U6uT7iRxXZbTVdPNwQKZnrndrBPshpGCzMTI4dZmCQFsNjrlVVYjWg9hX7RO7J/RSAvtC245r6OH8YKT7/BOu9Lpe67sfYHu3+UwKgL/ys5uQFVkXL2ILmfoo4AahugqikqzA3UdG3ON9Bx1b+kUul138RGEwk0dmkj+tMfvwYPXXxq7u/YYUBlwTI6+wIox9PihS7DwvDl8PvxJ6nU2vRTw+hzsj+4NZg8CMiqxet+POl78BSrSc98iAyv4xMUefT+/bPWVvGUgr5PQdeB1wRA/xpmmLWBNB0vKS/oZzw6H7w+OP0zitx27U/GGjtvmmhHZVTuE+gjwuEw4VAa34dRHHfu3ThSHjUEOkf/kQRJ6JORro+X0nl1O9jzKEgsgCpM7VG4hhCDuwVUG+UTm7EvfGp069SjkqV3ZAyHDqRSB3amfzmMPoL56xS51aTpgkqnvpecwHfNMembwTjqg51Zz6qVDpnFQ6D5vAxBYJ+kbrz0JnqEPDWZxa97Ek0SDhz5ECrqJEFTficFB7zE3C72PvwXwIN7mkxJAEiHViHDkGAHyA9HLuA2okefn+jshHoqv4BuSJxPZDXJRAMd9uejgeZERg2Y3+Cl5XHyHgiIj6Z940Nxc0X/8vH6p5BMXkMHAW1XArVe2ohzzqvzC1SxhYV5arT2ZBd5ivLYCvhHYBak0yzlERTK0fLanKyrgED6UlyHXyTr0F1Eh6PkKXIDO022XyJqrE3fi76A/fHdccikTy6sjMVWvrsk9vu+GGDuy2pP0WkO0iwGZVmwgcbZWTKD7h76mNVc2ngRxwmCu0snnYUus5/xbIZ9iCOHaFSp4fqhhsuISpX1wHPh0ExcWLgMa/Kte5cFElvd9hvQCBHADXeT++XaTYeeuzZyvX/N0VCLdHDZ6nuof32XWaUSsqxeLQHzbwKp+75NwK0J1AScFpCT3yZhAbNcic98kFAAN0LpKzuyUXlF/6JFLdN16C0w05PZRzOR+uowOp9utLakRHGkxWptGRHFVItV6Sq8H66vmd2AXiTP40NkLr0Hmc9iqzcVFoRwyutJhgQBhkC+yclxziZeWOTmODeMalS/nUr+qBknE2ToZUzpcgYRLnkZ6zMU0JLgEBVOKDv676f4pyVTPXLTaLk0UQvRuKwpuHx9zlKcpwsJpa7yggUj6X8QwkmvZ6hZEJqHPN5kWEhSk6pkapJcVQWmoY8/wOpzpDu42hG2DHtnW/lRMTBcEa770UxDjTdp4XzNXXUeNNE4SG0cbPQMhqqrQ4MeHm7NnEvmq2BQ5FwBGuOrwNsDShQaYc6GG55WzKEOv3xLoW1SVH9jfGUHUinyWSo1wU6PjExPjyyZzJs6oTG5KyzO0vz8Uqelwm3S7GMP5l06gD49/JOHf/rTh/fvXiwvj1itkeVydgemaT1fptTGSqiNHmD68sU6Q6V6fniB2kLrGPoqu/F6PjTi94+E+Pl9tK+9vY8uFB8cvJQ+4d22Y0tj43U3bJOeQ596hqjfhzzzezyZjMNKn2MPprezqjxVXJ2nXgA8rLucl5wyHQIb7FVafZ0Omq+PW5tTAN5is7WAkFSzdVhvkwVBtunnd5rK2Ni/Y8DtHtjR37+d7tv7AxkyArDbbEAKsLIu249yoB9ZKCs5Sl44qP3fFWLDSnsyDA2lXd+ZGddBQjyA7ySffWdOYCZwue7QHpbN15zL1YB2siuacLb+EFSzqa0lOFUr394b6t+9sknVtCEwdrhlb4xtRKuIGcrQA67IjY3h+s2RJXvrFtXsuuNAEKNOvAS6/QLoDNcpeWiBe5/EtIHcrLxM57xSHsRtJkO/ejADgZvx03z4/M6+wRsQV7v47u4EH2jbORkvDGyQpx9p2dOR04CO0tzcb0ts7Oy6JmG7E/6Wloo9/rVTU2vXTWDcOGBurhjwWJu9Dk1zaffyGT9t883XDhKCa99Lf+GINJrNjRFH7+rV/UZ7eXGwtjYYVGy4TYkmakOdEuEV7N/gjIOBkN6WdIq3JZGFLoNe04mBJrMUWFfbfKi5KbJ9oqPQt96/7J7mXR1qacXPUlCDTw2hvx8aItegL7laB69ptvQ3tizjQlzn6KRIlYxsWdT9JtGdS9+FVvQlyUc7d0Jst89tZ/eAXjTvoBDMa3U1s3ArFearfvZbUYXe1YlywBTwr3UL3b2J6qbortlE0eKZptnH2nbGc8SPU6mH6h5e4x15UCpr6xttkDo2D3nZMYwultW7rYXNVUlRCHpsVzDZuuW/0g80xlbrOnTj8erFjba8aJEnOhqohyzoBg5pHJiYCsYOVQoeyqG/FXhKk54v19BO6ZCKfjW6xS+trw/e3ibHtq1q1wc2BGaPtu6NLQySP6Ji8hl+izr/QPosbkyRnWgv+lWkrplrsTcmuKAhFO22YhTF0mpk7jj/J1zyXnoZCnU/QiO0G7LiK80i31Ov+TDOdJDMKR5OeeF50ffUlbwc3N0n9v+4I3r/iHj8otQ0FXgJVQe3RIy5xuH/R/2/YON76T8Y7LqIXrRU+vTt9imRhYQz1kKbY5lbspWHztdwm0RKQGoFyK7MOAZDD53xqDnw+JbHqcOp1GHy4bPoDvI6spLfrx19pCvxJPpl+oVh9AnmP06Pos0foE/it3fcodNGdTpyL3mayolf7jp6+rxKRyOdFeGJnsgCIfSGBFd35aELLTNaMYkeJg+ql6g35SzJqVxk8mwJfc7mpdYlk+tSeEs8TrpgltsI6zo2Vx0rzu0kL+AcUsL+gJxGEeb/AG7XWIUAAQAAAAEKPUzS6bNfDzz1IAsD6AAAAADRpuWtAAAAAObmDen/gf8JA78DiQAAAAgAAgAAAAAAAHjaY2BkYGAO+i/FEMD84n/j/93M+0EiKEALAKIzBtIAeNo1yTEKggAYhuFPGrtAQw1Rk1GTQRBFgkVkNBVENDQUDd5ABEEQj+Lk4K08gAfwHX55eeD/+ZxWMjWGSHHCGlO8sEOJBR6o4GGOGUbIcIeLJXys7D/afTAXfDG2v9/+2CLAHhM4g0Y3PfWjWIlC+MrlytObPmwRbVhCBbpSoXMHvNM7gQAAAAAAAAAAAAAdAE4AcwCZAMoA3gECAQ8BJQFgAX8BpAG6Ac4B5AIJAhsCLQI6AngCqALlAxwDQAOUA7oD3gP2BA8ETgR0BKME3wUDBUYFagWQBakFvwXqBhUGRAZ9BqwG1AbxByEHUAdrB5wHzQgdCJMI0gkcCV0JpwnhCkMKjwrlCzILmgvODAZ42mNgZGBgcGb4wiDF0MXAA+YhADMDIwAtywHueNqdU0tuE0EQffaYTwJEKFJ2EWpFLEAKQ2wgi2QVMChGCUE4QgGxmfiHFce2xh4CC7YsOAFX4ARIwAI2hhNwCA7AigXv1fSQD5YgqDUzr6urq169qgFwHiMEyBUmiN8X5jzO4UKh4HEeU8EPjwN0gtceFxAGTzw+gaUgu3sS8/nM/xT6+Vcen8Zcvu7xBB7nJz2exChX9vgMSrlpj8/iEr57fA5v8MDjKSxi1vA048wCH2dGb9+9xDLcl4tfZ75tGRp++vzhJ9FTDLn6GGAJV7l6xA100STq8qSDNmpmGfAd0hqjhU3ea9PicMf7OVSJmkR7iOjToCX1OByhTktCXCeOiYeMJN8qKljjd8PnPxh57VCEeVoe2u0B7fJxKJKZnqyatJashph+z3la4z7EDvdHq96zFdI7wjOLLd+YHumtXfJLsG35xUiVOpRRwi3iOuN3qYpjDxr8JqxZGjh2aJVIDNtWcY+nMS19MpA20mmXVuWsW2Vd7pypK+Zp3H274r4gSoxFk7ciosTiDHDZbOLtsGJVR4za5dk98i+zlkemSAtXyDSiEg73jemOZgJ3jWF6vmp9FHPdkVUeVbPpfN24qTcNrmVmWGFXbjOuM02knd7il3bpT7XS+Yi8Di3bD039dE7UOVUgjVKWmfJ/zxaOVWDdznpW/8FOjZun63wWrOqb9GvTU5xKtJX4hxX5XcC1sVnc7zxHJ+J43sr9/8yOk1ka9jlZ8mnZ36HZrdlEKW4RN6hZihb/UX/NYIdL3c2iZjOv/yj2Uy/P/X9d3Va1LeOpurbJSx4bzLrJjBVscV/heQ3hL6Ao6iF42mNgZgCD/xUMVkCKEcJDAAAoAAG2AAA=); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">kmp_search(text, pat)</tspan></text>
+<path d="M24 64 L359 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="335" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M352 64 L352 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve">pi ← <tspan font-weight="600">prefix_function</tspan>(pat)</text>
+<rect x="24" y="96" width="335" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">matches, k = [], 0</text>
+<rect x="24" y="128" width="335" height="288" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">for i, c in enumerate(text)</text>
+<rect x="46" y="160" width="313" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="180" font-size="13" fill="#151a22" xml:space="preserve">k &gt; 0 and c != pat[k]</text>
+<rect x="68" y="192" width="291" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="212" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]    # 패턴 안에서 물러난다</text>
+<rect x="46" y="224" width="313" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 224 L212 272 L359 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="212" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c == pat[k]</text>
+<text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="353" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="272" width="166" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">k += 1</text>
+<rect x="212" y="272" width="147" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="285.5" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M281 292.5 L290 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="304" width="313" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L307 352 L359 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="306.5" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">k == len(pat)</text>
+<text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="353" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="352" width="261" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="372" font-size="13" fill="#151a22" xml:space="preserve">matches.append(i - k + 1)    # 찾았다</text>
+<rect x="46" y="384" width="261" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]</text>
+<rect x="307" y="352" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="333" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M328.5 388.5 L337.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="416" width="335" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="436" font-size="13" fill="#151a22" xml:space="preserve">return matches</text>
+<text x="403" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="403" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">prefix_function(p)</tspan></text>
+<path d="M403 64 L846 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="403" y="64" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="413" y="84" font-size="13" fill="#151a22" xml:space="preserve">pi = [0] * len(p)    # p[:i+1]의 접두사이자 접미사인 가장 긴 길이</text>
+<rect x="403" y="96" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="413" y="116" font-size="13" fill="#151a22" xml:space="preserve">k = 0</text>
+<rect x="403" y="128" width="443" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="413" y="148" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, len(p))</text>
+<rect x="425" y="160" width="421" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="435" y="180" font-size="13" fill="#151a22" xml:space="preserve">k &gt; 0 and p[i] != p[k]</text>
+<rect x="447" y="192" width="399" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="457" y="212" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]</text>
+<rect x="425" y="224" width="421" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M425 224 L649 272 L846 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="649" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p[i] == p[k]</text>
+<text x="431" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="840" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="425" y="272" width="224" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="435" y="292" font-size="13" fill="#151a22" xml:space="preserve">k += 1</text>
+<rect x="649" y="272" width="197" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="747.5" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M743 292.5 L752 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="425" y="304" width="421" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="435" y="324" font-size="13" fill="#151a22" xml:space="preserve">pi[i] = k</text>
+<rect x="403" y="336" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="413" y="356" font-size="13" fill="#151a22" xml:space="preserve">return pi</text>
+</g>
+</svg>

@@ -77,12 +77,13 @@ const areas = [
   {
     name: '메뉴 · 화면 · 시작',
     about:
-      '메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
+      '메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]',
     paths: [
       'packages/editor/src/ui/',
       'packages/editor/src/i18n/',
       'packages/core/src/i18n/',
       'packages/editor/src/examples/',
+      'packages/editor/src/gallery/',
       'packages/editor/src/version.test.ts',
       'apps/web/src/shell/messages.test.ts',
       'apps/web/e2e/examples.spec.ts',

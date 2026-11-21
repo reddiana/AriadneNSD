@@ -1,0 +1,439 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1220" height="912" viewBox="0 0 1220 912">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="572b0b8cfaf733e271ea5816bf62597f88d245165e2c482d5fbe879e4f0e63f6"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "a = [5, 8, 6, 3, 2, 7, 2, 6]"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "n = len(a)"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "tree = [0] * (4 * n)    # the children of node k are 2k and 2k + 1"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "1, 0, n - 1",
+          "result": ""
+        },
+        {
+          "id": "b5",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "1, 0, n - 1, 2, 5",
+          "result": "s"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "print(s)    # 18"
+        },
+        {
+          "id": "b7",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d4"
+          },
+          "args": "1, 0, n - 1, 3, 10",
+          "result": ""
+        },
+        {
+          "id": "b8",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "1, 0, n - 1, 2, 5",
+          "result": "s"
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "print(s)    # 25"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "build(node, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b10",
+          "kind": "if",
+          "text": "lo == hi",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b11",
+                "kind": "process",
+                "text": "tree[node] = a[lo]"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b12",
+                "kind": "process",
+                "text": "mid = (lo + hi) // 2"
+              },
+              {
+                "id": "b13",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d2"
+                },
+                "args": "2 * node, lo, mid",
+                "result": ""
+              },
+              {
+                "id": "b14",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d2"
+                },
+                "args": "2 * node + 1, mid + 1, hi",
+                "result": ""
+              },
+              {
+                "id": "b15",
+                "kind": "process",
+                "text": "tree[node] = tree[2 * node] + tree[2 * node + 1]"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "query(node, lo, hi, l, r)"
+      },
+      "body": [
+        {
+          "id": "b16",
+          "kind": "if",
+          "text": "r < lo or hi < l",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b17",
+                "kind": "process",
+                "text": "return 0    # no overlap"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b18",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b19",
+          "kind": "if",
+          "text": "l <= lo and hi <= r",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b20",
+                "kind": "process",
+                "text": "return tree[node]    # fully inside the range"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b21",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b22",
+          "kind": "process",
+          "text": "mid = (lo + hi) // 2"
+        },
+        {
+          "id": "b23",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "2 * node, lo, mid, l, r",
+          "result": "left"
+        },
+        {
+          "id": "b24",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "2 * node + 1, mid + 1, hi, l, r",
+          "result": "right"
+        },
+        {
+          "id": "b25",
+          "kind": "process",
+          "text": "return left + right"
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "method",
+        "text": "update(node, lo, hi, i, x)"
+      },
+      "body": [
+        {
+          "id": "b26",
+          "kind": "if",
+          "text": "lo == hi",
+          "yes": {
+            "id": "r7",
+            "body": [
+              {
+                "id": "b27",
+                "kind": "process",
+                "text": "tree[node] = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r8",
+            "body": [
+              {
+                "id": "b28",
+                "kind": "process",
+                "text": "mid = (lo + hi) // 2"
+              },
+              {
+                "id": "b29",
+                "kind": "if",
+                "text": "i <= mid",
+                "yes": {
+                  "id": "r9",
+                  "body": [
+                    {
+                      "id": "b30",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d4"
+                      },
+                      "args": "2 * node, lo, mid, i, x",
+                      "result": ""
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r10",
+                  "body": [
+                    {
+                      "id": "b31",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d4"
+                      },
+                      "args": "2 * node + 1, mid + 1, hi, i, x",
+                      "result": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b32",
+                "kind": "process",
+                "text": "tree[node] = tree[2 * node] + tree[2 * node + 1]"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L473 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">a = [5, 8, 6, 3, 2, 7, 2, 6]</text>
+<rect x="24" y="96" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">n = len(a)</text>
+<rect x="24" y="128" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">tree = [0] * (4 * n)    # the children of node k are 2k and 2k + 1</text>
+<rect x="24" y="160" width="449" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 160 L31 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 160 L466 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(1, 0, n - 1)</text>
+<rect x="24" y="192" width="449" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 192 L31 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 192 L466 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="212" font-size="13" fill="#151a22" xml:space="preserve">s ← <tspan font-weight="600">query</tspan>(1, 0, n - 1, 2, 5)</text>
+<rect x="24" y="224" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="244" font-size="13" fill="#151a22" xml:space="preserve">print(s)    # 18</text>
+<rect x="24" y="256" width="449" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 256 L31 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 256 L466 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="276" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(1, 0, n - 1, 3, 10)</text>
+<rect x="24" y="288" width="449" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 288 L31 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 288 L466 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="308" font-size="13" fill="#151a22" xml:space="preserve">s ← <tspan font-weight="600">query</tspan>(1, 0, n - 1, 2, 5)</text>
+<rect x="24" y="320" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="340" font-size="13" fill="#151a22" xml:space="preserve">print(s)    # 25</text>
+<text x="561" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="561" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build(node, lo, hi)</tspan></text>
+<path d="M561 64 L1030 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="561" y="64" width="469" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 64 L698 112 L1030 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="698" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">lo == hi</text>
+<text x="567" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1024" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="112" width="137" height="128" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="132" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = a[lo]</text>
+<rect x="698" y="112" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="708" y="132" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="698" y="144" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M705 144 L705 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1023 144 L1023 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="715" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(2 * node, lo, mid)</text>
+<rect x="698" y="176" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M705 176 L705 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1023 176 L1023 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="715" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">build</tspan>(2 * node + 1, mid + 1, hi)</text>
+<rect x="698" y="208" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="708" y="228" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
+<text x="561" y="296" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="561" y="313" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">query(node, lo, hi, l, r)</tspan></text>
+<path d="M561 324 L926 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="561" y="324" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 324 L843 372 L926 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="843" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
+<text x="567" y="367" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="920" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="372" width="282" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # no overlap</text>
+<rect x="843" y="372" width="83" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="884.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M880 392.5 L889 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="561" y="404" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 404 L874 452 L926 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="854" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
+<text x="567" y="447" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="920" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="452" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # fully inside the range</text>
+<rect x="874" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="900" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M895.5 472.5 L904.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="561" y="484" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="504" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="561" y="516" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M568 516 L568 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M919 516 L919 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="578" y="536" font-size="13" fill="#151a22" xml:space="preserve">left ← <tspan font-weight="600">query</tspan>(2 * node, lo, mid, l, r)</text>
+<rect x="561" y="548" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M568 548 L568 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M919 548 L919 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="578" y="568" font-size="13" fill="#151a22" xml:space="preserve">right ← <tspan font-weight="600">query</tspan>(2 * node + 1, mid + 1, hi, l, r)</text>
+<rect x="561" y="580" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="600" font-size="13" fill="#151a22" xml:space="preserve">return left + right</text>
+<text x="561" y="668" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="561" y="685" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update(node, lo, hi, i, x)</tspan></text>
+<path d="M561 696 L1196 696" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="561" y="696" width="635" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 696 L672 744 L1196 696" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="672" y="714" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">lo == hi</text>
+<text x="567" y="739" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1190" y="739" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="744" width="111" height="144" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="764" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = x</text>
+<rect x="672" y="744" width="524" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="682" y="764" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
+<rect x="672" y="776" width="524" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M672 776 L908 824 L1196 776" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="908" y="794" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">i &lt;= mid</text>
+<text x="678" y="819" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1190" y="819" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="672" y="824" width="236" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M679 824 L679 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M901 824 L901 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="689" y="844" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(2 * node, lo, mid, i, x)</text>
+<rect x="908" y="824" width="288" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M915 824 L915 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1189 824 L1189 856" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="925" y="844" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update</tspan>(2 * node + 1, mid + 1, hi, i, x)</text>
+<rect x="672" y="856" width="524" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="682" y="876" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
+</g>
+</svg>

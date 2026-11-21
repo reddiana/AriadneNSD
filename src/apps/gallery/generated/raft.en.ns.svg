@@ -1,0 +1,1008 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1970" height="1278" viewBox="0 0 1970 1278">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="0147c60656dc1b14fab93bae32d20a974e3267752313d598a5d56ded9d722875"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "When the election timer runs out"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "if",
+          "text": "Am I the leader?",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b2",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b3",
+                "kind": "process",
+                "text": "Become a candidate"
+              },
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": "Increase the term by one"
+              },
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": "Vote for myself\n(votes = 1)"
+              },
+              {
+                "id": "b6",
+                "kind": "process",
+                "text": "Reset the election timer to a random time"
+              },
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": "Send a vote request to every peer\n(term, index and term of my last entry)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "event",
+        "text": "When a vote request arrives"
+      },
+      "body": [
+        {
+          "id": "b8",
+          "kind": "if",
+          "text": "Request term > my term?",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b11",
+          "kind": "if",
+          "text": "Request term < my term?",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b12",
+                "kind": "process",
+                "text": "Reply: rejected"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b13",
+                "kind": "if",
+                "text": "Not voted yet in this term,\nor already voted for this candidate?",
+                "yes": {
+                  "id": "r7",
+                  "body": [
+                    {
+                      "id": "b14",
+                      "kind": "if",
+                      "text": "Is the candidate's log as up to date as mine?",
+                      "yes": {
+                        "id": "r8",
+                        "body": [
+                          {
+                            "id": "b15",
+                            "kind": "process",
+                            "text": "Note that I voted for this candidate"
+                          },
+                          {
+                            "id": "b16",
+                            "kind": "process",
+                            "text": "Reset the election timer"
+                          },
+                          {
+                            "id": "b17",
+                            "kind": "process",
+                            "text": "Reply: vote granted"
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r9",
+                        "body": [
+                          {
+                            "id": "b18",
+                            "kind": "process",
+                            "text": "Reply: rejected"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r10",
+                  "body": [
+                    {
+                      "id": "b19",
+                      "kind": "process",
+                      "text": "Reply: rejected"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "event",
+        "text": "When a vote reply arrives"
+      },
+      "body": [
+        {
+          "id": "b20",
+          "kind": "if",
+          "text": "Reply term > my term?",
+          "yes": {
+            "id": "r11",
+            "body": [
+              {
+                "id": "b21",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r12",
+            "body": [
+              {
+                "id": "b22",
+                "kind": "if",
+                "text": "Still a candidate, and a vote\nfor me in this term?",
+                "yes": {
+                  "id": "r13",
+                  "body": [
+                    {
+                      "id": "b23",
+                      "kind": "process",
+                      "text": "Add one to the votes"
+                    },
+                    {
+                      "id": "b24",
+                      "kind": "if",
+                      "text": "Do the votes make a majority?",
+                      "yes": {
+                        "id": "r14",
+                        "body": [
+                          {
+                            "id": "b25",
+                            "kind": "process",
+                            "text": "Become the leader"
+                          },
+                          {
+                            "id": "b26",
+                            "kind": "process",
+                            "text": "Set each peer's next index\nto my last index + 1"
+                          },
+                          {
+                            "id": "b27",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d8"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r15",
+                        "body": [
+                          {
+                            "id": "b28",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r16",
+                  "body": [
+                    {
+                      "id": "b29",
+                      "kind": "process",
+                      "text": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "event",
+        "text": "When the heartbeat timer runs out"
+      },
+      "body": [
+        {
+          "id": "b30",
+          "kind": "if",
+          "text": "Am I the leader?",
+          "yes": {
+            "id": "r17",
+            "body": [
+              {
+                "id": "b31",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d8"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r18",
+            "body": [
+              {
+                "id": "b32",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d5",
+      "head": {
+        "kind": "event",
+        "text": "When a client request arrives"
+      },
+      "body": [
+        {
+          "id": "b33",
+          "kind": "if",
+          "text": "Am I the leader?",
+          "yes": {
+            "id": "r19",
+            "body": [
+              {
+                "id": "b34",
+                "kind": "process",
+                "text": "Append the command to the log\nas a new entry of this term"
+              },
+              {
+                "id": "b35",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d8"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r20",
+            "body": [
+              {
+                "id": "b36",
+                "kind": "process",
+                "text": "Tell the client the leader's address"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d6",
+      "head": {
+        "kind": "event",
+        "text": "When a log replication request arrives"
+      },
+      "body": [
+        {
+          "id": "b37",
+          "kind": "if",
+          "text": "Request term < my term?",
+          "yes": {
+            "id": "r21",
+            "body": [
+              {
+                "id": "b38",
+                "kind": "process",
+                "text": "Reply: failure\n(with my term)"
+              }
+            ]
+          },
+          "no": {
+            "id": "r22",
+            "body": [
+              {
+                "id": "b39",
+                "kind": "if",
+                "text": "Request term > my term,\nor am I a candidate?",
+                "yes": {
+                  "id": "r23",
+                  "body": [
+                    {
+                      "id": "b40",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d10"
+                      },
+                      "args": "",
+                      "result": ""
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r24",
+                  "body": [
+                    {
+                      "id": "b41",
+                      "kind": "process",
+                      "text": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b42",
+                "kind": "process",
+                "text": "Reset the election timer"
+              },
+              {
+                "id": "b43",
+                "kind": "if",
+                "text": "Do the previous entry's index and term match my log?",
+                "yes": {
+                  "id": "r25",
+                  "body": [
+                    {
+                      "id": "b44",
+                      "kind": "process",
+                      "text": "Delete my entries from the first conflict on"
+                    },
+                    {
+                      "id": "b45",
+                      "kind": "process",
+                      "text": "Append the new entries to the log"
+                    },
+                    {
+                      "id": "b46",
+                      "kind": "if",
+                      "text": "Leader's commit index > mine?",
+                      "yes": {
+                        "id": "r26",
+                        "body": [
+                          {
+                            "id": "b47",
+                            "kind": "process",
+                            "text": "Raise my commit index\n(to the smaller of the leader's commit index\nand my last index)"
+                          },
+                          {
+                            "id": "b48",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d9"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r27",
+                        "body": [
+                          {
+                            "id": "b49",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "b50",
+                      "kind": "process",
+                      "text": "Reply: success"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r28",
+                  "body": [
+                    {
+                      "id": "b51",
+                      "kind": "process",
+                      "text": "Reply: failure"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d7",
+      "head": {
+        "kind": "event",
+        "text": "When a log replication reply arrives"
+      },
+      "body": [
+        {
+          "id": "b52",
+          "kind": "if",
+          "text": "Reply term > my term?",
+          "yes": {
+            "id": "r29",
+            "body": [
+              {
+                "id": "b53",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r30",
+            "body": [
+              {
+                "id": "b54",
+                "kind": "if",
+                "text": "Success?",
+                "yes": {
+                  "id": "r31",
+                  "body": [
+                    {
+                      "id": "b55",
+                      "kind": "process",
+                      "text": "Raise the peer's match index and next index"
+                    },
+                    {
+                      "id": "b56",
+                      "kind": "if",
+                      "text": "Is an entry of this term held by a majority\nnot committed yet?",
+                      "yes": {
+                        "id": "r32",
+                        "body": [
+                          {
+                            "id": "b57",
+                            "kind": "process",
+                            "text": "Raise the commit index up to it"
+                          },
+                          {
+                            "id": "b58",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d9"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r33",
+                        "body": [
+                          {
+                            "id": "b59",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r34",
+                  "body": [
+                    {
+                      "id": "b60",
+                      "kind": "process",
+                      "text": "Lower the peer's next index by one\n(it is sent again at the next heartbeat)"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d8",
+      "head": {
+        "kind": "method",
+        "text": "Send the log to every peer"
+      },
+      "body": [
+        {
+          "id": "b61",
+          "kind": "while",
+          "text": "While a peer is left to send to",
+          "body": [
+            {
+              "id": "b62",
+              "kind": "process",
+              "text": "Pick the entries for that peer\n(from its next index to the end,\nor none for a heartbeat)"
+            },
+            {
+              "id": "b63",
+              "kind": "process",
+              "text": "Send a log replication request\n(term, previous index and term,\nentries, commit index)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d9",
+      "head": {
+        "kind": "method",
+        "text": "Apply committed entries to the state machine"
+      },
+      "body": [
+        {
+          "id": "b64",
+          "kind": "while",
+          "text": "applied index < commit index",
+          "body": [
+            {
+              "id": "b65",
+              "kind": "process",
+              "text": "Increase the applied index by one"
+            },
+            {
+              "id": "b66",
+              "kind": "process",
+              "text": "Apply that entry's command to the state machine"
+            },
+            {
+              "id": "b67",
+              "kind": "if",
+              "text": "Am I the leader?",
+              "yes": {
+                "id": "r35",
+                "body": [
+                  {
+                    "id": "b68",
+                    "kind": "process",
+                    "text": "Reply to the client with the result"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r36",
+                "body": [
+                  {
+                    "id": "b69",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d10",
+      "head": {
+        "kind": "method",
+        "text": "Step down to follower"
+      },
+      "body": [
+        {
+          "id": "b70",
+          "kind": "if",
+          "text": "Other side's term > my term?",
+          "yes": {
+            "id": "r37",
+            "body": [
+              {
+                "id": "b71",
+                "kind": "process",
+                "text": "Raise my term to the other side's term"
+              },
+              {
+                "id": "b72",
+                "kind": "process",
+                "text": "Clear my vote for this term"
+              }
+            ]
+          },
+          "no": {
+            "id": "r38",
+            "body": [
+              {
+                "id": "b73",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b74",
+          "kind": "process",
+          "text": "Become a follower"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When the election timer runs out</tspan></text>
+<path d="M24 64 L363 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="339" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L76 112 L363 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="86" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Am I the leader?</text>
+<text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="357" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="112" width="52" height="196" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="50" cy="210" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M45.5 214.5 L54.5 205.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="76" y="112" width="287" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="132" font-size="13" fill="#151a22" xml:space="preserve">Become a candidate</text>
+<rect x="76" y="144" width="287" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="164" font-size="13" fill="#151a22" xml:space="preserve">Increase the term by one</text>
+<rect x="76" y="176" width="287" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="196" font-size="13" fill="#151a22" xml:space="preserve">Vote for myself</text>
+<text x="86" y="214" font-size="13" fill="#151a22" xml:space="preserve">(votes = 1)</text>
+<rect x="76" y="226" width="287" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="246" font-size="13" fill="#151a22" xml:space="preserve">Reset the election timer to a random time</text>
+<rect x="76" y="258" width="287" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="278" font-size="13" fill="#151a22" xml:space="preserve">Send a vote request to every peer</text>
+<text x="86" y="296" font-size="13" fill="#151a22" xml:space="preserve">(term, index and term of my last entry)</text>
+<text x="24" y="364" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="381" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When a vote request arrives</tspan></text>
+<path d="M24 392 L643 392" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="392" width="619" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 392 L499 440 L643 392" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="499" y="410" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Request term &gt; my term?</text>
+<text x="30" y="435" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="637" y="435" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="440" width="475" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 440 L31 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M492 440 L492 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="460" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Step down to follower</tspan></text>
+<rect x="499" y="440" width="144" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="571" cy="456" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M566.5 460.5 L575.5 451.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="472" width="619" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 472 L142 520 L643 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="142" y="490" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Request term &lt; my term?</text>
+<text x="30" y="515" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="637" y="515" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="520" width="118" height="210" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="540" font-size="13" fill="#151a22" xml:space="preserve">Reply: rejected</text>
+<rect x="142" y="520" width="501" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M142 520 L525 586 L643 520" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="516" y="538" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Not voted yet in this term,</text>
+<text x="516" y="556" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">or already voted for this candidate?</text>
+<text x="148" y="581" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="637" y="581" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="142" y="586" width="383" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M142 586 L404 634 L525 586" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="368.5" y="604" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Is the candidate's log as up to date as mine?</text>
+<text x="148" y="629" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="519" y="629" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="142" y="634" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="152" y="654" font-size="13" fill="#151a22" xml:space="preserve">Note that I voted for this candidate</text>
+<rect x="142" y="666" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="152" y="686" font-size="13" fill="#151a22" xml:space="preserve">Reset the election timer</text>
+<rect x="142" y="698" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="152" y="718" font-size="13" fill="#151a22" xml:space="preserve">Reply: vote granted</text>
+<rect x="404" y="634" width="121" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="414" y="654" font-size="13" fill="#151a22" xml:space="preserve">Reply: rejected</text>
+<rect x="525" y="586" width="118" height="144" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="535" y="606" font-size="13" fill="#151a22" xml:space="preserve">Reply: rejected</text>
+<text x="24" y="786" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="803" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When a vote reply arrives</tspan></text>
+<path d="M24 814 L526 814" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="814" width="502" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 814 L195 862 L526 814" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="195" y="832" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Reply term &gt; my term?</text>
+<text x="30" y="857" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="520" y="857" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="24" y="862" width="171" height="260" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 862 L31 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M188 862 L188 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="882" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Step down to follower</tspan></text>
+<rect x="195" y="862" width="331" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M195 862 L474 928 L526 862" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="421.5" y="880" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Still a candidate, and a vote</text>
+<text x="421.5" y="898" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">for me in this term?</text>
+<text x="201" y="923" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="520" y="923" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="195" y="928" width="279" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="205" y="948" font-size="13" fill="#151a22" xml:space="preserve">Add one to the votes</text>
+<rect x="195" y="960" width="279" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M195 960 L417 1008 L474 960" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="369.5" y="978" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Do the votes make a majority?</text>
+<text x="201" y="1003" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="468" y="1003" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="195" y="1008" width="222" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="205" y="1028" font-size="13" fill="#151a22" xml:space="preserve">Become the leader</text>
+<rect x="195" y="1040" width="222" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="205" y="1060" font-size="13" fill="#151a22" xml:space="preserve">Set each peer's next index</text>
+<text x="205" y="1078" font-size="13" fill="#151a22" xml:space="preserve">to my last index + 1</text>
+<rect x="195" y="1090" width="222" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M202 1090 L202 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M410 1090 L410 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="212" y="1110" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Send the log to every peer</tspan></text>
+<rect x="417" y="1008" width="57" height="114" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="445.5" cy="1065" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M441 1069.5 L450 1060.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="474" y="928" width="52" height="194" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="500" cy="1025" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M495.5 1029.5 L504.5 1020.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="687" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="687" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When the heartbeat timer runs out</tspan></text>
+<path d="M687 64 L942 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="687" y="64" width="255" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M687 64 L890 112 L942 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="880" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Am I the leader?</text>
+<text x="693" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="936" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="687" y="112" width="203" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M694 112 L694 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M883 112 L883 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="704" y="132" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Send the log to every peer</tspan></text>
+<rect x="890" y="112" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="916" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M911.5 132.5 L920.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="687" y="200" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="687" y="217" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When a client request arrives</tspan></text>
+<path d="M687 228 L1150 228" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="687" y="228" width="463" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M687 228 L896 276 L1150 228" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="896" y="246" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Am I the leader?</text>
+<text x="693" y="271" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1144" y="271" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="687" y="276" width="209" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="697" y="296" font-size="13" fill="#151a22" xml:space="preserve">Append the command to the log</text>
+<text x="697" y="314" font-size="13" fill="#151a22" xml:space="preserve">as a new entry of this term</text>
+<rect x="687" y="326" width="209" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M694 326 L694 358" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M889 326 L889 358" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="704" y="346" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Send the log to every peer</tspan></text>
+<rect x="896" y="276" width="254" height="82" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="906" y="296" font-size="13" fill="#151a22" xml:space="preserve">Tell the client the leader's address</text>
+<text x="687" y="414" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="687" y="431" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When a log replication request arrives</tspan></text>
+<path d="M687 442 L1281 442" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="687" y="442" width="594" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M687 442 L798 490 L1281 442" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="798" y="460" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Request term &lt; my term?</text>
+<text x="693" y="485" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1275" y="485" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="687" y="490" width="111" height="422" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="697" y="510" font-size="13" fill="#151a22" xml:space="preserve">Reply: failure</text>
+<text x="697" y="528" font-size="13" fill="#151a22" xml:space="preserve">(with my term)</text>
+<rect x="798" y="490" width="483" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M798 490 L1168 556 L1281 490" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1168" y="508" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Request term &gt; my term,</text>
+<text x="1168" y="526" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">or am I a candidate?</text>
+<text x="804" y="551" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1275" y="551" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="798" y="556" width="370" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M805 556 L805 588" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1161 556 L1161 588" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="815" y="576" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Step down to follower</tspan></text>
+<rect x="1168" y="556" width="113" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1224.5" cy="572" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1220 576.5 L1229 567.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="798" y="588" width="483" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="808" y="608" font-size="13" fill="#151a22" xml:space="preserve">Reset the election timer</text>
+<rect x="798" y="620" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M798 620 L1170 668 L1281 620" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1102" y="638" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Do the previous entry's index and term match my log?</text>
+<text x="804" y="663" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1275" y="663" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="798" y="668" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="808" y="688" font-size="13" fill="#151a22" xml:space="preserve">Delete my entries from the first conflict on</text>
+<rect x="798" y="700" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="808" y="720" font-size="13" fill="#151a22" xml:space="preserve">Append the new entries to the log</text>
+<rect x="798" y="732" width="372" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M798 732 L1118 780 L1170 732" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1065.5" y="750" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Leader's commit index &gt; mine?</text>
+<text x="804" y="775" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1164" y="775" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="798" y="780" width="320" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="808" y="800" font-size="13" fill="#151a22" xml:space="preserve">Raise my commit index</text>
+<text x="808" y="818" font-size="13" fill="#151a22" xml:space="preserve">(to the smaller of the leader's commit index</text>
+<text x="808" y="836" font-size="13" fill="#151a22" xml:space="preserve">and my last index)</text>
+<rect x="798" y="848" width="320" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M805 848 L805 880" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1111 848 L1111 880" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="815" y="868" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Apply committed entries to the state machine</tspan></text>
+<rect x="1118" y="780" width="52" height="100" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1144" cy="830" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1139.5 834.5 L1148.5 825.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="798" y="880" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="808" y="900" font-size="13" fill="#151a22" xml:space="preserve">Reply: success</text>
+<rect x="1170" y="668" width="111" height="244" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1180" y="688" font-size="13" fill="#151a22" xml:space="preserve">Reply: failure</text>
+<text x="687" y="968" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="687" y="985" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">When a log replication reply arrives</tspan></text>
+<path d="M687 996 L1510 996" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="687" y="996" width="823" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M687 996 L858 1044 L1510 996" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="858" y="1014" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Reply term &gt; my term?</text>
+<text x="693" y="1039" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1504" y="1039" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="687" y="1044" width="171" height="210" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M694 1044 L694 1254" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M851 1044 L851 1254" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="704" y="1064" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Step down to follower</tspan></text>
+<rect x="858" y="1044" width="652" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M858 1044 L1230 1092 L1510 1044" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1230" y="1062" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Success?</text>
+<text x="864" y="1087" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1504" y="1087" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="858" y="1092" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="868" y="1112" font-size="13" fill="#151a22" xml:space="preserve">Raise the peer's match index and next index</text>
+<rect x="858" y="1124" width="372" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M858 1124 L1178 1190 L1230 1124" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1080" y="1142" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Is an entry of this term held by a majority</text>
+<text x="1080" y="1160" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">not committed yet?</text>
+<text x="864" y="1185" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1224" y="1185" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="858" y="1190" width="320" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="868" y="1210" font-size="13" fill="#151a22" xml:space="preserve">Raise the commit index up to it</text>
+<rect x="858" y="1222" width="320" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M865 1222 L865 1254" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1171 1222 L1171 1254" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="875" y="1242" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Apply committed entries to the state machine</tspan></text>
+<rect x="1178" y="1190" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1204" cy="1222" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1199.5 1226.5 L1208.5 1217.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1230" y="1092" width="280" height="162" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1240" y="1112" font-size="13" fill="#151a22" xml:space="preserve">Lower the peer's next index by one</text>
+<text x="1240" y="1130" font-size="13" fill="#151a22" xml:space="preserve">(it is sent again at the next heartbeat)</text>
+<text x="1598" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1598" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Send the log to every peer</tspan></text>
+<path d="M1598 64 L1848 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1598" y="64" width="250" height="168" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1608" y="84" font-size="13" fill="#151a22" xml:space="preserve">While a peer is left to send to</text>
+<rect x="1620" y="96" width="228" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1630" y="116" font-size="13" fill="#151a22" xml:space="preserve">Pick the entries for that peer</text>
+<text x="1630" y="134" font-size="13" fill="#151a22" xml:space="preserve">(from its next index to the end,</text>
+<text x="1630" y="152" font-size="13" fill="#151a22" xml:space="preserve">or none for a heartbeat)</text>
+<rect x="1620" y="164" width="228" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1630" y="184" font-size="13" fill="#151a22" xml:space="preserve">Send a log replication request</text>
+<text x="1630" y="202" font-size="13" fill="#151a22" xml:space="preserve">(term, previous index and term,</text>
+<text x="1630" y="220" font-size="13" fill="#151a22" xml:space="preserve">entries, commit index)</text>
+<text x="1598" y="288" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1598" y="305" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Apply committed entries to the state machine</tspan></text>
+<path d="M1598 316 L1946 316" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1598" y="316" width="348" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1608" y="336" font-size="13" fill="#151a22" xml:space="preserve">applied index &lt; commit index</text>
+<rect x="1620" y="348" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1630" y="368" font-size="13" fill="#151a22" xml:space="preserve">Increase the applied index by one</text>
+<rect x="1620" y="380" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1630" y="400" font-size="13" fill="#151a22" xml:space="preserve">Apply that entry's command to the state machine</text>
+<rect x="1620" y="412" width="326" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1620 412 L1889 460 L1946 412" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1884" y="430" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Am I the leader?</text>
+<text x="1626" y="455" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1940" y="455" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="1620" y="460" width="269" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1630" y="480" font-size="13" fill="#151a22" xml:space="preserve">Reply to the client with the result</text>
+<rect x="1889" y="460" width="57" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1917.5" cy="476" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1913 480.5 L1922 471.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="1598" y="548" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1598" y="565" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Step down to follower</tspan></text>
+<path d="M1598 576 L1917 576" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1598" y="576" width="319" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1598 576 L1865 624 L1917 576" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1816" y="594" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Other side's term &gt; my term?</text>
+<text x="1604" y="619" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="1911" y="619" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="1598" y="624" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1608" y="644" font-size="13" fill="#151a22" xml:space="preserve">Raise my term to the other side's term</text>
+<rect x="1598" y="656" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1608" y="676" font-size="13" fill="#151a22" xml:space="preserve">Clear my vote for this term</text>
+<rect x="1865" y="624" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1891" cy="656" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1886.5 660.5 L1895.5 651.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1598" y="688" width="319" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1608" y="708" font-size="13" fill="#151a22" xml:space="preserve">Become a follower</text>
+</g>
+</svg>

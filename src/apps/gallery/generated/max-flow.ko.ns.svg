@@ -1,0 +1,315 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="806" height="686" viewBox="0 0 806 686">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="05596527e4423edab7dcadfc0e1c1f024cfe3d18a28f868b4a1cbac0cb671b9a"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "max_flow(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "flow = 0    # cap[u][v]: 남은 용량 (역방향 간선 포함)"
+        },
+        {
+          "id": "b2",
+          "kind": "while",
+          "text": "True",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "cap, s, t",
+              "result": "parent"
+            },
+            {
+              "id": "b4",
+              "kind": "if",
+              "text": "t not in parent",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b5",
+                    "kind": "process",
+                    "text": "return flow    # 증가 경로가 없다"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b7",
+              "kind": "process",
+              "text": "b, v = INF, t"
+            },
+            {
+              "id": "b8",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b9",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b10",
+                  "kind": "process",
+                  "text": "b = min(b, cap[u][v])"
+                },
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b12",
+              "kind": "process",
+              "text": "v = t"
+            },
+            {
+              "id": "b13",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b14",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b15",
+                  "kind": "process",
+                  "text": "cap[u][v] -= b"
+                },
+                {
+                  "id": "b16",
+                  "kind": "process",
+                  "text": "cap[v][u] += b    # 되돌릴 수 있게"
+                },
+                {
+                  "id": "b17",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "flow += b"
+            }
+          ],
+          "folds": [
+            {
+              "id": "f1",
+              "first": "b7",
+              "last": "b8",
+              "name": "경로의 병목 찾기"
+            },
+            {
+              "id": "f2",
+              "first": "b12",
+              "last": "b13",
+              "name": "경로를 따라 흘려 보내기"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "bfs_path(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b19",
+          "kind": "process",
+          "text": "parent = {s: s}    # 간선 수가 가장 적은 경로"
+        },
+        {
+          "id": "b20",
+          "kind": "process",
+          "text": "q = deque([s])"
+        },
+        {
+          "id": "b21",
+          "kind": "while",
+          "text": "q and t not in parent",
+          "body": [
+            {
+              "id": "b22",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b23",
+              "kind": "for",
+              "text": "for v in cap[u]",
+              "body": [
+                {
+                  "id": "b24",
+                  "kind": "if",
+                  "text": "v not in parent and cap[u][v] > 0",
+                  "yes": {
+                    "id": "r3",
+                    "body": [
+                      {
+                        "id": "b25",
+                        "kind": "process",
+                        "text": "parent[v] = u"
+                      },
+                      {
+                        "id": "b26",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b27",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b28",
+          "kind": "process",
+          "text": "return parent"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">max_flow(cap, s, t)</tspan></text>
+<path d="M24 64 L389 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">flow = 0    # cap[u][v]: 남은 용량 (역방향 간선 포함)</text>
+<rect x="24" y="96" width="365" height="566" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">True</text>
+<rect x="46" y="128" width="343" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 128 L53 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 128 L382 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="148" font-size="13" fill="#151a22" xml:space="preserve">parent ← <tspan font-weight="600">bfs_path</tspan>(cap, s, t)</text>
+<rect x="46" y="160" width="343" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 160 L327 208 L389 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="327" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">t not in parent</text>
+<text x="52" y="203" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="383" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="208" width="281" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="228" font-size="13" fill="#151a22" xml:space="preserve">return flow    # 증가 경로가 없다</text>
+<rect x="327" y="208" width="62" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="358" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M353.5 228.5 L362.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="258" width="343" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="278" font-size="13" fill="#151a22" xml:space="preserve">b, v = INF, t</text>
+<rect x="46" y="290" width="343" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="310" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="322" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="342" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="354" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="374" font-size="13" fill="#151a22" xml:space="preserve">b = min(b, cap[u][v])</text>
+<rect x="68" y="386" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="406" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="240" width="343" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="253" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">경로의 병목 찾기</tspan></text>
+<rect x="47" y="241" width="341" height="176" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="438" width="343" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="458" font-size="13" fill="#151a22" xml:space="preserve">v = t</text>
+<rect x="46" y="470" width="343" height="160" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="490" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="502" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="522" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="534" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="554" font-size="13" fill="#151a22" xml:space="preserve">cap[u][v] -= b</text>
+<rect x="68" y="566" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="586" font-size="13" fill="#151a22" xml:space="preserve">cap[v][u] += b    # 되돌릴 수 있게</text>
+<rect x="68" y="598" width="321" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="618" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="420" width="343" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="433" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">경로를 따라 흘려 보내기</tspan></text>
+<rect x="47" y="421" width="341" height="208" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="630" width="343" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="650" font-size="13" fill="#151a22" xml:space="preserve">flow += b</text>
+<text x="433" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="433" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">bfs_path(cap, s, t)</tspan></text>
+<path d="M433 64 L782 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="433" y="64" width="349" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="84" font-size="13" fill="#151a22" xml:space="preserve">parent = {s: s}    # 간선 수가 가장 적은 경로</text>
+<rect x="433" y="96" width="349" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="116" font-size="13" fill="#151a22" xml:space="preserve">q = deque([s])</text>
+<rect x="433" y="128" width="349" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="148" font-size="13" fill="#151a22" xml:space="preserve">q and t not in parent</text>
+<rect x="455" y="160" width="327" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="465" y="180" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="455" y="192" width="327" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="465" y="212" font-size="13" fill="#151a22" xml:space="preserve">for v in cap[u]</text>
+<rect x="477" y="224" width="305" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 224 L681 272 L782 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="664.5" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">v not in parent and cap[u][v] &gt; 0</text>
+<text x="483" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="776" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="272" width="204" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="292" font-size="13" fill="#151a22" xml:space="preserve">parent[v] = u</text>
+<rect x="477" y="304" width="204" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="487" y="324" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="681" y="272" width="101" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="731.5" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M727 308.5 L736 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="336" width="349" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="356" font-size="13" fill="#151a22" xml:space="preserve">return parent</text>
+</g>
+</svg>

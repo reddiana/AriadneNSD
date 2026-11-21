@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 307 | - | 362 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 180 | - | 215 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 43 | - | 103 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 47 | - | 107 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 280 | 980 | 5 | 1352 |
+| 합계 | 87 | 280 | 984 | 5 | 1356 |
 
 ## 읽는 법
 
@@ -1023,7 +1023,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 103개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 16개, 테스트 107개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1192,6 +1192,19 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0329 | SVG 파일로 저장하고, 같은 문서로 연다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
 
 ^t-packages-editor-src-examples-examples-test-ts
+
+### [단위] `packages/editor/src/gallery/gallery.test.ts`
+
+gallery · $id. Vitest · 테스트 4개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1484 | lists each algorithm once, on a shelf, named in both languages, with the algorithmic examples | - |
+| T-1485 | builds in every language with either header shape and keeps every invariant | - |
+| T-1486 | renders in every language | - |
+| T-1487 | the English one has no Hangul, and the Korean one has the same blocks in the same places | - |
+
+^t-packages-editor-src-gallery-gallery-test-ts
 
 ### [단위] `packages/editor/src/i18n/messages.test.ts`
 

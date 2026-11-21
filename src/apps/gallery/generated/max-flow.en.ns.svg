@@ -1,0 +1,315 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="893" height="686" viewBox="0 0 893 686">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="74f8170e3e17292f53a26643b0b846f9dc93d58b9ee1d1d02c39bb21701e812d"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "max_flow(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "flow = 0    # cap[u][v]: residual capacity, reverse edges included"
+        },
+        {
+          "id": "b2",
+          "kind": "while",
+          "text": "True",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "cap, s, t",
+              "result": "parent"
+            },
+            {
+              "id": "b4",
+              "kind": "if",
+              "text": "t not in parent",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b5",
+                    "kind": "process",
+                    "text": "return flow    # no augmenting path"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b7",
+              "kind": "process",
+              "text": "b, v = INF, t"
+            },
+            {
+              "id": "b8",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b9",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b10",
+                  "kind": "process",
+                  "text": "b = min(b, cap[u][v])"
+                },
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b12",
+              "kind": "process",
+              "text": "v = t"
+            },
+            {
+              "id": "b13",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b14",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b15",
+                  "kind": "process",
+                  "text": "cap[u][v] -= b"
+                },
+                {
+                  "id": "b16",
+                  "kind": "process",
+                  "text": "cap[v][u] += b    # so it can be undone"
+                },
+                {
+                  "id": "b17",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "flow += b"
+            }
+          ],
+          "folds": [
+            {
+              "id": "f1",
+              "first": "b7",
+              "last": "b8",
+              "name": "Find the bottleneck"
+            },
+            {
+              "id": "f2",
+              "first": "b12",
+              "last": "b13",
+              "name": "Push the flow along the path"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "bfs_path(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b19",
+          "kind": "process",
+          "text": "parent = {s: s}    # the path with the fewest edges"
+        },
+        {
+          "id": "b20",
+          "kind": "process",
+          "text": "q = deque([s])"
+        },
+        {
+          "id": "b21",
+          "kind": "while",
+          "text": "q and t not in parent",
+          "body": [
+            {
+              "id": "b22",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b23",
+              "kind": "for",
+              "text": "for v in cap[u]",
+              "body": [
+                {
+                  "id": "b24",
+                  "kind": "if",
+                  "text": "v not in parent and cap[u][v] > 0",
+                  "yes": {
+                    "id": "r3",
+                    "body": [
+                      {
+                        "id": "b25",
+                        "kind": "process",
+                        "text": "parent[v] = u"
+                      },
+                      {
+                        "id": "b26",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b27",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b28",
+          "kind": "process",
+          "text": "return parent"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">max_flow(cap, s, t)</tspan></text>
+<path d="M24 64 L473 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">flow = 0    # cap[u][v]: residual capacity, reverse edges included</text>
+<rect x="24" y="96" width="449" height="566" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">True</text>
+<rect x="46" y="128" width="427" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 128 L53 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 128 L466 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="148" font-size="13" fill="#151a22" xml:space="preserve">parent ← <tspan font-weight="600">bfs_path</tspan>(cap, s, t)</text>
+<rect x="46" y="160" width="427" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 160 L399 208 L473 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="399" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">t not in parent</text>
+<text x="52" y="203" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="467" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="208" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="228" font-size="13" fill="#151a22" xml:space="preserve">return flow    # no augmenting path</text>
+<rect x="399" y="208" width="74" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="436" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M431.5 228.5 L440.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="258" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="278" font-size="13" fill="#151a22" xml:space="preserve">b, v = INF, t</text>
+<rect x="46" y="290" width="427" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="310" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="322" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="342" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="354" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="374" font-size="13" fill="#151a22" xml:space="preserve">b = min(b, cap[u][v])</text>
+<rect x="68" y="386" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="406" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="240" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="253" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Find the bottleneck</tspan></text>
+<rect x="47" y="241" width="425" height="176" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="438" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="458" font-size="13" fill="#151a22" xml:space="preserve">v = t</text>
+<rect x="46" y="470" width="427" height="160" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="490" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="502" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="522" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="534" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="554" font-size="13" fill="#151a22" xml:space="preserve">cap[u][v] -= b</text>
+<rect x="68" y="566" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="586" font-size="13" fill="#151a22" xml:space="preserve">cap[v][u] += b    # so it can be undone</text>
+<rect x="68" y="598" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="618" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="420" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="433" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Push the flow along the path</tspan></text>
+<rect x="47" y="421" width="425" height="208" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="630" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="650" font-size="13" fill="#151a22" xml:space="preserve">flow += b</text>
+<text x="517" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="517" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">bfs_path(cap, s, t)</tspan></text>
+<path d="M517 64 L869 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="517" y="64" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="527" y="84" font-size="13" fill="#151a22" xml:space="preserve">parent = {s: s}    # the path with the fewest edges</text>
+<rect x="517" y="96" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="527" y="116" font-size="13" fill="#151a22" xml:space="preserve">q = deque([s])</text>
+<rect x="517" y="128" width="352" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="527" y="148" font-size="13" fill="#151a22" xml:space="preserve">q and t not in parent</text>
+<rect x="539" y="160" width="330" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="549" y="180" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="539" y="192" width="330" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="549" y="212" font-size="13" fill="#151a22" xml:space="preserve">for v in cap[u]</text>
+<rect x="561" y="224" width="308" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 224 L767 272 L869 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="751.5" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">v not in parent and cap[u][v] &gt; 0</text>
+<text x="567" y="267" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="863" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="272" width="206" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="292" font-size="13" fill="#151a22" xml:space="preserve">parent[v] = u</text>
+<rect x="561" y="304" width="206" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="571" y="324" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="767" y="272" width="102" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="818" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M813.5 308.5 L822.5 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="517" y="336" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="527" y="356" font-size="13" fill="#151a22" xml:space="preserve">return parent</text>
+</g>
+</svg>

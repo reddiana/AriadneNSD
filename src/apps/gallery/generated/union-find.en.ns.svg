@@ -1,0 +1,381 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="789" height="684" viewBox="0 0 789 684">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="f2cb116f313ef197bb1ea818d30fa836207e3e9dff855c96f97e9b19f4b1cf86"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "kruskal(n, edges)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n",
+          "result": ""
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "mst = []"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for w, u, v in sorted(edges)    # lightest edge first",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d4"
+              },
+              "args": "u, v",
+              "result": "merged"
+            },
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "merged",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "mst.append((u, v, w))"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "return mst"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "make_sets(n)"
+      },
+      "body": [
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "parent = list(range(n))"
+        },
+        {
+          "id": "b10",
+          "kind": "process",
+          "text": "rank = [0] * n"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "find(x)"
+      },
+      "body": [
+        {
+          "id": "b11",
+          "kind": "if",
+          "text": "parent[x] != x",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b12",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d3"
+                },
+                "args": "parent[x]",
+                "result": "root"
+              },
+              {
+                "id": "b13",
+                "kind": "process",
+                "text": "parent[x] = root    # path compression"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b14",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "return parent[x]"
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "method",
+        "text": "union(x, y)"
+      },
+      "body": [
+        {
+          "id": "b16",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "x",
+          "result": "rx"
+        },
+        {
+          "id": "b17",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d3"
+          },
+          "args": "y",
+          "result": "ry"
+        },
+        {
+          "id": "b18",
+          "kind": "if",
+          "text": "rx == ry",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b19",
+                "kind": "process",
+                "text": "return False    # already in one set"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b20",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b21",
+          "kind": "if",
+          "text": "rank[rx] < rank[ry]",
+          "yes": {
+            "id": "r7",
+            "body": [
+              {
+                "id": "b22",
+                "kind": "process",
+                "text": "rx, ry = ry, rx"
+              }
+            ]
+          },
+          "no": {
+            "id": "r8",
+            "body": [
+              {
+                "id": "b23",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b24",
+          "kind": "process",
+          "text": "parent[ry] = rx    # lower tree under the higher"
+        },
+        {
+          "id": "b25",
+          "kind": "if",
+          "text": "rank[rx] == rank[ry]",
+          "yes": {
+            "id": "r9",
+            "body": [
+              {
+                "id": "b26",
+                "kind": "process",
+                "text": "rank[rx] += 1"
+              }
+            ]
+          },
+          "no": {
+            "id": "r10",
+            "body": [
+              {
+                "id": "b27",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b28",
+          "kind": "process",
+          "text": "return True"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">kruskal(n, edges)</tspan></text>
+<path d="M24 64 L389 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 64 L382 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">make_sets</tspan>(n)</text>
+<rect x="24" y="96" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">mst = []</text>
+<rect x="24" y="128" width="365" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">for w, u, v in sorted(edges)    # lightest edge first</text>
+<rect x="46" y="160" width="343" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 160 L53 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M382 160 L382 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="180" font-size="13" fill="#151a22" xml:space="preserve">merged ← <tspan font-weight="600">union</tspan>(u, v)</text>
+<rect x="46" y="192" width="343" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 192 L304 240 L389 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="304" y="210" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">merged</text>
+<text x="52" y="235" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="383" y="235" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="240" width="258" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="260" font-size="13" fill="#151a22" xml:space="preserve">mst.append((u, v, w))</text>
+<rect x="304" y="240" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="346.5" cy="256" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M342 260.5 L351 251.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="272" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="292" font-size="13" fill="#151a22" xml:space="preserve">return mst</text>
+<text x="24" y="360" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="377" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">make_sets(n)</tspan></text>
+<path d="M24 388 L194 388" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="388" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="408" font-size="13" fill="#151a22" xml:space="preserve">parent = list(range(n))</text>
+<rect x="24" y="420" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="440" font-size="13" fill="#151a22" xml:space="preserve">rank = [0] * n</text>
+<text x="433" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="433" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">find(x)</tspan></text>
+<path d="M433 64 L752 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="433" y="64" width="319" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M433 64 L700 112 L752 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="696.5" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">parent[x] != x</text>
+<text x="439" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="746" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="433" y="112" width="267" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M440 112 L440 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M693 112 L693 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="450" y="132" font-size="13" fill="#151a22" xml:space="preserve">root ← <tspan font-weight="600">find</tspan>(parent[x])</text>
+<rect x="433" y="144" width="267" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="164" font-size="13" fill="#151a22" xml:space="preserve">parent[x] = root    # path compression</text>
+<rect x="700" y="112" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="726" cy="144" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M721.5 148.5 L730.5 139.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="176" width="319" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="196" font-size="13" fill="#151a22" xml:space="preserve">return parent[x]</text>
+<text x="433" y="264" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="433" y="281" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">union(x, y)</tspan></text>
+<path d="M433 292 L765 292" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="433" y="292" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M440 292 L440 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M758 292 L758 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="450" y="312" font-size="13" fill="#151a22" xml:space="preserve">rx ← <tspan font-weight="600">find</tspan>(x)</text>
+<rect x="433" y="324" width="332" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M440 324 L440 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M758 324 L758 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="450" y="344" font-size="13" fill="#151a22" xml:space="preserve">ry ← <tspan font-weight="600">find</tspan>(y)</text>
+<rect x="433" y="356" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M433 356 L709 404 L765 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="709" y="374" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rx == ry</text>
+<text x="439" y="399" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="759" y="399" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="433" y="404" width="276" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="424" font-size="13" fill="#151a22" xml:space="preserve">return False    # already in one set</text>
+<rect x="709" y="404" width="56" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="737" cy="420" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M732.5 424.5 L741.5 415.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="436" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M433 436 L663 484 L765 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="663" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rank[rx] &lt; rank[ry]</text>
+<text x="439" y="479" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="759" y="479" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="433" y="484" width="230" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="504" font-size="13" fill="#151a22" xml:space="preserve">rx, ry = ry, rx</text>
+<rect x="663" y="484" width="102" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="714" cy="500" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M709.5 504.5 L718.5 495.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="516" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="536" font-size="13" fill="#151a22" xml:space="preserve">parent[ry] = rx    # lower tree under the higher</text>
+<rect x="433" y="548" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M433 548 L655 596 L765 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="655" y="566" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rank[rx] == rank[ry]</text>
+<text x="439" y="591" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="759" y="591" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="433" y="596" width="222" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="616" font-size="13" fill="#151a22" xml:space="preserve">rank[rx] += 1</text>
+<rect x="655" y="596" width="110" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="710" cy="612" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M705.5 616.5 L714.5 607.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="628" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="443" y="648" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+</g>
+</svg>

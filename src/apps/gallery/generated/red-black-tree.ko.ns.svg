@@ -1,0 +1,811 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1809" height="1054" viewBox="0 0 1809 1054">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="6000c78b09f45ea89d53a8b260a2a7bc6e24394673567e3e154a5754d4856bb3"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "rb_insert(T, z)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "y = T.nil"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "x = T.root"
+        },
+        {
+          "id": "b3",
+          "kind": "while",
+          "text": "x != T.nil",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "process",
+              "text": "y = x"
+            },
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "z.key < x.key",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "x = x.left"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "x = x.right"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "z.parent = y"
+        },
+        {
+          "id": "b9",
+          "kind": "if",
+          "text": "y == T.nil",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": "T.root = z"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b11",
+                "kind": "if",
+                "text": "z.key < y.key",
+                "yes": {
+                  "id": "r5",
+                  "body": [
+                    {
+                      "id": "b12",
+                      "kind": "process",
+                      "text": "y.left = z"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r6",
+                  "body": [
+                    {
+                      "id": "b13",
+                      "kind": "process",
+                      "text": "y.right = z"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "z.left = z.right = T.nil"
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "z.color = RED"
+        },
+        {
+          "id": "b16",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "T, z",
+          "result": ""
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b9",
+          "name": "이진 탐색 트리처럼 넣기"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "rb_insert_fixup(T, z)"
+      },
+      "body": [
+        {
+          "id": "b17",
+          "kind": "while",
+          "text": "z.parent.color == RED",
+          "body": [
+            {
+              "id": "b18",
+              "kind": "if",
+              "text": "z.parent == z.parent.parent.left",
+              "yes": {
+                "id": "r7",
+                "body": [
+                  {
+                    "id": "b19",
+                    "kind": "process",
+                    "text": "y = z.parent.parent.right    # 삼촌"
+                  },
+                  {
+                    "id": "b20",
+                    "kind": "if",
+                    "text": "y.color == RED",
+                    "yes": {
+                      "id": "r8",
+                      "body": [
+                        {
+                          "id": "b21",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # 경우 1: 삼촌이 빨강"
+                        },
+                        {
+                          "id": "b22",
+                          "kind": "process",
+                          "text": "y.color = BLACK"
+                        },
+                        {
+                          "id": "b23",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b24",
+                          "kind": "process",
+                          "text": "z = z.parent.parent"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r9",
+                      "body": [
+                        {
+                          "id": "b25",
+                          "kind": "if",
+                          "text": "z == z.parent.right",
+                          "yes": {
+                            "id": "r10",
+                            "body": [
+                              {
+                                "id": "b26",
+                                "kind": "process",
+                                "text": "z = z.parent    # 경우 2: 꺾인 모양을 편다"
+                              },
+                              {
+                                "id": "b27",
+                                "kind": "call",
+                                "target": {
+                                  "kind": "local",
+                                  "diagram": "d3"
+                                },
+                                "args": "T, z",
+                                "result": ""
+                              }
+                            ]
+                          },
+                          "no": {
+                            "id": "r11",
+                            "body": [
+                              {
+                                "id": "b28",
+                                "kind": "process",
+                                "text": ""
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "b29",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # 경우 3"
+                        },
+                        {
+                          "id": "b30",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b31",
+                          "kind": "call",
+                          "target": {
+                            "kind": "local",
+                            "diagram": "d4"
+                          },
+                          "args": "T, z.parent.parent",
+                          "result": ""
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "no": {
+                "id": "r12",
+                "body": [
+                  {
+                    "id": "b32",
+                    "kind": "process",
+                    "text": "y = z.parent.parent.left    # 삼촌"
+                  },
+                  {
+                    "id": "b33",
+                    "kind": "if",
+                    "text": "y.color == RED",
+                    "yes": {
+                      "id": "r13",
+                      "body": [
+                        {
+                          "id": "b34",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # 경우 1: 삼촌이 빨강"
+                        },
+                        {
+                          "id": "b35",
+                          "kind": "process",
+                          "text": "y.color = BLACK"
+                        },
+                        {
+                          "id": "b36",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b37",
+                          "kind": "process",
+                          "text": "z = z.parent.parent"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r14",
+                      "body": [
+                        {
+                          "id": "b38",
+                          "kind": "if",
+                          "text": "z == z.parent.left",
+                          "yes": {
+                            "id": "r15",
+                            "body": [
+                              {
+                                "id": "b39",
+                                "kind": "process",
+                                "text": "z = z.parent    # 경우 2: 꺾인 모양을 편다"
+                              },
+                              {
+                                "id": "b40",
+                                "kind": "call",
+                                "target": {
+                                  "kind": "local",
+                                  "diagram": "d4"
+                                },
+                                "args": "T, z",
+                                "result": ""
+                              }
+                            ]
+                          },
+                          "no": {
+                            "id": "r16",
+                            "body": [
+                              {
+                                "id": "b41",
+                                "kind": "process",
+                                "text": ""
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "b42",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # 경우 3"
+                        },
+                        {
+                          "id": "b43",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b44",
+                          "kind": "call",
+                          "target": {
+                            "kind": "local",
+                            "diagram": "d3"
+                          },
+                          "args": "T, z.parent.parent",
+                          "result": ""
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b45",
+          "kind": "process",
+          "text": "T.root.color = BLACK    # 뿌리는 늘 검정"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "left_rotate(T, x)"
+      },
+      "body": [
+        {
+          "id": "b46",
+          "kind": "process",
+          "text": "y = x.right"
+        },
+        {
+          "id": "b47",
+          "kind": "process",
+          "text": "x.right = y.left"
+        },
+        {
+          "id": "b48",
+          "kind": "if",
+          "text": "y.left != T.nil",
+          "yes": {
+            "id": "r17",
+            "body": [
+              {
+                "id": "b49",
+                "kind": "process",
+                "text": "y.left.parent = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r18",
+            "body": [
+              {
+                "id": "b50",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b51",
+          "kind": "process",
+          "text": "y.parent = x.parent"
+        },
+        {
+          "id": "b52",
+          "kind": "if",
+          "text": "x.parent == T.nil",
+          "yes": {
+            "id": "r19",
+            "body": [
+              {
+                "id": "b53",
+                "kind": "process",
+                "text": "T.root = y"
+              }
+            ]
+          },
+          "no": {
+            "id": "r20",
+            "body": [
+              {
+                "id": "b54",
+                "kind": "if",
+                "text": "x == x.parent.left",
+                "yes": {
+                  "id": "r21",
+                  "body": [
+                    {
+                      "id": "b55",
+                      "kind": "process",
+                      "text": "x.parent.left = y"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r22",
+                  "body": [
+                    {
+                      "id": "b56",
+                      "kind": "process",
+                      "text": "x.parent.right = y"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b57",
+          "kind": "process",
+          "text": "y.left = x"
+        },
+        {
+          "id": "b58",
+          "kind": "process",
+          "text": "x.parent = y"
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "method",
+        "text": "right_rotate(T, x)"
+      },
+      "body": [
+        {
+          "id": "b59",
+          "kind": "process",
+          "text": "y = x.left"
+        },
+        {
+          "id": "b60",
+          "kind": "process",
+          "text": "x.left = y.right"
+        },
+        {
+          "id": "b61",
+          "kind": "if",
+          "text": "y.right != T.nil",
+          "yes": {
+            "id": "r23",
+            "body": [
+              {
+                "id": "b62",
+                "kind": "process",
+                "text": "y.right.parent = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r24",
+            "body": [
+              {
+                "id": "b63",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b64",
+          "kind": "process",
+          "text": "y.parent = x.parent"
+        },
+        {
+          "id": "b65",
+          "kind": "if",
+          "text": "x.parent == T.nil",
+          "yes": {
+            "id": "r25",
+            "body": [
+              {
+                "id": "b66",
+                "kind": "process",
+                "text": "T.root = y"
+              }
+            ]
+          },
+          "no": {
+            "id": "r26",
+            "body": [
+              {
+                "id": "b67",
+                "kind": "if",
+                "text": "x == x.parent.left",
+                "yes": {
+                  "id": "r27",
+                  "body": [
+                    {
+                      "id": "b68",
+                      "kind": "process",
+                      "text": "x.parent.left = y"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r28",
+                  "body": [
+                    {
+                      "id": "b69",
+                      "kind": "process",
+                      "text": "x.parent.right = y"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b70",
+          "kind": "process",
+          "text": "y.right = x"
+        },
+        {
+          "id": "b71",
+          "kind": "process",
+          "text": "x.parent = y"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert(T, z)</tspan></text>
+<path d="M24 64 L286 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="82" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="102" font-size="13" fill="#151a22" xml:space="preserve">y = T.nil</text>
+<rect x="24" y="114" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">x = T.root</text>
+<rect x="24" y="146" width="262" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">x != T.nil</text>
+<rect x="46" y="178" width="240" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">y = x</text>
+<rect x="46" y="210" width="240" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 210 L161 258 L286 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="161" y="228" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.key &lt; x.key</text>
+<text x="52" y="253" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="280" y="253" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="258" width="115" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="278" font-size="13" fill="#151a22" xml:space="preserve">x = x.left</text>
+<rect x="161" y="258" width="125" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="171" y="278" font-size="13" fill="#151a22" xml:space="preserve">x = x.right</text>
+<rect x="24" y="290" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="310" font-size="13" fill="#151a22" xml:space="preserve">z.parent = y</text>
+<rect x="24" y="322" width="262" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 322 L109 370 L286 322" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="109" y="340" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y == T.nil</text>
+<text x="30" y="365" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="280" y="365" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="370" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="390" font-size="13" fill="#151a22" xml:space="preserve">T.root = z</text>
+<rect x="109" y="370" width="177" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M109 370 L194 418 L286 370" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="194" y="388" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.key &lt; y.key</text>
+<text x="115" y="413" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="280" y="413" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="109" y="418" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="119" y="438" font-size="13" fill="#151a22" xml:space="preserve">y.left = z</text>
+<rect x="194" y="418" width="92" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="204" y="438" font-size="13" fill="#151a22" xml:space="preserve">y.right = z</text>
+<rect x="24" y="64" width="262" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="77" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">이진 탐색 트리처럼 넣기</tspan></text>
+<rect x="25" y="65" width="260" height="384" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="450" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="470" font-size="13" fill="#151a22" xml:space="preserve">z.left = z.right = T.nil</text>
+<rect x="24" y="482" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="502" font-size="13" fill="#151a22" xml:space="preserve">z.color = RED</text>
+<rect x="24" y="514" width="262" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 514 L31 546" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M279 514 L279 546" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="534" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert_fixup</tspan>(T, z)</text>
+<text x="24" y="602" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="619" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert_fixup(T, z)</tspan></text>
+<path d="M24 630 L1388 630" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="630" width="1364" height="368" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="650" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color == RED</text>
+<rect x="46" y="662" width="1342" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 662 L717 710 L1388 662" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="717" y="680" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.parent == z.parent.parent.left</text>
+<text x="52" y="705" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1382" y="705" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="710" width="671" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="730" font-size="13" fill="#151a22" xml:space="preserve">y = z.parent.parent.right    # 삼촌</text>
+<rect x="46" y="742" width="671" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 742 L372 790 L717 742" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="372" y="760" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.color == RED</text>
+<text x="52" y="785" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="711" y="785" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="790" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="810" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # 경우 1: 삼촌이 빨강</text>
+<rect x="46" y="842" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="862" font-size="13" fill="#151a22" xml:space="preserve">y.color = BLACK</text>
+<rect x="46" y="894" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="914" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="46" y="946" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="966" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent.parent</text>
+<rect x="372" y="790" width="345" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M372 790 L665 838 L717 790" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="645" y="808" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z == z.parent.right</text>
+<text x="378" y="833" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="711" y="833" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="372" y="838" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="858" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent    # 경우 2: 꺾인 모양을 편다</text>
+<rect x="372" y="870" width="293" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M379 870 L379 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M658 870 L658 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="389" y="890" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate</tspan>(T, z)</text>
+<rect x="665" y="838" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="691" cy="870" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M686.5 874.5 L695.5 865.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="372" y="902" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="922" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # 경우 3</text>
+<rect x="372" y="934" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="954" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="372" y="966" width="345" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M379 966 L379 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M710 966 L710 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="389" y="986" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate</tspan>(T, z.parent.parent)</text>
+<rect x="717" y="710" width="671" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="727" y="730" font-size="13" fill="#151a22" xml:space="preserve">y = z.parent.parent.left    # 삼촌</text>
+<rect x="717" y="742" width="671" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M717 742 L1043 790 L1388 742" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1043" y="760" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.color == RED</text>
+<text x="723" y="785" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1382" y="785" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="717" y="790" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="727" y="810" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # 경우 1: 삼촌이 빨강</text>
+<rect x="717" y="842" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="727" y="862" font-size="13" fill="#151a22" xml:space="preserve">y.color = BLACK</text>
+<rect x="717" y="894" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="727" y="914" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="717" y="946" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="727" y="966" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent.parent</text>
+<rect x="1043" y="790" width="345" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1043 790 L1336 838 L1388 790" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1319.5" y="808" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z == z.parent.left</text>
+<text x="1049" y="833" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1382" y="833" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1043" y="838" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1053" y="858" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent    # 경우 2: 꺾인 모양을 편다</text>
+<rect x="1043" y="870" width="293" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1050 870 L1050 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1329 870 L1329 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1060" y="890" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate</tspan>(T, z)</text>
+<rect x="1336" y="838" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1362" cy="870" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1357.5 874.5 L1366.5 865.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1043" y="902" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1053" y="922" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # 경우 3</text>
+<rect x="1043" y="934" width="345" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1053" y="954" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="1043" y="966" width="345" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1050 966 L1050 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1381 966 L1381 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1060" y="986" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate</tspan>(T, z.parent.parent)</text>
+<rect x="24" y="998" width="1364" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1018" font-size="13" fill="#151a22" xml:space="preserve">T.root.color = BLACK    # 뿌리는 늘 검정</text>
+<text x="1432" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1432" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate(T, x)</tspan></text>
+<path d="M1432 64 L1785 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1432" y="64" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="84" font-size="13" fill="#151a22" xml:space="preserve">y = x.right</text>
+<rect x="1432" y="96" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="116" font-size="13" fill="#151a22" xml:space="preserve">x.right = y.left</text>
+<rect x="1432" y="128" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1432 128 L1685 176 L1785 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1685" y="146" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.left != T.nil</text>
+<text x="1438" y="171" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="171" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1432" y="176" width="253" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="196" font-size="13" fill="#151a22" xml:space="preserve">y.left.parent = x</text>
+<rect x="1685" y="176" width="100" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1735" cy="192" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1730.5 196.5 L1739.5 187.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1432" y="208" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="228" font-size="13" fill="#151a22" xml:space="preserve">y.parent = x.parent</text>
+<rect x="1432" y="240" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1432 240 L1517 288 L1785 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1517" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x.parent == T.nil</text>
+<text x="1438" y="283" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1432" y="288" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="308" font-size="13" fill="#151a22" xml:space="preserve">T.root = y</text>
+<rect x="1517" y="288" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1517 288 L1648 336 L1785 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1648" y="306" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x == x.parent.left</text>
+<text x="1523" y="331" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="331" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1517" y="336" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1527" y="356" font-size="13" fill="#151a22" xml:space="preserve">x.parent.left = y</text>
+<rect x="1648" y="336" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1658" y="356" font-size="13" fill="#151a22" xml:space="preserve">x.parent.right = y</text>
+<rect x="1432" y="368" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="388" font-size="13" fill="#151a22" xml:space="preserve">y.left = x</text>
+<rect x="1432" y="400" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="420" font-size="13" fill="#151a22" xml:space="preserve">x.parent = y</text>
+<text x="1432" y="488" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1432" y="505" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate(T, x)</tspan></text>
+<path d="M1432 516 L1785 516" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1432" y="516" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="536" font-size="13" fill="#151a22" xml:space="preserve">y = x.left</text>
+<rect x="1432" y="548" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="568" font-size="13" fill="#151a22" xml:space="preserve">x.left = y.right</text>
+<rect x="1432" y="580" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1432 580 L1688 628 L1785 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1688" y="598" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.right != T.nil</text>
+<text x="1438" y="623" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="623" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1432" y="628" width="256" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="648" font-size="13" fill="#151a22" xml:space="preserve">y.right.parent = x</text>
+<rect x="1688" y="628" width="97" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1736.5" cy="644" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1732 648.5 L1741 639.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1432" y="660" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="680" font-size="13" fill="#151a22" xml:space="preserve">y.parent = x.parent</text>
+<rect x="1432" y="692" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1432 692 L1517 740 L1785 692" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1517" y="710" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x.parent == T.nil</text>
+<text x="1438" y="735" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="735" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1432" y="740" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="760" font-size="13" fill="#151a22" xml:space="preserve">T.root = y</text>
+<rect x="1517" y="740" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1517 740 L1648 788 L1785 740" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1648" y="758" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x == x.parent.left</text>
+<text x="1523" y="783" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1779" y="783" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="1517" y="788" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1527" y="808" font-size="13" fill="#151a22" xml:space="preserve">x.parent.left = y</text>
+<rect x="1648" y="788" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1658" y="808" font-size="13" fill="#151a22" xml:space="preserve">x.parent.right = y</text>
+<rect x="1432" y="820" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="840" font-size="13" fill="#151a22" xml:space="preserve">y.right = x</text>
+<rect x="1432" y="852" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1442" y="872" font-size="13" fill="#151a22" xml:space="preserve">x.parent = y</text>
+</g>
+</svg>

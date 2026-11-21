@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="720" height="680" viewBox="0 0 720 680">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b807069f5efbe9298e6ab5b66f8306910818caf477ef8cb62ca6a12a915917fd"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "a_star(graph, start, goal, h)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "g = {start: 0}    # cost from the start"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "came_from = {}"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "open = [(h(start), start)]"
+        },
+        {
+          "id": "b4",
+          "kind": "while",
+          "text": "open",
+          "body": [
+            {
+              "id": "b5",
+              "kind": "process",
+              "text": "f, u = heappop(open)"
+            },
+            {
+              "id": "b6",
+              "kind": "if",
+              "text": "f > g[u] + h(u)",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "continue    # stale entry: a shorter path was found since"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b8",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b9",
+              "kind": "if",
+              "text": "u == goal",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "call",
+                    "target": {
+                      "kind": "local",
+                      "diagram": "d2"
+                    },
+                    "args": "came_from, u",
+                    "result": "path"
+                  },
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "return path"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "for",
+              "text": "for v, w in graph[u]",
+              "body": [
+                {
+                  "id": "b14",
+                  "kind": "process",
+                  "text": "tentative = g[u] + w"
+                },
+                {
+                  "id": "b15",
+                  "kind": "if",
+                  "text": "tentative < g.get(v, INF)",
+                  "yes": {
+                    "id": "r5",
+                    "body": [
+                      {
+                        "id": "b16",
+                        "kind": "process",
+                        "text": "came_from[v] = u    # found a shorter path"
+                      },
+                      {
+                        "id": "b17",
+                        "kind": "process",
+                        "text": "g[v] = tentative"
+                      },
+                      {
+                        "id": "b18",
+                        "kind": "process",
+                        "text": "heappush(open, (tentative + h(v), v))"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r6",
+                    "body": [
+                      {
+                        "id": "b19",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b20",
+          "kind": "process",
+          "text": "return None    # no path"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "reconstruct(came_from, u)"
+      },
+      "body": [
+        {
+          "id": "b21",
+          "kind": "process",
+          "text": "path = [u]"
+        },
+        {
+          "id": "b22",
+          "kind": "while",
+          "text": "u in came_from",
+          "body": [
+            {
+              "id": "b23",
+              "kind": "process",
+              "text": "u = came_from[u]"
+            },
+            {
+              "id": "b24",
+              "kind": "process",
+              "text": "path.append(u)"
+            }
+          ]
+        },
+        {
+          "id": "b25",
+          "kind": "process",
+          "text": "return path[::-1]"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">a_star(graph, start, goal, h)</tspan></text>
+<path d="M24 64 L489 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">g = {start: 0}    # cost from the start</text>
+<rect x="24" y="96" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">came_from = {}</text>
+<rect x="24" y="128" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">open = [(h(start), start)]</text>
+<rect x="24" y="160" width="465" height="464" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">open</text>
+<rect x="46" y="192" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="212" font-size="13" fill="#151a22" xml:space="preserve">f, u = heappop(open)</text>
+<rect x="46" y="224" width="443" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 224 L437 272 L489 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="430" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">f &gt; g[u] + h(u)</text>
+<text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="483" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="272" width="391" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue    # stale entry: a shorter path was found since</text>
+<rect x="437" y="272" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="463" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M458.5 292.5 L467.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="304" width="443" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L411 352 L489 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="411" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">u == goal</text>
+<text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="483" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="352" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 352 L53 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M404 352 L404 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="372" font-size="13" fill="#151a22" xml:space="preserve">path ← <tspan font-weight="600">reconstruct</tspan>(came_from, u)</text>
+<rect x="46" y="384" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">return path</text>
+<rect x="411" y="352" width="78" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="450" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M445.5 388.5 L454.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="416" width="443" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="436" font-size="13" fill="#151a22" xml:space="preserve">for v, w in graph[u]</text>
+<rect x="68" y="448" width="421" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="468" font-size="13" fill="#151a22" xml:space="preserve">tentative = g[u] + w</text>
+<rect x="68" y="480" width="421" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 480 L426 528 L489 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="397.5" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">tentative &lt; g.get(v, INF)</text>
+<text x="74" y="523" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="483" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="528" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="548" font-size="13" fill="#151a22" xml:space="preserve">came_from[v] = u    # found a shorter path</text>
+<rect x="68" y="560" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="580" font-size="13" fill="#151a22" xml:space="preserve">g[v] = tentative</text>
+<rect x="68" y="592" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="612" font-size="13" fill="#151a22" xml:space="preserve">heappush(open, (tentative + h(v), v))</text>
+<rect x="426" y="528" width="63" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="457.5" cy="576" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M453 580.5 L462 571.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="624" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="644" font-size="13" fill="#151a22" xml:space="preserve">return None    # no path</text>
+<text x="533" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="533" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">reconstruct(came_from, u)</tspan></text>
+<path d="M533 64 L696 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="533" y="64" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="543" y="84" font-size="13" fill="#151a22" xml:space="preserve">path = [u]</text>
+<rect x="533" y="96" width="163" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="543" y="116" font-size="13" fill="#151a22" xml:space="preserve">u in came_from</text>
+<rect x="555" y="128" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="565" y="148" font-size="13" fill="#151a22" xml:space="preserve">u = came_from[u]</text>
+<rect x="555" y="160" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="565" y="180" font-size="13" fill="#151a22" xml:space="preserve">path.append(u)</text>
+<rect x="533" y="192" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="543" y="212" font-size="13" fill="#151a22" xml:space="preserve">return path[::-1]</text>
+</g>
+</svg>
