@@ -15,7 +15,7 @@ import schema from '@ariadne-nsd/core/model.schema.json' with { type: 'json' };
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { describe, expect, it } from 'vitest';
 
-const skill = new URL('../skill/', import.meta.url);
+const skill = new URL('../plugin/skills/ariadne-nsd/', import.meta.url);
 const read = (path: string): string =>
   readFileSync(new URL(path, skill), 'utf8').replaceAll('\r\n', '\n');
 const documents = [

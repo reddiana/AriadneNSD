@@ -27,7 +27,7 @@ node scripts/nsd.mjs read  'https://ariadnensd.com/#ns1.d.…'   # print the mod
 - `--name max.ns.svg` names the document in the link (and the file, without `-o`). Default: the first Method's name + `.ns.svg`.
 - `--json` prints one JSON object, errors too. `read --envelope` prints `{"name", "model"}`.
 - Exit code 1 means the model is not valid. The message gives the parser's reason with a path (`diagrams[0].body[2]: unknown key "text"`) and what to do. Fix the JSON and run `check` again until it says `OK`. Never hand out a link or file that `check` did not pass.
-- Run it from this skill's folder, or give its full path. On claude.ai the skill folder is in the sandbox (for example `/mnt/skills/user/ariadne-nsd/`); in Claude Code it is `~/.claude/skills/ariadne-nsd/` or `.claude/skills/ariadne-nsd/` in the project.
+- Run it from this skill's folder, or give its full path. On claude.ai the skill folder is in the sandbox (for example `/mnt/skills/user/ariadne-nsd/`). In Claude Code it is the base directory shown when the skill loads: the plugin's folder when installed from the plugin marketplace, else `~/.claude/skills/ariadne-nsd/` or `.claude/skills/ariadne-nsd/` in the project.
 
 ## A. Explain an algorithm as a diagram
 

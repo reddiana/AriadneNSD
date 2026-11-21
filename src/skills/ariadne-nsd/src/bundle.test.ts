@@ -1,7 +1,7 @@
-// The built script, skill/scripts/nsd.mjs, is what the skill runs. It is committed so the skill
-// folder installs as it is (claude.ai's upload, ~/.claude/skills), so this test keeps it the
-// build of the current sources, and runs it the way the skill does: plain `node`, in an empty
-// folder, with nothing but Node's own modules.
+// The built script, plugin/skills/ariadne-nsd/scripts/nsd.mjs, is what the skill runs. It is
+// committed so the skill folder installs as it is (claude.ai's upload, ~/.claude/skills, the
+// plugin marketplace), so this test keeps it the build of the current sources, and runs it the
+// way the skill does: plain `node`, in an empty folder, with nothing but Node's own modules.
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire, isBuiltin } from 'node:module';
@@ -19,7 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { maxModel } from './test-support';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const script = join(root, 'skill/scripts/nsd.mjs');
+const script = join(root, 'plugin/skills/ariadne-nsd/scripts/nsd.mjs');
 
 /** The lines of the bundle that hold the packed files (virtual:nsd-assets). */
 const assetLine = /^(var (ttf|subsetWasm) = )"([A-Za-z0-9+/=]*)";$/gm;

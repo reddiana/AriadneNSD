@@ -1,6 +1,6 @@
-// Builds the skill's script, skill/scripts/nsd.mjs: one file with core, the fonts' code, the web
-// shell's share link, and the font and hb-subset wasm as base64 of brotli (virtual:nsd-assets),
-// so it runs with plain `node` and nothing else. The same sources always give the same file.
+// Builds the skill's script, plugin/skills/ariadne-nsd/scripts/nsd.mjs: one file with core, the
+// fonts' code, the web shell's share link, and the font and hb-subset wasm as base64 of brotli
+// (virtual:nsd-assets), so it runs with plain `node` and nothing else. The same sources always give the same file.
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -43,7 +43,7 @@ export default defineConfig({
   logLevel: 'warn',
   build: {
     ssr: here('src/main.ts'),
-    outDir: here('skill/scripts'),
+    outDir: here('plugin/skills/ariadne-nsd/scripts'),
     emptyOutDir: false,
     target: 'node20',
     minify: false,

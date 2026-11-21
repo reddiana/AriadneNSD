@@ -1,0 +1,19 @@
+{
+  "name": "ariadne-nsd",
+  "owner": {
+    "name": "reddiana",
+    "url": "https://github.com/reddiana"
+  },
+  "description": "AriadneNSD, a Nassi–Shneiderman diagram editor: the Claude skill that draws, reads and edits its diagrams.",
+  "plugins": [
+    {
+      "name": "ariadne-nsd",
+      "source": "./src/skills/ariadne-nsd/plugin",
+      "description": "Draw, read, explain and edit Nassi–Shneiderman diagrams (NS charts) as AriadneNSD .ns.svg files and share links.",
+      "category": "development",
+      "homepage": "https://ariadnensd.com/",
+      "repository": "https://github.com/reddiana/AriadneNSD",
+      "license": "Apache-2.0"
+    }
+  ]
+}

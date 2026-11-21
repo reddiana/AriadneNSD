@@ -5,4 +5,4 @@
 src/packages/core/golden/** -text
 
 # 스킬의 스크립트는 빌드 결과다(src/skills/ariadne-nsd/scripts/build.mjs). 한 줄이 수백 KB라 diff로 보지 않는다
-src/skills/*/skill/scripts/nsd.mjs -diff linguist-generated=true
+src/skills/*/plugin/skills/*/scripts/nsd.mjs -diff linguist-generated=true

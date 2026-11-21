@@ -1,0 +1,10 @@
+{
+  "name": "ariadne-nsd",
+  "version": "0.3.0",
+  "description": "Draw, read, explain and edit Nassi–Shneiderman diagrams (NS charts) as AriadneNSD .ns.svg files and share links.",
+  "author": { "name": "reddiana", "url": "https://github.com/reddiana" },
+  "homepage": "https://ariadnensd.com/",
+  "repository": "https://github.com/reddiana/AriadneNSD",
+  "license": "Apache-2.0",
+  "keywords": ["nassi-shneiderman", "ns-chart", "structogram", "diagram", "flowchart"]
+}

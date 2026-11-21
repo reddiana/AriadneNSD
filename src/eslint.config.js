@@ -19,7 +19,7 @@ export default tseslint.config(
       '**/playwright-report/',
       'packages/fonts/assets/',
       // Built by skills/ariadne-nsd/scripts/build.mjs.
-      'skills/*/skill/scripts/',
+      'skills/*/plugin/skills/*/scripts/',
     ],
   },
   js.configs.recommended,

@@ -3,7 +3,7 @@ title: 코딩 가이드
 tags:
   - coding-guide
 status: 초안
-updated: 2026-11-10
+updated: 2026-11-21
 ---
 
 # 코딩 가이드
@@ -46,7 +46,7 @@ updated: 2026-11-10
 
 Prettier가 정하는 모양은 사람이 따로 맞추지 않습니다. 리뷰에서도 모양은 말하지 않습니다.
 
-Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소의 문서 규칙을 따름), 골든 파일(`**/golden/`, 바이트가 곧 기대값), 스크립트가 만든 글꼴(`packages/fonts/assets/`), `pnpm-lock.yaml`, 빌드 · 테스트의 산출물(`dist/` · `coverage/` · `test-results/` · `playwright-report/`).
+Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소의 문서 규칙을 따름), 골든 파일(`**/golden/`, 바이트가 곧 기대값), 스크립트가 만든 글꼴(`packages/fonts/assets/`), Claude skill의 빌드 결과(`skills/*/plugin/skills/*/scripts/`, `nsd.mjs`를 소스의 빌드와 바이트로 비교 → [[07-claude-skill#5. 번들링]]), `pnpm-lock.yaml`, 빌드 · 테스트의 산출물(`dist/` · `coverage/` · `test-results/` · `playwright-report/`).
 
 ### 1.3 TypeScript
 
@@ -60,7 +60,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 | `noImplicitOverride` · `noFallthroughCasesInSwitch` | true | |
 | `verbatimModuleSyntax` | true | 타입만 가져올 때 `import type`을 강제 |
 | `target` · `module` · `moduleResolution` | `ES2022` · `ESNext` · `Bundler` | Vite · esbuild로 묶음 |
-| `lib` | `core` · `fonts`: `["ES2022"]`(DOM 없음), `editor` · 앱: `["ES2022", "DOM", "DOM.Iterable"]` | `core`가 DOM에 기대지 못하게(QA-14 → [[01-architecture#4.3 의존 규칙]]) |
+| `lib` | `core` · `fonts`: `["ES2022"]`(DOM 없음), `editor` · 앱: `["ES2022", "DOM", "DOM.Iterable"]`, `skills/ariadne-nsd`: `["ES2023"]`와 `types: ["node"]`(Node에서만 실행) | `core`가 DOM에 기대지 못하게(QA-14 → [[01-architecture#4.3 의존 규칙]]) |
 | `types` | `[]` (패키지가 필요한 것만 더함. 예: Node 쪽 코드의 `@types/node`) | 쓰지 않는 전역 타입이 새어 들지 않게 |
 | `isolatedModules` · `esModuleInterop` · `skipLibCheck` · `forceConsistentCasingInFileNames` · `resolveJsonModule` · `noEmit` | true | 묶는 것은 Vite · esbuild가 하고 `tsc`는 검사만 |
 
@@ -84,11 +84,11 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 
 규칙을 끄는 주석(`// eslint-disable-next-line …`)은 그 줄에만, 이유를 함께 기록합니다: `// eslint-disable-next-line no-console -- dev-only timing log`.
 
-검사하지 않는 곳: `node_modules/`, 빌드 · 테스트의 산출물, `packages/fonts/assets/`. JavaScript 파일(`*.js` · `*.cjs` · `*.mjs`, 설정과 스크립트)은 타입 정보를 쓰는 규칙을 끄고 Node의 전역으로 검사합니다.
+검사하지 않는 곳: `node_modules/`, 빌드 · 테스트의 산출물, `packages/fonts/assets/`, Claude skill의 빌드 결과(`skills/*/plugin/skills/*/scripts/`). JavaScript 파일(`*.js` · `*.cjs` · `*.mjs`, 설정과 스크립트)은 타입 정보를 쓰는 규칙을 끄고 Node의 전역으로 검사합니다.
 
 ### 1.5 dependency-cruiser
 
-[[01-architecture#4.3 의존 규칙]]을 기계가 지키게 합니다.
+[[01-architecture#4.3 의존 규칙]]을 기계가 지키게 합니다. 검사 대상은 `apps/` · `packages/` · `skills/`입니다(`pnpm deps`).
 
 | 규칙 | 금지하는 것 |
 | --- | --- |
@@ -97,6 +97,7 @@ Prettier가 손대지 않는 것(`.prettierignore`): Markdown(`*.md`, 저장소�
 | `fonts-is-data` | `packages/fonts`가 다른 우리 패키지를 가져오는 것 |
 | `editor-no-shell` | `packages/editor`가 `apps/*`를 가져오는 것 |
 | `apps-independent` | 앱이 다른 앱을 가져오는 것 |
+| `skill-is-not-a-shell` | `skills/`가 `apps/*` · `packages/editor`를 가져오는 것. 예외는 웹 셸의 공유 링크(`apps/web/src/files/share-link.ts`) 하나로, 스킬이 만드는 링크가 앱의 링크와 같게 한다 → [[07-claude-skill#4. 앱과 공유하는 코드]] |
 | `no-circular` | 모든 순환 의존 |
 | `no-deep-import` | 다른 패키지의 `src/` 안쪽을 직접 가져오는 것(그 패키지의 `index.ts`로만) |
 | `no-unresolvable` | 찾을 수 없는 모듈을 가져오는 것. 모든 가져오기가 실제 경로로 해석되어야 위 규칙들이 그 경로를 검증한다 |

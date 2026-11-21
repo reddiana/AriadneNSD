@@ -14,4 +14,4 @@ packages/fonts/src/generated/screen-slices.ts
 coverage-e2e/
 coverage-e2e-raw/
 # The skill's script is built by skills/ariadne-nsd/scripts/build.mjs and compared byte for byte.
-skills/*/skill/scripts/
+skills/*/plugin/skills/*/scripts/
