@@ -9,6 +9,7 @@
 #   /journal/…   이름 이야기와 로고의 출처 두 문서만 (journal/name-story.md, logo-source.md)
 #   /app/        옛 앱 주소. 첫 화면으로 넘겨 준다 (site/app-redirect.html)
 #   /manual/     사용법 (src/apps/manual, 영어. 한국어는 /manual/ko/ → DR-0020)
+#   /gallery/    알고리즘 갤러리 (src/apps/gallery, 시안 M70. 영어, 한국어는 /gallery/ko/. 그림 하나는 #kmp처럼)
 #
 # GitHub Pages는 저장소 하나에 사이트 하나다. 그래서 앱과 매뉴얼이 생기면 따로 올리지 않고
 # 이 워크플로가 모두 빌드해 _site/ 한 폴더로 모은 뒤 한 번에 올린다.
@@ -85,20 +86,22 @@ jobs:
           cache: pnpm
           cache-dependency-path: src/pnpm-lock.yaml
 
-      - name: 웹 앱과 사용법 빌드
+      - name: 웹 앱, 사용법, 갤러리 빌드
         working-directory: src
         run: |
           pnpm install --frozen-lockfile
           pnpm --filter @ariadne-nsd/web build
           pnpm --filter @ariadne-nsd/manual build
+          pnpm --filter @ariadne-nsd/gallery build
 
       # 앱이 첫 화면이다: Quartz가 만든 것 위에 앱의 index.html과 assets/를 덮는다(Quartz의 index는 만들지 않음)
-      - name: 웹 앱과 사용법 넣기
+      - name: 웹 앱, 사용법, 갤러리 넣기
         run: |
           cp -r src/apps/web/dist/. _site/
-          mkdir -p _site/app _site/manual
+          mkdir -p _site/app _site/manual _site/gallery
           cp site/app-redirect.html _site/app/index.html
           cp -r src/apps/manual/dist/. _site/manual/
+          cp -r src/apps/gallery/dist/. _site/gallery/
 
       - uses: actions/upload-pages-artifact@v3
         with:

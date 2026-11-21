@@ -1,0 +1,275 @@
+/* The algorithm gallery (M70, option G3): the list on the left, the selected diagram on the right.
+   Colours and type follow the user guide (apps/manual/pages/style.css). On a phone the list
+   becomes a select above the diagram. */
+:root {
+  --bg: #ffffff;
+  --fg: #1b2129;
+  --muted: #5b6573;
+  --line: #d9dee6;
+  --soft: #f3f5f8;
+  --accent: #2c55c9;
+  --accent-soft: #e6ecfb;
+  --on-accent: #ffffff;
+  --sans: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181d;
+    --fg: #e3e7ee;
+    --muted: #9aa4b2;
+    --line: #2e343d;
+    --soft: #1d2128;
+    --accent: #7d9bf0;
+    --accent-soft: #1f2a44;
+    --on-accent: #10131a;
+    color-scheme: dark;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  overflow-x: hidden;
+}
+body {
+  margin: 0 auto;
+  max-width: 1280px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15.5px/1.6 var(--sans);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a {
+  color: var(--accent);
+}
+p {
+  margin: 0;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.brand img {
+  display: block;
+}
+.brand img:first-child {
+  border-radius: 6px;
+}
+.links {
+  display: flex;
+  gap: 4px 18px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.links a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.links a:hover {
+  color: var(--accent);
+}
+.links .lang {
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 8px;
+}
+.intro {
+  display: grid;
+  gap: 6px;
+  padding-block: 28px 22px;
+}
+h1 {
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.lead {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 70ch;
+}
+.split {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 36px;
+  padding-bottom: 48px;
+}
+.list {
+  position: sticky;
+  top: 12px;
+  align-self: start;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  padding-right: 6px;
+}
+.list h2 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 16px 0 4px 10px;
+}
+.list h2:first-child {
+  margin-top: 0;
+}
+.list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.list a {
+  display: block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  color: var(--fg);
+  text-decoration: none;
+}
+.list a:hover {
+  background: var(--soft);
+}
+.list a[aria-current] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.list a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.list .keys {
+  margin: 16px 0 0 10px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.view {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.pick {
+  display: none;
+}
+.head {
+  display: grid;
+  gap: 2px;
+}
+.head h2 {
+  font-size: 23px;
+  line-height: 1.3;
+  margin: 0;
+  font-weight: 600;
+}
+#what {
+  color: var(--muted);
+}
+.actions {
+  display: flex;
+  gap: 8px 10px;
+  flex-wrap: wrap;
+}
+.button {
+  display: inline-block;
+  font-size: 14.5px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 5px 14px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.button.fill {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+.button:hover {
+  filter: brightness(1.08);
+}
+.wide-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+/* The diagrams are drawn for a white page, in both themes. A wide one scrolls in here, not the page. */
+.pic {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.pic:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pic img {
+  display: block;
+  max-width: none;
+  height: auto;
+}
+.about {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.foot {
+  border-top: 1px solid var(--line);
+  padding-block: 18px 32px;
+  display: grid;
+  gap: 4px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .list {
+    display: none;
+  }
+  .intro {
+    padding-block: 20px 14px;
+  }
+  h1 {
+    font-size: 25px;
+  }
+  .pick {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .pick select {
+    font: inherit;
+    font-size: 16px;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px 10px;
+    width: 100%;
+  }
+  .pic {
+    padding: 10px;
+  }
+}

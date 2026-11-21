@@ -1,0 +1,16 @@
+{
+  "name": "@ariadne-nsd/gallery",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

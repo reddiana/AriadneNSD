@@ -84,6 +84,7 @@ const areas = [
       'packages/core/src/i18n/',
       'packages/editor/src/examples/',
       'packages/editor/src/gallery/',
+      'apps/gallery/',
       'packages/editor/src/version.test.ts',
       'apps/web/src/shell/messages.test.ts',
       'apps/web/e2e/examples.spec.ts',

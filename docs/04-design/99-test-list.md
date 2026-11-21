@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 307 | - | 362 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 180 | - | 215 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 47 | - | 107 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 50 | - | 110 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 280 | 984 | 5 | 1356 |
+| 합계 | 87 | 280 | 987 | 5 | 1359 |
 
 ## 읽는 법
 
@@ -1023,7 +1023,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 16개, 테스트 107개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 110개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1138,6 +1138,18 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
+
+### [단위] `apps/gallery/build.test.ts`
+
+The algorithm gallery's build (M70). Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1488 | lists every gallery.json entry, under its name, on both language pages | - |
+| T-1489 | every relative link and picture on the pages points to a built file | - |
+| T-1490 | the pages link to each other, to the app and to the user guide of their language | - |
+
+^t-apps-gallery-build-test-ts
 
 ### [단위] `apps/web/scripts/example-thumbnails.test.ts`
 
