@@ -3,7 +3,7 @@ title: 웹
 tags:
   - design
 status: 초안
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # 웹
@@ -28,6 +28,7 @@ updated: 2026-11-21
 - 공유 URL과 보기 모드: [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]] (3장)
 - LLM · 에이전트를 위한 안내서: [[01-requirements#^r-web|R-WEB-10]] (3.1)
 - AI가 준 텍스트로 열기: [[01-requirements#^r-web|R-WEB-11]] (3.2)
+- 알고리즘 갤러리: [[01-requirements#^r-web|R-WEB-12]] (5.1)
 - Google Drive, AI 대화창: [[01-requirements#2.4 Google Drive]], [[01-requirements#^r-web|R-WEB-07]]
 
 ## 1. 파일 열기·저장
@@ -279,7 +280,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 ## 5. 배포
 
-웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 리다이렉트한다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about`), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]])이 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 위치에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
+웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 리다이렉트한다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about`), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]]), 알고리즘 갤러리(`/gallery/` 영어, `/gallery/ko/` 한국어, 5.1)가 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 위치에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
 
 빌드 산출물(Vite)은 셋으로 나뉘어 내려옵니다.
 
@@ -299,6 +300,20 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 슬라이스 0, gzip)이 230 KB 안인지 검증합니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올리고, 올린 경과는 그 스크립트의 머리 주석에 기록합니다.
 
 > [!info] 미완성: 코드 스플리팅, 캐시 전략
+
+### 5.1 알고리즘 갤러리
+
+잘 알려진 알고리즘을 NS 차트로 보여 주는 정적 페이지입니다([[01-requirements#^r-web|R-WEB-12]]). 편집기를 쓰지 않는 사람에게 NS 차트와 AriadneNSD를 소개하는 자리라서, 앱과 따로 빌드하고 앱의 첫 방문 내려받기에 들지 않습니다. 화면의 규칙 → [[ux-decisions#GL1. 알고리즘 갤러리의 화면|GL1]]
+
+| 무엇 | 원본 · 규칙 |
+| --- | --- |
+| 알고리즘 22개 | `editor`의 `gallery`(`src/packages/editor/src/gallery/`): 예제([[01-requirements#^r-edit\|R-EDIT-25]]) 가운데 알고리즘인 6개(예제 항목을 그대로 씀)와 갤러리만의 16개. 칸은 고전 · 어려운 것 · 재미 셋. 예제 모달에는 나오지 않는다. 글은 예제와 같다: 코드는 코드 그대로, 주석과 접기 영역의 이름은 화면 언어 |
+| 그림과 링크 | `pnpm --filter @ariadne-nsd/web gallery-images`(`src/apps/web/scripts/gallery-images.script.ts`)가 항목 · 언어마다 앱이 저장하는 것과 같은 `.ns.svg`(헤더 모양 "제목")와 그것을 여는 공유 링크(`d`, 앱의 공유 링크 모듈)를 `src/apps/gallery/generated/`에 쓰고, 목록 `gallery.json`(이름 · 설명 · 칸 · 파일 · 링크 · 그림 크기)을 함께 쓴다. 갤러리나 그리기가 바뀌면 다시 실행해 커밋한다 |
+| 페이지 | `src/apps/gallery/build.mjs`가 `gallery.json`과 그림을 읽어 `dist/index.html`(`/gallery/`)과 `dist/ko/index.html`(`/gallery/ko/`)을 만들고, 그림을 `dist/files/`에 복사한다. 스크립트(`pages/gallery.js`)와 스타일(`pages/style.css`)은 HTML에 넣는다. 사용법과 같은 방식이다(→ [[dr-0020-user-guide\|DR-0020]]). 공유 카드용 Open Graph 그림은 `pages/og-image.png`(`scripts/make-og-image.mjs`가 만듦) |
+| 배포 | 사이트 워크플로(`.github/workflows/pages.yml`)와 로컬 사이트 빌드(`site/build.sh`)가 `dist/`를 사이트의 `/gallery/`에 넣는다 |
+| 그림의 검증 | `src/apps/gallery/verify/`(배포하지 않는 개발 도구): 갤러리만의 16개의 블록 텍스트를 Python으로 한 줄씩 옮겨 실행하고 참조 구현과 견준다. 사용법은 그 폴더의 `README.md` |
+
+- **사용법과의 연결:** 사용법의 예제 항목이 알고리즘 갤러리로 링크하고, 갤러리의 머리에는 편집기 · 사용법 · GitHub · 다른 언어로 가는 링크가 있다.
 
 ## 6. PWA
 

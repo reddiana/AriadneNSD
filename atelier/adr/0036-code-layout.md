@@ -10,6 +10,7 @@ superseded-by:
 
 
 > [!NOTE] 이후 변경
+> - 2026-11-22: 앱 자리에 `apps/gallery`(알고리즘 갤러리의 정적 페이지 빌드, 사이트의 `/gallery/`)를 더했다. 그림 · 링크는 `apps/web/scripts/`의 스크립트가 `editor`의 `gallery`로 만들어 `apps/gallery/generated/`에 커밋하고, 페이지 빌드는 그 파일만 읽는다 → [[06-web#5.1 알고리즘 갤러리]]
 > - 2026-11-21: Claude skill을 만들었다(`src/skills/ariadne-nsd`). 내보내는 곳은 "저장소"가 아니라 GitHub Release의 zip과 이 저장소의 Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`)이고, 스킬의 스크립트 `nsd.mjs`는 빌드 결과지만 저장소에 넣는다 → [[0050-claude-skill-bundle-and-distribution|ADR-0050]], [[07-claude-skill]]
 > - 2026-11-10: 자리 둘을 더했다. `packages/core/schema/`(모델 JSON의 JSON Schema, 파서 곁)와 `apps/web/guide/`(다른 AI를 위한 안내서 `/llms.txt`의 틀). 웹 빌드가 둘을 사이트 루트에 낸다 → [[06-web#3.1 LLM · 에이전트를 위한 안내서]]
 > - 2026-11-01: 뼈대를 만들었다: `packages/core` · `packages/fonts` · `packages/editor`와 `apps/web`. 개발을 시작하는 법은 `src/README.md`에 있다. `core`의 `.ns.svg` 골든 테스트는 Node의 파일 읽기를 쓰므로 `src/`가 아니라 `packages/core/node/`에 둔다 → [[02-test-architecture#3. 골든 파일]]

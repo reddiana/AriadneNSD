@@ -4,7 +4,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 
 ## 폴더 구성
 
-패키지는 다섯입니다. 의존은 `apps/web` → `editor` → `core` → `fonts` 방향으로만 가고, 거꾸로는 가져오지 않습니다(dependency-cruiser가 검사). Claude skill(`skills/ariadne-nsd`)은 셸이 아니어서 `core` · `fonts`와 웹 셸의 공유 링크 모듈만 가져옵니다.
+패키지는 일곱입니다. 의존은 `apps/web` → `editor` → `core` → `fonts` 방향으로만 가고, 거꾸로는 가져오지 않습니다(dependency-cruiser가 검사). Claude skill(`skills/ariadne-nsd`)은 셸이 아니어서 `core` · `fonts`와 웹 셸의 공유 링크 모듈만 가져옵니다. 사용법(`apps/manual`)과 알고리즘 갤러리(`apps/gallery`)는 정적 페이지의 빌드라서, 페이지를 만드는 코드는 다른 패키지를 가져오지 않습니다.
 
 | 폴더 | 패키지 | 하는 일 |
 | --- | --- | --- |
@@ -12,6 +12,8 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `packages/fonts` | `@ariadne-nsd/fonts` | 번들 글꼴(D2Coding에서 만든 것), advance 폭 테이블, 저장 파일용 서브셋 글꼴(WOFF) |
 | `packages/editor` | `@ariadne-nsd/editor` | 편집기: 화면, 선택, 키 · 마우스 입력, 명령 목록, 메뉴 · 툴바(React) |
 | `apps/web` | `@ariadne-nsd/web` | 웹 버전(Vite + React): 파일 열기 · 저장, 로컬 백업, 자동 저장, 최근 파일 |
+| `apps/manual` | `@ariadne-nsd/manual` | 사용법 페이지(사이트의 `/manual/`, `/manual/ko/`)를 빌드 |
+| `apps/gallery` | `@ariadne-nsd/gallery` | 알고리즘 갤러리 페이지(사이트의 `/gallery/`, `/gallery/ko/`)를 빌드. 그림과 링크는 `generated/`(아래 `apps/web/scripts/`가 만듦), 그림의 검증은 `verify/`(Python, 배포하지 않음) → [웹 5.1](../docs/04-design/06-web.md) |
 | `skills/ariadne-nsd` | `@ariadne-nsd/skill` | Claude skill: 모델 JSON을 검증해 `.ns.svg`와 공유 링크를 만드는 Node 스크립트 하나(`nsd.mjs`)와 `SKILL.md`. 개발하는 법은 [그 폴더의 README](skills/ariadne-nsd/README.md), 설계는 [Claude skill](../docs/04-design/07-claude-skill.md) |
 
 패키지 안의 폴더입니다.
@@ -37,7 +39,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `apps/web/src/shell/` · `files/` · `storage/` · `fonts/`  | 웹 셸, 파일 I/O · PNG 내보내기, IndexedDB · 설정, 글꼴 로딩              |
 | `apps/web/guide/`                                         | 다른 AI를 위한 안내서의 틀(`llms.txt`). 빌드가 core의 값 목록으로 채워 사이트의 `/llms.txt`로 낸다 |
 | `apps/web/e2e/`                                           | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`)                     |
-| `apps/web/scripts/`                                       | 번들 사이즈 체크(bundle size budget)                                                |
+| `apps/web/scripts/`                                       | 번들 사이즈 체크(bundle size budget), 예제 썸네일 · 알고리즘 갤러리의 그림을 만드는 스크립트 |
 | `skills/ariadne-nsd/src/`                                 | 스킬의 엔진 · 명령줄과 테스트. 빌드하면 `plugin/skills/ariadne-nsd/scripts/nsd.mjs`가 됨 |
 | `skills/ariadne-nsd/plugin/`                              | Claude Code 플러그인(`.claude-plugin/plugin.json`). 그 안의 `skills/ariadne-nsd/`가 설치되는 스킬 폴더이고 claude.ai의 zip도 이것으로 만듦. 빌드한 `nsd.mjs`도 저장소에 넣음 |
 
