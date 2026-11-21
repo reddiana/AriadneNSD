@@ -2098,7 +2098,7 @@ The skill's script makes what the app makes (R-SKILL-01). Vitest · 테스트 7�
 
 ### [단위] `skills/ariadne-nsd/src/plugin.test.ts`
 
-The skill ships two ways (docs/04-design/09-claude-skill.md). Vitest · 테스트 1개.
+The skill ships two ways (docs/04-design/07-claude-skill.md). Vitest · 테스트 1개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |

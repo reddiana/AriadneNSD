@@ -4,7 +4,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 
 ## 폴더 구성
 
-패키지는 넷입니다. 의존은 `apps/web` → `editor` → `core` → `fonts` 방향으로만 가고, 거꾸로는 가져오지 않습니다(dependency-cruiser가 검사).
+패키지는 다섯입니다. 의존은 `apps/web` → `editor` → `core` → `fonts` 방향으로만 가고, 거꾸로는 가져오지 않습니다(dependency-cruiser가 검사). Claude skill(`skills/ariadne-nsd`)은 셸이 아니어서 `core` · `fonts`와 웹 셸의 공유 링크 모듈만 가져옵니다.
 
 | 폴더 | 패키지 | 하는 일 |
 | --- | --- | --- |
@@ -12,6 +12,7 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `packages/fonts` | `@ariadne-nsd/fonts` | 번들 글꼴(D2Coding에서 만든 것), advance 폭 테이블, 저장 파일용 서브셋 글꼴(WOFF) |
 | `packages/editor` | `@ariadne-nsd/editor` | 편집기: 화면, 선택, 키 · 마우스 입력, 명령 목록, 메뉴 · 툴바(React) |
 | `apps/web` | `@ariadne-nsd/web` | 웹 버전(Vite + React): 파일 열기 · 저장, 로컬 백업, 자동 저장, 최근 파일 |
+| `skills/ariadne-nsd` | `@ariadne-nsd/skill` | Claude skill: 모델 JSON을 검증해 `.ns.svg`와 공유 링크를 만드는 Node 스크립트 하나(`nsd.mjs`)와 `SKILL.md`. 개발하는 법은 [그 폴더의 README](skills/ariadne-nsd/README.md), 설계는 [Claude skill](../docs/04-design/07-claude-skill.md) |
 
 패키지 안의 폴더입니다.
 
@@ -37,6 +38,8 @@ AriadneNSD의 코드입니다. 이 폴더(`src/`)가 pnpm 워크스페이스의 
 | `apps/web/guide/`                                         | 다른 AI를 위한 안내서의 틀(`llms.txt`). 빌드가 core의 값 목록으로 채워 사이트의 `/llms.txt`로 낸다 |
 | `apps/web/e2e/`                                           | 브라우저 E2E와 인수 테스트(`acceptance.spec.ts`)                     |
 | `apps/web/scripts/`                                       | 번들 사이즈 체크(bundle size budget)                                                |
+| `skills/ariadne-nsd/src/`                                 | 스킬의 엔진 · 명령줄과 테스트. 빌드하면 `plugin/skills/ariadne-nsd/scripts/nsd.mjs`가 됨 |
+| `skills/ariadne-nsd/plugin/`                              | Claude Code 플러그인(`.claude-plugin/plugin.json`). 그 안의 `skills/ariadne-nsd/`가 설치되는 스킬 폴더이고 claude.ai의 zip도 이것으로 만듦. 빌드한 `nsd.mjs`도 저장소에 넣음 |
 
 단위 테스트는 소스 옆의 `*.test.ts`, 벤치마크는 `*.bench.ts`입니다. 이렇게 나눈 이유와 정한 과정은 [ADR-0036](../atelier/adr/0036-code-layout.md)에 있습니다.
 
@@ -57,6 +60,7 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 | ----------------------------------------------- | ----------------------------------------------------------- |
 | `pnpm dev`                                      | 웹 앱의 개발 서버(http://localhost:5173)                           |
 | `pnpm build`                                    | 웹 앱을 `apps/web/dist/`에 빌드                                   |
+| `pnpm --filter @ariadne-nsd/skill build`        | Claude skill의 `nsd.mjs`를 다시 빌드하고 `skills/ariadne-nsd/dist/ariadne-nsd.zip`을 만듦. `core`나 공유 링크를 고친 뒤에도 실행해 함께 커밋함 |
 | `pnpm check`                                    | 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트 → 뽑아 만든 문서(테스트 목록 등)가 낡지 않았는지. CI도 이것을 실행함 |
 | `pnpm test`                                     | 단위 테스트만 (`pnpm --filter @ariadne-nsd/core test`처럼 패키지 하나만도) |
 | `pnpm e2e`                                      | 웹 앱을 빌드해 Chromium으로 E2E                                     |
@@ -74,13 +78,15 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 
 - 1.0 전에는 기능을 더한 판이 `0.y.0`, 고치기만 한 판이 `0.y.z`입니다. 웹 1.0이 `1.0.0`입니다.
 - 패키지 넷(`apps/web`, `packages/core` · `editor` · `fonts`)의 `package.json`과 `packages/editor/src/version.ts`는 늘 같은 버전입니다. 어긋나면 `version.test.ts`가 실패합니다. 이 버전이 도움말 › AriadneNSD에 대하여에 보입니다.
+- Claude skill의 `skills/ariadne-nsd/package.json`과 `skills/ariadne-nsd/plugin/.claude-plugin/plugin.json`도 같은 버전으로 올립니다. 둘이 어긋나면 T-1474가 실패하고, 태그와 `plugin.json`이 다르면 Release 워크플로가 실패합니다. Claude Code의 사용자는 `plugin.json`의 버전이 바뀔 때 업데이트를 받습니다.
 
 순서:
 
-1. 위 다섯 곳의 버전을 올린다
+1. 위 일곱 곳의 버전을 올린다
 2. 도움말 › 이 버전에서 바뀐 것의 문구(`packages/editor/src/ui/messages.ts`의 `whatsNew.body`, 영어 · 한국어)를 고친다. 첫 줄은 문장, `- `로 시작하는 줄은 목록으로 보인다
 3. `pnpm check`, `pnpm e2e`가 통과하면 커밋하고 주석 태그를 단다: `git tag -a v0.2.0 -m "0.2.0"` (`--follow-tags`는 주석 태그만 올린다)
 4. 커밋과 태그를 push한다(`git push --follow-tags`). GitHub의 Releases에 그 태그로 바뀐 것을 적는다
+5. Release를 펴내면 워크플로(`.github/workflows/release.yml`)가 Claude skill의 `ariadne-nsd.zip`을 그 Release에 업로드한다. Actions에서 끝났는지 확인한다
 
 ## 글꼴을 다시 만들 때
 

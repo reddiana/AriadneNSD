@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-11-17
+updated: 2026-11-21
 ---
 
 # 아키텍처 개요
@@ -210,8 +210,9 @@ AriadneNSD/
 │  │  ├─ web/                웹, MVP (Google Drive 연동도 여기, e2e/에 브라우저 테스트)
 │  │  ├─ obsidian/           Obsidian 플러그인 (manifest.json의 원본)
 │  │  └─ desktop/            데스크톱
-│  └─ skills/                나중: Claude skill (셸이 아님)
+│  └─ skills/ariadne-nsd/    Claude skill (셸이 아님, plugin/ 아래가 설치되는 폴더)
 ├─ manifest.json, versions.json   Obsidian이 저장소 맨 위에서 읽는 사본
+├─ .claude-plugin/          Claude Code 플러그인 마켓플레이스 (marketplace.json)
 ├─ docs/ atelier/ journal/ til/   글
 ├─ site/                     문서 사이트 빌드
 └─ .github/workflows/        CI
@@ -258,8 +259,9 @@ UML 패키지 다이어그램입니다. 점선 열린 화살표(`..>`)는 **의�
 | `apps/obsidian` | 파일 뷰 등록, `.ns.svg` 판별, 볼트 파일 I/O, 노트에 삽입된 다이어그램 갱신 | [[04-obsidian-plugin]] |
 | `apps/desktop` | 창, 파일 대화상자, OS 파일 연결 | [[05-desktop]] |
 | `apps/web` | 정적 사이트, 브라우저 파일 I/O(File System Access API), 브라우저 문서, 로컬 백업 · 자동 저장 · 최근 파일, 공유 URL, Drive 연동 | [[06-web]] |
+| `skills/ariadne-nsd` | Claude skill. 셸이 아니다. 모델 JSON의 검증, `.ns.svg`와 공유 URL의 생성 · 읽기를 하는 Node 스크립트 하나(`core` · `fonts`와 웹 셸의 공유 링크 모듈을 번들) | [[07-claude-skill]] |
 
-나중의 대상: `apps/confluence` · `apps/vscode` · `apps/intellij`(→ `editor`), `skills/ariadne-nsd`(셸이 아님) → [[0036-code-layout|ADR-0036]]
+나중의 대상: `apps/confluence` · `apps/vscode` · `apps/intellij`(→ `editor`) → [[0036-code-layout|ADR-0036]]
 
 ### 4.2 editor와 셸의 인터페이스
 
@@ -318,6 +320,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 
 - 의존은 4.1 그림의 화살표 방향으로만 흐른다(단방향, 순환 없음). `core`는 `editor`와 셸을 모른다. 패키지 사이의 방향은 CI의 import 검사(`src/.dependency-cruiser.cjs`)가 지킨다([[0036-code-layout|ADR-0036]]). `core` 안의 모듈 폴더 사이는 지금 순환만 차단한다(같은 설정의 `no-circular`).
 
+- `skills/ariadne-nsd`는 `core` · `fonts`와 웹 셸의 공유 링크 모듈(`apps/web/src/files/share-link.ts`)만 가져온다. `editor`와 다른 셸 코드는 가져오지 않는다(dependency-cruiser `skill-is-not-a-shell` → [[07-claude-skill#4. 앱과 공유하는 코드]]).
 - `core`와 `fonts`는 **DOM과 브라우저 API에 의존하지 않는다.** Node에서 그대로 실행하고 테스트한다.
 - 텍스트 폭은 `core`가 `fonts`의 advance 폭 테이블로 직접 계산한다. 브라우저의 텍스트 측정 API(Canvas `measureText` 등)를 쓰지 않는다. → [[0026-bundled-font-metrics|ADR-0026]]
 - 플랫폼 의존 기능은 4.2의 필요 인터페이스 두 개로만 들어온다. → [[0031-shell-interfaces|ADR-0031]]
@@ -570,9 +573,9 @@ sequenceDiagram
 | 데스크톱 | Electron 또는 Tauri | `src/apps/desktop` | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
 | Confluence (`P2`) | Forge 앱의 iframe 안에 웹 화면 | `src/apps/confluence` | 페이지 안의 다이어그램(형식은 정하지 않음) | [[01-requirements#^r-cf\|R-CF-01]] |
 | IDE 플러그인 (`P2`) | VSCode 확장의 웹뷰, 그다음 IntelliJ | `src/apps/vscode`, `src/apps/intellij` | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
-| Claude skill (`P2`) | 셸이 아님. Claude가 모델을 쓰고 웹 버전이 렌더링한다 | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]] |
+| Claude skill (`P2`) | 셸이 아님. Claude가 모델 JSON을 쓰고, 스킬의 스크립트가 앱의 코드로 검증해 `.ns.svg`를 렌더링하고 공유 URL을 생성한다 → [[07-claude-skill]] | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] |
 
-코드의 위치와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 배포한 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다. 빌드 결과(`dist/`)는 저장소에 넣지 않고, GitHub Actions가 빌드해 그곳으로 보냅니다.
+코드의 위치와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 배포한 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다. 빌드 결과(`dist/`)는 저장소에 넣지 않고, GitHub Actions가 빌드해 그곳으로 보냅니다. Claude skill은 GitHub Release의 zip(claude.ai)과 이 저장소의 플러그인 마켓플레이스(Claude Code)로 배포하고, 스킬의 스크립트 `nsd.mjs`는 설치되는 그대로 실행되도록 빌드 결과를 저장소에 넣습니다 → [[07-claude-skill#7. 배포]]
 
 **Google Drive**는 따로 된 셸이 아니라 웹 셸에 더하는 연동 모듈입니다(→ [[0012-google-drive-integration|ADR-0012]], [[0014-drive-file-extension|ADR-0014]]).
 
@@ -666,17 +669,18 @@ sequenceDiagram
 | 패키지 관리 · 워크스페이스 | pnpm 12 (`package.json`의 `packageManager`에 12.16.1로 고정) | `src/` | [[0036-code-layout\|ADR-0036]], [[0038-build-and-test-tools\|ADR-0038]] |
 | 타입 검사 | TypeScript 6.0.3(`tsc --noEmit`). 7은 typescript-eslint가 아직 받지 않아 6에 머묾 | 패키지마다 | [[0038-build-and-test-tools\|ADR-0038]] |
 | 웹 빌드 · 개발 서버 | Vite 8 (`@vitejs/plugin-react`) | `src/apps/web` | 〃 |
+| Claude skill 빌드 | Vite 8 (Node용 SSR 빌드 하나, 글꼴 · wasm을 포함하는 플러그인 `virtual:nsd-assets`) | `src/skills/ariadne-nsd` | [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] |
 | Obsidian 빌드 | esbuild (Obsidian 공식 견본 플러그인의 설정) | `src/apps/obsidian` | 〃 |
 | 단위 테스트 · 벤치마크 | Vitest 5 | 소스 옆 `*.test.ts`, `*.bench.ts` | 〃 |
 | 속성 기반 테스트 · 퍼징 | fast-check 4 (Vitest 안에서) | 소스 옆 | 〃 |
 | 골든 파일 테스트 | Vitest + 저장소의 기대 파일 | 패키지마다 `golden/` | 〃 |
 | `editor`의 화면 테스트 | happy-dom(테스트 더블 DOM) + `@testing-library/react` | `packages/editor` | [[02-test-architecture#2. 계층마다 무엇을 테스트하나]] |
 | 브라우저 E2E · 시각 회귀 | Playwright 1.64 (`@playwright/test`) | `src/apps/web/e2e/` | 〃 |
-| JSON Schema 검사 | Ajv 8 (draft 2020-12), 테스트에서만. 모델 JSON의 스키마와 골든 파일 · 문서 속 예제가 어긋나지 않는지 검증한다 | `packages/core`, `apps/web` | [[06-web#3.1 LLM · 에이전트를 위한 안내서]] |
+| JSON Schema 검사 | Ajv 8 (draft 2020-12), 테스트에서만. 모델 JSON의 스키마와 골든 파일 · 문서 속 예제가 어긋나지 않는지 검증한다 | `packages/core`, `apps/web`, `skills/ariadne-nsd` | [[06-web#3.1 LLM · 에이전트를 위한 안내서]] |
 | 의존 방향 검사 | dependency-cruiser 18 | `src/` 맨 위 설정(`.dependency-cruiser.cjs`) | [[0038-build-and-test-tools\|ADR-0038]] |
 | 린트 · 포맷 | ESLint 10(typescript-eslint 8, `@eslint/js`, `globals`, React 코드의 `eslint-plugin-react-hooks`) + Prettier 3 | `src/` 맨 위 설정(`eslint.config.js`, `prettier.config.js`) | 〃 |
 | 커버리지 | `@vitest/coverage-v8`(단위 테스트, V8), `monocart-coverage-reports`(E2E에서 측정한 Chromium의 커버리지를 소스 파일에 매핑함) | `src/scripts/coverage.mjs`, `src/apps/web` | [[02-test-architecture#5. 도구와 CI]] |
-| CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
+| CI · 배포 | GitHub Actions, GitHub Pages(웹 앱은 `/app/`), GitHub Release(Claude skill의 zip은 `release.yml`), Claude Code 플러그인 마켓플레이스(`.claude-plugin/`) | `.github/workflows/` | [[0036-code-layout\|ADR-0036]], [[dr-0013-publish-docs-github-pages\|DR-0013]] |
 
 ## 10. 결정 목록
 

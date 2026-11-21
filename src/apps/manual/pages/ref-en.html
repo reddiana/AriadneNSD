@@ -734,6 +734,48 @@
   </p>
 </section>
 
+<section id="claude-skill">
+  <h2>Claude skill</h2>
+  <p>
+    With the AriadneNSD skill, Claude (claude.ai and Claude Code) makes the diagram itself: it gives
+    you a saved file (<code>.ns.svg</code>) and a share link, both exactly what this app writes. The
+    skill checks the diagram with the app's own code, needs no network, and uploads nothing. Ask in
+    your own words, for example:
+  </p>
+  <ul>
+    <li><b>Explain an algorithm:</b> "Explain quicksort as an NS diagram."</li>
+    <li>
+      <b>Draw code (Claude Code):</b> "Draw the function <code>partition</code> in
+      <code>src/sort.py</code> as an NS diagram." The file is saved next to the code or in
+      <code>docs/</code>.
+    </li>
+    <li>
+      <b>Read or change a diagram:</b> "Explain this diagram and extract the repeated part into a
+      Method:" and paste a share link or attach a <code>.ns.svg</code> file.
+    </li>
+  </ul>
+  <p>
+    <b>On claude.ai:</b> download <code>ariadne-nsd.zip</code> from the
+    <a href="https://github.com/reddiana/AriadneNSD/releases/latest">latest release</a>, then upload
+    it in Settings › Capabilities › Skills. Code execution must be on.
+  </p>
+  <p><b>In Claude Code:</b> run these two commands in a session.</p>
+  <div class="request">
+    <p id="skill-marketplace">/plugin marketplace add reddiana/AriadneNSD</p>
+    <button type="button" data-copy="skill-marketplace" data-copied="Copied">Copy</button>
+  </div>
+  <div class="request">
+    <p id="skill-install">/plugin install ariadne-nsd@ariadne-nsd</p>
+    <button type="button" data-copy="skill-install" data-copied="Copied">Copy</button>
+  </div>
+  <p>
+    What Claude gives opens here: click the link (view mode, then "Edit"), or open the
+    <code>.ns.svg</code> file with File › Open or drag it onto the page. The file is also an
+    ordinary picture, so it shows on GitHub and in Markdown. To have Claude change it again, give it
+    the file or a link from File › Copy Share Link.
+  </p>
+</section>
+
 <section id="commands">
   <h2>Command palette, context menu</h2>
   <p>

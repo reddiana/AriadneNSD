@@ -1,4 +1,4 @@
-// The skill ships two ways (docs/04-design/09-claude-skill.md): the zip on each GitHub Release for
+// The skill ships two ways (docs/04-design/07-claude-skill.md): the zip on each GitHub Release for
 // claude.ai, and this repository as a Claude Code plugin marketplace. The marketplace
 // (.claude-plugin/marketplace.json at the repository's top) points at the plugin folder, and the
 // plugin keeps the skill where Claude Code looks for it, so both ship the same SKILL.md.

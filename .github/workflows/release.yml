@@ -1,4 +1,4 @@
-# GitHub Release에 Claude skill의 zip을 붙인다 → docs/04-design/07-claude-skill.md 6장
+# GitHub Release에 Claude skill의 zip을 붙인다 → docs/04-design/07-claude-skill.md 7장
 #
 # claude.ai의 사용자는 Release에서 ariadne-nsd.zip을 받아 Settings › Capabilities › Skills에 올린다.
 # Release를 펴내면(published, 프리릴리스 포함) 그 태그의 코드로 스킬을 빌드하고(pnpm --filter @ariadne-nsd/skill build)
