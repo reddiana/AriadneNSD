@@ -90,6 +90,7 @@ updated: 2026-11-21
 - [ ] CB14 · ADR-0047: "이미 복사함" 표시 `b4/`, 복사의 실행 취소, 예전 파일은 열 때 복사 → [[0047-copy-method-folds-at-first-open|ADR-0047]]
 - [ ] UN1 · ADR-0048: 접고 펴기의 실행 취소 단계, 저장 안 됨(●) 표시, 대상이 아닌 것 → [[0048-folding-is-undoable|ADR-0048]]
 - [ ] 펴 보인 곳에서 다른 자리를 `Shift`+클릭하면 그 블록만 선택, 펴 보인 블록은 끌어 옮기지 않음 → [[02-interaction-rules]]
+- [ ] 토큰 절약으로 CLAUDE.md · outbox · status를 줄임(`5bd7010` `2eabe73` `c7bfcd6`): 빠진 것이 없는지 한 번 훑어보기. CLAUDE.md는 18KB에서 멈춤(긴 절차를 how-we-work로 옮기면 2 ~ 3KB 더 줄지만 그때마다 따로 읽어야 함) → [[2026-11-21-02-clear-and-tokens]]
 
 ## 알아만 두세요
 
