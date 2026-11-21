@@ -37,7 +37,11 @@ inbox의 호출 블록 요건 넷을 검토했다. 다른 문서의 Method 호�
 
 ## 결정
 
-- R-BLK-09 철회, 새 요구사항(Method 만들기), `lost` · `external`을 `named`로 합치는 ADR-0049 → 에이전트에게 맡김. 반영한 곳은 매듭 때 여기에 링크한다.
+- 다른 문서의 Method 호출 철회 → [[requirement-changes]]. 잃은 호출 · 다른 문서 호출은 이름 호출로 → [[0049-call-without-method-is-named|ADR-0049]]. Method 만들기([[01-requirements#^r-edit|R-EDIT-26]], `gd`) → [[ux-decisions#CB15. Method 만들기|CB15]] (`d7ef1cc`)
+- Method 풀어 넣고 지우기 → [[01-requirements#^r-edit|R-EDIT-27]], [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]] (`75479bd`)
+- BUG-18 → [[defects#BUG-18]], [[ux-decisions#RO1. 다른 탭이 편집 중일 때의 보기만 하는 중|RO1]] (`ee01499`). 정보 창의 전체 주소 → [[ux-decisions]] W4 (`fff8c5b`)
+- 일하는 방식: 정리는 메인테이너가 하자고 할 때나 매듭 때 → [[how-we-work#2. 세션의 리듬]] (`cb2acca`)
+- 웹 베타: 문턱을 모두 넘음, 브라우저 확인은 문턱에서 뺌 → [[dr-0018-release-stages|DR-0018]]의 이후 변경. v0.3.0 (`c28b3f8`). 정리 `177647e`
 
 ## 그 밖에 한 일
 
@@ -52,6 +56,13 @@ inbox의 호출 블록 요건 넷을 검토했다. 다른 문서의 Method 호�
 - 퀵소트 · 이진 탐색 예제에서 Method로 뺀 까닭을 물음. 이진 탐색은 그대로 두기로(메인테이너: "그대로 두세요").
 - Method 풀어 넣고 지우기: 메인테이너 "Method를 그 호출블록에 치환하고 Method를 지우는 기능을 추가하고 싶습니다." → 모든 호출 자리에 풀어 넣고 Method를 지움, 호출 블록과 Method 헤더의 우클릭 메뉴 둘 다, 다이어그램 메뉴 · 커맨드 팔레트, 단축키 없음, 재귀 · 호출 없음은 거절, 실행 취소 한 번(Claude의 추천, 메인테이너: "네, 진행해 주세요"). 에이전트가 코드 · 테스트만, 요구사항(R-EDIT-27 예정)과 설계 문서는 정리 때.
 
+## 발견한 위험
+
+- Vite 개발 서버가 에이전트가 고치던 도중의 모듈을 붙들어, 새로 고쳐도 예전 판을 줌(화면이 하얗게 빔). 에이전트가 코드를 고친 뒤 로컬 앱을 볼 때는 서버를 다시 띄운다.
+- `C:\Windows\Fonts\Pretendard-Bold.ttf`를 읽을 권한이 없어 README의 베타 버튼 그림을 만들지 못함.
+- 내장 브라우저는 탭을 닫을 때 `pagehide`를 보내지 않아 탭 잠금이 풀리지 않음(Chrome에서는 풀림).
+
 ## 다음 할 일
 
-- 에이전트의 결과를 확인하고 로컬 앱에서 보여 드림.
+- README의 베타 버튼 그림(메인테이너의 답을 기다림)
+- 메인테이너가 v0.3.0 베타를 알림

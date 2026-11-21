@@ -91,6 +91,10 @@ updated: 2026-11-21
 - [ ] UN1 · ADR-0048: 접고 펴기의 실행 취소 단계, 저장 안 됨(●) 표시, 대상이 아닌 것 → [[0048-folding-is-undoable|ADR-0048]]
 - [ ] 펴 보인 곳에서 다른 자리를 `Shift`+클릭하면 그 블록만 선택, 펴 보인 블록은 끌어 옮기지 않음 → [[02-interaction-rules]]
 - [ ] 토큰 절약으로 CLAUDE.md · outbox · status를 줄임(`5bd7010` `2eabe73` `c7bfcd6`): 빠진 것이 없는지 한 번 훑어보기. CLAUDE.md는 18KB에서 멈춤(긴 절차를 how-we-work로 옮기면 2 ~ 3KB 더 줄지만 그때마다 따로 읽어야 함) → [[2026-11-21-02-clear-and-tokens]]
+- [ ] 호출 블록 변경에서 에이전트가 정한 것: 새 Method는 마지막 Method 뒤, 만든 뒤 헤더를 선택, 같은 이름의 Method가 있으면 잇기, `readOther`를 모든 셸에서 뺌, 예전 파일의 `lost` · `external`은 저장하면 바이트가 바뀜 → [[ux-decisions#CB15. Method 만들기|CB15]], [[0049-call-without-method-is-named|ADR-0049]]
+- [ ] Method 풀어 넣고 지우기에서 에이전트가 정한 것: 직접 재귀만 거절(서로 호출은 허용), 뒤의 선택, 호출 없으면 흐리게, 영어 알림 문구 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
+- [ ] 다른 탭이 편집 중일 때의 라벨 · 툴팁 문구(하단 상태 줄의 라벨은 그대로) → [[ux-decisions#RO1. 다른 탭이 편집 중일 때의 보기만 하는 중|RO1]]
+- [ ] 정보 창: 이름표 아래에 전체 주소 → [[ux-decisions]] W4
 
 ## 알아만 두세요
 
