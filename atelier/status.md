@@ -44,14 +44,13 @@ updated: 2026-11-21
 | BUG-18 다른 탭 잠금의 까닭을 우상단에 | 메인테이너 신고, RO1 | 사이트에 있음 | `ee01499` |
 | 도움말 › 정보 창의 링크를 전체 주소로 | 메인테이너 (2026-11-21, inbox), W4 | 사이트에 있음 | `fff8c5b` |
 | Method 풀어 넣고 지우기(모든 호출 자리, 키 없음) | 메인테이너 (2026-11-21), [[01-requirements#^r-edit\|R-EDIT-27]] · CB16 | 사이트에 있음 | `75479bd` |
-| 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release, README 버튼 그림은 아직 MVP) | `c28b3f8` |
+| 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release) | `c28b3f8` |
 | 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
 
 ## 이번과 다음 세션에 할 것
 
 - [ ] 메인테이너: v0.3.0 웹 베타를 널리 알림
-- [ ] README의 베타 버튼 그림: `C:\Windows\Fonts\Pretendard-Bold.ttf`를 읽을 권한이 없음. 메인테이너가 `python journal/assets/2026-11-21-readme-beta-button.py`를 직접 돌리거나, Pretendard를 내려받아 만들지 정함
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]

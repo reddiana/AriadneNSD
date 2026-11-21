@@ -59,10 +59,9 @@ inbox의 호출 블록 요건 넷을 검토했다. 다른 문서의 Method 호�
 ## 발견한 위험
 
 - Vite 개발 서버가 에이전트가 고치던 도중의 모듈을 붙들어, 새로 고쳐도 예전 판을 줌(화면이 하얗게 빔). 에이전트가 코드를 고친 뒤 로컬 앱을 볼 때는 서버를 다시 띄운다.
-- `C:\Windows\Fonts\Pretendard-Bold.ttf`를 읽을 권한이 없어 README의 베타 버튼 그림을 만들지 못함.
+- `C:\Windows\Fonts\Pretendard-Bold.ttf`를 읽을 권한이 없어 README의 베타 버튼 그림을 만들지 못함. 메인테이너가 "2번"(받아서 만들기)을 골라 Pretendard 공식 저장소 v1.3.9의 Bold OTF로 만듦(스크립트에 `PRETENDARD_BOLD`).
 - 내장 브라우저는 탭을 닫을 때 `pagehide`를 보내지 않아 탭 잠금이 풀리지 않음(Chrome에서는 풀림).
 
 ## 다음 할 일
 
-- README의 베타 버튼 그림(메인테이너의 답을 기다림)
 - 메인테이너가 v0.3.0 베타를 알림
