@@ -28,6 +28,7 @@ import {
   headName,
   headParams,
   inlineCall,
+  inlineMethod,
   insertBlock,
   insertBranch,
   insertCall,
@@ -1437,6 +1438,113 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
   });
 
   /**
+   * The Method "Method 풀어 넣고 지우기" acts on: the one the selected call block calls (`from`
+   * is that call), or the selected Method header (`from` is `null`).
+   */
+  const inlineMethodTarget = (
+    state: EditorState,
+  ): Found<{ readonly diagram: Id; readonly from: Id | null }> => {
+    const ix = index();
+    const selection = state.selection;
+    if (selection?.kind === 'head') {
+      return ix.diagrams.get(selection.diagram)?.head?.kind === 'method'
+        ? { value: { diagram: selection.diagram, from: null } }
+        : { reason: 'reason.selectCallOrMethod' };
+    }
+    const found = selectedCall(state);
+    if (!('value' in found)) {
+      return found.reason === 'reason.selectCall' ? { reason: 'reason.selectCallOrMethod' } : found;
+    }
+    const block = ix.blocks.get(found.value)?.block;
+    if (block?.kind !== 'call' || block.target.kind !== 'local') {
+      return { reason: 'reason.notCallable' };
+    }
+    return { value: { diagram: block.target.diagram, from: block.id } };
+  };
+
+  /** Whether "Method 풀어 넣고 지우기" can run: the same checks as core's `inlineMethod`. */
+  const inlineMethodApplies = (state: EditorState): Applies => {
+    const found = inlineMethodTarget(state);
+    if (!('value' in found)) {
+      return found.reason;
+    }
+    const diagram = found.value.diagram;
+    const callers = [...index().blocks.values()].filter(
+      ({ block }) =>
+        block.kind === 'call' && block.target.kind === 'local' && block.target.diagram === diagram,
+    );
+    if (callers.some((place) => place.diagram === diagram)) {
+      return 'reason.recursiveMethod';
+    }
+    return callers.length > 0 ? true : 'reason.noCallers';
+  };
+
+  /**
+   * Method 풀어 넣고 지우기: every call of the Method becomes a copy of its blocks, each shown
+   * the way 풀기 shows it (UX CB8), and the Method goes, in one undo step. The blocks put in at
+   * the call it was started from are selected; from the header, those at the first call.
+   */
+  const runInlineMethod = (diagram: Id, from: Id | null, view: View): void => {
+    const before = content();
+    const head = index().diagrams.get(diagram)?.head ?? null;
+    const folded = new Set(view.folded);
+    const result = inlineMethod(before, {
+      diagram,
+      ids: session.ids(),
+      ownRegions: (call) => hasOwnSite(folded, sitePrefix([call])),
+    });
+    if (!result.ok) {
+      session.refuse(result.reason);
+      return;
+    }
+    let after = view;
+    for (const site of result.sites) {
+      const renamed = site.renamed;
+      const opened = after.opened.flatMap((path) => {
+        if (path[0] !== site.call) {
+          return [path];
+        }
+        const [inner, ...rest] = path.slice(1);
+        const copy = inner === undefined ? undefined : renamed.get(inner);
+        return copy === undefined ? [] : [[copy, ...rest]];
+      });
+      after = {
+        ...after,
+        folded: foldedAfterInline(before, after, site.call, renamed),
+        opened,
+      };
+    }
+    const shown = result.sites.find((site) => site.call === from) ?? result.sites[0];
+    const isApplied = session.commit(result, (ok) => ({
+      selection: selectTouched(ok.content, shown?.blocks ?? []),
+      view: after,
+    }));
+    if (isApplied) {
+      session.notify(
+        message('notice.methodInlined', {
+          count: result.sites.length,
+          name: head === null ? '' : headName(head),
+        }),
+      );
+    }
+  };
+
+  const inlineMethodSpec = spec('diagram.inlineMethod', {
+    edits: true,
+    when: inlineMethodApplies,
+    run: (state) => {
+      const found = inlineMethodTarget(state);
+      if ('value' in found) {
+        runInlineMethod(found.value.diagram, found.value.from, state.doc.view);
+      }
+    },
+    menu: { menu: 'diagram', group: 4, order: 5 },
+    context: ['blocks', 'head'],
+    // On a call block calling a Method of this document, or on a Method header.
+    inContext: (state) => 'value' in inlineMethodTarget(state),
+  });
+
+  /**
    * `gd` (03-keymap): from a call block to the header of the Method it calls; from a block shown
    * in an opened call to the Method's own block (interaction rules "호출 블록 펴 보기"). On a
    * call by a written name it makes the Method first (Method 만들기, UX CB15).
@@ -1733,6 +1841,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     setTargetSpec,
     goToSpec,
     makeMethodSpec,
+    inlineMethodSpec,
     ...diagramSpecs,
     ...selectionSpecs,
     zoomSpec('view.zoom.in', 1, (zoom) => zoom + zoomRange.step),

@@ -1,7 +1,7 @@
 // Editing commands in the browser that the acceptance tests do not cover: extracting blocks into
 // a new Method (R-EDIT-19, interaction rules "새 Method로 빼기와 새 다이어그램"), the toolbar's
-// "감싸기 ▾" when there is nothing to wrap (UX TB3), and making the Method of a call by name
-// (R-EDIT-26, UX CB15).
+// "감싸기 ▾" when there is nothing to wrap (UX TB3), making the Method of a call by name
+// (R-EDIT-26, UX CB15), and inlining a Method at its calls and deleting it.
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
@@ -160,4 +160,29 @@ test('T-1443 · R-EDIT-26 · UX CB15: gd on a call by name makes its Method and 
 
   await page.keyboard.press('u');
   await expect(scans).toHaveCount(1);
+});
+
+test('T-1456: Inline Method and Delete from the context menu puts the blocks back at the call and deletes the Method; one undo takes it back', async ({
+  page,
+}) => {
+  await openApp(page);
+  await canvas(page).focus();
+  await page.keyboard.press('Enter');
+  await typeText(page, 'step');
+  await page.keyboard.press('m');
+  await page.keyboard.press('Enter');
+  await typeText(page, 'work');
+  await expect(selection(page)).toHaveText('Call block');
+  await expect(drawnText(page, 'work')).not.toHaveCount(0);
+
+  const menu = page.getByRole('menu', { name: 'Context menu' });
+  await page.keyboard.press('Shift+F10');
+  await menu.getByRole('menuitem', { name: /^Inline Method and Delete/ }).click();
+  await expect(statusBar(page)).toContainText('Inlined at 1 call sites and deleted work.');
+  await expect(drawnText(page, 'work')).toHaveCount(0);
+  await expect(drawnText(page, 'step')).toHaveCount(1);
+  await expect(selection(page)).toHaveText('Process block');
+
+  await page.keyboard.press('u');
+  await expect(drawnText(page, 'work')).not.toHaveCount(0);
 });

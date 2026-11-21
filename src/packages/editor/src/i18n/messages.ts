@@ -110,6 +110,7 @@ const english = {
   'command.fold.remove': 'Remove Fold Region',
   'command.call.goTo': 'Go to Called Method',
   'command.call.makeMethod': 'Make Method',
+  'command.diagram.inlineMethod': 'Inline Method and Delete',
 
   // Refusals: core's reason codes.
   'reason.notFound': 'It is no longer there.',
@@ -161,6 +162,10 @@ const english = {
   'reason.selectHead': 'Select a header first.',
   'reason.selectCall': 'Select a call block.',
   'reason.callHasMethod': 'This call block already calls a Method.',
+  'reason.selectCallOrMethod': 'Select a call block or a Method header.',
+  'reason.recursiveMethod':
+    'This Method calls itself, so it cannot be inlined at its calls and deleted.',
+  'reason.noCallers': 'Nothing calls this Method, so there is nowhere to inline it.',
   'reason.notOnHead': 'This does not work on a header. Select a block.',
   'reason.cannotPasteOnHead': 'You cannot paste on a header.',
   'reason.cannotWrapHead': 'A header cannot be wrapped.',
@@ -228,6 +233,7 @@ const english = {
     'Opened {name} for the {count}th time. A Method that calls itself opens without end.',
   'notice.closed': 'Closed the call block.',
   'notice.inlined': 'Replaced the call block with the blocks of {name}.',
+  'notice.methodInlined': 'Inlined at {count} call sites and deleted {name}.',
 
   // Questions in the status bar (UX MD3).
   'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',
@@ -422,6 +428,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.fold.remove': '접기 영역 풀기',
   'command.call.goTo': '호출하는 Method로 가기',
   'command.call.makeMethod': 'Method 만들기',
+  'command.diagram.inlineMethod': 'Method 풀어 넣고 지우기',
   'reason.notFound': '이미 없습니다.',
   'reason.wrongKind': '선택한 것에는 적용되지 않습니다.',
   'reason.notContiguous': '같은 부모 아래 붙어 있는 블록을 선택하세요.',
@@ -467,6 +474,9 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.selectHead': '먼저 헤더를 선택하세요.',
   'reason.selectCall': '호출 블록을 선택하세요.',
   'reason.callHasMethod': '이미 Method를 호출하는 호출 블록입니다.',
+  'reason.selectCallOrMethod': '호출 블록이나 Method 헤더를 선택하세요.',
+  'reason.recursiveMethod': '자기 자신을 호출하는 Method라 호출한 곳에 풀어 넣고 지울 수 없습니다.',
+  'reason.noCallers': '이 Method를 호출하는 곳이 없어 풀어 넣을 곳이 없습니다.',
   'reason.notOnHead': '헤더에서는 되지 않습니다. 블록을 선택하세요.',
   'reason.cannotPasteOnHead': '헤더에는 붙여넣을 수 없습니다.',
   'reason.cannotWrapHead': '헤더는 감쌀 수 없습니다.',
@@ -529,6 +539,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
     '{name}을(를) {count}번째 폈습니다. 자기를 호출하는 Method는 끝없이 펼 수 있습니다.',
   'notice.closed': '호출 블록을 접었습니다.',
   'notice.inlined': '호출 블록을 {name}의 블록들로 바꿨습니다.',
+  'notice.methodInlined': '호출 {count}곳에 풀어 넣고 {name}을(를) 지웠습니다.',
   'question.convertIfToCase': 'If에는 분기를 더할 수 없습니다. Case로 바꿀까요?',
   'question.convertCaseToIf': '분기가 하나만 남았습니다. If로 바꿀까요?',
   'choice.convertToCase': 'Case로 바꾸기',

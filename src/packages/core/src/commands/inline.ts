@@ -1,5 +1,6 @@
 // Replacing a call block with the blocks of the Method it calls (R-EDIT-08): the opposite of
-// "새 Method로 빼기". The blocks are copied in with new ids and the Method stays.
+// "새 Method로 빼기". The blocks are copied in with new ids and the Method stays. Inlining a
+// Method at every call and deleting it ("Method 풀어 넣고 지우기") does this at each call site.
 import { placeSiteFolds } from '../layout/shown';
 import type { IdGenerator } from '../model/id';
 import type {
@@ -14,8 +15,10 @@ import type {
   SiteFold,
 } from '../model/types';
 import { done, fail, idsFor } from './common';
+import { deleteDiagram } from './diagram';
 import { foldRange, replaceRange } from './seq-edit';
 import { indexContent, updateSeq } from './tree';
+import type { BlockEntry, ContentIndex } from './tree';
 import type { OkResult, Result, WithIds } from './types';
 
 /** Arguments of `inlineCall`. */
@@ -198,4 +201,89 @@ function siteFoldsOf(copier: Copier, block: Call): ReadonlyArray<SiteFold> {
     copier.renamed.set(fold.id, id);
     return { ...fold, id };
   });
+}
+
+/** Arguments of `inlineMethod`. */
+export type InlineMethodArgs = WithIds & {
+  /** The Method to inline at every call and then delete. */
+  readonly diagram: Id;
+  /**
+   * Whether the call site `call` has its own fold regions (`b4/` in the view, ADR-0047), as
+   * `InlineCallArgs.ownRegions` for each call. Left out, no call site has.
+   */
+  readonly ownRegions?: (call: Id) => boolean;
+};
+
+/** One call site `inlineMethod` replaced. */
+export type InlinedSite = {
+  /** The call block that was replaced. */
+  readonly call: Id;
+  /** The copied blocks that stand where it was. */
+  readonly blocks: ReadonlyArray<Id>;
+  /** The ids of the Method and of the call site's regions to those of their copies here. */
+  readonly renamed: ReadonlyMap<Id, Id>;
+};
+
+/** The result of `inlineMethod`: the call sites replaced, in document order. */
+export type InlineMethodResult =
+  (OkResult & { readonly sites: ReadonlyArray<InlinedSite> }) | Exclude<Result, OkResult>;
+
+/**
+ * Replaces every call block calling the Method `diagram` with a copy of its blocks, each as
+ * `inlineCall` does, and then deletes the Method: one undo step ("Method 풀어 넣고 지우기").
+ * Refused when the Method calls itself (`recursiveMethod`: the copies would still call it) and
+ * when nothing calls it (`noCallers`). Touched: the copied blocks, site by site in document order.
+ */
+export function inlineMethod(content: Content, args: InlineMethodArgs): InlineMethodResult {
+  const index = indexContent(content);
+  const method = index.diagrams.get(args.diagram);
+  if (method === undefined) {
+    return fail('notFound', args.diagram);
+  }
+  if (method.head?.kind !== 'method') {
+    return fail('wrongKind', args.diagram);
+  }
+  const callers = callersOf(index, method.id);
+  if (callers.some((entry) => entry.diagram === method.id)) {
+    return fail('recursiveMethod', method.id);
+  }
+  if (callers.length === 0) {
+    return fail('noCallers', method.id);
+  }
+  const ids = idsFor(content, args);
+  const sites: InlinedSite[] = [];
+  let next = content;
+  for (const { block } of callers) {
+    const result = inlineCall(next, {
+      block: block.id,
+      ids,
+      ownRegions: args.ownRegions?.(block.id) === true,
+    });
+    if (!result.ok) {
+      return result;
+    }
+    next = result.content;
+    sites.push({ call: block.id, blocks: result.touched, renamed: result.renamed });
+  }
+  const deleted = deleteDiagram(next, { diagram: method.id });
+  if (!deleted.ok) {
+    return deleted;
+  }
+  return {
+    ...done(
+      deleted.content,
+      sites.flatMap((site) => site.blocks),
+    ),
+    sites,
+  };
+}
+
+/** The call blocks calling `diagram`, in document order. */
+function callersOf(index: ContentIndex, diagram: Id): ReadonlyArray<BlockEntry> {
+  return [...index.blocks.values()].filter(
+    (entry) =>
+      entry.block.kind === 'call' &&
+      entry.block.target.kind === 'local' &&
+      entry.block.target.diagram === diagram,
+  );
 }

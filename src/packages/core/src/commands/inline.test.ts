@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import type { Call, Content } from '../model/types';
 import { editCall, insertNamedCall, nameCallTarget } from './call';
 import { copy, paste } from './clipboard';
-import { inlineCall } from './inline';
+import { inlineCall, inlineMethod } from './inline';
 import { unwrap } from './wrap';
 import {
   blockOf,
@@ -13,6 +13,8 @@ import {
   contentOf,
   contentWith,
   diagram,
+  diagramIds,
+  event,
   expectRefused,
   foldsIn,
   idsIn,
@@ -114,6 +116,104 @@ describe('replacing a call block with its Method (R-EDIT-08)', () => {
     expectRefused(inlineCall, named, { block: 'b1' }, 'notCallable');
     expectRefused(inlineCall, content, { block: 'b1' }, 'wrongKind');
     expectRefused(inlineCall, content, { block: 'x' }, 'notFound');
+  });
+});
+
+describe('inlining a Method at every call and deleting it ("Method 풀어 넣고 지우기")', () => {
+  // d1: Event { b1; call b2 -> d3; while b3 { call b4 -> d3 } }
+  // d2: Method "other" { call b5 -> d3 }
+  // d3: Method "m" { fold f1 over b10, b11: b10; while b11 { b12 } }
+  const content: Content = contentWith(
+    diagram('d1', event('start'), [
+      proc('b1'),
+      call('b2', 'd3'),
+      whileBlock('b3', [call('b4', 'd3')]),
+    ]),
+    diagram('d2', method('other'), [call('b5', 'd3')]),
+    diagram(
+      'd3',
+      method('m'),
+      seq(
+        [proc('b10', 'n'), whileBlock('b11', [proc('b12', 'swap')])],
+        [{ id: 'f1', first: 'b10', last: 'b11', name: 'body' }],
+      ),
+    ),
+  );
+
+  it('T-1448: inline method: every call, also inside other Methods and loops, becomes copies; the Method goes', () => {
+    const result = runOk(inlineMethod, content, { diagram: 'd3' });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd2']);
+    expect(result.sites.map((site) => site.call)).toEqual(['b2', 'b4', 'b5']);
+    const [first, second, third] = result.sites;
+    expect(idsIn(result.content, 'd1')).toEqual(['b1', ...(first?.blocks ?? []), 'b3']);
+    expect(idsIn(result.content, 'b3')).toEqual(second?.blocks);
+    expect(idsIn(result.content, 'd2')).toEqual(third?.blocks);
+    expect(result.touched).toEqual(result.sites.flatMap((site) => site.blocks));
+    // Each site has its own copies, with their own ids.
+    const copies = result.sites.map((site) => site.renamed.get('b12'));
+    expect(new Set(copies).size).toBe(3);
+    expect(blockOf(result.content, third?.renamed.get('b12') ?? '')).toMatchObject({
+      kind: 'process',
+      text: 'swap',
+    });
+  });
+
+  it("T-1449: inline method: the folds go with each site as inlineCall's; a site with its own regions brings only those", () => {
+    const sited = contentWith(
+      diagram('d1', event('start'), [
+        withSiteFolds(call('b2', 'd3'), [
+          { id: 'f5', via: [], first: 'b12', last: 'b12', name: 'one' },
+        ]),
+        call('b4', 'd3'),
+      ]),
+      content.diagrams[2] ?? diagram('d3', method('x'), [proc('b9')]),
+    );
+    const result = runOk(inlineMethod, sited, {
+      diagram: 'd3',
+      ownRegions: (call) => call === 'b2',
+    });
+    const [own, plain] = result.sites;
+    const name = (site: typeof own, id: string): string => site?.renamed.get(id) ?? '';
+    // b2 had its own regions: only f5, inside the copied loop. b4 brings the Method's f1.
+    expect(foldsIn(result.content, name(own, 'b11'))).toEqual([
+      `${name(own, 'f5')}:${name(own, 'b12')}-${name(own, 'b12')}`,
+    ]);
+    expect(foldsIn(result.content, 'd1')).toEqual([
+      `${name(plain, 'f1')}:${name(plain, 'b10')}-${name(plain, 'b11')}`,
+    ]);
+    // The same as inlineCall at each site, one after the other.
+    const one = runOk(inlineCall, sited, { block: 'b2', ownRegions: true });
+    expect(foldsIn(one.content, one.renamed.get('b11') ?? '')).toHaveLength(1);
+  });
+
+  it('T-1450: inline method: refused for a Method that calls itself, one nothing calls, and what is no Method', () => {
+    const recursive = contentWith(
+      diagram('d1', null, [call('b1', 'd2')]),
+      diagram('d2', method('sort'), [proc('b10'), whileBlock('b11', [call('b12', 'd2')])]),
+    );
+    expectRefused(inlineMethod, recursive, { diagram: 'd2' }, 'recursiveMethod');
+    const unused = contentWith(
+      diagram('d1', null, [proc('b1')]),
+      diagram('d2', method('m'), [proc('b10')]),
+    );
+    expectRefused(inlineMethod, unused, { diagram: 'd2' }, 'noCallers');
+    expectRefused(inlineMethod, content, { diagram: 'd1' }, 'wrongKind');
+    expectRefused(inlineMethod, content, { diagram: 'x' }, 'notFound');
+  });
+
+  it('T-1451: inline method: one command, so undo brings everything back; calls to other Methods stay', () => {
+    const mutual = contentWith(
+      diagram('d1', null, [call('b1', 'd2')]),
+      diagram('d2', method('a'), [call('b10', 'd3')]),
+      diagram('d3', method('b'), [proc('b20')]),
+    );
+    // `run` checks the input is left as it was: the editor's undo restores it in one step.
+    const result = runOk(inlineMethod, mutual, { diagram: 'd2' });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd3']);
+    expect(blockOf(result.content, idsIn(result.content, 'd1')[0] ?? '')).toMatchObject({
+      kind: 'call',
+      target: { kind: 'local', diagram: 'd3' },
+    });
   });
 });
 

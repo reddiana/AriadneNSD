@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { branch, contentOf, ifBlock, proc, seq, testEngine } from '../engine-test-support';
 import type { TestEngine } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
-import { selectBlock, selectFold } from '../state/selection';
+import { selectBlock, selectFold, selectedBlocks } from '../state/selection';
 import { viewCommands } from '../ui/command-view';
 
 const call = (id: string, diagram: string, args = ''): Block => ({
@@ -923,5 +923,108 @@ describe('Method 만들기 (R-EDIT-26, UX CB15)', () => {
     readOnly.keys('g', 'd');
     expect(notice(readOnly)).toBe('reason.readOnly');
     expect(readOnly.content().diagrams).toHaveLength(2);
+  });
+});
+
+describe('Method 풀어 넣고 지우기', () => {
+  /** d1: p1, c1 → d2, c3 → d2. d2: Method "m(x)" { p6, p7 } with f1 on p6..p7. d3: Method "free". */
+  const callers = (): Content => {
+    const base = contentOf(
+      [proc('p1'), call('c1', 'd2', 'a'), call('c3', 'd2')],
+      [proc('p6'), proc('p7')],
+      [proc('p9')],
+    );
+    const [d1, d2, d3] = base.diagrams;
+    if (d1 === undefined || d2 === undefined || d3 === undefined) {
+      throw new Error('no diagrams');
+    }
+    return {
+      ...base,
+      diagrams: [
+        d1,
+        {
+          ...d2,
+          head: { kind: 'method', text: 'm(x)' },
+          body: { ...d2.body, folds: [{ id: 'f1', first: 'p6', last: 'p7', name: 'pair' }] },
+        },
+        { ...d3, head: { kind: 'method', text: 'free' } },
+      ],
+    };
+  };
+  const command = (engine: TestEngine, place: 'blocks' | 'head') =>
+    viewCommands(engine.registry, String).find(
+      (view) => view.id === 'diagram.inlineMethod' && view.context.includes(place),
+    );
+  const bodyIds = (engine: TestEngine): ReadonlyArray<string> =>
+    engine.content().diagrams[0]?.body.blocks.map((block) => block.id) ?? [];
+  const selected = (engine: TestEngine): ReadonlyArray<string> =>
+    selectedBlocks(engine.session.index(), engine.session.state.selection);
+
+  it('T-1452: the context menu has it on a call of a Method here and on a Method header, greyed out when nothing calls it', () => {
+    const engine = testEngine(callers());
+    select(engine, 'c1');
+    expect(command(engine, 'blocks')?.isEnabled).toBe(true);
+    select(engine, 'p1');
+    expect(command(engine, 'blocks')).toBeUndefined();
+    engine.select({ kind: 'head', diagram: 'd2' });
+    expect(command(engine, 'head')?.isEnabled).toBe(true);
+    engine.select({ kind: 'head', diagram: 'd3' });
+    expect(command(engine, 'head')).toMatchObject({ isEnabled: false, reason: 'reason.noCallers' });
+    const view = viewCommands(engine.registry, String).find((v) => v.id === 'diagram.inlineMethod');
+    expect(view?.menu).toEqual({ menu: 'diagram', group: 4, order: 5 });
+    expect(view?.keys).toEqual([]);
+  });
+
+  it('T-1453: from a call block every call becomes the blocks, folded as before, the Method goes, and one undo brings it all back', () => {
+    const engine = testEngine(callers());
+    const before = engine.content();
+    engine.session.setView({ ...engine.session.state.doc.view, folded: ['f1'] });
+    select(engine, 'c3');
+    engine.run('diagram.inlineMethod');
+    expect(engine.content().diagrams.map((d) => d.id)).toEqual(['d1', 'd3']);
+    expect(bodyIds(engine)).toEqual(['p1', 'b1', 'b2', 'b3', 'b4']);
+    expect(engine.content().diagrams[0]?.body.folds).toEqual([
+      { id: 'f2', first: 'b1', last: 'b2', name: 'pair' },
+      { id: 'f3', first: 'b3', last: 'b4', name: 'pair' },
+    ]);
+    expect(engine.session.state.doc.view.folded).toEqual(['f1', 'f2', 'f3']);
+    // Started from c3: the blocks put in there are selected.
+    expect(selected(engine)).toEqual(['b3', 'b4']);
+    expect(notice(engine)).toEqual({
+      key: 'notice.methodInlined',
+      params: { count: 2, name: 'm' },
+    });
+    engine.keys('u');
+    expect(engine.content()).toEqual(before);
+  });
+
+  it('T-1454: from a Method header (the palette) the blocks at the first call are selected', () => {
+    const engine = testEngine(callers());
+    engine.select({ kind: 'head', diagram: 'd2' });
+    engine.run('diagram.inlineMethod');
+    expect(engine.content().diagrams).toHaveLength(2);
+    expect(selected(engine)).toEqual(['b1', 'b2']);
+  });
+
+  it('T-1455: refused for a Method that calls itself, one nothing calls, and in a view-only document', () => {
+    const recursive = testEngine(sample());
+    select(recursive, 'c1');
+    expect(command(recursive, 'blocks')).toMatchObject({
+      isEnabled: false,
+      reason: 'reason.recursiveMethod',
+    });
+    recursive.run('diagram.inlineMethod');
+    expect(notice(recursive)).toBe('reason.recursiveMethod');
+    expect(recursive.content().diagrams).toHaveLength(2);
+    const unused = testEngine(callers());
+    unused.select({ kind: 'head', diagram: 'd3' });
+    unused.run('diagram.inlineMethod');
+    expect(notice(unused)).toBe('reason.noCallers');
+    const readOnly = testEngine(callers());
+    readOnly.session.setReadOnly(true);
+    select(readOnly, 'c1');
+    readOnly.run('diagram.inlineMethod');
+    expect(notice(readOnly)).toBe('reason.readOnly');
+    expect(readOnly.content().diagrams).toHaveLength(3);
   });
 });

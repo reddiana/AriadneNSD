@@ -178,8 +178,14 @@ export {
   newMethodAndCall,
   setCallTarget,
 } from './commands/call';
-export type { InlineCallArgs, InlineResult } from './commands/inline';
-export { inlineCall } from './commands/inline';
+export type {
+  InlineCallArgs,
+  InlineMethodArgs,
+  InlineMethodResult,
+  InlineResult,
+  InlinedSite,
+} from './commands/inline';
+export { inlineCall, inlineMethod } from './commands/inline';
 export type {
   MakeFoldArgs,
   MakeSiteFoldArgs,

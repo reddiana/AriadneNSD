@@ -53,6 +53,8 @@ export type Reason = {
  * - `notCallable`: the call block calls nothing in this document (a written name), so it cannot
  *   be opened or replaced by the blocks (R-EDIT-08, R-EDIT-15).
  * - `emptyCallName`: the written name of a call block would be empty (R-BLK-08).
+ * - `recursiveMethod`: the Method calls itself, so it cannot be inlined everywhere and deleted.
+ * - `noCallers`: nothing calls the Method, so there is nowhere to inline it.
  */
 export type ReasonCode =
   | 'notFound'
@@ -84,7 +86,9 @@ export type ReasonCode =
   | 'foldExists'
   | 'foldsCross'
   | 'notCallable'
-  | 'emptyCallName';
+  | 'emptyCallName'
+  | 'recursiveMethod'
+  | 'noCallers';
 
 /**
  * A note returned with a successful command.
