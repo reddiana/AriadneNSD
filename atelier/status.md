@@ -47,7 +47,7 @@ updated: 2026-11-21
 | 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release) | `c28b3f8` |
 | 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
-| Claude skill 첫 범위 A · B · C(알고리즘 그리기, 코드 → 차트, 차트 읽기 · 고치기), 공통 엔진 `nsd.mjs` | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]] | 구현함, 써 보지 못함 (정리 남음: 사용법 · 설계 문서 09, 코딩 가이드 1장 · 아키텍처 7장 · 9.2) | `091fe6b` |
+| Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 로컬에 있음(써 보지 못함, zip은 다음 Release부터) | `091fe6b` `b6adcf6` `7992933` |
 
 ## 이번과 다음 세션에 할 것
 

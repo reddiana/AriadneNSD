@@ -95,6 +95,7 @@ updated: 2026-11-21
 - [ ] Method 풀어 넣고 지우기에서 에이전트가 정한 것: 직접 재귀만 거절(서로 호출은 허용), 뒤의 선택, 호출 없으면 흐리게, 영어 알림 문구 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
 - [ ] 다른 탭이 편집 중일 때의 라벨 · 툴팁 문구(하단 상태 줄의 라벨은 그대로) → [[ux-decisions#RO1. 다른 탭이 편집 중일 때의 보기만 하는 중|RO1]]
 - [ ] 정보 창: 이름표 아래에 전체 주소 → [[ux-decisions]] W4
+- [ ] Claude skill에서 에이전트가 정한 것: 번들 방식(파일 하나를 커밋, 실행 중 스키마 검사 없음), 이름 없을 때 첫 Method 이름, 마켓플레이스 이름 `ariadne-nsd`(설치 `ariadne-nsd@ariadne-nsd`), manifest의 author `reddiana` · `Apache-2.0` · `development`, 버전은 plugin.json에만 → [[0050-claude-skill-bundle-and-distribution|ADR-0050]], [[07-claude-skill]]
 
 ## 알아만 두세요
 
