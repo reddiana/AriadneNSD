@@ -46,7 +46,7 @@ NS 차트(Nassi-Shneiderman Diagram)를 그리는 프로그램의 요구사항�
 | R-TGT-04 | Google Drive | 처음 셋 다음, 웹에 통합 (`P1`) | 무료 | `.ns.svg` | [[#2.4 Google Drive\|2.4]] |
 | R-TGT-05 | Confluence | 나중에 (`P2`) | 유료 | 페이지 안의 다이어그램 | [[#2.5 Confluence (유료, 나중에)\|2.5]] |
 | R-TGT-06 | IDE 플러그인 (VSCode, IntelliJ) | 나중에 (`P2`) | 무료 | 소스 코드 (코드가 원본) | [[#2.7 IDE 플러그인 (나중에)\|2.7]] |
-| R-TGT-07 | Claude skill | 나중에 (`P3`) | 무료 | `.ns.svg`와 공유 URL | [[#2.6 Claude skill (나중에)\|2.6]] |
+| R-TGT-07 | Claude skill | 나중에 (`P2`) | 무료 | `.ns.svg`와 공유 URL | [[#2.6 Claude skill (나중에)\|2.6]] |
 
 ^r-tgt
 
@@ -169,9 +169,9 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 
 | ID | 요구사항 | 우선순위 |
 | --- | --- | --- |
-| R-SKILL-01 | Claude skill: 설명할 알고리즘을 NS 모델로 만들어 `.ns.svg` 파일과 공유 URL([[#^r-web\|R-WEB-05]])을 함께 생성한다. 파일은 AriadneNSD에서 그대로 열어 편집할 수 있다 | P3  |
-| R-SKILL-02 | 코드 → 다이어그램: 소스 코드의 함수를 NS 모델로 옮겨 `.ns.svg` 파일과 공유 URL을 생성한다. 함수는 Method, 함수 호출은 호출 블록이 된다. 파서 없이 Claude가 코드를 읽는다(파서로 하는 변환은 [[#^r-code\|R-CODE-03]]) | P3  |
-| R-SKILL-03 | 다이어그램 읽기 · 고치기: 공유 URL이나 `.ns.svg` 파일의 다이어그램을 읽어 설명 · 검토하고, 말로 한 요청대로 고친 `.ns.svg` 파일과 새 공유 URL을 돌려준다. 예: "반복되는 부분을 Method로 빼 주세요" | P3  |
+| R-SKILL-01 | Claude skill: 설명할 알고리즘을 NS 모델로 만들어 `.ns.svg` 파일과 공유 URL([[#^r-web\|R-WEB-05]])을 함께 생성한다. 파일은 AriadneNSD에서 그대로 열어 편집할 수 있다 | P2  |
+| R-SKILL-02 | 코드 → 다이어그램: 소스 코드의 함수를 NS 모델로 옮겨 `.ns.svg` 파일과 공유 URL을 생성한다. 함수는 Method, 함수 호출은 호출 블록이 된다. 파서 없이 Claude가 코드를 읽는다(파서로 하는 변환은 [[#^r-code\|R-CODE-03]]) | P2  |
+| R-SKILL-03 | 다이어그램 읽기 · 고치기: 공유 URL이나 `.ns.svg` 파일의 다이어그램을 읽어 설명 · 검토하고, 말로 한 요청대로 고친 `.ns.svg` 파일과 새 공유 URL을 돌려준다. 예: "반복되는 부분을 Method로 빼 주세요" | P2  |
 
 ^r-skill
 
