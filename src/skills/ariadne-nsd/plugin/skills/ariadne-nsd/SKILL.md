@@ -94,7 +94,7 @@ A body is an array of blocks, drawn top to bottom. The block kinds are `process`
 | For | `{"id":"b6","kind":"for","text":"for i = 0 to n - 1","body":[...]}` |
 | Call | `{"id":"b7","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
 
-- `text` is what is written in the block. Use `\n` for more lines.
+- `text` is what is written in the block: one statement per process block. Use `\n` only to break one long statement or condition into lines.
 - A loop that counts (`i = 0 to n - 2`) is a `for` block; `while` is for a loop that tests a condition.
 - If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
 - Case: every arm needs `label`. `otherwise` (the default branch) is optional.

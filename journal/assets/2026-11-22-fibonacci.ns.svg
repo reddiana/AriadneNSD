@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="492" height="318" viewBox="0 0 492 318">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="492" height="360" viewBox="0 0 492 360">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="bcee53bebb2fb7570a408644c940d9c22668360d224cc9bfa327b056bfd9f697"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="bb24bcb63b4dbffadc6002ab1222a8931a98a632e8cf71f0deb4798541656fad"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -38,7 +38,12 @@
               {
                 "id": "b3",
                 "kind": "process",
-                "text": "a = 0\nb = 1"
+                "text": "a = 0"
+              },
+              {
+                "id": "b12",
+                "kind": "process",
+                "text": "b = 1"
               },
               {
                 "id": "b4",
@@ -48,7 +53,17 @@
                   {
                     "id": "b5",
                     "kind": "process",
-                    "text": "t = a + b\na = b\nb = t"
+                    "text": "t = a + b"
+                  },
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": "a = b"
+                  },
+                  {
+                    "id": "b14",
+                    "kind": "process",
+                    "text": "b = t"
                   }
                 ]
               },
@@ -139,19 +154,22 @@
 <text x="96" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n &lt; 2</text>
 <text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="201" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="24" y="112" width="72" height="182" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="112" width="72" height="224" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="132" font-size="13" fill="#151a22" xml:space="preserve">return n</text>
-<rect x="96" y="112" width="111" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="96" y="112" width="111" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="106" y="132" font-size="13" fill="#151a22" xml:space="preserve">a = 0</text>
-<text x="106" y="150" font-size="13" fill="#151a22" xml:space="preserve">b = 1</text>
-<rect x="96" y="162" width="111" height="100" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="106" y="182" font-size="13" fill="#151a22" xml:space="preserve">for i = 2 to n</text>
-<rect x="118" y="194" width="89" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="128" y="214" font-size="13" fill="#151a22" xml:space="preserve">t = a + b</text>
-<text x="128" y="232" font-size="13" fill="#151a22" xml:space="preserve">a = b</text>
-<text x="128" y="250" font-size="13" fill="#151a22" xml:space="preserve">b = t</text>
-<rect x="96" y="262" width="111" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="106" y="282" font-size="13" fill="#151a22" xml:space="preserve">return b</text>
+<rect x="96" y="144" width="111" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="106" y="164" font-size="13" fill="#151a22" xml:space="preserve">b = 1</text>
+<rect x="96" y="176" width="111" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="106" y="196" font-size="13" fill="#151a22" xml:space="preserve">for i = 2 to n</text>
+<rect x="118" y="208" width="89" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="128" y="228" font-size="13" fill="#151a22" xml:space="preserve">t = a + b</text>
+<rect x="118" y="240" width="89" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="128" y="260" font-size="13" fill="#151a22" xml:space="preserve">a = b</text>
+<rect x="118" y="272" width="89" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="128" y="292" font-size="13" fill="#151a22" xml:space="preserve">b = t</text>
+<rect x="96" y="304" width="111" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="106" y="324" font-size="13" fill="#151a22" xml:space="preserve">return b</text>
 <text x="251" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="251" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">fibRec(n)</tspan></text>
 <path d="M251 64 L468 64" fill="none" stroke="#5b77ad" stroke-width="1"/>

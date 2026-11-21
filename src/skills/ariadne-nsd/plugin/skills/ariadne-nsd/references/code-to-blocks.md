@@ -6,7 +6,7 @@ How the statements of a function become blocks. The aim is a diagram a reader fo
 | --- | --- |
 | A function `f(a, b)` | One diagram with `"head":{"kind":"method","text":"f(a, b)"}`. A handler (`onClick`) may take an `event` head instead |
 | A plain statement, an assignment | `process` with the statement as text: `x = x + 1` |
-| Several short statements in a row | One `process` with `\n` between them, when they do one thing together (`lo = 0\nhi = n - 1`) |
+| Several statements in a row | One `process` per statement, even short ones that do one thing together (`lo = 0`, then `hi = n - 1`). Never join statements with `\n` in one block; `\n` is only for breaking one long statement or condition |
 | `if (c) A else B` | `if`: `text` `c`, `yes` A, `no` B |
 | `if (c) A` without `else` | `if` with `no` holding one empty process `{"kind":"process","text":""}` |
 | `else if` chain | `if` nested in the `no` branch of the one before. When every test compares one value with constants (`x == 1`, `x == 2` …), a `case` reads better |
