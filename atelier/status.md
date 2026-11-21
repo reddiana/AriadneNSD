@@ -48,6 +48,7 @@ updated: 2026-11-22
 | 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
 | Claude skill 첫 범위 A · B · C, 배포는 Release zip + Claude Code 플러그인 마켓플레이스 | 메인테이너 (2026-11-21), [[01-requirements#^r-skill\|R-SKILL-01 ~ 03]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음(마켓플레이스는 main에서, zip은 [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)에. 써 보지 못함) | `091fe6b` `b6adcf6` `7992933` `dc6d15a` |
+| 두꺼운 외곽선: 배율이 정수가 아닐 때(110% 등) 맞닿은 선이 2px로 (결함) | 메인테이너 신고 (2026-11-21 inbox, 2026-11-22 재현 `atelier/sessions/assets/2026-11-22-thick-outline-zoom-110.png`) | 구현 중(에이전트) | |
 | 스킬: 처리 블록 하나에 문장 하나(줄바꿈으로 묶지 않음) | 메인테이너 (2026-11-22) | 로컬에 있음(push 전, 설치한 사람에게는 다음 판부터). 정리 남음(07-claude-skill · ux-decisions) | `3d59f98` |
 
 ## 이번과 다음 세션에 할 것
