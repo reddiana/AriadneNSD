@@ -90,27 +90,29 @@ draft: true
 
 ## 초안 1: GeekNews (Show GN)
 
-**제목:** AriadneNSD - 알고리즘을 NS 차트로 그리는 구조 편집기 (타입을 Show로 고르면 앞에 `Show GN:`이 저절로 붙으므로 적지 않음)
+**제목:** AriadneNSD - README에 넣은 그림을 그대로 다시 고치는 NS 차트 편집기 (타입을 Show로 고르면 앞에 `Show GN:`이 저절로 붙으므로 적지 않음)
 
-**링크:** https://ariadnensd.com/gallery/
+**링크:** https://ariadnensd.com/about
 
 **본문:**
 
 (GeekNews 글의 형식을 따름: 글머리표만, 명사형 끝맺음, 핵심 말만 굵게, 들여쓰기 한 단계. 본 글 https://news.hada.io/topic?id=33664)
 
 - 알고리즘을 **NS 차트**(Nassi–Shneiderman Diagram)로 그리는 웹 편집기, 베타로 공개
-- NS 차트는 플로우차트와 같은 것을 표현하면서 **지면은 훨씬 적게** 차지하지만, 손으로는 줄 맞추고 지우기를 반복해야 해서 복잡한 로직은 그리기 어려웠음
-- 상자를 직접 그리지 않고 **블록을 골라 for · if로 감싸는** 방식이라 줄 · 상자 크기 맞추기가 필요 없음
-- 저장 형식 `.ns.svg`는 **보통 SVG**
-	- README · 문서에 그대로 넣으면 그림으로 보임
-	- 편집기에서 다시 열면 고칠 수 있음(drawio-obsidian 방식)
-- **알고리즘 22개**를 그려 둔 갤러리 제공
-	- KMP, 유니온 파인드, 레드블랙 트리 삽입, 에드먼즈-카프, N-Queen 등
-	- 그림마다 편집기로 바로 열어 고쳐 볼 수 있음
-- **Claude 스킬** 제공: "이 함수 NS 차트로 그려 줘"라고 하면 그림과 공유 링크를 만듦
-- 백엔드 개발자가 **Claude Code로 처음 만든 프론트엔드**, 설계 문서와 세션 기록까지 모두 공개
-- 앱 https://ariadnensd.com/ · GitHub https://github.com/reddiana/AriadneNSD · 소개 https://ariadnensd.com/about
-- 아직 베타라 버그 · 의견 환영
+- 다른 NS 차트 도구와 다른 점: **저장한 파일이 곧 그림**이고, **설치 없이 브라우저**에서 그림
+	- Structorizer는 Java 데스크톱 앱이고, 저장 파일(.nsd)은 XML이라 그림은 따로 내보내야 함
+	- PPT · draw.io는 상자를 손으로 그려서 블록 하나 넣으면 아래를 다시 맞춰야 함. 여기서는 블록을 골라 for · if로 감싸면 레이아웃이 자동
+- NS 차트는 플로우차트와 동일하게 로직을 표현하면서 **지면은 훨씬 적게** 차지하지만, 손으로는 줄 맞추고 지우기를 반복해야 해서 복잡한 로직은 그리기 어려웠음
+- 저장 형식 `.ns.svg`는 NS 차트의 **다이어그램 구조를 메타에 포함**하고있는 **.svg** 파일
+	- README 등 Markdown 문서에 삽입하면 그림으로 보임
+	- AriadneNSD 편집기에서 열면 다이어그램 편집 가능
+- **Claude 스킬** 제공: "이 함수 NS 차트로 그려 줘"라고 하면 .svg 파일과 AriadneNSD에서 바로 편집 가능한 공유 링크를 만듦
+- 아키텍처 문서와 세션 기록 등 개발 여정까지 모두 공개
+- 앱: https://ariadnensd.com/ 
+- 소개: https://ariadnensd.com/about
+- 알고리즘 갤러리: https://ariadnensd.com/gallery/
+- GitHub: https://github.com/reddiana/AriadneNSD 
+- 아직 베타입니다. 버그레포팅 · 의견 환영합니다.
 
 ## 초안 2: Hacker News (Show HN)
 
@@ -155,4 +157,4 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 ## 올린 기록
 
-- 2026-11-22 02:15 [AriadneNSD - NS 차트 편집기 | GeekNews](https://news.hada.io/topic?id=37587)
+- 2026-11-22 02:56 [AriadneNSD - 알고리즘을 NS 차트로 그리는 구조 편집기 | GeekNews](https://news.hada.io/topic?id=37589)
