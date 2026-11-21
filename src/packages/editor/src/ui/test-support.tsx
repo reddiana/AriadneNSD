@@ -187,6 +187,7 @@ export function renderApp(
     readonly places?: PlacesHost;
     /** Where Help › User Guide opens (the web shell gives the one in the screen language). */
     readonly manualUrl?: string;
+    readonly galleryUrl?: string;
   } = {},
 ) {
   const canvas = document.createElement('div');
@@ -202,6 +203,7 @@ export function renderApp(
       {...(options.onEdit === undefined ? {} : { viewMode: { onEdit: options.onEdit } })}
       {...(options.places === undefined ? {} : { places: options.places })}
       {...(options.manualUrl === undefined ? {} : { manualUrl: options.manualUrl })}
+      {...(options.galleryUrl === undefined ? {} : { galleryUrl: options.galleryUrl })}
     />,
   );
 }

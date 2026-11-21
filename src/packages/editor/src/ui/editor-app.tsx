@@ -65,6 +65,8 @@ export type EditorAppProps = {
    * to Draw opens its `#ai` part.
    */
   readonly manualUrl?: string;
+  /** Where Help › Algorithm Gallery opens in a new tab (the site's `/gallery/`). */
+  readonly galleryUrl?: string;
   /**
    * The examples (R-EDIT-25): how the shell opens one as a new document, and whether to welcome
    * a first-time visitor with the examples modal. Without it there are no examples.
@@ -105,8 +107,8 @@ type UiCommand = {
   readonly title: UiMessageKey;
   readonly keys: ReadonlyArray<string>;
   readonly menu: MenuPlace;
-  /** `manual` opens the user guide, `manualAi` its part on asking an AI (`#ai`), in a new tab. */
-  readonly open: Popup | 'manual' | 'manualAi';
+  /** `manual` opens the user guide, `manualAi` its part on asking an AI (`#ai`), `gallery` the algorithm gallery, in a new tab. */
+  readonly open: Popup | 'manual' | 'manualAi' | 'gallery';
 };
 
 // Group 90 puts these after the engine's own groups of the same menu (03-editor 5.1).
@@ -140,18 +142,25 @@ const uiCommands: ReadonlyArray<UiCommand> = [
     open: 'manual',
   },
   {
+    id: uiCommandIds.gallery,
+    title: 'cmd.gallery',
+    keys: [],
+    menu: { menu: 'help', group: 0, order: 1 },
+    open: 'gallery',
+  },
+  {
     // For a user whose AI tried to operate the screen (UX LG7).
     id: uiCommandIds.askAi,
     title: 'cmd.askAi',
     keys: [],
-    menu: { menu: 'help', group: 0, order: 1 },
+    menu: { menu: 'help', group: 0, order: 2 },
     open: 'manualAi',
   },
   {
     id: uiCommandIds.shortcuts,
     title: 'cmd.shortcuts',
     keys: ['?'],
-    menu: { menu: 'help', group: 0, order: 2 },
+    menu: { menu: 'help', group: 0, order: 3 },
     open: 'shortcuts',
   },
   {
@@ -209,6 +218,7 @@ export function EditorApp({
   settings,
   formatMessage,
   manualUrl = 'manual/',
+  galleryUrl = 'gallery/',
   examples,
   viewMode,
   places,
@@ -276,7 +286,7 @@ export function EditorApp({
         id: uiCommandIds.examples,
         title: () => uiMessage(locale, 'cmd.examples'),
         keys: [],
-        menu: { menu: 'help', group: 0, order: 3 },
+        menu: { menu: 'help', group: 0, order: 4 },
         edits: false,
         when: () => true,
         run: () => {
@@ -314,6 +324,7 @@ export function EditorApp({
         when: () => true,
         run: () => {
           if (command.open === 'manual') window.open(manualUrl, '_blank', 'noopener');
+          else if (command.open === 'gallery') window.open(galleryUrl, '_blank', 'noopener');
           else if (command.open === 'manualAi') {
             window.open(`${manualUrl}#ai`, '_blank', 'noopener');
           } else openPopup(command.open);
@@ -324,7 +335,7 @@ export function EditorApp({
     return () => {
       for (const remove of unregister) remove();
     };
-  }, [handle, locale, manualUrl, openPopup]);
+  }, [handle, locale, manualUrl, galleryUrl, openPopup]);
 
   const chrome = useMemo<Chrome>(
     () => ({

@@ -15,6 +15,11 @@ export function manualUrl(locale: Locale): string {
   return locale === 'ko' ? 'manual/ko/' : 'manual/';
 }
 
+/** The algorithm gallery on the same site, in the screen language: `gallery/` and `gallery/ko/`. */
+export function galleryUrl(locale: Locale): string {
+  return locale === 'ko' ? 'gallery/ko/' : 'gallery/';
+}
+
 export type AppProps = {
   /** The editor, with the members its UI needs (more than the shell's contract). */
   readonly handle: EditorHandle;
@@ -68,6 +73,7 @@ export function App(props: AppProps): ReactElement {
         appearance={appearance}
         settings={props.settings}
         manualUrl={manualUrl(props.locale)}
+        galleryUrl={galleryUrl(props.locale)}
         examples={props.examples}
         {...(isViewing ? { viewMode: { onEdit } } : {})}
         places={props.places}

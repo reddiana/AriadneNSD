@@ -93,7 +93,33 @@ describe('menu bar', () => {
     expect(screen.getByRole('button', { name: '다이어그램' })).toBeTruthy();
   });
 
-  it('T-1172 · UX LG7: Help › Ask an AI to Draw, after User Guide, opens the guide’s AI part in the screen language', () => {
+  it('T-1491 · UX LG7: Help › Algorithm gallery, right below User Guide, opens the gallery in the screen language', () => {
+    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+    try {
+      for (const [locale, galleryUrl, name] of [
+        ['en', 'gallery/', 'Algorithm gallery'],
+        ['ko', 'gallery/ko/', '알고리즘 갤러리'],
+      ] as const) {
+        const engine = fakeEngine(editCommands);
+        renderApp(engine, { locale, galleryUrl });
+        fireEvent.click(screen.getByRole('button', { name: locale === 'ko' ? '도움말' : 'Help' }));
+        const menu = within(screen.getByRole('menu'));
+        const gallery = menu.getByRole('menuitem', { name: new RegExp(`^${name}`) });
+        const items = menu.getAllByRole('menuitem');
+        expect(items[items.indexOf(gallery) - 1]?.textContent).toMatch(
+          locale === 'ko' ? /^사용법/ : /^User Guide/,
+        );
+        fireEvent.click(gallery);
+        expect(engine.ran).toEqual(['help.gallery']);
+        expect(open).toHaveBeenLastCalledWith(galleryUrl, '_blank', 'noopener');
+        cleanup();
+      }
+    } finally {
+      open.mockRestore();
+    }
+  });
+
+  it('T-1172 · UX LG7: Help › Ask an AI to Draw, after Algorithm gallery, opens the guide’s AI part in the screen language', () => {
     const open = vi.spyOn(window, 'open').mockReturnValue(null);
     try {
       for (const [locale, manualUrl, name] of [
@@ -107,7 +133,7 @@ describe('menu bar', () => {
         const askAi = menu.getByRole('menuitem', { name: new RegExp(`^${name}`) });
         const items = menu.getAllByRole('menuitem');
         expect(items[items.indexOf(askAi) - 1]?.textContent).toMatch(
-          locale === 'ko' ? /^사용법/ : /^User Guide/,
+          locale === 'ko' ? /^알고리즘 갤러리/ : /^Algorithm gallery/,
         );
         fireEvent.click(askAi);
         expect(engine.ran).toEqual(['help.askAi']);
