@@ -1,0 +1,23 @@
+{
+  "name": "@ariadne-nsd/skill",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ariadne-nsd/core": "workspace:*",
+    "@ariadne-nsd/fonts": "workspace:*",
+    "@ariadne-nsd/web": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "ajv": "^8.20.0",
+    "typescript": "6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

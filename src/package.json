@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deps": "depcruise apps packages",
+    "deps": "depcruise apps packages skills",
     "test": "pnpm -r test",
     "e2e": "pnpm --filter @ariadne-nsd/web e2e",
     "dev": "pnpm --filter @ariadne-nsd/web dev",

@@ -18,6 +18,8 @@ export default tseslint.config(
       '**/test-results/',
       '**/playwright-report/',
       'packages/fonts/assets/',
+      // Built by skills/ariadne-nsd/scripts/build.mjs.
+      'skills/*/skill/scripts/',
     ],
   },
   js.configs.recommended,

@@ -112,6 +112,12 @@ const areas = [
     ],
   },
   {
+    name: 'Claude skill',
+    about:
+      'Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill (나중에)]]',
+    paths: ['skills/'],
+  },
+  {
     name: '레이아웃 · 그리기 · 글자',
     about:
       '블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]',
@@ -259,6 +265,7 @@ const unique = (items) => [...new Set(items)];
 
 const files = testFiles(join(src, 'apps'))
   .concat(testFiles(join(src, 'packages')))
+  .concat(testFiles(join(src, 'skills')))
   .map((path) => {
     const rel = relative(src, path).replaceAll('\\', '/');
     const text = readFileSync(path, 'utf8').replaceAll('\r\n', '\n');

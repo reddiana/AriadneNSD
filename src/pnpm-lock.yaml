@@ -323,6 +323,34 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(@types/node@26.6.6)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.6.6))
 
+  skills/ariadne-nsd:
+    dependencies:
+      '@ariadne-nsd/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@ariadne-nsd/fonts':
+        specifier: workspace:*
+        version: link:../../packages/fonts
+      '@ariadne-nsd/web':
+        specifier: workspace:*
+        version: link:../../apps/web
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.3.5
+        version: 8.3.5(@types/node@26.6.6)
+      vitest:
+        specifier: ^5.0.5
+        version: 5.0.5(@types/node@26.6.6)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.6.6))
+
 packages:
 
   '@babel/code-frame@7.29.7':

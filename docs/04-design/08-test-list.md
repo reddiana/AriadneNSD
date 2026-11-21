@@ -21,10 +21,11 @@ status: 생성됨
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 43 | - | 103 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
-| [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
-| [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
-| [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 280 | 957 | 5 | 1329 |
+| [[#6. Claude skill\|Claude skill]] | - | - | 17 | - | 17 |
+| [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
+| [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
+| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
+| 합계 | 87 | 280 | 974 | 5 | 1346 |
 
 ## 읽는 법
 
@@ -2050,7 +2051,64 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ^t-packages-editor-src-create-editor-export-test-ts
 
-## 6. 레이아웃 · 그리기 · 글자
+## 6. Claude skill
+
+Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill (나중에)]]. 파일 4개, 테스트 17개.
+
+### [단위] `skills/ariadne-nsd/src/bundle.test.ts`
+
+The built script, skill/scripts/nsd.mjs, is what the skill runs. Vitest · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1472 | is the build of the current sources (run `pnpm --filter @ariadne-nsd/skill build` after a change) | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1473 | runs with plain node in an empty folder: save, link and read give back the model | [[01-requirements#^r-skill\|R-SKILL-01]] |
+
+^t-skills-ariadne-nsd-src-bundle-test-ts
+
+### [단위] `skills/ariadne-nsd/src/cli.test.ts`
+
+The script's command line (R-SKILL-01). Vitest · 테스트 5개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1464 | check prints the size and the next free ids, as text or JSON | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1465 | save writes the file named by -o, --name or the first Method, and link and read take it back | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1466 | link --json gives the url and its length | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1467 | a bad model fails with exit code 1, the parser’s detail and what to do next | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1468 | a bad command line fails with exit code 2 and the usage; help prints it | - |
+
+^t-skills-ariadne-nsd-src-cli-test-ts
+
+### [단위] `skills/ariadne-nsd/src/engine.test.ts`
+
+The skill's script makes what the app makes (R-SKILL-01). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[01-requirements#^r-skill|R-SKILL-01]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1457 | the app’s parser opens it to the same document, and its drawing is the app’s | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1458 | a document with text as outlines is saved with outlines and opens | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-fmt\|R-FMT-10]] |
+| T-1459 | is the app’s d link, and the web shell reads it back to the same model | [[01-requirements#^r-skill\|R-SKILL-01]], [[01-requirements#^r-web\|R-WEB-05]] |
+| T-1460 | a link made with another base opens that page | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1461 | reads model JSON, an envelope, every link packing and a saved file to the same model | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1462 | says what is wrong in the parser’s words: the JSON with its brackets, the model with its path, the link with its reason | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1463 | names a document after its first Method, and counts the next free ids | [[01-requirements#^r-skill\|R-SKILL-01]] |
+
+^t-skills-ariadne-nsd-src-engine-test-ts
+
+### [단위] `skills/ariadne-nsd/src/skill-doc.test.ts`
+
+The skill's documents, run as tests (doctest, as for /llms.txt). Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1469 | every JSON example in SKILL.md and its references opens and passes the schema, or says why it is not checked | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1470 | SKILL.md names core’s lists of values, and its block table has every kind | [[01-requirements#^r-skill\|R-SKILL-01]] |
+| T-1471 | SKILL.md has the front matter a skill needs, and every file it links to exists | [[01-requirements#^r-skill\|R-SKILL-01]] |
+
+^t-skills-ariadne-nsd-src-skill-doc-test-ts
+
+## 7. 레이아웃 · 그리기 · 글자
 
 블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 166개.
 
@@ -2355,7 +2413,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ^t-packages-fonts-src-glyph-outlines-test-ts
 
-## 7. 성능
+## 8. 성능
 
 렌더링과 파일 열기의 시간 예산(벤치마크), 기준 기기에서 사람이 AT-05를 측정하는 점검 모드(`?perf`) → [[03-quality-attribute-scenarios]]. 파일 5개, 테스트 22개.
 
@@ -2426,7 +2484,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ^t-packages-core-src-render-render-bench-ts
 
-## 8. 문서와 코드의 정합성
+## 9. 문서와 코드의 정합성
 
 코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 2개, 테스트 10개.
 
@@ -2458,7 +2516,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ^t-packages-editor-src-docs-agree-test-ts
 
-## 9. 테스트가 없는 ID
+## 10. 테스트가 없는 ID
 
 문서에 정의된 시나리오(`QA-`) · 인수 테스트(`AT-`) · 결함(`BUG-`) 가운데, 이름에 그 ID를 단 테스트가 없는 것입니다. 테스트 파일이 통째로 담당하거나(영역 절의 "파일 전체가 확인하는 것"), 인수 테스트가 담당하거나([[01-requirements#5.2 MVP의 인수 기준]]의 표), 테스트가 아닌 검사가 담당하는 것은 그 경로를 기록합니다. “없음”은 사람이 점검표로 보거나 아직 테스트가 없는 빈 곳입니다.
 

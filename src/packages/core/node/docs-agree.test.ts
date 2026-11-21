@@ -156,6 +156,7 @@ describe('the technology stack', () => {
     'src/packages/fonts/package.json',
     'src/apps/web/package.json',
     'src/apps/manual/package.json',
+    'src/skills/ariadne-nsd/package.json',
   ].map((path) => ({ path, manifest: JSON.parse(read(path)) as Manifest }));
 
   /** Whether a text names a package: the name itself, as a word, in any case. */

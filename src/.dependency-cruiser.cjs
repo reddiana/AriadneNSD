@@ -46,11 +46,23 @@ module.exports = {
       to: { path: '^apps/', pathNot: '^apps/$1/' },
     },
     {
+      name: 'skill-is-not-a-shell',
+      comment:
+        'The Claude skill uses core and fonts, and from the web app only its share link, so its links are those of the app (06-web 3).',
+      severity: 'error',
+      from: { path: '^skills/' },
+      to: {
+        path: ['^apps/', '^packages/editor/'],
+        pathNot: '^apps/web/src/files/share-link\\.ts$',
+      },
+    },
+    {
       name: 'no-unresolvable',
-      comment: 'Every import must resolve, so the rules above see real paths.',
+      comment:
+        'Every import must resolve, so the rules above see real paths. A virtual: module is made by a build (skills/ariadne-nsd/vite.config.ts).',
       severity: 'error',
       from: {},
-      to: { couldNotResolve: true },
+      to: { couldNotResolve: true, pathNot: '^virtual:' },
     },
     {
       name: 'no-circular',
