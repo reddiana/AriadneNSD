@@ -960,7 +960,7 @@ describe('Method 풀어 넣고 지우기', () => {
   const selected = (engine: TestEngine): ReadonlyArray<string> =>
     selectedBlocks(engine.session.index(), engine.session.state.selection);
 
-  it('T-1452: the context menu has it on a call of a Method here and on a Method header, greyed out when nothing calls it', () => {
+  it('T-1452 · R-EDIT-27 · UX CB16: the context menu has it on a call of a Method here and on a Method header, greyed out when nothing calls it', () => {
     const engine = testEngine(callers());
     select(engine, 'c1');
     expect(command(engine, 'blocks')?.isEnabled).toBe(true);
@@ -975,7 +975,7 @@ describe('Method 풀어 넣고 지우기', () => {
     expect(view?.keys).toEqual([]);
   });
 
-  it('T-1453: from a call block every call becomes the blocks, folded as before, the Method goes, and one undo brings it all back', () => {
+  it('T-1453 · R-EDIT-27 · UX CB16: from a call block every call becomes the blocks, folded as before, the Method goes, and one undo brings it all back', () => {
     const engine = testEngine(callers());
     const before = engine.content();
     engine.session.setView({ ...engine.session.state.doc.view, folded: ['f1'] });
@@ -998,7 +998,7 @@ describe('Method 풀어 넣고 지우기', () => {
     expect(engine.content()).toEqual(before);
   });
 
-  it('T-1454: from a Method header (the palette) the blocks at the first call are selected', () => {
+  it('T-1454 · R-EDIT-27 · UX CB16: from a Method header (the palette) the blocks at the first call are selected', () => {
     const engine = testEngine(callers());
     engine.select({ kind: 'head', diagram: 'd2' });
     engine.run('diagram.inlineMethod');
@@ -1006,7 +1006,7 @@ describe('Method 풀어 넣고 지우기', () => {
     expect(selected(engine)).toEqual(['b1', 'b2']);
   });
 
-  it('T-1455: refused for a Method that calls itself, one nothing calls, and in a view-only document', () => {
+  it('T-1455 · R-EDIT-27 · UX CB16: refused for a Method that calls itself, one nothing calls, and in a view-only document', () => {
     const recursive = testEngine(sample());
     select(recursive, 'c1');
     expect(command(recursive, 'blocks')).toMatchObject({

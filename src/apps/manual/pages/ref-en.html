@@ -401,7 +401,11 @@
     document does not have, choose "Call by a written name" in the list and type its name. To draw
     it later, press <kbd>gd</kbd> on that call block (or "Make Method"): a Method of that name is
     made, every call block with that name calls it, and the selection goes to its header. When a
-    Method is deleted, the call blocks that called it keep its name as a call by a written name.
+    Method is deleted, the call blocks that called it keep its name as a call by a written name. To
+    undo a Method altogether, choose "Inline Method and Delete" on a call block or on its header
+    (the context menu or the Diagram menu): every call block calling it becomes a copy of its
+    blocks, the Method is deleted, and one undo takes it all back. A Method that calls itself cannot
+    be inlined this way.
   </p>
   <div class="pair">
     <figure>
@@ -448,7 +452,10 @@
         <td>The Diagram menu, the context menu</td>
       </tr>
       <tr>
-        <td>Go to the called Method (from a shown block, to its own block; on a call by a written name, make the Method)</td>
+        <td>
+          Go to the called Method (from a shown block, to its own block; on a call by a written
+          name, make the Method)
+        </td>
         <td><kbd>gd</kbd></td>
         <td>The Diagram menu, the context menu</td>
       </tr>
@@ -466,6 +473,13 @@
         <td>Replace a call block with the Method's blocks (unwrap)</td>
         <td><kbd>ds</kbd></td>
         <td>Diagram › Unwrap</td>
+      </tr>
+      <tr>
+        <td>
+          Inline Method and Delete (every call becomes the Method's blocks, and the Method goes)
+        </td>
+        <td></td>
+        <td>The Diagram menu, the context menu (on a call block or a Method header)</td>
       </tr>
       <tr>
         <td>Previous / next diagram</td>

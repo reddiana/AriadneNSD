@@ -162,7 +162,7 @@ test('T-1443 · R-EDIT-26 · UX CB15: gd on a call by name makes its Method and 
   await expect(scans).toHaveCount(1);
 });
 
-test('T-1456: Inline Method and Delete from the context menu puts the blocks back at the call and deletes the Method; one undo takes it back', async ({
+test('T-1456 · R-EDIT-27 · UX CB16: Inline Method and Delete from the context menu puts the blocks back at the call and deletes the Method; one undo takes it back', async ({
   page,
 }) => {
   await openApp(page);
@@ -178,7 +178,9 @@ test('T-1456: Inline Method and Delete from the context menu puts the blocks bac
   const menu = page.getByRole('menu', { name: 'Context menu' });
   await page.keyboard.press('Shift+F10');
   await menu.getByRole('menuitem', { name: /^Inline Method and Delete/ }).click();
-  await expect(statusBar(page)).toContainText('Inlined work at every call site (1) and deleted it.');
+  await expect(statusBar(page)).toContainText(
+    'Inlined work at every call site (1) and deleted it.',
+  );
   await expect(drawnText(page, 'work')).toHaveCount(0);
   await expect(drawnText(page, 'step')).toHaveCount(1);
   await expect(selection(page)).toHaveText('Process block');

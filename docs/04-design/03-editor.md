@@ -17,7 +17,7 @@ updated: 2026-11-21
 ## 관련 요구사항
 
 - [[01-requirements#3.2 편집]], 그 가운데 드래그 앤 드롭 [[01-requirements#^r-edit|R-EDIT-09]], 커맨드 팔레트 [[01-requirements#^r-edit|R-EDIT-24]]
-- 호출 블록에서 Method 만들기: [[01-requirements#^r-edit|R-EDIT-26]]
+- 호출 블록에서 Method 만들기: [[01-requirements#^r-edit|R-EDIT-26]], Method 풀어 넣고 지우기: [[01-requirements#^r-edit|R-EDIT-27]]
 - 줌 · 팬: [[01-requirements#^r-lay|R-LAY-03]]
 - [[01-requirements#^r-nfr|R-NFR-03]], [[01-requirements#^r-nfr|R-NFR-04]], [[01-requirements#^r-nfr|R-NFR-05]]
 
@@ -125,6 +125,7 @@ type SeqRef = { owner: Id; slot: string };                   // 그 줄을 가�
 | 삽입 · 붙여넣기 · 감싸기 · 이동 | `touched`(삽입한 것, 감싼 새 블록, 이동한 것) |
 | 삭제 · 잘라내기 | 삭제한 범위의 다음 블록 → 앞 블록 → 담고 있던 블록 (삭제 **전**에 계산해 둔다) |
 | 풀기 | 남은 안의 블록들. 안쪽에서 풀었으면 선택한 것 그대로(접기 영역도 그대로). 분기 라벨 · 빈 default 칸에서 풀었으면 남은 안의 블록들 |
+| Method 풀어 넣고 지우기 | 들어온 블록들: 호출 블록에서 했으면 그 자리의 것, Method 헤더에서 했으면 문서 순서로 첫 자리의 것(`sites`) → [[ux-decisions#CB16. Method 풀어 넣고 지우기\|CB16]] |
 | 새 Method로 빼기 | 새 Method의 헤더(이름 칸을 엶). 이름 칸을 닫으면 그 위치에 남은 호출 블록(`touched`의 둘째) → [[ux-decisions#XM2. 빼고 난 뒤의 선택과 화면\|XM2]] |
 | 실행 취소 · 다시 하기 | 선택한 것이 남아 있으면 그대로, 없으면 `null` |
 
@@ -318,7 +319,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- |
 | 파일 | 새로 · 열기… · 붙여넣은 JSON으로 열기…(웹 → [[06-web#3.2 붙여넣은 문서]]) · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… · 공유 링크 복사(웹 → [[06-web#3. 공유 URL과 보기 모드]]) ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 · 앞에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
+| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
@@ -328,6 +329,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 - "호출…" · "호출할 Method 바꾸기…"는 고르는 목록(`ChromeState.picker`, 6장)을 엽니다. 목록은 문서의 Method 전부(렌더링된 순서), "새 Method를 만들고 호출", "이름을 적어 호출하기"입니다.
 - "호출하는 Method로 가기"(`call.goTo`, `gd`)는 다이어그램 메뉴의 "새 Method로 빼기" 다음에 둡니다. 선택을 바꾸는 명령이라 읽기 전용에서도 됩니다. 이름을 적는 호출 블록에서는 "Method 만들기"를 실행합니다(읽기 전용이면 거절).
 - "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 적는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 적는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
+- "Method 풀어 넣고 지우기"(`diagram.inlineMethod`, [[01-requirements#^r-edit|R-EDIT-27]])는 같은 문서의 Method를 호출하는 호출 블록이나 Method 헤더를 선택했을 때 그 Method에 적용됩니다. `core`의 `inlineMethod`를 실행하고(실행 취소 한 단계), 자리마다 펴 보기 · 접힘(`view.opened` · `view.folded`)을 호출 블록 풀기처럼 사본으로 옮긴 뒤, 들어온 블록을 선택하고 "호출 n곳에 풀어 넣고 {이름}을(를) 지웠습니다."를 알립니다. `when`은 `core`와 같은 검사로 `recursiveMethod` · `noCallers`를 미리 돌려주어 메뉴에서 흐리게 합니다. 컨텍스트 메뉴(`context: ['blocks', 'head']`)에는 호출 블록 · Method 헤더에서만 보입니다(`inContext`). 키는 없습니다 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
 - 보기 메뉴의 접기 명령: "접기 · 펴기"(`view.fold.toggle`), "접기 영역 만들기"(`fold.make`), "접기 영역 풀기"(`fold.remove`), "접기 영역 보기 ✓"(`view.bands`, 이름 띠 켜고 끄기). 키로만 실행하는 "펴기"(`view.fold.open`, `zo`)와 "접기"(`view.fold.close`, `zc`)는 커맨드 팔레트에도 있습니다. 모두 접기 · 모두 펴기([[01-requirements#^r-edit|R-EDIT-17]], `P2`)는 아직 없습니다.
 - 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기는 실행 취소 한 단계이고, 이름 띠 켜고 끄기는 실행 취소 스택에 저장하지 않습니다([[0048-folding-is-undoable|ADR-0048]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
 - 메뉴 항목 옆에는 키를 표시합니다. 키가 둘이면(`dd`와 `Ctrl`+`X`) 표준 키를 표시하고, Vim 키는 커맨드 팔레트와 단축키 목록에서 보입니다.
@@ -345,8 +347,8 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | 분기 | `branch.insert` · `branch.insertBefore` · `branch.delete`, `branch.convertIfToCase` · `branch.convertCaseToIf` |
 | 편집 | `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste` · `edit.pasteBefore` · `edit.delete`, `edit.text` · `edit.textStart` · `edit.textClear` · `edit.branchLabel`, `edit.move.up` · `edit.move.down` · `edit.move.left` · `edit.move.right`, `edit.commandPalette` |
 | 선택 · 이동 | `select.up` · `select.down` · `select.left` · `select.right`, `select.unitUp` · `select.unitDown`, `select.branchLeft` · `select.branchRight`, `select.first` · `select.last`, `select.previousDiagram` · `select.nextDiagram`, `select.extendUp` · `select.extendDown`, `select.visual`, `select.clear` |
-| 호출 | `call.setTarget` · `call.goTo` |
-| 다이어그램 | `diagram.event` · `diagram.method` · `diagram.removeHead`, `diagram.extractMethod`, `diagram.newEvent` · `diagram.newMethod` · `diagram.delete`, `diagram.documentSettings` |
+| 호출 | `call.setTarget` · `call.goTo` · `call.makeMethod` |
+| 다이어그램 | `diagram.event` · `diagram.method` · `diagram.removeHead`, `diagram.extractMethod` · `diagram.inlineMethod`, `diagram.newEvent` · `diagram.newMethod` · `diagram.delete`, `diagram.documentSettings` |
 | 접기 · 보기 | `view.fold.toggle` · `view.fold.open` · `view.fold.close`, `fold.make` · `fold.remove`, `view.bands`, `view.zoom.in` · `view.zoom.out` · `view.zoom.reset` |
 | 파일 | `file.save` · `file.saveAs`, `file.preferences`. 웹 셸이 더하는 것: `file.new` · `file.open` · `file.recent.<n>`, `file.export.png` · `file.export.svg` · `file.export.pdf`, `file.print`, `file.share`, `file.openPasted` |
 | 도움말 | `help.shortcuts` · `help.manual` · `help.askAi` · `help.whatsNew` · `help.about` · `help.examples`, `example.<id>`(예제 하나를 여는 명령. 커맨드 팔레트에 보임) |
@@ -380,6 +382,7 @@ type OpenedDocument = {
   store: DocumentStore;                          // 이 문서의 읽기 · 쓰기
   text: string | null;                           // .ns.svg · .ns 문자열. null이면 새 문서 (R-ALL-03)
   readOnly?: boolean;                            // 보기만 함 → 6.4
+  readOnlyReason?: ReadOnlyReason;               // 보기만 하는 까닭 (readOnly일 때만 읽음) → 6.4
   restored?: string;                             // 로컬 백업에서 복원한 내용(스냅숏). 있으면 text 대신 열고 dirty로 둔다 → 6.3
   doc?: Doc;                                     // 만들어 둔 문서(예제 → R-EDIT-25). 있으면 text 대신 새 문서로 열고, 저장 안 됨이 아니며 선택한 것이 없다
 };
@@ -433,7 +436,7 @@ interface EditorHandle {
   rendering(): Rendering;                        // 지금 그린 것(레이아웃 · 장면 · 그림): 셸의 인쇄 · PDF가 쓴다 (R-EXP-03)
   snapshot(): string;                            // 지금 문서의 모델 JSON (로컬 백업에 씀. 서브셋 글꼴을 만들지 않아 가볍다)
   save(): Promise<WriteResult>;                  // "저장" 명령과 같음: serialize → store.write → 성공하면 dirty를 끈다
-  setReadOnly(readOnly: boolean): void;
+  setReadOnly(readOnly: boolean, reason?: ReadOnlyReason): void;  // reason은 메뉴 바 오른쪽 라벨에 보일 까닭. readOnly가 false면 버린다 → 6.4
   setAppearance(a: Appearance): void;            // 호스트의 밝기가 바뀌었을 때
   documentSetting(id: string): unknown;          // 문서 설정(scope: 'document')의 지금 값
   setDocumentSetting(id: string, value: unknown): void;  // 문서 설정을 바꾼다. 내용에 드는 것이면 undo 대상 (W5)
@@ -447,7 +450,8 @@ interface EditorHandle {
   popupAnchor(): { x: number; y: number; top: number };  // 키보드로 여는 팝업의 위치(페이지 좌표): 선택한 것의 바로 아래, 선택이 없으면 캔버스의 왼쪽 위. top은 선택의 위쪽 끝으로, 아래에 공간이 없는 팝업은 이 위로 뒤집는다
   dispose(): void;
 }
-type DocStatus = { name: string; dirty: boolean; readOnly: boolean; revision: number; place: 'file' | 'browser' };  // revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름. place: store의 place
+type DocStatus = { name: string; dirty: boolean; readOnly: boolean; readOnlyReason?: ReadOnlyReason; revision: number; place: 'file' | 'browser' };  // readOnlyReason: 셸이 알린 까닭(보기만 할 때만). revision: 내용 · 뷰 상태가 바뀔 때마다 1씩 오름. place: store의 place
+type ReadOnlyReason = 'otherTab';               // 다른 탭이 같은 문서를 편집하고 있음 (웹 → 06-web 2)
 type ChromeState = {
   selection: Message | null;                     // 선택한 것 ("If 블록", "블록 3개")
   notice: Notice | null;                         // 상태 표시줄의 알림 { id, message, level: 'info' | 'warn' }
@@ -540,7 +544,7 @@ sequenceDiagram
             E-->>-S: 복원 / 버리기
         end
         S->>S: DocumentStore를 만들고 탭 잠금 (06-web 2.1)
-        S->>+E: open({ store, text, readOnly?, restored? })
+        S->>+E: open({ store, text, readOnly?, readOnlyReason?, restored? })
         E-->>-S: onStatus(name, dirty)
         S->>F: 최근 파일에 더함
         S-->>-U: 메뉴 바에 파일 이름
@@ -571,8 +575,8 @@ sequenceDiagram
 
 `readOnly`이면 `edits: true`인 명령이 모두 "보기만 하는 중"이라는 이유로 적용되지 않습니다. 선택 · 이동 · 복사 · 줌 · 접기와 펴기(뷰 상태)는 됩니다. 뷰 상태는 바뀌어도 `dirty`를 켜지 않습니다(저장할 수 없으므로).
 
-- 웹: 같은 파일을 다른 탭이 편집하고 있으면 셸이 `setReadOnly(true)`를 호출합니다. 그 탭이 닫히면 `false`로 되돌리고 알립니다 → [[06-web#2. 로컬 백업과 자동 저장]]
-- 상태 표시줄에 "보기만 하는 중"과 그 이유를 둡니다.
+- 웹: 같은 파일을 다른 탭이 편집하고 있으면 셸이 까닭과 함께 `setReadOnly(true, 'otherTab')`를 호출합니다(처음 열 때는 `open`의 `readOnly` · `readOnlyReason`). 그 탭이 닫히면 `false`로 되돌리고 알립니다 → [[06-web#2. 로컬 백업과 자동 저장]]
+- 메뉴 바 오른쪽(이름 뒤)과 상태 표시줄 오른쪽에 "보기만 하는 중"을 둡니다. 까닭이 `otherTab`이면(`DocStatus.readOnlyReason`) 메뉴 바의 라벨은 "보기만 하는 중 · 다른 탭에서 편집 중"이고 툴팁은 "그 탭을 닫으면 여기서 편집할 수 있습니다."입니다 → [[ux-decisions#RO1. 다른 탭이 편집 중일 때의 보기만 하는 중|RO1]]
 
 ### 6.5 주변 UI와 셸의 계약
 

@@ -10,6 +10,9 @@ superseded-by:
 
 # DR-0018: MVP 다음은 웹 베타와 웹 1.0이고, 파일 형식은 웹 1.0부터 약속한다
 
+> [!NOTE] 이후 변경
+> - 2026-11-21: 메인테이너가 웹 베타의 문턱에서 "Firefox · Safari · 휴대폰에서 써 본다"를 뺐다("2: skip"). 다른 브라우저의 확인은 웹 1.0의 인수 테스트([[01-requirements#^at|AT-10]] · [[01-requirements#^at|AT-14]])에 남는다 → [[2026-11-21-03-call-without-method]], [[01-requirements#5.1 MVP 다음의 단계]]
+
 ## 배경
 
 메인테이너가 물었다: "MVP 다음은 무엇인가요? Beta버전인가요?"(2026-11-02).

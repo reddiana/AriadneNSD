@@ -3,7 +3,7 @@ title: 모델
 tags:
   - design
 status: 작성 중
-updated: 2026-11-03
+updated: 2026-11-21
 ---
 
 # 모델
@@ -19,7 +19,7 @@ updated: 2026-11-03
 - 블록 종류: [[01-requirements#3.1 블록 종류]]
 - 정합성: [[01-requirements#^r-nfr|R-NFR-01]]
 - 실행 취소: [[01-requirements#^r-edit|R-EDIT-02]], [[02-interaction-rules#6. 실행 취소]]
-- 감싸기 · 풀기: [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-08]]
+- 감싸기 · 풀기: [[01-requirements#^r-edit|R-EDIT-06]], [[01-requirements#^r-edit|R-EDIT-07]], [[01-requirements#^r-edit|R-EDIT-08]], Method 풀어 넣고 지우기 [[01-requirements#^r-edit|R-EDIT-27]]
 - 이동 · 붙여넣기 · 분기: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]]
 - 새 Method로 빼기: [[01-requirements#^r-edit|R-EDIT-19]]
 - 문서 설정(블록 텍스트의 언어, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-07]], [[01-requirements#^r-lay|R-LAY-10]]
@@ -277,7 +277,7 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 반환합니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) · `recursiveMethod`(자기를 호출하는 Method를 풀어 넣고 지움) · `noCallers`(호출하는 곳이 없는 Method를 풀어 넣고 지움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 `Doc`(내용과 뷰 상태)을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
@@ -302,6 +302,7 @@ type Target =                                        // 명령이 적용되는 �
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
 | | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
+| | Method 풀어 넣고 지우기 (`inlineMethod`) | Method를 호출하는 `local` 호출 블록마다 문서 순서로 `inlineCall`을 하고(자리마다 `ownRegions`를 따로 묻는다) 그 Method 다이어그램을 지운다. undo 한 단계([[01-requirements#^r-edit\|R-EDIT-27]]). 다이어그램이 없으면 `notFound`, Method가 아니면 `wrongKind`, 그 Method 안에 자기를 호출하는 호출 블록이 있으면 `recursiveMethod`(서로 호출하는 Method는 거절하지 않음), 호출하는 호출 블록이 없으면 `noCallers`. `touched`는 자리마다 들어온 블록들(문서 순서)이고, 자리마다 바뀐 호출 블록 · 들어온 블록 · `renamed`의 목록(`sites`)도 반환한다(`editor`가 자리마다 뷰 상태를 옮기고 선택을 고르는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 위치에 그 Method를 호출하는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 반환한다. 안의 호출 블록은 호출하던 대상을 그대로 호출한다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
 | 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |

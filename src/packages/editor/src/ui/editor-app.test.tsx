@@ -754,7 +754,7 @@ describe('the dialog modal', () => {
     expect(answers).toEqual(['{\n}']);
   });
 
-  it('T-1447: 06-web 2: the view-only label tells why when another tab edits the file, and a tooltip says how to leave', () => {
+  it('T-1447 · BUG-18 · UX RO1: 06-web 2: the view-only label tells why when another tab edits the file, and a tooltip says how to leave', () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {

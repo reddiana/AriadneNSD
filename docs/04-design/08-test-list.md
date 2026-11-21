@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 9 | 45 | 299 | - | 353 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 307 | - | 362 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 36 | 43 | - | 102 |
-| [[#5. 파일\|파일]] | 18 | 166 | 242 | - | 426 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 43 | - | 103 |
+| [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 86 | 277 | 949 | 5 | 1317 |
+| 합계 | 87 | 280 | 957 | 5 | 1329 |
 
 ## 읽는 법
 
@@ -77,11 +77,11 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 353개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 362개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
-인수 테스트가 다루지 않는 편집 명령을 브라우저에서 확인합니다. Playwright · 테스트 4개.
+인수 테스트가 다루지 않는 편집 명령을 브라우저에서 확인합니다. Playwright · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -89,6 +89,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0840 | 헤더 없는 다이어그램에서 `m`은 묻는다: `Esc`는 그만두고, `2`는 Method 헤더를 달고, `Enter`는 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-1384 | 선택한 것이 없으면 감싸기 ▾가 흐리고, 누르면 목록을 열지 않고 상태 표시줄에 이유를 알린다 | [[ux-decisions\|UX TB3]] |
 | T-1443 | gd on a call by name makes its Method and goes there; the context menu offers it; one undo takes it back | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX CB15]] |
+| T-1456 | Inline Method and Delete from the context menu puts the blocks back at the call and deletes the Method; one undo takes it back | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 
 ^t-apps-web-e2e-editing-spec-ts
 
@@ -346,7 +347,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/src/commands/inline.test.ts`
 
-호출 블록. Vitest · 테스트 9개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]].
+호출 블록. Vitest · 테스트 13개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -354,6 +355,10 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 | T-1080 | inline: 그 위치의 접기 영역은 보통 접기 영역이 되고, 더 안쪽 것은 안쪽 호출 블록을 따라간다 | - |
 | T-1411 | inline: 자기 접기 영역을 가진 호출 자리는 그것만 들여오고 Method의 것은 들여오지 않는다(ADR-0047) | - |
 | T-1081 | inline: 호출 블록 하나에서 풀기도 같고, 이 문서의 것을 부르지 않는 호출 블록은 거절한다 | - |
+| T-1448 | inline method: every call, also inside other Methods and loops, becomes copies; the Method goes | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1449 | inline method: the folds go with each site as inlineCall's; a site with its own regions brings only those | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1450 | inline method: refused for a Method that calls itself, one nothing calls, and what is no Method | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1451 | inline method: one command, so undo brings everything back; calls to other Methods stay | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 | T-1082 | named call: 적은 이름을 호출하는 호출 블록을 삽입한다. 이름은 한 줄, 앞뒤 공백 없이 | - |
 | T-1083 | named call: 이름은 인자와 함께 편집하고, 한 번 적은 이름은 비울 수 없다 | - |
 | T-1084 | named call: 어느 호출 블록이든 적은 이름을 호출하게 바꿀 수 있다 | - |
@@ -543,7 +548,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 38개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 42개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -585,6 +590,10 @@ id. Vitest · 테스트 5개.
 | T-1438 | gd on a call by name makes its Method, links the calls of that name and goes there | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1439 | the context menu has Method 만들기 on a call by name only, in place of going to the Method | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1440 | the command makes the Method from the palette too; a view-only document refuses gd | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1452 | the context menu has it on a call of a Method here and on a Method header, greyed out when nothing calls it | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1453 | from a call block every call becomes the blocks, folded as before, the Method goes, and one undo brings it all back | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1454 | from a Method header (the palette) the blocks at the first call are selected | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1455 | refused for a Method that calls itself, one nothing calls, and in a view-only document | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 
 ^t-packages-editor-src-commands-call-commands-test-ts
 
@@ -1000,7 +1009,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 102개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 15개, 테스트 103개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1072,7 +1081,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 36개.
+메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 37개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1112,6 +1121,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 | - |
 | T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
+| T-1447 | 06-web 2: the view-only label tells why when another tab edits the file, and a tooltip says how to leave | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
@@ -1241,7 +1251,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 426개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 428개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1324,7 +1334,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [통합] `apps/web/src/shell/web-shell.test.ts`
 
-웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09) · 웹 셸: 텍스트로 붙여넣은 문서(R-WEB-11). Vitest · 테스트 85개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]], [[01-requirements#^r-web|R-WEB-11]].
+웹 셸 · 웹 셸: 한 번도 저장하지 않은 새 문서를 떠날 때(UX US1) · 웹 셸: 열기 · 웹 셸: 파일 드롭 · 웹 셸: 최근 파일 · 웹 셸: 저장 · 웹 셸: 내보내기, 언어, 탭 · 웹 셸: 공유 링크와 보기 모드(R-WEB-05, R-WEB-06) · 웹 셸: 브라우저 문서(R-WEB-09) · 웹 셸: 텍스트로 붙여넣은 문서(R-WEB-11). Vitest · 테스트 87개. 파일 전체가 확인하는 것: [[ux-decisions|UX US1]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-09]], [[01-requirements#^r-web|R-WEB-11]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1381,6 +1391,8 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0725 | 제목 없는 문서의 이름은 셸이 시작할 때의 언어를 지킨다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0726 | dispose는 셸 명령을 없앤다 | - |
 | T-0727 | 06-web 2: 다른 탭에서 연 파일은 그 탭이 놓을 때까지 보기 전용이다 | - |
+| T-1444 | 06-web 2: a tab locked by another tab tells the editor why it is view only, and drops the reason when it regains the lock | [[defects#BUG-18\|BUG-18]] |
+| T-1446 | 06-web 6: a share link opened in view mode has no reason to tell | [[defects#BUG-18\|BUG-18]] |
 | T-0895 | 파일 메뉴에 "공유 링크 복사"를 더하고, 그 문서를 여는 링크를 복사한다 | - |
 | T-0896 | 시작할 때 링크를 새 문서로 보기 모드에서 열고, 복원을 묻지 않는다 | - |
 | T-0897 | "편집하기"는 같은 문서를 편집할 수 있게 한다. 편집은 로컬 백업에 남고, 떠날 때 먼저 묻는다 | - |

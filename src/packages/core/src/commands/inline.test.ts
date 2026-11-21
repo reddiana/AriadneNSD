@@ -140,7 +140,7 @@ describe('inlining a Method at every call and deleting it ("Method 풀어 넣고
     ),
   );
 
-  it('T-1448: inline method: every call, also inside other Methods and loops, becomes copies; the Method goes', () => {
+  it('T-1448 · R-EDIT-27 · UX CB16: inline method: every call, also inside other Methods and loops, becomes copies; the Method goes', () => {
     const result = runOk(inlineMethod, content, { diagram: 'd3' });
     expect(diagramIds(result.content)).toEqual(['d1', 'd2']);
     expect(result.sites.map((site) => site.call)).toEqual(['b2', 'b4', 'b5']);
@@ -158,7 +158,7 @@ describe('inlining a Method at every call and deleting it ("Method 풀어 넣고
     });
   });
 
-  it("T-1449: inline method: the folds go with each site as inlineCall's; a site with its own regions brings only those", () => {
+  it("T-1449 · R-EDIT-27 · UX CB16: inline method: the folds go with each site as inlineCall's; a site with its own regions brings only those", () => {
     const sited = contentWith(
       diagram('d1', event('start'), [
         withSiteFolds(call('b2', 'd3'), [
@@ -186,7 +186,7 @@ describe('inlining a Method at every call and deleting it ("Method 풀어 넣고
     expect(foldsIn(one.content, one.renamed.get('b11') ?? '')).toHaveLength(1);
   });
 
-  it('T-1450: inline method: refused for a Method that calls itself, one nothing calls, and what is no Method', () => {
+  it('T-1450 · R-EDIT-27 · UX CB16: inline method: refused for a Method that calls itself, one nothing calls, and what is no Method', () => {
     const recursive = contentWith(
       diagram('d1', null, [call('b1', 'd2')]),
       diagram('d2', method('sort'), [proc('b10'), whileBlock('b11', [call('b12', 'd2')])]),
@@ -201,7 +201,7 @@ describe('inlining a Method at every call and deleting it ("Method 풀어 넣고
     expectRefused(inlineMethod, content, { diagram: 'x' }, 'notFound');
   });
 
-  it('T-1451: inline method: one command, so undo brings everything back; calls to other Methods stay', () => {
+  it('T-1451 · R-EDIT-27 · UX CB16: inline method: one command, so undo brings everything back; calls to other Methods stay', () => {
     const mutual = contentWith(
       diagram('d1', null, [call('b1', 'd2')]),
       diagram('d2', method('a'), [call('b10', 'd3')]),

@@ -1048,7 +1048,7 @@ describe('web shell: export, language, tabs', () => {
     expect(second.editor.notices.at(-1)).toBe('The other tab closed. You can edit this file now.');
   });
 
-  it('T-1444: 06-web 2: a tab locked by another tab tells the editor why it is view only, and drops the reason when it regains the lock', async () => {
+  it('T-1444 · BUG-18: 06-web 2: a tab locked by another tab tells the editor why it is view only, and drops the reason when it regains the lock', async () => {
     const connect = hub();
     const db = memoryDb();
     const first = setup({ db, channel: connect(), tabId: 'one' });
@@ -1070,7 +1070,7 @@ describe('web shell: share links and view mode (R-WEB-05, R-WEB-06)', () => {
   const model = serializeModelJson(newDoc);
   const link = (name = 'Shared.ns.svg') => writeShareLink(model, name, browserDeflate());
 
-  it('T-1446: 06-web 6: a share link opened in view mode has no reason to tell', async () => {
+  it('T-1446 · BUG-18: 06-web 6: a share link opened in view mode has no reason to tell', async () => {
     const { shell, editor } = setup();
     await shell.start(editor, await link());
     expect(editor.status()).toMatchObject({ readOnly: true });
