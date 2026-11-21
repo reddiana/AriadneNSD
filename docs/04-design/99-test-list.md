@@ -1141,13 +1141,13 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [단위] `apps/gallery/build.test.ts`
 
-The algorithm gallery's build (M70). Vitest · 테스트 3개.
+알고리즘 갤러리의 빌드 (M70). Vitest · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1488 | lists every gallery.json entry, under its name, on both language pages | - |
-| T-1489 | every relative link and picture on the pages points to a built file | - |
-| T-1490 | the pages link to each other, to the app and to the user guide of their language | - |
+| T-1488 | gallery.json의 항목을 모두 그 이름으로 두 언어의 페이지에 나열한다 | - |
+| T-1489 | 페이지의 상대 링크와 그림은 모두 빌드된 파일을 가리킨다 | - |
+| T-1490 | 페이지는 서로, 그리고 앱과 그 언어의 사용법으로 링크한다 | - |
 
 ^t-apps-gallery-build-test-ts
 
@@ -1207,14 +1207,14 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `packages/editor/src/gallery/gallery.test.ts`
 
-gallery · $id. Vitest · 테스트 4개.
+갤러리 · $id. Vitest · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1484 | lists each algorithm once, on a shelf, named in both languages, with the algorithmic examples | - |
-| T-1485 | builds in every language with either header shape and keeps every invariant | - |
-| T-1486 | renders in every language | - |
-| T-1487 | the English one has no Hangul, and the Korean one has the same blocks in the same places | - |
+| T-1484 | 알고리즘마다 한 번씩, 한 묶음에, 두 언어의 이름으로, 알고리즘 예제와 함께 나열한다 | - |
+| T-1485 | 모든 언어에서 두 헤더 모양 모두로 만들어지고 모든 불변식을 지킨다 | - |
+| T-1486 | 모든 언어에서 렌더링된다 | - |
+| T-1487 | 영어판에는 한글이 없고, 한국어판은 같은 자리에 같은 블록이 있다 | - |
 
 ^t-packages-editor-src-gallery-gallery-test-ts
 
