@@ -93,7 +93,7 @@ describe('menu bar', () => {
     expect(screen.getByRole('button', { name: '다이어그램' })).toBeTruthy();
   });
 
-  it('T-1491 · UX LG7: Help › Algorithm gallery, right below User Guide, opens the gallery in the screen language', () => {
+  it('T-1491 · UX GL2: Help › Algorithm gallery, right below User Guide, opens the gallery in the screen language', () => {
     const open = vi.spyOn(window, 'open').mockReturnValue(null);
     try {
       for (const [locale, galleryUrl, name] of [

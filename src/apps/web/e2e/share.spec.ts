@@ -167,9 +167,10 @@ test('T-1173 · R-WEB-10 · UX LG7: after the app starts, the note for AI tools 
   await page.getByRole('button', { name: 'Help', exact: true }).click();
   const items = page.getByRole('menuitem');
   await expect(items.nth(0)).toContainText('User Guide');
-  await expect(items.nth(1)).toContainText('Ask an AI to Draw');
+  await expect(items.nth(1)).toContainText('Algorithm gallery');
+  await expect(items.nth(2)).toContainText('Ask an AI to Draw');
   const opening = context.waitForEvent('page');
-  await items.nth(1).click();
+  await items.nth(2).click();
   const guide = await opening;
   expect(guide.url()).toMatch(/\/manual\/#ai$/);
 });
