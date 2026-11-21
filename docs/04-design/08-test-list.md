@@ -88,8 +88,8 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0839 | `m`이 선택한 블록을 빼고, 이름을 적으면 호출 블록이 선택되며, 새 Method는 뺀 Method 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM1]], [[ux-decisions\|UX XM2]] |
 | T-0840 | 헤더 없는 다이어그램에서 `m`은 묻는다: `Esc`는 그만두고, `2`는 Method 헤더를 달고, `Enter`는 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-1384 | 선택한 것이 없으면 감싸기 ▾가 흐리고, 누르면 목록을 열지 않고 상태 표시줄에 이유를 알린다 | [[ux-decisions\|UX TB3]] |
-| T-1443 | gd on a call by name makes its Method and goes there; the context menu offers it; one undo takes it back | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX CB15]] |
-| T-1456 | Inline Method and Delete from the context menu puts the blocks back at the call and deletes the Method; one undo takes it back | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1443 | 이름 호출에서 gd는 그 Method를 만들고 그리로 간다. 컨텍스트 메뉴에도 있고, 실행 취소 한 번으로 되돌린다 | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX CB15]] |
+| T-1456 | 컨텍스트 메뉴의 "Method 풀어 넣고 지우기"는 블록들을 호출 자리에 넣고 Method를 지운다. 실행 취소 한 번으로 되돌린다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 
 ^t-apps-web-e2e-editing-spec-ts
 
@@ -193,9 +193,9 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0068 | 아무것도 받지 않는 Method는 빈 인자로 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0069 | 이름을 적어 호출한 블록은 적힌 그대로 편집한다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-0070 | 01-model 4: 같은 텍스트면 내용은 그대로다 | - |
-| T-1432 | a call whose Method went away is a call by name and can be edited | - |
+| T-1432 | Method가 없어진 호출 블록은 이름 호출이 되고 편집할 수 있다 | - |
 | T-0072 | 호출 블록이 아닌 블록과 정의되지 않은 블록은 거절한다 | - |
-| T-0073 | 01-model 1.5: a call by name calls a Method again and keeps what was written | - |
+| T-0073 | 01-model 1.5: 이름 호출은 다시 Method를 호출할 수 있고, 적어 둔 것은 그대로 남는다 | - |
 | T-0074 | 01-model 1.5: Method를 바꾸며 인자와 결과를 지킨다 | - |
 | T-0075 | 빈 인자는 새 Method의 매개변수를 받는다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0076 | 01-model 1.6: 옛 호출 위치의 접기 영역은 없어진다 | - |
@@ -211,11 +211,11 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0086 | 적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 | - |
 | T-0088 | 비거나 중복되는 이름과 없는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
-| T-1433 | makes the Method a call by name calls, with its arguments, and links it | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1434 | without arguments the header is the name alone | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1435 | every call block calling the same name calls the new Method | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1436 | a Method of that name already there is called, and nothing is made | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1437 | refuses a call to a Method, an empty name, a name of an Event, other blocks | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1433 | 이름 호출이 가리키는 Method를 인자와 함께 만들고 잇는다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1434 | 인자가 없으면 헤더는 이름만이다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1435 | 같은 이름을 호출하는 호출 블록은 모두 새 Method를 호출한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1436 | 그 이름의 Method가 이미 있으면 그것을 호출하고 새로 만들지 않는다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1437 | Method를 호출하는 블록, 빈 이름, Event의 이름, 다른 블록은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 
 ^t-packages-core-src-commands-call-test-ts
 
@@ -229,7 +229,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0090 | 붙여넣기는 새 id의 사본을 선택한 블록 뒤에 둔다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0091 | 01-model 1.7: 붙여넣은 접기 영역은 새 id로 바뀐다 | - |
 | T-0092 | 빈 블록에 붙여넣으면 그 위치를 차지한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-0093 | 01-model 3.6: a pasted call to a Method not in this document calls by name | - |
+| T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 블록을 붙여 넣으면 이름 호출이 된다 | - |
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 삭제한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 
@@ -271,7 +271,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0114 | Event를 Method로, 다시 Event로 바꾸며 텍스트를 지킨다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0115 | 호출 블록이 호출하는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0116 | 종류를 바꿀 때 겹치거나 빈 이름으로 읽히는 텍스트는 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
-| T-0117 | removing a Method header turns its call blocks into calls by name | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-0117 | Method 헤더를 제거하면 그 호출 블록들이 이름 호출이 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0118 | 불변식 7: 헤더도 내용도 없이 남은 다이어그램은 사라진다 | - |
 | T-0119 | 불변식 7: 하나뿐인 다이어그램은 헤더도 내용도 없어도 남는다 | - |
 | T-0120 | 01-model 4: 같은 종류로 바꾸면 내용은 그대로다 | - |
@@ -280,7 +280,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0123 | 그 종류의 첫 것은 맨 앞(Event)이나 맨 뒤(Method)에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0124 | 불변식 7: 새 문서의 빈 다이어그램은 다른 다이어그램이 오면 없어진다 | - |
 | T-0125 | 01-model 1.7: id를 주어진 생성기에서 받는다 | - |
-| T-0126 | deletes a diagram; the call blocks calling it call by name | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-0126 | 다이어그램을 삭제한다. 그것을 호출하던 호출 블록은 이름 호출이 된다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0127 | 불변식 1: 하나뿐인 다이어그램은 삭제할 수 없다 | - |
 | T-0128 | 같은 종류의 앞 다이어그램과 위치를 바꾸고, 다른 종류는 건너뛴다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0129 | 같은 종류의 양 끝에서는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
@@ -355,10 +355,10 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 | T-1080 | inline: 그 위치의 접기 영역은 보통 접기 영역이 되고, 더 안쪽 것은 안쪽 호출 블록을 따라간다 | - |
 | T-1411 | inline: 자기 접기 영역을 가진 호출 자리는 그것만 들여오고 Method의 것은 들여오지 않는다(ADR-0047) | - |
 | T-1081 | inline: 호출 블록 하나에서 풀기도 같고, 이 문서의 것을 부르지 않는 호출 블록은 거절한다 | - |
-| T-1448 | inline method: every call, also inside other Methods and loops, becomes copies; the Method goes | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1449 | inline method: the folds go with each site as inlineCall's; a site with its own regions brings only those | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1450 | inline method: refused for a Method that calls itself, one nothing calls, and what is no Method | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1451 | inline method: one command, so undo brings everything back; calls to other Methods stay | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1448 | inline method: 다른 Method와 반복 안의 것까지 모든 호출이 사본이 되고, Method는 지워진다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1449 | inline method: 접힘은 inlineCall처럼 호출 자리마다 따라간다. 제 접기 영역을 가진 자리는 그것만 가져간다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1450 | inline method: 자기를 호출하는 Method, 아무도 호출하지 않는 Method, Method가 아닌 것은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1451 | inline method: 명령 하나라 실행 취소로 모두 돌아온다. 다른 Method의 호출은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 | T-1082 | named call: 적은 이름을 호출하는 호출 블록을 삽입한다. 이름은 한 줄, 앞뒤 공백 없이 | - |
 | T-1083 | named call: 이름은 인자와 함께 편집하고, 한 번 적은 이름은 비울 수 없다 | - |
 | T-1084 | named call: 어느 호출 블록이든 적은 이름을 호출하게 바꿀 수 있다 | - |
@@ -522,11 +522,11 @@ id. Vitest · 테스트 5개.
 | T-1332 | Method는 접힌 채 펴 둔 호출 자리는 자기 접힘을 갖는다는 표시를 기록한다 | - |
 | T-1333 | 닫힌 호출 자리의 접힘은 파일에 남고, 다시 저장해도 바이트가 같다 | - |
 | T-1334 | 없어진 호출 자리, Method에 없는 id, 갈 수 없는 경로는 기록하지 않는다 | - |
-| T-1335 | a call site calling by name writes nothing | - |
+| T-1335 | 이름을 호출하는 호출 블록은 아무것도 쓰지 않는다 | - |
 | T-1336 | 다른 버전의 파일에 정의되지 않은 항목이 있어도 열리고 그려진다 | - |
 | T-1337 | 호출 블록이 다른 Method를 호출하면 그 호출 블록을 지나는 경로의 접힘만 버린다 | - |
-| T-1338 | a call left with a name when its Method goes keeps the folding, and undoing the deletion finds it | - |
-| T-1339 | calling a Method from a call by name starts over | - |
+| T-1338 | Method가 없어져 이름만 남은 호출 블록은 접힘을 간직하고, 삭제를 실행 취소하면 다시 찾는다 | - |
+| T-1339 | 이름 호출에서 Method를 호출하게 바꾸면 처음부터 다시 시작한다 | - |
 | T-1340 | 호출 블록을 풀면 사본이 그 자리에 보이던 대로 접힌다 | - |
 | T-1341 | 접힘이 없는 닫힌 호출 블록을 풀면 사본이 Method처럼 접힌다 | - |
 
@@ -555,7 +555,7 @@ id. Vitest · 테스트 5개.
 | T-1087 | peek: 호출 블록에서 f는 펴 보이고, Method의 블록은 선택하고 복사할 수 있지만 편집할 수 없다 | - |
 | T-1088 | peek: 펴 보인 안쪽에서 접으면 그 호출 블록을 접고 호출 블록을 선택한다 | - |
 | T-1089 | peek: 펴 보인 안쪽에서 편 호출 블록은 경로를 갖고, 같은 Method를 세 번째로 펴면 알린다 | - |
-| T-1090 | peek: gd on a call block goes to its Method; a call by a written name cannot be opened | - |
+| T-1090 | peek: 호출 블록에서 gd는 그 Method로 간다. 이름을 적어 호출한 블록은 펼 수 없다 | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1416 | peek: 그 자리로 복사한 Method의 접기 영역은 그 호출 블록에서만 풀고 이름을 바꾼다 | - |
 | T-1423 | Shift+↓는 그 자리의 범위를 넓히고 줄의 끝에서 멈추며, zf가 그 범위로 접기 영역을 만든다 | - |
@@ -587,13 +587,13 @@ id. Vitest · 테스트 5개.
 | T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
 | T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |
 | T-1096 | paste: 복사한 호출 블록은 id가 아니라 이름으로 Method를 잇는다 | - |
-| T-1438 | gd on a call by name makes its Method, links the calls of that name and goes there | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1439 | the context menu has Method 만들기 on a call by name only, in place of going to the Method | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1440 | the command makes the Method from the palette too; a view-only document refuses gd | [[01-requirements#^r-edit\|R-EDIT-26]] |
-| T-1452 | the context menu has it on a call of a Method here and on a Method header, greyed out when nothing calls it | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1453 | from a call block every call becomes the blocks, folded as before, the Method goes, and one undo brings it all back | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1454 | from a Method header (the palette) the blocks at the first call are selected | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
-| T-1455 | refused for a Method that calls itself, one nothing calls, and in a view-only document | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1438 | 이름 호출에서 gd는 그 Method를 만들고, 같은 이름의 호출을 이은 뒤 그리로 간다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1439 | 컨텍스트 메뉴의 "Method 만들기"는 이름 호출에만, Method로 가기 대신 보인다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1440 | 커맨드 팔레트에서도 Method를 만든다. 보기만 하는 문서는 gd를 거절한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1452 | 컨텍스트 메뉴에서 이 문서의 Method를 호출하는 블록과 Method 헤더에 보이고, 호출하는 곳이 없으면 흐리다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1453 | 호출 블록에서 부르면 모든 호출 자리가 블록들이 되고(접힘은 그대로), Method는 지워지며, 실행 취소 한 번으로 모두 돌아온다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1454 | Method 헤더에서(커맨드 팔레트로) 부르면 첫 호출 자리의 블록들을 선택한다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
+| T-1455 | 자기를 호출하는 Method, 아무도 호출하지 않는 Method, 보기만 하는 문서에서는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-27]], [[ux-decisions\|UX CB16]] |
 
 ^t-packages-editor-src-commands-call-commands-test-ts
 
@@ -700,7 +700,7 @@ id. Vitest · 테스트 5개.
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
-| T-0218 | removing a Method header makes its calls call by name and selects the first block | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-0218 | Method 헤더를 제거하면 그 호출 블록들은 이름 호출이 되고, 첫 블록을 선택한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0221 | 헤더에서 `Alt`+방향키는 같은 종류 안에서 다이어그램을 이동한다 | [[ux-decisions\|UX Q6]] |
@@ -717,7 +717,7 @@ id. Vitest · 테스트 5개.
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |
 | T-0225 | 조작 규칙 "호출 블록": 아무것도 받지 않는 Method는 결과 칸만 있다 | - |
-| T-1441 | a call whose Method went away is edited like any call by name | - |
+| T-1441 | Method가 없어진 호출 블록은 다른 이름 호출과 똑같이 편집한다 | - |
 | T-0227 | 호출할 Method를 바꿀 때는 지금 Method에서 시작하고 텍스트를 지킨다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 
 ^t-packages-editor-src-session-diagrams-test-ts
@@ -1121,7 +1121,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 | - |
 | T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
-| T-1447 | 06-web 2: the view-only label tells why when another tab edits the file, and a tooltip says how to leave | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
+| T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
@@ -1321,7 +1321,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0689 | 06-web 1: 내려받을 때마다 먼저 셸에 알린다 | - |
 | T-0690 | 06-web 1: 취소한 "다른 이름으로 내려받기"는 아무것도 바꾸지 않는다 | - |
 | T-0691 | 실패한 내려받기는 실패한 저장이다 | - |
-| T-0692 | a new document has no file to read | - |
+| T-0692 | 새 문서에는 읽을 파일이 없다 | - |
 | T-0936 | 브라우저 문서는 그 문서 키로 브라우저에 저장되고 자동 저장된다 | [[ux-decisions\|UX BS2]] |
 | T-0937 | 다른 이름으로 저장은 어디에 저장할지 묻고, 이 브라우저를 고르면 받은 키로 문서를 옮긴다 | [[ux-decisions\|UX BS1]] |
 | T-0938 | 이 컴퓨터로 다른 이름으로 저장하면 내려받고, 창을 닫으면 취소한다 | [[ux-decisions\|UX BS1]] |
@@ -1391,8 +1391,8 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0725 | 제목 없는 문서의 이름은 셸이 시작할 때의 언어를 지킨다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0726 | dispose는 셸 명령을 없앤다 | - |
 | T-0727 | 06-web 2: 다른 탭에서 연 파일은 그 탭이 놓을 때까지 보기 전용이다 | - |
-| T-1444 | 06-web 2: a tab locked by another tab tells the editor why it is view only, and drops the reason when it regains the lock | [[defects#BUG-18\|BUG-18]] |
-| T-1446 | 06-web 6: a share link opened in view mode has no reason to tell | [[defects#BUG-18\|BUG-18]] |
+| T-1444 | 06-web 2: 다른 탭에 잠긴 탭은 보기만 하는 까닭을 편집기에 알리고, 잠금을 되찾으면 그 까닭을 지운다 | [[defects#BUG-18\|BUG-18]] |
+| T-1446 | 06-web 6: 보기 모드로 연 공유 링크에는 알릴 까닭이 없다 | [[defects#BUG-18\|BUG-18]] |
 | T-0895 | 파일 메뉴에 "공유 링크 복사"를 더하고, 그 문서를 여는 링크를 복사한다 | - |
 | T-0896 | 시작할 때 링크를 새 문서로 보기 모드에서 열고, 복원을 묻지 않는다 | - |
 | T-0897 | "편집하기"는 같은 문서를 편집할 수 있게 한다. 편집은 로컬 백업에 남고, 떠날 때 먼저 묻는다 | - |
@@ -1958,7 +1958,7 @@ base64 인코딩. Vitest · 테스트 2개.
 | --- | --- | :---: |
 | T-0414 | 모든 노드 종류를 다시 읽으면 같은 문서다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
 | T-0415 | 01-file-format 3.3: 빈 목록과 접기를 적은 파일도 읽는다 | - |
-| T-1442 | reads an old call to another document or to a lost Method as a call by name | - |
+| T-1442 | 다른 문서나 잃은 Method를 호출하던 예전 호출 블록은 이름 호출로 읽는다 | - |
 | T-0416 | 01-file-format 3.3: 지원하지 않는 textKind는 일반 텍스트로 보이고, 저장하려고 값을 지킨다 | - |
 | T-0866 | 01-file-format 3.3: 이 버전이 지원하는 모든 언어를 모델로 읽고 그대로 다시 기록한다 | - |
 | T-0417 | 01-file-format 7: 버전 0의 파일은 프로토타입 파일이고 편집할 수 없다 | - |
