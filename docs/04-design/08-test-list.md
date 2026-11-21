@@ -547,11 +547,11 @@ id. Vitest · 테스트 5개.
 | T-1090 | peek: 호출 블록에서 gd는 그 Method로 가고, 이름을 적는 호출 블록에는 갈 곳이 없다 | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1416 | peek: 그 자리로 복사한 Method의 접기 영역은 그 호출 블록에서만 풀고 이름을 바꾼다 | - |
-| T-1423 | Shift+Down widens the range there, stops at the end of the sequence, and zf makes a region of it | - |
-| T-1424 | v then j k widens the range there as with blocks outside | - |
+| T-1423 | Shift+↓는 그 자리의 범위를 넓히고 줄의 끝에서 멈추며, zf가 그 범위로 접기 영역을 만든다 | - |
+| T-1424 | v 다음 j · k가 펴 보인 곳 밖의 블록처럼 그 자리의 범위를 넓힌다 | - |
 | T-1417 | Method에서 나중에 접기 영역을 바꿔도 이미 펴 본 호출 자리에는 전달되지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1418 | 펴 보인 호출 블록 안에서 편 호출 블록은 그 경로의 접기 영역을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
-| T-1419 | undoing the first opening closes the call and takes the copied regions away; redo brings both back | [[01-requirements#^r-edit\|R-EDIT-16]] |
+| T-1419 | 처음 펴기를 실행 취소하면 호출 블록이 접히고 복사한 접기 영역도 사라지며, 다시 실행하면 둘 다 돌아온다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1420 | 보기 모드에서 펴면 복사는 실행 취소 단계가 아니고 문서를 바뀐 것으로 표시하지 않는다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1342 | 처음 펼 때 그 순간의 Method 접힘을 가져온다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1343 | 펴 보인 호출 블록에서 접어도 Method와 다른 호출 블록은 그대로다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
@@ -639,12 +639,12 @@ id. Vitest · 테스트 5개.
 | T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
 | T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
 | T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
-| T-1426 | fold undo: u unfolds what f folded and U folds it again; back where it was saved, the document is unchanged | - |
-| T-1427 | fold undo: an edit after folding is undone first, keeping the fold; the next undo unfolds | - |
-| T-1428 | fold undo: a fold region made and folded at once goes away unfolded in one undo step | - |
-| T-1429 | fold undo: the name bands are no undo step, and undoing a fold keeps them as they are | - |
-| T-1430 | fold undo: folding while view only is no undo step and leaves the document as saved | - |
-| T-1431 | fold undo: a fold after an undo empties the redo | - |
+| T-1426 | fold undo: f로 접은 것을 u가 펴고 U가 다시 접으며, 저장한 때로 돌아오면 문서는 바뀌지 않은 것이 된다 | - |
+| T-1427 | fold undo: 접은 뒤의 편집이 먼저 되돌려지고 접힘은 남으며, 다음 실행 취소가 편다 | - |
+| T-1428 | fold undo: 만들자마자 접힌 접기 영역은 실행 취소 한 번에 펴진 모습으로 사라진다 | - |
+| T-1429 | fold undo: 이름 띠 보기는 실행 취소 단계가 아니고, 접기를 되돌려도 그대로 남는다 | - |
+| T-1430 | fold undo: 보기 모드에서 접으면 실행 취소 단계가 생기지 않고 문서는 저장한 그대로다 | - |
+| T-1431 | fold undo: 실행 취소 뒤에 접으면 다시 실행할 것이 비워진다 | - |
 
 ^t-packages-editor-src-commands-fold-commands-test-ts
 
@@ -751,7 +751,7 @@ id. Vitest · 테스트 5개.
 | T-0594 | 선택이 있으면 캔버스에 포커스를 줘도 테두리를 비추지 않는다 | [[ux-decisions\|UX CF2]] |
 | T-0595 | 어느 버튼이든 기다리던 첫 키를 버리고, 주 버튼만 선택한다 | [[ux-decisions\|UX K4]] |
 | T-0596 | `Shift`+클릭은 클릭한 블록까지 선택을 넓힌다 | [[01-requirements#^r-edit\|R-EDIT-05]] |
-| T-1425 | a shift click inside an opened call block widens the range there; elsewhere it selects only the clicked block | - |
+| T-1425 | 펴 보인 호출 블록 안에서 Shift+클릭하면 그 자리의 범위를 넓히고, 다른 자리면 클릭한 블록만 선택한다 | - |
 | T-0597 | 선택한 범위 안을 클릭하면 놓을 때까지 범위를 지키고, 그다음 클릭한 블록을 선택한다 | - |
 | T-0598 | 블록을 클릭하면 열린 인라인 편집기를 먼저 확정한다 | - |
 | T-0599 | 호버 테두리는 포인터를 따르고, 포인터가 캔버스를 떠나면 없어진다 | - |
