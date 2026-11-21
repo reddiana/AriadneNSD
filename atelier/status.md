@@ -23,9 +23,9 @@ updated: 2026-11-21
 
 ## 지금 단계
 
-**웹 0.2.0(MVP + 웹의 `P1`)을 냈고, 웹 베타의 문턱을 모두 넘었습니다(2026-11-21)** → [[backlog#웹 베타의 문턱]]. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
+**웹 베타 0.3.0을 냈습니다(2026-11-21).** 베타 동안 웹의 `P1`을 다듬고 Obsidian 베타(BRAT)를 시작합니다. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
 
-- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release, 그 뒤 더한 것도 배포함). 1.0 전에는 파일 형식이 바뀔 수 있음
+- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0)(Pre-release, 웹 베타). 1.0 전에는 파일 형식이 바뀔 수 있음
 - 코드 `src/` → `src/README.md`, 규칙 [[07-coding-guide]], 문서 지도 [[docs/README#문서 지도|문서 색인]]
 - 테스트: 단위 · 통합 1,685개, E2E 83개(2026-11-19), 커버리지 → [[coverage]], 결함 → [[defects]]
 
@@ -40,17 +40,18 @@ updated: 2026-11-21
 | 펴 보인 곳의 접기 영역은 처음 펼 때 복사 | M69, [[0047-copy-method-folds-at-first-open\|ADR-0047]] · CB14 | 사이트에 있음 | `4a6fb9a` |
 | 펴 보인 곳 안의 여러 블록 선택 (결함) | 메인테이너 신고 | 사이트에 있음 | `26e1fe3` |
 | 접고 펴기를 실행 취소 대상으로 | [[0048-folding-is-undoable\|ADR-0048]] · UN1 | 사이트에 있음 | `62a94a2` |
-| 호출 블록: 다른 문서 호출 철회, 잃은 호출은 이름 호출로, `gd`로 Method 만들기 | 메인테이너 (2026-11-21, inbox), [[0049-call-without-method-is-named\|ADR-0049]] · CB15 | 로컬 앱에 있음 | `d7ef1cc` |
-| BUG-18 다른 탭 잠금의 까닭을 우상단에 | 메인테이너 신고, RO1 | 로컬 앱에 있음 | `ee01499` |
-| 도움말 › 정보 창의 링크를 전체 주소로 | 메인테이너 (2026-11-21, inbox), W4 | 로컬 앱에 있음 | `fff8c5b` |
-| Method 풀어 넣고 지우기(모든 호출 자리, 키 없음) | 메인테이너 (2026-11-21), [[01-requirements#^r-edit\|R-EDIT-27]] · CB16 | 로컬 앱에 있음 | `75479bd` |
-| 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 로컬 앱에 있음 (버튼 그림은 아직 MVP) | `c28b3f8` |
-| 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 문서에 반영함 ([[how-we-work]]) | |
+| 호출 블록: 다른 문서 호출 철회, 잃은 호출은 이름 호출로, `gd`로 Method 만들기 | 메인테이너 (2026-11-21, inbox), [[0049-call-without-method-is-named\|ADR-0049]] · CB15 | 사이트에 있음 | `d7ef1cc` |
+| BUG-18 다른 탭 잠금의 까닭을 우상단에 | 메인테이너 신고, RO1 | 사이트에 있음 | `ee01499` |
+| 도움말 › 정보 창의 링크를 전체 주소로 | 메인테이너 (2026-11-21, inbox), W4 | 사이트에 있음 | `fff8c5b` |
+| Method 풀어 넣고 지우기(모든 호출 자리, 키 없음) | 메인테이너 (2026-11-21), [[01-requirements#^r-edit\|R-EDIT-27]] · CB16 | 사이트에 있음 | `75479bd` |
+| 웹 베타 v0.3.0: README 문구, 판 번호, 바뀐 것 | 메인테이너 (2026-11-21), [[dr-0018-release-stages\|DR-0018]] | 사이트에 있음 ([v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) Pre-release, README 버튼 그림은 아직 MVP) | `c28b3f8` |
+| 일하는 방식: 작은 결정은 한 줄, 검사 · 번역은 push 전에, 이 표 | 메인테이너 (2026-11-21) | 사이트에 있음 ([[how-we-work]]) | |
 | 일하는 방식: 매듭 뒤 /clear, 늘 실리는 문서 줄이기 | 메인테이너 (2026-11-21) | 사이트에 있음 | `5bd7010` |
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] **이번 매듭: v0.3.0 웹 베타** — 메인테이너가 로컬 앱에서 오늘 바뀐 것을 봄 → 정리 → 전체 검사 → README · 사이트 · 앱의 "MVP"를 "베타"로 → v0.3.0 Pre-release. 알리는 일은 메인테이너
+- [ ] 메인테이너: v0.3.0 웹 베타를 널리 알림
+- [ ] README의 베타 버튼 그림: `C:\Windows\Fonts\Pretendard-Bold.ttf`를 읽을 권한이 없음. 메인테이너가 `python journal/assets/2026-11-21-readme-beta-button.py`를 직접 돌리거나, Pretendard를 내려받아 만들지 정함
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
