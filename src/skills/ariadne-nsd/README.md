@@ -9,6 +9,7 @@ Claude(claude.ai, Claude Code)가 NS 차트를 그리고 읽고 고치게 하는
 | `src/` | 엔진(`engine.ts`), 명령줄(`cli.ts`), Node 입출력(`node-io.ts`), 번들의 진입점(`main.ts`)과 테스트 |
 | `plugin/` | Claude Code 플러그인. `.claude-plugin/plugin.json`이 manifest |
 | `plugin/skills/ariadne-nsd/` | 설치되는 스킬 폴더: `SKILL.md`, `references/`, `scripts/nsd.mjs`(빌드 결과, 커밋함) |
+| `plugin/skills/ariadne-nsd/{OFL.txt,LICENSE,NOTICE}` | 내장한 글꼴(OFL)의 라이선스 전문과 저장소의 `LICENSE` · `NOTICE`의 사본. 원본과 같은 바이트여야 하고(T-1475), 원본을 고치면 함께 고칩니다 |
 | `scripts/build.mjs` | `nsd.mjs`를 빌드하고 `dist/ariadne-nsd.zip`을 만듦 |
 | `vite.config.ts` | `nsd.mjs`의 번들 설정(글꼴 · wasm을 포함) |
 

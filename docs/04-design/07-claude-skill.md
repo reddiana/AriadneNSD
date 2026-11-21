@@ -57,6 +57,8 @@ src/skills/ariadne-nsd/
 
 스킬 폴더(`plugin/skills/ariadne-nsd/`)는 설치되는 그대로의 모습입니다. claude.ai의 zip, Claude Code의 플러그인, `~/.claude/skills/`에 복사하는 설치가 모두 이 폴더 하나를 사용합니다.
 
+폴더에는 `OFL.txt`(내장한 D2Coding 글꼴의 라이선스. OFL은 글꼴과 함께 전문을 배포하라고 요구합니다), `LICENSE`, `NOTICE`가 저장소의 원본과 같은 바이트의 사본으로 들어 있어 zip과 플러그인 설치에 함께 실립니다. 마켓플레이스가 저장소에서 바로 설치하므로 커밋합니다. 원본을 고치면 사본도 고칩니다(T-1475가 비교합니다).
+
 ## 3. 스크립트 `nsd.mjs`
 
 `node scripts/nsd.mjs <명령> [입력] [옵션]`. Node 20 이상에서 다른 파일 · 설치 · 네트워크 없이 실행됩니다. 메시지는 사람과 언어 모델이 함께 읽으므로, 실패마다 파서의 말로 무엇이 틀렸는지와 다음에 할 일을 출력합니다.
@@ -124,6 +126,7 @@ src/skills/ariadne-nsd/
 | `SKILL.md`와 `references/`의 JSON 예제가 앱의 파서로 열리고 JSON Schema를 통과하며, 값 목록이 `core`의 목록과 같다(doctest) | [[99-test-list#^t-skills-ariadne-nsd-src-skill-doc-test-ts\|T-1469]] ~ [[99-test-list#^t-skills-ariadne-nsd-src-skill-doc-test-ts\|T-1471]] |
 | 커밋한 `nsd.mjs`가 지금 소스의 빌드이고(압축한 글꼴 · wasm은 디코딩해서 비교), 빈 폴더에서 `node`만으로 실행된다 | [[99-test-list#^t-skills-ariadne-nsd-src-bundle-test-ts\|T-1472]], [[99-test-list#^t-skills-ariadne-nsd-src-bundle-test-ts\|T-1473]] |
 | 마켓플레이스가 플러그인을, 플러그인이 `SKILL.md`를 가리키고, 플러그인의 버전이 패키지의 버전과 같다 | [[99-test-list#^t-skills-ariadne-nsd-src-plugin-test-ts\|T-1474]] |
+| 스킬 폴더의 `OFL.txt` · `LICENSE` · `NOTICE`가 원본과 같은 바이트이고 zip에 들어 있다 | [[99-test-list#^t-skills-ariadne-nsd-src-plugin-test-ts\|T-1475]] |
 
 `core`나 공유 링크 모듈이 바뀌어 `nsd.mjs`가 최신 상태가 아니면 [[99-test-list#^t-skills-ariadne-nsd-src-bundle-test-ts|T-1472]]가 실패합니다. 그때는 `pnpm --filter @ariadne-nsd/skill build`로 다시 빌드해 함께 커밋합니다.
 

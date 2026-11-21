@@ -1,0 +1,9 @@
+AriadneNSD
+Copyright 2026 서세일(Seil Suh)
+
+This product includes software developed as part of the AriadneNSD project
+(https://github.com/reddiana/AriadneNSD).
+
+The Claude skill (src/skills/ariadne-nsd) bundles a subset of the font D2Coding,
+Copyright (c) 2015, NAVER Corporation, licensed under the SIL Open Font License 1.1
+(OFL.txt in the skill folder).
