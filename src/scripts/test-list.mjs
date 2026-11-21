@@ -1,4 +1,4 @@
-// Writes the test list, docs/04-design/08-test-list.md, from the tests themselves: the names of the
+// Writes the test list, docs/04-design/99-test-list.md, from the tests themselves: the names of the
 // tests, the first comment of each test file and its describe titles. `--check` fails when the
 // file is out of date, so `pnpm check` keeps it current (maintainer, 2026-11-01: "테스트들을
 // 정리하고 항상 현행화해주세요").
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const src = join(dirname(fileURLToPath(import.meta.url)), '..');
 const repo = join(src, '..');
-const outFile = join(repo, 'docs/04-design/08-test-list.md');
+const outFile = join(repo, 'docs/04-design/99-test-list.md');
 
 /** Files that test several modules together (with a fake shell or a fake DOM): "통합". */
 const integrationFiles = new Set([
@@ -495,7 +495,7 @@ const testRow = (test) =>
 
 /**
  * The block id of a file's table (`^t-apps-web-e2e-boot-spec-ts`). Other documents link a test as
- * `[[08-test-list#^t-…|T-0278]]`: Obsidian goes to the table (it cannot point at a row), and the
+ * `[[99-test-list#^t-…|T-0278]]`: Obsidian goes to the table (it cannot point at a row), and the
  * site build goes to the row (site/prepare-content.mjs), as for requirement ids (DR-0016).
  */
 const blockOf = (rel) => `t-${rel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
@@ -528,7 +528,7 @@ const fileBlock = (file) => [
 const linkingDocs = ['atelier/defects.md'];
 for (const doc of linkingDocs) {
   const text = readFileSync(join(repo, doc), 'utf8');
-  for (const m of text.matchAll(/\[\[08-test-list#\^([a-z0-9-]+)\\?\|(T-\d{4})\]\]/g)) {
+  for (const m of text.matchAll(/\[\[99-test-list#\^([a-z0-9-]+)\\?\|(T-\d{4})\]\]/g)) {
     const file = seen.get(m[2]);
     if (file === undefined) problems.push(`${doc}: ${m[2]} is not a test`);
     else if (blockOf(file) !== m[1])
@@ -600,7 +600,7 @@ const output = lines.join('\n');
  * here so that it never falls behind the tests.
  */
 const qasFile = join(repo, 'docs/01-requirements/03-quality-attribute-scenarios.md');
-const testLink = (test) => `[[08-test-list#^${blockOf(test.file.rel)}|${test.id}]]`;
+const testLink = (test) => `[[99-test-list#^${blockOf(test.file.rel)}|${test.id}]]`;
 function testIdsOf(qa) {
   const parts = [];
   const whole = files.filter((f) => f.refs.includes(qa));
@@ -666,7 +666,7 @@ if (process.argv.includes('--check')) {
   }
   if (current !== output || qasBefore !== qasOutput) {
     console.error(
-      'docs/04-design/08-test-list.md or the test ids in 03-quality-attribute-scenarios.md are out of date. Run `pnpm test-list` in src/.',
+      'docs/04-design/99-test-list.md or the test ids in 03-quality-attribute-scenarios.md are out of date. Run `pnpm test-list` in src/.',
     );
     process.exit(1);
   }

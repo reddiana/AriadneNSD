@@ -135,7 +135,7 @@ function addRowAnchor(line) {
   line = line
     .replace(/^\| ([A-Z]+(?:-[A-Z]+)*-\d+)( +)\|/, (_, id, sp) => `| <span id="${id.toLowerCase()}"></span>${id}${sp}|`)
     .replace(/\[\[([^\]#|\\]*)#\^r-[a-z0-9-]+(\\?\|)(R-[A-Z]+-\d+)\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
-    // 테스트 목록의 표로 가는 테스트 ID 링크([[08-test-list#^t-…|T-0278]])도 그 줄로 돌린다(2026-11-03 → DR-0022)
+    // 테스트 목록의 표로 가는 테스트 ID 링크([[99-test-list#^t-…|T-0278]])도 그 줄로 돌린다(2026-11-03 → DR-0022)
     .replace(/\[\[([^\]#|\\]*)#\^t-[a-z0-9-]+(\\?\|)(T-\d{4})\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)
     // 요구사항 5.2의 인수 기준 표로 가는 링크([[01-requirements#^at|AT-04]])도 그 줄로 돌린다
     .replace(/\[\[([^\]#|\\]*)#\^at(\\?\|)(AT-\d+)\]\]/g, (_, file, sep, id) => `[[${file}#${id.toLowerCase()}${sep}${id}]]`)

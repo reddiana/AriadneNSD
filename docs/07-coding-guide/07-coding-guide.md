@@ -182,7 +182,7 @@ export function wrap(content: Content, args: WrapArgs): Result {
 ## 10. 테스트
 
 - 테스트 이름은 영어 문장으로, 맨 앞에 그 테스트의 ID(`T-` + 네 자리)를, 그 뒤에 확인하는 요구사항 · 시나리오 · 결함의 ID를 붙입니다: `it('T-0123 · R-EDIT-06: wraps a contiguous range in a new If block', …)`, 확인하는 것이 없으면 `it('T-0124: …')` → [[dr-0022-test-ids|DR-0022]]
-- 테스트를 더하면 `src/`에서 `node scripts/test-list.mjs --assign-ids`로 ID를 받고, `--add-missing`으로 [[08-test-list|테스트 목록]]에 쓸 빈 번역을 `scripts/test-list-ko.json`에 더해 채운 뒤 `pnpm test-list`. ID나 번역이 빠지면 `pnpm check`가 실패합니다. ID는 바꾸거나 다시 쓰지 않습니다
+- 테스트를 더하면 `src/`에서 `node scripts/test-list.mjs --assign-ids`로 ID를 받고, `--add-missing`으로 [[99-test-list|테스트 목록]]에 쓸 빈 번역을 `scripts/test-list-ko.json`에 더해 채운 뒤 `pnpm test-list`. ID나 번역이 빠지면 `pnpm check`가 실패합니다. ID는 바꾸거나 다시 쓰지 않습니다
 - 버그를 고치면 그 버그를 다시 재현하는 테스트를 먼저 더합니다.
 - 층마다 무엇을 테스트하는지, 골든 파일의 규칙, 인수 테스트는 [[02-test-architecture]]에 있습니다.
 
@@ -223,13 +223,13 @@ feat(core): 감싸기 명령(R-EDIT-06)
 
 | 방법 | 무엇을 | 언제 |
 | --- | --- | --- |
-| 원본에서 생성 | 같은 사실은 원본 하나에만 기록하고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[08-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
+| 원본에서 생성 | 같은 사실은 원본 하나에만 기록하고, 다른 곳은 빌드나 스크립트가 원본에서 만든다. 예: 테스트 목록([[99-test-list]]), 모델 JSON 스키마의 문서([[02-model-schema]]는 `model.schema.json`에서), `/llms.txt`의 값 목록(블록 종류, 텍스트 언어, 테마 …)은 `core`의 상수에서 | 빌드, `pnpm check` |
 | 예제를 테스트로 | 문서에 든 예제 JSON과 공유 링크를 테스트가 꺼내 실제 파서로 연다. 대상: `/llms.txt`, 첫 화면 HTML 안의 AI용 안내, 파일 형식 명세([[01-file-format]]). 스키마는 골든 파일로 검사한다 | `pnpm test` |
 | 함께 바뀌는 곳의 검사 | "이것을 바꾸면 저것도 검증한다"는 경로의 쌍을 표로 두고, 한쪽만 바뀐 커밋을 검사가 알린다 | 커밋 · CI |
 | 사용자처럼 테스트 | 저장소를 모르는 새 LLM에게 `/llms.txt`만 제공해 다이어그램을 생성하게 하고, 그 링크를 앱의 파서로 검사한다(시안 M56에서 한 실험, 검사 스크립트 `journal/assets/2026-11-09-llm-guide-check.mjs`) → [[02-test-architecture#5.2 새 LLM으로 안내서 테스트하기]] | 출시 전 |
 
 - 생성된 파일은 손으로 고치지 않습니다. 원본을 고칩니다. 생성된 문서(테스트 목록, [[02-model-schema|모델 JSON 스키마]], 아래의 쌍 표)가 원본과 다르면 `pnpm check`가 실패합니다.
-- 값을 견줄 수 있는 것은 쌍의 검사가 아니라 테스트로 검증합니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[01-architecture#9. 기술 스택]]이 그렇습니다 → [[08-test-list#8. 문서와 코드의 정합성]]
+- 값을 견줄 수 있는 것은 쌍의 검사가 아니라 테스트로 검증합니다. 명세 머리말의 형식 버전과 `core`의 상수, 키 표의 키와 [[03-keymap]], 테마 · 화면 색 · 편집 레이어의 색과 [[04-visual-design#3. 디자인 토큰]], 테스트 이름의 요구사항 · UX 결정 ID와 그 정의, 패키지 넷의 버전 번호와 "이 버전에서 바뀐 것", 의존성과 [[01-architecture#9. 기술 스택]]이 그렇습니다 → [[99-test-list#9. 문서와 코드의 정합성]]
 
 ### 13.1 함께 바뀌는 곳의 쌍
 

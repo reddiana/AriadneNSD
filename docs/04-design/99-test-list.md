@@ -21,11 +21,11 @@ status: 생성됨
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 37 | 43 | - | 103 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
-| [[#6. Claude skill\|Claude skill]] | - | - | 17 | - | 17 |
+| [[#6. Claude skill\|Claude skill]] | - | - | 18 | - | 18 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 280 | 974 | 5 | 1346 |
+| 합계 | 87 | 280 | 975 | 5 | 1347 |
 
 ## 읽는 법
 
@@ -2053,11 +2053,11 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 
 ## 6. Claude skill
 
-Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill (나중에)]]. 파일 4개, 테스트 17개.
+Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill (나중에)]]. 파일 5개, 테스트 18개.
 
 ### [단위] `skills/ariadne-nsd/src/bundle.test.ts`
 
-The built script, skill/scripts/nsd.mjs, is what the skill runs. Vitest · 테스트 2개.
+The built script, plugin/skills/ariadne-nsd/scripts/nsd.mjs, is what the skill runs. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2095,6 +2095,16 @@ The skill's script makes what the app makes (R-SKILL-01). Vitest · 테스트 7�
 | T-1463 | names a document after its first Method, and counts the next free ids | [[01-requirements#^r-skill\|R-SKILL-01]] |
 
 ^t-skills-ariadne-nsd-src-engine-test-ts
+
+### [단위] `skills/ariadne-nsd/src/plugin.test.ts`
+
+The skill ships two ways (docs/04-design/09-claude-skill.md). Vitest · 테스트 1개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1474 | the marketplace lists the plugin, the plugin holds the skill’s SKILL.md, and its version is the package’s | [[01-requirements#^r-skill\|R-SKILL-01]] |
+
+^t-skills-ariadne-nsd-src-plugin-test-ts
 
 ### [단위] `skills/ariadne-nsd/src/skill-doc.test.ts`
 

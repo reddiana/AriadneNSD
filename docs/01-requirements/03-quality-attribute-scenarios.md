@@ -16,7 +16,7 @@ updated: 2026-11-19
 
 > [!info] 읽는 법
 > - 시나리오는 SEI(Bass · Clements · Kazman, *Software Architecture in Practice*)의 여섯 부분으로 씁니다: **자극원**(누가 · 무엇이), **자극**(무슨 일), **환경**(어떤 상황에서), **대상**(시스템의 어느 부분), **응답**(시스템이 하는 일), **응답 측정**(합격 기준).
-> - **아키텍처**는 이 시나리오를 만족시키는 구조와 그 결정(ADR)입니다. **테스트**는 합격 기준을 확인하는 방법과 실행할 때입니다. 테스트는 같은 ID로 자동 테스트를 만듭니다(테스트 이름에 `T-0012 · QA-03: …`처럼 그 시나리오의 ID를 넣습니다). **테스트 ID**는 그 시나리오를 확인하는 테스트로, 테스트 목록 스크립트가 채웁니다(손으로 고치지 않습니다 → [[08-test-list]]). 층마다 어떻게 테스트하는지는 [[02-test-architecture]]에 있습니다.
+> - **아키텍처**는 이 시나리오를 만족시키는 구조와 그 결정(ADR)입니다. **테스트**는 합격 기준을 확인하는 방법과 실행할 때입니다. 테스트는 같은 ID로 자동 테스트를 만듭니다(테스트 이름에 `T-0012 · QA-03: …`처럼 그 시나리오의 ID를 넣습니다). **테스트 ID**는 그 시나리오를 확인하는 테스트로, 테스트 목록 스크립트가 채웁니다(손으로 고치지 않습니다 → [[99-test-list]]). 층마다 어떻게 테스트하는지는 [[02-test-architecture]]에 있습니다.
 > - 합격 기준의 수치 가운데 요구사항에 없던 것은 **제안값**이라고 적었습니다. 확인받기 전입니다.
 > - **목표의 근거**는 그 수치를 왜 그렇게 정했는지입니다. 근거를 찾지 못한 수치는 "근거 없음(제안값)"이라고 밝혀 둡니다.
 > - 시나리오가 기대는 유즈케이스는 [[02-use-cases]]의 ID로 적습니다.
@@ -67,7 +67,7 @@ updated: 2026-11-19
 
 - **아키텍처:** 명령은 문서를 받아 새 문서를 반환하는 순수 함수이고, 새 문서를 만들 때마다 불변식을 검사한다. 위반하는 문서는 만들어지지 않는다 → [[01-architecture#6. 공통 관심사]], [[0029-immutable-document-undo|ADR-0029]], [[01-model#3. 불변식]]
 - **테스트:** 속성 기반 테스트(property-based test, 예: fast-check). 무작위 문서와 무작위 명령열을 만들어 매 단계 불변식을 검사한다. 실패하면 가장 짧은 반례로 줄여 회귀 테스트에 추가한다. **실행할 때:** 모든 커밋(CI)
-- **테스트 ID:** `packages/core/src/commands/properties.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-commands-properties-test-ts|T-0171]] ~ T-0172). `packages/editor/src/session/random-keys.test.ts`의 테스트 1개([[08-test-list#^t-packages-editor-src-session-random-keys-test-ts|T-0228]])
+- **테스트 ID:** `packages/core/src/commands/properties.test.ts`의 테스트 2개([[99-test-list#^t-packages-core-src-commands-properties-test-ts|T-0171]] ~ T-0172). `packages/editor/src/session/random-keys.test.ts`의 테스트 1개([[99-test-list#^t-packages-editor-src-session-random-keys-test-ts|T-0228]])
 
 ### QA-02 깨진 파일 열기
 
@@ -85,7 +85,7 @@ updated: 2026-11-19
 
 - **아키텍처:** 역직렬화할 때도 편집 명령과 같은 불변식 검사를 한다. 열기는 읽기만 한다 → [[01-file-format#5. 버전 관리]], [[01-architecture#5.2 저장과 열기]]
 - **테스트:** 퍼징(올바른 파일을 무작위로 망가뜨린 입력 + 손으로 만든 깨진 파일 묶음). 열기 뒤 원본 파일의 해시가 같은지 검증한다. **실행할 때:** 모든 커밋(짧게), 매일 밤(길게)
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[01-requirements#^at|AT-06]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
+- **테스트 ID:** [[99-test-list#^t-packages-core-src-format-parse-model-test-ts|T-0419]], [[99-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0424]], [[99-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0436]]. 인수 테스트 [[01-requirements#^at|AT-06]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0008]])
 
 ### QA-03 결정적 저장 출력
 
@@ -103,7 +103,7 @@ updated: 2026-11-19
 
 - **아키텍처:** 레이아웃과 렌더러는 순수 함수다. 텍스트 폭은 브라우저에 조회하지 않고 번들 글꼴의 advance 폭 테이블로 계산하고 정수 px로 올린다. JSON의 키 순서와 줄바꿈을 고정하고, 시각 · 기기 정보 · 난수를 쓰지 않는다. 서브세팅은 결정적이다 → [[01-architecture#6. 공통 관심사]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** 골든 파일 테스트. 대표 문서 묶음(한글 · 영문 · 기호, 블록 종류 모두, 접힘 · 펴 보기 포함)을 저장해 저장소의 기대 파일과 바이트로 비교한다. 같은 테스트를 Node와 각 브라우저(Playwright)에서 실행한다. **실행할 때:** 모든 커밋(Node, Chromium), 출시 전(모든 브라우저와 Obsidian)
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. `packages/core/src/model/site-folded.test.ts`의 테스트 22개([[08-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-10]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
+- **테스트 ID:** [[99-test-list#^t-packages-editor-src-create-editor-test-ts|T-0816]]. `packages/core/src/model/site-folded.test.ts`의 테스트 22개([[99-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-10]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0012]])
 - **위험:** Firefox와 Safari는 스파이크에서 확인하지 못했다 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-04 저장 왕복 무손실
@@ -122,7 +122,7 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** QA-03과 같다. 뷰 상태도 파일에 들어 있어 열 때 그대로 복원된다 → [[0018-save-as-shown|ADR-0018]]
 - **테스트:** 골든 파일 왕복 테스트. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[08-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[08-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[08-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. `packages/core/src/model/site-folded.test.ts`의 테스트 22개([[08-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-02]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
+- **테스트 ID:** [[99-test-list#^t-packages-editor-src-examples-examples-test-ts|T-0329]], [[99-test-list#^t-packages-core-node-golden-test-ts|T-0354]], [[99-test-list#^t-packages-core-src-format-round-trip-test-ts|T-0423]], [[99-test-list#^t-packages-core-src-format-svg-file-test-ts|T-0429]]. `packages/core/src/model/site-folded.test.ts`의 테스트 22개([[99-test-list#^t-packages-core-src-model-site-folded-test-ts|T-1324]] ~ T-1341). 인수 테스트 [[01-requirements#^at|AT-02]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0002]], [[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0022]])
 - **알아 둘 것:** 화면 언어가 달라도 같다. 그림에 적는 텍스트("참", "거짓", "블록 n개")는 문서 설정의 언어를 따르기 때문이다([[0041-drawing-locale-in-document|ADR-0041]]). 그림의 언어가 적히지 않은 옛 파일만, 처음 저장할 때 연 사람의 화면 언어가 더해진다
 
 ### QA-05 하위 호환성
@@ -159,7 +159,7 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** 쓰인 문자만 남긴 서브셋 글꼴과 문서 테마의 색을 파일 안에 포함한다. 편집 중에만 보이는 표시는 오버레이 레이어라 저장되지 않는다 → [[0026-bundled-font-metrics|ADR-0026]], [[0018-save-as-shown|ADR-0018]], [[01-architecture#5.2 저장과 열기]]
 - **테스트:** 시각 회귀 테스트. 골든 문서를 각 브라우저에서 이미지로 열어(Playwright 스크린샷) 기준 그림과 픽셀로 비교한다. SVG 1.1 검증기로 문법을 검증한다. GitHub · Drive · Obsidian은 수동 점검표. **실행할 때:** 모든 커밋(Chromium), 출시 전(나머지)
-- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-08]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0010]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-08]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0010]])
 
 ### QA-07 편집 반응 시간
 
@@ -177,19 +177,19 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리를 구분해 낼 수 있다. 증분 레이아웃(메모이제이션)을 할지는 측정해서 정한다 → [[0029-immutable-document-undo|ADR-0029]], [[02-layout#4. 성능]]
 - **테스트:** 성능 벤치마크. 블록 500개 문서에서 대표 명령 20가지를 각 100번 실행해 p95를 측정한다. Node에서 `core`만(레이아웃 + 렌더링, 목표의 절반인 50ms 이하를 제안)과 브라우저에서 화면 갱신까지(Playwright, 성능 타임라인)로 나눈다. **실행할 때:** 모든 커밋(Node, 결과를 기록해 느려지면 알림), 출시 전(기준 기기)
-- **테스트 ID:** [[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-1176]], [[08-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1152]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1153]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1159]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1160]], [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 26개([[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). `apps/web/src/perf/perf-segments.test.ts`의 테스트 3개([[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts|T-1177]] ~ T-1179). 인수 테스트 [[01-requirements#^at|AT-05]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1147]], [[08-test-list#^t-apps-web-e2e-perf-spec-ts|T-1148]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1155]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1156]])
+- **테스트 ID:** [[99-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]], [[99-test-list#^t-packages-core-src-render-render-doc-test-ts|T-1176]], [[99-test-list#^t-packages-core-src-render-render-doc-test-ts|T-0487]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1152]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1153]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1159]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1160]], [[99-test-list#^t-packages-core-src-render-render-bench-ts|T-0517]]. `packages/core/src/layout/fold-layout.test.ts`의 테스트 26개([[99-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1113]] ~ T-1126). `apps/web/src/perf/perf-segments.test.ts`의 테스트 3개([[99-test-list#^t-apps-web-src-perf-perf-segments-test-ts|T-1177]] ~ T-1179). 인수 테스트 [[01-requirements#^at|AT-05]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0007]], [[99-test-list#^t-apps-web-e2e-perf-spec-ts|T-1147]], [[99-test-list#^t-apps-web-e2e-perf-spec-ts|T-1148]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1155]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1156]])
 - **측정 구간:** 입력부터 화면까지의 경로를 [[01-architecture#3. 실행 중의 모습|C&C 뷰]]의 커넥터로 나눈다. 점검 모드([[06-web#9. 점검 모드]])가 명령마다 구간별 p95를 보인다. 예산은 기준 기기에서의 p95이고, 합격은 지금처럼 전체 p95로만 가른다(구간 예산은 어디를 고칠지 찾는 기준).
 
 | 구간 | 커넥터 | 시작 → 끝 (코드의 자리) | 예산 | 검증 |
 | --- | --- | --- | --- | --- |
-| 입력 | C-01 ~ C-04 | 키 이벤트 → 명령 실행 직전. 키 처리(`EditorSession.handleKey` · `readKey`)와 아래 구간에 들지 않은 동기 작업. 키 처리 시간에서 측정한 구간을 뺀 나머지 | 2ms | [[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
-| 편집 명령 | C-04 · C-05 | 명령의 실행(`registry.run`의 `spec.run`, 글자는 `EditorSession.commitEditing`)에서 아래 구간을 뺀 것. 새 내용 · 색인 · 선택을 만듦 | 8ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
-| 불변식 검사 | C-05 | `EditorSession.apply`의 `checkInvariants` | 4ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
-| 레이아웃 | C-07 · C-08 | `renderDoc`의 `layout` (글자 폭 포함) | 12ms | [[08-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[08-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
-| 그림 | C-09 | `renderDoc`의 `buildScene` + `toSvg` | 14ms | [[08-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[08-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
-| 알림 | C-06 · C-11 | `EditorSession.setState`가 호출하는 리스너(셸에 알림, 인라인 에디터, 다음 프레임 예약) | 10ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
-| DOM 반영 | C-10 | 첫 프레임의 `CanvasView.draw`: 문서 레이어의 `innerHTML`, 오버레이, 선택 상자 | 20ms | [[08-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
-| 브라우저 | (우리 코드 밖) | 그 뒤 두 번째 프레임까지: 스타일 · 레이아웃 · 페인트와 화면 주사율의 기다림. 그 시간에서 측정한 구간을 뺀 나머지 | 30ms | [[08-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
+| 입력 | C-01 ~ C-04 | 키 이벤트 → 명령 실행 직전. 키 처리(`EditorSession.handleKey` · `readKey`)와 아래 구간에 들지 않은 동기 작업. 키 처리 시간에서 측정한 구간을 뺀 나머지 | 2ms | [[99-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
+| 편집 명령 | C-04 · C-05 | 명령의 실행(`registry.run`의 `spec.run`, 글자는 `EditorSession.commitEditing`)에서 아래 구간을 뺀 것. 새 내용 · 색인 · 선택을 만듦 | 8ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 불변식 검사 | C-05 | `EditorSession.apply`의 `checkInvariants` | 4ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 레이아웃 | C-07 · C-08 | `renderDoc`의 `layout` (글자 폭 포함) | 12ms | [[99-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[99-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
+| 그림 | C-09 | `renderDoc`의 `buildScene` + `toSvg` | 14ms | [[99-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[99-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
+| 알림 | C-06 · C-11 | `EditorSession.setState`가 호출하는 리스너(셸에 알림, 인라인 에디터, 다음 프레임 예약) | 10ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| DOM 반영 | C-10 | 첫 프레임의 `CanvasView.draw`: 문서 레이어의 `innerHTML`, 오버레이, 선택 상자 | 20ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| 브라우저 | (우리 코드 밖) | 그 뒤 두 번째 프레임까지: 스타일 · 레이아웃 · 페인트와 화면 주사율의 기다림. 그 시간에서 측정한 구간을 뺀 나머지 | 30ms | [[99-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
 
 - 예산의 근거: `core`의 구간(편집 명령 ~ 그림)은 측정값에 여유를 두고 38ms, 화면 쪽(알림 · DOM 반영 · 브라우저)에 60ms를 둔다. 브라우저 구간은 60Hz 화면의 한 프레임(17ms)을 기다리는 시간을 품어야 해서 가장 크다. 레이아웃 12 · 그림 14ms는 Node의 벤치마크 한도(각 p99 20ms, T-0517)보다 좁다. 브라우저에서 기준 기기의 값이기 때문이다.
 - **측정값 (2026-11-17, 개발 기계의 Chromium, 명령마다 30번):** 감속 없이는 모든 명령이 p95 34 ~ 35ms로 합격이고, `core`의 구간을 다 더해도 4ms 아래다. CPU 4배 감속(기준 기기 대신)에서는 8가지 모두 불합격(p95 173 ~ 267ms)이다. `core`의 구간은 각 15ms 아래로 예산 안이고, 시간은 DOM 반영(27 ~ 136ms)과 브라우저(53 ~ 199ms)가 차지한다. 문서 레이어를 전체 교체하고 브라우저가 블록 500개의 SVG를 다시 레이아웃 · 페인트하는 시간이다. 그래서 증분 레이아웃보다 화면 쪽(바뀐 곳만 DOM에 반영하기)이 고칠 곳이다 → [[backlog#MVP 개발]]
@@ -211,7 +211,7 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** 열 때는 모델 JSON만 읽고 그림 부분과 서브셋 글꼴은 읽지 않는다 → [[01-architecture#5.2 저장과 열기]]
 - **테스트:** QA-07과 같은 벤치마크에 열기를 더했다. Node에서 `core`만: 저장한 파일(블록 500개, 실제 서브셋 글꼴만 한 글꼴 자리를 넣음)을 열어 검사하고 레이아웃 · 그리기까지 p99 100ms 이하. 화면에 붙여 편집할 수 있게 되기까지는 브라우저에서 측정한다(아직 없음). **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-packages-core-src-render-render-bench-ts|T-0540]]
+- **테스트 ID:** [[99-test-list#^t-packages-core-src-render-render-bench-ts|T-0540]]
 
 ### QA-09 파일과 번들의 크기 (제안)
 
@@ -229,7 +229,7 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 
 - **아키텍처:** 편집기에는 기본 블록 글꼴 D2Coding 보통 굵기 하나를 번들한다. 한자를 뺀 문자(라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나)를 포함하고, woff2로 약 328 KB다 → [[0034-default-block-font|ADR-0034]]. 웹은 이것을 문자 범위의 슬라이스 38개로 나눠 화면에 나온 문자의 슬라이스만 받는다 → [[0040-screen-font-slices|ADR-0040]]. 저장 파일에는 쓰인 문자만 추린 서브셋 글꼴을 포함한다. 서브셋이 300 KB 안에 드는지는 정하지 않음 → [[01-architecture#8. 위험과 검증이 필요한 사항]], [[02-layout]]
 - **테스트:** 번들 사이즈 체크(bundle size budget, 빌드 산출물과 골든 문서의 저장 결과 크기를 측정하고, 넘으면 실패). **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-packages-core-node-golden-test-ts|T-0355]]. 테스트가 아닌 검사: 번들 사이즈 체크 `apps/web/scripts/check-size.mjs` (CI의 웹 빌드 뒤)
+- **테스트 ID:** [[99-test-list#^t-packages-core-node-golden-test-ts|T-0355]]. 테스트가 아닌 검사: 번들 사이즈 체크 `apps/web/scripts/check-size.mjs` (CI의 웹 빌드 뒤)
 
 ### QA-10 셸 확장성
 
@@ -247,7 +247,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 필요 인터페이스 `DocumentStore` · `SettingsStore`, 제공 인터페이스 `CommandRegistry` · `SettingsSchema`. 의존은 셸 → `editor` → `core` 한 방향 → [[01-architecture#4.2 editor와 셸의 인터페이스]], [[0031-shell-interfaces|ADR-0031]], [[0033-command-list-for-shells|ADR-0033]]
 - **테스트:** 정적 분석(의존 규칙 검사, 예: dependency-cruiser). `core`가 `editor`나 `apps/*`를 import하면, `editor`가 `apps/*`를 import하면 실패. 테스트 더블 셸(메모리 안의 `DocumentStore`)로 `editor`의 테스트를 실행한다. 새 셸을 붙인 PR에서 `packages/`의 변경을 검증한다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 52개([[08-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
+- **테스트 ID:** `packages/editor/src/create-editor.test.ts`의 테스트 52개([[99-test-list#^t-packages-editor-src-create-editor-test-ts|T-1175]] ~ T-0820). 테스트가 아닌 검사: 의존 방향 검사 dependency-cruiser (`pnpm deps`)
 - **알아 둘 것:** IDE 플러그인은 원본이 소스 코드라 예외일 수 있다 → [[01-architecture#7. 배포 구성]]
 
 ### QA-11 렌더링 백엔드 교체 용이성
@@ -302,7 +302,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 화면의 텍스트는 `editor`, 그림에 적는 텍스트는 `core`가 한 곳씩에서 관리한다 → [[01-architecture#6. 공통 관심사]]
 - **테스트:** 정적 분석: UI 코드(`.tsx`)의 JSX에 쓴 글자와 `title` · `aria-label` · `placeholder` · `alt` 속성의 글자를 ESLint가 차단한다(번역하지 않는 제품 이름과 확장자는 이름 붙은 상수로). 카탈로그 넷(그림 · 엔진 · UI · 웹 셸)이 언어마다 모든 키를 가지는지는 타입 검사가 검증한다. 단위 테스트는 빈 문자열이 없는지, `{name}` 자리표시가 언어마다 같은지, 엔진과 UI 카탈로그에 같은 키가 없는지 검증한다. 언어 목록은 `core`의 `locales` 한 줄이다. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[08-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[08-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[08-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
+- **테스트 ID:** [[99-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 2개([[99-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-0532). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[99-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
 
 ### QA-14 DOM 독립 테스트 용이성
 
@@ -338,7 +338,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 모든 명령은 `CommandRegistry`에 있고 키 표 하나로 키에 잇는다. 메뉴와 툴바도 같은 레지스트리에서 나온다 → [[0033-command-list-for-shells|ADR-0033]], [[03-keymap]]
 - **테스트:** E2E 테스트(Playwright, 키 입력만). 레지스트리의 명령마다 키나 키로 열 수 있는 메뉴가 있는지 보는 테스트. **실행할 때:** 모든 커밋(웹), 출시 전(Obsidian, 데스크톱)
-- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-04]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0004]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0005]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0006]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-04]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0004]], [[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0005]], [[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0006]])
 
 ### QA-16 고대비
 
@@ -356,7 +356,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 색은 토큰 맵으로 렌더러에 전달하고, 테마와 화면 색은 다른 맵이다 → [[01-architecture#6. 공통 관심사]], [[04-visual-design#8. 테마]]
 - **테스트:** 토큰 표에서 쌍(텍스트 · 배경, 선 · 배경)의 대비를 계산하는 단위 테스트. 지금은 밝은 기본 테마만 있어, 그 테마의 [[04-visual-design#3.3 밝은 기본 테마|3.3절]] 기준(텍스트 4.5:1, 선 3:1)을 종이와 블록 배경 여섯 위에서 검증한다. 고대비 화면 색과 흑백 인쇄 팔레트가 생기면 같은 테스트에 이 시나리오의 기준(7:1)으로 더한다. **실행할 때:** 모든 커밋
-- **테스트 ID:** `packages/core/src/render/theme.test.ts`의 테스트 11개([[08-test-list#^t-packages-core-src-render-theme-test-ts|T-0536]] ~ T-0986)
+- **테스트 ID:** `packages/core/src/render/theme.test.ts`의 테스트 11개([[99-test-list#^t-packages-core-src-render-theme-test-ts|T-0536]] ~ T-0986)
 
 ### QA-17 저장 실패
 
@@ -374,7 +374,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 문서는 불변이고 `editor`가 갖고 있으므로, 쓰기 실패는 문서를 바꾸지 않는다. `DocumentStore`의 쓰기는 실패를 던지지 않고 값(`WriteResult`: `cancelled` · `denied` · `failed`)으로 반환한다 → [[03-editor#6. 셸과의 연결]]
 - **테스트:** 실패하는 테스트 더블 `DocumentStore`로 저장하고, 문서 · "저장 안 됨" 표시 · 알림을 보는 테스트. **실행할 때:** 모든 커밋
-- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-07]]([[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0009]], [[08-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0023]])
+- **테스트 ID:** 인수 테스트 [[01-requirements#^at|AT-07]]([[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0009]], [[99-test-list#^t-apps-web-e2e-acceptance-spec-ts|T-0023]])
 
 ### QA-18 모바일 시작 시간
 
@@ -392,7 +392,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 편집 화면은 블록 글꼴을 기다리지 않고 그린다(텍스트 폭은 글꼴 파일이 아니라 번들한 advance 폭 테이블로 계산하므로 레이아웃은 같다). 저장용 TTF와 wasm은 첫 편집 뒤에 받는다 → [[06-web#5. 배포]], [[0026-bundled-font-metrics|ADR-0026]]
 - **테스트:** E2E(Playwright, Android 폰 흉내 + CPU · 네트워크 감속). 편집 화면과 블록 글꼴이 보인 때를 재어 합격 기준과 견준다. 원인을 나눠 보는 재기 스크립트 `src/apps/web/scripts/measure-startup.mjs`. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
-- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
+- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[99-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
 ### QA-19 초기화 장애 시 빈 화면 방지
 
@@ -410,7 +410,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 저장소 열기의 시간 제한(3초)과 메모리 대체, 시작 화면과 시작 단계(`data-boot-step`) → [[06-web#2. 로컬 백업과 자동 저장]], [[06-web#7. 웹에서의 화면]]
 - **테스트:** E2E(응답하지 않는 `indexedDB.open`, 시작 중 오류를 흉내). **실행할 때:** 모든 커밋
-- **테스트 ID:** `apps/web/e2e/boot.spec.ts`의 테스트 2개([[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] ~ T-0279)
+- **테스트 ID:** `apps/web/e2e/boot.spec.ts`의 테스트 2개([[99-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] ~ T-0279)
 
 ### QA-20 모바일 사용성
 
@@ -428,7 +428,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 좁은 화면 배치 → [[05-screen-layout|화면 배치]], [[ux-decisions#MB1. 좁은 화면|MB1]]
 - **테스트:** E2E(Playwright의 Android 폰 흉내: 화면 크기 · 터치 · user agent). 실제 휴대폰은 출시 점검표. **실행할 때:** 모든 커밋(흉내), 출시 전(실제 휴대폰)
-- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
+- **테스트 ID:** `apps/web/e2e/mobile.spec.ts`의 테스트 6개([[99-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0287]] ~ T-0523)
 
 ### QA-21 비신뢰 공유 링크 입력 처리
 
@@ -446,7 +446,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 길이를 먼저 보고, 스트림으로 풀며 크기를 세고, 모델은 파일과 같은 검증 파서를 거친다 → [[0043-share-link-in-fragment|ADR-0043]], [[06-web#3. 공유 URL과 보기 모드]]
 - **테스트:** 단위 테스트(잘린 · 바뀐 · 긴 링크, zip bomb, 봉투가 틀린 JSON, 모델 검증 실패)와 E2E(손상된 링크로 페이지를 엶). **실행할 때:** 모든 커밋
-- **테스트 ID:** [[08-test-list#^t-apps-web-src-files-share-link-test-ts|T-1140]]
+- **테스트 ID:** [[99-test-list#^t-apps-web-src-files-share-link-test-ts|T-1140]]
 
 ## 3. 테스트 전략
 

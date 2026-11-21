@@ -38,7 +38,7 @@ Playwright(Chromium)에서 셋을 바꿉니다.
 ## AriadneNSD에서 어디에 쓰나
 
 - 유형 · 진짜와 가짜 · 추적 규칙 → [[02-test-architecture#1. 테스트 아키텍처]]
-- 지금 있는 테스트 전부(테스트 이름에서 자동으로 만듦) → [[08-test-list]]
+- 지금 있는 테스트 전부(테스트 이름에서 자동으로 만듦) → [[99-test-list]]
 - 결함과 그 회귀 테스트 → [[defects|결함 기록]]
 - 휴대폰 테스트 `src/apps/web/e2e/mobile.spec.ts`, 시작 시간 재기 `src/apps/web/scripts/measure-startup.mjs`
 

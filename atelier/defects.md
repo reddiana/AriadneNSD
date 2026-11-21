@@ -8,7 +8,7 @@ updated: 2026-11-19
 # 결함 기록
 
 > [!abstract] 이 문서는
-> MVP를 써 보다 찾은 **결함**(버그와 품질 문제)의 기록입니다. 결함마다 `BUG-` 번호를 붙이고, 그 결함이 다시 생기지 않는지 보는 **회귀 테스트**의 이름에 같은 번호를 적습니다(`T-0285 · BUG-01: …`, 앞의 `T-`는 테스트의 ID → [[dr-0022-test-ids|DR-0022]]). 테스트 목록([[08-test-list]])이 그 번호로 이 문서와 테스트를 잇습니다. 이 문서의 테스트 ID는 테스트 목록의 그 파일 표로 가는 링크입니다(사이트에서는 그 줄로 갑니다). 링크가 다른 표를 가리키면 테스트 목록 검사가 실패합니다.
+> MVP를 써 보다 찾은 **결함**(버그와 품질 문제)의 기록입니다. 결함마다 `BUG-` 번호를 붙이고, 그 결함이 다시 생기지 않는지 보는 **회귀 테스트**의 이름에 같은 번호를 적습니다(`T-0285 · BUG-01: …`, 앞의 `T-`는 테스트의 ID → [[dr-0022-test-ids|DR-0022]]). 테스트 목록([[99-test-list]])이 그 번호로 이 문서와 테스트를 잇습니다. 이 문서의 테스트 ID는 테스트 목록의 그 파일 표로 가는 링크입니다(사이트에서는 그 줄로 갑니다). 링크가 다른 표를 가리키면 테스트 목록 검사가 실패합니다.
 > - 번호는 불변이고 다시 쓰지 않습니다. 새 결함은 다음 번호를 받습니다.
 > - 고친 결함도 지우지 않습니다. 언제 무엇이 깨졌고 무엇이 막고 있는지의 기록입니다.
 > - 표에는 ID · 찾은 날 · 증상 · 상태만 두고, 찾은 사람 · 원인 · 고친 곳 · 회귀 테스트는 표 아래 결함마다의 절에 적습니다.
@@ -41,14 +41,14 @@ updated: 2026-11-19
 - **찾은 사람:** 메인테이너
 - **원인:** 화면 틀의 자리와 캔버스가 같은 클래스 `ans-canvas`를 써서 틀의 `overflow: hidden`이 캔버스에도 먹음
 - **고친 곳:** [[2026-11-01-03-mvp-scroll-dropdown]]
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0285]] 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-examples-spec-ts|T-0285]] 창보다 큰 다이어그램은 캔버스 안에서 스크롤된다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-02
 
 - **찾은 사람:** 메인테이너
 - **원인:** 툴바의 `overflow-x: auto`가 세로도 `auto`로 만들어 드롭다운이 툴바 안에 갇힘
 - **고친 곳:** [[2026-11-01-03-mvp-scroll-dropdown]]
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0284]] 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-examples-spec-ts|T-0284]] 툴바의 드롭다운은 툴바 안이 아니라 캔버스 위에 열린다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-03
 
@@ -56,22 +56,22 @@ updated: 2026-11-19
 - **원인:** 화면을 그리기 전에 IndexedDB를 여는데 시간 제한이 없음(원인 후보였고, 3초 제한을 넣은 뒤 S26에서 뜸)
 - **고친 곳:** [[2026-11-01-04-examples-button-android-load]]
 - **회귀 테스트:** (E2E, `apps/web/e2e/boot.spec.ts`)
-	- [[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다
-	- [[08-test-list#^t-apps-web-e2e-boot-spec-ts|T-0279]] 시작하다 실패하면 시작 화면에 그 사실을 보인다
+	- [[99-test-list#^t-apps-web-e2e-boot-spec-ts|T-0278]] `indexedDB.open`이 끝내 답하지 않아도 편집기가 뜬다
+	- [[99-test-list#^t-apps-web-e2e-boot-spec-ts|T-0279]] 시작하다 실패하면 시작 화면에 그 사실을 보인다
 
 ## BUG-04
 
 - **찾은 사람:** 메인테이너
 - **원인:** 툴바의 예제를 드롭다운에서 버튼으로 바꿀 때(EX4) "넓은 화면에서만" 클래스를 그대로 둠. E2E가 노트북 크기로만 봐서 못 잡음
 - **고친 곳:** [[2026-11-01-04-examples-button-android-load]]
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0290]] 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 (E2E, `apps/web/e2e/mobile.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-mobile-spec-ts|T-0290]] 휴대폰의 툴바에 "예제"가 보이고, 탭하면 모달이 열린다 (E2E, `apps/web/e2e/mobile.spec.ts`)
 
 ## BUG-05
 
 - **찾은 사람:** Claude(사용법 그림을 찍다 발견)
 - **원인:** 마우스로 열면 포커스가 메뉴 제목 버튼에 남는데, 그 버튼은 `↓`만 받고 `Esc`는 메뉴 안(드롭다운)에서만 받았음
 - **고친 곳:** 메뉴가 열려 있는 동안 문서 어디서든 `Esc`로 닫음(`packages/editor/src/ui/menu-bar.tsx`의 `useCloseMenu`)
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-examples-spec-ts|T-0286]] 마우스로 연 메뉴를 `Esc`가 닫는다 (E2E, `apps/web/e2e/examples.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-examples-spec-ts|T-0286]] 마우스로 연 메뉴를 `Esc`가 닫는다 (E2E, `apps/web/e2e/examples.spec.ts`)
 
 ## BUG-06
 
@@ -87,28 +87,28 @@ updated: 2026-11-19
 - **증상의 자세한 모습:** 주황 테두리가 왼쪽 · 위보다 오른쪽 · 아래에서 안쪽으로 더 들어가 보이고, 오른쪽 · 아래에는 블록의 파란 선이 바깥에 드러남
 - **원인:** 문서 그림은 1px 선을 또렷하게 하려고 반 픽셀 밀어 그려서([[04-visual-design]] 9.1) 상자의 오른쪽 · 아래 선이 상자 바깥 1px에 놓임. 오버레이의 테두리는 상자 안에만 그림
 - **고친 곳:** `packages/editor/src/dom/overlay.ts`: 선택 · 호버 테두리가 그 1px까지 덮음
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-0229]] 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 (단위, `packages/editor/src/dom/overlay.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-0229]] 선택 테두리가 블록의 선을 네 변 모두 똑같이 덮는다 (단위, `packages/editor/src/dom/overlay.test.ts`)
 
 ## BUG-08
 
 - **찾은 사람:** 메인테이너
 - **원인:** 기다리던 첫 키를 버리는 곳이 다른 키와 `Esc`뿐이었음
 - **고친 곳:** `packages/editor/src/dom/canvas-view.ts`: 캔버스를 누르거나 포커스가 캔버스를 떠나면 버림 → [[ux-decisions#K4. 클릭하면 기다리던 키를 버린다|K4]]
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0203]] 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 (E2E, `apps/web/e2e/canvas.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0203]] 빈 캔버스를 클릭하면 `a`를 기다리던 키 힌트가 닫힌다 (E2E, `apps/web/e2e/canvas.spec.ts`)
 
 ## BUG-09
 
 - **찾은 사람:** 메인테이너
 - **원인:** 그림의 글자(SVG `text`)가 브라우저의 글자 선택 대상이었음
 - **고친 곳:** `packages/editor/src/dom/styles.ts`: 캔버스는 `user-select: none`, 인라인 에디터만 글자 선택
-- **회귀 테스트:** [[08-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0205]] 블록을 끌어도 그려진 글자가 선택되지 않는다 (E2E, `apps/web/e2e/canvas.spec.ts`)
+- **회귀 테스트:** [[99-test-list#^t-apps-web-e2e-canvas-spec-ts|T-0205]] 블록을 끌어도 그려진 글자가 선택되지 않는다 (E2E, `apps/web/e2e/canvas.spec.ts`)
 
 ## BUG-10
 
 - **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
 - **원인:** 복사 · 잘라내기 · 삭제가 공통 검사 `blocksOnly` 하나를 써서 빈 default 칸에서는 셋 모두 삭제의 문구가 나옴
 - **고친 곳:** `packages/editor/src/commands/editor-commands.ts`: `blocksOnly`가 빈 default 칸의 문구를 명령마다 받음(복사 "빈 칸에는 복사할 블록이 없습니다.", 잘라내기 "빈 칸에는 잘라낼 블록이 없습니다."), 메시지 카탈로그(`packages/editor/src/i18n/messages.ts`)
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0797]] 빈 default 칸에서 복사 · 잘라내기를 하면 삭제할 default가 없다가 아니라 거기에 블록이 없다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0797]] 빈 default 칸에서 복사 · 잘라내기를 하면 삭제할 default가 없다가 아니라 거기에 블록이 없다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
 
 ## BUG-11
 
@@ -116,28 +116,28 @@ updated: 2026-11-19
 - **증상의 자세한 모습:** 같은 헤더에서 복사 · 잘라내기는 "헤더에서는 되지 않습니다"라고 알리는데, 붙여넣기 · 감싸기 · 풀기는 선택한 것이 없다고 알림
 - **원인:** 붙여넣기 · 감싸기 · 풀기의 `when`이 헤더를 따로 보지 않아 "선택 없음"의 문구로 떨어짐
 - **고친 곳:** `packages/editor/src/commands/editor-commands.ts`: 헤더에서 붙여넣기는 "헤더에는 붙여넣을 수 없습니다.", 감싸기는 "헤더는 감쌀 수 없습니다.", 풀기는 "헤더에서는 되지 않습니다. 블록을 선택하세요."라고 알림, 메시지 카탈로그(`packages/editor/src/i18n/messages.ts`)
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0798]] 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 선택한 것이 없다가 아니라 헤더라서 안 된다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-commands-editor-commands-test-ts|T-0798]] 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 선택한 것이 없다가 아니라 헤더라서 안 된다고 알린다 (단위, `packages/editor/src/commands/editor-commands.test.ts`)
 
 ## BUG-12
 
 - **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
 - **원인:** `Ctrl`+`←` `→`가 선택의 초점 블록(`focusBlock`)에서 출발해, 분기 라벨과 빈 default 칸에서는 그 If · Case 블록에서 출발함. If · Case 블록은 분기 밖이라 `Ctrl`+`→`가 `↓`처럼 움직여 첫 분기로 들어감
 - **고친 곳:** `packages/editor/src/navigation/navigate.ts`: 분기 라벨은 그 분기 안, 빈 default 칸은 그 Case의 가장 오른쪽 칸으로 보고 옆 분기를 찾음. 그쪽에 없으면 한 겹 바깥 If · Case로 가고, 바깥에도 없으면 움직이지 않음
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-navigation-navigate-test-ts|T-0799]] 분기 라벨에서 `Ctrl`+`→`는 If · Case 블록에서 출발하지 않고 그 If · Case의 다음 분기로 간다 (단위, `packages/editor/src/navigation/navigate.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-navigation-navigate-test-ts|T-0799]] 분기 라벨에서 `Ctrl`+`→`는 If · Case 블록에서 출발하지 않고 그 If · Case의 다음 분기로 간다 (단위, `packages/editor/src/navigation/navigate.test.ts`)
 
 ## BUG-13
 
 - **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
 - **원인:** 클립보드의 텍스트(`clipToText`)가 호출 블록에서 결과와 인자만 이어 적고, 레이아웃이 그리는 이름 · 결과 기호 · 괄호를 적지 않음
 - **고친 곳:** `packages/core/src/layout/call-text.ts`: 호출 블록의 그려지는 텍스트(`callParts` · `callText`)를 레이아웃에서 떼어 내 내보냄. `packages/editor/src/clipboard/clip-format.ts`가 그것으로 그려진 대로 적음(`ys ← MergeSort(xs)`, 결과가 없으면 `MergeSort(xs)`, 둘 다 없으면 `MergeSort()`, 결과 기호는 문서의 `=`도 따름). 복사할 때 문서의 다이어그램과 결과 기호를 넘김(`packages/editor/src/commands/editor-commands.ts`)
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-clipboard-clip-format-test-ts|T-0800]] 복사한 호출 블록은 Method 이름을 잃지 않고, 그려진 대로 적힌다 (단위, `packages/editor/src/clipboard/clip-format.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-clipboard-clip-format-test-ts|T-0800]] 복사한 호출 블록은 Method 이름을 잃지 않고, 그려진 대로 적힌다 (단위, `packages/editor/src/clipboard/clip-format.test.ts`)
 
 ## BUG-14
 
 - **찾은 사람:** Claude(리팩토링 전의 테스트를 더하다 발견, [[2026-11-03-05-tests-before-refactoring]])
 - **원인:** `runDrop`이 명령이 받아들여졌는지(`session.commit`)를 그대로 돌려줌. 제자리로의 이동은 받아들여지지만 내용이 그대로라 실행 취소 단계가 생기지 않음. 함수 주석은 "문서가 바뀌었는지"라고 적혀 있었음. 화면에는 영향 없음, 셸이 이 값을 믿으면 헷갈릴 수 있음
 - **고친 곳:** `packages/editor/src/commands/drop-command.ts`: 드롭 뒤 내용이 그대로면 `false`를 돌려줌. 주석에 거절되었거나 제자리에 놓였을 때 `false`라고 적음
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-commands-drop-command-test-ts|T-0801]] 분기 안의 범위를 제자리에 드롭하면 문서가 바뀌지 않았다고 알린다 (단위, `packages/editor/src/commands/drop-command.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-commands-drop-command-test-ts|T-0801]] 분기 안의 범위를 제자리에 드롭하면 문서가 바뀌지 않았다고 알린다 (단위, `packages/editor/src/commands/drop-command.test.ts`)
 
 ## BUG-15
 
@@ -146,27 +146,27 @@ updated: 2026-11-19
 - **원인:** 외곽선과 PDF는 번들 글꼴(보통 굵기 하나)의 글리프를 그대로 쓰고, 기울임 글꼴이 없어 장면의 기울임 표시(`TextRun.isItalic`)를 따르지 않음 → [[0045-export-pipeline|ADR-0045]]. 두 에이전트가 나란히 만들어 서로의 것을 보지 못함
 - **고친 곳:** 글리프 외곽선을 기준선 기준으로 기울여 그림 → [[ux-decisions#SL1. 외곽선과 PDF도 기울여 그린다|SL1]]. `packages/core/src/render/outline-text.ts`: 놓인 글리프가 런의 기울임을 보유하고 `slantedCommands`가 외곽선을 기울임(`glyphPathData`가 사용). `packages/core/src/export/pdf.ts`: 기울인 글리프를 별도의 폼 XObject로 씀
 - **회귀 테스트:**
-	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1316]] 기울임 런은 기준선을 기준으로 기울이고 보통 런은 바로 세워 둔다 (단위, `packages/core/src/render/outline-text.test.ts`)
-	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1317]] 굵은 기울임 런의 테두리와 합성 굵게를 글리프와 함께 기울인다 (단위, 같은 파일)
-	- [[08-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1318]] 기울인 좌표도 다른 좌표처럼 소수 둘째 자리로 반올림한다 (단위, 같은 파일)
-	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1312]] 기울임 런의 외곽선을 기울이고 보통 텍스트는 바로 세워 둔다 (단위, `packages/core/src/export/pdf.test.ts`)
-	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1313]] 한 요소의 기울임 런과 보통 런을 각자의 폼으로 그린다 (단위, 같은 파일)
-	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1314]] 합성 굵게도 글리프와 함께 기울인다 (단위, 같은 파일)
-	- [[08-test-list#^t-packages-core-src-export-pdf-test-ts|T-1315]] 기울인 글리프를 바로 선 글리프와 같은 자리에 놓고, 다시 만들어도 같은 바이트다 (단위, 같은 파일)
+	- [[99-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1316]] 기울임 런은 기준선을 기준으로 기울이고 보통 런은 바로 세워 둔다 (단위, `packages/core/src/render/outline-text.test.ts`)
+	- [[99-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1317]] 굵은 기울임 런의 테두리와 합성 굵게를 글리프와 함께 기울인다 (단위, 같은 파일)
+	- [[99-test-list#^t-packages-core-src-render-outline-text-test-ts|T-1318]] 기울인 좌표도 다른 좌표처럼 소수 둘째 자리로 반올림한다 (단위, 같은 파일)
+	- [[99-test-list#^t-packages-core-src-export-pdf-test-ts|T-1312]] 기울임 런의 외곽선을 기울이고 보통 텍스트는 바로 세워 둔다 (단위, `packages/core/src/export/pdf.test.ts`)
+	- [[99-test-list#^t-packages-core-src-export-pdf-test-ts|T-1313]] 한 요소의 기울임 런과 보통 런을 각자의 폼으로 그린다 (단위, 같은 파일)
+	- [[99-test-list#^t-packages-core-src-export-pdf-test-ts|T-1314]] 합성 굵게도 글리프와 함께 기울인다 (단위, 같은 파일)
+	- [[99-test-list#^t-packages-core-src-export-pdf-test-ts|T-1315]] 기울인 글리프를 바로 선 글리프와 같은 자리에 놓고, 다시 만들어도 같은 바이트다 (단위, 같은 파일)
 
 ## BUG-16
 
 - **찾은 사람:** 메인테이너(2026-11-17 inbox: "MVP는 접기영역을 만들고 폈을 때, 제목 아래 선이 빠졌습니다. 프로토타입과 비교해보시지요.")
 - **원인:** 펼친 접기 영역의 이름 띠는 안의 블록보다 나중에 그린다(테두리가 블록의 바깥 선을 덮도록). 그런데 띠의 사각형이 테두리 선을 띠 배경색(`fold.band`)으로 그려, 첫 블록의 윗선을 지웠다. 프로토타입은 띠 아래에 구조선을 따로 그렸고, 펴 보인 호출 블록의 띠는 구조선 색으로 그린다
 - **고친 곳:** `packages/core/src/render/build-scene.ts`의 `foldFrame`: 띠의 테두리를 `line.structure`로 그림. 띠의 위 · 양옆 선은 3px 테두리 아래에 깔려 보이지 않음
-- **회귀 테스트:** [[08-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1174]] 펼친 접기 영역은 이름 띠 아래의 구조선을 그린다(첫 블록이 처리 · If · 반복일 때, 겹친 접기 영역, 테마 넷) (단위, `packages/core/src/layout/fold-layout.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-core-src-layout-fold-layout-test-ts|T-1174]] 펼친 접기 영역은 이름 띠 아래의 구조선을 그린다(첫 블록이 처리 · If · 반복일 때, 겹친 접기 영역, 테마 넷) (단위, `packages/core/src/layout/fold-layout.test.ts`)
 
 ## BUG-17
 
 - **찾은 사람:** 메인테이너(2026-11-19: "접힌 접기 영역의 작은 삼각형 위치가 위쪽에 붙어있는데, 의도한 것인가요?")
 - **원인:** 펼침 삼각형의 세로 중심을 이름 띠(18px)의 가운데로 계산하는 식을 접힌 칸에도 썼다. 그래서 삼각형의 중심은 칸 위에서 9px, 이름 첫 줄의 가운데는 16px이 되어 7px 어긋났다
 - **고친 곳:** `packages/editor/src/dom/overlay.ts`의 `triangle`: 접힌 칸의 `▸`는 이름 첫 줄의 가운데(`space.pad-y` + `space.line` / 2 = 16px)에 둠. 이름 띠와 펴 보기 띠의 `▾`는 그대로(9px). 편집 레이어만 바뀌므로 저장되는 그림은 같음 → [[ux-decisions#FD11. 접힌 칸의 펼침 삼각형 자리|FD11]]
-- **회귀 테스트:** [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1320]] 접힌 칸의 삼각형은 이름과 나란하다, [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1321]] 이름이 여러 줄이어도 첫 줄에 둔다, [[08-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1322]] 이름 띠의 삼각형은 띠의 가운데에 그대로 둔다 (단위, `packages/editor/src/dom/overlay.test.ts`)
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1320]] 접힌 칸의 삼각형은 이름과 나란하다, [[99-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1321]] 이름이 여러 줄이어도 첫 줄에 둔다, [[99-test-list#^t-packages-editor-src-dom-overlay-test-ts|T-1322]] 이름 띠의 삼각형은 띠의 가운데에 그대로 둔다 (단위, `packages/editor/src/dom/overlay.test.ts`)
 
 ## BUG-18
 

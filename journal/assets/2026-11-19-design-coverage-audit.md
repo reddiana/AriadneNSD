@@ -441,4 +441,4 @@ updated: 2026-11-19
 - **시각 디자인 · 화면 배치:** 문서의 스크린숏이 지금 앱과 같은지, PDF 관련 서술, 10.2의 색 차이 수치, `05-screen-layout.md:36`의 새 문서 언어, `:53`의 보기 모드 키 동작, 점검 모드(`?perf`) 화면.
 - **모델 · 레이아웃 · 파일 형식:** `src/packages/fonts`(글자 수, 슬라이스, 서브셋 크기, WOFF 설정), `02-layout.md` 4장의 성능 수치, 인쇄 경로와 PNG 내보내기, `model.schema.ko.json`의 원문.
 - **편집기 · 웹:** `src/apps/web/dist`가 지금 코드의 빌드인지(`06-web.md:230` "JS 넷" 항목의 한계), 예제 데이터의 내용, `perf-messages.ts`, `version.ts`, `.github/workflows/pages.yml`과 옛 주소 리다이렉트.
-- **범위 밖:** `docs/04-design/04-obsidian-plugin.md`, `05-desktop.md`(코드가 없음), `08-test-list.md`(생성 문서), `docs/01-requirements`, `docs/03-architecture`.
+- **범위 밖:** `docs/04-design/04-obsidian-plugin.md`, `05-desktop.md`(코드가 없음), `99-test-list.md`(생성 문서), `docs/01-requirements`, `docs/03-architecture`.
