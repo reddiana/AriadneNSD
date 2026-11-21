@@ -90,7 +90,7 @@ draft: true
 
 ## 초안 1: GeekNews (Show GN)
 
-**제목:** AriadneNSD - README에 넣은 그림을 그대로 다시 고치는 NS 차트 편집기 (타입을 Show로 고르면 앞에 `Show GN:`이 저절로 붙으므로 적지 않음)
+**제목:** AriadneNSD - 알고리즘을 NS 차트로 그리는 구조 편집기 (타입을 Show로 고르면 앞에 `Show GN:`이 저절로 붙으므로 적지 않음)
 
 **링크:** https://ariadnensd.com/about
 
