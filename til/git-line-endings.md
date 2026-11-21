@@ -2,7 +2,7 @@
 title: git과 줄 끝 문자 (LF / CRLF)
 tags:
   - til
-updated: 2026-10-22
+updated: 2026-11-21
 ---
 
 # git과 줄 끝 문자 (LF / CRLF)
@@ -49,6 +49,8 @@ updated: 2026-10-22
 **확인한 법.** `git ls-files --debug 파일`(색인에 적힌 크기)과 실제 파일 크기를 견주고, `git hash-object 파일`이 `git rev-parse HEAD:파일`과 같은지 본다. 같으면 내용은 같다.
 
 **고친 법.** `git add 파일`. 내용이 같으므로 커밋할 것은 생기지 않고, 색인의 크기와 시각만 새로 적힌다. 여러 파일이면 `git add --renormalize .`
+
+**다시 생긴 까닭 (2026-11-21).** 이번에는 작업 폴더의 파일 35개가 CRLF였다(대부분 `journal/assets/`의 시안 HTML과 빌드 스크립트). Claude가 Windows에서 Python(`open(p, 'w')`)이나 PowerShell로 파일을 쓰면 줄 끝이 CRLF가 된다. 색인은 LF라 내용은 같지만 Obsidian Git에는 커밋 대상으로 보였다. 찾는 법은 `git ls-files --eol | grep -P "w/(crlf|mixed)"`, 고친 법은 그 파일을 LF로 바꾸고(`sed -i 's/\r$//'`) `git add`. 막는 법은 스크립트가 LF로 쓰게 하는 것(Python `newline=''`)이다.
 
 **백엔드로 비유하면** 캐시의 ETag 대신 크기로만 바뀜을 판정하는 것과 같다. 빠르지만, 크기만 바뀐 같은 내용(줄 끝)을 "바뀜"으로 잘못 본다.
 

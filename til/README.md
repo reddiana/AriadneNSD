@@ -69,7 +69,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 
 ### git과 GitHub
 
-- [[git-line-endings]] — git과 줄 끝 문자 (LF / CRLF) (2026-10-10. 2026-10-22에 "내용은 같은데 modified"를 더함)
+- [[git-line-endings]] — git과 줄 끝 문자 (LF / CRLF) (2026-10-10. 2026-10-22에 "내용은 같은데 modified"를, 2026-11-21에 스크립트가 쓴 CRLF를 더함)
 - [[git-history-rewrite]] — git 기록에서 파일 지우기: 지워도 남는 까닭, 기록 고쳐 쓰기, 강제 push, 바뀌는 해시 (2026-10-11)
 - [[git-worktree]] — git worktree로 나란히 일하기: 작업 폴더를 여럿 꺼내 에이전트마다 하나씩, 그래도 부딪치는 포트 · 번호 (2026-11-04)
 - [[llms-txt-and-doc-consistency]] — llms.txt(LLM용 안내서), 공유 링크의 꾸림 d · j · u, 문서와 코드의 정합성을 지키는 넷, 화면의 응답 시간 재기, hidden과 보이지 않는 글, 커밋을 막는 훅 (2026-11-10)

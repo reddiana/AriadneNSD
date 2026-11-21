@@ -137,6 +137,14 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 - [ ] `nschart` 코드 블록([[01-requirements#^r-fmt|R-FMT-12]])을 설계할 때 문법을 시안으로 견주어 정한다(YAML · 의사 코드 · id 없는 JSON, 같은 차트를 셋으로). 물음은 [[01-requirements#6. 미결정 사항]] (2026-11-02, inbox)
 - [ ] 데스크톱 프레임워크(Electron · Tauri)를 정한다 → [[0009-desktop-framework|ADR-0009]]. 그 전에 지원할 OS(맥 · 리눅스 포함인지)를 정하고, 맥의 WebKit 웹뷰에서 그린 글자가 셈한 폭과 맞는지 본다. 저장되는 파일은 어느 쪽이든 같다(2026-10-25, 메인테이너: 데스크톱 때 정함)
 
+## Claude skill
+
+- [ ] 실제로 써 보기: claude.ai에 zip 올리기(샌드박스의 Node 버전 확인, 20 이상), GitHub에서 `/plugin marketplace add reddiana/AriadneNSD` → [[07-claude-skill]]
+- [ ] 다음 판을 낼 때 `release.yml`이 zip을 붙이는지 확인(v0.3.0에는 스킬이 없음)
+- [ ] 다음 판 후보: core의 편집 명령(`extractMethod` · `inlineCall` 등)을 `nsd.mjs`의 명령으로 내놓을지. 지금은 Claude가 JSON을 직접 고침
+- [ ] 커버리지 대상과 버전 일치 검사에 스킬 패키지를 넣을지
+- [ ] 뒤로 미룬 기능: D 차트 → 코드([[01-requirements#^r-code|R-CODE-02]]), E 코드와 문서의 차트가 어긋났는지 검사, F 문제 내기 · 채점 (2026-11-21, 메인테이너가 A · B · C를 먼저 고름)
+
 ## 웹 베타의 문턱
 
 

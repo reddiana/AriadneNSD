@@ -52,6 +52,8 @@ updated: 2026-11-21
 ## 이번과 다음 세션에 할 것
 
 - [ ] 메인테이너: v0.3.0 웹 베타를 널리 알림
+- [ ] 메인테이너: push 뒤 Claude Code에서 스킬 설치해 써 보기(`/plugin marketplace add reddiana/AriadneNSD` → `/plugin install ariadne-nsd@ariadne-nsd`), 새 판을 낼지 → [[backlog#Claude skill]]
+- [ ] inbox의 두꺼운 외곽선 결함(예제 다섯)을 함께 검토
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
