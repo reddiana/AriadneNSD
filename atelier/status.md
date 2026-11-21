@@ -18,13 +18,12 @@ updated: 2026-11-21
 | --- | --- | --- | --- |
 | M01 | **프로토타입** | https://claude.ai/artifact/RuUjpc7YmCcbJXAdCeQiRG | `journal/assets/2026-10-10-ns-prototype.html` |
 | M12 | 글자 폭 스파이크 (답을 기다림: Firefox에서 열기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` |
-| M51 | 사용법 전체 초안 (답을 기다림) | https://claude.ai/artifact/MG7ez6KtKUaFZYAf275Ehq | `journal/assets/2026-11-02-manual-full-study.html` |
 | M54 | 새 Method로 빼기 (답을 기다림: Claude가 정해 둔 것의 표) | https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n | `journal/assets/2026-11-03-extract-method-study.html` |
 | M55 | 브라우저 안의 문서 (답을 기다림: Claude가 정해 둔 것의 표) | https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV | `journal/assets/2026-11-03-browser-storage-study.html` |
 
 ## 지금 단계
 
-**웹 0.2.0(MVP + 웹의 `P1`)을 냈고, 웹 베타의 문턱을 넘는 중입니다.** 남은 것은 메인테이너가 Firefox · Safari · 휴대폰에서 써 보기와 Claude가 추천안으로 정한 것의 확인 → [[backlog#웹 베타의 문턱]]. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
+**웹 0.2.0(MVP + 웹의 `P1`)을 냈고, 웹 베타의 문턱을 모두 넘었습니다(2026-11-21)** → [[backlog#웹 베타의 문턱]]. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
 
 - 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)(Pre-release, 그 뒤 더한 것도 배포함). 1.0 전에는 파일 형식이 바뀔 수 있음
 - 코드 `src/` → `src/README.md`, 규칙 [[07-coding-guide]], 문서 지도 [[docs/README#문서 지도|문서 색인]]
@@ -50,13 +49,12 @@ updated: 2026-11-21
 ## 이번과 다음 세션에 할 것
 
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
-- [ ] 메인테이너: 0.2.0을 써 보며(Chrome · Edge · Firefox · Safari · 휴대폰) [[outbox#확인해 주세요]]를 확인
+- [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
 - [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 고침 → 그 뒤 Claude가 [[01-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
 - [ ] AT-05: 병목은 화면 쪽(DOM 반영 · 브라우저 그리기). "바뀐 블록만 DOM에 반영"을 할지 여쭙기 → [[backlog#MVP 개발]]
 - [ ] 메인테이너: AT-05를 `https://ariadnensd.com/?perf`로 가진 기기에서 재고 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 메인테이너: Windows 알림을 다시 켤지(`.claude/settings.local.json`의 `hooks`를 비워 둠)
-- [ ] 메인테이너: 사용법 초안 M51 보기 → [[backlog#웹 베타의 문턱]]
 - [ ] 메인테이너: 앱이 "불러오는 중"에서 멈출 때 주소를 바로 열었는지, 사이트 · README 버튼을 거쳤는지 알려 주기 → [[defects]]
 - [ ] 11-03 밤의 worktree 정리 → [[backlog#저장소 손질]]
 - [ ] Firefox로 M12 열기 → [[outbox#정해 주세요]]
