@@ -1,0 +1,147 @@
+<title>M70 알고리즘 갤러리 배치</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 배치: 물음 하나, 선택지 셋을 세로로. 선택지마다 실제 페이지의 축소판 */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#1d2430; --muted:#5d6878; --line:#d5dae2;
+  --accent:#1f5f8b; --accent-soft:#e3eef6; --star:#b5761b;
+  --f-body:"IBM Plex Sans KR",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14181e; --paper:#1c222a; --ink:#e4e8ee; --muted:#9aa5b4; --line:#2f3743;
+  --accent:#7db3db; --accent-soft:#1e3242; --star:#e0a54a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181e; --paper:#1c222a; --ink:#e4e8ee; --muted:#9aa5b4; --line:#2f3743;
+  --accent:#7db3db; --accent-soft:#1e3242; --star:#e0a54a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:1.6rem;margin:0;text-wrap:balance}
+h2{font-size:1.2rem;margin:0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+p{margin:0;max-width:68ch}
+.tag{font-family:var(--f-mono);font-weight:600;font-size:.85rem;background:var(--accent);color:var(--paper);padding:2px 8px;border-radius:4px}
+.star{color:var(--star);font-weight:700}
+.muted{color:var(--muted)}
+.opt{display:flex;flex-direction:column;gap:12px}
+.frame{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;overflow-x:auto}
+.pros{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 24px;font-size:.92rem}
+.pros div{min-width:0}
+/* 축소판 안의 공통 */
+.site-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px}
+.site-h b{font-size:1.05rem}
+.cat{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.btn{display:inline-block;font-size:.8rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;padding:2px 8px;white-space:nowrap}
+.btn.fill{background:var(--accent);color:var(--paper)}
+/* G1 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
+.card .th{aspect-ratio:4/3;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+.card .th img{max-height:100%;object-fit:contain}
+.card .th.todo{background:var(--accent-soft);color:var(--muted);font-size:.8rem}
+.card .bd{padding:8px 10px;display:flex;flex-direction:column;gap:4px;font-size:.85rem}
+.card .bd b{font-size:.92rem}
+/* G2 */
+.long{display:flex;flex-direction:column;gap:22px}
+.sec{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;align-items:start;border-bottom:1px dashed var(--line);padding-bottom:18px}
+.sec .pic{background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px;text-align:center}
+.sec .txt{display:flex;flex-direction:column;gap:8px;font-size:.9rem}
+.sec code{font-family:var(--f-mono);font-size:.82rem}
+@media (max-width:640px){.sec{grid-template-columns:1fr}}
+/* G3 */
+.split{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;min-height:380px}
+.split ul{list-style:none;margin:0;padding:0;font-size:.86rem;border-right:1px solid var(--line)}
+.split li{padding:3px 8px}
+.split li.h{color:var(--muted);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;margin-top:8px}
+.split li.on{background:var(--accent-soft);color:var(--accent);font-weight:500}
+.split .view{display:flex;flex-direction:column;gap:10px}
+.split .view .pic{background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px;text-align:center}
+@media (max-width:640px){.split{grid-template-columns:1fr}.split ul{border-right:0;border-bottom:1px solid var(--line)}}
+table{border-collapse:collapse;font-size:.88rem;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span class="muted" style="font-family:var(--f-mono);font-size:.85rem">M70 · 2026-11-22 · 홍보</span>
+    <h1>M70 알고리즘 갤러리 배치</h1>
+    <p>알고리즘 갤러리는 <code>ariadnensd.com/gallery/</code>에 두는 페이지 하나입니다. 알고리즘 21개(앱 예제 6개 + 새로 그리는 15개)를 모아 두고, 그림마다 "편집기에서 열기" 링크를 답니다. 홍보 글에서 이 페이지로 오므로, 링크를 따라온 개발자가 처음 보는 화면입니다.</p>
+    <p><b>물음:</b> 페이지를 어떤 배치로 할까요? 아래 G1 ~ G3은 실제 예제 그림을 넣은 축소판입니다. 새로 그리는 것은 지금 에이전트가 그리고 있어서 빈 칸으로 두었습니다. 지금은 갤러리가 없고, 비슷한 것은 앱의 도움말 › 예제 모달(썸네일 카드)입니다.</p>
+  </header>
+
+  <section class="opt" id="g1">
+    <h2><span class="tag">G1</span> 카드 그리드 + 누르면 큰 그림 <span class="star">★ 추천</span></h2>
+    <div class="frame">
+      <div class="site-h"><b>Algorithm Gallery · 알고리즘 갤러리</b><span class="muted" style="font-size:.85rem">21 diagrams · 한국어 | English</span></div>
+      <div class="cat">고전</div>
+      <div class="grid">
+        <div class="card"><div class="th"><img src="{{binary-search}}" alt="이진 탐색"></div><div class="bd"><b>이진 탐색</b><span class="muted">정렬된 배열에서 절반씩 줄여 찾기</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th"><img src="{{quicksort}}" alt="퀵정렬"></div><div class="bd"><b>퀵정렬</b><span class="muted">피벗으로 나누고 재귀</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th"><img src="{{merge-sort}}" alt="병합 정렬"></div><div class="bd"><b>병합 정렬</b><span class="muted">반으로 나눠 정렬하고 합치기</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th"><img src="{{dijkstra}}" alt="다익스트라"></div><div class="bd"><b>다익스트라</b><span class="muted">우선순위 큐로 최단 경로</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th todo">그리는 중</div><div class="bd"><b>KMP</b><span class="muted">실패 함수로 문자열 찾기</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th todo">그리는 중</div><div class="bd"><b>유니온 파인드</b><span class="muted">경로 압축과 랭크 합치기</span><span class="btn">편집기에서 열기</span></div></div>
+      </div>
+      <div class="cat">어려운 것</div>
+      <div class="grid">
+        <div class="card"><div class="th"><img src="{{raft}}" alt="Raft"></div><div class="bd"><b>Raft 리더 선출</b><span class="muted">분산 합의의 선거</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th todo">그리는 중</div><div class="bd"><b>레드블랙 트리 삽입</b><span class="muted">색 바꾸기와 회전</span><span class="btn">편집기에서 열기</span></div></div>
+        <div class="card"><div class="th todo">그리는 중</div><div class="bd"><b>A*</b><span class="muted">휴리스틱으로 길 찾기</span><span class="btn">편집기에서 열기</span></div></div>
+      </div>
+    </div>
+    <div class="pros">
+      <div><b>좋은 점:</b> 21개를 한눈에 훑어봄. 앱의 예제 모달과 같은 모양이라 익숙함. 그림을 누르면 큰 그림(<code>/gallery/#kmp</code>)이 열려 글에서 하나만 가리킬 수도 있음.</div>
+      <div><b>아쉬운 점:</b> 썸네일이 작아 NS 차트의 글자는 큰 그림을 열어야 읽힘.</div>
+    </div>
+  </section>
+
+  <section class="opt" id="g2">
+    <h2><span class="tag">G2</span> 한 장씩 크게, 세로로 길게</h2>
+    <div class="frame">
+      <div class="site-h"><b>Algorithm Gallery · 알고리즘 갤러리</b><span class="muted" style="font-size:.85rem">목차: 고전 · 어려운 것 · 재미</span></div>
+      <div class="long">
+        <div class="sec"><div class="pic"><img src="{{dijkstra-big}}" alt="다익스트라 NS 차트"></div>
+          <div class="txt"><b style="font-size:1rem">다익스트라 최단 경로</b><span>시작점에서 가까운 정점부터 확정해 나간다. 큐에서 꺼낸 거리가 기록보다 크면 건너뛰는 갈래가 핵심.</span><span class="muted"><code>while</code> 1 · <code>if</code> 3 · Method 1</span><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="btn fill">편집기에서 열기</span><span class="btn">.ns.svg 받기</span></span></div></div>
+        <div class="sec"><div class="pic"><img src="{{merge-sort-big}}" alt="병합 정렬 NS 차트"></div>
+          <div class="txt"><b style="font-size:1rem">병합 정렬</b><span>반으로 나눠 각각 정렬한 뒤 앞에서부터 작은 것을 골라 합친다.</span><span class="muted"><code>if</code> 2 · 재귀 호출 2</span><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="btn fill">편집기에서 열기</span><span class="btn">.ns.svg 받기</span></span></div></div>
+      </div>
+    </div>
+    <div class="pros">
+      <div><b>좋은 점:</b> 그림을 바로 읽을 수 있음. 설명을 곁들여 "알고리즘을 구조로 읽기"라는 이야기가 잘 전해짐.</div>
+      <div><b>아쉬운 점:</b> 21개면 아주 긴 페이지. 처음 화면에 두세 개만 보여 전체 규모가 안 보임. 설명 21개를 쓰고 번역해야 함.</div>
+    </div>
+  </section>
+
+  <section class="opt" id="g3">
+    <h2><span class="tag">G3</span> 왼쪽 목록 + 오른쪽 큰 그림</h2>
+    <div class="frame">
+      <div class="site-h"><b>Algorithm Gallery · 알고리즘 갤러리</b><span class="muted" style="font-size:.85rem">한국어 | English</span></div>
+      <div class="split">
+        <ul>
+          <li class="h">고전</li><li>이진 탐색</li><li>퀵정렬</li><li class="on">병합 정렬</li><li>힙 정렬</li><li>다익스트라</li><li>KMP</li><li>…</li>
+          <li class="h">어려운 것</li><li>레드블랙 트리</li><li>A*</li><li>…</li>
+          <li class="h">재미</li><li>하노이 탑</li><li>N-Queen</li><li>…</li>
+        </ul>
+        <div class="view"><b>병합 정렬</b><div class="pic"><img src="{{merge-sort-big}}" alt="병합 정렬 NS 차트"></div><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="btn fill">편집기에서 열기</span><span class="btn">.ns.svg 받기</span></span></div>
+      </div>
+    </div>
+    <div class="pros">
+      <div><b>좋은 점:</b> 목록과 큰 그림을 함께 봄. 문서 사이트처럼 차례로 넘겨 보기 좋음.</div>
+      <div><b>아쉬운 점:</b> 휴대폰에서는 목록이 위로 올라가 그림이 아래로 밀림. 처음 화면에서 그림이 하나뿐이라 홍보 페이지로는 덜 화려함.</div>
+    </div>
+  </section>
+
+  <section class="opt">
+    <h2>들어갈 알고리즘 (메인테이너가 고른 세 묶음 + 앱 예제)</h2>
+    <div class="frame">
+      <table>
+        <tr><th>묶음</th><th>알고리즘</th></tr>
+        <tr><td>앱 예제</td><td>이진 탐색, 퀵정렬, 병합 정렬, 다익스트라, 미로, Raft</td></tr>
+        <tr><td>고전</td><td>힙 정렬, KMP, 유니온 파인드, 위상 정렬, BFS, DFS, 0/1 배낭, LCS</td></tr>
+        <tr><td>어려운 것</td><td>레드블랙 트리 삽입, A*, 최대 유량(에드먼즈-카프), 세그먼트 트리</td></tr>
+        <tr><td>재미</td><td>하노이 탑, N-Queen, 라이프 게임, 유클리드 호제법</td></tr>
+      </table>
+    </div>
+  </section>
+</div>
