@@ -25,7 +25,7 @@ Claude(claude.ai, Claude Code)가 NS 차트를 그리고 읽고 고치게 하는
 | 절 | 요구사항 | 입력 | Claude가 하는 일 | 결과 |
 | --- | --- | --- | --- | --- |
 | A. 알고리즘을 다이어그램으로 | [[01-requirements#^r-skill\|R-SKILL-01]] | 말로 한 요청("퀵소트를 NS 차트로 설명해 주세요") | 모델 JSON을 쓰고 `check` → `save` · `link` | `.ns.svg` 파일과 공유 URL, 짧은 설명 |
-| B. 코드를 다이어그램으로 | [[01-requirements#^r-skill\|R-SKILL-02]] | 사용자 저장소의 함수(Claude Code) | 코드를 읽어 함수는 Method, 문장 하나인 호출은 호출 블록으로 옮김(파서 없음, `references/code-to-blocks.md`) | 코드 옆이나 `docs/`의 `함수이름.ns.svg`와 공유 URL |
+| B. 코드를 다이어그램으로 | [[01-requirements#^r-skill\|R-SKILL-02]] | 사용자 저장소의 함수(Claude Code) | 코드를 읽어 함수는 Method, 문장 하나인 호출은 호출 블록으로 옮기고, 문장 하나는 처리 블록 하나로 옮김(짧은 문장도 줄바꿈으로 한 블록에 묶지 않고, `\n`은 긴 문장 하나나 조건 하나를 나눌 때만 → [[ux-decisions#SK1. 문장 하나에 처리 블록 하나\|SK1]]. 파서 없음, `references/code-to-blocks.md`) | 코드 옆이나 `docs/`의 `함수이름.ns.svg`와 공유 URL |
 | C. 다이어그램 읽기 · 고치기 | [[01-requirements#^r-skill\|R-SKILL-03]] | 공유 URL(`#ns1.d.` · `j` · `u`)이나 `.ns.svg` 파일 | `read`로 모델 JSON을 추출해 설명 · 검토하고, 고칠 때는 남는 id를 유지하고 새 id는 `check`가 출력한 다음 번호부터(`references/editing.md`) | 설명 · 검토, 또는 고친 파일과 새 공유 URL |
 
 모델 JSON의 형식은 `SKILL.md`의 요약과 `references/model.md`에 있습니다. 원본은 [[01-file-format|파일 형식 명세]]와 [[02-model-schema|모델 JSON 스키마]]이고, 스킬의 문서가 그것과 같은지는 테스트가 검증합니다(6장).

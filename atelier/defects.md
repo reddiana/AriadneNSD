@@ -2,7 +2,7 @@
 title: 결함 기록
 tags:
   - plan
-updated: 2026-11-19
+updated: 2026-11-22
 ---
 
 # 결함 기록
@@ -35,6 +35,7 @@ updated: 2026-11-19
 | [[#BUG-16\|BUG-16]] | 2026-11-17 | 접기 영역을 펼치면 이름 띠와 첫 블록 사이의 선이 빠짐(프로토타입에는 있음) | 고침 |
 | [[#BUG-17\|BUG-17]] | 2026-11-19 | 접힌 접기 영역의 펼침 삼각형(`▸`)이 이름보다 7px 위에 붙음 | 고침 |
 | [[#BUG-18\|BUG-18]] | 2026-11-21 | 같은 문서를 연 탭이 둘이면 나중 탭의 우상단에 "보기만 하는 중"만 보이고, 까닭과 편집으로 돌아갈 길을 알 수 없음 | 고침 |
+| [[#BUG-19\|BUG-19]] | 2026-11-21 | 110% 같은 배율에서 1px 구조선이 1px과 2px로 섞여 두꺼운 외곽선처럼 보임 | 고침 |
 
 ## BUG-01
 
@@ -174,3 +175,10 @@ updated: 2026-11-19
 - **원인:** 웹 앱은 한 문서를 한 탭에서만 편집한다(탭 잠금, `apps/web/src/shell/tab-lock.ts`). 잠긴 탭에는 "다른 탭에서 이 파일을 편집하고 있습니다. 이 탭은 보기만 합니다."를 알리지만 상태 줄의 알림이라 곧 사라지고, 그 뒤에는 까닭 없는 "보기만 하는 중"만 남는다
 - **고친 곳:** 셸이 편집기에 보기만 하는 까닭을 알림. `EditorHandle.open`의 `readOnlyReason`과 `setReadOnly(readOnly, reason)`(`'otherTab'`), `DocStatus.readOnlyReason`(`packages/editor/src/contracts.ts`, `apps/web/src/editor-contract.ts`, `create-editor.ts`). 웹 셸(`web-shell.ts`)은 `switchTo`와 `start`에서 잠금을 못 얻으면 이 까닭을 넘기고, 잠금을 되찾으면 지움. 메뉴 줄 우상단 라벨(`ui/menu-bar.tsx`)은 까닭이 `otherTab`이면 "보기만 하는 중 · 다른 탭에서 편집 중"과 "그 탭을 닫으면 여기서 편집할 수 있습니다." 툴팁을 보임(`ui/messages.ts`의 `status.readOnly.otherTab`, 영어 · 한국어). 공유 링크 보기와 그 밖의 보기만 하는 경우는 그대로
 - **회귀 테스트:** T-1444 까닭을 넘기고 잠금을 되찾으면 지운다, T-1446 공유 링크의 보기에는 까닭이 없다 (단위, `apps/web/src/shell/web-shell.test.ts`), T-1447 까닭이 있으면 라벨과 툴팁이 달라진다 (단위, `packages/editor/src/ui/editor-app.test.tsx`)
+
+## BUG-19
+
+- **찾은 사람:** 메인테이너(2026-11-21, inbox: 두꺼운 외곽선이 보인다는 신고와 스크린숏 `atelier/sessions/assets/2026-11-21-thick-outline-*.png`, 이튿날 110%에서 재현한 `atelier/sessions/assets/2026-11-22-thick-outline-zoom-110.png`)
+- **원인:** 편집 화면은 저장 SVG를 CSS `scale`(배율)로 키우고 그 위에 `devicePixelRatio`가 곱해진다. 사각형은 `shape-rendering="crispEdges"`라 브라우저가 선의 양쪽 가장자리를 장치 픽셀로 반올림하는데, 1px 선이 110%에서는 1.1 장치 픽셀이라 놓인 자리에 따라 1px도 되고 2px도 된다(배율 1.1에서 가로선의 약 1/3이 2px)
+- **고친 곳:** 화면에서만, 크리스프 사각형과 가로세로로만 이은 채우지 않은 경로(Case 갈래 선, 호출 막대)의 `stroke-width`를 `max(1, round(굵기 × 배율)) / 배율`(배율 = 줌 × `devicePixelRatio`)로 바꿔 언제나 정수 장치 픽셀이 되게 함(`packages/editor/src/dom/crisp-lines.ts`, `canvas-view.ts`). 빗금과 곡선은 안티앨리어싱 그대로. 그림을 다시 그리거나 줌 · `devicePixelRatio`가 바뀌면 다시 맞춤. 저장하는 `.ns.svg`의 바이트는 그대로 → [[04-visual-design#9.2 배율과 출력]]. 커밋 70deffa
+- **회귀 테스트:** [[99-test-list#^t-packages-editor-src-dom-crisp-lines-test-ts|T-1480]], T-1481, T-1483 (단위, `packages/editor/src/dom/crisp-lines.test.ts`), T-1482 (단위, `packages/editor/src/dom/canvas-view.test.ts`)
