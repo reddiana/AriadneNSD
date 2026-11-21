@@ -1,13 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="333" height="536" viewBox="0 0 333 536">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b11947603bf865fee4887ad6f0832c092f278f225df9a6a8b5846087c2ade678"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
   "settings": {
     "textKind": "plain",
     "theme": "default",
-    "headStyle": "title"
+    "headStyle": "title",
+    "locale": "ko"
   },
   "diagrams": [
     {

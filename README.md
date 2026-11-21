@@ -11,8 +11,8 @@ English | [한국어](README.ko.md)
 An editor for NS charts ([Nassi-Shneiderman diagrams](https://en.wikipedia.org/wiki/Nassi%E2%80%93Shneiderman_diagram)). You draw a chart by **structural editing**: you select blocks and wrap them, and the layout adjusts itself. The saved file (`.ns.svg`) is a plain SVG, so it shows as a picture when you put it in a README or a blog post, and the editor can open the same file again to edit it. There is no separate picture and source file to keep in sync.
 
 <p align="center" style="display:flex;justify-content:center;align-items:flex-start;gap:16px;flex-wrap:wrap">
-  <img src="journal/assets/2026-11-02-readme-dijkstra.ns.svg" width="300" hspace="4" alt="Example NS chart: Dijkstra's shortest path">
-  <img src="journal/assets/2026-11-02-readme-merge-sort.ns.svg" width="286" hspace="4" alt="Example NS chart: merge sort">
+  <img src="journal/assets/2026-11-22-readme-dijkstra.en.ns.svg" width="300" hspace="4" alt="Example NS chart: Dijkstra's shortest path">
+  <img src="journal/assets/2026-11-22-readme-merge-sort.en.ns.svg" width="286" hspace="4" alt="Example NS chart: merge sort">
 </p>
 <p align="center"><sub>NS charts drawn with AriadneNSD: Dijkstra's shortest path (left) and merge sort (right)</sub></p>
 
