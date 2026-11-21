@@ -257,14 +257,24 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
       <p>{text('about.body')}</p>
       <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
       <p className="ans-note">{text('about.preview')}</p>
-      <p className="ans-about-links">
-        <a href={aboutDocsUrl} target="_blank" rel="noopener noreferrer">
-          {text('about.docs')}
-        </a>
-        <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
-          {text('about.repository')}
-        </a>
-      </p>
+      <dl className="ans-about-links">
+        {(
+          [
+            ['about.docs', aboutDocsUrl],
+            ['about.repository', repositoryUrl],
+          ] as const
+        ).map(([label, url]) => (
+          <div key={url}>
+            <dt>{text(label)}</dt>
+            {/* The full address is the link text, so it can be read, copied and shared (UX W4). */}
+            <dd>
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                {url}
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
     </Modal>
   );
 }

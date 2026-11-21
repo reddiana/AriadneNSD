@@ -365,12 +365,14 @@ describe('modals', () => {
         engine.handle.commands.run('help.about');
       });
       const dialog = within(screen.getByRole('dialog', { name: title }));
-      for (const [name, href] of [
+      for (const [label, href] of [
         [docs, 'https://ariadnensd.com/about'],
         [repository, 'https://github.com/reddiana/AriadneNSD'],
       ] as const) {
-        const link = dialog.getByRole('link', { name });
+        // The full address is the link text, under its label.
+        const link = dialog.getByRole('link', { name: href });
         expect(link.getAttribute('href')).toBe(href);
+        expect(link.closest('div')?.querySelector('dt')?.textContent).toBe(label);
         expect(link.getAttribute('target')).toBe('_blank');
         expect(link.getAttribute('rel')).toBe('noopener noreferrer');
       }
@@ -392,7 +394,7 @@ describe('modals', () => {
       link.focus();
       expect(document.activeElement).toBe(link);
     }
-    fireEvent.keyDown(within(dialog).getByRole('link', { name: 'Documentation' }), {
+    fireEvent.keyDown(within(dialog).getByRole('link', { name: 'https://ariadnensd.com/about' }), {
       key: 'Escape',
     });
     expect(screen.queryByRole('dialog')).toBeNull();

@@ -28,5 +28,4 @@ title: Inbox
 
 # 7. 기타
 
-- "도움말 > AriadneNSD에 대하여" 창에 문서와 GitHub 저장소 링크를 full url로 해주세요. 우리의 아키텍처, 설계를 
 ## 매뉴얼
