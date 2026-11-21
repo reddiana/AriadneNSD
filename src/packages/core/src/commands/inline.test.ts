@@ -205,7 +205,7 @@ describe('pasting call blocks with the names of their Methods', () => {
     });
     // Not tied to the Method that happens to have the same id.
     expect(blockOf(result.content, 'b3')).toMatchObject({
-      target: { kind: 'lost', lastName: 'merge' },
+      target: { kind: 'named', name: 'merge' },
     });
   });
 });

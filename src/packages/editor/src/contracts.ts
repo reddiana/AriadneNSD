@@ -25,8 +25,6 @@ export interface DocumentStore {
   /** Writes to the original place. If it cannot, the shell does something else (download). */
   write(svg: string): Promise<WriteResult>;
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
-  /** Another document (R-BLK-09). `null` when it cannot be read. */
-  readOther(path: string): Promise<string | null>;
 }
 
 /** The result of a write. The user closing the save dialog (`cancelled`) is not an error. */
@@ -142,6 +140,11 @@ export type CommandSpec = {
   readonly toolbar?: ToolbarPlace;
   /** The kinds of selection the context menu shows this command for. */
   readonly context?: ReadonlyArray<SelectionKind>;
+  /**
+   * Addition: whether the context menu shows it for what is selected now, besides its kind. Left
+   * out, it always does ("Method 만들기" only on a call by name, UX CB15).
+   */
+  inContext?(ctx: CommandContext): boolean;
   /** Whether it changes the document. Read-only documents refuse these (03-editor 6.4). */
   readonly edits: boolean;
   /** Whether it applies now, or why not. */

@@ -155,29 +155,6 @@
             "kind": { "const": "named" },
             "name": { "type": "string" }
           }
-        },
-        {
-          "description": "A Method in another file.",
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["kind", "file", "diagram", "lastName"],
-          "properties": {
-            "kind": { "const": "external" },
-            "file": { "type": "string" },
-            "diagram": { "$ref": "#/$defs/diagramId" },
-            "lastName": { "type": "string" }
-          }
-        },
-        {
-          "description": "A Method that is no longer there.",
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["kind", "lastName"],
-          "properties": {
-            "kind": { "const": "lost" },
-            "lastName": { "type": "string" },
-            "file": { "type": "string" }
-          }
         }
       ]
     },

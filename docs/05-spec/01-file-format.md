@@ -125,7 +125,7 @@ UML 클래스 다이어그램으로 나타낸 XML 요소의 포함 관계입니�
 | `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]), 텍스트를 외곽선으로 저장([[01-requirements#^r-fmt\|R-FMT-10]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 헤더(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 호출 등(`kind`로 판별하는 유니온). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
-| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을, 다른 문서의 Method를 호출하면 그 파일을 가리키는 값과 그 안의 Method id를 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]]에 있고, `external.file`에 무엇을 적는지만 정하지 않음 → [[01-requirements#^r-blk\|R-BLK-08]], [[01-requirements#^r-blk\|R-BLK-09]]). 이름 문자열을 복사해 갖지 않는다. 참조 대상이 없으면(dangling) 마지막에 보이던 이름을 보존한다 → [[0022-call-name-follows-head\|ADR-0022]] | 대상 |
+| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]] → [[01-requirements#^r-blk\|R-BLK-08]]). 이름 문자열을 복사해 갖지 않는다. 참조하던 Method가 없어지면 마지막에 보이던 이름을 적은 호출 블록이 된다 → [[0022-call-name-follows-head\|ADR-0022]], [[0049-call-without-method-is-named\|ADR-0049]] | 대상 |
 | 접기 영역 | 한 줄 안의 연속된 블록 범위(처음 · 끝 블록의 id)와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 속한다([[01-requirements#^r-edit\|R-EDIT-16]]) | 대상 |
 | `view` | 뷰 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
 
@@ -146,7 +146,7 @@ UML 클래스 다이어그램으로 나타낸 XML 요소의 포함 관계입니�
 		- 경로가 끝나는 Method에 접기 영역이 있으면 `"b4/"`를 언제나 기록한다. 없으면 다시 열었을 때 같은 모습이 되는 자리는 기록하지 않는다: 펴 보인 자리는 접힘이 Method와 같으면, 닫힌 자리는 그 자리와 Method 모두 접힌 것이 없으면 기록하지 않는다. 그래서 펴 보인 Method에 접기 영역이 없고 그 안에 접힌 것이 없는 문서에는 이 항목이 없다.
 		- 펴 보인 경로에 `"b4/"`가 없는 파일(이 규칙 전에 저장한 파일)은 열 때 그 자리를 처음 펴는 것으로 보고 Method의 접힘과 접기 영역을 가져온다. 연 모습은 같고, 다시 저장하면 사본과 `"b4/"`가 더해진다.
 		- 지금도 갈 수 있는 경로, 그 Method에 있는 id만 기록한다. 지원하지 않는 형태의 항목은 없는 id처럼 무시하고 저장할 때 기록하지 않는다. 이 항목이 생기기 전의 앱도 같은 이유로 이 파일을 연다.
-	- `opened`에는 지금도 갈 수 있는 경로만 한 번씩 기록한다: 경로의 id가 모두 호출 블록이고, 안쪽 것은 바로 바깥 호출 블록이 호출하는(같은 문서의) Method 안에 있다. 다른 문서를 거치는 경로는 아직 설계하지 않아 기록하지 않는다([[01-model#미결정 사항]]).
+	- `opened`에는 지금도 갈 수 있는 경로만 한 번씩 기록한다: 경로의 id가 모두 호출 블록이고, 안쪽 것은 바로 바깥 호출 블록이 호출하는(같은 문서의) Method 안에 있다.
 - 서브셋 글꼴은 문자를 코드 포인트 순으로 서브세팅하고, 같은 버전의 서브세팅 도구와 같은 버전 · 같은 수준의 압축 라이브러리로 만든다.
 - 렌더링 결과 안의 텍스트 가운데 편집기가 표시하는 고정 문구("참" · "거짓", "⋯ 블록 n개", "(이름 없음)")는 `settings.locale`의 언어로 표시한다. 저장하는 사람의 화면 언어(UI 언어)는 파일에 들어가지 않는다. 그래서 같은 모델이면 누가 어느 화면 언어로 저장해도 같은 파일이다([[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]).
 
@@ -179,7 +179,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 | Case의 분기 (`arms`의 원소) | `id` · `label` · `body` · `folds` | `folds`는 비면 |
 | While · Do-While · For | `id` · `kind`(`"while"` \| `"doWhile"` \| `"for"`) · `text` · `body` · `folds` | `folds`는 비면 |
 | 호출 | `id` · `kind: "call"` · `target` · `args` · `result` · `siteFolds` | `siteFolds`는 비면 |
-| `target` | `kind` 다음에 그 종류의 필드 ([[01-model#1.5 호출 블록]]) | 없음 |
+| `target` | `kind` 다음에 그 종류의 필드 ([[01-model#1.5 호출 블록]]): `local`은 `diagram`, `named`는 `name`. 예전 파일의 `lost`(`lastName`, 선택 `file`)와 `external`(`file` · `diagram` · `lastName`)은 `lastName`을 `name`으로 한 `named`로 읽고, 저장할 때는 `named`로 쓴다 → [[0049-call-without-method-is-named\|ADR-0049]] | 없음 |
 | 접기 영역 (`folds`의 원소) | `id` · `first` · `last` · `name` | `name`은 없으면 |
 | 펴 보인 곳의 접기 영역 | `id` · `via` · `first` · `last` · `name` | `name`은 없으면 |
 | `view` | `folded` · `opened` · `bands` · `resultSymbol`(`"←"` \| `"="`) | 없음 (빈 목록도 적음) |
@@ -194,7 +194,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 	- 지원하지 않는 값(뒤의 버전이 더한 언어)은 연 사람의 화면 언어로 그리고, 받은 값은 `textKind`처럼 모델 밖에 따로 보존한다. 사용자가 그 문서의 그림 문구의 언어를 바꾸지 않았으면 저장할 때 보존한 값을 그대로 기록한다.
 	- 문자열이 아니면 깨진 파일이다.
 - **`textOutlines`**: 텍스트를 외곽선으로 저장(4.3). `true`일 때만 기록한다. `true` · `false`가 아니면 깨진 파일이다.
-- 헤더 · 호출 블록 · 여러 다이어그램 · 접기 영역은 MVP 뒤의 기능이지만 v1 형식에 들어 있다. 그 기능을 낼 때 뜻이 바뀌면(예: `external.file`에 무엇을 적는지 → [[01-model#미결정 사항]]) 버전을 올리고 마이그레이션을 둔다(5장).
+- 헤더 · 호출 블록 · 여러 다이어그램 · 접기 영역은 MVP 뒤의 기능이지만 v1 형식에 들어 있다. 그 기능을 낼 때 뜻이 바뀌면 버전을 올리고 마이그레이션을 둔다(5장).
 
 작은 예입니다. 처리 블록 하나와 If 하나가 든, 헤더 없는 다이어그램입니다.
 

@@ -133,7 +133,6 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 3b. 옛 형식 버전의 파일: 지금 형식으로 바꿔 읽는다. 원본이 언제 새 형식이 되는지는 미결정(6장). 프로토타입이 저장한 `version: 0` 파일은 바꿔 읽지 않고 3a와 같이 다룬다 → [[0035-model-namespace-and-v0|ADR-0035]]
 - 3c. 지금보다 새 형식 버전의 파일: 편집할 수 없다고 알리고 앱 업데이트를 안내한다
 - 3d. 다른 도구로 그림 부분만 수정한 파일: 그림이 모델과 달라졌다고 알린다
-- 4a. 다른 문서의 Method를 호출하는 호출 블록이 있는데 그 파일을 읽지 못한다: 편집 화면에 찾을 수 없다는 표시가 보이고, 저장되는 그림의 호출 블록은 실선 그대로다
 
 **기술 변형**
 
@@ -141,7 +140,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 **빈도:** 편집을 시작할 때마다
 
-**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-blk|R-BLK-09]], [[01-requirements#^r-nfr|R-NFR-02]]
+**요구사항:** [[01-requirements#^r-web|R-WEB-02]], [[01-requirements#^r-all|R-ALL-02]], [[01-requirements#^r-dsk|R-DSK-01]], [[01-requirements#^r-dsk|R-DSK-02]], [[01-requirements#^r-dsk|R-DSK-03]], [[01-requirements#^r-dsk|R-DSK-04]], [[01-requirements#^r-obs-2|R-OBS-05]], [[01-requirements#^r-obs-2|R-OBS-06]], [[01-requirements#^r-obs-2|R-OBS-09]], [[01-requirements#^r-gd|R-GD-01]], [[01-requirements#^r-web|R-WEB-05]], [[01-requirements#^r-web|R-WEB-06]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-fmt|R-FMT-02]], [[01-requirements#^r-fmt|R-FMT-05]], [[01-requirements#^r-fmt|R-FMT-06]], [[01-requirements#^r-fmt|R-FMT-09]], [[01-requirements#^r-nfr|R-NFR-02]]
 
 ### UC-03 블록을 편집한다
 
@@ -182,11 +181,10 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 
 - 1a. 처음부터 Event나 Method 다이어그램을 새로 만들어 나란히 둔다
 - 2a. 거꾸로, 호출 블록을 풀어 Method의 블록들로 바꾼다
-- 3a. 호출할 것이 문서에 없으면(라이브러리 함수 등) 이름을 적어 호출한다
-- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 "참조 대상 없음"이 된다
-- 4b. 다른 문서의 Method를 호출한다(`P2`)
+- 3a. 호출할 것이 문서에 없으면(라이브러리 함수 등) 이름을 적어 호출한다. 나중에 그 이름의 Method를 그리기로 하면 그 호출 블록에서 Method를 만든다
+- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 보이던 이름을 적은 호출 블록이 된다
 
-**요구사항:** [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-edit|R-EDIT-19]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
+**요구사항:** [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-edit|R-EDIT-19]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-edit|R-EDIT-26]]
 
 ### UC-05 큰 다이어그램을 훑어본다
 

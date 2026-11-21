@@ -169,19 +169,6 @@ function targetJson(target: CallTarget): unknown {
       return { kind: target.kind, diagram: target.diagram };
     case 'named':
       return { kind: target.kind, name: target.name };
-    case 'external':
-      return {
-        kind: target.kind,
-        file: target.file,
-        diagram: target.diagram,
-        lastName: target.lastName,
-      };
-    case 'lost':
-      return {
-        kind: target.kind,
-        lastName: target.lastName,
-        ...(target.file === undefined ? {} : { file: target.file }),
-      };
   }
 }
 

@@ -264,10 +264,9 @@ describe('web document store: other browsers', () => {
     expect(written).toEqual([]);
   });
 
-  it('T-0692: a new document has no file to read, and no other documents are read yet', async () => {
+  it('T-0692: a new document has no file to read', async () => {
     const store = new WebDocumentStore(host(false, []), 'k', 'a.ns.svg', { kind: 'none' });
     await expect(store.read()).rejects.toThrow('A new document has no file to read');
-    expect(await store.readOther()).toBeNull();
   });
 });
 

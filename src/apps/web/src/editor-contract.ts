@@ -35,7 +35,6 @@ export type DocumentStore = {
   read(): Promise<string>;
   write(svg: string): Promise<WriteResult>;
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
-  readOther(path: string): Promise<string | null>;
 };
 
 /** User settings, implemented by the shell (03-editor 6). Reads are synchronous. */

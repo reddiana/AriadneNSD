@@ -129,7 +129,6 @@ export function memoryStore(
       store.name = suggested;
       return Promise.resolve(store.result ?? { ok: true, name: suggested });
     },
-    readOther: () => Promise.resolve(null),
   };
   return store;
 }

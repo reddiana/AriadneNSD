@@ -8,6 +8,7 @@ import { branch, contentOf, ifBlock, proc, seq, testEngine } from '../engine-tes
 import type { TestEngine } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
 import { selectBlock, selectFold } from '../state/selection';
+import { viewCommands } from '../ui/command-view';
 
 const call = (id: string, diagram: string, args = ''): Block => ({
   id,
@@ -144,7 +145,7 @@ describe('opening a call block in place (R-EDIT-15)', () => {
     expect(notice(engine)).toEqual({ key: 'notice.openedAgain', params: { name: 'm', count: 3 } });
   });
 
-  it('T-1090: peek: gd on a call block goes to its Method; a call by a written name has none', () => {
+  it('T-1090: peek: gd on a call block goes to its Method; a call by a written name cannot be opened', () => {
     const engine = testEngine(sample());
     select(engine, 'c1');
     engine.keys('g', 'd');
@@ -162,8 +163,6 @@ describe('opening a call block in place (R-EDIT-15)', () => {
       ]),
     );
     select(named, 'c9');
-    named.keys('g', 'd');
-    expect(notice(named)).toBe('reason.notCallable');
     named.keys('f');
     expect(notice(named)).toBe('reason.nothingToFold');
   });
@@ -855,5 +854,74 @@ describe('pasting calls into another document', () => {
     await target.settle();
     const pasted = target.content().diagrams[0]?.body.blocks[1];
     expect(pasted).toMatchObject({ kind: 'call', target: { kind: 'local', diagram: 'd7' } });
+  });
+});
+
+describe('Method 만들기 (R-EDIT-26, UX CB15)', () => {
+  const named = (id: string, name: string, args = ''): Block => ({
+    id,
+    kind: 'call',
+    target: { kind: 'named', name },
+    args,
+    result: '',
+    siteFolds: [],
+  });
+  /** d1: p1, n1 → "scan"(port), n2 → "scan", c1 → d2. d2: Method "m(x)". */
+  const withNamed = (): Content => {
+    const base = sample();
+    const [d1, d2] = base.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    const blocks = [proc('p1'), named('n1', 'scan', 'port'), named('n2', 'scan'), call('c1', 'd2')];
+    return { ...base, diagrams: [{ ...d1, body: { ...d1.body, blocks } }, d2] };
+  };
+  const contextIds = (engine: TestEngine): ReadonlyArray<string> =>
+    viewCommands(engine.registry, String)
+      .filter((command) => command.context.includes('blocks'))
+      .map((command) => command.id);
+
+  it('T-1438 · R-EDIT-26: gd on a call by name makes its Method, links the calls of that name and goes there', () => {
+    const engine = testEngine(withNamed());
+    const before = engine.content();
+    select(engine, 'n1');
+    engine.keys('g', 'd');
+    const made = engine.content().diagrams.at(-1);
+    expect(made?.head).toEqual({ kind: 'method', text: 'scan(port)' });
+    expect(made?.body.blocks).toHaveLength(1);
+    expect(blockOf(engine, 'n1')).toMatchObject({ target: { kind: 'local', diagram: made?.id } });
+    expect(blockOf(engine, 'n2')).toMatchObject({
+      target: { kind: 'local', diagram: made?.id },
+      args: 'port',
+    });
+    expect(engine.session.state.selection).toEqual({ kind: 'head', diagram: made?.id });
+    engine.keys('u');
+    expect(engine.content()).toBe(before);
+  });
+
+  it('T-1439 · R-EDIT-26: the context menu has Method 만들기 on a call by name only, in place of going to the Method', () => {
+    const engine = testEngine(withNamed());
+    select(engine, 'n2');
+    expect(contextIds(engine)).toContain('call.makeMethod');
+    expect(contextIds(engine)).not.toContain('call.goTo');
+    select(engine, 'c1');
+    expect(contextIds(engine)).not.toContain('call.makeMethod');
+    expect(contextIds(engine)).toContain('call.goTo');
+    engine.run('call.makeMethod');
+    expect(notice(engine)).toBe('reason.callHasMethod');
+  });
+
+  it('T-1440 · R-EDIT-26: the command makes the Method from the palette too; a view-only document refuses gd', () => {
+    const engine = testEngine(withNamed());
+    select(engine, 'n2');
+    engine.run('call.makeMethod');
+    expect(engine.content().diagrams.at(-1)?.head).toEqual({ kind: 'method', text: 'scan' });
+    expect(blockOf(engine, 'n1')).toMatchObject({ target: { kind: 'local' }, args: 'port' });
+    const readOnly = testEngine(withNamed());
+    readOnly.session.setReadOnly(true);
+    select(readOnly, 'n1');
+    readOnly.keys('g', 'd');
+    expect(notice(readOnly)).toBe('reason.readOnly');
+    expect(readOnly.content().diagrams).toHaveLength(2);
   });
 });

@@ -41,7 +41,6 @@ export function perfDocumentStore(name: string): DocumentStore {
     read: () => Promise.resolve(''),
     write: () => Promise.resolve(notSaved),
     writeAs: () => Promise.resolve(notSaved),
-    readOther: () => Promise.resolve(null),
   };
 }
 

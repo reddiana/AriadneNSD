@@ -109,6 +109,7 @@ const english = {
   'command.fold.make': 'Make Fold Region',
   'command.fold.remove': 'Remove Fold Region',
   'command.call.goTo': 'Go to Called Method',
+  'command.call.makeMethod': 'Make Method',
 
   // Refusals: core's reason codes.
   'reason.notFound': 'It is no longer there.',
@@ -139,8 +140,6 @@ const english = {
   'reason.duplicateHeadName': 'Another header already has this name. Write another name.',
   'reason.methodHasCallers': 'Call blocks call this Method, so it cannot become an Event.',
   'reason.lastDiagram': 'This is the only diagram, so it cannot be deleted.',
-  'reason.lostTarget':
-    'This call block lost the Method it called. Choose the Method to call first.',
   // Refusals: the editor's own.
   'reason.readOnly': 'View only: this document cannot be changed here.',
   'reason.nothingSelected': 'Select a block first.',
@@ -161,6 +160,7 @@ const english = {
   'reason.branchMovesSideways': 'Branches move left or right.',
   'reason.selectHead': 'Select a header first.',
   'reason.selectCall': 'Select a call block.',
+  'reason.callHasMethod': 'This call block already calls a Method.',
   'reason.notOnHead': 'This does not work on a header. Select a block.',
   'reason.cannotPasteOnHead': 'You cannot paste on a header.',
   'reason.cannotWrapHead': 'A header cannot be wrapped.',
@@ -421,6 +421,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'command.fold.make': '접기 영역 만들기',
   'command.fold.remove': '접기 영역 풀기',
   'command.call.goTo': '호출하는 Method로 가기',
+  'command.call.makeMethod': 'Method 만들기',
   'reason.notFound': '이미 없습니다.',
   'reason.wrongKind': '선택한 것에는 적용되지 않습니다.',
   'reason.notContiguous': '같은 부모 아래 붙어 있는 블록을 선택하세요.',
@@ -447,8 +448,6 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.duplicateHeadName': '같은 이름의 헤더가 이미 있습니다. 다른 이름을 적으세요.',
   'reason.methodHasCallers': '이 Method를 호출하는 호출 블록이 있어 Event로 바꿀 수 없습니다.',
   'reason.lastDiagram': '하나뿐인 다이어그램이라 삭제할 수 없습니다.',
-  'reason.lostTarget':
-    '호출하던 Method를 잃은 호출 블록이라 편집할 수 없습니다. 먼저 호출할 Method를 선택하세요.',
   'reason.readOnly': '보기만 하는 중: 이 문서는 여기서 바꿀 수 없습니다.',
   'reason.nothingSelected': '먼저 블록을 선택하세요.',
   'reason.selectOneBlock': '블록 하나를 선택하세요.',
@@ -467,6 +466,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.branchMovesSideways': '분기는 왼쪽 · 오른쪽으로만 이동합니다.',
   'reason.selectHead': '먼저 헤더를 선택하세요.',
   'reason.selectCall': '호출 블록을 선택하세요.',
+  'reason.callHasMethod': '이미 Method를 호출하는 호출 블록입니다.',
   'reason.notOnHead': '헤더에서는 되지 않습니다. 블록을 선택하세요.',
   'reason.cannotPasteOnHead': '헤더에는 붙여넣을 수 없습니다.',
   'reason.cannotWrapHead': '헤더는 감쌀 수 없습니다.',

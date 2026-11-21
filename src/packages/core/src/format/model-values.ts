@@ -31,8 +31,6 @@ const resultSymbolSet = { '←': true, '=': true } as const satisfies Record<
 const callTargetKindSet = {
   local: true,
   named: true,
-  external: true,
-  lost: true,
 } as const satisfies Record<CallTarget['kind'], true>;
 
 /** Every block kind (`kind` of a block), in the order the guide and the toolbar list them. */

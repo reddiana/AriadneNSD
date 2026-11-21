@@ -14,7 +14,7 @@ updated: 2026-11-21
 
 | 인터페이스 | 방향 | 웹에서 |
 | --- | --- | --- |
-| `DocumentStore` | 필요 (셸이 구현) | 브라우저 파일 I/O (1장)와 브라우저 문서 (1.3). 다른 문서 읽기(`readOther`)는 지금 항상 `null`을 반환합니다(다른 문서의 Method 호출 [[01-requirements#^r-blk\|R-BLK-09]]은 미완성) |
+| `DocumentStore` | 필요 (셸이 구현) | 브라우저 파일 I/O (1장)와 브라우저 문서 (1.3) |
 | `SettingsStore` | 필요 (셸이 구현) | 그 브라우저의 저장소 |
 | `CommandRegistry` | 제공 (셸이 사용) | 우리 메뉴 바 · 툴바 · 컨텍스트 메뉴 · 커맨드 팔레트 |
 | `SettingsSchema` | 제공 (셸이 사용) | 우리 설정 창 |

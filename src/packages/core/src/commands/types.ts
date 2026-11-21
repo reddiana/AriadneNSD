@@ -48,13 +48,10 @@ export type Reason = {
  *   together, case sensitive, ignoring surrounding spaces (R-BLK-11).
  * - `methodHasCallers`: a Method that call blocks call cannot become an Event (R-BLK-11).
  * - `lastDiagram`: the only diagram of the document cannot be deleted (invariant 1).
- * - `lostTarget`: a call block that lost its target cannot be edited (interaction rules
- *   "호출 블록"); choose a new target first.
  * - `foldExists`: a fold region with the same range is already there (invariant 5).
  * - `foldsCross`: the new fold region would cross the end of another one (invariant 5).
- * - `notCallable`: the call block calls nothing in this document (a written name, another
- *   document, a lost target), so it cannot be opened or replaced by the blocks (R-EDIT-08,
- *   R-EDIT-15).
+ * - `notCallable`: the call block calls nothing in this document (a written name), so it cannot
+ *   be opened or replaced by the blocks (R-EDIT-08, R-EDIT-15).
  * - `emptyCallName`: the written name of a call block would be empty (R-BLK-08).
  */
 export type ReasonCode =
@@ -84,7 +81,6 @@ export type ReasonCode =
   | 'duplicateHeadName'
   | 'methodHasCallers'
   | 'lastDiagram'
-  | 'lostTarget'
   | 'foldExists'
   | 'foldsCross'
   | 'notCallable'

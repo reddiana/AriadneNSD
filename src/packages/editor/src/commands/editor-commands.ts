@@ -32,6 +32,7 @@ import {
   insertBranch,
   insertCall,
   insertNamedCall,
+  makeMethod,
   move,
   moveBranch,
   moveDiagram,
@@ -1395,9 +1396,50 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     context: ['blocks'],
   });
 
+  /** The one selected call block calling by a written name, or why there is none (R-EDIT-26). */
+  const selectedNamedCall = (state: EditorState): Found<Id> => {
+    const found = selectedCall(state);
+    if (!('value' in found)) {
+      return found;
+    }
+    const block = index().blocks.get(found.value)?.block;
+    return block?.kind === 'call' && block.target.kind === 'named'
+      ? found
+      : { reason: 'reason.callHasMethod' };
+  };
+
+  /** Whether the selection is one call block calling by a written name. */
+  const isNamedCall = (state: EditorState): boolean => 'value' in selectedNamedCall(state);
+
+  /**
+   * Method 만들기 (R-EDIT-26): makes the Method a call by name calls, links the call blocks of
+   * that name to it, and goes to its header, in one undo step (UX CB15).
+   */
+  const runMakeMethod = (call: Id): void => {
+    session.commit(makeMethod(content(), { block: call, ids: session.ids() }), (ok) => {
+      const [diagram] = ok.touched;
+      return { selection: diagram === undefined ? null : { kind: 'head', diagram } };
+    });
+  };
+
+  const makeMethodSpec = spec('call.makeMethod', {
+    edits: true,
+    when: (state) => appliesIf(selectedNamedCall(state)),
+    run: (state) => {
+      const found = selectedNamedCall(state);
+      if ('value' in found) {
+        runMakeMethod(found.value);
+      }
+    },
+    menu: { menu: 'diagram', group: 4, order: 4 },
+    context: ['blocks'],
+    inContext: isNamedCall,
+  });
+
   /**
    * `gd` (03-keymap): from a call block to the header of the Method it calls; from a block shown
-   * in an opened call to the Method's own block (interaction rules "호출 블록 펴 보기").
+   * in an opened call to the Method's own block (interaction rules "호출 블록 펴 보기"). On a
+   * call by a written name it makes the Method first (Method 만들기, UX CB15).
    */
   const goToTarget = (state: EditorState): Found<Selection> => {
     const selection = state.selection;
@@ -1425,8 +1467,18 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
 
   const goToSpec = spec('call.goTo', {
     edits: false,
-    when: (state) => appliesIf(goToTarget(state)),
+    when: (state) => {
+      if (isNamedCall(state)) {
+        return state.readOnly ? 'reason.readOnly' : true;
+      }
+      return appliesIf(goToTarget(state));
+    },
     run: (state) => {
+      const named = selectedNamedCall(state);
+      if ('value' in named) {
+        runMakeMethod(named.value);
+        return;
+      }
       const found = goToTarget(state);
       if ('value' in found) {
         session.select(found.value);
@@ -1434,6 +1486,8 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     },
     menu: { menu: 'diagram', group: 4, order: 3 },
     context: ['blocks', 'peek'],
+    // On a call by name the context menu has "Method 만들기" instead.
+    inContext: (state) => !isNamedCall(state),
   });
 
   // Headers and diagrams (R-BLK-10, R-BLK-11, R-EDIT-18).
@@ -1678,6 +1732,7 @@ export function editorCommands(deps: CommandDeps): ReadonlyArray<CommandSpec> {
     convertCaseSpec,
     setTargetSpec,
     goToSpec,
+    makeMethodSpec,
     ...diagramSpecs,
     ...selectionSpecs,
     zoomSpec('view.zoom.in', 1, (zoom) => zoom + zoomRange.step),

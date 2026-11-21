@@ -234,11 +234,6 @@ export class WebDocumentStore implements DocumentStore {
     return this.#writeHandle(handle, svg, { previousKey, key });
   }
 
-  readOther(): Promise<string | null> {
-    // Other documents (R-BLK-09) come with the call block, after the MVP.
-    return Promise.resolve(null);
-  }
-
   async #writeHandle(
     handle: FileSystemFileHandle,
     svg: string,

@@ -69,11 +69,11 @@ export type SetHeadArgs = {
  * - Changing the kind keeps the text. A Method that call blocks call cannot become an Event
  *   (`methodHasCallers`). The text read as the other kind must still give a valid name
  *   (`emptyHeadName`, `duplicateHeadName`).
- * - Removing a Method's header turns the call blocks calling it into lost ones that keep the name
- *   they showed (01-model 1.5). A diagram left with neither header nor content disappears
+ * - Removing a Method's header turns the call blocks calling it into calls by the name they
+ *   showed (01-model 1.5, ADR-0049). A diagram left with neither header nor content disappears
  *   unless it is the only one (invariant 7).
  * The same kind as before leaves the content as it is.
- * Touched: the diagram, then the call blocks that lost their target.
+ * Touched: the diagram, then the call blocks that now call by name.
  */
 export function setHead(content: Content, args: SetHeadArgs): Result {
   const diagram = content.diagrams.find((d) => d.id === args.diagram);
@@ -89,7 +89,7 @@ export function setHead(content: Content, args: SetHeadArgs): Result {
     const touched: Id[] = [diagram.id];
     let next = replaceDiagram(content, diagram.id, { ...diagram, head: null });
     if (old?.kind === 'method') {
-      next = loseCalls(next, diagram.id, headName(old), touched);
+      next = nameCalls(next, diagram.id, headName(old), touched);
     }
     return done(next, touched);
   }
@@ -131,8 +131,8 @@ export type DeleteDiagramArgs = {
 
 /**
  * Deletes a diagram with everything in it (R-EDIT-18). The call blocks elsewhere that called it
- * lose their target and keep the name they showed (01-model 1.5). The only diagram cannot be
- * deleted (`lastDiagram`, invariant 1). Touched: the call blocks that lost their target.
+ * now call by the name they showed (01-model 1.5, ADR-0049). The only diagram cannot be deleted
+ * (`lastDiagram`, invariant 1). Touched: the call blocks that now call by name.
  */
 export function deleteDiagram(content: Content, args: DeleteDiagramArgs): Result {
   const diagram = content.diagrams.find((d) => d.id === args.diagram);
@@ -148,7 +148,7 @@ export function deleteDiagram(content: Content, args: DeleteDiagramArgs): Result
     diagrams: content.diagrams.filter((d) => d.id !== diagram.id),
   };
   if (diagram.head?.kind === 'method') {
-    next = loseCalls(next, diagram.id, headName(diagram.head), touched);
+    next = nameCalls(next, diagram.id, headName(diagram.head), touched);
   }
   return done(next, touched);
 }
@@ -301,14 +301,17 @@ function callersOf(content: Content, diagram: Id): ReadonlyArray<Id> {
   return found;
 }
 
-/** Turns the call blocks calling `diagram` into lost ones showing `lastName` (01-model 1.5). */
-function loseCalls(content: Content, diagram: Id, lastName: string, touched: Id[]): Content {
+/**
+ * Turns the call blocks calling `diagram` into calls by `name`, the name they showed (01-model
+ * 1.5, ADR-0049). What they keep of an opened call site stays: it names nothing now.
+ */
+function nameCalls(content: Content, diagram: Id, name: string, touched: Id[]): Content {
   return mapCalls(content, (call) => {
     if (!calls(call, diagram)) {
       return call;
     }
     touched.push(call.id);
-    return { ...call, target: { kind: 'lost', lastName } };
+    return { ...call, target: { kind: 'named', name } };
   });
 }
 

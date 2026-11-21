@@ -398,7 +398,10 @@
     and folding in the Method leaves this one as it is. Select shown blocks and press
     <kbd>zf</kbd> for a fold region at this call only. <kbd>ds</kbd> (unwrap) replaces the call
     block with a copy of the Method's blocks (the opposite of extracting). To call a function the
-    document does not have, choose "Call by a written name" in the list and type its name.
+    document does not have, choose "Call by a written name" in the list and type its name. To draw
+    it later, press <kbd>gd</kbd> on that call block (or "Make Method"): a Method of that name is
+    made, every call block with that name calls it, and the selection goes to its header. When a
+    Method is deleted, the call blocks that called it keep its name as a call by a written name.
   </p>
   <div class="pair">
     <figure>
@@ -445,7 +448,12 @@
         <td>The Diagram menu, the context menu</td>
       </tr>
       <tr>
-        <td>Go to the called Method (from a shown block, to its own block)</td>
+        <td>Go to the called Method (from a shown block, to its own block; on a call by a written name, make the Method)</td>
+        <td><kbd>gd</kbd></td>
+        <td>The Diagram menu, the context menu</td>
+      </tr>
+      <tr>
+        <td>Make Method (on a call by a written name)</td>
         <td><kbd>gd</kbd></td>
         <td>The Diagram menu, the context menu</td>
       </tr>

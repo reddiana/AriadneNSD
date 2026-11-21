@@ -1,10 +1,10 @@
 // Commands on call blocks (01-model 1.5, 4.1 "호출", interaction rules "호출 블록").
-import { headParams } from '../model/head';
+import { headName, headParams } from '../model/head';
 import type { Call, Content, Diagram, Id } from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget, unchanged } from './common';
 import { addDiagram, calls, checkHeadName, filledArgs } from './diagram';
 import { putBlocks } from './insert';
-import { indexContent, replaceBlock } from './tree';
+import { indexContent, mapCalls, replaceBlock } from './tree';
 import type { FailResult, Result, Side, Target, WithIds } from './types';
 
 /** Arguments of `editCall`. A field left out stays as it is. */
@@ -21,8 +21,8 @@ export type EditCallArgs = {
 /**
  * Sets the arguments and the result of a call block (R-BLK-07). Both are one line, so line
  * breaks become spaces. Calling a Method that receives something, empty arguments are refilled
- * with the text inside its parentheses (interaction rules "텍스트 편집"). A call block that lost
- * its target cannot be edited (`lostTarget`). A call by a written name also takes a new `name`
+ * with the text inside its parentheses (interaction rules "텍스트 편집"). A call by a written
+ * name, a call whose Method went away included (ADR-0049), also takes a new `name`
  * (R-BLK-08); it cannot become empty once written (`emptyCallName`, UX Q4), and a name is only
  * written on such a call (`wrongKind`). The same text as before leaves the content as it is.
  * Touched: the call block.
@@ -36,9 +36,6 @@ export function editCall(content: Content, args: EditCallArgs): Result {
   const call = entry.block;
   if (call.kind !== 'call') {
     return fail('wrongKind', args.block);
-  }
-  if (call.target.kind === 'lost') {
-    return fail('lostTarget', args.block);
   }
   let newArgs = args.args === undefined ? call.args : oneLine(args.args);
   if (args.args !== undefined && call.target.kind === 'local') {
@@ -142,7 +139,7 @@ export type SetCallTargetArgs = {
 
 /**
  * Makes a call block call a Method of this document (R-BLK-07, 01-model 1.5 "호출할 것
- * 바꾸기"), whatever it called before, a lost target included. The arguments and the result
+ * 바꾸기"), whatever it called before, a written name included. The arguments and the result
  * stay; empty arguments take the text inside the Method's parentheses. Fold regions of the old
  * opened call site go, since they named blocks of the old Method. Only a Method can be called:
  * an Event or a diagram without a header is refused (`wrongKind`). Calling the same Method again
@@ -240,6 +237,71 @@ export function newMethodAndCall(content: Content, args: NewMethodAndCallArgs): 
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
   const next = putBlocks(made.content, range, side, { blocks: [block], folds: [] });
   return done(next, [made.diagram, block.id]);
+}
+
+/** Arguments of `makeMethod`. */
+export type MakeMethodArgs = WithIds & {
+  /** A call block calling by a written name. */
+  readonly block: Id;
+};
+
+/**
+ * Makes the Method a call by a written name calls, in one undo step (R-EDIT-26, "Method
+ * 만들기"). The new Method's header is `name(args)` with the call block's arguments, or `name`
+ * when it has none, and its body one empty block; it goes after the last Method, like
+ * `newDiagram`. Every call block of the document calling the same name then calls it, with the
+ * arguments refilled like `setCallTarget`. When a Method of that name is already there (a file
+ * written by hand), the call blocks call it and nothing is made. Refused: not a call by name
+ * (`wrongKind`), an empty name (`emptyHeadName`), an Event of that name (`duplicateHeadName`).
+ * Touched: the Method, then the call blocks that now call it.
+ */
+export function makeMethod(content: Content, args: MakeMethodArgs): Result {
+  const entry = indexContent(content).blocks.get(args.block);
+  if (entry === undefined) {
+    return fail('notFound', args.block);
+  }
+  const call = entry.block;
+  if (call.kind !== 'call' || call.target.kind !== 'named') {
+    return fail('wrongKind', args.block);
+  }
+  const name = call.target.name.trim();
+  const text = call.args.trim() === '' ? name : `${name}(${call.args})`;
+  const head = { kind: 'method', text } as const;
+  const existing = content.diagrams.find(
+    (d) => d.head?.kind === 'method' && headName(d.head) === headName(head),
+  );
+  let next = content;
+  let method: Diagram;
+  if (existing === undefined) {
+    const clash = checkHeadName(content, head, null);
+    if (clash !== null) {
+      return failWith({ ...clash, node: call.id });
+    }
+    const made = addDiagram(content, 'method', text, idsFor(content, args));
+    next = made.content;
+    const found = next.diagrams.find((d) => d.id === made.diagram);
+    if (found === undefined) {
+      throw new Error(`makeMethod: the new Method ${made.diagram} is missing`);
+    }
+    method = found;
+  } else {
+    method = existing;
+  }
+  const params = paramsOf(method);
+  const linked: Id[] = [];
+  next = mapCalls(next, (other) => {
+    if (other.target.kind !== 'named' || other.target.name.trim() !== name) {
+      return other;
+    }
+    linked.push(other.id);
+    return {
+      ...other,
+      target: { kind: 'local', diagram: method.id },
+      args: filledArgs(other.args, params),
+      siteFolds: [],
+    };
+  });
+  return done(next, [method.id, ...linked]);
 }
 
 /** A new call block calling `diagram`, with the Method's parameters as its arguments. */

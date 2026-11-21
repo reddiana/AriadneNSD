@@ -173,7 +173,7 @@ describe('setHead', () => {
     expectRefused(setHead, content, { diagram: 'd3', kind: 'method' }, 'emptyHeadName');
   });
 
-  it('T-0117 · R-BLK-07: removing a Method header turns its call blocks into lost ones', () => {
+  it('T-0117 · R-BLK-07: removing a Method header turns its call blocks into calls by name', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'v', 'r')]),
       diagram('d2', method(' sort (a)'), [proc('b2')]),
@@ -181,7 +181,7 @@ describe('setHead', () => {
     const result = runOk(setHead, content, { diagram: 'd2', kind: null });
     expect(diagramOf(result.content, 'd2').head).toBeNull();
     expect(blockOf(result.content, 'b1')).toEqual(
-      call('b1', { kind: 'lost', lastName: 'sort' }, 'v', 'r'),
+      call('b1', { kind: 'named', name: 'sort' }, 'v', 'r'),
     );
     expect(result.touched).toEqual(['d2', 'b1']);
   });
@@ -259,7 +259,7 @@ describe('newDiagram', () => {
 });
 
 describe('deleteDiagram', () => {
-  it('T-0126 · R-EDIT-18: deletes a diagram; the call blocks calling it become lost', () => {
+  it('T-0126 · R-EDIT-18: deletes a diagram; the call blocks calling it call by name', () => {
     const content = contentWith(
       diagram('d1', event('Main'), [call('b1', 'd2', 'v'), call('b2', 'd3')]),
       diagram('d2', method('sort(a)'), [call('b3', 'd2', 'a')]),
@@ -267,9 +267,7 @@ describe('deleteDiagram', () => {
     );
     const result = runOk(deleteDiagram, content, { diagram: 'd2' });
     expect(diagramIds(result.content)).toEqual(['d1', 'd3']);
-    expect(blockOf(result.content, 'b1')).toEqual(
-      call('b1', { kind: 'lost', lastName: 'sort' }, 'v'),
-    );
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', { kind: 'named', name: 'sort' }, 'v'));
     expect(blockOf(result.content, 'b2')).toBe(blockOf(content, 'b2'));
     expect(result.touched).toEqual(['b1']);
   });

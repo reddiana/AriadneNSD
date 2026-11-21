@@ -22,6 +22,8 @@ export type SpecParts = {
   readonly menu?: MenuPlace;
   readonly toolbar?: ToolbarPlace;
   readonly context?: ReadonlyArray<SelectionKind>;
+  /** Whether the context menu shows it for the selection now (`CommandSpec.inContext`). */
+  readonly inContext?: (state: EditorState) => boolean;
   readonly title?: Message | ((ctx: CommandContext) => Message);
   readonly checked?: (state: EditorState) => boolean;
   /**
@@ -42,6 +44,7 @@ export function isInsidePeek(selection: Selection | null): boolean {
 /** Makes a command spec. */
 export function spec(id: string, parts: SpecParts): CommandSpec {
   const checked = parts.checked;
+  const inContext = parts.inContext;
   return {
     id,
     title: parts.title ?? commandTitle(id),
@@ -56,6 +59,9 @@ export function spec(id: string, parts: SpecParts): CommandSpec {
     ...(parts.toolbar === undefined ? {} : { toolbar: parts.toolbar }),
     ...(parts.context === undefined ? {} : { context: parts.context }),
     ...(checked === undefined ? {} : { checked: (ctx: CommandContext) => checked(ctx.state) }),
+    ...(inContext === undefined
+      ? {}
+      : { inContext: (ctx: CommandContext) => inContext(ctx.state) }),
   };
 }
 

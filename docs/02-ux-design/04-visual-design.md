@@ -53,7 +53,7 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | If | 조건 칸에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 분기 라벨(처음은 "참" · "거짓", 편집할 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | Case | 조건 칸에 긴 빗금과 짧은 빗금, 분기마다 세로선과 분기 라벨. 분기 라벨은 칸의 왼쪽에 붙이고, **default 분기의 라벨만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]). 코드에서 가져와 default가 없으면 빈 default 칸(`∅`)을 그려 두고, default만 있으면 짧은 빗금 하나만 그린다(→ [[ux-decisions#CD1. default가 없는 Case\|CD1]] · [[ux-decisions#CD2. default만 있는 Case\|CD2]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 조건 칸이 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
-| 호출 블록 | 양옆 안쪽의 세로 이중선. 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함)은 이중선이 점선. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선\|EX1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
+| 호출 블록 | 양옆 안쪽의 세로 이중선, 언제나 실선. Method가 없는 호출 블록(이름을 적는 호출 블록, Method를 삭제하거나 헤더를 제거함)도 모양이 같다 → [[0049-call-without-method-is-named\|ADR-0049]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
 | For | While과 같은 모양(왼쪽 띠 안에 본문, 조건 칸이 위). While과는 **조건 칸의 텍스트로만** 구분한다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | Event 헤더 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 헤더 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("호출하는 것과 호출되는 것"이라 같은 색) |
@@ -352,7 +352,7 @@ flowchart LR
 
 ![[visual-design-anatomy.svg|720]]
 
-*블록마다의 치수와 상태. 위에서부터 블록의 종류, 여러 줄 텍스트, 빈 분기와 default가 없는 Case, 접힌 분기, 대상을 잃은 호출 블록, 겹친 테두리(제어 블록을 거쳐 겹쳐도 틈은 같다), 다이어그램 사이, 편집 레이어의 순서다. 주황 선과 주황 글자는 치수선이고 그림에는 들어가지 않는다. 펼침 삼각형(`▸` `▾`)과 맨 아래의 편집 레이어는 편집 화면에만 보이고 저장되는 그림에는 들어가지 않는다.*
+*블록마다의 치수와 상태. 위에서부터 블록의 종류, 여러 줄 텍스트, 빈 분기와 default가 없는 Case, 접힌 분기, 겹친 테두리(제어 블록을 거쳐 겹쳐도 틈은 같다), 다이어그램 사이, 편집 레이어의 순서다. 주황 선과 주황 글자는 치수선이고 그림에는 들어가지 않는다. 펼침 삼각형(`▸` `▾`)과 맨 아래의 편집 레이어는 편집 화면에만 보이고 저장되는 그림에는 들어가지 않는다.*
 
 | 토큰 | 값 | 무엇 |
 | --- | --- | --- |
@@ -425,7 +425,6 @@ flowchart LR
 | 접힌 접기 영역 | 한 줄 칸 + 이름. 편집할 때는 이름 앞에 펼침 삼각형 `▸`(편집 레이어, 저장되지 않음) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded` | 있음 (2026-11-03) |
 | 접힌 제어 블록의 분기 | 한 줄 칸 + "⋯ 블록 n개" (기울임) | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#fbfcfe;border:1px solid #8888;vertical-align:-0.1em"></span> `block.folded`, <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 (2026-11-03) |
 | 펴 보인 호출 블록 | 3px 테두리 + 띠(호출 블록의 텍스트. 편집할 때는 앞에 펼침 삼각형 `▾`, 편집 레이어). 펴진 접기 영역과 모양이 같고 색이 보라다. 안의 텍스트는 다른 블록과 같다. 띠가 있는 동안 세로 이중선은 그리지 않음 | 문서 | `peek.*` | 있음 (2026-11-03) |
-| 참조 대상을 잃은 호출 블록(Method를 삭제함, 헤더를 제거함) | 세로 이중선이 점선(3 · 3). 다른 문서를 찾을 수 없는 호출 블록은 저장되는 그림에서 실선이고, 찾을 수 없다는 표시는 편집 레이어에만 그립니다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선\|EX1]] | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 있음 |
 | 이름 없는 접기 영역 (펴짐) | 이름 띠에 기본 이름([[02-interaction-rules#접기 · 펼치기]])을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#2c55c9;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.name` | 있음 (2026-11-03) |
 | 이름 없는 접기 영역 (접힘) | 접힌 칸에 기본 이름을 기울여 씀 | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` | 있음 (2026-11-03) |
 | 호버 | 블록의 바깥 선에서 1px 안에 1px 테두리. 선택한 블록에는 그리지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover` | 있음 |
@@ -579,7 +578,6 @@ flowchart LR
 
 ## 12. 미결정 사항
 
-- 다른 문서를 찾을 수 없다는 편집 레이어 표시의 모양. 다른 문서의 Method 호출([[01-requirements#^r-blk|R-BLK-09]])을 만들 때 정합니다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]
 - 비례폭 글꼴(분기 라벨 등의 자리, 그리고 블록 텍스트를 문장으로 쓰는 문서). 아직 없다. 들인다면 블록 텍스트의 언어가 아닌 다른 문서 설정으로 고르게 한다. 그래야 이미 저장한 파일이 다시 배치되지 않는다 ([[0034-default-block-font|ADR-0034]], [[0042-text-kind-keeps-block-font|ADR-0042]])
 - 화면의 나머지(툴바, 메뉴, 모달, 설정 화면, 아이콘)의 모습. 배포 대상마다 그 앱의 모습을 따를지, 공통 모습을 둘지. 웹의 배치는 [[05-screen-layout|화면 배치]]에서 정했고, 아이콘의 그림과 색이 남았습니다
 - 이름이 중복된 헤더에 붙이는 표시의 모양 ([[01-requirements#^r-blk|R-BLK-10]])

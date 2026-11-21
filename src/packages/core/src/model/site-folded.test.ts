@@ -246,8 +246,8 @@ describe('what the file keeps (QA-03, QA-04)', () => {
     expect(savedFolded(docOf({ folded, opened: [['b1']] }))).toEqual(['b1/', 'b1/r1']);
   });
 
-  it('T-1335: a call site whose target is lost writes nothing', () => {
-    const lost: Content = {
+  it('T-1335: a call site calling by name writes nothing', () => {
+    const named: Content = {
       ...content,
       diagrams: content.diagrams.map((diagram) =>
         diagram.id === 'd1'
@@ -258,7 +258,7 @@ describe('what the file keeps (QA-03, QA-04)', () => {
                 blocks: [
                   {
                     ...call('b1', 'd2'),
-                    target: { kind: 'lost', lastName: 'm' },
+                    target: { kind: 'named', name: 'm' },
                   } as Block,
                 ],
               },
@@ -266,7 +266,7 @@ describe('what the file keeps (QA-03, QA-04)', () => {
           : diagram,
       ),
     };
-    const doc: Doc = { content: lost, view: viewOf({ folded: ['b1/', 'b1/f1'] }) };
+    const doc: Doc = { content: named, view: viewOf({ folded: ['b1/', 'b1/f1'] }) };
     expect(savedFolded(doc)).toEqual([]);
   });
 
@@ -311,15 +311,15 @@ describe('when the call blocks change', () => {
     expect(next.folded).toEqual(['b2/', 'b2/f1']);
   });
 
-  it('T-1338: a target lost with its Method keeps the folding, and undoing the deletion finds it', () => {
-    const lost = retargeted({ kind: 'lost', lastName: 'm' });
-    expect(forgetRetargeted(content, lost, view, false)).toBe(view);
-    expect(forgetRetargeted(lost, content, view, true)).toBe(view);
+  it('T-1338: a call left with a name when its Method goes keeps the folding, and undoing the deletion finds it', () => {
+    const named = retargeted({ kind: 'named', name: 'm' });
+    expect(forgetRetargeted(content, named, view, false)).toBe(view);
+    expect(forgetRetargeted(named, content, view, true)).toBe(view);
   });
 
-  it('T-1339: calling a Method from a lost target starts over', () => {
-    const lost = retargeted({ kind: 'lost', lastName: 'm' });
-    expect(forgetRetargeted(lost, content, view, false).folded).toEqual(['b2/', 'b2/f1']);
+  it('T-1339: calling a Method from a call by name starts over', () => {
+    const named = retargeted({ kind: 'named', name: 'm' });
+    expect(forgetRetargeted(named, content, view, false).folded).toEqual(['b2/', 'b2/f1']);
   });
 
   it('T-1340: replacing a call block folds the copies as they were shown at that call', () => {

@@ -46,8 +46,6 @@ const objects = [
   { pointer: '/$defs/callTarget', key: 'target', name: 'CallTarget', union: true },
   { pointer: '/$defs/callTarget/oneOf/0', key: 'target.local', name: 'LocalTarget' },
   { pointer: '/$defs/callTarget/oneOf/1', key: 'target.named', name: 'NamedTarget' },
-  { pointer: '/$defs/callTarget/oneOf/2', key: 'target.external', name: 'ExternalTarget' },
-  { pointer: '/$defs/callTarget/oneOf/3', key: 'target.lost', name: 'LostTarget' },
 ];
 
 const problems = [];

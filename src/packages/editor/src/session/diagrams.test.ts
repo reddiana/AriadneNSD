@@ -204,14 +204,14 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     ]);
   });
 
-  it('T-0218 · R-BLK-07: removing a Method header makes its calls lost and selects the first block', () => {
+  it('T-0218 · R-BLK-07: removing a Method header makes its calls call by name and selects the first block', () => {
     const engine = testEngine(
       withHeads(contentOf([call('k1', 'd2', 'v')], [proc('c')]), { d2: ['method', 'f(a)'] }),
     );
     engine.select({ kind: 'head', diagram: 'd2' });
     engine.keys('x');
     expect(headText(engine, 'd2')).toBeNull();
-    expect(blockOf(engine, 'k1')).toMatchObject({ target: { kind: 'lost', lastName: 'f' } });
+    expect(blockOf(engine, 'k1')).toMatchObject({ target: { kind: 'named', name: 'f' } });
     expect(selected(engine)).toEqual(['c']);
     engine.keys('u');
     engine.select({ kind: 'head', diagram: 'd2' });
@@ -236,7 +236,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     select(engine, 'c');
     engine.keys('Shift+Delete');
     expect(engine.content().diagrams.map((d) => d.id)).toEqual(['d1']);
-    expect(blockOf(engine, 'k1')).toMatchObject({ target: { kind: 'lost', lastName: 'f' } });
+    expect(blockOf(engine, 'k1')).toMatchObject({ target: { kind: 'named', name: 'f' } });
     expect(notice(engine)).toBe('notice.diagramDeleted');
     expect(selected(engine)).toEqual(['k1']);
     engine.keys('Shift+Delete');
@@ -511,13 +511,19 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     expect(blockOf(engine, 'k1')).toMatchObject({ args: '', result: 'ok' });
   });
 
-  it('T-0226 · R-BLK-07: a call block that lost its target cannot be edited', () => {
-    const lost: Call = { ...call('k1', 'd1'), target: { kind: 'lost', lastName: 'f' } };
-    const engine = testEngine(contentOf([lost]));
+  it('T-1441: a call whose Method went away is edited like any call by name', () => {
+    const engine = testEngine(
+      withHeads(contentOf([call('k1', 'd2', 'v')], [proc('c')]), { d2: ['method', 'f(a)'] }),
+    );
+    select(engine, 'c');
+    engine.keys('Shift+Delete');
     select(engine, 'k1');
     engine.keys('Enter');
-    expect(engine.session.state.editing).toBeNull();
-    expect(notice(engine)).toBe('reason.lostTarget');
+    expect(engine.session.state.editing?.field).toEqual({
+      kind: 'call',
+      block: 'k1',
+      part: 'args',
+    });
   });
 
   it('T-0227 · R-BLK-07: changing the called Method starts at the current one and keeps the texts', async () => {

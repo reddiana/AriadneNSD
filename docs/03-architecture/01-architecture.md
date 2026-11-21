@@ -273,7 +273,6 @@ classDiagram
     class DocumentStore
     <<interface>> DocumentStore
     DocumentStore : 이 문서 읽기 · 쓰기 · 다른 이름으로 쓰기
-    DocumentStore : 경로로 다른 문서 읽기, 없으면 null
     class SettingsStore
     <<interface>> SettingsStore
     SettingsStore : 사용자 설정 읽기 · 쓰기
@@ -310,7 +309,7 @@ UML 컴포넌트 · 인터페이스 그림입니다(Mermaid에 컴포넌트 다�
 | **제공 인터페이스** (provided) | `CommandRegistry`, `SettingsSchema`, `EditorHandle` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
 
 - **필요 인터페이스**는 포트와 어댑터(헥사고날) 패턴입니다. 플랫폼마다 다른 I/O를 `editor`가 인터페이스로 정의하고, 셸이 구현체를 만들어 시작할 때 주입합니다.
-	- `DocumentStore`: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다, 다른 문서를 경로로 읽는다(다른 문서의 Method 호출 → [[01-requirements#^r-blk|R-BLK-09]]). 읽지 못하면 `null`을 반환하고, 찾을 수 없다는 표시를 편집 레이어에만 그린다(저장되는 그림은 그대로 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]). 웹은 사용자가 권한을 준 파일이나 폴더 안에서만 읽는다.
+	- `DocumentStore`: 이 문서를 읽는다 · 쓴다 · 다른 이름으로 쓴다.
 	- `SettingsStore`: 사용자 설정(화면 언어, 자동 저장, 키 힌트 등 → [[05-screen-layout|화면 배치]]의 환경 설정)을 읽고 쓴다.
 - **제공 인터페이스**로 `editor`는 명령 레지스트리와 설정 스키마를 노출합니다. 셸은 이것을 자기 툴바 · 메뉴 · 설정 창으로 렌더링하거나, 호스트 프로그램의 확장 지점(명령 팔레트 · 컨텍스트 메뉴 · 설정 화면: Obsidian, VSCode, IntelliJ)에 등록합니다. 명령의 실행 진입점은 하나(`id`로 실행)입니다. 셸도 자기 명령(새로 · 열기 · 최근 파일)을 같은 목록에 더합니다.
 	- `EditorHandle`: 셸이 `editor`를 만들면 받는 핸들입니다. 문서를 바꾸고(`open`), 저장하고, 문서의 상태(이름 · 저장 안 됨 · 읽기 전용)를 알립니다. `editor`는 문서 하나만 관리하고, 어떤 파일을 열지와 자동 저장 · 로컬 백업의 타이머는 셸이 담당합니다 → [[03-editor#6.1 새로 · 열기 · 최근 파일]], [[03-editor#6.3 자동 저장과 로컬 백업은 셸이 담당한다]]
@@ -386,7 +385,7 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 - **다이어그램**(`Diagram`)은 헤더(`Head`)와 본문(`Seq`)을 갖는다. 헤더가 Event이면 이벤트 핸들러, Method이면 호출할 수 있는 서브루틴이다. → [[0021-event-and-method|ADR-0021]]
 - **줄**(`Seq`)은 블록의 순서 있는 목록이다. 비지 않는다(빈 분기는 빈 처리 블록 하나로 채운다).
 - **제어 블록**은 줄을 하나 이상 합성한다: While · Do-While · For는 본문 하나, If는 분기 둘, Case는 분기 여럿과 default.
-- **호출 블록**(`Call`)은 호출 대상 Method를 **id로 참조**한다(다른 문서의 Method는 파일 경로와 id로). 이름 문자열을 복사해 갖지 않는다. 한 문서 안에서 헤더의 이름은 유일하다([[02-interaction-rules#Event 헤더]]). 그래서 헤더의 이름을 바꾸면 호출 블록의 표시가 모두 따라 바뀐다. 참조 대상이 없어지면 마지막으로 보이던 이름을 보존하고 "참조 대상 없음"(dangling reference)이 된다. → [[0022-call-name-follows-head|ADR-0022]]
+- **호출 블록**(`Call`)은 호출 대상 Method를 **id로 참조**한다. 이름 문자열을 복사해 갖지 않는다. 한 문서 안에서 헤더의 이름은 유일하다([[02-interaction-rules#Event 헤더]]). 그래서 헤더의 이름을 바꾸면 호출 블록의 표시가 모두 따라 바뀐다. 문서에 없는 것을 호출하는 호출 블록은 id 대신 이름을 적고, 참조하던 Method가 없어지면 마지막으로 보이던 이름을 적은 호출 블록이 된다. → [[0022-call-name-follows-head|ADR-0022]], [[0049-call-without-method-is-named|ADR-0049]]
 - **접기 영역**(`FoldMark`)은 한 줄 안의 연속된 블록 범위에 이름을 붙인 마커다. 중첩될 수 있다. 블록을 감싸는 컨테이너 노드가 아니라 줄에 붙은 주석(annotation)이라, 블록 트리는 접기 영역과 무관하게 같다. → [[0017-fold-name-in-model|ADR-0017]]
 - 블록과 다이어그램, 접기 영역은 모두 **안정 id**(문서가 바뀌어도 유지되는 식별자)를 갖는다. 선택, 접힘, 호출 대상은 모두 id로 참조한다.
 

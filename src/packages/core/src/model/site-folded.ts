@@ -333,9 +333,9 @@ function openedMethod(call: Call): Id | null {
 
 /**
  * Forgets the folding of call sites whose call block now calls something else: what they kept
- * named blocks of the old Method, and the new one is opened for the first time. A target lost
- * with its Method is not a new target, so undoing the deletion brings the folding back.
- * `isStep` is an undo or redo: a lost target coming back there is the old one again.
+ * named blocks of the old Method, and the new one is opened for the first time. A call left with
+ * a name only (its Method deleted, ADR-0049) opens nothing, so undoing the deletion brings the
+ * folding back. `isStep` is an undo or redo: a Method coming back there is the old one again.
  */
 export function forgetRetargeted(
   before: Content,
@@ -353,8 +353,8 @@ export function forgetRetargeted(
     if (
       was !== undefined &&
       openedMethod(was) !== openedMethod(call) &&
-      call.target.kind !== 'lost' &&
-      !(isStep && was.target.kind === 'lost')
+      call.target.kind !== 'named' &&
+      !(isStep && was.target.kind === 'named')
     ) {
       changed.add(call.id);
     }

@@ -112,7 +112,7 @@ describe('clipboard formats (03-editor 3.3)', () => {
       {
         id: 'c4',
         kind: 'call',
-        target: { kind: 'lost', lastName: 'Old' },
+        target: { kind: 'named', name: 'Old' },
         args: 'a',
         result: 'r',
         siteFolds: [],

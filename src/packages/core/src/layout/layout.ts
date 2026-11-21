@@ -891,7 +891,6 @@ function placeBlock(
           before: measure.before,
           name: measure.name,
           after: measure.after,
-          isLost: block.target.kind === 'lost',
         });
         context.regions.push({ kind: 'block', blockId: id, box });
       } else if (measure.kind === 'peek') {

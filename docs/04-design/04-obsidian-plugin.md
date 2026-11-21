@@ -14,7 +14,7 @@ Obsidian 셸입니다. 셸은 `editor`를 감싸는 어댑터로, [[01-architect
 
 | 인터페이스 | 방향 | Obsidian에서 |
 | --- | --- | --- |
-| `DocumentStore` | 필요 (셸이 구현) | 볼트 파일 I/O. 다른 문서도 볼트에서 경로로 읽는다 (4장) |
+| `DocumentStore` | 필요 (셸이 구현) | 볼트 파일 I/O (4장) |
 | `SettingsStore` | 필요 (셸이 구현) | 플러그인 설정(`loadData` · `saveData`) |
 | `CommandRegistry` | 제공 (셸이 사용) | Obsidian 명령 팔레트, Obsidian 컨텍스트 메뉴 (+ 우리 툴바) |
 | `SettingsSchema` | 제공 (셸이 사용) | 플러그인 설정 탭 |
@@ -116,7 +116,7 @@ sequenceDiagram
 
 ## 4. 볼트 입출력
 
-`DocumentStore`의 Obsidian 구현체입니다. 이 문서와 다른 문서(다른 문서의 Method 호출)를 모두 볼트에서 경로로 읽습니다 → [[0031-shell-interfaces|ADR-0031]]
+`DocumentStore`의 Obsidian 구현체입니다. 이 문서를 볼트에서 경로로 읽고 씁니다 → [[0031-shell-interfaces|ADR-0031]]
 
 > [!info] 미완성: 읽기/쓰기 구현, 저장 시점(탭 닫을 때 / 자동 저장), 외부 변경(다른 곳에서 파일이 바뀌었을 때)의 충돌 처리
 

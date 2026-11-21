@@ -38,7 +38,10 @@ export type CommandView = {
   readonly keys: ReadonlyArray<string>;
   readonly menu: MenuPlace | null;
   readonly toolbar: ToolbarPlace | null;
-  /** The kinds of selection the context menu shows it for; empty when it is not there. */
+  /**
+   * The kinds of selection the context menu shows it for; empty when it is not there, also when
+   * `inContext` says not for the selection now.
+   */
   readonly context: ReadonlyArray<SelectionKind>;
   readonly isEnabled: boolean;
   /** Why it does not apply now, or `null` when it does. */
@@ -62,7 +65,7 @@ export function viewCommand(
     keys: spec.keys,
     menu: spec.menu ?? null,
     toolbar: spec.toolbar ?? null,
-    context: spec.context ?? [],
+    context: spec.inContext === undefined || spec.inContext(ctx) ? (spec.context ?? []) : [],
     isEnabled: applies === true,
     reason: applies === true ? null : format(applies),
     checked: spec.checked ? spec.checked(ctx) : null,

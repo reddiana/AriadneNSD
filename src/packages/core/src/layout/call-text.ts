@@ -36,10 +36,6 @@ export function callParts(context: CallTextContext, block: Call): CallParts {
     case 'named':
       name = target.name;
       break;
-    case 'external':
-    case 'lost':
-      name = target.lastName;
-      break;
   }
   if (name === '') {
     name = drawingMessage(context.locale, 'call.noName');

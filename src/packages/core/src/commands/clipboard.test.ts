@@ -78,7 +78,7 @@ describe('copy, cut and paste', () => {
     expect(idsIn(result.content, 'r1')).toEqual(['b4', 'b5']);
   });
 
-  it('T-0093: 01-model 3.6: a pasted call to a Method not in this document loses its target', () => {
+  it('T-0093: 01-model 3.6: a pasted call to a Method not in this document calls by name', () => {
     const clip = seq([
       {
         id: 'b1',
@@ -95,7 +95,7 @@ describe('copy, cut and paste', () => {
       clip,
     });
     expect(blockOf(result.content, 'b2')).toMatchObject({
-      target: { kind: 'lost', lastName: '' },
+      target: { kind: 'named', name: '' },
       args: 'a',
     });
   });

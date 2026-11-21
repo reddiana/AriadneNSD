@@ -1,6 +1,7 @@
 // Editing commands in the browser that the acceptance tests do not cover: extracting blocks into
-// a new Method (R-EDIT-19, interaction rules "새 Method로 빼기와 새 다이어그램") and the toolbar's
-// "감싸기 ▾" when there is nothing to wrap (UX TB3).
+// a new Method (R-EDIT-19, interaction rules "새 Method로 빼기와 새 다이어그램"), the toolbar's
+// "감싸기 ▾" when there is nothing to wrap (UX TB3), and making the Method of a call by name
+// (R-EDIT-26, UX CB15).
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
@@ -130,4 +131,33 @@ test('T-1384 · UX TB3: with nothing selected Wrap ▾ is dimmed and a click tel
   await wrap.click({ force: true });
   await expect(statusBar(page)).toContainText('Select a block first.');
   await expect(page.getByRole('menu')).toHaveCount(0);
+});
+
+test('T-1443 · R-EDIT-26 · UX CB15: gd on a call by name makes its Method and goes there; the context menu offers it; one undo takes it back', async ({
+  page,
+}) => {
+  await openApp(page);
+  await canvas(page).focus();
+  await page.keyboard.press('a');
+  await page.keyboard.press('c');
+  await page.getByRole('menuitem', { name: 'Call by a written name' }).click();
+  await typeText(page, 'scan');
+  await expect(selection(page)).toHaveText('Call block');
+
+  const menu = page.getByRole('menu', { name: 'Context menu' });
+  await page.keyboard.press('Shift+F10');
+  await expect(menu.getByRole('menuitem', { name: /^Make Method/ })).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /^Go to Called Method/ })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(canvas(page)).toBeFocused();
+
+  await page.keyboard.press('g');
+  await page.keyboard.press('d');
+  await expect(selection(page)).toHaveText('Method header "scan"');
+  // The call block's text and the new header.
+  const scans = page.locator('.ans-document text').filter({ hasText: /^scan$/ });
+  await expect(scans).toHaveCount(2);
+
+  await page.keyboard.press('u');
+  await expect(scans).toHaveCount(1);
 });

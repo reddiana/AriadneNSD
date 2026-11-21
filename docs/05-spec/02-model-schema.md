@@ -101,15 +101,6 @@ classDiagram
   class NamedTarget {
     name
   }
-  class ExternalTarget {
-    file
-    diagram
-    lastName
-  }
-  class LostTarget {
-    lastName
-    file
-  }
   Document *-- "1" Settings : settings
   Document *-- "1..*" Diagram : diagrams
   Document *-- "1" View : view
@@ -135,8 +126,6 @@ classDiagram
   Arm *-- "*" Fold : folds
   CallTarget <|-- LocalTarget
   CallTarget <|-- NamedTarget
-  CallTarget <|-- ExternalTarget
-  CallTarget <|-- LostTarget
 ```
 
 ## 2. 객체마다의 필드
@@ -312,7 +301,7 @@ Case에서 값 하나의 분기입니다.
 
 `kind`로 가르는 네 꼴 가운데 하나입니다.
 
-꼴: [[#2.17 호출 대상: local|호출 대상: local]] · [[#2.18 호출 대상: named|호출 대상: named]] · [[#2.19 호출 대상: external|호출 대상: external]] · [[#2.20 호출 대상: lost|호출 대상: lost]]
+꼴: [[#2.17 호출 대상: local|호출 대상: local]] · [[#2.18 호출 대상: named|호출 대상: named]]
 
 ### 2.17 호출 대상: local
 
@@ -325,33 +314,12 @@ Case에서 값 하나의 분기입니다.
 
 ### 2.18 호출 대상: named
 
-다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수 등).
+다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수, 아직 그리지 않은 서브루틴, 지워진 Method의 이름 등).
 
 | 필드 | 타입 | 필수 | 허용 값 | 설명 |
 | --- | --- | :---: | --- | --- |
 | `kind` | string | 필수 | `"named"`만 | 대상의 종류 |
 | `name` | string | 필수 | - | 블록에 적은 이름 |
-
-### 2.19 호출 대상: external
-
-다른 파일의 Method입니다.
-
-| 필드 | 타입 | 필수 | 허용 값 | 설명 |
-| --- | --- | :---: | --- | --- |
-| `kind` | string | 필수 | `"external"`만 | 대상의 종류 |
-| `file` | string | 필수 | - | 그 파일을 가리키는 값(무엇을 기록할지는 아직 정하지 않음) |
-| `diagram` | string | 필수 | `d1`, `d2` … (`^d[1-9][0-9]*$`) | 그 파일 안 Method 다이어그램의 id |
-| `lastName` | string | 필수 | - | 마지막으로 본 Method의 이름. 파일을 읽지 못할 때 보인다 |
-
-### 2.20 호출 대상: lost
-
-가리키던 Method가 없어진 호출 블록입니다(다이어그램을 지움, 헤더를 뗌).
-
-| 필드 | 타입 | 필수 | 허용 값 | 설명 |
-| --- | --- | :---: | --- | --- |
-| `kind` | string | 필수 | `"lost"`만 | 대상의 종류 |
-| `lastName` | string | 필수 | - | 마지막으로 보인 이름 |
-| `file` | string | 생략 가능 | - | 다른 파일의 Method였으면 그 파일을 가리키던 값 |
 
 ## 3. 스키마가 보지 못하는 규칙
 
@@ -534,29 +502,6 @@ Case에서 값 하나의 분기입니다.
 >           "properties": {
 >             "kind": { "const": "named" },
 >             "name": { "type": "string" }
->           }
->         },
->         {
->           "description": "A Method in another file.",
->           "type": "object",
->           "additionalProperties": false,
->           "required": ["kind", "file", "diagram", "lastName"],
->           "properties": {
->             "kind": { "const": "external" },
->             "file": { "type": "string" },
->             "diagram": { "$ref": "#/$defs/diagramId" },
->             "lastName": { "type": "string" }
->           }
->         },
->         {
->           "description": "A Method that is no longer there.",
->           "type": "object",
->           "additionalProperties": false,
->           "required": ["kind", "lastName"],
->           "properties": {
->             "kind": { "const": "lost" },
->             "lastName": { "type": "string" },
->             "file": { "type": "string" }
 >           }
 >         }
 >       ]

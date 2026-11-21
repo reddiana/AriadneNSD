@@ -718,9 +718,6 @@ export class EditorSession {
       }
       case 'named':
         return target.name;
-      case 'external':
-      case 'lost':
-        return target.lastName;
     }
   }
 
@@ -773,9 +770,6 @@ export class EditorSession {
         }
         if (block.kind !== 'call') {
           return { reason: 'reason.wrongKind' };
-        }
-        if (block.target.kind === 'lost') {
-          return { reason: 'reason.lostTarget' };
         }
         if (field.part === 'name') {
           return block.target.kind === 'named'

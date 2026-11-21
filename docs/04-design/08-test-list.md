@@ -17,14 +17,14 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 8 | 45 | 291 | - | 344 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 9 | 45 | 299 | - | 353 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 176 | - | 211 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 36 | 43 | - | 102 |
-| [[#5. 파일\|파일]] | 18 | 166 | 241 | - | 425 |
+| [[#5. 파일\|파일]] | 18 | 166 | 242 | - | 426 |
 | [[#6. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#7. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#8. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 85 | 277 | 940 | 5 | 1307 |
+| 합계 | 86 | 277 | 949 | 5 | 1317 |
 
 ## 읽는 법
 
@@ -77,17 +77,18 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 344개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 353개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
-인수 테스트가 다루지 않는 편집 명령을 브라우저에서 확인합니다. Playwright · 테스트 3개.
+인수 테스트가 다루지 않는 편집 명령을 브라우저에서 확인합니다. Playwright · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0839 | `m`이 선택한 블록을 빼고, 이름을 적으면 호출 블록이 선택되며, 새 Method는 뺀 Method 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM1]], [[ux-decisions\|UX XM2]] |
 | T-0840 | 헤더 없는 다이어그램에서 `m`은 묻는다: `Esc`는 그만두고, `2`는 Method 헤더를 달고, `Enter`는 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-1384 | 선택한 것이 없으면 감싸기 ▾가 흐리고, 누르면 목록을 열지 않고 상태 표시줄에 이유를 알린다 | [[ux-decisions\|UX TB3]] |
+| T-1443 | gd on a call by name makes its Method and goes there; the context menu offers it; one undo takes it back | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX CB15]] |
 
 ^t-apps-web-e2e-editing-spec-ts
 
@@ -181,7 +182,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 
 ### [단위] `packages/core/src/commands/call.test.ts`
 
-호출 블록의 명령(editCall · setCallTarget · insertCall · newMethodAndCall). Vitest · 테스트 24개.
+editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vitest · 테스트 29개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -191,9 +192,9 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0068 | 아무것도 받지 않는 Method는 빈 인자로 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0069 | 이름을 적어 호출한 블록은 적힌 그대로 편집한다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-0070 | 01-model 4: 같은 텍스트면 내용은 그대로다 | - |
-| T-0071 | 대상을 잃은 호출 블록은 편집할 수 없다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-1432 | a call whose Method went away is a call by name and can be edited | - |
 | T-0072 | 호출 블록이 아닌 블록과 정의되지 않은 블록은 거절한다 | - |
-| T-0073 | 01-model 1.5: 대상을 잃은 호출 블록이 다시 Method를 호출하며 적은 것을 지킨다 | - |
+| T-0073 | 01-model 1.5: a call by name calls a Method again and keeps what was written | - |
 | T-0074 | 01-model 1.5: Method를 바꾸며 인자와 결과를 지킨다 | - |
 | T-0075 | 빈 인자는 새 Method의 매개변수를 받는다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0076 | 01-model 1.6: 옛 호출 위치의 접기 영역은 없어진다 | - |
@@ -209,6 +210,11 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0086 | 적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 | - |
 | T-0088 | 비거나 중복되는 이름과 없는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
+| T-1433 | makes the Method a call by name calls, with its arguments, and links it | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1434 | without arguments the header is the name alone | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1435 | every call block calling the same name calls the new Method | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1436 | a Method of that name already there is called, and nothing is made | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1437 | refuses a call to a Method, an empty name, a name of an Event, other blocks | [[01-requirements#^r-edit\|R-EDIT-26]] |
 
 ^t-packages-core-src-commands-call-test-ts
 
@@ -222,7 +228,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0090 | 붙여넣기는 새 id의 사본을 선택한 블록 뒤에 둔다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0091 | 01-model 1.7: 붙여넣은 접기 영역은 새 id로 바뀐다 | - |
 | T-0092 | 빈 블록에 붙여넣으면 그 위치를 차지한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 붙여넣은 호출은 대상을 잃는다 | - |
+| T-0093 | 01-model 3.6: a pasted call to a Method not in this document calls by name | - |
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 삭제한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 
@@ -264,7 +270,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0114 | Event를 Method로, 다시 Event로 바꾸며 텍스트를 지킨다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0115 | 호출 블록이 호출하는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0116 | 종류를 바꿀 때 겹치거나 빈 이름으로 읽히는 텍스트는 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
-| T-0117 | Method 헤더를 없애면 그 호출 블록은 대상을 잃는다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-0117 | removing a Method header turns its call blocks into calls by name | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0118 | 불변식 7: 헤더도 내용도 없이 남은 다이어그램은 사라진다 | - |
 | T-0119 | 불변식 7: 하나뿐인 다이어그램은 헤더도 내용도 없어도 남는다 | - |
 | T-0120 | 01-model 4: 같은 종류로 바꾸면 내용은 그대로다 | - |
@@ -273,7 +279,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0123 | 그 종류의 첫 것은 맨 앞(Event)이나 맨 뒤(Method)에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0124 | 불변식 7: 새 문서의 빈 다이어그램은 다른 다이어그램이 오면 없어진다 | - |
 | T-0125 | 01-model 1.7: id를 주어진 생성기에서 받는다 | - |
-| T-0126 | 다이어그램을 삭제하면 그것을 부르던 호출 블록은 대상을 잃는다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-0126 | deletes a diagram; the call blocks calling it call by name | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0127 | 불변식 1: 하나뿐인 다이어그램은 삭제할 수 없다 | - |
 | T-0128 | 같은 종류의 앞 다이어그램과 위치를 바꾸고, 다른 종류는 건너뛴다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0129 | 같은 종류의 양 끝에서는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
@@ -511,11 +517,11 @@ id. Vitest · 테스트 5개.
 | T-1332 | Method는 접힌 채 펴 둔 호출 자리는 자기 접힘을 갖는다는 표시를 기록한다 | - |
 | T-1333 | 닫힌 호출 자리의 접힘은 파일에 남고, 다시 저장해도 바이트가 같다 | - |
 | T-1334 | 없어진 호출 자리, Method에 없는 id, 갈 수 없는 경로는 기록하지 않는다 | - |
-| T-1335 | 호출 대상이 없어진 호출 자리는 기록하지 않는다 | - |
+| T-1335 | a call site calling by name writes nothing | - |
 | T-1336 | 다른 버전의 파일에 정의되지 않은 항목이 있어도 열리고 그려진다 | - |
 | T-1337 | 호출 블록이 다른 Method를 호출하면 그 호출 블록을 지나는 경로의 접힘만 버린다 | - |
-| T-1338 | Method를 삭제해 호출 대상이 없어져도 접힘은 남고, 삭제를 실행 취소하면 돌아온다 | - |
-| T-1339 | 대상이 없어진 호출 블록이 Method를 호출하게 되면 접힘을 처음부터 가져온다 | - |
+| T-1338 | a call left with a name when its Method goes keeps the folding, and undoing the deletion finds it | - |
+| T-1339 | calling a Method from a call by name starts over | - |
 | T-1340 | 호출 블록을 풀면 사본이 그 자리에 보이던 대로 접힌다 | - |
 | T-1341 | 접힘이 없는 닫힌 호출 블록을 풀면 사본이 Method처럼 접힌다 | - |
 
@@ -537,14 +543,14 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 35개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 38개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1087 | peek: 호출 블록에서 f는 펴 보이고, Method의 블록은 선택하고 복사할 수 있지만 편집할 수 없다 | - |
 | T-1088 | peek: 펴 보인 안쪽에서 접으면 그 호출 블록을 접고 호출 블록을 선택한다 | - |
 | T-1089 | peek: 펴 보인 안쪽에서 편 호출 블록은 경로를 갖고, 같은 Method를 세 번째로 펴면 알린다 | - |
-| T-1090 | peek: 호출 블록에서 gd는 그 Method로 가고, 이름을 적는 호출 블록에는 갈 곳이 없다 | - |
+| T-1090 | peek: gd on a call block goes to its Method; a call by a written name cannot be opened | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1416 | peek: 그 자리로 복사한 Method의 접기 영역은 그 호출 블록에서만 풀고 이름을 바꾼다 | - |
 | T-1423 | Shift+↓는 그 자리의 범위를 넓히고 줄의 끝에서 멈추며, zf가 그 범위로 접기 영역을 만든다 | - |
@@ -576,6 +582,9 @@ id. Vitest · 테스트 5개.
 | T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
 | T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |
 | T-1096 | paste: 복사한 호출 블록은 id가 아니라 이름으로 Method를 잇는다 | - |
+| T-1438 | gd on a call by name makes its Method, links the calls of that name and goes there | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1439 | the context menu has Method 만들기 on a call by name only, in place of going to the Method | [[01-requirements#^r-edit\|R-EDIT-26]] |
+| T-1440 | the command makes the Method from the palette too; a view-only document refuses gd | [[01-requirements#^r-edit\|R-EDIT-26]] |
 
 ^t-packages-editor-src-commands-call-commands-test-ts
 
@@ -682,7 +691,7 @@ id. Vitest · 테스트 5개.
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
-| T-0218 | Method 헤더를 없애면 그 호출은 대상을 잃고 첫 블록이 선택된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-0218 | removing a Method header makes its calls call by name and selects the first block | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0221 | 헤더에서 `Alt`+방향키는 같은 종류 안에서 다이어그램을 이동한다 | [[ux-decisions\|UX Q6]] |
@@ -699,7 +708,7 @@ id. Vitest · 테스트 5개.
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |
 | T-0225 | 조작 규칙 "호출 블록": 아무것도 받지 않는 Method는 결과 칸만 있다 | - |
-| T-0226 | 대상을 잃은 호출 블록은 편집할 수 없다 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-1441 | a call whose Method went away is edited like any call by name | - |
 | T-0227 | 호출할 Method를 바꿀 때는 지금 Method에서 시작하고 텍스트를 지킨다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 
 ^t-packages-editor-src-session-diagrams-test-ts
@@ -1232,7 +1241,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 425개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 426개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1302,7 +1311,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0689 | 06-web 1: 내려받을 때마다 먼저 셸에 알린다 | - |
 | T-0690 | 06-web 1: 취소한 "다른 이름으로 내려받기"는 아무것도 바꾸지 않는다 | - |
 | T-0691 | 실패한 내려받기는 실패한 저장이다 | - |
-| T-0692 | 새 문서에는 읽을 파일이 없고, 다른 문서는 아직 읽지 않는다 | - |
+| T-0692 | a new document has no file to read | - |
 | T-0936 | 브라우저 문서는 그 문서 키로 브라우저에 저장되고 자동 저장된다 | [[ux-decisions\|UX BS2]] |
 | T-0937 | 다른 이름으로 저장은 어디에 저장할지 묻고, 이 브라우저를 고르면 받은 키로 문서를 옮긴다 | [[ux-decisions\|UX BS1]] |
 | T-0938 | 이 컴퓨터로 다른 이름으로 저장하면 내려받고, 창을 닫으면 취소한다 | [[ux-decisions\|UX BS1]] |
@@ -1931,12 +1940,13 @@ base64 인코딩. Vitest · 테스트 2개.
 
 ### [단위] `packages/core/src/format/parse-model.test.ts`
 
-모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041) · 텍스트를 외곽선으로 저장하는 설정(R-FMT-10). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
+모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041) · 텍스트를 외곽선으로 저장하는 설정(R-FMT-10). Vitest · 테스트 17개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0414 | 모든 노드 종류를 다시 읽으면 같은 문서다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
 | T-0415 | 01-file-format 3.3: 빈 목록과 접기를 적은 파일도 읽는다 | - |
+| T-1442 | reads an old call to another document or to a lost Method as a call by name | - |
 | T-0416 | 01-file-format 3.3: 지원하지 않는 textKind는 일반 텍스트로 보이고, 저장하려고 값을 지킨다 | - |
 | T-0866 | 01-file-format 3.3: 이 버전이 지원하는 모든 언어를 모델로 읽고 그대로 다시 기록한다 | - |
 | T-0417 | 01-file-format 7: 버전 0의 파일은 프로토타입 파일이고 편집할 수 없다 | - |

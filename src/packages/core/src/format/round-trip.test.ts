@@ -68,17 +68,6 @@ const rawFold = fc.record({ from: fc.nat(), to: fc.nat(), name: optionalText });
 const target: fc.Arbitrary<CallTarget> = fc.oneof(
   diagramRef.map((diagram) => ({ kind: 'local' as const, diagram })),
   text.map((name) => ({ kind: 'named' as const, name })),
-  fc.record({
-    kind: fc.constant('external' as const),
-    file: text,
-    diagram: diagramRef,
-    lastName: text,
-  }),
-  fc.record({ lastName: text, file: optionalText }).map(({ lastName, file }) => ({
-    kind: 'lost' as const,
-    lastName,
-    ...(file === undefined ? {} : { file }),
-  })),
 );
 
 function rawSeq(depth: number): fc.Arbitrary<RawSeq> {

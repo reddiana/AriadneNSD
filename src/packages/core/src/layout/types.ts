@@ -56,8 +56,6 @@ export type LayoutNode =
       readonly kind: 'call';
       readonly id: Id;
       readonly box: Box;
-      /** The target is lost: the double bars are dashed. */
-      readonly isLost: boolean;
     })
   | {
       readonly kind: 'loop';

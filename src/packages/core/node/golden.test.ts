@@ -60,7 +60,7 @@ const oneDiagram = (...blocks: Block[]): Doc => ({
   view,
 });
 
-/** Event and Method headers, a call opened in place, a lost call and a fold. */
+/** Event and Method headers, a call opened in place, a call by name and a fold. */
 const diagramsAndCalls: Doc = {
   content: {
     settings: { ...settings, headStyle: 'title' },
@@ -80,7 +80,7 @@ const diagramsAndCalls: Doc = {
           {
             id: 'b2',
             kind: 'call',
-            target: { kind: 'lost', lastName: 'gone' },
+            target: { kind: 'named', name: 'gone' },
             args: '',
             result: '',
             siteFolds: [],

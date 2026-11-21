@@ -164,29 +164,10 @@
   },
   "target.named": {
     "title": "호출 대상: named",
-    "about": "다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수 등).",
+    "about": "다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수, 아직 그리지 않은 서브루틴, 지워진 Method의 이름 등).",
     "fields": {
       "kind": "대상의 종류",
       "name": "블록에 적은 이름"
-    }
-  },
-  "target.external": {
-    "title": "호출 대상: external",
-    "about": "다른 파일의 Method입니다.",
-    "fields": {
-      "kind": "대상의 종류",
-      "file": "그 파일을 가리키는 값(무엇을 기록할지는 아직 정하지 않음)",
-      "diagram": "그 파일 안 Method 다이어그램의 id",
-      "lastName": "마지막으로 본 Method의 이름. 파일을 읽지 못할 때 보인다"
-    }
-  },
-  "target.lost": {
-    "title": "호출 대상: lost",
-    "about": "가리키던 Method가 없어진 호출 블록입니다(다이어그램을 지움, 헤더를 뗌).",
-    "fields": {
-      "kind": "대상의 종류",
-      "lastName": "마지막으로 보인 이름",
-      "file": "다른 파일의 Method였으면 그 파일을 가리키던 값"
     }
   }
 }

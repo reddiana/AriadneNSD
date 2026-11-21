@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0031: editor의 필요 인터페이스 DocumentStore · SettingsStore를 셸이 구현한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-21: 다른 문서의 Method 호출을 철회해 `DocumentStore`에서 다른 문서 읽기(`readOther`)를 뺐다. `DocumentStore`는 이 문서를 읽고 · 쓰고 · 다른 이름으로 쓴다. 아래 "다른 문서를 경로로 읽는다"와 셸마다의 "다른 문서 읽기" 칸, 2026-11-19의 줄은 지금 해당하지 않는다 → [[0049-call-without-method-is-named|ADR-0049]], [[requirement-changes#^r-withdrawn|R-BLK-09]]
 > - 2026-11-21: `createEditor`가 선택적인 필요 인터페이스 `pastedDocument`(`PastedDocumentPort`: `isDocument` · `open`)를 받게 되었다. 붙여넣은 텍스트가 AriadneNSD 문서(모델 JSON · 공유 링크)이면 `editor`가 새 문서로 열지 묻고, 여는 일은 셸이 한다. 셸이 부르는 `prompt`는 제목 · 확인 버튼 · 여러 줄 입력 칸을 받는다 → [[01-requirements#^r-web|R-WEB-11]], [[03-editor#3.3 클립보드]], [[ux-decisions#JP2. 알아본 뒤의 동작|JP2]]
 > - 2026-11-19: 다른 문서를 읽지 못해도 그 호출 블록을 "이어진 곳 없음"으로 저장하지 않는다. 저장되는 그림은 실선 그대로이고, 찾을 수 없다는 표시는 편집 레이어에만 그린다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]
 > - 2026-11-10: 셸이 부르는 `editor`의 `confirm`이 모달의 제목(`title`)을 받게 되었고, 모달의 메시지는 줄바꿈을 지킨다. 열지 못한 공유 링크의 까닭을 묻지 않고 알리는 모달에 쓴다 → [[03-editor#6. 셸과의 연결]], [[ux-decisions#LG6. 열지 못한 링크의 까닭|LG6]]
@@ -28,7 +29,7 @@ superseded-by:
 
 [[01-architecture]]의 초안(2026-10-13)에 Claude는 "셸의 인터페이스는 파일 I/O 하나(이 문서를 읽기 · 쓰기 · 다른 이름으로 쓰기)"라고 적었다. 텍스트 측정 함수의 주입과 편집기 상태 저장소가 그날의 결정으로 필요 없어져서다. 시안 M20을 만들며(2026-10-17) 둘이 빠진 것을 찾았다.
 
-- 다른 문서의 Method 호출([[01-requirements#^r-blk|R-BLK-09]])은 지금 연 문서가 아닌 다른 파일을 읽어야 한다.
+- 다른 문서의 Method 호출([[requirement-changes#^r-withdrawn|R-BLK-09]])은 지금 연 문서가 아닌 다른 파일을 읽어야 한다.
 - 사용자 설정(UI 언어, 화면 색)은 문서 파일 밖 어딘가에 영속해야 한다.
 
 ## 결정 기준

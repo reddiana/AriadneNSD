@@ -79,25 +79,9 @@ const fullDoc: Doc = {
               siteFolds: [{ id: 'f2', via: [], first: 'b14', last: 'b14', name: 'n' }],
             },
             {
-              id: 'b13',
-              kind: 'call',
-              target: { kind: 'external', file: 'x.ns', diagram: 'd4', lastName: 'ext' },
-              args: '',
-              result: '',
-              siteFolds: [],
-            },
-            {
               id: 'b15',
               kind: 'call',
               target: { kind: 'named', name: 'nm' },
-              args: '',
-              result: '',
-              siteFolds: [],
-            },
-            {
-              id: 'b16',
-              kind: 'call',
-              target: { kind: 'lost', lastName: 'old', file: 'y.ns' },
               args: '',
               result: '',
               siteFolds: [],
@@ -147,6 +131,43 @@ describe('model JSON parsing', () => {
     ];
     const result = parseModel(value);
     expect(result.ok).toBe(true);
+  });
+
+  it('T-1442: reads an old call to another document or to a lost Method as a call by name', () => {
+    const callTo = (id: string, target: object) => ({
+      id,
+      kind: 'call',
+      target,
+      args: 'x',
+      result: '',
+    });
+    const value = minimal();
+    value.diagrams = [
+      {
+        id: 'd1',
+        body: [
+          callTo('b1', { kind: 'external', file: 'other.ns.svg', diagram: 'd4', lastName: 'ext' }),
+          callTo('b2', { kind: 'lost', lastName: 'old', file: 'y.ns' }),
+          callTo('b3', { kind: 'lost', lastName: '' }),
+        ],
+      },
+    ];
+    const result = parseModel(value);
+    if (!result.ok) {
+      throw new Error(result.detail);
+    }
+    const targets = result.value.doc.content.diagrams[0]?.body.blocks.map((block) =>
+      block.kind === 'call' ? block.target : null,
+    );
+    expect(targets).toEqual([
+      { kind: 'named', name: 'ext' },
+      { kind: 'named', name: 'old' },
+      { kind: 'named', name: '' },
+    ]);
+    const saved = serializeModelJson(result.value.doc);
+    expect(saved).not.toContain('lastName');
+    expect(saved).not.toMatch(/"external"|"lost"/);
+    expect(parseModelJson(saved)).toEqual(result);
   });
 
   it('T-0416: 01-file-format 3.3: shows an unknown textKind as plain and keeps the value for saving', () => {

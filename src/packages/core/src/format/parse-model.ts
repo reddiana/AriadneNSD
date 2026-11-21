@@ -514,6 +514,8 @@ function readTarget(reader: Reader, at: string, value: unknown): CallTarget | nu
       const name = readString(reader, `${at}.name`, value.name);
       return fields === null || name === null ? null : { kind: 'named', name };
     }
+    // Files written before ADR-0049 may hold a call to a Method of another document or a call
+    // that lost its Method. Both are read as a call by the name they showed.
     case 'external': {
       const fields = readObject(reader, at, value, ['kind', 'file', 'diagram', 'lastName']);
       const file = readString(reader, `${at}.file`, value.file);
@@ -522,7 +524,7 @@ function readTarget(reader: Reader, at: string, value: unknown): CallTarget | nu
       if (fields === null || file === null || diagram === null || lastName === null) {
         return null;
       }
-      return { kind: 'external', file, diagram, lastName };
+      return { kind: 'named', name: lastName };
     }
     case 'lost': {
       const fields = readObject(reader, at, value, ['kind', 'lastName', 'file']);
@@ -531,7 +533,7 @@ function readTarget(reader: Reader, at: string, value: unknown): CallTarget | nu
       if (fields === null || lastName === null || !file.ok) {
         return null;
       }
-      return { kind: 'lost', lastName, ...(file.value === undefined ? {} : { file: file.value }) };
+      return { kind: 'named', name: lastName };
     }
     default:
       return fail(reader, `${at}.kind`, 'is not a known call target kind');

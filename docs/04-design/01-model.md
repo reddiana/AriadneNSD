@@ -23,7 +23,7 @@ updated: 2026-11-03
 - 이동 · 붙여넣기 · 분기: [[01-requirements#^r-edit|R-EDIT-09]], [[01-requirements#^r-edit|R-EDIT-10]], [[01-requirements#^r-edit|R-EDIT-11]]
 - 새 Method로 빼기: [[01-requirements#^r-edit|R-EDIT-19]]
 - 문서 설정(블록 텍스트의 언어, 헤더 모양): [[01-requirements#^r-lay|R-LAY-06]], [[01-requirements#^r-lay|R-LAY-07]], [[01-requirements#^r-lay|R-LAY-10]]
-- 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-blk|R-BLK-09]]
+- 여러 다이어그램, Event · Method, 호출 블록: [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-edit|R-EDIT-26]]
 - 접기 영역과 뷰 상태: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-16]], [[0018-save-as-shown|ADR-0018]]
 
 ## 1. 타입
@@ -146,15 +146,13 @@ type Call = {
 
 type CallTarget =
   | { kind: 'local'; diagram: Id }                                   // 같은 문서의 Method
-  | { kind: 'named'; name: string }                                  // 이름을 적어 부름
-  | { kind: 'external'; file: string; diagram: Id; lastName: string } // 다른 문서의 Method
-  | { kind: 'lost'; lastName: string; file?: string };               // 참조 대상을 잃음
+  | { kind: 'named'; name: string };                                 // 이름을 적어 부름 (Method가 없는 것 모두)
 ```
 
 - 같은 문서의 Method는 **id로만** 참조합니다. 표시할 이름은 그 Method의 헤더에서 조회합니다. → [[0022-call-name-follows-head|ADR-0022]]
-- 참조하던 Method가 없어지면(다이어그램을 삭제함, 헤더를 제거함) 그 명령이 호출 블록을 `lost`로 바꾸고 보이던 이름을 `lastName`에 보존합니다. 그래서 `local`은 언제나 존재하는 Method를 참조합니다(불변식 6). 상태 전이는 아래 그림과 같습니다.
-- `named`는 처음부터 이름만 기록한 것입니다. 참조를 잃은 것(`lost`, 점선과 `?`)과 모양이 다르므로 variant를 나눕니다.
-- 다른 문서의 Method(`external`)는 그 파일을 읽을 수 없을 수 있으므로(`DocumentStore`가 `null`을 반환함 → [[01-architecture#4.2 editor와 셸의 인터페이스]]) 마지막에 본 이름(`lastName`)을 캐시해 둡니다. `file`에 무엇을 적는지(상대 경로 등)는 정하지 않았습니다 → 미결정 사항
+- `named`는 이름만 기록한 것입니다. 처음부터 이름을 적은 것(문서에 없는 라이브러리 함수, 아직 그리지 않은 서브루틴)과 Method를 잃은 것을 나누지 않습니다. 모양도 편집도 같기 때문입니다 → [[0049-call-without-method-is-named|ADR-0049]]
+- 참조하던 Method가 없어지면(다이어그램을 삭제함, 헤더를 제거함) 그 명령이 호출 블록을 보이던 이름의 `named`로 바꿉니다. 그래서 `local`은 언제나 존재하는 Method를 참조합니다(불변식 6). 상태 전이는 아래 그림과 같습니다.
+- 예전 파일의 `lost`(Method를 잃음)와 `external`(다른 문서의 Method)은 읽을 때 `lastName`을 이름으로 한 `named`가 됩니다 → [[01-file-format#3.3 노드별 필드]]
 - 결과 기호(`←` / `=`)는 호출 블록마다가 아니라 문서마다 하나이고, 뷰 상태에 있습니다(2장).
 
 ```mermaid
@@ -162,14 +160,11 @@ stateDiagram-v2
     direction LR
     [*] --> local : 호출 블록 삽입 (목록에서 Method를 선택함)
     [*] --> named : 이름만 적어 삽입
-    [*] --> external : 다른 문서의 Method를 선택함
-    local --> lost : 다이어그램 삭제 · 헤더 제거
-    lost --> local : 호출할 것 바꾸기
-    named --> local : 호출할 것 바꾸기
-    external --> local : 호출할 것 바꾸기
+    local --> named : 다이어그램 삭제 · 헤더 제거 · 이름을 적어 호출하기
+    named --> local : 호출할 것 바꾸기 · Method 만들기
 ```
 
-UML 상태 다이어그램입니다. 상태는 `CallTarget.kind`이고, 화살표 위의 레이블은 전이를 트리거하는 편집 명령입니다. "호출할 것 바꾸기"는 어느 상태에서든 `target`을 새로 정하므로 어느 상태로든 갈 수 있으나, 이 다이어그램에는 `local`로 가는 것만 그렸습니다. 헤더 이름 편집은 전이가 아닙니다(id로 참조하므로 `local` 그대로). `external`의 파일을 읽지 못하는 것도 전이가 아닙니다. 모델은 `external` 그대로이고, 저장되는 그림도 실선 그대로이며, 찾을 수 없다는 표시는 편집 레이어에만 그립니다 → [[ux-decisions#EX1. 다른 문서를 찾을 수 없어도 저장되는 그림은 실선|EX1]]
+UML 상태 다이어그램입니다. 상태는 `CallTarget.kind`이고, 화살표 위의 레이블은 전이를 트리거하는 편집 명령입니다. 헤더 이름 편집은 전이가 아닙니다(id로 참조하므로 `local` 그대로). 이름을 적는 호출 블록의 이름 편집도 `named` 그대로입니다.
 
 ### 1.6 펴 보인 곳의 접기 영역
 
@@ -282,7 +277,7 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 반환합니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `lostTarget`(참조 대상을 잃은 호출 블록을 편집함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 `Doc`(내용과 뷰 상태)을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
@@ -303,10 +298,10 @@ type Target =                                        // 명령이 적용되는 �
 | | 텍스트 편집 | 블록의 `text`, 호출 블록의 `args` · `result`, 헤더, 분기 라벨, 접기 영역 이름. If의 분기 라벨을 비우면 `label`을 지워 기본 라벨("참" · "거짓")로 돌아간다. Case의 분기 라벨은 비울 수 없고(`emptyLabel`), default의 라벨은 편집하지 않는다(`defaultLabelFixed`) |
 | | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 위치를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 앞 · 뒤로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
 | | 드래그 앤 드롭으로 이동 (`moveTo`) | 블록을 문서의 아무 블록 곁으로 옮긴다. id는 그대로이고 이웃 제어 블록 안으로도 들어간다. 빈 줄에는 빈 블록을 남기고, 놓은 곳이 빈 블록이면 그것을 바꾼다. 제자리에 놓으면 바뀌는 것이 없고, 자기 안쪽에 놓으면 `intoItself`로 거절한다 |
-| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 호출하고, 없으면 그 이름을 `lastName`으로 간직한 `lost`가 된다. 이름이 없으면 id가 같은 Method를 호출하고, 없으면 `lost`(불변식 6) |
+| | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 호출하고, 없으면 그 이름의 `named`가 된다. 이름이 없으면 id가 같은 Method를 호출하고, 없으면 빈 이름의 `named`(불변식 6) |
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
-| | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named` · `external` · `lost`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
+| | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 위치에 그 Method를 호출하는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 반환한다. 안의 호출 블록은 호출하던 대상을 그대로 호출한다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
 | 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
@@ -317,9 +312,10 @@ type Target =                                        // 명령이 적용되는 �
 | | 호출할 것 바꾸기 (`setCallTarget`) | `target`을 바꾸고 `args` · `result`는 남긴다. 다만 `args`가 비어 있으면 새 Method의 괄호 안 텍스트로 채우고, 호출 위치의 접기 영역(`siteFolds`)은 비운다(이전 Method의 블록을 가리키므로). Method가 아니면 `wrongKind`, 이미 호출하는 Method면 바뀌는 것이 없다. 이름을 적어 호출하게 바꾸는 것은 `nameCallTarget`(이 자리의 접기 영역은 없어진다) |
 | | 이름을 적는 호출 블록 삽입 (`insertNamedCall`) | `named` 대상의 호출 블록을 삽입한다([[01-requirements#^r-blk\|R-BLK-08]]). 이름은 한 줄, 앞뒤 공백 없이. 보통 빈 이름으로 넣고 `editor`가 이름 칸을 연다 |
 | | 인자 · 결과 · 이름 편집 (`editCall`) | 이름(`name`)은 `named` 대상에만 기록한다(아니면 `wrongKind`). 한 번 적은 이름을 비우면 `emptyCallName` |
+| | Method 만들기 (`makeMethod`) | `named` 호출 블록에서 헤더가 `이름(인자)`(인자가 비면 `이름`)이고 본문이 빈 블록 하나인 Method를 Method의 맨 뒤에 만들고, 이름이 같은 `named` 호출 블록을 모두 그 Method의 `local`로 바꾼다(빈 `args`는 괄호 안 텍스트로 채우고 `siteFolds`는 비움). undo 한 단계([[01-requirements#^r-edit\|R-EDIT-26]]). 이름이 같은 Method가 이미 있으면 만들지 않고 그것에 잇는다. `named`가 아니면 `wrongKind`, 이름이 비거나 같은 이름의 Event가 있으면 `emptyHeadName` · `duplicateHeadName`. `touched`는 Method, 그다음 이은 호출 블록들 |
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
-| | 삭제 | 이 Method를 호출하던 호출 블록을 `lost`로 바꾼다 |
-| | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 `lost`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
+| | 삭제 | 이 Method를 호출하던 호출 블록을 보이던 이름의 `named`로 바꾼다 |
+| | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 보이던 이름의 `named`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
 | | 헤더 이름 편집 | 중복되거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 (`makeFold`) | [[02-interaction-rules#접기 · 펼치기]]. 한 줄의 연속 범위에 `FoldMark`를 붙인다. 이름은 없이 시작한다(`editor`가 바로 이름 칸을 연다). 같은 범위가 이미 있으면 `foldExists`, 다른 접기 영역의 끝에 걸치면 `foldsCross`(불변식 5). `touched`는 새 접기 영역 |
@@ -372,5 +368,4 @@ type Target =                                        // 명령이 적용되는 �
 
 - [ ] If를 Case로, Case를 If로 바꿀 때 텍스트를 옮기는 법(예: Case `key`의 분기 `1` → If의 조건 `key == 1`인가) → 4.1. 정할 때까지 MVP는 조건 텍스트를 그대로 둔다(`src/packages/core/src/commands/branch.ts`)
 - [ ] 코드의 fall-through(`break` 없이 다음 분기로 이어지는 `case`)를 모델에 어떻게 담을지 → [[01-requirements#3.6 코드 연동]]
-- [ ] 다른 문서를 가리키는 값(`external.file`): 상대 경로인지, 무엇에 대한 상대인지 → [[02-interaction-rules#호출 블록]]
 - [ ] 논리 · 물리 뷰([[01-requirements#^r-ide|R-IDE-08]])를 담는 슬롯. 블록에 선택 필드 하나(예: 설명 문장이나 코드 가운데 지금의 `text`가 아닌 쪽)를 더하고, 어느 얼굴을 보이는지는 뷰 상태에 둔다. 필드를 더하는 일이라 지금의 타입 · 레이아웃 · 렌더러의 구조는 바꾸지 않아도 된다. 레이아웃은 보이는 얼굴의 문자를 측정할 뿐이다

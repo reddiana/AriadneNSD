@@ -42,7 +42,7 @@ updated: 2026-11-18
 | 전위 판정 반복 | while (pre-test loop) | `While` | 조건을 먼저 검사하는 반복 |
 | 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhile` | 본문을 먼저 실행하고 조건을 검사하는 반복 |
 | 횟수 반복 | for | `For` | 정해진 횟수만큼 반복 |
-| 호출 블록 | call | `Call` | Method를 호출하는 블록. 같은 문서의 Method, 이름만 적은 함수, 다른 문서의 Method를 호출한다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 형태로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
+| 호출 블록 | call | `Call` | Method를 호출하는 블록. 같은 문서의 Method나 이름만 적은 함수(Method가 없는 것)를 호출한다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 형태로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 이름을 적는 호출 블록 | call by name | `named` (`CallTarget`) | 문서에 없는 것(라이브러리 함수, 아직 그리지 않은 서브루틴)을 이름 · 인자 · 결과를 적어 호출하는 호출 블록. 보통 호출 블록과 같은 모양이고, 펴 보거나 풀 수 없다 → [[01-requirements#^r-blk\|R-BLK-08]], [[02-interaction-rules#호출 블록]] |
 | 인자 · 결과 | arguments · result | `args` · `result` | 호출 블록마다 적는 텍스트. 이름은 적지 않고 Method의 헤더를 따른다 |
 | 결과 기호 | result symbol | `resultSymbol` | 결과를 받는 기호 `←` 또는 `=`. 문서마다 하나이고, 뷰 상태다(파일에 저장되지만 실행 취소의 대상이 아님) → [[ux-decisions#Q9. 실행 취소의 대상 (R7)\|Q9]] |

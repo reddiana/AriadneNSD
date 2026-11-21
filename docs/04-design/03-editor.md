@@ -17,7 +17,7 @@ updated: 2026-11-21
 ## 관련 요구사항
 
 - [[01-requirements#3.2 편집]], 그 가운데 드래그 앤 드롭 [[01-requirements#^r-edit|R-EDIT-09]], 커맨드 팔레트 [[01-requirements#^r-edit|R-EDIT-24]]
-- 다른 문서 읽기(`readOther`): [[01-requirements#^r-blk|R-BLK-09]]
+- 호출 블록에서 Method 만들기: [[01-requirements#^r-edit|R-EDIT-26]]
 - 줌 · 팬: [[01-requirements#^r-lay|R-LAY-03]]
 - [[01-requirements#^r-nfr|R-NFR-03]], [[01-requirements#^r-nfr|R-NFR-04]], [[01-requirements#^r-nfr|R-NFR-05]]
 
@@ -249,7 +249,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 복사 · 잘라내기는 시스템 클립보드에 둘을 함께 씁니다:
 	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게). 호출 블록은 렌더링된 대로 `ys ← MergeSort(xs)`
-	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식). 첫 다이어그램(헤더 없음)이 복사한 블록이고, 그 블록의 호출 블록이 호출하는 Method마다 헤더만 있는 빈 Method가 뒤따릅니다. 그래서 클립이 그 자체로 올바른 문서이고(불변식 6), 호출 블록이 부르던 Method의 이름이 따라갑니다. 붙여넣으면 호출 블록은 붙이는 문서에서 **이름이 같은 Method**를 호출하고, 없으면 그 이름을 간직한 채 참조 대상 없음이 됩니다 → [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]]
+	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식). 첫 다이어그램(헤더 없음)이 복사한 블록이고, 그 블록의 호출 블록이 호출하는 Method마다 헤더만 있는 빈 Method가 뒤따릅니다. 그래서 클립이 그 자체로 올바른 문서이고(불변식 6), 호출 블록이 부르던 Method의 이름이 따라갑니다. 붙여넣으면 호출 블록은 붙이는 문서에서 **이름이 같은 Method**를 호출하고, 없으면 그 이름을 적은 호출 블록이 됩니다 → [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]]
 - 붙여넣기는 사용자 정의 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
 - 셸이 `pastedDocument`(6장의 `createEditor` 옵션)를 전달했고 사용자 정의 형식이 없으며 `pastedDocument.isDocument(text)`가 참이면(AriadneNSD 문서인 텍스트, [[01-requirements#^r-web|R-WEB-11]] → [[06-web#3.2 붙여넣은 문서]]), 블록을 만들기 전에 모달(`Dialog`, 제목 "AriadneNSD")로 묻습니다. "새 문서로 열기"(확인 버튼)면 `pastedDocument.open(text)`를 호출하고 지금 문서는 바꾸지 않으며, "텍스트로 붙여넣기"(넷째 버튼, 선택한 것이 없으면 `isSecondDisabled`)면 위의 규칙대로 붙이고, 취소면 아무것도 하지 않습니다 → [[ux-decisions#JP2. 알아본 뒤의 동작|JP2]]
 	- 그래서 `pastedDocument`가 있으면 붙여넣기 명령의 `when`은 선택한 것이 없어도 참입니다. 문서가 아닌 텍스트이면 그때 "먼저 블록을 선택하세요."(`reason.nothingSelected`)를 알립니다. 헤더 · 분기 라벨 · 읽기 전용에서의 거절은 그대로입니다.
@@ -292,6 +292,7 @@ type CommandSpec = {
   menu?: MenuPlace;                   // 메뉴 바의 자리
   toolbar?: { group: number; order: number; icon: string };  // icon: 툴바 아이콘의 id ('file.save', 'block.if' …)
   context?: SelectionKind[];          // 컨텍스트 메뉴에 보일 선택의 종류
+  inContext?(ctx: CommandContext): boolean;    // 그 종류 가운데서도 지금 선택에 컨텍스트 메뉴로 보일지. 없으면 늘 ("Method 만들기"는 이름을 적는 호출 블록에서만)
   edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 적용되지 않는다 → 6.4
   when(ctx: CommandContext): true | Message;   // 적용되는가, 아니면 이유
   run(ctx: CommandContext, args?: unknown): void | Promise<void>;
@@ -317,7 +318,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- |
 | 파일 | 새로 · 열기… · 붙여넣은 JSON으로 열기…(웹 → [[06-web#3.2 붙여넣은 문서]]) · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… · 공유 링크 복사(웹 → [[06-web#3. 공유 URL과 보기 모드]]) ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 · 앞에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
+| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
@@ -325,7 +326,8 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 - "Event 헤더" · "Method 헤더"는 선택한 것에 따라 이름이 바뀝니다: 헤더 없는 다이어그램에서는 "… 헤더 달기", 헤더에서는 "…로 바꾸기"입니다. 헤더가 있는 다이어그램의 블록에서는 흐리게 보입니다(헤더를 선택하라고 알림) → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
 - "새 Method로 빼기"(`diagram.extractMethod`)는 블록이나 접기 영역을 선택했을 때 됩니다. 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트에서는 묻지 않고 뺍니다. 키 `m`으로 실행하면(인자 `fromKey`) 헤더 없는 다이어그램에서만 고르는 목록(`ChromeState.picker`, 6장) "1 새 Method로 빼기 · 2 Method 헤더 달기"를 먼저 엽니다 → [[ux-decisions#XM3. 헤더 없는 다이어그램에서 블록에 m은 고르는 목록|XM3]]
 - "호출…" · "호출할 Method 바꾸기…"는 고르는 목록(`ChromeState.picker`, 6장)을 엽니다. 목록은 문서의 Method 전부(렌더링된 순서), "새 Method를 만들고 호출", "이름을 적어 호출하기"입니다.
-- "호출하는 Method로 가기"(`call.goTo`, `gd`)는 다이어그램 메뉴의 "새 Method로 빼기" 다음에 둡니다. 선택을 바꾸는 명령이라 읽기 전용에서도 됩니다.
+- "호출하는 Method로 가기"(`call.goTo`, `gd`)는 다이어그램 메뉴의 "새 Method로 빼기" 다음에 둡니다. 선택을 바꾸는 명령이라 읽기 전용에서도 됩니다. 이름을 적는 호출 블록에서는 "Method 만들기"를 실행합니다(읽기 전용이면 거절).
+- "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 적는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 적는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
 - 보기 메뉴의 접기 명령: "접기 · 펴기"(`view.fold.toggle`), "접기 영역 만들기"(`fold.make`), "접기 영역 풀기"(`fold.remove`), "접기 영역 보기 ✓"(`view.bands`, 이름 띠 켜고 끄기). 키로만 실행하는 "펴기"(`view.fold.open`, `zo`)와 "접기"(`view.fold.close`, `zc`)는 커맨드 팔레트에도 있습니다. 모두 접기 · 모두 펴기([[01-requirements#^r-edit|R-EDIT-17]], `P2`)는 아직 없습니다.
 - 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기는 실행 취소 한 단계이고, 이름 띠 켜고 끄기는 실행 취소 스택에 저장하지 않습니다([[0048-folding-is-undoable|ADR-0048]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
 - 메뉴 항목 옆에는 키를 표시합니다. 키가 둘이면(`dd`와 `Ctrl`+`X`) 표준 키를 표시하고, Vim 키는 커맨드 팔레트와 단축키 목록에서 보입니다.
@@ -396,7 +398,6 @@ interface DocumentStore {
   read(): Promise<string>;                       // .ns.svg 문자열
   write(svg: string): Promise<WriteResult>;      // 원래 자리에. 못 쓰면 셸이 내려받기 등으로 대신한다
   writeAs(svg: string, suggestedName: string): Promise<WriteResult>;
-  readOther(path: string): Promise<string | null>; // 다른 문서 (R-BLK-09). 읽지 못하면 null
 }
 type WriteResult = { ok: true; name: string } | { ok: false; reason: 'cancelled' | 'denied' | 'failed'; detail?: string; message?: Message };  // message: 셸의 문장 (브라우저의 저장 공간이 모자람). 있으면 editor의 일반 알림 대신 보인다
 

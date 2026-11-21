@@ -120,7 +120,7 @@ describe('model JSON serialization', () => {
                 {
                   id: 'b4',
                   kind: 'call',
-                  target: { kind: 'lost', lastName: 'g' },
+                  target: { kind: 'named', name: 'g' },
                   args: '',
                   result: '',
                   siteFolds: [],
@@ -148,7 +148,7 @@ describe('model JSON serialization', () => {
     expect(diagram.body[1]).toEqual({
       id: 'b4',
       kind: 'call',
-      target: { kind: 'lost', lastName: 'g' },
+      target: { kind: 'named', name: 'g' },
       args: '',
       result: '',
     });

@@ -201,17 +201,11 @@ export type Call = {
 export type CallTarget =
   /** A Method in the same document, by id only (ADR-0022). Always exists (invariant 6). */
   | { readonly kind: 'local'; readonly diagram: Id }
-  /** Called by a written name. */
-  | { readonly kind: 'named'; readonly name: string }
-  /** A Method in another document. `lastName` caches the last name seen. */
-  | {
-      readonly kind: 'external';
-      readonly file: string;
-      readonly diagram: Id;
-      readonly lastName: string;
-    }
-  /** The target was lost (diagram deleted or header removed). Keeps the last shown name. */
-  | { readonly kind: 'lost'; readonly lastName: string; readonly file?: string };
+  /**
+   * Called by a written name: something not drawn in this document, or a Method that went away
+   * (deleted, header removed), which leaves the name it showed (ADR-0049).
+   */
+  | { readonly kind: 'named'; readonly name: string };
 
 // 1.6 Fold regions at an opened call site
 

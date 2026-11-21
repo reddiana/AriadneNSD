@@ -85,8 +85,8 @@ export function paste(content: Content, args: PasteArgs): Result {
 
 /**
  * Where pasted call blocks go: copied Method id → the target here. With the clip's names, a
- * call goes to the Method of the same name in this document (whatever its id), or is lost with
- * the name; without names, to the Method with the same id.
+ * call goes to the Method of the same name in this document (whatever its id), or calls by that
+ * name (ADR-0049); without names, to the Method with the same id.
  */
 type Methods = (id: Id) => CallTarget;
 
@@ -101,12 +101,10 @@ function methodsOf(content: Content, names: ReadonlyMap<Id, string> | undefined)
   return (id) => {
     const name = names?.get(id);
     if (name === undefined) {
-      return ids.has(id) ? { kind: 'local', diagram: id } : { kind: 'lost', lastName: '' };
+      return ids.has(id) ? { kind: 'local', diagram: id } : { kind: 'named', name: '' };
     }
     const found = byName.get(name);
-    return found === undefined
-      ? { kind: 'lost', lastName: name }
-      : { kind: 'local', diagram: found };
+    return found === undefined ? { kind: 'named', name } : { kind: 'local', diagram: found };
   };
 }
 
@@ -190,7 +188,7 @@ function renewBlock(block: Block, ids: IdGenerator, methods: Methods): Block {
   }
 }
 
-/** A local target must name a Method of this document (invariant 6); otherwise it is lost. */
+/** A local target must name a Method of this document (invariant 6); otherwise it is named. */
 function keepTarget(target: CallTarget, methods: Methods): CallTarget {
   return target.kind === 'local' ? methods(target.diagram) : target;
 }

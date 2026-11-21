@@ -42,7 +42,6 @@
 <path d="M400 244 H407 M400 241 V247 M407 241 V247" stroke="#c2410c" stroke-width="1" fill="none"/>
 <text x="403.5" y="240" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">7</text>
 <text x="400" y="300" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이름은 굵게, 인자와 결과는 보통 (ADR-0022)</text>
-<text x="400" y="314" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">대상을 잃으면 이중선이 점선(아래 그림)</text>
 <text x="70" y="406" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">Event 헤더 · Method 헤더</text>
 <path d="M70 456 C92 438,151.5 438,173.5 456 L300 456 L300 488 L70 488 Z" fill="#e2efdf" stroke="#5b77ad" stroke-width="1"/>
 <text x="80" y="476" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">TIM2 인터럽트</text>
@@ -216,13 +215,6 @@
 <circle cx="113" cy="1537.5" r="0.6" fill="none" stroke="#5a6476" stroke-width="1.2"/>
 <text x="118" y="1541" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="12" fill="#5a6476" font-style="italic">블록 2개</text>
 <text x="70" y="1567" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">반복의 본문도 같은 칸, 높이 32</text>
-<text x="400" y="1345" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">대상을 잃은 호출 블록</text>
-<rect x="400" y="1361" width="230" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1"/>
-<path d="M407 1361 V1393" fill="none" stroke="#5b77ad" stroke-width="1" stroke-dasharray="3 3"/>
-<path d="M623 1361 V1393" fill="none" stroke="#5b77ad" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="417" y="1381" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22"><tspan font-weight="600">send</tspan>(buf)</text>
-<text x="640" y="1373" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">이중선이 점선</text>
-<text x="640" y="1387" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="10" fill="#c2410c">3 · 3, 굵기 1px</text>
 <text x="400" y="1415" font-family="IBM Plex Sans KR, Malgun Gothic, sans-serif" font-size="13" fill="#1c2230" font-weight="600">겹친 테두리</text>
 <rect x="404" y="1467" width="222" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1"/>
 <text x="414" y="1487" font-family="IBM Plex Mono, IBM Plex Sans KR, Consolas, monospace" font-size="13" fill="#151a22">adc_start(CH0);</text>

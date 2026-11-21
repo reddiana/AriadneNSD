@@ -52,7 +52,6 @@ describe('the check mode writes nothing (AT-05)', () => {
     expect(await store.write('<svg/>')).toMatchObject({ ok: false, reason: 'denied' });
     expect(await store.writeAs('<svg/>', 'copy.ns.svg')).toMatchObject({ ok: false });
     expect(await store.read()).toBe('');
-    expect(await store.readOther('other.ns.svg')).toBeNull();
     await expect(noSaveFonts()).rejects.toThrow('does not save');
   });
 

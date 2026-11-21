@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="458" height="174" viewBox="0 0 458 174">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="ff0144c60e4d5a038352bc41cb0acd87b65dd9f37ca3976ce4d584b8a80a28db"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="8c4784644f4f80e37cfa4785129a750e130fa3a2f9d8d761fcf3cffc41ef5dc5"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -41,8 +41,8 @@
           "id": "b2",
           "kind": "call",
           "target": {
-            "kind": "lost",
-            "lastName": "gone"
+            "kind": "named",
+            "name": "gone"
           },
           "args": "",
           "result": ""
@@ -93,8 +93,8 @@
 <text x="44" y="77" font-size="12" fill="#5f459f" xml:space="preserve">p ← <tspan font-weight="600">partition</tspan>(a, 0, n)</text>
 <rect x="25" y="65" width="160" height="52" fill="none" stroke="#7a5fb8" stroke-width="3" shape-rendering="crispEdges"/>
 <rect x="24" y="118" width="162" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M31 118 L31 150" fill="none" stroke="#5b77ad" stroke-width="1" stroke-dasharray="3 3"/>
-<path d="M179 118 L179 150" fill="none" stroke="#5b77ad" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M31 118 L31 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M179 118 L179 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="41" y="138" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">gone</tspan></text>
 <text x="274" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="274" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">partition(a, lo, hi)</tspan></text>

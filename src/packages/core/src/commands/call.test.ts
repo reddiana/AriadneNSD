@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Block, Call, Seq } from '../model/types';
-import { editCall, insertCall, newMethodAndCall, setCallTarget } from './call';
+import { editCall, insertCall, makeMethod, newMethodAndCall, setCallTarget } from './call';
 import {
   blockOf,
   call,
@@ -70,9 +70,10 @@ describe('editCall', () => {
     expect(runOk(editCall, content, { block: 'b1', args: 'v', result: 'p' }).content).toBe(content);
   });
 
-  it('T-0071 · R-BLK-07: a call block that lost its target cannot be edited', () => {
-    const content = program(call('b1', { kind: 'lost', lastName: 'old' }, 'v'));
-    expectRefused(editCall, content, { block: 'b1', args: 'w' }, 'lostTarget');
+  it('T-1432: a call whose Method went away is a call by name and can be edited', () => {
+    const content = program(call('b1', { kind: 'named', name: 'old' }, 'v'));
+    const result = runOk(editCall, content, { block: 'b1', args: 'w', name: 'new' });
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', { kind: 'named', name: 'new' }, 'w'));
   });
 
   it('T-0072: refuses a block that is not a call block, and an unknown block', () => {
@@ -83,8 +84,8 @@ describe('editCall', () => {
 });
 
 describe('setCallTarget', () => {
-  it('T-0073: 01-model 1.5: a lost call block calls a Method again and keeps what was written', () => {
-    const content = program(call('b1', { kind: 'lost', lastName: 'old' }, 'v', 'p'));
+  it('T-0073: 01-model 1.5: a call by name calls a Method again and keeps what was written', () => {
+    const content = program(call('b1', { kind: 'named', name: 'old' }, 'v', 'p'));
     const result = runOk(setCallTarget, content, { block: 'b1', diagram: 'd2' });
     expect(blockOf(result.content, 'b1')).toEqual(call('b1', 'd2', 'v', 'p'));
     expect(result.touched).toEqual(['b1']);
@@ -255,5 +256,63 @@ describe('newMethodAndCall', () => {
       { target: { ...blocks, first: 'b9', last: 'b9' }, side: 'after' },
       'notFound',
     );
+  });
+});
+
+describe('makeMethod', () => {
+  const named = (name: string) => ({ kind: 'named', name }) as const;
+
+  it('T-1433 · R-EDIT-26: makes the Method a call by name calls, with its arguments, and links it', () => {
+    const content = program(call('b1', named('scan'), 'port', 'v'), proc('b2'));
+    const result = runOk(makeMethod, content, { block: 'b1' });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd2', 'd3', 'd4']);
+    expect(diagramOf(result.content, 'd4')).toEqual(
+      diagram('d4', method('scan(port)'), [empty('b92')]),
+    );
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', 'd4', 'port', 'v'));
+    expect(result.touched).toEqual(['d4', 'b1']);
+  });
+
+  it('T-1434 · R-EDIT-26: without arguments the header is the name alone', () => {
+    const content = program(call('b1', named('beep')));
+    const result = runOk(makeMethod, content, { block: 'b1' });
+    expect(diagramOf(result.content, 'd4').head).toEqual(method('beep'));
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', 'd4'));
+  });
+
+  it('T-1435 · R-EDIT-26: every call block calling the same name calls the new Method', () => {
+    const content = program(
+      call('b1', named('scan'), 'port'),
+      call('b2', named('scan')),
+      call('b3', named('other'), 'x'),
+    );
+    const result = runOk(makeMethod, content, { block: 'b2' });
+    expect(diagramOf(result.content, 'd4').head).toEqual(method('scan'));
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', 'd4', 'port'));
+    expect(blockOf(result.content, 'b2')).toEqual(call('b2', 'd4'));
+    expect(blockOf(result.content, 'b3')).toEqual(call('b3', named('other'), 'x'));
+    expect(result.touched).toEqual(['d4', 'b1', 'b2']);
+  });
+
+  it('T-1436 · R-EDIT-26: a Method of that name already there is called, and nothing is made', () => {
+    const content = program(call('b1', named('sort')));
+    const result = runOk(makeMethod, content, { block: 'b1' });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd2', 'd3']);
+    expect(blockOf(result.content, 'b1')).toEqual(call('b1', 'd2', 'a, lo, hi'));
+    expect(result.touched).toEqual(['d2', 'b1']);
+  });
+
+  it('T-1437 · R-EDIT-26: refuses a call to a Method, an empty name, a name of an Event, other blocks', () => {
+    const content = program(
+      call('b1', 'd2'),
+      call('b2', named('')),
+      call('b3', named('Main')),
+      proc('b4'),
+    );
+    expectRefused(makeMethod, content, { block: 'b1' }, 'wrongKind');
+    expectRefused(makeMethod, content, { block: 'b2' }, 'emptyHeadName');
+    expectRefused(makeMethod, content, { block: 'b3' }, 'duplicateHeadName');
+    expectRefused(makeMethod, content, { block: 'b4' }, 'wrongKind');
+    expectRefused(makeMethod, content, { block: 'b9' }, 'notFound');
   });
 });

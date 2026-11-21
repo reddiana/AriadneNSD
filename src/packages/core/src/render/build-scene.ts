@@ -411,7 +411,7 @@ function call(ctx: Painter, node: Extract<LayoutNode, { kind: 'call' }>): void {
   const colors = ctx.colors;
   const { box } = node;
   rect(ctx, node.id, box, colors['block.call']);
-  // The double bars of the NS chart call symbol; dashed when the target is lost.
+  // The double bars of the NS chart call symbol.
   for (const x of [box.x + callBar, box.x + box.width - callBar]) {
     ctx.elements.push({
       kind: 'polyline',
@@ -422,7 +422,7 @@ function call(ctx: Painter, node: Extract<LayoutNode, { kind: 'call' }>): void {
       ],
       stroke: colors['line.structure'],
       strokeWidth: structureWidth,
-      dash: node.isLost ? [3, 3] : null,
+      dash: null,
       isRoundCap: false,
     });
   }
