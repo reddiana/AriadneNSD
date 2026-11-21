@@ -10,8 +10,9 @@
 //   두 겹 아래 폴더(docs/01-requirements/)에서는 `../.././../tags/P0`가 되어 사이트 밖으로 나간다.
 //   위키링크처럼 맨 위 기준(`tags/P0`)으로 만들면 CrawlLinks가 맞게 바꾼다.
 // - 페이지를 옮기는 SPA(Quartz v4.5.2 spa.inline.ts)가 Quartz가 만들지 않은 페이지로 가는 링크까지
-//   가로채는 곳. 첫 화면(`/`, 앱)과 사용법(`/manual/`), 옛 앱 주소(`/app/`)를 받아 본문만 갈아 끼우면
+//   가로채는 곳. 첫 화면(`/`, 앱)과 사용법(`/manual/`), 갤러리(`/gallery/`), 옛 앱 주소(`/app/`)를 받아 본문만 갈아 끼우면
 //   앱의 스크립트가 돌지 않아 "불러오는 중"에서 멈추고 왼쪽 목록이 겹친다(2026-11-02, 메인테이너).
+//   갤러리도 같아서 그림이 바뀌지 않았다(2026-11-22, 메인테이너).
 //   그런 주소는 브라우저가 페이지를 새로 불러오게 둔다 → DR-0021
 // - 왼쪽 위 사이트 이름(Quartz v4.5.2 PageTitle.tsx)이 사이트의 맨 위(`/`, 앱)로 가는 곳.
 //   문서 사이트의 첫 화면인 소개(`/about`)로 가게 한다(2026-11-03, 메인테이너: "Home으로 가게 해주세요")
@@ -45,8 +46,8 @@ const patches = [
     from: "  if (!isLocalUrl(href)) return\n",
     to:
       "  if (!isLocalUrl(href)) return\n" +
-      "  // AriadneNSD: the app (/) and the user guide are not Quartz pages: load them for real\n" +
-      "  if (/^\\/(app\\/|manual\\/|$)/.test(new URL(href).pathname)) return\n",
+      "  // AriadneNSD: the app (/), the user guide and the gallery are not Quartz pages: load them for real\n" +
+      "  if (/^\\/(app\\/|manual\\/|gallery\\/|$)/.test(new URL(href).pathname)) return\n",
   },
   {
     file: "quartz/components/PageTitle.tsx",
