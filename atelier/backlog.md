@@ -175,6 +175,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 ## 출시 무렵과 그 뒤
 
 - [ ] 알고리즘 갤러리: 앱 도움말 메뉴에서 갤러리로 가는 링크(메뉴 문구 · 편집기 메뉴를 함께 고침). 맞지만 헷갈릴 수 있는 곳에 한 줄씩 덧붙일지: 선언 없는 공유 변수(DFS · 유니온 파인드 · 세그먼트 트리 · N-Queen), 최대 유량의 `s == t`, KMP의 빈 패턴 → [[2026-11-22-02-promotion-gallery]]
+- [ ] README(`README.md` · `README.ko.md`)에 힙 정렬 편집 GIF를 넣는다. GitHub README의 동영상은 자동 재생되지 않으므로 GIF로 따로 만든다(폭을 줄이고 15 ~ 20초 안으로, LinkedIn 동영상 `journal/assets/2026-11-22-linkedin-heap-sort.mp4`와 `src/apps/web/promo/record.mjs`를 바탕으로). 사이트 `/about`에서도 보이는지 확인 (2026-11-22 메인테이너: LinkedIn 다음에) → [[promotion]]
 - [ ] 웹 1.0 출시 뒤: EUIPO(유럽)에서 `ariadne`(분류 9 · 42)를 메인테이너가 직접 조회(2026-11-03 정함. 한국 · 미국은 2026-11-03에 봄, 위험 낮음~중간 → [[names-and-registries#상표 검색 (2026-11-03)]])
 - [ ] 저장소 맨 위 `README.md`에 Buy Me a Coffee 후원 버튼 링크를 단다(2026-11-02에 웹 베타의 문턱에서 뺌 → [[dr-0021-domain-and-front-page|DR-0021]]) → [[01-requirements#^r-all|R-ALL-01]]
 
