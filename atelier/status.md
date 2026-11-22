@@ -59,6 +59,7 @@ updated: 2026-11-22
 
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
+- [ ] LinkedIn 글(https://lnkd.in/p/gb2ezD8B)의 댓글: 지금은 메인테이너가 앱 알림으로 보고, 부탁하면 Claude가 Chrome으로 한 번 읽고 답글 초안. Gmail 알림 메일로 정기 확인할지는 미룸(어느 Gmail 계정을 연결할지 — ariadnensd · reddiana, 2026-11-22 메인테이너)
 - [ ] 메인테이너: claude.ai에 v0.4.0의 `ariadne-nsd.zip`을 올려 써 보기, "문장마다 블록"을 담은 다음 판(0.5.0)을 언제 낼지 → [[backlog#Claude skill]]
 - [ ] **다음 세션 처음: 시간 테스트 T-0171 · T-1126을 안정시킴**(파일을 나란히 돌릴 때 실패, CI는 통과) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
