@@ -218,14 +218,10 @@ try {
   await move('j', 'Into the loop body');
   await step('Enter', 'Edit block', 250);
   await type('a[0], a[end] = a[end], a[0]    # largest to the back');
-  // Copy the first loop's call below the swap, give it other arguments.
-  await move('k', 'Up');
-  await move('k', 'Up');
-  await step('y y', 'Copy', 500);
-  await move('j', 'Down');
-  await move('j', 'Down');
-  await step('p', 'Paste after', 700);
-  await step('Enter', 'Edit arguments', 250);
+  // The second call, the same way as the first.
+  await step('a c', 'Insert call', 700);
+  await step('3', 'Call by a written name', 400);
+  await type('sift_down', 'Tab');
   await type('a, 0, end');
   await wait(500);
   // sift_down: made from the call.
@@ -234,6 +230,9 @@ try {
   await move('k', 'Up');
   await step('g d', 'Create Method from call', 1200);
   await move('j', 'Down');
+  await step('a w', 'Insert While', 700);
+  await type('True');
+  await move('j', 'Into the loop body');
   await step('Enter', 'Edit block', 250);
   await type('largest = i');
   await step('o', 'New block after', 300);
@@ -263,13 +262,6 @@ try {
   await type('a[i], a[largest] = a[largest], a[i]');
   await step('o', 'New block after', 300);
   await type('i = largest');
-  // Select the whole body and wrap it in a While.
-  for (let i = 0; i < 6; i += 1) {
-    await step('Shift+ArrowUp', 'Select blocks', 220);
-  }
-  await wait(500);
-  await step('s w', 'Wrap all in While', 500);
-  await type('True');
   await wait(600);
   // The whole drawing.
   for (let i = 0; i < 6; i += 1) {
