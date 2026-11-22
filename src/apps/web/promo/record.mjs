@@ -265,12 +265,23 @@ try {
   await type('True');
   await wait(600);
   // The whole drawing.
-  for (let i = 0; i < 7; i += 1) {
+  for (let i = 0; i < 6; i += 1) {
     await step('-', 'Zoom out', 200);
   }
   await wait(600);
-  await step('Escape Escape', 'Clear selection', 900);
+  // Clear the selection by clicking the empty canvas below the drawing (no status message, unlike
+  // Esc Esc); any notice left in the status bar is hidden for the final hold.
   await page.evaluate(() => window.promoKeysHide());
+  await page.mouse.click(size / 2, size - 60);
+  await wait(300);
+  if ((await page.locator('.ans-statusbar .ans-notice').count()) > 0) {
+    process.stdout.write('a status notice was showing: hidden for the final hold\n');
+    await page.addStyleTag({ content: '.ans-statusbar .ans-notice { visibility: hidden; }' });
+  }
+  await page.mouse.move(size - 2, size / 2);
+  await wait(900);
+  const drawing = await page.locator('.ans-document').boundingBox();
+  process.stdout.write(`final drawing box (CSS px): ${JSON.stringify(drawing)}\n`);
   await wait(3200);
   const ended = Date.now() / 1000;
   await cdp.send('Page.stopScreencast');
