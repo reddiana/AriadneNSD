@@ -9,7 +9,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "readme-images": "vitest run --config scripts/vitest.config.ts"
+    "readme-images": "vitest run --config scripts/vitest.config.ts readme-images",
+    "example-flowcharts": "vitest run --config scripts/vitest.config.ts example-flowcharts"
   },
   "dependencies": {
     "@ariadne-nsd/core": "workspace:*",
