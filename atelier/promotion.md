@@ -115,6 +115,20 @@ draft: true
 - GitHub: https://github.com/reddiana/AriadneNSD 
 - 아직 베타입니다. 버그레포팅 · 의견 환영합니다.
 
+**실제로 올린 본문**: (달님이 다른 도구들과의 비교를 보완해준 부분을 못 보고 올렸음)
+- 알고리즘을 **NS 차트**(Nassi–Shneiderman Diagram)로 그리는 웹 편집기, 베타로 공개
+- NS 차트는 플로우차트와 동일하게 로직을 표현하면서 **지면은 훨씬 적게** 차지하지만, 손으로는 줄 맞추고 지우기를 반복해야 해서 복잡한 로직은 그리기 어려웠음
+- 저장 형식 `.ns.svg`는 NS 차트의 **다이어그램 구조를 메타에 포함**하고있는 **.svg** 파일
+    - README 등 Markdown 문서에 삽입하면 그림으로 보임
+    - AriadenNSD 편집기에서 열면 다이어그램 편집 가능
+- **Claude 스킬** 제공: "이 함수 NS 차트로 그려 줘"라고 하면 .svg 파일과 AriadenNSD에서 바로 편집 가능한 공유 링크를 만듦
+- 아키텍처 문서와 세션 기록 등 개발 여정까지 모두 공개
+- 앱: [https://ariadnensd.com/](https://ariadnensd.com/)
+- 소개: [https://ariadnensd.com/about](https://ariadnensd.com/about)
+- 알고리즘 갤러리: [https://ariadnensd.com/gallery/](https://ariadnensd.com/gallery/)
+- GitHub: [https://github.com/reddiana/AriadneNSD](https://github.com/reddiana/AriadneNSD)
+- 아직 베타입니다. 버그레포팅 · 의견 환영합니다.
+
 ## 초안 2: Hacker News (Show HN)
 
 **Title:** Show HN: AriadneNSD – A structure editor for Nassi–Shneiderman diagrams
