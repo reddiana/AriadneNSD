@@ -78,6 +78,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 ### 작업 환경
 
 - [[lock-screen-and-sleep]] — 화면 잠금과 절전의 차이, 긴 작업을 맡기고 자리를 비울 때 (2026-11-19)
+- [[video-for-sharing]] — 홍보용 동영상: MP4와 WebM, GitHub README의 동영상, LinkedIn 글의 빈 줄 (2026-11-22)
 
 ### 오픈소스 운영
 
