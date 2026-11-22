@@ -32,6 +32,7 @@ draft: true
 | 3 | Reddit r/algorithms, r/compsci | 영어 | 자기 홍보 규칙을 먼저 읽기. 갤러리 그림 한 장을 앞세움 |
 | 4 | Reddit r/programming, Lobsters | 영어 | Lobsters는 초대가 있어야 글을 씀 |
 | 따로 | LinkedIn | 한국어 + 영어 | 순서와 상관없이. 보는 사람이 1촌(동료 · 지인)이라 다른 곳과 겹치지 않음. 제품이 아니라 "백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱"을 앞세움(2026-11-22 메인테이너) → [[#초안 4: LinkedIn]] |
+| 따로 | 페이스북 그룹 | 한국어 | 순서와 상관없이. 그룹의 성격(개발자 일반 · AI 활용 · 알고리즘)에 맞춰 앞세울 것을 고름. 그룹 규칙을 먼저 읽고, 한 곳씩 며칠 띄워 올림(2026-11-22 메인테이너) → [[#초안 5: 페이스북 그룹]] |
 | 그 뒤 | velog · 블로그, OKKY, X | 한국어 · 영어 | 반응이 좋았던 그림과 이야기로 |
 
 ## 처음 올리는 사람을 위한 단계별 안내
@@ -217,6 +218,16 @@ The requirements, design docs, decision records and session logs are all public 
 - 앱 · App: https://ariadnensd.com/
 - 알고리즘 갤러리 · Algorithm gallery: https://ariadnensd.com/gallery/
 - 소개와 만든 과정 · About (Korean): https://ariadnensd.com/about
+
+## 초안 5: 페이스북 그룹
+
+(메인테이너가 [[#초안 4: LinkedIn]]의 한국어 본문에서 발췌해 씀)
+
+**올릴 그룹:**
+
+**붙일 것:**
+
+**본문:**
 
 ## 올리기 전에 확인할 것
 
