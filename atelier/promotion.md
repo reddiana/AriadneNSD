@@ -169,6 +169,8 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 **붙일 동영상:** 빈 문서에서 힙 정렬을 키보드로 만드는 51초짜리 동영상 `journal/assets/2026-11-22-linkedin-heap-sort.mp4`(1080×1080, MP4, 누른 키를 오른쪽 아래에 보임, 접기 영역 없음). 미리보기 그림이 필요하면 완성 화면 `journal/assets/2026-11-22-linkedin-heap-sort-final.png`. 다시 뽑기: `src/apps/web/promo/record.mjs`
 
+**붙여넣을 때:** LinkedIn은 붙여넣은 글의 빈 줄을 지운다. 빈 줄마다 보이지 않는 글자 `U+2800`(⠀)을 하나 넣은 본문을 붙인다(2026-11-22에 이렇게 고침). 그래도 사라지면 `Ctrl`+`Shift`+`V`나 수정 창에서 `Enter`를 직접
+
 **본문:**
 
 백엔드 개발자가 Claude Code와 함께 처음으로 프론트엔드 앱을 만들어 베타로 공개합니다.
@@ -215,10 +217,10 @@ The requirements, design docs, decision records and session logs are all public 
 
 **첫 댓글:**
 
+- GitHub: https://github.com/reddiana/AriadneNSD
 - 앱 · App: https://ariadnensd.com/
 - 알고리즘 갤러리 · Algorithm gallery: https://ariadnensd.com/gallery/
 - 소개와 만든 과정 · About (Korean): https://ariadnensd.com/about
-- GitHub: https://github.com/reddiana/AriadneNSD
 
 ## 올리기 전에 확인할 것
 
@@ -230,3 +232,4 @@ The requirements, design docs, decision records and session logs are all public 
 ## 올린 기록
 
 - 2026-11-22 02:56 [AriadneNSD - 알고리즘을 NS 차트로 그리는 구조 편집기 | GeekNews](https://news.hada.io/topic?id=37589)
+- 2026-11-22 13시 무렵 [LinkedIn: 백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱 (힙 정렬 동영상)](https://lnkd.in/p/gb2ezD8B)
