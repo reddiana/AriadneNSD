@@ -53,8 +53,29 @@
             the left column is the Vim key, the right one the standard key and the mouse. Use
             whichever your hands know.
           </p>
-          <div class="wide videos">
-            <figure>
+          <div class="videos">
+            <div class="tabs" role="tablist" aria-label="Heap sort videos">
+              <button
+                type="button"
+                role="tab"
+                id="vt-keys"
+                aria-controls="vp-keys"
+                aria-selected="true"
+              >
+                Keyboard only
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="vt-mouse"
+                aria-controls="vp-mouse"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Mouse only
+              </button>
+            </div>
+            <figure role="tabpanel" id="vp-keys" aria-labelledby="vt-keys">
               <video
                 controls
                 preload="none"
@@ -71,7 +92,7 @@
                 Keyboard only: the keys pressed and what they do show at the bottom right.
               </figcaption>
             </figure>
-            <figure>
+            <figure role="tabpanel" id="vp-mouse" aria-labelledby="vt-mouse" hidden>
               <video
                 controls
                 preload="none"

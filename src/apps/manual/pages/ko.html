@@ -52,8 +52,29 @@
             됩니다. 키는 왼쪽이 Vim 키, 오른쪽이 표준 키와 마우스입니다. 둘 중 손에 익은 쪽을 쓰면
             됩니다.
           </p>
-          <div class="wide videos">
-            <figure>
+          <div class="videos">
+            <div class="tabs" role="tablist" aria-label="힙 정렬 동영상">
+              <button
+                type="button"
+                role="tab"
+                id="vt-keys"
+                aria-controls="vp-keys"
+                aria-selected="true"
+              >
+                키보드만
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="vt-mouse"
+                aria-controls="vp-mouse"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                마우스만
+              </button>
+            </div>
+            <figure role="tabpanel" id="vp-keys" aria-labelledby="vt-keys">
               <video
                 controls
                 preload="none"
@@ -68,7 +89,7 @@
               </video>
               <figcaption>키보드만: 누른 키와 뜻이 오른쪽 아래에 보입니다.</figcaption>
             </figure>
-            <figure>
+            <figure role="tabpanel" id="vp-mouse" aria-labelledby="vt-mouse" hidden>
               <video
                 controls
                 preload="none"
