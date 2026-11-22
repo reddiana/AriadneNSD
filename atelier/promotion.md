@@ -31,7 +31,8 @@ draft: true
 | 2 | Hacker News "Show HN" | 영어 | 평일 미국 오전(한국 밤 10시 ~ 자정)에. 올린 뒤 몇 시간은 댓글에 답할 수 있을 때 |
 | 3 | Reddit r/algorithms, r/compsci | 영어 | 자기 홍보 규칙을 먼저 읽기. 갤러리 그림 한 장을 앞세움 |
 | 4 | Reddit r/programming, Lobsters | 영어 | Lobsters는 초대가 있어야 글을 씀 |
-| 그 뒤 | velog · 블로그, OKKY, X · LinkedIn | 한국어 · 영어 | 반응이 좋았던 그림과 이야기로 |
+| 따로 | LinkedIn | 한국어 + 영어 | 순서와 상관없이. 보는 사람이 1촌(동료 · 지인)이라 다른 곳과 겹치지 않음. 제품이 아니라 "백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱"을 앞세움(2026-11-22 메인테이너) → [[#초안 4: LinkedIn]] |
+| 그 뒤 | velog · 블로그, OKKY, X | 한국어 · 영어 | 반응이 좋았던 그림과 이야기로 |
 
 ## 처음 올리는 사람을 위한 단계별 안내
 
@@ -147,6 +148,57 @@ Nassi–Shneiderman diagrams show control flow as nested boxes, so loops and bra
 Every diagram opens in the editor if you want to change it or trace it step by step. Which algorithm would you like to see drawn next, and is there one you think this notation makes clearer, or worse?
 
 (Editor: https://ariadnensd.com/, open source under Apache-2.0: https://github.com/reddiana/AriadneNSD)
+
+## 초안 4: LinkedIn
+
+(만든 과정을 앞세움, 한국어 위 · 영어 아래. 3,000자 안. 숫자는 2026-11-22 기준. "해 보며 배운 것"은 Claude가 기록에서 고른 것이라 메인테이너의 말로 고쳐 쓰기)
+
+**붙일 그림(2 ~ 3장):** ① 편집기 화면(`journal/assets/2026-11-02-manual-tour-0-screen.png`나 새로 찍은 것), ② 갤러리의 큰 그림 하나(레드블랙 트리 삽입 등), ③ 저장소의 `docs/` · `atelier/` 폴더나 세션 기록 목록 한 장(만든 과정을 보여 줌)
+
+**본문:**
+
+백엔드 개발자인 제가 Claude Code와 함께 처음으로 프론트엔드 앱을 만들어 베타로 공개했습니다.
+
+AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 웹 편집기입니다. 상자를 손으로 그리지 않고, 블록을 골라 반복 · 분기로 감싸면 레이아웃이 따라옵니다. 저장한 .ns.svg 파일은 그대로 그림이라 README에 넣으면 보이고, 편집기로 다시 열면 고칠 수 있습니다.
+
+빈 저장소에서 시작해 6주 반 동안 58번의 세션을 거쳤습니다.
+• 코드보다 먼저 요구사항과 아키텍처를 썼습니다
+• 결정은 ADR 40건 · DR 22건으로 남겼습니다
+• 말로 고르기 어려운 것은 시안부터 그렸습니다(70여 개)
+• 테스트는 단위 · 통합 1,685개, E2E 83개입니다
+
+해 보며 배운 것
+• AI에게 많이 맡길수록 문서가 더 중요해졌습니다. 세션 사이에 기억이 없는 Claude가 어제 일을 이어 가게 해 준 것은 문서였습니다.
+• 저는 무엇을 왜 만들지를 정하고, 구현과 검사는 에이전트들이 나란히 했습니다.
+
+요구사항, 설계 문서, 결정 기록, 세션 기록까지 모두 공개되어 있습니다. AI와 함께 제품을 만드는 과정이 궁금한 분께 참고가 되면 좋겠습니다. 링크는 첫 댓글에 있습니다.
+
+―
+
+I'm a backend developer, and I just released the beta of my first frontend app, built together with Claude Code.
+
+AriadneNSD is a web editor for Nassi–Shneiderman diagrams (structograms). You don't draw boxes: you select blocks and wrap them in loops or branches, and the layout follows. The saved .ns.svg file is a plain picture that shows up in any README, and the editor can open it again for editing.
+
+It took six and a half weeks and 58 sessions, starting from an empty repository.
+• Requirements and architecture came before code
+• 40 ADRs and 22 other decision records
+• When a choice was hard to make in words, I asked for a mockup first (about 70 of them)
+• 1,685 unit and integration tests, 83 end-to-end tests
+
+What I learned
+• The more I handed to AI, the more the documents mattered. Claude has no memory between sessions; the docs are what let it pick up yesterday's work.
+• I decided what to build and why; agents did the implementation and checks in parallel.
+
+The requirements, design docs, decision records and session logs are all public (in Korean). Links in the first comment.
+
+#ClaudeCode #AI #SoftwareArchitecture #개발자 #사이드프로젝트
+
+**첫 댓글:**
+
+- 앱 · App: https://ariadnensd.com/
+- 알고리즘 갤러리 · Algorithm gallery: https://ariadnensd.com/gallery/
+- 소개와 만든 과정 · About (Korean): https://ariadnensd.com/about
+- GitHub: https://github.com/reddiana/AriadneNSD
 
 ## 올리기 전에 확인할 것
 
