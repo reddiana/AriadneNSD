@@ -102,6 +102,7 @@ updated: 2026-11-22
 - [ ] README의 "Claude 스킬" 절의 문구와 자리(웹 베타 상자 아래) → [README](https://github.com/reddiana/AriadneNSD#claude-스킬)
 - [ ] BUG-19의 고침: 화면의 선 굵기를 화면 픽셀의 정수배로 올림(150%에서 1px 선이 2px), 좌표는 맞추지 않음, 대각선은 그대로 → [[defects#BUG-19]], [[04-visual-design]]
 - [ ] 알고리즘 갤러리에서 에이전트가 정한 것: 묶음(앱 예제 이진 탐색 · 퀵정렬 · 병합 정렬 · 다익스트라는 고전, Raft는 어려운 것, 미로는 재미), `#` 없으면 다익스트라, 화살표 키는 기록을 덮어씀, 어두운 테마에서도 흰 바탕, 새 OG 그림, 사용법 "예제" 꼭지에 링크(앱 도움말 메뉴에는 없음) → [[2026-11-22-02-promotion-gallery]], http://localhost:8093/gallery/ko/ (push 뒤 https://ariadnensd.com/gallery/ko/)
+- [ ] 사용법 동영상에서 정한 것: 동영상 아래 짧은 설명 둘과 안내 한 줄의 문구, 탭 폭 680px, 마우스판의 딱지 자리(상태 표시줄 위 오른쪽) → [[ux-decisions#MV1. 사용법의 힙 정렬 동영상|MV1]], https://ariadnensd.com/manual/ko/#tour
 - [ ] 갤러리로 가는 링크에서 에이전트가 정한 것: 앱 도움말 메뉴에 구분선 · 단축키 없음, 아래 항목은 한 칸씩 내려감, 영어 이름 "Algorithm gallery" → [[ux-decisions#GL2. 갤러리로 가는 링크|GL2]]
 
 ## 알아만 두세요
