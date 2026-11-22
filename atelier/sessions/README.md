@@ -71,3 +71,4 @@ updated: 2026-10-25
 - [[2026-11-22-03-first-post-guide|2026-11-22 처음 올리는 사람의 단계별 안내(GeekNews · HN · Reddit), GeeksforGeeks는 뺌, 홍보 문서는 사이트에서 뺌, 갤러리로 가는 링크(사이트 메뉴 · 앱 도움말, GL2)]]
 - [[2026-11-22-04-gallery-spa-geeknews-mail|2026-11-22 갤러리 링크를 SPA가 가로채던 것, GeekNews를 GN 형식으로 다시 올림, report 메일을 클라우드 예약 작업으로]]
 - [[2026-11-22-05-linkedin-heap-sort-video|2026-11-22 LinkedIn에 올림(만든 과정, 한국어 + 영어), 힙 정렬 편집 동영상, 사라진 초안 되살리기]]
+- [[2026-11-22-06-flowchart-comparison|2026-11-22 앱 예제를 플로차트로 그려 NS 차트와 비교(M71 머지 소트, M72 예제 열 개 자동 배치)]]
