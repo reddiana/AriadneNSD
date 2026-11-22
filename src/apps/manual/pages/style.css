@@ -200,6 +200,9 @@ a {
   gap: 4px;
   min-width: 0;
 }
+.videos figure[hidden] {
+  display: none;
+}
 .videos video {
   display: block;
   width: 100%;
