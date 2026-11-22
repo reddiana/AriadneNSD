@@ -1,0 +1,210 @@
+<title>M71 머지 소트 NS · 플로차트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 두 칸: 왼쪽 NS 차트(갤러리의 그림 그대로), 오른쪽 같은 알고리즘의 플로차트. 좁으면 위아래 */
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --fg: #1d2330; --muted: #5d6677;
+  --line: #2a3142; --shape: #ffffff; --decision: #fff6e0; --call: #eaf2ff;
+  --term: #e9f6ee; --loop: #c2410c; --ok: #15803d; --no: #b91c1c;
+  --mono: "D2Coding", Consolas, "Malgun Gothic", monospace;
+  --sans: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151b; --panel: #1a1e26; --fg: #e6e9ef; --muted: #9aa3b2;
+  --line: #c9d0dc; --shape: #1f2430; --decision: #3a3120; --call: #1e2c44;
+  --term: #1c3326; --loop: #fb923c; --ok: #4ade80; --no: #f87171; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12151b; --panel: #1a1e26; --fg: #e6e9ef; --muted: #9aa3b2;
+  --line: #c9d0dc; --shape: #1f2430; --decision: #3a3120; --call: #1e2c44;
+  --term: #1c3326; --loop: #fb923c; --ok: #4ade80; --no: #f87171; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px; }
+main { max-width: 1100px; margin: 0 auto; display: grid; gap: 20px; }
+h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+.lead { margin: 0; color: var(--muted); max-width: 70ch; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
+figure { margin: 0; background: var(--panel); border: 1px solid color-mix(in srgb, var(--line) 18%, transparent);
+  border-radius: 8px; padding: 16px; min-width: 0; display: grid; gap: 10px; }
+figcaption { font-weight: 600; }
+figcaption span { font-weight: 400; color: var(--muted); font-size: .9rem; margin-left: .4em; }
+.scroll { overflow-x: auto; }
+.ns { background: #fff; border-radius: 4px; padding: 8px; width: fit-content; }
+.ns svg, .fc svg { display: block; max-width: none; }
+.fc text { font-family: var(--mono); font-size: 13px; fill: var(--fg); }
+.fc .lbl { font-family: var(--sans); font-size: 12px; font-weight: 600; }
+.fc .yes { fill: var(--ok); } .fc .no { fill: var(--no); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid color-mix(in srgb, var(--line) 15%, transparent); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+code { font-family: var(--mono); font-size: .9em; }
+</style>
+
+<main>
+  <h1>M71 머지 소트: NS 차트와 플로차트</h1>
+  <p class="lead">앱 예제의 <code>merge_sort(a, lo, hi)</code>를 두 방식으로 그렸습니다. 왼쪽은 알고리즘 갤러리의 그림 그대로, 오른쪽은 같은 순서의 플로차트(ISO 5807 기호)입니다. 반복의 되돌아가는 선은 주황색으로 칠했습니다.</p>
+
+  <div class="pair">
+    <figure>
+      <figcaption>NS 차트 <span>AriadneNSD, 블록 15개</span></figcaption>
+      <div class="scroll"><div class="ns"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="318" height="504" viewBox="0 0 318 504">
+  
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort(a, lo, hi)</tspan></text>
+<path d="M24 64 L294 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="270" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L168 112 L294 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="168" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="288" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="112" width="144" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="168" y="112" width="126" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="231" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M226.5 132.5 L235.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="144" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="164" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="24" y="176" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 176 L31 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M287 176 L287 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="24" y="208" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 208 L31 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M287 208 L287 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="228" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="24" y="240" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="260" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="24" y="272" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="292" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="46" y="304" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L170 352 L294 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="170" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="288" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="352" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="372" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="46" y="384" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="170" y="352" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="180" y="372" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="170" y="384" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="180" y="404" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="24" y="416" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="436" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="24" y="448" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="468" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+</g>
+</svg>
+</div></div>
+    </figure>
+
+    <figure class="fc">
+      <figcaption>플로차트 <span>도형 14개, 화살표 14개</span></figcaption>
+      <div class="scroll">
+      <svg width="470" height="900" viewBox="0 0 470 900" role="img" aria-label="머지 소트 플로차트">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" style="fill:var(--line)"/></marker>
+          <marker id="ahl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" style="fill:var(--loop)"/></marker>
+        </defs>
+        <g transform="translate(20,0)" style="stroke:var(--line);stroke-width:1.4">
+          <!-- 시작 -->
+          <rect x="110" y="16" width="220" height="36" rx="18" style="fill:var(--term)"/>
+          <!-- 판단: 길이 < 2 -->
+          <polygon points="220,78 310,110 220,142 130,110" style="fill:var(--decision)"/>
+          <rect x="360" y="92" width="80" height="36" rx="18" style="fill:var(--term)"/>
+          <!-- mid -->
+          <rect x="110" y="170" width="220" height="36" style="fill:var(--shape)"/>
+          <!-- 두 번의 재귀 호출(미리 정의된 처리) -->
+          <rect x="110" y="230" width="220" height="36" style="fill:var(--call)"/>
+          <line x1="122" y1="230" x2="122" y2="266"/><line x1="318" y1="230" x2="318" y2="266"/>
+          <rect x="110" y="290" width="220" height="36" style="fill:var(--call)"/>
+          <line x1="122" y1="290" x2="122" y2="326"/><line x1="318" y1="290" x2="318" y2="326"/>
+          <!-- 초기화 -->
+          <rect x="110" y="350" width="220" height="36" style="fill:var(--shape)"/>
+          <!-- 반복 조건 -->
+          <polygon points="220,418 335,454 220,490 105,454" style="fill:var(--decision)"/>
+          <!-- 비교 -->
+          <polygon points="220,520 300,552 220,584 140,552" style="fill:var(--decision)"/>
+          <rect x="25" y="604" width="150" height="48" style="fill:var(--shape)"/>
+          <rect x="265" y="604" width="150" height="48" style="fill:var(--shape)"/>
+          <!-- 남은 것 붙이기, 되쓰기, 끝 -->
+          <rect x="110" y="720" width="220" height="36" style="fill:var(--shape)"/>
+          <rect x="110" y="780" width="220" height="36" style="fill:var(--shape)"/>
+          <rect x="160" y="840" width="120" height="36" rx="18" style="fill:var(--term)"/>
+
+          <g style="fill:none">
+            <line x1="220" y1="52" x2="220" y2="78" marker-end="url(#ah)"/>
+            <line x1="310" y1="110" x2="360" y2="110" marker-end="url(#ah)"/>
+            <line x1="220" y1="142" x2="220" y2="170" marker-end="url(#ah)"/>
+            <line x1="220" y1="206" x2="220" y2="230" marker-end="url(#ah)"/>
+            <line x1="220" y1="266" x2="220" y2="290" marker-end="url(#ah)"/>
+            <line x1="220" y1="326" x2="220" y2="350" marker-end="url(#ah)"/>
+            <line x1="220" y1="386" x2="220" y2="418" marker-end="url(#ah)"/>
+            <line x1="220" y1="490" x2="220" y2="520" marker-end="url(#ah)"/>
+            <polyline points="140,552 100,552 100,604" marker-end="url(#ah)"/>
+            <polyline points="300,552 340,552 340,604" marker-end="url(#ah)"/>
+            <!-- 반복 거짓: 오른쪽으로 빠져 아래로 -->
+            <polyline points="335,454 440,454 440,698 220,698 220,720" marker-end="url(#ah)"/>
+            <line x1="220" y1="756" x2="220" y2="780" marker-end="url(#ah)"/>
+            <line x1="220" y1="816" x2="220" y2="840" marker-end="url(#ah)"/>
+          </g>
+          <!-- 되돌아가는 선 -->
+          <g style="fill:none;stroke:var(--loop);stroke-width:1.8">
+            <line x1="100" y1="652" x2="100" y2="672"/>
+            <polyline points="340,652 340,672 0,672 0,402 220,402" marker-end="url(#ahl)"/>
+          </g>
+          <circle cx="100" cy="672" r="3" style="fill:var(--loop);stroke:none"/>
+          <circle cx="220" cy="402" r="3" style="fill:var(--loop);stroke:none"/>
+
+          <g style="stroke:none" text-anchor="middle" dominant-baseline="central">
+            <text x="220" y="34">merge_sort(a, lo, hi)</text>
+            <text x="220" y="110">hi - lo &lt; 2</text>
+            <text x="400" y="110">return</text>
+            <text x="220" y="188">mid = (lo + hi) &gt;&gt; 1</text>
+            <text x="220" y="248">merge_sort(a, lo, mid)</text>
+            <text x="220" y="308">merge_sort(a, mid, hi)</text>
+            <text x="220" y="368">i, j, tmp = lo, mid, []</text>
+            <text x="220" y="454">i &lt; mid and j &lt; hi</text>
+            <text x="220" y="552">a[i] &lt;= a[j]</text>
+            <text x="100" y="619">tmp.append(a[i])</text>
+            <text x="100" y="637">i += 1</text>
+            <text x="340" y="619">tmp.append(a[j])</text>
+            <text x="340" y="637">j += 1</text>
+            <text x="220" y="738">tmp += a[i:mid] + a[j:hi]</text>
+            <text x="220" y="798">a[lo:hi] = tmp</text>
+            <text x="220" y="858">끝</text>
+            <text class="lbl yes" x="334" y="100">참</text>
+            <text class="lbl no" x="236" y="158">거짓</text>
+            <text class="lbl yes" x="232" y="505">참</text>
+            <text class="lbl no" x="372" y="444">거짓</text>
+            <text class="lbl yes" x="118" y="542">참</text>
+            <text class="lbl no" x="324" y="542">거짓</text>
+          </g>
+        </g>
+      </svg>
+      </div>
+    </figure>
+  </div>
+
+  <figure>
+    <figcaption>나란히 보며 볼 곳</figcaption>
+    <div class="scroll"><table>
+      <thead><tr><th>무엇</th><th>NS 차트</th><th>플로차트</th></tr></thead>
+      <tbody>
+        <tr><td>반복</td><td>while 블록이 몸통을 감싸 범위가 모양으로 보임</td><td>판단 도형 + 되돌아가는 선. 어디까지가 몸통인지는 선을 따라가야 앎</td></tr>
+        <tr><td>조기 반환</td><td>if의 참 갈래에 return, 거짓 갈래는 빈 블록</td><td>판단에서 옆으로 빠지는 끝 도형</td></tr>
+        <tr><td>재귀 호출</td><td>호출 블록 두 개(같은 Method를 가리킴)</td><td>미리 정의된 처리 기호(양옆 두 줄) 두 개</td></tr>
+        <tr><td>읽는 방향</td><td>위에서 아래로만</td><td>아래로 가다가 반복 거짓은 오른쪽 바깥, 되돌아가는 선은 왼쪽 바깥으로 돎</td></tr>
+        <tr><td>차지하는 자리</td><td>318 × 504</td><td>470 × 900 (선을 돌릴 여백 포함)</td></tr>
+      </tbody>
+    </table></div>
+  </figure>
+</main>
