@@ -17,6 +17,11 @@ const pages = [
 await rm(dist, { recursive: true, force: true });
 await mkdir(new URL('ko/', dist), { recursive: true });
 await cp(new URL('img/', root), new URL('img/', dist), { recursive: true });
+// The videos (mp4 and their poster png) without the recording script and its README.
+await cp(new URL('video/', root), new URL('video/', dist), {
+  recursive: true,
+  filter: (src) => !/\.(mjs|md)$/.test(src),
+});
 await cp(new URL('pages/style.css', root), new URL('style.css', dist));
 await cp(new URL('pages/copy.js', root), new URL('copy.js', dist));
 
