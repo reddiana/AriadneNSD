@@ -219,6 +219,36 @@ The requirements, design docs, decision records and session logs are all public 
 - 알고리즘 갤러리 · Algorithm gallery: https://ariadnensd.com/gallery/
 - 소개와 만든 과정 · About (Korean): https://ariadnensd.com/about
 
+## 페이스북 그룹 후보
+
+대상은 알고리즘에 관심 많은 사람이고, AI · Claude 스킬 쪽 그룹은 뺍니다(2026-11-22 메인테이너). 2026-11-22에 메인테이너의 Chrome으로 페이스북 그룹 검색과 각 그룹의 "정보" 탭을 읽어 적었습니다(가입 · 게시는 하지 않음).
+
+- 한국어: "알고리즘", "백준", "코딩테스트", "자료구조", "프로그래밍 대회"로 찾아도 알고리즘 · PS 그룹은 나오지 않았습니다. 한국의 PS 사람들은 페이스북 밖에 있습니다(아래 표). 페이스북에서는 코딩을 배우는 사람이 많은 큰 그룹을 고릅니다.
+- 영어: 알고리즘 · 경쟁 프로그래밍 그룹이 많지만 회원 수에 비해 조용한 곳이 많습니다. 지난달 글 수로 살아 있는지를 봅니다. 회원은 남아시아(방글라데시 · 인도) 학생이 많아 보입니다.
+
+| 추천 | 그룹 | 말 | 회원 | 지난달 글 | 홍보 규칙 |
+| --- | --- | --- | --- | --- | --- |
+| ★ | [생활코딩](https://www.facebook.com/groups/codingeverybody/) | 한국어 | 11.7만 | 32 | 상업 홍보만 막음(유료 강의 · 도서 · 상업 앱). 무료 오픈소스 소개는 됨. 메인테이너는 이미 가입함 |
+|  | [[스터디 그룹] 혼자 공부하는 프로그래밍](https://www.facebook.com/groups/hongong/) | 한국어 | 6.1천 | 확인 못 함 | 확인 못 함 |
+| ★ | [Data Structures and Algorithms](https://www.facebook.com/groups/190802016227153/) | 영어 | 1.4만 | 519 | 규칙 칸 없음. "개발자와 자료구조 · 알고리즘을 나누고 설명하는 곳". 가장 활발함 |
+| ★ | [Competitive Programming-Problem Solving and Contest](https://www.facebook.com/groups/192542874718174/) | 영어 | 1.8만 | 332 | 친절 · 사생활 · 혐오 금지 등 일반 규칙(끝까지는 못 읽음) |
+|  | [Competitive Programming Problems & Solutions](https://www.facebook.com/groups/985986314866721/) | 영어 | 6.3만 | 10 | 상업 광고 · 자기 홍보 금지. 올리려면 갤러리의 알고리즘 하나를 문제 풀이처럼 보여 주는 글로, 링크는 덧붙이는 정도 |
+|  | [Leetcode Problem Solving Group](https://www.facebook.com/groups/913783172475942/) | 영어 | 1.3만 | 8 | 규칙 칸 없음 |
+|  | [Algorithms & Data Structures](https://www.facebook.com/groups/algoandds/) | 영어 | 2.2천 | 0 | 메인테이너가 가입해 있고, 관리자 승인을 기다리는 글이 1개 있음. 활동이 없어 추천하지 않음 |
+
+뺀 곳: [Data Structures and Algorithms Discussion](https://www.facebook.com/groups/datastructuresdiscussion/)(5.5만, 비공개, 지난달 글 0), 같은 이름의 작은 그룹들(글 0).
+
+### 페이스북 밖의 PS · 알고리즘 독자
+
+| 곳 | 말 | 메모 |
+| --- | --- | --- |
+| [Codeforces 블로그](https://codeforces.com/blog) | 영어 | 누구나 블로그 글을 씀. 한국 PS 고수도 많음. 광고로 보이면 비추천(downvote)이 쌓이므로 "22개 알고리즘을 NS 차트로 그려 봄"처럼 그림을 앞세움 |
+| [PS 마이너 갤러리](https://gall.dcinside.com/mgallery/board/lists/?id=ps) | 한국어 | 익명이라 반응이 거침. 그림 몇 장을 보여 주고 의견을 묻는 글로 |
+| Reddit r/algorithms · r/compsci · r/leetcode · r/competitiveprogramming | 영어 | → [[#3. Reddit (r/algorithms · r/compsci)]] |
+| velog · 블로그 "NS 차트로 보는 KMP" 같은 글 | 한국어 | 검색으로 찾아오게 → [[#방향]] |
+
+출처: [JihunDev/awesome-developer-community-in-korea](https://github.com/JihunDev/awesome-developer-community-in-korea), [bartkim0426/korea-dev-community](https://github.com/bartkim0426/korea-dev-community)(2018), [Codeforces: Facebook Group](https://codeforces.com/blog/entry/12999), [Codeforces: Competitive programming (mini)group](https://codeforces.com/blog/entry/11369), [daily.dev: Best Competitive Programming Communities](https://daily.dev/blog/best-competitive-programming-communities/)
+
 ## 초안 5: 페이스북 그룹
 
 (메인테이너가 [[#초안 4: LinkedIn]]의 한국어 본문에서 발췌해 씀)
@@ -228,7 +258,25 @@ The requirements, design docs, decision records and session logs are all public 
 **붙일 것:**
 
 **본문:**
+  - 영문:
+AriadneNSD is a web editor for Nassi–Shneiderman diagrams (structograms). An NS diagram shows the same logic as a flowchart in far less space, but drawing one by hand meant lining things up and erasing again and again, so complex logic was hard to draw. With AriadneNSD you can easily draw NS charts of even complex algorithms, WYSIWYG.
+⠀
+The saved .ns.svg file is an SVG that carries the diagram structure as metadata. It shows up as a picture in any Markdown document such as a README, and the editor can open it again for editing.
 
+App: https://ariadnensd.com/
+Algorithm gallery: https://ariadnensd.com/gallery/
+
+#NassiShneiderman #NSDiagram #Structogram 
+
+- 국문:
+AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 웹 편집기입니다. NS 차트는 플로우차트와 같은 로직을 훨씬 적은 지면에 담지만, 손으로 그리려면 줄을 맞추고 지우기를 되풀이해야 해서 복잡한 로직은 그리기 어려웠습니다. AriadneNSD에서는 복잡한 알고리즘도 화면에 보이는 그대로(WYSIWYG) NS 차트로 쉽게 그릴 수 있습니다.  
+⠀  
+저장 형식인 .ns.svg는 다이어그램 구조를 메타데이터로 담은 SVG 파일입니다. README 같은 Markdown 문서에 넣으면 그림으로 보이고, AriadneNSD 편집기로 열면 다시 편집할 수 있습니다.  
+
+App: https://ariadnensd.com/
+Algorithm gallery: https://ariadnensd.com/gallery/
+
+#NassiShneiderman #NSDiagram #Structogram
 ## 올리기 전에 확인할 것
 
 - [ ] 갤러리가 사이트에 있고, 22개 모두 "편집기에서 열기"가 열림
