@@ -73,3 +73,4 @@ updated: 2026-10-25
 - [[2026-11-22-05-linkedin-heap-sort-video|2026-11-22 LinkedIn에 올림(만든 과정, 한국어 + 영어), 힙 정렬 편집 동영상, 사라진 초안 되살리기]]
 - [[2026-11-22-06-flowchart-comparison|2026-11-22 앱 예제를 플로차트로 그려 NS 차트와 비교(M71 머지 소트, M72 예제 열 개 자동 배치)]]
 - [[2026-11-22-07-linkedin-video-loop-first|2026-11-22 LinkedIn 동영상을 반복문을 먼저 · 새 Method로 빼기로 다시 녹화해 다시 올림, 첫 줄을 숫자로]]
+- [[2026-11-22-08-linkedin-first-line|2026-11-22 LinkedIn 글의 첫 두 문장(숫자 나열 · 자기소개)을 지움]]
