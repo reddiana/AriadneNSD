@@ -167,53 +167,57 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 (만든 과정을 앞세움, 한국어 위 · 영어 아래. 3,000자 안. 숫자는 2026-11-22 기준. "해 보며 배운 것"은 Claude가 기록에서 고른 것이라 메인테이너의 말로 고쳐 쓰기)
 
-**붙일 동영상:** 빈 문서에서 힙 정렬을 키보드로 만드는 51초짜리 동영상 `journal/assets/2026-11-22-linkedin-heap-sort.mp4`(1080×1080, MP4, 누른 키를 오른쪽 아래에 보임, 접기 영역 없음). 미리보기 그림이 필요하면 완성 화면 `journal/assets/2026-11-22-linkedin-heap-sort-final.png`. 다시 뽑기: `src/apps/web/promo/record.mjs`
+**붙일 동영상:** 빈 문서에서 힙 정렬을 키보드로 만드는 49초짜리 동영상(반복문을 먼저 만들고, 같은 로직을 새 Method로 뺌. 복사 · 붙여넣기 · 감싸기 없음) `journal/assets/2026-11-22-linkedin-heap-sort.mp4`(1080×1080, MP4, 누른 키를 오른쪽 아래에 보임, 접기 영역 없음). 미리보기 그림이 필요하면 완성 화면 `journal/assets/2026-11-22-linkedin-heap-sort-final.png`. 다시 뽑기: `src/apps/web/promo/record.mjs`
 
 **붙여넣을 때:** LinkedIn은 붙여넣은 글의 빈 줄을 지운다. 빈 줄마다 보이지 않는 글자 `U+2800`(⠀)을 하나 넣은 본문을 붙인다(2026-11-22에 이렇게 고침). 그래도 사라지면 `Ctrl`+`Shift`+`V`나 수정 창에서 `Enter`를 직접
 
 **본문:**
 
-백엔드 개발자가 Claude Code와 함께 처음으로 프론트엔드 앱을 만들어 베타로 공개합니다.
-
-AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 웹 편집기입니다. NS 차트는 플로우차트와 같은 로직을 훨씬 적은 지면에 담지만, 손으로 그리려면 줄을 맞추고 지우기를 되풀이해야 해서 복잡한 로직은 그리기 어려웠습니다. AriadneNSD에서는 복잡한 알고리즘도 화면에 보이는 그대로(WYSIWYG) NS 차트로 쉽게 그릴 수 있습니다.
-
-저장 형식인 .ns.svg는 다이어그램 구조를 메타데이터로 담은 SVG 파일입니다. README 같은 Markdown 문서에 넣으면 그림으로 보이고, AriadneNSD 편집기로 열면 다시 편집할 수 있습니다.
-
-빈 저장소에서 시작해 6주 반 동안 58번의 세션을 거쳤습니다.
-• 코드보다 먼저 요구사항과 아키텍처를 정의했습니다
-• 결정은 ADR(아키텍처) 40건 · DR(그 밖) 22건으로 기록했습니다
-• Claude의 말로만 판단하기 어려운 것은 시안을 그리도록 하였습니다(70여 개)
-• 테스트는 단위 · 통합 1,685개, E2E 83개입니다
-
-해 보며 배운 것
-• Claude에게 많이 맡길수록 문서가 더 중요해졌습니다. 세션 사이에 기억이 없는 Claude가 어제 하던 일을 이어 갈 수 있었던 것은 문서 덕분이었습니다.
-• 저는 무엇을 왜 만들지를 정하고, 구현과 검사는 Claude 에이전트들이 병렬로 맡았습니다.
-• Claude와의 협업은 예전에 인도 GDC(Global Delivery Center)와 함께 프로젝트를 성공적으로 이끌었던 경험과 닮았습니다. 지금까지 저의 결론은, GDC와 협업하는 것과 AI를 활용하는 것은 근본적으로 같은 원리라는 것입니다.
-
-요구사항, 설계 문서, 결정 기록, 세션 기록까지 모두 공개되어 있습니다. AI와 함께 제품을 만드는 과정이 궁금한 분께 참고가 되면 좋겠습니다. 링크는 첫 댓글에 있습니다.
-
-―
-
-I'm a backend developer, and today I'm releasing the beta of my first frontend app, built together with Claude Code.
-
-AriadneNSD is a web editor for Nassi–Shneiderman diagrams (structograms). An NS chart shows the same logic as a flowchart in far less space, but drawing one by hand meant lining things up and erasing again and again, so complex logic was hard to draw. With AriadneNSD you can easily draw NS charts of even complex algorithms, WYSIWYG.
-
-The saved .ns.svg file is an SVG that carries the diagram structure as metadata. It shows up as a picture in any Markdown document such as a README, and the editor can open it again for editing.
-
-It took six and a half weeks and 58 sessions, starting from an empty repository.
-• I defined the requirements and architecture before writing code
-• Decisions are recorded as 40 ADRs (architecture) and 22 DRs (everything else)
-• When Claude's words alone weren't enough to judge, I had it draw a mockup (about 70 of them)
-• 1,685 unit and integration tests, 83 end-to-end tests
-
-What I learned
-• The more I handed to Claude, the more the documents mattered. Claude has no memory between sessions; the docs are what let it pick up yesterday's work.
-• I decided what to build and why; Claude agents did the implementation and checks in parallel.
-• Working with Claude felt much like a project I once led successfully with a Global Delivery Center (GDC) in India. My conclusion so far: working with a GDC and working with AI rest on the same principles.
-
-The requirements, design docs, decision records and session logs are all public (in Korean). I hope it helps anyone curious about building a product together with AI. Links in the first comment.
-
-#NassiShneiderman #NSDiagram #Structogram #NS차트 #Algorithms #ClaudeCode #SoftwareArchitecture #사이드프로젝트
+6주 반, 테스트 1,768개, 결정 기록 62건. 프론트엔드를 처음 해 본 백엔드 개발자의 사이드 프로젝트입니다.  
+⠀  
+Claude Code와 함께 만들었고, 오늘 베타로 공개합니다.  
+⠀  
+AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 웹 편집기입니다. NS 차트는 플로우차트와 같은 로직을 훨씬 적은 지면에 담지만, 손으로 그리려면 줄을 맞추고 지우기를 되풀이해야 해서 복잡한 로직은 그리기 어려웠습니다. AriadneNSD에서는 복잡한 알고리즘도 화면에 보이는 그대로(WYSIWYG) NS 차트로 쉽게 그릴 수 있습니다.  
+⠀  
+저장 형식인 .ns.svg는 다이어그램 구조를 메타데이터로 담은 SVG 파일입니다. README 같은 Markdown 문서에 넣으면 그림으로 보이고, AriadneNSD 편집기로 열면 다시 편집할 수 있습니다.  
+⠀  
+빈 저장소에서 시작해 6주 반 동안 58번의 세션을 거쳤습니다.  
+• 코드보다 먼저 요구사항과 아키텍처를 정의했습니다  
+• 결정은 ADR(아키텍처) 40건 · DR(그 밖) 22건으로 기록했습니다  
+• Claude의 말로만 판단하기 어려운 것은 시안을 그리도록 하였습니다(70여 개)  
+• 테스트는 단위 · 통합 1,685개, E2E 83개입니다  
+⠀  
+해 보며 배운 것  
+• Claude에게 많이 맡길수록 문서가 더 중요해졌습니다. 세션 사이에 기억이 없는 Claude가 어제 하던 일을 이어 갈 수 있었던 것은 문서 덕분이었습니다.  
+• 저는 무엇을 왜 만들지를 정하고, 구현과 검사는 Claude 에이전트들이 병렬로 맡았습니다.  
+• Claude와의 협업은 예전에 인도 GDC(Global Delivery Center)와 함께 프로젝트를 성공적으로 이끌었던 경험과 닮았습니다. 지금까지 저의 결론은, GDC와 협업하는 것과 AI를 활용하는 것은 근본적으로 같은 원리라는 것입니다.  
+⠀  
+요구사항, 설계 문서, 결정 기록, 세션 기록까지 모두 공개되어 있습니다. AI와 함께 제품을 만드는 과정이 궁금한 분께 참고가 되면 좋겠습니다. 링크는 첫 댓글에 있습니다.  
+⠀  
+―  
+⠀  
+Six and a half weeks, 1,768 tests, 62 recorded decisions — a side project by a backend developer new to frontend.  
+⠀  
+I built it together with Claude Code, and today I'm releasing the beta.  
+⠀  
+AriadneNSD is a web editor for Nassi–Shneiderman diagrams (structograms). An NS chart shows the same logic as a flowchart in far less space, but drawing one by hand meant lining things up and erasing again and again, so complex logic was hard to draw. With AriadneNSD you can easily draw NS charts of even complex algorithms, WYSIWYG.  
+⠀  
+The saved .ns.svg file is an SVG that carries the diagram structure as metadata. It shows up as a picture in any Markdown document such as a README, and the editor can open it again for editing.  
+⠀  
+It took six and a half weeks and 58 sessions, starting from an empty repository.  
+• I defined the requirements and architecture before writing code  
+• Decisions are recorded as 40 ADRs (architecture) and 22 DRs (everything else)  
+• When Claude's words alone weren't enough to judge, I had it draw a mockup (about 70 of them)  
+• 1,685 unit and integration tests, 83 end-to-end tests  
+⠀  
+What I learned  
+• The more I handed to Claude, the more the documents mattered. Claude has no memory between sessions; the docs are what let it pick up yesterday's work.  
+• I decided what to build and why; Claude agents did the implementation and checks in parallel.  
+• Working with Claude felt much like a project I once led successfully with a Global Delivery Center (GDC) in India. My conclusion so far: working with a GDC and working with AI rest on the same principles.  
+⠀  
+The requirements, design docs, decision records and session logs are all public (in Korean). I hope it helps anyone curious about building a product together with AI. Links in the first comment.  
+⠀  
+#NassiShneiderman #NSDiagram #Structogram #NS차트 #Algorithms #ClaudeCode #SoftwareArchitecture #SideProject
 
 **첫 댓글:**
 
