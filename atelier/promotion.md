@@ -173,10 +173,6 @@ Every diagram opens in the editor if you want to change it or trace it step by s
 
 **본문:**
 
-6주 반, 테스트 1,768개, 결정 기록 62건. 프론트엔드를 처음 해 본 백엔드 개발자의 사이드 프로젝트입니다.  
-⠀  
-Claude Code와 함께 만들었고, 오늘 베타로 공개합니다.  
-⠀  
 AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 웹 편집기입니다. NS 차트는 플로우차트와 같은 로직을 훨씬 적은 지면에 담지만, 손으로 그리려면 줄을 맞추고 지우기를 되풀이해야 해서 복잡한 로직은 그리기 어려웠습니다. AriadneNSD에서는 복잡한 알고리즘도 화면에 보이는 그대로(WYSIWYG) NS 차트로 쉽게 그릴 수 있습니다.  
 ⠀  
 저장 형식인 .ns.svg는 다이어그램 구조를 메타데이터로 담은 SVG 파일입니다. README 같은 Markdown 문서에 넣으면 그림으로 보이고, AriadneNSD 편집기로 열면 다시 편집할 수 있습니다.  
@@ -195,10 +191,6 @@ AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 
 요구사항, 설계 문서, 결정 기록, 세션 기록까지 모두 공개되어 있습니다. AI와 함께 제품을 만드는 과정이 궁금한 분께 참고가 되면 좋겠습니다. 링크는 첫 댓글에 있습니다.  
 ⠀  
 ―  
-⠀  
-Six and a half weeks, 1,768 tests, 62 recorded decisions — a side project by a backend developer new to frontend.  
-⠀  
-I built it together with Claude Code, and today I'm releasing the beta.  
 ⠀  
 AriadneNSD is a web editor for Nassi–Shneiderman diagrams (structograms). An NS chart shows the same logic as a flowchart in far less space, but drawing one by hand meant lining things up and erasing again and again, so complex logic was hard to draw. With AriadneNSD you can easily draw NS charts of even complex algorithms, WYSIWYG.  
 ⠀  
