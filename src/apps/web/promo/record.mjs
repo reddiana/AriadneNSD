@@ -232,7 +232,7 @@ try {
   await wait(300);
   await move('j', 'Into the true branch');
   await step('Enter', 'Edit block', 250);
-  await type('return    # heap order holds');
+  await type('break    # heap order holds');
   await step('Control+ArrowUp', 'Up to the If', 600);
   await step('o', 'New block after', 300);
   await type('a[i], a[largest] = a[largest], a[i]');
