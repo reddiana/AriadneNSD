@@ -15,3 +15,5 @@ coverage-e2e/
 coverage-e2e-raw/
 # The skill's script is built by skills/ariadne-nsd/scripts/build.mjs and compared byte for byte.
 skills/*/plugin/skills/*/scripts/
+# The promo video's recording script: not part of the app or its checks.
+apps/web/promo/

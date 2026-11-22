@@ -20,6 +20,8 @@ export default tseslint.config(
       'packages/fonts/assets/',
       // Built by skills/ariadne-nsd/scripts/build.mjs.
       'skills/*/plugin/skills/*/scripts/',
+      // The promo video's recording script (apps/web/promo/README.md): not part of the app or its checks.
+      'apps/web/promo/',
     ],
   },
   js.configs.recommended,
