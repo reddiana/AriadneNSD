@@ -85,6 +85,8 @@ const text = {
       addMethodHeader: 'Add Method Header',
       insert: 'Insert',
       for: 'Insert For',
+      insertProcess: 'Insert Process',
+      insertIf: 'Insert If',
       call: 'Insert Call…',
       extract: 'Extract into New Method',
       process: 'Process',
@@ -121,6 +123,8 @@ const text = {
       addMethodHeader: 'Method 헤더 달기',
       insert: '삽입',
       for: 'For 삽입',
+      insertProcess: '처리 삽입',
+      insertIf: 'If 삽입',
       call: '호출 삽입…',
       extract: '새 Method로 빼기',
       process: '처리',
@@ -503,12 +507,12 @@ async function byKeys(page, wait) {
 }
 
 /**
- * The mouse version: the same drawing by the mouse. Blocks on the toolbar (Process · If · While)
- * are dragged from their icons onto the diagram; the rest (Method header, For, call, Extract into
- * New Method) comes from the right-click context menu. A text field opens by a double-click or by
- * the drop, and is accepted by the next click elsewhere (it accepts its text when it loses focus).
- * Only the text is typed, and the zoom is by its key as in the key version (the maintainer's
- * choice).
+ * The mouse version: the same drawing in the key version's order, by the mouse. Blocks come from
+ * the right-click context menu of the block they follow (Insert › …), and so do the Method header
+ * and Extract into New Method; the While is dragged once from its toolbar icon, to show the drag.
+ * A text field opens by a double-click, an insert or a drop, and is accepted by the next click
+ * (it accepts its text when it loses focus). Only the text is typed, and the zoom is by its key
+ * as in the key version (the maintainer's choice).
  */
 async function byMouse(page, wait) {
   let at = { x: size - 40, y: size / 2 };
@@ -631,22 +635,6 @@ async function byMouse(page, wait) {
   const viaToolbar = (block) => `${text.toolbar} › ${block}`;
   const pill = (action, label, hold) =>
     page.evaluate(([k, l, h]) => window.promoKeys(k, l, h), [[action], label, hold]);
-  /** The top edge of the block that shows a drawn text: the "between" band before it. */
-  const topEdgeOf = async (start) => {
-    await pointOf(drawn(start));
-    const box = await drawn(start).boundingBox();
-    const top = await page.evaluate((t) => {
-      const cx = t.x + t.width / 2;
-      const cy = t.y + t.height / 2;
-      const boxes = [...document.querySelectorAll('.ans-document rect')]
-        .map((r) => r.getBoundingClientRect())
-        .filter((r) => cx > r.left && cx < r.right && cy > r.top && cy < r.bottom)
-        .sort((a, b) => a.width * a.height - b.width * b.height);
-      return boxes[0]?.top ?? null;
-    }, box);
-    if (top === null) throw new Error(`no block shows ${start}`);
-    return { x: box.x + Math.min(80, box.width / 2), y: top + 3 };
-  };
   /**
    * Drags a toolbar block icon onto the diagram with real pointer events: press, a small move
    * that starts the drag (and lets the open text field accept its text), a slow move to the
@@ -691,33 +679,33 @@ async function byMouse(page, wait) {
   await type('heap_sort(a)');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type('n = len(a)');
-  // The first loop: the For (not on the toolbar) from the context menu, then its body.
+  // The first loop: each block by the context menu of the block before it (a right-click on an
+  // open field accepts it first); the While once by a drag, to show that the icons drag.
   await contextMenu(field, app.insert, app.for);
   await type('for i in range(n // 2 - 1, -1, -1)');
   await drag('block.insert.while', 'While', () => emptyBelow('for i in range'));
   await type('True');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type('largest = i');
-  await drag('block.insert.process', app.process, () => pointOf(drawn('largest = i')));
+  await contextMenu(field, app.insert, app.insertProcess);
   await type('l, r = 2 * i + 1, 2 * i + 2');
-  await drag('block.insert.process', app.process, () => pointOf(drawn('l, r =')));
-  await type('a[i], a[largest] = a[largest], a[i]');
-  await drag('block.insert.process', app.process, () => pointOf(drawn('a[i], a[largest]')));
-  await type('i = largest');
-  // The three Ifs, each dropped between the last one and "a[i], a[largest] = …".
-  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
+  await contextMenu(field, app.insert, app.insertIf);
   await type('l < n and a[l] > a[largest]');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type('largest = l');
-  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
+  await contextMenu(drawn('l < n and'), app.insert, app.insertIf);
   await type('r < n and a[r] > a[largest]');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type('largest = r');
-  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
+  await contextMenu(drawn('r < n and'), app.insert, app.insertIf);
   await type('largest == i');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type(`break    # ${words.heapOrderHolds}`);
-  // Extract the While into a new Method, from its context menu.
+  await contextMenu(drawn('largest == i'), app.insert, app.insertProcess);
+  await type('a[i], a[largest] = a[largest], a[i]');
+  await contextMenu(field, app.insert, app.insertProcess);
+  await type('i = largest');
+  // Extract the While into a new Method.
   await contextMenu(drawn('True'), app.extract);
   await type('sift_down(a, i, n)');
   await wait(500);
