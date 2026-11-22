@@ -77,10 +77,8 @@ const text = {
     tripleClick: 'Triple-click',
     selectArgs: 'Select the arguments',
     rightClick: 'Right-click',
-    menu: 'Menu',
-    contextMenu: 'Context menu',
+    drag: 'Drag',
     toolbar: 'Toolbar',
-    zoomMenu: 'Zoom',
     // The app's names (en-US screen).
     app: {
       diagramMenu: 'Diagram',
@@ -89,7 +87,6 @@ const text = {
       for: 'Insert For',
       call: 'Insert Call…',
       extract: 'Extract into New Method',
-      zoomOut: 'Zoom Out',
       process: 'Process',
     },
   },
@@ -116,11 +113,9 @@ const text = {
     doubleClick: '더블클릭',
     tripleClick: '세 번 클릭',
     selectArgs: '인자를 모두 선택',
-    rightClick: '오른쪽 클릭',
-    menu: '메뉴',
-    contextMenu: '컨텍스트 메뉴',
+    rightClick: '우클릭',
+    drag: '드래그',
     toolbar: '툴바',
-    zoomMenu: '확대',
     app: {
       diagramMenu: '다이어그램',
       addMethodHeader: 'Method 헤더 달기',
@@ -128,7 +123,6 @@ const text = {
       for: 'For 삽입',
       call: '호출 삽입…',
       extract: '새 Method로 빼기',
-      zoomOut: '축소',
       process: '처리',
     },
   },
@@ -210,6 +204,12 @@ function overlayScript(withCursor) {
       .promo-ripple.right { border-color: #1971c2; background: rgba(25, 113, 194, .18); }
       @keyframes promo-ripple { from { transform: scale(.3); opacity: 1; }
         to { transform: scale(1.1); opacity: 0; } }`;
+    if (withCursor) {
+      // The mouse version: a smaller pill over the status bar, off the drawing.
+      style.textContent += `
+        #promo-keys { bottom: 2px; right: 10px; padding: 4px 12px; gap: 8px; font-size: 17px; }
+        #promo-keys kbd { font-size: 16px; padding: 3px 7px; }`;
+    }
     document.head.append(style);
     const box = document.createElement('div');
     box.id = 'promo-keys';
@@ -503,9 +503,12 @@ async function byKeys(page, wait) {
 }
 
 /**
- * The mouse version: the same drawing, every command by a click (toolbar, menu bar, context menu)
- * and each text field opened by a double-click. Only the text itself is typed; a field is
- * accepted by the next click elsewhere (the field accepts its text when it loses focus).
+ * The mouse version: the same drawing by the mouse. Blocks on the toolbar (Process · If · While)
+ * are dragged from their icons onto the diagram; the rest (Method header, For, call, Extract into
+ * New Method) comes from the right-click context menu. A text field opens by a double-click or by
+ * the drop, and is accepted by the next click elsewhere (it accepts its text when it loses focus).
+ * Only the text is typed, and the zoom is by its key as in the key version (the maintainer's
+ * choice).
  */
 async function byMouse(page, wait) {
   let at = { x: size - 40, y: size / 2 };
@@ -626,86 +629,116 @@ async function byMouse(page, wait) {
       .first();
   const app = text.app;
   const viaToolbar = (block) => `${text.toolbar} › ${block}`;
-  const viaMenu = (...path) => [text.menu, ...path].join(' › ');
-  /** Diagram › Insert › <item>, by the menu bar. */
-  const insertFromMenu = async (item) => {
-    await click(page.locator('.ans-menu-button').filter({ hasText: app.diagramMenu }), null, {
-      pause: 300,
-    });
-    const row = await hover(menuItem(app.insert));
-    const target = await pointOf(menuItem(item));
-    await glide(target.x, row.y, 300);
-    await click(menuItem(item), viaMenu(app.diagramMenu, app.insert, item), { pause: 700 });
+  const pill = (action, label, hold) =>
+    page.evaluate(([k, l, h]) => window.promoKeys(k, l, h), [[action], label, hold]);
+  /** The top edge of the block that shows a drawn text: the "between" band before it. */
+  const topEdgeOf = async (start) => {
+    await pointOf(drawn(start));
+    const box = await drawn(start).boundingBox();
+    const top = await page.evaluate((t) => {
+      const cx = t.x + t.width / 2;
+      const cy = t.y + t.height / 2;
+      const boxes = [...document.querySelectorAll('.ans-document rect')]
+        .map((r) => r.getBoundingClientRect())
+        .filter((r) => cx > r.left && cx < r.right && cy > r.top && cy < r.bottom)
+        .sort((a, b) => a.width * a.height - b.width * b.height);
+      return boxes[0]?.top ?? null;
+    }, box);
+    if (top === null) throw new Error(`no block shows ${start}`);
+    return { x: box.x + Math.min(80, box.width / 2), y: top + 3 };
+  };
+  /**
+   * Drags a toolbar block icon onto the diagram with real pointer events: press, a small move
+   * that starts the drag (and lets the open text field accept its text), a slow move to the
+   * drop place, a rest with the drop indicator showing, then release (the new block's field
+   * opens).
+   */
+  const drag = async (id, block, placeOf) => {
+    const from = await pointOf(tool(id));
+    await glide(from.x, from.y);
+    await wait(150);
+    await pill(text.drag, viaToolbar(block), 2600);
+    await page.mouse.down();
+    await wait(120);
+    await glide(from.x + 6, from.y + 14, 160);
+    await wait(250);
+    const to = await placeOf();
+    await glide(to.x, to.y, 800);
+    await wait(650);
+    await page.mouse.up();
+    await wait(600);
+  };
+  /** Right-clicks `target` and runs `path` of its context menu (a submenu, then its item). */
+  const contextMenu = async (target, ...path) => {
+    const point = await pointOf(target);
+    await glide(point.x, point.y);
+    await wait(120);
+    await pill(text.rightClick, path.join(' › '), 3000);
+    await page.mouse.click(point.x, point.y, { button: 'right' });
+    await wait(450);
+    if (path.length === 2) {
+      const row = await hover(menuItem(path[0]));
+      const item = await pointOf(menuItem(path[1]));
+      await glide(item.x, row.y, 300);
+    }
+    await click(menuItem(path.at(-1)), null, { pause: 700 });
   };
 
   await wait(1200);
   // heap_sort: a Method header on the empty diagram, then the first line.
   const first = await emptyBelow(null); // the only block of the empty document
-  await click(first, `${text.click}`, { pause: 300 });
-  await click(page.locator('.ans-menu-button').filter({ hasText: app.diagramMenu }), null, {
-    pause: 300,
-  });
-  await click(menuItem(app.addMethodHeader), viaMenu(app.diagramMenu, app.addMethodHeader), {
-    pause: 500,
-  });
+  await contextMenu(first, app.addMethodHeader);
   await type('heap_sort(a)');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type('n = len(a)');
-  // The first loop: the For (not on the toolbar) from the menu bar, then its body.
-  await insertFromMenu(app.for);
+  // The first loop: the For (not on the toolbar) from the context menu, then its body.
+  await contextMenu(field, app.insert, app.for);
   await type('for i in range(n // 2 - 1, -1, -1)');
-  await click(await emptyBelow(field), text.intoBody, { pause: 300 });
-  await click(tool('block.insert.while'), viaToolbar('While'), { pause: 600 });
+  await drag('block.insert.while', 'While', () => emptyBelow('for i in range'));
   await type('True');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type('largest = i');
-  await click(tool('block.insert.process'), viaToolbar(app.process), { pause: 400 });
+  await drag('block.insert.process', app.process, () => pointOf(drawn('largest = i')));
   await type('l, r = 2 * i + 1, 2 * i + 2');
-  await click(tool('block.insert.if'), viaToolbar('If'), { pause: 500 });
+  await drag('block.insert.process', app.process, () => pointOf(drawn('l, r =')));
+  await type('a[i], a[largest] = a[largest], a[i]');
+  await drag('block.insert.process', app.process, () => pointOf(drawn('a[i], a[largest]')));
+  await type('i = largest');
+  // The three Ifs, each dropped between the last one and "a[i], a[largest] = …".
+  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
   await type('l < n and a[l] > a[largest]');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type('largest = l');
-  await click(drawn('l < n and'), text.upToIf, { pause: 400 });
-  await click(tool('block.insert.if'), viaToolbar('If'), { pause: 500 });
+  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
   await type('r < n and a[r] > a[largest]');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type('largest = r');
-  await click(drawn('r < n and'), text.upToIf, { pause: 400 });
-  await click(tool('block.insert.if'), viaToolbar('If'), { pause: 500 });
+  await drag('block.insert.if', 'If', () => topEdgeOf('a[i], a[largest]'));
   await type('largest == i');
   await click(await emptyBelow(field), text.intoTrue, { double: true, pause: 300 });
   await type(`break    # ${words.heapOrderHolds}`);
-  await click(drawn('largest == i'), text.upToIf, { pause: 400 });
-  await click(tool('block.insert.process'), viaToolbar(app.process), { pause: 400 });
-  await type('a[i], a[largest] = a[largest], a[i]');
-  await click(tool('block.insert.process'), viaToolbar(app.process), { pause: 400 });
-  await type('i = largest');
   // Extract the While into a new Method, from its context menu.
-  await click(drawn('True'), 'While', { button: 'right', pause: 500 });
-  await click(menuItem(app.extract), `${text.contextMenu} › ${app.extract}`, { pause: 700 });
+  await contextMenu(drawn('True'), app.extract);
   await type('sift_down(a, i, n)');
   await wait(500);
   // The second loop: after the first one.
-  await click(drawn('for i in range'), text.upToFor, { pause: 400 });
-  await insertFromMenu(app.for);
+  await contextMenu(drawn('for i in range'), app.insert, app.for);
   await type('for end in range(n - 1, 0, -1)');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type(`a[0], a[end] = a[end], a[0]    # ${words.largestToBack}`);
-  // The call: the menu bar (a right-click on the block would land in its open text field).
-  await insertFromMenu(app.call);
-  await click(menuItem('sift_down'), text.callSift, {
-    pause: 500,
-  });
+  await contextMenu(field, app.insert, app.call);
+  await click(menuItem('sift_down'), text.callSift, { pause: 500 });
   // The arguments field opens with the Method's own ("a, i, n"): select them all to replace them.
   await click(field, text.selectArgs, { count: 3, pause: 300 });
   await page.keyboard.type('a, 0, end', { delay: 22 });
   await wait(600);
-  // The whole drawing: Zoom Out from the toolbar's zoom menu.
+  // The whole drawing: accept the field with a click on the empty canvas, then zoom out by the
+  // key (as in the key version; the maintainer's choice for zoom).
+  await click({ x: size / 2, y: size - 90 }, null, { pause: 400 });
   for (let i = 0; i < 6; i += 1) {
-    await click(page.locator('.ans-tool').filter({ hasText: /%$/ }), null, { pause: 250 });
-    await click(menuItem(app.zoomOut), `${text.toolbar} › ${text.zoomMenu} › ${app.zoomOut}`, {
-      pause: 250,
-    });
+    await page.evaluate(([k, l]) => window.promoKeys(k, l), [['−'], text.zoomOut]);
+    await page.keyboard.press('-');
+    await wait(200);
   }
   await wait(600);
 }
