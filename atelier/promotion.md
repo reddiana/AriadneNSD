@@ -236,4 +236,5 @@ The requirements, design docs, decision records and session logs are all public 
 ## 올린 기록
 
 - 2026-11-22 02:56 [AriadneNSD - 알고리즘을 NS 차트로 그리는 구조 편집기 | GeekNews](https://news.hada.io/topic?id=37589)
-- 2026-11-22 13시 무렵 [LinkedIn: 백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱 (힙 정렬 동영상)](https://lnkd.in/p/gb2ezD8B)
+- 2026-11-22 13시 무렵 LinkedIn: 백엔드 개발자가 Claude Code와 처음 만든 프론트엔드 앱 (힙 정렬 동영상, `https://lnkd.in/p/gb2ezD8B`). 같은 날 지움: 동영상이 반복문을 모두 감싸기로 만들어 어색했음
+- 2026-11-22 [LinkedIn: 다시 올림, 첫 줄을 숫자로 · 동영상은 반복문을 먼저, 같은 로직을 새 Method로 뺌](https://www.linkedin.com/feed/update/urn:li:activity:7530170940547289088/)
