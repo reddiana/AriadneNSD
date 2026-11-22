@@ -179,7 +179,7 @@ AriadneNSD: 알고리즘을 NS 차트(Nassi–Shneiderman Diagram)로 그리는 
 
 빈 저장소에서 시작해 6주 반 동안 58번의 세션을 거쳤습니다.
 • 코드보다 먼저 요구사항과 아키텍처를 정의했습니다
-• 아키텍처 결정은 ADR 40건 · DR 22건으로 기록했습니다
+• 결정은 ADR(아키텍처) 40건 · DR(그 밖) 22건으로 기록했습니다
 • Claude의 말로만 판단하기 어려운 것은 시안을 그리도록 하였습니다(70여 개)
 • 테스트는 단위 · 통합 1,685개, E2E 83개입니다
 
@@ -200,7 +200,7 @@ The saved .ns.svg file is an SVG that carries the diagram structure as metadata.
 
 It took six and a half weeks and 58 sessions, starting from an empty repository.
 • I defined the requirements and architecture before writing code
-• Architecture decisions are recorded as 40 ADRs and 22 DRs
+• Decisions are recorded as 40 ADRs (architecture) and 22 DRs (everything else)
 • When Claude's words alone weren't enough to judge, I had it draw a mockup (about 70 of them)
 • 1,685 unit and integration tests, 83 end-to-end tests
 
@@ -211,7 +211,7 @@ What I learned
 
 The requirements, design docs, decision records and session logs are all public (in Korean). I hope it helps anyone curious about building a product together with AI. Links in the first comment.
 
-#ClaudeCode #AI #SoftwareArchitecture #개발자 #사이드프로젝트
+#NassiShneiderman #NSDiagram #Structogram #NS차트 #Algorithms #ClaudeCode #SoftwareArchitecture #사이드프로젝트
 
 **첫 댓글:**
 
