@@ -202,34 +202,10 @@ try {
   await move('j', 'Down');
   await step('Enter', 'Edit block', 250);
   await type('n = len(a)');
-  // The first loop: the For first, then its body.
+  // The first loop: the For first, then its body: the sift-down logic, written right there.
   await step('a f', 'Insert For', 700);
   await type('for i in range(n // 2 - 1, -1, -1)');
   await move('j', 'Into the loop body');
-  // The call to sift_down, by a written name.
-  await step('a c', 'Insert call', 700);
-  await step('3', 'Call by a written name', 400);
-  await type('sift_down', 'Tab');
-  await type('a, i, n');
-  // The second loop: after the first one.
-  await step('Control+ArrowUp', 'Up to the For', 600);
-  await step('a f', 'Insert For', 700);
-  await type('for end in range(n - 1, 0, -1)');
-  await move('j', 'Into the loop body');
-  await step('Enter', 'Edit block', 250);
-  await type('a[0], a[end] = a[end], a[0]    # largest to the back');
-  // The second call, the same way as the first.
-  await step('a c', 'Insert call', 700);
-  await step('3', 'Call by a written name', 400);
-  await type('sift_down', 'Tab');
-  await type('a, 0, end');
-  await wait(500);
-  // sift_down: made from the call.
-  await move('k', 'Up');
-  await move('k', 'Up');
-  await move('k', 'Up');
-  await step('g d', 'Create Method from call', 1200);
-  await move('j', 'Down');
   await step('a w', 'Insert While', 700);
   await type('True');
   await move('j', 'Into the loop body');
@@ -262,6 +238,24 @@ try {
   await type('a[i], a[largest] = a[largest], a[i]');
   await step('o', 'New block after', 300);
   await type('i = largest');
+  // Extract the While into a new Method.
+  for (let i = 0; i < 6; i += 1) await step('Control+ArrowUp', 'Up', 220);
+  await step('k', 'Up to the While', 600);
+  await wait(400);
+  await step('m', 'Extract to new Method', 700);
+  await type('sift_down(a, i, n)');
+  await wait(800);
+  // The second loop: after the first one.
+  await step('Control+ArrowUp', 'Up to the For', 600);
+  await step('a f', 'Insert For', 700);
+  await type('for end in range(n - 1, 0, -1)');
+  await move('j', 'Into the loop body');
+  await step('Enter', 'Edit block', 250);
+  await type('a[0], a[end] = a[end], a[0]    # largest to the back');
+  await step('a c', 'Insert call', 700);
+  await step('2', 'Call sift_down', 500);
+  await page.keyboard.press('Control+a');
+  await type('a, 0, end');
   await wait(600);
   // The whole drawing.
   for (let i = 0; i < 6; i += 1) {
