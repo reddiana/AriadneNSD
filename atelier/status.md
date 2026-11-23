@@ -55,9 +55,11 @@ updated: 2026-11-22
 | 사이트 왼쪽 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(`/gallery/ko/`) | 메인테이너 (2026-11-22) | 사이트에 있음(SPA가 갤러리 링크를 가로채지 않게 고침) | `e75e0f3` `c4cb34f` |
 | 앱 도움말 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(한국어 `gallery/ko/`, 영어 `gallery/`), T-1491 | 메인테이너 (2026-11-22), [[ux-decisions\|GL2]] | 사이트에 있음 | `82fa479` |
 | 사용법 둘러보기 맨 위에 힙 정렬 동영상 둘(키보드만 · 마우스만) 탭으로, 누르면 재생, 언어마다 따로, 마우스판은 우클릭 먼저 | 메인테이너 (2026-11-22), M73, [[ux-decisions\|MV1]] | 사이트에 있음(https://ariadnensd.com/manual/ko/#tour) | `cff38e2` `814ddd8` `e5c4beb` `2e6f26a` `50da46f` `f628728` |
+| 노출 세기: 앱 · 사이트 · 갤러리에 Cloudflare Web Analytics(쿠키 없음, 공유 링크의 `#` 뒤는 보내지 않음), 소개 페이지에 한 줄. "방문 통계를 모으지 않는다"를 바꿈 | 메인테이너 (2026-11-23) | 결정(메인테이너가 Cloudflare에서 사이트를 더하고 토큰을 알려 주면 구현, 정리 남음: DR) | |
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] 메인테이너: Cloudflare › Web Analytics에서 `ariadnensd.com`을 더하고(자동 설치 말고 JS 스니펫) 토큰을 알려 주기 → Claude가 앱 · 사이트 · 갤러리에 붙임
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])
