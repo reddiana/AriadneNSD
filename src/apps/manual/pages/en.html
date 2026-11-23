@@ -436,7 +436,16 @@
     <script src="copy.js"></script>
     <!-- Cloudflare Web Analytics: counts page views without cookies. Loaded only on the real site, never on localhost or in tests. -->
     <script>
-      if (/(^|[.])ariadnensd[.]com$/.test(location.hostname)) {
+      // ?nocount keeps this browser out of the count, ?count counts it again.
+      var cfOff = false;
+      try {
+        var cfKey = 'ariadne-nsd.setting.nocount',
+          cfQuery = new URLSearchParams(location.search);
+        if (cfQuery.has('nocount')) localStorage.setItem(cfKey, 'true');
+        else if (cfQuery.has('count')) localStorage.removeItem(cfKey);
+        cfOff = localStorage.getItem(cfKey) === 'true';
+      } catch (e) {}
+      if (!cfOff && /(^|[.])ariadnensd[.]com$/.test(location.hostname)) {
         var cfBeacon = document.createElement('script');
         cfBeacon.type = 'module';
         cfBeacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';

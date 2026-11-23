@@ -20,7 +20,8 @@
 //   사용법(`/manual/ko/`)으로 가는 "사용자 도움말", 갤러리(`/gallery/ko/`)로 가는 "알고리즘 갤러리"를
 //   넣는다. 셋은 Quartz의 페이지가 아니라서 목록에 저절로 생기지 않는다(2026-11-03 · 2026-11-22, 메인테이너)
 // - 모든 페이지 끝(Quartz v4.5.2 renderPage.tsx)에 Cloudflare Web Analytics의 신호기를 넣는다.
-//   Quartz의 analytics 설정에는 Cloudflare가 없다(2026-11-23). 실제 사이트(ariadnensd.com)에서만 불러온다
+//   Quartz의 analytics 설정에는 Cloudflare가 없다(2026-11-23). 실제 사이트(ariadnensd.com)에서만 불러온다.
+//   주소에 `?nocount`가 있으면 그 브라우저는 세지 않고(localStorage), `?count`로 되돌린다
 //
 // 고칠 글이 없으면(Quartz를 올려 소스가 달라졌으면) 멈춘다. 그때 이 패치가 아직 필요한지 다시 본다.
 import fs from "node:fs"
@@ -79,7 +80,7 @@ const patches = [
       "        {/* AriadneNSD: Cloudflare Web Analytics, page views without cookies, only on the real site */}\n" +
       "        <script\n" +
       "          dangerouslySetInnerHTML={{\n" +
-      "            __html: `if (/(^|[.])ariadnensd[.]com$/.test(location.hostname)) { var s = document.createElement('script'); s.type = 'module'; s.src = 'https://static.cloudflareinsights.com/beacon.min.js'; s.setAttribute('data-cf-beacon', '{\"token\": \"b248de05a82341d081728426e6cc5878\"}'); document.body.appendChild(s) }`,\n" +
+      "            __html: `var off = false; try { var k = 'ariadne-nsd.setting.nocount', q = new URLSearchParams(location.search); if (q.has('nocount')) localStorage.setItem(k, 'true'); else if (q.has('count')) localStorage.removeItem(k); off = localStorage.getItem(k) === 'true' } catch (e) {} if (!off && /(^|[.])ariadnensd[.]com$/.test(location.hostname)) { var s = document.createElement('script'); s.type = 'module'; s.src = 'https://static.cloudflareinsights.com/beacon.min.js'; s.setAttribute('data-cf-beacon', '{\"token\": \"b248de05a82341d081728426e6cc5878\"}'); document.body.appendChild(s) }`,\n" +
       "          }}\n" +
       "        />\n" +
       "      </body>\n",
