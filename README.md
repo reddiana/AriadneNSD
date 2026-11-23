@@ -19,7 +19,7 @@ An editor for NS charts ([Nassi-Shneiderman diagrams](https://en.wikipedia.org/w
 > [!TIP]
 > **You can try the web beta right in your browser:**<br>
 > <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-21-readme-beta-button.svg" height="32" alt="AriadneNSD Beta" align="absmiddle"></a><br>
-> This is the web beta. It opens without installing anything and saves to files on your own computer, with no server involved (Chrome and Edge; Firefox and Safari download the file instead). The manual is at [ariadnensd.com/manual/](https://ariadnensd.com/manual/), and the keys are listed under Help › Keyboard Shortcuts (`?`).<br>
+> This is the web beta. It opens without installing anything and saves to files on your own computer, with no server involved (Chrome and Edge; Firefox and Safari download the file instead). The site counts visits without cookies. The manual is at [ariadnensd.com/manual/](https://ariadnensd.com/manual/), and the keys are listed under Help › Keyboard Shortcuts (`?`).<br>
 > The [algorithm gallery](https://ariadnensd.com/gallery/) collects well-known algorithms drawn as NS charts.<br>
 > If you use Claude, install the [AriadneNSD skill](https://ariadnensd.com/manual/#claude-skill) to make diagrams, draw code, and edit diagrams you receive, all within a conversation.<br>
 > This is still before 1.0, so files you save now may not open in later versions.

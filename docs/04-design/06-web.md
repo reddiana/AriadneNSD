@@ -206,7 +206,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 | | 무엇 |
 | --- | --- |
-| 위치 | URL의 fragment(`#` 뒤). 브라우저가 서버로 보내지 않아 GitHub Pages의 로그에도 다른 사이트로 가는 리퍼러에도 실리지 않는다. 페이지 주소는 지금 페이지의 `origin` + `pathname`(query는 뺌) |
+| 위치 | URL의 fragment(`#` 뒤). 브라우저가 서버로 보내지 않아 GitHub Pages의 로그에도 다른 사이트로 가는 리퍼러에도 방문 집계(5.2)에도 실리지 않는다. 페이지 주소는 지금 페이지의 `origin` + `pathname`(query는 뺌) |
 | 내용 | UTF-8 JSON `{"name": "정렬.ns.svg", "model": {…}}`. `model`은 파일의 모델 JSON([[01-file-format]])을 들여쓰기 없이 쓴 것으로, 뷰 상태(접힘, 이름 띠 등)도 들어 있다. 렌더링 결과와 서브셋 글꼴은 넣지 않는다(받는 쪽이 같은 렌더러로 다시 렌더링한다) |
 | 인코딩 방식 | 브라우저의 `CompressionStream('deflate-raw')`로 압축하고 base64url(패딩 없음)로 기록한다(`d`). CompressionStream이 없는 브라우저는 압축하지 않고 기록한다(`j`). 라이브러리를 더하지 않는다. 읽을 때는 셋째 인코딩 방식 `u`(JSON을 `encodeURIComponent`로 퍼센트 인코딩한 것)도 받는다. 압축이 없어 코드 없이 손으로 쓸 수 있고, 사람과 LLM이 그대로 읽는다. 앱은 `u`를 만들지 않는다 |
 | 버전 | `ns1.`이 링크 형식의 버전이다. `ns` + 다른 숫자로 시작하면 "더 새 버전의 AriadneNSD가 만든 링크"라고 알린다. 모델의 버전 규칙(옛 버전은 옮기고 더 새 버전은 거절)은 파일과 같다 |
@@ -314,6 +314,16 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 | 그림의 검증 | `src/apps/gallery/verify/`(배포하지 않는 개발 도구): 갤러리만의 16개의 블록 텍스트를 Python으로 한 줄씩 옮겨 실행하고 참조 구현과 견준다. 사용법은 그 폴더의 `README.md` |
 
 - **사용법과의 연결:** 사용법의 예제 항목이 알고리즘 갤러리로 링크하고, 갤러리의 머리에는 편집기 · 사용법 · GitHub · 다른 언어로 가는 링크가 있다.
+
+### 5.2 방문 수
+
+사이트의 모든 페이지는 Cloudflare Web Analytics로 방문 수를 셉니다. 쿠키를 쓰지 않고, 보내는 주소는 `origin` + `pathname`뿐이라 공유 링크의 fragment와 query는 나가지 않습니다. → [[0051-cloudflare-web-analytics|ADR-0051]]
+
+| 무엇 | 규칙 |
+| --- | --- |
+| 신호기 | `https://static.cloudflareinsights.com/beacon.min.js`, 토큰은 `data-cf-beacon`. `location.hostname`이 `ariadnensd.com`(또는 그 하위 도메인)일 때만 스크립트 요소를 만들어 `body` 끝에 붙인다. 로컬 개발 · E2E는 요청을 보내지 않는다 |
+| 넣는 곳 | 앱 `src/apps/web/index.html`, 사용법 `src/apps/manual/pages/en.html` · `ko.html`, 갤러리 `src/apps/gallery/build.mjs`의 틀, Quartz 페이지(`site/patch-quartz.mjs`가 `renderPage.tsx`의 `</body>` 앞에 넣음). `/app/` 넘겨주기 페이지에는 넣지 않는다 |
+| Cloudflare 설정 | Web Analytics의 사이트 `ariadnensd.com`, RUM은 "Enable with JS Snippet installation"(DNS only라 자동으로 넣을 수 없음) |
 
 ## 6. PWA
 

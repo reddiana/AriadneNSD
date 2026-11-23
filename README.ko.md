@@ -21,7 +21,7 @@ NS 차트([Nassi-Shneiderman Diagram](https://en.wikipedia.org/wiki/Nassi%E2%80%
 > [!TIP]
 > **웹 베타를 브라우저에서 바로 써 볼 수 있습니다:**<br>
 > <a href="https://ariadnensd.com/" target="_blank" rel="noopener"><img src="journal/assets/2026-11-21-readme-beta-button.svg" height="32" alt="AriadneNSD Beta" align="absmiddle"></a><br>
-> 웹 베타입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
+> 웹 베타입니다. 설치 없이 열리고, 서버 없이 내 컴퓨터의 파일에 저장합니다(Chrome · Edge. Firefox · Safari는 내려받기). 사이트는 쿠키 없이 방문 수만 셉니다. 사용법은 [ariadnensd.com/manual/ko/](https://ariadnensd.com/manual/ko/), 키는 도움말 › 단축키 목록(`?`)에 있습니다.<br>
 > 이름난 알고리즘을 NS 차트로 그려 모은 [알고리즘 갤러리](https://ariadnensd.com/gallery/ko/)도 있습니다.<br>
 > Claude를 쓴다면 [AriadneNSD 스킬](https://ariadnensd.com/manual/ko/#claude-skill)을 설치해 대화 중에 다이어그램을 만들고, 코드를 그리고, 받은 다이어그램을 고칠 수 있습니다.<br>
 > 아직 1.0 전이라, 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.
