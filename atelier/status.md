@@ -59,7 +59,7 @@ updated: 2026-11-22
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너: Cloudflare › Web Analytics에서 `ariadnensd.com`을 더하고(자동 설치 말고 JS 스니펫) 토큰을 알려 주기 → Claude가 앱 · 사이트 · 갤러리에 붙임
+- [ ] 메인테이너: Cloudflare › Web Analytics에서 `ariadnensd.com`을 더하고(Add a site → 호스트 이름 → Done → Manage site의 JS 스니펫) 토큰을 알려 주기 → Claude가 앱 · 사이트 · 갤러리에 붙임
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])
