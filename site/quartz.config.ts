@@ -10,7 +10,7 @@ const config: QuartzConfig = {
     pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,
-    analytics: null, // 방문 통계를 모으지 않는다
+    analytics: null, // 방문 수는 Cloudflare Web Analytics가 쿠키 없이 센다. Quartz에 그 제공자가 없어 site/patch-quartz.mjs가 넣는다
     locale: "ko-KR",
     baseUrl: "ariadnensd.com",
     ignorePatterns: [".obsidian"],
