@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-11-23
+updated: 2026-11-24
 ---
 
 # 현재 상태
@@ -56,10 +56,11 @@ updated: 2026-11-23
 | 앱 도움말 메뉴의 "사용자 도움말" 바로 아래에 "알고리즘 갤러리"(한국어 `gallery/ko/`, 영어 `gallery/`), T-1491 | 메인테이너 (2026-11-22), [[ux-decisions\|GL2]] | 사이트에 있음 | `82fa479` |
 | 사용법 둘러보기 맨 위에 힙 정렬 동영상 둘(키보드만 · 마우스만) 탭으로, 누르면 재생, 언어마다 따로, 마우스판은 우클릭 먼저 | 메인테이너 (2026-11-22), M73, [[ux-decisions\|MV1]] | 사이트에 있음(https://ariadnensd.com/manual/ko/#tour) | `cff38e2` `814ddd8` `e5c4beb` `2e6f26a` `50da46f` `f628728` |
 | 노출 세기: 앱 · 사이트 · 갤러리에 Cloudflare Web Analytics(쿠키 없음, 공유 링크의 `#` 뒤는 보내지 않음), README · 소개에 한 줄 | 메인테이너 (2026-11-23), [[0051-cloudflare-web-analytics\|ADR-0051]] | 사이트에 있음(push 뒤 Cloudflare 대시보드에 방문이 잡히는지, 요청에 `#` 뒤가 없는지 확인) | `a368ed9` |
-| 메인테이너의 방문은 빼기: `?nocount`를 한 번 열면 그 브라우저는 세지 않음(`?count`로 되돌림) | 메인테이너 (2026-11-24) | 로컬 앱에 있음, 정리 남음(ADR-0051 이후 변경, 웹 설계 5.2) | `9b2c94b` |
+| 메인테이너의 방문은 빼기: `?nocount`를 한 번 열면 그 브라우저는 세지 않음(`?count`로 되돌림) | 메인테이너 (2026-11-24) | 사이트에 있음(메인테이너가 쓰는 브라우저 · 기기마다 `https://ariadnensd.com/?nocount`를 한 번 열기) | `9b2c94b` |
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])

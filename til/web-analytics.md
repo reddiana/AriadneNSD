@@ -36,3 +36,9 @@ GitHub Pages는 방문 수를 알려 주지 않는다. 페이지에 작은 스�
 
 - 프록시(주황 구름)를 쓰는 사이트: Cloudflare가 페이지에 스크립트를 자동으로 넣는다.
 - DNS only(회색 구름, AriadneNSD): 자동으로 넣을 수 없다. Web Analytics › Add a site로 호스트 이름을 등록하고, Manage site의 RUM 설정을 "Enable with JS Snippet installation"으로 두고, 나온 스니펫을 페이지의 `</body>` 앞에 직접 붙인다.
+
+## 여러 번 들어오면, 내 방문은
+
+- 쿠키가 없어 같은 사람을 알아보지 못하므로 들어올 때마다 따로 센다. Visits는 다른 사이트 · 주소창에서 들어와 연 횟수, Page views는 연 페이지 수(사이트 안의 이동 · 새로 고침 포함). 순 방문자 수는 없다.
+- Cloudflare 대시보드에는 IP나 방문자를 빼는 설정이 없고, 이미 잡힌 방문은 지울 수 없다. 그래서 신호를 처음부터 보내지 않게 해야 한다: 광고 차단기로 `static.cloudflareinsights.com`을 막거나, 페이지 코드에 "세지 않기" 표시를 둔다.
+- AriadneNSD는 뒤의 길: `https://ariadnensd.com/?nocount`를 한 번 열면 그 브라우저(프로필마다, 기기마다)의 `localStorage`에 표시가 남아 사이트 전체에서 빠진다. `?count`로 되돌린다. InPrivate 창과 사이트 데이터를 지운 뒤에는 다시 센다 → [[06-web#5.2 방문 수]]

@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0051: 방문 수는 Cloudflare Web Analytics로 쿠키 없이 센다
 
+> [!NOTE] 이후 변경
+> - 2026-11-24: Cloudflare는 방문자를 골라 뺄 수 없어, `?nocount`로 그 브라우저는 신호기를 붙이지 않게 함 → [[06-web#5.2 방문 수]]
+
 ## 배경
 
 웹 베타를 내고 GeekNews · LinkedIn · 페이스북에 알리기 시작했지만(→ [[promotion]]), 사이트 `ariadnensd.com`(앱 · 사용법 · 갤러리 · 소개 · 설계 문서)에 몇 명이 어디서 왔는지 알 방법이 없었다. 사이트 설정은 `analytics: null`로 일부러 통계를 꺼 두었고, GitHub Pages는 방문 수를 보여 주지 않으며, Cloudflare DNS는 DNS only(회색 구름)라 Cloudflare를 거치는 트래픽도 없다. 저장소의 GitHub Traffic(14일)과 Release 내려받기 수, 글이 올라간 서비스의 조회 수만 볼 수 있었다.

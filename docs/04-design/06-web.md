@@ -323,6 +323,7 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 | --- | --- |
 | 신호기 | `https://static.cloudflareinsights.com/beacon.min.js`, 토큰은 `data-cf-beacon`. `location.hostname`이 `ariadnensd.com`(또는 그 하위 도메인)일 때만 스크립트 요소를 만들어 `body` 끝에 붙인다. 로컬 개발 · E2E는 요청을 보내지 않는다 |
 | 넣는 곳 | 앱 `src/apps/web/index.html`, 사용법 `src/apps/manual/pages/en.html` · `ko.html`, 갤러리 `src/apps/gallery/build.mjs`의 틀, Quartz 페이지(`site/patch-quartz.mjs`가 `renderPage.tsx`의 `</body>` 앞에 넣음). `/app/` 넘겨주기 페이지에는 넣지 않는다 |
+| 세지 않을 브라우저 | 주소에 `?nocount`가 있으면 `localStorage`의 `ariadne-nsd.setting.nocount`를 `true`로, `?count`가 있으면 지운다. 이 값이 `true`이면 신호기를 붙이지 않는다. 저장소를 쓸 수 없으면 센다. 메인테이너가 자기 방문을 빼려고 쓴다 |
 | Cloudflare 설정 | Web Analytics의 사이트 `ariadnensd.com`, RUM은 "Enable with JS Snippet installation"(DNS only라 자동으로 넣을 수 없음) |
 
 ## 6. PWA
