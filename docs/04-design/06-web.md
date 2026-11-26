@@ -3,7 +3,7 @@ title: 웹
 tags:
   - design
 status: 초안
-updated: 2026-11-22
+updated: 2026-11-27
 ---
 
 # 웹
@@ -297,7 +297,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 크기는 코드가 바뀔 때마다 달라지므로 이 문서에 기록하지 않습니다. 청크마다의 크기(원래 크기와 gzip)는 웹 빌드(`src/`에서 `pnpm --filter @ariadne-nsd/web build`)가 출력하고, 첫 방문에 내려받는 파일과 그 합은 번들 사이즈 체크(`node apps/web/scripts/check-size.mjs`, CI `check` job의 "번들 사이즈 체크" 단계)가 출력합니다.
 
-CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 슬라이스 0, gzip)이 230 KB 안인지 검증합니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올리고, 올린 경과는 그 스크립트의 머리 주석에 기록합니다.
+CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 것(HTML · JS · CSS · 화면 글꼴의 슬라이스 0, gzip)이 250 KB 안인지 검증합니다(`src/apps/web/scripts/check-size.mjs`, QA-09). 한도는 그것이 필요한 커밋에서 일부러 올리고, 올린 경과는 그 스크립트의 머리 주석에 기록합니다.
 
 > [!info] 미완성: 코드 스플리팅, 캐시 전략
 

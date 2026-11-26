@@ -8,7 +8,9 @@
 //
 // The budget was the size after the screen font was cut into slices (2026-11-03, 176 KB) plus
 // 20%: 212 KB. Folding and opened call blocks (R-EDIT-13 ~ 16) took the first download to 213 KB
-// on 2026-11-04, so it is 230 KB, about 8% over that. It was 540 KB before (450 KB at the first
+// on 2026-11-04, so it was 230 KB, about 8% over that. The zoom buttons (M76) and the document
+// layer that updates only changed elements (AT-05) took it to 235 KB on 2026-11-27, so it is
+// 250 KB, about 6% over that. It was 540 KB before (450 KB at the first
 // build, 2026-11-01). The design has no number for the web bundle yet; raise it on purpose, in
 // the commit that needs more.
 import { readdirSync, readFileSync } from 'node:fs';
@@ -16,7 +18,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 
-const budgetKb = 230;
+const budgetKb = 250;
 
 const dist = resolve(dirname(fileURLToPath(import.meta.url)), '../dist');
 
