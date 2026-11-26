@@ -71,9 +71,28 @@ describe('menu bar', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: /Wrap/ }));
     const wrapIf = screen.getByRole('menuitem', { name: /Wrap in If/ });
     expect(wrapIf.getAttribute('aria-disabled')).toBe('true');
-    expect(wrapIf.getAttribute('title')).toBe('Select blocks next to each other under one parent.');
+    const tip = document.getElementById(wrapIf.getAttribute('aria-describedby') ?? '');
+    expect(tip?.textContent).toBe('Select blocks next to each other under one parent.');
     fireEvent.click(wrapIf);
     expect(engine.ran).toEqual(['block.wrap.if']);
+  });
+
+  it('T-1492: a dimmed menu item tells why in an editor tooltip, not the browser’s title; an item that applies has none (M74 D3)', () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    fireEvent.click(screen.getByRole('button', { name: 'Diagram' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Wrap/ }));
+    const wrapIf = screen.getByRole('menuitem', { name: /Wrap in If/ });
+    expect(wrapIf.hasAttribute('title')).toBe(false);
+    const tip = wrapIf.nextElementSibling;
+    expect(tip?.getAttribute('role')).toBe('tooltip');
+    expect(tip?.getAttribute('class')).toBe('ans-tip');
+    expect(tip?.id).toBe(wrapIf.getAttribute('aria-describedby'));
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    const undo = screen.getByRole('menuitem', { name: /Undo/ });
+    expect(undo.getAttribute('aria-disabled')).toBe('false');
+    expect(undo.hasAttribute('aria-describedby')).toBe(false);
+    expect(undo.nextElementSibling).toBeNull();
   });
 
   it('T-0295 · UX W3: shows the file name with ● while unsaved', () => {
@@ -404,6 +423,26 @@ describe('modals', () => {
       }
       cleanup();
     }
+  });
+
+  it('T-1493: About shows the picture logo, the name and the version in the middle on top, before the rest (M74 A1)', async () => {
+    const engine = fakeEngine(editCommands);
+    renderApp(engine);
+    act(() => {
+      engine.handle.commands.run('help.about');
+    });
+    const dialog = screen.getByRole('dialog', { name: 'About AriadneNSD' });
+    const logo = await within(dialog).findByRole('img', { name: 'AriadneNSD' });
+    expect(logo.getAttribute('src')).toMatch(/^data:image\/svg\+xml,%3Csvg/);
+    expect([logo.getAttribute('width'), logo.getAttribute('height')]).toEqual(['64', '64']);
+    const head = logo.parentElement;
+    expect(head?.getAttribute('class')).toBe('ans-about-head');
+    expect([...(head?.children ?? [])].map((child) => child.textContent)).toEqual([
+      '',
+      'AriadneNSD',
+      expect.stringMatching(/^Version \d+\.\d+\.\d+/),
+    ]);
+    expect(head?.nextElementSibling?.textContent).toBe('A Nassi-Shneiderman diagram editor.');
   });
 
   it('T-1301 · UX W4: the About links take the keyboard focus, and Esc on a link closes the modal', () => {

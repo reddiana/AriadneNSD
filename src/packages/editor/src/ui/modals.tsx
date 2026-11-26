@@ -245,6 +245,7 @@ export function DocumentSettingsModal({ onClose }: { readonly onClose: () => voi
 
 const aboutDocsUrl = 'https://ariadnensd.com/about';
 const repositoryUrl = 'https://github.com/reddiana/AriadneNSD';
+const productName = 'AriadneNSD';
 
 /**
  * Help › About AriadneNSD. The links are plain anchors: every shell's web view opens them on its
@@ -252,10 +253,33 @@ const repositoryUrl = 'https://github.com/reddiana/AriadneNSD';
  */
 export function AboutModal({ onClose }: { readonly onClose: () => void }): ReactElement {
   const { text } = useChrome();
+  // The logo is a module of its own, fetched when the modal opens (about-logo.ts); its box keeps
+  // the place meanwhile so nothing moves when it arrives.
+  const [logo, setLogo] = useState<string | null>(null);
+  useEffect(() => {
+    let isOpen = true;
+    const load = async (): Promise<void> => {
+      const { aboutLogoSvg } = await import('./about-logo');
+      if (isOpen) setLogo(`data:image/svg+xml,${encodeURIComponent(aboutLogoSvg)}`);
+    };
+    void load();
+    return () => {
+      isOpen = false;
+    };
+  }, []);
   return (
     <Modal title={text('about.title')} onClose={onClose}>
+      {/* Logo, name and version in the middle on top, the rest on the left (M74 A1). */}
+      <div className="ans-about-head">
+        {logo === null ? (
+          <span className="ans-about-logo" />
+        ) : (
+          <img className="ans-about-logo" src={logo} width={64} height={64} alt={productName} />
+        )}
+        <div className="ans-about-name">{productName}</div>
+        <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
+      </div>
       <p>{text('about.body')}</p>
-      <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
       <p className="ans-note">{text('about.preview')}</p>
       <dl className="ans-about-links">
         {(

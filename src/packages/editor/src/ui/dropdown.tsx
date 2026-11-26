@@ -3,7 +3,7 @@
 // tell why in the status bar (03-editor 3: "막지 않고 알린다").
 
 import type { KeyboardEvent, ReactElement } from 'react';
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CommandView } from './command-view';
 import { displayKey, menuKey } from './keys';
@@ -55,6 +55,7 @@ export function Dropdown({
   isSubmenu = false,
 }: DropdownProps): ReactElement {
   const { run } = useChrome();
+  const tipId = useId();
   const listRef = useRef<HTMLUListElement>(null);
   const [openSubmenu, setOpenSubmenu] = useState<number | null>(null);
   const [isSubmenuFocused, setIsSubmenuFocused] = useState(false);
@@ -142,6 +143,10 @@ export function Dropdown({
         if (item.kind === 'command') {
           const { command } = item;
           const key = menuKey(command.keys);
+          // A dimmed item tells why in an editor tooltip that shows at once (M74 D3), not in the
+          // browser's slow `title`; aria-describedby gives the same words to a screen reader.
+          const tip =
+            !command.isEnabled && command.reason !== null ? `${tipId}-${command.id}` : null;
           return (
             <Fragment key={command.id}>
               {separator}
@@ -152,7 +157,7 @@ export function Dropdown({
                   role={command.checked === null ? 'menuitem' : 'menuitemcheckbox'}
                   aria-checked={command.checked ?? undefined}
                   aria-disabled={!command.isEnabled}
-                  title={command.reason ?? undefined}
+                  aria-describedby={tip ?? undefined}
                   onMouseEnter={() => {
                     setOpenSubmenu(null);
                   }}
@@ -167,6 +172,11 @@ export function Dropdown({
                   <span className="ans-title">{command.title}</span>
                   {key !== null && <kbd>{displayKey(key)}</kbd>}
                 </button>
+                {tip !== null && (
+                  <span className="ans-tip" id={tip} role="tooltip">
+                    {command.reason}
+                  </span>
+                )}
               </li>
             </Fragment>
           );

@@ -8,27 +8,27 @@ import { defaultTheme } from '@ariadne-nsd/core';
 export const chromeCss = `
 .ans-app {
   --ui-bg: #eef1f6; --ui-dots: #d3d9e4; --ui-panel: #ffffff; --ui-text: #1c2230;
-  --ui-muted: #5a6476; --ui-line: #d4dbe6; --ui-accent: #2c55c9; --ui-accent-soft: #e4eafb;
-  --ui-warn: #ad560f; --ui-shadow: rgba(20, 30, 60, 0.18); --ui-backdrop: rgba(20, 26, 34, 0.32);
+  --ui-muted: #5a6476; --ui-disabled: #9aa1ad; --ui-line: #d4dbe6; --ui-accent: #2c55c9;
+  --ui-accent-soft: #e4eafb; --ui-warn: #ad560f; --ui-shadow: rgba(20, 30, 60, 0.18); --ui-backdrop: rgba(20, 26, 34, 0.32);
   position: relative; display: flex; flex-direction: column; height: 100%; min-height: 0;
   background: var(--ui-bg); color: var(--ui-text);
   font-family: var(--ans-ui-font, system-ui, sans-serif); font-size: 13px; line-height: 18px;
 }
 .ans-app[data-scheme='dark'] {
   --ui-bg: #12151b; --ui-dots: #262c37; --ui-panel: #1a1e26; --ui-text: #e5e8ee;
-  --ui-muted: #9aa3b3; --ui-line: #2b313c; --ui-accent: #8ba7ff; --ui-accent-soft: #232c45;
-  --ui-warn: #f0a560; --ui-shadow: rgba(0, 0, 0, 0.5); --ui-backdrop: rgba(0, 0, 0, 0.5);
+  --ui-muted: #9aa3b3; --ui-disabled: #5f6676; --ui-line: #2b313c; --ui-accent: #8ba7ff;
+  --ui-accent-soft: #232c45; --ui-warn: #f0a560; --ui-shadow: rgba(0, 0, 0, 0.5); --ui-backdrop: rgba(0, 0, 0, 0.5);
 }
 /* High contrast screen colors (R-NFR-07, 04-visual-design 3.4): when the OS asks for more
    contrast, texts reach 7:1 and the dividers 3:1. The drawing has its own high contrast theme. */
 @media (prefers-contrast: more) {
   .ans-app {
-    --ui-text: #000000; --ui-muted: #3d4554; --ui-line: #6b7486; --ui-accent: #1f3fb8;
-    --ui-warn: #7f3c06;
+    --ui-text: #000000; --ui-muted: #3d4554; --ui-disabled: #6b7486; --ui-line: #6b7486;
+    --ui-accent: #1f3fb8; --ui-warn: #7f3c06;
   }
   .ans-app[data-scheme='dark'] {
-    --ui-text: #ffffff; --ui-muted: #c5ccd8; --ui-line: #8790a0; --ui-accent: #a8bdff;
-    --ui-warn: #f5b97a;
+    --ui-text: #ffffff; --ui-muted: #c5ccd8; --ui-disabled: #8790a0; --ui-line: #8790a0;
+    --ui-accent: #a8bdff; --ui-warn: #f5b97a;
   }
 }
 .ans-app *, .ans-app *::before, .ans-app *::after { box-sizing: border-box; }
@@ -77,7 +77,20 @@ export const chromeCss = `
 .ans-item:hover, .ans-item:focus-visible, .ans-item[aria-expanded='true'] {
   background: var(--ui-accent-soft); outline: none;
 }
-.ans-item[aria-disabled='true'] { color: var(--ui-muted); }
+.ans-item[aria-disabled='true'], .ans-item[aria-disabled='true'] kbd { color: var(--ui-disabled); }
+/* A dimmed item takes no hover background; the keyboard's focus still shows where it is (M74 D3). */
+.ans-item[aria-disabled='true']:hover:not(:focus-visible) { background: none; }
+/* Why a dimmed item does not apply, at once under its title while the mouse is on it (M74 D3).
+   Always in the page, so the item's aria-describedby reads it to keyboard users too. */
+.ans-tip {
+  display: none; position: absolute; left: 36px; top: calc(100% - 2px); z-index: 1;
+  width: max-content; max-width: 280px; padding: 3px 8px; border-radius: 4px;
+  font-size: 12px; line-height: 16px; background: var(--ui-text); color: var(--ui-panel);
+  box-shadow: 0 4px 12px var(--ui-shadow); pointer-events: none;
+}
+@media (hover: hover) {
+  .ans-item[aria-disabled='true']:hover + .ans-tip { display: block; }
+}
 .ans-item .ans-check { width: 12px; flex: none; }
 .ans-item .ans-title { flex: 1; white-space: nowrap; }
 .ans-item kbd, .ans-item .ans-more { margin-left: auto; white-space: nowrap; }
@@ -97,7 +110,7 @@ export const chromeCss = `
   border-radius: 4px; color: var(--ui-text); flex: none; cursor: default; touch-action: none;
 }
 .ans-tool:hover { background: var(--ui-accent-soft); }
-.ans-tool[aria-disabled='true'] { color: var(--ui-muted); }
+.ans-tool[aria-disabled='true'] { color: var(--ui-disabled); }
 .ans-tool[aria-disabled='true'] .ans-block-icon, .ans-tool[aria-disabled='true'] .ans-icon { opacity: 0.45; }
 .ans-tool-label { font-size: 12px; }
 .ans-tool-root { position: relative; }
@@ -172,6 +185,11 @@ export const chromeCss = `
 .ans-modal .ans-close:hover { background: var(--ui-accent-soft); }
 .ans-modal-body { padding: 12px 14px; overflow: auto; display: grid; gap: 10px; }
 .ans-note { color: var(--ui-muted); margin: 0; }
+.ans-about-head {
+  display: grid; justify-items: center; gap: 4px; text-align: center; padding: 4px 0 2px;
+}
+.ans-about-logo { display: block; width: 64px; height: 64px; margin-bottom: 6px; }
+.ans-about-name { font-weight: 600; font-size: 15px; line-height: 20px; }
 .ans-about-links { display: grid; gap: 6px; margin: 0; }
 .ans-about-links dt { color: var(--ui-muted); font-size: 12px; }
 .ans-about-links dd { margin: 0; overflow-wrap: anywhere; }
@@ -202,7 +220,8 @@ export const chromeCss = `
   display: flex; gap: 12px; align-items: center; padding: 5px 10px; border-radius: 4px; cursor: default;
 }
 .ans-palette li[aria-selected='true'] { background: var(--ui-accent-soft); }
-.ans-palette li[aria-disabled='true'] .ans-title { color: var(--ui-muted); }
+.ans-palette li[aria-disabled='true'] .ans-title,
+.ans-palette li[aria-disabled='true'] kbd { color: var(--ui-disabled); }
 .ans-palette .ans-title { flex: 1; }
 .ans-palette .ans-reason { color: var(--ui-muted); font-size: 12px; }
 .ans-palette kbd { margin-left: 6px; }

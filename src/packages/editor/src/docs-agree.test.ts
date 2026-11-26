@@ -181,19 +181,20 @@ describe('the screen and edit layer colors', () => {
     expect(rest.match(/#[0-9a-f]{3,8}\b|rgba?\(/gi)).toBeNull();
   });
 
-  it('T-1319 · UX WC1: ui.warn as text keeps 4.5:1 on the background and the panel, and 7:1 in high contrast', () => {
-    /** WCAG 2.2 contrast ratio of two `#rrggbb` colors. */
-    const contrast = (a: string, b: string): number => {
-      const luminance = (hex: string): number => {
-        const channel = (offset: number): number => {
-          const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
-          return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-        };
-        return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+  /** WCAG 2.2 contrast ratio of two `#rrggbb` colors. */
+  const contrast = (a: string, b: string): number => {
+    const luminance = (hex: string): number => {
+      const channel = (offset: number): number => {
+        const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
       };
-      const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
-      return (light + 0.05) / (dark + 0.05);
+      return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
     };
+    const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+    return (light + 0.05) / (dark + 0.05);
+  };
+
+  it('T-1319 · UX WC1: ui.warn as text keeps 4.5:1 on the background and the panel, and 7:1 in high contrast', () => {
     const at = chromeCss.indexOf('@media (prefers-contrast: more)');
     const [base, more] = [chromeCss.slice(0, at), chromeCss.slice(at)];
     const dark = ".ans-app[data-scheme='dark']";
@@ -234,6 +235,28 @@ describe('the screen and edit layer colors', () => {
         const ratio = contrast(text, paint.get(back) ?? '');
         expect(ratio, `${name}: ui.warn on ${back}`).toBeGreaterThanOrEqual(minimum);
       }
+    }
+  });
+
+  it('T-1494: ui.disabled is fainter than ui.muted on the panel, and keeps 4.5:1 in high contrast (M74 D3)', () => {
+    const at = chromeCss.indexOf('@media (prefers-contrast: more)');
+    const [base, more] = [chromeCss.slice(0, at), chromeCss.slice(at)];
+    const dark = ".ans-app[data-scheme='dark']";
+    for (const selector of ['.ans-app', dark]) {
+      // High contrast changes neither ui.panel nor ui.accent-soft.
+      const normalSet = declarations(base, selector, 'ui');
+      const moreSet = declarations(more, selector, 'ui');
+      const panel = normalSet.get('ui.panel') ?? '';
+      const disabled = normalSet.get('ui.disabled') ?? '';
+      expect(contrast(disabled, panel), selector).toBeLessThan(
+        contrast(normalSet.get('ui.muted') ?? '', panel),
+      );
+      expect(contrast(moreSet.get('ui.disabled') ?? '', panel), selector).toBeGreaterThanOrEqual(
+        4.5,
+      );
+      expect(contrast(moreSet.get('ui.disabled') ?? '', panel), selector).toBeLessThan(
+        contrast(moreSet.get('ui.text') ?? '', panel),
+      );
     }
   });
 
