@@ -25,6 +25,10 @@ updated: 2026-11-22
 
 - [ ] 깨진 모델 JSON을 붙였을 때의 오류 글(`AriadneNSD could not open the pasted text (…)`)도 안내서 `llms.txt`에 한 줄 더할까? 지금은 공유 링크의 오류 글만 말함 → [[ux-decisions]] JP2
 
+### 이름 · 로고 · 라이선스
+
+- [ ] Anthropic Directory 제출에 쓸 지원 연락처: 플러그인 README에는 GitHub Issues만 적음. 심사 정책은 확인된 연락처를 요구하니 report@ 메일도 함께 적을지 → `src/skills/ariadne-nsd/plugin/README.md`
+
 ### 홍보
 
 - [ ] 교사 홍보: 써 봐 줄 정보 교사가 주변에 있는지, 독일어 화면(Struktogramm을 쓰는 독일어권 교사용)을 요구사항 후보로 올릴지 → [[promotion#교사]]
@@ -125,6 +129,11 @@ updated: 2026-11-22
 - [ ] 리팩토링: 웹 셸은 `ShellContext` 하나를 부분들이 함께 씀, 편집 명령은 묶음 파일이 명령 객체를 돌려주고 예전 차례로 이음, 세션 · 캔버스는 도우미 클래스가 좁은 host 타입을 받음(타입 import도 순환으로 세는 depcruise 때문) → [[2026-11-27-03-refactoring]]
 - [ ] 영어 `/about`: Quartz의 화면 글자(탐색기 · 툴바)는 한국어로 남음, 문서 페이지의 사이트 이름은 한국어 소개(`/about/ko`)로 감, 앱 정보 창의 "문서"는 화면 언어를 따름 → http://localhost:8080/about (push 뒤 https://ariadnensd.com/about)
 - [ ] 문서 현행화: README 로드맵의 "Claude 스킬 베타 (지금)" 줄과 웹 1.0 줄의 문구 → [README](https://github.com/reddiana/AriadneNSD#roadmap)
+
+### 2026-11-27 세션 04에 Claude가 정한 것
+
+- [ ] 플러그인 README(영어)의 내용: 들어 있는 것 · 실행하는 것, 네트워크 · 데이터 수집 없음, 1MB 스크립트의 까닭(base64 글꼴 · wasm, 소스 위치), 베타 안내 → `src/skills/ariadne-nsd/plugin/README.md`
+- [ ] claude.ai 설치 안내의 영어 메뉴 이름(Plugins › Add › Add marketplace › Add from repository)은 한국어 화면에서 옮긴 것이라 실제 영어 화면과 다를 수 있음 → README, 사용법 `#claude-skill`
 
 ## 알아만 두세요
 

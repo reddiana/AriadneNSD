@@ -134,14 +134,15 @@ src/skills/ariadne-nsd/
 
 | 대상 | 배포 방법 | 사용자가 하는 일 |
 | --- | --- | --- |
-| claude.ai | GitHub Release의 파일 `ariadne-nsd.zip`(맨 위에 폴더 `ariadne-nsd/`, 그 안에 `SKILL.md`) | 최신 Release에서 zip을 받아 Settings › Capabilities › Skills에 업로드 |
+| claude.ai | 이 저장소가 플러그인 마켓플레이스 `ariadne-nsd` | 플러그인 화면의 추가 › 마켓플레이스 추가 › 저장소에서 추가에 `reddiana/AriadneNSD`, 그다음 AriadneNSD 플러그인을 추가. 설정 › 기능의 "코드 실행 및 파일 생성"이 켜져 있어야 한다 |
 | Claude Code | 이 저장소가 플러그인 마켓플레이스 `ariadne-nsd` | `/plugin marketplace add reddiana/AriadneNSD`, 그다음 `/plugin install ariadne-nsd@ariadne-nsd` |
+| zip | GitHub Release의 파일 `ariadne-nsd.zip`(맨 위에 폴더 `ariadne-nsd/`, 그 안에 `SKILL.md`) | 스킬 폴더를 손으로 설치하는 곳에 쓴다 |
 | Claude Code (수동) | 스킬 폴더 그대로 | `plugin/skills/ariadne-nsd/`를 `~/.claude/skills/ariadne-nsd/`(또는 프로젝트의 `.claude/skills/`)에 복사 |
 
 사용자에게는 사용법(`/manual/`, `/manual/ko/`)의 "Claude skill" 꼭지(`#claude-skill`)가 요청의 예(A · B · C마다 하나)와 두 설치 방법, 결과를 AriadneNSD에서 여는 법을 안내합니다(원본 `src/apps/manual/pages/ref-en.html` · `ref-ko.html`).
 
 **Release의 zip**(`.github/workflows/release.yml`): GitHub Release를 펴내면(프리릴리스 포함) 그 태그의 코드로 스킬을 빌드해(`scripts/build.mjs`) `dist/ariadne-nsd.zip`을 그 Release의 파일로 업로드합니다. 같은 이름의 파일이 있으면 교체합니다. 태그(`v0.4.0`)와 `plugin.json`의 버전이 다르면 실패합니다. 이미 펴낸 Release에 다시 업로드할 때는 워크플로를 태그를 입력해 수동으로 실행합니다. zip은 항목의 순서와 시각을 고정해 같은 파일에서 같은 바이트가 됩니다.
 
-**플러그인 마켓플레이스:** 저장소 맨 위의 `.claude-plugin/marketplace.json`이 마켓플레이스 `ariadne-nsd`를 정의하고, 플러그인 하나 `ariadne-nsd`의 `source`가 `./src/skills/ariadne-nsd/plugin`(저장소 맨 위 기준의 상대 경로)입니다. 플러그인의 manifest는 `plugin/.claude-plugin/plugin.json`이고, Claude Code는 플러그인의 `skills/<이름>/SKILL.md`에서 스킬을 찾습니다. 설치하면 Claude Code가 플러그인 폴더를 자기 캐시로 복사하므로, 스킬이 쓰는 파일은 모두 플러그인 폴더 안에 있어야 합니다.
+**플러그인 마켓플레이스:** claude.ai와 Claude Code가 같은 마켓플레이스를 읽습니다. 저장소 맨 위의 `.claude-plugin/marketplace.json`이 마켓플레이스 `ariadne-nsd`를 정의하고, 플러그인 하나 `ariadne-nsd`의 `source`가 `./src/skills/ariadne-nsd/plugin`(저장소 맨 위 기준의 상대 경로)입니다. 플러그인의 manifest는 `plugin/.claude-plugin/plugin.json`이고, Claude Code는 플러그인의 `skills/<이름>/SKILL.md`에서 스킬을 찾습니다. 설치하면 Claude Code가 플러그인 폴더를 자기 캐시로 복사하므로, 스킬이 쓰는 파일은 모두 플러그인 폴더 안에 있어야 합니다. 플러그인 폴더에는 표시 이름 `displayName`(`AriadneNSD`, 없으면 claude.ai가 "Ariadne nsd"로 보임), 아이콘 `.claude-plugin/icon.png`(로고 큰 판의 1024px PNG, `scripts/make-icon.mjs`로 만듦, 시안 M78), Anthropic Directory 심사와 사용자를 위한 영어 안내 `README.md`(실행하는 것, 네트워크와 데이터 수집이 없음, 큰 스크립트의 까닭)가 있습니다.
 
 **버전:** 스킬의 버전은 제품의 버전과 같습니다(`package.json`과 `plugin.json`, 판을 내는 순서 → `src/README.md`). 버전은 `plugin.json`에만 기록하고 마켓플레이스의 항목에는 기록하지 않습니다(Claude Code는 둘이 다르면 `plugin.json`을 따름). Claude Code의 사용자는 `plugin.json`의 버전이 바뀔 때 업데이트를 받으므로, 같은 버전 안에서 `main`에 들어간 변경은 다음 판까지 사용자에게 전달되지 않습니다.

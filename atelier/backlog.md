@@ -139,9 +139,9 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## Claude skill
 
-- [x] 실제로 써 보기: claude.ai의 플러그인 › 추가 › 마켓플레이스 추가 › 저장소에서 추가(`reddiana/AriadneNSD`)로 설치, "이진 탐색을 NS 차트로" → `.ns.svg`와 링크가 나옴, 링크는 `check` OK (2026-11-27). claude.ai의 설치 경로가 설정 › Skills에서 플러그인 화면으로 옮겨져 [[07-claude-skill]] · README · 사용법의 안내를 고칠 것(정리 때)
 - [ ] 다음 판(0.5.0)으로 "문장마다 블록"(`3d59f98`)을 설치한 사람에게 보내기
-- [ ] claude.ai의 플러그인 검색(Anthropic Directory)에 제출할지: 제출처 · 심사 기준 알아보기
+- [ ] Anthropic Directory에 제출: 0.5.0을 낸 뒤 claude.ai/directory/manage › 새로 제출 › Plugin bundle. 준비한 것(아이콘 M78 · 표시 이름 · README, `claude plugin validate --strict --profile directory` 통과)과 기준은 [[2026-11-27-04-skill-directory]]. 제출 전에 지원 연락처를 정함 → [[outbox#정해 주세요]]
+- [ ] claude.ai의 "플러그인 업로드"가 Release의 zip(스킬 폴더만 든 것)을 받는지 시험. 받지 않으면 zip을 플러그인 모양으로 바꿀지, 없앨지
 - [ ] 사용법 AI 꼭지에 데스크톱 앱의 `/plugin` 창 안내 한 줄
 - [ ] 다음 판 후보: core의 편집 명령(`extractMethod` · `inlineCall` 등)을 `nsd.mjs`의 명령으로 내놓을지. 지금은 Claude가 JSON을 직접 고침
 - [ ] 커버리지 대상과 버전 일치 검사에 스킬 패키지를 넣을지

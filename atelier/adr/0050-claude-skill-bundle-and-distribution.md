@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0050: Claude skill은 앱의 코드를 Node 스크립트 하나로 번들해 커밋하고, Release의 zip과 플러그인 마켓플레이스로 배포한다
 
+> [!NOTE] 이후 변경
+> - 2026-11-27: claude.ai의 스킬 설치 자리가 설정의 Skills에서 플러그인 화면으로 옮겨져, claude.ai도 zip 대신 이 플러그인 마켓플레이스로 설치한다(메인테이너가 설치해 써 봄, 샌드박스에서 Node로 `nsd.mjs`가 돎). zip은 Release에 그대로 남는다. 플러그인에 표시 이름 · 아이콘 · README를 더했다(Anthropic Directory 제출 준비) → [[07-claude-skill#7. 배포]]
+
 ## 배경
 
 Claude skill([[01-requirements#^r-skill|R-SKILL-01]] ~ [[01-requirements#^r-skill|R-SKILL-03]], `P2`)은 Claude가 쓴 모델 JSON을 `.ns.svg` 파일과 공유 URL로 만들고, 사용자가 준 링크나 파일을 읽는다. [[0036-code-layout|ADR-0036]]은 자리(`src/skills/ariadne-nsd`, 셸이 아님)만 정했고 내보내는 곳은 "저장소"로 적었다. 구현하면서 정할 것이 셋 생겼다.

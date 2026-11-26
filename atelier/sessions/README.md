@@ -82,3 +82,4 @@ updated: 2026-10-25
 - [[2026-11-27-01-zoom-buttons|2026-11-27 확대 · 축소를 바로 누르는 버튼으로]]
 - [[2026-11-27-02-knot-without-push|2026-11-27 매듭에서 push를 빼다]]
 - [[2026-11-27-03-refactoring|2026-11-27 리팩토링 R1 ~ R5, 바뀐 블록만 DOM 반영, 문서 현행화, 영어 /about]]
+- [[2026-11-27-04-skill-directory|2026-11-27 스킬을 Anthropic Directory에 낼 준비, claude.ai에서 써 보기, 링크는 한 번만]]

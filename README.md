@@ -35,7 +35,7 @@ claude plugin marketplace add reddiana/AriadneNSD
 claude plugin install ariadne-nsd@ariadne-nsd
 ```
 
-**claude.ai:** Download `ariadne-nsd.zip` from the [latest release](https://github.com/reddiana/AriadneNSD/releases) and upload it in Settings › Capabilities › Skills ("Code execution and file creation" must be turned on).
+**claude.ai:** Open Plugins, choose Add › Add marketplace › Add from repository, enter `reddiana/AriadneNSD`, then add the AriadneNSD plugin ("Code execution and file creation" must be turned on in Settings › Capabilities).
 
 See the [AI section of the manual](https://ariadnensd.com/manual/#claude-skill) for details.
 

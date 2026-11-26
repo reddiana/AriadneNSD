@@ -35,7 +35,7 @@ claude plugin marketplace add reddiana/AriadneNSD
 claude plugin install ariadne-nsd@ariadne-nsd
 ```
 
-**claude.ai:** [최신 Release](https://github.com/reddiana/AriadneNSD/releases)에서 `ariadne-nsd.zip`을 받아 Settings › Capabilities › Skills에 올립니다("Code execution and file creation"을 켜 두어야 합니다).
+**claude.ai:** 플러그인 화면에서 추가 › 마켓플레이스 추가 › 저장소에서 추가를 고르고 `reddiana/AriadneNSD`를 넣은 뒤, AriadneNSD 플러그인을 추가합니다(설정 › 기능의 "코드 실행 및 파일 생성"을 켜 두어야 합니다).
 
 자세한 것은 [사용법의 AI 꼭지](https://ariadnensd.com/manual/ko/#claude-skill)에 있습니다.
 
