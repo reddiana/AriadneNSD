@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M75 맨 처음 · 맨 끝에 놓기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 시안 페이지. 다이어그램의 치수는 core/layout/geometry.ts, 색은 core/render/theme.ts,
+   드롭 판정은 editor/input/drop.ts · input/hit-test.ts, 드롭 표시는 editor/dom/overlay.ts를 옮긴 것. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --fg: #1d2330; --muted: #5d6676; --line: #d9dee7;
+  --accent: #5b4a9a; --accent-soft: #eeeaf7; --star: #b4690e; --ok: #22702a; --no: #b42318;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+  /* 앱의 밝은 테마 (theme.ts, overlay.ts) */
+  --ui-panel: #ffffff; --ui-line: #d4dbe6; --ui-accent-soft: #e4eafb;
+  --nsd-paper: #ffffff; --nsd-process: #edf0f5; --nsd-branch: #f6ebdc; --nsd-loop: #dce6f6;
+  --nsd-call: #ebe7f4; --nsd-line: #5b77ad; --nsd-text: #151a22; --nsd-text2: #4b5567;
+  --nsd-muted: #5a6476; --nsd-drop: #d0500b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+    --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; --ok: #82c98a; --no: #ff7b72; color-scheme: dark;
+    --ui-panel: #1a1e26; --ui-line: #2b313c; --ui-accent-soft: #232c45;
+    --nsd-paper: #171a21; --nsd-process: #232833; --nsd-branch: #3a3226; --nsd-loop: #22304a;
+    --nsd-call: #2c2840; --nsd-line: #7d93c4; --nsd-text: #e6e9ef; --nsd-text2: #b4bccb;
+    --nsd-muted: #a3acbc; --nsd-drop: #f08a4b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --fg: #e3e7ee; --muted: #9aa3b2; --line: #2e3542;
+  --accent: #b9a6ee; --accent-soft: #241f36; --star: #e7a54a; --ok: #82c98a; --no: #ff7b72; color-scheme: dark;
+  --ui-panel: #1a1e26; --ui-line: #2b313c; --ui-accent-soft: #232c45;
+  --nsd-paper: #171a21; --nsd-process: #232833; --nsd-branch: #3a3226; --nsd-loop: #22304a;
+  --nsd-call: #2c2840; --nsd-line: #7d93c4; --nsd-text: #e6e9ef; --nsd-text2: #b4bccb;
+  --nsd-muted: #a3acbc; --nsd-drop: #f08a4b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.7; font-size: 15px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 1.75rem; margin: 0 0 4px; font-weight: 600; }
+h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); font-weight: 600; }
+p, li { max-width: 80ch; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--paper); max-width: 80ch; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--paper); font-size: 0.9rem; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 500; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+.option { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 14px; min-width: 0; }
+.option.rec { border: 2px solid var(--star); }
+.option h3 { font-size: 1rem; margin: 0 0 6px; font-weight: 500; }
+.option .pc { margin: 10px 0 0; font-size: 0.9rem; color: var(--muted); }
+.option .pc span { color: var(--fg); }
+.n { display: inline-block; min-width: 1.8em; text-align: center; font-family: var(--font-mono); font-weight: 500; color: var(--paper); background: var(--accent); border-radius: 4px; margin-right: 6px; padding: 0 3px; }
+.star { color: var(--star); }
+/* 앱의 툴바(블록 아이콘)를 옮긴 것 */
+.ans-toolbar { display: flex; align-items: center; gap: 2px; padding: 4px 8px; background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 4px 4px 0 0; user-select: none; }
+.ans-tool { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 30px; padding: 0 5px; border: 1px solid transparent; border-radius: 4px; cursor: grab; touch-action: none; }
+.ans-tool:hover { background: var(--ui-accent-soft); }
+.ans-tool svg { width: 22px; height: 16px; }
+.tb-sp { flex: 1; }
+.btn { font: inherit; font-size: 0.82rem; padding: 2px 10px; border: 1px solid var(--ui-line); border-radius: 4px; background: var(--paper); color: var(--fg); cursor: pointer; }
+.canvas { border: 1px solid var(--ui-line); border-top: 0; background: var(--nsd-paper); overflow-x: auto; touch-action: none; user-select: none; }
+.canvas svg { display: block; }
+.status { font-size: 0.85rem; color: var(--muted); min-height: 1.6em; margin: 6px 0 0; }
+.tasks { list-style: none; padding: 0; margin: 8px 0 0; font-size: 0.88rem; }
+.tasks li { padding: 1px 0; }
+.tasks .mark { display: inline-block; width: 1.4em; font-family: var(--font-mono); color: var(--muted); }
+.tasks li.done .mark { color: var(--ok); }
+.tasks li.done { color: var(--ok); }
+.ghost { position: fixed; z-index: 10; pointer-events: none; padding: 1px 8px; font-size: 12px; border-radius: 4px; background: var(--nsd-drop); color: #fff; display: none; white-space: nowrap; }
+body.dragging, body.dragging * { cursor: grabbing !important; }
+body.dragging.no-drop, body.dragging.no-drop * { cursor: not-allowed !important; }
+/* 다이어그램 (문서 레이어) */
+.f-process { fill: var(--nsd-process); } .f-branch { fill: var(--nsd-branch); } .f-loop { fill: var(--nsd-loop); }
+.f-call { fill: var(--nsd-call); }
+.s { stroke: var(--nsd-line); stroke-width: 1; fill: none; }
+.r { stroke: var(--nsd-line); stroke-width: 1; }
+.t { fill: var(--nsd-text); font: 13px "D2Coding", "AriadneNSD Mono", Consolas, "Malgun Gothic", monospace; white-space: pre; }
+.t2 { fill: var(--nsd-text2); font: 12px "D2Coding", "AriadneNSD Mono", Consolas, "Malgun Gothic", monospace; }
+.tm { fill: var(--nsd-muted); }
+.halo { paint-order: stroke; stroke: var(--nsd-branch); stroke-width: 6; stroke-linejoin: round; }
+.drop { stroke: var(--nsd-drop); stroke-width: 2; fill: none; }
+.src { fill: var(--nsd-drop); opacity: 0.12; }
+.foot { margin-top: 28px; color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>M75 맨 처음 · 맨 끝에 놓기</h1>
+<p class="sub">2026-11-26 · 드래그 앤 드롭으로 다이어그램 본문의 맨 앞과 맨 뒤에 놓는 자리를 고르는 시안. 세 판 모두 실제로 끌어 볼 수 있습니다.</p>
+
+<blockquote>“드래그 앤 드롭을 다이어그램 맨 처음과 맨 마지막에 할 수 없어요” — 메인테이너</blockquote>
+
+<h2>지금 코드가 하는 일</h2>
+<p><code>findDrop</code>(<code>editor/src/input/drop.ts</code>)은 마우스 아래에서 가장 안쪽의 것(<code>hitTest</code>)을 찾고, 그 블록의 위 · 아래 8px 띠(<code>betweenBand</code>)를 “사이”로 봅니다. 헤더와 다이어그램 밖은 놓을 수 없는 곳입니다.</p>
+<div class="tbl"><table>
+<thead><tr><th>놓고 싶은 곳</th><th>지금 되는 길</th><th>까닭</th></tr></thead>
+<tbody>
+<tr><td>본문 맨 앞</td><td>첫 블록 안쪽 위 8px 띠뿐</td><td>헤더(<code>diagramHead</code>)는 <code>null</code>. 첫 블록이 If · Case · While · For면 그 머리(<code>head</code> 영역)가 잡혀 블록 전체의 위 띠가 되므로 됨. 첫 블록이 Do-While이면 위쪽은 본문이라 안쪽 첫 블록 앞이 되고, 왼쪽 띠(22px) 위에서만 바깥 맨 앞</td></tr>
+<tr><td>본문 맨 끝, 마지막이 처리 블록</td><td>마지막 블록 아래 8px 띠</td><td>—</td></tr>
+<tr><td>본문 맨 끝, 마지막이 If · Case</td><td>길 없음</td><td>아래 띠에서는 분기 안의 블록이 가장 안쪽이라 분기 안으로 들어감. 다이어그램 아래는 <code>hitTest</code>가 <code>null</code></td></tr>
+<tr><td>본문 맨 끝, 마지막이 While · For</td><td>왼쪽 띠(22px 폭) 아래 8px만</td><td>반복 블록의 왼쪽 띠에는 클릭 영역이 없어 반복 블록 자신이 잡힘. 본문 쪽은 안쪽 블록으로 들어감</td></tr>
+<tr><td>본문 맨 끝, 마지막이 Do-While</td><td>아래 8px 띠(전체 폭)</td><td>아래의 조건 칸이 머리 영역이라 블록 전체의 아래 띠가 됨</td></tr>
+</tbody></table></div>
+
+<h2>끌어 보기</h2>
+<p>툴바의 블록 아이콘(처리 · If · While)이나 다이어그램 안의 블록을 마우스로 끌어 보세요. 놓일 자리는 주황 2px 선(양 끝 4px 눈금), 감싸기는 블록 테두리로 보입니다. 아래의 과제는 해내면 <span style="color:var(--ok)">✓</span>가 붙습니다. <code>Esc</code>는 드래그 취소입니다.</p>
+
+<div class="grid" id="grid"></div>
+
+<p style="margin-top:18px">키보드 · 붙여넣기로는 이미 맨 앞 · 맨 뒤에 넣을 수 있습니다: 첫 블록을 선택하고 <code>O</code>(앞에 삽입) · <code>P</code>(앞에 붙여넣기), 마지막 블록을 선택하고 <code>o</code> · <code>p</code>, 선택한 것이 없을 때 툴바 아이콘을 누르면 다이어그램의 맨 끝에 삽입(02-interaction-rules의 “키보드로 이동하고 삽입하기” · “블록 아이콘으로 삽입 · 감싸기” · “붙여넣기”).</p>
+
+<p class="foot">시안에서는 알아보기 쉽게 새 처리 블록에 글자(“새 처리 1” …)를 넣었습니다. 앱은 빈 블록으로 넣습니다. 분기 라벨 줄은 If의 머리와 같게 다뤘습니다(앱도 블록 아이콘에는 같음). 선택과 여러 블록 드래그는 넣지 않았습니다.</p>
+</div>
+<div class="ghost" id="ghost"></div>
+
+<script>
+'use strict';
+// ── 치수 (core/layout/geometry.ts, input/drop.ts) ──
+const G = { padX: 10, padY: 7, line: 18, minW: 52, strip: 22, ifLabel: 16, ifExtra: 70, labelRoom: 18,
+  labelInset: 6, hat: 16, hatRoom: 24, diagMinW: 160, diagGap: 44, paper: 24, band: 8, small: 24, endBand: 12 };
+const FONT = '13px "D2Coding", "AriadneNSD Mono", Consolas, "Malgun Gothic", monospace';
+const FONT2 = '12px "D2Coding", "AriadneNSD Mono", Consolas, "Malgun Gothic", monospace';
+const mctx = document.createElement('canvas').getContext('2d');
+function tw(s, f) { mctx.font = f || FONT; return Math.ceil(mctx.measureText(s).width); }
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+// ── 모델 ──
+let uid = 0;
+const nid = (p) => p + (++uid);
+const S = (blocks) => ({ id: nid('s'), blocks });
+const P = (text) => ({ id: nid('b'), kind: 'process', text });
+const IF = (text, yes, no) => ({ id: nid('b'), kind: 'if', text, seqs: [S(yes), S(no)] });
+const WH = (text, body) => ({ id: nid('b'), kind: 'while', text, seqs: [S(body)] });
+function scene() {
+  return [
+    { id: nid('d'), head: '주문 처리()', body: S([P('합계 = 0'), IF('재고 있음?', [P('출고')], [P('취소')])]) },
+    { id: nid('d'), head: '로그인()', body: S([IF('토큰 있음?', [P('자동 로그인')], [P('로그인 화면')]), WH('시도 < 3', [P('입력 받기')])]) },
+  ];
+}
+
+// ── 측정과 배치 (02-layout의 줄임) ──
+const lineH = G.line + 2 * G.padY;
+function mSeq(s) {
+  if (s.blocks.length === 0) return { w: G.minW, h: lineH };
+  let w = 0, h = 0;
+  for (const b of s.blocks) { const m = mBlock(b); w = Math.max(w, m.w); h += m.h; }
+  return { w, h };
+}
+function mBlock(b) {
+  if (b.kind === 'process') return { w: Math.max(G.minW, tw(b.text) + 2 * G.padX), h: lineH };
+  if (b.kind === 'if') {
+    const a = mSeq(b.seqs[0]), c = mSeq(b.seqs[1]);
+    const wa = Math.max(a.w, tw('참', FONT2) + G.labelRoom), wc = Math.max(c.w, tw('거짓', FONT2) + G.labelRoom);
+    const head = lineH + G.ifLabel;
+    return { w: Math.max(tw(b.text) + 2 * G.padX + G.ifExtra, wa + wc), h: head + Math.max(a.h, c.h), head, bw: [wa, wc] };
+  }
+  const s = mSeq(b.seqs[0]);
+  return { w: Math.max(tw(b.text) + 2 * G.padX, G.strip + s.w), h: lineH + s.h, head: lineH };
+}
+function layoutAll(diagrams) {
+  const L = { boxes: new Map(), regions: [], draw: [], parent: new Map(), seqOf: new Map(), seqOwner: new Map(),
+    seqName: new Map(), diagrams: [], width: 0, height: 0 };
+  let y = G.paper, maxW = 0;
+  for (const d of diagrams) {
+    const bm = mSeq(d.body);
+    const hh = G.hat + lineH;
+    const w = Math.max(G.diagMinW, tw(d.head) + 2 * G.padX + G.hatRoom, bm.w);
+    const x = G.paper;
+    const head = { x, y, w, h: hh };
+    const body = { x, y: y + hh, w, h: bm.h };
+    L.regions.push({ kind: 'diagramHead', id: d.id, box: head });
+    L.draw.push({ kind: 'dhead', box: head, text: d.head });
+    L.seqName.set(d.body.id, d.head + ' 본문');
+    placeSeq(L, d.body, body, null);
+    L.diagrams.push({ d, head, body, box: { x, y, w, h: hh + bm.h } });
+    y += hh + bm.h + G.diagGap;
+    maxW = Math.max(maxW, w);
+  }
+  L.width = maxW + 2 * G.paper;
+  L.height = y - G.diagGap + G.paper;
+  return L;
+}
+function placeSeq(L, s, box, owner) {
+  L.seqOwner.set(s.id, owner);
+  if (s.blocks.length === 0) {
+    const id = 'e:' + s.id;
+    L.boxes.set(id, box);
+    L.seqOf.set(id, s);
+    L.parent.set(id, { seq: s, owner });
+    L.regions.push({ kind: 'block', id, box });
+    L.draw.push({ kind: 'empty', box });
+    return;
+  }
+  const ms = s.blocks.map(mBlock);
+  const total = ms.reduce((a, m) => a + m.h, 0);
+  let y = box.y;
+  s.blocks.forEach((b, i) => {
+    const h = ms[i].h + (i === s.blocks.length - 1 ? box.h - total : 0);
+    L.parent.set(b.id, { seq: s, owner });
+    placeBlock(L, b, { x: box.x, y, w: box.w, h }, ms[i]);
+    y += h;
+  });
+}
+function placeBlock(L, b, box, m) {
+  L.boxes.set(b.id, box);
+  if (b.kind === 'process') {
+    L.regions.push({ kind: 'block', id: b.id, box });
+    L.draw.push({ kind: 'process', box, text: b.text });
+    return;
+  }
+  const head = { x: box.x, y: box.y, w: box.w, h: m.head };
+  L.regions.push({ kind: 'head', id: b.id, box: head });
+  if (b.kind === 'if') {
+    const extra = box.w - (m.bw[0] + m.bw[1]);
+    const w0 = m.bw[0] + Math.floor(extra / 2);
+    const split = box.x + w0;
+    L.draw.push({ kind: 'if', box, head, split, text: b.text });
+    L.seqName.set(b.seqs[0].id, '‘' + b.text + '’의 참 분기');
+    L.seqName.set(b.seqs[1].id, '‘' + b.text + '’의 거짓 분기');
+    const bh = box.h - m.head;
+    placeSeq(L, b.seqs[0], { x: box.x, y: box.y + m.head, w: w0, h: bh }, b.id);
+    placeSeq(L, b.seqs[1], { x: split, y: box.y + m.head, w: box.w - w0, h: bh }, b.id);
+    return;
+  }
+  L.draw.push({ kind: 'while', box, text: b.text });
+  L.seqName.set(b.seqs[0].id, '‘' + b.text + '’의 본문');
+  placeSeq(L, b.seqs[0], { x: box.x + G.strip, y: box.y + m.head, w: box.w - G.strip, h: box.h - m.head }, b.id);
+}
+
+// ── 누른 것 찾기 (input/hit-test.ts) ──
+const inBox = (b, p) => p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h;
+function hitTest(L, p) {
+  let best = null, ba = Infinity;
+  for (const r of L.regions) {
+    if (!inBox(r.box, p)) continue;
+    const a = r.box.w * r.box.h;
+    if (a > ba) continue;
+    ba = a; best = r;
+  }
+  if (best) return best;
+  let inner = null;
+  for (const [id, b] of L.boxes) {
+    if (inBox(b, p) && (inner === null || b.w * b.h < inner.box.w * inner.box.h)) inner = { kind: 'block', id, box: b };
+  }
+  return inner;
+}
+
+// ── 놓을 자리 (input/drop.ts) ──
+function zoneOf(box, p) {
+  if (box.h < G.small) return p.y < box.y + box.h / 2 ? 'before' : 'after';
+  if (p.y < box.y + G.band) return 'before';
+  if (p.y > box.y + box.h - G.band) return 'after';
+  return 'on';
+}
+function isInside(L, id, srcId) {
+  let cur = id;
+  while (cur) {
+    if (cur === srcId) return true;
+    const pr = L.parent.get(cur);
+    cur = pr ? pr.owner : null;
+  }
+  return false;
+}
+function lineMark(x, y, w) { return { kind: 'line', x, y, w }; }
+function between(L, id, side) {
+  const pr = L.parent.get(id), box = L.boxes.get(id);
+  const i = pr.seq.blocks.findIndex((b) => b.id === id);
+  return { kind: 'at', seq: pr.seq, index: i + (side === 'after' ? 1 : 0),
+    mark: lineMark(box.x, side === 'before' ? box.y : box.y + box.h, box.w) };
+}
+function atSeq(seq, index, x, y, w) { return { kind: 'at', seq, index, mark: lineMark(x, y, w) }; }
+
+function findDrop(L, p, src, mode) {
+  if (mode === 'p3') {
+    // 최상위 블록의 위 · 아래 띠가 안쪽 블록보다 먼저
+    for (const D of L.diagrams) {
+      if (p.x < D.body.x || p.x > D.body.x + D.body.w) continue;
+      for (const b of D.d.body.blocks) {
+        const box = L.boxes.get(b.id);
+        if (!inBox(box, p)) continue;
+        if (box.h < G.small) return between(L, b.id, p.y < box.y + box.h / 2 ? 'before' : 'after');
+        if (p.y < box.y + G.band) return between(L, b.id, 'before');
+        if (p.y > box.y + box.h - G.band) return between(L, b.id, 'after');
+      }
+    }
+  }
+  const hit = hitTest(L, p);
+  if (mode === 'p2') {
+    if (hit && hit.kind === 'diagramHead' && p.y >= hit.box.y + hit.box.h - G.band) {
+      const D = L.diagrams.find((x) => x.d.id === hit.id);
+      return atSeq(D.d.body, 0, D.body.x, D.body.y, D.body.w);
+    }
+    if (!hit) {
+      for (const D of L.diagrams) {
+        const bottom = D.body.y + D.body.h;
+        if (p.x >= D.body.x && p.x <= D.body.x + D.body.w && p.y > bottom && p.y <= bottom + G.endBand) {
+          return atSeq(D.d.body, D.d.body.blocks.length, D.body.x, bottom, D.body.w);
+        }
+      }
+    }
+  }
+  if (!hit || hit.kind === 'diagramHead') return null;
+  const id = hit.id;
+  if (src.kind === 'block' && isInside(L, id, src.id)) return null;
+  const box = L.boxes.get(id);
+  if (L.seqOf.has(id)) return { kind: 'fill', seq: L.seqOf.get(id), mark: { kind: 'outline', box } };
+  const zone = zoneOf(box, p);
+  if (zone !== 'on') return between(L, id, zone);
+  if (src.kind === 'block') return between(L, id, p.y < box.y + box.h / 2 ? 'before' : 'after');
+  if (src.bk === 'process') return between(L, id, 'after');
+  return { kind: 'wrap', id, bk: src.bk, mark: { kind: 'outline', box } };
+}
+
+// ── 놓기 ──
+const WRAP_NAME = { if: 'If로 감싸기', while: 'While로 감싸기' };
+function makeBlock(panel, bk) {
+  panel.count[bk] = (panel.count[bk] || 0) + 1;
+  const n = panel.count[bk];
+  if (bk === 'process') return P('새 처리 ' + n);
+  if (bk === 'if') return IF('새 조건 ' + n, [], []);
+  return WH('새 반복 ' + n, []);
+}
+function findParent(diagrams, id) {
+  const walk = (s) => {
+    const i = s.blocks.findIndex((b) => b.id === id);
+    if (i >= 0) return { seq: s, i };
+    for (const b of s.blocks) for (const t of b.seqs || []) { const r = walk(t); if (r) return r; }
+    return null;
+  };
+  for (const d of diagrams) { const r = walk(d.body); if (r) return r; }
+  return null;
+}
+function apply(panel, drop, src) {
+  let blk;
+  let index = drop.index;
+  if (src.kind === 'new') {
+    blk = drop.kind === 'wrap' ? null : makeBlock(panel, src.bk);
+  } else {
+    const pr = findParent(panel.diagrams, src.id);
+    blk = pr.seq.blocks[pr.i];
+    if (drop.kind === 'at' && pr.seq === drop.seq && pr.i < index) index--;
+    pr.seq.blocks.splice(pr.i, 1);
+  }
+  if (drop.kind === 'at') drop.seq.blocks.splice(index, 0, blk);
+  else if (drop.kind === 'fill') drop.seq.blocks = [blk];
+  else {
+    const pr = findParent(panel.diagrams, drop.id);
+    const inner = pr.seq.blocks[pr.i];
+    const w = makeBlock(panel, drop.bk);
+    w.seqs[0].blocks = [inner];
+    pr.seq.blocks[pr.i] = w;
+  }
+}
+function describe(L, drop) {
+  if (drop.kind === 'wrap') return WRAP_NAME[drop.bk];
+  const name = L.seqName.get(drop.seq.id);
+  if (drop.kind === 'fill' || drop.seq.blocks.length === 0) return name + '의 빈 칸';
+  const len = drop.seq.blocks.length;
+  if (drop.index === 0) return name + ' 맨 앞';
+  if (drop.index === len) return name + ' 맨 끝';
+  return name + ', ‘' + drop.seq.blocks[drop.index - 1].text + '’ 뒤';
+}
+
+// ── 그리기 ──
+const n = (v) => Math.round(v * 10) / 10;
+function drawDoc(L) {
+  const out = [];
+  for (const d of L.draw) {
+    const b = d.box, x = b.x + 0.5, y = b.y + 0.5;
+    if (d.kind === 'dhead') {
+      const top = y + G.hat, w = b.w, h = b.h;
+      out.push(`<path class="f-call r" d="M${x} ${top} C${n(x + w * 0.2)} ${y + 1} ${n(x + w * 0.8)} ${y + 1} ${x + w} ${top} L${x + w} ${y + h} L${x} ${y + h} Z"/>`);
+      out.push(`<text class="t" x="${b.x + G.padX}" y="${b.y + G.hat + G.padY + 13}">${esc(d.text)}</text>`);
+    } else if (d.kind === 'process') {
+      out.push(`<rect class="f-process r" x="${x}" y="${y}" width="${b.w}" height="${b.h}"/>`);
+      out.push(`<text class="t" x="${b.x + G.padX}" y="${b.y + G.padY + 13}">${esc(d.text)}</text>`);
+    } else if (d.kind === 'empty') {
+      out.push(`<rect class="f-process r" x="${x}" y="${y}" width="${b.w}" height="${b.h}"/>`);
+      out.push(`<text class="t tm" text-anchor="middle" x="${b.x + b.w / 2}" y="${b.y + G.padY + 13}">∅</text>`);
+    } else if (d.kind === 'if') {
+      const h = d.head;
+      out.push(`<rect class="f-branch r" x="${x}" y="${y}" width="${h.w}" height="${h.h}"/>`);
+      out.push(`<polyline class="s" points="${x},${y} ${d.split + 0.5},${y + h.h} ${x + h.w},${y}"/>`);
+      const half = tw(d.text) / 2;
+      const cx = Math.min(Math.max(d.split, h.x + half + G.padX), h.x + h.w - half - G.padX);
+      out.push(`<text class="t halo" text-anchor="middle" x="${cx}" y="${h.y + G.padY + 11}">${esc(d.text)}</text>`);
+      out.push(`<text class="t2" x="${h.x + G.labelInset}" y="${h.y + h.h - 4}">참</text>`);
+      out.push(`<text class="t2" text-anchor="end" x="${h.x + h.w - G.labelInset}" y="${h.y + h.h - 4}">거짓</text>`);
+    } else if (d.kind === 'while') {
+      out.push(`<rect class="f-loop r" x="${x}" y="${y}" width="${b.w}" height="${b.h}"/>`);
+      out.push(`<text class="t" x="${b.x + G.padX}" y="${b.y + G.padY + 13}">${esc(d.text)}</text>`);
+    }
+  }
+  return out.join('');
+}
+function drawMark(m) {
+  if (m.kind === 'line') {
+    const { x, y, w } = m;
+    return `<line class="drop" x1="${x}" y1="${y}" x2="${x + w}" y2="${y}"/>` +
+      `<line class="drop" x1="${x + 1}" y1="${y - 4}" x2="${x + 1}" y2="${y + 4}"/>` +
+      `<line class="drop" x1="${x + w - 1}" y1="${y - 4}" x2="${x + w - 1}" y2="${y + 4}"/>`;
+  }
+  const b = m.box;
+  return `<rect class="drop" x="${b.x + 2}" y="${b.y + 2}" width="${b.w - 4}" height="${b.h - 4}"/>`;
+}
+
+// ── 판 ──
+const OPTIONS = [
+  { mode: 'p1', no: 'P1', title: '지금(재현용)', rec: false,
+    pc: ['<span>장점</span> 바꿀 것이 없음.',
+      '<span>단점</span> 맨 앞은 첫 블록 위 8px 띠뿐이고, 마지막이 If면 맨 끝에 놓을 길이 없음. 마지막이 While이면 왼쪽 띠 22×8px 한 점만.'] },
+  { mode: 'p2', no: 'P2', title: '<span class="star">★</span> 헤더 아래 띠와 다이어그램 아래 띠', rec: true,
+    pc: ['헤더 안 아래 8px에 놓으면 본문 맨 앞, 다이어그램 바로 아래 12px 띠(본문 폭)에 놓으면 본문 맨 뒤. 나머지는 지금 그대로.',
+      '<span>장점</span> 맨 앞 · 맨 끝이 언제나 되고, 안쪽의 드롭은 하나도 바뀌지 않음. 놓일 선이 헤더 아랫선과 다이어그램 아랫선에 그려져 뜻이 바로 보임.',
+      '<span>단점</span> “헤더 · 다이어그램 밖에는 놓을 수 없다”는 규칙에 예외 두 줄이 생김. 헤더 없는 다이어그램의 맨 앞은 지금처럼 첫 블록 위 띠뿐.'] },
+  { mode: 'p3', no: 'P3', title: '최상위 블록의 띠가 이김', rec: false,
+    pc: ['최상위 블록의 위 · 아래 8px 띠에서는 안쪽 블록보다 최상위 블록 사이가 먼저.',
+      '<span>장점</span> 새 자리 없이 블록의 띠만으로 맨 끝이 됨.',
+      '<span>단점</span> If의 아래 8px가 분기 마지막 블록의 아래 띠와 겹쳐, 분기 맨 끝에 사이로 놓을 수 없음(과제 5). 처리 · 옮기기는 블록의 아래쪽 반으로 놓으면 되지만 새 If · While은 감싸기가 되어 길이 없음. “가장 안쪽이 이긴다”는 규칙과도 어긋남.'] },
+];
+const TASKS = [
+  { text: '‘주문 처리()’ 본문 맨 앞에 놓기', ok: (L, d) => d.kind === 'at' && L.seqName.get(d.seq.id) === '주문 처리() 본문' && d.index === 0 },
+  { text: '‘주문 처리()’ 본문 맨 끝(If 뒤)에 놓기', ok: (L, d) => d.kind === 'at' && L.seqName.get(d.seq.id) === '주문 처리() 본문' && d.index === d.seq.blocks.length },
+  { text: '‘로그인()’ 본문 맨 앞(If 앞)에 놓기', ok: (L, d) => d.kind === 'at' && L.seqName.get(d.seq.id) === '로그인() 본문' && d.index === 0 },
+  { text: '‘로그인()’ 본문 맨 끝(While 뒤)에 놓기', ok: (L, d) => d.kind === 'at' && L.seqName.get(d.seq.id) === '로그인() 본문' && d.index === d.seq.blocks.length },
+  { text: '‘재고 있음?’ 참 분기 맨 끝(출고 뒤)에 새 While 놓기', ok: (L, d, s) => s.kind === 'new' && s.bk === 'while' && d.kind === 'at' && L.seqName.get(d.seq.id) === '‘재고 있음?’의 참 분기' && d.index === d.seq.blocks.length },
+];
+const ICONS = {
+  process: '<rect x=".5" y=".5" width="21" height="15" fill="#edf0f5" stroke="#5b77ad"/>',
+  if: '<rect x=".5" y=".5" width="21" height="15" fill="#edf0f5" stroke="#5b77ad"/><rect x=".5" y=".5" width="21" height="7" fill="#f6ebdc" stroke="#5b77ad"/><path d="M.5 .5 L11 7.5 L21.5 .5 M11 7.5 V15.5" fill="none" stroke="#5b77ad"/>',
+  while: '<rect x=".5" y=".5" width="21" height="15" fill="#dce6f6" stroke="#5b77ad"/><rect x="5.5" y="5.5" width="16" height="10" fill="#edf0f5" stroke="#5b77ad"/>',
+};
+const LABEL = { process: '처리', if: 'If', while: 'While' };
+
+const panels = [];
+const grid = document.getElementById('grid');
+for (const o of OPTIONS) {
+  const el = document.createElement('section');
+  el.className = 'option' + (o.rec ? ' rec' : '');
+  el.innerHTML = `<h3><span class="n">${o.no}</span>${o.title}</h3>
+    <div class="ans-toolbar">${['process', 'if', 'while'].map((k) =>
+      `<span class="ans-tool" data-kind="${k}" title="${LABEL[k]} — 끌어서 놓기"><svg viewBox="0 0 22 16">${ICONS[k]}</svg></span>`).join('')}
+      <span class="tb-sp"></span><button class="btn" data-act="undo">되돌리기</button><button class="btn" data-act="reset">처음으로</button></div>
+    <div class="canvas"><svg></svg></div>
+    <p class="status">놓을 자리를 찾아 보세요.</p>
+    <ul class="tasks">${TASKS.map((t, i) => `<li><span class="mark">${i + 1}</span>${t.text}</li>`).join('')}</ul>
+    ${o.pc.map((t) => `<p class="pc">${t}</p>`).join('')}`;
+  grid.appendChild(el);
+  const panel = { o, el, svg: el.querySelector('.canvas svg'), status: el.querySelector('.status'), tasks: [...el.querySelectorAll('.tasks li')],
+    diagrams: scene(), history: [], count: {}, L: null, drop: null, srcId: null };
+  panels.push(panel);
+  el.querySelectorAll('.ans-tool').forEach((t) => t.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    pending = { panel, src: { kind: 'new', bk: t.dataset.kind }, label: LABEL[t.dataset.kind], x0: e.clientX, y0: e.clientY };
+  }));
+  panel.svg.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    const hit = hitTest(panel.L, toSvg(panel, e));
+    if (!hit || hit.kind === 'diagramHead' || panel.L.seqOf.has(hit.id)) return;
+    const blk = findParent(panel.diagrams, hit.id);
+    pending = { panel, src: { kind: 'block', id: hit.id }, label: blk.seq.blocks[blk.i].text, x0: e.clientX, y0: e.clientY };
+  });
+  el.querySelector('[data-act=undo]').addEventListener('click', () => {
+    const prev = panel.history.pop();
+    if (prev) { panel.diagrams = prev.d; panel.count = prev.c; panel.status.textContent = '되돌렸습니다.'; render(panel); }
+  });
+  el.querySelector('[data-act=reset]').addEventListener('click', () => {
+    panel.diagrams = scene(); panel.history = []; panel.count = {};
+    panel.tasks.forEach((li, i) => { li.classList.remove('done'); li.querySelector('.mark').textContent = String(i + 1); });
+    panel.status.textContent = '처음 모습으로 돌렸습니다.';
+    render(panel);
+  });
+  render(panel);
+}
+
+function render(panel) {
+  const L = layoutAll(panel.diagrams);
+  panel.L = L;
+  panel.svg.setAttribute('viewBox', `0 0 ${L.width} ${L.height}`);
+  panel.svg.setAttribute('width', L.width);
+  panel.svg.setAttribute('height', L.height);
+  let src = '';
+  if (panel.srcId && L.boxes.has(panel.srcId)) {
+    const b = L.boxes.get(panel.srcId);
+    src = `<rect class="src" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}"/>`;
+  }
+  panel.svg.innerHTML = drawDoc(L) + src + (panel.drop ? drawMark(panel.drop.mark) : '');
+}
+function toSvg(panel, e) {
+  const r = panel.svg.getBoundingClientRect();
+  return { x: (e.clientX - r.left) * (panel.L.width / r.width), y: (e.clientY - r.top) * (panel.L.height / r.height) };
+}
+const clone = (v) => JSON.parse(JSON.stringify(v));
+
+// ── 드래그 ──
+let pending = null, drag = null;
+const ghost = document.getElementById('ghost');
+function endDrag() {
+  if (drag) { drag.panel.drop = null; drag.panel.srcId = null; render(drag.panel); }
+  drag = null; pending = null;
+  ghost.style.display = 'none';
+  document.body.classList.remove('dragging', 'no-drop');
+}
+document.addEventListener('pointermove', (e) => {
+  if (pending && !drag && Math.hypot(e.clientX - pending.x0, e.clientY - pending.y0) > 4) {
+    drag = pending;
+    drag.panel.srcId = drag.src.kind === 'block' ? drag.src.id : null;
+    document.body.classList.add('dragging');
+  }
+  if (!drag) return;
+  const panel = drag.panel;
+  const r = panel.svg.getBoundingClientRect();
+  const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  const drop = inside ? findDrop(panel.L, toSvg(panel, e), drag.src, panel.o.mode) : null;
+  panel.drop = drop;
+  document.body.classList.toggle('no-drop', drop === null);
+  ghost.textContent = drop && drop.kind === 'wrap' ? WRAP_NAME[drop.bk] : drag.label;
+  ghost.style.display = 'block';
+  ghost.style.left = e.clientX + 14 + 'px';
+  ghost.style.top = e.clientY + 14 + 'px';
+  panel.status.textContent = drop ? '놓으면: ' + describe(panel.L, drop) : (inside ? '여기에는 놓을 수 없습니다.' : '');
+  render(panel);
+});
+document.addEventListener('pointerup', () => {
+  if (drag && drag.panel.drop) {
+    const panel = drag.panel, drop = drag.panel.drop, L = panel.L;
+    const text = describe(L, drop);
+    const done = TASKS.map((t) => t.ok(L, drop, drag.src));
+    panel.history.push({ d: clone(panel.diagrams), c: { ...panel.count } });
+    // 놓기는 지금의 모델에 바로 적용 (drop은 같은 모델의 seq를 가리킴)
+    apply(panel, drop, drag.src);
+    panel.status.textContent = '넣었습니다: ' + text;
+    done.forEach((ok, i) => { if (ok) { panel.tasks[i].classList.add('done'); panel.tasks[i].querySelector('.mark').textContent = '✓'; } });
+  }
+  endDrag();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (drag || pending)) { if (drag) drag.panel.status.textContent = '드래그를 취소했습니다.'; endDrag(); } });
+window.addEventListener('blur', endDrag);
+</script>
+</body>
+</html>
