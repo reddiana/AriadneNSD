@@ -1,5 +1,6 @@
-// The editing session: the state, undo, notices, the inline editor's text flow and the key
-// reader, without the DOM. The DOM view and the commands drive it; tests drive it in Node.
+// The editing session: the state, undo, notices and questions, without the DOM. The inline
+// editor's text flow (`text-editing.ts`) and the key reader (`key-reader.ts`) are its parts.
+// The DOM view and the commands drive it; tests drive it in Node.
 import type {
   Block,
   Content,
@@ -16,17 +17,12 @@ import type {
   View,
 } from '@ariadne-nsd/core';
 import {
-  addDefaultBranch,
   checkInvariants,
   createIdGenerator,
   defaultFoldName,
   drawingMessage,
-  editCall,
-  editHead,
-  editText,
   forgetRetargeted,
   headName,
-  headParams,
   pathSeparator,
   renderDoc,
   settleSiteFolds,
@@ -39,19 +35,11 @@ import type { ChromeState, Notice, Question } from '../contracts';
 import type { EditorMessage, Message, MessageKey } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { KeyBinding } from '../input/keys';
-import { readKey } from '../input/keys';
 import type { DocIndex } from '../model/doc-index';
 import { indexDoc, isEmptyBlock } from '../model/doc-index';
 import type { ShownIndex } from '../model/shown-index';
 import { shownIndexOf } from '../model/shown-index';
-import type {
-  CallPart,
-  Caret,
-  EditField,
-  Editing,
-  EditorState,
-  Extracted,
-} from '../state/editor-state';
+import type { CallPart, Caret, EditField, EditorState, Extracted } from '../state/editor-state';
 import {
   clampZoom,
   isSameFolding,
@@ -61,25 +49,20 @@ import {
   withSelection,
 } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import {
-  foldPath,
-  peekBlocks,
-  selectBlock,
-  selectedBlocks,
-  validSelection,
-} from '../state/selection';
+import { peekBlocks, selectedBlocks, validSelection } from '../state/selection';
+import { callName, callParts } from './call-names';
+import type { Timers } from './key-reader';
+import { KeyReader, keyHintTitle } from './key-reader';
+import { TextEditing } from './text-editing';
+
+export type { Timers } from './key-reader';
+export { keyHintDelay, keyHintTitle } from './key-reader';
 
 /** The system clipboard, or the editor's own when the browser blocks it (03-editor 3.3). */
 export type ClipboardPort = {
   /** Writes both forms. Returns where they went. */
   write(data: ClipboardData): Promise<'system' | 'memory'>;
   read(): Promise<ClipboardData>;
-};
-
-/** A timer the key hint uses; tests pass a fake one. */
-export type Timers = {
-  set(callback: () => void, milliseconds: number): unknown;
-  clear(handle: unknown): void;
 };
 
 /** What the session needs from outside. */
@@ -121,9 +104,6 @@ export type After = {
   };
 };
 
-/** The key hint shows this long after the first key of a sequence (UX K1). */
-export const keyHintDelay = 400;
-
 /**
  * The document with every drawn call site holding its own folding and fold regions (ADR-0046,
  * ADR-0047). Copying the Method's regions changes the content.
@@ -144,9 +124,8 @@ export class EditorSession {
   private noticeValue: Notice | null = null;
   private questionValue: Question | null = null;
   private nextId = 1;
-  private isEscArmed = false;
-  private hintTimer: unknown = null;
-  private isHintShown = false;
+  private readonly text: TextEditing;
+  private readonly keys: KeyReader;
   /** Runs a command by id (the registry). Set by the editor after the registry is made. */
   runCommand: (id: string, args?: unknown) => void = () => undefined;
   /** Times the parts of an edit (the check mode); the view times its drawing with it too. */
@@ -159,6 +138,11 @@ export class EditorSession {
   ) {
     const doc = settled(opened);
     this.time = options.time ?? untimed;
+    const write = (state: EditorState): void => {
+      this.setState(state);
+    };
+    this.text = new TextEditing(this, write);
+    this.keys = new KeyReader(this, write, () => this.questionValue, options);
     this.rendered = this.render(doc);
     this.indexed = indexDoc(doc.content);
     this.saved = load.isDirty ? null : doc;
@@ -357,7 +341,7 @@ export class EditorSession {
       question: this.questionValue,
       pendingKeys,
       mode: editing !== null ? 'editing' : mode,
-      isKeyHintShown: this.isHintShown,
+      isKeyHintShown: this.keys.isHintShown,
       keyHintTitle: pendingKeys === null ? null : keyHintTitle(pendingKeys),
       zoom,
     };
@@ -687,7 +671,7 @@ export class EditorSession {
     return { ...state, doc, dirty: this.isDirty(doc), layout: this.rendered.layout };
   }
 
-  // The inline editor (03-editor 3.4).
+  // The inline editor (03-editor 3.4), in `text-editing.ts`.
 
   /**
    * The fields of a call block, in `Tab` order (interaction rules "호출 블록"): the arguments,
@@ -695,30 +679,12 @@ export class EditorSession {
    * written name has its name last (R-BLK-08, UX CB6).
    */
   callParts(block: Block): ReadonlyArray<CallPart> {
-    if (block.kind === 'call' && block.target.kind === 'named') {
-      return ['args', 'result', 'name'];
-    }
-    if (block.kind !== 'call' || block.target.kind !== 'local') {
-      return ['args', 'result'];
-    }
-    const head = this.index().diagrams.get(block.target.diagram)?.head ?? null;
-    return head !== null && headParams(head) !== null ? ['args', 'result'] : ['result'];
+    return callParts(this.index(), block);
   }
 
   /** The name a call block shows now, without the "no name" word (empty then). */
   callName(block: Block): string {
-    if (block.kind !== 'call') {
-      return '';
-    }
-    const target = block.target;
-    switch (target.kind) {
-      case 'local': {
-        const head = this.index().diagrams.get(target.diagram)?.head ?? null;
-        return head === null ? '' : headName(head);
-      }
-      case 'named':
-        return target.name;
-    }
+    return callName(this.index(), block);
   }
 
   /**
@@ -726,70 +692,12 @@ export class EditorSession {
    * field (the arguments, or the result when the Method receives nothing).
    */
   blockField(id: Id): EditField {
-    const block = this.index().blocks.get(id)?.block;
-    if (block?.kind !== 'call') {
-      return { kind: 'block', block: id };
-    }
-    return { kind: 'call', block: id, part: this.callParts(block)[0] ?? 'result' };
+    return this.text.blockField(id);
   }
 
   /** The text a field opens with, or why it cannot be edited. */
   fieldText(field: EditField): { readonly text: string } | { readonly reason: EditorMessage } {
-    const index = this.index();
-    switch (field.kind) {
-      case 'block': {
-        const block = index.blocks.get(field.block)?.block;
-        if (block === undefined) {
-          return { reason: 'reason.notFound' };
-        }
-        return block.kind === 'call' ? { reason: 'reason.unsupported' } : { text: block.text };
-      }
-      case 'branchLabel': {
-        const place = index.branches.get(field.branch);
-        if (place === undefined) {
-          return { reason: 'reason.notFound' };
-        }
-        if (place.isDefault) {
-          return { reason: 'reason.defaultLabelFixed' };
-        }
-        return { text: this.labelText(field.branch) };
-      }
-      case 'missingDefault':
-        return index.blocks.has(field.block) ? { text: '' } : { reason: 'reason.notFound' };
-      case 'head': {
-        const diagram = index.diagrams.get(field.diagram);
-        if (diagram === undefined) {
-          return { reason: 'reason.notFound' };
-        }
-        return diagram.head === null ? { reason: 'reason.noHead' } : { text: diagram.head.text };
-      }
-      case 'call': {
-        const block = index.blocks.get(field.block)?.block;
-        if (block === undefined) {
-          return { reason: 'reason.notFound' };
-        }
-        if (block.kind !== 'call') {
-          return { reason: 'reason.wrongKind' };
-        }
-        if (field.part === 'name') {
-          return block.target.kind === 'named'
-            ? { text: block.target.name }
-            : { reason: 'reason.wrongKind' };
-        }
-        return { text: field.part === 'args' ? block.args : block.result };
-      }
-      case 'fold': {
-        const isSite = index.siteFolds.has(field.fold);
-        if (!index.folds.has(field.fold) && !isSite) {
-          return { reason: 'reason.notFound' };
-        }
-        // A region of the Method seen in an opened call is the Method's (R-EDIT-16).
-        if (foldPath(field).length > 0 && !isSite) {
-          return { reason: 'reason.methodFoldHere' };
-        }
-        return { text: this.foldName(field.fold) };
-      }
-    }
+    return this.text.fieldText(field);
   }
 
   /** Opens the inline editor on a field. Returns `true`, or why it did not open. */
@@ -799,29 +707,7 @@ export class EditorSession {
     extracted?: Extracted,
     joinsLast = false,
   ): true | EditorMessage {
-    if (this.current.readOnly) {
-      return 'reason.readOnly';
-    }
-    const found = this.fieldText(field);
-    if ('reason' in found) {
-      return found.reason;
-    }
-    this.clearPending();
-    const call = field.kind === 'call' ? this.index().blocks.get(field.block)?.block : undefined;
-    this.setState({
-      ...this.current,
-      mode: 'normal',
-      editing: {
-        field,
-        initial: found.text,
-        text: caret === 'clear' ? '' : found.text,
-        caret: caret === 'clear' ? 'end' : caret,
-        ...(call?.kind === 'call' ? { call: callFields(call) } : {}),
-        ...(extracted === undefined ? {} : { extracted }),
-        ...(joinsLast ? { joinsLast: true } : {}),
-      },
-    });
-    return true;
+    return this.text.startEditing(field, caret, extracted, joinsLast);
   }
 
   /**
@@ -829,24 +715,7 @@ export class EditorSession {
    * "호출 블록"). Returns `false` when there is no other field (a Method receiving nothing).
    */
   switchCallPart(text: string): boolean {
-    const editing = this.current.editing;
-    if (editing?.field.kind !== 'call' || editing.call === undefined) {
-      return false;
-    }
-    const field = editing.field;
-    const block = this.index().blocks.get(field.block)?.block;
-    const parts = block === undefined ? [] : this.callParts(block);
-    const other = parts[(parts.indexOf(field.part) + 1) % parts.length];
-    if (other === undefined || other === field.part) {
-      return false;
-    }
-    const call = withPart(editing.call, field.part, text);
-    const next = partOf(call, other);
-    this.setState({
-      ...this.current,
-      editing: { field: { ...field, part: other }, initial: next, text: next, caret: 'end', call },
-    });
-    return true;
+    return this.text.switchCallPart(text);
   }
 
   /**
@@ -854,382 +723,32 @@ export class EditorSession {
    * when it opened runs nothing, so it leaves no undo step.
    */
   commitEditing(text: string): void {
-    this.time('command', () => {
-      this.commitText(text);
-    });
-  }
-
-  private commitText(text: string): void {
-    const editing = this.current.editing;
-    if (editing === null) {
-      return;
-    }
-    this.setState({ ...this.current, editing: null });
-    if (this.current.readOnly) {
-      return;
-    }
-    const field = editing.field;
-    if (field.kind === 'head' && editing.extracted !== undefined) {
-      this.nameExtracted(editing, field.diagram, editing.extracted, text);
-      return;
-    }
-    const keep = (): After => ({ selection: this.current.selection });
-    if (field.kind === 'call') {
-      // All fields in one command: one undo step. The same texts change nothing (UX MD2).
-      const call = withPart(editing.call ?? { args: '', result: '' }, field.part, text);
-      this.commit(editCall(this.current.doc.content, { block: field.block, ...call }), keep);
-      return;
-    }
-    if (text === editing.initial) {
-      return;
-    }
-    switch (field.kind) {
-      case 'block':
-        this.commit(editText(this.current.doc.content, { node: field.block, text }), keep);
-        return;
-      case 'branchLabel':
-        this.commit(editText(this.current.doc.content, { node: field.branch, text }), keep);
-        return;
-      case 'fold': {
-        // An empty name brings the default name back (UX Q4); the region keeps no name.
-        const result = editText(this.current.doc.content, { node: field.fold, text });
-        if (editing.joinsLast === true && result.ok) {
-          this.apply(result.content, keep(), true);
-          return;
-        }
-        this.commit(result, keep);
-        return;
-      }
-      case 'missingDefault': {
-        // Typing into the empty default cell makes the default branch: one undo step (UX CD1).
-        const content = this.current.doc.content;
-        const made = addDefaultBranch(content, { block: field.block, ids: this.ids() });
-        if (!made.ok) {
-          this.refuse(made.reason);
-          return;
-        }
-        const [, empty] = made.touched;
-        if (empty === undefined) {
-          return;
-        }
-        const written = editText(made.content, { node: empty, text });
-        this.commit(written, (ok) => ({ selection: selectBlock(indexDoc(ok.content), empty) }));
-        return;
-      }
-      case 'head': {
-        const result = editHead(this.current.doc.content, { diagram: field.diagram, text });
-        if (!result.ok && result.reason.code === 'duplicateHeadName') {
-          // A clashing name is not taken: the field opens again with it (interaction rules
-          // "Event 헤더"). An empty name puts the old one back, so the refusal alone does that.
-          this.refuse(result.reason);
-          this.setState({
-            ...this.current,
-            editing: { field, initial: editing.initial, text, caret: 'end', isRejected: true },
-          });
-          return;
-        }
-        this.commit(result, keep);
-        return;
-      }
-    }
-  }
-
-  /**
-   * The name typed for the Method an extract just made (UX XM2): it joins the extract's undo
-   * step, and the call block left in place is selected again. The default name stays when the
-   * text did not change; a clashing name opens the field again like any header name.
-   */
-  private nameExtracted(editing: Editing, diagram: Id, extracted: Extracted, text: string): void {
-    const content = this.current.doc.content;
-    const back = (now: Content): After => ({
-      selection: selectBlock(indexDoc(now), extracted.call),
-    });
-    if (text !== editing.initial) {
-      const result = editHead(content, { diagram, text });
-      if (!result.ok) {
-        this.refuse(result.reason);
-        if (result.reason.code === 'duplicateHeadName') {
-          this.setState({
-            ...this.current,
-            editing: { ...editing, text, caret: 'end', isRejected: true },
-          });
-          return;
-        }
-        // An empty name keeps the default name; the refusal says so.
-        this.select(back(content).selection);
-        return;
-      }
-      if (!this.apply(result.content, back(result.content), true)) {
-        return;
-      }
-    } else {
-      this.select(back(content).selection);
-    }
-    this.notifyExtracted(diagram, extracted);
-  }
-
-  /** "Extracted n blocks into the new Method name." */
-  private notifyExtracted(diagram: Id, extracted: Extracted): void {
-    const head = this.index().diagrams.get(diagram)?.head ?? null;
-    const name = head === null ? '' : headName(head);
-    this.notify(message('notice.extractedNamed', { count: extracted.count, name }));
+    this.text.commitEditing(text);
   }
 
   /** Closes the inline editor without running anything. */
   cancelEditing(): void {
-    const editing = this.current.editing;
-    if (editing === null) {
-      return;
-    }
-    this.setState({ ...this.current, editing: null });
-    if (editing.field.kind === 'head' && editing.extracted !== undefined) {
-      // Esc on a refused name keeps the name the Method has, and goes back (UX XM2).
-      this.select(selectBlock(this.index(), editing.extracted.call));
-      this.notifyExtracted(editing.field.diagram, editing.extracted);
-    }
+    this.text.cancelEditing();
   }
 
-  // Keys (03-editor 4).
+  // Keys (03-editor 4), in `key-reader.ts`.
 
   /**
    * Reads one key of the diagram area (not of the inline editor or an input box). Returns
    * whether the key was used, so the caller can stop the browser's own action.
    */
   handleKey(stroke: string): boolean {
-    if (this.current.editing !== null) {
-      return false;
-    }
-    if (this.questionValue !== null && this.answerQuestion(stroke)) {
-      return true;
-    }
-    if (stroke === 'Escape') {
-      this.escape();
-      return true;
-    }
-    this.isEscArmed = false;
-    if (this.current.mode === 'visual') {
-      const used = this.visualKey(stroke);
-      if (used !== null) {
-        return used;
-      }
-    }
-    const selection = this.current.selection;
-    const outcome = readKey(this.options.keyBindings, this.current.pendingKeys, stroke, {
-      mode: 'normal',
-      selection: selection === null ? null : selection.kind,
-    });
-    return this.follow(outcome);
-  }
-
-  private follow(outcome: ReturnType<typeof readKey>): boolean {
-    switch (outcome.kind) {
-      case 'pending':
-        this.setPending(outcome.first);
-        return true;
-      case 'command':
-        this.clearPending();
-        this.clearNotice();
-        this.runCommand(outcome.binding.command, outcome.binding.args);
-        return true;
-      case 'cancelled':
-        this.clearPending();
-        this.notify(
-          outcome.isEscape
-            ? 'notice.keyCancelled'
-            : message('notice.unknownKey', { keys: outcome.keys }),
-        );
-        return true;
-      case 'unbound': {
-        // A lone character is a Vim key the table lacks: say so. Other keys go to the browser.
-        const isCharacter = outcome.keys.length === 1;
-        if (isCharacter) {
-          this.notify(message('notice.unknownKey', { keys: outcome.keys }));
-        }
-        return isCharacter;
-      }
-    }
-  }
-
-  /** A key while selecting a range. `null`: not a range key, read it as a normal key. */
-  private visualKey(stroke: string): boolean | null {
-    if (this.current.pendingKeys === null && (stroke === 'v' || stroke === 'V')) {
-      this.leaveVisual();
-      return true;
-    }
-    const selection = this.current.selection;
-    const outcome = readKey(this.options.keyBindings, this.current.pendingKeys, stroke, {
-      mode: 'visual',
-      selection: selection === null ? null : selection.kind,
-    });
-    if (outcome.kind === 'unbound') {
-      this.setMode('normal');
-      return null;
-    }
-    if (outcome.kind === 'command' && !outcome.binding.command.startsWith('select.extend')) {
-      this.setMode('normal');
-    }
-    return this.follow(outcome);
-  }
-
-  private leaveVisual(): void {
-    const selection = this.current.selection;
-    this.setState({
-      ...this.current,
-      mode: 'normal',
-      selection:
-        selection?.kind === 'blocks' || selection?.kind === 'peek'
-          ? { ...selection, anchor: selection.focus }
-          : selection,
-    });
-  }
-
-  private escape(): void {
-    if (this.current.pendingKeys !== null) {
-      this.clearPending();
-      this.notify('notice.keyCancelled');
-      return;
-    }
-    if (this.current.mode === 'visual') {
-      this.leaveVisual();
-      return;
-    }
-    if (this.current.selection === null) {
-      return;
-    }
-    // Esc twice in a row clears the selection; once only tells how (interaction rules 2).
-    if (this.isEscArmed) {
-      this.isEscArmed = false;
-      this.select(null);
-      this.notify('notice.selectionCleared');
-    } else {
-      this.isEscArmed = true;
-      this.notify('notice.escAgain');
-    }
-  }
-
-  private answerQuestion(stroke: string): boolean {
-    const question = this.questionValue;
-    if (question === null) {
-      return false;
-    }
-    if (stroke === 'Enter') {
-      question.choices.find((choice) => choice.isDefault === true)?.choose();
-      return true;
-    }
-    if (stroke === 'Escape') {
-      question.dismiss();
-      return true;
-    }
-    const digit = /^[1-9]$/.test(stroke) ? Number(stroke) : null;
-    const chosen = digit === null ? undefined : question.choices[digit - 1];
-    if (chosen !== undefined) {
-      chosen.choose();
-      return true;
-    }
-    question.dismiss();
-    return false;
-  }
-
-  private setPending(first: string): void {
-    this.clearHintTimer();
-    this.isHintShown = false;
-    this.setState({ ...this.current, pendingKeys: first });
-    if (this.options.isKeyHintEnabled()) {
-      this.hintTimer = this.options.timers.set(() => {
-        this.hintTimer = null;
-        if (this.current.pendingKeys === first) {
-          this.isHintShown = true;
-          this.touch();
-        }
-      }, keyHintDelay);
-    }
+    return this.keys.handleKey(stroke);
   }
 
   /** Drops a waiting first key. */
   clearPending(): void {
-    this.clearHintTimer();
-    this.isHintShown = false;
-    if (this.current.pendingKeys !== null) {
-      this.current = { ...this.current, pendingKeys: null };
-      this.touch();
-    }
-  }
-
-  private clearHintTimer(): void {
-    if (this.hintTimer !== null) {
-      this.options.timers.clear(this.hintTimer);
-      this.hintTimer = null;
-    }
+    this.keys.clearPending();
   }
 
   /** Stops the timers. */
   dispose(): void {
-    this.clearHintTimer();
+    this.keys.clearHintTimer();
     this.listeners.clear();
-  }
-}
-
-/** What the fields of a call block hold when the inline editor opens. */
-function callFields(call: Extract<Block, { kind: 'call' }>): {
-  readonly args: string;
-  readonly result: string;
-  readonly name?: string;
-} {
-  return call.target.kind === 'named'
-    ? { args: call.args, result: call.result, name: call.target.name }
-    : { args: call.args, result: call.result };
-}
-
-type CallTexts = { readonly args: string; readonly result: string; readonly name?: string };
-
-/** The fields with one of them set to `text`. */
-function withPart(call: CallTexts, part: CallPart, text: string): CallTexts {
-  switch (part) {
-    case 'args':
-      return { ...call, args: text };
-    case 'result':
-      return { ...call, result: text };
-    case 'name':
-      return { ...call, name: text };
-  }
-}
-
-/** One field of the fields. */
-function partOf(call: CallTexts, part: CallPart): string {
-  switch (part) {
-    case 'args':
-      return call.args;
-    case 'result':
-      return call.result;
-    case 'name':
-      return call.name ?? '';
-  }
-}
-
-/** The title of a key hint group: the first key of a sequence (03-keymap). */
-export function keyHintTitle(first: string): EditorMessage | null {
-  switch (first) {
-    case 'a':
-      return 'keyHint.a';
-    case 'A':
-      return 'keyHint.A';
-    case 's':
-      return 'keyHint.s';
-    case 'c':
-      return 'keyHint.c';
-    case 'd':
-      return 'keyHint.d';
-    case 'y':
-      return 'keyHint.y';
-    case 'g':
-      return 'keyHint.g';
-    case '[':
-      return 'keyHint.[';
-    case ']':
-      return 'keyHint.]';
-    case 'z':
-      return 'keyHint.z';
-    default:
-      return null;
   }
 }
