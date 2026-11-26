@@ -34,7 +34,7 @@ node scripts/nsd.mjs read  'https://ariadnensd.com/#ns1.d.…'   # print the mod
 1. Write the model JSON (below). Text in blocks may be in the user's language or code; set `settings.locale` to `ko` when the user writes Korean, else `en`.
 2. Write it to a file and run `check`. Fix until `OK`.
 3. Run `save` (the `.ns.svg` file) and `link`.
-4. Give the user the file, and the link as a markdown link and again as plain text in a code block (some chat apps rewrite links). Say in one or two sentences: the link opens in view mode and Edit makes it editable; File › Copy Share Link in the app makes a new link to keep, share or paste back to you; File › Save keeps it as a file.
+4. Give the user the file, and the link once, as a markdown link. Do not repeat it as plain text or in a code block: a terminal wraps a long plain link and opens only part of it, while the markdown link stays whole. Say in one or two sentences: the link opens in view mode and Edit makes it editable; File › Copy Share Link in the app makes a new link to keep, share or paste back to you; File › Save keeps it as a file.
 5. Keep your explanation of the algorithm next to it, short: the diagram is the explanation.
 
 ## B. Draw code as a diagram (Claude Code)
