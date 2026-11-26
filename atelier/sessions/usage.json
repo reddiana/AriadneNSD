@@ -190,13 +190,13 @@
       "output": 152733
     },
     "2026-11-27": {
-      "sessions": 1,
-      "minutes": 14,
-      "requests": 39,
-      "input": 86,
-      "cacheWrite": 138198,
-      "cacheRead": 6466502,
-      "output": 22919
+      "sessions": 3,
+      "minutes": 61,
+      "requests": 159,
+      "input": 349,
+      "cacheWrite": 444961,
+      "cacheRead": 22159138,
+      "output": 94961
     }
   }
 }

@@ -1,4 +1,4 @@
-// A dropdown menu: the menu bar's menus, submenus (▸), the toolbar's "감싸기 ▾" · "확대 ▾" and
+// A dropdown menu: the menu bar's menus, submenus (▸), the toolbar's "감싸기 ▾" and
 // the narrow screen's ☰. Items that do not apply are dimmed but still run, so the registry can
 // tell why in the status bar (03-editor 3: "막지 않고 알린다").
 
