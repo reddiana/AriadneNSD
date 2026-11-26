@@ -66,6 +66,10 @@ export class CanvasView {
     selection: undefined,
   };
   private frame: number | null = null;
+  /** The theme setting `applyTheme` last applied. */
+  private appliedTheme: string | null = null;
+  /** The overlay's markup now: an unchanged overlay is not parsed again (hover, drag). */
+  private overlayMarkup: string | null = null;
   private hover: Id | null = null;
   private editColors: EditColors = editColorsFor('light');
 
@@ -174,10 +178,15 @@ export class CanvasView {
 
   /**
    * The inline editor and the edit layer follow the document's theme: they are drawn on the
-   * paper (visual design 3.4, UX TM4). Set whenever the drawing changes.
+   * paper (visual design 3.4, UX TM4). Set whenever the drawing changes to another theme.
    */
   private applyTheme(): void {
-    const theme = themeFor(this.session.state.doc.content.settings.theme);
+    const setting = this.session.state.doc.content.settings.theme;
+    if (setting === this.appliedTheme) {
+      return;
+    }
+    this.appliedTheme = setting;
+    const theme = themeFor(setting);
     this.editColors = editColorsFor(theme.kind);
     const style = this.canvas.style;
     style.setProperty('--ans-edit-field', this.editColors['edit.field']);
@@ -266,7 +275,7 @@ export class CanvasView {
       this.drawn = { ...this.drawn, scale };
     }
     const drag = this.drag.current;
-    this.overlay.innerHTML = overlayContent({
+    const overlayMarkup = overlayContent({
       layout: state.layout,
       index: this.session.index(),
       selection: state.selection,
@@ -277,6 +286,10 @@ export class CanvasView {
       paper: svg.paper,
       edit: this.editColors,
     });
+    if (overlayMarkup !== this.overlayMarkup) {
+      this.overlay.innerHTML = overlayMarkup;
+      this.overlayMarkup = overlayMarkup;
+    }
     this.canvas.classList.toggle('ans-has-selection', state.selection !== null);
     this.canvas.classList.toggle('ans-focus-kept', this.options.isFocusOutlineKept());
     this.inlineEditor.sync(state.editing);

@@ -45,24 +45,53 @@ export function isAxisAlignedPath(data: string): boolean {
  * earlier one, so the drawing can be snapped again at another scale.
  */
 export function snapCrispStrokes(root: ParentNode, scale: number): void {
+  snapCrispElements(root.querySelectorAll<SVGElement>(crispSelector), scale);
+}
+
+const crispSelector = '[shape-rendering="crispEdges"], path[fill="none"]';
+
+/**
+ * `snapCrispStrokes` for some elements only: the ones the document layer has just added or
+ * changed (the others keep their snapped width while the scale stays).
+ */
+export function snapCrispElements(elements: Iterable<Element>, scale: number): void {
   if (!(Number.isFinite(scale) && scale > 0)) {
     return;
   }
-  const shapes = [
-    ...root.querySelectorAll<SVGElement>('[shape-rendering="crispEdges"]'),
-    ...[...root.querySelectorAll<SVGElement>('path[fill="none"]')].filter((path) =>
-      isAxisAlignedPath(path.getAttribute('d') ?? ''),
-    ),
-  ];
-  for (const shape of shapes) {
-    const width = Number(shape.getAttribute('stroke-width'));
-    if (!(width > 0)) {
-      continue;
+  for (const element of elements) {
+    if (element instanceof SVGElement) {
+      snapCrispStroke(element, scale);
     }
-    if (!shape.hasAttribute('shape-rendering')) {
-      shape.style.shapeRendering = 'crispEdges';
-    }
-    const snapped = crispStrokeWidth(width, scale);
-    shape.style.strokeWidth = snapped === width ? '' : `${String(snapped)}px`;
+  }
+}
+
+/**
+ * Snaps one shape. It writes only what differs, so an element that only moved keeps its style as
+ * it is; a shape that is no longer a crisp line loses the width it had.
+ */
+function snapCrispStroke(shape: SVGElement, scale: number): void {
+  const isCrisp = shape.getAttribute('shape-rendering') === 'crispEdges';
+  const width = Number(shape.getAttribute('stroke-width'));
+  const isSnapped =
+    width > 0 &&
+    (isCrisp ||
+      (shape.localName === 'path' &&
+        shape.getAttribute('fill') === 'none' &&
+        isAxisAlignedPath(shape.getAttribute('d') ?? '')));
+  if (!isSnapped) {
+    shape.removeAttribute('style');
+    return;
+  }
+  const style = shape.style;
+  if (!isCrisp && style.getPropertyValue('shape-rendering') === '') {
+    style.shapeRendering = 'crispEdges';
+  }
+  const snapped = crispStrokeWidth(width, scale);
+  const value = snapped === width ? '' : `${String(snapped)}px`;
+  if (style.strokeWidth !== value) {
+    style.strokeWidth = value;
+  }
+  if (shape.getAttribute('style') === '') {
+    shape.removeAttribute('style');
   }
 }
