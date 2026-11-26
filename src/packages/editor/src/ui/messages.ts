@@ -60,10 +60,14 @@ const en = {
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
-    '0.4.0 adds the AriadneNSD skill for Claude.\n' +
-    '- Claude can draw a diagram, turn code into one, and read or edit a .ns.svg file, giving back a file or a share link\n' +
-    '- In Claude Code, install it from the plugin marketplace; in claude.ai, upload ariadne-nsd.zip from the GitHub release\n' +
-    "- The manual's AI section tells how",
+    '0.5.0 makes everyday editing quicker.\n' +
+    '- Zoom out, 100% and zoom in are buttons on the toolbar; click the number for 100%, or use the wheel over them\n' +
+    '- Drop blocks at the very start or end of a diagram, on the band under the header or under the diagram\n' +
+    '- Menu items you cannot use now are fainter and say why when you point at them\n' +
+    '- Editing a large diagram is faster: only the blocks that change are redrawn\n' +
+    '- Lines are no longer thicker at zoom levels like 110%\n' +
+    '- Help › Algorithm gallery opens 22 algorithms drawn as NS diagrams\n' +
+    '- The Claude skill installs in claude.ai from the plugin marketplace too',
   'modal.close': 'Close',
   'contextMenu.label': 'Context menu',
   'dialog.label': 'Question',
@@ -190,10 +194,14 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':
-    '0.4.0은 Claude용 AriadneNSD 스킬을 더했습니다.\n' +
-    '- Claude가 다이어그램을 그리고, 코드를 다이어그램으로 옮기고, .ns.svg 파일을 읽고 고쳐 파일이나 공유 링크로 돌려줌\n' +
-    '- Claude Code는 플러그인 마켓플레이스에서 설치, claude.ai는 GitHub Release의 ariadne-nsd.zip을 올림\n' +
-    '- 자세한 것은 사용법의 AI 꼭지',
+    '0.5.0은 늘 하는 편집을 더 빠르게 했습니다.\n' +
+    '- 툴바의 축소 · 100% · 확대를 바로 누르는 버튼으로. 숫자를 누르면 100%, 그 위에서 휠로 배율\n' +
+    '- 다이어그램의 맨 앞 · 맨 끝(헤더 아래 띠 · 다이어그램 아래 띠)에 블록을 놓을 수 있음\n' +
+    '- 지금 쓸 수 없는 메뉴 항목은 더 흐리고, 가리키면 까닭을 보임\n' +
+    '- 큰 다이어그램의 편집이 빨라짐: 바뀐 블록만 다시 그림\n' +
+    '- 110% 같은 배율에서 선이 굵어지던 것을 고침\n' +
+    '- 도움말 › 알고리즘 갤러리: NS 차트로 그린 알고리즘 22개\n' +
+    '- Claude 스킬을 claude.ai에서도 플러그인 마켓플레이스로 설치',
   'modal.close': '닫기',
   'contextMenu.label': '컨텍스트 메뉴',
   'dialog.label': '질문',

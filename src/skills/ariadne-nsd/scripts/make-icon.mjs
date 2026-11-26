@@ -16,7 +16,9 @@ if (!sharpHome) {
 }
 const sharp = createRequire(path.join(path.resolve(sharpHome), 'package.json'))('sharp');
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
-const svg = fs.readFileSync(path.join(repo, 'journal/assets/2026-10-10-logo-aegean-lady-rounded.svg'));
+const svg = fs.readFileSync(
+  path.join(repo, 'journal/assets/2026-10-10-logo-aegean-lady-rounded.svg'),
+);
 const out = path.join(repo, 'src/skills/ariadne-nsd/plugin/.claude-plugin/icon.png');
 await sharp(svg, { density: 300 }).resize(1024, 1024).png({ compressionLevel: 9 }).toFile(out);
 console.log('만듦:', out);

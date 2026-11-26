@@ -26,7 +26,7 @@ updated: 2026-11-27
 
 **웹 베타 0.3.0을 냈습니다(2026-11-21).** 베타 동안 웹의 `P1`을 다듬고 Obsidian 베타(BRAT)를 시작합니다. 그다음 웹 1.0 → [[backlog#웹 1.0의 문턱]], [[dr-0018-release-stages|DR-0018]]
 
-- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)(Pre-release, 웹 베타, Claude skill의 zip 포함). 1.0 전에는 파일 형식이 바뀔 수 있음
+- 앱 https://ariadnensd.com/ (사용법 `/manual/`, 소개 `/about`), 판 [v0.5.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.5.0)(Pre-release, 웹 베타, Claude skill의 zip 포함). 1.0 전에는 파일 형식이 바뀔 수 있음
 - 코드 `src/` → `src/README.md`, 규칙 [[07-coding-guide]], 문서 지도 [[docs/README#문서 지도|문서 색인]]
 - 테스트: 단위 · 통합 1,685개, E2E 83개(2026-11-19), 커버리지 → [[coverage]], 결함 → [[defects]]
 
