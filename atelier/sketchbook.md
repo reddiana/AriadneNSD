@@ -90,6 +90,7 @@ updated: 2026-10-25
 | M73 | 사용법의 힙 정렬 동영상 (2026-11-22) | LinkedIn에 올린 힙 정렬 동영상(키보드)과 같은 장면의 마우스판을 사용법에 싣는 자리(V1), 재생 방식(V2), 언어(V3) | https://claude.ai/artifact/8zz38aYBffrbAgeTcc8g5P | `journal/assets/2026-11-22-manual-video-study.html` |
 | M74 | 흐린 메뉴와 정보 창의 로고 (2026-11-26) | 쓸 수 없는 메뉴 항목이 흐리다는 것이 한눈에 보이게(D1~D3: 더 옅은 글자색, 흐린 항목의 hover 배경, 까닭 툴팁, 고대비 기준), 도움말 › "AriadneNSD에 대하여" 창의 로고 자리(A1~A3). 라이트 · 다크 나란히 | https://claude.ai/artifact/JHosVr1MGzmc8ZkYfSegUU | `journal/assets/2026-11-26-disabled-and-about-study.html` |
 | M75 | 맨 처음 · 맨 끝에 놓기 (2026-11-26) | 드래그 앤 드롭으로 다이어그램 본문 맨 앞 · 맨 끝에 놓는 자리: P1 지금, P2 헤더 아래 띠 · 다이어그램 아래 띠, P3 최상위 블록의 띠가 이김. 세 판을 직접 끌어 봄 | https://claude.ai/artifact/XuFz5j9p9QRP3NWpzbZLW7 | `journal/assets/2026-11-26-drop-at-ends-study.html` |
+| M76 | 확대 · 축소 버튼 (2026-11-27) | 툴바의 "확대 ▾" 드롭다운 대신 바로 누르는 버튼: Z1 [−] 100% [+](숫자는 100%로), Z2 [−] [100% ▾] [+], Z3 [−] [+]만(숫자는 상태 표시줄) | https://claude.ai/artifact/Fz3ttWwSbTiwsjshA18ubn | `journal/assets/2026-11-27-zoom-buttons-study.html` |
 
 - **시안과 스파이크 페이지는 CC BY 4.0입니다**(프로토타입은 Apache-2.0). 페이지마다 맨 아래에 안내가 있습니다 → [[dr-0010-study-pages-cc-by|DR-0010]]. 안내는 `journal/assets/2026-10-14-add-license-note.py`로 넣습니다. 새 시안을 만들면 이 스크립트를 한 번 돌립니다. claude.ai의 열두 페이지도 2026-10-14에 안내가 든 판으로 다시 올렸습니다.
 - **방문자에게는 claude.ai의 공개 링크로 보여 줍니다**(2026-10-14, 메인테이너: ""나"로 합시다"). 페이지마다 메인테이너가 Share 메뉴에서 "링크를 가진 누구나"로 바꿉니다. Claude는 공유 설정을 바꿀 수 없습니다. 견준 다른 길은 GitHub Pages였습니다.

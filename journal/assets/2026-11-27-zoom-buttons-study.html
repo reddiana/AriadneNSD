@@ -1,0 +1,121 @@
+<title>M76 확대 · 축소 버튼</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 툴바 오른쪽 끝을 크게 잘라 보여 주는 카드 세 장 + 지금 모습 */
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --fg: #1f2430; --muted: #5f6676; --line: #d9dde4;
+  --hover: #eef1f6; --accent: #2f6fdb; --dim: #9aa1ad; --tag: #1f2430; --tagfg: #fff;
+  --font: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #181b21; --panel: #22262e; --fg: #e4e7ec; --muted: #9aa1ad; --line: #3a404b;
+  --hover: #2d323c; --accent: #6f9ef0; --dim: #5f6676; --tag: #e4e7ec; --tagfg: #181b21; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #181b21; --panel: #22262e; --fg: #e4e7ec; --muted: #9aa1ad; --line: #3a404b;
+  --hover: #2d323c; --accent: #6f9ef0; --dim: #5f6676; --tag: #e4e7ec; --tagfg: #181b21; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; }
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 20px; }
+h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+p { margin: 0; max-width: 65ch; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 10px; }
+.card.rec { border-color: var(--accent); border-width: 2px; }
+.head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tag { background: var(--tag); color: var(--tagfg); font-weight: 700; border-radius: 4px; padding: 0 8px; font-size: .9rem; }
+.star { color: var(--accent); font-weight: 700; }
+.bar { display: flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; background: var(--panel); width: max-content; max-width: 100%; flex-wrap: wrap; }
+.tool { display: inline-flex; align-items: center; gap: 4px; height: 30px; min-width: 30px; justify-content: center; padding: 0 6px; border: 0; background: none; color: var(--fg); border-radius: 4px; font: inherit; font-size: .9rem; cursor: pointer; font-variant-numeric: tabular-nums; }
+.tool:hover { background: var(--hover); }
+.tool:focus-visible { outline: 2px solid var(--accent); }
+.tool[aria-disabled="true"] { color: var(--dim); cursor: default; }
+.tool[aria-disabled="true"]:hover { background: none; }
+.sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+.ghost { color: var(--muted); }
+svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+ul { margin: 0; padding-left: 1.2em; }
+.menu { border: 1px solid var(--line); border-radius: 6px; background: var(--panel); width: max-content; padding: 4px 0; font-size: .9rem; }
+.menu div { padding: 2px 14px; display: flex; gap: 24px; justify-content: space-between; }
+.menu kbd { color: var(--muted); font-family: inherit; }
+.note { color: var(--muted); font-size: .9rem; }
+</style>
+
+<main>
+  <h1>M76 확대 · 축소 버튼</h1>
+  <p>툴바의 "확대 ▾"는 누르면 확대 · 축소 · 100% 세 줄이 나와서 한 번 바꾸는 데 두 번 누릅니다. 선택지마다 툴바 오른쪽 끝(감싸기 다음)만 그렸습니다. 버튼은 눌러 볼 수 있습니다.</p>
+
+  <section class="card">
+    <div class="head"><span class="tag">지금</span><b>확대 ▾ → 목록에서 고름</b></div>
+    <div class="bar">
+      <span class="tool ghost">감싸기 ▾</span><span class="sep"></span>
+      <span class="tool"><svg viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>100%</span> ▾</span>
+      <span class="tool ghost">예제</span>
+    </div>
+    <div class="menu"><div>확대<kbd>+</kbd></div><div>축소<kbd>-</kbd></div><div>100%<kbd>0</kbd></div></div>
+  </section>
+
+  <section class="card rec">
+    <div class="head"><span class="tag">Z1</span><b>[−] 100% [+] — 가운데 숫자를 누르면 100%로</b><span class="star">★ 추천</span></div>
+    <div class="bar" data-zoom>
+      <span class="tool ghost">감싸기 ▾</span><span class="sep"></span>
+      <button class="tool" data-d="-1" title="축소 (-)"><svg viewBox="0 0 20 20"><path d="M5 10h10"/></svg></button>
+      <button class="tool" data-d="0" title="100%로 (0)"><span data-v>100%</span></button>
+      <button class="tool" data-d="1" title="확대 (+)"><svg viewBox="0 0 20 20"><path d="M5 10h10M10 5v10"/></svg></button>
+      <span class="tool ghost">예제</span>
+    </div>
+    <ul>
+      <li>한 번 눌러 바로 바뀝니다. 드롭다운은 없어집니다(남는 항목이 "100%" 하나뿐이라 숫자 버튼이 대신함).</li>
+      <li>끝 배율에 닿으면 그쪽 버튼이 흐려지고, 누르면 까닭("더 바꿀 수 없는 배율입니다.")을 알립니다(D3와 같게).</li>
+      <li>Google Docs · draw.io · Figma 같은 편집기가 흔히 쓰는 모양.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="head"><span class="tag">Z2</span><b>[−] [100% ▾] [+] — 가운데는 드롭다운 그대로</b></div>
+    <div class="bar" data-zoom>
+      <span class="tool ghost">감싸기 ▾</span><span class="sep"></span>
+      <button class="tool" data-d="-1" title="축소 (-)"><svg viewBox="0 0 20 20"><path d="M5 10h10"/></svg></button>
+      <button class="tool" data-d="0" title="확대 · 축소 목록"><span data-v>100%</span> ▾</button>
+      <button class="tool" data-d="1" title="확대 (+)"><svg viewBox="0 0 20 20"><path d="M5 10h10M10 5v10"/></svg></button>
+      <span class="tool ghost">예제</span>
+    </div>
+    <ul>
+      <li>가운데 목록에 나중에 "화면에 맞추기" · 50% · 200% 같은 항목을 더할 자리가 남습니다.</li>
+      <li>지금은 목록이 같은 명령의 되풀이라 버튼이 하나 더 많아 보일 뿐입니다.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="head"><span class="tag">Z3</span><b>[−] [+]만, 배율 숫자는 상태 표시줄에</b></div>
+    <div class="bar" data-zoom>
+      <span class="tool ghost">감싸기 ▾</span><span class="sep"></span>
+      <button class="tool" data-d="-1" title="축소 (-)"><svg viewBox="0 0 20 20"><path d="M5 10h10"/></svg></button>
+      <button class="tool" data-d="1" title="확대 (+)"><svg viewBox="0 0 20 20"><path d="M5 10h10M10 5v10"/></svg></button>
+      <span class="tool ghost">예제</span>
+    </div>
+    <p class="note">상태 표시줄: … · <span data-v>100%</span></p>
+    <ul>
+      <li>툴바가 가장 좁습니다. 100%로 되돌리기는 키(0) · 보기 메뉴 · 상태 표시줄 숫자 누르기.</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+const steps = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+document.querySelectorAll('[data-zoom]').forEach((bar) => {
+  const card = bar.closest('.card');
+  let i = 5;
+  const show = () => {
+    card.querySelectorAll('[data-v]').forEach((v) => { v.textContent = Math.round(steps[i] * 100) + '%'; });
+    bar.querySelector('[data-d="-1"]').setAttribute('aria-disabled', String(i === 0));
+    bar.querySelector('[data-d="1"]').setAttribute('aria-disabled', String(i === steps.length - 1));
+  };
+  bar.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-d]');
+    if (!b) return;
+    const d = Number(b.dataset.d);
+    if (d === 0) i = 5; else i = Math.min(steps.length - 1, Math.max(0, i + d));
+    show();
+  });
+  show();
+});
+</script>
