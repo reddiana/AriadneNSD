@@ -140,7 +140,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 ## Claude skill
 
 - [ ] 다음 판(0.5.0)으로 "문장마다 블록"(`3d59f98`)을 설치한 사람에게 보내기
-- [ ] Anthropic Directory에 제출: 0.5.0을 낸 뒤 claude.ai/directory/manage › 새로 제출 › Plugin bundle. 준비한 것(아이콘 M78 · 표시 이름 · README, `claude plugin validate --strict --profile directory` 통과)과 기준은 [[2026-11-27-04-skill-directory]]. 제출 전에 지원 연락처를 정함 → [[outbox#정해 주세요]]
+- [ ] Anthropic Directory에 제출: 0.5.0을 낸 뒤 claude.ai/directory/manage › 새로 제출 › Plugin bundle. 준비한 것(아이콘 M78 · 표시 이름 · README, `claude plugin validate --strict --profile directory` 통과)과 기준은 [[2026-11-27-04-skill-directory]]. 지원 연락처는 GitHub Issues만(2026-11-27, 메인테이너)
 - [ ] claude.ai의 "플러그인 업로드"가 Release의 zip(스킬 폴더만 든 것)을 받는지 시험. 받지 않으면 zip을 플러그인 모양으로 바꿀지, 없앨지
 - [ ] 사용법 AI 꼭지에 데스크톱 앱의 `/plugin` 창 안내 한 줄
 - [ ] 다음 판 후보: core의 편집 명령(`extractMethod` · `inlineCall` 등)을 `nsd.mjs`의 명령으로 내놓을지. 지금은 Claude가 JSON을 직접 고침

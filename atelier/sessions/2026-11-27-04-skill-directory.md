@@ -20,6 +20,7 @@ tags:
 - 플러그인 아이콘은 로고 큰 판(M78 I1) → [[dr-0006-logo|DR-0006]]의 이후 변경
 - 표시 이름 `AriadneNSD`, 영어 README, claude.ai도 마켓플레이스로 설치 → [[07-claude-skill#7. 배포]], [[0050-claude-skill-bundle-and-distribution|ADR-0050]]의 이후 변경
 - 공유 링크는 마크다운 링크 한 번만 → [[ux-decisions]] SK2
+- (매듭 뒤) Directory의 지원 연락처는 GitHub Issues만. 메인테이너: "GitHub Issues만으로 충분해요"
 
 ## 발견한 위험
 
@@ -30,7 +31,7 @@ tags:
 
 ## 다음 할 것
 
-- 0.5.0(문장마다 블록, 아이콘, README, 표시 이름, 링크 한 번만)을 마무리 때 → claude.ai에 "AriadneNSD"로 보이는지 → Directory 제출. 지원 연락처는 [[outbox]]
+- 0.5.0(문장마다 블록, 아이콘, README, 표시 이름, 링크 한 번만)을 마무리 때 → claude.ai에 "AriadneNSD"로 보이는지 → Directory 제출.
 - "플러그인 업로드"가 zip을 받는지 → [[backlog#Claude skill]]
 
 ## inbox
