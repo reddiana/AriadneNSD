@@ -7,7 +7,7 @@ tags:
   - requirements
   - architecture
 status: 초안
-updated: 2026-11-19
+updated: 2026-11-27
 ---
 
 # 품질 속성 시나리오
@@ -188,11 +188,12 @@ QA-03이 실행 환경 사이의 동일성이라면, 이 시나리오는 열기�
 | 레이아웃 | C-07 · C-08 | `renderDoc`의 `layout` (글자 폭 포함) | 12ms | [[99-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[99-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
 | 그림 | C-09 | `renderDoc`의 `buildScene` + `toSvg` | 14ms | [[99-test-list#^t-packages-core-src-render-render-doc-test-ts\|T-1176]], [[99-test-list#^t-packages-core-src-render-render-bench-ts\|T-0517]] |
 | 알림 | C-06 · C-11 | `EditorSession.setState`가 호출하는 리스너(셸에 알림, 인라인 에디터, 다음 프레임 예약) | 10ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
-| DOM 반영 | C-10 | 첫 프레임의 `CanvasView.draw`: 문서 레이어의 `innerHTML`, 오버레이, 선택 상자 | 20ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
+| DOM 반영 | C-10 | 첫 프레임의 `CanvasView.draw`: 문서 레이어 반영(`DocumentLayer`), 오버레이, 선택 상자 | 20ms | [[99-test-list#^t-packages-editor-src-create-editor-test-ts\|T-1175]] |
 | 브라우저 | (우리 코드 밖) | 그 뒤 두 번째 프레임까지: 스타일 · 레이아웃 · 페인트와 화면 주사율의 기다림. 그 시간에서 측정한 구간을 뺀 나머지 | 30ms | [[99-test-list#^t-apps-web-src-perf-perf-segments-test-ts\|T-1178]] |
 
 - 예산의 근거: `core`의 구간(편집 명령 ~ 그림)은 측정값에 여유를 두고 38ms, 화면 쪽(알림 · DOM 반영 · 브라우저)에 60ms를 둔다. 브라우저 구간은 60Hz 화면의 한 프레임(17ms)을 기다리는 시간을 품어야 해서 가장 크다. 레이아웃 12 · 그림 14ms는 Node의 벤치마크 한도(각 p99 20ms, T-0517)보다 좁다. 브라우저에서 기준 기기의 값이기 때문이다.
-- **측정값 (2026-11-17, 개발 기계의 Chromium, 명령마다 30번):** 감속 없이는 모든 명령이 p95 34 ~ 35ms로 합격이고, `core`의 구간을 다 더해도 4ms 아래다. CPU 4배 감속(기준 기기 대신)에서는 8가지 모두 불합격(p95 173 ~ 267ms)이다. `core`의 구간은 각 15ms 아래로 예산 안이고, 시간은 DOM 반영(27 ~ 136ms)과 브라우저(53 ~ 199ms)가 차지한다. 문서 레이어를 전체 교체하고 브라우저가 블록 500개의 SVG를 다시 레이아웃 · 페인트하는 시간이다. 그래서 증분 레이아웃보다 화면 쪽(바뀐 곳만 DOM에 반영하기)이 고칠 곳이다 → [[backlog#MVP 개발]]
+- **측정값 (2026-11-17, 개발 기계의 Chromium, 명령마다 30번):** 감속 없이는 모든 명령이 p95 34 ~ 35ms로 합격이고, `core`의 구간을 다 더해도 4ms 아래다. CPU 4배 감속(기준 기기 대신)에서는 8가지 모두 불합격(p95 173 ~ 267ms)이다. `core`의 구간은 각 15ms 아래로 예산 안이고, 시간은 DOM 반영(27 ~ 136ms)과 브라우저(53 ~ 199ms)가 차지한다. 문서 레이어를 전체 교체하고 브라우저가 블록 500개의 SVG를 다시 레이아웃 · 페인트하는 시간이다. 그래서 증분 레이아웃보다 화면 쪽(바뀐 곳만 DOM에 반영하기)이 고칠 곳이다.
+- **측정값 (2026-11-27, 바뀐 요소만 반영한 뒤, 같은 조건 3회):** 아래로 옮기기(p95 52 ~ 60ms)와 글자 확정(50 ~ 87ms)이 합격이다. 넣기 · 지우기 · 실행 취소 · 다시 실행 · 감싸기 · 붙여넣기는 p95 119 ~ 314ms(중앙값 88 ~ 111ms)로 불합격이다. 남는 시간은 문서의 높이가 바뀌거나 밀린 블록의 좌표를 고칠 때 브라우저가 글자를 다시 배치하는 것이다. 개발 기계의 다른 앱에 따라 값이 2배까지 흔들리므로 기준 기기에서 다시 잰다 → [[backlog#리팩토링]]
 - **열린 질문:** "500개"를 문서의 블록 수로 셀지, 펴 보인 호출 블록까지 그려지는 블록 수로 셀지 → [[01-architecture#8. 위험과 검증이 필요한 사항]]
 
 ### QA-08 여는 시간 (제안)

@@ -146,7 +146,7 @@ AriadneNSD의 앱 셋은 따로 설치하고 따로 실행하는 프로그램입
 | C-07 | 함수 호출 | 세션 → 레이아웃 | 편집 명령 바로 뒤 `renderDoc` 안에서 `layout(문서, 뷰 상태)` → 블록 id → bounding box | 동기 |
 | C-08 | 함수 호출 | 레이아웃 → advance 폭 테이블 | 텍스트 폭 | 동기 |
 | C-09 | 함수 호출 | 세션 → 렌더러 | `renderDoc` 안에서 씬 빌드 + SVG 출력(`buildScene` · `toSvg`) | 동기 |
-| C-10 | 함수 호출 | 캔버스 뷰 → DOM | 렌더링 결과가 바뀌었으면 문서 레이어를 전체 교체하고(`innerHTML`), 오버레이를 렌더링함 | 다음 프레임(`requestAnimationFrame`)에 동기 |
+| C-10 | 함수 호출 | 캔버스 뷰 → DOM | 렌더링 결과가 바뀌었으면 문서 레이어의 바뀐 요소만 고치고(`DocumentLayer`, 처음과 짝지을 수 없을 때는 전체 교체), 오버레이를 렌더링함 | 다음 프레임(`requestAnimationFrame`)에 동기 |
 | C-11 | 알림 | 세션 → 웹 셸 | `EditorHandle`: 이름 · 저장 안 됨 · 읽기 전용 | 동기 콜백 |
 | C-12 | 함수 호출 | 웹 셸 → 저장 | 저장 텍스트와 스냅숏 받기(자동 저장 · 백업) | 비동기(처음엔 글꼴을 기다림) |
 | C-13 | 함수 호출 | 저장 → 파일 형식 | `serialize(문서, 뷰 상태)` | 동기 |
@@ -619,7 +619,7 @@ sequenceDiagram
 | --- | --- | --- | --- | --- |
 | S-01 | 폭 계산의 올림 규칙 | [[0026-bundled-font-metrics\|ADR-0026]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실\|QA-04]] | advance 폭의 합을 정수 px로 올리는 규칙 한 줄이 바뀌면 모든 다이어그램의 좌표, 곧 저장 파일의 바이트가 바뀐다. 골든 파일이 이것을 지킨다 |
 | S-02 | 서브셋 글꼴에 든 문자 수 | [[0026-bundled-font-metrics\|ADR-0026]], [[0039-woff-subset-font\|ADR-0039]] | [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]] | 파일 크기가 쓰인 문자 수에 비례한다. 한글 800자면 압축 전 114 KB(위 콜아웃) |
-| S-03 | 문서 레이어를 전체 교체하기 | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] | 블록 하나를 고쳐도 렌더링 결과 전체를 `innerHTML`로 바꾸므로(C-10), DOM 반영과 브라우저 레이아웃 · 페인트가 블록 수에 비례한다. CPU 4배 감속에서 응답 시간의 대부분이 여기서 든다(QA-07의 측정 구간) |
+| S-03 | 문서 레이어에 렌더링 결과를 반영하기 | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | [[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]] | 바뀐 요소만 고치지만(C-10), 문서의 높이가 바뀌거나 밀린 블록의 좌표를 고치면 브라우저가 SVG의 글자를 모두 다시 배치해 블록 수에 비례한다. CPU 4배 감속에서 넣기 · 지우기 · 감싸기 · 붙여넣기 · 실행 취소의 응답 시간 대부분이 여기서 든다(QA-07의 측정 구간) |
 | S-04 | 저장소 열기의 시간 제한(3초) | [[06-web#2. 로컬 백업과 자동 저장]] | [[03-quality-attribute-scenarios#QA-19 초기화 장애 시 빈 화면 방지\|QA-19]], [[03-quality-attribute-scenarios#QA-17 저장 실패\|QA-17]] | 짧으면 느린 기기에서 로컬 백업 없이 메모리로 시작하고, 길면 시작 화면이 길어진다 |
 | S-05 | 공유 링크의 한도(8 KB 경고, 1 MB, 풀 때 16 MB) | [[0043-share-link-in-fragment\|ADR-0043]] | [[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]] | 한도가 크면 꾸민 링크가 메모리를 쓰고, 작으면 큰 다이어그램을 링크로 나누지 못한다 |
 
@@ -630,7 +630,7 @@ sequenceDiagram
 | ID | 얻은 것 | 내준 것 | 관련 결정 | 지금의 대응 |
 | --- | --- | --- | --- | --- |
 | T-01 | 결정적 저장 출력 · 렌더링 이식성([[03-quality-attribute-scenarios#QA-03 결정적 저장 출력\|QA-03]], [[03-quality-attribute-scenarios#QA-06 렌더링 이식성\|QA-06]]) | 첫 로딩과 파일의 크기([[03-quality-attribute-scenarios#QA-18 모바일 시작 시간\|QA-18]], [[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)\|QA-09]]) | [[0026-bundled-font-metrics\|ADR-0026]], [[0034-default-block-font\|ADR-0034]] | 화면 글꼴은 슬라이스로 필요할 때만 받고([[0040-screen-font-slices\|ADR-0040]]), 저장 파일에는 쓰인 문자만 WOFF로 넣는다([[0039-woff-subset-font\|ADR-0039]]) |
-| T-02 | 렌더링 백엔드를 바꿀 수 있음, 단순함([[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]]) | 큰 문서의 편집 반응([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | 렌더러는 SVG 문자열 하나를 내고 뷰는 통째로 넣는다(S-03). 바뀐 블록만 반영하려면 백엔드 인터페이스가 넓어진다 |
+| T-02 | 렌더링 백엔드를 바꿀 수 있음, 단순함([[03-quality-attribute-scenarios#QA-11 렌더링 백엔드 교체 용이성\|QA-11]]) | 큰 문서의 편집 반응([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0030-swappable-drawing\|ADR-0030]], [[0037-two-pass-full-layout\|ADR-0037]] | 렌더러는 SVG 문자열 하나를 내고 뷰가 앞 결과와 줄마다 견주어 바뀐 요소만 고친다(S-03). 밀린 블록을 좌표 하나로 옮기려면(블록마다 `<g transform>`) 렌더링 결과와 저장 파일의 SVG 구조가 바뀐다 |
 | T-03 | Obsidian에서 일반 SVG와 같은 파일로 쓰임 | Obsidian 업데이트에 대한 견고성 | [[0005-model-embedded-svg\|ADR-0005]], [[0006-file-extensions\|ADR-0006]] | `.ns.svg`만 가로채는 데 비공개 내부 API를 쓴다(위 콜아웃) → [[04-obsidian-plugin#1. `.ns.svg` 파일 열기]] |
 | T-04 | 서버 없는 정적 웹([[01-requirements#^r-web\|R-WEB-01]])과 공유 | 공유할 수 있는 문서의 크기([[03-quality-attribute-scenarios#QA-21 비신뢰 공유 링크 입력 처리\|QA-21]]) | [[0043-share-link-in-fragment\|ADR-0043]] | 문서를 링크의 fragment에 압축해 담고, 큰 문서는 파일로 공유하라고 알린다 |
 | T-05 | 정합성과 단순한 실행 취소([[03-quality-attribute-scenarios#QA-01 편집 명령과 불변식\|QA-01]]) | 편집마다의 메모리 · 시간([[03-quality-attribute-scenarios#QA-07 편집 반응 시간\|QA-07]]) | [[0029-immutable-document-undo\|ADR-0029]] | 불변 문서와 구조적 공유로 바뀌지 않은 하위 트리는 함께 쓴다 |
