@@ -120,6 +120,12 @@ updated: 2026-11-22
 - [ ] 확대 · 축소 묶음: 100%에서도 가운데 칸은 흐리지 않음, 문구 "100%로" · 묶음 이름 "확대 · 축소", 휠은 50px마다 한 단계(줄 단위 16px, 방향을 바꾸면 새로 셈) → [[2026-11-27-01-zoom-buttons]]
 - [ ] 매듭에서 push를 빼면서 전체 검사(`test-list:strict` · `check` · `e2e`)도 마무리로 옮김. 매듭 때도 검사를 원하시면 알려 주세요 → [[2026-11-27-02-knot-without-push]]
 
+### 2026-11-27 세션 03에 Claude(에이전트)가 정한 것
+
+- [ ] 리팩토링: 웹 셸은 `ShellContext` 하나를 부분들이 함께 씀, 편집 명령은 묶음 파일이 명령 객체를 돌려주고 예전 차례로 이음, 세션 · 캔버스는 도우미 클래스가 좁은 host 타입을 받음(타입 import도 순환으로 세는 depcruise 때문) → [[2026-11-27-03-refactoring]]
+- [ ] 영어 `/about`: Quartz의 화면 글자(탐색기 · 툴바)는 한국어로 남음, 문서 페이지의 사이트 이름은 한국어 소개(`/about/ko`)로 감, 앱 정보 창의 "문서"는 화면 언어를 따름 → http://localhost:8080/about (push 뒤 https://ariadnensd.com/about)
+- [ ] 문서 현행화: README 로드맵의 "Claude 스킬 베타 (지금)" 줄과 웹 1.0 줄의 문구 → [README](https://github.com/reddiana/AriadneNSD#roadmap)
+
 ## 알아만 두세요
 
 지금은 없습니다.

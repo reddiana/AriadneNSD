@@ -2,7 +2,7 @@
 title: 정적 사이트의 방문 수 세기
 tags:
   - til
-updated: 2026-11-23
+updated: 2026-11-27
 ---
 
 # 정적 사이트의 방문 수 세기
@@ -42,3 +42,24 @@ GitHub Pages는 방문 수를 알려 주지 않는다. 페이지에 작은 스�
 - 쿠키가 없어 같은 사람을 알아보지 못하므로 들어올 때마다 따로 센다. Visits는 다른 사이트 · 주소창에서 들어와 연 횟수, Page views는 연 페이지 수(사이트 안의 이동 · 새로 고침 포함). 순 방문자 수는 없다.
 - Cloudflare 대시보드에는 IP나 방문자를 빼는 설정이 없고, 이미 잡힌 방문은 지울 수 없다. 그래서 신호를 처음부터 보내지 않게 해야 한다: 광고 차단기로 `static.cloudflareinsights.com`을 막거나, 페이지 코드에 "세지 않기" 표시를 둔다.
 - AriadneNSD는 뒤의 길: `https://ariadnensd.com/?nocount`를 한 번 열면 그 브라우저(프로필마다, 기기마다)의 `localStorage`에 표시가 남아 사이트 전체에서 빠진다. `?count`로 되돌린다. InPrivate 창과 사이트 데이터를 지운 뒤에는 다시 센다 → [[06-web#5.2 방문 수]]
+
+## 대시보드에서 어디를 보나 (2026-11-27)
+
+Cloudflare 대시보드에는 Analytics가 두 곳 있습니다.
+
+| 자리 | 무엇 | 우리 사이트에서 |
+| --- | --- | --- |
+| 도메인(`ariadnensd.com`) 안의 Analytics | Cloudflare 프록시를 거친 요청 수 | 0. 사이트를 GitHub Pages가 내보내서 프록시를 거치지 않음 |
+| 계정 메뉴의 관찰 가능성 › Analytics › Web Analytics | 페이지에 넣은 스크립트가 센 방문 · 페이지 보기 · 유입 경로 · 나라 · 기기, 그리고 Core Web Vitals | 여기를 본다 |
+
+백엔드에 빗대면, 앞의 것은 로드 밸런서의 액세스 로그이고 뒤의 것은 클라이언트가 보내는 RUM(Real User Monitoring)입니다.
+
+## Core Web Vitals
+
+실제 방문자의 브라우저가 잰 품질 지표 셋입니다. 각각 좋음 · 개선 필요 · 나쁨의 비율로 나오고, URL · 요소 탭과 "디버그 보기"로 원인이 된 요소를 CSS 선택자로 볼 수 있습니다.
+
+- LCP(Largest Contentful Paint): 화면에서 가장 큰 그림이나 글 덩어리가 그려지기까지. 응답 시간의 p95 같은 것
+- INP(Interaction to Next Paint): 클릭 · 키에 다음 화면이 그려지기까지. 우리 AT-05(편집 반응)와 같은 종류
+- CLS(Cumulative Layout Shift): 늦게 커진 요소가 아래를 밀어낸 정도. 2026-11-27에 문서 사이트의 `> [!tip]` 콜아웃과 사용법의 `#ai` 꼭지가 원인으로 나옴
+
+표본이 작을 때(하루 방문 수십)는 비율이 한두 방문에 크게 흔들립니다. 기간을 7일로 넓혀 봅니다.
