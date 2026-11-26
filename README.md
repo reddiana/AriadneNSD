@@ -69,11 +69,11 @@ The web version gets polished first, then the same editor extends to an Obsidian
 
 | Stage | Version | What | Saved files |
 | --- | --- | --- | --- |
-| Web MVP | 0.1 · 0.2 | Structural editing by selecting and wrapping blocks, Event · Method headers and call blocks, examples, PNG export (0.1). 0.2 brought in some of the 1.0 features below early. Tried by people who know the link | May not open in later versions |
+| Web MVP | 0.1 · 0.2 | Structural editing by selecting and wrapping blocks, Event · Method headers and call blocks, examples, PNG export (0.1). 0.2 already brought in the 1.0 features below. Tried by people who know the link | May not open in later versions |
 | **Web beta** (now) | from 0.3 | Starts spreading the word. Adds a manual and a channel for reporting problems, and adds the 1.0 features below release by release | May not open in later versions |
 | **Claude skill beta** (now) | from 0.4 | Out alongside the web beta. Claude draws diagrams, turns code into diagrams, and reads and edits diagrams it is given. Installed from this repository's Claude Code plugin marketplace, or as a zip from the release for claude.ai | Same as the web beta |
 | Obsidian beta | 0.x | Starts alongside the web beta. Installed straight from GitHub with the BRAT plugin | May not open in later versions |
-| Web 1.0 | 1.0 | Folding, extract to Method, expanding call blocks, syntax highlighting, themes, share URLs, PDF and printing, high-contrast display. The key layout is fixed | **Opens in all later versions** |
+| Web 1.0 | 1.0 | All web `P1` features, final file names and wording, a fixed key layout, and a manual covering every feature (folding, extract to Method, expanding call blocks, syntax highlighting, themes, share URLs, PDF and printing, and high-contrast display already arrived in 0.2) | **Opens in all later versions** |
 | Obsidian 1.0 | | Listed in Obsidian's community plugins | Opens in all later versions |
 | Desktop app | | Opens and edits `.ns` and `.ns.svg` files on your computer directly | |
 | After that | | Google Drive integration, a Confluence app, IDE plugins (VS Code, IntelliJ) | |
