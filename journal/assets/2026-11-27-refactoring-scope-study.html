@@ -1,0 +1,316 @@
+<title>M77 리팩토링 범위</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 레이아웃: 한 줄 기둥(최대 920px). 위에서 아래로 지도 → 나눌 곳 R1~R5 → 물음 Q1~Q4 */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1d2430;
+  --muted: #5b6678;
+  --line: #d9dee6;
+  --accent: #2f5fd0;
+  --accent-soft: #e4ebfb;
+  --web: #c2702a;
+  --web-soft: #f7e6d6;
+  --common: #2f8a6b;
+  --common-soft: #dcf0e7;
+  --helper: #7a6bb8;
+  --helper-soft: #e9e5f6;
+  --pick: #b8860b;
+  --font-body: "IBM Plex Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181f; --surface: #1c222c; --fg: #e5e9f0; --muted: #9aa5b6; --line: #2f3744;
+    --accent: #7ea2f2; --accent-soft: #24304a;
+    --web: #e3995a; --web-soft: #3d2c1d; --common: #5cc39d; --common-soft: #1c372e;
+    --helper: #a99ce0; --helper-soft: #2c2843; --pick: #e0b44a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181f; --surface: #1c222c; --fg: #e5e9f0; --muted: #9aa5b6; --line: #2f3744;
+  --accent: #7ea2f2; --accent-soft: #24304a;
+  --web: #e3995a; --web-soft: #3d2c1d; --common: #5cc39d; --common-soft: #1c372e;
+  --helper: #a99ce0; --helper-soft: #2c2843; --pick: #e0b44a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+main { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+h1 { font-size: 28px; margin: 0; text-wrap: balance; }
+h2 { font-size: 20px; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 68ch; }
+code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
+.lead { color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 14px; }
+.tag { display: inline-flex; align-items: center; justify-content: center; min-width: 2.4em; padding: 1px 7px; border-radius: 4px; font-family: var(--font-mono); font-weight: 500; font-size: 13px; background: var(--accent); color: var(--surface); }
+.star { color: var(--pick); font-weight: 700; }
+
+/* 지도 */
+.map { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; grid-template-columns: minmax(0, 15em) minmax(0, 1fr) 4.5em; gap: 8px 12px; align-items: center; font-variant-numeric: tabular-nums; }
+.map .head { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+.map .file { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.map .file .r { margin-right: 6px; font-size: 11px; padding: 0 5px; min-width: 0; }
+.bars { display: flex; flex-direction: column; gap: 3px; }
+.bar { height: 10px; border-radius: 2px; }
+.bar.size { background: var(--accent); }
+.bar.churn { background: var(--web); height: 6px; }
+.map .num { font-size: 12px; text-align: right; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 14px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* 나눌 곳 */
+.cut { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.cut-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 10px; }
+.cut-head .path { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.why { font-size: 14px; }
+.strip-label { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+.strip { display: flex; height: 34px; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
+.strip.before { height: 22px; }
+.strip.before div { background: var(--line); }
+.strip div { min-width: 2px; border-right: 2px solid var(--surface); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; overflow: hidden; white-space: nowrap; }
+.strip div:last-child { border-right: 0; }
+.k-web { background: var(--web-soft); color: var(--web); }
+.k-common { background: var(--common-soft); color: var(--common); }
+.k-helper { background: var(--helper-soft); color: var(--helper); }
+.k-plain { background: var(--accent-soft); color: var(--accent); }
+.parts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 6px 16px; font-size: 13px; }
+.parts li { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.parts .sw { flex: none; width: 10px; height: 10px; border-radius: 2px; transform: translateY(1px); }
+.parts .nm { font-family: var(--font-mono); overflow-wrap: anywhere; }
+.parts .ln { color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; padding-left: 6px; white-space: nowrap; }
+.note { font-size: 13px; color: var(--muted); }
+
+/* 물음 */
+.q { display: flex; flex-direction: column; gap: 10px; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.opt { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.opt.rec { border-color: var(--pick); box-shadow: 0 0 0 1px var(--pick) inset; }
+.opt-head { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.opt p { font-size: 13.5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: var(--font-mono); font-size: 11.5px; padding: 1px 6px; border-radius: 3px; background: var(--line); color: var(--muted); }
+.chip.on { background: var(--accent); color: var(--surface); }
+.timeline { display: flex; gap: 4px; flex-wrap: wrap; font-size: 11.5px; }
+.timeline span { padding: 2px 6px; border-radius: 3px; background: var(--line); color: var(--muted); }
+.timeline span.on { background: var(--pick); color: var(--surface); }
+
+.rules { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+.rules ul { margin: 6px 0 0; padding-left: 1.2em; }
+.rules li { margin: 2px 0; }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 560px) {
+  .map { grid-template-columns: minmax(0, 1fr) 3.5em; }
+  .map .bars { grid-column: 1 / -1; }
+  .map .head.bars-h { display: none; }
+  .strip div { font-size: 0; }
+}
+</style>
+
+<main>
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span class="tag" style="align-self:flex-start">M77</span>
+    <h1>리팩토링 범위</h1>
+    <p class="lead">코드가 크고 자주 바뀌는 파일 다섯을 어떻게 나눌지, 언제 어디까지 할지 정하는 시안입니다. 동작은 바꾸지 않고 파일을 나누고 경계를 긋는 일만 다룹니다. 숫자는 2026-11-27의 <code>main</code>(<code>3b829bb</code>)에서 잰 값입니다.</p>
+  </header>
+
+  <section>
+    <h2>지금 모습: 크기와 바뀐 횟수</h2>
+    <p class="lead">테스트를 뺀 <code>src</code>의 파일 가운데 큰 것들입니다. 크고 자주 바뀌는 파일일수록 나눴을 때 얻는 것이 큽니다.</p>
+    <div class="legend"><span><i style="background:var(--accent)"></i>줄 수</span><span><i style="background:var(--web)"></i>2026-10-20 뒤 바뀐 커밋 수</span></div>
+    <div class="map" id="map">
+      <div class="head">파일</div><div class="head bars-h">줄 · 바뀐 횟수</div><div class="head" style="text-align:right">줄 / 횟수</div>
+    </div>
+    <p class="note"><code>styles.ts</code>(341줄, 26번) · 두 <code>messages.ts</code>(17번씩)는 가장 자주 바뀌지만 문구와 스타일의 표라서 나눠도 얻는 것이 없습니다. 이번 범위에서 뺍니다.</p>
+  </section>
+
+  <section>
+    <h2>나눌 곳 R1 ~ R5</h2>
+    <p class="lead">가는 회색 띠가 지금 파일 하나이고, 그 아래 색 띠가 나눈 뒤의 파일들입니다. 칸의 폭은 줄 수에 비례합니다. 나누는 자리는 지금 코드 안의 절 주석(<code>// --- …</code>, <code>// Insert, wrap.</code> 등)을 그대로 따릅니다.</p>
+    <div class="legend">
+      <span><i style="background:var(--web-soft);border:1px solid var(--web)"></i>웹에만 있을 것</span>
+      <span><i style="background:var(--common-soft);border:1px solid var(--common)"></i>Obsidian 셸도 쓸 것 (공통 후보)</span>
+      <span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>나눈 파일</span>
+      <span><i style="background:var(--helper-soft);border:1px solid var(--helper)"></i>여럿이 함께 쓰는 도우미</span>
+    </div>
+    <div id="cuts" style="display:flex;flex-direction:column;gap:16px"></div>
+  </section>
+
+  <section>
+    <h2>물음</h2>
+    <p class="lead">번호로 답해 주세요(예: "Q1 ②, Q2 ①"). <span class="star">★</span>는 추천입니다.</p>
+    <div id="questions" style="display:flex;flex-direction:column;gap:28px"></div>
+  </section>
+
+  <section class="rules">
+    <h3>어느 경우든 지킬 규칙</h3>
+    <ul>
+      <li>동작을 바꾸지 않습니다. 테스트는 고치지 않고, 나누기 전과 같은 테스트가 그대로 통과해야 합니다(2026-11-03에 더한 "지금 동작을 적는 테스트" 255개 포함).</li>
+      <li>시작 전에 시간 테스트 T-0171 · T-1126을 안정시킵니다. 이 둘이 나란히 돌 때 빨개지면 리팩토링 때문에 깨졌는지 가릴 수 없습니다.</li>
+      <li>R마다 에이전트 하나, 덩어리마다 커밋 하나. 같은 파일을 만지는 R(R2와 R3는 <code>call</code> 쪽이 닿음)은 앞 커밋을 기다립니다.</li>
+      <li>공개하는 이름(<code>EditorHandle</code>, 명령 ID, 설정 ID)은 바꾸지 않습니다. 바꿔야 하면 멈추고 묻습니다.</li>
+    </ul>
+  </section>
+
+  <footer>AriadneNSD 작업 시안 M77 · 저장소 사본 <code>journal/assets/2026-11-27-refactoring-scope-study.html</code></footer>
+</main>
+
+<script>
+const files = [
+  { f: 'editor/src/commands/editor-commands.ts', n: 1852, c: 18, r: 'R2' },
+  { f: 'web/src/shell/web-shell.ts', n: 1451, c: 12, r: 'R1' },
+  { f: 'editor/src/session/session.ts', n: 1235, c: 13, r: 'R3' },
+  { f: 'core/src/layout/layout.ts', n: 1178, c: null },
+  { f: 'editor/src/dom/canvas-view.ts', n: 1069, c: 14, r: 'R4' },
+  { f: 'editor/src/commands/fold-commands.ts', n: 832, c: null },
+  { f: 'editor/src/create-editor.ts', n: 804, c: 18, r: 'R5' },
+  { f: 'core/src/render/build-scene.ts', n: 632, c: null },
+];
+const map = document.getElementById('map');
+const maxN = 1852, maxC = 18;
+for (const x of files) {
+  const file = document.createElement('div');
+  file.className = 'file';
+  file.innerHTML = (x.r ? `<span class="tag r">${x.r}</span>` : '') + x.f;
+  const bars = document.createElement('div');
+  bars.className = 'bars';
+  bars.innerHTML = `<div class="bar size" style="width:${(x.n / maxN) * 100}%"></div>` +
+    (x.c ? `<div class="bar churn" style="width:${(x.c / maxC) * 100}%"></div>` : '');
+  const num = document.createElement('div');
+  num.className = 'num';
+  num.textContent = `${x.n.toLocaleString()} / ${x.c ?? '—'}`;
+  map.append(file, bars, num);
+}
+
+const cuts = [
+  { r: 'R1', path: 'apps/web/src/shell/web-shell.ts · 1,451줄',
+    title: '웹 셸을 기능별로',
+    why: 'Obsidian 셸을 만들 때 가장 먼저 닿는 곳입니다. 지금은 웹 전용(브라우저 안의 문서, 최근 파일, 공유 링크)과 셸이면 어디나 필요한 것(상태 줄, 열기 흐름, 파일 메뉴 명령)이 한 함수 <code>createWebShell</code> 안에 섞여 있습니다. 나눠 두면 무엇을 Obsidian에서 다시 쓸 수 있는지가 파일 이름으로 보입니다.',
+    parts: [
+      ['web-shell.ts (조립 · 시작)', 365, 'common'],
+      ['shell/status.ts', 81, 'common'],
+      ['shell/opening.ts', 261, 'common'],
+      ['shell/shell-commands.ts', 138, 'common'],
+      ['shell/browser-documents.ts', 314, 'web'],
+      ['shell/recent-files.ts', 86, 'web'],
+      ['shell/share-view.ts', 93, 'web'],
+      ['shell/paste-open.ts', 84, 'web'],
+    ],
+    note: '"조립 · 시작"은 지금의 머리 부분(옵션 · 타입 · 설정 키, 260줄)과 <code>// --- Start ---</code>(105줄)입니다. 공통 후보를 어느 패키지로 옮길지는 Q3입니다.' },
+  { r: 'R2', path: 'packages/editor/src/commands/editor-commands.ts · 1,852줄',
+    title: '편집 명령을 묶음별로',
+    why: '함수 하나(<code>editorCommands</code>, 1,470줄)가 모든 명령을 만듭니다. 명령 묶음마다 파일을 두고, 위쪽 도우미 함수들(<code>oneBlock</code>, <code>branchOfSelection</code> 등)은 함께 쓰는 파일로 뺍니다. 순수하게 옮기는 일이라 다섯 가운데 가장 안전합니다. <code>fold-commands.ts</code>가 이미 이렇게 나뉘어 있어 그 모양을 따릅니다.',
+    parts: [
+      ['command-helpers.ts', 386, 'helper'],
+      ['call-commands.ts', 378, 'plain'],
+      ['insert-wrap-commands.ts', 269, 'plain'],
+      ['clipboard-commands.ts', 236, 'plain'],
+      ['cursor-commands.ts (이동 · 글자 · 실행 취소 · 선택 · 보기)', 200, 'plain'],
+      ['method-commands.ts (헤더 · Method로 빼기)', 189, 'plain'],
+      ['branch-commands.ts', 94, 'plain'],
+      ['file-commands.ts', 62, 'plain'],
+      ['editor-commands.ts (모아서 내보냄)', 38, 'plain'],
+    ],
+    note: '<code>call-commands.test.ts</code>는 이미 따로 있습니다. 테스트 파일은 옮기지 않고 import만 고칩니다.' },
+  { r: 'R3', path: 'packages/editor/src/session/session.ts · 1,235줄',
+    title: '세션에서 글자 편집과 키 읽기를 떼기',
+    why: '<code>EditorSession</code> 클래스 하나가 상태 · 실행 취소 · 글자 편집 · 키 읽기를 모두 맡습니다. 글자 편집(<code>fieldText</code> ~ <code>cancelEditing</code>)과 키 읽기(<code>handleKey</code> ~ <code>setPending</code>)는 세션의 상태를 받아 쓰는 도우미 클래스로 뺄 수 있습니다. 클래스를 나누는 일이라 R2보다 손이 더 갑니다.',
+    parts: [
+      ['session.ts (상태 · 적용 · 실행 취소)', 697, 'plain'],
+      ['text-editing.ts', 270, 'plain'],
+      ['key-reader.ts', 237, 'plain'],
+      ['call-names.ts', 31, 'helper'],
+    ],
+    note: '<code>callParts</code> · <code>callName</code>은 R2의 <code>call-commands.ts</code>도 쓰므로 R2 뒤에 합니다.' },
+  { r: 'R4', path: 'packages/editor/src/dom/canvas-view.ts · 1,069줄',
+    title: '캔버스를 그리기 · 입력 · 끌기로',
+    why: 'AT-05(편집 반응 시간)가 불합격인 까닭이 이 파일의 <code>drawNow</code>(문서 레이어 전체를 <code>innerHTML</code>로 바꿈)에 있습니다. 그리기만 따로 떼어 두면 "바뀐 블록만 DOM에 반영"을 할 때 손댈 곳이 한 파일로 좁혀집니다.',
+    parts: [
+      ['canvas-view.ts (그리기 · 테마 · 배율)', 340, 'plain'],
+      ['canvas-input.ts (키 · 컨텍스트 메뉴 · 포인터 · 휠)', 440, 'plain'],
+      ['canvas-drag.ts (끌어 놓기 · 자동 스크롤)', 172, 'plain'],
+      ['inline-editor.ts', 86, 'plain'],
+    ],
+    note: '"바뀐 블록만 DOM에 반영"까지 함께 할지는 Q4입니다.' },
+  { r: 'R5', path: 'packages/editor/src/create-editor.ts · 804줄',
+    title: '설정 표와 문서 읽기를 밖으로',
+    why: '파일 앞쪽의 설정 표(<code>settingSpecs</code>)와 문서 읽기(<code>readDocument</code>)는 <code>createEditor</code>와 따로 바뀝니다. 둘을 빼면 남는 것은 조립뿐입니다. 작고 쉬운 일입니다.',
+    parts: [
+      ['create-editor.ts (조립)', 498, 'plain'],
+      ['settings.ts', 130, 'plain'],
+      ['read-document.ts', 88, 'plain'],
+    ],
+    note: '' },
+];
+const cutsEl = document.getElementById('cuts');
+for (const c of cuts) {
+  const total = c.parts.reduce((s, p) => s + p[1], 0);
+  const el = document.createElement('article');
+  el.className = 'cut';
+  el.id = c.r.toLowerCase();
+  el.innerHTML = `
+    <div class="cut-head"><span class="tag">${c.r}</span><h3>${c.title}</h3><span class="path">${c.path}</span></div>
+    <p class="why">${c.why}</p>
+    <div class="strip-label">지금</div>
+    <div class="strip before"><div style="flex:1"></div></div>
+    <div class="strip-label">나눈 뒤</div>
+    <div class="strip">${c.parts.map(p => `<div class="k-${p[2]}" style="flex:${p[1]}" title="${p[0]} · 약 ${p[1]}줄">${p[1] > total * 0.12 ? p[0].split(' ')[0] : ''}</div>`).join('')}</div>
+    <ul class="parts">${c.parts.map(p => `<li><span class="sw k-${p[2]}" style="border:1px solid currentColor"></span><span class="nm">${p[0]}</span><span class="ln">약 ${p[1]}줄</span></li>`).join('')}</ul>
+    ${c.note ? `<p class="note">${c.note}</p>` : ''}`;
+  cutsEl.append(el);
+}
+
+const chips = on => ['R1', 'R2', 'R3', 'R4', 'R5'].map(r => `<span class="chip${on.includes(r) ? ' on' : ''}">${r}</span>`).join('');
+const steps = (labels, on) => `<div class="timeline">${labels.map((l, i) => `<span class="${i === on ? 'on' : ''}">${l}</span>`).join('')}</div>`;
+const when = ['시간 테스트', '웹 베타 다듬기', 'Obsidian 베타', '웹 1.0'];
+const questions = [
+  { q: 'Q1', title: '이번에 어디까지 할까요?', opts: [
+    { n: '①', t: 'Obsidian과 AT-05에 걸린 것 + 가장 큰 것', rec: true, pic: chips(['R1', 'R2', 'R4']),
+      d: 'R1(Obsidian의 경계), R4(AT-05), R2(가장 크고 가장 안전). R3 · R5는 그 근처를 고칠 일이 생길 때 합니다.' },
+    { n: '②', t: '다섯 모두', pic: chips(['R1', 'R2', 'R3', 'R4', 'R5']),
+      d: '한 번에 끝냅니다. R3이 R2를 기다려야 해서 가장 오래 걸리고, 그동안 기능 작업은 멈춥니다.' },
+    { n: '③', t: 'R2만 먼저 시험 삼아', pic: chips(['R2']),
+      d: '가장 안전한 것 하나로 리팩토링 절차(에이전트 지시 · 검사 · 커밋)를 시험해 보고 나머지를 정합니다.' },
+  ]},
+  { q: 'Q2', title: '언제 할까요?', opts: [
+    { n: '①', t: 'Obsidian 베타를 시작하기 바로 전', rec: true, pic: steps(when, 2),
+      d: 'R1의 경계를 Obsidian 셸을 앞에 두고 긋습니다. 웹 베타를 다듬는 동안은 기능 작업을 이어 갑니다.' },
+    { n: '②', t: '다음 세션, 시간 테스트를 고친 바로 뒤', pic: steps(when, 1),
+      d: '가장 이릅니다. 웹 베타를 다듬는 일(확대 · 축소 같은 작은 변경)이 나눈 파일 위에서 이어집니다.' },
+    { n: '③', t: '웹 1.0 뒤', pic: steps(when, 3),
+      d: '1.0까지는 기능과 문서를 굳히는 데 씁니다. 그동안 큰 파일은 더 커집니다.' },
+  ]},
+  { q: 'Q3', title: 'R1의 공통 후보(초록)는 어디에 둘까요?', opts: [
+    { n: '①', t: '지금은 웹 안에서 파일만 나눔', rec: true, pic: '<div class="chips"><span class="chip on">apps/web/src/shell/</span></div>',
+      d: '옮길 곳은 Obsidian 셸을 만들며 실제로 두 번 쓰게 될 때 정합니다. 쓰는 곳이 하나뿐인 지금 경계를 짐작으로 긋지 않습니다.' },
+    { n: '②', t: '<code>packages/editor</code>로 옮김', pic: '<div class="chips"><span class="chip on">packages/editor/src/shell/</span></div>',
+      d: '편집기 패키지가 셸 도구까지 냅니다. 패키지가 하나 늘지 않지만 편집기의 책임이 넓어집니다.' },
+    { n: '③', t: '새 패키지 <code>packages/shell</code>', pic: '<div class="chips"><span class="chip on">packages/shell/</span></div>',
+      d: '셸마다 쓰는 것을 따로 둡니다. 경계는 가장 분명하지만 ADR(코드 배치, ADR-0036의 변경)이 하나 필요합니다.' },
+  ]},
+  { q: 'Q4', title: 'R4를 나눈 뒤 "바뀐 블록만 DOM에 반영"도 함께 할까요?', opts: [
+    { n: '①', t: '함께 함', rec: true, pic: '<div class="chips"><span class="chip on">R4 나누기</span><span class="chip on">바뀐 블록만 반영</span></div>',
+      d: '나눈 <code>canvas-view.ts</code>에서 바로 이어 합니다. 이것은 동작(성능)을 바꾸는 일이라 따로 커밋하고, AT-05를 다시 재서 확인합니다. outbox에 걸린 "AT-05를 고칠 길"의 답도 됩니다.' },
+    { n: '②', t: '나누기만', pic: '<div class="chips"><span class="chip on">R4 나누기</span><span class="chip">바뀐 블록만 반영</span></div>',
+      d: '리팩토링은 동작을 바꾸지 않는 일로만 둡니다. AT-05는 따로 정합니다.' },
+  ]},
+];
+const qEl = document.getElementById('questions');
+for (const q of questions) {
+  const el = document.createElement('div');
+  el.className = 'q';
+  el.innerHTML = `<div class="cut-head"><span class="tag">${q.q}</span><h3>${q.title}</h3></div>
+    <div class="opts">${q.opts.map(o => `<div class="opt${o.rec ? ' rec' : ''}">
+      <div class="opt-head"><span>${o.n}</span><span>${o.t}</span>${o.rec ? '<span class="star">★</span>' : ''}</div>
+      ${o.pic}<p>${o.d}</p></div>`).join('')}</div>`;
+  qEl.append(el);
+}
+</script>
