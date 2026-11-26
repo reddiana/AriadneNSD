@@ -222,9 +222,9 @@ flowchart LR
 | `ui.shadow` | `rgba(20, 30, 60, 0.18)` | `rgba(0, 0, 0, 0.5)` | 메뉴 · 키 힌트 · 모달의 그림자 |
 | `ui.backdrop` | `rgba(20, 26, 34, 0.32)` | `rgba(0, 0, 0, 0.5)` | 모달 뒤를 덮는 막 |
 
-화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.51 / 8.93 (배경 위), 5.10 / 8.16 (패널 위). `ui.warn`은 경고 알림과 삭제 버튼의 글자에도 쓰므로 기준은 텍스트의 4.5:1입니다 → [[ux-decisions#WC1. 경고색 글자의 대비|WC1]]
+화면 색의 대비율(밝은 / 어두운): `ui.text` 15.90 / 13.60, `ui.muted` 5.97 / 6.57 (패널 위), `ui.accent` 5.71 / 7.89, `ui.warn` 4.51 / 8.93 (배경 위), 5.10 / 8.16 (패널 위), `ui.disabled` 2.60 / 2.90 (패널 위). `ui.warn`은 경고 알림과 삭제 버튼의 글자에도 쓰므로 기준은 텍스트의 4.5:1입니다 → [[ux-decisions#WC1. 경고색 글자의 대비|WC1]]
 
-**고대비 화면 색**([[01-requirements#^r-nfr|R-NFR-07]]): 운영체제가 더 높은 대비를 요청하면(`prefers-contrast: more`, Windows의 대비 테마 · macOS의 "대비 증가") 아래 다섯 토큰만 바뀝니다. 나머지는 위 표 그대로입니다. 그림의 색은 바뀌지 않습니다. 그림은 문서의 테마(3.6절의 고대비 테마)가 정합니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
+**고대비 화면 색**([[01-requirements#^r-nfr|R-NFR-07]]): 운영체제가 더 높은 대비를 요청하면(`prefers-contrast: more`, Windows의 대비 테마 · macOS의 "대비 증가") 아래 여섯 토큰만 바뀝니다. 나머지는 위 표 그대로입니다. 그림의 색은 바뀌지 않습니다. 그림은 문서의 테마(3.6절의 고대비 테마)가 정합니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
 
 | 토큰 | 밝은 화면 | 어두운 화면 | 역할 |
 | --- | --- | --- | --- |
@@ -235,7 +235,7 @@ flowchart LR
 | `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 포커스, 상태 표시줄의 모드, 캔버스 포커스, 기본 버튼, 링크 |
 | `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7f3c06;border:1px solid #8888;vertical-align:-0.1em"></span> `#7f3c06` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
 
-고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.line` 4.70 / 5.19, `ui.warn` 7.27 / 10.54 (배경 위). 텍스트는 모두 7:1을 넘습니다.
+고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.disabled`와 `ui.line` 4.70 / 5.19 (패널 위), `ui.warn` 7.27 / 10.54 (배경 위). `ui.disabled`는 쓸 수 없는 항목의 글자라 WCAG의 대비 기준에서 빠지므로 흐린 정도를 보이는 값이고(보통 화면 2.60 / 2.90), 고대비에서는 `ui.line`과 같은 값으로 읽을 수 있게 합니다 → [[ux-decisions#DD1. 흐린 메뉴 항목과 까닭 툴팁|DD1]]. 나머지 텍스트는 모두 7:1을 넘습니다.
 
 편집 레이어의 표시는 종이 위에 그려지므로, 화면 색이 아니라 **테마의 종류**(종이가 밝은가 어두운가)를 따릅니다. 밝은 종이(밝은 테마 · 흑백 인쇄)에는 주황 `orange.600`을, 어두운 종이(어두운 테마 · 고대비)에는 더 밝은 주황을 씁니다. 인라인 에디터의 바탕과 글자도 그 테마의 `paper` · `text.primary`이고, 자리 표시 글자는 `text.muted`입니다 → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
 
@@ -438,7 +438,7 @@ flowchart LR
 | 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 중복될 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 항상 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄(12px, `ui.panel` 배경, 1px `ui.line` 테두리, 반지름 4px) | 편집 | | 있음 |
-| 드롭 위치 | 블록 사이에 2px 가로줄 + 양 끝에 줄의 위아래로 4px씩(길이 8px, 굵기 2px) 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
+| 드롭 위치 | 블록 사이(본문의 맨 앞 · 맨 끝은 본문의 윗선 · 다이어그램의 아랫선)에 2px 가로줄 + 양 끝에 줄의 위아래로 4px씩(길이 8px, 굵기 2px) 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
 | 빈 분기 | If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |

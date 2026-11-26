@@ -17,15 +17,15 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 307 | - | 362 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 180 | - | 215 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 38 | 50 | - | 111 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 188 | - | 223 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 40 | 50 | - | 113 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
-| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 10 | - | 10 |
-| 합계 | 87 | 281 | 987 | 5 | 1360 |
+| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
+| 합계 | 87 | 283 | 998 | 5 | 1373 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 362개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 364개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -370,7 +370,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/src/commands/insert.test.ts`
 
-블록 삽입(insertBlock). Vitest · 테스트 13개.
+블록 삽입(insertBlock). Vitest · 테스트 14개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -384,6 +384,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 | T-0145 | 선택한 것이 없으면 다이어그램의 끝에 삽입한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
 | T-0146 | 01-model 4.3 (UX MD1): 안의 블록을 선택했을 때 접기의 끝에 삽입한 블록은 접기에 든다 | - |
 | T-0147 | 01-model 4.3 (UX MD1): 선택한 접기 전체의 옆에 삽입한 블록은 밖에 남는다 | - |
+| T-1500 | interaction rules 7: a block dropped at a body end stays outside the folds ending there | - |
 | T-0148 | 01-model 4.3: 접기의 양 끝 사이에 삽입한 블록은 그 안에 든다 | - |
 | T-0149 | 01-model 1.7: 새 id는 주어진 생성기에서 온다 | - |
 | T-0150 | 없거나 이어지지 않은 대상은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
@@ -392,7 +393,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/src/commands/move-to.test.ts`
 
-moveTo(드래그 앤 드롭). Vitest · 테스트 5개.
+moveTo(드래그 앤 드롭). Vitest · 테스트 6개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -400,6 +401,7 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 5개.
 | T-0152 | 빈 블록 위에 드롭한 블록은 그 위치를 차지한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0153 | 블록이 하나도 남지 않은 줄에는 빈 블록이 들어간다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0154 | 제자리에 드롭한 블록은 아무것도 바꾸지 않는다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1501 | interaction rules 7: blocks dropped at a body end stay outside the folds ending there | - |
 | T-0155 | 블록을 자기 안에 드롭하기는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 
 ^t-packages-core-src-commands-move-to-test-ts
@@ -669,7 +671,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 15개, 테스트 215개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 16개, 테스트 223개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -897,6 +899,23 @@ id. Vitest · 테스트 5개.
 
 ^t-packages-editor-src-dom-system-clipboard-test-ts
 
+### [단위] `packages/editor/src/input/drop-ends.test.ts`
+
+Dropping at the very start and end of a diagram body (interaction rules 7, M75 P2). Vitest · 테스트 8개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1502 | under a diagram whose last block is a %s, the drop goes after it, outside it | - |
+| T-1503 | in the bottom band of the header, the drop goes before a first %s | - |
+| T-1504 | the bands end where they say: beside, below and inside the diagram nothing changes | - |
+| T-1505 | dragged blocks already at that end are not dropped there; others move | - |
+| T-1506 | a diagram without a header has only the end band; an empty body takes the drop in its empty block | - |
+| T-1507 | next to a fold region, folded or open, a new block at a body end stays outside it | - |
+| T-1508 | the end band never reaches another diagram | - |
+| T-1509 | under an opened call block the drop goes after the call, not into what it shows | - |
+
+^t-packages-editor-src-input-drop-ends-test-ts
+
 ### [단위] `packages/editor/src/input/hit-shown.test.ts`
 
 접힌 것, 접기 영역, 펴 보인 호출 블록에서 클릭이 가리키는 것과 오버레이가 두르는 것 (03-editor 3.1, 조작 규칙 4). Vitest · 테스트 4개.
@@ -1023,7 +1042,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 111개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 113개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1095,12 +1114,13 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 38개.
+메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 40개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0293 | 03-editor 5.1: 메뉴를 그 항목과 표준 키로 열고, 클릭을 실행한다 | - |
 | T-0294 | 03-editor 3: 맞지 않는 명령은 흐리게 보이되, 엔진이 이유를 알리도록 실행은 한다 | - |
+| T-1492 | a dimmed menu item tells why in an editor tooltip, not the browser’s title; an item that applies has none (M74 D3) | - |
 | T-0295 | 저장하지 않은 동안 파일 이름에 ●를 보인다 | [[ux-decisions\|UX W3]] |
 | T-0296 | 메뉴의 이름을 화면 언어로 보인다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1491 | 도움말 › 알고리즘 갤러리는 사용법 바로 아래에 있고, 화면 언어의 갤러리를 연다 | [[ux-decisions\|UX GL2]] |
@@ -1120,6 +1140,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0306 | 엔진이 힌트를 보일 때라고 하면 둘째 키를 보이고, 그 뒤에 숨긴다 | [[01-requirements#^r-edit\|R-EDIT-04]] |
 | T-0307 | `?`는 Vim 키와 표준 키의 두 열로 된 키 표를 열고, `Esc`가 닫는다 | [[01-requirements#^r-edit\|R-EDIT-21]] |
 | T-1300 | AriadneNSD에 대하여의 문서 · 저장소 링크는 화면 언어로 표시되고 새 탭으로 열린다 | [[ux-decisions\|UX W4]] |
+| T-1493 | About shows the picture logo, the word logo and the version in the middle on top, before the rest, in a narrow modal (M74 A1) | - |
 | T-1301 | AriadneNSD에 대하여의 링크는 키보드 포커스를 받고, 링크에서 Esc를 누르면 모달이 닫힌다 | [[ux-decisions\|UX W4]] |
 | T-0308 | 환경 설정은 사용자 설정을 보이고, 바꾼 것을 설정 저장소에 쓴다 | [[ux-decisions\|UX W5]] |
 | T-0309 | 문서 설정은 엔진을 거쳐 쓴다 | [[ux-decisions\|UX W5]] |
@@ -2536,7 +2557,7 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ## 9. 문서와 코드의 정합성
 
-코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 2개, 테스트 10개.
+코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 2개, 테스트 11개.
 
 ### [단위] `packages/core/node/docs-agree.test.ts`
 
@@ -2554,13 +2575,14 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ### [단위] `packages/editor/src/docs-agree.test.ts`
 
-편집기의 사실 가운데 코드와 문서에 함께 기록된 것을 값마다 견줌(코딩 가이드 13장): 키 표의 키와 단축키 문서, 화면 색 · 편집 레이어의 색과 시각 디자인 3.4. Vitest · 테스트 5개.
+편집기의 사실 가운데 코드와 문서에 함께 기록된 것을 값마다 견줌(코딩 가이드 13장): 키 표의 키와 단축키 문서, 화면 색 · 편집 레이어의 색과 시각 디자인 3.4. Vitest · 테스트 6개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1167 | 키 표의 모든 키가 단축키 문서에 있다 | [[01-requirements#^r-edit\|R-EDIT-04]] |
 | T-1168 | UI의 화면 색 토큰이 3.4절의 표와 같다(밝은 · 어두운 화면, 보통 · 고대비) | [[01-requirements#^r-nfr\|R-NFR-07]] |
 | T-1319 | `ui.warn` 글자가 배경과 패널 위에서 보통 화면 색(밝은 · 어두운)은 4.5:1, 고대비 화면 색(밝은 · 어두운)은 7:1을 넘는다 | [[ux-decisions\|UX WC1]] |
+| T-1494 | ui.disabled is fainter than ui.muted on the panel, and keeps 4.5:1 in high contrast (M74 D3) | - |
 | T-1169 | 편집기를 둘러싼 웹 페이지도 같은 화면 색을 쓴다 | [[01-requirements#^r-nfr\|R-NFR-07]] |
 | T-1170 | 편집 레이어의 색이 밝은 종이 · 어두운 종이 모두 3.4절의 표와 같다 | [[ux-decisions\|UX TM4]] |
 
