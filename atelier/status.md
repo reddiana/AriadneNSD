@@ -20,7 +20,7 @@ updated: 2026-11-27
 | M12 | 글자 폭 스파이크 (답을 기다림: Firefox에서 열기) | https://claude.ai/artifact/FNoS6pjV1zjieBgMwN8HxT | `journal/assets/2026-10-13-text-width-spike.html` |
 | M54 | 새 Method로 빼기 (답을 기다림: Claude가 정해 둔 것의 표) | https://claude.ai/artifact/J11wWw9DVKUZkUP2ubT94n | `journal/assets/2026-11-03-extract-method-study.html` |
 | M55 | 브라우저 안의 문서 (답을 기다림: Claude가 정해 둔 것의 표) | https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV | `journal/assets/2026-11-03-browser-storage-study.html` |
-| M77 | 리팩토링 범위 (답을 기다림: Q1 ~ Q4) | https://claude.ai/artifact/SzSbNuXyzC1xd9zib347Xf | `journal/assets/2026-11-27-refactoring-scope-study.html` |
+| M77 | 리팩토링 범위 (정함: Q1 ②, Q2 ~ Q4 ①) | https://claude.ai/artifact/SzSbNuXyzC1xd9zib347Xf | `journal/assets/2026-11-27-refactoring-scope-study.html` |
 
 ## 지금 단계
 
@@ -61,6 +61,7 @@ updated: 2026-11-27
 | 흐린 메뉴 항목: 더 옅게, hover 없음, 까닭 툴팁(D3) · 정보 창 맨 위에 로고(A1) | 메인테이너 (2026-11-26, inbox), M74 | 사이트에 있음 (정보 창은 128px 로고 + 문자 로고, 폭 440px, [[ux-decisions\|DD1 · AL1]]) | `65e415f` `28e6c3e` `c30fc83` |
 | 맨 처음 · 맨 끝에 놓기: 헤더 아래 띠 · 다이어그램 아래 띠(P2), 마지막 블록이 무엇이든 | 메인테이너 (2026-11-26, inbox), M75 | 사이트에 있음 ([[ux-decisions\|DE1]]) | `a1141c1` |
 | 툴바의 확대 · 축소: 드롭다운 대신 [돋보기−] 100% [돋보기+], 숫자를 누르면 100% | 메인테이너 (2026-11-27), M76 Z1 | 로컬 앱에 있음 (push · 전체 검사는 마무리 때) | `a46a00d` `6909621` |
+| 리팩토링: R1 ~ R5 모두(웹 셸 · 편집 명령 · 세션 · 캔버스 · create-editor), 공통 후보는 웹 안에, R4 뒤 바뀐 블록만 DOM 반영. Obsidian 베타 전을 앞당겨 바로 | 메인테이너 (2026-11-27), M77 | 구현 중(에이전트 넷, R3은 R2 뒤), 정리 남음 | |
 
 ## 이번과 다음 세션에 할 것
 
@@ -74,7 +75,7 @@ updated: 2026-11-27
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
 - [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 고침 → 그 뒤 Claude가 [[01-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
-- [ ] AT-05: 병목은 화면 쪽(DOM 반영 · 브라우저 그리기). "바뀐 블록만 DOM에 반영"을 할지 여쭙기 → [[backlog#MVP 개발]]
+- [ ] 리팩토링 R1 ~ R5(R3은 R2 뒤), 그 뒤 R4 위에서 "바뀐 블록만 DOM에 반영"과 AT-05 다시 재기, 시간 테스트는 그다음 홀로 → [[backlog#리팩토링]]
 - [ ] 메인테이너: AT-05를 `https://ariadnensd.com/?perf`로 가진 기기에서 재고 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 메인테이너: Windows 알림을 다시 켤지(`.claude/settings.local.json`의 `hooks`를 비워 둠)
 - [ ] 메인테이너: 앱이 "불러오는 중"에서 멈출 때 주소를 바로 열었는지, 사이트 · README 버튼을 거쳤는지 알려 주기 → [[defects]]
