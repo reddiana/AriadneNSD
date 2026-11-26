@@ -928,4 +928,59 @@ describe('the zoom buttons (M76 Z1)', () => {
     fireEvent.click(zoomIn);
     expect(engine.ran).toEqual(['view.zoom.in']);
   });
+
+  /** A wheel event over the zoom group, as the browser sends it. */
+  function wheel(
+    target: HTMLElement,
+    fields: { deltaY: number; deltaX?: number; deltaMode?: number },
+  ) {
+    const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, ...fields });
+    // The test DOM does not take deltaMode from the init.
+    Object.defineProperty(event, 'deltaMode', { value: fields.deltaMode ?? 0 });
+    target.dispatchEvent(event);
+    return event;
+  }
+
+  it('T-1513: a wheel over the zoom group zooms, one step per mouse notch, and keeps the page from scrolling', () => {
+    const { engine, level, zoomIn } = zoomEngine(1);
+    let event!: WheelEvent;
+    act(() => {
+      event = wheel(level, { deltaY: -100 });
+    });
+    expect(event.defaultPrevented).toBe(true);
+    expect(level.textContent).toBe('110%');
+    act(() => {
+      wheel(zoomIn, { deltaY: 100 });
+      wheel(zoomIn, { deltaY: 100 });
+    });
+    expect(level.textContent).toBe('90%');
+    act(() => {
+      wheel(level, { deltaY: -4, deltaMode: 1 });
+    });
+    expect(engine.ran).toEqual(['view.zoom.in', 'view.zoom.out', 'view.zoom.out', 'view.zoom.in']);
+  });
+
+  it('T-1514: a trackpad’s small deltas add up to a step; a horizontal-only wheel does nothing', () => {
+    const { engine, level } = zoomEngine(1);
+    let sideways!: WheelEvent;
+    act(() => {
+      sideways = wheel(level, { deltaY: 0, deltaX: 80 });
+      for (let i = 0; i < 4; i += 1) wheel(level, { deltaY: -10 });
+    });
+    expect(sideways.defaultPrevented).toBe(false);
+    expect(engine.ran).toEqual([]);
+    act(() => {
+      wheel(level, { deltaY: -10 });
+    });
+    expect(engine.ran).toEqual(['view.zoom.in']);
+  });
+
+  it('T-1515 · UX D3: a wheel at the limit still runs the command, so the status bar tells why', () => {
+    const { engine, level } = zoomEngine(2);
+    act(() => {
+      wheel(level, { deltaY: -100 });
+    });
+    expect(engine.ran).toEqual(['view.zoom.in']);
+    expect(level.textContent).toBe('200%');
+  });
 });

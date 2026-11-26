@@ -3,7 +3,7 @@
 // examples modal). Narrow screens show
 // the same buttons on more rows, with icons only, and a help button at the end (UX MB2).
 
-import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
+import type { PointerEvent as ReactPointerEvent, ReactElement, ReactNode, RefObject } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { blockIconCommand, blockKindOfIcon, uiCommandIds, zoomCommandIds } from './command-ids';
@@ -325,6 +325,53 @@ function useWrappedSeparators(root: RefObject<HTMLElement | null>): void {
   });
 }
 
+/** How far a wheel must scroll over the zoom group for one zoom step (a mouse notch is ~100px). */
+export const zoomWheelStep = 50;
+
+/** A wheel's deltaY in pixels, whatever its deltaMode (lines, pages). */
+function wheelPixels(event: WheelEvent, pageHeight: number): number {
+  if (event.deltaMode === 1) return event.deltaY * 16;
+  if (event.deltaMode === 2) return event.deltaY * pageHeight;
+  return event.deltaY;
+}
+
+/**
+ * [−] [NN%] [+] as one tight group that never wraps apart (M76 Z1). A wheel over it zooms: up
+ * runs "확대", down "축소", one step per mouse notch; a trackpad's small deltas add up to a step.
+ * The listener is native and not passive, so the page and the canvas do not scroll at once.
+ */
+function ZoomGroup({ children }: { readonly children: ReactNode }): ReactElement {
+  const { run, text } = useChrome();
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const runRef = useRef(run);
+  runRef.current = run;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    let sum = 0;
+    function onWheel(event: WheelEvent): void {
+      if (event.deltaY === 0) return;
+      event.preventDefault();
+      const delta = wheelPixels(event, root?.ownerDocument.defaultView?.innerHeight ?? 800);
+      // A turn the other way starts over.
+      sum = Math.sign(sum) === Math.sign(delta) ? sum + delta : delta;
+      if (Math.abs(sum) < zoomWheelStep) return;
+      const id = sum < 0 ? zoomCommandIds.in : zoomCommandIds.out;
+      sum = 0;
+      runRef.current(id);
+    }
+    root.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      root.removeEventListener('wheel', onWheel);
+    };
+  }, []);
+  return (
+    <span className="ans-zoom-group" role="group" aria-label={text('toolbar.zoom')} ref={rootRef}>
+      {children}
+    </span>
+  );
+}
+
 /** A command the toolbar shows outside the registry's groups, drawn with the icon of its id. */
 function withIcon(command: CommandView): CommandView {
   return { ...command, toolbar: { group: 0, order: 0, icon: command.id } };
@@ -376,12 +423,11 @@ export function Toolbar(): ReactElement {
         className="ans-icon-on-narrow"
         isDimmedWhenNoneApply
       />
-      {/* One tight group, so the three read as one control and never wrap apart. */}
-      <span className="ans-zoom-group" role="group" aria-label={text('toolbar.zoom')}>
+      <ZoomGroup>
         {zoomOut && <CommandButton command={withIcon(zoomOut)} />}
         {zoomReset && <ZoomLevelButton command={zoomReset} zoom={zoomLevel} />}
         {zoomIn && <CommandButton command={withIcon(zoomIn)} />}
-      </span>
+      </ZoomGroup>
       <ExamplesButton command={commands.find((command) => command.id === uiCommandIds.examples)} />
       {help && (
         <CommandButton
