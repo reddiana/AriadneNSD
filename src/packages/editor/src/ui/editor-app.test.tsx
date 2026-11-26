@@ -425,23 +425,31 @@ describe('modals', () => {
     }
   });
 
-  it('T-1493: About shows the picture logo, the name and the version in the middle on top, before the rest (M74 A1)', async () => {
+  it('T-1493: About shows the picture logo, the word logo and the version in the middle on top, before the rest, in a narrow modal (M74 A1)', async () => {
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
       engine.handle.commands.run('help.about');
     });
     const dialog = screen.getByRole('dialog', { name: 'About AriadneNSD' });
-    const logo = await within(dialog).findByRole('img', { name: 'AriadneNSD' });
-    expect(logo.getAttribute('src')).toMatch(/^data:image\/svg\+xml,%3Csvg/);
-    expect([logo.getAttribute('width'), logo.getAttribute('height')]).toEqual(['128', '128']);
-    const head = logo.parentElement;
+    expect(dialog.getAttribute('data-size')).toBe('narrow');
+    // The word logo carries the name; the picture beside it is decoration (alt "").
+    const word = await within(dialog).findByRole('img', { name: 'AriadneNSD' });
+    expect(word.getAttribute('class')).toBe('ans-about-wordmark');
+    const head = word.parentElement;
     expect(head?.getAttribute('class')).toBe('ans-about-head');
-    expect([...(head?.children ?? [])].map((child) => child.textContent)).toEqual([
-      '',
-      'AriadneNSD',
-      expect.stringMatching(/^Version \d+\.\d+\.\d+/),
+    const [picture, wordmark, version] = [...(head?.children ?? [])];
+    expect(picture?.getAttribute('class')).toBe('ans-about-logo');
+    expect(picture?.getAttribute('alt')).toBe('');
+    for (const img of [picture, wordmark]) {
+      expect(img?.getAttribute('src')).toMatch(/^data:image\/svg\+xml,%3Csvg/);
+    }
+    expect([picture?.getAttribute('width'), picture?.getAttribute('height')]).toEqual([
+      '128',
+      '128',
     ]);
+    expect(version?.textContent).toMatch(/^Version \d+\.\d+\.\d+/);
+    expect(head?.children).toHaveLength(3);
     expect(head?.nextElementSibling?.textContent).toBe('A Nassi-Shneiderman diagram editor.');
   });
 

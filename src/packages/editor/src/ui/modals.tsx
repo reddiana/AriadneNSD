@@ -17,10 +17,13 @@ export function Modal({
   title,
   onClose,
   children,
+  size,
 }: {
   readonly title: string;
   readonly onClose: () => void;
   readonly children: ReactNode;
+  /** `narrow` for a short message such as About; the default fits tables and lists. */
+  readonly size?: 'narrow';
 }): ReactElement {
   const { text } = useChrome();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -38,6 +41,7 @@ export function Modal({
   return (
     <div
       className="ans-modal"
+      data-size={size}
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -255,12 +259,19 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
   const { text } = useChrome();
   // The logo is a module of its own, fetched when the modal opens (about-logo.ts); its box keeps
   // the place meanwhile so nothing moves when it arrives.
-  const [logo, setLogo] = useState<string | null>(null);
+  const [logo, setLogo] = useState<{ readonly picture: string; readonly word: string } | null>(
+    null,
+  );
   useEffect(() => {
     let isOpen = true;
     const load = async (): Promise<void> => {
-      const { aboutLogoSvg } = await import('./about-logo');
-      if (isOpen) setLogo(`data:image/svg+xml,${encodeURIComponent(aboutLogoSvg)}`);
+      const { aboutLogoSvg, aboutWordmarkSvg } = await import('./about-logo');
+      if (isOpen) {
+        setLogo({
+          picture: `data:image/svg+xml,${encodeURIComponent(aboutLogoSvg)}`,
+          word: `data:image/svg+xml,${encodeURIComponent(aboutWordmarkSvg)}`,
+        });
+      }
     };
     void load();
     return () => {
@@ -268,15 +279,27 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
     };
   }, []);
   return (
-    <Modal title={text('about.title')} onClose={onClose}>
-      {/* Logo, name and version in the middle on top, the rest on the left (M74 A1). */}
+    <Modal title={text('about.title')} onClose={onClose} size="narrow">
+      {/* Picture logo, word logo and version in the middle on top, the rest on the left (M74 A1).
+          The word logo stands for the name; the title above spells it as text. */}
       <div className="ans-about-head">
         {logo === null ? (
-          <span className="ans-about-logo" />
+          <>
+            <span className="ans-about-logo" />
+            <span className="ans-about-wordmark" />
+          </>
         ) : (
-          <img className="ans-about-logo" src={logo} width={128} height={128} alt={productName} />
+          <>
+            <img className="ans-about-logo" src={logo.picture} width={128} height={128} alt="" />
+            <img
+              className="ans-about-wordmark"
+              src={logo.word}
+              width={176}
+              height={22}
+              alt={productName}
+            />
+          </>
         )}
-        <div className="ans-about-name">{productName}</div>
         <p className="ans-note">{text('about.version', { version: editorVersion })}</p>
       </div>
       <p>{text('about.body')}</p>
