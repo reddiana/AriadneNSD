@@ -5,7 +5,7 @@ aliases:
 tags:
   - architecture
 status: 초안
-updated: 2026-11-21
+updated: 2026-11-27
 ---
 
 # 아키텍처 개요
@@ -81,7 +81,8 @@ AriadneNSD의 앱 셋은 따로 설치하고 따로 실행하는 프로그램입
 ## 3. 실행 중의 모습
 
 > [!info] 웹만 그렸습니다
-> 이 장의 다이어그램은 지금 있는 앱인 **웹**(MVP)만 다룹니다. Obsidian 플러그인과 데스크톱은 아직 만들지 않았고, 만들 때 그 앱의 다이어그램을 더합니다.
+> 이 장의 다이어그램은 지금 있는 앱인 **웹**만 다룹니다. Obsidian 플러그인과 데스크톱은 아직 만들지 않았고, 만들 때 그 앱의 다이어그램을 더합니다.
+> Claude skill은 셸이 아니라 이 장에 없습니다 → [[07-claude-skill]]
 
 웹 앱이 브라우저 탭 하나에서 실행될 때, 어떤 컴포넌트가 활성 상태이고 컴포넌트끼리 어떤 방식으로 통신하는지를 보여 주는 C&C 뷰(Component & Connector View)입니다. 웹 셸을 기준으로 그렸습니다. 다른 셸(Obsidian · 데스크톱)에서는 웹 셸 모듈과 외부(회색) 상자만 바뀌고, 셸과 `editor` 사이의 커넥터(C-11 · C-12 · C-15)는 같습니다.
 
@@ -207,7 +208,7 @@ AriadneNSD/
 │  │  │  └─ golden/          골든 파일 (저장되는 SVG의 기대값)
 │  │  └─ editor/             화면 편집기 (주변 UI만 React → ADR-0010)
 │  ├─ apps/                  배포하는 프로그램 (셸)
-│  │  ├─ web/                웹, MVP (Google Drive 연동도 여기, e2e/에 브라우저 테스트)
+│  │  ├─ web/                웹 (Google Drive 연동도 여기, e2e/에 브라우저 테스트)
 │  │  ├─ obsidian/           Obsidian 플러그인 (manifest.json의 원본)
 │  │  └─ desktop/            데스크톱
 │  └─ skills/ariadne-nsd/    Claude skill (셸이 아님, plugin/ 아래가 설치되는 폴더)
@@ -567,13 +568,13 @@ sequenceDiagram
 
 | 대상 | 셸 | 코드의 위치 | 저장 확장자 | 결정 |
 | --- | --- | --- | --- | --- |
-| 웹 (MVP) | 정적 호스팅: GitHub Pages `/app/` | `src/apps/web` | `.ns` | [[0006-file-extensions\|ADR-0006]] |
+| 웹 | 정적 호스팅: GitHub Pages `/app/` | `src/apps/web` | `.ns` | [[0006-file-extensions\|ADR-0006]] |
 | Google Drive | 웹에 통합 | `src/apps/web` 안 | `.ns.svg` | [[0012-google-drive-integration\|ADR-0012]], [[0014-drive-file-extension\|ADR-0014]] |
 | Obsidian 플러그인 | Obsidian 플러그인 API | `src/apps/obsidian` | `.ns.svg` | [[0006-file-extensions\|ADR-0006]] |
 | 데스크톱 | Electron 또는 Tauri | `src/apps/desktop` | `.ns` | [[0009-desktop-framework\|ADR-0009]] (제안됨) |
 | Confluence (`P2`) | Forge 앱의 iframe 안에 웹 화면 | `src/apps/confluence` | 페이지 안의 다이어그램(형식은 정하지 않음) | [[01-requirements#^r-cf\|R-CF-01]] |
 | IDE 플러그인 (`P2`) | VSCode 확장의 웹뷰, 그다음 IntelliJ | `src/apps/vscode`, `src/apps/intellij` | 소스 코드 (코드가 원본) | [[01-requirements#2.7 IDE 플러그인 (나중에)]] |
-| Claude skill (`P2`) | 셸이 아님. Claude가 모델 JSON을 쓰고, 스킬의 스크립트가 앱의 코드로 검증해 `.ns.svg`를 렌더링하고 공유 URL을 생성한다 → [[07-claude-skill]] | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill (나중에)]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] |
+| Claude skill (`P2`) | 셸이 아님. Claude가 모델 JSON을 쓰고, 스킬의 스크립트가 앱의 코드로 검증해 `.ns.svg`를 렌더링하고 공유 URL을 생성한다 → [[07-claude-skill]] | `src/skills/ariadne-nsd` | `.ns.svg`와 공유 URL | [[01-requirements#2.6 Claude skill]], [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] |
 
 코드의 위치와 내보내는 곳은 [[0036-code-layout|ADR-0036]]에 있습니다. 웹은 배포한 사이트의 `/app/`으로, Obsidian 플러그인과 데스크톱은 GitHub Release로 내보냅니다. 빌드 결과(`dist/`)는 저장소에 넣지 않고, GitHub Actions가 빌드해 그곳으로 보냅니다. Claude skill은 GitHub Release의 zip(claude.ai)과 이 저장소의 플러그인 마켓플레이스(Claude Code)로 배포하고, 스킬의 스크립트 `nsd.mjs`는 설치되는 그대로 실행되도록 빌드 결과를 저장소에 넣습니다 → [[07-claude-skill#7. 배포]]
 

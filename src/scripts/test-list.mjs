@@ -116,7 +116,7 @@ const areas = [
   {
     name: 'Claude skill',
     about:
-      'Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill (나중에)]]',
+      'Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 파일과 공유 링크를 만들고 읽는지, 빌드한 스크립트가 지금의 소스와 같고 Node만으로 실행되는지, SKILL.md의 예제가 열리는지 → [[01-requirements#2.6 Claude skill]]',
     paths: ['skills/'],
   },
   {

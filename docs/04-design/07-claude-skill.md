@@ -3,7 +3,7 @@ title: Claude skill
 tags:
   - design
 status: 초안
-updated: 2026-11-21
+updated: 2026-11-27
 ---
 
 # Claude skill
@@ -14,7 +14,7 @@ Claude(claude.ai, Claude Code)가 NS 차트를 그리고 읽고 고치게 하는
 
 ## 관련 요구사항
 
-- [[01-requirements#2.6 Claude skill (나중에)]]: [[01-requirements#^r-skill|R-SKILL-01]](알고리즘 → 다이어그램), [[01-requirements#^r-skill|R-SKILL-02]](코드 → 다이어그램), [[01-requirements#^r-skill|R-SKILL-03]](다이어그램 읽기 · 고치기)
+- [[01-requirements#2.6 Claude skill]]: [[01-requirements#^r-skill|R-SKILL-01]](알고리즘 → 다이어그램), [[01-requirements#^r-skill|R-SKILL-02]](코드 → 다이어그램), [[01-requirements#^r-skill|R-SKILL-03]](다이어그램 읽기 · 고치기)
 - 배포 대상: [[01-requirements#^r-tgt|R-TGT-07]]
 - 스킬이 생성하는 것: 공유 URL [[01-requirements#^r-web|R-WEB-05]], 저장 파일 [[01-file-format|파일 형식 명세]]
 
