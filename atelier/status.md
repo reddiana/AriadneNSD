@@ -73,7 +73,7 @@ updated: 2026-11-27
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])
 - [ ] LinkedIn 글(https://www.linkedin.com/feed/update/urn:li:activity:7530170940547289088/, 2026-11-22 다시 올림)의 댓글: 지금은 메인테이너가 앱 알림으로 보고, 부탁하면 Claude가 Chrome으로 한 번 읽고 답글 초안. Gmail 알림 메일로 정기 확인할지는 미룸(어느 Gmail 계정을 연결할지 — ariadnensd · reddiana, 2026-11-22 메인테이너)
-- [ ] Anthropic Directory에 제출(v0.5.0을 냄): claude.ai에 "AriadneNSD"로 보이는지 확인 → claude.ai/directory/manage에서 메인테이너가 제출, Claude는 앱 안 브라우저로 함께 → [[backlog#Claude skill]]
+- [ ] Anthropic Directory: 검증에서 "스크립트(`nsd.mjs`)는 Verified 조직만"으로 막힘 → 도메인 `ariadnensd.com` 증명(Cloudflare TXT, 지우지 않음), Verified 요청 CASE-44465F27(2026-11-27, Anthropic 사람이 검토). 답은 claude.ai/directory/manage/help의 Your cases에서. 승인되면 제출 양식(저장소 폴더 `src/skills/ariadne-nsd/plugin`)을 다시 검증, 거절되면 스크립트 없는 판 · 우리 마켓플레이스만 가운데 고름 → [[2026-11-27-04-skill-directory]]
 - [ ] 시간 테스트 T-0171 · T-1126: 2026-11-27 조용한 PC에서 `pnpm check` 통과. 다시 실패하면 그때 PC 부하부터 본다 → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
