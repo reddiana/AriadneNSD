@@ -25,6 +25,10 @@ updated: 2026-11-22
 
 - [ ] 깨진 모델 JSON을 붙였을 때의 오류 글(`AriadneNSD could not open the pasted text (…)`)도 안내서 `llms.txt`에 한 줄 더할까? 지금은 공유 링크의 오류 글만 말함 → [[ux-decisions]] JP2
 
+### 홍보
+
+- [ ] 교사 홍보: 써 봐 줄 정보 교사가 주변에 있는지, 독일어 화면(Struktogramm을 쓰는 독일어권 교사용)을 요구사항 후보로 올릴지 → [[promotion#교사]]
+
 ## 확인해 주세요
 
 ### 2026-11-03 세션 06에 Claude(에이전트)가 정한 것

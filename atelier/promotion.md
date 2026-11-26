@@ -219,6 +219,34 @@ The requirements, design docs, decision records and session logs are all public 
 - 알고리즘 갤러리 · Algorithm gallery: https://ariadnensd.com/gallery/
 - 소개와 만든 과정 · About (Korean): https://ariadnensd.com/about
 
+## 교사
+
+메인테이너: "AriadneNSD가 교사들이 좋아할 것 같아요."(2026-11-27). 웹 검색으로 찾은 것이고, 채널에 가입 · 게시는 하지 않았습니다.
+
+### 어디의 교사가 NS 차트를 쓰나
+
+| 지역 | 수업에서 NS 차트 | 근거 |
+| --- | --- | --- |
+| 독일 · 오스트리아 · 스위스 | 쓴다. Struktogramm(DIN 66261)은 김나지움 정보 수업의 표준 도구 | 학교 학습지와 주(州)의 Abitur 자료([바이에른 2024](https://www.isb.bayern.de/fileadmin/user_upload/Gymnasium/Leistungserhebungen/Abiturpruefung/Informatik/Informatik_2024_A.pdf), [베를린의 학교 자료](https://www.siemens-gymnasium-berlin.de/sites/default/files/Artikel_oeffentlich/10_nur-stuktogramme-v26.pdf)), 대학 정보교육과의 수업용 편집기([TU Dresden Stuktog](https://tu-dresden.de/ing/informatik/smt/ddi/die-professur/news/neues-release-des-stuktog-struktogrammeditors)), 브라우저 편집기([ZAP, DIN 66261](https://zap-hosting.com/en/tools/developer-tools/structogram-editor)) |
+| 한국 | 알고리즘 표현은 가르친다. NS 차트가 교과서에 얼마나 나오는지는 확인하지 못함 | 2022 개정 정보과의 "알고리즘과 프로그래밍" 영역([연구](https://koreascience.or.kr/article/JAKO202415036521152.pdf)). 순서도 · 의사코드 연구는 많음 |
+| 영미권 | 거의 쓰지 않는다. 순서도 · 의사코드 중심 | 영국 GCSE · [NCCE 연수](https://teachcomputing.org/courses/cp420). 비슷한 도구는 Flowgorithm · Think2Code |
+
+독일어권이 가장 맞습니다. 다만 화면과 그림 글자가 독일어여야 하고 DIN 66261 표기와 맞는지 봐야 합니다(지금 화면은 영어 · 한국어).
+
+### 채널 후보
+
+- 한국 중등 정보 교사: 시 · 도 교육청의 SW · AI 교육 연구회, 정보 교사 페이스북 그룹, 에듀넷 · 쌤동네 같은 자료 공유, 한국정보교육학회(KAIE) · 한국컴퓨터교육학회(KACE) 학술대회의 데모 · 포스터. 정보 교과 교사만의 커뮤니티는 검색으로 확인하지 못해 교사에게 물어봐야 함
+- 한국 초등 교사: [인디스쿨](https://ko.wikipedia.org/wiki/%EC%9D%B8%EB%94%94%EC%8A%A4%EC%BF%A8)이 가장 크지만 초등 교사 인증이 필요하고, 초등은 블록 코딩 중심이라 맞지 않음
+- 독일어권: ZUM(Zentrale für Unterrichtsmedien)의 위키 · 포럼 · [학습지](https://unterrichten.zum.de/images/f/fc/Aufgabenblatt_Basic_Struktogramm.pdf), 대학 정보교육과의 수업 도구 목록([Duisburg-Essen DDI](https://ddi.informatik.uni-due.de/en/schools-practice/links/media-for-the-informatics-classroom)), GI의 학교 정보교육 분과(IBBS), 학회 INFOS
+- 영미권: [CSTA 커뮤니티](https://csteachers.org/), [Code.org 교사 포럼](https://forum.code.org/). NS 차트를 쓰지 않아 뒤로
+
+### 차례 (Claude의 추천)
+
+1. 한국 정보 교사 한두 명에게 먼저 써 보게 한다. 학습지 그림, 학생에게 보낼 링크, 시험 문제 만들기 가운데 무엇을 원하는지 들은 뒤 글을 쓴다
+2. 사용법에 "수업에서 쓰기" 꼭지: PNG · PDF로 학습지, 공유 링크 · 보기 모드로 학생에게, 갤러리의 예제 22개. 가입 · 설치 없이 무료라는 것을 앞세움
+3. 그 꼭지를 들고 한국 채널(연구회 · 페이스북 그룹 · 학회)로
+4. 독일어권은 독일어 화면을 넣을지 정한 뒤(넣는다면 웹 1.0 무렵)
+
 ## 페이스북 그룹 후보
 
 대상은 알고리즘에 관심 많은 사람이고, AI · Claude 스킬 쪽 그룹은 뺍니다(2026-11-22 메인테이너). 2026-11-22에 메인테이너의 Chrome으로 페이스북 그룹 검색과 각 그룹의 "정보" 탭을 읽어 적었습니다(가입 · 게시는 하지 않음).
