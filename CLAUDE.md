@@ -90,7 +90,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 5. 메인테이너(Claude Code 초보자)가 Claude Code나 AI와 일하는 법을 새로 배웠으면 `journal/learning-claude-code.md`에 더한다.
 6. 기술을 설명했으면 `til/`에 정리한다.
 7. 정리: 결정은 `docs/`와 ADR · DR에 반영하고(미뤄 둔 정리를 모두 여기서), 세션 기록과 상태 문서에는 링크만.
-8. (마무리만) push 전 전체 검사: `pnpm test-list:strict`로 번역을 채우고, `pnpm check` 전체와 `pnpm e2e`. 실패하면 고치거나 알린다. 지난 push 뒤로 코드가 바뀌지 않았으면(`git diff --stat origin/main -- src`) 테스트 · E2E는 하지 않고, 바뀐 설정의 검사(lint · 포맷 등)만. E2E는 편집기의 동작이 바뀐 때만(localhost에서 돌지 않는 코드 · 문구 · 정적 HTML은 아님), 사이트 쪽은 `SKIP_APP=1 bash site/build.sh`. 시간 테스트(T-0171 · T-1126)는 다른 일이 돌지 않을 때만 믿는다.
+8. (마무리만) push 전 전체 검사: `pnpm test-list:strict`로 번역을 채우고, `pnpm check` 전체와 `pnpm e2e`. 실패하면 고치거나 알린다. 지난 push 뒤로 코드가 바뀌지 않았으면(`git diff --stat origin/main -- src`) 테스트 · E2E는 하지 않고, 바뀐 설정의 검사(lint · 포맷 등)만. 마지막 코드 변경 뒤에 이 세션에서 이미 돌린 검사(에이전트의 E2E 포함)는 다시 돌리지 않는다. E2E는 편집기의 동작이 바뀐 때만(localhost에서 돌지 않는 코드 · 문구 · 정적 HTML은 아님), 사이트 쪽은 `SKIP_APP=1 bash site/build.sh`. 시간 테스트(T-0171 · T-1126)는 다른 일이 돌지 않을 때만 믿는다.
 9. 바뀐 파일을 모두 커밋한다. 마무리면 push하고, push한 뒤 `status.md`의 "정한 것이 어디까지 갔나"의 그 줄들을 "사이트에 있음"으로.
 10. 정리를 다 마치면(매듭은 커밋까지, 마무리는 push까지) 보고한 뒤 대화를 비운다(`/clear`: `mcp__ccd_session_mgmt__clear_session`에 `session_id: "self"`). 매듭이든 마무리든 같다. 비운 뒤는 새 세션이고 세션 기록도 그날의 다음 번호로 새로 쓴다(앞 기록에 덧붙이지 않음). 정리가 끝나지 않았으면(검사 실패, 답을 기다림) 비우지 않는다.
 

@@ -66,7 +66,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0017 | 커맨드 팔레트에서 명령을 찾아 실행한다 | [[01-requirements#^at\|AT-16]] |
 | T-0018 | `?`는 단축키 목록을, 도움말은 사용법을 연다 | [[01-requirements#^at\|AT-17]] |
 | T-0019 | 키와 툴바로 실행 취소 · 다시 실행 | - |
-| T-0020 | zoom with keys, Ctrl+wheel and the zoom buttons | - |
+| T-0020 | 키 · `Ctrl`+휠 · 확대 · 축소 버튼으로 줌 | - |
 | T-0021 | 컨텍스트 메뉴가 선택에 맞는 명령을 보인다 | - |
 | T-0022 | 내려받은 파일을 다시 열면 같은 바이트로 내려받는다 | [[01-requirements#^at\|AT-02]] |
 | T-0023 | 다른 이름으로 저장은 편집기 안에서 이름을 묻고, 취소하면 편집한 것을 지킨다 | [[01-requirements#^at\|AT-07]] |
@@ -850,16 +850,16 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/document-layer.test.ts`
 
-The document layer (03-editor 1.2, QA-07). Vitest + happy-dom · 테스트 6개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+문서 레이어 (03-editor 1.2, QA-07). Vitest + happy-dom · 테스트 6개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-07]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1516 | takes the numbers out of the start tag only, so a moved element keeps its key | - |
-| T-1517 | pairs the lines before and after an inserted one, and a moved tail by its keys | - |
-| T-1518 | draws the whole layer first, and again for content it cannot pair | - |
-| T-1519 | ends each edit with the DOM that parsing the whole markup gives | - |
-| T-1520 | keeps the elements that stay or only move, and returns the ones it added or changed | - |
-| T-1521 | gives a moved line a fresh snapped width, and replaces an element whose attributes differ | - |
+| T-1516 | 시작 태그에서만 숫자를 빼므로, 옮겨진 요소도 키가 같다 | - |
+| T-1517 | 넣은 줄의 앞뒤 줄을 짝짓고, 밀려난 뒷부분은 키로 짝짓는다 | - |
+| T-1518 | 처음에는 레이어 전체를 그리고, 짝지을 수 없는 내용이면 다시 전체를 그린다 | - |
+| T-1519 | 편집마다 마크업 전체를 파싱한 것과 같은 DOM으로 끝난다 | - |
+| T-1520 | 그대로이거나 옮겨지기만 한 요소는 유지하고, 더하거나 바꾼 요소를 돌려준다 | - |
+| T-1521 | 옮겨진 줄에는 픽셀에 새로 맞춘 선 굵기를 주고, 속성이 다른 요소는 교체한다 | - |
 
 ^t-packages-editor-src-dom-document-layer-test-ts
 
@@ -1129,7 +1129,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-menu bar · toolbar block icons · toolbar wrap dropdown · command palette · status bar · key hint · modals · canvas slot · context menu · dialogs and notices from the shell · picker (interaction rules "호출 블록") · the dialog modal · the zoom buttons (M76 Z1). Vitest + happy-dom · 테스트 46개.
+메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달 · 확대 · 축소 버튼(M76 Z1). Vitest + happy-dom · 테스트 46개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1173,12 +1173,12 @@ menu bar · toolbar block icons · toolbar wrap dropdown · command palette · s
 | T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
 | T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
-| T-1510 | [zoom out] [NN%] [zoom in] change the zoom with one click each, in that order | - |
-| T-1511 | the zoom level goes back to 100% when clicked, and stays readable at 100% | - |
-| T-1512 | a zoom button at its limit is dimmed with the reason, and a click still runs it | [[ux-decisions\|UX DD1]] |
-| T-1513 | a wheel over the zoom group zooms, one step per mouse notch, and keeps the page from scrolling | - |
-| T-1514 | a trackpad’s small deltas add up to a step; a horizontal-only wheel does nothing | - |
-| T-1515 | a wheel at the limit still runs the command, so the status bar tells why | [[ux-decisions\|UX DD1]] |
+| T-1510 | [축소] [NN%] [확대]가 이 차례로 있고, 한 번 누를 때마다 배율을 바꾼다 | - |
+| T-1511 | 배율을 누르면 100%로 돌아가고, 100%에서도 흐리지 않게 읽힌다 | - |
+| T-1512 | 한계에 닿은 확대 · 축소 버튼은 까닭과 함께 흐려지고, 눌러도 명령을 실행한다 | [[ux-decisions\|UX DD1]] |
+| T-1513 | 확대 · 축소 묶음 위의 휠은 마우스 한 칸에 한 단계씩 줌하고, 페이지는 스크롤하지 않는다 | - |
+| T-1514 | 트랙패드의 작은 움직임은 모여서 한 단계가 되고, 가로로만 굴린 휠은 아무것도 하지 않는다 | - |
+| T-1515 | 한계에서 굴린 휠도 명령을 실행하므로, 상태 표시줄이 까닭을 알린다 | [[ux-decisions\|UX DD1]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
@@ -1279,9 +1279,9 @@ commandViewSource. Vitest · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1522 | evaluates the commands once per registry change for all its readers | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
-| T-1523 | keeps the views that did not change, and the whole list when none did | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
-| T-1524 | formats a plain message key once, not on every change | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1522 | 레지스트리가 바뀔 때마다 명령을 한 번만 계산해 모든 읽는 쪽이 함께 쓴다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1523 | 바뀌지 않은 뷰는 그대로 쓰고, 아무것도 바뀌지 않았으면 목록 전체를 그대로 쓴다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1524 | 인자 없는 메시지 키는 바뀔 때마다가 아니라 한 번만 포맷한다 | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
 
 ^t-packages-editor-src-ui-command-view-test-ts
 
