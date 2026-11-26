@@ -370,10 +370,24 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 | `main.tsx` | 시작 순서. 설정 · 데이터베이스 · 편집기 · 셸을 만들어 서로 연결한다 |
 | `app.tsx` | 최상위 React 컴포넌트. `EditorApp`과 파일을 끌어 올 때의 안내를 렌더링한다 |
 | `editor-contract.ts` | 셸이 사용하는 `editor`의 좁은 계약. 셸의 모듈은 이 타입만 읽고, `main.tsx`가 실제 `editor`와 연결한다 |
-| `shell/` | 웹 셸: 명령과 문서 전환(`web-shell.ts`), 열기 · 저장 창(`places.ts`), 두 탭 잠금(`tab-lock.ts`), 페이지 이벤트(`page-events.ts`), 화면 밝기(`appearance.ts`), 셸의 문구(`messages.ts`) |
+| `shell/` | 웹 셸. 아래 표의 부분들과 열기 · 저장 창(`places.ts`), 두 탭 잠금(`tab-lock.ts`), 자동 저장 · 로컬 백업의 타이머(`timers.ts`), 페이지 이벤트(`page-events.ts`), 화면 밝기(`appearance.ts`), 셸의 문구(`messages.ts`) |
 | `storage/` | 브라우저 저장소: IndexedDB(`browser-db.ts`), 최근 파일 · 브라우저 문서의 규칙(`recent-files.ts` · `browser-documents.ts`), 설정(`settings-store.ts`) |
 | `files/` | 파일과 내보내기: `DocumentStore` 구현(`web-document-store.ts`), File System Access와 내려받기(`file-system-access.ts` · `file-fallback.ts`), PNG · PDF, 공유 링크, 붙여넣은 문서의 인식(`pasted-document.ts`), zip |
 | `print/` · `examples/` · `fonts/` · `perf/` | 인쇄 전용 보기(1.6), 예제와 썸네일, 글꼴의 로드, 점검 모드(9장) |
+
+웹 셸(`shell/`)은 `web-shell.ts`가 부분들이 함께 쓰는 상태(`ShellContext`)를 한 번 만들고, 부분들을 이어 시작합니다. `status.ts` · `opening.ts` · `shell-commands.ts`는 어느 셸에나 필요한 일이라 다른 셸을 만들 때 함께 쓸 후보이고, 나머지 부분은 웹에만 있는 일입니다.
+
+| 모듈 (`shell/`) | 담당 | 범위 |
+| --- | --- | --- |
+| `web-shell.ts` | 조립과 시작(`createWebShell`, `start`): 처음 문서를 열고 `editor`와 잇는다 | 웹 |
+| `shell-context.ts` | 부분들이 함께 쓰는 것: 셸의 옵션, 읽고 바꾸는 상태, 화면 언어의 문구, 상태 표시줄 알림. `web-shell.ts`를 가져오지 않고 타입을 쓰게 따로 둔다(순환 없음) | 웹 |
+| `status.ts` | 창 제목, 로컬 백업, 자동 저장 → [[03-editor#6.2 editor가 셸에 알리는 것]] | 공통 후보 |
+| `opening.ts` | 열기의 흐름: 파일을 먼저 검사해 열 수 없으면 지금 문서를 그대로 두기, 새 문서를 먼저 저장할지 묻기, 탭 잠금, 복원할 백업. 파일 › 열기 창 · 열기 대화 상자 · 드롭은 웹의 것 → [[03-editor#6.1 새로 · 열기 · 최근 파일]] | 공통 후보 |
+| `shell-commands.ts` | 셸이 명령 목록에 더하는 명령: 새로 · 열기 · 내보내기 · 공유 · 인쇄(공유와 붙여넣은 JSON에서 열기는 웹의 것) | 공통 후보 |
+| `browser-documents.ts` | 이 브라우저의 문서(1.3): 열기 · 저장 창의 브라우저 쪽, IndexedDB에 저장 · 열기, 이름 바꾸기 · 삭제 · 내보내기 · 가져오기 | 웹 |
+| `recent-files.ts` | 최근 파일(1.1): 파일 › 최근 파일 하위 메뉴 | 웹 |
+| `share-view.ts` | 공유 링크와 보기 모드(3장): URL의 `#…`을 읽기 전용으로 열기, 열리지 않는 링크의 설명, "편집" | 웹 |
+| `paste-open.ts` | 텍스트로 붙여넣은 문서(3.2)(공유 링크, 모델 JSON)를 새 문서로 열기, 파일 › 붙여넣은 JSON에서 열기 | 웹 |
 
 시작 순서입니다. 단계마다 이름을 남겨, 시작하지 못하면 어느 단계에서 멈췄는지 시작 화면에 표시합니다(7장).
 

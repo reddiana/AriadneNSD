@@ -116,18 +116,18 @@ AriadneNSD의 앱 셋은 따로 설치하고 따로 실행하는 프로그램입
 
 | 컴포넌트 | 유형 | 코드 | 생명주기 | 하는 일 |
 | --- | --- | --- | --- | --- |
-| 웹 셸 | 수동 · 조립 | `apps/web/src/shell/web-shell.ts` | 항상 | `editor`를 생성하고 문서를 전달, 셸 명령(새로 · 열기 · 내보내기), 알림 |
+| 웹 셸 | 수동 · 조립 | `apps/web/src/shell/web-shell.ts`와 그 부분(`status.ts` · `opening.ts` · `shell-commands.ts` …) | 항상 | `editor`를 생성하고 문서를 전달, 셸 명령(새로 · 열기 · 내보내기), 알림. 부분들은 함께 쓰는 상태(`ShellContext`)로 이어진다 → [[06-web#10. 모듈과 시작 순서]] |
 | 타이머 | 능동 | `apps/web/src/shell/timers.ts` | 편집한 뒤 | 자동 저장(2초 뒤), 로컬 백업(0.5초 안의 편집을 한 번에) |
 | 공유 링크 | 능동 | `apps/web/src/files/share-link.ts`, `main.tsx` | 시작할 때 · `hashchange` | fragment를 디코딩해 문서로 엶 |
 | 탭 잠금 | 능동 | `apps/web/src/shell/tab-lock.ts` | 문서를 열 때 | 같은 문서를 연 탭이 있으면 나중 탭은 보기만 |
 | 파일 어댑터 | 수동 | `apps/web/src/files/web-document-store.ts` | 열기 · 저장 | `DocumentStore` 구현: File System Access, 내려받기, 브라우저 문서 |
 | 화면 글꼴 로더 | 수동 | `apps/web/src/fonts/screen-font.ts` | 그 문자가 처음 나올 때 | 글꼴 슬라이스(woff2)를 `FontFace`로 등록 → [[0040-screen-font-slices\|ADR-0040]] |
 | 저장 글꼴 로더 | 수동 | `apps/web/src/fonts/save-font.ts` | 처음 저장 · PDF | 서브셋을 떠낼 TTF를 받음 |
-| 입력 | 능동 | `packages/editor/src/input/` | 항상 | DOM 이벤트 → 키맵 → 명령 id |
+| 입력 | 능동 | `packages/editor/src/dom/canvas-input.ts` · `canvas-drag.ts` · `inline-editor.ts`, `session/key-reader.ts`, `input/` | 항상 | DOM 이벤트 → 키맵 → 명령 id. 캔버스 뷰의 부분으로, 이벤트를 옮기기만 하고 정하는 것은 명령 레지스트리 · 세션을 거침 → [[03-editor#1. 화면 구성]] |
 | 주변 UI | 수동 | `packages/editor/src/ui/` (React) | 항상 | 메뉴 · 툴바 · 모달 · 상태 표시줄 |
 | 명령 레지스트리 | 수동 | `packages/editor/src/commands/` | 항상 | id로 실행. 셸 명령도 같은 목록 → [[0033-command-list-for-shells\|ADR-0033]] |
 | 세션 | 수동 · 상태 | `packages/editor/src/session/` | 문서 하나 | 지금 문서, undo 스택, 선택. 문서가 바뀌면 레이아웃과 렌더링 결과를 생성해 보유함(`renderDoc`) |
-| 캔버스 뷰 | 수동 | `packages/editor/src/dom/canvas-view.ts`, `overlay.ts` | 바뀔 때마다 | 세션이 생성한 렌더링 결과를 다음 프레임에 DOM에 넣고, 레이아웃 결과로 선택 오버레이를 렌더링함 |
+| 캔버스 뷰 | 수동 | `packages/editor/src/dom/canvas-view.ts`, `overlay.ts` | 바뀔 때마다 | 세션이 생성한 렌더링 결과를 다음 프레임에 DOM에 넣고, 레이아웃 결과로 선택 오버레이를 렌더링함. |
 | 저장 | 수동 | `packages/editor/src/save/` | 저장 · 백업 | 저장할 SVG 텍스트를 만듦 |
 | 편집 명령 · 레이아웃 · 렌더러 · 파일 형식 | 순수 함수 | `packages/core/src/commands` · `layout` · `render` · `format` | 호출될 때 | 문서 → 새 문서, 위치, SVG, 직렬화 → 4.1의 표 |
 | advance 폭 테이블 | 순수 함수 | `packages/fonts` | 호출될 때 | 문자마다의 폭 |

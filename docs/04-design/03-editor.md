@@ -33,9 +33,10 @@ updated: 2026-11-21
 | 팝업 레이어 | 컨텍스트 메뉴, 키 힌트, 커맨드 팔레트, 모달 | React | 열고 닫을 때 |
 
 - 문서 레이어와 오버레이 레이어는 같은 좌표계(문서 좌표, px)를 씁니다. 오버레이 레이어는 문서 레이어 위에 같은 크기로 겹친 SVG이고, 저장할 때는 문서 레이어만 씁니다. 그래서 "편집 중에만 뜨는 표시는 저장되는 그림에 넣지 않는다"([[0018-save-as-shown|ADR-0018]])가 구조로 지켜집니다.
-- 화면 색(라이트 · 다크, 고대비)은 팝업 레이어와 캔버스의 바깥에 적용됩니다. 문서 레이어는 문서의 테마로 렌더링합니다. 오버레이와 인라인 에디터는 종이 위에 렌더링하므로 화면 색이 아니라 테마의 종류(`Theme.kind`: 밝음 · 어두움)를 따릅니다: `CanvasView`가 렌더링 결과가 바뀔 때마다 `editColorsFor(kind)`를 오버레이에 전달하고, 인라인 에디터의 색(테마의 `paper` · `text.primary` · `text.muted`, `edit.field` · `edit.error`)을 캔버스의 CSS 변수로 둡니다 → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#3.4 화면 색]], [[0044-document-themes|ADR-0044]]
+- 화면 색(라이트 · 다크, 고대비)은 팝업 레이어와 캔버스의 바깥에 적용됩니다. 문서 레이어는 문서의 테마로 렌더링합니다. 오버레이와 인라인 에디터는 종이 위에 렌더링하므로 화면 색이 아니라 테마의 종류(`Theme.kind`: 밝음 · 어두움)를 따릅니다: `CanvasView`가 문서의 테마 설정이 바뀔 때 `editColorsFor(kind)`를 정해 오버레이에 전달하고, 인라인 에디터의 색(테마의 `paper` · `text.primary` · `text.muted`, `edit.field` · `edit.error`)을 캔버스의 CSS 변수로 둡니다 → [[04-visual-design#2. 레이어와 출력]], [[04-visual-design#3.4 화면 색]], [[0044-document-themes|ADR-0044]]
 - 오버레이 레이어의 색과 굵기는 시각 디자인의 편집 레이어 토큰(`edit.*`, 밝은 종이용과 어두운 종이용)을 씁니다 → [[04-visual-design#7.1 상태 표]]
 - 문서 레이어의 둘레에는 화면에서만 그림자를 두릅니다(모서리 반지름 4px, CSS `box-shadow`). 저장 파일에는 들어가지 않습니다 → [[04-visual-design#원칙 4. 문서는 종이다]]
+- 다이어그램 영역은 React 밖의 `CanvasView`(`dom/canvas-view.ts`)입니다(→ [[0010-ui-framework|ADR-0010]]). 문서 · 오버레이 레이어, 줌, 스크롤을 맡고, 세 부분을 둡니다: 입력(`dom/canvas-input.ts`: 키 · 포커스 · 컨텍스트 메뉴 · 포인터 · 더블클릭 · 휠, 3장), 드래그 앤 드롭(`dom/canvas-drag.ts`, 3.2), 인라인 에디터(`dom/inline-editor.ts`, 3.4). 부분들은 DOM 이벤트를 옮길 뿐이고, 정하는 것은 모두 세션이나 명령 목록을 거칩니다.
 
 **컨텍스트 메뉴**(팝업 레이어)는 블록 위의 오른쪽 클릭, `Shift`+`F10`, 메뉴 키(`ContextMenu`)로 엽니다. 규칙 → [[02-interaction-rules#컨텍스트 메뉴]]
 
@@ -53,9 +54,13 @@ updated: 2026-11-21
 
 ### 1.2 다시 렌더링
 
-- 편집할 때마다 문서 전체를 처음부터 다시 계산합니다(→ [[0037-two-pass-full-layout|ADR-0037]]). 문서 레이어는 SVG 문자열을 전체 교체합니다. 블록 500개에서 10ms 안팎이라 나누어 고치지 않습니다 → [[02-layout#4. 성능]]
+- 편집할 때마다 문서 전체를 처음부터 다시 계산합니다(→ [[0037-two-pass-full-layout|ADR-0037]], [[02-layout#4. 성능]]). 문서 레이어는 렌더링 결과가 바뀌면 SVG 문자열로 전체 교체하고(`innerHTML`), 선 맞추기(1.1)도 문서 레이어 전체에 다시 합니다. 큰 문서에서는 이 교체와 그 뒤 브라우저의 레이아웃 · 페인트가 편집 응답의 대부분을 차지합니다 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]]
 - 한 프레임에 한 번만 렌더링합니다. 명령이 여럿 이어져도(예: 붙여넣은 뒤 선택) `requestAnimationFrame` 하나로 모읍니다.
-- 오버레이 레이어는 선택만 바뀌면 문서 레이어를 건드리지 않고 다시 렌더링합니다. 키로 블록 사이를 오갈 때 문서 레이어를 다시 그리지 않으려는 것입니다.
+- 오버레이 레이어는 선택만 바뀌면 문서 레이어를 건드리지 않고 다시 렌더링합니다. 키로 블록 사이를 오갈 때 문서 레이어를 다시 그리지 않으려는 것입니다. 만든 오버레이의 마크업이 앞과 같으면(호버 · 드래그 중) 다시 넣지 않습니다.
+- 오버레이 · 인라인 에디터의 색(1장)은 문서의 테마 설정이 바뀔 때만 다시 정합니다.
+
+> [!info] 미완성: 바뀐 요소만 문서 레이어에 반영하기
+> `DocumentLayer`(`dom/document-layer.ts`)는 새 렌더링을 앞 렌더링과 요소(SVG의 한 줄)마다 견주어 다른 것만 고칩니다. 렌더링 결과는 그룹 안에 요소 하나가 한 줄이고(`toSvg`), 두 줄은 시작 태그의 숫자를 뺀 열쇠로 짝짓습니다. 편집 아래로 밀린 블록은 열쇠가 같아 기존 요소에 새 좌표만 쓰고(파싱하지 않음), 짝이 없는 줄만 파싱해 넣습니다. 짝지을 수 없는 내용이면 전체를 다시 그립니다. 고친 요소를 반환하므로 선 맞추기도 그 요소에만 합니다(`snapCrispElements`). 결과 DOM은 전체를 다시 파싱한 것과 같습니다([[99-test-list#^t-packages-editor-src-dom-document-layer-test-ts|T-1519]]). 이 클래스와 테스트는 있지만 `CanvasView`는 아직 이것을 쓰지 않고 위처럼 전체를 교체합니다.
 
 ## 2. 상태와 선택
 
@@ -173,6 +178,8 @@ type Extracted = { call: Id; count: number };        // 그 위치에 남은 호
 | `load(doc, options)` | 문서를 전체 교체합니다. undo를 비우고 선택은 옵션의 값으로 둡니다 |
 | `notify(message, level?)` · `refuse(reason)` · `ask(question, choices)` | 상태 표시줄의 알림, 명령이 거절한 이유, 버튼이 달린 물음 |
 | `index()` · `shown()` | 모델의 색인과 보이는 나무(2.2)를 계산합니다. 문서가 바뀔 때까지 재사용합니다 |
+
+세션의 부분 둘은 따로 된 모듈이고, 상태는 세션이 보유하며 부분은 세션을 통해 읽고 씁니다: 인라인 에디터의 텍스트 흐름(`TextEditing`, `session/text-editing.ts`: 칸을 열 때의 텍스트, 호출 블록의 칸 사이 이동, 닫을 때의 텍스트 편집 명령 하나 → 3.4)과 다이어그램 영역의 키 읽기(`KeyReader`, `session/key-reader.ts`: 두 키 대기, 키 힌트, 범위 선택 키, `Esc`, 상태 표시줄의 물음에 답하는 키 → 4장). 호출 블록의 칸과 이름을 내용의 색인에서 읽는 것은 `session/call-names.ts`입니다.
 
 세션을 만드는 옵션(`SessionOptions`)은 클립보드, 타이머, 키 힌트를 보일지, 로그, 키 표, 시간 측정기입니다. 문서를 받을 때의 옵션(`LoadOptions`)은 파일에서 읽어 보유할 설정 값(`kept`), 처음 선택, 저장 안 됨 여부, 읽기 전용 여부입니다. 명령이 끝난 뒤의 처리(`After`)는 다음 선택, 함께 바꿀 뷰 상태, 바로 열 인라인 에디터입니다.
 
@@ -312,6 +319,20 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 - 이름이 상황에 따라 바뀌는 예: 원래 파일에 쓸 수 없는 브라우저(`store.canWriteInPlace`가 false)에서는 "저장"을 "내려받기"로 표시합니다 → [[06-web#1. 파일 열기·저장]]
 - 명령의 대부분은 `editor`가 만듭니다. 저장 · 다른 이름으로 저장도 `editor`의 명령이고(`DocumentStore`를 거쳐 셸에 전달됨), 셸은 새로 · 열기 · 최근 파일 · 내보내기(웹은 공유 링크 복사도)만 만들어 같은 목록에 더합니다 → 6.1
+- `editor`의 명령은 묶음마다 모듈 하나에서 만들고, `commands/editor-commands.ts`의 `editorCommands`가 이것을 모아 목록의 순서를 정합니다.
+
+| 모듈 (`commands/`) | 명령 |
+| --- | --- |
+| `insert-wrap-commands.ts` | 삽입, 감싸기 · 풀기 |
+| `branch-commands.ts` | 분기의 삽입 · 삭제, If ↔ Case 바꾸기 |
+| `clipboard-commands.ts` | 잘라내기 · 복사 · 붙여넣기 · 삭제 |
+| `cursor-commands.ts` | 블록 옮기기, 텍스트 편집, 실행 취소 · 다시 하기, 선택 · 이동, 줌 |
+| `call-commands.ts` | 호출 블록(삽입, 대상 정하기, 대상으로 가기, Method 만들기, Method 펼쳐 넣기) |
+| `method-commands.ts` | 헤더와 다이어그램, 새 Method로 빼기 |
+| `file-commands.ts` | 저장 · 다른 이름으로 저장 |
+| `command-helpers.ts` | 묶음들이 함께 쓰는 것: 명령이 받는 의존(`CommandDeps`), 여러 묶음이 쓰는 작은 함수, 선택을 살피는 도우미 |
+
+- 메뉴 바 · 툴바 · 키 힌트 등 명령을 보이는 주변 UI는 명령마다의 화면 이름 · 적용 여부 · 이유(`CommandView`)를 `commandViewSource`(`ui/command-view.ts`) 하나에서 함께 읽습니다. 명령 목록이 바뀌었다고 알린 뒤(`onChange`: 명령의 등록 · 해제, 상태가 바뀌어 적용 여부가 달라졌을 수 있을 때) 처음 읽을 때 한 번만 계산해 모든 컴포넌트가 함께 쓰고, 인자 없는 메시지 키의 문구는 한 번만 만들며, 바뀌지 않은 명령의 `CommandView`는 앞의 것을 그대로 씁니다. 그래서 편집마다 컴포넌트 수만큼 `when`과 이름을 다시 계산하지 않습니다 → [[03-quality-attribute-scenarios#QA-07 편집 반응 시간|QA-07]]
 
 ### 5.1 메뉴 구성
 
@@ -364,6 +385,8 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- | --- | --- | --- | --- |
 | 필요 인터페이스 (required, 포트) | `DocumentStore`, `SettingsStore` | `editor` | 셸 (어댑터) | `editor` | [[0031-shell-interfaces\|ADR-0031]] |
 | 제공 인터페이스 (provided) | `CommandRegistry`, `SettingsSchema`, `EditorHandle` | `editor` | `editor` | 셸 | [[0033-command-list-for-shells\|ADR-0033]] |
+
+셸이 부르는 `createEditor`는 `create-editor.ts`에 있고, 세션 · 명령 목록 · 캔버스 뷰를 만들어 잇고 `EditorHandle`을 반환합니다. 두 부분은 따로 된 모듈입니다: `editor`가 아는 설정의 id와 목록, 문서 설정을 바꿀 때의 검사(`settings.ts`, 6.6)와, 열 것(`OpenedDocument`)을 문서로 읽거나 읽지 못한 까닭을 내는 것(`read-document.ts`: 로컬 백업, 만들어 둔 문서, 새 문서, 파일의 순서).
 
 ```ts
 // 시작: 셸이 editor를 만든다
