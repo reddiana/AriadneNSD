@@ -1,0 +1,123 @@
+<title>M78 플러그인 아이콘</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* 레이아웃: 안 하나에 한 띠. 왼쪽에 번호 딱지와 설명, 오른쪽에 실제 크기들(밝은 바탕 · 어두운 바탕), 아래에 목록 줄 미리보기 */
+:root {
+  --bg: #f6f4f2; --panel: #ffffff; --fg: #2b2522; --muted: #6f6560; --line: #e2dcd8;
+  --accent: #c9401f; --chip-fg: #ffffff; --star: #b7791f;
+  --light-ground: #ffffff; --dark-ground: #1e1b1a; --dark-text: #ece6e2; --dark-muted: #a59c97;
+  --sans: "IBM Plex Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171514; --panel: #211e1c; --fg: #ece6e2; --muted: #a59c97; --line: #36302d; --accent: #e0603e; --star: #e3b04b; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #171514; --panel: #211e1c; --fg: #ece6e2; --muted: #a59c97; --line: #36302d; --accent: #e0603e; --star: #e3b04b; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 48px; }
+main { max-width: 1040px; margin: 0 auto; display: grid; gap: 20px; }
+h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 68ch; margin: 0; }
+.facts { display: grid; gap: 4px; margin: 0; padding: 12px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); font-size: .92rem; }
+.facts li { list-style: none; }
+.opt { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 14px; }
+.opt.rec { border-color: var(--star); border-width: 2px; }
+.head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.chip { font-family: var(--mono); background: var(--accent); color: var(--chip-fg); border-radius: 4px; padding: 1px 8px; font-size: .95rem; }
+.head h2 { font-size: 1.1rem; margin: 0; }
+.star { color: var(--star); font-weight: 600; }
+.desc { margin: 0; color: var(--muted); max-width: 72ch; }
+.grounds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 720px) { .grounds { grid-template-columns: 1fr; } }
+.ground { border-radius: 8px; padding: 14px; display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; min-width: 0; }
+.ground.l { background: var(--light-ground); border: 1px solid var(--line); color: #6f6560; }
+.ground.d { background: var(--dark-ground); color: var(--dark-muted); }
+.sz { display: grid; justify-items: center; gap: 4px; font-family: var(--mono); font-size: .72rem; }
+.sz img { display: block; }
+.rows { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 720px) { .rows { grid-template-columns: 1fr; } }
+.row { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 8px; min-width: 0; }
+.row.l { background: var(--light-ground); border: 1px solid var(--line); color: #2b2522; }
+.row.d { background: var(--dark-ground); color: var(--dark-text); }
+.row .t { min-width: 0; }
+.row b { display: block; font-size: .92rem; }
+.row span { display: block; font-size: .8rem; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cap { font-size: .8rem; color: var(--muted); margin: 0; }
+footer { color: var(--muted); font-size: .85rem; }
+</style>
+
+<main>
+  <h1>M78 플러그인 아이콘</h1>
+  <p class="lede">Anthropic Directory에 제출할 플러그인 <code>ariadne-nsd</code>의 아이콘을 고릅니다. 네 안 모두 지금 쓰는 로고(DR-0006)의 SVG를 그대로 쓰고, NS 차트 배지만 새로 그렸습니다. 크기마다 실제 픽셀로 보입니다.</p>
+  <ul class="facts">
+    <li>아이콘은 처음 제출할 때 한 번만 정해지고, 나중에 파일을 바꿔도 목록의 아이콘은 그대로입니다.</li>
+    <li>형식은 정사각형 PNG 512~2048px(SVG 불가)입니다. 고른 안을 1024px PNG로 뽑아 <code>.claude-plugin/icon.png</code>에 둡니다.</li>
+    <li>목록에서는 대개 32~48px로, 상세 화면에서는 더 크게 보입니다. 그래서 작은 크기에서 알아보이는지가 중요합니다.</li>
+  </ul>
+  <div id="opts"></div>
+  <footer>지금 쓰는 곳: 앱 정보 창 = I1의 큰 판, 사이트 탭 아이콘 = I2의 작은 판. 아래 "목록 줄"은 실제 Directory 화면이 아니라 크기를 가늠하려고 그린 줄입니다.</footer>
+</main>
+
+<script>
+const BIG = /*BIG*/"";
+const TINY = /*TINY*/"";
+
+const inner = s => s.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+const vbOf = s => s.match(/viewBox="([^"]+)"/)[1];
+
+// 작은 판을 큰 판과 같은 모서리 비율(84/382)로 둥글림(site/make-icon.mjs와 같음)
+function roundedTiny(id) {
+  return `<clipPath id="${id}"><rect width="100" height="100" rx="${100*84/382}"/></clipPath>` +
+    `<g clip-path="url(#${id})"><svg width="100" height="100" viewBox="${vbOf(TINY)}">${inner(TINY)}</svg></g>`;
+}
+function bigAt100() {
+  return `<svg width="100" height="100" viewBox="${vbOf(BIG)}">${inner(BIG)}</svg>`;
+}
+// NS 차트 배지: 처리 블록 하나, 판단(삼각형) 하나, 두 갈래
+function nsBadge(x, y, s, ground, ink, sw) {
+  const r = s * 0.16, p = s * 0.16, w = s - 2*p, h = s - 2*p;
+  const x0 = x + p, y0 = y + p, row = h / 3;
+  const L = (a,b,c,d) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`;
+  return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${r}" fill="${ground}"/>` +
+    `<g fill="none" stroke="${ink}" stroke-width="${sw}" stroke-linecap="square">` +
+    `<rect x="${x0}" y="${y0}" width="${w}" height="${h}"/>` +
+    L(x0, y0+row, x0+w, y0+row) + L(x0, y0+2*row, x0+w, y0+2*row) +
+    L(x0, y0+row, x0+w/2, y0+2*row) + L(x0+w, y0+row, x0+w/2, y0+2*row) +
+    L(x0+w/2, y0+2*row, x0+w/2, y0+h) + `</g>`;
+}
+const wrap = body => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${body}</svg>`;
+
+const OPTIONS = [
+  { id: 'I1', name: '큰 판 그대로', svg: wrap(bigAt100()),
+    desc: '앱 정보 창의 로고와 같습니다. 벽화의 여인 전체가 보여 크게 볼 때 가장 아름답지만, 32px 아래에서는 얼굴이 작아 무엇인지 알아보기 어렵습니다.' },
+  { id: 'I2', name: '작은 판(얼굴을 크게)', rec: true, svg: wrap(roundedTiny('c2')),
+    desc: '사이트 탭 아이콘과 같은 그림입니다. 머리 · 얼굴 · 눈만 남겨 목록의 작은 크기에서도 형태가 또렷하고, 사이트 · 앱과 한 얼굴로 이어집니다. 크게 볼 때는 큰 판보다 단순합니다.' },
+  { id: 'I3', name: '작은 판 + NS 차트 배지', svg: wrap(roundedTiny('c3') + nsBadge(56, 56, 40, '#F7F1EA', '#3a2a22', 3)),
+    desc: '오른쪽 아래에 NS 차트 모양을 얹어 "다이어그램 도구"임을 알립니다. 64px 이상에서는 뜻이 전해지지만, 32px 아래에서는 배지가 얼굴을 가리는 얼룩이 됩니다.' },
+  { id: 'I4', name: 'NS 차트 기호만', svg: wrap(`<rect width="100" height="100" rx="${100*84/382}" fill="#C9401F"/>` + nsBadge(18, 18, 64, 'none', '#F7F1EA', 5)),
+    desc: '로고의 주홍 바탕에 NS 차트 기호만 둡니다. 무슨 도구인지 가장 바로 읽히지만, 사이트 · 앱의 여인 로고와 따로 놀아 브랜드가 둘이 됩니다.' },
+];
+
+const SIZES = [256, 128, 64, 48, 32, 24];
+const urls = {};
+for (const o of OPTIONS) urls[o.id] = URL.createObjectURL(new Blob([o.svg], { type: 'image/svg+xml' }));
+
+const sizesHtml = id => SIZES.map(s =>
+  `<div class="sz"><img src="${urls[id]}" width="${s}" height="${s}" alt="${id} ${s}px"><span>${s}</span></div>`).join('');
+const rowHtml = (id, cls) =>
+  `<div class="row ${cls}"><img src="${urls[id]}" width="40" height="40" alt=""><div class="t"><b>ariadne-nsd</b><span>Draw, read, explain and edit Nassi–Shneiderman diagrams</span></div></div>`;
+
+document.getElementById('opts').innerHTML = OPTIONS.map(o => `
+  <section class="opt${o.rec ? ' rec' : ''}" id="${o.id}">
+    <div class="head"><span class="chip">${o.id}</span><h2>${o.name}</h2>${o.rec ? '<span class="star">★ 추천</span>' : ''}</div>
+    <p class="desc">${o.desc}</p>
+    <div class="grounds">
+      <div class="ground l">${sizesHtml(o.id)}</div>
+      <div class="ground d">${sizesHtml(o.id)}</div>
+    </div>
+    <p class="cap">목록 줄(40px)</p>
+    <div class="rows">${rowHtml(o.id, 'l')}${rowHtml(o.id, 'd')}</div>
+  </section>`).join('');
+</script>
