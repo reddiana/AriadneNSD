@@ -10,6 +10,9 @@ superseded-by:
 
 # DR-0021: 사이트는 ariadnensd.com으로 옮기고, 첫 화면은 앱이다
 
+> [!NOTE] 이후 변경
+> - 2026-11-27: 소개는 영어 `/about`(`README.md`)과 한국어 `/about/ko`(`README.ko.md`) 둘이 되었다(메인테이너). 편집기의 정보 창도 화면 언어 쪽으로 가리킨다 → [[dr-0013-publish-docs-github-pages|DR-0013]]
+
 ## 배경
 
 웹 베타의 문턱에 "주소"가 있다([[dr-0018-release-stages|DR-0018]]). 널리 알린 뒤에 주소를 바꾸면 링크가 깨지기 때문이다. 도메인 `ariadnensd.com`은 2026-10-25에 Cloudflare에서 샀다([[names-and-registries]]). 사이트(`reddiana.github.io/AriadneNSD/`)의 첫 화면은 README로 만든 소개였고, 앱은 `/app/`에 있었다([[dr-0013-publish-docs-github-pages|DR-0013]]).
