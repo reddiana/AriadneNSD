@@ -384,7 +384,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 | T-0145 | 선택한 것이 없으면 다이어그램의 끝에 삽입한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
 | T-0146 | 01-model 4.3 (UX MD1): 안의 블록을 선택했을 때 접기의 끝에 삽입한 블록은 접기에 든다 | - |
 | T-0147 | 01-model 4.3 (UX MD1): 선택한 접기 전체의 옆에 삽입한 블록은 밖에 남는다 | - |
-| T-1500 | interaction rules 7: a block dropped at a body end stays outside the folds ending there | - |
+| T-1500 | 조작 규칙 7: 본문 끝에 드롭한 블록은 거기서 끝나는 접기 영역 밖에 놓인다 | - |
 | T-0148 | 01-model 4.3: 접기의 양 끝 사이에 삽입한 블록은 그 안에 든다 | - |
 | T-0149 | 01-model 1.7: 새 id는 주어진 생성기에서 온다 | - |
 | T-0150 | 없거나 이어지지 않은 대상은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
@@ -401,7 +401,7 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 6개.
 | T-0152 | 빈 블록 위에 드롭한 블록은 그 위치를 차지한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0153 | 블록이 하나도 남지 않은 줄에는 빈 블록이 들어간다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0154 | 제자리에 드롭한 블록은 아무것도 바꾸지 않는다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
-| T-1501 | interaction rules 7: blocks dropped at a body end stay outside the folds ending there | - |
+| T-1501 | 조작 규칙 7: 본문 끝에 드롭한 블록들은 거기서 끝나는 접기 영역 밖에 놓인다 | - |
 | T-0155 | 블록을 자기 안에 드롭하기는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 
 ^t-packages-core-src-commands-move-to-test-ts
@@ -901,18 +901,18 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/input/drop-ends.test.ts`
 
-Dropping at the very start and end of a diagram body (interaction rules 7, M75 P2). Vitest · 테스트 8개.
+다이어그램 본문의 맨 앞 · 맨 끝에 드롭(조작 규칙 7, M75 P2). Vitest · 테스트 8개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1502 | under a diagram whose last block is a %s, the drop goes after it, outside it | - |
-| T-1503 | in the bottom band of the header, the drop goes before a first %s | - |
-| T-1504 | the bands end where they say: beside, below and inside the diagram nothing changes | - |
-| T-1505 | dragged blocks already at that end are not dropped there; others move | - |
-| T-1506 | a diagram without a header has only the end band; an empty body takes the drop in its empty block | - |
-| T-1507 | next to a fold region, folded or open, a new block at a body end stays outside it | - |
-| T-1508 | the end band never reaches another diagram | - |
-| T-1509 | under an opened call block the drop goes after the call, not into what it shows | - |
+| T-1502 | 마지막 블록이 %s인 다이어그램 아래에 놓으면 그 블록 안이 아니라 뒤에 들어간다 | - |
+| T-1503 | 헤더의 아래 띠에 놓으면 첫 블록 %s 앞에 들어간다 | - |
+| T-1504 | 띠는 정한 곳에서 끝난다: 다이어그램 옆 · 띠 아래 · 안쪽에서는 아무것도 바뀌지 않는다 | - |
+| T-1505 | 이미 그 끝에 있는 블록을 끌면 그 자리에 놓이지 않고, 다른 블록은 옮겨진다 | - |
+| T-1506 | 헤더 없는 다이어그램에는 맨 끝 띠만 있고, 빈 본문은 빈 블록으로 드롭을 받는다 | - |
+| T-1507 | 접기 영역이 접혔든 펴졌든, 본문 끝에 넣은 새 블록은 그 영역 밖에 놓인다 | - |
+| T-1508 | 맨 끝 띠는 다른 다이어그램에 닿지 않는다 | - |
+| T-1509 | 펴 보인 호출 블록 아래에 놓으면 펴 보인 내용 안이 아니라 호출 블록 뒤에 들어간다 | - |
 
 ^t-packages-editor-src-input-drop-ends-test-ts
 
@@ -1120,7 +1120,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | --- | --- | :---: |
 | T-0293 | 03-editor 5.1: 메뉴를 그 항목과 표준 키로 열고, 클릭을 실행한다 | - |
 | T-0294 | 03-editor 3: 맞지 않는 명령은 흐리게 보이되, 엔진이 이유를 알리도록 실행은 한다 | - |
-| T-1492 | a dimmed menu item tells why in an editor tooltip, not the browser’s title; an item that applies has none (M74 D3) | - |
+| T-1492 | 흐린 메뉴 항목은 까닭을 브라우저의 title이 아니라 편집기 툴팁으로 알리고, 쓸 수 있는 항목에는 툴팁이 없다(M74 D3) | - |
 | T-0295 | 저장하지 않은 동안 파일 이름에 ●를 보인다 | [[ux-decisions\|UX W3]] |
 | T-0296 | 메뉴의 이름을 화면 언어로 보인다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1491 | 도움말 › 알고리즘 갤러리는 사용법 바로 아래에 있고, 화면 언어의 갤러리를 연다 | [[ux-decisions\|UX GL2]] |
@@ -1140,7 +1140,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0306 | 엔진이 힌트를 보일 때라고 하면 둘째 키를 보이고, 그 뒤에 숨긴다 | [[01-requirements#^r-edit\|R-EDIT-04]] |
 | T-0307 | `?`는 Vim 키와 표준 키의 두 열로 된 키 표를 열고, `Esc`가 닫는다 | [[01-requirements#^r-edit\|R-EDIT-21]] |
 | T-1300 | AriadneNSD에 대하여의 문서 · 저장소 링크는 화면 언어로 표시되고 새 탭으로 열린다 | [[ux-decisions\|UX W4]] |
-| T-1493 | About shows the picture logo, the word logo and the version in the middle on top, before the rest, in a narrow modal (M74 A1) | - |
+| T-1493 | 정보 창은 좁은 모달이고, 맨 위 가운데에 그림 로고 · 문자 로고 · 버전을 나머지보다 먼저 보인다(M74 A1) | - |
 | T-1301 | AriadneNSD에 대하여의 링크는 키보드 포커스를 받고, 링크에서 Esc를 누르면 모달이 닫힌다 | [[ux-decisions\|UX W4]] |
 | T-0308 | 환경 설정은 사용자 설정을 보이고, 바꾼 것을 설정 저장소에 쓴다 | [[ux-decisions\|UX W5]] |
 | T-0309 | 문서 설정은 엔진을 거쳐 쓴다 | [[ux-decisions\|UX W5]] |
@@ -2582,7 +2582,7 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 | T-1167 | 키 표의 모든 키가 단축키 문서에 있다 | [[01-requirements#^r-edit\|R-EDIT-04]] |
 | T-1168 | UI의 화면 색 토큰이 3.4절의 표와 같다(밝은 · 어두운 화면, 보통 · 고대비) | [[01-requirements#^r-nfr\|R-NFR-07]] |
 | T-1319 | `ui.warn` 글자가 배경과 패널 위에서 보통 화면 색(밝은 · 어두운)은 4.5:1, 고대비 화면 색(밝은 · 어두운)은 7:1을 넘는다 | [[ux-decisions\|UX WC1]] |
-| T-1494 | ui.disabled is fainter than ui.muted on the panel, and keeps 4.5:1 in high contrast (M74 D3) | - |
+| T-1494 | ui.disabled는 패널 위에서 ui.muted보다 옅고, 고대비에서는 4.5:1을 지킨다(M74 D3) | - |
 | T-1169 | 편집기를 둘러싼 웹 페이지도 같은 화면 색을 쓴다 | [[01-requirements#^r-nfr\|R-NFR-07]] |
 | T-1170 | 편집 레이어의 색이 밝은 종이 · 어두운 종이 모두 3.4절의 표와 같다 | [[ux-decisions\|UX TM4]] |
 
