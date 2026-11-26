@@ -3,7 +3,7 @@ title: 테스트 아키텍처
 tags:
   - architecture
 status: 초안
-updated: 2026-11-18
+updated: 2026-11-27
 ---
 
 # 테스트 아키텍처
@@ -39,7 +39,7 @@ AriadneNSD를 어떻게 테스트하는지 정합니다: 테스트 아키텍처(
 
 ### 1.2 유형과 구성 요소
 
-어느 유형이 어느 구성 요소([[01-architecture#4. 구성 요소]])를 덮는지입니다.
+어느 유형이 어느 구성 요소([[01-architecture#4. 구성 요소]])를 검증하는지입니다.
 
 ![[testing-types-components.svg|720]]
 
