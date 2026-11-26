@@ -920,7 +920,7 @@ describe('the zoom buttons (M76 Z1)', () => {
     expect(engine.ran).toEqual(['view.zoom.reset', 'view.zoom.reset']);
   });
 
-  it('T-1512 · UX D3: a zoom button at its limit is dimmed with the reason, and a click still runs it', () => {
+  it('T-1512 · UX DD1: a zoom button at its limit is dimmed with the reason, and a click still runs it', () => {
     const { engine, zoomIn, zoomOut } = zoomEngine(2);
     expect(zoomIn.getAttribute('aria-disabled')).toBe('true');
     expect(zoomIn.title).toBe('The zoom is at its limit.');
@@ -975,7 +975,7 @@ describe('the zoom buttons (M76 Z1)', () => {
     expect(engine.ran).toEqual(['view.zoom.in']);
   });
 
-  it('T-1515 · UX D3: a wheel at the limit still runs the command, so the status bar tells why', () => {
+  it('T-1515 · UX DD1: a wheel at the limit still runs the command, so the status bar tells why', () => {
     const { engine, level } = zoomEngine(2);
     act(() => {
       wheel(level, { deltaY: -100 });

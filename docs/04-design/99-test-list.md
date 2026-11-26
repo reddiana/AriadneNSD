@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 188 | - | 223 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 40 | 50 | - | 113 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 50 | - | 119 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 283 | 998 | 5 | 1373 |
+| 합계 | 87 | 289 | 998 | 5 | 1379 |
 
 ## 읽는 법
 
@@ -66,7 +66,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0017 | 커맨드 팔레트에서 명령을 찾아 실행한다 | [[01-requirements#^at\|AT-16]] |
 | T-0018 | `?`는 단축키 목록을, 도움말은 사용법을 연다 | [[01-requirements#^at\|AT-17]] |
 | T-0019 | 키와 툴바로 실행 취소 · 다시 실행 | - |
-| T-0020 | 키 · `Ctrl`+휠 · 줌 메뉴로 줌 | - |
+| T-0020 | zoom with keys, Ctrl+wheel and the zoom buttons | - |
 | T-0021 | 컨텍스트 메뉴가 선택에 맞는 명령을 보인다 | - |
 | T-0022 | 내려받은 파일을 다시 열면 같은 바이트로 내려받는다 | [[01-requirements#^at\|AT-02]] |
 | T-0023 | 다른 이름으로 저장은 편집기 안에서 이름을 묻고, 취소하면 편집한 것을 지킨다 | [[01-requirements#^at\|AT-07]] |
@@ -1042,7 +1042,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 113개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 119개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1114,7 +1114,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달. Vitest + happy-dom · 테스트 40개.
+menu bar · toolbar block icons · toolbar wrap dropdown · command palette · status bar · key hint · modals · canvas slot · context menu · dialogs and notices from the shell · picker (interaction rules "호출 블록") · the dialog modal · the zoom buttons (M76 Z1). Vitest + happy-dom · 테스트 46개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1158,6 +1158,12 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
 | T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
+| T-1510 | [zoom out] [NN%] [zoom in] change the zoom with one click each, in that order | - |
+| T-1511 | the zoom level goes back to 100% when clicked, and stays readable at 100% | - |
+| T-1512 | a zoom button at its limit is dimmed with the reason, and a click still runs it | [[ux-decisions\|UX DD1]] |
+| T-1513 | a wheel over the zoom group zooms, one step per mouse notch, and keeps the page from scrolling | - |
+| T-1514 | a trackpad’s small deltas add up to a step; a horizontal-only wheel does nothing | - |
+| T-1515 | a wheel at the limit still runs the command, so the status bar tells why | [[ux-decisions\|UX DD1]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
