@@ -101,6 +101,7 @@ section { display: flex; flex-direction: column; gap: 14px; }
 .timeline { display: flex; gap: 4px; flex-wrap: wrap; font-size: 11.5px; }
 .timeline span { padding: 2px 6px; border-radius: 3px; background: var(--line); color: var(--muted); }
 .timeline span.on { background: var(--pick); color: var(--surface); }
+.timeline span.now { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .rules { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
 .rules ul { margin: 6px 0 0; padding-left: 1.2em; }
@@ -269,8 +270,9 @@ for (const c of cuts) {
 }
 
 const chips = on => ['R1', 'R2', 'R3', 'R4', 'R5'].map(r => `<span class="chip${on.includes(r) ? ' on' : ''}">${r}</span>`).join('');
-const steps = (labels, on) => `<div class="timeline">${labels.map((l, i) => `<span class="${i === on ? 'on' : ''}">${l}</span>`).join('')}</div>`;
-const when = ['시간 테스트', '웹 베타 다듬기', 'Obsidian 베타', '웹 1.0'];
+const steps = (labels, on) => `<div class="timeline">${labels.map((l, i) => `<span class="${i === on ? 'on' : ''}${i === nowStep ? ' now' : ''}">${l}${i === nowStep ? ' ◀ 지금' : ''}</span>`).join('')}</div>`;
+const when = ['웹 베타 0.3.0 (11-21)', '웹 베타 다듬기', 'Obsidian 베타', '웹 1.0'];
+const nowStep = 1;
 const questions = [
   { q: 'Q1', title: '이번에 어디까지 할까요?', opts: [
     { n: '①', t: 'Obsidian과 AT-05에 걸린 것 + 가장 큰 것', rec: true, pic: chips(['R1', 'R2', 'R4']),
@@ -283,7 +285,7 @@ const questions = [
   { q: 'Q2', title: '언제 할까요?', opts: [
     { n: '①', t: 'Obsidian 베타를 시작하기 바로 전', rec: true, pic: steps(when, 2),
       d: 'R1의 경계를 Obsidian 셸을 앞에 두고 긋습니다. 웹 베타를 다듬는 동안은 기능 작업을 이어 갑니다.' },
-    { n: '②', t: '다음 세션, 시간 테스트를 고친 바로 뒤', pic: steps(when, 1),
+    { n: '②', t: '지금(다음 세션, 시간 테스트를 고친 바로 뒤)', pic: steps(when, 1),
       d: '가장 이릅니다. 웹 베타를 다듬는 일(확대 · 축소 같은 작은 변경)이 나눈 파일 위에서 이어집니다.' },
     { n: '③', t: '웹 1.0 뒤', pic: steps(when, 3),
       d: '1.0까지는 기능과 문서를 굳히는 데 씁니다. 그동안 큰 파일은 더 커집니다.' },
