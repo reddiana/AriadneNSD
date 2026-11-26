@@ -18,14 +18,14 @@ status: 생성됨
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 188 | - | 223 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 194 | - | 229 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 50 | - | 119 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 289 | 998 | 5 | 1379 |
+| 합계 | 87 | 289 | 1004 | 5 | 1385 |
 
 ## 읽는 법
 
@@ -671,7 +671,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 16개, 테스트 223개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 17개, 테스트 229개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -847,6 +847,21 @@ id. Vitest · 테스트 5개.
 | T-1483 | 가로 · 세로 선만의 패스와 대각선 · 곡선의 패스를 가름 | - |
 
 ^t-packages-editor-src-dom-crisp-lines-test-ts
+
+### [단위] `packages/editor/src/dom/document-layer.test.ts`
+
+The document layer (03-editor 1.2, QA-07). Vitest + happy-dom · 테스트 6개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1516 | takes the numbers out of the start tag only, so a moved element keeps its key | - |
+| T-1517 | pairs the lines before and after an inserted one, and a moved tail by its keys | - |
+| T-1518 | draws the whole layer first, and again for content it cannot pair | - |
+| T-1519 | ends each edit with the DOM that parsing the whole markup gives | - |
+| T-1520 | keeps the elements that stay or only move, and returns the ones it added or changed | - |
+| T-1521 | gives a moved line a fresh snapped width, and replaces an element whose attributes differ | - |
+
+^t-packages-editor-src-dom-document-layer-test-ts
 
 ### [단위] `packages/editor/src/dom/overlay.test.ts`
 
