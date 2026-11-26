@@ -173,12 +173,30 @@
     },
     "2026-11-24": {
       "sessions": 1,
-      "minutes": 23,
-      "requests": 30,
-      "input": 72,
-      "cacheWrite": 147536,
-      "cacheRead": 2749793,
-      "output": 17684
+      "minutes": 24,
+      "requests": 38,
+      "input": 92,
+      "cacheWrite": 151402,
+      "cacheRead": 3710812,
+      "output": 19317
+    },
+    "2026-11-26": {
+      "sessions": 1,
+      "minutes": 26,
+      "requests": 219,
+      "input": 452,
+      "cacheWrite": 717486,
+      "cacheRead": 27100694,
+      "output": 152733
+    },
+    "2026-11-27": {
+      "sessions": 1,
+      "minutes": 14,
+      "requests": 39,
+      "input": 86,
+      "cacheWrite": 138198,
+      "cacheRead": 6466502,
+      "output": 22919
     }
   }
 }
