@@ -17,6 +17,7 @@ tags:
 7. **마무리(대화는 비우지 않음).** "우리 스킬 공식 배포하고 있었잖아요? 얼마큼 된거죠?"에 된 것 · 남은 것을 답함. 지원 연락처는 "GitHub Issues만으로 충분해요". "마무리 하지만 clear는 하지 마세요" → 0.5.0(버전 아홉 곳 · "이 버전에서 바뀐 것" 문구, `db8a6c9`). `pnpm check`는 `make-icon.mjs`의 포맷 하나로 실패해 고친 뒤 통과, 편집기 동작은 바뀌지 않아 E2E는 하지 않음, 사이트 빌드 통과. push · 태그 v0.5.0 · Release(영어 글). CI · Pages · Release(zip 업로드) 모두 성공. claude.ai는 push 직후 아직 "Ariadne nsd"
 
 8. **제출 시도.** 포털(claude.ai/directory/manage › 새 제출 › 플러그인 번들)에 저장소 폴더 주소를 넣어 검증 → 7개 검사 중 6개 통과, 막힘 둘: "스크립트는 Verified 조직만"(`nsd.mjs`), "256KiB 넘는 파일은 끝까지 검사 못 함". 에이전트가 조사한 공식 문서는 "스킬이 시키는 스크립트는 막지 않고, 큰 파일은 사람 검토로 보류"라 포털과 다름. Help and appeals 화면: Verified = "실제 회사임을 안다", 조건은 유료 플랜과 증명한 도메인, 사람이 법적 이름 · 웹사이트 · 지난 12개월 기록을 봄. 메인테이너가 Cloudflare에 TXT를 넣어 `ariadnensd.com`을 증명(앱 안 브라우저는 Cloudflare 로그인의 로봇 확인을 통과하지 못해 메인테이너가 Chrome에서). Verified 요청: Legal name `Seil Suh`, 웹사이트 `https://ariadnensd.com/`, 메모는 개인 메인테이너의 오픈소스라고 밝힌 영어 글 → CASE-44465F27
+9. **마무리 둘째(대화는 비우지 않음).** "Directory와 마켓플레이스 차이는?"에 표로 답함(기능 차이는 없고 발견과 믿음). "마무리하고 pc 종료해주세요" → 기록, push, PC 종료
 
 ## 결정
 
