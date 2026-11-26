@@ -2,7 +2,7 @@
 // scrolling. Outside React (ADR-0010). The input (canvas-input.ts), drag and drop (canvas-drag.ts)
 // and the inline editor (inline-editor.ts) are parts of it; everything they decide goes through
 // the session or the command registry.
-import type { Box, Id, Locale, RenderedSvg } from '@ariadne-nsd/core';
+import type { Box, Id, Locale } from '@ariadne-nsd/core';
 import { themeFor } from '@ariadne-nsd/core';
 
 import type { Appearance, ContextMenuRequest } from '../contracts';
@@ -16,7 +16,8 @@ import { CanvasInput } from './canvas-input';
 import type { EditColors } from './overlay';
 import { editColorsFor, overlayContent, selectionBox } from './overlay';
 import { InlineEditor } from './inline-editor';
-import { snapCrispStrokes } from './crisp-lines';
+import { snapCrispElements, snapCrispStrokes } from './crisp-lines';
+import { DocumentLayer } from './document-layer';
 import { canvasMargin } from './styles';
 
 export { autoScrollEdge, dragThreshold } from './canvas-drag';
@@ -36,16 +37,13 @@ export type ViewOptions = {
 
 const svgNamespace = 'http://www.w3.org/2000/svg';
 
-function drawingMarkup(svg: RenderedSvg): string {
-  return `<svg xmlns="${svgNamespace}" width="${String(svg.width)}" height="${String(svg.height)}" viewBox="${svg.viewBox}"><rect width="100%" height="100%" fill="${svg.paper}"/>${svg.content}</svg>`;
-}
-
 /** The diagram area of one editor. */
 export class CanvasView {
   readonly canvas: HTMLDivElement;
   private readonly sizer: HTMLDivElement;
   private readonly stage: HTMLDivElement;
   private readonly documentLayer: HTMLDivElement;
+  private readonly layer: DocumentLayer;
   private readonly overlay: SVGSVGElement;
   private readonly inlineEditor: InlineEditor;
   private readonly dragLabel: HTMLDivElement;
@@ -84,6 +82,7 @@ export class CanvasView {
     this.stage.className = 'ans-stage';
     this.documentLayer = document.createElement('div');
     this.documentLayer.className = 'ans-document';
+    this.layer = new DocumentLayer(this.documentLayer);
     this.overlay = document.createElementNS(svgNamespace, 'svg');
     this.overlay.setAttribute('class', 'ans-overlay');
     this.overlay.setAttribute('aria-hidden', 'true');
@@ -253,9 +252,11 @@ export class CanvasView {
     const svg = rendering.svg;
     const zoom = state.zoom;
     const isNewRendering = rendering !== this.drawn.rendering;
+    // The elements the new rendering added or changed; `null`: all of them.
+    let changed: ReadonlyArray<Element> | null = [];
     if (isNewRendering || zoom !== this.drawn.zoom) {
       if (isNewRendering) {
-        this.documentLayer.innerHTML = drawingMarkup(svg);
+        changed = this.layer.draw(svg);
         this.applyTheme();
       }
       this.stage.style.width = `${String(svg.width)}px`;
@@ -270,9 +271,11 @@ export class CanvasView {
     }
     // Lines of one width at any zoom and device pixel ratio (crisp-lines.ts).
     const scale = zoom * this.pixelRatio();
-    if (isNewRendering || scale !== this.drawn.scale) {
+    if (scale !== this.drawn.scale || changed === null) {
       snapCrispStrokes(this.documentLayer, scale);
       this.drawn = { ...this.drawn, scale };
+    } else {
+      snapCrispElements(changed, scale);
     }
     const drag = this.drag.current;
     const overlayMarkup = overlayContent({
