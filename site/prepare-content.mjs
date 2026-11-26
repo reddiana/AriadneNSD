@@ -10,10 +10,11 @@
 // - 별칭에 인라인 코드나 `#`가 든 위키링크는 마크다운 링크로 바꾼다. Quartz v4.5.2는 이런 위키링크를 링크로 만들지 못한다.
 // - 첫 칸이 ID(R-WEB-02 등)인 표의 줄에 그 ID의 앵커를 달고, 요구사항 표로 가는 링크를 그 줄로 돌린다(2026-10-25 → DR-0016).
 // - 본문이 `# 제목`으로 시작하지 않는 문서에는 제목을 넣는다. 사이트는 본문의 제목만 보여 준다(quartz.layout.ts).
-// - 소개 페이지(about.md, 주소 /about)는 저장소 맨 위의 한국어 README.ko.md로 만든다(README.ko.md가 원본, 2026-11-22에
-//   GitHub 첫 화면 README.md는 영어로 바꿈). 사이트의 첫 화면(/)은
+// - 소개 페이지는 저장소 맨 위의 README로 만든다: 영어 README.md는 about.md(주소 /about), 한국어 README.ko.md는
+//   about/ko.md(주소 /about/ko). 2026-11-27에 영어를 기본으로 바꿈(그 전에는 README.ko.md가 /about). 사이트의 첫 화면(/)은
 //   앱이라서 Quartz의 index는 만들지 않는다(2026-11-02 → DR-0021). GitHub에서만 맞는 곳
 //   (<!-- site:skip --> … <!-- /site:skip -->)은 빼고, 저장소 경로 링크와 그림 경로를 사이트에 맞게 바꾼다.
+//   맨 위 언어 바꾸기 줄의 README.md · README.ko.md 링크는 /about · /about/ko로 바꾼다. 속성 lang으로 <html lang>을 맞춘다.
 import fs from "node:fs"
 import path from "node:path"
 
@@ -186,11 +187,16 @@ for (const rel of publishedFiles) {
   fs.mkdirSync(path.dirname(d), { recursive: true })
   copyFile(path.join(repo, rel), d, rel.split("/").at(-1))
 }
-buildHome()
+// 소개 페이지: 저장소의 README → 사이트의 페이지 (언어 바꾸기 줄의 링크도 이 표로 바꾼다)
+const ABOUT = [
+  { readme: "README.md", page: "about", lang: "en" },
+  { readme: "README.ko.md", page: "about/ko", lang: "ko" },
+]
+for (const a of ABOUT) buildAbout(a)
 
-// README.ko.md → about.md
-function buildHome() {
-  let md = fs.readFileSync(path.join(repo, "README.ko.md"), "utf8")
+// README → 소개 페이지(about.md, about/ko.md)
+function buildAbout({ readme, page, lang }) {
+  let md = fs.readFileSync(path.join(repo, readme), "utf8")
   md = md.replace(/<!-- site:skip -->[\s\S]*?<!-- \/site:skip -->\n?/g, "")
   // 그림: journal/assets/의 파일을 content/brand/로 옮기고 그 자리를 가리킨다
   fs.mkdirSync(path.join(content, "brand"), { recursive: true })
@@ -199,11 +205,14 @@ function buildHome() {
     fs.copyFileSync(path.join(repo, rel), path.join(content, "brand", name))
     return `src="./brand/${name}"`
   })
-  // 링크: 펴내는 문서는 사이트 주소로, 나머지 저장소 파일은 GitHub 주소로
+  // 링크: README끼리는 소개 페이지로, 펴내는 문서는 사이트 주소로, 나머지 저장소 파일은 GitHub 주소로.
+  // 사이트 주소는 맨 위 기준(./…)으로 둔다. Quartz(CrawlLinks "shortest")가 페이지의 깊이에 맞게 바꾼다
   md = md.replace(/\]\(([^)\s]+)\)/g, (whole, href) => {
     if (/^(https?:|mailto:|#)/.test(href)) return whole
     const [p, hash = ""] = href.split("#")
     const clean = p.replace(/^\.\//, "")
+    const about = ABOUT.find((a) => a.readme === clean)
+    if (about) return `](./${about.page}${hash ? "#" + hash : ""})`
     if (isPublished(clean) && clean.endsWith(".md")) {
       const page = clean.replace(/\/README\.md$/, "/").replace(/\.md$/, "")
       return `](./${page}${hash ? "#" + hash : ""})`
@@ -211,7 +220,16 @@ function buildHome() {
     const kind = clean.endsWith("/") ? "tree" : "blob"
     return `](${GITHUB.replace("/blob/", `/${kind}/`)}${clean}${hash ? "#" + hash : ""})`
   })
-  fs.writeFileSync(path.join(content, "about.md"), `---\ntitle: AriadneNSD\n---\n\n${md}`)
+  const out = path.join(content, `${page}.md`)
+  fs.mkdirSync(path.dirname(out), { recursive: true })
+  // 링크 미리보기의 설명: 첫 글 단락(그대로 두면 Quartz가 맨 위 언어 바꾸기 줄부터 설명으로 쓴다)
+  const lead = md
+    .split("\n")
+    .find((l) => /^[\p{L}\p{N}]/u.test(l) && !l.includes(" | "))
+    ?.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*`]/g, "")
+  const description = lead ? `description: ${JSON.stringify(lead)}\n` : ""
+  fs.writeFileSync(out, `---\ntitle: AriadneNSD\n${description}lang: ${lang}\n---\n\n${md}`)
 }
 
 console.log(`content 준비: ${PUBLISHED.join(", ")} 복사, 그 밖의 파일 ${publishedFiles.size}개, 펴내지 않는 곳으로 가는 링크 ${rewritten}개를 GitHub 주소로 바꿈`)

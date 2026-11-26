@@ -1,6 +1,4 @@
-<!-- site:skip -->
 [English](README.md) | 한국어
-<!-- /site:skip -->
 
 <p align="center">
   <img src="journal/assets/2026-10-10-logo-aegean-lady-rounded.svg" width="160" alt="AriadneNSD 로고: 크노소스 벽화의 여인">
@@ -50,7 +48,7 @@ claude plugin install ariadne-nsd@ariadne-nsd
 이 저장소의 문서는 [Obsidian](https://obsidian.md/)으로 쓰고 읽도록 만들었습니다. `[[위키링크]]`, 블록 ID, 태그, 콜아웃을 쓰기 때문에 GitHub에서는 문서 사이의 링크가 동작하지 않고 일부가 글자 그대로 보입니다. 아래 두 가지 방법 가운데 하나로 읽어 주세요.
 
 > [!TIP]
-> **1. 웹 사이트에서 읽기 (설치 없이):** **https://ariadnensd.com/about**
+> **1. 웹 사이트에서 읽기 (설치 없이):** **https://ariadnensd.com/about/ko**
 > 설계 문서(`docs/`), 아뜰리에(`atelier/`), 배운 것(`til/`, Today I Learned)을 펴낸 사이트입니다. 링크와 그림이 Obsidian처럼 동작합니다. `main`에 올릴 때마다 새로 펴냅니다.
 >
 > **2. Obsidian으로 읽기:** 저장소를 내려받은 뒤(`git clone` 또는 Code → Download ZIP), Obsidian에서 **Open folder as vault**로 저장소 폴더를 엽니다. [`docs/README.md`](docs/README.md)에서 시작하세요. 사이트에 없는 여정 기록(`journal/`의 대부분)도 함께 읽을 수 있습니다.

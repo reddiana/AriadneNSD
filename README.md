@@ -48,7 +48,7 @@ See the [AI section of the manual](https://ariadnensd.com/manual/#claude-skill) 
 The documents in this repository are written in Korean, and they are made to be written and read in [Obsidian](https://obsidian.md/). They use `[[wikilinks]]`, block IDs, tags and callouts, so on GitHub the links between documents don't work and some of the markup shows as plain text. Please read them in one of these two ways.
 
 > [!TIP]
-> **1. Read on the website (no install):** **https://ariadnensd.com/about** (in Korean)
+> **1. Read on the website (no install):** **https://ariadnensd.com/about** (the documents are in Korean)
 > The site publishes the design documents (`docs/`), the atelier (`atelier/`) and what was learned (`til/`, Today I Learned). Links and diagrams work as they do in Obsidian. It is republished on every push to `main`.
 >
 > **2. Read in Obsidian:** Get the repository (`git clone`, or Code → Download ZIP), then in Obsidian use **Open folder as vault** on the repository folder. Start from [`docs/README.md`](docs/README.md). You can also read the journey notes (most of `journal/`), which are not on the site.

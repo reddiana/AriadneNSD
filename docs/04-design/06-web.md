@@ -280,7 +280,7 @@ https://ariadnensd.com/#ns1.d.7VZtb9s2EP4rhD5tgO3Ksp0XfxnSdF0LrF2xFRiwYRhoibK4yq
 
 ## 5. 배포
 
-웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 리다이렉트한다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about`), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]]), 알고리즘 갤러리(`/gallery/` 영어, `/gallery/ko/` 한국어, 5.1)가 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 위치에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
+웹 버전은 GitHub Pages의 사용자 도메인 `https://ariadnensd.com/`의 첫 화면(`/`)에 놓인다(옛 주소 `reddiana.github.io/AriadneNSD/app/`은 첫 화면으로 리다이렉트한다 → [[dr-0021-domain-and-front-page|DR-0021]]). 같은 사이트에 소개(`/about` 영어, `/about/ko` 한국어. 저장소의 `README.md` · `README.ko.md`로 만든다), 설계 문서(`/docs/`, `/atelier/`)와 사용법(`/manual/` 영어, `/manual/ko/` 한국어 → [[dr-0020-user-guide|DR-0020]]), 알고리즘 갤러리(`/gallery/` 영어, `/gallery/ko/` 한국어, 5.1)가 함께 놓이고, 한 GitHub Actions 워크플로(`.github/workflows/pages.yml`)가 모두 빌드해 한 번에 배포한다. 앱 빌드의 base path는 상대 경로 `./`라서(`src/apps/web/vite.config.ts`) 산출물이 서로를 상대 경로로 가리키고, 사이트의 어느 위치에 넣어도 그대로 동작한다. → [[dr-0013-publish-docs-github-pages|DR-0013]]
 
 빌드 산출물(Vite)은 셋으로 나뉘어 내려옵니다.
 

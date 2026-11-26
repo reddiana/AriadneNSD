@@ -15,7 +15,10 @@
 //   갤러리도 같아서 그림이 바뀌지 않았다(2026-11-22, 메인테이너).
 //   그런 주소는 브라우저가 페이지를 새로 불러오게 둔다 → DR-0021
 // - 왼쪽 위 사이트 이름(Quartz v4.5.2 PageTitle.tsx)이 사이트의 맨 위(`/`, 앱)로 가는 곳.
-//   문서 사이트의 첫 화면인 소개(`/about`)로 가게 한다(2026-11-03, 메인테이너: "Home으로 가게 해주세요")
+//   문서 사이트의 첫 화면인 소개로 가게 한다(2026-11-03, 메인테이너: "Home으로 가게 해주세요").
+//   영어 소개(`/about`)에서는 `/about`, 그 밖(한국어 문서, 한국어 소개)에서는 한국어 소개(`/about/ko`)로(2026-11-27)
+// - 폴더 페이지(Quartz v4.5.2 folderPage.tsx)를 `about` 폴더에는 만들지 않는다. 한국어 소개(about/ko.md) 때문에
+//   생긴 폴더라서, 만들면 `/about/`에 "폴더: about" 목록이 생긴다(2026-11-27)
 // - 왼쪽 목록(Quartz v4.5.2 explorer.inline.ts)의 맨 위에 앱(`/`)으로 가는 "앱 열기"와
 //   사용법(`/manual/ko/`)으로 가는 "사용자 도움말", 갤러리(`/gallery/ko/`)로 가는 "알고리즘 갤러리"를
 //   넣는다. 셋은 Quartz의 페이지가 아니라서 목록에 저절로 생기지 않는다(2026-11-03 · 2026-11-22, 메인테이너)
@@ -55,7 +58,13 @@ const patches = [
   {
     file: "quartz/components/PageTitle.tsx",
     from: "<a href={baseDir}>{title}</a>",
-    to: '<a href={baseDir + "/about"}>{title}</a>',
+    to: '<a href={baseDir + (fileData.slug === "about" ? "/about" : "/about/ko")}>{title}</a>',
+  },
+  {
+    file: "quartz/plugins/emitters/folderPage.tsx",
+    from: '(folderName) => folderName !== "." && folderName !== "tags",',
+    to: '(folderName) => folderName !== "." && folderName !== "tags" && folderName !== "about",',
+    all: true,
   },
   {
     file: "quartz/components/scripts/explorer.inline.ts",
@@ -95,6 +104,6 @@ for (const p of patches) {
     console.error(`패치 실패: ${p.file}에 "${p.from}"이 없습니다. Quartz가 바뀌었는지 보세요.`)
     process.exit(1)
   }
-  fs.writeFileSync(f, text.replace(p.from, p.to))
+  fs.writeFileSync(f, p.all ? text.replaceAll(p.from, p.to) : text.replace(p.from, p.to))
   console.log(`패치: ${p.file}`)
 }
