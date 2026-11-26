@@ -42,7 +42,7 @@ AriadneNSD is in beta (0.x). Until 1.0 the file format may change; a later edito
 ## Install
 
 - **Claude Code:** `/plugin marketplace add reddiana/AriadneNSD`, then `/plugin install ariadne-nsd@ariadne-nsd`.
-- **claude.ai:** download `ariadne-nsd.zip` from the [latest release](https://github.com/reddiana/AriadneNSD/releases) and upload it in Settings › Capabilities › Skills.
+- **claude.ai:** in Plugins, choose Add › Add marketplace › Add from repository, enter `reddiana/AriadneNSD`, then add the AriadneNSD plugin. "Code execution and file creation" must be on (Settings › Capabilities).
 
 ## Support
 

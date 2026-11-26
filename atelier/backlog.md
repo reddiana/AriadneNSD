@@ -139,7 +139,7 @@ MVP 뒤로 미뤄도 되는 것: 블록 글자의 종류 목록(MVP에서 미룬
 
 ## Claude skill
 
-- [ ] 실제로 써 보기: claude.ai에 zip 올리기(샌드박스의 Node 버전 확인, 20 이상). Claude Code의 마켓플레이스 설치는 됨(2026-11-22) → [[07-claude-skill]]
+- [x] 실제로 써 보기: claude.ai의 플러그인 › 추가 › 마켓플레이스 추가 › 저장소에서 추가(`reddiana/AriadneNSD`)로 설치, "이진 탐색을 NS 차트로" → `.ns.svg`와 링크가 나옴, 링크는 `check` OK (2026-11-27). claude.ai의 설치 경로가 설정 › Skills에서 플러그인 화면으로 옮겨져 [[07-claude-skill]] · README · 사용법의 안내를 고칠 것(정리 때)
 - [ ] 다음 판(0.5.0)으로 "문장마다 블록"(`3d59f98`)을 설치한 사람에게 보내기
 - [ ] claude.ai의 플러그인 검색(Anthropic Directory)에 제출할지: 제출처 · 심사 기준 알아보기
 - [ ] 사용법 AI 꼭지에 데스크톱 앱의 `/plugin` 창 안내 한 줄
