@@ -72,7 +72,9 @@ test("T-0284 · BUG-02: the toolbar's dropdown opens over the canvas, not inside
   page,
 }) => {
   await openApp(page);
-  await page.locator('.ans-toolbar button[title="Zoom"]').click();
+  // Wrap ▾ is the toolbar's dropdown since zoom became buttons (M76 Z1); a new document's empty
+  // block is selected, so it opens.
+  await page.locator('.ans-toolbar').getByRole('button', { name: 'Wrap', exact: true }).click();
   const last = page.locator('.ans-dropdown [role="menuitem"]').last();
   await expect(last).toBeVisible();
   // The toolbar must not clip it: the element seen at the item's centre is the item.
