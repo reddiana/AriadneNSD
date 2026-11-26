@@ -247,7 +247,6 @@ export function DocumentSettingsModal({ onClose }: { readonly onClose: () => voi
   );
 }
 
-const aboutDocsUrl = 'https://ariadnensd.com/about';
 const repositoryUrl = 'https://github.com/reddiana/AriadneNSD';
 const productName = 'AriadneNSD';
 
@@ -307,7 +306,8 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
       <dl className="ans-about-links">
         {(
           [
-            ['about.docs', aboutDocsUrl],
+            // The site's About in the screen language: /about (English) or /about/ko (Korean).
+            ['about.docs', text('about.docsUrl')],
             ['about.repository', repositoryUrl],
           ] as const
         ).map(([label, url]) => (

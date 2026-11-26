@@ -56,6 +56,7 @@ const en = {
   'about.version': 'Version {version}',
   'about.preview': 'Before version 1.0, files you save may not open in later versions.',
   'about.docs': 'Documentation',
+  'about.docsUrl': 'https://ariadnensd.com/about',
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
@@ -185,6 +186,7 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.version': '버전 {version}',
   'about.preview': '1.0 전에 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
   'about.docs': '문서',
+  'about.docsUrl': 'https://ariadnensd.com/about/ko',
   'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':

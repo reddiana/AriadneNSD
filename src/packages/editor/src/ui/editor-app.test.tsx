@@ -403,9 +403,15 @@ describe('modals', () => {
   });
 
   it('T-1300 · UX W4: About links to the documentation and the repository in a new tab, in the screen language', () => {
-    for (const [locale, title, docs, repository] of [
-      ['en', 'About AriadneNSD', 'Documentation', 'GitHub repository'],
-      ['ko', 'AriadneNSD에 대하여', '문서', 'GitHub 저장소'],
+    for (const [locale, title, docs, docsUrl, repository] of [
+      [
+        'en',
+        'About AriadneNSD',
+        'Documentation',
+        'https://ariadnensd.com/about',
+        'GitHub repository',
+      ],
+      ['ko', 'AriadneNSD에 대하여', '문서', 'https://ariadnensd.com/about/ko', 'GitHub 저장소'],
     ] as const) {
       const engine = fakeEngine(editCommands);
       renderApp(engine, { locale });
@@ -414,7 +420,7 @@ describe('modals', () => {
       });
       const dialog = within(screen.getByRole('dialog', { name: title }));
       for (const [label, href] of [
-        [docs, 'https://ariadnensd.com/about'],
+        [docs, docsUrl],
         [repository, 'https://github.com/reddiana/AriadneNSD'],
       ] as const) {
         // The full address is the link text, under its label.
