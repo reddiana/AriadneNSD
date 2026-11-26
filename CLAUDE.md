@@ -6,7 +6,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 
 | 폴더 | 용도 |
 | --- | --- |
-| `README.md` · `README.ko.md` | `README.md`는 영어로 쓴 GitHub 첫 화면, `README.ko.md`는 그 한국어판이자 사이트 소개 페이지(`/about`)의 원본. 둘 다 맨 위에 언어 바꾸기 줄. 위키링크 대신 일반 마크다운 링크. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸 사이트에서 뺀다(→ [[dr-0013-publish-docs-github-pages\|DR-0013]]) |
+| `README.md` · `README.ko.md` | `README.md`는 영어로 쓴 GitHub 첫 화면이자 사이트 소개 페이지(`/about`)의 원본, `README.ko.md`는 그 한국어판(`/about/ko`). 둘 다 맨 위에 언어 바꾸기 줄. 위키링크 대신 일반 마크다운 링크. GitHub에서만 맞는 곳은 `<!-- site:skip -->` … `<!-- /site:skip -->`로 감싸 사이트에서 뺀다(→ [[dr-0013-publish-docs-github-pages\|DR-0013]]) |
 | `CONTRIBUTING.md` | 기여 안내: MVP 써 보기와 버그 알리기, 설계 읽기, 이슈, 문서 고침. 코드 PR은 아직 받지 않음. 개발 환경은 `src/README.md`, 코드 규칙은 [[07-coding-guide]] |
 | `docs/` | 애플리케이션 문서. **지금의 모습만**: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세, 용어집, 코딩 가이드(코드를 쓰기 전에 읽음). 시작점 `docs/README.md` |
 | `src/` | 코드. `packages/core` · `packages/fonts` · `packages/editor`, `apps/web`. 설계(`docs/`)와 코드가 다르면 둘 중 하나가 틀린 것 |
