@@ -274,7 +274,7 @@ export function AboutModal({ onClose }: { readonly onClose: () => void }): React
         {logo === null ? (
           <span className="ans-about-logo" />
         ) : (
-          <img className="ans-about-logo" src={logo} width={64} height={64} alt={productName} />
+          <img className="ans-about-logo" src={logo} width={128} height={128} alt={productName} />
         )}
         <div className="ans-about-name">{productName}</div>
         <p className="ans-note">{text('about.version', { version: editorVersion })}</p>

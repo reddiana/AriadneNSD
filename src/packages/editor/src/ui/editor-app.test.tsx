@@ -434,7 +434,7 @@ describe('modals', () => {
     const dialog = screen.getByRole('dialog', { name: 'About AriadneNSD' });
     const logo = await within(dialog).findByRole('img', { name: 'AriadneNSD' });
     expect(logo.getAttribute('src')).toMatch(/^data:image\/svg\+xml,%3Csvg/);
-    expect([logo.getAttribute('width'), logo.getAttribute('height')]).toEqual(['64', '64']);
+    expect([logo.getAttribute('width'), logo.getAttribute('height')]).toEqual(['128', '128']);
     const head = logo.parentElement;
     expect(head?.getAttribute('class')).toBe('ans-about-head');
     expect([...(head?.children ?? [])].map((child) => child.textContent)).toEqual([

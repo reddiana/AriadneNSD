@@ -188,7 +188,7 @@ export const chromeCss = `
 .ans-about-head {
   display: grid; justify-items: center; gap: 4px; text-align: center; padding: 4px 0 2px;
 }
-.ans-about-logo { display: block; width: 64px; height: 64px; margin-bottom: 6px; }
+.ans-about-logo { display: block; width: 128px; height: 128px; margin-bottom: 8px; }
 .ans-about-name { font-weight: 600; font-size: 15px; line-height: 20px; }
 .ans-about-links { display: grid; gap: 6px; margin: 0; }
 .ans-about-links dt { color: var(--ui-muted); font-size: 12px; }
