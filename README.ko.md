@@ -59,7 +59,7 @@ claude plugin install ariadne-nsd@ariadne-nsd
 | 폴더                                    | 내용                                                     |
 | ------------------------------------- | ------------------------------------------------------ |
 | [`docs/`](docs/README.md)             | 애플리케이션 문서: 요구사항, 아키텍처, UX 설계, 상세 설계, 파일 형식 명세          |
-| [`src/`](src/README.md)               | 코드: pnpm 모노레포(모델 · 레이아웃 · 파일 형식의 `core`, 글꼴의 `fonts`, 편집 화면의 `editor`, 웹 앱). 개발을 시작하는 법은 [`src/README.md`](src/README.md) |
+| [`src/`](src/README.md)               | 코드: pnpm 모노레포(모델 · 레이아웃 · 파일 형식의 `core`, 글꼴의 `fonts`, 편집 화면의 `editor`, 웹 앱, 사용법 · 알고리즘 갤러리 페이지, Claude 스킬). 개발을 시작하는 법은 [`src/README.md`](src/README.md) |
 | [`atelier/`](atelier/README.md)       | 아뜰리에: 현재 상태, 할 일, 답을 기다리는 것, 프로토타입, 결정 기록(아키텍처는 ADR, 그 밖은 DR), 세션 기록, inbox |
 | [`journal/`](journal/README.md)       | 여정 기록: 타임라인, Claude Code 초보자의 배움 기록                    |
 | [`til/`](til/README.md)               | Today I Learned: 백엔드 개발자가 프론트엔드를 배우며 정리한 것                  |
@@ -73,11 +73,12 @@ claude plugin install ariadne-nsd@ariadne-nsd
 | --- | --- | --- | --- |
 | 웹 MVP | 0.1 · 0.2 | 블록을 고르고 감싸는 구조 편집, Event · Method 헤더와 호출 블록, 예제, PNG 내보내기(0.1). 0.2에서 아래 1.0의 기능을 먼저 더했습니다. 링크를 아는 사람이 써 봅니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | **웹 베타** (지금) | 0.3부터 | 널리 알리기 시작합니다. 사용법과 문제 알리기 채널을 갖추고, 아래 1.0의 기능을 판마다 더합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
+| **Claude 스킬 베타** (지금) | 0.4부터 | 웹 베타와 함께 냈습니다. Claude가 다이어그램을 그리고, 코드를 다이어그램으로 옮기고, 받은 다이어그램을 읽고 고칩니다. 이 저장소의 Claude Code 플러그인 마켓플레이스에서 설치하거나, claude.ai에는 Release의 zip으로 올립니다 | 웹 베타와 같음 |
 | Obsidian 베타 | 0.x | 웹 베타와 함께 시작합니다. BRAT 플러그인으로 GitHub에서 바로 설치합니다 | 뒤의 버전에서 열리지 않을 수 있음 |
 | 웹 1.0 | 1.0 | 접기, Method로 빼기, 호출 블록 펴 보기, 구문 강조, 테마, 공유 URL, PDF · 인쇄, 고대비 화면. 키 배치가 굳습니다 | **뒤의 모든 버전이 엽니다** |
 | Obsidian 1.0 | | Obsidian 커뮤니티 플러그인 목록에 올립니다 | 뒤의 모든 버전이 엽니다 |
 | 데스크톱 앱 | | 내 컴퓨터의 `.ns` · `.ns.svg` 파일을 바로 열어 편집 | |
-| 그 뒤 | | Google Drive 연동, Confluence 앱, IDE 플러그인(VSCode · IntelliJ), Claude skill | |
+| 그 뒤 | | Google Drive 연동, Confluence 앱, IDE 플러그인(VSCode · IntelliJ) | |
 
 날짜는 정하지 않았습니다. 단계를 정한 과정은 [DR-0018](atelier/decisions/dr-0018-release-stages.md)에, 기능마다의 우선순위는 [요구사항](docs/01-requirements/01-requirements.md)에 있습니다.
 
@@ -88,7 +89,7 @@ claude plugin install ariadne-nsd@ariadne-nsd
 1. **설계:** 요구사항부터 UX · 아키텍처 · 상세 설계까지 문서로 먼저 썼습니다. 결정의 근거는 결정 기록(ADR · DR)으로, 세션마다 의논한 것은 세션 기록으로 남깁니다.
 2. **시안과 프로토타입:** 말로 견주기 어려운 것은 그림으로 그려 놓고 골랐고, 버릴 프로토타입으로 요구사항을 써 보았습니다. 페이지마다 무엇을 견주어 왜 골랐는지 적혀 있습니다: [`atelier/sketchbook.md`](atelier/sketchbook.md)
 3. **MVP:** 그 설계대로 코드를 [`src/`](src/README.md)에서 새로 짜서 [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0)으로 펴냈고, 웹 1.0의 기능을 더한 [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0)까지 냈습니다.
-4. **웹 베타:** [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0)부터 널리 알리고 써 보며 다듬습니다.
+4. **웹 베타:** [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0)부터 널리 알리고 써 보며 다듬습니다. [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0)에서 Claude 스킬을 더했습니다.
 
 처음부터 지금까지의 흐름은 [`journal/timeline.md`](journal/timeline.md)에, AI와 일하는 법을 배워 간 기록은 [`journal/learning-claude-code.md`](journal/learning-claude-code.md)에 있습니다.
 

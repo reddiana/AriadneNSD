@@ -57,7 +57,7 @@ The documents in this repository are written in Korean, and they are made to be 
 | Folder                                | Contents                                                |
 | ------------------------------------- | ------------------------------------------------------- |
 | [`docs/`](docs/README.md)             | Application documents: requirements, architecture, UX design, detailed design, file format specification |
-| [`src/`](src/README.md)               | Code: a pnpm monorepo (`core` for the model, layout and file format, `fonts` for fonts, `editor` for the editing UI, and the web app). How to start developing is in [`src/README.md`](src/README.md) |
+| [`src/`](src/README.md)               | Code: a pnpm monorepo (`core` for the model, layout and file format, `fonts` for fonts, `editor` for the editing UI, the web app, the manual and algorithm gallery pages, and the Claude skill). How to start developing is in [`src/README.md`](src/README.md) |
 | [`atelier/`](atelier/README.md)       | The atelier: current status, to-dos, items awaiting an answer, prototypes, decision records (ADRs for architecture, DRs for everything else), session notes, inbox |
 | [`journal/`](journal/README.md)       | Journey notes: a timeline, and what a Claude Code beginner learned along the way |
 | [`til/`](til/README.md)               | Today I Learned: notes from a backend developer learning frontend |
@@ -71,11 +71,12 @@ The web version gets polished first, then the same editor extends to an Obsidian
 | --- | --- | --- | --- |
 | Web MVP | 0.1 · 0.2 | Structural editing by selecting and wrapping blocks, Event · Method headers and call blocks, examples, PNG export (0.1). 0.2 brought in some of the 1.0 features below early. Tried by people who know the link | May not open in later versions |
 | **Web beta** (now) | from 0.3 | Starts spreading the word. Adds a manual and a channel for reporting problems, and adds the 1.0 features below release by release | May not open in later versions |
+| **Claude skill beta** (now) | from 0.4 | Out alongside the web beta. Claude draws diagrams, turns code into diagrams, and reads and edits diagrams it is given. Installed from this repository's Claude Code plugin marketplace, or as a zip from the release for claude.ai | Same as the web beta |
 | Obsidian beta | 0.x | Starts alongside the web beta. Installed straight from GitHub with the BRAT plugin | May not open in later versions |
 | Web 1.0 | 1.0 | Folding, extract to Method, expanding call blocks, syntax highlighting, themes, share URLs, PDF and printing, high-contrast display. The key layout is fixed | **Opens in all later versions** |
 | Obsidian 1.0 | | Listed in Obsidian's community plugins | Opens in all later versions |
 | Desktop app | | Opens and edits `.ns` and `.ns.svg` files on your computer directly | |
-| After that | | Google Drive integration, a Confluence app, IDE plugins (VS Code, IntelliJ), Claude skill | |
+| After that | | Google Drive integration, a Confluence app, IDE plugins (VS Code, IntelliJ) | |
 
 There are no dates. How the stages were decided is in [DR-0018](atelier/decisions/dr-0018-release-stages.md) (in Korean), and the priority of each feature is in the [requirements](docs/01-requirements/01-requirements.md) (in Korean).
 
@@ -86,7 +87,7 @@ This project is also the story of a **backend developer using Claude Code for th
 1. **Design:** Everything from requirements through UX, architecture and detailed design was written down first. The reasons behind decisions are kept as decision records (ADRs and DRs), and what was discussed in each session is kept in session notes.
 2. **Mockups and prototypes:** Things that were hard to compare in words were drawn out first and then chosen, and the requirements were tried out on throwaway prototypes. Each page says what was compared and why one was chosen: [`atelier/sketchbook.md`](atelier/sketchbook.md) (in Korean)
 3. **MVP:** The code was written fresh in [`src/`](src/README.md) following that design and released as [v0.1.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.1.0), followed by [v0.2.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.2.0) with some web 1.0 features added.
-4. **Web beta:** From [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) on, it is being shared widely and refined through use.
+4. **Web beta:** From [v0.3.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.3.0) on, it is being shared widely and refined through use. [v0.4.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.4.0) added the Claude skill.
 
 The whole story from the start is in [`journal/timeline.md`](journal/timeline.md), and the notes on learning to work with AI are in [`journal/learning-claude-code.md`](journal/learning-claude-code.md) (both in Korean).
 

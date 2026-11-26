@@ -13,7 +13,7 @@
 
 ## 코드
 
-코드는 [`src/`](src/README.md)의 pnpm 모노레포이고, 개발 환경을 갖추고 빌드 · 테스트하는 법은 [`src/README.md`](src/README.md)에 있습니다. 코드를 쓰는 규칙(도구와 그 설정, 이름 짓기, 오류 처리, 주석, 테스트, 커밋 메시지)은 [코딩 가이드](docs/07-coding-guide/07-coding-guide.md)에 있습니다. 쓰는 기술과 개발 도구는 [아키텍처 개요의 기술 스택](docs/03-architecture/01-architecture.md#8-기술-스택)에 있습니다. 코드 Pull Request는 아직 받지 않습니다. 고칠 곳을 찾으셨으면 이슈로 알려 주세요. 받기 시작하면 이 문서에 적겠습니다.
+코드는 [`src/`](src/README.md)의 pnpm 모노레포이고, 개발 환경을 갖추고 빌드 · 테스트하는 법은 [`src/README.md`](src/README.md)에 있습니다. 코드를 쓰는 규칙(도구와 그 설정, 이름 짓기, 오류 처리, 주석, 테스트, 커밋 메시지)은 [코딩 가이드](docs/07-coding-guide/07-coding-guide.md)에 있습니다. 쓰는 기술과 개발 도구는 [아키텍처 개요의 기술 스택](docs/03-architecture/01-architecture.md#9-기술-스택)에 있습니다. 코드 Pull Request는 아직 받지 않습니다. 고칠 곳을 찾으셨으면 이슈로 알려 주세요. 받기 시작하면 이 문서에 적겠습니다.
 
 ## 라이선스
 
