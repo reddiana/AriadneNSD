@@ -63,8 +63,8 @@ updated: 2026-11-27
 | 툴바의 확대 · 축소: 드롭다운 대신 [돋보기−] 100% [돋보기+], 숫자를 누르면 100% | 메인테이너 (2026-11-27), M76 Z1 | 사이트에 있음 | `a46a00d` `6909621` |
 | 리팩토링: R1 ~ R5 모두(웹 셸 · 편집 명령 · 세션 · 캔버스 · create-editor), 공통 후보는 웹 안에, R4 뒤 바뀐 블록만 DOM 반영. Obsidian 베타 전을 앞당겨 바로 | 메인테이너 (2026-11-27), M77 | 사이트에 있음 (R1 ~ R5, 바뀐 블록만 DOM 반영 `ac93179`, AT-05는 2/8 합격) | `376c964` `85b7380` `bddaca6` `0191859` `000d015` |
 | 사이트 소개를 영어 기본으로: `/about`은 `README.md`(영어), 한국어는 `/about/ko`, 맨 위에 언어 바꾸기 줄. 파일 형식 명세의 영어판은 웹 1.0 때, 나머지 문서는 한국어 + 안내 띠 | 메인테이너 (2026-11-27) | 사이트에 있음 (https://ariadnensd.com/about) | `04f7d8b` `fe8a45a` `b7ac6ec` |
-| Directory 제출 준비: 플러그인 아이콘은 로고 큰 판(M78 I1), 표시 이름 `AriadneNSD`, 영어 README, claude.ai도 마켓플레이스로 설치(메인테이너가 설치해 써 봄) | 메인테이너 (2026-11-27), M78, [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 로컬에 있음 (push · 0.5.0 뒤 claude.ai에 "AriadneNSD"로 보이는지) | `cc7f442` `48e799a` `3089339` `3b9aa95` |
-| 스킬: 공유 링크는 마크다운 링크 한 번만(코드 블록으로 되풀이하지 않음) | 메인테이너 (2026-11-27), [[ux-decisions\|SK2]] | 로컬에 있음 (메인테이너가 CLI에서 확인) | `f0d85e6` |
+| Directory 제출 준비: 플러그인 아이콘은 로고 큰 판(M78 I1), 표시 이름 `AriadneNSD`, 영어 README, claude.ai도 마켓플레이스로 설치(메인테이너가 설치해 써 봄) | 메인테이너 (2026-11-27), M78, [[0050-claude-skill-bundle-and-distribution\|ADR-0050]] | 사이트에 있음 ([v0.5.0](https://github.com/reddiana/AriadneNSD/releases/tag/v0.5.0). claude.ai는 push 직후 아직 "Ariadne nsd", 마켓플레이스를 다시 읽은 뒤 확인) | `cc7f442` `48e799a` `3089339` `3b9aa95` |
+| 스킬: 공유 링크는 마크다운 링크 한 번만(코드 블록으로 되풀이하지 않음) | 메인테이너 (2026-11-27), [[ux-decisions\|SK2]] | 사이트에 있음 (v0.5.0, 메인테이너가 CLI에서 확인) | `f0d85e6` |
 
 ## 이번과 다음 세션에 할 것
 
@@ -73,7 +73,7 @@ updated: 2026-11-27
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])
 - [ ] LinkedIn 글(https://www.linkedin.com/feed/update/urn:li:activity:7530170940547289088/, 2026-11-22 다시 올림)의 댓글: 지금은 메인테이너가 앱 알림으로 보고, 부탁하면 Claude가 Chrome으로 한 번 읽고 답글 초안. Gmail 알림 메일로 정기 확인할지는 미룸(어느 Gmail 계정을 연결할지 — ariadnensd · reddiana, 2026-11-22 메인테이너)
-- [ ] 메인테이너: "문장마다 블록"을 담은 다음 판(0.5.0)을 언제 낼지, 그 뒤 Anthropic Directory에 제출(claude.ai/directory/manage). claude.ai에서 마켓플레이스로 설치해 써 봄(2026-11-27, Node 동작 · 링크 검증 OK) → [[backlog#Claude skill]]
+- [ ] Anthropic Directory에 제출(v0.5.0을 냄): claude.ai에 "AriadneNSD"로 보이는지 확인 → claude.ai/directory/manage에서 메인테이너가 제출, Claude는 앱 안 브라우저로 함께 → [[backlog#Claude skill]]
 - [ ] 시간 테스트 T-0171 · T-1126: 2026-11-27 조용한 PC에서 `pnpm check` 통과. 다시 실패하면 그때 PC 부하부터 본다 → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
