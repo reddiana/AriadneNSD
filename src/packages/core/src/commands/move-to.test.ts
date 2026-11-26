@@ -7,10 +7,12 @@ import {
   contentOf,
   empty,
   expectRefused,
+  foldsIn,
   idsIn,
   ifBlock,
   proc,
   runOk,
+  seq,
   whileBlock,
 } from './test-support';
 
@@ -51,6 +53,22 @@ describe('moveTo (drag and drop)', () => {
       const result = runOk(moveTo, content, { target: range('b1', 'b2'), to, side });
       expect(result.content).toBe(content);
     }
+  });
+
+  it('T-1501: interaction rules 7: blocks dropped at a body end stay outside the folds ending there', () => {
+    const folded = contentOf(
+      seq([proc('b1'), proc('b2'), proc('b3')], [{ id: 'f1', first: 'b2', last: 'b3' }]),
+    );
+    const toEnd = runOk(moveTo, folded, {
+      target: range('b1'),
+      to: 'b3',
+      side: 'after',
+      outsideFolds: true,
+    });
+    expect(idsIn(toEnd.content, 'd1')).toEqual(['b2', 'b3', 'b1']);
+    expect(foldsIn(toEnd.content, 'd1')).toEqual(['f1:b2-b3']);
+    const joined = runOk(moveTo, folded, { target: range('b1'), to: 'b3', side: 'after' });
+    expect(foldsIn(joined.content, 'd1')).toEqual(['f1:b2-b1']);
   });
 
   it('T-0155 · R-EDIT-09: refuses to drop blocks inside themselves', () => {

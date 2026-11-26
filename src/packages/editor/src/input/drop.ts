@@ -1,6 +1,7 @@
 // Where a drag would drop (03-editor 3.2, interaction rules 7). Pure: layout and document only.
 import type {
   Box,
+  DiagramLayout,
   Id,
   LayoutResult,
   NewBlockKind,
@@ -13,7 +14,7 @@ import type { DocIndex } from '../model/doc-index';
 import { ancestorsOf, isEmptyBlock } from '../model/doc-index';
 import type { Selection } from '../state/selection';
 import { selectedBlocks, targetOf } from '../state/selection';
-import type { Point } from './hit-test';
+import type { Hit, Point } from './hit-test';
 import { hitTest } from './hit-test';
 
 /** The band at the top and bottom of a block that means "between blocks" (px). */
@@ -22,6 +23,12 @@ export const betweenBand = 8;
 /** A block lower than this has only "between" halves, no "on the block" part (px). */
 export const smallBlockHeight = 24;
 
+/**
+ * The band right under a diagram, as wide as its body, that means "at the end of the body" (px).
+ * Narrower than the gap between diagrams (`space.diagram`), so it never reaches the next one.
+ */
+export const bodyEndBand = 12;
+
 /** What is dragged: blocks of the diagram (a range), or a new block from a toolbar icon. */
 export type DragSource =
   | { readonly kind: 'blocks'; readonly target: Target; readonly blocks: ReadonlyArray<Id> }
@@ -29,17 +36,27 @@ export type DragSource =
 
 /** What a drop does. Each is one command, so one undo step. */
 export type DropAction =
-  /** Insert a new block next to `to`; on an empty block it takes its place. */
+  /**
+   * Insert a new block next to `to`; on an empty block it takes its place. `outsideFolds`: at
+   * the very start or end of a diagram body, it does not join a fold region ending there.
+   */
   | {
       readonly kind: 'insert';
       readonly to: Id;
       readonly side: Side;
       readonly blockKind: NewBlockKind;
+      readonly outsideFolds?: boolean;
     }
   /** Wrap blocks in a new control block. */
   | { readonly kind: 'wrap'; readonly target: Target; readonly blockKind: WrapKind }
   /** Move the dragged blocks next to `to`; on an empty block they take its place. */
-  | { readonly kind: 'move'; readonly target: Target; readonly to: Id; readonly side: Side }
+  | {
+      readonly kind: 'move';
+      readonly target: Target;
+      readonly to: Id;
+      readonly side: Side;
+      readonly outsideFolds?: boolean;
+    }
   /** Make the missing default of a Case (UX CD1) and put the new or dragged blocks in it. */
   | {
       readonly kind: 'intoMissingDefault';
@@ -73,7 +90,12 @@ export function findDrop(
   selection: Selection | null,
 ): Drop | null {
   const hit = hitTest(layout, index, point);
-  // Nothing is dropped on a diagram's header (blocks go into its body) or a fold triangle.
+  const atEnd = bodyEndOf(layout, hit, point);
+  if (atEnd !== null) {
+    return dropAtBodyEnd(layout, index, atEnd.diagram, atEnd.side, source);
+  }
+  // Nothing is dropped on the rest of a diagram's header (blocks go into its body) or a fold
+  // triangle.
   if (hit === null || hit.kind === 'diagramHead' || hit.kind === 'toggle') {
     return null;
   }
@@ -133,6 +155,88 @@ export function findDrop(
     action: { kind: 'wrap', target: { kind: 'blocks', first: id, last: id }, blockKind: kind },
     mark: { kind: 'outline', box },
     wraps: kind,
+  };
+}
+
+/**
+ * Whether a point means the very start or end of a diagram body (M75 P2): the bottom band of the
+ * header inside it (`betweenBand`), or the band right under the diagram (`bodyEndBand`) where
+ * nothing else is hit. A diagram without a header has only the end; its start is the first
+ * block's top band, as before.
+ */
+function bodyEndOf(
+  layout: LayoutResult,
+  hit: Hit | null,
+  point: Point,
+): { readonly diagram: DiagramLayout; readonly side: Side } | null {
+  if (hit?.kind === 'diagramHead') {
+    const diagram = layout.diagrams.find((d) => d.id === hit.diagram);
+    const isLow = point.y >= hit.box.y + hit.box.height - betweenBand;
+    return diagram !== undefined && isLow ? { diagram, side: 'before' } : null;
+  }
+  if (hit !== null) {
+    return null;
+  }
+  for (const diagram of layout.diagrams) {
+    const { body } = diagram;
+    const bottom = body.y + body.height;
+    if (
+      point.x >= body.x &&
+      point.x <= body.x + body.width &&
+      point.y > bottom &&
+      point.y <= bottom + bodyEndBand
+    ) {
+      return { diagram, side: 'after' };
+    }
+  }
+  return null;
+}
+
+/**
+ * A drop before the first or after the last block of a diagram body, whatever kind the block
+ * is. The line is drawn on the body's top (the header's bottom) or the diagram's bottom. An empty
+ * body takes the drop in its empty block, as a drop on any empty block does. The blocks do not
+ * join a fold region ending there, as with an insert at the diagram's end (`diagramEnd`).
+ */
+function dropAtBodyEnd(
+  layout: LayoutResult,
+  index: DocIndex,
+  diagram: DiagramLayout,
+  side: Side,
+  source: DragSource,
+): Drop | null {
+  const blocks = index.seqs.get(diagram.id)?.seq.blocks ?? [];
+  const block = side === 'before' ? blocks[0] : blocks.at(-1);
+  if (block === undefined) {
+    return null;
+  }
+  // Dragged blocks already at that end stay where they are.
+  if (source.kind === 'blocks' && source.blocks.includes(block.id)) {
+    return null;
+  }
+  const { body } = diagram;
+  if (isEmptyBlock(block)) {
+    return {
+      action:
+        source.kind === 'new'
+          ? { kind: 'insert', to: block.id, side: 'after', blockKind: source.blockKind }
+          : { kind: 'move', target: source.target, to: block.id, side: 'after' },
+      mark: { kind: 'outline', box: layout.boxes.get(block.id) ?? body },
+      wraps: null,
+    };
+  }
+  return {
+    action:
+      source.kind === 'new'
+        ? { kind: 'insert', to: block.id, side, blockKind: source.blockKind, outsideFolds: true }
+        : { kind: 'move', target: source.target, to: block.id, side, outsideFolds: true },
+    mark: {
+      kind: 'line',
+      x: body.x,
+      y: side === 'before' ? body.y : body.y + body.height,
+      width: body.width,
+    },
+    wraps: null,
   };
 }
 

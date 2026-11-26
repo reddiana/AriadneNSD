@@ -24,6 +24,11 @@ export type InsertBlockArgs = WithIds & {
    * UX KP2). Without this the empty block itself is the place to write.
    */
   readonly besideEmpty?: boolean;
+  /**
+   * The block goes outside the fold regions that end at that side, as with `diagramEnd`: a drop
+   * at the very start or end of a diagram body (interaction rules 7).
+   */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -47,7 +52,8 @@ export function insertBlock(content: Content, args: InsertBlockArgs): Result {
   const block = newBlock(args.kind, ids);
   // With nothing selected the block always goes at the very end.
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const next = putBlocks(content, range, side, { blocks: [block], folds: [] }, !isBeside);
+  const place = args.outsideFolds === true ? { ...range, join: false } : range;
+  const next = putBlocks(content, place, side, { blocks: [block], folds: [] }, !isBeside);
   return done(next, [block.id]);
 }
 

@@ -159,6 +159,28 @@ describe('insertBlock', () => {
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b1-b2']);
   });
 
+  it('T-1500: interaction rules 7: a block dropped at a body end stays outside the folds ending there', () => {
+    const content = contentOf(
+      seq([proc('b1'), proc('b2')], [{ id: 'f1', first: 'b1', last: 'b2' }]),
+    );
+    const atEnd = runOk(insertBlock, content, {
+      target: { ...blocks, first: 'b2', last: 'b2' },
+      side: 'after',
+      kind: 'process',
+      outsideFolds: true,
+    });
+    expect(idsIn(atEnd.content, 'd1')).toEqual(['b1', 'b2', 'b3']);
+    expect(foldsIn(atEnd.content, 'd1')).toEqual(['f1:b1-b2']);
+    const atStart = runOk(insertBlock, content, {
+      target: { ...blocks, first: 'b1', last: 'b1' },
+      side: 'before',
+      kind: 'if',
+      outsideFolds: true,
+    });
+    expect(idsIn(atStart.content, 'd1')[1]).toBe('b1');
+    expect(foldsIn(atStart.content, 'd1')).toEqual(['f1:b1-b2']);
+  });
+
   it('T-0148: 01-model 4.3: a block inserted between the ends of a fold is inside it', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2')], [{ id: 'f1', first: 'b1', last: 'b2' }]),

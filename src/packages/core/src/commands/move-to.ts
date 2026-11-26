@@ -12,6 +12,8 @@ export type MoveToArgs = WithIds & {
   /** The block to put them next to. When it is a sequence's only empty block, they replace it. */
   readonly to: Id;
   readonly side: Side;
+  /** The blocks go outside the fold regions that end next to `to` (see `InsertBlockArgs`). */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -62,7 +64,8 @@ export function moveTo(content: Content, args: MoveToArgs): Result {
   if (isReason(place)) {
     throw new Error(`moveTo: the destination ${args.to} was lost`);
   }
-  return done(putBlocks(removed, place, args.side, clip), movedIds);
+  const at = args.outsideFolds === true ? { ...place, join: false } : place;
+  return done(putBlocks(removed, at, args.side, clip), movedIds);
 }
 
 /** Whether `id` is a block somewhere inside `block` (not `block` itself). */

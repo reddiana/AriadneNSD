@@ -59,6 +59,7 @@ function runAction(session: EditorSession, action: DropAction, content: Content)
           side: action.side,
           kind: action.blockKind,
           ids: session.ids(),
+          outsideFolds: action.outsideFolds === true,
         }),
         afterDrop(true),
       );
@@ -74,6 +75,7 @@ function runAction(session: EditorSession, action: DropAction, content: Content)
           to: action.to,
           side: action.side,
           ids: session.ids(),
+          outsideFolds: action.outsideFolds === true,
         }),
         afterDrop(false),
       );
