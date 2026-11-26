@@ -4,9 +4,9 @@
 import type { Locale } from '@ariadne-nsd/core';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import type { CommandView, MessageFormatter } from './command-view';
-import { viewCommands } from './command-view';
-import type { ChromeState, DocStatus, EditorHandle } from './engine-api';
+import type { CommandView, CommandViewSource, MessageFormatter } from './command-view';
+import { commandViewSource } from './command-view';
+import type { ChromeState, CommandRegistry, DocStatus, EditorHandle } from './engine-api';
 import type { UiMessageKey } from './messages';
 import { uiMessage } from './messages';
 
@@ -68,14 +68,32 @@ export function useChromeState(handle: EditorHandle): ChromeState {
   return useSubscription(read, subscribe);
 }
 
+const sources = new WeakMap<
+  CommandRegistry,
+  { readonly format: MessageFormatter; readonly source: CommandViewSource }
+>();
+
+/** The registry's views shared by all components that show commands (see `commandViewSource`). */
+function sharedSource(registry: CommandRegistry, format: MessageFormatter): CommandViewSource {
+  const kept = sources.get(registry);
+  if (kept?.format === format) return kept.source;
+  const source = commandViewSource(registry, format);
+  sources.set(registry, { format, source });
+  return source;
+}
+
 /** All commands with their titles and "applies now", re-evaluated when the registry says so. */
 export function useCommands(): ReadonlyArray<CommandView> {
   const { handle, format } = useChrome();
-  const registry = handle.commands;
-  const read = useMemo(() => () => viewCommands(registry, format), [registry, format]);
-  const subscribe = useMemo(
-    () => (listener: () => void) => registry.onChange(listener),
-    [registry],
-  );
-  return useSubscription(read, subscribe);
+  const source = sharedSource(handle.commands, format);
+  // Afresh when the component appears (an opened palette or menu), shared after that.
+  const [views, setViews] = useState(() => source.read(true));
+  useEffect(() => {
+    const stop = source.subscribe(() => {
+      setViews(source.read());
+    });
+    setViews(source.read());
+    return stop;
+  }, [source]);
+  return views;
 }

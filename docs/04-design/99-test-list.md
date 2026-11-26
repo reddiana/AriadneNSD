@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 194 | - | 229 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 50 | - | 119 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 53 | - | 122 |
 | [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 289 | 1004 | 5 | 1385 |
+| 합계 | 87 | 289 | 1007 | 5 | 1388 |
 
 ## 읽는 법
 
@@ -1057,7 +1057,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 17개, 테스트 119개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 122개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1272,6 +1272,18 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0535 | 키 하나는 한 카탈로그에만 있다(UI는 제 카탈로그로 먼저 옮김) | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
 
 ^t-packages-editor-src-i18n-messages-test-ts
+
+### [단위] `packages/editor/src/ui/command-view.test.ts`
+
+commandViewSource. Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1522 | evaluates the commands once per registry change for all its readers | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1523 | keeps the views that did not change, and the whole list when none did | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+| T-1524 | formats a plain message key once, not on every change | [[03-quality-attribute-scenarios#1. 목록\|QA-07]] |
+
+^t-packages-editor-src-ui-command-view-test-ts
 
 ### [단위] `packages/editor/src/ui/menu-model.test.ts`
 

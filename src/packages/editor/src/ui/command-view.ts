@@ -50,6 +50,8 @@ export type CommandView = {
   readonly checked: boolean | null;
 };
 
+const noKinds: ReadonlyArray<SelectionKind> = [];
+
 /** Evaluates one spec against the registry's current context. */
 export function viewCommand(
   spec: CommandSpec,
@@ -65,7 +67,8 @@ export function viewCommand(
     keys: spec.keys,
     menu: spec.menu ?? null,
     toolbar: spec.toolbar ?? null,
-    context: spec.inContext === undefined || spec.inContext(ctx) ? (spec.context ?? []) : [],
+    context:
+      spec.inContext === undefined || spec.inContext(ctx) ? (spec.context ?? noKinds) : noKinds,
     isEnabled: applies === true,
     reason: applies === true ? null : format(applies),
     checked: spec.checked ? spec.checked(ctx) : null,
@@ -78,6 +81,104 @@ export function viewCommands(
   format: MessageFormatter,
 ): ReadonlyArray<CommandView> {
   return registry.list().map((spec) => viewCommand(spec, registry, format));
+}
+
+function sameView(a: CommandView, b: CommandView): boolean {
+  return (
+    a.id === b.id &&
+    a.title === b.title &&
+    a.keys === b.keys &&
+    a.menu === b.menu &&
+    a.toolbar === b.toolbar &&
+    a.context === b.context &&
+    a.isEnabled === b.isEnabled &&
+    a.reason === b.reason &&
+    a.checked === b.checked
+  );
+}
+
+/**
+ * Keeps the objects of `previous` that `next` repeats, and `previous` itself when nothing
+ * changed, so that React skips the components whose commands stayed the same.
+ */
+export function reuseViews(
+  previous: ReadonlyArray<CommandView>,
+  next: ReadonlyArray<CommandView>,
+): ReadonlyArray<CommandView> {
+  const before = new Map(previous.map((view) => [view.id, view]));
+  let isSame = previous.length === next.length;
+  const kept = next.map((view, index) => {
+    const old = before.get(view.id);
+    const result = old !== undefined && sameView(old, view) ? old : view;
+    if (result !== previous[index]) isSame = false;
+    return result;
+  });
+  return isSame ? previous : kept;
+}
+
+/** The command views shared by every component of one chrome (see `commandViewSource`). */
+export type CommandViewSource = {
+  /**
+   * The views now; evaluated at most once per change of the registry, or afresh with `isFresh`
+   * (a component that opens shows what applies now even if something changed unannounced).
+   */
+  read(isFresh?: boolean): ReadonlyArray<CommandView>;
+  /** Called after the registry changes; the views are re-read lazily. */
+  subscribe(listener: () => void): () => void;
+};
+
+/**
+ * One evaluation of the commands per registry change for all components (menu bar, toolbar,
+ * key hint …), instead of one per component, with the formatted text of plain message keys kept
+ * (they depend only on the formatter). AT-05 (QA-07): this ran on every edit.
+ */
+export function commandViewSource(
+  registry: CommandRegistry,
+  format: MessageFormatter,
+): CommandViewSource {
+  const texts = new Map<string, string>();
+  const formatKept: MessageFormatter = (message) => {
+    if (typeof message !== 'string') return format(message);
+    let text = texts.get(message);
+    if (text === undefined) {
+      text = format(message);
+      texts.set(message, text);
+    }
+    return text;
+  };
+  const listeners = new Set<() => void>();
+  let views: ReadonlyArray<CommandView> = [];
+  let isStale = true;
+  let stop: (() => void) | null = null;
+  const onChange = (): void => {
+    isStale = true;
+    for (const listener of [...listeners]) listener();
+  };
+  return {
+    read: (isFresh = false) => {
+      // Without listeners nothing marks the views stale, so read afresh each time.
+      if (isFresh || isStale || stop === null) {
+        views = reuseViews(views, viewCommands(registry, formatKept));
+        isStale = false;
+      }
+      return views;
+    },
+    subscribe: (listener) => {
+      listeners.add(listener);
+      if (stop === null) {
+        stop = registry.onChange(onChange);
+        // Changes while nobody listened were not seen.
+        isStale = true;
+      }
+      return () => {
+        listeners.delete(listener);
+        if (listeners.size === 0 && stop !== null) {
+          stop();
+          stop = null;
+        }
+      };
+    },
+  };
 }
 
 /** Orders by group, then order, then id, so equal places still have a stable order. */
