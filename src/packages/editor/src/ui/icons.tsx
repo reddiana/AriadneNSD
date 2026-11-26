@@ -116,7 +116,9 @@ const strokePaths: Readonly<Record<string, string>> = {
   'edit.cut': 'M6 20a2.5 2.5 0 1 0 0-.1 M18 20a2.5 2.5 0 1 0 0-.1 M7.5 18L17 4 M16.5 18L7 4',
   'edit.copy': 'M9 9h11v11H9z M5 15H4V4h11v1',
   'edit.paste': 'M8 5H5v16h14V5h-3 M9 3h6v4H9z',
-  zoom: 'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5',
+  'view.zoom.in':
+    'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5',
+  'view.zoom.out': 'M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5',
   menu: 'M4 7h16 M4 12h16 M4 17h16',
   help: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7v.5 M12 17v.5',
   examples: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',

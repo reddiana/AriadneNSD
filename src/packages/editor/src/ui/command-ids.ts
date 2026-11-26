@@ -37,12 +37,12 @@ export function blockIconCommand(
   return `block.insert.${kind}`;
 }
 
-/** The commands of the toolbar's zoom dropdown (06-web 7 "확대 ▾"). */
-export const zoomCommandIds: ReadonlyArray<string> = [
-  'view.zoom.in',
-  'view.zoom.out',
-  'view.zoom.reset',
-];
+/** The toolbar's zoom buttons, as [zoom out] [NN%] [zoom in] (06-web 7, M76 Z1). */
+export const zoomCommandIds = {
+  in: 'view.zoom.in',
+  out: 'view.zoom.out',
+  reset: 'view.zoom.reset',
+} as const;
 
 /**
  * The commands the UI itself registers, because what they do is open a part of the UI.

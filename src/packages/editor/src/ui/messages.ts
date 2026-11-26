@@ -21,6 +21,7 @@ const en = {
   'toolbar.label': 'Toolbar',
   'toolbar.wrap': 'Wrap',
   'toolbar.zoom': 'Zoom',
+  'toolbar.zoomReset': 'Zoom to 100%',
   'toolbar.blockTip':
     '{name}: insert after ({after}) · Shift+click: before ({before}) · Ctrl+click: wrap ({wrap}) · drag onto the diagram',
   'toolbar.processTip':
@@ -148,7 +149,8 @@ const ko: Readonly<Record<UiMessageKey, string>> = {
   'submenu.wrap': '감싸기',
   'toolbar.label': '툴바',
   'toolbar.wrap': '감싸기',
-  'toolbar.zoom': '확대',
+  'toolbar.zoom': '확대 · 축소',
+  'toolbar.zoomReset': '100%로',
   'toolbar.blockTip':
     '{name}: 뒤에 삽입 ({after}) · Shift+클릭: 앞에 ({before}) · Ctrl+클릭: 감싸기 ({wrap}) · 다이어그램에 드래그',
   'toolbar.processTip':

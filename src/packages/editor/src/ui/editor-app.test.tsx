@@ -333,13 +333,16 @@ describe('status bar', () => {
   });
 
   it('T-0304: 04-visual-design 7.1: shows the editing mode and the zoom', () => {
-    const engine = fakeEngine(editCommands);
+    const engine = fakeEngine([
+      ...editCommands,
+      spec({ id: 'view.zoom.reset', title: 'command.view.zoom.reset', edits: false }),
+    ]);
     renderApp(engine);
     act(() => {
       engine.setChrome({ mode: 'editing', zoom: 1.5 });
     });
     expect(screen.getByRole('status').textContent).toContain('-- EDIT --');
-    expect(screen.getByRole('button', { name: /150%/ })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Zoom to 100%' }).textContent).toBe('150%');
   });
 
   it('T-0305 · UX MD3: asks If ↔ Case with buttons and passes the answer to the engine', () => {
@@ -846,5 +849,83 @@ describe('the dialog modal', () => {
       engine.setStatus({ readOnly: false });
     });
     expect(document.querySelector('.ans-read-only')).toBeNull();
+  });
+});
+
+describe('the zoom buttons (M76 Z1)', () => {
+  /** The three zoom commands over a fake zoom, kept in the chrome state as the engine does. */
+  function zoomEngine(start: number) {
+    let zoom = start;
+    const range = { min: 0.5, max: 2, step: 0.1 };
+    const engine = fakeEngine([
+      ...(
+        [
+          ['view.zoom.in', 'command.view.zoom.in', '+', (z: number) => z + range.step],
+          ['view.zoom.out', 'command.view.zoom.out', '-', (z: number) => z - range.step],
+          ['view.zoom.reset', 'command.view.zoom.reset', 'Ctrl+0', () => 1],
+        ] as const
+      ).map(([id, title, key, next]) =>
+        spec({
+          id,
+          title,
+          keys: [key],
+          edits: false,
+          when: () => {
+            const to = Math.min(range.max, Math.max(range.min, next(zoom)));
+            return Math.abs(to - zoom) < 1e-9 ? 'reason.zoomLimit' : true;
+          },
+          run: () => {
+            zoom = Math.min(range.max, Math.max(range.min, next(zoom)));
+            engine.setChrome({ zoom });
+            engine.changeCommands();
+          },
+        }),
+      ),
+    ]);
+    renderApp(engine);
+    act(() => {
+      engine.setChrome({ zoom });
+    });
+    const toolbar = screen.getByRole('group', { name: 'Zoom' });
+    return {
+      engine,
+      zoomIn: within(toolbar).getByRole('button', { name: 'Zoom In' }),
+      zoomOut: within(toolbar).getByRole('button', { name: 'Zoom Out' }),
+      level: within(toolbar).getByRole('button', { name: 'Zoom to 100%' }),
+    };
+  }
+
+  it('T-1510: [zoom out] [NN%] [zoom in] change the zoom with one click each, in that order', () => {
+    const { engine, zoomIn, zoomOut, level } = zoomEngine(1);
+    const order = [zoomOut, level, zoomIn].map((button) => button.dataset.command);
+    expect(order).toEqual(['view.zoom.out', 'view.zoom.reset', 'view.zoom.in']);
+    expect(level.textContent).toBe('100%');
+    expect(zoomIn.title).toBe('Zoom In (+)');
+    fireEvent.click(zoomIn);
+    expect(level.textContent).toBe('110%');
+    fireEvent.click(zoomOut);
+    fireEvent.click(zoomOut);
+    expect(level.textContent).toBe('90%');
+    expect(engine.ran).toEqual(['view.zoom.in', 'view.zoom.out', 'view.zoom.out']);
+  });
+
+  it('T-1511: the zoom level goes back to 100% when clicked, and stays readable at 100%', () => {
+    const { engine, level } = zoomEngine(1.5);
+    expect(level.textContent).toBe('150%');
+    expect(level.title).toBe('Zoom to 100% (Ctrl+0)');
+    fireEvent.click(level);
+    expect(level.textContent).toBe('100%');
+    expect(level.hasAttribute('aria-disabled')).toBe(false);
+    fireEvent.click(level);
+    expect(engine.ran).toEqual(['view.zoom.reset', 'view.zoom.reset']);
+  });
+
+  it('T-1512 · UX D3: a zoom button at its limit is dimmed with the reason, and a click still runs it', () => {
+    const { engine, zoomIn, zoomOut } = zoomEngine(2);
+    expect(zoomIn.getAttribute('aria-disabled')).toBe('true');
+    expect(zoomIn.title).toBe('The zoom is at its limit.');
+    expect(zoomOut.getAttribute('aria-disabled')).toBe('false');
+    fireEvent.click(zoomIn);
+    expect(engine.ran).toEqual(['view.zoom.in']);
   });
 });

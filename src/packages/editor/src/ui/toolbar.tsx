@@ -1,5 +1,6 @@
 // The toolbar (03-editor 5.2, 06-web 7): the registry's toolbar commands in their groups, the six
-// block icons, then "감싸기 ▾", "확대 ▾" and "예제" (opens the examples modal). Narrow screens show
+// block icons, then "감싸기 ▾", the zoom buttons [축소] [NN%] [확대] (M76 Z1) and "예제" (opens the
+// examples modal). Narrow screens show
 // the same buttons on more rows, with icons only, and a help button at the end (UX MB2).
 
 import type { PointerEvent as ReactPointerEvent, ReactElement, RefObject } from 'react';
@@ -150,19 +151,16 @@ function useOutsideClose(
   }, [root, isOpen, close]);
 }
 
-/** A toolbar button with a ▾ that opens a list of commands (감싸기 ▾, 확대 ▾). */
+/** A toolbar button with a ▾ that opens a list of commands (감싸기 ▾). */
 export function DropdownButton({
   icon,
   label,
   commands,
-  caption,
   className = '',
   isDimmedWhenNoneApply = false,
 }: {
   readonly icon: ReactElement;
   readonly label: string;
-  /** Text on the button instead of the label (the zoom shows "100%"). */
-  readonly caption?: string;
   readonly commands: ReadonlyArray<CommandView>;
   readonly className?: string;
   /**
@@ -203,7 +201,7 @@ export function DropdownButton({
         }}
       >
         {icon}
-        <span className="ans-tool-label">{caption ?? label}</span>
+        <span className="ans-tool-label">{label}</span>
         <StrokeIcon icon="chevron" size={10} />
       </button>
       {open && !isDimmed && (
@@ -216,6 +214,37 @@ export function DropdownButton({
         />
       )}
     </div>
+  );
+}
+
+/**
+ * The zoom level between [축소] and [확대] (M76 Z1): a click runs "100%" (`view.zoom.reset`). It
+ * stays readable at 100% too, where the command does not apply, because it also shows the zoom;
+ * the click then still runs the command, so the status bar tells why.
+ */
+function ZoomLevelButton({
+  command,
+  zoom,
+}: {
+  readonly command: CommandView;
+  readonly zoom: number;
+}): ReactElement {
+  const { run, text } = useChrome();
+  const label = text('toolbar.zoomReset');
+  const key = menuKey(command.keys);
+  return (
+    <button
+      type="button"
+      className="ans-tool ans-zoom-level"
+      aria-label={label}
+      title={key === null ? label : `${label} (${displayKey(key)})`}
+      data-command={command.id}
+      onClick={() => {
+        run(command.id);
+      }}
+    >
+      <span className="ans-tool-label">{`${String(Math.round(zoom * 100))}%`}</span>
+    </button>
   );
 }
 
@@ -296,6 +325,11 @@ function useWrappedSeparators(root: RefObject<HTMLElement | null>): void {
   });
 }
 
+/** A command the toolbar shows outside the registry's groups, drawn with the icon of its id. */
+function withIcon(command: CommandView): CommandView {
+  return { ...command, toolbar: { group: 0, order: 0, icon: command.id } };
+}
+
 /** The toolbar under the menu bar. */
 export function Toolbar(): ReactElement {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -308,7 +342,11 @@ export function Toolbar(): ReactElement {
       command.toolbar ? [{ ...command.toolbar, id: command.id, command }] : [],
     )
     .sort(byPlace);
-  const zoom = zoomCommandIds.flatMap((id) => commands.filter((command) => command.id === id));
+  const byId = (id: string): CommandView | undefined =>
+    commands.find((command) => command.id === id);
+  const zoomOut = byId(zoomCommandIds.out);
+  const zoomReset = byId(zoomCommandIds.reset);
+  const zoomIn = byId(zoomCommandIds.in);
   // Narrow screens have no Help menu in sight, so the shortcut list gets a button (UX MB2).
   const help = commands.find((command) => command.id === uiCommandIds.shortcuts);
 
@@ -338,12 +376,12 @@ export function Toolbar(): ReactElement {
         className="ans-icon-on-narrow"
         isDimmedWhenNoneApply
       />
-      <DropdownButton
-        icon={<StrokeIcon icon="zoom" />}
-        label={text('toolbar.zoom')}
-        caption={`${String(Math.round(zoomLevel * 100))}%`}
-        commands={zoom}
-      />
+      {/* One tight group, so the three read as one control and never wrap apart. */}
+      <span className="ans-zoom-group" role="group" aria-label={text('toolbar.zoom')}>
+        {zoomOut && <CommandButton command={withIcon(zoomOut)} />}
+        {zoomReset && <ZoomLevelButton command={zoomReset} zoom={zoomLevel} />}
+        {zoomIn && <CommandButton command={withIcon(zoomIn)} />}
+      </span>
       <ExamplesButton command={commands.find((command) => command.id === uiCommandIds.examples)} />
       {help && (
         <CommandButton

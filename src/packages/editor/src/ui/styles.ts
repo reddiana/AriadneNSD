@@ -114,6 +114,11 @@ export const chromeCss = `
 .ans-tool[aria-disabled='true'] .ans-block-icon, .ans-tool[aria-disabled='true'] .ans-icon { opacity: 0.45; }
 .ans-tool-label { font-size: 12px; }
 .ans-tool-root { position: relative; }
+/* [−] [NN%] [+] as one tight control that never wraps apart (M76 Z1). The level's width just fits
+   "100%" in tabular digits, so it does not jump as the digits change. */
+.ans-zoom-group { display: inline-flex; align-items: center; gap: 0; flex: none; flex-wrap: nowrap; white-space: nowrap; }
+.ans-zoom-group .ans-tool { min-width: 24px; padding: 0 2px; }
+.ans-zoom-level { min-width: 4.5ch; font-variant-numeric: tabular-nums; }
 
 /* The slot that holds the engine's element. Its own class: the engine's canvas is \`.ans-canvas\`
    and scrolls, so a rule here on that name would clip the diagram. */

@@ -548,8 +548,8 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await expect(drawnText(page, 'b')).toBeVisible();
   });
 
-  test('T-0020: zoom with keys, Ctrl+wheel and the zoom menu', async ({ page }) => {
-    const zoomButton = page.locator('button[title="Zoom"]');
+  test('T-0020: zoom with keys, Ctrl+wheel and the zoom buttons', async ({ page }) => {
+    const zoomButton = command(page, 'view.zoom.reset');
     await expect(zoomButton).toContainText('100%');
     await press(page, 'Shift+Equal', 'Shift+Equal');
     await expect(zoomButton).toContainText('120%');
@@ -565,7 +565,10 @@ test.describe('in-memory files (Chromium: File System Access)', () => {
     await page.keyboard.up('Control');
     await expect(zoomButton).toContainText('120%');
     await zoomButton.click();
-    await page.getByRole('menuitem', { name: /100%|Actual Size|Reset/ }).click();
+    await expect(zoomButton).toContainText('100%');
+    await command(page, 'view.zoom.in').click();
+    await expect(zoomButton).toContainText('110%');
+    await command(page, 'view.zoom.out').click();
     await expect(zoomButton).toContainText('100%');
   });
 
