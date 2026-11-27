@@ -1,7 +1,7 @@
 // Reading model JSON: docs/05-spec/01-file-format.md, sections 1, 3 and 5.
 // The input comes from outside (a file), so it is `unknown` until checked (coding guide 5).
 import type { Locale } from '../i18n/messages';
-import { locales } from '../i18n/messages';
+import { isLocale } from '../i18n/messages';
 import { checkInvariants } from '../model/invariants';
 import type {
   Arm,
@@ -298,7 +298,7 @@ function readSettings(
 }
 
 function knownLocale(value: string): Locale | null {
-  return locales.find((locale) => locale === value) ?? null;
+  return isLocale(value) ? value : null;
 }
 
 function readDiagram(reader: Reader, at: string, value: unknown): Diagram | null {

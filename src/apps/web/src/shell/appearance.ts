@@ -2,8 +2,6 @@
 // from `prefers-color-scheme`, the system UI font, and the screen language.
 
 import type { Appearance } from '../editor-contract';
-import type { ShellLocale } from './messages';
-import { localeFromLanguageTag } from './messages';
 
 /** The operating system's UI font, with Korean fallbacks (04-visual-design). */
 export const systemUiFont =
@@ -35,13 +33,8 @@ export function watchAppearance(listener: (appearance: Appearance) => void): {
   };
 }
 
-/** The user setting of the screen language (preferences, R-NFR-04). Missing: follow the browser. */
-export const localeSettingKey = 'ui.locale';
-
 /**
- * The screen language: the preference if the user chose one, otherwise Korean when the browser
- * prefers it and English for everything else.
+ * The user setting of the screen language (preferences, R-NFR-04). Missing: follow the browser
+ * (`screenLocale` of core).
  */
-export function screenLocale(chosen: unknown, languageTag: string | undefined): ShellLocale {
-  return chosen === 'en' || chosen === 'ko' ? chosen : localeFromLanguageTag(languageTag);
-}
+export const localeSettingKey = 'ui.locale';

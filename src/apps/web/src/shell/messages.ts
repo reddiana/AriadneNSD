@@ -186,11 +186,6 @@ const korean: Record<ShellMessageKey, string> = {
 
 const catalogs: Record<ShellLocale, Record<ShellMessageKey, string>> = { en: english, ko: korean };
 
-/** Picks the screen language from a BCP 47 tag such as `navigator.language`: Korean or English. */
-export function localeFromLanguageTag(tag: string | undefined): ShellLocale {
-  return tag?.toLowerCase().startsWith('ko') === true ? 'ko' : 'en';
-}
-
 /** Returns a shell string in `locale`, with `{name}`-style placeholders filled from `values`. */
 export function shellMessage(
   locale: ShellLocale,

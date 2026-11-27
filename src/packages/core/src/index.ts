@@ -38,7 +38,10 @@ export {
   catalogProblems,
   drawingCatalogEntries,
   drawingMessage,
+  isLocale,
+  localeFromLanguageTag,
   locales,
+  screenLocale,
 } from './i18n/messages';
 export type { TextSize } from './text/measure-text';
 export { fontSizes, lineHeight, measureLine, measureText, splitLines } from './text/measure-text';

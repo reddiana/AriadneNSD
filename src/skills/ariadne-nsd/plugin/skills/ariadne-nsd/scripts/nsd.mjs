@@ -1715,6 +1715,10 @@ function headName(head) {
 * one catalog entry per catalog (QA-13); the type checker then points at every catalog to fill.
 */
 var locales = ["en", "ko"];
+/** Whether a value is one of the screen languages (`locales`). */
+function isLocale(value) {
+	return locales.some((locale) => locale === value);
+}
 var catalog = {
 	en: {
 		"if.yes": "true",
@@ -4863,7 +4867,7 @@ function readSettings(reader, value) {
 	};
 }
 function knownLocale(value) {
-	return locales.find((locale) => locale === value) ?? null;
+	return isLocale(value) ? value : null;
 }
 function readDiagram(reader, at, value) {
 	const fields = readObject(reader, at, value, [

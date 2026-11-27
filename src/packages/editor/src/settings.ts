@@ -1,7 +1,8 @@
 // The settings the editor knows: their ids, specs and the checked change of a document setting.
-import type { Settings } from '@ariadne-nsd/core';
+import type { Locale, Settings } from '@ariadne-nsd/core';
 import {
   isKnownTheme,
+  isLocale,
   isTextKind,
   locales,
   resultSymbols,
@@ -126,6 +127,17 @@ export const settingSpecs: ReadonlyArray<SettingSpec> = [
   },
 ];
 
+/**
+ * The settings with the screen language's default set to `inUse`, the language shown while the
+ * user has not chosen one (the browser's, core `screenLocale`). `settingSpecs` says English, the
+ * language when nothing else is known.
+ */
+export function specsWithScreenLocale(inUse: Locale): ReadonlyArray<SettingSpec> {
+  return settingSpecs.map((spec) =>
+    spec.id === settingIds.locale ? { ...spec, defaultValue: inUse } : spec,
+  );
+}
+
 /** The header shape a new document starts with: the one chosen last, or "title" (UX HS1). */
 export function rememberedHeadStyle(settings: SettingsStore): Settings['headStyle'] {
   return settings.get<string>(settingIds.headStyle) === 'shape' ? 'shape' : 'title';
@@ -136,10 +148,8 @@ export function changedSettings(settings: Settings, id: string, value: unknown):
   switch (id) {
     case documentSettingIds.headStyle:
       return value === 'shape' || value === 'title' ? { ...settings, headStyle: value } : null;
-    case documentSettingIds.locale: {
-      const chosen = locales.find((locale) => locale === value);
-      return chosen === undefined ? null : { ...settings, locale: chosen };
-    }
+    case documentSettingIds.locale:
+      return isLocale(value) ? { ...settings, locale: value } : null;
     case documentSettingIds.theme:
       return typeof value === 'string' && isKnownTheme(value)
         ? { ...settings, theme: value }

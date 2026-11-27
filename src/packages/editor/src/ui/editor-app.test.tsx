@@ -1,8 +1,14 @@
 // @vitest-environment happy-dom
-import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { screenLocale } from '@ariadne-nsd/core';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import type { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { createEditor, settingIds } from '../create-editor';
+import { memoryClipboard, memoryStore } from '../engine-test-support';
 import { paletteRows } from './command-palette';
+import { EditorApp } from './editor-app';
 import type { Dialog } from './engine-api';
 import type { CommandView } from './command-view';
 import { fakeEngine, memorySettings, renderApp, spec } from './test-support';
@@ -988,5 +994,57 @@ describe('the zoom buttons (M76 Z1)', () => {
     });
     expect(engine.ran).toEqual(['view.zoom.in']);
     expect(level.textContent).toBe('200%');
+  });
+});
+
+describe('screen language (R-NFR-04)', () => {
+  it('T-1525 · R-NFR-04: not chosen yet, the preferences show the browser language, and English can be chosen', () => {
+    // A Korean browser that has never chosen a screen language, wired as the web shell does
+    // (main.tsx): the shell and the editor both take the language from core `screenLocale`.
+    const browserLanguage = 'ko-KR';
+    const settings = memorySettings();
+    const host = document.createElement('div');
+    const handle = createEditor({
+      host,
+      settings,
+      appearance: { scheme: 'light', uiFont: 'sans-serif' },
+      doc: { store: memoryStore(), text: null },
+      fonts: () => Promise.reject(new Error('not saved in this test')),
+      clipboard: memoryClipboard(),
+      locale: screenLocale(settings.get(settingIds.locale), browserLanguage),
+    });
+    function Shell(): ReactElement {
+      const inUse = (): ReturnType<typeof screenLocale> =>
+        screenLocale(settings.get(settingIds.locale), browserLanguage);
+      const [locale, setLocale] = useState(inUse);
+      useEffect(() =>
+        settings.onChange(() => {
+          setLocale(inUse());
+        }),
+      );
+      return (
+        <EditorApp
+          handle={handle}
+          canvas={host}
+          locale={locale}
+          appearance={{ scheme: 'light', uiFont: 'sans-serif' }}
+          settings={settings}
+        />
+      );
+    }
+    render(<Shell />);
+    act(() => {
+      handle.commands.run('file.preferences');
+    });
+    const select = screen.getByLabelText<HTMLSelectElement>('화면 언어');
+    expect(select.options[Number(select.value)]?.textContent).toBe('한국어');
+
+    fireEvent.change(select, { target: { value: '0' } });
+
+    expect(settings.get(settingIds.locale)).toBe('en');
+    expect(screen.getByRole('dialog', { name: 'Preferences' })).toBeTruthy();
+    const after = screen.getByLabelText<HTMLSelectElement>('Screen language');
+    expect(after.options[Number(after.value)]?.textContent).toBe('English');
+    handle.dispose();
   });
 });

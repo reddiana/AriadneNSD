@@ -1,5 +1,6 @@
 // A small fake engine for the UI tests. It keeps the same contract as engine-api.ts.
 
+import type { Locale } from '@ariadne-nsd/core';
 import { render } from '@testing-library/react';
 
 import { EditorApp } from './editor-app';
@@ -180,7 +181,7 @@ export function memorySettings(initial: Readonly<Record<string, unknown>> = {}):
 export function renderApp(
   engine: FakeEngine,
   options: {
-    readonly locale?: 'en' | 'ko';
+    readonly locale?: Locale;
     readonly settings?: SettingsStore;
     /** View mode (R-WEB-06) with its "Edit" button. */
     readonly onEdit?: () => void;

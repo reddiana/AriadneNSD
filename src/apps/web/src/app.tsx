@@ -8,16 +8,23 @@ import type { Appearance, SettingsStore } from './editor-contract';
 import { shellMessage } from './shell/messages';
 
 /**
+ * The folder of each screen language's pages on the site: English at the root, the others in a
+ * folder of their name (`manual/ko/`). A table, so a new screen language must say where its pages
+ * are (or that it has none yet).
+ */
+const pageFolders: Readonly<Record<Locale, string>> = { en: '', ko: 'ko/' };
+
+/**
  * The user guide on the same site, in the screen language (06-web 5, DR-0020): the app is the
  * site's front page, the guide is `manual/` (English) and `manual/ko/` (Korean).
  */
 export function manualUrl(locale: Locale): string {
-  return locale === 'ko' ? 'manual/ko/' : 'manual/';
+  return `manual/${pageFolders[locale]}`;
 }
 
 /** The algorithm gallery on the same site, in the screen language: `gallery/` and `gallery/ko/`. */
 export function galleryUrl(locale: Locale): string {
-  return locale === 'ko' ? 'gallery/ko/' : 'gallery/';
+  return `gallery/${pageFolders[locale]}`;
 }
 
 export type AppProps = {

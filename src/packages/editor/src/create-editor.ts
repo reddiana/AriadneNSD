@@ -1,6 +1,6 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, PhaseTimer } from '@ariadne-nsd/core';
-import { createDoc, resultSymbols, setSettings } from '@ariadne-nsd/core';
+import { createDoc, resultSymbols, screenLocale, setSettings } from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -40,7 +40,7 @@ import {
   documentSettingIds,
   rememberedHeadStyle,
   settingIds,
-  settingSpecs,
+  specsWithScreenLocale,
 } from './settings';
 
 export { settingIds, documentSettingIds, settingSpecs, rememberedHeadStyle } from './settings';
@@ -95,10 +95,8 @@ const browserTimers: Timers = {
 export function createEditor(options: EditorOptions): EditorHandle {
   const { settings } = options;
   const log = options.log ?? (() => undefined);
-  const locale = (): Locale => {
-    const chosen = settings.get<string>(settingIds.locale);
-    return chosen === 'ko' || chosen === 'en' ? chosen : (options.locale ?? 'en');
-  };
+  // The same rule as the shell's (core `screenLocale`), so the menus and the shell agree.
+  const locale = (): Locale => screenLocale(settings.get(settingIds.locale), options.locale);
   const clipboard = options.clipboard ?? createSystemClipboard(log);
   const fonts = cachedFonts(options.fonts);
   let store: DocumentStore = options.doc.store;
@@ -404,7 +402,11 @@ export function createEditor(options: EditorOptions): EditorHandle {
     }
   });
 
-  const settingsSchema: SettingsSchema = { list: () => settingSpecs };
+  // Not chosen yet, the screen language shows the one in use (the browser's), not English: a
+  // Korean browser shows 한국어, and choosing English is then a change.
+  const settingsSchema: SettingsSchema = {
+    list: () => specsWithScreenLocale(screenLocale(undefined, options.locale)),
+  };
 
   const handle: EditorHandle = {
     commands: registry,

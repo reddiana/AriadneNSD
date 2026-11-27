@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Appearance } from '../editor-contract';
-import { appearanceFor, screenLocale, systemUiFont, watchAppearance } from './appearance';
+import { appearanceFor, systemUiFont, watchAppearance } from './appearance';
 
 /** A `prefers-color-scheme: dark` query whose answer the test changes. */
 function fakeDarkQuery(isDark: boolean): {
@@ -61,15 +61,5 @@ describe('screen brightness', () => {
 
     expect(heard.map((appearance) => appearance.scheme)).toEqual(['dark', 'light']);
     expect(query.listenerCount()).toBe(0);
-  });
-});
-
-describe('screen language', () => {
-  it('T-0806 · R-NFR-04: the chosen language wins; otherwise Korean only for a Korean browser', () => {
-    expect(screenLocale('en', 'ko-KR')).toBe('en');
-    expect(screenLocale('ko', 'en-US')).toBe('ko');
-    expect(screenLocale(undefined, 'ko-KR')).toBe('ko');
-    expect(screenLocale('fr', 'de-DE')).toBe('en');
-    expect(screenLocale(undefined, undefined)).toBe('en');
   });
 });

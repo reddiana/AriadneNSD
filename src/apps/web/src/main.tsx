@@ -1,5 +1,6 @@
 // The web app's entry: builds the shell and the editor and puts them on the page (06-web).
 
+import { screenLocale } from '@ariadne-nsd/core';
 import type { ExamplesHost } from '@ariadne-nsd/editor';
 import { createEditor, examples, rememberedHeadStyle } from '@ariadne-nsd/editor';
 import { StrictMode } from 'react';
@@ -14,7 +15,7 @@ import { createSaveFonts } from './fonts/save-font';
 import { isPerfMode } from './perf/is-perf-mode';
 import { createPrinter } from './print/print-view';
 import { loadBlockFont } from './fonts/screen-font';
-import { localeSettingKey, screenLocale, watchAppearance } from './shell/appearance';
+import { localeSettingKey, watchAppearance } from './shell/appearance';
 import { createListeners } from './shell/listeners';
 import { watchFileDrops, watchPageExit } from './shell/page-events';
 import { browserClock } from './shell/timers';

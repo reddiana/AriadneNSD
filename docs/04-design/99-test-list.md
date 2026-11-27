@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 194 | - | 229 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 53 | - | 122 |
-| [[#5. 파일\|파일]] | 18 | 168 | 242 | - | 428 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 47 | 54 | - | 124 |
+| [[#5. 파일\|파일]] | 18 | 168 | 241 | - | 427 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 289 | 1007 | 5 | 1388 |
+| 합계 | 87 | 290 | 1007 | 5 | 1389 |
 
 ## 읽는 법
 
@@ -1057,7 +1057,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 122개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 124개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1129,7 +1129,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 ▾ · 커맨드 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 슬롯 · 컨텍스트 메뉴 · 셸의 대화 상자와 알림 · 고르는 창(조작 규칙 "호출 블록") · 묻는 모달 · 확대 · 축소 버튼(M76 Z1). Vitest + happy-dom · 테스트 46개.
+menu bar · toolbar block icons · toolbar wrap dropdown · command palette · status bar · key hint · modals · canvas slot · context menu · dialogs and notices from the shell · picker (interaction rules "호출 블록") · the dialog modal · the zoom buttons (M76 Z1) · screen language (R-NFR-04). Vitest + happy-dom · 테스트 47개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-04]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1179,6 +1179,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-1513 | 확대 · 축소 묶음 위의 휠은 마우스 한 칸에 한 단계씩 줌하고, 페이지는 스크롤하지 않는다 | - |
 | T-1514 | 트랙패드의 작은 움직임은 모여서 한 단계가 되고, 가로로만 굴린 휠은 아무것도 하지 않는다 | - |
 | T-1515 | 한계에서 굴린 휠도 명령을 실행하므로, 상태 표시줄이 까닭을 알린다 | [[ux-decisions\|UX DD1]] |
+| T-1525 | not chosen yet, the preferences show the browser language, and English can be chosen | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
@@ -1206,12 +1207,10 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `apps/web/src/shell/messages.test.ts`
 
-화면 언어. Vitest · 테스트 4개.
+화면 언어. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-0318 | 한국어 브라우저는 한국어, 다른 모든 언어는 영어를 받는다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0320 | 자리표시자를 채우고 정의되지 않은 것은 그대로 둔다 | - |
 | T-0530 | 셸 카탈로그는 모든 언어에 모든 키가 있고 자리표시가 같음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
 
@@ -1219,12 +1218,15 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `packages/core/src/i18n/messages.test.ts`
 
-메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 2개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]].
+메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 5개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]], [[01-requirements#^r-nfr|R-NFR-04]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0531 | 그림 카탈로그는 모든 언어에 모든 키가 있음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0532 | 검사가 빠진 텍스트와 다른 자리표시를 찾음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+| T-0318 | a browser language in the list gets that language, every other English | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0806 | the chosen language wins; otherwise the browser language, otherwise English | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-core-src-i18n-messages-test-ts
 
@@ -1345,7 +1347,7 @@ commandViewSource. Vitest · 테스트 3개.
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 428개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 427개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1811,13 +1813,12 @@ File System Access(06-web 1). Vitest · 테스트 13개.
 
 ### [단위] `apps/web/src/shell/appearance.test.ts`
 
-페이지가 호스트로서 브라우저에서 받는 것. Vitest · 테스트 3개.
+페이지가 호스트로서 브라우저에서 받는 것. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0804 | 브라우저가 지금 고른 밝기와 시스템 UI 글꼴로 시작한다 | - |
 | T-0805 | 브라우저의 밝기가 바뀌면 알리고, 그만 보라고 하면 멈춘다 | - |
-| T-0806 | 고른 화면 언어가 앞서고, 고르지 않았으면 한국어 브라우저에서만 한국어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-apps-web-src-shell-appearance-test-ts
 

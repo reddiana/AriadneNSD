@@ -10,6 +10,29 @@ export const locales = ['en', 'ko'] as const;
 /** A screen language, also the language of the drawing's fixed words. */
 export type Locale = (typeof locales)[number];
 
+/** Whether a value is one of the screen languages (`locales`). */
+export function isLocale(value: unknown): value is Locale {
+  return locales.some((locale) => locale === value);
+}
+
+/**
+ * The screen language of a BCP 47 tag such as `navigator.language`: its primary language subtag
+ * when that is one of `locales` (`ko-KR` is `ko`), otherwise English.
+ */
+export function localeFromLanguageTag(tag: string | undefined): Locale {
+  const primary = tag?.split(/[-_]/)[0]?.toLowerCase();
+  return isLocale(primary) ? primary : locales[0];
+}
+
+/**
+ * The screen language (R-NFR-04): the one the user chose in the preferences (`ui.locale`) if it
+ * is a screen language, otherwise the language of `languageTag` (the browser's), otherwise
+ * English. The one rule for every shell and the editor, so they always show the same language.
+ */
+export function screenLocale(chosen: unknown, languageTag: string | undefined): Locale {
+  return isLocale(chosen) ? chosen : localeFromLanguageTag(languageTag);
+}
+
 /** The keys of the fixed words in the drawing. */
 export type DrawingMessageKey =
   /** The label of an If's true branch when the user has not written one (UX Q24). */

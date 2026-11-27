@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import type { Block, Doc } from '@ariadne-nsd/core';
+import type { Block, Doc, Locale } from '@ariadne-nsd/core';
 import { createDoc, openSvgFile } from '@ariadne-nsd/core';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -818,11 +818,11 @@ describe('rarer parts of the shell contract (03-editor 6)', () => {
 describe('the drawing language in the document (ADR-0041)', () => {
   const proc = (id: string): Block => ({ id, kind: 'process', text: '' });
   /** An editor whose screen language is `locale`. */
-  const makeIn = (locale: 'en' | 'ko', doc: Partial<OpenedDocument> = {}) =>
+  const makeIn = (locale: Locale, doc: Partial<OpenedDocument> = {}) =>
     make(doc, memoryStore(), memorySettings({ [settingIds.locale]: locale })).handle;
 
   /** A saved file with an If whose branch labels are left as they are. */
-  const fileWithIf = async (locale: 'en' | 'ko'): Promise<string> => {
+  const fileWithIf = async (locale: Locale): Promise<string> => {
     const handle = makeIn(locale);
     handle.commands.run('block.insert.if');
     handle.commands.run('select.clear');

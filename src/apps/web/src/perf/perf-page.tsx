@@ -8,6 +8,7 @@
 // store that refuses to save. The measured document is thrown away at the end.
 
 import type { Locale } from '@ariadne-nsd/core';
+import { screenLocale } from '@ariadne-nsd/core';
 import type { Appearance, EditorHandle } from '@ariadne-nsd/editor';
 import { createEditor, EditorApp, editorVersion } from '@ariadne-nsd/editor';
 import type { ReactElement } from 'react';
@@ -15,7 +16,7 @@ import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { loadBlockFont } from '../fonts/screen-font';
-import { localeSettingKey, screenLocale, watchAppearance } from '../shell/appearance';
+import { localeSettingKey, watchAppearance } from '../shell/appearance';
 import { browserLocalStorage, createSettingsStore } from '../storage/settings-store';
 import { perfMessage } from './perf-messages';
 import { memoryClipboard, noSaveFonts, perfDocumentStore, readOnlyStorage } from './perf-ports';
