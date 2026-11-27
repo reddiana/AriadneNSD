@@ -191,12 +191,21 @@
     },
     "2026-11-27": {
       "sessions": 8,
-      "minutes": 271,
-      "requests": 1017,
-      "input": 2314,
-      "cacheWrite": 3099542,
-      "cacheRead": 197688430,
-      "output": 678499
+      "minutes": 275,
+      "requests": 1021,
+      "input": 2322,
+      "cacheWrite": 3103676,
+      "cacheRead": 199149145,
+      "output": 679719
+    },
+    "2026-11-28": {
+      "sessions": 2,
+      "minutes": 8,
+      "requests": 22,
+      "input": 58,
+      "cacheWrite": 367873,
+      "cacheRead": 6667323,
+      "output": 6644
     }
   }
 }
