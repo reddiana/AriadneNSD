@@ -84,3 +84,4 @@ updated: 2026-10-25
 - [[2026-11-27-03-refactoring|2026-11-27 리팩토링 R1 ~ R5, 바뀐 블록만 DOM 반영, 문서 현행화, 영어 /about]]
 - [[2026-11-27-04-skill-directory|2026-11-27 스킬을 Anthropic Directory에 낼 준비, claude.ai에서 써 보기, 링크는 한 번만]]
 - [[2026-11-28-01-verified-check|2026-11-28 Verified 답 확인과 예약 작업]]
+- [[2026-11-28-02-blocks-wording-german|2026-11-28 빠진 블록, 앞 · 뒤의 이름, 독일어]]
