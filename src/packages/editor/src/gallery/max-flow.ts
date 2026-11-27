@@ -17,11 +17,10 @@ function maxFlowWith(words: MaxFlowWords): ReadonlyArray<DiagramSpec> {
     method('max_flow(cap, s, t)', [
       `flow = 0    # ${words.residual}`,
       [
-        'while',
-        'True',
+        'endless',
         [
           ['call', 'bfs_path(cap, s, t)', 'cap, s, t', 'parent'],
-          ['if', 't not in parent', [`return flow    # ${words.noPath}`], ['']],
+          ['if', 't not in parent', [['exit', `return flow    # ${words.noPath}`]], ['']],
           [
             'range',
             words.bottleneck,

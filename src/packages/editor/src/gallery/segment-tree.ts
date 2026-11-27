@@ -36,8 +36,8 @@ function segmentTreeWith(words: SegmentTreeWords): ReadonlyArray<DiagramSpec> {
       ],
     ]),
     method('query(node, lo, hi, l, r)', [
-      ['if', 'r < lo or hi < l', [`return 0    # ${words.outside}`], ['']],
-      ['if', 'l <= lo and hi <= r', [`return tree[node]    # ${words.inside}`], ['']],
+      ['if', 'r < lo or hi < l', [['exit', `return 0    # ${words.outside}`]], ['']],
+      ['if', 'l <= lo and hi <= r', [['exit', `return tree[node]    # ${words.inside}`]], ['']],
       'mid = (lo + hi) // 2',
       ['call', 'query(node, lo, hi, l, r)', '2 * node, lo, mid, l, r', 'left'],
       ['call', 'query(node, lo, hi, l, r)', '2 * node + 1, mid + 1, hi, l, r', 'right'],

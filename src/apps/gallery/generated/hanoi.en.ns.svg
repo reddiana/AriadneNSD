@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="801" height="264" viewBox="0 0 801 264">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="2595390b67da52c42157376caebf84665061ef94d3c002596841b65b8eab1b2e"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="2e4e33fe1ad08c8767536dd5d7db68267c7d88e8988df908ff932f95665085ee"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -51,7 +51,7 @@
             "body": [
               {
                 "id": "b4",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return"
               }
             ]
@@ -122,15 +122,16 @@
 <text x="321" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi(n, src, dst, via)</tspan></text>
 <path d="M321 64 L777 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <rect x="321" y="64" width="456" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M321 64 L563 112 L777 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="563" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
+<path d="M321 64 L587 112 L777 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="587" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
 <text x="327" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
 <text x="771" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="321" y="112" width="242" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="331" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
-<rect x="563" y="112" width="214" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="670" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M665.5 132.5 L674.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="321" y="112" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M335 112 L321 128 L335 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="345" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="587" y="112" width="190" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="682" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M677.5 132.5 L686.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="321" y="144" width="456" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M328 144 L328 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <path d="M770 144 L770 176" fill="none" stroke="#5b77ad" stroke-width="1"/>

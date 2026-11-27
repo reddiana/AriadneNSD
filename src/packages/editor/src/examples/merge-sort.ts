@@ -5,7 +5,7 @@ import { method } from './build-example';
 /** Merge sort: one Method that calls itself twice. */
 export const mergeSort: ReadonlyArray<DiagramSpec> = [
   method('merge_sort(a, lo, hi)', [
-    ['if', 'hi - lo < 2', ['return'], ['']],
+    ['if', 'hi - lo < 2', [['exit', 'return']], ['']],
     'mid = (lo + hi) >> 1',
     ['call', 'merge_sort(a, lo, hi)', 'a, lo, mid'],
     ['call', 'merge_sort(a, lo, hi)', 'a, mid, hi'],

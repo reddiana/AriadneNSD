@@ -21,7 +21,12 @@ function nQueensWith(words: NQueensWords): ReadonlyArray<DiagramSpec> {
       `print(len(solutions))    # ${words.solutions}`,
     ]),
     method('place(row)', [
-      ['if', 'row == n', [`solutions.append(board[:])    # ${words.allPlaced}`, 'return'], ['']],
+      [
+        'if',
+        'row == n',
+        [`solutions.append(board[:])    # ${words.allPlaced}`, ['exit', 'return']],
+        [''],
+      ],
       [
         'for',
         'for c in range(n)',
@@ -29,7 +34,7 @@ function nQueensWith(words: NQueensWords): ReadonlyArray<DiagramSpec> {
           [
             'if',
             'c in cols or row - c in diag1 or row + c in diag2',
-            [`continue    # ${words.attacked}`],
+            [['exit', `continue    # ${words.attacked}`]],
             [''],
           ],
           `board.append(c)    # ${words.place}`,

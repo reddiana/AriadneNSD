@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="789" height="684" viewBox="0 0 789 684">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="f2cb116f313ef197bb1ea818d30fa836207e3e9dff855c96f97e9b19f4b1cf86"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="7892cface295ede3a79f61c5a2aaedb8921460cf099e9e3cbcf50e928fe57373"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -186,7 +186,7 @@
             "body": [
               {
                 "id": "b19",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return False    # already in one set"
               }
             ]
@@ -344,15 +344,16 @@
 <path d="M758 324 L758 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="450" y="344" font-size="13" fill="#151a22" xml:space="preserve">ry ← <tspan font-weight="600">find</tspan>(y)</text>
 <rect x="433" y="356" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M433 356 L709 404 L765 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="709" y="374" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rx == ry</text>
+<path d="M433 356 L711 404 L765 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="711" y="374" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rx == ry</text>
 <text x="439" y="399" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
 <text x="759" y="399" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="433" y="404" width="276" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="443" y="424" font-size="13" fill="#151a22" xml:space="preserve">return False    # already in one set</text>
-<rect x="709" y="404" width="56" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="737" cy="420" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M732.5 424.5 L741.5 415.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="433" y="404" width="278" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M447 404 L433 420 L447 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="457" y="424" font-size="13" fill="#151a22" xml:space="preserve">return False    # already in one set</text>
+<rect x="711" y="404" width="54" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="738" cy="420" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M733.5 424.5 L742.5 415.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="433" y="436" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M433 436 L663 484 L765 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="663" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rank[rx] &lt; rank[ry]</text>

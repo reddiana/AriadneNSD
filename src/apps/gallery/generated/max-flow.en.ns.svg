@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="893" height="686" viewBox="0 0 893 686">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="893" height="698" viewBox="0 0 893 698">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="74f8170e3e17292f53a26643b0b846f9dc93d58b9ee1d1d02c39bb21701e812d"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="36573173e76872f097748fdb905d07588dd6e4a3976a9d42667f6bac0b0a4a22"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -25,8 +25,7 @@
         },
         {
           "id": "b2",
-          "kind": "while",
-          "text": "True",
+          "kind": "endless",
           "body": [
             {
               "id": "b3",
@@ -47,7 +46,7 @@
                 "body": [
                   {
                     "id": "b5",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "return flow    # no augmenting path"
                   }
                 ]
@@ -229,7 +228,7 @@
     ]]></ans:document>
   </metadata>
   <style>
-    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
   </style>
   <rect width="100%" height="100%" fill="#ffffff"/>
   <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
@@ -238,52 +237,52 @@
 <path d="M24 64 L473 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <rect x="24" y="64" width="449" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">flow = 0    # cap[u][v]: residual capacity, reverse edges included</text>
-<rect x="24" y="96" width="449" height="566" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">True</text>
-<rect x="46" y="128" width="427" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M53 128 L53 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M466 128 L466 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="63" y="148" font-size="13" fill="#151a22" xml:space="preserve">parent ← <tspan font-weight="600">bfs_path</tspan>(cap, s, t)</text>
-<rect x="46" y="160" width="427" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 160 L399 208 L473 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="399" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">t not in parent</text>
-<text x="52" y="203" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="467" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="46" y="208" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="228" font-size="13" fill="#151a22" xml:space="preserve">return flow    # no augmenting path</text>
-<rect x="399" y="208" width="74" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="436" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M431.5 228.5 L440.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="46" y="258" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="278" font-size="13" fill="#151a22" xml:space="preserve">b, v = INF, t</text>
-<rect x="46" y="290" width="427" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="310" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
-<rect x="68" y="322" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="342" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
-<rect x="68" y="354" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="374" font-size="13" fill="#151a22" xml:space="preserve">b = min(b, cap[u][v])</text>
-<rect x="68" y="386" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="406" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
-<rect x="46" y="240" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="66" y="253" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Find the bottleneck</tspan></text>
-<rect x="47" y="241" width="425" height="176" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
-<rect x="46" y="438" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="458" font-size="13" fill="#151a22" xml:space="preserve">v = t</text>
-<rect x="46" y="470" width="427" height="160" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="490" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
-<rect x="68" y="502" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="522" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
-<rect x="68" y="534" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="554" font-size="13" fill="#151a22" xml:space="preserve">cap[u][v] -= b</text>
-<rect x="68" y="566" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="586" font-size="13" fill="#151a22" xml:space="preserve">cap[v][u] += b    # so it can be undone</text>
-<rect x="68" y="598" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="78" y="618" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
-<rect x="46" y="420" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="66" y="433" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Push the flow along the path</tspan></text>
-<rect x="47" y="421" width="425" height="208" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
-<rect x="46" y="630" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="650" font-size="13" fill="#151a22" xml:space="preserve">flow += b</text>
+<rect x="24" y="96" width="449" height="578" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="118" width="427" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 118 L53 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M466 118 L466 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="138" font-size="13" fill="#151a22" xml:space="preserve">parent ← <tspan font-weight="600">bfs_path</tspan>(cap, s, t)</text>
+<rect x="46" y="150" width="427" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 150 L402 198 L473 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="402" y="168" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">t not in parent</text>
+<text x="52" y="193" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="467" y="193" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="198" width="356" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 198 L46 214 L60 230" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="218" font-size="13" fill="#151a22" xml:space="preserve">return flow    # no augmenting path</text>
+<rect x="402" y="198" width="71" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="437.5" cy="214" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M433 218.5 L442 209.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="248" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="268" font-size="13" fill="#151a22" xml:space="preserve">b, v = INF, t</text>
+<rect x="46" y="280" width="427" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="300" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="312" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="332" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="344" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="364" font-size="13" fill="#151a22" xml:space="preserve">b = min(b, cap[u][v])</text>
+<rect x="68" y="376" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="396" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="230" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="243" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Find the bottleneck</tspan></text>
+<rect x="47" y="231" width="425" height="176" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="428" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="448" font-size="13" fill="#151a22" xml:space="preserve">v = t</text>
+<rect x="46" y="460" width="427" height="160" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="480" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="492" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="512" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="524" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="544" font-size="13" fill="#151a22" xml:space="preserve">cap[u][v] -= b</text>
+<rect x="68" y="556" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="576" font-size="13" fill="#151a22" xml:space="preserve">cap[v][u] += b    # so it can be undone</text>
+<rect x="68" y="588" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="608" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="410" width="427" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="423" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Push the flow along the path</tspan></text>
+<rect x="47" y="411" width="425" height="208" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="620" width="427" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="640" font-size="13" fill="#151a22" xml:space="preserve">flow += b</text>
 <text x="517" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="517" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">bfs_path(cap, s, t)</tspan></text>
 <path d="M517 64 L869 64" fill="none" stroke="#5b77ad" stroke-width="1"/>

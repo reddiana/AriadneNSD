@@ -21,13 +21,18 @@ import type {
  * One block in short notation. A string is a process block (`''` is an empty one).
  * `['case', …]` arms labelled `default` become the default branch. `['call', head, args, result]`
  * calls the Method whose header text is `head`. `['range', name, blocks]` puts the blocks in
- * place and marks them as a named fold region (ADR-0017).
+ * place and marks them as a named fold region (ADR-0017). `['endless', blocks]` is an endless
+ * loop, `['exit', text]` an exit block, `['parallel', text, [branch, …]]` a parallel block with one
+ * branch per list.
  */
 export type BlockSpec =
   | string
   | readonly ['if', string, ReadonlyArray<BlockSpec>, ReadonlyArray<BlockSpec>]
   | readonly ['case', string, ReadonlyArray<readonly [string, ReadonlyArray<BlockSpec>]>]
   | readonly ['while' | 'doWhile' | 'for', string, ReadonlyArray<BlockSpec>]
+  | readonly ['endless', ReadonlyArray<BlockSpec>]
+  | readonly ['exit', string]
+  | readonly ['parallel', string, ReadonlyArray<ReadonlyArray<BlockSpec>>]
   | readonly ['call', string, string?, string?]
   | readonly ['range', string, ReadonlyArray<BlockSpec>];
 
@@ -147,6 +152,12 @@ function buildBlock(
     case 'doWhile':
     case 'for':
       return { id, kind: spec[0], text: spec[1], body: buildSeq(spec[2], ids, methodByHead) };
+    case 'endless':
+      return { id, kind: 'endless', body: buildSeq(spec[1], ids, methodByHead) };
+    case 'exit':
+      return { id, kind: 'exit', text: spec[1] };
+    case 'parallel':
+      return { id, kind: 'parallel', text: spec[1], branches: spec[2].map(branch) };
     case 'call': {
       const target = methodByHead.get(spec[1]);
       if (target === undefined) {

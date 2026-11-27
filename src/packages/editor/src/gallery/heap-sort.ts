@@ -41,14 +41,13 @@ function heapSortWith(words: HeapSortWords): ReadonlyArray<DiagramSpec> {
     ]),
     method('sift_down(a, i, n)', [
       [
-        'while',
-        'True',
+        'endless',
         [
           'largest = i',
           'l, r = 2 * i + 1, 2 * i + 2',
           ['if', 'l < n and a[l] > a[largest]', ['largest = l'], ['']],
           ['if', 'r < n and a[r] > a[largest]', ['largest = r'], ['']],
-          ['if', 'largest == i', [`return    # ${words.heapOrderHolds}`], ['']],
+          ['if', 'largest == i', [['exit', `return    # ${words.heapOrderHolds}`]], ['']],
           'a[i], a[largest] = a[largest], a[i]',
           'i = largest',
         ],

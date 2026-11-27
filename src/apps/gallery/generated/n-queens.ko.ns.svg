@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="848" height="472" viewBox="0 0 848 472">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="ec54c933d8f3c9ba164bc0ade47123a9ebc34e839364c2b2f714e594dec12d6e"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="9e7ce9f5556b4c27270000c630e725267878b5c3e640ac2fe0901545985b1b32"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -71,7 +71,7 @@
               },
               {
                 "id": "b8",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return"
               }
             ]
@@ -101,7 +101,7 @@
                 "body": [
                   {
                     "id": "b12",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "continue    # 공격받는 칸"
                   }
                 ]
@@ -192,22 +192,24 @@
 <rect x="392" y="112" width="374" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="402" y="132" font-size="13" fill="#151a22" xml:space="preserve">solutions.append(board[:])    # 여왕을 다 놓았다</text>
 <rect x="392" y="144" width="374" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="402" y="164" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<path d="M406 144 L392 160 L406 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="416" y="164" font-size="13" fill="#151a22" xml:space="preserve">return</text>
 <rect x="766" y="112" width="58" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <circle cx="795" cy="144" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
 <path d="M790.5 148.5 L799.5 139.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="392" y="176" width="432" height="272" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="402" y="196" font-size="13" fill="#151a22" xml:space="preserve">for c in range(n)</text>
 <rect x="414" y="208" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M414 208 L733 256 L824 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M414 208 L738 256 L824 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="654.5" y="226" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c in cols or row - c in diag1 or row + c in diag2</text>
 <text x="420" y="251" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="818" y="251" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="414" y="256" width="319" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="424" y="276" font-size="13" fill="#151a22" xml:space="preserve">continue    # 공격받는 칸</text>
-<rect x="733" y="256" width="91" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="778.5" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M774 276.5 L783 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="414" y="256" width="324" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M428 256 L414 272 L428 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="438" y="276" font-size="13" fill="#151a22" xml:space="preserve">continue    # 공격받는 칸</text>
+<rect x="738" y="256" width="86" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="781" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M776.5 276.5 L785.5 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="414" y="288" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="424" y="308" font-size="13" fill="#151a22" xml:space="preserve">board.append(c)    # 놓아 본다</text>
 <rect x="414" y="320" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>

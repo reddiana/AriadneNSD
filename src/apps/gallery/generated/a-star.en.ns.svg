@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="720" height="680" viewBox="0 0 720 680">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="734" height="680" viewBox="0 0 734 680">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b807069f5efbe9298e6ab5b66f8306910818caf477ef8cb62ca6a12a915917fd"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="22d550adb48548203367e9aceb3b7167142e2f72a8c588f1c6ff7cf9115432f8"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -52,7 +52,7 @@
                 "body": [
                   {
                     "id": "b7",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "continue    # stale entry: a shorter path was found since"
                   }
                 ]
@@ -87,7 +87,7 @@
                   },
                   {
                     "id": "b11",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "return path"
                   }
                 ]
@@ -212,73 +212,75 @@
   <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
 <text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">a_star(graph, start, goal, h)</tspan></text>
-<path d="M24 64 L489 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="24" y="64" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L503 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="479" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">g = {start: 0}    # cost from the start</text>
-<rect x="24" y="96" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="96" width="479" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">came_from = {}</text>
-<rect x="24" y="128" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="128" width="479" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">open = [(h(start), start)]</text>
-<rect x="24" y="160" width="465" height="464" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="160" width="479" height="464" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">open</text>
-<rect x="46" y="192" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="192" width="457" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="212" font-size="13" fill="#151a22" xml:space="preserve">f, u = heappop(open)</text>
-<rect x="46" y="224" width="443" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 224 L437 272 L489 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="430" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">f &gt; g[u] + h(u)</text>
+<rect x="46" y="224" width="457" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 224 L451 272 L503 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="444" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">f &gt; g[u] + h(u)</text>
 <text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="483" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="46" y="272" width="391" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue    # stale entry: a shorter path was found since</text>
-<rect x="437" y="272" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="463" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M458.5 292.5 L467.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="46" y="304" width="443" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 304 L411 352 L489 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="411" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">u == goal</text>
+<text x="497" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="272" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 272 L46 288 L60 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue    # stale entry: a shorter path was found since</text>
+<rect x="451" y="272" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="477" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M472.5 292.5 L481.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="304" width="457" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L422 352 L503 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="422" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">u == goal</text>
 <text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="483" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="46" y="352" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="497" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="46" y="352" width="376" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M53 352 L53 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M404 352 L404 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M415 352 L415 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="63" y="372" font-size="13" fill="#151a22" xml:space="preserve">path ← <tspan font-weight="600">reconstruct</tspan>(came_from, u)</text>
-<rect x="46" y="384" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">return path</text>
-<rect x="411" y="352" width="78" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="450" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M445.5 388.5 L454.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="46" y="416" width="443" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="384" width="376" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 384 L46 400 L60 416" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="404" font-size="13" fill="#151a22" xml:space="preserve">return path</text>
+<rect x="422" y="352" width="81" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="462.5" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M458 388.5 L467 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="416" width="457" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="436" font-size="13" fill="#151a22" xml:space="preserve">for v, w in graph[u]</text>
-<rect x="68" y="448" width="421" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="448" width="435" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="468" font-size="13" fill="#151a22" xml:space="preserve">tentative = g[u] + w</text>
-<rect x="68" y="480" width="421" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M68 480 L426 528 L489 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="397.5" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">tentative &lt; g.get(v, INF)</text>
+<rect x="68" y="480" width="435" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 480 L437 528 L503 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="411.5" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">tentative &lt; g.get(v, INF)</text>
 <text x="74" y="523" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="483" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="68" y="528" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="497" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="68" y="528" width="369" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="548" font-size="13" fill="#151a22" xml:space="preserve">came_from[v] = u    # found a shorter path</text>
-<rect x="68" y="560" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="560" width="369" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="580" font-size="13" fill="#151a22" xml:space="preserve">g[v] = tentative</text>
-<rect x="68" y="592" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="592" width="369" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="612" font-size="13" fill="#151a22" xml:space="preserve">heappush(open, (tentative + h(v), v))</text>
-<rect x="426" y="528" width="63" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="457.5" cy="576" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M453 580.5 L462 571.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="24" y="624" width="465" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="437" y="528" width="66" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="470" cy="576" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M465.5 580.5 L474.5 571.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="624" width="479" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="644" font-size="13" fill="#151a22" xml:space="preserve">return None    # no path</text>
-<text x="533" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
-<text x="533" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">reconstruct(came_from, u)</tspan></text>
-<path d="M533 64 L696 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="533" y="64" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="543" y="84" font-size="13" fill="#151a22" xml:space="preserve">path = [u]</text>
-<rect x="533" y="96" width="163" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="543" y="116" font-size="13" fill="#151a22" xml:space="preserve">u in came_from</text>
-<rect x="555" y="128" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="565" y="148" font-size="13" fill="#151a22" xml:space="preserve">u = came_from[u]</text>
-<rect x="555" y="160" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="565" y="180" font-size="13" fill="#151a22" xml:space="preserve">path.append(u)</text>
-<rect x="533" y="192" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="543" y="212" font-size="13" fill="#151a22" xml:space="preserve">return path[::-1]</text>
+<text x="547" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="547" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">reconstruct(came_from, u)</tspan></text>
+<path d="M547 64 L710 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="547" y="64" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="557" y="84" font-size="13" fill="#151a22" xml:space="preserve">path = [u]</text>
+<rect x="547" y="96" width="163" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="557" y="116" font-size="13" fill="#151a22" xml:space="preserve">u in came_from</text>
+<rect x="569" y="128" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="579" y="148" font-size="13" fill="#151a22" xml:space="preserve">u = came_from[u]</text>
+<rect x="569" y="160" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="579" y="180" font-size="13" fill="#151a22" xml:space="preserve">path.append(u)</text>
+<rect x="547" y="192" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="557" y="212" font-size="13" fill="#151a22" xml:space="preserve">return path[::-1]</text>
 </g>
 </svg>

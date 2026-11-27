@@ -20,7 +20,7 @@ function gcdWith(words: GcdWords): ReadonlyArray<DiagramSpec> {
       'return a',
     ]),
     method('ext_gcd(a, b)', [
-      ['if', 'b == 0', ['return a, 1, 0'], ['']],
+      ['if', 'b == 0', [['exit', 'return a, 1, 0']], ['']],
       ['call', 'ext_gcd(a, b)', 'b, a % b', 'g, x, y'],
       `return g, y, x - (a // b) * y    # ${words.backSubstitute}`,
     ]),

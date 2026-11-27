@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1136" height="912" viewBox="0 0 1136 912">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="88bd0db788393080899e308628d595bae877209350076cb0e5df96fb9cbd721d"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="fc897c4c3c3c18f635f5633f29672d13e63676e5ef487f52fd26569888049ca6"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -160,7 +160,7 @@
             "body": [
               {
                 "id": "b17",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return 0    # 겹치지 않는다"
               }
             ]
@@ -185,7 +185,7 @@
             "body": [
               {
                 "id": "b20",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return tree[node]    # 구간 안에 다 들어온다"
               }
             ]
@@ -375,38 +375,40 @@
 <text x="624" y="228" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
 <text x="477" y="296" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="477" y="313" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">query(node, lo, hi, l, r)</tspan></text>
-<path d="M477 324 L835 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="477" y="324" width="358" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M477 324 L760 372 L835 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="760" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
+<path d="M477 324 L849 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="477" y="324" width="372" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 324 L775 372 L849 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="775" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
 <text x="483" y="367" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
-<text x="829" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="477" y="372" width="283" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="487" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # 겹치지 않는다</text>
-<rect x="760" y="372" width="75" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="797.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M793 392.5 L802 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="477" y="404" width="358" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M477 404 L783 452 L835 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="763" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
+<text x="843" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="372" width="298" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M491 372 L477 388 L491 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="501" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # 겹치지 않는다</text>
+<rect x="775" y="372" width="74" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="812" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M807.5 392.5 L816.5 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="404" width="372" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M477 404 L797 452 L849 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="777" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
 <text x="483" y="447" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
-<text x="829" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="477" y="452" width="306" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="487" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # 구간 안에 다 들어온다</text>
-<rect x="783" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="809" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M804.5 472.5 L813.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="477" y="484" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="843" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="477" y="452" width="320" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M491 452 L477 468 L491 484" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="501" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # 구간 안에 다 들어온다</text>
+<rect x="797" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="823" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M818.5 472.5 L827.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="477" y="484" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="487" y="504" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
-<rect x="477" y="516" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="477" y="516" width="372" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M484 516 L484 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M828 516 L828 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M842 516 L842 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="494" y="536" font-size="13" fill="#151a22" xml:space="preserve">left ← <tspan font-weight="600">query</tspan>(2 * node, lo, mid, l, r)</text>
-<rect x="477" y="548" width="358" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="477" y="548" width="372" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M484 548 L484 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M828 548 L828 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M842 548 L842 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="494" y="568" font-size="13" fill="#151a22" xml:space="preserve">right ← <tspan font-weight="600">query</tspan>(2 * node + 1, mid + 1, hi, l, r)</text>
-<rect x="477" y="580" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="477" y="580" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="487" y="600" font-size="13" fill="#151a22" xml:space="preserve">return left + right</text>
 <text x="477" y="668" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="477" y="685" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update(node, lo, hi, i, x)</tspan></text>

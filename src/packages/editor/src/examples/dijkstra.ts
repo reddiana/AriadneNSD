@@ -13,7 +13,7 @@ export const dijkstra: ReadonlyArray<DiagramSpec> = [
       'pq',
       [
         'd, u = heappop(pq)',
-        ['if', 'd > dist[u]', ['continue'], ['']],
+        ['if', 'd > dist[u]', [['exit', 'continue']], ['']],
         [
           'for',
           'for v, w in graph[u]',

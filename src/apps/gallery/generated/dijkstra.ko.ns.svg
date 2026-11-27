@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="333" height="536" viewBox="0 0 333 536">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b11947603bf865fee4887ad6f0832c092f278f225df9a6a8b5846087c2ade678"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="80970d85d46bdb2d00c15c1f380c314a78aa60672ea1724a8acf60a294a42744"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -52,7 +52,7 @@
                 "body": [
                   {
                     "id": "b7",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "continue"
                   }
                 ]
@@ -148,15 +148,16 @@
 <rect x="46" y="192" width="263" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="212" font-size="13" fill="#151a22" xml:space="preserve">d, u = heappop(pq)</text>
 <rect x="46" y="224" width="263" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 224 L199 272 L309 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="199" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">d &gt; dist[u]</text>
+<path d="M46 224 L210 272 L309 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="210" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">d &gt; dist[u]</text>
 <text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="303" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="46" y="272" width="153" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue</text>
-<rect x="199" y="272" width="110" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="254" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M249.5 292.5 L258.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="272" width="164" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 272 L46 288 L60 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue</text>
+<rect x="210" y="272" width="99" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="259.5" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M255 292.5 L264 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="46" y="304" width="263" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="324" font-size="13" fill="#151a22" xml:space="preserve">for v, w in graph[u]</text>
 <rect x="68" y="336" width="241" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>

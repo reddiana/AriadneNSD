@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="687" height="680" viewBox="0 0 687 680">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="701" height="680" viewBox="0 0 701 680">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="c9485e6dbf8524d7230a175e67f74b859b724c531bdc76fbbb8d6e3dc149cb25"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="0aa03986169785ad4f14d189f85a073516ce116327029e1d20bae327d451d7ef"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -52,7 +52,7 @@
                 "body": [
                   {
                     "id": "b7",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "continue    # 낡은 항목: 그 뒤에 더 짧은 길을 찾았다"
                   }
                 ]
@@ -87,7 +87,7 @@
                   },
                   {
                     "id": "b11",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "return path"
                   }
                 ]
@@ -212,73 +212,75 @@
   <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
 <text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">a_star(graph, start, goal, h)</tspan></text>
-<path d="M24 64 L456 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="24" y="64" width="432" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L470 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="446" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">g = {start: 0}    # 출발점에서 온 비용</text>
-<rect x="24" y="96" width="432" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="96" width="446" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">came_from = {}</text>
-<rect x="24" y="128" width="432" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="128" width="446" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">open = [(h(start), start)]</text>
-<rect x="24" y="160" width="432" height="464" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="24" y="160" width="446" height="464" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">open</text>
-<rect x="46" y="192" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="192" width="424" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="212" font-size="13" fill="#151a22" xml:space="preserve">f, u = heappop(open)</text>
-<rect x="46" y="224" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 224 L404 272 L456 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="397" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">f &gt; g[u] + h(u)</text>
+<rect x="46" y="224" width="424" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 224 L418 272 L470 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="411" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">f &gt; g[u] + h(u)</text>
 <text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
-<text x="450" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="46" y="272" width="358" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue    # 낡은 항목: 그 뒤에 더 짧은 길을 찾았다</text>
-<rect x="404" y="272" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="430" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M425.5 292.5 L434.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="46" y="304" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M46 304 L384 352 L456 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="384" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">u == goal</text>
+<text x="464" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="272" width="372" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 272 L46 288 L60 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="292" font-size="13" fill="#151a22" xml:space="preserve">continue    # 낡은 항목: 그 뒤에 더 짧은 길을 찾았다</text>
+<rect x="418" y="272" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="444" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M439.5 292.5 L448.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="304" width="424" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L395 352 L470 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="395" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">u == goal</text>
 <text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
-<text x="450" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="46" y="352" width="338" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="464" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="352" width="349" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M53 352 L53 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M377 352 L377 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M388 352 L388 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="63" y="372" font-size="13" fill="#151a22" xml:space="preserve">path ← <tspan font-weight="600">reconstruct</tspan>(came_from, u)</text>
-<rect x="46" y="384" width="338" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">return path</text>
-<rect x="384" y="352" width="72" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="420" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M415.5 388.5 L424.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="46" y="416" width="410" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="384" width="349" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 384 L46 400 L60 416" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="404" font-size="13" fill="#151a22" xml:space="preserve">return path</text>
+<rect x="395" y="352" width="75" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="432.5" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M428 388.5 L437 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="416" width="424" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="56" y="436" font-size="13" fill="#151a22" xml:space="preserve">for v, w in graph[u]</text>
-<rect x="68" y="448" width="388" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="448" width="402" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="468" font-size="13" fill="#151a22" xml:space="preserve">tentative = g[u] + w</text>
-<rect x="68" y="480" width="388" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M68 480 L396 528 L456 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="364.5" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">tentative &lt; g.get(v, INF)</text>
+<rect x="68" y="480" width="402" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 480 L408 528 L470 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="378.5" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">tentative &lt; g.get(v, INF)</text>
 <text x="74" y="523" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
-<text x="450" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="68" y="528" width="328" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="464" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="68" y="528" width="340" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="548" font-size="13" fill="#151a22" xml:space="preserve">came_from[v] = u    # 더 짧은 길을 찾았다</text>
-<rect x="68" y="560" width="328" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="560" width="340" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="580" font-size="13" fill="#151a22" xml:space="preserve">g[v] = tentative</text>
-<rect x="68" y="592" width="328" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="68" y="592" width="340" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="78" y="612" font-size="13" fill="#151a22" xml:space="preserve">heappush(open, (tentative + h(v), v))</text>
-<rect x="396" y="528" width="60" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="426" cy="576" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M421.5 580.5 L430.5 571.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="24" y="624" width="432" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="408" y="528" width="62" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="439" cy="576" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M434.5 580.5 L443.5 571.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="624" width="446" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="644" font-size="13" fill="#151a22" xml:space="preserve">return None    # 길이 없다</text>
-<text x="500" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
-<text x="500" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">reconstruct(came_from, u)</tspan></text>
-<path d="M500 64 L663 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="500" y="64" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="510" y="84" font-size="13" fill="#151a22" xml:space="preserve">path = [u]</text>
-<rect x="500" y="96" width="163" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="510" y="116" font-size="13" fill="#151a22" xml:space="preserve">u in came_from</text>
-<rect x="522" y="128" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="532" y="148" font-size="13" fill="#151a22" xml:space="preserve">u = came_from[u]</text>
-<rect x="522" y="160" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="532" y="180" font-size="13" fill="#151a22" xml:space="preserve">path.append(u)</text>
-<rect x="500" y="192" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="510" y="212" font-size="13" fill="#151a22" xml:space="preserve">return path[::-1]</text>
+<text x="514" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="514" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">reconstruct(came_from, u)</tspan></text>
+<path d="M514 64 L677 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="514" y="64" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="524" y="84" font-size="13" fill="#151a22" xml:space="preserve">path = [u]</text>
+<rect x="514" y="96" width="163" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="524" y="116" font-size="13" fill="#151a22" xml:space="preserve">u in came_from</text>
+<rect x="536" y="128" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="546" y="148" font-size="13" fill="#151a22" xml:space="preserve">u = came_from[u]</text>
+<rect x="536" y="160" width="141" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="546" y="180" font-size="13" fill="#151a22" xml:space="preserve">path.append(u)</text>
+<rect x="514" y="192" width="163" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="524" y="212" font-size="13" fill="#151a22" xml:space="preserve">return path[::-1]</text>
 </g>
 </svg>

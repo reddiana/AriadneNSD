@@ -15,7 +15,7 @@ function hanoiWith(words: HanoiWords): ReadonlyArray<DiagramSpec> {
       ['call', 'hanoi(n, src, dst, via)', 'n, "A", "C", "B"'],
     ]),
     method('hanoi(n, src, dst, via)', [
-      ['if', 'n == 0', ['return'], ['']],
+      ['if', 'n == 0', [['exit', 'return']], ['']],
       ['call', 'hanoi(n, src, dst, via)', 'n - 1, src, via, dst'],
       `print(f"${words.move}")    # ${words.outOfTheWay}`,
       ['call', 'hanoi(n, src, dst, via)', 'n - 1, via, dst, src'],

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="839" height="264" viewBox="0 0 839 264">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="5a6690c80f0a6aa14631f4df52534f92b6526e3c571a1bb76ca690cb025d9c47"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="6e4bdffb594146ffd88ca9301842ca6bf2e52ef565fdb5835161f85094462803"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -51,7 +51,7 @@
             "body": [
               {
                 "id": "b4",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return"
               }
             ]
@@ -122,15 +122,16 @@
 <text x="340" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi(n, src, dst, via)</tspan></text>
 <path d="M340 64 L815 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <rect x="340" y="64" width="475" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M340 64 L592 112 L815 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="592" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
+<path d="M340 64 L617 112 L815 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="617" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
 <text x="346" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="809" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="340" y="112" width="252" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="350" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
-<rect x="592" y="112" width="223" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="703.5" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M699 132.5 L708 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="340" y="112" width="277" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M354 112 L340 128 L354 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="364" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="617" y="112" width="198" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="716" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M711.5 132.5 L720.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="340" y="144" width="475" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M347 144 L347 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <path d="M808 144 L808 176" fill="none" stroke="#5b77ad" stroke-width="1"/>

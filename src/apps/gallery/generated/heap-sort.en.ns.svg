@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="760" height="488" viewBox="0 0 760 488">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="762" height="500" viewBox="0 0 762 500">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="a5f49b8c3663300d0119660613fb656d7676a73d0917c0875e6142beab185148"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b182e2e88cdba2145118b95bf5ccc372a1a0685245e92279ca6fdd855eea0b3a"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -87,8 +87,7 @@
       "body": [
         {
           "id": "b7",
-          "kind": "while",
-          "text": "True",
+          "kind": "endless",
           "body": [
             {
               "id": "b8",
@@ -159,7 +158,7 @@
                 "body": [
                   {
                     "id": "b17",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "return    # heap order holds"
                   }
                 ]
@@ -231,46 +230,46 @@
 <rect x="25" y="181" width="378" height="112" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
 <text x="448" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="448" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down(a, i, n)</tspan></text>
-<path d="M448 64 L736 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="448" y="64" width="288" height="400" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="458" y="84" font-size="13" fill="#151a22" xml:space="preserve">True</text>
-<rect x="470" y="96" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="116" font-size="13" fill="#151a22" xml:space="preserve">largest = i</text>
-<rect x="470" y="128" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="148" font-size="13" fill="#151a22" xml:space="preserve">l, r = 2 * i + 1, 2 * i + 2</text>
-<rect x="470" y="160" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M470 160 L640 208 L736 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="638" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt; n and a[l] &gt; a[largest]</text>
-<text x="476" y="203" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="730" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="470" y="208" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="228" font-size="13" fill="#151a22" xml:space="preserve">largest = l</text>
-<rect x="640" y="208" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="688" cy="224" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M683.5 228.5 L692.5 219.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="470" y="240" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M470 240 L640 288 L736 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="638" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; n and a[r] &gt; a[largest]</text>
-<text x="476" y="283" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="730" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="470" y="288" width="170" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="308" font-size="13" fill="#151a22" xml:space="preserve">largest = r</text>
-<rect x="640" y="288" width="96" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="688" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M683.5 308.5 L692.5 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="470" y="320" width="266" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M470 320 L682 368 L736 320" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="682" y="338" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">largest == i</text>
-<text x="476" y="363" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="730" y="363" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="470" y="368" width="212" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="388" font-size="13" fill="#151a22" xml:space="preserve">return    # heap order holds</text>
-<rect x="682" y="368" width="54" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="709" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M704.5 388.5 L713.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="470" y="400" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="420" font-size="13" fill="#151a22" xml:space="preserve">a[i], a[largest] = a[largest], a[i]</text>
-<rect x="470" y="432" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="480" y="452" font-size="13" fill="#151a22" xml:space="preserve">i = largest</text>
+<path d="M448 64 L738 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="448" y="64" width="290" height="412" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="470" y="86" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="106" font-size="13" fill="#151a22" xml:space="preserve">largest = i</text>
+<rect x="470" y="118" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="138" font-size="13" fill="#151a22" xml:space="preserve">l, r = 2 * i + 1, 2 * i + 2</text>
+<rect x="470" y="150" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 150 L641 198 L738 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="640" y="168" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt; n and a[l] &gt; a[largest]</text>
+<text x="476" y="193" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="732" y="193" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="198" width="171" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="218" font-size="13" fill="#151a22" xml:space="preserve">largest = l</text>
+<rect x="641" y="198" width="97" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="689.5" cy="214" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M685 218.5 L694 209.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="230" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 230 L641 278 L738 230" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="640" y="248" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; n and a[r] &gt; a[largest]</text>
+<text x="476" y="273" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="732" y="273" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="278" width="171" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="298" font-size="13" fill="#151a22" xml:space="preserve">largest = r</text>
+<rect x="641" y="278" width="97" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="689.5" cy="294" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M685 298.5 L694 289.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="310" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M470 310 L686 358 L738 310" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="686" y="328" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">largest == i</text>
+<text x="476" y="353" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
+<text x="732" y="353" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="470" y="358" width="216" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M484 358 L470 374 L484 390" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="494" y="378" font-size="13" fill="#151a22" xml:space="preserve">return    # heap order holds</text>
+<rect x="686" y="358" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="712" cy="374" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M707.5 378.5 L716.5 369.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="470" y="390" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="410" font-size="13" fill="#151a22" xml:space="preserve">a[i], a[largest] = a[largest], a[i]</text>
+<rect x="470" y="422" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="480" y="442" font-size="13" fill="#151a22" xml:space="preserve">i = largest</text>
 </g>
 </svg>

@@ -40,7 +40,7 @@ function unionFindWith(words: UnionFindWords): ReadonlyArray<DiagramSpec> {
     method('union(x, y)', [
       ['call', 'find(x)', 'x', 'rx'],
       ['call', 'find(x)', 'y', 'ry'],
-      ['if', 'rx == ry', [`return False    # ${words.sameSet}`], ['']],
+      ['if', 'rx == ry', [['exit', `return False    # ${words.sameSet}`]], ['']],
       ['if', 'rank[rx] < rank[ry]', ['rx, ry = ry, rx'], ['']],
       `parent[ry] = rx    # ${words.lowerUnderHigher}`,
       ['if', 'rank[rx] == rank[ry]', ['rank[rx] += 1'], ['']],

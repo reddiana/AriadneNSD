@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="757" height="684" viewBox="0 0 757 684">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="3e7b81230191037d3d93a6ebf3a7c95258d4d6263282b7f58e46a846fbc93534"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="8cc62d5c1e3632acd615e2fc6f835d34304a7630d6f5fd21ff25319ea29713af"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -186,7 +186,7 @@
             "body": [
               {
                 "id": "b19",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return False    # 이미 같은 집합"
               }
             ]
@@ -344,15 +344,16 @@
 <path d="M726 324 L726 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="424" y="344" font-size="13" fill="#151a22" xml:space="preserve">ry ← <tspan font-weight="600">find</tspan>(y)</text>
 <rect x="407" y="356" width="326" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M407 356 L672 404 L733 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="672" y="374" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rx == ry</text>
+<path d="M407 356 L675 404 L733 356" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="675" y="374" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rx == ry</text>
 <text x="413" y="399" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="727" y="399" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="407" y="404" width="265" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="417" y="424" font-size="13" fill="#151a22" xml:space="preserve">return False    # 이미 같은 집합</text>
-<rect x="672" y="404" width="61" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="702.5" cy="420" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M698 424.5 L707 415.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="407" y="404" width="268" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M421 404 L407 420 L421 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="431" y="424" font-size="13" fill="#151a22" xml:space="preserve">return False    # 이미 같은 집합</text>
+<rect x="675" y="404" width="58" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="704" cy="420" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M699.5 424.5 L708.5 415.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="407" y="436" width="326" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M407 436 L633 484 L733 436" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="633" y="454" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">rank[rx] &lt; rank[ry]</text>

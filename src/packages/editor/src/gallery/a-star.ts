@@ -20,11 +20,14 @@ function aStarWith(words: AStarWords): ReadonlyArray<DiagramSpec> {
         'open',
         [
           'f, u = heappop(open)',
-          ['if', 'f > g[u] + h(u)', [`continue    # ${words.stale}`], ['']],
+          ['if', 'f > g[u] + h(u)', [['exit', `continue    # ${words.stale}`]], ['']],
           [
             'if',
             'u == goal',
-            [['call', 'reconstruct(came_from, u)', 'came_from, u', 'path'], 'return path'],
+            [
+              ['call', 'reconstruct(came_from, u)', 'came_from, u', 'path'],
+              ['exit', 'return path'],
+            ],
             [''],
           ],
           [

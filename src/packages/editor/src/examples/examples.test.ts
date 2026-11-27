@@ -329,6 +329,18 @@ function specTexts(spec: ReadonlyArray<DiagramSpec>): string[] {
             out.push(item[1]);
             seq(item[2]);
             break;
+          case 'endless':
+            seq(item[1]);
+            break;
+          case 'exit':
+            out.push(item[1]);
+            break;
+          case 'parallel':
+            out.push(item[1]);
+            for (const body of item[2]) {
+              seq(body);
+            }
+            break;
           case 'call':
             out.push(item[1], item[2] ?? '', item[3] ?? '');
             break;

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1220" height="912" viewBox="0 0 1220 912">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="572b0b8cfaf733e271ea5816bf62597f88d245165e2c482d5fbe879e4f0e63f6"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="c5070448b7eb69509df79ba164d0c90a5487deef0bc8690509912191712a5d7c"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -160,7 +160,7 @@
             "body": [
               {
                 "id": "b17",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return 0    # no overlap"
               }
             ]
@@ -185,7 +185,7 @@
             "body": [
               {
                 "id": "b20",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return tree[node]    # fully inside the range"
               }
             ]
@@ -375,38 +375,40 @@
 <text x="708" y="228" font-size="13" fill="#151a22" xml:space="preserve">tree[node] = tree[2 * node] + tree[2 * node + 1]</text>
 <text x="561" y="296" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="561" y="313" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">query(node, lo, hi, l, r)</tspan></text>
-<path d="M561 324 L926 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<rect x="561" y="324" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M561 324 L843 372 L926 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="843" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
+<path d="M561 324 L940 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="561" y="324" width="379" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 324 L859 372 L940 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="859" y="342" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; lo or hi &lt; l</text>
 <text x="567" y="367" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="920" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="561" y="372" width="282" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="571" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # no overlap</text>
-<rect x="843" y="372" width="83" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="884.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M880 392.5 L889 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="561" y="404" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M561 404 L874 452 L926 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="854" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
+<text x="934" y="367" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="372" width="298" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M575 372 L561 388 L575 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="585" y="392" font-size="13" fill="#151a22" xml:space="preserve">return 0    # no overlap</text>
+<rect x="859" y="372" width="81" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="899.5" cy="388" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M895 392.5 L904 383.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="561" y="404" width="379" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 404 L888 452 L940 404" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="868" y="422" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt;= lo and hi &lt;= r</text>
 <text x="567" y="447" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
-<text x="920" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="561" y="452" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="571" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # fully inside the range</text>
-<rect x="874" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="900" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M895.5 472.5 L904.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
-<rect x="561" y="484" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="934" y="447" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
+<rect x="561" y="452" width="327" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M575 452 L561 468 L575 484" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="585" y="472" font-size="13" fill="#151a22" xml:space="preserve">return tree[node]    # fully inside the range</text>
+<rect x="888" y="452" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="914" cy="468" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M909.5 472.5 L918.5 463.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="561" y="484" width="379" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="571" y="504" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) // 2</text>
-<rect x="561" y="516" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="561" y="516" width="379" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M568 516 L568 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M919 516 L919 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M933 516 L933 548" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="578" y="536" font-size="13" fill="#151a22" xml:space="preserve">left ← <tspan font-weight="600">query</tspan>(2 * node, lo, mid, l, r)</text>
-<rect x="561" y="548" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="561" y="548" width="379" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <path d="M568 548 L568 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<path d="M919 548 L919 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M933 548 L933 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="578" y="568" font-size="13" fill="#151a22" xml:space="preserve">right ← <tspan font-weight="600">query</tspan>(2 * node + 1, mid + 1, hi, l, r)</text>
-<rect x="561" y="580" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="561" y="580" width="379" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="571" y="600" font-size="13" fill="#151a22" xml:space="preserve">return left + right</text>
 <text x="561" y="668" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
 <text x="561" y="685" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">update(node, lo, hi, i, x)</tspan></text>

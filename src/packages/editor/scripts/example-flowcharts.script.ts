@@ -202,9 +202,11 @@ const emptyBox: Box = {
 type Jump = 'return' | 'continue' | 'break';
 
 function jumpOf(block: Block): Jump | null {
-  if (block.kind !== 'process') return null;
+  if (block.kind !== 'process' && block.kind !== 'exit') return null;
   const m = /^(return|continue|break)\b/.exec(block.text.trim());
-  return m === null ? null : (m[1] as Jump);
+  // An exit block always leaves; one that is not break or continue (throw …) ends like a return.
+  if (m === null) return block.kind === 'exit' ? 'return' : null;
+  return m[1] as Jump;
 }
 
 function isEmptySeq(seq: Seq): boolean {
@@ -234,7 +236,7 @@ function jumpBox(block: Block, ctx: Ctx): Box {
     loop.brk ??= nextLetter(ctx);
     return connectorBox(loop.brk);
   }
-  return terminal(block.kind === 'process' ? block.text : '');
+  return terminal(block.kind === 'process' || block.kind === 'exit' ? block.text : '');
 }
 
 function seqBox(seq: Seq, ctx: Ctx): Box {
@@ -703,6 +705,130 @@ function postTestBox(block: Extract<Block, { kind: 'doWhile' }>, ctx: Ctx): Box 
   };
 }
 
+/** An endless loop: the body and a loop line back to its top; it leaves only by a break. */
+function endlessBox(block: Extract<Block, { kind: 'endless' }>, ctx: Ctx): Box {
+  const loop: Loop = {};
+  ctx.loops.push(loop);
+  const body = seqBox(block.body, ctx);
+  ctx.loops.pop();
+  const cx = loopX + 30 + Math.max(body.cx, 40);
+  const bodyTop = junctionY + 16;
+  const bodyBottom = bodyTop + body.h;
+  const backY = bodyBottom + 16;
+  const outY = backY + 18 + connectorR;
+  const leaves = loop.brk !== undefined;
+  return {
+    w: cx + Math.max(body.w - body.cx, 60) + 4,
+    h: leaves ? outY : backY,
+    cx,
+    arrowIn: bodyTop + body.arrowIn,
+    exits: leaves,
+    empty: false,
+    draw: (x, y, out) => {
+      edge(
+        out,
+        [
+          [x + cx, y + junctionY],
+          [x + cx, y + bodyTop + body.arrowIn],
+        ],
+        { head: !body.empty },
+      );
+      body.draw(x + cx - body.cx, y + bodyTop, out);
+      if (body.exits) {
+        edge(
+          out,
+          [
+            [x + cx, y + bodyBottom],
+            [x + cx, y + backY],
+            [x + loopX, y + backY],
+            [x + loopX, y + junctionY],
+            [x + cx, y + junctionY],
+          ],
+          { head: true, loop: true },
+        );
+      }
+      dot(out, x + cx, y + junctionY, true);
+      if (loop.cont !== undefined) {
+        connectorShape(out, x + cx + 36, y + junctionY, loop.cont);
+        edge(
+          out,
+          [
+            [x + cx + 36 - connectorR, y + junctionY],
+            [x + cx, y + junctionY],
+          ],
+          { head: false, loop: true },
+        );
+      }
+      if (loop.brk !== undefined) {
+        connectorShape(out, x + cx, y + outY - connectorR, loop.brk);
+      }
+    },
+  };
+}
+
+const barH = 5;
+
+/** A parallel block: a fork bar, the branches side by side, and a join bar (UML activity). */
+function parallelBox(block: Extract<Block, { kind: 'parallel' }>, ctx: Ctx): Box {
+  const boxes = block.branches.map((branch) => seqBox(branch.body, ctx));
+  const colGap = 24;
+  let left = 0;
+  const cols = boxes.map((box) => {
+    const ccx = Math.max(box.cx, 4);
+    const col = { box, x: left + ccx };
+    left += ccx + Math.max(box.w - box.cx, 4) + colGap;
+    return col;
+  });
+  const words = block.text.trim();
+  const colsW = left - colGap;
+  const w = colsW + (words === '' ? 0 : labelWidth(words) + 12);
+  const cx = ((cols[0]?.x ?? 0) + (cols[cols.length - 1]?.x ?? 0)) / 2;
+  const colTop = barH + 24;
+  const joinY = colTop + Math.max(...cols.map((c) => c.box.h)) + 24;
+  const exits = cols.some((c) => c.box.exits);
+  return {
+    w,
+    h: joinY + barH,
+    cx,
+    arrowIn: 0,
+    exits,
+    empty: false,
+    draw: (x, y, out) => {
+      const bar = (top: number): void => {
+        out.shapes.push(
+          `<rect x="${n(x)}" y="${n(top)}" width="${n(colsW)}" height="${n(barH)}" style="fill:var(--line)"/>`,
+        );
+        out.shapeCount += 1;
+      };
+      bar(y);
+      if (exits) bar(y + joinY);
+      for (const col of cols) {
+        const ex = x + col.x;
+        edge(
+          out,
+          [
+            [ex, y + barH],
+            [ex, y + colTop + col.box.arrowIn],
+          ],
+          { head: !col.box.empty },
+        );
+        col.box.draw(ex - col.box.cx, y + colTop, out);
+        if (col.box.exits) {
+          edge(
+            out,
+            [
+              [ex, y + colTop + col.box.h],
+              [ex, y + joinY],
+            ],
+            { head: true },
+          );
+        }
+      }
+      if (words !== '') label(out, x + colsW + 6, y + barH / 2 + 4, words, 'arm', 'start');
+    },
+  };
+}
+
 function blockBox(block: Block, ctx: Ctx): Box {
   switch (block.kind) {
     case 'process':
@@ -721,10 +847,11 @@ function blockBox(block: Block, ctx: Ctx): Box {
     case 'doWhile':
       return postTestBox(block, ctx);
     case 'endless':
+      return endlessBox(block, ctx);
     case 'exit':
+      return jumpBox(block, ctx);
     case 'parallel':
-      // The examples do not use these blocks yet.
-      throw new Error(`No flowchart for a ${block.kind} block`);
+      return parallelBox(block, ctx);
   }
 }
 

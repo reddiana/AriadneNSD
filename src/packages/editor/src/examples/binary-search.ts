@@ -28,7 +28,7 @@ function binarySearchWith(found: string, notFound: string): ReadonlyArray<Diagra
           [
             'if',
             'a[mid] == key',
-            ['return mid;'],
+            [['exit', 'return mid;']],
             [['if', 'a[mid] < key', ['lo = mid + 1;'], ['hi = mid - 1;']]],
           ],
         ],

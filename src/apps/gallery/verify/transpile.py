@@ -54,6 +54,24 @@ def block(b, depth, out):
         args = b[2] if len(b) > 2 and b[2] else ''
         result = b[3] if len(b) > 3 and b[3] else ''
         out.append(f'{pad}{result + " = " if result else ""}{name}({args})')
+    elif kind == 'endless':
+        out.append(f'{pad}while True:')
+        body(b[1], depth + 1, out)
+    elif kind == 'exit':
+        out.append(pad + b[1])
+    elif kind == 'parallel':
+        # Each branch runs in its own thread; the block ends when all of them have ended. The
+        # branches see the enclosing names but do not assign them (the gallery's only call).
+        names = []
+        for branch in b[2]:
+            name = f'_branch{len(out)}'
+            names.append(name)
+            out.append(f'{pad}def {name}():')
+            body(branch, depth + 1, out)
+        threads = ', '.join(f'threading.Thread(target={name})' for name in names)
+        out.append(f'{pad}_threads = [{threads}]')
+        out.append(f'{pad}for _t in _threads: _t.start()')
+        out.append(f'{pad}for _t in _threads: _t.join()')
     elif kind == 'range':
         for x in b[2]:
             block(x, depth, out)
@@ -65,7 +83,7 @@ def transpile(diagrams, globals_by_func=None):
     """Returns Python source for all diagrams of one locale. globals_by_func maps a function name
     to the names it shares through module scope (the diagrams leave that implicit)."""
     globals_by_func = globals_by_func or {}
-    out = []
+    out = ['import threading', '']
     for d in diagrams:
         head = d['head']['text']
         name = head.split('(')[0]

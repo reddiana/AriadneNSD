@@ -18,8 +18,8 @@ function mazeWith(words: MazeWords): ReadonlyArray<DiagramSpec> {
       ['if', 'found', ['draw_thread(path)'], [`print("${words.noExit}")`]],
     ]),
     method('solve(maze, p)', [
-      ['if', 'p == maze.exit', ['return True'], ['']],
-      ['if', 'maze.wall(p) or p in visited', ['return False'], ['']],
+      ['if', 'p == maze.exit', [['exit', 'return True']], ['']],
+      ['if', 'maze.wall(p) or p in visited', [['exit', 'return False']], ['']],
       'visited.add(p)',
       `path.append(p)    # ${words.unwind}`,
       [
@@ -27,7 +27,7 @@ function mazeWith(words: MazeWords): ReadonlyArray<DiagramSpec> {
         'for d in (N, E, S, W)',
         [
           ['call', 'solve(maze, p)', 'maze, p + d', 'ok'],
-          ['if', 'ok', ['return True'], ['']],
+          ['if', 'ok', [['exit', 'return True']], ['']],
         ],
       ],
       `path.pop()        # ${words.windBack}`,

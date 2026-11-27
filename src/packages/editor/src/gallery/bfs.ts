@@ -17,7 +17,7 @@ function bfsWith(words: BfsWords): ReadonlyArray<DiagramSpec> {
         'q',
         [
           'p = q.popleft()',
-          ['if', 'p == goal', ['return dist[p]'], ['']],
+          ['if', 'p == goal', [['exit', 'return dist[p]']], ['']],
           [
             'for',
             'for d in (N, E, S, W)',

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="683" height="520" viewBox="0 0 683 520">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="d464b67db5bee9c2812682738543054c5ae37a87c2a0ca27d13467e49f9f5622"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b0b637af696719177b1d18e22059a1d2bf298b1c336313c5fac3e8e81de3c9d0"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -76,7 +76,7 @@
             "body": [
               {
                 "id": "b7",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return True"
               }
             ]
@@ -101,7 +101,7 @@
             "body": [
               {
                 "id": "b10",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return False"
               }
             ]
@@ -151,7 +151,7 @@
                 "body": [
                   {
                     "id": "b17",
-                    "kind": "process",
+                    "kind": "exit",
                     "text": "return True"
                   }
                 ]
@@ -218,25 +218,27 @@
 <text x="387" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">solve(maze, p)</tspan></text>
 <path d="M387 64 L659 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <rect x="387" y="64" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M387 64 L561 112 L659 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="561" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p == maze.exit</text>
+<path d="M387 64 L569 112 L659 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="569" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p == maze.exit</text>
 <text x="393" y="107" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
 <text x="653" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="387" y="112" width="174" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="397" y="132" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
-<rect x="561" y="112" width="98" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="610" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M605.5 132.5 L614.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="387" y="112" width="182" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M401 112 L387 128 L401 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="411" y="132" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="569" y="112" width="90" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="614" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M609.5 132.5 L618.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="387" y="144" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M387 144 L565 192 L659 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M387 144 L573 192 L659 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="558" y="162" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">maze.wall(p) or p in visited</text>
 <text x="393" y="187" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
 <text x="653" y="187" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="387" y="192" width="178" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="397" y="212" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
-<rect x="565" y="192" width="94" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="612" cy="208" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M607.5 212.5 L616.5 203.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="387" y="192" width="186" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M401 192 L387 208 L401 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="411" y="212" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="573" y="192" width="86" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="616" cy="208" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M611.5 212.5 L620.5 203.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="387" y="224" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="397" y="244" font-size="13" fill="#151a22" xml:space="preserve">visited.add(p)</text>
 <rect x="387" y="256" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
@@ -248,15 +250,16 @@
 <path d="M652 320 L652 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
 <text x="426" y="340" font-size="13" fill="#151a22" xml:space="preserve">ok ← <tspan font-weight="600">solve</tspan>(maze, p + d)</text>
 <rect x="409" y="352" width="250" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M409 352 L569 400 L659 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="569" y="370" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">ok</text>
+<path d="M409 352 L577 400 L659 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="577" y="370" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">ok</text>
 <text x="415" y="395" font-size="12" fill="#4b5567" xml:space="preserve">true</text>
 <text x="653" y="395" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">false</text>
-<rect x="409" y="400" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="419" y="420" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
-<rect x="569" y="400" width="90" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="614" cy="416" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M609.5 420.5 L618.5 411.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="409" y="400" width="168" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M423 400 L409 416 L423 432" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="433" y="420" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="577" y="400" width="82" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="618" cy="416" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M613.5 420.5 L622.5 411.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="387" y="432" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="397" y="452" font-size="13" fill="#151a22" xml:space="preserve">path.pop()        # wind it back</text>
 <rect x="387" y="464" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="556" height="650" viewBox="0 0 556 650">
   <metadata>
-    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="97460507309bc251bac498c3681c2ef883e0f960a1d5bc09e2b67c8031b427cf"><![CDATA[
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="32d85bde4a96f8a6f60a73ec4bd83c1296eba37bb99a151d2f82767d23e71359"><![CDATA[
 {
   "format": "ariadne-nsd",
   "version": 1,
@@ -115,7 +115,7 @@
             "body": [
               {
                 "id": "b16",
-                "kind": "process",
+                "kind": "exit",
                 "text": "return None    # 사이클이 있다"
               }
             ]
@@ -200,15 +200,16 @@
 <circle cx="448" cy="498" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
 <path d="M443.5 502.5 L452.5 493.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="24" y="514" width="508" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<path d="M24 514 L433 562 L532 514" fill="none" stroke="#5b77ad" stroke-width="1"/>
-<text x="433" y="532" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">len(order) &lt; len(graph)</text>
+<path d="M24 514 L438 562 L532 514" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="438" y="532" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">len(order) &lt; len(graph)</text>
 <text x="30" y="557" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
 <text x="526" y="557" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
-<rect x="24" y="562" width="409" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<text x="34" y="582" font-size="13" fill="#151a22" xml:space="preserve">return None    # 사이클이 있다</text>
-<rect x="433" y="562" width="99" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
-<circle cx="482.5" cy="578" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
-<path d="M478 582.5 L487 573.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="562" width="414" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 562 L24 578 L38 594" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="582" font-size="13" fill="#151a22" xml:space="preserve">return None    # 사이클이 있다</text>
+<rect x="438" y="562" width="94" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="485" cy="578" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M480.5 582.5 L489.5 573.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
 <rect x="24" y="594" width="508" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
 <text x="34" y="614" font-size="13" fill="#151a22" xml:space="preserve">return order</text>
 </g>

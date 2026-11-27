@@ -34,7 +34,7 @@ function topologicalSortWith(words: TopologicalSortWords): ReadonlyArray<Diagram
           ],
         ],
       ],
-      ['if', 'len(order) < len(graph)', [`return None    # ${words.cycle}`], ['']],
+      ['if', 'len(order) < len(graph)', [['exit', `return None    # ${words.cycle}`]], ['']],
       'return order',
     ]),
   ];
