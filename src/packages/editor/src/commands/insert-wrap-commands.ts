@@ -74,7 +74,7 @@ export function insertWrapCommands(ctx: CommandContext) {
       run: () => {
         runInsert(kind, 'after');
       },
-      menu: { menu: 'diagram', group: 1, order: order + 1, submenu: 'insert' },
+      menu: { menu: 'diagram', group: 1, order: order + 11, submenu: 'insert' },
       // For has no toolbar icon: it looks like While and confused people (UX TB1). Keys and menus.
       ...(kind === 'for' ? {} : { toolbar: { group: 4, order: order + 1, icon: `block.${kind}` } }),
       context: ['blocks', 'missingDefault'],
@@ -85,7 +85,7 @@ export function insertWrapCommands(ctx: CommandContext) {
       run: () => {
         runInsert(kind, 'before');
       },
-      menu: { menu: 'diagram', group: 1, order: order + 11, submenu: 'insertBefore' },
+      menu: { menu: 'diagram', group: 1, order: order + 1, submenu: 'insertBefore' },
     }),
   ]);
 

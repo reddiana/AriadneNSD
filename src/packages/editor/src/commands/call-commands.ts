@@ -152,7 +152,7 @@ export function callCommands(ctx: CommandContext) {
           ? 'reason.notOnBranchLabel'
           : insertWhen('process')(state),
       run: () => runInsertCall('after'),
-      menu: { menu: 'diagram', group: 1, order: 7, submenu: 'insert' },
+      menu: { menu: 'diagram', group: 1, order: 17, submenu: 'insert' },
       context: ['blocks', 'missingDefault'],
     }),
     spec('block.insertBefore.call', {
@@ -162,7 +162,7 @@ export function callCommands(ctx: CommandContext) {
           ? 'reason.notOnBranchLabel'
           : insertWhen('process')(state),
       run: () => runInsertCall('before'),
-      menu: { menu: 'diagram', group: 1, order: 17, submenu: 'insertBefore' },
+      menu: { menu: 'diagram', group: 1, order: 7, submenu: 'insertBefore' },
     }),
   ];
 
