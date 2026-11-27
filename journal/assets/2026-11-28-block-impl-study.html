@@ -1,0 +1,287 @@
+<title>M84 블록 셋 구현 때 정할 것</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M33과 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.fig svg text { font-family: var(--font); font-size: 12px; }
+.ref { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.ref figure { margin: 0; display: grid; gap: 6px; }
+.ref figcaption { font-size: 12.5px; color: var(--muted); }
+.ref img { background: #fff; border: 1px solid var(--line); image-rendering: pixelated; width: 236px; height: auto; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+
+.cards.wide { grid-template-columns: 1fr; }
+.tbwrap { display: grid; gap: 10px; justify-items: start; }
+.tbwrap.open { padding-bottom: 104px; }
+.tb { display: flex; align-items: center; gap: 2px; min-height: 36px; padding: 3px 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; color: var(--fg); width: max-content; }
+.tb .t { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 3px; min-width: 28px; height: 28px; padding: 0 5px; border: 1px solid transparent; border-radius: 4px; font-size: 12px; flex: none; }
+.tb .t.new { border: 1.5px dashed var(--accent); }
+.tb .t.on { background: rgba(44, 85, 201, .14); }
+.tb .sep { width: 1px; height: 20px; margin: 0 6px; background: var(--line); flex: none; }
+.tb .zg { display: inline-flex; align-items: center; }
+.tb .zg .t { min-width: 20px; padding: 0; }
+.dd { position: absolute; top: 100%; left: 0; z-index: 2; min-width: 220px; margin: 2px 0 0; padding: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 18px rgba(20, 30, 60, .18); list-style: none; color: var(--fg); }
+.dd.static { position: static; margin: 0; width: max-content; }
+.dd li { display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 4px; font-size: 13px; white-space: nowrap; }
+.dd li.dim { color: var(--muted); }
+.dd hr { border: 0; border-top: 1px solid var(--line); margin: 4px 2px; }
+.dd kbd { margin-left: auto; padding-left: 16px; color: var(--muted); }
+.note { font-size: 12.5px; color: var(--muted); }
+.figrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.figrow figure { margin: 0; display: grid; gap: 4px; justify-items: start; }
+.figrow figcaption { font-size: 12.5px; color: var(--muted); }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.fixed { width: 100%; border-collapse: collapse; font-size: 14px; }
+.fixed th, .fixed td { padding: 10px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+.fixed thead th { border-top: 0; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.fixed td:first-child { white-space: nowrap; font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 600; }
+.fixed td.why { color: var(--muted); font-size: 13.5px; min-width: 18ch; }
+.fixed td .fig { padding: 8px; display: inline-block; }
+</style>
+
+<main>
+  <div>
+    <h1>M84 · 블록 셋 구현 때 정할 것</h1>
+    <p class="lede">무한 반복(M79 · EL1), 탈출(M80 · XB1), 병렬 처리(M81 · PB1)의 모양과 키는 정했습니다. 구현하려면 두 가지가 더 필요합니다: <b>병렬 처리의 분기를 무엇으로 고르나(B1)</b>, <b>툴바에 어떻게 놓나(B2)</b>. 물음마다 <b>★ 표시가 Claude의 추천</b>입니다(B1은 1번, B2는 2번). 그 밖에 Claude가 정해 둔 것은 맨 아래 표에 있습니다. 바꿀 것만 알려 주세요.</p>
+  </div>
+
+  <section>
+    <span class="part">B1</span>
+    <h2>B1. 병렬 처리의 분기를 무엇으로 고르나</h2>
+    <p class="q">Case는 <b>분기 라벨</b>을 골라 분기를 다룹니다(분기 첫 블록에서 <kbd>↑</kbd>, 마우스로는 라벨을 누름). 병렬 처리에는 분기 라벨이 없어서 고를 것이 따로 있어야 합니다.</p>
+    <p class="q">어느 판이든 <b>분기를 고른 상태에서의 조작은 Case와 같습니다</b>: 처리 블록 삽입(<kbd>a</kbd> 아래에 · <kbd>A</kbd> 위에)은 오른쪽 · 왼쪽에 분기 삽입, 삭제는 분기를 안의 블록과 함께, 이동은 옆 분기와 자리 바꿈. 메뉴 · 커맨드 팔레트의 "왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제"도 있습니다. 그림은 둘째 분기를 고른 모습이고, 주황 테두리가 선택 하이라이트, 흰 화살표가 마우스로 누르는 자리입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">B1 · 1번</span><h3>분기 칸 전체를 고름</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="fig" data-fig="b1"></div>
+        <ul><li>키보드: 분기 첫 블록에서 <kbd>↑</kbd>(한 번 더 누르면 병렬 처리 블록). Case의 분기 라벨과 같은 자리의 키입니다.</li><li>마우스: 위 띠 가운데 <b>그 분기 바로 위 구간</b>을 누릅니다.</li><li>하이라이트는 분기 칸 전체의 테두리입니다. <b>모양은 M81에서 정한 그대로</b>입니다.</li><li><span class="bad">위 띠가 분기마다 나뉘므로, 병렬 처리 블록 자체는 마우스로 아래 띠나 양 끝 빗금을 눌러 고릅니다. 위 띠에 텍스트가 있으면 텍스트를 누를 때 분기가 골라집니다(편집은 블록을 고른 뒤).</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">B1 · 2번</span><h3>분기마다 얇은 빈 머리칸을 두고 그것을 고름</h3></header>
+        <div class="fig" data-fig="b2"></div>
+        <ul><li>위 띠 바로 아래, 분기마다 높이 8px의 빈 칸(Case의 라벨 자리)을 둡니다. 고르는 방법 · 키는 Case의 분기 라벨과 똑같습니다.</li><li>위 띠 전체는 블록을 고르는 자리로 남습니다.</li><li><span class="bad">모양이 M81에서 정한 것과 달라집니다(분기마다 8px). 비어 있어 뜻이 없는 칸이 저장되는 그림에도 들어갑니다. 8px 칸은 누르기 작습니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">B1 · 3번</span><h3>분기를 고르는 것이 없음</h3></header>
+        <div class="fig" data-fig="b3"></div>
+        <ul><li>분기 안의 블록을 고르고 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트의 "왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제"로만 다룹니다.</li><li>새로 만들 선택 대상이 없어 구현이 가장 작습니다.</li><li><span class="bad">분기 전용 키가 없고(<kbd>a</kbd> · <kbd>A</kbd>는 블록에 적용), 분기를 옮길 수 없습니다. Case와 다르게 움직입니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">B2</span>
+    <h2>B2. 툴바에 새 블록 셋을 어떻게 놓나</h2>
+    <p class="q">지금 툴바(앱의 <code>toolbar.tsx</code>를 옮겨 그림): 저장 | 실행 취소 · 다시 실행 | 잘라내기 · 복사 · 붙여넣기 | <b>블록 다섯</b>(처리 · If · Case · While · Do-While) | 감싸기 ▾, 축소 · 100% · 확대, 예제. For는 While과 헷갈려서 툴바에서 뺐습니다(UX TB1). 파란 점선이 새로 생기는 버튼입니다.</p>
+    <div class="cards wide">
+      <article class="card"><header><span class="tag">B2 · 1번</span><h3>다섯 버튼 뒤에 아이콘 셋</h3></header>
+        <div class="fig" data-fig="t1"></div>
+        <ul><li>블록 모양을 줄인 아이콘(무한 반복 · 탈출 · 병렬 처리)입니다. 누르기 · Shift+클릭 · Ctrl+클릭 · 드래그가 다른 블록 버튼과 같습니다.</li><li><span class="bad">툴바가 버튼 셋만큼 길어져 좁은 화면에서 한 줄 더 내려갑니다. 작은 아이콘(22 × 16)에서 무한 반복은 While과, 병렬 처리는 Case와 헷갈리기 쉽습니다(For를 뺀 까닭과 같음).</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">B2 · 2번</span><h3>"블록 더 보기" ▾ 드롭다운 하나</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="fig" data-fig="t2"></div>
+        <ul><li>다섯 버튼 뒤에 ▾ 버튼 하나. 펼치면 셋이 아이콘 + 이름 + 키(<kbd>a e</kbd> · <kbd>a x</kbd> · <kbd>a t</kbd>)로 나옵니다. 그림은 펼친 모습입니다.</li><li>이름이 함께 보여 아이콘이 헷갈리지 않고, 툴바는 버튼 하나만 늘어납니다. 키를 배우는 자리도 됩니다.</li><li>항목을 누르면 아래에 삽입합니다. Shift · Ctrl+클릭과 드래그도 블록 버튼과 같게 할지는 구현 때 맞춥니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">B2 · 3번</span><h3>툴바에는 없음</h3></header>
+        <div class="fig" data-fig="t3"></div>
+        <ul><li>툴바는 지금 그대로입니다. 키(<kbd>a</kbd> 다음의 키 힌트) · 메뉴 "다이어그램 › 아래에 삽입" · 커맨드 팔레트로만 넣습니다(For와 같음).</li><li><span class="bad">마우스만 쓰는 사람은 메뉴를 열어야 찾습니다. 새 블록이 있는지 툴바에서 보이지 않습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">정해 둔 것</span>
+    <h2>Claude가 정해 둔 것 (바꿀 것만 알려 주세요)</h2>
+    <p class="q">결정(EL1 · XB1 · PB1)에 없던 구현의 세부입니다. 그대로면 답하지 않으셔도 됩니다.</p>
+    <div class="tablewrap"><table class="fixed">
+      <thead><tr><th>번호</th><th>정한 것</th><th>모습</th><th>까닭</th></tr></thead>
+      <tbody>
+        <tr><td>D1</td><td>모델의 <code>kind</code> 이름: <code>endless</code> · <code>exit</code> · <code>parallel</code></td><td><div class="fig" data-fig="d1"></div></td><td class="why">EL1에서 정한 <code>endless</code>와 같은 짜임으로 영어 한 낱말. <code>doWhile</code>처럼 카멜 표기가 필요 없음</td></tr>
+        <tr><td>D2</td><td>병렬 처리의 아래 띠 높이 18px(텍스트 없는 위 띠와 같음). 위 띠에 텍스트를 적으면 위 띠만 조건 칸 높이(32px)</td><td><div class="fig" data-fig="d2"></div></td><td class="why">아래 띠에는 텍스트가 없으므로 늘 얇은 띠. 위 · 아래가 같은 두께라 비운 모양이 대칭</td></tr>
+        <tr><td>D3</td><td>새 탈출 블록은 빈 텍스트로 열고 바로 편집</td><td><div class="fig" data-fig="d3"></div></td><td class="why">처리 블록을 넣을 때와 같음. <code>break</code> 같은 기본 텍스트를 넣지 않음(언어마다 다름)</td></tr>
+        <tr><td>D4</td><td>병렬 처리를 새로 넣으면 빈 분기 둘</td><td><div class="fig" data-fig="d4"></div></td><td class="why">PB1의 "둘 이상"의 최소. 감싸기(<kbd>s</kbd> + <kbd>t</kbd>)면 고른 블록이 첫 분기, 둘째는 빈 분기</td></tr>
+        <tr><td>D5</td><td>블록 셋 모두 접기 영역 · 복사 · 잘라내기 · 붙여넣기 · 이동 · 끌어 옮기기는 다른 블록과 같음</td><td class="note">그림 없음</td><td class="why">새 규칙이 없음. 탈출은 처리 블록처럼 안에 담는 것이 없어 감쌀 수 없음(XB1)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>B1, B2 하나씩 <b>번호</b> 또는 고칠 점.</li>
+      <li>정해 둔 것(D1 ~ D5)은 바꿀 것만.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', branch: '#f6ebdc', call: '#ebe7f4', event: '#e2efdf', paper: '#fffbe8', white: '#ffffff', sel: '#d0500b' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const svg = (w, h, body) => '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' + body + '</svg>';
+const rect = (x, y, w, h, fill, extra) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '" ' + (extra || '') + '/>';
+const line = (pts, extra) => '<polyline points="' + pts.map(p => (p[0] + .5) + ',' + (p[1] + .5)).join(' ') + '" fill="none" stroke="' + C.line + '" ' + (extra || '') + '/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '"' + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + (o.size ? ' font-size="' + o.size + '"' : '') + (o.italic ? ' font-style="italic"' : '') + (o.mono === false ? '' : ' font-family="IBM Plex Mono, monospace"') + '>' + esc(s) + '</text>'; };
+// M84: 선택 하이라이트(블록 안쪽 3px, edit.select 주황, 배경 없음 — 04-visual-design 5장)와 마우스 포인터.
+const sel = (x, y, w, h) => '<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="' + (w - 3) + '" height="' + (h - 3) + '" fill="none" stroke="' + C.sel + '" stroke-width="3"/>';
+const pointer = (x, y) => '<path d="M' + x + ',' + y + ' l0,15 l4,-3.5 l2.8,6 l2.4,-1.1 l-2.8,-5.8 l5,-.3 z" fill="#ffffff" stroke="#151a22" stroke-width="1" stroke-linejoin="round"/>';
+const ROW = 32, HEAD = 32, STRIP = 22, BAND = 18;
+const parBands = b => b.style === 'din' ? [b.text ? HEAD : BAND, BAND] : b.style === 'top' ? [b.text ? HEAD : BAND, 0] : [8, 8];
+function H(b) {
+  if (typeof b === 'string' || b.exit != null || b.proc != null || b.call != null) return ROW;
+  if (b.note != null) return b.lines ? 14 + b.lines.length * 17 : ROW;
+  if (b.iff) return HEAD + Math.max(S(b.yes), S(b.no));
+  if (b.par) { const [t, u] = parBands(b); return t + (b.heads || 0) + Math.max(...b.par.map(S)) + u; }
+  return S(b.body) + ({ while: HEAD, doWhile: HEAD, e1: STRIP * 2 })[b.loop];
+}
+const S = bs => bs.reduce((a, b) => a + H(b), 0);
+function arrowMark(x, y) { return '<path d="M' + x + ',' + y + ' h-10 m0,0 l4,-4 m-4,4 l4,4 M' + x + ',' + y + ' v-8" fill="none" stroke="' + C.muted + '" stroke-width="1.4"/>'; }
+function draw(x, y, w, b, h) {
+  h = h || H(b);
+  if (typeof b === 'string') return rect(x, y, w, h, C.proc) + text(x + 10, y + 21, b);
+  if (b.call != null) return rect(x, y, w, h, C.call) + '<line x1="' + (x + 6.5) + '" y1="' + y + '" x2="' + (x + 6.5) + '" y2="' + (y + h) + '" stroke="' + C.line + '"/><line x1="' + (x + w - 5.5) + '" y1="' + y + '" x2="' + (x + w - 5.5) + '" y2="' + (y + h) + '" stroke="' + C.line + '"/>' + text(x + 14, y + 21, b.call);
+  if (b.exit != null) {
+    const st = b.style || 'din';
+    let s = rect(x, y, w, h, C.proc);
+    // M84: 새로 넣은 빈 탈출 블록에서 바로 텍스트를 적는 모습(인라인 에디터 = 주황 테두리 + 커서).
+    if (b.edit) return s + line([[x + 14, y], [x, y + h / 2], [x + 14, y + h]]) + sel(x, y, w, h) + '<line x1="' + (x + 22.5) + '" y1="' + (y + 9) + '" x2="' + (x + 22.5) + '" y2="' + (y + 24) + '" stroke="' + C.text + '" stroke-width="1.4"/>';
+    if (st === 'din') return s + line([[x + 14, y], [x, y + h / 2], [x + 14, y + h]]) + text(x + 22, y + 21, b.exit);
+    if (st === 'arrow') return s + arrowMark(x + w - 8, y + 20) + text(x + 10, y + 21, b.exit);
+    if (st === 'kind') return s + line([[x + 14, y], [x, y + h / 2], [x + 14, y + h]]) + '<rect x="' + (x + 20.5) + '" y="' + (y + 7.5) + '" width="' + (b.kw.length * 7.4 + 10) + '" height="18" rx="3" fill="' + C.white + '" stroke="' + C.muted + '"/>' + text(x + 25, y + 21, b.kw, { size: 11.5 }) + text(x + 34 + b.kw.length * 7.4, y + 21, b.exit);
+    return s + text(x + 10, y + 21, b.exit);
+  }
+  if (b.proc != null) {
+    let s = rect(x, y, w, h, C.proc) + text(x + 10, y + 21, b.proc);
+    if (b.sel) s += sel(x, y, w, h);
+    if (!b.cmt) return s;
+    if (b.style === 'side') return s + text(x + w - 8, y + 21, '// ' + b.cmt, { fill: C.muted, anchor: 'end', size: 11.5, italic: true });
+    if (b.style === 'mark') return s + '<path d="M' + (x + w - 16) + ',' + (y + 6) + ' h10 v7 h-5 l-3,3 v-3 h-2z" fill="' + C.paper + '" stroke="' + C.muted + '"/>';
+    return s;
+  }
+  if (b.note != null) {
+    const lines = b.lines || [b.note], st = b.style || 'dash';
+    let s = '';
+    if (st === 'dash') s += '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + C.white + '" stroke="' + C.line + '"/><rect x="' + (x + 3.5) + '" y="' + (y + 3.5) + '" width="' + (w - 6) + '" height="' + (h - 6) + '" fill="none" stroke="' + C.muted + '" stroke-dasharray="4 3"/>';
+    if (st === 'paper') s += rect(x, y, w, h, C.paper) + '<path d="M' + (x + w - 12.5) + ',' + (y + .5) + ' l12,12 h-12z" fill="' + C.white + '" stroke="' + C.line + '"/>';
+    if (st === 'slash') s += rect(x, y, w, h, C.proc);
+    lines.forEach((t, i) => { s += text(x + 10, y + 21 + i * 17 - (b.lines ? 1 : 0), (st === 'slash' ? '// ' : '') + t, { fill: C.muted, italic: true, mono: st === 'slash' }); });
+    return s;
+  }
+  if (b.iff) {
+    const hw = Math.round(w / 2);
+    let s = rect(x, y, w, HEAD, C.branch) + line([[x, y], [x + hw, y + HEAD], [x + w, y]]);
+    s += text(x + hw, y + 14, b.iff, { anchor: 'middle' });
+    s += text(x + 6, y + HEAD - 4, '참', { size: 10, fill: C.muted, mono: false }) + text(x + w - 6, y + HEAD - 4, '거짓', { size: 10, fill: C.muted, mono: false, anchor: 'end' });
+    return s + seq(x, y + HEAD, hw, b.yes, h - HEAD) + seq(x + hw, y + HEAD, w - hw, b.no, h - HEAD);
+  }
+  if (b.par) {
+    const [t, u] = parBands(b), n = b.par.length, cw = Math.floor(w / n), st = b.style, hd = b.heads || 0;
+    const colW = i => i === n - 1 ? w - i * cw : cw;
+    let s = rect(x, y, w, h, C.loop);
+    if (st === 'din') {
+      const d = Math.min(t, 18);
+      s += line([[x + d, y], [x, y + t]]) + line([[x + w - d, y], [x + w, y + t]]) + line([[x, y + h - u], [x + d, y + h]]) + line([[x + w, y + h - u], [x + w - d, y + h]]);
+    }
+    if (st === 'top') { const d = Math.min(t, 18); s += line([[x + d, y], [x, y + t]]) + line([[x + w - d, y], [x + w, y + t]]); }
+    if (st === 'bar') s += '<rect x="' + x + '" y="' + y + '" width="' + (w + 1) + '" height="8" fill="' + C.line + '"/><rect x="' + x + '" y="' + (y + h - 7) + '" width="' + (w + 1) + '" height="8" fill="' + C.line + '"/>';
+    if (b.text) s += text(x + w / 2, y + 21, b.text, { anchor: 'middle' });
+    // M84: 분기마다 위 띠 아래의 얇은 빈 머리칸(B1 2번).
+    if (hd) b.par.forEach((q, i) => { s += rect(x + i * cw, y + t, colW(i), hd, C.white); });
+    const bodyH = h - t - u - hd;
+    b.par.forEach((q, i) => { s += seq(x + i * cw, y + t + hd, colW(i), q, bodyH); });
+    // M84: 고른 분기의 하이라이트(칸 전체 또는 머리칸)와 누르는 자리.
+    if (b.selCol != null) {
+      const cx = x + b.selCol * cw, ww = colW(b.selCol);
+      s += b.selPart === 'head' ? sel(cx, y + t, ww, hd) : sel(cx, y + t, ww, h - t - u);
+      if (b.ptr === 'band') s += pointer(cx + ww / 2, y + t / 2);
+      if (b.ptr === 'head') s += pointer(cx + ww / 2, y + t + hd / 2);
+    }
+    return s;
+  }
+  let s = rect(x, y, w, h, C.loop), top = 0;
+  if (b.loop === 'while') { top = HEAD; s += text(x + 10, y + 21, b.text); }
+  if (b.loop === 'e1') top = STRIP;
+  if (b.loop === 'doWhile') s += text(x + 10, y + h - 11, b.text);
+  return s + seq(x + STRIP, y + top, w - STRIP, b.body);
+}
+function seq(x, y, w, bs, fill) {
+  let s = '', yy = y; const total = S(bs);
+  bs.forEach((b, i) => {
+    let h = H(b);
+    if (i === bs.length - 1 && fill && fill > total) {
+      const simple = typeof b === 'string' || b.exit != null || b.proc != null || b.note != null || b.call != null;
+      if (simple) h += fill - total; else s += rect(x, yy + h, w, fill - total, C.proc);
+    }
+    s += draw(x, yy, w, b, h); yy += h;
+  });
+  return s;
+}
+function diagram(name, body, w, kind) {
+  const hh = 30; let s = '<rect x=".5" y=".5" width="' + w + '" height="' + hh + '" fill="' + (kind === 'method' ? C.call : C.event) + '" stroke="' + C.line + '"/>' + text(10, 20, name, { mono: kind === 'method' });
+  s += seq(0, hh, w, body);
+  return svg(w + 2, hh + S(body) + 2, s);
+}
+const one = (b, w) => svg(w + 2, H(b) + 2, draw(0, 0, w, b));
+function keys(title, list, hot) {
+  const W = 470, rows = Math.ceil(list.length / 3), Hh = 40 + rows * 22;
+  let b = '<rect x=".5" y=".5" width="' + (W - 1) + '" height="' + (Hh - 1) + '" rx="5" fill="#f5f7fb" stroke="#d4dbe6"/>' + text(12, 20, title, { size: 12, mono: false });
+  list.forEach((kn, i) => {
+    const col = i % 3, row = Math.floor(i / 3), x = 12 + col * 152, y = 44 + row * 22, on = hot.indexOf(kn[1]) >= 0;
+    if (on) b += '<rect x="' + (x - 5.5) + '" y="' + (y - 14.5) + '" width="140" height="20" rx="4" fill="none" stroke="#1d7a46" stroke-width="1.5"/>';
+    b += text(x, y, kn[0], { size: 12.5, fill: '#2c55c9' }) + text(x + 16, y, kn[1], { size: 12, mono: false });
+  });
+  return svg(W, Hh, b);
+}
+
+const F = {
+  'b1': diagram('페이지를 열면', ['쪽 ← 주소에서 읽기()', { par: [['사진 ← 받기(a)'], ['글 ← 받기(b)', '글 ← 줄이기(글)'], ['광고 ← 고르기()']], style: 'din', selCol: 1, ptr: 'band' }, '그리기(사진, 글, 광고)'], 345, 'event'),
+  'b2': diagram('페이지를 열면', ['쪽 ← 주소에서 읽기()', { par: [['사진 ← 받기(a)'], ['글 ← 받기(b)', '글 ← 줄이기(글)'], ['광고 ← 고르기()']], style: 'din', heads: 8, selCol: 1, selPart: 'head', ptr: 'head' }, '그리기(사진, 글, 광고)'], 345, 'event'),
+  'b3': diagram('페이지를 열면', ['쪽 ← 주소에서 읽기()', { par: [['사진 ← 받기(a)'], [{ proc: '글 ← 받기(b)', sel: true }, '글 ← 줄이기(글)'], ['광고 ← 고르기()']], style: 'din' }, '그리기(사진, 글, 광고)'], 345, 'event') + '<div style="margin-top:10px" class="note">글 ← 받기(b)를 고르고 우클릭한 컨텍스트 메뉴(일부)</div>' + "<ul class=\"dd static\"><li class=\"dim\">아래에 삽입 ▸</li><li class=\"dim\">위에 삽입 ▸</li><hr><li>왼쪽에 분기 삽입</li><li>오른쪽에 분기 삽입</li><li>분기 삭제</li><hr><li class=\"dim\">복사<kbd>y</kbd></li><li class=\"dim\">삭제<kbd>Delete</kbd></li></ul>",
+  't1': "<div class=\"tbwrap\"><div class=\"tb\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 4h11l3 3v13H5z M8 4v5h7V4 M8 20v-6h8v6\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 8H5V4 M5 8a8 8 0 1 1 1.8 8.5\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 8h4V4 M19 8a8 8 0 1 0 -1.8 8.5\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 20a2.5 2.5 0 1 0 0-.1 M18 20a2.5 2.5 0 1 0 0-.1 M7.5 18L17 4 M16.5 18L7 4\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 9h11v11H9z M5 15H4V4h11v1\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 5H5v16h14V5h-3 M9 3h6v4H9z\"/></svg></span><span class=\"sep\"></span><span class=\"t\" title=\"처리\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"If\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L11 7.5 L21.5 .5 M11 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Case\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L15.8 7.5 L21.5 .5 M5.3 7.5 V15.5 M10.6 7.5 V15.5 M15.8 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"5.5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Do-While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\".5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t new\" title=\"무한 반복\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"4.5\" width=\"16\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t new\" title=\"탈출\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><path d=\"M6 .5 L.5 8 L6 15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t new\" title=\"병렬 처리\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\"4.5\" width=\"21\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><path d=\"M11 4.5 V11.5 M4 .5 L.5 4.5 M18 .5 L21.5 4.5 M.5 11.5 L4 15.5 M21.5 11.5 L18 15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"4.5\" width=\"11\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg><span>감싸기</span><svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 10l5 5 5-5\"/></svg></span><span class=\"zg\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5\"/></svg></span><span class=\"t\">100%</span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5\"/></svg></span></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z\"/></svg><span>예제</span></span></div></div>",
+  't2': "<div class=\"tbwrap open\"><div class=\"tb\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 4h11l3 3v13H5z M8 4v5h7V4 M8 20v-6h8v6\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 8H5V4 M5 8a8 8 0 1 1 1.8 8.5\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 8h4V4 M19 8a8 8 0 1 0 -1.8 8.5\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 20a2.5 2.5 0 1 0 0-.1 M18 20a2.5 2.5 0 1 0 0-.1 M7.5 18L17 4 M16.5 18L7 4\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 9h11v11H9z M5 15H4V4h11v1\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 5H5v16h14V5h-3 M9 3h6v4H9z\"/></svg></span><span class=\"sep\"></span><span class=\"t\" title=\"처리\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"If\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L11 7.5 L21.5 .5 M11 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Case\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L15.8 7.5 L21.5 .5 M5.3 7.5 V15.5 M10.6 7.5 V15.5 M15.8 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"5.5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Do-While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\".5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t new on\" title=\"블록 더 보기\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 10l5 5 5-5\"/></svg><ul class=\"dd\"><li><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"4.5\" width=\"16\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg><span>무한 반복</span><kbd>a e</kbd></li><li><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><path d=\"M6 .5 L.5 8 L6 15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg><span>탈출</span><kbd>a x</kbd></li><li><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\"4.5\" width=\"21\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><path d=\"M11 4.5 V11.5 M4 .5 L.5 4.5 M18 .5 L21.5 4.5 M.5 11.5 L4 15.5 M21.5 11.5 L18 15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg><span>병렬 처리</span><kbd>a t</kbd></li></ul></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"4.5\" width=\"11\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg><span>감싸기</span><svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 10l5 5 5-5\"/></svg></span><span class=\"zg\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5\"/></svg></span><span class=\"t\">100%</span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5\"/></svg></span></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z\"/></svg><span>예제</span></span></div></div>",
+  't3': "<div class=\"tbwrap\"><div class=\"tb\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 4h11l3 3v13H5z M8 4v5h7V4 M8 20v-6h8v6\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 8H5V4 M5 8a8 8 0 1 1 1.8 8.5\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 8h4V4 M19 8a8 8 0 1 0 -1.8 8.5\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 20a2.5 2.5 0 1 0 0-.1 M18 20a2.5 2.5 0 1 0 0-.1 M7.5 18L17 4 M16.5 18L7 4\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 9h11v11H9z M5 15H4V4h11v1\"/></svg></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 5H5v16h14V5h-3 M9 3h6v4H9z\"/></svg></span><span class=\"sep\"></span><span class=\"t\" title=\"처리\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"If\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L11 7.5 L21.5 .5 M11 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Case\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/><rect x=\".5\" y=\".5\" width=\"21\" height=\"7\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><path d=\"M.5 .5 L15.8 7.5 L21.5 .5 M5.3 7.5 V15.5 M10.6 7.5 V15.5 M15.8 7.5 V15.5\" fill=\"none\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"5.5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"t\" title=\"Do-While\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#dce6f6\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\".5\" width=\"16\" height=\"10\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg></span><span class=\"sep\"></span><span class=\"t\"><svg width=\"22\" height=\"16\" viewBox=\"0 0 22 16\" aria-hidden=\"true\"><rect x=\".5\" y=\".5\" width=\"21\" height=\"15\" fill=\"#f6ebdc\" stroke=\"#5b77ad\"/><rect x=\"5.5\" y=\"4.5\" width=\"11\" height=\"7\" fill=\"#edf0f5\" stroke=\"#5b77ad\"/></svg><span>감싸기</span><svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 10l5 5 5-5\"/></svg></span><span class=\"zg\"><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5\"/></svg></span><span class=\"t\">100%</span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13 M15.5 15.5L20 20 M8 10.5h5 M10.5 8v5\"/></svg></span></span><span class=\"t\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z\"/></svg><span>예제</span></span></div></div>" + '<div style="height:10px"></div>' + keys('a  아래에 삽입', [['p', '처리'], ['i', 'If'], ['w', 'While'], ['d', 'Do-While'], ['f', 'For'], ['k', 'Case'], ['c', '호출'], , ['e', '무한 반복'], ['x', '탈출'], ['t', '병렬 처리']], ["무한 반복","탈출","병렬 처리"]),
+  'd1': '<div class="figrow"><figure>' + one({ loop: 'e1', body: ['처리(x)'] }, 130) + '<figcaption><code>endless</code></figcaption></figure><figure>' + one({ exit: 'break' }, 130) + '<figcaption><code>exit</code></figcaption></figure><figure>' + one({ par: [['a'], ['b']], style: 'din' }, 130) + '<figcaption><code>parallel</code></figcaption></figure></div>',
+  'd2': '<div class="figrow"><figure>' + one({ par: [['a'], ['b']], style: 'din' }, 150) + '<figcaption>위 18 · 아래 18</figcaption></figure><figure>' + one({ par: [['a'], ['b']], style: 'din', text: '동시에 받기' }, 150) + '<figcaption>위 32 · 아래 18</figcaption></figure></div>',
+  'd3': one({ exit: '', edit: true }, 180),
+  'd4': one({ par: [[''], ['']], style: 'din' }, 180),
+};
+document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
