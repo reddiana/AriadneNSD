@@ -25,6 +25,7 @@ updated: 2026-11-28
 | M80 | 탈출 블록 (정함: X1 ~ X3 모두 1번) | https://claude.ai/artifact/JEnc5ppTHaJhjz9iPNUVDB | `journal/assets/2026-11-28-exit-block-study.html` |
 | M81 | 병렬 처리 블록 (정함: P1 1번, P2 2번, P3 1번) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
 | M83 | 삽입 · 붙여넣기의 앞 · 뒤 (정함: W1 1번) | https://claude.ai/artifact/A4crRvr8crouTNLy84rMfU | `journal/assets/2026-11-28-before-after-naming-study.html` |
+| M84 | 블록 셋 구현 때 정할 것 (답을 기다림: B1 · B2, D1 ~ D5) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
 
 ## 지금 단계
 
@@ -68,6 +69,7 @@ updated: 2026-11-28
 | 삽입 · 붙여넣기의 앞 · 뒤를 그림의 방향으로: 블록은 위에 · 아래에, 분기는 왼쪽에 · 오른쪽에, 양쪽에 늘 표시, "이전 · 다음 다이어그램" | 메인테이너 (2026-11-28 inbox), M83 W1 1번 | 로컬 앱에 있음(정리함: UX 설계 · 그림 `e967b81`, 사용법 · 키 표 · 알림 `61b7df0`) | `d3cfe48` |
 | 메뉴에서 쌍의 차례를 이름대로: "위에"를 "아래에" 위에, "왼쪽에"를 "오른쪽에" 위에(메뉴 · 하위 메뉴 · 컨텍스트 메뉴) | 메인테이너 (2026-11-28) | 로컬 앱에 있음(정리함 `e967b81`) | `13c3c75` |
 | 독일어: 앱 화면 · 그림 글자(If는 ja · nein, Case의 default는 sonst) · 사용법 · 갤러리, 지금 바로 | 메인테이너 (2026-11-28 inbox), [[01-requirements#^r-nfr\|R-NFR-04]] | 결정 | |
+| 화면 언어를 정하는 곳을 하나로(core의 `locales` 기준), 설정 창은 실제로 쓰는 언어를 보임 (결함: 고른 적 없으면 English로 보여 바꿀 수 없음) | 메인테이너 (2026-11-28 inbox 6 · 7장) | 로컬 앱에 있음(정리 남음: docs · UX 결정) | `c180f59` |
 | 흐린 메뉴 항목: 더 옅게, hover 없음, 까닭 툴팁(D3) · 정보 창 맨 위에 로고(A1) | 메인테이너 (2026-11-26, inbox), M74 | 사이트에 있음 (정보 창은 128px 로고 + 문자 로고, 폭 440px, [[ux-decisions\|DD1 · AL1]]) | `65e415f` `28e6c3e` `c30fc83` |
 | 맨 처음 · 맨 끝에 놓기: 헤더 아래 띠 · 다이어그램 아래 띠(P2), 마지막 블록이 무엇이든 | 메인테이너 (2026-11-26, inbox), M75 | 사이트에 있음 ([[ux-decisions\|DE1]]) | `a1141c1` |
 | 툴바의 확대 · 축소: 드롭다운 대신 [돋보기−] 100% [돋보기+], 숫자를 누르면 100% | 메인테이너 (2026-11-27), M76 Z1 | 사이트에 있음 | `a46a00d` `6909621` |
@@ -79,7 +81,7 @@ updated: 2026-11-28
 ## 이번과 다음 세션에 할 것
 
 - [ ] inbox 6 · 7장(언어 설정과 실제 언어가 어긋남, 다국어와 구조)의 답 → 화면 언어를 정하는 곳(웹 셸 · 편집기)을 하나로 모으고 결함을 고친 뒤 독일어 앱(화면 · 그림 글자) → 그다음 사용법 · 갤러리의 독일어판, 키 표 → [[2026-11-28-02-blocks-wording-german]]
-- [ ] 탈출 · 병렬 처리 · 무한 반복 블록 구현(모양 · 키는 정함) → [[backlog#웹 1.0의 문턱]]
+- [ ] 탈출 · 병렬 처리 · 무한 반복 블록 구현(모양 · 키는 정함) → [[backlog#웹 1.0의 문턱]]. 범위(2026-11-28 메인테이너): 기본(모델 · 파일 형식 · 그리기 · 키 · 메뉴) + 내보내기 · 공유 링크 + Claude 스킬 + 사용법 · 키 표 + 갤러리 예제 하나 + 기존 갤러리 · 예제에서 새 블록으로 고칠 곳. 분기 고르기 · 툴바는 M84에서
 - [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
