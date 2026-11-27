@@ -379,8 +379,8 @@ describe('key hint', () => {
       engine.setChrome({ isKeyHintShown: true, keyHintTitle: 'keyHint.a' });
     });
     const hint = screen.getByRole('note');
-    expect(hint.textContent).toContain('Insert after');
-    expect(hint.textContent).toContain('iInsert If');
+    expect(hint.textContent).toContain('Insert below');
+    expect(hint.textContent).toContain('iInsert If Below');
     act(() => {
       engine.setChrome({ pendingKeys: null, isKeyHintShown: false });
     });
@@ -585,7 +585,7 @@ describe('context menu', () => {
     if (cut === undefined || insert === undefined) throw new Error('two items expected');
     expect(others).toEqual([]);
     expect(cut.textContent).toContain('Cut');
-    expect(insert.textContent).toContain('Insert');
+    expect(insert.textContent).toContain('Insert Below');
     // Opened from the keyboard or the mouse, the first item has the focus; j moves down.
     expect(document.activeElement).toBe(cut);
     fireEvent.keyDown(cut, { key: 'j' });

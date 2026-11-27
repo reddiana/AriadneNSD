@@ -683,7 +683,7 @@ test.describe('Korean screen', () => {
     await typeText(page, '조건');
     await expect(drawnText(page, '참')).toBeVisible();
     await page.getByRole('button', { name: '다이어그램', exact: true }).click();
-    await page.getByRole('menuitem', { name: '삽입', exact: true }).hover();
-    await expect(page.getByRole('menuitem', { name: /^While 삽입/ })).toBeVisible();
+    await page.getByRole('menuitem', { name: '아래에 삽입', exact: true }).hover();
+    await expect(page.getByRole('menuitem', { name: /^아래에 While 삽입/ })).toBeVisible();
   });
 });

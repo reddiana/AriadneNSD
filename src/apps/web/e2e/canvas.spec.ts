@@ -95,10 +95,10 @@ test('T-0522: a submenu near the right edge stays in the window, and h / l close
   await drawnText(page, 'edge').click({ button: 'right' });
   const menu = page.getByRole('menu', { name: 'Context menu' });
   await expect(menu).toBeVisible();
-  const insert = menu.getByRole('menuitem', { name: 'Insert', exact: true });
+  const insert = menu.getByRole('menuitem', { name: 'Insert Below', exact: true });
   await insert.focus();
   await page.keyboard.press('l');
-  const submenu = page.getByRole('menu', { name: 'Insert', exact: true });
+  const submenu = page.getByRole('menu', { name: 'Insert Below', exact: true });
   await expect(submenu).toBeVisible();
   const box = await submenu.boundingBox();
   expect(box).not.toBeNull();
