@@ -1,0 +1,249 @@
+<title>M80 탈출 블록</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M33과 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.fig svg text { font-family: var(--font); font-size: 12px; }
+.ref { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.ref figure { margin: 0; display: grid; gap: 6px; }
+.ref figcaption { font-size: 12.5px; color: var(--muted); }
+.ref img { background: #fff; border: 1px solid var(--line); image-rendering: pixelated; width: 236px; height: auto; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M80 · 탈출 블록</h1>
+    <p class="lede">탈출(R-BLK-12, 이제 <code>P1</code>)은 반복이나 Method를 중간에 끝내는 블록입니다(<code>break</code> · <code>return</code> · <code>exit</code>). 무한 반복(M79, 정함)에서 나가는 유일한 길이기도 합니다. 이 페이지에서 <b>모양(X1)</b>, <b>글자(X2)</b>, <b>넣는 키(X3, 무한 반복의 키도 함께)</b>를 고릅니다. 각 물음의 <b>1번이 Claude의 추천</b>입니다. 그림의 무한 반복은 M79에서 정한 모양입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">참고</span>
+    <h2>DIN 66261의 탈출(Aussprung)</h2>
+    <p class="q">보통 블록의 <b>왼쪽에 꼭짓점이 왼쪽을 향하는 쐐기</b>가 있고, 쐐기 오른쪽에 나가는 곳("Zielort für Aussprung")을 적습니다. 원 논문에는 없고 DIN이 더한 기호입니다. Structorizer의 Jump도 같은 모양입니다.</p>
+    <div class="ref"><figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAAAwCAIAAAAepfppAAAAK3RFWHRDcmVhdGlvbiBUaW1lAERpIDI3IERleiAyMDA1IDAwOjUwOjEyICswMTAwhnvxGgAAAAd0SU1FB9UMGhcyFnS+KRMAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAEZ0FNQQAAsY8L/GEFAAADbUlEQVR42u1ZPZKyQBBttjwI1pcYeAgtEyxTb4CJOZRnsCS1TPAGppYkW3IIApMtuYlfzw/CMPyMguWuzEvUnpmGfrwB+2HcbjfQSPD17hP4XeixD8Mw3n0mbwbbJb3c70IgWZ+9p+5q0JtFQD0dHy+NLLQ6BNTQ0SlpgFZHDlV0dE0aoNWRQykdHZQGPK+O0DVycEOI99PpPpYnl8VzGQvm4EqemxzRDZUyNcGN4v6l8GcNrr4Fln+tnFA5XjpHZWEbSHloTMfZAXDOwtkTfhjYgBTnNZK445CYZVnZgTQzz5LyksnF1/KDt0JHwWZ55K6B4h1H/nUzEmLLw5xVdR2sU21jfDGkp34eLpY8HESDHUZOpx0t82SbaaLRhtcupE/B15aMPoVek8Wh2ycFZkvAqr8PQRD0jUVyaWOYsIFL4MxOtM6ZMz4iHbjOmk9M9QOKaLK2BHl1qEujSBjJeWYl3+bFA0pqyxRU0aEKJoyTKAwKczKHxTbks4x0s5gDyzvSeHj0rIGpcpgMggtJFP9EL2RDpENZGvF+7QF449yDlpdt7/yIDY0hw1gaF8LJ6L9hsOiXPUVNe+XQwy0vQwteB14/I6Kbf70go4MvOdRl6J5FQEqHlgZodeSg6RAg3ErffTLvh1aHAOFWqgXSVB3C3/C/D4GOhwWCf9bBnx94h/IBaKSOcLsYzuzJPGKdGUHq3t2/cYMPkehIimDA3bNgZrXrTmkvJOck81031ytxv5IM3GNN6XhEINiYOrMRaWGjdemGyZhB3PWRIwTeAXaFzlCJQeDBjDlmSZfsErsBIzMcehrP2z+4USJ/twHabg6NbWgXnjjp9/vUDCImHnV/5AjW76xoj6vsDHGHwBxY0U8MoxgvzerGM8Dx2aIKNouaQHCjBNiRM8GOPfDyAkl8GtM+MYuTNuhExnJE+RK81PuBBvYPXo2sZXv14fDN+BB9GnKfwIopBcgAXko5QuZVO0O13g9qIs3QNh11AiFPlLOwN8iGIR6Y5NNkzCCjf5jvbFOOkHlWtKY6ww0oOUMq3s9ocwaa9AgOPI+yNwnw0KuWhmjzfcrZgYdzQcWLBTWB/DbcXwsW6UsZgjmYH+uMP1ZgDsr4awJpAbqjFVBDR9cEotUhoJ6OTgkk7Vmqa+4II115lCpC3zsE/Ad3msMrht6rCQAAAABJRU5ErkJggg==" alt="DIN 66261의 탈출 기호: 사각형 왼쪽에 왼쪽을 향한 쐐기, 오른쪽에 Zielort für Aussprung" width="90" height="48" style="width:180px"><figcaption>독일어 위키백과의 Aussprung 그림(2배, Renzsorf, public domain)</figcaption></figure></div>
+  </section>
+
+  <section>
+    <span class="part">X1</span>
+    <h2>X1. 탈출의 모양</h2>
+    <p class="q">원칙 2("블록 종류는 색이 없어도 모양만으로 가려진다")를 기준으로 견줍니다. 바탕색은 세 판 모두 처리 블록과 같습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">X1 · 1번</span><h3>DIN 그대로: 왼쪽 쐐기</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="x1"></div>
+        <ul><li>NS 차트 표준(DIN 66261)과 Structorizer의 모양입니다.</li><li>처리 블록과 <b>모양으로 가려집니다</b>. 쐐기가 "밖으로 나간다"를 가리킵니다.</li><li>쐐기 폭(14px)만큼 글자가 오른쪽으로 갑니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">X1 · 2번</span><h3>처리 블록에 ↵ 기호</h3></header>
+        <div class="fig" data-fig="x2"></div>
+        <ul><li>오른쪽 끝에 되돌아가는 화살표를 <code>text.muted</code>로 그립니다.</li><li><span class="bad">표준에 없는 표시입니다. 긴 글자가 기호와 겹치지 않게 오른쪽 자리를 비워야 합니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">X1 · 3번</span><h3>처리 블록 그대로(지금 스킬이 그리는 방식)</h3></header>
+        <div class="fig" data-fig="x3"></div>
+        <ul><li>따로 만들 것이 없습니다.</li><li><span class="bad">처리 블록과 모양이 같아 원칙 2를 어깁니다. 무한 반복에서 나가는 곳이 눈에 띄지 않습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">X2</span>
+    <h2>X2. 탈출 블록의 글자</h2>
+    <p class="q"><b>Claude가 정해 둔 것:</b> 탈출은 반복 · Method 어디에나 넣을 수 있고, 위치를 검사하지 않습니다(NS 차트는 실행기가 아니라 그림이라서). 탈출 뒤의 블록도 그대로 둡니다. <code>continue</code>도 같은 블록에 적습니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">X2 · 1번</span><h3>글자 하나를 자유롭게</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="x1"></div>
+        <ul><li>처리 블록처럼 <code>text</code> 하나입니다. <code>break</code>, <code>return 합</code>, <code>break outer</code>, "검색 끝"처럼 무엇이든 적습니다.</li><li>코드에서 가져올 때(스킬 · 리버스 엔지니어링) 코드의 말을 그대로 옮깁니다.</li><li>새로 넣으면 빈 글자로 열고 바로 적습니다(빈 블록과 같음).</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">X2 · 2번</span><h3>종류를 고르고 값을 적음</h3></header>
+        <div class="fig" data-fig="x2k"></div>
+        <ul><li><code>break</code> · <code>return</code> · <code>exit</code> 가운데 고르고(딱지), 뒤에 값을 적습니다.</li><li>종류로 검사(반복 밖의 break 알리기)를 할 수 있습니다.</li><li><span class="bad">모델이 칸 둘이 됩니다. 딱지의 말을 화면 언어마다 번역할지, Python의 <code>raise</code>처럼 목록에 없는 말은 어디에 둘지 정해야 합니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">X3</span>
+    <h2>X3. 넣는 키 (무한 반복 · 탈출)</h2>
+    <p class="q">블록 넣기는 <code>a</code> / <code>A</code> + 종류 글자, 감싸기는 <code>s</code> + 종류 글자입니다. 지금 쓰는 종류 글자는 <code>p</code> <code>i</code> <code>w</code> <code>d</code> <code>f</code> <code>k</code> <code>c</code>입니다. 탈출은 처리 블록처럼 감쌀 수 없고(<code>s</code> 없음), 무한 반복은 감쌀 수 있습니다(<code>s</code> + 글자). 그림은 <code>a</code>를 누른 뒤의 키 힌트입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">X3 · 1번</span><h3>무한 반복 <code>e</code>, 탈출 <code>x</code></h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="x3k1"></div>
+        <ul><li><b>e</b>ndless, e<b>x</b>it의 글자입니다. 영어 이름과 이어져 외우기 쉽습니다.</li><li><code>x</code>는 Vim의 "지우기"와 같은 글자지만 <code>a</code> 다음의 둘째 키로만 읽어서 겹치지 않습니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">X3 · 2번</span><h3>무한 반복 <code>l</code>, 탈출 <code>b</code></h3></header>
+        <div class="fig" data-fig="x3k2"></div>
+        <ul><li><b>l</b>oop, <b>b</b>reak의 글자입니다.</li><li><span class="bad"><code>l</code>은 While · For와 같은 "반복"이라 어느 반복인지 흐립니다. <code>b</code>는 return · exit와 이어지지 않습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">X1 · 1번 · 겹침</span>
+    <h2>Method 안에서(1번 · 1번)</h2>
+    <p class="q">무한 반복 안의 <code>break</code>와, Method를 끝내는 <code>return</code>입니다.</p>
+    <div class="fig" data-fig="nest"></div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>X1, X2, X3 하나씩, <b>번호</b> 또는 고칠 점.</li>
+      <li>병렬 처리(M81)와 주석(M82)의 시안도 이어서 있습니다. 넣는 키는 세 시안을 겹치지 않게 골랐습니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', branch: '#f6ebdc', call: '#ebe7f4', event: '#e2efdf', paper: '#fffbe8', white: '#ffffff' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const svg = (w, h, body) => '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' + body + '</svg>';
+const rect = (x, y, w, h, fill, extra) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '" ' + (extra || '') + '/>';
+const line = (pts, extra) => '<polyline points="' + pts.map(p => (p[0] + .5) + ',' + (p[1] + .5)).join(' ') + '" fill="none" stroke="' + C.line + '" ' + (extra || '') + '/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '"' + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + (o.size ? ' font-size="' + o.size + '"' : '') + (o.italic ? ' font-style="italic"' : '') + (o.mono === false ? '' : ' font-family="IBM Plex Mono, monospace"') + '>' + esc(s) + '</text>'; };
+const ROW = 32, HEAD = 32, STRIP = 22, BAND = 18;
+const parBands = b => b.style === 'din' ? [b.text ? HEAD : BAND, BAND] : b.style === 'top' ? [b.text ? HEAD : BAND, 0] : [8, 8];
+function H(b) {
+  if (typeof b === 'string' || b.exit != null || b.proc != null || b.call != null) return ROW;
+  if (b.note != null) return b.lines ? 14 + b.lines.length * 17 : ROW;
+  if (b.iff) return HEAD + Math.max(S(b.yes), S(b.no));
+  if (b.par) { const [t, u] = parBands(b); return t + Math.max(...b.par.map(S)) + u; }
+  return S(b.body) + ({ while: HEAD, doWhile: HEAD, e1: STRIP * 2 })[b.loop];
+}
+const S = bs => bs.reduce((a, b) => a + H(b), 0);
+function arrowMark(x, y) { return '<path d="M' + x + ',' + y + ' h-10 m0,0 l4,-4 m-4,4 l4,4 M' + x + ',' + y + ' v-8" fill="none" stroke="' + C.muted + '" stroke-width="1.4"/>'; }
+function draw(x, y, w, b, h) {
+  h = h || H(b);
+  if (typeof b === 'string') return rect(x, y, w, h, C.proc) + text(x + 10, y + 21, b);
+  if (b.call != null) return rect(x, y, w, h, C.call) + '<line x1="' + (x + 6.5) + '" y1="' + y + '" x2="' + (x + 6.5) + '" y2="' + (y + h) + '" stroke="' + C.line + '"/><line x1="' + (x + w - 5.5) + '" y1="' + y + '" x2="' + (x + w - 5.5) + '" y2="' + (y + h) + '" stroke="' + C.line + '"/>' + text(x + 14, y + 21, b.call);
+  if (b.exit != null) {
+    const st = b.style || 'din';
+    let s = rect(x, y, w, h, C.proc);
+    if (st === 'din') return s + line([[x + 14, y], [x, y + h / 2], [x + 14, y + h]]) + text(x + 22, y + 21, b.exit);
+    if (st === 'arrow') return s + arrowMark(x + w - 8, y + 20) + text(x + 10, y + 21, b.exit);
+    if (st === 'kind') return s + line([[x + 14, y], [x, y + h / 2], [x + 14, y + h]]) + '<rect x="' + (x + 20.5) + '" y="' + (y + 7.5) + '" width="' + (b.kw.length * 7.4 + 10) + '" height="18" rx="3" fill="' + C.white + '" stroke="' + C.muted + '"/>' + text(x + 25, y + 21, b.kw, { size: 11.5 }) + text(x + 34 + b.kw.length * 7.4, y + 21, b.exit);
+    return s + text(x + 10, y + 21, b.exit);
+  }
+  if (b.proc != null) {
+    let s = rect(x, y, w, h, C.proc) + text(x + 10, y + 21, b.proc);
+    if (!b.cmt) return s;
+    if (b.style === 'side') return s + text(x + w - 8, y + 21, '// ' + b.cmt, { fill: C.muted, anchor: 'end', size: 11.5, italic: true });
+    if (b.style === 'mark') return s + '<path d="M' + (x + w - 16) + ',' + (y + 6) + ' h10 v7 h-5 l-3,3 v-3 h-2z" fill="' + C.paper + '" stroke="' + C.muted + '"/>';
+    return s;
+  }
+  if (b.note != null) {
+    const lines = b.lines || [b.note], st = b.style || 'dash';
+    let s = '';
+    if (st === 'dash') s += '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + C.white + '" stroke="' + C.line + '"/><rect x="' + (x + 3.5) + '" y="' + (y + 3.5) + '" width="' + (w - 6) + '" height="' + (h - 6) + '" fill="none" stroke="' + C.muted + '" stroke-dasharray="4 3"/>';
+    if (st === 'paper') s += rect(x, y, w, h, C.paper) + '<path d="M' + (x + w - 12.5) + ',' + (y + .5) + ' l12,12 h-12z" fill="' + C.white + '" stroke="' + C.line + '"/>';
+    if (st === 'slash') s += rect(x, y, w, h, C.proc);
+    lines.forEach((t, i) => { s += text(x + 10, y + 21 + i * 17 - (b.lines ? 1 : 0), (st === 'slash' ? '// ' : '') + t, { fill: C.muted, italic: true, mono: st === 'slash' }); });
+    return s;
+  }
+  if (b.iff) {
+    const hw = Math.round(w / 2);
+    let s = rect(x, y, w, HEAD, C.branch) + line([[x, y], [x + hw, y + HEAD], [x + w, y]]);
+    s += text(x + hw, y + 14, b.iff, { anchor: 'middle' });
+    s += text(x + 6, y + HEAD - 4, '참', { size: 10, fill: C.muted, mono: false }) + text(x + w - 6, y + HEAD - 4, '거짓', { size: 10, fill: C.muted, mono: false, anchor: 'end' });
+    return s + seq(x, y + HEAD, hw, b.yes, h - HEAD) + seq(x + hw, y + HEAD, w - hw, b.no, h - HEAD);
+  }
+  if (b.par) {
+    const [t, u] = parBands(b), n = b.par.length, cw = Math.floor(w / n), st = b.style;
+    let s = rect(x, y, w, h, C.loop);
+    if (st === 'din') {
+      const d = Math.min(t, 18);
+      s += line([[x + d, y], [x, y + t]]) + line([[x + w - d, y], [x + w, y + t]]) + line([[x, y + h - u], [x + d, y + h]]) + line([[x + w, y + h - u], [x + w - d, y + h]]);
+    }
+    if (st === 'top') { const d = Math.min(t, 18); s += line([[x + d, y], [x, y + t]]) + line([[x + w - d, y], [x + w, y + t]]); }
+    if (st === 'bar') s += '<rect x="' + x + '" y="' + y + '" width="' + (w + 1) + '" height="8" fill="' + C.line + '"/><rect x="' + x + '" y="' + (y + h - 7) + '" width="' + (w + 1) + '" height="8" fill="' + C.line + '"/>';
+    if (b.text) s += text(x + w / 2, y + 21, b.text, { anchor: 'middle' });
+    const bodyH = h - t - u;
+    b.par.forEach((q, i) => { s += seq(x + i * cw, y + t, i === n - 1 ? w - i * cw : cw, q, bodyH); });
+    return s;
+  }
+  let s = rect(x, y, w, h, C.loop), top = 0;
+  if (b.loop === 'while') { top = HEAD; s += text(x + 10, y + 21, b.text); }
+  if (b.loop === 'e1') top = STRIP;
+  if (b.loop === 'doWhile') s += text(x + 10, y + h - 11, b.text);
+  return s + seq(x + STRIP, y + top, w - STRIP, b.body);
+}
+function seq(x, y, w, bs, fill) {
+  let s = '', yy = y; const total = S(bs);
+  bs.forEach((b, i) => {
+    let h = H(b);
+    if (i === bs.length - 1 && fill && fill > total) {
+      const simple = typeof b === 'string' || b.exit != null || b.proc != null || b.note != null || b.call != null;
+      if (simple) h += fill - total; else s += rect(x, yy + h, w, fill - total, C.proc);
+    }
+    s += draw(x, yy, w, b, h); yy += h;
+  });
+  return s;
+}
+function diagram(name, body, w, kind) {
+  const hh = 30; let s = '<rect x=".5" y=".5" width="' + w + '" height="' + hh + '" fill="' + (kind === 'method' ? C.call : C.event) + '" stroke="' + C.line + '"/>' + text(10, 20, name, { mono: kind === 'method' });
+  s += seq(0, hh, w, body);
+  return svg(w + 2, hh + S(body) + 2, s);
+}
+const one = (b, w) => svg(w + 2, H(b) + 2, draw(0, 0, w, b));
+function keys(title, list, hot) {
+  const W = 470, rows = Math.ceil(list.length / 3), Hh = 40 + rows * 22;
+  let b = '<rect x=".5" y=".5" width="' + (W - 1) + '" height="' + (Hh - 1) + '" rx="5" fill="#f5f7fb" stroke="#d4dbe6"/>' + text(12, 20, title, { size: 12, mono: false });
+  list.forEach((kn, i) => {
+    const col = i % 3, row = Math.floor(i / 3), x = 12 + col * 152, y = 44 + row * 22, on = hot.indexOf(kn[1]) >= 0;
+    if (on) b += '<rect x="' + (x - 5.5) + '" y="' + (y - 14.5) + '" width="140" height="20" rx="4" fill="none" stroke="#1d7a46" stroke-width="1.5"/>';
+    b += text(x, y, kn[0], { size: 12.5, fill: '#2c55c9' }) + text(x + 16, y, kn[1], { size: 12, mono: false });
+  });
+  return svg(W, Hh, b);
+}
+
+const F = {
+  'x1': one({ exit: 'return 합', style: 'din' }, 300),
+  'x2': one({ exit: 'return 합', style: 'arrow' }, 300),
+  'x3': one({ exit: 'return 합', style: 'plain' }, 300),
+  'x2k': one({ exit: '합', style: 'kind', kw: 'return' }, 300),
+  'x3k1': keys('a  뒤에 넣기', [['p', '처리'], ['i', 'If'], ['w', 'While'], ['d', 'Do-While'], ['f', 'For'], ['k', 'Case'], ['c', '호출'], , ['e', '무한 반복'], ['x', '탈출']], ["무한 반복","탈출"]),
+  'x3k2': keys('a  뒤에 넣기', [['p', '처리'], ['i', 'If'], ['w', 'While'], ['d', 'Do-While'], ['f', 'For'], ['k', 'Case'], ['c', '호출'], , ['l', '무한 반복'], ['b', '탈출']], ["무한 반복","탈출"]),
+  'nest': diagram('합계(목록)', ['합 ← 0', ...[{ loop: 'e1', body: ['x ← 읽기()', { iff: 'x = 끝', yes: [{ exit: 'break', style: 'din' }], no: ['처리(x)'] }] }, { exit: 'return 합', style: 'din' }]], 340, 'method'),
+};
+document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span>

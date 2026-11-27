@@ -22,6 +22,9 @@ updated: 2026-11-27
 | M55 | 브라우저 안의 문서 (답을 기다림: Claude가 정해 둔 것의 표) | https://claude.ai/artifact/CLz2Y1yXLYJfdn6q27Y1PV | `journal/assets/2026-11-03-browser-storage-study.html` |
 | M77 | 리팩토링 범위 (정함: Q1 ②, Q2 ~ Q4 ①) | https://claude.ai/artifact/SzSbNuXyzC1xd9zib347Xf | `journal/assets/2026-11-27-refactoring-scope-study.html` |
 | M79 | 무한 반복 블록의 모양 (정함: E1 1번) | https://claude.ai/artifact/G3TYprDPbqavA6oEHERrK8 | `journal/assets/2026-11-28-endless-loop-study.html` |
+| M80 | 탈출 블록 (답을 기다림: X1 ~ X3) | https://claude.ai/artifact/JEnc5ppTHaJhjz9iPNUVDB | `journal/assets/2026-11-28-exit-block-study.html` |
+| M81 | 병렬 처리 블록 (답을 기다림: P1 ~ P3) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
+| M82 | 주석 (답을 기다림: N1 ~ N3) | https://claude.ai/artifact/QLzkYe9Dp5YjbxhuQbd22u | `journal/assets/2026-11-28-comment-block-study.html` |
 
 ## 지금 단계
 
