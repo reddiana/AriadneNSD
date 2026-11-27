@@ -2,7 +2,7 @@
 title: 현재 상태
 tags:
   - plan
-updated: 2026-11-27
+updated: 2026-11-28
 ---
 
 # 현재 상태
@@ -78,6 +78,8 @@ updated: 2026-11-27
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] inbox 6 · 7장(언어 설정과 실제 언어가 어긋남, 다국어와 구조)의 답 → 화면 언어를 정하는 곳(웹 셸 · 편집기)을 하나로 모으고 결함을 고친 뒤 독일어 앱(화면 · 그림 글자) → 그다음 사용법 · 갤러리의 독일어판, 키 표 → [[2026-11-28-02-blocks-wording-german]]
+- [ ] 탈출 · 병렬 처리 · 무한 반복 블록 구현(모양 · 키는 정함) → [[backlog#웹 1.0의 문턱]]
 - [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]

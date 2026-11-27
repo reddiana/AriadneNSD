@@ -199,13 +199,13 @@
       "output": 679719
     },
     "2026-11-28": {
-      "sessions": 2,
-      "minutes": 8,
-      "requests": 22,
-      "input": 58,
-      "cacheWrite": 367873,
-      "cacheRead": 6667323,
-      "output": 6644
+      "sessions": 4,
+      "minutes": 70,
+      "requests": 214,
+      "input": 476,
+      "cacheWrite": 975718,
+      "cacheRead": 41063903,
+      "output": 153962
     }
   }
 }
