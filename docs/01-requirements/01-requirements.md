@@ -211,10 +211,10 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 | R-BLK-08 | 이름을 적는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
 | R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P0  |
 | R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]] | P0  |
-| R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | P2  |
-| R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기 | P2  |
-| R-BLK-14 | 주석 블록 | P2  |
-| R-BLK-15 | 무한 반복(Endless loop) 블록: 조건 없이 본문을 끝없이 반복한다. 나가는 길은 탈출 블록뿐이다 | P2  |
+| R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | P1  |
+| R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기 | P1  |
+| R-BLK-14 | 주석 블록 | P1  |
+| R-BLK-15 | 무한 반복(Endless loop) 블록: 조건 없이 본문을 끝없이 반복한다. 나가는 길은 탈출 블록뿐이다 | P1  |
 
 ^r-blk
 
