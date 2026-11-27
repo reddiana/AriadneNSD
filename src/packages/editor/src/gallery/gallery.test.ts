@@ -89,7 +89,7 @@ describe('gallery', () => {
   it('T-1484: lists each algorithm once, on a shelf, named in both languages, with the algorithmic examples', () => {
     const ids = gallery.map((entry) => entry.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toHaveLength(22);
+    expect(ids).toHaveLength(23);
     for (const id of ['binary-search', 'quicksort', 'merge-sort', 'dijkstra', 'maze', 'raft']) {
       expect(gallery.find((entry) => entry.id === id)?.build).toBe(
         examples.find((example) => example.id === id)?.build,

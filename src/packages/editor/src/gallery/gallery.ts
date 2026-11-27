@@ -21,6 +21,7 @@ import { knapsack } from './knapsack';
 import { lcs } from './lcs';
 import { maxFlow } from './max-flow';
 import { nQueens } from './n-queens';
+import { producerConsumer } from './producer-consumer';
 import { redBlackTree } from './red-black-tree';
 import { segmentTree } from './segment-tree';
 import { topologicalSort } from './topological-sort';
@@ -119,6 +120,16 @@ export const gallery: ReadonlyArray<GalleryEntry> = [
     { ko: '최장 공통 부분 수열', en: 'Longest common subsequence' },
     { ko: '동적 계획법 표 · 거꾸로 따라가기', en: 'DP table · walking it back' },
     lcs,
+  ),
+  entry(
+    'producer-consumer',
+    'classic',
+    { ko: '생산자-소비자', en: 'Producer–consumer' },
+    {
+      ko: '유한 버퍼 · 함께 도는 두 스레드 · 끝 표시',
+      en: 'Bounded buffer · two threads at once · an end marker',
+    },
+    producerConsumer,
   ),
   entry(
     'red-black-tree',

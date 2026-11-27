@@ -1,0 +1,293 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="731" height="676" viewBox="0 0 731 676">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="7ddd86c86248419aeeb08c594c976d8cdae85baf77a38fc3328e7b8f181f2211"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "buf = deque()"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "empty = Semaphore(N)    # 빈 칸 수"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "full = Semaphore(0)     # 찬 칸 수"
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "mutex = Lock()"
+        },
+        {
+          "id": "b5",
+          "kind": "parallel",
+          "text": "",
+          "branches": [
+            {
+              "id": "r1",
+              "body": [
+                {
+                  "id": "b6",
+                  "kind": "call",
+                  "target": {
+                    "kind": "local",
+                    "diagram": "d2"
+                  },
+                  "args": "",
+                  "result": ""
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "body": [
+                {
+                  "id": "b7",
+                  "kind": "call",
+                  "target": {
+                    "kind": "local",
+                    "diagram": "d3"
+                  },
+                  "args": "",
+                  "result": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "print(\"둘 다 끝남\")"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "producer()"
+      },
+      "body": [
+        {
+          "id": "b9",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b10",
+              "kind": "process",
+              "text": "item = produce()    # 다 만들면 None"
+            },
+            {
+              "id": "b11",
+              "kind": "process",
+              "text": "empty.acquire()     # 빈 칸이 날 때까지 기다린다"
+            },
+            {
+              "id": "b12",
+              "kind": "process",
+              "text": "with mutex: buf.append(item)"
+            },
+            {
+              "id": "b13",
+              "kind": "process",
+              "text": "full.release()"
+            },
+            {
+              "id": "b14",
+              "kind": "if",
+              "text": "item is None",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "exit",
+                    "text": "break    # 끝 표시까지 넣었다"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b16",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "consumer()"
+      },
+      "body": [
+        {
+          "id": "b17",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "full.acquire()    # 찬 칸이 생길 때까지 기다린다"
+            },
+            {
+              "id": "b19",
+              "kind": "process",
+              "text": "with mutex: item = buf.popleft()"
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "empty.release()"
+            },
+            {
+              "id": "b21",
+              "kind": "if",
+              "text": "item is None",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b22",
+                    "kind": "exit",
+                    "text": "break    # 끝 표시를 받았다"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b23",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b24",
+              "kind": "process",
+              "text": "consume(item)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L265 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="241" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">buf = deque()</text>
+<rect x="24" y="96" width="241" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">empty = Semaphore(N)    # 빈 칸 수</text>
+<rect x="24" y="128" width="241" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">full = Semaphore(0)     # 찬 칸 수</text>
+<rect x="24" y="160" width="241" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">mutex = Lock()</text>
+<rect x="24" y="192" width="241" height="68" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M42 192 L24 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M247 192 L265 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M24 242 L42 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M265 242 L247 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="210" width="121" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 210 L31 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M138 210 L138 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="230" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">producer</tspan>()</text>
+<rect x="145" y="210" width="120" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M152 210 L152 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M258 210 L258 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="162" y="230" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">consumer</tspan>()</text>
+<rect x="24" y="260" width="241" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="280" font-size="13" fill="#151a22" xml:space="preserve">print("둘 다 끝남")</text>
+<text x="353" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="353" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">producer()</tspan></text>
+<path d="M353 64 L707 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="353" y="64" width="354" height="252" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="375" y="86" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="106" font-size="13" fill="#151a22" xml:space="preserve">item = produce()    # 다 만들면 None</text>
+<rect x="375" y="118" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="138" font-size="13" fill="#151a22" xml:space="preserve">empty.acquire()     # 빈 칸이 날 때까지 기다린다</text>
+<rect x="375" y="150" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="170" font-size="13" fill="#151a22" xml:space="preserve">with mutex: buf.append(item)</text>
+<rect x="375" y="182" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="202" font-size="13" fill="#151a22" xml:space="preserve">full.release()</text>
+<rect x="375" y="214" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M375 214 L644 262 L707 214" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="644" y="232" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is None</text>
+<text x="381" y="257" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="701" y="257" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="375" y="262" width="269" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M389 262 L375 278 L389 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="399" y="282" font-size="13" fill="#151a22" xml:space="preserve">break    # 끝 표시까지 넣었다</text>
+<rect x="644" y="262" width="63" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="675.5" cy="278" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M671 282.5 L680 273.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="353" y="372" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="353" y="389" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">consumer()</tspan></text>
+<path d="M353 400 L707 400" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="353" y="400" width="354" height="252" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="375" y="422" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="442" font-size="13" fill="#151a22" xml:space="preserve">full.acquire()    # 찬 칸이 생길 때까지 기다린다</text>
+<rect x="375" y="454" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="474" font-size="13" fill="#151a22" xml:space="preserve">with mutex: item = buf.popleft()</text>
+<rect x="375" y="486" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="506" font-size="13" fill="#151a22" xml:space="preserve">empty.release()</text>
+<rect x="375" y="518" width="332" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M375 518 L641 566 L707 518" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="641" y="536" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is None</text>
+<text x="381" y="561" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="701" y="561" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="375" y="566" width="266" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M389 566 L375 582 L389 598" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="399" y="586" font-size="13" fill="#151a22" xml:space="preserve">break    # 끝 표시를 받았다</text>
+<rect x="641" y="566" width="66" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="674" cy="582" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M669.5 586.5 L678.5 577.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="375" y="598" width="332" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="385" y="618" font-size="13" fill="#151a22" xml:space="preserve">consume(item)</text>
+</g>
+</svg>

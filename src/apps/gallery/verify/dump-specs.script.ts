@@ -15,6 +15,7 @@ import { knapsack } from '../../../packages/editor/src/gallery/knapsack';
 import { lcs } from '../../../packages/editor/src/gallery/lcs';
 import { maxFlow } from '../../../packages/editor/src/gallery/max-flow';
 import { nQueens } from '../../../packages/editor/src/gallery/n-queens';
+import { producerConsumer } from '../../../packages/editor/src/gallery/producer-consumer';
 import { redBlackTree } from '../../../packages/editor/src/gallery/red-black-tree';
 import { segmentTree } from '../../../packages/editor/src/gallery/segment-tree';
 import { topologicalSort } from '../../../packages/editor/src/gallery/topological-sort';
@@ -33,6 +34,7 @@ const all = {
   lcs,
   'max-flow': maxFlow,
   'n-queens': nQueens,
+  'producer-consumer': producerConsumer,
   'red-black-tree': redBlackTree,
   'segment-tree': segmentTree,
   'topological-sort': topologicalSort,

@@ -20,6 +20,7 @@ SHARED = {
     'union-find': {'make_sets': 'parent, rank'},
     'segment-tree': {'main': 'a, n, tree'},
     'n-queens': {'main': 'n, board, solutions, cols, diag1, diag2'},
+    'producer-consumer': {'main': 'buf, empty, full, mutex'},
 }
 
 
@@ -54,6 +55,8 @@ class Locales(unittest.TestCase):
             en = transpile.strip_comments(transpile.transpile(spec['en']))
             if algo == 'hanoi':  # only the printed sentence is localized
                 ko = ko.replace('원반 {n}', 'disk {n}')
+            if algo == 'producer-consumer':  # and here
+                ko = ko.replace('둘 다 끝남', 'both done')
             self.assertEqual(ko, en, algo)
 
     def test_all_locales_compile(self):
@@ -705,6 +708,47 @@ class GameOfLife(unittest.TestCase):
         copy = [row[:] for row in g]
         self.ns['life_step'](g)
         self.assertEqual(g, copy)
+
+
+class ProducerConsumer(unittest.TestCase):
+    def run_with(self, items, slots, seed):
+        from threading import Lock, Semaphore
+        import time
+
+        rnd = random.Random(seed)
+        made, used, most = iter(list(items) + [None]), [], [0]
+
+        def produce():
+            time.sleep(rnd.random() / 2000)
+            return next(made)
+
+        def consume(item):
+            most[0] = max(most[0], len(ns['buf']))
+            time.sleep(rnd.random() / 2000)
+            used.append(item)
+
+        extra = {'N': slots, 'Semaphore': Semaphore, 'Lock': Lock,
+                 'produce': produce, 'consume': consume}
+        ns = load('producer-consumer', extra=extra)
+        self.assertEqual(run_main(ns), ['both done'])
+        return used, most[0]
+
+    def test_every_item_in_order(self):
+        for seed in range(20):
+            rnd = random.Random(seed)
+            items = [rnd.randrange(100) for _ in range(rnd.randint(0, 30))]
+            slots = rnd.randint(1, 4)
+            used, most = self.run_with(items, slots, seed)
+            self.assertEqual(used, items)
+            self.assertLessEqual(most, slots)
+
+    def test_korean_prints_its_own_words(self):
+        from threading import Lock, Semaphore
+        made = iter([1, 2, None])
+        extra = {'N': 2, 'Semaphore': Semaphore, 'Lock': Lock,
+                 'produce': lambda: next(made), 'consume': lambda item: None}
+        ns = load('producer-consumer', 'ko', extra)
+        self.assertEqual(run_main(ns), ['둘 다 끝남'])
 
 
 if __name__ == '__main__':
