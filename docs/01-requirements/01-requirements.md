@@ -214,6 +214,7 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 | R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | P2  |
 | R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기 | P2  |
 | R-BLK-14 | 주석 블록 | P2  |
+| R-BLK-15 | 무한 반복(Endless loop) 블록: 조건 없이 본문을 끝없이 반복한다. 나가는 길은 탈출 블록뿐이다 | P2  |
 
 ^r-blk
 

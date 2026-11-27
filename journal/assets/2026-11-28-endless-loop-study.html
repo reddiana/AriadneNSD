@@ -1,0 +1,172 @@
+<title>M79 무한 반복 블록</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M33과 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 76ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.fig { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.fig svg { display: block; max-width: none; }
+.fig svg text { font-family: var(--font); font-size: 12px; }
+.ref { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.ref figure { margin: 0; display: grid; gap: 6px; }
+.ref figcaption { font-size: 12.5px; color: var(--muted); }
+.ref img { background: #fff; border: 1px solid var(--line); image-rendering: pixelated; width: 236px; height: auto; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M79 · 무한 반복 블록</h1>
+    <p class="lede">무한 반복(R-BLK-15, <code>P2</code>)은 조건 없이 본문을 끝없이 도는 반복입니다. 나가는 길은 탈출 블록(R-BLK-12)뿐입니다. 이 페이지에서는 <b>모양(E1)</b>을 고릅니다. <b>1번이 Claude의 추천</b>입니다. 그림은 M33(For 블록)과 같은 렌더러로 그렸고, 본문의 <code>exit</code> 줄은 탈출 블록 자리입니다. 탈출 블록의 모양은 아직 정하지 않아서 처리 블록으로 대신 그렸습니다.</p>
+  </div>
+
+  <section>
+    <span class="part">참고</span>
+    <h2>지금의 반복 둘과 DIN 66261의 그림</h2>
+    <p class="q">While은 <b>위 띠(조건) + 왼쪽 띠</b>, Do-While은 <b>왼쪽 띠 + 아래 띠(조건)</b>입니다. DIN 66261의 무한 반복(Endlosschleife, "Begin=End=true")은 둘을 합친 모양입니다. <b>위 · 왼쪽 · 아래에 띠가 있고, 띠에는 글자가 없습니다</b>. 본문의 오른쪽은 바깥 틀에 붙습니다.</p>
+    <div class="fig" data-fig="now"></div>
+    <div class="ref">
+      <figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAABmCAIAAACRE/LdAAAAK3RFWHRDcmVhdGlvbiBUaW1lAE1vIDI2IERleiAyMDA1IDE5OjM5OjExICswMTAw1EVjVgAAAAd0SU1FB9UMGhInIxNzyc8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAEZ0FNQQAAsY8L/GEFAAAD8klEQVR42u2bvY6qQBiGh5O9EMw2FlyEZhs3ttyBNGZbiddgpDU2ege2RpoNXAQFjZE78cwMv0fkrOv6om7epxEHGMbHjy/wDRjH41EQJH/uPYDfz0v6YRjGvUfyC0kzxMvJd3IriqhlooBDxXCoGA4Vw6FiOFQMh4rhUDEcKoZDxXCoGA4Vw6FiOFQMh4rhUDEcKoZDxXCoGA4Vw6FiOFQMh4rhUDEcKobzct1ufEDrcq5ULPiA1lfwgav2oGI4VAyHiuFQMRwqhkPFcKgYTtuKQ9d4Xye37DFZv9+4xxtjpDdp8lbkW3dr392+1LEQdhS/7ua9e/9yNIWiVqM4XDjWcPRmR9swb5LSXdc1NG6YteRRKUM+a6y0yiXjzPZlc7ndyVL9WNkx1He5QrfV+vkxbSoOt95k2BOmdDyrDN8TQ/l3H4OJp83L1WLzmejto8Eg2qvF5HMj7DdTGRhv7IPa/njozgoLlebAcsaNck6OJQX3o5XabyhXfaOfx1ScrGfR6qOnJI6mlrMI8xWDrqk+zG6mM3csDdvLqaUWS8OfG993OjrKOo7vx5kDtU/a7Ir5cTcyGwZxciz1p0/1xr3h5Dv9PKRimSQKOUbfE96sMURSx+E+sl7N3lA6DnPD2tIqjTJNkdLN0U4F9mrg9atpQJPE/sXDrPWTJZJap4+nWMVLUKqRPyLLBo2OZxtLZhUZcCLexrlhHWXZCVC9OFEZVCrQgqSf9HQQaZAn+6hpVDJ284yx9c7305vX/s6HVCyThAj+GeJJsjjj2Bf6pFaZ24uKGDZHy1XUT08FERRncqXZ6GzspWyXR5joUBzH1qDR8TwQeretmDT082PavWh7XOQpMesebpN8U+5z0fZ4FJlWXljcJGTPwChGwShuDyqGQ8VwqBgOFcOhYjhtKa4Xzi8vpX+xZeheXT5ohWePYum37917EP+nTcXx4v1MqbuogZftp1X3jEqFvthuOzwGk3uIu5wWFftRd1krdSfrsWMF/5TAQ7eTlcUPq6hfmZ6YdQ/Hk1rSM0xQtah4kJbLeh/VOmYS+2omROjCoi4+JvtokJcuR7vMqe90+mIKKiKAeZJcPFgFq2j20BPNjbSZKLIZuYVTTmGoKZ6yKK6nfcxXy8+jvFJ11wXm20ymtUyLiie2GNfKhmUNvKiw9+YHe9OpVd1V+fwpJbOYiYLFzPagYjhUDIeK4VAxHCqGQ8Vwrn97lO/oXsiVinnf8SV8Qbc9qBgOFcOhYjhUDIeK4VAxHCqGQ8VwqBgOFcOhYjhUDIeK4VAxHCqGQ8VwqBgOFcOhYjhUDIeK4VAxHCqGQ8VwyqeB+AAVCL6yAYeJAs5fkG0lQbCCy94AAAAASUVORK5CYII=" alt="DIN 66261의 무한 반복 그림: 본문 블록의 위, 왼쪽, 아래에 빈 띠가 있다" width="118" height="102"><figcaption>독일어 위키백과 <a href="https://de.wikipedia.org/wiki/Nassi-Shneiderman-Diagramm">Nassi-Shneiderman-Diagramm</a>의 Endlosschleife 그림(2배)</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">E1</span>
+    <h2>E1. 무한 반복의 모양</h2>
+    <p class="q">세 판 모두 바탕색은 다른 반복과 같은 <code>block.loop</code>입니다. 시각 디자인 원칙 2는 "블록 종류는 색이 없어도 모양만으로 가려진다"입니다.</p>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">E1 · 1번</span><h3>DIN 그대로: 위 · 왼쪽 · 아래 빈 띠</h3><span class="badge">Claude의 추천</span></header>
+        <div class="fig" data-fig="e1"></div>
+        <ul><li>NS 차트 표준의 그림 그대로입니다. Structorizer의 ENDLESS도 이렇게 그립니다.</li><li>While · Do-While과 <b>모양으로 가려집니다</b>(띠가 셋). 원칙 2를 지킵니다.</li><li>글자가 없어서 화면 언어와 상관없습니다. 모델은 본문만 가집니다(<code>text</code> 없음).</li><li>위 · 아래 띠는 글자가 없어서 왼쪽 띠의 폭과 같은 두께(22px)입니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">E1 · 2번</span><h3>1번에 ∞ 기호를 더함</h3></header>
+        <div class="fig" data-fig="e2"></div>
+        <ul><li>위 띠의 왼쪽에 <b>∞</b>를 <code>text.muted</code>로 그립니다(빈 분기의 <code>∅</code>처럼 도형으로 그림).</li><li>표준을 모르는 사람도 "끝없이 돈다"를 바로 읽습니다.</li><li><span class="bad">표준에는 없는 표시입니다. 띠가 기호 높이만큼 두꺼워집니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">E1 · 3번</span><h3>While 모양에 정해진 글자</h3></header>
+        <div class="fig" data-fig="e3"></div>
+        <ul><li>While과 같은 모양이고, 조건 칸에 "무한 반복"(영어 화면에서는 <code>loop forever</code>)을 늘 적습니다. 문서 설정 <code>locale</code>을 따르는 If의 "참" · "거짓"과 같은 방식입니다.</li><li><span class="bad">While에 <code>while true</code>라고 적은 것과 모양이 같습니다. For처럼 원칙 2에 예외를 하나 더 둡니다.</span></li><li><span class="bad">NS 차트 표준의 그림이 아닙니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">E1 · 겹침</span>
+    <h2>다른 블록 안에 든 모습(1번)</h2>
+    <p class="q">이벤트를 기다리는 서버의 바깥 반복처럼, 무한 반복 안에 If와 탈출이 드는 흔한 모양입니다.</p>
+    <div class="fig" data-fig="nest"></div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>E1의 <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 시각 디자인의 모양 표, 모델(<code>kind: 'endless'</code>), 조작 규칙(넣는 키 · 감싸기)에 옮깁니다. 넣는 키는 다음 시안에서 묻습니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', sel: '#e6eef9' };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const svg = (w, h, body) => `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
+  const rect = (x, y, w, h, fill) => `<rect x="${x + .5}" y="${y + .5}" width="${w}" height="${h}" fill="${fill}" stroke="${C.line}"/>`;
+  const text = (x, y, s, o = {}) => `<text x="${x}" y="${y}" fill="${o.fill || C.text}" ${o.anchor ? `text-anchor="${o.anchor}"` : ''} ${o.size ? `font-size="${o.size}"` : ''} ${o.mono !== false ? 'font-family="IBM Plex Mono, monospace"' : ''}>${esc(s)}</text>`;
+  const ROW = 32, HEAD = 32, STRIP = 22;
+  // ∞ 기호: 도형(path)으로
+  const inf = (cx, cy) => `<path d="M${cx},${cy} c-3,-5 -9,-5 -9,0 s6,5 9,0 s6,-5 9,0 s-6,5 -9,0z" fill="none" stroke="${C.muted}" stroke-width="1.4"/>`;
+  // 블록 목록을 그린다. 블록: 문자열(처리) | {loop: 'while'|'doWhile'|'e1'|'e2'|'e3', text, body} | {iff, yes, no}
+  function height(b) {
+    if (typeof b === 'string') return ROW;
+    const inner = seqH(b.body || []);
+    if (b.iff) return HEAD + Math.max(seqH(b.yes), seqH(b.no));
+    return inner + ({ while: HEAD, doWhile: HEAD, e1: STRIP * 2, e2: 26 + STRIP, e3: HEAD })[b.loop];
+  }
+  const seqH = bs => bs.reduce((a, b) => a + height(b), 0);
+  function block(x, y, w, b) {
+    if (typeof b === 'string') return rect(x, y, w, ROW, C.proc) + text(x + 10, y + 21, b);
+    const h = height(b);
+    if (b.iff) {
+      const hw = Math.round(w / 2);
+      let s = rect(x, y, w, HEAD, C.sel);
+      s += `<polyline points="${x + .5},${y + .5} ${x + hw + .5},${y + HEAD + .5} ${x + w + .5},${y + .5}" fill="none" stroke="${C.line}"/>`;
+      s += text(x + hw, y + 14, b.iff, { anchor: 'middle' });
+      s += text(x + 6, y + HEAD - 4, '참', { size: 10, fill: C.muted, mono: false }) + text(x + w - 6, y + HEAD - 4, '거짓', { size: 10, fill: C.muted, mono: false, anchor: 'end' });
+      s += seq(x, y + HEAD, hw, b.yes, h - HEAD) + seq(x + hw, y + HEAD, w - hw, b.no, h - HEAD);
+      return s;
+    }
+    let s = rect(x, y, w, h, C.loop), top = 0;
+    if (b.loop === 'while' || b.loop === 'e3') { top = HEAD; s += text(x + 10, y + 21, b.loop === 'e3' ? '무한 반복' : b.text, { mono: b.loop !== 'e3' }); }
+    if (b.loop === 'e1') top = STRIP;
+    if (b.loop === 'e2') { top = 26; s += inf(x + 20, y + 13); }
+    if (b.loop === 'doWhile') s += text(x + 10, y + h - 11, b.text);
+    s += seq(x + STRIP, y + top, w - STRIP, b.body);
+    return s;
+  }
+  function seq(x, y, w, bs, fill) {
+    let s = '', yy = y;
+    bs.forEach((b, i) => {
+      const last = i === bs.length - 1, h = height(b);
+      if (last && fill && fill > seqH(bs) && typeof b === 'string') { s += rect(x, yy, w, ROW + fill - seqH(bs), C.proc) + text(x + 10, yy + 21, b); }
+      else s += block(x, yy, w, b);
+      yy += h;
+    });
+    return s;
+  }
+  const body = ['x ← 읽기()', { iff: 'x = 끝', yes: ['exit'], no: ['처리(x)'] }];
+  const one = (b, w = 300) => svg(w + 2, height(b) + 2, block(0, 0, w, b));
+  function now() {
+    const items = [['While', { loop: 'while', text: 'while i < n', body: ['i ← i + 1'] }], ['Do-While', { loop: 'doWhile', text: 'until i ≥ n', body: ['i ← i + 1'] }], ['무한 반복(E1 · 1번)', { loop: 'e1', body: ['i ← i + 1'] }]];
+    const w = 190, gap = 26;
+    let s = '', maxH = 0;
+    items.forEach(([name, b], i) => { const x = i * (w + gap); s += text(x + 1, 12, name, { fill: C.muted, size: 11, mono: false }) + block(x, 20, w, b); maxH = Math.max(maxH, height(b)); });
+    return svg(items.length * (w + gap), maxH + 22, s);
+  }
+  function nest() {
+    const m = { loop: 'e1', body: ['요청 ← 기다리기()', { iff: '요청 = 종료', yes: ['exit'], no: ['답하기(요청)'] }] };
+    const w = 340, headH = 30;
+    let s = `<rect x=".5" y=".5" width="${w}" height="${headH}" rx="0" fill="#f1ece0" stroke="${C.line}"/>` + text(10, 20, '서버 시작', { mono: false });
+    s += block(0, headH, w, '연결 ← 열기()') + block(0, headH + ROW, w, m) + block(0, headH + ROW + height(m), w, '닫기(연결)');
+    return svg(w + 2, headH + ROW * 2 + height(m) + 2, s);
+  }
+  const F = { now: now(), e1: one({ loop: 'e1', body }), e2: one({ loop: 'e2', body }), e3: one({ loop: 'e3', body }), nest: nest() };
+  document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = F[el.dataset.fig]; });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span> 참고 그림: Wikimedia Commons <a href="https://commons.wikimedia.org/wiki/File:Endlosschleife.png" style="color:inherit">Endlosschleife.png</a> (Renzsorf, public domain).</footer>
