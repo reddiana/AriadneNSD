@@ -25,7 +25,7 @@ updated: 2026-11-28
 | M80 | 탈출 블록 (정함: X1 ~ X3 모두 1번) | https://claude.ai/artifact/JEnc5ppTHaJhjz9iPNUVDB | `journal/assets/2026-11-28-exit-block-study.html` |
 | M81 | 병렬 처리 블록 (정함: P1 1번, P2 2번, P3 1번) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
 | M83 | 삽입 · 붙여넣기의 앞 · 뒤 (정함: W1 1번) | https://claude.ai/artifact/A4crRvr8crouTNLy84rMfU | `journal/assets/2026-11-28-before-after-naming-study.html` |
-| M84 | 블록 셋 구현 때 정할 것 (답을 기다림: B1 · B2, D1 ~ D5) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
+| M84 | 블록 셋 구현 때 정할 것 (정함: B1 1번, B2 1번, D1 ~ D5 그대로) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
 
 ## 지금 단계
 
@@ -70,6 +70,7 @@ updated: 2026-11-28
 | 메뉴에서 쌍의 차례를 이름대로: "위에"를 "아래에" 위에, "왼쪽에"를 "오른쪽에" 위에(메뉴 · 하위 메뉴 · 컨텍스트 메뉴) | 메인테이너 (2026-11-28) | 로컬 앱에 있음(정리함 `e967b81`) | `13c3c75` |
 | 독일어: 앱 화면 · 그림 글자(If는 ja · nein, Case의 default는 sonst) · 사용법 · 갤러리, 지금 바로 | 메인테이너 (2026-11-28 inbox), [[01-requirements#^r-nfr\|R-NFR-04]] | 결정 | |
 | 화면 언어를 정하는 곳을 하나로(core의 `locales` 기준), 설정 창은 실제로 쓰는 언어를 보임 (결함: 고른 적 없으면 English로 보여 바꿀 수 없음) | 메인테이너 (2026-11-28 inbox 6 · 7장) | 로컬 앱에 있음(정리 남음: docs · UX 결정) | `c180f59` |
+| 블록 셋 구현: 병렬 처리의 분기는 분기 칸 전체를 고름(위 띠의 그 분기 위 · 첫 블록에서 `↑`), 툴바에 아이콘 셋, `kind` `endless` · `exit` · `parallel`, 아래 띠 18px | 메인테이너 (2026-11-28), M84 B1 1번 · B2 1번 · D1 ~ D5 | 구현 중 | |
 | 흐린 메뉴 항목: 더 옅게, hover 없음, 까닭 툴팁(D3) · 정보 창 맨 위에 로고(A1) | 메인테이너 (2026-11-26, inbox), M74 | 사이트에 있음 (정보 창은 128px 로고 + 문자 로고, 폭 440px, [[ux-decisions\|DD1 · AL1]]) | `65e415f` `28e6c3e` `c30fc83` |
 | 맨 처음 · 맨 끝에 놓기: 헤더 아래 띠 · 다이어그램 아래 띠(P2), 마지막 블록이 무엇이든 | 메인테이너 (2026-11-26, inbox), M75 | 사이트에 있음 ([[ux-decisions\|DE1]]) | `a1141c1` |
 | 툴바의 확대 · 축소: 드롭다운 대신 [돋보기−] 100% [돋보기+], 숫자를 누르면 100% | 메인테이너 (2026-11-27), M76 Z1 | 사이트에 있음 | `a46a00d` `6909621` |
