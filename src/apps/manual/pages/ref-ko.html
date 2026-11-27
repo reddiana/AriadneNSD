@@ -53,7 +53,7 @@
       </tr>
       <tr>
         <td>Case</td>
-        <td>값에 따라 여러 분기, 맨 끝은 default</td>
+        <td>값에 따라 여러 분기, 맨 오른쪽은 default</td>
         <td><kbd>k</kbd></td>
       </tr>
       <tr>
@@ -141,7 +141,7 @@
 <section id="insert">
   <h2>삽입 · 텍스트 편집</h2>
   <p>
-    새 블록은 선택한 것의 다음에, <kbd>Shift</kbd>를 함께 누르면 앞에 들어갑니다. 빈
+    새 블록은 선택한 것의 아래에, <kbd>Shift</kbd>를 함께 누르면 위에 들어갑니다. 빈
     블록(<code>∅</code>)을 선택했으면 그 자리를 채웁니다. 삽입하면 바로 텍스트(제어 블록은 조건
     칸)를 적게 합니다. 적고 나서 <kbd>Enter</kbd>나 <kbd>Esc</kbd>를 누르면 편집이 완료됩니다.
   </p>
@@ -162,7 +162,7 @@
         <th>표준 키 · 마우스</th>
       </tr>
       <tr>
-        <td>처리 블록을 다음 / 앞에</td>
+        <td>처리 블록을 아래에 / 위에</td>
         <td>
           <kbd>o</kbd> (또는 <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (또는 <kbd>A</kbd>
           <kbd>p</kbd>)
@@ -170,7 +170,7 @@
         <td>툴바의 처리 아이콘 / <kbd>Shift</kbd>+클릭</td>
       </tr>
       <tr>
-        <td>다른 블록을 다음 / 앞에</td>
+        <td>다른 블록을 아래에 / 위에</td>
         <td><kbd>a</kbd> / <kbd>A</kbd> + 종류 글자</td>
         <td>툴바의 그 아이콘 / <kbd>Shift</kbd>+클릭, 아이콘을 블록 사이로 드래그 앤 드롭</td>
       </tr>
@@ -241,9 +241,9 @@
         <td><kbd>Ctrl</kbd>+<kbd>X</kbd></td>
       </tr>
       <tr>
-        <td>다음 / 앞에 붙여넣기</td>
+        <td>아래에 / 위에 붙여넣기</td>
         <td><kbd>p</kbd> / <kbd>P</kbd></td>
-        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (다음에)</td>
+        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (아래에)</td>
       </tr>
       <tr>
         <td>삭제 (복사하지 않음)</td>
@@ -259,7 +259,7 @@
   <p>
     감싸기는 선택한 블록들을 새 제어 블록 안에 넣습니다(If는 참 분기, Case는 첫 분기에). 풀기는
     반대로 껍데기만 없애고 안의 블록을 남깁니다. Case의 분기는 분기 라벨을 선택하고 블록처럼
-    삽입하고 삭제합니다. default는 늘 맨 끝입니다.
+    삽입하고 삭제합니다. default는 늘 맨 오른쪽입니다.
   </p>
   <div class="pair">
     <figure>
@@ -268,8 +268,8 @@
     </figure>
     <span class="to" aria-hidden="true">→</span>
     <figure>
-      <img src="../img/ko/ref-branch-added.png" alt="1 다음에 새 분기 3" />
-      <figcaption><kbd>o</kbd>로 다음에 분기를 삽입하고 <code>3</code>을 적음</figcaption>
+      <img src="../img/ko/ref-branch-added.png" alt="1 오른쪽에 새 분기 3" />
+      <figcaption><kbd>o</kbd>로 오른쪽에 분기를 삽입하고 <code>3</code>을 적음</figcaption>
     </figure>
   </div>
   <div class="tbl">
@@ -292,7 +292,7 @@
         <td>컨텍스트 메뉴</td>
       </tr>
       <tr>
-        <td>분기 삽입 다음 / 앞 (분기 라벨을 선택한 채)</td>
+        <td>분기 삽입 오른쪽에 / 왼쪽에 (분기 라벨을 선택한 채)</td>
         <td><kbd>o</kbd> / <kbd>O</kbd></td>
         <td></td>
       </tr>
@@ -472,7 +472,7 @@
         <td>다이어그램 메뉴, 컨텍스트 메뉴 (호출 블록이나 Method 헤더에서)</td>
       </tr>
       <tr>
-        <td>앞 / 뒤 다이어그램으로</td>
+        <td>이전 / 다음 다이어그램으로</td>
         <td><kbd>[[</kbd> / <kbd>]]</kbd></td>
         <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
       </tr>

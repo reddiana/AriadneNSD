@@ -53,7 +53,7 @@
       </tr>
       <tr>
         <td>Case</td>
-        <td>Several branches by value; default comes last</td>
+        <td>Several branches by value; default comes rightmost</td>
         <td><kbd>k</kbd></td>
       </tr>
       <tr>
@@ -142,7 +142,7 @@
 <section id="insert">
   <h2>Inserting blocks, editing text</h2>
   <p>
-    A new block goes after the selection, or before it with <kbd>Shift</kbd>. If an empty block
+    A new block goes below the selection, or above it with <kbd>Shift</kbd>. If an empty block
     (<code>∅</code>) is selected, the new block takes its place. Editing the text (for a control
     block, its condition cell) starts right away. Press <kbd>Enter</kbd> or <kbd>Esc</kbd> to finish
     editing.
@@ -166,14 +166,14 @@
         <th>Standard key · mouse</th>
       </tr>
       <tr>
-        <td>A process block after / before</td>
+        <td>A process block below / above</td>
         <td>
           <kbd>o</kbd> (or <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (or <kbd>A</kbd> <kbd>p</kbd>)
         </td>
         <td>The process icon on the toolbar / <kbd>Shift</kbd>+click</td>
       </tr>
       <tr>
-        <td>Another block after / before</td>
+        <td>Another block below / above</td>
         <td><kbd>a</kbd> / <kbd>A</kbd> + kind letter</td>
         <td>
           That icon on the toolbar / <kbd>Shift</kbd>+click, or drag and drop the icon between
@@ -246,9 +246,9 @@
         <td><kbd>Ctrl</kbd>+<kbd>X</kbd></td>
       </tr>
       <tr>
-        <td>Paste after / before</td>
+        <td>Paste below / above</td>
         <td><kbd>p</kbd> / <kbd>P</kbd></td>
-        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (after)</td>
+        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (below)</td>
       </tr>
       <tr>
         <td>Delete (without copying)</td>
@@ -264,7 +264,7 @@
   <p>
     Wrapping puts the selected blocks in a new control block (an If's true branch, a Case's first
     branch). Unwrapping removes the shell and keeps what is inside. Insert and delete a Case's
-    branches like blocks, with its label selected. The default branch always comes last.
+    branches like blocks, with its label selected. The default branch always comes rightmost.
   </p>
   <div class="pair">
     <figure>
@@ -273,8 +273,8 @@
     </figure>
     <span class="to" aria-hidden="true">→</span>
     <figure>
-      <img src="img/en/ref-branch-added.png" alt="A new branch 3 after 1" />
-      <figcaption><kbd>o</kbd> inserts a branch after it, labelled <code>3</code></figcaption>
+      <img src="img/en/ref-branch-added.png" alt="A new branch 3 right of 1" />
+      <figcaption><kbd>o</kbd> inserts a branch to its right, labelled <code>3</code></figcaption>
     </figure>
   </div>
   <div class="tbl">
@@ -298,7 +298,7 @@
         <td>The context menu</td>
       </tr>
       <tr>
-        <td>Insert a branch after / before (label selected)</td>
+        <td>Insert a branch right / left (label selected)</td>
         <td><kbd>o</kbd> / <kbd>O</kbd></td>
         <td></td>
       </tr>

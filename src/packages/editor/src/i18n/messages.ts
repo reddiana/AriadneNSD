@@ -123,7 +123,7 @@ const english = {
   'reason.atLeftmost': 'This is the leftmost branch.',
   'reason.atRightmost': 'This is the rightmost branch.',
   'reason.notInBranch': 'Branches move only inside an If or a Case. Move blocks up or down.',
-  'reason.defaultBranchFixed': 'The default branch always stays last.',
+  'reason.defaultBranchFixed': 'The default branch always stays rightmost.',
   'reason.lastArm': 'This is the only branch left. To remove the Case, delete or unwrap it.',
   'reason.ifBranchesFixed':
     'An If has exactly two branches. To remove the If, delete or unwrap it.',
@@ -439,7 +439,7 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'reason.atLeftmost': '맨 왼쪽 분기입니다.',
   'reason.atRightmost': '맨 오른쪽 분기입니다.',
   'reason.notInBranch': 'If · Case 안에서만 분기를 이동합니다. 블록은 위 · 아래로 이동합니다.',
-  'reason.defaultBranchFixed': 'default 분기는 늘 맨 끝에 있습니다.',
+  'reason.defaultBranchFixed': 'default 분기는 늘 맨 오른쪽에 있습니다.',
   'reason.lastArm': '분기가 하나뿐이라 삭제할 수 없습니다. Case를 없애려면 삭제하거나 푸세요.',
   'reason.ifBranchesFixed': 'If의 분기는 둘입니다. If를 없애려면 삭제하거나 푸세요.',
   'reason.askConvertIfToCase': 'If에는 분기를 더할 수 없습니다.',
