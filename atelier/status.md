@@ -24,6 +24,7 @@ updated: 2026-11-27
 | M79 | 무한 반복 블록의 모양 (정함: E1 1번) | https://claude.ai/artifact/G3TYprDPbqavA6oEHERrK8 | `journal/assets/2026-11-28-endless-loop-study.html` |
 | M80 | 탈출 블록 (정함: X1 ~ X3 모두 1번) | https://claude.ai/artifact/JEnc5ppTHaJhjz9iPNUVDB | `journal/assets/2026-11-28-exit-block-study.html` |
 | M81 | 병렬 처리 블록 (정함: P1 1번, P2 2번, P3 1번) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
+| M83 | 삽입 · 붙여넣기의 앞 · 뒤 (답을 기다림: W1) | https://claude.ai/artifact/A4crRvr8crouTNLy84rMfU | `journal/assets/2026-11-28-before-after-naming-study.html` |
 
 ## 지금 단계
 
