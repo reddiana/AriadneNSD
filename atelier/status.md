@@ -23,7 +23,7 @@ updated: 2026-11-27
 | M77 | 리팩토링 범위 (정함: Q1 ②, Q2 ~ Q4 ①) | https://claude.ai/artifact/SzSbNuXyzC1xd9zib347Xf | `journal/assets/2026-11-27-refactoring-scope-study.html` |
 | M79 | 무한 반복 블록의 모양 (정함: E1 1번) | https://claude.ai/artifact/G3TYprDPbqavA6oEHERrK8 | `journal/assets/2026-11-28-endless-loop-study.html` |
 | M80 | 탈출 블록 (정함: X1 ~ X3 모두 1번) | https://claude.ai/artifact/JEnc5ppTHaJhjz9iPNUVDB | `journal/assets/2026-11-28-exit-block-study.html` |
-| M81 | 병렬 처리 블록 (답을 기다림: P1 ~ P3) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
+| M81 | 병렬 처리 블록 (정함: P1 1번, P2 2번, P3 1번) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
 | M82 | 주석 (답을 기다림: N1 ~ N3) | https://claude.ai/artifact/QLzkYe9Dp5YjbxhuQbd22u | `journal/assets/2026-11-28-comment-block-study.html` |
 
 ## 지금 단계
@@ -64,6 +64,7 @@ updated: 2026-11-27
 | 메인테이너의 방문은 빼기: `?nocount`를 한 번 열면 그 브라우저는 세지 않음(`?count`로 되돌림) | 메인테이너 (2026-11-24) | 사이트에 있음(메인테이너가 쓰는 브라우저 · 기기마다 `https://ariadnensd.com/?nocount`를 한 번 열기) | `9b2c94b` |
 | 블록 넷(탈출 · 병렬 · 주석 · 무한 반복)을 `P1`로(1.0 전), 무한 반복 R-BLK-15의 모양은 DIN 그대로(위 · 왼쪽 · 아래 빈 띠) | 메인테이너 (2026-11-28), M79 E1 1번, [[01-requirements#^r-blk\|R-BLK-15]] | 결정 | |
 | 탈출 R-BLK-12: DIN 왼쪽 쐐기, 자유 글자 하나(위치 검사 없음, `continue`도), 넣는 키 `a` + `x`(무한 반복은 `e`, `s` + `e`로 감싸기) | 메인테이너 (2026-11-28), M80 X1 ~ X3 1번 | 결정(정리 남음) | |
+| 병렬 처리 R-BLK-13: 위 · 아래 띠의 양 끝 빗금, 위 띠에 글자를 적을 수 있음(비우면 띠가 얇음), 갈래 조작은 Case를 따름(최소 둘), 넣는 키 `a` + `t` · 감싸기 `s` + `t` | 메인테이너 (2026-11-28), M81 P1 1번 · P2 2번 · P3 1번 | 결정(정리 남음) | |
 | 흐린 메뉴 항목: 더 옅게, hover 없음, 까닭 툴팁(D3) · 정보 창 맨 위에 로고(A1) | 메인테이너 (2026-11-26, inbox), M74 | 사이트에 있음 (정보 창은 128px 로고 + 문자 로고, 폭 440px, [[ux-decisions\|DD1 · AL1]]) | `65e415f` `28e6c3e` `c30fc83` |
 | 맨 처음 · 맨 끝에 놓기: 헤더 아래 띠 · 다이어그램 아래 띠(P2), 마지막 블록이 무엇이든 | 메인테이너 (2026-11-26, inbox), M75 | 사이트에 있음 ([[ux-decisions\|DE1]]) | `a1141c1` |
 | 툴바의 확대 · 축소: 드롭다운 대신 [돋보기−] 100% [돋보기+], 숫자를 누르면 100% | 메인테이너 (2026-11-27), M76 Z1 | 사이트에 있음 | `a46a00d` `6909621` |
