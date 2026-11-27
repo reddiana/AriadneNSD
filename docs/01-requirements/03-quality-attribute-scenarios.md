@@ -36,7 +36,7 @@ updated: 2026-11-27
 | QA-09 | 자원 | 저장 파일과 편집기 번들의 크기가 정해진 값을 넘지 않는다 | [[01-requirements#^r-fmt\|R-FMT-07]] (제안) | 중 | 중 | 중간 |
 | QA-10 | 변경 용이성 | 새 배포 대상(셸)을 붙일 때 `core` · `editor`를 수정하지 않는다 | [[01-requirements#^r-nfr\|R-NFR-02]], [[0002-three-targets-shared-core\|ADR-0002]] | 상 | 중 | 높음 |
 | QA-11 | 변경 용이성 | 화면 렌더링 백엔드를 바꿀 때 구현체 하나만 바뀌고 저장 파일은 그대로다 | [[0030-swappable-drawing\|ADR-0030]] | 중 | 중 | 중간 |
-| QA-12 | 변경 용이성 | 블록 종류를 추가할 때 셸을 수정하지 않고 기존 파일은 그대로 열린다 | [[01-requirements#^r-blk\|R-BLK-12]], [[01-requirements#^r-blk\|R-BLK-13]], [[01-requirements#^r-blk\|R-BLK-14]] (`P2` 블록) | 중 | 하 | 중간 |
+| QA-12 | 변경 용이성 | 블록 종류를 추가할 때 셸을 수정하지 않고 기존 파일은 그대로 열린다 | [[01-requirements#^r-blk\|R-BLK-12]], [[01-requirements#^r-blk\|R-BLK-13]], [[requirement-changes#^r-withdrawn\|R-BLK-14]](철회) (`P2` 블록) | 중 | 하 | 중간 |
 | QA-13 | 변경 용이성 | 화면 언어를 더할 때 코드를 수정하지 않는다 | [[01-requirements#^r-nfr\|R-NFR-04]] | 하 | 하 | 낮음 |
 | QA-14 | 테스트 가능성 | `core`의 테스트는 DOM 없이 Node에서 실행된다 | [[01-requirements#^r-nfr\|R-NFR-06]] | 상 | 하 | 높음 |
 | QA-15 | 사용성 · 접근성 | 키보드만으로 주요 유즈케이스를 끝낼 수 있다 | [[01-requirements#^r-nfr\|R-NFR-05]], [[01-requirements#^r-edit\|R-EDIT-03]] | 상 | 중 | 높음 |

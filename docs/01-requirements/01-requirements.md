@@ -199,22 +199,21 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 
 [DIN 66261](https://www.dinmedia.de/de/norm/din-66261/1255956)(1985년 독일 표준, 유료) / [원 논문](https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/1973.pdf)(Nassi · Shneiderman, "Flowchart Techniques for Structured Programming", *SIGPLAN Notices* 8(8), 1973, [ACM](https://doi.org/10.1145/953349.953350)) 기준입니다.
 
-| ID | 요구사항 | 우선순위 |
-| --- | --- | --- |
-| R-BLK-01 | 처리(Process) 블록: 한 단계의 명령 | P0  |
-| R-BLK-02 | 선택(If-Then-Else) 블록: 조건에 따라 참 분기나 거짓 분기를 실행 | P0  |
-| R-BLK-03 | 전위 판정 반복(While) 블록: 조건을 먼저 검사하고 본문을 반복 | P0  |
-| R-BLK-04 | 후위 판정 반복(Do-While / Repeat-Until) 블록: 본문을 먼저 실행하고 조건을 검사 | P0  |
-| R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 분기 여러 개와 default 분기 → [[02-interaction-rules#Case 블록\|상세]] | P0  |
-| R-BLK-06 | 횟수 반복(For) 블록: While의 변형 | P0  |
-| R-BLK-07 | 호출 블록: 같은 문서의 Method를 호출한다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]] | P0  |
-| R-BLK-08 | 이름을 적는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
-| R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P0  |
-| R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]] | P0  |
-| R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출 | P1  |
-| R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기 | P1  |
-| R-BLK-14 | 주석 블록 | P1  |
-| R-BLK-15 | 무한 반복(Endless loop) 블록: 조건 없이 본문을 끝없이 반복한다. 나가는 길은 탈출 블록뿐이다 | P1  |
+| ID       | 요구사항                                                                                                                                                                  | 우선순위 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| R-BLK-01 | 처리(Process) 블록: 한 단계의 명령                                                                                                                                              | P0   |
+| R-BLK-02 | 선택(If-Then-Else) 블록: 조건에 따라 참 분기나 거짓 분기를 실행                                                                                                                           | P0   |
+| R-BLK-03 | 전위 판정 반복(While) 블록: 조건을 먼저 검사하고 본문을 반복                                                                                                                                | P0   |
+| R-BLK-04 | 후위 판정 반복(Do-While / Repeat-Until) 블록: 본문을 먼저 실행하고 조건을 검사                                                                                                              | P0   |
+| R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 분기 여러 개와 default 분기 → [[02-interaction-rules#Case 블록\|상세]]                                                                                     | P0   |
+| R-BLK-06 | 횟수 반복(For) 블록: While의 변형                                                                                                                                              | P0   |
+| R-BLK-07 | 호출 블록: 같은 문서의 Method를 호출한다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]]                                                                            | P0   |
+| R-BLK-08 | 이름을 적는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]]                               | P1   |
+| R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P0   |
+| R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]]     | P0   |
+| R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출                                                                                                                              | P1   |
+| R-BLK-13 | 병렬 처리(Parallel) 블록: 동시 실행 분기                                                                                                                                          | P1   |
+| R-BLK-15 | 무한 반복(Endless loop) 블록: 조건 없이 본문을 끝없이 반복한다. 나가는 길은 탈출 블록뿐이다                                                                                                           | P1   |
 
 ^r-blk
 
