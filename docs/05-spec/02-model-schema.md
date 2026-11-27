@@ -66,6 +66,14 @@ classDiagram
   class LoopBlock {
     text
   }
+  class EndlessBlock {
+  }
+  class ExitBlock {
+    text
+  }
+  class ParallelBlock {
+    text
+  }
   class CallBlock {
     args
     result
@@ -77,6 +85,9 @@ classDiagram
   class Arm {
     id
     label
+  }
+  class ParallelBranch {
+    id
   }
   class Fold {
     id
@@ -111,6 +122,9 @@ classDiagram
   Block <|-- IfBlock
   Block <|-- CaseBlock
   Block <|-- LoopBlock
+  Block <|-- EndlessBlock
+  Block <|-- ExitBlock
+  Block <|-- ParallelBlock
   Block <|-- CallBlock
   IfBlock *-- "1" Branch : yes
   IfBlock *-- "1" Branch : no
@@ -118,12 +132,17 @@ classDiagram
   CaseBlock *-- "0..1" Branch : otherwise
   LoopBlock *-- "1..*" Block : body
   LoopBlock *-- "*" Fold : folds
+  EndlessBlock *-- "1..*" Block : body
+  EndlessBlock *-- "*" Fold : folds
+  ParallelBlock *-- "1..*" ParallelBranch : branches
   CallBlock *-- "1" CallTarget : target
   CallBlock *-- "*" SiteFold : siteFolds
   Branch *-- "1..*" Block : body
   Branch *-- "*" Fold : folds
   Arm *-- "1..*" Block : body
   Arm *-- "*" Fold : folds
+  ParallelBranch *-- "1..*" Block : body
+  ParallelBranch *-- "*" Fold : folds
   CallTarget <|-- LocalTarget
   CallTarget <|-- NamedTarget
 ```
@@ -165,7 +184,7 @@ classDiagram
 | `id` | string | 필수 | `d1`, `d2` … (`^d[1-9][0-9]*$`) | 다이어그램의 id |
 | `head` | [[#2.4 head (헤더)\|head]] | 생략 가능 | - | 헤더. 헤더가 없는 다이어그램은 이 키를 기록하지 않는다 |
 | `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 본문의 블록들. 위에서 아래로 렌더링한다 |
-| `folds` | [[#2.14 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 본문 줄의 접기 영역. 비면 기록하지 않는다 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 본문 줄의 접기 영역. 비면 기록하지 않는다 |
 
 ### 2.4 head (헤더)
 
@@ -189,9 +208,9 @@ classDiagram
 
 ### 2.6 블록
 
-`kind`로 가르는 다섯 꼴 가운데 하나입니다. 블록의 배열(`body`)은 비지 않습니다: 빈 분기에도 빈 처리 블록이 하나 있습니다.
+`kind`로 가르는 여덟 꼴 가운데 하나입니다. 블록의 배열(`body`)은 비지 않습니다: 빈 분기에도 빈 처리 블록이 하나 있습니다.
 
-꼴: [[#2.7 처리 블록|처리 블록]] · [[#2.8 If 블록|If 블록]] · [[#2.9 Case 블록|Case 블록]] · [[#2.10 반복 블록 (While · Do-While · For)|반복 블록]] · [[#2.11 호출 블록|호출 블록]]
+꼴: [[#2.7 처리 블록|처리 블록]] · [[#2.8 If 블록|If 블록]] · [[#2.9 Case 블록|Case 블록]] · [[#2.10 반복 블록 (While · Do-While · For)|반복 블록]] · [[#2.11 무한 반복 블록|무한 반복 블록]] · [[#2.12 탈출 블록|탈출 블록]] · [[#2.13 병렬 처리 블록|병렬 처리 블록]] · [[#2.14 호출 블록|호출 블록]]
 
 ### 2.7 처리 블록
 
@@ -212,8 +231,8 @@ classDiagram
 | `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
 | `kind` | string | 필수 | `"if"`만 | 블록의 종류 |
 | `text` | string | 필수 | - | 조건 |
-| `yes` | [[#2.12 분기 (yes · no · otherwise)\|분기]] | 필수 | - | 조건이 참일 때의 분기 |
-| `no` | [[#2.12 분기 (yes · no · otherwise)\|분기]] | 필수 | - | 조건이 거짓일 때의 분기 |
+| `yes` | [[#2.15 분기 (yes · no · otherwise)\|분기]] | 필수 | - | 조건이 참일 때의 분기 |
+| `no` | [[#2.15 분기 (yes · no · otherwise)\|분기]] | 필수 | - | 조건이 거짓일 때의 분기 |
 
 ### 2.9 Case 블록
 
@@ -224,8 +243,8 @@ classDiagram
 | `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
 | `kind` | string | 필수 | `"case"`만 | 블록의 종류 |
 | `text` | string | 필수 | - | 가를 값 |
-| `arms` | [[#2.13 Case의 분기 (arms의 원소)\|Case의 분기]]의 배열 | 필수 | - | 값마다의 분기. 왼쪽부터 렌더링한다 |
-| `otherwise` | [[#2.12 분기 (yes · no · otherwise)\|분기]] | 생략 가능 | - | default 분기. 없으면 기록하지 않는다 |
+| `arms` | [[#2.16 Case의 분기 (arms의 원소)\|Case의 분기]]의 배열 | 필수 | - | 값마다의 분기. 왼쪽부터 렌더링한다 |
+| `otherwise` | [[#2.15 분기 (yes · no · otherwise)\|분기]] | 생략 가능 | - | default 분기. 없으면 기록하지 않는다 |
 
 ### 2.10 반복 블록 (While · Do-While · For)
 
@@ -237,9 +256,41 @@ classDiagram
 | `kind` | string | 필수 | `"while"` · `"doWhile"` · `"for"` | 블록의 종류 |
 | `text` | string | 필수 | - | 조건(For는 반복의 머리) |
 | `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 반복할 블록들 |
-| `folds` | [[#2.14 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 본문 줄의 접기 영역. 비면 기록하지 않는다 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 본문 줄의 접기 영역. 비면 기록하지 않는다 |
 
-### 2.11 호출 블록
+### 2.11 무한 반복 블록
+
+조건 없이 본문을 끝없이 반복합니다. 위 · 왼쪽 · 아래의 빈 띠로 그리고 텍스트가 없습니다.
+
+| 필드 | 타입 | 필수 | 허용 값 | 설명 |
+| --- | --- | :---: | --- | --- |
+| `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
+| `kind` | string | 필수 | `"endless"`만 | 블록의 종류 |
+| `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 반복할 블록들 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 본문 줄의 접기 영역. 비면 기록하지 않는다 |
+
+### 2.12 탈출 블록
+
+반복이나 Method를 중간에 끝냅니다. 왼쪽의 쐐기 오른쪽에 텍스트를 적습니다. 놓인 자리는 검사하지 않습니다.
+
+| 필드 | 타입 | 필수 | 허용 값 | 설명 |
+| --- | --- | :---: | --- | --- |
+| `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
+| `kind` | string | 필수 | `"exit"`만 | 블록의 종류 |
+| `text` | string | 필수 | - | 탈출의 텍스트(`break`, `return x` …) |
+
+### 2.13 병렬 처리 블록
+
+분기 여럿을 동시에 실행하고, 모두 끝나면 다음 블록으로 갑니다. 위 · 아래 띠의 양 끝을 빗금으로 자른 모양입니다.
+
+| 필드 | 타입 | 필수 | 허용 값 | 설명 |
+| --- | --- | :---: | --- | --- |
+| `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
+| `kind` | string | 필수 | `"parallel"`만 | 블록의 종류 |
+| `text` | string | 필수 | - | 위 띠의 텍스트. 비울 수 있다 |
+| `branches` | [[#2.17 병렬 처리의 분기 (branches의 원소)\|병렬 처리의 분기]]의 배열, 1개 이상 | 필수 | - | 분기들. 왼쪽부터 렌더링한다 |
+
+### 2.14 호출 블록
 
 다른 흐름을 호출하는 블록입니다. 호출 대상의 이름은 복사해 갖지 않고 대상으로 가리킵니다.
 
@@ -247,12 +298,12 @@ classDiagram
 | --- | --- | :---: | --- | --- |
 | `id` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 블록의 id |
 | `kind` | string | 필수 | `"call"`만 | 블록의 종류 |
-| `target` | [[#2.16 호출 대상\|호출 대상]] | 필수 | - | 호출 대상 |
+| `target` | [[#2.20 호출 대상\|호출 대상]] | 필수 | - | 호출 대상 |
 | `args` | string | 필수 | - | 인자 |
 | `result` | string | 필수 | - | 반환값을 받는 곳. 없으면 `""` |
-| `siteFolds` | [[#2.15 펴 보인 곳의 접기 영역 (siteFolds의 원소)\|펴 보인 곳의 접기 영역]]의 배열 | 생략 가능 | - | 이 호출 블록을 펴 보인 곳(안에 보이는 Method의 블록) 위의 접기 영역. 처음 펼 때 복사한 Method의 접기 영역도 여기 있다. 비면 기록하지 않는다 |
+| `siteFolds` | [[#2.19 펴 보인 곳의 접기 영역 (siteFolds의 원소)\|펴 보인 곳의 접기 영역]]의 배열 | 생략 가능 | - | 이 호출 블록을 펴 보인 곳(안에 보이는 Method의 블록) 위의 접기 영역. 처음 펼 때 복사한 Method의 접기 영역도 여기 있다. 비면 기록하지 않는다 |
 
-### 2.12 분기 (yes · no · otherwise)
+### 2.15 분기 (yes · no · otherwise)
 
 If의 두 분기와 Case의 default 분기입니다.
 
@@ -261,9 +312,9 @@ If의 두 분기와 Case의 default 분기입니다.
 | `id` | string | 필수 | `r1`, `r2` … (`^r[1-9][0-9]*$`) | 분기의 id |
 | `label` | string | 생략 가능 | - | 렌더링되는 참 · 거짓이나 default 대신 쓰는 이름. 편집하지 않았으면 기록하지 않는다 |
 | `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 분기의 블록들 |
-| `folds` | [[#2.14 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 분기 줄의 접기 영역. 비면 기록하지 않는다 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 분기 줄의 접기 영역. 비면 기록하지 않는다 |
 
-### 2.13 Case의 분기 (arms의 원소)
+### 2.16 Case의 분기 (arms의 원소)
 
 Case에서 값 하나의 분기입니다.
 
@@ -272,9 +323,19 @@ Case에서 값 하나의 분기입니다.
 | `id` | string | 필수 | `r1`, `r2` … (`^r[1-9][0-9]*$`) | 분기의 id |
 | `label` | string | 필수 | - | 분기의 값. 그 분기의 라벨로 렌더링한다 |
 | `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 분기의 블록들 |
-| `folds` | [[#2.14 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 분기 줄의 접기 영역. 비면 기록하지 않는다 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 분기 줄의 접기 영역. 비면 기록하지 않는다 |
 
-### 2.14 접기 영역 (folds의 원소)
+### 2.17 병렬 처리의 분기 (branches의 원소)
+
+병렬 처리 블록의 분기 하나입니다. 라벨이 없습니다.
+
+| 필드 | 타입 | 필수 | 허용 값 | 설명 |
+| --- | --- | :---: | --- | --- |
+| `id` | string | 필수 | `r1`, `r2` … (`^r[1-9][0-9]*$`) | 분기의 id |
+| `body` | [[#2.6 블록\|블록]]의 배열, 1개 이상 | 필수 | - | 분기의 블록들 |
+| `folds` | [[#2.18 접기 영역 (folds의 원소)\|접기 영역]]의 배열 | 생략 가능 | - | 분기 줄의 접기 영역. 비면 기록하지 않는다 |
+
+### 2.18 접기 영역 (folds의 원소)
 
 한 줄 안의 연속된 블록 범위와 그 이름입니다.
 
@@ -285,7 +346,7 @@ Case에서 값 하나의 분기입니다.
 | `last` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 범위의 끝 블록의 id |
 | `name` | string | 생략 가능 | - | 이름. 없으면 기록하지 않는다 |
 
-### 2.15 펴 보인 곳의 접기 영역 (siteFolds의 원소)
+### 2.19 펴 보인 곳의 접기 영역 (siteFolds의 원소)
 
 펴 보인 호출 블록 안에 보이는 Method의 블록 위에 만든 접기 영역입니다. 가장 바깥의 호출 블록에 속합니다.
 
@@ -297,13 +358,13 @@ Case에서 값 하나의 분기입니다.
 | `last` | string | 필수 | `b1`, `b2` … (`^b[1-9][0-9]*$`) | 범위의 끝 블록의 id |
 | `name` | string | 생략 가능 | - | 이름. 없으면 기록하지 않는다 |
 
-### 2.16 호출 대상
+### 2.20 호출 대상
 
 `kind`로 가르는 네 꼴 가운데 하나입니다.
 
-꼴: [[#2.17 호출 대상: local|호출 대상: local]] · [[#2.18 호출 대상: named|호출 대상: named]]
+꼴: [[#2.21 호출 대상: local|호출 대상: local]] · [[#2.22 호출 대상: named|호출 대상: named]]
 
-### 2.17 호출 대상: local
+### 2.21 호출 대상: local
 
 이 문서 안의 Method 다이어그램입니다.
 
@@ -312,7 +373,7 @@ Case에서 값 하나의 분기입니다.
 | `kind` | string | 필수 | `"local"`만 | 대상의 종류 |
 | `diagram` | string | 필수 | `d1`, `d2` … (`^d[1-9][0-9]*$`) | 호출하는 Method 다이어그램의 id |
 
-### 2.18 호출 대상: named
+### 2.22 호출 대상: named
 
 다이어그램이 아니라 블록에 적은 이름입니다(라이브러리 함수, 아직 그리지 않은 서브루틴, 지워진 Method의 이름 등).
 
@@ -469,6 +530,17 @@ Case에서 값 하나의 분기입니다.
 >         "folds": { "$ref": "#/$defs/folds" }
 >       }
 >     },
+>     "parallelBranch": {
+>       "description": "A branch of a parallel block: no label.",
+>       "type": "object",
+>       "additionalProperties": false,
+>       "required": ["id", "body"],
+>       "properties": {
+>         "id": { "$ref": "#/$defs/branchId" },
+>         "body": { "$ref": "#/$defs/body" },
+>         "folds": { "$ref": "#/$defs/folds" }
+>       }
+>     },
 >     "siteFold": {
 >       "description": "A fold region over blocks seen inside an opened call block.",
 >       "type": "object",
@@ -552,6 +624,45 @@ Case에서 값 하나의 분기입니다.
 >             "text": { "type": "string" },
 >             "body": { "$ref": "#/$defs/body" },
 >             "folds": { "$ref": "#/$defs/folds" }
+>           }
+>         },
+>         {
+>           "description": "An endless loop: no text, only a body.",
+>           "type": "object",
+>           "additionalProperties": false,
+>           "required": ["id", "kind", "body"],
+>           "properties": {
+>             "id": { "$ref": "#/$defs/blockId" },
+>             "kind": { "const": "endless" },
+>             "body": { "$ref": "#/$defs/body" },
+>             "folds": { "$ref": "#/$defs/folds" }
+>           }
+>         },
+>         {
+>           "description": "An exit: leaves a loop or a Method early. Free text such as break or return x.",
+>           "type": "object",
+>           "additionalProperties": false,
+>           "required": ["id", "kind", "text"],
+>           "properties": {
+>             "id": { "$ref": "#/$defs/blockId" },
+>             "kind": { "const": "exit" },
+>             "text": { "type": "string" }
+>           }
+>         },
+>         {
+>           "description": "Parallel branches that all end before the next block. The text (may be empty) is drawn in the top band.",
+>           "type": "object",
+>           "additionalProperties": false,
+>           "required": ["id", "kind", "text", "branches"],
+>           "properties": {
+>             "id": { "$ref": "#/$defs/blockId" },
+>             "kind": { "const": "parallel" },
+>             "text": { "type": "string" },
+>             "branches": {
+>               "type": "array",
+>               "minItems": 1,
+>               "items": { "$ref": "#/$defs/parallelBranch" }
+>             }
 >           }
 >         },
 >         {

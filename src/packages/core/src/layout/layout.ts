@@ -12,9 +12,11 @@ import type {
   Diagram,
   Doc,
   DoWhile,
+  Endless,
   For,
   Id,
   If,
+  Parallel,
   Seq,
   While,
 } from '../model/types';
@@ -43,6 +45,7 @@ import type {
   HitRegion,
   LayoutNode,
   LayoutResult,
+  ParallelColumn,
   PlacedText,
 } from './types';
 
@@ -51,6 +54,8 @@ const padY = geometry['space.pad-y'];
 const line = geometry['space.line'];
 const blockMinWidth = geometry['size.block-min-w'];
 const loopStrip = geometry['size.loop-strip'];
+const exitWedge = geometry['size.exit-wedge'];
+const parallelBand = geometry['size.parallel-band'];
 const labelRoom = geometry['size.label-room'];
 const callBar = geometry['size.call-bar'];
 const diagramMinWidth = geometry['size.diagram-min-w'];
@@ -88,6 +93,16 @@ function insetsOfLoopBody(insets: Insets, block: While | DoWhile | For): Insets 
   return { left: 0, right: insets.right, bottom: block.kind === 'doWhile' ? 0 : insets.bottom };
 }
 
+/** An endless loop's body lies inside its left strip and above its bottom strip (UX EL1). */
+function insetsOfEndlessBody(insets: Insets): Insets {
+  return { left: 0, right: insets.right, bottom: 0 };
+}
+
+/** A parallel block's branches lie above its bottom band (UX PB1). */
+function insetsOfParallelColumn(insets: Insets, column: number, count: number): Insets {
+  return { ...insetsOfColumn(insets, column, count), bottom: 0 };
+}
+
 /** A branch column reaches the left side when it is the first, the right side when the last. */
 function insetsOfColumn(insets: Insets, column: number, count: number): Insets {
   return {
@@ -115,6 +130,15 @@ type Measure =
   | (Size & { readonly kind: 'process'; readonly text: TextSize })
   | (Size & CallWords & { readonly kind: 'call' })
   | (Size & { readonly kind: 'loop'; readonly text: TextSize; readonly headHeight: number })
+  | (Size & { readonly kind: 'endless' })
+  | (Size & { readonly kind: 'exit'; readonly text: TextSize })
+  | (Size & {
+      readonly kind: 'parallel';
+      readonly text: TextSize;
+      /** The top band: thin without text, as high as a condition cell with text (M84 D2). */
+      readonly topHeight: number;
+      readonly columnWidths: ReadonlyArray<number>;
+    })
   | (Size & {
       readonly kind: 'if';
       readonly text: TextSize;
@@ -405,7 +429,13 @@ export function foldLabel(
 export function defaultFoldName(words: CallTextContext, blocks: ReadonlyArray<Block>): string {
   const [first] = blocks;
   const raw =
-    first === undefined ? '' : first.kind === 'call' ? callText(words, first) : first.text;
+    first === undefined
+      ? ''
+      : first.kind === 'call'
+        ? callText(words, first)
+        : first.kind === 'endless'
+          ? drawingMessage(words.locale, 'fold.endless')
+          : first.text;
   const text = raw.split('\n')[0] ?? '';
   const shown = text === '' ? drawingMessage(words.locale, 'fold.empty') : text;
   const rest = blocks.length - 1;
@@ -520,12 +550,25 @@ function measureBlockOnce(context: Context, block: Block, at: ShownAt, insets: I
         height: text.height + 2 * padY,
       };
     }
+    case 'exit': {
+      const text = measureText(block.text);
+      return {
+        kind: 'exit',
+        text,
+        width: Math.max(blockMinWidth, exitWedge + text.width + 2 * padX),
+        height: text.height + 2 * padY,
+      };
+    }
     case 'call':
       return measureCall(context, block, at);
     case 'while':
     case 'doWhile':
     case 'for':
       return measureLoop(context, block, at, insets);
+    case 'endless':
+      return measureEndless(context, block, at, insets);
+    case 'parallel':
+      return measureParallel(context, block, at, insets);
     case 'if':
       return measureIf(context, block, at, insets);
     case 'case':
@@ -563,6 +606,40 @@ function measureLoop(
     headHeight,
     width: Math.max(text.width + 2 * padX, loopStrip + body.width),
     height: headHeight + body.height,
+  };
+}
+
+function measureEndless(context: Context, block: Endless, at: ShownAt, insets: Insets): Measure {
+  const body = measureBody(context, block.id, block.body, at, insetsOfEndlessBody(insets));
+  return {
+    kind: 'endless',
+    width: loopStrip + body.width,
+    height: loopStrip + body.height + loopStrip,
+  };
+}
+
+function measureParallel(context: Context, block: Parallel, at: ShownAt, insets: Insets): Measure {
+  const text = measureText(block.text);
+  // The top band is thin without text, as high as a condition cell with it (sketch M84 D2).
+  const topHeight = block.text === '' ? parallelBand : text.height + 2 * padY;
+  const count = block.branches.length;
+  const columnWidths: number[] = [];
+  let bodyHeight = 0;
+  block.branches.forEach((branch, column) => {
+    const columnInsets = insetsOfParallelColumn(insets, column, count);
+    const size = measureBody(context, branch.id, branch.body, at, columnInsets);
+    columnWidths.push(size.width);
+    bodyHeight = Math.max(bodyHeight, size.height);
+  });
+  // The text keeps clear of the cut ends of the top band.
+  const textWidth = block.text === '' ? 0 : text.width + 2 * padX + 2 * parallelBand;
+  return {
+    kind: 'parallel',
+    text,
+    topHeight,
+    columnWidths,
+    width: Math.max(textWidth, 2 * parallelBand + blockMinWidth, sum(columnWidths)),
+    height: topHeight + bodyHeight + parallelBand,
   };
 }
 
@@ -840,8 +917,11 @@ function hide(context: Context, block: Block, prefix: string, box: Box): void {
 function innerOwners(block: Block): ReadonlyArray<{ readonly owner: Id; readonly seq: Seq }> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return [];
+    case 'parallel':
+      return block.branches.map((branch) => ({ owner: branch.id, seq: branch.body }));
     case 'if':
       return [
         { owner: block.yes.id, seq: block.yes.body },
@@ -854,6 +934,7 @@ function innerOwners(block: Block): ReadonlyArray<{ readonly owner: Id; readonly
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return [{ owner: block.id, seq: block.body }];
   }
 }
@@ -902,6 +983,20 @@ function placeBlock(
     case 'for':
       if (measure.kind === 'loop') {
         placeLoop(context, block, box, measure, at, insets);
+      }
+      return;
+    case 'exit':
+      if (measure.kind === 'exit') {
+        context.nodes.push({ kind: 'exit', id, box, text: placedText(measure.text) });
+        context.regions.push({ kind: 'block', blockId: id, box });
+      }
+      return;
+    case 'endless':
+      placeEndless(context, block, box, at, insets);
+      return;
+    case 'parallel':
+      if (measure.kind === 'parallel') {
+        placeParallel(context, block, box, measure, at, insets);
       }
       return;
     case 'if':
@@ -1023,6 +1118,98 @@ function placeLoop(
     false,
     insetsOfLoopBody(insets, block),
   );
+}
+
+/**
+ * An endless loop (UX EL1): the three strips select the block; the body lies inside them and
+ * takes the extra height.
+ */
+function placeEndless(
+  context: Context,
+  block: Endless,
+  box: Box,
+  at: ShownAt,
+  insets: Insets,
+): void {
+  const id = screenId(at.prefix, block.id);
+  context.nodes.push({ kind: 'endless', id, box });
+  const bottom = box.y + box.height - loopStrip;
+  context.regions.push(
+    { kind: 'head', blockId: id, box: { ...box, height: loopStrip } },
+    { kind: 'head', blockId: id, box: { ...box, width: loopStrip } },
+    { kind: 'head', blockId: id, box: { ...box, y: bottom, height: loopStrip } },
+  );
+  placeBody(
+    context,
+    block.id,
+    block.body,
+    {
+      x: box.x + loopStrip,
+      y: box.y + loopStrip,
+      width: box.width - loopStrip,
+      height: box.height - 2 * loopStrip,
+    },
+    at,
+    false,
+    insetsOfEndlessBody(insets),
+  );
+}
+
+/**
+ * A parallel block (UX PB1): the bands and the branches between them, which take the extra
+ * height. The part of the top band above a branch selects that branch; the bottom band and the
+ * cut ends of the top band select the block (sketch M84 B1).
+ */
+function placeParallel(
+  context: Context,
+  block: Parallel,
+  box: Box,
+  measure: Extract<Measure, { kind: 'parallel' }>,
+  at: ShownAt,
+  insets: Insets,
+): void {
+  const id = screenId(at.prefix, block.id);
+  const top: Box = { ...box, height: measure.topHeight };
+  const bottom: Box = { ...box, y: box.y + box.height - parallelBand, height: parallelBand };
+  const widths = splitWidth(box.width, measure.columnWidths);
+  const bodyY = top.y + top.height;
+  const bodyHeight = bottom.y - bodyY;
+  const columns: ParallelColumn[] = [];
+  let x = box.x;
+  block.branches.forEach((branch, index) => {
+    const width = widths[index] ?? 0;
+    columns.push({
+      branchId: screenId(at.prefix, branch.id),
+      column: { x, y: bodyY, width, height: bodyHeight },
+    });
+    x += width;
+  });
+  context.nodes.push({
+    kind: 'parallel',
+    id,
+    box,
+    top,
+    bottom,
+    text: placedText(measure.text),
+    columns,
+  });
+  columns.forEach((column, index) => {
+    const above: Box = { ...column.column, y: top.y, height: top.height };
+    context.regions.push(branchLabelRegion(id, column.branchId, index, above));
+  });
+  const cut = Math.min(parallelBand, Math.floor(box.width / 2));
+  context.regions.push(
+    { kind: 'head', blockId: id, box: bottom },
+    { kind: 'head', blockId: id, box: { ...top, width: cut } },
+    { kind: 'head', blockId: id, box: { ...top, x: top.x + top.width - cut, width: cut } },
+  );
+  block.branches.forEach((branch, index) => {
+    const column = columns[index]?.column;
+    if (column !== undefined) {
+      const columnInsets = insetsOfParallelColumn(insets, index, block.branches.length);
+      placeBranch(context, branch, column, at, columnInsets);
+    }
+  });
 }
 
 /**

@@ -103,7 +103,7 @@ export type FoldMark = {
 // 1.4 Blocks
 
 /** A block. Discriminated by `kind`. */
-export type Block = Process | If | Case | While | DoWhile | For | Call;
+export type Block = Process | If | Case | While | DoWhile | For | Endless | Exit | Parallel | Call;
 
 /** The kind of a block. */
 export type BlockKind = Block['kind'];
@@ -182,6 +182,39 @@ export type For = {
   readonly body: Seq;
 };
 
+/**
+ * An endless loop: the body repeats with no condition (R-BLK-15, UX EL1). It has no text; the
+ * only way out is an exit block.
+ */
+export type Endless = {
+  readonly id: Id;
+  readonly kind: 'endless';
+  readonly body: Seq;
+};
+
+/**
+ * An exit block: leaves a loop or a Method early (R-BLK-12, UX XB1). Free text (`break`,
+ * `return x` …); where it stands is not checked.
+ */
+export type Exit = {
+  readonly id: Id;
+  readonly kind: 'exit';
+  readonly text: string;
+};
+
+/**
+ * A parallel block: its branches run at the same time and all end before the next block
+ * (R-BLK-13, UX PB1). Branches have no labels; editing keeps at least two.
+ */
+export type Parallel = {
+  readonly id: Id;
+  readonly kind: 'parallel';
+  /** The text of the top band; may be empty. */
+  readonly text: string;
+  /** The branches, left to right. Never empty (invariant 4). Their `label` is never set. */
+  readonly branches: ReadonlyArray<Branch>;
+};
+
 // 1.5 Call block
 
 /** A call block. */
@@ -229,7 +262,8 @@ export type SiteFold = {
  */
 export type View = {
   /**
-   * Folded things: fold regions (FoldMark, SiteFold), branches (If, Case), loop blocks (body).
+   * Folded things: fold regions (FoldMark, SiteFold), branches (If, Case, parallel), loop blocks
+   * (body).
    * Inside an opened call block a Method's own are written behind the call path (`b4/r3`), and
    * `b4/` says that the call site has its own folding (ADR-0046, `site-folded.ts`).
    */

@@ -27,7 +27,8 @@ export type MoveArgs = WithIds & {
  *   a neighbouring control block. At the top or bottom of a diagram the move is refused.
  *   Fold regions act like the control blocks here: blocks at the end of a region first step out
  *   of it, and a region next to the blocks is jumped over whole.
- * - Left · right: moves the branch holding the blocks (the nearest If or Case), see `moveBranch`.
+ * - Left · right: moves the branch holding the blocks (the nearest If, Case or parallel block),
+ *   see `moveBranch`.
  * Touched: the moved blocks (or the moved branch).
  */
 export function move(content: Content, args: MoveArgs): Result {
@@ -157,7 +158,7 @@ function swapWithNeighbour(seq: Seq, lo: number, hi: number, down: boolean): Seq
   return permute(seq, order);
 }
 
-/** The branch (If or Case) nearest around the sequence owned by `owner`, or `null`. */
+/** The branch (If, Case or parallel) nearest around the sequence owned by `owner`, or `null`. */
 function enclosingBranch(index: ContentIndex, owner: Id): Id | null {
   let current: Id | null = owner;
   while (current !== null) {
@@ -179,6 +180,7 @@ export type MoveBranchArgs = {
 /**
  * Swaps a branch with the branch beside it, blocks and all (R-EDIT-11, interaction rules "이동").
  * - Case: the label goes with the branch. The default branch stays last and does not move.
+ * - Parallel: the branch trades places with its neighbour (UX PB1).
  * - If: the blocks of the two branches trade places; the labels stay where they are and the
  *   condition is not negated, so the note `checkCondition` asks the user to fix it.
  *   The branch ids go with the blocks, so a folded branch stays folded.
@@ -211,6 +213,26 @@ export function moveBranch(content: Content, args: MoveBranchArgs): Result {
       no: swapped(block.no, block.yes),
     }));
     return done(next, [args.branch], { kind: 'checkCondition', node: block.id });
+  }
+
+  if (block.kind === 'parallel') {
+    const i = entry.armIndex;
+    const j = right ? i + 1 : i - 1;
+    if (j < 0 || j >= block.branches.length) {
+      return fail(right ? 'atRightmost' : 'atLeftmost', args.branch);
+    }
+    const branches: Branch[] = block.branches.slice();
+    const a = branches[i];
+    const b = branches[j];
+    if (a === undefined || b === undefined) {
+      throw new Error('moveBranch: branch index out of range');
+    }
+    branches[i] = b;
+    branches[j] = a;
+    return done(
+      replaceBlock(content, owner, () => ({ ...block, branches })),
+      [args.branch],
+    );
   }
 
   if (entry.slot === 'otherwise') {

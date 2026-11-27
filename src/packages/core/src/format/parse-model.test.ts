@@ -247,6 +247,47 @@ describe('model JSON parsing', () => {
     expect(parseModelJson('{ "format": ')).toMatchObject({ ok: false, reason: 'damaged' });
   });
 
+  it('T-1546 · R-BLK-15 · R-BLK-12 · R-BLK-13: reads the endless loop, exit and parallel blocks and refuses their wrong shapes', () => {
+    const withBody = (body: unknown[]): Record<string, unknown> => ({
+      ...minimal(),
+      diagrams: [{ id: 'd1', body }],
+    });
+    const process = (id: string): unknown => ({ id, kind: 'process', text: '' });
+    const good = withBody([
+      { id: 'b1', kind: 'endless', body: [{ id: 'b2', kind: 'exit', text: 'break' }] },
+      {
+        id: 'b3',
+        kind: 'parallel',
+        text: '',
+        branches: [
+          { id: 'r1', body: [process('b4')] },
+          { id: 'r2', body: [process('b5')] },
+        ],
+      },
+    ]);
+    const read = parseModel(good);
+    expect(read.ok).toBe(true);
+    if (read.ok) {
+      expect(JSON.parse(serializeModelJson(read.value.doc))).toEqual(good);
+    }
+    const broken = [
+      withBody([{ id: 'b1', kind: 'endless', text: '', body: [process('b2')] }]),
+      withBody([{ id: 'b1', kind: 'exit' }]),
+      withBody([{ id: 'b1', kind: 'parallel', text: '', branches: [] }]),
+      withBody([
+        {
+          id: 'b1',
+          kind: 'parallel',
+          text: '',
+          branches: [{ id: 'r1', label: '1', body: [process('b2')] }],
+        },
+      ]),
+    ];
+    for (const value of broken) {
+      expect(parseModel(value)).toMatchObject({ ok: false, reason: 'damaged' });
+    }
+  });
+
   it('T-0420: 01-model 2: keeps dangling view ids when reading (weak references)', () => {
     const value = minimal();
     value.view = { folded: ['r9'], opened: [['b9']], bands: true, resultSymbol: '←' };

@@ -15,13 +15,13 @@ export type WrapArgs = WithIds & {
 /**
  * Wraps the target blocks in a new control block (R-EDIT-06, interaction rules "감싸기 · 풀기").
  * The blocks go into the body of a loop, the true branch of an If, or the first branch of a Case
- * (whose second branch and default get an empty block). The new block takes the place of the
+ * or parallel block (whose other branches get an empty block, UX PB1). The new block takes the place of the
  * blocks and has empty text, for the editor to open. Fold regions inside the blocks go along;
  * a region of exactly these blocks stays outside and now holds the new block.
- * A process block cannot wrap anything. Touched: the new block.
+ * A process or exit block cannot wrap anything. Touched: the new block.
  */
 export function wrap(content: Content, args: WrapArgs): Result {
-  if (args.kind === 'process') {
+  if (args.kind === 'process' || args.kind === 'exit') {
     return fail('cannotWrapWithProcess');
   }
   if (args.target.kind === 'diagramEnd') {
@@ -66,6 +66,18 @@ function makeWrapper(kind: WrapKind, inner: Seq, ids: IdGenerator): Block {
     case 'doWhile':
     case 'for':
       return { id, kind, text: '', body: inner };
+    case 'endless':
+      return { id, kind, body: inner };
+    case 'parallel':
+      return {
+        id,
+        kind,
+        text: '',
+        branches: [
+          { id: ids.next('branch'), body: inner },
+          { id: ids.next('branch'), body: emptySeq(ids) },
+        ],
+      };
   }
 }
 

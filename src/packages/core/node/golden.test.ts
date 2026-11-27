@@ -151,6 +151,31 @@ const cases: ReadonlyArray<{
     ),
   },
   {
+    name: 'endless-exit-parallel',
+    doc: oneDiagram(
+      {
+        id: 'b1',
+        kind: 'endless',
+        body: seq(process('b2', 'next()'), { id: 'b3', kind: 'exit', text: 'break' }),
+      },
+      {
+        id: 'b4',
+        kind: 'parallel',
+        text: 'fetch',
+        branches: [
+          { id: 'r1', body: seq(process('b5', 'a()')) },
+          { id: 'r2', body: seq(process('b6', 'b()')) },
+        ],
+      },
+      {
+        id: 'b7',
+        kind: 'parallel',
+        text: '',
+        branches: [{ id: 'r3', body: seq(process('b8', '')) }],
+      },
+    ),
+  },
+  {
     name: 'korean-and-english',
     doc: oneDiagram(process('b1', '합계 ← 0'), process('b2', '출력(sum)과 "따옴표" & <꺾쇠>')),
   },

@@ -121,6 +121,17 @@
         "folds": { "$ref": "#/$defs/folds" }
       }
     },
+    "parallelBranch": {
+      "description": "A branch of a parallel block: no label.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "body"],
+      "properties": {
+        "id": { "$ref": "#/$defs/branchId" },
+        "body": { "$ref": "#/$defs/body" },
+        "folds": { "$ref": "#/$defs/folds" }
+      }
+    },
     "siteFold": {
       "description": "A fold region over blocks seen inside an opened call block.",
       "type": "object",
@@ -204,6 +215,45 @@
             "text": { "type": "string" },
             "body": { "$ref": "#/$defs/body" },
             "folds": { "$ref": "#/$defs/folds" }
+          }
+        },
+        {
+          "description": "An endless loop: no text, only a body.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "body"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "endless" },
+            "body": { "$ref": "#/$defs/body" },
+            "folds": { "$ref": "#/$defs/folds" }
+          }
+        },
+        {
+          "description": "An exit: leaves a loop or a Method early. Free text such as break or return x.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "exit" },
+            "text": { "type": "string" }
+          }
+        },
+        {
+          "description": "Parallel branches that all end before the next block. The text (may be empty) is drawn in the top band.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "kind", "text", "branches"],
+          "properties": {
+            "id": { "$ref": "#/$defs/blockId" },
+            "kind": { "const": "parallel" },
+            "text": { "type": "string" },
+            "branches": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/parallelBranch" }
+            }
           }
         },
         {

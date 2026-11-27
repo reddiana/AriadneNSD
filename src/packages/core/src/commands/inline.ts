@@ -159,9 +159,12 @@ function copyBlock(copier: Copier, block: Block): Block {
   };
   switch (block.kind) {
     case 'process':
+    case 'exit':
       return { ...block, id };
     case 'if':
       return { ...block, id, yes: branch(block.yes), no: branch(block.no) };
+    case 'parallel':
+      return { ...block, id, branches: block.branches.map(branch) };
     case 'case':
       return {
         ...block,
@@ -172,6 +175,7 @@ function copyBlock(copier: Copier, block: Block): Block {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return { ...block, id, body: copySeq(copier, block.body) };
     case 'call':
       return { ...block, id, siteFolds: siteFoldsOf(copier, block) };

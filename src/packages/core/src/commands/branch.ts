@@ -14,6 +14,7 @@ export type InsertBranchArgs = WithIds & {
 
 /**
  * Inserts a new Case branch after (or before) the selected branch (R-EDIT-11, UX Q10 · Q5).
+ * On a parallel block the new branch has no label and holds an empty block (UX PB1).
  * The default branch stays last, so "after the default" inserts right before it. The new branch
  * holds an empty block and gets a number label not used yet; the editor opens its label.
  * On an If this is refused with `askConvertIfToCase` (UX MD3). Touched: the new branch.
@@ -29,6 +30,15 @@ export function insertBranch(content: Content, args: InsertBranchArgs): Result {
     return fail('askConvertIfToCase', block.id);
   }
   const ids = idsFor(content, args);
+  if (block.kind === 'parallel') {
+    const added: Branch = { id: ids.next('branch'), body: emptySeq(ids) };
+    const at = args.side === 'after' ? entry.armIndex + 1 : entry.armIndex;
+    const branches = [...block.branches.slice(0, at), added, ...block.branches.slice(at)];
+    return done(
+      replaceBlock(content, owner, () => ({ ...block, branches })),
+      [added.id],
+    );
+  }
   const arm: Arm = {
     id: ids.next('branch'),
     label: freshArmLabel(block.arms),
@@ -56,7 +66,8 @@ export type DeleteBranchArgs = {
  * Deletes a Case branch with its blocks (R-EDIT-11, UX MD3). The default branch and the last
  * non-default branch cannot be deleted, nor can an If branch. When one non-default branch and
  * the default are left, the note `offerConvertCaseToIf` asks whether to make it an If.
- * Touched: the Case.
+ * A parallel block keeps at least two branches (`lastParallelBranches`, UX PB1).
+ * Touched: the Case (or parallel block).
  */
 export function deleteBranch(content: Content, args: DeleteBranchArgs): Result {
   const found = findBranch(content, args.branch);
@@ -67,6 +78,16 @@ export function deleteBranch(content: Content, args: DeleteBranchArgs): Result {
   const block = entry.block;
   if (block.kind === 'if') {
     return fail('ifBranchesFixed', args.branch);
+  }
+  if (block.kind === 'parallel') {
+    if (block.branches.length <= 2) {
+      return fail('lastParallelBranches', args.branch);
+    }
+    const branches = block.branches.filter((branch) => branch.id !== args.branch);
+    return done(
+      replaceBlock(content, owner, () => ({ ...block, branches })),
+      [block.id],
+    );
   }
   if (entry.slot === 'otherwise') {
     return fail('defaultBranchFixed', args.branch);

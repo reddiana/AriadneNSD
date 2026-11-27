@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="208" height="306" viewBox="0 0 208 306">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="451576f94cefdb67bb6b4ca1f0e96864fb23f91100672161f378e8696d6b75bf"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "shape",
+    "locale": "en"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "body": [
+        {
+          "id": "b1",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b2",
+              "kind": "process",
+              "text": "next()"
+            },
+            {
+              "id": "b3",
+              "kind": "exit",
+              "text": "break"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "parallel",
+          "text": "fetch",
+          "branches": [
+            {
+              "id": "r1",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "a()"
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "body": [
+                {
+                  "id": "b6",
+                  "kind": "process",
+                  "text": "b()"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b7",
+          "kind": "parallel",
+          "text": "",
+          "branches": [
+            {
+              "id": "r3",
+              "body": [
+                {
+                  "id": "b8",
+                  "kind": "process",
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="160" height="108" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="46" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="66" font-size="13" fill="#151a22" xml:space="preserve">next()</text>
+<rect x="46" y="78" width="138" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 78 L46 94 L60 110" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="98" font-size="13" fill="#151a22" xml:space="preserve">break</text>
+<rect x="24" y="132" width="160" height="82" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M42 132 L24 164" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M166 132 L184 164" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M24 196 L42 214" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M184 196 L166 214" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="104" y="152" text-anchor="middle" font-size="13" fill="#151a22" xml:space="preserve">fetch</text>
+<rect x="24" y="164" width="80" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="184" font-size="13" fill="#151a22" xml:space="preserve">a()</text>
+<rect x="104" y="164" width="80" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="114" y="184" font-size="13" fill="#151a22" xml:space="preserve">b()</text>
+<rect x="24" y="214" width="160" height="68" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M42 214 L24 232" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M166 214 L184 232" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M24 264 L42 282" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M184 264 L166 282" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="232" width="160" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="104" cy="248" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M99.5 252.5 L108.5 243.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+</g>
+</svg>

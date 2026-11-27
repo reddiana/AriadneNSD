@@ -77,10 +77,13 @@ function controlFoldableIds(seq: Seq): Id[] {
 export function innerSeqs(block: Block): ReadonlyArray<Seq> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return [];
     case 'if':
       return [block.yes.body, block.no.body];
+    case 'parallel':
+      return block.branches.map((branch) => branch.body);
     case 'case':
       return [
         ...block.arms.map((arm) => arm.body),
@@ -89,12 +92,14 @@ export function innerSeqs(block: Block): ReadonlyArray<Seq> {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return [block.body];
   }
 }
 
 /**
- * Lists the ids that can be folded on a sequence, in document order: branches of If and Case,
+ * Lists the ids that can be folded on a sequence, in document order: branches of If, Case and
+ * parallel blocks,
  * loop blocks and fold regions, and with `withSiteFolds` the site fold regions of call blocks.
  */
 export function* seqFoldableIds(seq: Seq, withSiteFolds: boolean): Generator<Id> {
@@ -109,6 +114,13 @@ export function* seqFoldableIds(seq: Seq, withSiteFolds: boolean): Generator<Id>
 function* blockFoldableIds(block: Block, withSiteFolds: boolean): Generator<Id> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
+      return;
+    case 'parallel':
+      for (const branch of block.branches) {
+        yield branch.id;
+        yield* seqFoldableIds(branch.body, withSiteFolds);
+      }
       return;
     case 'if':
       yield block.yes.id;
@@ -129,6 +141,7 @@ function* blockFoldableIds(block: Block, withSiteFolds: boolean): Generator<Id> 
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       yield block.id;
       yield* seqFoldableIds(block.body, withSiteFolds);
       return;

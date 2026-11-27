@@ -1,5 +1,6 @@
 // Pages for print and PDF (R-EXP-03): the drawing at its print size (1px = 0.75pt, visual design
 // 9.2), cut into pages of the paper, at block boundaries where it can be.
+import { geometry } from '../layout/geometry';
 import type { Box, LayoutNode, LayoutResult } from '../layout/types';
 
 /** A paper size in pt (1/72 inch), portrait. */
@@ -156,6 +157,7 @@ function paginateAs(
 function leafBox(node: LayoutNode): Box {
   switch (node.kind) {
     case 'process':
+    case 'exit':
     case 'call':
     case 'diagramHead':
     case 'missingDefault':
@@ -166,6 +168,11 @@ function leafBox(node: LayoutNode): Box {
     case 'if':
     case 'case':
       return node.head;
+    case 'parallel':
+      return node.top;
+    // An endless loop holds no text; its top strip stays whole.
+    case 'endless':
+      return { ...node.box, height: geometry['size.loop-strip'] };
     // A fold region's name band and an opened call's band hold text; their sides may be cut.
     case 'foldFrame':
     case 'peek':

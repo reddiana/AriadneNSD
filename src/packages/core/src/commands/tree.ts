@@ -1,7 +1,19 @@
 // Finding and replacing nodes in the immutable content tree.
 // Every sequence has exactly one owner with an id: a diagram (its body), a loop block (its body)
 // or a branch (its body). So a sequence is named by its owner's id alone.
-import type { Arm, Block, Branch, Call, Case, Content, Diagram, Id, If, Seq } from '../model/types';
+import type {
+  Arm,
+  Block,
+  Branch,
+  Call,
+  Case,
+  Content,
+  Diagram,
+  Id,
+  If,
+  Parallel,
+  Seq,
+} from '../model/types';
 
 /** Where a block sits. */
 export type BlockEntry = {
@@ -24,9 +36,12 @@ export type SeqEntry = {
 /** Where a branch sits. */
 export type BranchEntry = {
   readonly branch: Branch | Arm;
-  readonly block: If | Case;
-  readonly slot: 'yes' | 'no' | 'arm' | 'otherwise';
-  /** The position among the arms; `-1` for `yes`, `no` and `otherwise`. */
+  readonly block: If | Case | Parallel;
+  readonly slot: 'yes' | 'no' | 'arm' | 'otherwise' | 'parallel';
+  /**
+   * The position among the arms (or among a parallel block's branches); `-1` for `yes`, `no`
+   * and `otherwise`.
+   */
   readonly armIndex: number;
 };
 
@@ -59,7 +74,7 @@ export function indexContent(content: Content): ContentIndex {
         if (
           child.branch !== null &&
           child.slot !== 'body' &&
-          (block.kind === 'if' || block.kind === 'case')
+          (block.kind === 'if' || block.kind === 'case' || block.kind === 'parallel')
         ) {
           branches.set(child.branch.id, {
             branch: child.branch,
@@ -85,7 +100,7 @@ export type ChildSeq = {
   readonly seq: Seq;
   readonly owner: Id;
   readonly branch: Branch | Arm | null;
-  readonly slot: 'yes' | 'no' | 'arm' | 'otherwise' | 'body';
+  readonly slot: 'yes' | 'no' | 'arm' | 'otherwise' | 'parallel' | 'body';
   readonly armIndex: number;
 };
 
@@ -93,8 +108,17 @@ export type ChildSeq = {
 export function childSeqs(block: Block): ReadonlyArray<ChildSeq> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return [];
+    case 'parallel':
+      return block.branches.map((branch, armIndex) => ({
+        seq: branch.body,
+        owner: branch.id,
+        branch,
+        slot: 'parallel',
+        armIndex,
+      }));
     case 'if':
       return [
         { seq: block.yes.body, owner: block.yes.id, branch: block.yes, slot: 'yes', armIndex: -1 },
@@ -123,6 +147,7 @@ export function childSeqs(block: Block): ReadonlyArray<ChildSeq> {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return [{ seq: block.body, owner: block.id, branch: null, slot: 'body', armIndex: -1 }];
   }
 }
@@ -153,8 +178,13 @@ function inBlock(block: Block, owner: Id, update: (seq: Seq) => Seq): Block {
   };
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return block;
+    case 'parallel': {
+      const branches = block.branches.map(branch);
+      return sameItems(branches, block.branches) ? block : { ...block, branches };
+    }
     case 'if': {
       const yes = branch(block.yes);
       const no = branch(block.no);
@@ -169,7 +199,8 @@ function inBlock(block: Block, owner: Id, update: (seq: Seq) => Seq): Block {
     }
     case 'while':
     case 'doWhile':
-    case 'for': {
+    case 'for':
+    case 'endless': {
       const next = body(block.body, block.id);
       return next === block.body ? block : { ...block, body: next };
     }
@@ -210,7 +241,7 @@ export function isEmptySeq(seq: Seq): boolean {
 
 /** Whether a block holds other blocks. */
 export function isControlBlock(block: Block): boolean {
-  return block.kind !== 'process' && block.kind !== 'call';
+  return block.kind !== 'process' && block.kind !== 'exit' && block.kind !== 'call';
 }
 
 /**
@@ -232,7 +263,12 @@ export function mapCalls(content: Content, update: (call: Call) => Call): Conten
     };
     switch (block.kind) {
       case 'process':
+      case 'exit':
         return block;
+      case 'parallel': {
+        const branches = block.branches.map(branch);
+        return sameItems(branches, block.branches) ? block : { ...block, branches };
+      }
       case 'if': {
         const yes = branch(block.yes);
         const no = branch(block.no);
@@ -247,7 +283,8 @@ export function mapCalls(content: Content, update: (call: Call) => Call): Conten
       }
       case 'while':
       case 'doWhile':
-      case 'for': {
+      case 'for':
+      case 'endless': {
         const body = inCalls(block.body);
         return body === block.body ? block : { ...block, body };
       }

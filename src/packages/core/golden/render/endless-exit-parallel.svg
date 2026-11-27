@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="286" height="386" viewBox="0 0 286 386">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<rect x="24" y="24" width="238" height="256" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="46" width="216" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="66" font-size="13" fill="#151a22" xml:space="preserve">line ← read()</text>
+<rect x="46" y="78" width="216" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 78 L168 126 L262 78" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="168" y="96" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">line = ""</text>
+<text x="52" y="121" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="256" y="121" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="126" width="122" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 126 L46 142 L60 158" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="146" font-size="13" fill="#151a22" xml:space="preserve">break</text>
+<rect x="168" y="126" width="94" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="215" cy="142" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M210.5 146.5 L219.5 137.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="158" width="216" height="100" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M64 158 L46 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M244 158 L262 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M46 240 L64 258" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M262 240 L244 258" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="46" y="176" width="85" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="196" font-size="13" fill="#151a22" xml:space="preserve">save(line)</text>
+<rect x="131" y="176" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="141" y="196" font-size="13" fill="#151a22" xml:space="preserve">show(line)</text>
+<rect x="131" y="208" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="141" y="228" font-size="13" fill="#151a22" xml:space="preserve">count ← count + 1</text>
+<rect x="24" y="280" width="238" height="82" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M42 280 L24 312" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M244 280 L262 312" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M24 344 L42 362" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M262 344 L244 362" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="143" y="300" text-anchor="middle" font-size="13" fill="#151a22" xml:space="preserve">동시에 받기</text>
+<rect x="24" y="312" width="65" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="56.5" cy="328" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M52 332.5 L61 323.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="89" y="312" width="108" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M103 312 L89 328 L103 344" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="113" y="332" font-size="13" fill="#151a22" xml:space="preserve">return x</text>
+<rect x="197" y="312" width="65" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="229.5" cy="328" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M225 332.5 L234 323.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+</g>
+</svg>

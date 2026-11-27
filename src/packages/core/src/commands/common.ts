@@ -136,12 +136,14 @@ function dropBlankDiagrams(content: Content): Content {
 
 /**
  * A new block of the given kind with empty text. Its inner sequences are one empty block each;
- * a new Case has two branches and a default (interaction rules "Case 블록").
+ * a new Case has two branches and a default (interaction rules "Case 블록"), a new parallel block
+ * two empty branches (UX PB1).
  */
 export function newBlock(kind: NewBlockKind, ids: IdGenerator): Block {
   const id = ids.next('block');
   switch (kind) {
     case 'process':
+    case 'exit':
       return { id, kind, text: '' };
     case 'if':
       return {
@@ -166,6 +168,18 @@ export function newBlock(kind: NewBlockKind, ids: IdGenerator): Block {
     case 'doWhile':
     case 'for':
       return { id, kind, text: '', body: emptySeq(ids) };
+    case 'endless':
+      return { id, kind, body: emptySeq(ids) };
+    case 'parallel':
+      return {
+        id,
+        kind,
+        text: '',
+        branches: [
+          { id: ids.next('branch'), body: emptySeq(ids) },
+          { id: ids.next('branch'), body: emptySeq(ids) },
+        ],
+      };
   }
 }
 

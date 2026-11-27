@@ -11,9 +11,12 @@ import {
   caseBlock,
   docOf,
   doWhileBlock,
+  endlessBlock,
+  exitBlock,
   forBlock,
   ifBlock,
   largeDoc,
+  parallelBlock,
   process,
   whileBlock,
   inLocale,
@@ -349,6 +352,29 @@ describe('render: golden files (02-test-architecture 3)', () => {
         whileBlock('b1', 'i < n', [process('b2', 'i ← i + 1')]),
         doWhileBlock('b3', 'retry > 0', [process('b4', 'retry ← retry - 1')]),
         forBlock('b5', 'k ← 1 .. 10', [process('b6', 'print(k)')]),
+      ),
+    ],
+    [
+      'endless-exit-parallel',
+      docOf(
+        endlessBlock('b1', [
+          process('b2', 'line ← read()'),
+          ifBlock(
+            'b3',
+            'line = ""',
+            branch('r4', [exitBlock('b5', 'break')]),
+            branch('r6', [process('b20')]),
+          ),
+          parallelBlock('b7', '', [
+            branch('r8', [process('b9', 'save(line)')]),
+            branch('r10', [process('b11', 'show(line)'), process('b12', 'count ← count + 1')]),
+          ]),
+        ]),
+        parallelBlock('b13', '동시에 받기', [
+          branch('r14', [process('b15')]),
+          branch('r16', [exitBlock('b17', 'return x')]),
+          branch('r18', [process('b19')]),
+        ]),
       ),
     ],
     ['sample', sample],

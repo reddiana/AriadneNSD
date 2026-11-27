@@ -22,6 +22,13 @@ export type BranchLabel = {
   readonly column: Box;
 };
 
+/** A column of a parallel block: one branch between the bands. */
+export type ParallelColumn = {
+  readonly branchId: Id;
+  /** The branch's cell: its sequence between the bands. */
+  readonly column: Box;
+};
+
 /** A column of a Case: one branch under the header. */
 export type CaseColumn = {
   /** The branch id; `null` for the drawn default cell of a Case without one (UX CD1). */
@@ -85,6 +92,35 @@ export type LayoutNode =
       readonly text: PlacedText;
       /** The arms in order, then the default column (always last). */
       readonly columns: ReadonlyArray<CaseColumn>;
+    }
+  | {
+      /**
+       * An endless loop (UX EL1): empty strips on top, on the left and at the bottom, as thick
+       * as the loop strip; the body lies inside them and reaches the right edge.
+       */
+      readonly kind: 'endless';
+      readonly id: Id;
+      readonly box: Box;
+    }
+  | {
+      /** An exit block (UX XB1): a wedge pointing left, its text right of it. */
+      readonly kind: 'exit';
+      readonly id: Id;
+      readonly box: Box;
+      readonly text: PlacedText;
+    }
+  | {
+      /**
+       * A parallel block (UX PB1): a top and a bottom band whose ends are cut slanting, and the
+       * branches side by side between them. The top band holds the text, if any.
+       */
+      readonly kind: 'parallel';
+      readonly id: Id;
+      readonly box: Box;
+      readonly top: Box;
+      readonly bottom: Box;
+      readonly text: PlacedText;
+      readonly columns: ReadonlyArray<ParallelColumn>;
     }
   | {
       /**
@@ -155,11 +191,15 @@ export type LayoutNode =
 export type HitRegion =
   /** A process or call block: the whole box. */
   | { readonly kind: 'block'; readonly blockId: Id; readonly box: Box }
-  /** The header of a control block (If, Case, loop). */
+  /**
+   * The header of a control block (If, Case, loop), or another part that selects it: the strips
+   * of an endless loop, the bottom band and the cut ends of a parallel block.
+   */
   | { readonly kind: 'head'; readonly blockId: Id; readonly box: Box }
   /**
-   * The label row of one branch of an If or Case. `branchId` is `null` for the drawn default of
-   * a Case without one; `index` counts the columns from the left.
+   * The label row of one branch of an If or Case, or the part of a parallel block's top band
+   * above one branch (sketch M84 B1). `branchId` is `null` for the drawn default of a Case
+   * without one; `index` counts the columns from the left.
    */
   | {
       readonly kind: 'branchLabel';

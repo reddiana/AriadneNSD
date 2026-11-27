@@ -35,6 +35,9 @@ type RawBlock =
       readonly otherwise: RawBranch | null;
     }
   | { readonly kind: 'while' | 'doWhile' | 'for'; readonly text: string; readonly body: RawSeq }
+  | { readonly kind: 'endless'; readonly body: RawSeq }
+  | { readonly kind: 'exit'; readonly text: string }
+  | { readonly kind: 'parallel'; readonly text: string; readonly branches: ReadonlyArray<RawSeq> }
   | {
       readonly kind: 'call';
       readonly target: CallTarget;
@@ -80,6 +83,7 @@ function rawSeq(depth: number): fc.Arbitrary<RawSeq> {
 function rawBlock(depth: number): fc.Arbitrary<RawBlock> {
   const leaves: fc.Arbitrary<RawBlock>[] = [
     text.map((value) => ({ kind: 'process' as const, text: value })),
+    text.map((value) => ({ kind: 'exit' as const, text: value })),
     fc.record({
       kind: fc.constant('call' as const),
       target,
@@ -115,6 +119,12 @@ function rawBlock(depth: number): fc.Arbitrary<RawBlock> {
       text,
       body,
     }),
+    fc.record({ kind: fc.constant('endless' as const), body }),
+    fc.record({
+      kind: fc.constant('parallel' as const),
+      text,
+      branches: fc.array(body, { minLength: 1, maxLength: 3 }),
+    }),
   );
 }
 
@@ -147,7 +157,17 @@ function numberDoc(
     const id = next('b');
     switch (raw.kind) {
       case 'process':
+      case 'exit':
         return { id, kind: raw.kind, text: raw.text };
+      case 'endless':
+        return { id, kind: raw.kind, body: seq(raw.body) };
+      case 'parallel':
+        return {
+          id,
+          kind: raw.kind,
+          text: raw.text,
+          branches: raw.branches.map((body) => ({ id: next('r'), body: seq(body) })),
+        };
       case 'if':
         return { id, kind: raw.kind, text: raw.text, yes: branch(raw.yes), no: branch(raw.no) };
       case 'case':

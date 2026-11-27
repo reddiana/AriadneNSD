@@ -164,9 +164,12 @@ function renewBlock(block: Block, ids: IdGenerator, methods: Methods): Block {
   });
   switch (block.kind) {
     case 'process':
+    case 'exit':
       return { ...block, id };
     case 'if':
       return { ...block, id, yes: branch(block.yes), no: branch(block.no) };
+    case 'parallel':
+      return { ...block, id, branches: block.branches.map(branch) };
     case 'case':
       return {
         ...block,
@@ -177,6 +180,7 @@ function renewBlock(block: Block, ids: IdGenerator, methods: Methods): Block {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return { ...block, id, body: renewSeq(block.body, ids, methods) };
     case 'call':
       return {

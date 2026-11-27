@@ -7,8 +7,11 @@ import type {
   Case,
   Doc,
   DoWhile,
+  Endless,
+  Exit,
   For,
   If,
+  Parallel,
   Process,
   Seq,
   While,
@@ -61,6 +64,21 @@ export const forBlock = (id: string, text: string, blocks: Block[]): For => ({
   kind: 'for',
   text,
   body: seq(...blocks),
+});
+
+export const endlessBlock = (id: string, blocks: Block[]): Endless => ({
+  id,
+  kind: 'endless',
+  body: seq(...blocks),
+});
+
+export const exitBlock = (id: string, text = ''): Exit => ({ id, kind: 'exit', text });
+
+export const parallelBlock = (id: string, text: string, branches: Branch[]): Parallel => ({
+  id,
+  kind: 'parallel',
+  text,
+  branches,
 });
 
 /** A document with one diagram without a header. */
@@ -126,7 +144,13 @@ export function countBlocks(blocks: ReadonlyArray<Block>): number {
     total += 1;
     switch (block.kind) {
       case 'process':
+      case 'exit':
       case 'call':
+        break;
+      case 'parallel':
+        for (const item of block.branches) {
+          total += countBlocks(item.body.blocks);
+        }
         break;
       case 'if':
         total += countBlocks(block.yes.body.blocks) + countBlocks(block.no.body.blocks);
@@ -140,6 +164,7 @@ export function countBlocks(blocks: ReadonlyArray<Block>): number {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         total += countBlocks(block.body.blocks);
         break;
     }

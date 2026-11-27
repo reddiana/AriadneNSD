@@ -13,6 +13,9 @@ const blockKindSet = {
   while: true,
   doWhile: true,
   for: true,
+  endless: true,
+  exit: true,
+  parallel: true,
   call: true,
 } as const satisfies Record<Block['kind'], true>;
 

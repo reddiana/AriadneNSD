@@ -8,6 +8,11 @@ export const geometry = {
   'space.line': 18,
   'size.block-min-w': 52,
   'size.loop-strip': 22,
+  // The wedge of an exit block: its tip on the left edge, 14px deep (UX XB1, sketch M80).
+  'size.exit-wedge': 14,
+  // The thin bands of a parallel block: the bottom band, and the top band without text; the
+  // diagonal cuts at their ends are as wide (UX PB1, sketch M84 D2).
+  'size.parallel-band': 18,
   'size.if-label': 16,
   'size.case-label': 28,
   'size.if-head-extra': 70,

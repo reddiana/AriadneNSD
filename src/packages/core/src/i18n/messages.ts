@@ -48,7 +48,9 @@ export type DrawingMessageKey =
   /** The default name of a fold region of several blocks: its first block's text and the rest. */
   | 'fold.more'
   /** The first block's text in a default fold region name when that block has no text. */
-  | 'fold.empty';
+  | 'fold.empty'
+  /** An endless loop's words in a default fold region name: it has no text (UX EL1). */
+  | 'fold.endless';
 
 const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string>>>> = {
   en: {
@@ -59,6 +61,7 @@ const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string
     'folded.count': '{count} blocks',
     'fold.more': '{text} and {count} more',
     'fold.empty': '(empty block)',
+    'fold.endless': '(endless loop)',
   },
   ko: {
     'if.yes': '참',
@@ -68,6 +71,7 @@ const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string
     'folded.count': '블록 {count}개',
     'fold.more': '{text} 외 {count}개',
     'fold.empty': '(빈 블록)',
+    'fold.endless': '(무한 반복)',
   },
 };
 

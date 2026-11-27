@@ -19,6 +19,7 @@ export type EditTextArgs = {
  * - A Case branch label cannot be empty (the editor puts the label back), and the default
  *   branch's label cannot be edited.
  * - A fold region's name: `renameFold` (`''` removes it, R-EDIT-23).
+ * - A parallel block's branches have no label, and an endless loop has no text (UX PB1, EL1).
  * - Header text and call block arguments have commands of their own.
  * The same text as before leaves the content as it is. Touched: the node.
  */
@@ -26,7 +27,7 @@ export function editText(content: Content, args: EditTextArgs): Result {
   const index = indexContent(content);
   const block = index.blocks.get(args.node);
   if (block !== undefined) {
-    if (block.block.kind === 'call') {
+    if (block.block.kind === 'call' || block.block.kind === 'endless') {
       return fail('unsupported', args.node);
     }
     if (block.block.text === args.text) {
@@ -48,6 +49,9 @@ export function editText(content: Content, args: EditTextArgs): Result {
   if (branch.slot === 'otherwise') {
     return fail('defaultLabelFixed', args.node);
   }
+  if (branch.slot === 'parallel') {
+    return fail('unsupported', args.node);
+  }
   if (branch.slot === 'arm' && args.text === '') {
     return fail('emptyLabel', args.node);
   }
@@ -65,6 +69,7 @@ export function editText(content: Content, args: EditTextArgs): Result {
 function withText(block: Block, text: string): Block {
   switch (block.kind) {
     case 'call':
+    case 'endless':
       return block;
     case 'process':
     case 'if':
@@ -72,6 +77,8 @@ function withText(block: Block, text: string): Block {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'exit':
+    case 'parallel':
       return { ...block, text };
   }
 }

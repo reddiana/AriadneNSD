@@ -12,11 +12,14 @@ export type {
   Diagram,
   Doc,
   DoWhile,
+  Endless,
+  Exit,
   FoldMark,
   For,
   Head,
   Id,
   If,
+  Parallel,
   Path,
   Process,
   Seq,
@@ -81,6 +84,7 @@ export type {
   HitRegion,
   LayoutNode,
   LayoutResult,
+  ParallelColumn,
   PlacedText,
 } from './layout/types';
 export type { PathSegment, Point, Scene, SceneElement, TextRun } from './render/scene';

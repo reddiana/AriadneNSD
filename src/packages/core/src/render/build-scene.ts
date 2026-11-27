@@ -42,6 +42,8 @@ const band = geometry['size.band'];
 const bandTextX = geometry['size.band-text-x'] + geometry['size.band-icon-room'];
 const foldEdge = geometry['size.fold-edge'];
 const foldIconRoom = geometry['size.fold-icon-room'];
+const exitWedge = geometry['size.exit-wedge'];
+const parallelBand = geometry['size.parallel-band'];
 
 /**
  * Builds the scene of a laid-out document with a theme. All color and shape decisions are made
@@ -140,6 +142,16 @@ function paint(ctx: Painter, node: LayoutNode): void {
         node.head.y + padY,
         ctx.colors['text.primary'],
       );
+      return;
+    case 'endless':
+      // The body is painted over the inside; the strips stay (UX EL1).
+      rect(ctx, node.id, node.box, colors['block.loop']);
+      return;
+    case 'exit':
+      exit(ctx, node);
+      return;
+    case 'parallel':
+      parallel(ctx, node);
       return;
     case 'if':
       ifHead(ctx, node);
@@ -441,6 +453,71 @@ function call(ctx: Painter, node: Extract<LayoutNode, { kind: 'call' }>): void {
     fill: ctx.colors['text.primary'],
     runs,
     halo: null,
+  });
+}
+
+/** An exit block (UX XB1): the box, a wedge whose tip is on the left edge, the text after it. */
+function exit(ctx: Painter, node: Extract<LayoutNode, { kind: 'exit' }>): void {
+  const { box } = node;
+  rect(ctx, node.id, box, ctx.colors['block.process']);
+  const wedge = Math.min(exitWedge, box.width);
+  polyline(ctx, node.id, [
+    [box.x + wedge, box.y],
+    [box.x, box.y + box.height / 2],
+    [box.x + wedge, box.y + box.height],
+  ]);
+  blockText(
+    ctx,
+    node.id,
+    node.text,
+    box.x + exitWedge + padX,
+    box.y + padY,
+    ctx.colors['text.primary'],
+  );
+}
+
+/**
+ * A parallel block (UX PB1): the box in the loop color, the ends of the top and bottom bands cut
+ * slanting, and the text centered in the top band. The branches are painted over the inside.
+ */
+function parallel(ctx: Painter, node: Extract<LayoutNode, { kind: 'parallel' }>): void {
+  const { box, top, bottom } = node;
+  rect(ctx, node.id, box, ctx.colors['block.loop']);
+  const cut = Math.min(parallelBand, box.width / 2);
+  const right = box.x + box.width;
+  const end = box.y + box.height;
+  polyline(ctx, node.id, [
+    [box.x + cut, box.y],
+    [box.x, top.y + top.height],
+  ]);
+  polyline(ctx, node.id, [
+    [right - cut, box.y],
+    [right, top.y + top.height],
+  ]);
+  polyline(ctx, node.id, [
+    [box.x, bottom.y],
+    [box.x + cut, end],
+  ]);
+  polyline(ctx, node.id, [
+    [right, bottom.y],
+    [right - cut, end],
+  ]);
+  const x = box.x + box.width / 2;
+  highlightedLines(ctx, node.text).forEach((runs, index) => {
+    if (runs.length === 0) {
+      return;
+    }
+    ctx.elements.push({
+      kind: 'text',
+      blockId: node.id,
+      x,
+      y: baseline(top.y + padY, index),
+      anchor: 'middle',
+      fontSize: fontSizes.body,
+      fill: ctx.colors['text.primary'],
+      runs,
+      halo: null,
+    });
   });
 }
 

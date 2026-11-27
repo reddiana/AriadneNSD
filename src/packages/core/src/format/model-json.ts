@@ -126,7 +126,17 @@ function armJson(arm: Arm): unknown {
 function blockJson(block: Block): unknown {
   switch (block.kind) {
     case 'process':
+    case 'exit':
       return { id: block.id, kind: block.kind, text: block.text };
+    case 'endless':
+      return { id: block.id, kind: block.kind, ...seqJson(block.body) };
+    case 'parallel':
+      return {
+        id: block.id,
+        kind: block.kind,
+        text: block.text,
+        branches: block.branches.map((branch) => ({ id: branch.id, ...seqJson(branch.body) })),
+      };
     case 'if':
       return {
         id: block.id,

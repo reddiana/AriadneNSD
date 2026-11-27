@@ -39,6 +39,7 @@ export type Reason = {
 
 /**
  * The reasons a command can refuse. The editor maps each code to a message in its catalog.
+ * - `lastParallelBranches`: a parallel block keeps at least two branches (UX PB1, M84 B1).
  * - `askConvertIfToCase`: a branch was inserted on an If. The editor asks whether to convert
  *   the If to a Case and, if so, runs `convertIfToCase` (UX MD3).
  * - `intoItself`: blocks were dropped inside one of themselves (`moveTo`).
@@ -69,6 +70,7 @@ export type ReasonCode =
   | 'notInBranch'
   | 'defaultBranchFixed'
   | 'lastArm'
+  | 'lastParallelBranches'
   | 'ifBranchesFixed'
   | 'askConvertIfToCase'
   | 'cannotWrapWithProcess'
@@ -120,10 +122,14 @@ export type Target =
 export type Side = 'after' | 'before';
 
 /** The block kinds `insertBlock` can make. Call blocks are inserted with `insertCall`. */
-export type NewBlockKind = 'process' | 'if' | 'case' | 'while' | 'doWhile' | 'for';
+export type NewBlockKind =
+  'process' | 'if' | 'case' | 'while' | 'doWhile' | 'for' | 'endless' | 'exit' | 'parallel';
 
-/** The control block kinds a selection can be wrapped in (R-EDIT-06). */
-export type WrapKind = Exclude<NewBlockKind, 'process'>;
+/**
+ * The control block kinds a selection can be wrapped in (R-EDIT-06). A process or exit block
+ * holds nothing, so it wraps nothing (UX XB1).
+ */
+export type WrapKind = Exclude<NewBlockKind, 'process' | 'exit'>;
 
 /** Arguments shared by commands that make new ids. */
 export type WithIds = {

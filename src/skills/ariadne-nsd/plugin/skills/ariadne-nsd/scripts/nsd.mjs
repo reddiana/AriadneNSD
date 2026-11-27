@@ -1671,7 +1671,8 @@ function* seqIds(seq) {
 function* blockIds(block) {
 	yield block.id;
 	switch (block.kind) {
-		case "process": return;
+		case "process":
+		case "exit": return;
 		case "if":
 			yield block.yes.id;
 			yield* seqIds(block.yes.body);
@@ -1691,7 +1692,14 @@ function* blockIds(block) {
 		case "while":
 		case "doWhile":
 		case "for":
+		case "endless":
 			yield* seqIds(block.body);
+			return;
+		case "parallel":
+			for (const branch of block.branches) {
+				yield branch.id;
+				yield* seqIds(branch.body);
+			}
 			return;
 		case "call":
 			for (const fold of block.siteFolds) yield fold.id;
@@ -1727,7 +1735,8 @@ var catalog = {
 		"call.noName": "(no name)",
 		"folded.count": "{count} blocks",
 		"fold.more": "{text} and {count} more",
-		"fold.empty": "(empty block)"
+		"fold.empty": "(empty block)",
+		"fold.endless": "(endless loop)"
 	},
 	ko: {
 		"if.yes": "참",
@@ -1736,7 +1745,8 @@ var catalog = {
 		"call.noName": "(이름 없음)",
 		"folded.count": "블록 {count}개",
 		"fold.more": "{text} 외 {count}개",
-		"fold.empty": "(빈 블록)"
+		"fold.empty": "(빈 블록)",
+		"fold.endless": "(무한 반복)"
 	}
 };
 var placeholderPattern = /\{(\w+)\}/g;
@@ -2082,16 +2092,20 @@ function controlFoldableIds(seq) {
 function innerSeqs(block) {
 	switch (block.kind) {
 		case "process":
+		case "exit":
 		case "call": return [];
 		case "if": return [block.yes.body, block.no.body];
+		case "parallel": return block.branches.map((branch) => branch.body);
 		case "case": return [...block.arms.map((arm) => arm.body), ...block.otherwise === null ? [] : [block.otherwise.body]];
 		case "while":
 		case "doWhile":
-		case "for": return [block.body];
+		case "for":
+		case "endless": return [block.body];
 	}
 }
 /**
-* Lists the ids that can be folded on a sequence, in document order: branches of If and Case,
+* Lists the ids that can be folded on a sequence, in document order: branches of If, Case and
+* parallel blocks,
 * loop blocks and fold regions, and with `withSiteFolds` the site fold regions of call blocks.
 */
 function* seqFoldableIds(seq, withSiteFolds) {
@@ -2100,7 +2114,14 @@ function* seqFoldableIds(seq, withSiteFolds) {
 }
 function* blockFoldableIds(block, withSiteFolds) {
 	switch (block.kind) {
-		case "process": return;
+		case "process":
+		case "exit": return;
+		case "parallel":
+			for (const branch of block.branches) {
+				yield branch.id;
+				yield* seqFoldableIds(branch.body, withSiteFolds);
+			}
+			return;
 		case "if":
 			yield block.yes.id;
 			yield* seqFoldableIds(block.yes.body, withSiteFolds);
@@ -2120,6 +2141,7 @@ function* blockFoldableIds(block, withSiteFolds) {
 		case "while":
 		case "doWhile":
 		case "for":
+		case "endless":
 			yield block.id;
 			yield* seqFoldableIds(block.body, withSiteFolds);
 			return;
@@ -2225,6 +2247,8 @@ var geometry = {
 	"space.line": 18,
 	"size.block-min-w": 52,
 	"size.loop-strip": 22,
+	"size.exit-wedge": 14,
+	"size.parallel-band": 18,
 	"size.if-label": 16,
 	"size.case-label": 28,
 	"size.if-head-extra": 70,
@@ -2460,6 +2484,8 @@ var padY$1 = geometry["space.pad-y"];
 var line = geometry["space.line"];
 var blockMinWidth = geometry["size.block-min-w"];
 var loopStrip = geometry["size.loop-strip"];
+var exitWedge$1 = geometry["size.exit-wedge"];
+var parallelBand$1 = geometry["size.parallel-band"];
 var labelRoom = geometry["size.label-room"];
 var callBar$1 = geometry["size.call-bar"];
 var diagramMinWidth = geometry["size.diagram-min-w"];
@@ -2499,6 +2525,21 @@ function insetsOfLoopBody(insets, block) {
 		left: 0,
 		right: insets.right,
 		bottom: block.kind === "doWhile" ? 0 : insets.bottom
+	};
+}
+/** An endless loop's body lies inside its left strip and above its bottom strip (UX EL1). */
+function insetsOfEndlessBody(insets) {
+	return {
+		left: 0,
+		right: insets.right,
+		bottom: 0
+	};
+}
+/** A parallel block's branches lie above its bottom band (UX PB1). */
+function insetsOfParallelColumn(insets, column, count) {
+	return {
+		...insetsOfColumn(insets, column, count),
+		bottom: 0
 	};
 }
 /** A branch column reaches the left side when it is the first, the right side when the last. */
@@ -2757,7 +2798,7 @@ function foldLabel(words, fold) {
 /** The default name of a region holding `blocks`: "the first block's text and n more". */
 function defaultFoldName(words, blocks) {
 	const [first] = blocks;
-	const text = (first === void 0 ? "" : first.kind === "call" ? callText(words, first) : first.text).split("\n")[0] ?? "";
+	const text = (first === void 0 ? "" : first.kind === "call" ? callText(words, first) : first.kind === "endless" ? drawingMessage(words.locale, "fold.endless") : first.text).split("\n")[0] ?? "";
 	const shown = text === "" ? drawingMessage(words.locale, "fold.empty") : text;
 	const rest = blocks.length - 1;
 	return rest > 0 ? drawingMessage(words.locale, "fold.more", {
@@ -2854,10 +2895,21 @@ function measureBlockOnce(context, block, at, insets) {
 				height: text.height + 2 * padY$1
 			};
 		}
+		case "exit": {
+			const text = measureText(block.text);
+			return {
+				kind: "exit",
+				text,
+				width: Math.max(blockMinWidth, exitWedge$1 + text.width + 2 * padX$1),
+				height: text.height + 2 * padY$1
+			};
+		}
 		case "call": return measureCall(context, block, at);
 		case "while":
 		case "doWhile":
 		case "for": return measureLoop(context, block, at, insets);
+		case "endless": return measureEndless(context, block, at, insets);
+		case "parallel": return measureParallel(context, block, at, insets);
 		case "if": return measureIf(context, block, at, insets);
 		case "case": return measureCase(context, block, at, insets);
 	}
@@ -2883,6 +2935,36 @@ function measureLoop(context, block, at, insets) {
 		headHeight,
 		width: Math.max(text.width + 2 * padX$1, loopStrip + body.width),
 		height: headHeight + body.height
+	};
+}
+function measureEndless(context, block, at, insets) {
+	const body = measureBody(context, block.id, block.body, at, insetsOfEndlessBody(insets));
+	return {
+		kind: "endless",
+		width: loopStrip + body.width,
+		height: loopStrip + body.height + loopStrip
+	};
+}
+function measureParallel(context, block, at, insets) {
+	const text = measureText(block.text);
+	const topHeight = block.text === "" ? parallelBand$1 : text.height + 2 * padY$1;
+	const count = block.branches.length;
+	const columnWidths = [];
+	let bodyHeight = 0;
+	block.branches.forEach((branch, column) => {
+		const columnInsets = insetsOfParallelColumn(insets, column, count);
+		const size = measureBody(context, branch.id, branch.body, at, columnInsets);
+		columnWidths.push(size.width);
+		bodyHeight = Math.max(bodyHeight, size.height);
+	});
+	const textWidth = block.text === "" ? 0 : text.width + 2 * padX$1 + 2 * parallelBand$1;
+	return {
+		kind: "parallel",
+		text,
+		topHeight,
+		columnWidths,
+		width: Math.max(textWidth, 2 * parallelBand$1 + blockMinWidth, sum(columnWidths)),
+		height: topHeight + bodyHeight + parallelBand$1
 	};
 }
 /** The smallest width of a branch column: its sequence, or its label plus room (02-layout 1.4). */
@@ -3096,7 +3178,12 @@ function hide(context, block, prefix, box) {
 function innerOwners(block) {
 	switch (block.kind) {
 		case "process":
+		case "exit":
 		case "call": return [];
+		case "parallel": return block.branches.map((branch) => ({
+			owner: branch.id,
+			seq: branch.body
+		}));
 		case "if": return [{
 			owner: block.yes.id,
 			seq: block.yes.body
@@ -3110,7 +3197,8 @@ function innerOwners(block) {
 		}));
 		case "while":
 		case "doWhile":
-		case "for": return [{
+		case "for":
+		case "endless": return [{
 			owner: block.id,
 			seq: block.body
 		}];
@@ -3158,6 +3246,27 @@ function placeBlock(context, block, box, at, isEmptyBranch, insets) {
 		case "doWhile":
 		case "for":
 			if (measure.kind === "loop") placeLoop(context, block, box, measure, at, insets);
+			return;
+		case "exit":
+			if (measure.kind === "exit") {
+				context.nodes.push({
+					kind: "exit",
+					id,
+					box,
+					text: placedText(measure.text)
+				});
+				context.regions.push({
+					kind: "block",
+					blockId: id,
+					box
+				});
+			}
+			return;
+		case "endless":
+			placeEndless(context, block, box, at, insets);
+			return;
+		case "parallel":
+			if (measure.kind === "parallel") placeParallel(context, block, box, measure, at, insets);
 			return;
 		case "if":
 			if (measure.kind === "if") placeIf(context, block, box, measure, at, insets);
@@ -3254,6 +3363,125 @@ function placeLoop(context, block, box, measure, at, insets) {
 		width: box.width - loopStrip,
 		height: box.height - headHeight
 	}, at, false, insetsOfLoopBody(insets, block));
+}
+/**
+* An endless loop (UX EL1): the three strips select the block; the body lies inside them and
+* takes the extra height.
+*/
+function placeEndless(context, block, box, at, insets) {
+	const id = screenId(at.prefix, block.id);
+	context.nodes.push({
+		kind: "endless",
+		id,
+		box
+	});
+	const bottom = box.y + box.height - loopStrip;
+	context.regions.push({
+		kind: "head",
+		blockId: id,
+		box: {
+			...box,
+			height: loopStrip
+		}
+	}, {
+		kind: "head",
+		blockId: id,
+		box: {
+			...box,
+			width: loopStrip
+		}
+	}, {
+		kind: "head",
+		blockId: id,
+		box: {
+			...box,
+			y: bottom,
+			height: loopStrip
+		}
+	});
+	placeBody(context, block.id, block.body, {
+		x: box.x + loopStrip,
+		y: box.y + loopStrip,
+		width: box.width - loopStrip,
+		height: box.height - 2 * loopStrip
+	}, at, false, insetsOfEndlessBody(insets));
+}
+/**
+* A parallel block (UX PB1): the bands and the branches between them, which take the extra
+* height. The part of the top band above a branch selects that branch; the bottom band and the
+* cut ends of the top band select the block (sketch M84 B1).
+*/
+function placeParallel(context, block, box, measure, at, insets) {
+	const id = screenId(at.prefix, block.id);
+	const top = {
+		...box,
+		height: measure.topHeight
+	};
+	const bottom = {
+		...box,
+		y: box.y + box.height - parallelBand$1,
+		height: parallelBand$1
+	};
+	const widths = splitWidth(box.width, measure.columnWidths);
+	const bodyY = top.y + top.height;
+	const bodyHeight = bottom.y - bodyY;
+	const columns = [];
+	let x = box.x;
+	block.branches.forEach((branch, index) => {
+		const width = widths[index] ?? 0;
+		columns.push({
+			branchId: screenId(at.prefix, branch.id),
+			column: {
+				x,
+				y: bodyY,
+				width,
+				height: bodyHeight
+			}
+		});
+		x += width;
+	});
+	context.nodes.push({
+		kind: "parallel",
+		id,
+		box,
+		top,
+		bottom,
+		text: placedText(measure.text),
+		columns
+	});
+	columns.forEach((column, index) => {
+		const above = {
+			...column.column,
+			y: top.y,
+			height: top.height
+		};
+		context.regions.push(branchLabelRegion(id, column.branchId, index, above));
+	});
+	const cut = Math.min(parallelBand$1, Math.floor(box.width / 2));
+	context.regions.push({
+		kind: "head",
+		blockId: id,
+		box: bottom
+	}, {
+		kind: "head",
+		blockId: id,
+		box: {
+			...top,
+			width: cut
+		}
+	}, {
+		kind: "head",
+		blockId: id,
+		box: {
+			...top,
+			x: top.x + top.width - cut,
+			width: cut
+		}
+	});
+	block.branches.forEach((branch, index) => {
+		const column = columns[index]?.column;
+		if (column !== void 0) placeBranch(context, branch, column, at, insetsOfParallelColumn(insets, index, block.branches.length));
+	});
 }
 /**
 * Splits a width among columns in proportion to their smallest widths; the last column takes the
@@ -3444,6 +3672,8 @@ var band = geometry["size.band"];
 var bandTextX = geometry["size.band-text-x"] + geometry["size.band-icon-room"];
 var foldEdge = geometry["size.fold-edge"];
 var foldIconRoom = geometry["size.fold-icon-room"];
+var exitWedge = geometry["size.exit-wedge"];
+var parallelBand = geometry["size.parallel-band"];
 /**
 * Builds the scene of a laid-out document with a theme. All color and shape decisions are made
 * here, so a rendering backend only translates the result (ADR-0030). Block text is highlighted
@@ -3515,6 +3745,15 @@ function paint(ctx, node) {
 		case "loop":
 			rect(ctx, node.id, node.box, colors["block.loop"]);
 			blockText(ctx, node.id, node.text, node.head.x + padX, node.head.y + padY, ctx.colors["text.primary"]);
+			return;
+		case "endless":
+			rect(ctx, node.id, node.box, colors["block.loop"]);
+			return;
+		case "exit":
+			exit(ctx, node);
+			return;
+		case "parallel":
+			parallel(ctx, node);
 			return;
 		case "if":
 			ifHead(ctx, node);
@@ -3850,6 +4089,48 @@ function call(ctx, node) {
 		fill: ctx.colors["text.primary"],
 		runs,
 		halo: null
+	});
+}
+/** An exit block (UX XB1): the box, a wedge whose tip is on the left edge, the text after it. */
+function exit(ctx, node) {
+	const { box } = node;
+	rect(ctx, node.id, box, ctx.colors["block.process"]);
+	const wedge = Math.min(exitWedge, box.width);
+	polyline(ctx, node.id, [
+		[box.x + wedge, box.y],
+		[box.x, box.y + box.height / 2],
+		[box.x + wedge, box.y + box.height]
+	]);
+	blockText(ctx, node.id, node.text, box.x + exitWedge + padX, box.y + padY, ctx.colors["text.primary"]);
+}
+/**
+* A parallel block (UX PB1): the box in the loop color, the ends of the top and bottom bands cut
+* slanting, and the text centered in the top band. The branches are painted over the inside.
+*/
+function parallel(ctx, node) {
+	const { box, top, bottom } = node;
+	rect(ctx, node.id, box, ctx.colors["block.loop"]);
+	const cut = Math.min(parallelBand, box.width / 2);
+	const right = box.x + box.width;
+	const end = box.y + box.height;
+	polyline(ctx, node.id, [[box.x + cut, box.y], [box.x, top.y + top.height]]);
+	polyline(ctx, node.id, [[right - cut, box.y], [right, top.y + top.height]]);
+	polyline(ctx, node.id, [[box.x, bottom.y], [box.x + cut, end]]);
+	polyline(ctx, node.id, [[right, bottom.y], [right - cut, end]]);
+	const x = box.x + box.width / 2;
+	highlightedLines(ctx, node.text).forEach((runs, index) => {
+		if (runs.length === 0) return;
+		ctx.elements.push({
+			kind: "text",
+			blockId: node.id,
+			x,
+			y: baseline(top.y + padY, index),
+			anchor: "middle",
+			fontSize: fontSizes.body,
+			fill: ctx.colors["text.primary"],
+			runs,
+			halo: null
+		});
 	});
 }
 function ifHead(ctx, node) {
@@ -4458,7 +4739,8 @@ function checkInvariants(content) {
 	const checkBlock = (block) => {
 		note(block.id);
 		switch (block.kind) {
-			case "process": return;
+			case "process":
+			case "exit": return;
 			case "if":
 				if (!isObject(block.yes) || !isObject(block.no)) {
 					report(4, `If ${block.id} does not have two branches`, block.id);
@@ -4483,7 +4765,15 @@ function checkInvariants(content) {
 			case "while":
 			case "doWhile":
 			case "for":
+			case "endless":
 				checkSeq(block.body, block.id);
+				return;
+			case "parallel":
+				if (block.branches.length === 0) report(4, `parallel ${block.id} has no branch`, block.id);
+				for (const branch of block.branches) {
+					note(branch.id);
+					checkSeq(branch.body, branch.id);
+				}
 				return;
 			case "call":
 				for (const fold of block.siteFolds) note(fold.id);
@@ -4609,10 +4899,25 @@ function armJson(arm) {
 }
 function blockJson(block) {
 	switch (block.kind) {
-		case "process": return {
+		case "process":
+		case "exit": return {
 			id: block.id,
 			kind: block.kind,
 			text: block.text
+		};
+		case "endless": return {
+			id: block.id,
+			kind: block.kind,
+			...seqJson(block.body)
+		};
+		case "parallel": return {
+			id: block.id,
+			kind: block.kind,
+			text: block.text,
+			branches: block.branches.map((branch) => ({
+				id: branch.id,
+				...seqJson(branch.body)
+			}))
 		};
 		case "if": return {
 			id: block.id,
@@ -4686,6 +4991,9 @@ var blockKindSet = {
 	while: true,
 	doWhile: true,
 	for: true,
+	endless: true,
+	exit: true,
+	parallel: true,
 	call: true
 };
 var headKindSet = {
@@ -4970,6 +5278,22 @@ function readBranch(reader, at, value) {
 		body
 	};
 }
+/** A branch of a parallel block: no label (UX PB1). */
+function readParallelBranch(reader, at, value) {
+	const fields = readObject(reader, at, value, [
+		"id",
+		"body",
+		"folds"
+	]);
+	if (fields === null) return null;
+	const id = readId(reader, `${at}.id`, fields.id, "r");
+	const body = readSeq(reader, at, fields);
+	if (id === null || body === null) return null;
+	return {
+		id,
+		body
+	};
+}
 function readArm(reader, at, value) {
 	const fields = readObject(reader, at, value, [
 		"id",
@@ -4991,7 +5315,9 @@ function readArm(reader, at, value) {
 function readBlock(reader, at, value) {
 	if (!isRecord(value)) return fail$1(reader, at, "is not an object");
 	switch (value.kind) {
-		case "process": {
+		case "process":
+		case "exit": {
+			const { kind } = value;
 			const fields = readObject(reader, at, value, [
 				"id",
 				"kind",
@@ -5002,8 +5328,42 @@ function readBlock(reader, at, value) {
 			if (fields === null || id === null || text === null) return null;
 			return {
 				id,
-				kind: "process",
+				kind,
 				text
+			};
+		}
+		case "endless": {
+			const fields = readObject(reader, at, value, [
+				"id",
+				"kind",
+				"body",
+				"folds"
+			]);
+			const id = readId(reader, `${at}.id`, value.id, "b");
+			const body = readSeq(reader, at, value);
+			if (fields === null || id === null || body === null) return null;
+			return {
+				id,
+				kind: "endless",
+				body
+			};
+		}
+		case "parallel": {
+			const fields = readObject(reader, at, value, [
+				"id",
+				"kind",
+				"text",
+				"branches"
+			]);
+			const id = readId(reader, `${at}.id`, value.id, "b");
+			const text = readString(reader, `${at}.text`, value.text);
+			const branches = readArray(reader, `${at}.branches`, value.branches, (item, itemAt) => readParallelBranch(reader, itemAt, item));
+			if (fields === null || id === null || text === null || branches === null) return null;
+			return {
+				id,
+				kind: "parallel",
+				text,
+				branches
 			};
 		}
 		case "if": {

@@ -56,6 +56,7 @@ export function checkInvariants(content: Content): ReadonlyArray<Violation> {
     note(block.id);
     switch (block.kind) {
       case 'process':
+      case 'exit':
         return;
       case 'if':
         // 4. An If has two branches. The type says so; a file may not.
@@ -85,7 +86,18 @@ export function checkInvariants(content: Content): ReadonlyArray<Violation> {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         checkSeq(block.body, block.id);
+        return;
+      case 'parallel':
+        // 4. A parallel block has at least one branch (editing keeps two, UX PB1).
+        if (block.branches.length === 0) {
+          report(4, `parallel ${block.id} has no branch`, block.id);
+        }
+        for (const branch of block.branches) {
+          note(branch.id);
+          checkSeq(branch.body, branch.id);
+        }
         return;
       case 'call':
         for (const fold of block.siteFolds) {

@@ -391,6 +391,20 @@ function readBranch(reader: Reader, at: string, value: unknown): Branch | null {
   return { id, ...(label.value === undefined ? {} : { label: label.value }), body };
 }
 
+/** A branch of a parallel block: no label (UX PB1). */
+function readParallelBranch(reader: Reader, at: string, value: unknown): Branch | null {
+  const fields = readObject(reader, at, value, ['id', 'body', 'folds']);
+  if (fields === null) {
+    return null;
+  }
+  const id = readId(reader, `${at}.id`, fields.id, 'r');
+  const body = readSeq(reader, at, fields);
+  if (id === null || body === null) {
+    return null;
+  }
+  return { id, body };
+}
+
 function readArm(reader: Reader, at: string, value: unknown): Arm | null {
   const fields = readObject(reader, at, value, ['id', 'label', 'body', 'folds']);
   if (fields === null) {
@@ -410,14 +424,37 @@ function readBlock(reader: Reader, at: string, value: unknown): Block | null {
     return fail(reader, at, 'is not an object');
   }
   switch (value.kind) {
-    case 'process': {
+    case 'process':
+    case 'exit': {
+      const { kind } = value;
       const fields = readObject(reader, at, value, ['id', 'kind', 'text']);
       const id = readId(reader, `${at}.id`, value.id, 'b');
       const text = readString(reader, `${at}.text`, value.text);
       if (fields === null || id === null || text === null) {
         return null;
       }
-      return { id, kind: 'process', text };
+      return { id, kind, text };
+    }
+    case 'endless': {
+      const fields = readObject(reader, at, value, ['id', 'kind', 'body', 'folds']);
+      const id = readId(reader, `${at}.id`, value.id, 'b');
+      const body = readSeq(reader, at, value);
+      if (fields === null || id === null || body === null) {
+        return null;
+      }
+      return { id, kind: 'endless', body };
+    }
+    case 'parallel': {
+      const fields = readObject(reader, at, value, ['id', 'kind', 'text', 'branches']);
+      const id = readId(reader, `${at}.id`, value.id, 'b');
+      const text = readString(reader, `${at}.text`, value.text);
+      const branches = readArray(reader, `${at}.branches`, value.branches, (item, itemAt) =>
+        readParallelBranch(reader, itemAt, item),
+      );
+      if (fields === null || id === null || text === null || branches === null) {
+        return null;
+      }
+      return { id, kind: 'parallel', text, branches };
     }
     case 'if': {
       const fields = readObject(reader, at, value, ['id', 'kind', 'text', 'yes', 'no']);

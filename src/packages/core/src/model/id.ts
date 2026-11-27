@@ -80,6 +80,7 @@ function* blockIds(block: Block): Generator<Id> {
   yield block.id;
   switch (block.kind) {
     case 'process':
+    case 'exit':
       return;
     case 'if':
       yield block.yes.id;
@@ -100,7 +101,14 @@ function* blockIds(block: Block): Generator<Id> {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       yield* seqIds(block.body);
+      return;
+    case 'parallel':
+      for (const branch of block.branches) {
+        yield branch.id;
+        yield* seqIds(branch.body);
+      }
       return;
     case 'call':
       for (const fold of block.siteFolds) {
