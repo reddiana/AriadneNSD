@@ -97,7 +97,7 @@ updated: 2026-11-28
 - [ ] 메인테이너: AT-05를 `https://ariadnensd.com/?perf`로 가진 기기에서 재고 기준 기기 정하기 → [[01-requirements#5.2 MVP의 인수 기준]]
 - [ ] 메인테이너: Windows 알림을 다시 켤지(`.claude/settings.local.json`의 `hooks`를 비워 둠)
 - [ ] 메인테이너: 앱이 "불러오는 중"에서 멈출 때 주소를 바로 열었는지, 사이트 · README 버튼을 거쳤는지 알려 주기 → [[defects]]
-- [ ] 11-03 밤의 worktree 정리 → [[backlog#저장소 손질]]
+- [ ] 11-03 밤의 worktree 7개 지우기: 이번 매듭 때(2026-11-28 메인테이너, 모두 변경 없음 · main에 합쳐짐) → [[backlog#저장소 손질]]
 - [ ] Firefox로 M12 열기 → [[outbox#정해 주세요]]
 
 ## 열린 질문이 있는 곳
