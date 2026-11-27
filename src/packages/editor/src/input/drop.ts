@@ -134,7 +134,8 @@ export function findDrop(
     return between(source, id, box, point.y < box.y + box.height / 2 ? 'before' : 'after');
   }
   const kind = source.blockKind;
-  if (kind === 'process') {
+  // A process or exit block holds nothing, so it goes below instead of wrapping (UX XB1).
+  if (kind === 'process' || kind === 'exit') {
     return between(source, id, box, 'after');
   }
   // On one of the selected blocks, the whole selection is wrapped (interaction rules 7).

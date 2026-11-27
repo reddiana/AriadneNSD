@@ -720,6 +720,11 @@ function blockBox(block: Block, ctx: Ctx): Box {
       return preTestBox(block, ctx);
     case 'doWhile':
       return postTestBox(block, ctx);
+    case 'endless':
+    case 'exit':
+    case 'parallel':
+      // The examples do not use these blocks yet.
+      throw new Error(`No flowchart for a ${block.kind} block`);
   }
 }
 
@@ -773,12 +778,17 @@ function countBlocks(seq: Seq): number {
         for (const arm of block.arms) count += countBlocks(arm.body);
         if (block.otherwise !== null) count += countBlocks(block.otherwise.body);
         break;
+      case 'parallel':
+        for (const branch of block.branches) count += countBlocks(branch.body);
+        break;
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         count += countBlocks(block.body);
         break;
       case 'process':
+      case 'exit':
       case 'call':
         break;
     }

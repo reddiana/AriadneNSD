@@ -24,9 +24,13 @@ export type ClipboardData = {
 
 const indentUnit = '    ';
 
+/** The line before each branch of a parallel block in copied text: the branches have no label. */
+const parallelMark = '∥';
+
 /**
  * The blocks as indented lines, so they read like pseudocode elsewhere. Control blocks put their
- * text on one line and their blocks below, one level in; If and Case branches get a label line.
+ * text on one line and their blocks below, one level in; If and Case branches get a label line,
+ * a parallel block's branches a line `∥`, an endless loop the line "(endless loop)".
  * A Do-While writes its condition after its blocks, as it is drawn. A call block is its line as
  * drawn, `ys ← MergeSort(xs)`, so it needs the document's diagrams and result symbol (`drawn`).
  * Empty blocks are left out.
@@ -46,8 +50,30 @@ export function clipToText(clip: Clip, drawn: CallTextContext): string {
           textLines(block.text, depth);
         }
         return;
+      case 'exit':
+        if (block.text !== '') {
+          textLines(block.text, depth);
+        }
+        return;
       case 'call':
         textLines(callText(drawn, block), depth);
+        return;
+      case 'endless':
+        textLines(drawingMessage(locale, 'endless.name'), depth);
+        block.body.blocks.forEach((inner) => {
+          visit(inner, depth + 1);
+        });
+        return;
+      case 'parallel':
+        if (block.text !== '') {
+          textLines(block.text, depth);
+        }
+        for (const branch of block.branches) {
+          textLines(parallelMark, depth + 1);
+          branch.body.blocks.forEach((inner) => {
+            visit(inner, depth + 2);
+          });
+        }
         return;
       case 'while':
       case 'for':
@@ -132,9 +158,12 @@ function calledMethods(seq: Seq): Id[] {
   return seq.blocks.flatMap((block): Id[] => {
     switch (block.kind) {
       case 'process':
+      case 'exit':
         return [];
       case 'call':
         return block.target.kind === 'local' ? [block.target.diagram] : [];
+      case 'parallel':
+        return block.branches.flatMap((branch) => calledMethods(branch.body));
       case 'if':
         return [...calledMethods(block.yes.body), ...calledMethods(block.no.body)];
       case 'case':
@@ -145,6 +174,7 @@ function calledMethods(seq: Seq): Id[] {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         return calledMethods(block.body);
     }
   });

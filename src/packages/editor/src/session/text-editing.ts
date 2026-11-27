@@ -79,6 +79,10 @@ export class TextEditing {
         if (block === undefined) {
           return { reason: 'reason.notFound' };
         }
+        if (block.kind === 'endless') {
+          // An endless loop has no text (UX EL1).
+          return { reason: 'reason.endlessHasNoText' };
+        }
         return block.kind === 'call' ? { reason: 'reason.unsupported' } : { text: block.text };
       }
       case 'branchLabel': {
@@ -88,6 +92,10 @@ export class TextEditing {
         }
         if (place.isDefault) {
           return { reason: 'reason.defaultLabelFixed' };
+        }
+        if (place.block.kind === 'parallel') {
+          // A parallel block's branches have no label; its text is edited on the block (M84 B1).
+          return { reason: 'reason.parallelBranchHasNoLabel' };
         }
         return { text: this.session.labelText(field.branch) };
       }

@@ -1736,7 +1736,7 @@ var catalog = {
 		"folded.count": "{count} blocks",
 		"fold.more": "{text} and {count} more",
 		"fold.empty": "(empty block)",
-		"fold.endless": "(endless loop)"
+		"endless.name": "(endless loop)"
 	},
 	ko: {
 		"if.yes": "참",
@@ -1746,7 +1746,7 @@ var catalog = {
 		"folded.count": "블록 {count}개",
 		"fold.more": "{text} 외 {count}개",
 		"fold.empty": "(빈 블록)",
-		"fold.endless": "(무한 반복)"
+		"endless.name": "(무한 반복)"
 	}
 };
 var placeholderPattern = /\{(\w+)\}/g;
@@ -2798,7 +2798,7 @@ function foldLabel(words, fold) {
 /** The default name of a region holding `blocks`: "the first block's text and n more". */
 function defaultFoldName(words, blocks) {
 	const [first] = blocks;
-	const text = (first === void 0 ? "" : first.kind === "call" ? callText(words, first) : first.kind === "endless" ? drawingMessage(words.locale, "fold.endless") : first.text).split("\n")[0] ?? "";
+	const text = (first === void 0 ? "" : first.kind === "call" ? callText(words, first) : first.kind === "endless" ? drawingMessage(words.locale, "endless.name") : first.text).split("\n")[0] ?? "";
 	const shown = text === "" ? drawingMessage(words.locale, "fold.empty") : text;
 	const rest = blocks.length - 1;
 	return rest > 0 ? drawingMessage(words.locale, "fold.more", {

@@ -156,6 +156,7 @@ export function shownIndexOf(doc: Doc): ShownIndex {
     };
     switch (block.kind) {
       case 'process':
+      case 'exit':
         return { ...block, id };
       case 'call': {
         const inside = openedAt(block, id, at);
@@ -168,6 +169,8 @@ export function shownIndexOf(doc: Doc): ShownIndex {
       }
       case 'if':
         return { ...block, id, yes: branch(block.yes), no: branch(block.no) };
+      case 'parallel':
+        return { ...block, id, branches: block.branches.map(branch) };
       case 'case':
         return {
           ...block,
@@ -178,6 +181,7 @@ export function shownIndexOf(doc: Doc): ShownIndex {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         return { ...block, id, body: body(block.id, block.body, at) };
     }
   };
@@ -212,8 +216,11 @@ export function shownIndexOf(doc: Doc): ShownIndex {
 function innerOf(block: Block): ReadonlyArray<{ readonly owner: Id; readonly seq: Seq }> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return [];
+    case 'parallel':
+      return block.branches.map((branch) => ({ owner: branch.id, seq: branch.body }));
     case 'if':
       return [
         { owner: block.yes.id, seq: block.yes.body },
@@ -226,6 +233,7 @@ function innerOf(block: Block): ReadonlyArray<{ readonly owner: Id; readonly seq
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return [{ owner: block.id, seq: block.body }];
   }
 }

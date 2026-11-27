@@ -69,6 +69,33 @@ function blockShape(kind: ToolbarBlockKind): ReactElement {
           <rect x="5.5" y=".5" width="16" height="10" fill={fill.process} stroke={line} />
         </>
       );
+    // The three below are sketch M84 B2's icons as drawn there.
+    case 'endless':
+      return (
+        <>
+          {frame(fill.loop)}
+          <rect x="5.5" y="4.5" width="16" height="7" fill={fill.process} stroke={line} />
+        </>
+      );
+    case 'exit':
+      return (
+        <>
+          {frame(fill.process)}
+          <path d="M6 .5 L.5 8 L6 15.5" fill="none" stroke={line} />
+        </>
+      );
+    case 'parallel':
+      return (
+        <>
+          {frame(fill.loop)}
+          <rect x=".5" y="4.5" width={width - 1} height="7" fill={fill.process} stroke={line} />
+          <path
+            d="M11 4.5 V11.5 M4 .5 L.5 4.5 M18 .5 L21.5 4.5 M.5 11.5 L4 15.5 M21.5 11.5 L18 15.5"
+            fill="none"
+            stroke={line}
+          />
+        </>
+      );
   }
 }
 

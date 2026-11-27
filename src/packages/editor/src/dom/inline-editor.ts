@@ -117,13 +117,13 @@ export class InlineEditor {
     return formatMessage(this.host.locale(), key);
   }
 
-  /** If and Case conditions are drawn centered; other text starts at the left. */
+  /** If and Case conditions and a parallel block's text are drawn centered; other text starts at the left. */
   private isCentered(field: EditField): boolean {
     if (field.kind !== 'block') {
       return false;
     }
     const kind = this.host.session.index().blocks.get(field.block)?.block.kind;
-    return kind === 'if' || kind === 'case';
+    return kind === 'if' || kind === 'case' || kind === 'parallel';
   }
 
   private fit(): void {

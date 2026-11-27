@@ -170,7 +170,13 @@ function* seqBlocks(seq: Seq): Generator<Block> {
     yield block;
     switch (block.kind) {
       case 'process':
+      case 'exit':
       case 'call':
+        break;
+      case 'parallel':
+        for (const branch of block.branches) {
+          yield* seqBlocks(branch.body);
+        }
         break;
       case 'if':
         yield* seqBlocks(block.yes.body);
@@ -187,6 +193,7 @@ function* seqBlocks(seq: Seq): Generator<Block> {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         yield* seqBlocks(block.body);
         break;
     }
@@ -205,8 +212,11 @@ function docShape(doc: Doc): string[] {
     ...seq.blocks.flatMap((block) => {
       switch (block.kind) {
         case 'process':
+        case 'exit':
         case 'call':
           return [];
+        case 'parallel':
+          return block.branches.flatMap((branch) => folds(branch.body));
         case 'if':
           return [...folds(block.yes.body), ...folds(block.no.body)];
         case 'case':
@@ -217,6 +227,7 @@ function docShape(doc: Doc): string[] {
         case 'while':
         case 'doWhile':
         case 'for':
+        case 'endless':
           return folds(block.body);
       }
     }),
@@ -238,7 +249,17 @@ function docTexts(doc: Doc): string[] {
     for (const block of s.blocks) {
       switch (block.kind) {
         case 'process':
+        case 'exit':
           out.push(block.text);
+          break;
+        case 'endless':
+          seq(block.body);
+          break;
+        case 'parallel':
+          out.push(block.text);
+          for (const branch of block.branches) {
+            seq(branch.body);
+          }
           break;
         case 'if':
           out.push(block.text);

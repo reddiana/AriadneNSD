@@ -318,7 +318,8 @@ export type PromptOptions = {
 export type ContextMenuRequest = { readonly x: number; readonly y: number };
 
 /** The block kinds of the toolbar's block icons. */
-export type ToolbarBlockKind = 'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile';
+export type ToolbarBlockKind =
+  'process' | 'if' | 'case' | 'while' | 'for' | 'doWhile' | 'endless' | 'exit' | 'parallel';
 
 /** The editor as the shell sees it (03-editor 6). */
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- a contract the shell implements (coding guide 4)

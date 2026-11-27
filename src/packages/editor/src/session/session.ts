@@ -366,8 +366,13 @@ export class EditorSession {
         }
         return isEmptyBlock(block) ? 'selection.empty' : `selection.${block.kind}`;
       }
-      case 'branchLabel':
+      case 'branchLabel': {
+        const place = index.branches.get(selection.branch);
+        if (place?.block.kind === 'parallel') {
+          return message('selection.parallelBranch', { number: place.column + 1 });
+        }
         return message('selection.branchLabel', { label: this.labelText(selection.branch) });
+      }
       case 'missingDefault':
         return 'selection.missingDefault';
       case 'head': {

@@ -434,7 +434,7 @@ export function defaultFoldName(words: CallTextContext, blocks: ReadonlyArray<Bl
       : first.kind === 'call'
         ? callText(words, first)
         : first.kind === 'endless'
-          ? drawingMessage(words.locale, 'fold.endless')
+          ? drawingMessage(words.locale, 'endless.name')
           : first.text;
   const text = raw.split('\n')[0] ?? '';
   const shown = text === '' ? drawingMessage(words.locale, 'fold.empty') : text;

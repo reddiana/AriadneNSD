@@ -389,10 +389,14 @@ export class CanvasInput {
         field = { kind: 'head', diagram: hit.diagram };
         break;
       case 'branchLabel':
-        field =
-          hit.branch === null
-            ? { kind: 'missingDefault', block: hit.block }
-            : { kind: 'branchLabel', branch: hit.branch };
+        if (hit.branch === null) {
+          field = { kind: 'missingDefault', block: hit.block };
+        } else if (shown.index.branches.get(hit.branch)?.block.kind === 'parallel') {
+          // A parallel branch has no label: its top band holds the block's text (M84 B1).
+          field = this.session.blockField(hit.block);
+        } else {
+          field = { kind: 'branchLabel', branch: hit.branch };
+        }
         break;
       case 'missingDefault':
         field = { kind: 'missingDefault', block: hit.block };

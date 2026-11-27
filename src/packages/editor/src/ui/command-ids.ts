@@ -3,7 +3,10 @@
 
 import type { ToolbarBlockKind } from './engine-api';
 
-/** The six block icons of the toolbar, in toolbar order (06-web 7). */
+/**
+ * The block icons of the toolbar, in toolbar order (06-web 7): the five, then the endless loop,
+ * exit and parallel blocks (sketch M84 B2). For has no button but is listed (UX TB1).
+ */
 export const toolbarBlockKinds: ReadonlyArray<ToolbarBlockKind> = [
   'process',
   'if',
@@ -11,6 +14,9 @@ export const toolbarBlockKinds: ReadonlyArray<ToolbarBlockKind> = [
   'while',
   'for',
   'doWhile',
+  'endless',
+  'exit',
+  'parallel',
 ];
 
 /** The toolbar icon id of a block kind (`ToolbarPlace.icon`). */
@@ -25,16 +31,21 @@ export function blockKindOfIcon(icon: string): ToolbarBlockKind | null {
 
 /**
  * The commands a block icon runs: click inserts after, Shift+click before, Ctrl+click wraps
- * (02-interaction-rules "블록 아이콘으로 삽입 · 감싸기", UX W2). A process block cannot wrap,
- * so its Ctrl+click inserts.
+ * (02-interaction-rules "블록 아이콘으로 삽입 · 감싸기", UX W2). A process or exit block cannot
+ * wrap, so its Ctrl+click inserts.
  */
 export function blockIconCommand(
   kind: ToolbarBlockKind,
   modifiers: { readonly shiftKey: boolean; readonly ctrlKey: boolean; readonly metaKey: boolean },
 ): string {
-  if ((modifiers.ctrlKey || modifiers.metaKey) && kind !== 'process') return `block.wrap.${kind}`;
+  if ((modifiers.ctrlKey || modifiers.metaKey) && canWrap(kind)) return `block.wrap.${kind}`;
   if (modifiers.shiftKey) return `block.insertBefore.${kind}`;
   return `block.insert.${kind}`;
+}
+
+/** Whether a block icon's kind can wrap blocks: a process or exit block holds nothing. */
+export function canWrap(kind: ToolbarBlockKind): boolean {
+  return kind !== 'process' && kind !== 'exit';
 }
 
 /** The toolbar's zoom buttons, as [zoom out] [NN%] [zoom in] (06-web 7, M76 Z1). */

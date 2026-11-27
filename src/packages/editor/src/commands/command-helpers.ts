@@ -53,7 +53,10 @@ export type CommandDeps = {
   readonly askPastedDocument?: (canPasteText: boolean) => Promise<'open' | 'text' | 'cancel'>;
 };
 
-/** The block kinds in toolbar and menu order (06-web 7). */
+/**
+ * The block kinds in toolbar and menu order (06-web 7): the endless loop, exit and parallel
+ * blocks come after the other five (sketch M84 B2).
+ */
 export const blockKinds: ReadonlyArray<NewBlockKind> = [
   'process',
   'if',
@@ -61,10 +64,21 @@ export const blockKinds: ReadonlyArray<NewBlockKind> = [
   'while',
   'for',
   'doWhile',
+  'endless',
+  'exit',
+  'parallel',
 ];
 
-/** The kinds that can wrap blocks. */
-export const wrapKinds: ReadonlyArray<WrapKind> = ['if', 'case', 'while', 'for', 'doWhile'];
+/** The kinds that can wrap blocks. An exit block holds nothing (UX XB1). */
+export const wrapKinds: ReadonlyArray<WrapKind> = [
+  'if',
+  'case',
+  'while',
+  'for',
+  'doWhile',
+  'endless',
+  'parallel',
+];
 
 export const kindNames: Readonly<Record<string, string>> = {
   if: 'If',
@@ -365,10 +379,12 @@ export function commandContext(deps: CommandDeps): CommandContext {
     if (made === undefined) {
       return { selection: session.state.selection };
     }
-    return {
-      selection: selectBlock(indexDoc(result.content), made),
-      edit: { field: { kind: 'block', block: made }, caret: 'end' },
-    };
+    const madeIndex = indexDoc(result.content);
+    const selection = selectBlock(madeIndex, made);
+    // An endless loop has no text to open (UX EL1).
+    return madeIndex.blocks.get(made)?.block.kind === 'endless'
+      ? { selection }
+      : { selection, edit: { field: { kind: 'block', block: made }, caret: 'end' } };
   };
 
   const insertWhen =
@@ -389,8 +405,12 @@ export function commandContext(deps: CommandDeps): CommandContext {
     const result = insertBranch(content(), { branch, side, ids: session.ids() });
     const isApplied = session.commit(result, (ok) => {
       const [made] = ok.touched;
-      return made === undefined
-        ? { selection: session.state.selection }
+      if (made === undefined) {
+        return { selection: session.state.selection };
+      }
+      // A parallel branch has no label to write: it is only selected (M84 B1).
+      return place?.block.kind === 'parallel'
+        ? { selection: { kind: 'branchLabel', branch: made } }
         : {
             selection: { kind: 'branchLabel', branch: made },
             edit: { field: { kind: 'branchLabel', branch: made }, caret: 'selectAll' },

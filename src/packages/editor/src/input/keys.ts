@@ -27,6 +27,9 @@ export const kindLetters = [
   ['w', 'while'],
   ['f', 'for'],
   ['d', 'doWhile'],
+  // UX EL1 · PB1: `e` endless loop, `t` parallel (thread, together).
+  ['e', 'endless'],
+  ['t', 'parallel'],
 ] as const;
 
 const insertBindings: ReadonlyArray<KeyBinding> = [
@@ -38,6 +41,9 @@ const insertBindings: ReadonlyArray<KeyBinding> = [
     { keys: `A ${letter}`, command: `block.insertBefore.${kind}` },
     { keys: `s ${letter}`, command: `block.wrap.${kind}` },
   ]),
+  // An exit block holds nothing, so it only inserts (UX XB1).
+  { keys: 'a x', command: 'block.insert.exit' },
+  { keys: 'A x', command: 'block.insertBefore.exit' },
   { keys: 'a c', command: 'block.insert.call' },
   { keys: 'A c', command: 'block.insertBefore.call' },
 ];

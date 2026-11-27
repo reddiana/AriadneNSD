@@ -1,11 +1,12 @@
 // The insert, wrap, unwrap and inline commands.
+import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import { indexDoc, isControl, seqOfBlock } from '../model/doc-index';
 import type { Selection } from '../state/selection';
 import { foldPath, selectedBlocks, targetOf } from '../state/selection';
 import { isOpenable } from './fold-commands';
 import { spec } from './spec';
-import type { Id, NewBlockKind, Side, Target, View } from '@ariadne-nsd/core';
+import type { BlockKind, Id, NewBlockKind, Side, Target, View } from '@ariadne-nsd/core';
 import {
   foldedAfterInline,
   hasOwnSite,
@@ -179,9 +180,7 @@ export function insertWrapCommands(ctx: CommandContext) {
         selection: isWhole ? selectTouched(ok.content, ok.touched) : state.selection,
       }));
       if (isApplied && removed !== undefined) {
-        session.notify(
-          message('notice.unwrapped', { kind: kindNames[removed.kind] ?? removed.kind }),
-        );
+        session.notify(unwrappedNotice(removed.kind));
       }
     },
     menu: { menu: 'diagram', group: 2, order: 10 },
@@ -206,9 +205,7 @@ export function insertWrapCommands(ctx: CommandContext) {
           : selectTouched(ok.content, ok.touched),
     }));
     if (isApplied && removed !== undefined) {
-      session.notify(
-        message('notice.unwrapped', { kind: kindNames[removed.kind] ?? removed.kind }),
-      );
+      session.notify(unwrappedNotice(removed.kind));
     }
   };
 
@@ -251,4 +248,16 @@ export function insertWrapCommands(ctx: CommandContext) {
   };
 
   return { insertSpecs, wrapSpecs, unwrapSpec };
+}
+
+/** The notice after unwrapping a block of this kind. */
+function unwrappedNotice(kind: BlockKind): EditorMessage {
+  // The new kinds have names in the screen language, so they have notices of their own.
+  if (kind === 'endless') {
+    return 'notice.unwrappedEndless';
+  }
+  if (kind === 'parallel') {
+    return 'notice.unwrappedParallel';
+  }
+  return message('notice.unwrapped', { kind: kindNames[kind] ?? kind });
 }

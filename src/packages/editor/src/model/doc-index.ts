@@ -1,7 +1,18 @@
 // Lookup tables over one document content, for selection, navigation and hit testing.
 // Every sequence has one owner with an id: a diagram (its body), a loop block (its body) or a
 // branch (its body), as in core. So a sequence is named by its owner's id alone.
-import type { Arm, Block, Branch, Case, Content, Diagram, Id, If, Seq } from '@ariadne-nsd/core';
+import type {
+  Arm,
+  Block,
+  Branch,
+  Case,
+  Content,
+  Diagram,
+  Id,
+  If,
+  Parallel,
+  Seq,
+} from '@ariadne-nsd/core';
 
 /** Where a block sits. */
 export type BlockPlace = {
@@ -18,16 +29,19 @@ export type SeqPlace = {
   readonly owner: Id;
   /** The control block holding this sequence; `null` for a diagram body. */
   readonly holder: Id | null;
-  /** The branch owning the sequence, when it is a branch body of an If or a Case. */
+  /** The branch owning the sequence, when it is a branch body of an If, Case or parallel block. */
   readonly branch: Id | null;
   readonly diagram: Id;
 };
 
-/** One branch of an If or a Case, in drawn order (columns from the left). */
+/** One branch of an If, a Case or a parallel block, in drawn order (columns from the left). */
 export type BranchPlace = {
   readonly branch: Branch | Arm;
-  readonly block: If | Case;
-  /** The column from the left: If true 0, false 1; Case arms, then the default. */
+  readonly block: If | Case | Parallel;
+  /**
+   * The column from the left: If true 0, false 1; Case arms, then the default; a parallel
+   * block's branches in order.
+   */
   readonly column: number;
   readonly isDefault: boolean;
 };
@@ -48,10 +62,13 @@ export type DocIndex = {
 /** One sequence directly inside a block, left to right. */
 export type ChildSeq = { readonly owner: Id; readonly seq: Seq; readonly branch: Id | null };
 
-/** The branches of an If or Case in drawn order. A Case's default comes last. */
-export function branchesOf(block: If | Case): ReadonlyArray<Branch | Arm> {
+/** The branches of an If, Case or parallel block in drawn order. A Case's default comes last. */
+export function branchesOf(block: If | Case | Parallel): ReadonlyArray<Branch | Arm> {
   if (block.kind === 'if') {
     return [block.yes, block.no];
+  }
+  if (block.kind === 'parallel') {
+    return block.branches;
   }
   return block.otherwise === null ? block.arms : [...block.arms, block.otherwise];
 }
@@ -60,10 +77,12 @@ export function branchesOf(block: If | Case): ReadonlyArray<Branch | Arm> {
 export function childSeqs(block: Block): ReadonlyArray<ChildSeq> {
   switch (block.kind) {
     case 'process':
+    case 'exit':
     case 'call':
       return [];
     case 'if':
     case 'case':
+    case 'parallel':
       return branchesOf(block).map((branch) => ({
         owner: branch.id,
         seq: branch.body,
@@ -72,13 +91,14 @@ export function childSeqs(block: Block): ReadonlyArray<ChildSeq> {
     case 'while':
     case 'doWhile':
     case 'for':
+    case 'endless':
       return [{ owner: block.id, seq: block.body, branch: null }];
   }
 }
 
-/** Whether a block has branches side by side (If, Case). */
-export function isBranching(block: Block): block is If | Case {
-  return block.kind === 'if' || block.kind === 'case';
+/** Whether a block has branches side by side (If, Case, parallel). */
+export function isBranching(block: Block): block is If | Case | Parallel {
+  return block.kind === 'if' || block.kind === 'case' || block.kind === 'parallel';
 }
 
 /** Whether a block holds other blocks. */

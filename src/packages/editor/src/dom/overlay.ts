@@ -81,10 +81,7 @@ export function selectionBox(
   }
   if (selection.kind === 'peek' && selection.branch !== undefined) {
     const label = screenIdIn(selection.path, selection.branch);
-    return (
-      layout.regions.find((region) => region.kind === 'branchLabel' && region.branchId === label)
-        ?.box ?? null
-    );
+    return branchBox(layout, isParallelBranch(index, selection.branch), label);
   }
   switch (selection.kind) {
     case 'blocks':
@@ -98,11 +95,7 @@ export function selectionBox(
       return boxes.length === 0 ? null : union(boxes);
     }
     case 'branchLabel':
-      return (
-        layout.regions.find(
-          (region) => region.kind === 'branchLabel' && region.branchId === selection.branch,
-        )?.box ?? null
-      );
+      return branchBox(layout, isParallelBranch(index, selection.branch), selection.branch);
     case 'missingDefault':
       return (
         layout.regions.find(
@@ -124,6 +117,24 @@ export function selectionBox(
   }
 }
 
+/**
+ * The box of a selected branch: an If or Case branch's label row, or a parallel block's whole
+ * branch cell, which has no label (sketch M84 B1).
+ */
+function branchBox(layout: LayoutResult, isParallel: boolean, branch: Id): Box | null {
+  if (isParallel) {
+    return layout.boxes.get(branch) ?? null;
+  }
+  return (
+    layout.regions.find((region) => region.kind === 'branchLabel' && region.branchId === branch)
+      ?.box ?? null
+  );
+}
+
+function isParallelBranch(index: DocIndex, branch: Id): boolean {
+  return index.branches.get(branch)?.block.kind === 'parallel';
+}
+
 /** How far the selection outline of a header like a title stands outside it (3px line + 1px). */
 const titleHeadOutset = 4;
 
@@ -142,6 +153,14 @@ export function fieldBox(layout: LayoutResult, field: EditField): Box | null {
       const node = layout.nodes.find((n) => n.kind !== 'missingDefault' && n.id === field.block);
       if (node === undefined || node.kind === 'missingDefault') {
         return null;
+      }
+      if (node.kind === 'parallel') {
+        return node.top;
+      }
+      if (node.kind === 'exit') {
+        // The text starts right of the wedge (UX XB1).
+        const wedge = geometry['size.exit-wedge'];
+        return { ...node.box, x: node.box.x + wedge, width: node.box.width - wedge };
       }
       return 'head' in node ? node.head : node.box;
     }

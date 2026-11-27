@@ -40,7 +40,16 @@ function texts(doc: Doc): string[] {
       case 'for':
         seq(block.body);
         return [block.text];
+      case 'endless':
+        seq(block.body);
+        return [];
+      case 'parallel':
+        for (const branch of block.branches) {
+          seq(branch.body);
+        }
+        return [block.text];
       case 'process':
+      case 'exit':
         return [block.text];
     }
   };
@@ -63,8 +72,12 @@ function shape(doc: Doc): unknown {
       case 'while':
       case 'doWhile':
       case 'for':
+      case 'endless':
         return [b.kind, seq(b.body)];
+      case 'parallel':
+        return ['parallel', b.branches.map((branch) => seq(branch.body))];
       case 'process':
+      case 'exit':
       case 'call':
         return b.kind;
     }

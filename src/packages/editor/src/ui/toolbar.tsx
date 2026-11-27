@@ -6,7 +6,13 @@
 import type { PointerEvent as ReactPointerEvent, ReactElement, ReactNode, RefObject } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { blockIconCommand, blockKindOfIcon, uiCommandIds, zoomCommandIds } from './command-ids';
+import {
+  blockIconCommand,
+  blockKindOfIcon,
+  canWrap,
+  uiCommandIds,
+  zoomCommandIds,
+} from './command-ids';
 import type { CommandView } from './command-view';
 import { byPlace, groupRuns } from './command-view';
 import type { DropdownItem } from './dropdown';
@@ -38,7 +44,7 @@ function BlockButton({
   const hasDragged = useRef(false);
 
   const name = text(`block.${kind}`);
-  const tip = text(kind === 'process' ? 'toolbar.processTip' : 'toolbar.blockTip', {
+  const tip = text(canWrap(kind) ? 'toolbar.blockTip' : 'toolbar.processTip', {
     name,
     after: keyText(
       commands,
