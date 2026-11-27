@@ -27,7 +27,7 @@ updated: 2026-11-18
 | Method | method | `kind: 'method'` | 호출 블록이 호출하는 다이어그램. 폭 전체에 걸친 낮은 아치 헤더를 단다. 헤더의 첫 여는 괄호 앞까지가 이름이고, 괄호 안이 받는 것이다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 본문 | body | `body` | 다이어그램 헤더 아래의 블록 목록. 반복 블록 안에서 반복되는 블록 목록도 본문이라고 한다 |
 | 문서 설정 | document settings | `settings` | 문서마다 정해 파일에 저장하고, 바꾸면 실행 취소의 대상인 것: 블록 텍스트의 언어, 그림 문구의 언어, 테마, 헤더 모양, 텍스트를 외곽선으로 저장. 결과 기호도 문서마다 하나이고 파일에 저장되지만 뷰 상태다 |
-| 그림 문구의 언어 | language of drawn labels | `settings.locale` | 편집기가 그림에 적는 고정 문구(If의 "참" · "거짓", "⋯ 블록 n개", "(이름 없음)")의 언어. 문서 설정이다. 새 문서는 만든 사람의 화면 언어로 시작한다. 메뉴 · 알림은 화면 언어를 따른다 → [[0041-drawing-locale-in-document\|ADR-0041]] |
+| 그림 문구의 언어 | language of drawn labels | `settings.locale` | 편집기가 그림에 적는 고정 문구(If의 "참" · "거짓", "⋯ 블록 n개", "(이름 없음)")의 언어. 문서 설정이다. 영어 · 한국어가 있고 독일어("ja" · "nein", default는 "sonst")는 미완성이다. 새 문서는 만든 사람의 화면 언어로 시작한다. 메뉴 · 알림은 화면 언어를 따른다 → [[0041-drawing-locale-in-document\|ADR-0041]] |
 
 ## 블록
 
@@ -36,12 +36,15 @@ updated: 2026-11-18
 | 블록 | block | `Block` | 다이어그램을 이루는 사각형 하나. 트리의 노드 |
 | 시퀀스 · 줄 | sequence | `Seq` | 위에서 아래로 차례로 실행되는 블록 목록. 다이어그램 · 분기 · 반복 블록의 본문이 모두 줄이다 |
 | 처리 블록 | process | `Process` | 한 단계의 명령 |
-| 제어 블록 | control block | — | 다른 블록을 안에 품는 블록 (If, Case, 반복) |
+| 제어 블록 | control block | — | 다른 블록을 안에 품는 블록 (If, Case, 반복. 미완성인 무한 반복 · 병렬 처리도) |
 | If 블록 | if-then-else | `If` | 조건에 따라 참 · 거짓 분기 가운데 하나를 실행 |
 | Case 블록 (다중 선택 블록) | switch/case | `Case` | 값에 따라 여러 분기 가운데 하나를 실행. 편집기로 만든 Case는 맨 끝에 default 분기가 있다. 코드에서 가져온 것은 없을 수도 있다 |
 | 전위 판정 반복 | while (pre-test loop) | `While` | 조건을 먼저 검사하는 반복 |
 | 후위 판정 반복 | do-while / repeat-until (post-test loop) | `DoWhile` | 본문을 먼저 실행하고 조건을 검사하는 반복 |
 | 횟수 반복 | for | `For` | 정해진 횟수만큼 반복 |
+| 무한 반복 | endless loop | `'endless'` | 조건 없이 본문을 끝없이 반복. 나가는 길은 탈출 블록뿐이다. 미완성 → [[ux-decisions#EL1. 무한 반복 블록\|EL1]] |
+| 탈출 블록 | exit / break / return | — | 반복이나 Method를 중간에 끝내는 블록. 텍스트 하나(`break`, `return x` …). 미완성 → [[ux-decisions#XB1. 탈출 블록\|XB1]] |
+| 병렬 처리 블록 | parallel | — | 분기 여럿을 동시에(또는 순서 없이) 실행하고, 모두 끝나면 다음으로 가는 블록. 분기 라벨이 없다. 미완성 → [[ux-decisions#PB1. 병렬 처리 블록\|PB1]] |
 | 호출 블록 | call | `Call` | Method를 호출하는 블록. 같은 문서의 Method나 이름만 적은 함수(Method가 없는 것)를 호출한다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 형태로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
 | 이름을 적는 호출 블록 | call by name | `named` (`CallTarget`) | 문서에 없는 것(라이브러리 함수, 아직 그리지 않은 서브루틴)을 이름 · 인자 · 결과를 적어 호출하는 호출 블록. 보통 호출 블록과 같은 모양이고, 펴 보거나 풀 수 없다 → [[01-requirements#^r-blk\|R-BLK-08]], [[02-interaction-rules#호출 블록]] |
 | 인자 · 결과 | arguments · result | `args` · `result` | 호출 블록마다 적는 텍스트. 이름은 적지 않고 Method의 헤더를 따른다 |

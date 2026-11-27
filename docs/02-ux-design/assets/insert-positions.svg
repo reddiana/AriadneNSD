@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="180" viewBox="0 0 560 180" font-family="IBM Plex Sans KR, sans-serif" font-size="12">
+<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#1d7a46"/></marker></defs>
+<rect width="560" height="180" fill="#ffffff"/>
+<rect x="20.5" y="20.5" width="200" height="32" fill="#edf0f5" stroke="#5b77ad"/><text x="30" y="41" font-family="IBM Plex Mono, monospace" fill="#151a22">합 ← 0</text>
+<rect x="20.5" y="52.5" width="200" height="32" fill="#edf0f5" stroke="#5b77ad"/><rect x="21.5" y="53.5" width="198" height="30" fill="none" stroke="#2c55c9" stroke-width="2"/><text x="30" y="73" font-family="IBM Plex Mono, monospace" fill="#151a22">i ← 0</text>
+<rect x="20.5" y="84.5" width="200" height="32" fill="#edf0f5" stroke="#5b77ad"/><text x="30" y="105" font-family="IBM Plex Mono, monospace" fill="#151a22">출력(합)</text>
+<line x1="232" y1="68" x2="232" y2="40" stroke="#1d7a46" stroke-width="1.5" marker-end="url(#ah)"/><text x="240" y="42" fill="#1d7a46">위에 (O · A · P)</text>
+<line x1="232" y1="70" x2="232" y2="100" stroke="#1d7a46" stroke-width="1.5" marker-end="url(#ah)"/><text x="240" y="104" fill="#1d7a46">아래에 (o · a · p)</text>
+<text x="20" y="145" fill="#5a6476">고른 블록 i ← 0 (파란 테두리)의 위 · 아래</text>
+<rect x="360.5" y="20.5" width="180" height="32" fill="#f6ebdc" stroke="#5b77ad"/><polyline points="360.5,20.5 450.5,52.5 540.5,20.5" fill="none" stroke="#5b77ad"/><text x="450" y="34" text-anchor="middle" font-family="IBM Plex Mono, monospace" fill="#151a22">x &gt; 0</text>
+<text x="364" y="49" font-size="10" fill="#5a6476">참</text><text x="536" y="49" font-size="10" fill="#5a6476" text-anchor="end">거짓</text>
+<rect x="360.5" y="52.5" width="90" height="32" fill="#edf0f5" stroke="#5b77ad"/><rect x="450.5" y="52.5" width="90" height="32" fill="#edf0f5" stroke="#5b77ad"/>
+<rect x="361.5" y="53.5" width="88" height="30" fill="none" stroke="#2c55c9" stroke-width="2"/><text x="370" y="73" font-family="IBM Plex Mono, monospace" fill="#151a22">양수</text><text x="460" y="73" font-family="IBM Plex Mono, monospace" fill="#151a22">음수</text>
+<line x1="405" y1="100" x2="350" y2="100" stroke="#1d7a46" stroke-width="1.5" marker-end="url(#ah)"/><text x="310" y="120" fill="#1d7a46">왼쪽에 (O)</text>
+<line x1="405" y1="100" x2="465" y2="100" stroke="#1d7a46" stroke-width="1.5" marker-end="url(#ah)"/><text x="430" y="120" fill="#1d7a46">오른쪽에 (o)</text>
+<text x="310" y="145" fill="#5a6476">고른 분기(참)의 왼쪽 · 오른쪽</text>
+<text x="310" y="163" fill="#5a6476">If에서 넣으면 Case로 바꿀지 묻는다</text>
+</svg>

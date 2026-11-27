@@ -315,6 +315,9 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 
 - **사용법과의 연결:** 사용법의 예제 항목이 알고리즘 갤러리로 링크하고, 갤러리의 머리에는 편집기 · 사용법 · GitHub · 다른 언어로 가는 링크가 있다.
 
+> [!info] 미완성: 독일어판
+> 사용법과 갤러리에 독일어판을 더하기로 했다(화면 언어 · 그림 문구와 함께 → [[01-requirements#^r-nfr|R-NFR-04]], [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]).
+
 ### 5.2 방문 수
 
 사이트의 모든 페이지는 Cloudflare Web Analytics로 방문 수를 셉니다. 쿠키를 쓰지 않고, 보내는 주소는 `origin` + `pathname`뿐이라 공유 링크의 fragment와 query는 나가지 않습니다. → [[0051-cloudflare-web-analytics|ADR-0051]]

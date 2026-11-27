@@ -52,7 +52,7 @@ type Settings = {
 };
 type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';  // 일반 텍스트, C, C++, Java, JavaScript · TypeScript, Python, Bash
 type ThemeId = string;   // 테마의 이름: 'default' · 'dark' · 'high-contrast' · 'print'. 지원하지 않는 이름은 기본 테마로 그리고 그대로 둔다 (ADR-0044)
-type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록)
+type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록). 'de'를 더할 예정(미완성 → R-NFR-04)
 ```
 
 - `TextKind`는 유니온이라 파일에 기록된 지원하지 않는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 다시 기록합니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 지원하지 않는 이름도 그대로 담습니다. `Locale`도 유니온이라, 지원하지 않는 언어가 기록된 파일은 연 사람의 화면 언어로 그리고 받은 값은 `TextKind`처럼 모델 밖에 두었다가 다시 기록합니다. `locale`이 없는 파일(ADR-0041 전에 저장한 파일)은 연 사람의 화면 언어로 엽니다.
@@ -126,12 +126,15 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 
 - 조건이나 반복의 텍스트는 모두 `text` 필드 하나에 둡니다. 텍스트 편집 명령이 블록 종류(`kind`)마다 다른 필드로 분기하지 않아도 됩니다.
 - **빈 블록**은 텍스트가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 분기, 새 반복의 본문은 빈 블록 하나로 채웁니다.
-- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 문서 설정 `locale`의 언어로 "참" · "거짓"을 표시합니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]. default 분기의 라벨은 편집하지 않으며 항상 "default"입니다.
+- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 문서 설정 `locale`의 언어로 "참" · "거짓"을 표시합니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]. default 분기의 라벨은 편집하지 않으며 항상 "default"입니다(독일어는 "sonst", 미완성 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]).
 - 분기(`Branch`)에도 id가 있습니다. If와 Case는 분기별로 접히므로, 뷰 상태가 분기를 id로 참조합니다.
 - **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 편집할 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 항상 default가 있고, default는 삭제할 수 없고, default가 아닌 분기는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 
-> [!info] 미완성: 탈출(Exit / Break / Return), 병렬 처리, 주석 블록
-> 모두 `P2`입니다. 넣을 때 이 판별 유니온(`kind`)에 멤버를 더합니다. 병렬 처리는 Case처럼 분기 여럿을 합성하고, 탈출과 주석은 처리 블록처럼 `text` 하나를 갖는 형태가 될 것입니다.
+> [!info] 미완성: 무한 반복, 탈출(Exit / Break / Return), 병렬 처리
+> 모두 `P1`이고([[01-requirements#^r-blk|R-BLK-15]], [[01-requirements#^r-blk|R-BLK-12]], [[01-requirements#^r-blk|R-BLK-13]]) 모양과 조작은 정했습니다([[02-interaction-rules#블록의 모양]]). 넣을 때 이 판별 유니온(`kind`)에 멤버를 셋 더합니다.
+> - **무한 반복** `kind: 'endless'`: 본문(`body: Seq`)만 가집니다. `text`가 없습니다 → [[ux-decisions#EL1. 무한 반복 블록|EL1]]
+> - **탈출**: 처리 블록처럼 `text` 하나만 가집니다(`break`, `return x` …). 안에 블록이 없어 감쌀 수 없습니다. 어디에 놓였는지 불변식으로 검사하지 않습니다 → [[ux-decisions#XB1. 탈출 블록|XB1]]
+> - **병렬 처리**: Case처럼 분기 여럿(라벨이 없는 분기, 둘 이상)을 합성하고, 생략할 수 있는 `text`(위 띠의 텍스트)를 가집니다 → [[ux-decisions#PB1. 병렬 처리 블록|PB1]]
 
 ### 1.5 호출 블록
 
@@ -292,11 +295,11 @@ type Target =                                        // 명령이 적용되는 �
 
 | 묶음 | 명령 | 규칙 |
 | --- | --- | --- |
-| 블록 | 삽입 (앞 · 뒤 · 빈 블록 위치) | [[02-interaction-rules#키보드로 이동하고 삽입하기]] |
+| 블록 | 삽입 (위 · 아래 · 빈 블록 위치) | [[02-interaction-rules#키보드로 이동하고 삽입하기]] |
 | | 삭제 | 줄이 비게 되면 빈 블록 하나를 남긴다 |
 | | 복사 · 잘라내기 | 복사(`copy`)는 내용을 바꾸지 않으므로 명령이 아니라, 범위의 블록(과 범위 안의 접기 영역)을 클립으로 반환하는 함수다. 잘라내기(`cut`)는 삭제의 결과에 그 클립을 더해 반환한다 |
 | | 텍스트 편집 | 블록의 `text`, 호출 블록의 `args` · `result`, 헤더, 분기 라벨, 접기 영역 이름. If의 분기 라벨을 비우면 `label`을 지워 기본 라벨("참" · "거짓")로 돌아간다. Case의 분기 라벨은 비울 수 없고(`emptyLabel`), default의 라벨은 편집하지 않는다(`defaultLabelFixed`) |
-| | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 위치를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 앞 · 뒤로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
+| | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 위치를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 위 · 아래로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
 | | 드래그 앤 드롭으로 이동 (`moveTo`) | 블록을 문서의 아무 블록 곁으로 옮긴다. id는 그대로이고 이웃 제어 블록 안으로도 들어간다. 빈 줄에는 빈 블록을 남기고, 놓은 곳이 빈 블록이면 그것을 바꾼다. 제자리에 놓으면 바뀌는 것이 없고, 자기 안쪽에 놓으면 `intoItself`로 거절한다 |
 | | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 호출하고, 없으면 그 이름의 `named`가 된다. 이름이 없으면 id가 같은 Method를 호출하고, 없으면 빈 이름의 `named`(불변식 6) |
 | | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
@@ -304,7 +307,7 @@ type Target =                                        // 명령이 적용되는 �
 | | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
 | | Method 풀어 넣고 지우기 (`inlineMethod`) | Method를 호출하는 `local` 호출 블록마다 문서 순서로 `inlineCall`을 하고(자리마다 `ownRegions`를 따로 묻는다) 그 Method 다이어그램을 지운다. undo 한 단계([[01-requirements#^r-edit\|R-EDIT-27]]). 다이어그램이 없으면 `notFound`, Method가 아니면 `wrongKind`, 그 Method 안에 자기를 호출하는 호출 블록이 있으면 `recursiveMethod`(서로 호출하는 Method는 거절하지 않음), 호출하는 호출 블록이 없으면 `noCallers`. `touched`는 자리마다 들어온 블록들(문서 순서)이고, 자리마다 바뀐 호출 블록 · 들어온 블록 · `renamed`의 목록(`sites`)도 반환한다(`editor`가 자리마다 뷰 상태를 옮기고 선택을 고르는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 위치에 그 Method를 호출하는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 반환한다. 안의 호출 블록은 호출하던 대상을 그대로 호출한다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
-| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 뒤에 있다("default 뒤에 삽입"은 default 바로 앞에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
+| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 오른쪽(배열의 맨 뒤)에 있다("default 오른쪽에 분기 삽입"은 default 바로 왼쪽에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 슬롯)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |

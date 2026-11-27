@@ -248,7 +248,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 드래그는 HTML5 드래그 앤 드롭(`dragstart`)이 아니라 포인터 이벤트(`pointerdown` → `pointermove` → `pointerup`)로 직접 만듭니다. 드롭 위치를 블록 사이 · 블록 위로 나눠 보이고, 드래그하는 동안 오버레이 레이어를 렌더링해야 하기 때문입니다. 터치에서도 같은 코드가 동작합니다.
 - 4px 넘게 움직여야 드래그로 판정합니다. 그 전에 떼면 클릭입니다.
-- **드롭 위치 계산:** 가리킨 블록 상자의 위쪽 8px과 아래쪽 8px 띠는 "그 블록의 앞 · 뒤 사이", 나머지는 "블록 위"입니다. 블록의 높이가 24px보다 작으면 위아래를 반씩 나눠 "사이"만 둡니다. 본문의 맨 앞 · 맨 끝은 `bodyEndOf`가 블록보다 먼저 판정합니다: 헤더 상자(`diagramHead`)의 아래쪽 8px(`betweenBand`)은 본문의 맨 앞, 다이어그램 본문 바로 아래 12px(`bodyEndBand`, 본문 폭, 다이어그램 사이의 간격보다 좁아 다음 다이어그램에 닿지 않음)은 본문의 맨 끝입니다. 그 자리는 첫 · 마지막 블록의 종류와 관계없이 그 블록의 앞 · 뒤 사이로 취급하고, 삽입 · 이동에 `outsideFolds`를 켜서 그 끝의 접기 영역에 들어가지 않게 합니다(코어의 `insertBlock` · `moveTo`, `diagramEnd` 삽입과 같음). 빈 본문은 빈 블록 위 규칙으로, 이미 그 끝에 있는 블록을 옮기면 드롭할 수 없고, 가로줄은 본문의 윗선 · 다이어그램의 아랫선에 그립니다 → [[ux-decisions#DE1. 본문의 맨 앞 · 맨 끝에 놓기|DE1]] 분기의 빈 블록(`∅`)은 전체가 "빈 블록 위"입니다.
+- **드롭 위치 계산:** 가리킨 블록 상자의 위쪽 8px과 아래쪽 8px 띠는 "그 블록의 위 · 아래 사이", 나머지는 "블록 위"입니다. 블록의 높이가 24px보다 작으면 위아래를 반씩 나눠 "사이"만 둡니다. 본문의 맨 앞 · 맨 끝은 `bodyEndOf`가 블록보다 먼저 판정합니다: 헤더 상자(`diagramHead`)의 아래쪽 8px(`betweenBand`)은 본문의 맨 앞, 다이어그램 본문 바로 아래 12px(`bodyEndBand`, 본문 폭, 다이어그램 사이의 간격보다 좁아 다음 다이어그램에 닿지 않음)은 본문의 맨 끝입니다. 그 자리는 첫 · 마지막 블록의 종류와 관계없이 그 블록의 앞 · 뒤 사이로 취급하고, 삽입 · 이동에 `outsideFolds`를 켜서 그 끝의 접기 영역에 들어가지 않게 합니다(코어의 `insertBlock` · `moveTo`, `diagramEnd` 삽입과 같음). 빈 본문은 빈 블록 위 규칙으로, 이미 그 끝에 있는 블록을 옮기면 드롭할 수 없고, 가로줄은 본문의 윗선 · 다이어그램의 아랫선에 그립니다 → [[ux-decisions#DE1. 본문의 맨 앞 · 맨 끝에 놓기|DE1]] 분기의 빈 블록(`∅`)은 전체가 "빈 블록 위"입니다.
 - 드래그하는 동안 오버레이 레이어에 놓을 결과를 렌더링합니다: 사이면 가로줄 + 양 끝 눈금, 블록 위면 그 블록의 테두리 + 커서 곁의 텍스트("If로 감싸기"). 드롭할 수 없으면 아무것도 렌더링하지 않고 커서를 금지 모양으로 바꿉니다.
 - 놓으면 `runDrop`이 이동 · 삽입 · 감싸기 편집 명령 가운데 하나를 세션의 `commit`으로 실행합니다(명령 목록의 `run`과 `when`을 거치지 않습니다. 대상은 드래그 중에 검사합니다). 드래그 자체는 명령이 아니라서, 놓기 전에 `Esc`를 누르면 아무 일도 없습니다.
 - 캔버스 가장자리 32px 안으로 드래그하면 그쪽으로 자동 스크롤합니다.
@@ -308,7 +308,7 @@ type CommandSpec = {
 };
 type MenuPlace = { menu: MenuId; group: number; order: number; submenu?: SubmenuId };  // 같은 group이 가로줄 사이의 한 묶음
 type MenuId = 'file' | 'edit' | 'diagram' | 'view' | 'help';
-type SubmenuId = 'recent' | 'export' | 'insert' | 'insertBefore' | 'wrap';  // 최근 파일 ▸ · 내보내기 ▸ · 삽입 ▸ · 앞에 삽입 ▸ · 감싸기 ▸
+type SubmenuId = 'recent' | 'export' | 'insert' | 'insertBefore' | 'wrap';  // 최근 파일 ▸ · 내보내기 ▸ · 아래에 삽입 ▸ · 위에 삽입 ▸ · 감싸기 ▸
 type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
 ```
 
@@ -340,11 +340,12 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | 메뉴 | 묶음 (가로줄로 나눔) |
 | --- | --- |
 | 파일 | 새로 · 열기… · 붙여넣은 JSON으로 열기…(웹 → [[06-web#3.2 붙여넣은 문서]]) · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… · 공유 링크 복사(웹 → [[06-web#3. 공유 URL과 보기 모드]]) ／ 환경 설정… |
-| 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 · 앞에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 삽입 ▸ (처리 · If · Case · While · For · Do-While · 호출…) · 앞에 삽입 ▸ ／ 감싸기 ▸ · 풀기 ／ 분기 삽입 · 앞에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
+| 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 위에 붙여넣기 · 아래에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
+| 다이어그램 | 위에 삽입 ▸ · 아래에 삽입 ▸ (둘 다 처리 · If · Case · While · For · Do-While · 호출…) ／ 감싸기 ▸ · 풀기 ／ 왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · 알고리즘 갤러리 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
+- 짝이 되는 항목은 이름의 방향대로 놓습니다: "위에 …"가 "아래에 …"의 위, "왼쪽에 …"가 "오른쪽에 …"의 위입니다(메뉴 바, 하위 메뉴, 컨텍스트 메뉴). 명령 id(`block.insert.*` · `block.insertBefore.*` · `edit.paste` · `edit.pasteBefore` · `branch.insert` · `branch.insertBefore`)는 그대로입니다 → [[ux-decisions#NM1. 위에 · 아래에, 왼쪽에 · 오른쪽에|NM1]], [[ux-decisions#MO1. 메뉴에서 짝의 차례|MO1]]
 - "알고리즘 갤러리"(`help.gallery`)는 사이트의 갤러리를 새 탭으로 엽니다. 화면 언어의 것(셸이 준 갤러리 주소, 웹은 `gallery/` · `gallery/ko/`)입니다 → [[06-web#5.1 알고리즘 갤러리]], [[ux-decisions#GL2. 갤러리로 가는 링크|GL2]]
 - "AI에게 그려 달라고 하기"(`help.askAi`)는 사용법의 "AI에게 그려 달라고 하기" 꼭지(`#ai`)를 새 탭으로 엽니다. 사용법처럼 화면 언어의 것(셸이 준 사용법 주소 + `#ai`)입니다. AI가 화면을 조작하려 할 때 사용자가 할 일(AI에게 공유 링크를 청함)을 찾게 합니다 → [[ux-decisions#LG7. 화면을 조작하는 AI에게도 안내가 보이게|LG7]]
 - "Event 헤더" · "Method 헤더"는 선택한 것에 따라 이름이 바뀝니다: 헤더 없는 다이어그램에서는 "… 헤더 달기", 헤더에서는 "…로 바꾸기"입니다. 헤더가 있는 다이어그램의 블록에서는 흐리게 보입니다(헤더를 선택하라고 알림) → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
@@ -484,7 +485,7 @@ type ChromeState = {
   pendingKeys: string | null;                    // 둘째 키를 기다리는 첫 키
   mode: 'normal' | 'editing' | 'visual';
   isKeyHintShown: boolean;                       // 첫 키 뒤 0.4초가 지났고 설정이 켜져 있다 (K1)
-  keyHintTitle: Message | null;                  // 키 힌트의 제목 ("뒤에 삽입")
+  keyHintTitle: Message | null;                  // 키 힌트의 제목 ("아래에 삽입")
   zoom: number;
   dialog: Dialog | null;                         // 셸이 청한 모달(confirm · prompt). 주변 UI가 모달로 보인다
   picker: Picker | null;                         // 고르는 목록(호출할 Method). 주변 UI가 컨텍스트 메뉴처럼 보인다
@@ -679,6 +680,9 @@ type SettingSpec = {
 | `document.textOutlines` (텍스트를 외곽선으로 저장) | `document` | 켬 · 끔 | 끔 |
 | `document.resultSymbol` (결과 기호) | `document` | `core`의 `resultSymbols` (`←` · `=`) | `←` |
 | `document.theme` (테마) | `document` | `core`의 `themeIds` | `default` |
+
+> [!info] 미완성: 독일어
+> `ui.locale`과 `document.locale`에 `de`(독일어)를 더하기로 했습니다([[01-requirements#^r-nfr|R-NFR-04]]). 그림 문구는 If의 분기 라벨 `ja` · `nein`, Case의 default `sonst`입니다. 사용법 · 갤러리도 독일어판을 둡니다 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]
 
 ## 미결정 사항
 

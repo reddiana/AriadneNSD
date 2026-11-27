@@ -145,7 +145,7 @@ flowchart LR
 - **If의 조건 칸:** 높이는 조건 텍스트 + 2·`space.pad-y` + `size.if-label`(분기 라벨 줄)이고, 최소 폭은 `tw` + 2·`space.pad-x` + `size.if-head-extra`입니다. 참 · 거짓 분기마다 최소 폭은 Case처럼 max(그 분기 줄의 폭, 분기 라벨의 폭 + `size.label-room`)입니다. 라벨이 긴 분기도 라벨이 칸 안에 들어갑니다. 빗금의 꼭짓점은 참 분기와 거짓 분기의 경계 위에 있습니다. 조건 텍스트는 꼭짓점 위 가운데에 두되 블록 밖으로 나가지 않게 밉니다.
 - **조건 텍스트와 빗금:** 조건 칸을 텍스트에 맞춰 넓히거나 높이지 않습니다. 조건이 길면 빗금이 텍스트에 닿을 수 있고, 렌더링하는 단계에서 텍스트 뒤에 조건 칸 배경색의 테두리(`size.text-halo`)를 깔아 가립니다. 레이아웃의 계산에는 영향이 없습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]], [[04-visual-design#5. 기하와 해부도|배치 규칙]]
 - **Case의 조건 칸:** 높이는 조건 텍스트 + 2·`space.pad-y` + `size.case-label`이고, 최소 폭은 `tw` + 2·`space.pad-x` + `size.case-head-extra`입니다. 긴 빗금은 왼쪽 위에서 default 분기의 왼쪽 아래로, 짧은 빗금은 오른쪽 위에서 같은 점으로 갑니다. 분기 사이의 세로선은 긴 빗금에서 내려옵니다. 분기마다 최소 폭은 max(그 분기 줄의 폭, 분기 라벨의 폭 + `size.label-room`)입니다.
-- **분기 라벨:** If는 "참"을 왼쪽 아래 구석에, "거짓"을 오른쪽 아래 구석에 둡니다. Case는 분기 라벨을 칸의 왼쪽에, default의 라벨만 오른쪽에 붙입니다([[ux-decisions#Q25. Case의 default 이름의 자리|Q25]]). 구석과의 거리는 `size.label-inset`(default도 같음)입니다. 사용자가 라벨을 입력하지 않은 분기는 렌더링 결과의 고정 문구로 표시합니다: If는 "참" · "거짓"(영어 `true` · `false`), Case의 default는 한국어 · 영어 모두 `default`입니다.
+- **분기 라벨:** If는 "참"을 왼쪽 아래 구석에, "거짓"을 오른쪽 아래 구석에 둡니다. Case는 분기 라벨을 칸의 왼쪽에, default의 라벨만 오른쪽에 붙입니다([[ux-decisions#Q25. Case의 default 이름의 자리|Q25]]). 구석과의 거리는 `size.label-inset`(default도 같음)입니다. 사용자가 라벨을 입력하지 않은 분기는 렌더링 결과의 고정 문구로 표시합니다: If는 "참" · "거짓"(영어 `true` · `false`), Case의 default는 한국어 · 영어 모두 `default`입니다. 독일어(`de`, 미완성)는 If가 `ja` · `nein`, default가 `sonst`입니다 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]
 - **이름 없는 호출 블록**(호출하는 Method의 이름이 비어 있음)은 이름 위치에 고정 문구 "(이름 없음)"(영어 `(no name)`)을 표시합니다.
 - **분기 라벨의 클릭 영역**은 그 칸 위의 라벨 줄입니다. 높이는 If가 `size.if-label`(16px), Case가 `size.case-label`(28px)입니다(프로토타입은 둘 다 20px).
 - **빈 분기:** If · Case의 분기에 빈 블록 하나만 있으면 그 블록 가운데에 `∅`를 렌더링합니다. 크기 측정에는 영향이 없습니다(빈 블록의 크기 그대로) → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
@@ -153,6 +153,12 @@ flowchart LR
 
 - **default가 없는 Case**(코드에서 가져온 것, `otherwise: null`)는 **빈 default 칸을 렌더링해 둡니다.** 모델에는 분기가 없지만, 레이아웃은 default 칸이 빈 블록 하나인 것처럼 측정하고 놓으며 칸 가운데에 `∅`를 렌더링합니다. 그래서 보통 Case와 모양이 같습니다. 이 칸은 `LayoutResult`에 "없는 default"로 표시해 `editor`가 구분할 수 있게 합니다 → [[ux-decisions#CD1. default가 없는 Case|CD1]]
 - **default만 있는 Case**(분기 없음)는 default 칸이 블록 전체입니다. 긴 빗금은 길이가 없어 렌더링하지 않고, **짧은 빗금 하나**(오른쪽 위에서 왼쪽 아래로)만 남습니다 → [[ux-decisions#CD2. default만 있는 Case|CD2]]
+
+> [!info] 미완성: 무한 반복 · 탈출 · 병렬 처리의 크기
+> 모양은 정했고([[04-visual-design#원칙 2. 뜻은 모양이 나르고, 색은 거들기만 한다|모양 표]]) 레이아웃은 아직 없습니다.
+> - **무한 반복:** 본문은 `size.loop-strip`(22px)만큼 오른쪽, 같은 두께의 위 · 아래 띠 사이에 놓입니다. 본문의 오른쪽은 바깥 틀에 붙습니다. 텍스트가 없습니다 → [[ux-decisions#EL1. 무한 반복 블록|EL1]]
+> - **탈출:** 처리 블록의 크기에 왼쪽 쐐기의 폭 14px를 더합니다. 텍스트는 쐐기 오른쪽에서 시작합니다 → [[ux-decisions#XB1. 탈출 블록|XB1]]
+> - **병렬 처리:** 분기를 Case처럼 가로로 놓습니다. 위 띠는 텍스트가 있으면 조건 칸의 높이, 없으면 18px이고, 아래 띠가 있습니다 → [[ux-decisions#PB1. 병렬 처리 블록|PB1]]
 
 ### 1.5 헤더
 
