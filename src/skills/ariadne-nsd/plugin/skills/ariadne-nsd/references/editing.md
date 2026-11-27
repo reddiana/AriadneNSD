@@ -43,7 +43,7 @@ After: `b2` moved into the new Method `d2`, `b5` deleted, two call blocks `b7` a
 
 Things worth pointing out, with the block's text so the user finds it:
 
-- A `while` whose body never changes what its condition tests (an endless loop), or a `for` that should be a `while` (it does not count).
+- A `while` whose body never changes what its condition tests (an endless loop), an `endless` loop with no `exit` in it where the description says it ends, or a `for` that should be a `while` (it does not count).
 - An If whose two branches hold the same steps, or whose condition is always true or false where it stands.
 - An empty branch that the description says should do something, or an If with an empty `no` that would read better as a guard.
 - A Case without `otherwise` where a value can fall through.

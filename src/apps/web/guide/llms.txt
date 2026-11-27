@@ -56,12 +56,18 @@ A body is an array of blocks, drawn top to bottom. The block kinds are {{blockKi
 | While (test first) | `{"id":"b4","kind":"while","text":"i < n","body":[...]}` |
 | Do-While (test last) | `{"id":"b5","kind":"doWhile","text":"while swapped","body":[...]}` |
 | For | `{"id":"b6","kind":"for","text":"for i = 0 to n - 1","body":[...]}` |
-| Call | `{"id":"b7","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
+| Endless loop (no condition) | `{"id":"b7","kind":"endless","body":[...]}` |
+| Exit (break, continue, return) | `{"id":"b8","kind":"exit","text":"break"}` |
+| Parallel (branches run at the same time) | `{"id":"b9","kind":"parallel","text":"","branches":[{"id":"r5","body":[...]},{"id":"r6","body":[...]}]}` |
+| Call | `{"id":"b10","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
 
 - `text` is what is written in the block. Use `\n` for more lines. Write it in the user's language or as code.
 - A loop that counts (`i = 0 to n - 2`) is a `for` block, not a `while`. Use `while` for a loop that tests a condition.
 - If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
 - Case: every arm needs `label`. `otherwise` (the default branch) is optional; leave it out if there is none.
+- Endless loop: a loop with **no `text`**, for `while (true)` or `loop { }`. The way out is an exit block in its body.
+- Exit: leaves a loop or the function early. Its `text` says how: `break`, `continue`, `return x`. It usually stands in a branch of an If (`if found` → exit `break`). It holds no blocks.
+- Parallel: steps that run at the same time and all end before the next block. Its branches have **no `label`**; give two or more. `text` (optional, `""` for none) is written in the top band, for example `fork` or `for each worker`.
 - Call: a call block has **no `text`**. The name it calls goes in `target`, the arguments in `args` (a string). A call block with `text` does not open. `result` receives the return value (`""` for none), drawn as `result ← name(args)`. To call a Method in the same document, use `"target":{"kind":"local","diagram":"d2"}` where `d2` has a `method` head; a Method may call itself (recursion).
 
 ## Rules (a link that breaks one does not open)

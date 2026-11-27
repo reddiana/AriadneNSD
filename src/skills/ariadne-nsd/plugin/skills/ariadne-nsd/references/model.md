@@ -18,6 +18,10 @@ Keys go in this order (the app writes them so; it reads any order). "May be left
 | Branch (`yes`, `no`, `otherwise`) | `id`, `label`, `body`, `folds` | `label` when it is the default ("True", "False", "default"), `folds` when empty |
 | Case arm (in `arms`) | `id`, `label`, `body`, `folds` | `folds` when empty |
 | While, Do-While, For | `id`, `kind` (`"while"`, `"doWhile"`, `"for"`), `text`, `body`, `folds` | `folds` when empty |
+| Endless loop | `id`, `kind: "endless"`, `body`, `folds` (no `text`) | `folds` when empty |
+| Exit | `id`, `kind: "exit"`, `text` | nothing |
+| Parallel | `id`, `kind: "parallel"`, `text`, `branches` (two or more) | nothing (`"text": ""` for none) |
+| Parallel branch (in `branches`) | `id`, `body`, `folds` (no `label`) | `folds` when empty |
 | Call | `id`, `kind: "call"`, `target`, `args`, `result`, `siteFolds` | `siteFolds` when empty (leave it to the app) |
 | `target` | `{"kind":"local","diagram":"d2"}` (a Method in this document) or `{"kind":"named","name":"print"}` (anything else) | nothing |
 | Fold region (in `folds`) | `id`, `first`, `last`, `name` | `name` when it has none |

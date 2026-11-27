@@ -82,7 +82,7 @@ The outline of a model (full field list and more examples: [references/model.md]
 
 ### Blocks
 
-A body is an array of blocks, drawn top to bottom. The block kinds are `process`, `if`, `case`, `while`, `doWhile`, `for`, `call`.
+A body is an array of blocks, drawn top to bottom. The block kinds are `process`, `if`, `case`, `while`, `doWhile`, `for`, `endless`, `exit`, `parallel`, `call`.
 
 | Block | JSON |
 | --- | --- |
@@ -92,12 +92,18 @@ A body is an array of blocks, drawn top to bottom. The block kinds are `process`
 | While (test first) | `{"id":"b4","kind":"while","text":"i < n","body":[...]}` |
 | Do-While (test last) | `{"id":"b5","kind":"doWhile","text":"while swapped","body":[...]}` |
 | For | `{"id":"b6","kind":"for","text":"for i = 0 to n - 1","body":[...]}` |
-| Call | `{"id":"b7","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
+| Endless loop (no condition) | `{"id":"b7","kind":"endless","body":[...]}` |
+| Exit (break, continue, return) | `{"id":"b8","kind":"exit","text":"break"}` |
+| Parallel (branches run at the same time) | `{"id":"b9","kind":"parallel","text":"","branches":[{"id":"r5","body":[...]},{"id":"r6","body":[...]}]}` |
+| Call | `{"id":"b10","kind":"call","target":{"kind":"named","name":"swap"},"args":"a[i], a[j]","result":""}` |
 
 - `text` is what is written in the block: one statement per process block. Use `\n` only to break one long statement or condition into lines.
 - A loop that counts (`i = 0 to n - 2`) is a `for` block; `while` is for a loop that tests a condition.
 - If: both `yes` and `no` are required. A branch may have `"label"` to replace "True"/"False".
 - Case: every arm needs `label`. `otherwise` (the default branch) is optional.
+- Endless loop: a loop with **no `text`**, for `while (true)` / `for (;;)` / `loop { }`. The way out is an exit block in its body.
+- Exit: leaves a loop or the function early; `text` says how (`break`, `continue`, `return x`). It holds no blocks and usually stands in a branch of an If.
+- Parallel: steps that run at the same time and all end before the next block. Its branches have **no `label`**; give two or more. `text` is written in the top band (`""` for none).
 - Call: a call block has **no `text`**. The callee goes in `target`, the arguments in `args` (a string), the variable that receives the result in `result` (`""` for none); it is drawn as `result ← name(args)`. `"target":{"kind":"local","diagram":"d2"}` calls the Method of diagram `d2` in the same document (a Method may call itself); `"target":{"kind":"named","name":"print"}` calls anything else.
 
 ### Rules (`check` refuses a model that breaks one)
