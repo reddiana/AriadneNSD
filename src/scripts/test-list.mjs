@@ -144,8 +144,12 @@ const areas = [
   {
     name: '문서와 코드의 정합성',
     about:
-      '코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]',
-    paths: ['packages/core/node/docs-agree.test.ts', 'packages/editor/src/docs-agree.test.ts'],
+      '코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리, 조작 규칙의 공통 규칙에 있는 표(칸마다 편집기의 동작과 대조). 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]',
+    paths: [
+      'packages/core/node/docs-agree.test.ts',
+      'packages/editor/src/docs-agree.test.ts',
+      'packages/editor/src/rules/',
+    ],
   },
 ];
 

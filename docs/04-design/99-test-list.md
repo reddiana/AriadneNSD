@@ -24,8 +24,8 @@ status: 생성됨
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
-| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1105 | 5 | 1484 |
+| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 33 | - | 33 |
+| 합계 | 87 | 287 | 1127 | 5 | 1506 |
 
 ## 읽는 법
 
@@ -2749,7 +2749,7 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ## 9. 문서와 코드의 정합성
 
-코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리. 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 2개, 테스트 11개.
+코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리, 조작 규칙의 공통 규칙에 있는 표(칸마다 편집기의 동작과 대조). 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 8개, 테스트 33개.
 
 ### [단위] `packages/core/node/docs-agree.test.ts`
 
@@ -2779,6 +2779,82 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 | T-1170 | 편집 레이어의 색이 밝은 종이 · 어두운 종이 모두 3.4절의 표와 같다 | [[ux-decisions\|UX TM4]] |
 
 ^t-packages-editor-src-docs-agree-test-ts
+
+### [단위] `packages/editor/src/rules/table-blocks.test.ts`
+
+The table of block kinds of the interaction rules ("블록 종류"), compared with the editor cell by cell. Vitest · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1706 | the table of block kinds has the rows and columns that are tested | - |
+| T-1707 | a cell of the block kinds: $name | - |
+
+^t-packages-editor-src-rules-table-blocks-test-ts
+
+### [단위] `packages/editor/src/rules/table-containers.test.ts`
+
+The tables of elements and containers of the interaction rules ("요소와 컨테이너"), compared with the editor. Vitest · 테스트 5개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1716 | the table of containers has the rows and columns that are tested | - |
+| T-1717 | a cell of the containers: $name | - |
+| T-1718 | the table of container rules has the rules that are tested | - |
+| T-1719 | a rule of the containers: $row | - |
+| T-1720 | folding a region that is not drawn says which region it folded | - |
+
+^t-packages-editor-src-rules-table-containers-test-ts
+
+### [단위] `packages/editor/src/rules/table-fields.test.ts`
+
+The table of text fields of the interaction rules ("텍스트 필드"), compared with the editor cell by cell. Vitest · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1708 | the table of text fields has the rows and columns that are tested | - |
+| T-1709 | a cell of the text fields: $name | - |
+
+^t-packages-editor-src-rules-table-fields-test-ts
+
+### [단위] `packages/editor/src/rules/table-matrix.test.ts`
+
+The command × target matrix of the interaction rules ("명령 × 대상 매트릭스"), compared with the editor cell by cell. Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1700 | the matrix has the rows and columns that are tested | - |
+| T-1701 | a cell of the matrix: $name | - |
+| T-1702 | a cell of the matrix that BL3 or BL4 changes: $name | - |
+
+^t-packages-editor-src-rules-table-matrix-test-ts
+
+### [단위] `packages/editor/src/rules/table-positions.test.ts`
+
+The table of insert positions of the interaction rules ("삽입 위치"), compared with the editor cell by cell. Vitest · 테스트 3개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1703 | the table of insert positions has the rows and columns that are tested | - |
+| T-1704 | a cell of the insert positions: $name | - |
+| T-1705 | a cell of the insert positions that BL3 changes: $name | - |
+
+^t-packages-editor-src-rules-table-positions-test-ts
+
+### [단위] `packages/editor/src/rules/table-targets.test.ts`
+
+The two tables of command targets of the interaction rules ("명령마다 받는 대상"), compared with the editor. Vitest · 테스트 7개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1710 | table 1 of the command targets has the rows that are tested | - |
+| T-1711 | a row of table 1: $name | - |
+| T-1712 | table 2 of the command targets has the rows and columns that are tested | - |
+| T-1713 | a cell of table 2: $name | - |
+| T-1714 | extract and fold.make take block ranges today (BL4 adds the branch label) | - |
+| T-1715 | a cell of table 2 that BL4 changes: $name | - |
+| T-1721 | remove region on the empty default cell goes up to the region around | - |
+
+^t-packages-editor-src-rules-table-targets-test-ts
 
 ## 10. 테스트가 없는 ID
 
