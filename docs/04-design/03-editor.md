@@ -352,7 +352,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | 도움말 | 사용법 · 알고리즘 갤러리 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
 - 짝이 되는 항목은 이름의 방향대로 놓습니다: "위에 …"가 "아래에 …"의 위, "왼쪽에 …"가 "오른쪽에 …"의 위입니다(메뉴 바, 하위 메뉴, 컨텍스트 메뉴). 명령 id(`block.insert.*` · `block.insertBefore.*` · `edit.paste` · `edit.pasteBefore` · `branch.insert` · `branch.insertBefore`)는 그대로입니다 → [[ux-decisions#NM1. 위에 · 아래에, 왼쪽에 · 오른쪽에|NM1]], [[ux-decisions#MO1. 메뉴에서 짝의 차례|MO1]]
-- "알고리즘 갤러리"(`help.gallery`)는 사이트의 갤러리를 새 탭으로 엽니다. 화면 언어의 것(셸이 준 갤러리 주소, 웹은 `gallery/` · `gallery/ko/`)입니다 → [[06-web#5.1 알고리즘 갤러리]], [[ux-decisions#GL2. 갤러리로 가는 링크|GL2]]
+- "알고리즘 갤러리"(`help.gallery`)는 사이트의 갤러리를 새 탭으로 엽니다. 화면 언어의 것(셸이 준 갤러리 주소, 웹은 `gallery/` · `gallery/ko/` · `gallery/de/`)입니다 → [[06-web#5.1 알고리즘 갤러리]], [[ux-decisions#GL2. 갤러리로 가는 링크|GL2]]
 - "AI에게 그려 달라고 하기"(`help.askAi`)는 사용법의 "AI에게 그려 달라고 하기" 꼭지(`#ai`)를 새 탭으로 엽니다. 사용법처럼 화면 언어의 것(셸이 준 사용법 주소 + `#ai`)입니다. AI가 화면을 조작하려 할 때 사용자가 할 일(AI에게 공유 링크를 청함)을 찾게 합니다 → [[ux-decisions#LG7. 화면을 조작하는 AI에게도 안내가 보이게|LG7]]
 - "Event 헤더" · "Method 헤더"는 선택한 것에 따라 이름이 바뀝니다: 헤더 없는 다이어그램에서는 "… 헤더 달기", 헤더에서는 "…로 바꾸기"입니다. 헤더가 있는 다이어그램의 블록에서는 흐리게 보입니다(헤더를 선택하라고 알림) → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
 - "새 Method로 빼기"(`diagram.extractMethod`)는 블록이나 접기 영역을 선택했을 때 됩니다. 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트에서는 묻지 않고 뺍니다. 키 `m`으로 실행하면(인자 `fromKey`) 헤더 없는 다이어그램에서만 고르는 목록(`ChromeState.picker`, 6장) "1 새 Method로 빼기 · 2 Method 헤더 달기"를 먼저 엽니다 → [[ux-decisions#XM3. 헤더 없는 다이어그램에서 블록에 m은 고르는 목록|XM3]]
@@ -402,7 +402,7 @@ function createEditor(options: {
   appearance: Appearance;                        // 화면 밝기와 UI 글꼴 (호스트에서 받음)
   doc: OpenedDocument;                           // 처음 보일 문서
   fonts: SaveFonts;                              // 저장 파일의 서브셋 글꼴을 만들 것. 처음 저장할 때 한 번 호출한다
-  locale?: Locale;                               // 환경 설정에 화면 언어가 없을 때의 언어. 없으면 영어. 새 문서의 그림 문구의 언어도 화면 언어다
+  locale?: Locale;                               // 환경 설정에 화면 언어가 없을 때의 언어(웹은 브라우저 언어). 없으면 영어. 새 문서의 그림 문구의 언어도 화면 언어다
   screenFontUrl?: string;                        // 화면에 쓸 블록 글꼴(woff2)의 주소
   clipboard?: ClipboardPort;                     // 없으면 시스템 클립보드(막히면 메모리)
   pastedDocument?: PastedDocumentPort;           // 붙여넣은 텍스트가 AriadneNSD 문서이면 새 문서로 여는 셸 (R-WEB-11 → 3.3). 없으면 텍스트는 항상 블록
@@ -676,19 +676,20 @@ type SettingSpec = {
 
 | id | 범위 | 값 | 기본값 |
 | --- | --- | --- | --- |
-| `ui.locale` (화면 언어) | `user` | `en` · `ko` · `de` | `en` |
+| `ui.locale` (화면 언어) | `user` | `core`의 `locales` (`en` · `ko` · `de`) | 지금 쓰는 언어(아래) |
 | `editor.keyHint` (키 힌트) | `user` | 켬 · 끔 | 켬 |
 | `editor.focusOutline` (캔버스 포커스 테두리 항상 보이기) | `user` | 켬 · 끔 | 끔 |
 | `file.autoSave` (자동 저장) | `user` | 켬 · 끔 | 켬 |
 | `document.textKind` (블록 텍스트의 언어) | `document` | `core`의 `textKinds` | `plain` |
-| `document.locale` (그림 문구의 언어) | `document` | `en` · `ko` · `de` | `en` |
+| `document.locale` (그림 문구의 언어) | `document` | `core`의 `locales` (`en` · `ko` · `de`) | 화면 언어 |
 | `document.headStyle` (헤더 모양) | `document` | `title` · `shape` | `title` |
 | `document.textOutlines` (텍스트를 외곽선으로 저장) | `document` | 켬 · 끔 | 끔 |
 | `document.resultSymbol` (결과 기호) | `document` | `core`의 `resultSymbols` (`←` · `=`) | `←` |
 | `document.theme` (테마) | `document` | `core`의 `themeIds` | `default` |
 
-> [!info] 미완성: 독일어
-> `ui.locale`과 `document.locale`에 `de`(독일어)를 더하기로 했습니다([[01-requirements#^r-nfr|R-NFR-04]]). 그림 문구는 If의 분기 라벨 `ja` · `nein`, Case의 default `sonst`입니다. 사용법 · 갤러리도 독일어판을 둡니다 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]
+- **화면 언어**는 `core`의 `screenLocale` 하나로 정합니다: 환경 설정에서 고른 값(`ui.locale`)이 `locales`에 있으면 그것, 없으면 셸이 준 언어(웹은 브라우저 언어 `navigator.language`의 BCP 47 앞부분이 `locales`에 있으면 그것, `de-AT`는 `de`), 그것도 아니면 영어입니다. 셸과 편집기가 같은 함수를 써서 늘 같은 언어를 보입니다. 언어의 목록은 `core`의 `locales` 한 곳에만 있습니다 → [[01-requirements#^r-nfr|R-NFR-04]]
+- 환경 설정 창의 "화면 언어"는 고르지 않았을 때 지금 쓰는 언어를 보입니다(`specsWithScreenLocale`). 설정 명세 상수(`settingSpecs`)의 기본값은 아무것도 모를 때의 영어입니다. 그래서 한국어 브라우저에서는 "한국어"가 보이고, 영어를 고르면 바뀐 것으로 저장됩니다.
+- 독일어(`de`)의 그림 문구는 If의 분기 라벨 `ja` · `nein`, Case의 default `sonst`입니다 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]. 화면의 용어는 [[ux-decisions#DL2. 독일어 화면의 용어|DL2]]
 
 ## 미결정 사항
 

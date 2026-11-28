@@ -10,6 +10,9 @@ superseded-by:
 
 # DR-0020: 사용법은 둘러보기와 찾아보기의 한 페이지, 그림은 앱에서 찍고 키는 나란히, 영어와 한국어
 
+> [!NOTE] 이후 변경
+> - 2026-11-28: 독일어판 `/manual/de/`를 더했다(사용법 · 동영상 · 단축키 표). 도움말 › 사용법은 화면 언어의 판을 연다 → [[01-requirements#^r-nfr|R-NFR-04]], [[06-web#5.1 알고리즘 갤러리]]
+
 ## 배경
 
 MVP의 도움말 › 사용법은 `/manual/`을 새 탭으로 여는데, 그 주소에 아직 아무것도 없다. 사용법은 웹 베타의 문턱이다([[dr-0018-release-stages|DR-0018]]). 요구사항은 "사용법을 한 페이지로 안내하고, 단축키 목록을 볼 수 있게 한다"([[01-requirements#^r-edit|R-EDIT-21]], 본보기는 SequenceDiagram.org의 Instructions)뿐이고, 목차와 모양은 정하지 않았다. 고른 과정은 시안 M48에 있다(https://claude.ai/artifact/7rKqHPCcR6UYn8zXbJZCS4, 저장소의 사본 `journal/assets/2026-11-02-manual-toc-study.html`).

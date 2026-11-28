@@ -940,4 +940,29 @@ MVP에 드는 조작의 미결정을 한 번에 정했다(메인테이너: "mvp 
 
 ### DL1. 독일어의 그림 문구
 
-**정함 (2026-11-28): 독일어를 화면 언어 · 그림 문구의 언어 · 사용법 · 갤러리에 더한다([[01-requirements#^r-nfr|R-NFR-04]]). 그림 문구의 언어가 `de`이면 If의 분기 라벨은 "ja" · "nein", Case의 default 라벨은 "sonst"다.** "ja" · "nein"은 독일어 위키백과의 DIN 66261 그림(시안 M79 · M81에서 참고한 그림)에 적힌 말이다. 아직 만들지 않았다. 지금의 규칙(미완성) → [[03-editor#6.6 설정 목록]], [[02-layout#3. SVG 렌더링]]
+**정함 (2026-11-28): 독일어를 화면 언어 · 그림 문구의 언어 · 사용법 · 갤러리에 더한다([[01-requirements#^r-nfr|R-NFR-04]]). 그림 문구의 언어가 `de`이면 If의 분기 라벨은 "ja" · "nein", Case의 default 라벨은 "sonst"다.** "ja" · "nein"은 독일어 위키백과의 DIN 66261 그림(시안 M79 · M81에서 참고한 그림)에 적힌 말이다. 2026-11-28에 만들었다(`188da36`). 지금의 규칙 → [[03-editor#6.6 설정 목록]], [[02-layout#3. SVG 렌더링]]
+
+### DL2. 독일어 화면의 용어
+
+**정함 (2026-11-28, Claude(에이전트)가 정함 · 메인테이너의 확인을 받지 않음): 독일어 화면은 독일 학교 · DIN 66261의 Struktogramm 용어를 쓴다.** 메인테이너가 독일어를 앱 · 그림 문구 · 사용법 · 갤러리에 지금 더하기로 하고([[#DL1. 독일어의 그림 문구|DL1]]), 용어는 번역하며 정했다(`188da36` `85071c4`). 사용법 번역은 독일어를 아는 사람이 한 번 읽으면 좋다.
+
+| 한국어 | 독일어 |
+| --- | --- |
+| NS 차트 | Struktogramm |
+| 처리 블록 | Anweisung |
+| If (참 · 거짓) | Verzweigung (ja · nein) |
+| Case (default) | Fallauswahl (sonst) |
+| While · For · Do-While | While-Schleife · For-Schleife · Do-While-Schleife |
+| 무한 반복 · 탈출 · 병렬 처리 | Endlosschleife · Aussprung · Parallelverarbeitung |
+| 호출 블록 | Aufruf |
+| 분기 | Zweig |
+| Event · Method · 헤더 | Ereignis · Methode · Kopf |
+| 접기 영역 | Faltbereich |
+| 메뉴 파일 · 편집 · 다이어그램 · 보기 · 도움말 | Datei · Bearbeiten · Diagramm · Ansicht · Hilfe |
+| 아래에 · 위에 삽입 ▸ (블록 삽입) | Block darunter einfügen · Block darüber einfügen |
+| 아래에 · 위에 붙여넣기 | Darunter einfügen · Darüber einfügen |
+
+- 블록 삽입의 하위 메뉴는 "Block darunter/darüber einfügen"이다. "Darunter einfügen"(붙여넣기)과 컨텍스트 메뉴에 나란히 같은 이름으로 보이지 않게 했다(`85071c4`). 하위 메뉴 안의 항목은 "Anweisung darunter einfügen"처럼 종류를 붙인다.
+- 키 이름은 영어 그대로 `Ctrl` · `Shift`이고(메뉴의 키 표시, 키 힌트, 단축키 목록), 툴바 툴팁 · 알림처럼 문장 속에서만 `Strg` · `Umschalt`이다.
+- 소개(`/about`)는 영어 · 한국어뿐이라 독일어 화면의 정보 창 링크에는 "(Englisch)"를 붙인다.
+- 지금의 규칙 → [[03-editor#6.6 설정 목록]], 번역 표 `src/packages/editor/src/i18n/messages.ts` · `src/packages/editor/src/ui/messages.ts` · `src/apps/web/src/shell/messages.ts`

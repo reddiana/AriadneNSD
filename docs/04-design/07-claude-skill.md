@@ -139,7 +139,7 @@ src/skills/ariadne-nsd/
 | zip | GitHub Release의 파일 `ariadne-nsd.zip`(맨 위에 폴더 `ariadne-nsd/`, 그 안에 `SKILL.md`) | 스킬 폴더를 손으로 설치하는 곳에 쓴다 |
 | Claude Code (수동) | 스킬 폴더 그대로 | `plugin/skills/ariadne-nsd/`를 `~/.claude/skills/ariadne-nsd/`(또는 프로젝트의 `.claude/skills/`)에 복사 |
 
-사용자에게는 사용법(`/manual/`, `/manual/ko/`)의 "Claude skill" 꼭지(`#claude-skill`)가 요청의 예(A · B · C마다 하나)와 두 설치 방법, 결과를 AriadneNSD에서 여는 법을 안내합니다(원본 `src/apps/manual/pages/ref-en.html` · `ref-ko.html`).
+사용자에게는 사용법(`/manual/`, `/manual/ko/`, `/manual/de/`)의 "Claude skill" 꼭지(`#claude-skill`)가 요청의 예(A · B · C마다 하나)와 두 설치 방법, 결과를 AriadneNSD에서 여는 법을 안내합니다(원본 `src/apps/manual/pages/ref-en.html` · `ref-ko.html`).
 
 **Release의 zip**(`.github/workflows/release.yml`): GitHub Release를 펴내면(프리릴리스 포함) 그 태그의 코드로 스킬을 빌드해(`scripts/build.mjs`) `dist/ariadne-nsd.zip`을 그 Release의 파일로 업로드합니다. 같은 이름의 파일이 있으면 교체합니다. 태그(`v0.4.0`)와 `plugin.json`의 버전이 다르면 실패합니다. 이미 펴낸 Release에 다시 업로드할 때는 워크플로를 태그를 입력해 수동으로 실행합니다. zip은 항목의 순서와 시각을 고정해 같은 파일에서 같은 바이트가 됩니다.
 

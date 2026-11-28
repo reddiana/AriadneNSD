@@ -52,7 +52,7 @@ type Settings = {
 };
 type TextKind = 'plain' | 'c' | 'cpp' | 'java' | 'javascript' | 'python' | 'bash';  // 일반 텍스트, C, C++, Java, JavaScript · TypeScript, Python, Bash
 type ThemeId = string;   // 테마의 이름: 'default' · 'dark' · 'high-contrast' · 'print'. 지원하지 않는 이름은 기본 테마로 그리고 그대로 둔다 (ADR-0044)
-type Locale = 'en' | 'ko';  // core의 locales와 같은 목록(화면 언어의 목록). 'de'를 더할 예정(미완성 → R-NFR-04)
+type Locale = 'en' | 'ko' | 'de';  // core의 locales와 같은 목록(화면 언어의 목록 → R-NFR-04)
 ```
 
 - `TextKind`는 유니온이라 파일에 기록된 지원하지 않는 값을 담지 못합니다. 그런 파일을 열면 모델에는 `'plain'`을 두고, 받은 값은 모델 밖에 따로 두었다가 저장할 때 다시 기록합니다 → [[01-file-format#3.3 노드별 필드]]. `ThemeId`는 문자열이라 지원하지 않는 이름도 그대로 담습니다. `Locale`도 유니온이라, 지원하지 않는 언어가 기록된 파일은 연 사람의 화면 언어로 그리고 받은 값은 `TextKind`처럼 모델 밖에 두었다가 다시 기록합니다. `locale`이 없는 파일(ADR-0041 전에 저장한 파일)은 연 사람의 화면 언어로 엽니다.
@@ -133,7 +133,7 @@ type Parallel = {
 
 - 조건이나 반복의 텍스트는 모두 `text` 필드 하나에 둡니다. 텍스트 편집 명령이 블록 종류(`kind`)마다 다른 필드로 분기하지 않아도 됩니다.
 - **빈 블록**은 텍스트가 없는 처리 블록입니다(`{ kind: 'process', text: '' }`). 빈 분기, 새 반복의 본문은 빈 블록 하나로 채웁니다.
-- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 문서 설정 `locale`의 언어로 "참" · "거짓"을 표시합니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]. default 분기의 라벨은 편집하지 않으며 항상 "default"입니다(독일어는 "sonst", 미완성 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]).
+- If의 분기 라벨은 편집할 수 있습니다(`label`). 편집하지 않았으면 비어 있고, 편집기가 문서 설정 `locale`의 언어로 "참" · "거짓"을 표시합니다 → [[01-requirements#^r-edit|R-EDIT-12]], [[01-requirements#^r-nfr|R-NFR-04]], [[0041-drawing-locale-in-document|ADR-0041]]. default 분기의 라벨은 편집하지 않으며 항상 "default"입니다(독일어는 "sonst" → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]).
 - 분기(`Branch`)에도 id가 있습니다. If와 Case는 분기별로 접히므로, 뷰 상태가 분기를 id로 참조합니다.
 - **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 편집할 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 항상 default가 있고, default는 삭제할 수 없고, default가 아닌 분기는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 

@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0041: 그림의 고정 문구는 문서의 언어를 따른다
 
 > [!NOTE] 이후 변경
+> - 2026-11-28: 독일어를 만들었다. `locale`의 값에 `"de"`가 더해졌고(JSON Schema · 파일 형식), 그림 문구는 `ja` · `nein` · `sonst`다. 화면 언어는 `core`의 `screenLocale` 하나로 정한다 → [[01-file-format#3.3 노드별 필드]], [[03-editor#6.6 설정 목록]]
 > - 2026-11-28: 독일어를 더하기로 했다(그림 문구 If의 `ja` · `nein`, Case default의 `sonst`, 아직 만들지 않음). 고정 문구가 문서의 언어를 따른다는 결정은 그대로다 → [[01-requirements#^r-nfr|R-NFR-04]], [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]
 
 ## 배경

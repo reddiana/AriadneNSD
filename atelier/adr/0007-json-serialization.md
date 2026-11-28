@@ -11,6 +11,7 @@ superseded-by:
 # ADR-0007: 모델 직렬화 형식 JSON
 
 > [!NOTE] 이후 변경
+> - 2026-11-28: 문서 설정 `locale`의 값에 `"de"`(독일어)가 더해졌다(형식 버전은 그대로). 그 전의 앱은 이 값을 지원하지 않는 언어로 보고 받은 값을 보존한다 → [[0041-drawing-locale-in-document|ADR-0041]], [[01-file-format#3.3 노드별 필드]]
 > - 2026-11-28: 블록의 `kind`에 `endless` · `exit` · `parallel`이 더해졌다(형식 버전은 그대로 1). 새 블록이 든 파일은 그 전의 앱에서 깨진 파일이다 → [[0052-endless-exit-parallel-blocks|ADR-0052]], [[01-file-format#3.3 노드별 필드]]
 > - 2026-11-03: 같은 모델 JSON(들여쓰기 없이)이 공유 링크에도 담긴다. 파일과 같은 검증 파서로 읽고 버전 규칙도 같다 → [[0043-share-link-in-fragment|ADR-0043]]
 > - 2026-11-03: 문서 설정(`settings`)에 그림 문구의 언어 `locale`이 더해졌다. 그림의 고정 문구가 저장할 때의 화면 언어를 따르던 예외가 사라져, 같은 모델이면 화면 언어와 상관없이 같은 텍스트가 나온다. `locale`이 없는 파일은 연 사람의 화면 언어로 읽는다 → [[0041-drawing-locale-in-document|ADR-0041]], [[01-file-format#3.3 노드별 필드]]
