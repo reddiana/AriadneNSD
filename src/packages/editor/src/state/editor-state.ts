@@ -53,8 +53,8 @@ export type Editing = {
    */
   readonly extracted?: Extracted;
   /**
-   * The name typed right after making a fold region joins that undo step (interaction rules
-   * "접기 · 펼치기": the name is asked when the region is made).
+   * The field of something just made: what is typed joins the undo step that made it
+   * (UX UN3, interaction rules C4).
    */
   readonly joinsLast?: true;
 };

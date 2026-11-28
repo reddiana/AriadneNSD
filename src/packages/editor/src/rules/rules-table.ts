@@ -79,26 +79,13 @@ export type CellCase = {
   readonly doc: string;
   /** What the editor must do. Left out when the cell only restates what other cells check. */
   readonly check?: () => void | Promise<void>;
-  /** A decision whose change is not merged yet: the test is skipped until it is. */
-  readonly pending?: 'BL3' | 'BL4' | 'UN3';
 };
 
-/** The cases to run, and the ones waiting for a decision's change. */
-export function split<T extends CellCase>(
+/** The cases with the name a test shows. */
+export const withNames = <T extends CellCase>(
   cases: ReadonlyArray<T>,
-): {
-  readonly active: ReadonlyArray<T & { readonly name: string }>;
-  readonly pending: ReadonlyArray<T & { readonly name: string }>;
-} {
-  const named = cases.map((c) => ({
-    ...c,
-    name: `${c.row} × ${c.column}${c.pending === undefined ? '' : ` (${c.pending})`}`,
-  }));
-  return {
-    active: named.filter((c) => c.pending === undefined),
-    pending: named.filter((c) => c.pending !== undefined),
-  };
-}
+): ReadonlyArray<T & { readonly name: string }> =>
+  cases.map((c) => ({ ...c, name: `${c.row} × ${c.column}` }));
 
 /** The `row × column` keys of a table's cells, the first column left out. */
 export const tableKeys = (table: Table, skip: ReadonlyArray<string> = []): string[] =>

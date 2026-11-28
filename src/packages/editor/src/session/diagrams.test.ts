@@ -411,7 +411,7 @@ describe('extracting into a new Method (interaction rules "새 Method로 빼기�
     expect(idsOf(engine, 'd5')).toEqual(['c']);
   });
 
-  it('T-0862 · R-EDIT-19: on a branch label or the empty default cell, m tells to select blocks', () => {
+  it('T-0862 · R-EDIT-19: on the empty default cell, m tells to select blocks', () => {
     const engine = testEngine(
       contentOf([
         {
@@ -423,9 +423,6 @@ describe('extracting into a new Method (interaction rules "새 Method로 빼기�
         },
       ]),
     );
-    engine.select({ kind: 'branchLabel', branch: 'r1' });
-    engine.keys('m');
-    expect(notice(engine)).toBe('reason.selectBlocksToExtract');
     engine.select({ kind: 'missingDefault', block: 'k1' });
     engine.keys('m');
     expect(notice(engine)).toBe('reason.selectBlocksToExtract');
@@ -457,7 +454,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
       field: { kind: 'call', part: 'args' },
       text: 'xs',
     });
-    // Tab goes to the result; both fields go in at once, one undo step for the typing.
+    // Tab goes to the result; both fields go in at once, in the step of the new block (UX UN3).
     expect(engine.session.switchCallPart('list')).toBe(true);
     expect(engine.session.state.editing).toMatchObject({
       field: { kind: 'call', part: 'result' },
@@ -465,7 +462,7 @@ describe('call blocks (interaction rules "호출 블록")', () => {
     });
     engine.session.commitEditing('sorted');
     expect(blockOf(engine, made ?? '')).toMatchObject({ args: 'list', result: 'sorted' });
-    expect(engine.session.state.undo).toHaveLength(2);
+    expect(engine.session.state.undo).toHaveLength(1);
   });
 
   it('T-0223 · R-BLK-07: "New Method, and call it" makes the Method and edits its name', async () => {

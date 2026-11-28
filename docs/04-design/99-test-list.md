@@ -17,15 +17,15 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 358 | - | 410 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 369 | - | 421 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
-| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 33 | - | 33 |
-| 합계 | 87 | 287 | 1127 | 5 | 1506 |
+| [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 29 | - | 29 |
+| 합계 | 87 | 287 | 1134 | 5 | 1513 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 410개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 421개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -652,7 +652,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
-명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 45개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL2]], [[ux-decisions|UX HC1]], [[ux-decisions|UX PS1]], [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
+명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 56개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL2]], [[ux-decisions|UX HC1]], [[ux-decisions|UX PS1]], [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]], [[ux-decisions|UX BL3]], [[ux-decisions|UX UN3]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -701,6 +701,17 @@ id. Vitest · 테스트 5개.
 | T-1391 | 선택한 것이 없어도 붙여넣기가 묻고, "텍스트로 붙여넣기"는 줄들을 끝에 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
 | T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1656 | a control or exit block on a branch label goes into a new branch beside it | [[ux-decisions\|UX BL3]] |
+| T-1657 | on a branch label of an If the If becomes a Case, and the user is told | [[ux-decisions\|UX BL3]] |
+| T-1658 | a call on a branch label goes into a new branch, whose label opens | [[ux-decisions\|UX BL3]] |
+| T-1659 | a call needing a name opens that name first, in one undo step | [[ux-decisions\|UX BL3]] |
+| T-1660 | new Method from a branch label takes the blocks of the branch | [[ux-decisions\|UX BL4]] |
+| T-1661 | a fold region from a branch label holds the blocks of the branch; a folded branch opens | [[ux-decisions\|UX BL4]] |
+| T-1662 | a wrap and its condition are one undo step | [[ux-decisions\|UX UN3]] |
+| T-1663 | a new branch label and a new header name join the step that made them | [[ux-decisions\|UX UN3]] |
+| T-1664 | a header name refused for a clash still joins the step when typed again | [[ux-decisions\|UX UN3]] |
+| T-1665 | nothing made, nothing joined: text on a kept empty block is its own step | [[ux-decisions\|UX UN3]] |
+| T-1666 | editing again later is a step of its own | [[ux-decisions\|UX UN3]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
@@ -779,7 +790,7 @@ id. Vitest · 테스트 5개.
 | T-0859 | 헤더 없는 다이어그램의 블록에서 `m`은 묻는다: `1`은 빼기, `2`는 Method 헤더 달기 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0860 | 메뉴에서는 헤더 없는 다이어그램에서도 묻지 않고 빼고, Method 헤더 달기와 `e`는 그대로다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0861 | 헤더가 있는 다이어그램에서는 `m`이 묻지 않고 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
-| T-0862 | 분기 라벨이나 빈 default 칸에서 `m`은 뺄 블록을 선택하라고 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0862 | on the empty default cell, m tells to select blocks | [[01-requirements#^r-edit\|R-EDIT-19]] |
 | T-0222 | `a c`는 Method 목록을 보이고, 고른 Method를 호출하며 그 인자를 입력한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |
@@ -2749,7 +2760,7 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ## 9. 문서와 코드의 정합성
 
-코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리, 조작 규칙의 공통 규칙에 있는 표(칸마다 편집기의 동작과 대조). 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 8개, 테스트 33개.
+코드와 문서에 함께 기록된 값을 하나씩 견줍니다: 명세의 형식 버전, 단축키 문서의 키, 시각 디자인의 색 토큰, 기술 스택의 라이브러리, 조작 규칙의 공통 규칙에 있는 표(칸마다 편집기의 동작과 대조). 문서 속 예제(doctest)와 스키마는 "파일" 영역에 있습니다 → [[07-coding-guide#13. 문서와 코드의 정합성]]. 파일 8개, 테스트 29개.
 
 ### [단위] `packages/core/node/docs-agree.test.ts`
 
@@ -2818,31 +2829,29 @@ The table of text fields of the interaction rules ("텍스트 필드"), compared
 
 ### [단위] `packages/editor/src/rules/table-matrix.test.ts`
 
-The command × target matrix of the interaction rules ("명령 × 대상 매트릭스"), compared with the editor cell by cell. Vitest · 테스트 3개.
+The command × target matrix of the interaction rules ("명령 × 대상 매트릭스"), compared with the editor cell by cell. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1700 | the matrix has the rows and columns that are tested | - |
 | T-1701 | a cell of the matrix: $name | - |
-| T-1702 | a cell of the matrix that BL3 or BL4 changes: $name | - |
 
 ^t-packages-editor-src-rules-table-matrix-test-ts
 
 ### [단위] `packages/editor/src/rules/table-positions.test.ts`
 
-The table of insert positions of the interaction rules ("삽입 위치"), compared with the editor cell by cell. Vitest · 테스트 3개.
+The table of insert positions of the interaction rules ("삽입 위치"), compared with the editor cell by cell. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1703 | the table of insert positions has the rows and columns that are tested | - |
 | T-1704 | a cell of the insert positions: $name | - |
-| T-1705 | a cell of the insert positions that BL3 changes: $name | - |
 
 ^t-packages-editor-src-rules-table-positions-test-ts
 
 ### [단위] `packages/editor/src/rules/table-targets.test.ts`
 
-The two tables of command targets of the interaction rules ("명령마다 받는 대상"), compared with the editor. Vitest · 테스트 7개.
+The two tables of command targets of the interaction rules ("명령마다 받는 대상"), compared with the editor. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2850,8 +2859,6 @@ The two tables of command targets of the interaction rules ("명령마다 받는
 | T-1711 | a row of table 1: $name | - |
 | T-1712 | table 2 of the command targets has the rows and columns that are tested | - |
 | T-1713 | a cell of table 2: $name | - |
-| T-1714 | extract and fold.make take block ranges today (BL4 adds the branch label) | - |
-| T-1715 | a cell of table 2 that BL4 changes: $name | - |
 | T-1721 | remove region on the empty default cell goes up to the region around | - |
 
 ^t-packages-editor-src-rules-table-targets-test-ts

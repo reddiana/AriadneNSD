@@ -83,7 +83,11 @@ export function branchCommands(ctx: CommandContext) {
           ? { selection: selectBlock(indexDoc(ok.content), block) }
           : {
               selection: { kind: 'branchLabel', branch: made },
-              edit: { field: { kind: 'branchLabel', branch: made }, caret: 'selectAll' },
+              edit: {
+                field: { kind: 'branchLabel', branch: made },
+                caret: 'selectAll',
+                joinsLast: true,
+              },
             };
       });
     },

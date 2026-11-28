@@ -25,7 +25,7 @@ import {
   seqOutline,
 } from './rules-fixture';
 import type { Selector } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase } from './rules-table';
 
 const containers = ruleTable('### 요소와 컨테이너', ['컨테이너', '대표 요소']);
@@ -358,14 +358,14 @@ const ruleRows: ReadonlyArray<CellCase> = [
 const containerCases: ReadonlyArray<CellCase> = Object.entries(containerRows).flatMap(
   ([row, entries]) => entries.map((entry, i) => ({ row, column: columns[i] ?? '', ...entry })),
 );
-const { active } = split(containerCases);
+const named = withNames(containerCases);
 
 describe('the table of containers', () => {
   it('T-1716: the table of containers has the rows and columns that are tested', () => {
     expect(tableKeys(containers)).toEqual(caseKeys(containerCases));
   });
 
-  it.each(active)('T-1717: a cell of the containers: $name', async (c) => {
+  it.each(named)('T-1717: a cell of the containers: $name', async (c) => {
     expect(cellOf(containers, c.row, c.column), 'the cell in the document').toBe(c.doc);
     await c.check?.();
   });
@@ -376,7 +376,7 @@ describe('the rules T1 ~ T4', () => {
     expect(rules.rows.map((r) => r[0])).toEqual(ruleRows.map((r) => r.row));
   });
 
-  it.each(split(ruleRows).active)('T-1719: a rule of the containers: $row', async (c) => {
+  it.each(withNames(ruleRows))('T-1719: a rule of the containers: $row', async (c) => {
     expect(cellOf(rules, c.row, c.column), 'the cell in the document').toBe(c.doc);
     await c.check?.();
   });

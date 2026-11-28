@@ -22,7 +22,7 @@ import {
   seqOutline,
 } from './rules-fixture';
 import type { Selector } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase } from './rules-table';
 
 const matrix = ruleTable('### 명령 × 대상 매트릭스', ['명령', '블록']);
@@ -37,7 +37,7 @@ const columns = [
   '선택 없음',
 ] as const;
 
-type Entry = Pick<CellCase, 'doc' | 'check' | 'pending'>;
+type Entry = Pick<CellCase, 'doc' | 'check'>;
 type Row = readonly [
   block: Entry,
   label: Entry,
@@ -163,8 +163,8 @@ const rows: Readonly<Record<string, Row>> = {
       }
     }),
     {
+      // The document still has the words from before BL3 · BL4: they change at the cleanup.
       doc: '거절',
-      pending: 'BL3',
       // BL3: a new branch beside the label holds the block.
       check: async () => {
         const engine = await after(block.label, 'block.insert.while');
@@ -401,8 +401,8 @@ const rows: Readonly<Record<string, Row>> = {
       expect(bodyOf(engine)).toMatch(/^<\w+: a while\(w\)\[w1 w2\]> if/);
     }),
     {
+      // The document still has the words from before BL3 · BL4: they change at the cleanup.
       doc: '거절',
-      pending: 'BL4',
       // BL4: the blocks of the branch become the region.
       check: async () => {
         const engine = await after(block.label, 'fold.make');
@@ -455,8 +455,8 @@ const rows: Readonly<Record<string, Row>> = {
       starts(engine, 'call while(w)');
     }),
     {
+      // The document still has the words from before BL3 · BL4: they change at the cleanup.
       doc: '거절',
-      pending: 'BL4',
       // BL4: the blocks of the branch become the Method, and the call stays in the branch.
       check: async () => {
         const engine = await after(block.label, 'diagram.extractMethod');
@@ -499,7 +499,7 @@ function eventContent(engine: TestEngine) {
 const cases: ReadonlyArray<CellCase> = Object.entries(rows).flatMap(([row, entries]) =>
   entries.map((entry, i) => ({ row, column: columns[i] ?? '', ...entry })),
 );
-const { active, pending } = split(cases);
+const named = withNames(cases);
 
 const read = (c: CellCase): string => cellOf(matrix, c.row, c.column);
 
@@ -513,10 +513,5 @@ describe('the command × target matrix', () => {
     expect(tableKeys(matrix)).toEqual(caseKeys(cases));
   });
 
-  it.each(active)('T-1701: a cell of the matrix: $name', run);
-
-  // Turned on when the branch of BL3 · BL4 is merged: update the cell's words and the behavior.
-  describe.skip('cells waiting for BL3 · BL4', () => {
-    it.each(pending)('T-1702: a cell of the matrix that BL3 or BL4 changes: $name', run);
-  });
+  it.each(named)('T-1701: a cell of the matrix: $name', run);
 });

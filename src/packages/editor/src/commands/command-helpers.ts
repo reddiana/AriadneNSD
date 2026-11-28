@@ -210,6 +210,12 @@ export function branchTarget(index: DocIndex, branch: Id): Target | null {
     : { kind: 'blocks', first: first.id, last: last.id };
 }
 
+/** The empty block of a branch just made, as the target of what fills it (UX BL2, BL3). */
+export function emptyOfNewBranch(content: Content, branch: Id): Target {
+  const [empty] = indexDoc(content).branches.get(branch)?.branch.body.blocks ?? [];
+  return { kind: 'blocks', first: empty?.id ?? '', last: empty?.id ?? '' };
+}
+
 /** After deleting the branch at `place`: the label next to it is selected, or nothing. */
 export function afterBranchDelete(place: BranchPlace) {
   return (ok: { readonly content: Content }): After => {
@@ -343,8 +349,11 @@ export function headAction(
   return { reason: kind === 'method' ? 'reason.hasHead' : 'reason.eventNotExtracted' };
 }
 
-/** What "새 Method로 빼기" takes: selected blocks or a fold region (R-EDIT-19). */
-export function extractTarget(selection: Selection | null): Found<Target> {
+/**
+ * What "새 Method로 빼기" takes: selected blocks, a fold region, or the blocks of a branch whose
+ * label is selected (R-EDIT-19, UX BL4).
+ */
+export function extractTarget(index: DocIndex, selection: Selection | null): Found<Target> {
   if (selection === null) {
     return { reason: 'reason.nothingSelected' };
   }
@@ -355,7 +364,10 @@ export function extractTarget(selection: Selection | null): Found<Target> {
       return { value: { kind: 'fold', fold: selection.fold } };
     case 'peek':
       return { reason: 'reason.peekReadOnly' };
-    case 'branchLabel':
+    case 'branchLabel': {
+      const target = branchTarget(index, selection.branch);
+      return target === null ? { reason: 'reason.notFound' } : { value: target };
+    }
     case 'missingDefault':
     case 'head':
       return { reason: 'reason.selectBlocksToExtract' };
@@ -375,7 +387,7 @@ export function afterHead(diagram: Id, isEditing: boolean): After {
   return isEditing
     ? {
         selection: { kind: 'head', diagram },
-        edit: { field: { kind: 'head', diagram }, caret: 'selectAll' },
+        edit: { field: { kind: 'head', diagram }, caret: 'selectAll', joinsLast: true },
       }
     : { selection: { kind: 'head', diagram } };
 }
@@ -396,15 +408,18 @@ export type CommandContext = {
     readonly content: Content;
     readonly touched: ReadonlyArray<Id>;
   }) => After;
-  readonly insertWhen: (kind: NewBlockKind, side: Side) => (state: EditorState) => Applies;
+  readonly insertWhen: (side: Side) => (state: EditorState) => Applies;
   /**
    * Inserts a branch beside `branch`, turning an If into a Case (M87 F6), and opens its label.
-   * `fill` changes the new branch in the same undo step (paste on a branch label, UX BL2).
+   * `fill` changes the new branch in the same undo step (an insert or a paste on a branch label,
+   * UX BL3, BL2). `afterFill`, given what `fill` touched, says what comes next instead of the
+   * label (a call block whose name is typed first).
    */
   readonly runInsertBranch: (
     branch: Id,
     side: Side,
     fill?: (made: Content, branch: Id, ids: IdGenerator) => Result,
+    afterFill?: (ok: { readonly content: Content; readonly touched: ReadonlyArray<Id> }) => After,
   ) => void;
   readonly blocksOnly: (onEmptyCell: EditorMessage) => (state: EditorState) => Applies;
   /** The paste in flight: saving waits for it. */
@@ -449,33 +464,49 @@ export function commandContext(deps: CommandDeps): CommandContext {
     // An endless loop has no text to open (UX EL1).
     return madeIndex.blocks.get(made)?.block.kind === 'endless'
       ? { selection }
-      : { selection, edit: { field: { kind: 'block', block: made }, caret: 'end' } };
+      : {
+          selection,
+          edit: { field: { kind: 'block', block: made }, caret: 'end', joinsLast: true },
+        };
   };
 
   const insertWhen =
-    (kind: NewBlockKind, side: Side) =>
+    (side: Side) =>
     (state: EditorState): Applies => {
-      const selection = state.selection;
-      if (selection?.kind === 'branchLabel') {
-        return kind === 'process' ? true : 'reason.notOnBranchLabel';
-      }
-      if (selection?.kind === 'head') {
+      if (state.selection?.kind === 'head') {
         // Below a header is the start of its body (M87 F4); above it there is nothing.
         return side === 'after' ? true : 'reason.notOnHead';
       }
       return true;
     };
 
-  const runInsertBranch: CommandContext['runInsertBranch'] = (branch, side, fill) => {
+  const runInsertBranch: CommandContext['runInsertBranch'] = (branch, side, fill, afterFill) => {
     const place = index().branches.get(branch);
     const ids = session.ids();
+    let filledTouched: ReadonlyArray<Id> = [];
     const filled = (result: Result): Result => {
       const [made] = result.ok ? result.touched : [];
       if (!result.ok || fill === undefined || made === undefined) {
         return result;
       }
       const next = fill(result.content, made, ids);
-      return next.ok ? { ...result, content: next.content } : next;
+      if (!next.ok) {
+        return next;
+      }
+      filledTouched = next.touched;
+      return { ...result, content: next.content };
+    };
+    /** The new branch is selected and its label opens, unless `afterFill` says otherwise. */
+    const toBranch = (made: Id, content: Content, hasLabel: boolean): After => {
+      if (afterFill !== undefined) {
+        return afterFill({ content, touched: filledTouched });
+      }
+      const selection = { kind: 'branchLabel', branch: made } as const;
+      if (!hasLabel) {
+        return { selection };
+      }
+      const field = { kind: 'branchLabel', branch: made } as const;
+      return { selection, edit: { field, caret: 'selectAll', joinsLast: true } };
     };
     if (place?.block.kind === 'if') {
       // An If has two branches: it becomes a Case with a new branch at once, one undo step, and
@@ -487,10 +518,7 @@ export function commandContext(deps: CommandDeps): CommandContext {
           const [made] = ok.touched;
           return made === undefined
             ? { selection: selectBlock(indexDoc(ok.content), block) }
-            : {
-                selection: { kind: 'branchLabel', branch: made },
-                edit: { field: { kind: 'branchLabel', branch: made }, caret: 'selectAll' },
-              };
+            : toBranch(made, ok.content, true);
         },
       );
       if (isConverted) {
@@ -501,16 +529,10 @@ export function commandContext(deps: CommandDeps): CommandContext {
     const result = filled(insertBranch(content(), { branch, side, ids }));
     const isApplied = session.commit(result, (ok) => {
       const [made] = ok.touched;
-      if (made === undefined) {
-        return { selection: session.state.selection };
-      }
       // A parallel branch has no label to write: it is only selected (M84 B1).
-      return place?.block.kind === 'parallel'
-        ? { selection: { kind: 'branchLabel', branch: made } }
-        : {
-            selection: { kind: 'branchLabel', branch: made },
-            edit: { field: { kind: 'branchLabel', branch: made }, caret: 'selectAll' },
-          };
+      return made === undefined
+        ? { selection: session.state.selection }
+        : toBranch(made, ok.content, place?.block.kind !== 'parallel');
     });
     if (isApplied && place?.isDefault === true && side === 'after') {
       session.notify('notice.defaultStaysLast');

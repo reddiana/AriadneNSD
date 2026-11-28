@@ -27,6 +27,7 @@ import {
   currentDiagram,
   headStart,
   branchTarget,
+  emptyOfNewBranch,
 } from './command-helpers';
 
 export function insertWrapCommands(ctx: CommandContext) {
@@ -39,7 +40,18 @@ export function insertWrapCommands(ctx: CommandContext) {
     const state = session.state;
     const selection = state.selection;
     if (selection?.kind === 'branchLabel') {
-      runInsertBranch(selection.branch, side);
+      // A new branch beside the label. A process block is its empty block; any other block
+      // takes that block's place (UX BL3).
+      runInsertBranch(
+        selection.branch,
+        side,
+        kind === 'process'
+          ? undefined
+          : (made, branch, ids) => {
+              const target = emptyOfNewBranch(made, branch);
+              return insertBlock(made, { target, side: 'after', kind, ids });
+            },
+      );
       return;
     }
     if (selection?.kind === 'missingDefault') {
@@ -80,7 +92,7 @@ export function insertWrapCommands(ctx: CommandContext) {
   const insertSpecs = blockKinds.flatMap((kind, order) => [
     spec(`block.insert.${kind}`, {
       edits: true,
-      when: insertWhen(kind, 'after'),
+      when: insertWhen('after'),
       run: () => {
         runInsert(kind, 'after');
       },
@@ -91,7 +103,7 @@ export function insertWrapCommands(ctx: CommandContext) {
     }),
     spec(`block.insertBefore.${kind}`, {
       edits: true,
-      when: insertWhen(kind, 'before'),
+      when: insertWhen('before'),
       run: () => {
         runInsert(kind, 'before');
       },

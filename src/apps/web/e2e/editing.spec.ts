@@ -97,8 +97,7 @@ test('T-0840 · R-EDIT-19 · UX XM3: in a diagram without a header m asks; Esc c
   await page.keyboard.press('2');
   await typeText(page, 'main');
   await expect(selection(page)).toHaveText('Method header "main"');
-  // Adding the header and naming it are two undo steps.
-  await page.keyboard.press('u');
+  // Adding the header and naming it are one undo step (UX UN3).
   await page.keyboard.press('u');
   await expect(drawnText(page, 'main')).toHaveCount(0);
   await expect(drawnText(page, 'Method 1')).toHaveCount(0);

@@ -1,0 +1,529 @@
+<meta charset="utf-8">
+<title>M93 분기 라벨 위 드롭과 새 다이어그램의 위치</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M91과 같은 틀(복사). M91: 위에서 아래로: 결론 → 수준 표 → 숨은 개념 여섯 → 컨테이너 그림 → 매트릭스를 만드는 표 둘 → 단계 → 물음 → 드러난 칸 → 근거 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbece2; --box: #f5f7fb;
+  --sel: #d9730d; --ink: #1c2230; --paper: #ffffff; --hl: #dbe5fb; --peek: #8a4fbf; --peek-soft: #efe4f8;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; --hl: #26355e; --peek: #c79bee; --peek-soft: #33274a; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; --hl: #26355e; --peek: #c79bee; --peek-soft: #33274a; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 90ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 15px; line-height: 1; flex: none; }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul, .sum ul, .sum ol { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.sum ol { font-size: 14.5px; gap: 6px; }
+.card li b, .sum li b { color: var(--fg); font-weight: 600; }
+.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.card dt { color: var(--muted); white-space: nowrap; font-weight: 600; font-size: 12px; padding-top: 2px; }
+.card dd { margin: 0; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 112ch; }
+.tw { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; background: var(--panel); min-width: 760px; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--box); font-weight: 600; white-space: nowrap; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.k { font-family: var(--mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+tr.a td:first-child { box-shadow: inset 4px 0 0 var(--pick); }
+tr.b td:first-child, tr.c td:first-child, tr.d td:first-child { box-shadow: inset 4px 0 0 var(--warn); }
+.lv { font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 1px 9px; white-space: nowrap; background: var(--box); color: var(--muted); border: 1px solid var(--line); }
+.lv.ok { background: var(--pick-soft); color: var(--pick); border-color: transparent; }
+.lv.off { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.lv.new { background: var(--hl); color: var(--accent); border-color: transparent; }
+code { font-family: var(--mono); font-size: 12.5px; }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.5; max-width: 100ch; }
+figcaption b { color: var(--fg); font-weight: 600; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; align-items: start; }
+.scene { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.scene svg { display: block; max-width: none; font-family: var(--font); }
+.ns rect, .ns line, .ns path { stroke: var(--ink); stroke-width: 1.2; fill: none; }
+.ns text { fill: var(--ink); font-size: 12.5px; stroke: none; }
+.ns .selr { stroke: var(--sel); stroke-width: 2.5; }
+.ns .newr { stroke: var(--pick); stroke-width: 2.5; fill: var(--pick-soft); }
+.ns .st { fill: var(--muted); font-size: 12px; }
+.ns .bar { fill: var(--box); stroke: var(--line); }
+.ns .h { fill: var(--hl); }
+.ns .hp { fill: var(--peek-soft); }
+.ns .reg { stroke: var(--accent); stroke-width: 2.2; }
+.ns .pk { stroke: var(--peek); stroke-width: 2.2; }
+.ns .mut { fill: var(--muted); }
+.ns .bd { fill: var(--accent); stroke: none; }
+.ns .bt { fill: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 12px; }
+/* 단계 흐름 */
+.steps { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: center; font-size: 13px; }
+.steps span { border: 1px solid var(--line); background: var(--box); border-radius: 5px; padding: 2px 9px; white-space: nowrap; }
+.steps i { color: var(--muted); font-style: normal; }
+.steps .r { border-color: transparent; background: var(--warn-soft); color: var(--warn); font-weight: 600; }
+.steps .g { border-color: transparent; background: var(--pick-soft); color: var(--pick); font-weight: 600; }
+
+.ns .chip { fill: var(--accent); stroke: none; }
+.ns .chipt { fill: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 11px; }
+.ns .prev { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 5 3; }
+.ns .ptr { fill: var(--ink); stroke: var(--paper); stroke-width: 1; }
+.ns .tip { fill: var(--accent); font-size: 11.5px; font-weight: 600; }
+.ns .dg { fill: var(--paper); }
+.ns .dsel { stroke: var(--sel); stroke-width: 2.5; }
+.ns .colt { fill: var(--muted); font-size: 11.5px; font-weight: 600; }
+.ns .arr { stroke: var(--pick); stroke-width: 1.6; }
+</style>
+
+<main>
+  <div>
+    <h1>M93 · 분기 라벨 위 드롭과 새 다이어그램의 위치</h1>
+    <p class="lede">M91의 "추상화가 드러낸 칸" 가운데 남은 <b>U3</b>과 <b>U6</b>입니다. 조작 규칙의 미결정 사항 "분기 라벨과 드래그 앤 드롭" · "새 다이어그램의 위치"에 해당합니다. 한 번에 하나씩 여쭙니다(Q1 → Q2). 지금 모습은 0.6.3 코드(<code>input/drop.ts</code>, <code>core/commands/diagram.ts</code>)로 확인했습니다. 앱의 동작은 아직 바꾸지 않았습니다.</p>
+  </div>
+
+  <section>
+    <p class="part">Q1 · U3</p>
+    <h2>분기 라벨 위에 블록 아이콘을 놓으면 무엇이 대상인가요?</h2>
+    <p class="q">키보드에서 분기 라벨은 <b>그 분기</b>입니다(삽입은 옆에 새 분기, 복사 · 감싸기는 그 분기의 블록 전체, 공통 규칙 T1). 드롭에서는 <b>그 If · Case 블록</b>이라, 툴바의 While 아이콘을 분기 라벨 2 위에 놓으면 Case 전체를 감쌉니다. 분기 라벨을 끌어 분기를 옮기는 것(U4)은 백로그로 미뤘으니 여기서는 놓는 쪽만 정합니다.</p>
+    <div class="two">
+      <figure><div class="scene"><svg class="ns" width="320" height="128" viewBox="0 0 320 128" role="img" aria-label="드래그하는 순간">
+<rect x="10" y="34" width="300" height="84"/>
+<text x="160.0" y="52" text-anchor="middle">state</text>
+<line x1="10" y1="62" x2="310" y2="62"/>
+<line x1="10" y1="84" x2="310" y2="84"/>
+<text x="55.0" y="78" text-anchor="middle">1</text>
+<rect x="10" y="84" width="90" height="34"/>
+<text x="55.0" y="105.0" text-anchor="middle">start()</text>
+<line x1="100" y1="62" x2="100" y2="118"/>
+<text x="145.0" y="78" text-anchor="middle">2</text>
+<rect x="100" y="84" width="90" height="34"/>
+<text x="145.0" y="105.0" text-anchor="middle">stop()</text>
+<line x1="190" y1="62" x2="190" y2="118"/>
+<text x="240.0" y="78" text-anchor="middle">default</text>
+<rect x="190" y="84" width="100" height="34"/>
+<text x="240.0" y="105.0" text-anchor="middle">wait()</text>
+<rect class="prev" x="11.5" y="35.5" width="297" height="81"/>
+<rect class="chip" x="150" y="70" width="53.5" height="20" rx="4"/>
+<text class="chipt" x="158" y="84">While</text>
+<path class="ptr" d="M144 56 l0 15 l4 -4 l3 7 l3 -1.5 l-3 -7 l5.5 0 z"/>
+<text class="tip" x="10" y="20" text-anchor="start">While로 감싸기</text>
+</svg></div><figcaption><b>지금(3).</b> While 아이콘을 분기 라벨 2 위에 끌면 Case 전체에 미리보기 테두리.</figcaption></figure>
+      <figure><div class="scene"><svg class="ns" width="320" height="128" viewBox="0 0 320 128" role="img" aria-label="드래그하는 순간">
+<rect x="10" y="34" width="300" height="84"/>
+<text x="160.0" y="52" text-anchor="middle">state</text>
+<line x1="10" y1="62" x2="310" y2="62"/>
+<line x1="10" y1="84" x2="310" y2="84"/>
+<text x="55.0" y="78" text-anchor="middle">1</text>
+<rect x="10" y="84" width="90" height="34"/>
+<text x="55.0" y="105.0" text-anchor="middle">start()</text>
+<line x1="100" y1="62" x2="100" y2="118"/>
+<text x="145.0" y="78" text-anchor="middle">2</text>
+<rect x="100" y="84" width="90" height="34"/>
+<text x="145.0" y="105.0" text-anchor="middle">stop()</text>
+<line x1="190" y1="62" x2="190" y2="118"/>
+<text x="240.0" y="78" text-anchor="middle">default</text>
+<rect x="190" y="84" width="100" height="34"/>
+<text x="240.0" y="105.0" text-anchor="middle">wait()</text>
+<rect class="prev" x="101.5" y="63.5" width="87" height="53"/>
+<rect class="chip" x="150" y="70" width="53.5" height="20" rx="4"/>
+<text class="chipt" x="158" y="84">While</text>
+<path class="ptr" d="M144 56 l0 15 l4 -4 l3 7 l3 -1.5 l-3 -7 l5.5 0 z"/>
+<text class="tip" x="10" y="20" text-anchor="start">While로 감싸기</text>
+</svg></div><figcaption><b>1 · 2.</b> 분기 2에만 미리보기 테두리. 파란 점선 = 미리보기, 녹색 = 드롭하면 새로 생기는 것.</figcaption></figure>
+    </div>
+    <div class="cards">
+<div class="card pick">
+  <header><span class="num">1</span><h3>분기 라벨 = 그 분기(키보드와 같게)</h3><span class="badge">추천</span></header>
+  <ul><li><b>제어 블록 아이콘</b>: 그 분기의 블록을 감싼다(키보드의 감싸기 BL1과 같음).</li>
+<li><b>처리 · 탈출 · 호출 아이콘</b>: 옆에 새 분기를 만들어 넣는다(키보드의 삽입 Q5 · BL3과 같음).</li>
+<li><b>끌어 온 블록</b>: 옆에 새 분기를 만들어 넣는다(붙여넣기 BL2와 같음).</li>
+<li>Case 전체를 감싸려면 머리 칸(<code>state</code>)이나 If의 조건 칸 위에 놓는다.</li></ul>
+  <figure><div class="scene"><svg class="ns" width="320" height="146" viewBox="0 0 320 146" role="img" aria-label="분기 2의 블록을 While로 감싼 결과">
+<rect x="10" y="10" width="300" height="106"/>
+<text x="160.0" y="28" text-anchor="middle">state</text>
+<line x1="10" y1="38" x2="310" y2="38"/>
+<line x1="10" y1="60" x2="310" y2="60"/>
+<text x="55.0" y="54" text-anchor="middle">1</text>
+<rect x="10" y="60" width="90" height="56"/>
+<text x="55.0" y="92.0" text-anchor="middle">start()</text>
+<line x1="100" y1="38" x2="100" y2="116"/>
+<text x="145.0" y="54" text-anchor="middle">2</text>
+<rect x="100" y="60" width="90" height="56"/>
+<line x1="114" y1="82" x2="190" y2="82"/>
+<line x1="114" y1="82" x2="114" y2="116"/>
+<text x="145.0" y="75" text-anchor="middle" style="font-size:11.5px">조건</text>
+<rect x="114" y="82" width="76" height="34"/>
+<text x="152.0" y="103.0" text-anchor="middle">stop()</text>
+<rect class="newr" x="101.5" y="61.5" width="87" height="53" style="fill:none"/>
+<line x1="190" y1="38" x2="190" y2="116"/>
+<text x="240.0" y="54" text-anchor="middle">default</text>
+<rect x="190" y="60" width="100" height="56"/>
+<text x="240.0" y="92.0" text-anchor="middle">wait()</text>
+<rect class="bar" x="10" y="124" width="300" height="18"/>
+<text class="st" x="16" y="137">While로 감쌌습니다</text>
+</svg></div><figcaption>While 아이콘 → 분기 2의 <code>stop()</code>을 감쌈</figcaption></figure><figure><div class="scene"><svg class="ns" width="320" height="124" viewBox="0 0 320 124" role="img" aria-label="분기 2 옆에 새 분기를 만들어 처리 블록을 넣은 결과">
+<rect class="newr" x="151.5" y="39.5" width="67" height="53"/>
+<rect x="10" y="10" width="300" height="84"/>
+<text x="160.0" y="28" text-anchor="middle">state</text>
+<line x1="10" y1="38" x2="310" y2="38"/>
+<line x1="10" y1="60" x2="310" y2="60"/>
+<text x="45.0" y="54" text-anchor="middle">1</text>
+<rect x="10" y="60" width="70" height="34"/>
+<text x="45.0" y="81.0" text-anchor="middle">start()</text>
+<line x1="80" y1="38" x2="80" y2="94"/>
+<text x="115.0" y="54" text-anchor="middle">2</text>
+<rect x="80" y="60" width="70" height="34"/>
+<text x="115.0" y="81.0" text-anchor="middle">stop()</text>
+<line x1="150" y1="38" x2="150" y2="94"/>
+<text x="185.0" y="54" text-anchor="middle">3</text>
+<rect x="150" y="60" width="70" height="34"/>
+<text x="185.0" y="81.0" text-anchor="middle">∅</text>
+<line x1="220" y1="38" x2="220" y2="94"/>
+<text x="265.0" y="54" text-anchor="middle">default</text>
+<rect x="220" y="60" width="90" height="34"/>
+<text x="265.0" y="81.0" text-anchor="middle">wait()</text>
+<rect class="bar" x="10" y="102" width="300" height="18"/>
+<text class="st" x="16" y="115">분기 3을 만들고 처리 블록을 넣었습니다</text>
+</svg></div><figcaption>처리 아이콘 → 분기 2 옆에 새 분기 3</figcaption></figure>
+</div>
+<div class="card">
+  <header><span class="num">2</span><h3>감싸기만 그 분기로</h3></header>
+  <ul><li><b>제어 블록 아이콘</b>: 그 분기의 블록을 감싼다(1과 같음).</li>
+<li><b>처리 · 탈출 · 호출 아이콘, 끌어 온 블록</b>: 지금처럼 Case 블록의 아래(위)로.</li>
+<li>바뀌는 칸이 하나라 작지만, 같은 라벨 위에서 감싸기는 분기, 삽입은 블록이 된다.</li></ul>
+  <figure><div class="scene"><svg class="ns" width="320" height="146" viewBox="0 0 320 146" role="img" aria-label="분기 2의 블록을 While로 감싼 결과">
+<rect x="10" y="10" width="300" height="106"/>
+<text x="160.0" y="28" text-anchor="middle">state</text>
+<line x1="10" y1="38" x2="310" y2="38"/>
+<line x1="10" y1="60" x2="310" y2="60"/>
+<text x="55.0" y="54" text-anchor="middle">1</text>
+<rect x="10" y="60" width="90" height="56"/>
+<text x="55.0" y="92.0" text-anchor="middle">start()</text>
+<line x1="100" y1="38" x2="100" y2="116"/>
+<text x="145.0" y="54" text-anchor="middle">2</text>
+<rect x="100" y="60" width="90" height="56"/>
+<line x1="114" y1="82" x2="190" y2="82"/>
+<line x1="114" y1="82" x2="114" y2="116"/>
+<text x="145.0" y="75" text-anchor="middle" style="font-size:11.5px">조건</text>
+<rect x="114" y="82" width="76" height="34"/>
+<text x="152.0" y="103.0" text-anchor="middle">stop()</text>
+<rect class="newr" x="101.5" y="61.5" width="87" height="53" style="fill:none"/>
+<line x1="190" y1="38" x2="190" y2="116"/>
+<text x="240.0" y="54" text-anchor="middle">default</text>
+<rect x="190" y="60" width="100" height="56"/>
+<text x="240.0" y="92.0" text-anchor="middle">wait()</text>
+<rect class="bar" x="10" y="124" width="300" height="18"/>
+<text class="st" x="16" y="137">While로 감쌌습니다</text>
+</svg></div><figcaption>While 아이콘 → 분기 2의 <code>stop()</code>을 감쌈</figcaption></figure><figure><div class="scene"><svg class="ns" width="320" height="158" viewBox="0 0 320 158" role="img" aria-label="처리 블록을 Case 아래에 넣은 결과">
+<rect x="10" y="10" width="300" height="84"/>
+<text x="160.0" y="28" text-anchor="middle">state</text>
+<line x1="10" y1="38" x2="310" y2="38"/>
+<line x1="10" y1="60" x2="310" y2="60"/>
+<text x="55.0" y="54" text-anchor="middle">1</text>
+<rect x="10" y="60" width="90" height="34"/>
+<text x="55.0" y="81.0" text-anchor="middle">start()</text>
+<line x1="100" y1="38" x2="100" y2="94"/>
+<text x="145.0" y="54" text-anchor="middle">2</text>
+<rect x="100" y="60" width="90" height="34"/>
+<text x="145.0" y="81.0" text-anchor="middle">stop()</text>
+<line x1="190" y1="38" x2="190" y2="94"/>
+<text x="240.0" y="54" text-anchor="middle">default</text>
+<rect x="190" y="60" width="100" height="34"/>
+<text x="240.0" y="81.0" text-anchor="middle">wait()</text>
+<rect class="newr" x="10" y="94" width="300" height="34"/>
+<rect x="10" y="94" width="300" height="34"/>
+<text class="mut" x="160.0" y="115" text-anchor="middle">∅</text>
+<rect class="bar" x="10" y="136" width="300" height="18"/>
+<text class="st" x="16" y="149">처리 블록을 넣었습니다</text>
+</svg></div><figcaption>처리 아이콘 → Case 아래</figcaption></figure>
+</div>
+<div class="card">
+  <header><span class="num">3</span><h3>지금대로: 분기 라벨 = 그 If · Case 블록</h3><span class="badge">지금</span></header>
+  <ul><li><b>제어 블록 아이콘</b>: 그 If · Case 전체를 감싼다.</li>
+<li><b>처리 · 탈출 · 호출 아이콘, 끌어 온 블록</b>: Case 블록의 아래(위)로.</li>
+<li>키보드(분기 라벨 = 그 분기)와 드롭이 다르다. 조작 규칙의 트레이드오프에 적는다.</li></ul>
+  <figure><div class="scene"><svg class="ns" width="320" height="146" viewBox="0 0 320 146" role="img" aria-label="Case 전체를 While로 감싼 결과">
+<rect class="newr" x="11.5" y="11.5" width="297" height="19"/>
+<rect x="10" y="10" width="300" height="106"/>
+<text x="160.0" y="25" text-anchor="middle" style="font-size:11.5px">조건</text>
+<line x1="24" y1="32" x2="24" y2="116"/>
+<rect class="newr" x="11.5" y="32" width="11" height="82.5"/>
+<rect x="24" y="32" width="286" height="84"/>
+<text x="167.0" y="50" text-anchor="middle">state</text>
+<line x1="24" y1="60" x2="310" y2="60"/>
+<line x1="24" y1="82" x2="310" y2="82"/>
+<text x="67.0" y="76" text-anchor="middle">1</text>
+<rect x="24" y="82" width="86" height="34"/>
+<text x="67.0" y="103.0" text-anchor="middle">start()</text>
+<line x1="110" y1="60" x2="110" y2="116"/>
+<text x="153.0" y="76" text-anchor="middle">2</text>
+<rect x="110" y="82" width="86" height="34"/>
+<text x="153.0" y="103.0" text-anchor="middle">stop()</text>
+<line x1="196" y1="60" x2="196" y2="116"/>
+<text x="253.0" y="76" text-anchor="middle">default</text>
+<rect x="196" y="82" width="114" height="34"/>
+<text x="253.0" y="103.0" text-anchor="middle">wait()</text>
+<rect class="bar" x="10" y="124" width="300" height="18"/>
+<text class="st" x="16" y="137">While로 감쌌습니다</text>
+</svg></div><figcaption>While 아이콘 → Case 전체를 감쌈</figcaption></figure><figure><div class="scene"><svg class="ns" width="320" height="158" viewBox="0 0 320 158" role="img" aria-label="처리 블록을 Case 아래에 넣은 결과">
+<rect x="10" y="10" width="300" height="84"/>
+<text x="160.0" y="28" text-anchor="middle">state</text>
+<line x1="10" y1="38" x2="310" y2="38"/>
+<line x1="10" y1="60" x2="310" y2="60"/>
+<text x="55.0" y="54" text-anchor="middle">1</text>
+<rect x="10" y="60" width="90" height="34"/>
+<text x="55.0" y="81.0" text-anchor="middle">start()</text>
+<line x1="100" y1="38" x2="100" y2="94"/>
+<text x="145.0" y="54" text-anchor="middle">2</text>
+<rect x="100" y="60" width="90" height="34"/>
+<text x="145.0" y="81.0" text-anchor="middle">stop()</text>
+<line x1="190" y1="38" x2="190" y2="94"/>
+<text x="240.0" y="54" text-anchor="middle">default</text>
+<rect x="190" y="60" width="100" height="34"/>
+<text x="240.0" y="81.0" text-anchor="middle">wait()</text>
+<rect class="newr" x="10" y="94" width="300" height="34"/>
+<rect x="10" y="94" width="300" height="34"/>
+<text class="mut" x="160.0" y="115" text-anchor="middle">∅</text>
+<rect class="bar" x="10" y="136" width="300" height="18"/>
+<text class="st" x="16" y="149">처리 블록을 넣었습니다</text>
+</svg></div><figcaption>처리 아이콘 → Case 아래</figcaption></figure>
+</div>
+    </div>
+    <div class="tw">
+      <table>
+        <tr><th>분기 라벨 위에 놓는 것</th><th>1</th><th>2</th><th>3 (지금)</th><th>견줄 키보드 조작</th></tr>
+        <tr><td>제어 블록 아이콘(If · Case · While · For · 병렬 처리)</td><td>그 분기의 블록을 감쌈</td><td>그 분기의 블록을 감쌈</td><td>If · Case 전체를 감쌈</td><td>분기 라벨에서 감싸기 = 그 분기의 블록(BL1)</td></tr>
+        <tr><td>처리 · 탈출 · 호출 아이콘</td><td>옆에 새 분기, 그 안에</td><td>If · Case 아래</td><td>If · Case 아래</td><td>분기 라벨에서 삽입 = 옆에 새 분기(Q5 · BL3)</td></tr>
+        <tr><td>끌어 온 블록(이동)</td><td>옆에 새 분기, 그 안에</td><td>If · Case 위 · 아래</td><td>If · Case 위 · 아래</td><td>분기 라벨에서 붙여넣기 = 옆에 새 분기(BL2)</td></tr>
+        <tr><td>If · Case 전체를 감싸는 곳</td><td>머리 칸 · 조건 칸</td><td>머리 칸 · 조건 칸</td><td>머리 칸 · 조건 칸 · 분기 라벨</td><td>If · Case 블록을 선택하고 감싸기</td></tr>
+      </table>
+    </div>
+    <p class="q">추천은 <b>1</b>입니다. 같은 분기 라벨이 키보드와 드롭에서 같은 것을 가리키고(원칙 ③ · T1), 표 한 줄로 적힙니다. 2는 아이콘의 종류에 따라 라벨이 분기였다 블록이었다 합니다. 확신이 중간인 까닭: Case 전체를 감싸려던 사용자가 습관으로 분기 라벨 위에 놓으면 다른 결과가 나옵니다. 미리보기 테두리가 그 분기에만 그려져 놓기 전에 보입니다.</p>
+  </section>
+
+  <section>
+    <p class="part">Q2 · U6</p>
+    <h2>새 Event · Method 다이어그램은 어디에 놓을까요?</h2>
+    <p class="q">지금 다이어그램을 만드는 길은 다섯입니다. <b>지금 다이어그램의 바로 뒤</b>: 붙여넣기, 새 Method로 빼기(XM1). <b>그 종류의 맨 뒤</b>: 메뉴의 새 Event · 새 Method, 호출 블록 목록의 "새 Method를 만들고 호출", "Method 만들기"(CB15). 어느 쪽이든 뷰포트는 새 다이어그램으로 스크롤하고 헤더 이름의 인라인 에디터가 열립니다. 그림: 왼쪽 Event, 오른쪽 Method(줄이 차면 오른쪽 줄로). 주황 = 선택한 헤더(<code>partition</code>), 녹색 = 새 다이어그램.</p>
+    <div class="cards">
+<div class="card pick">
+  <header><span class="num">1</span><h3>모두 지금 다이어그램의 바로 뒤</h3><span class="badge">추천</span></header>
+  <ul><li>새 Event · 새 Method(메뉴), 호출 블록의 "새 Method를 만들고 호출", "Method 만들기"가 모두 붙여넣기 · 새 Method로 빼기와 같은 자리에 놓인다.</li>
+<li>지금 다이어그램과 종류가 다르거나 선택한 것이 없으면 그 종류의 맨 뒤.</li>
+<li>PowerPoint · Google Slides의 새 슬라이드, Excel의 새 시트(+)와 같다(원칙 ④).</li>
+<li>뒤의 다이어그램은 한 칸씩 밀린다(붙여넣기 · 빼기에서 이미 그렇다).</li></ul>
+  <figure><div class="scene"><svg class="ns" width="370" height="230" viewBox="0 0 370 230" role="img" aria-label="partition 바로 뒤에 Method 1">
+<text class="colt" x="62" y="18" text-anchor="middle">Event</text>
+<text class="colt" x="250" y="18" text-anchor="middle">Method</text>
+<rect class="dg" x="10" y="28" width="104" height="46"/>
+<rect x="10" y="28" width="104" height="46"/>
+<line x1="10" y1="48" x2="114" y2="48"/>
+<text x="62.0" y="42" text-anchor="middle" style="font-size:11.5px">onStart</text>
+<text class="mut" x="62.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="10" y="84" width="104" height="46"/>
+<rect x="10" y="84" width="104" height="46"/>
+<line x1="10" y1="104" x2="114" y2="104"/>
+<text x="62.0" y="98" text-anchor="middle" style="font-size:11.5px">onClick</text>
+<text class="mut" x="62.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="28" width="104" height="46"/>
+<rect x="140" y="28" width="104" height="46"/>
+<line x1="140" y1="48" x2="244" y2="48"/>
+<text x="192.0" y="42" text-anchor="middle" style="font-size:11.5px">sort</text>
+<text class="mut" x="192.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="84" width="104" height="46"/>
+<rect x="140" y="84" width="104" height="46"/>
+<line x1="140" y1="104" x2="244" y2="104"/>
+<text x="192.0" y="98" text-anchor="middle" style="font-size:11.5px">partition</text>
+<text class="mut" x="192.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dsel" x="141.5" y="85.5" width="101" height="17"/>
+<rect class="newr" x="140" y="140" width="104" height="46"/>
+
+<rect x="140" y="140" width="104" height="46"/>
+<line x1="140" y1="160" x2="244" y2="160"/>
+<text x="192.0" y="154" text-anchor="middle" style="font-size:11.5px">Method 1</text>
+<text class="mut" x="192.0" y="177" text-anchor="middle" style="font-size:11.5px">∅</text>
+<rect class="dg" x="256" y="28" width="104" height="46"/>
+<rect x="256" y="28" width="104" height="46"/>
+<line x1="256" y1="48" x2="360" y2="48"/>
+<text x="308.0" y="42" text-anchor="middle" style="font-size:11.5px">swap</text>
+<text class="mut" x="308.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="256" y="84" width="104" height="46"/>
+<rect x="256" y="84" width="104" height="46"/>
+<line x1="256" y1="104" x2="360" y2="104"/>
+<text x="308.0" y="98" text-anchor="middle" style="font-size:11.5px">print</text>
+<text class="mut" x="308.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="bar" x="10" y="206" width="350" height="18"/>
+<text class="st" x="16" y="219">새 Method: partition 바로 뒤</text>
+</svg></div><figcaption>partition의 헤더를 선택하고 새 Method → 그 바로 뒤</figcaption></figure>
+</div>
+<div class="card">
+  <header><span class="num">2</span><h3>호출에서 만든 Method만 바로 뒤</h3></header>
+  <ul><li>"Method 만들기" · "새 Method를 만들고 호출"은 지금 다이어그램의 호출 블록에서 나오므로 새 Method로 빼기(XM1)처럼 바로 뒤.</li>
+<li>메뉴의 새 Event · 새 Method는 지금처럼 그 종류의 맨 뒤.</li>
+<li>기준: 지금 다이어그램에서 나온 것은 곁에, 빈 새 다이어그램은 끝에.</li></ul>
+  <figure><div class="scene"><svg class="ns" width="370" height="230" viewBox="0 0 370 230" role="img" aria-label="호출에서 만든 Method는 바로 뒤">
+<text class="colt" x="62" y="18" text-anchor="middle">Event</text>
+<text class="colt" x="250" y="18" text-anchor="middle">Method</text>
+<rect class="dg" x="10" y="28" width="104" height="46"/>
+<rect x="10" y="28" width="104" height="46"/>
+<line x1="10" y1="48" x2="114" y2="48"/>
+<text x="62.0" y="42" text-anchor="middle" style="font-size:11.5px">onStart</text>
+<text class="mut" x="62.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="10" y="84" width="104" height="46"/>
+<rect x="10" y="84" width="104" height="46"/>
+<line x1="10" y1="104" x2="114" y2="104"/>
+<text x="62.0" y="98" text-anchor="middle" style="font-size:11.5px">onClick</text>
+<text class="mut" x="62.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="28" width="104" height="46"/>
+<rect x="140" y="28" width="104" height="46"/>
+<line x1="140" y1="48" x2="244" y2="48"/>
+<text x="192.0" y="42" text-anchor="middle" style="font-size:11.5px">sort</text>
+<text class="mut" x="192.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="84" width="104" height="46"/>
+<rect x="140" y="84" width="104" height="46"/>
+<line x1="140" y1="104" x2="244" y2="104"/>
+<text x="192.0" y="98" text-anchor="middle" style="font-size:11.5px">partition</text>
+<text class="mut" x="192.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dsel" x="141.5" y="85.5" width="101" height="17"/>
+<rect class="newr" x="140" y="140" width="104" height="46"/>
+
+<rect x="140" y="140" width="104" height="46"/>
+<line x1="140" y1="160" x2="244" y2="160"/>
+<text x="192.0" y="154" text-anchor="middle" style="font-size:11.5px">Method 1</text>
+<text class="mut" x="192.0" y="177" text-anchor="middle" style="font-size:11.5px">∅</text>
+<rect class="dg" x="256" y="28" width="104" height="46"/>
+<rect x="256" y="28" width="104" height="46"/>
+<line x1="256" y1="48" x2="360" y2="48"/>
+<text x="308.0" y="42" text-anchor="middle" style="font-size:11.5px">swap</text>
+<text class="mut" x="308.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="256" y="84" width="104" height="46"/>
+<rect x="256" y="84" width="104" height="46"/>
+<line x1="256" y1="104" x2="360" y2="104"/>
+<text x="308.0" y="98" text-anchor="middle" style="font-size:11.5px">print</text>
+<text class="mut" x="308.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="bar" x="10" y="206" width="350" height="18"/>
+<text class="st" x="16" y="219">Method 만들기: partition 바로 뒤</text>
+</svg></div><figcaption>partition 안의 호출 블록에서 Method 만들기 → 바로 뒤</figcaption></figure><figure><div class="scene"><svg class="ns" width="370" height="230" viewBox="0 0 370 230" role="img" aria-label="메뉴의 새 Method는 맨 뒤">
+<text class="colt" x="62" y="18" text-anchor="middle">Event</text>
+<text class="colt" x="250" y="18" text-anchor="middle">Method</text>
+<rect class="dg" x="10" y="28" width="104" height="46"/>
+<rect x="10" y="28" width="104" height="46"/>
+<line x1="10" y1="48" x2="114" y2="48"/>
+<text x="62.0" y="42" text-anchor="middle" style="font-size:11.5px">onStart</text>
+<text class="mut" x="62.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="10" y="84" width="104" height="46"/>
+<rect x="10" y="84" width="104" height="46"/>
+<line x1="10" y1="104" x2="114" y2="104"/>
+<text x="62.0" y="98" text-anchor="middle" style="font-size:11.5px">onClick</text>
+<text class="mut" x="62.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="28" width="104" height="46"/>
+<rect x="140" y="28" width="104" height="46"/>
+<line x1="140" y1="48" x2="244" y2="48"/>
+<text x="192.0" y="42" text-anchor="middle" style="font-size:11.5px">sort</text>
+<text class="mut" x="192.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="84" width="104" height="46"/>
+<rect x="140" y="84" width="104" height="46"/>
+<line x1="140" y1="104" x2="244" y2="104"/>
+<text x="192.0" y="98" text-anchor="middle" style="font-size:11.5px">partition</text>
+<text class="mut" x="192.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dsel" x="141.5" y="85.5" width="101" height="17"/>
+<rect class="dg" x="140" y="140" width="104" height="46"/>
+<rect x="140" y="140" width="104" height="46"/>
+<line x1="140" y1="160" x2="244" y2="160"/>
+<text x="192.0" y="154" text-anchor="middle" style="font-size:11.5px">swap</text>
+<text class="mut" x="192.0" y="177" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="256" y="28" width="104" height="46"/>
+<rect x="256" y="28" width="104" height="46"/>
+<line x1="256" y1="48" x2="360" y2="48"/>
+<text x="308.0" y="42" text-anchor="middle" style="font-size:11.5px">print</text>
+<text class="mut" x="308.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="newr" x="256" y="84" width="104" height="46"/>
+
+<rect x="256" y="84" width="104" height="46"/>
+<line x1="256" y1="104" x2="360" y2="104"/>
+<text x="308.0" y="98" text-anchor="middle" style="font-size:11.5px">Method 1</text>
+<text class="mut" x="308.0" y="121" text-anchor="middle" style="font-size:11.5px">∅</text>
+<rect class="bar" x="10" y="206" width="350" height="18"/>
+<text class="st" x="16" y="219">새 Method(메뉴): 맨 뒤</text>
+</svg></div><figcaption>메뉴의 새 Method → 맨 뒤</figcaption></figure>
+</div>
+<div class="card">
+  <header><span class="num">3</span><h3>지금대로</h3><span class="badge">지금</span></header>
+  <ul><li>새 Event · 새 Method와 호출에서 만든 Method는 그 종류의 맨 뒤.</li>
+<li>붙여넣은 다이어그램과 새 Method로 빼기로 만든 Method만 지금 다이어그램의 바로 뒤.</li>
+<li>뷰포트가 맨 뒤로 스크롤해 보던 자리에서 멀어질 수 있다.</li></ul>
+  <figure><div class="scene"><svg class="ns" width="370" height="230" viewBox="0 0 370 230" role="img" aria-label="맨 뒤에 Method 1">
+<text class="colt" x="62" y="18" text-anchor="middle">Event</text>
+<text class="colt" x="250" y="18" text-anchor="middle">Method</text>
+<rect class="dg" x="10" y="28" width="104" height="46"/>
+<rect x="10" y="28" width="104" height="46"/>
+<line x1="10" y1="48" x2="114" y2="48"/>
+<text x="62.0" y="42" text-anchor="middle" style="font-size:11.5px">onStart</text>
+<text class="mut" x="62.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="10" y="84" width="104" height="46"/>
+<rect x="10" y="84" width="104" height="46"/>
+<line x1="10" y1="104" x2="114" y2="104"/>
+<text x="62.0" y="98" text-anchor="middle" style="font-size:11.5px">onClick</text>
+<text class="mut" x="62.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="28" width="104" height="46"/>
+<rect x="140" y="28" width="104" height="46"/>
+<line x1="140" y1="48" x2="244" y2="48"/>
+<text x="192.0" y="42" text-anchor="middle" style="font-size:11.5px">sort</text>
+<text class="mut" x="192.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="140" y="84" width="104" height="46"/>
+<rect x="140" y="84" width="104" height="46"/>
+<line x1="140" y1="104" x2="244" y2="104"/>
+<text x="192.0" y="98" text-anchor="middle" style="font-size:11.5px">partition</text>
+<text class="mut" x="192.0" y="121" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dsel" x="141.5" y="85.5" width="101" height="17"/>
+<rect class="dg" x="140" y="140" width="104" height="46"/>
+<rect x="140" y="140" width="104" height="46"/>
+<line x1="140" y1="160" x2="244" y2="160"/>
+<text x="192.0" y="154" text-anchor="middle" style="font-size:11.5px">swap</text>
+<text class="mut" x="192.0" y="177" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="dg" x="256" y="28" width="104" height="46"/>
+<rect x="256" y="28" width="104" height="46"/>
+<line x1="256" y1="48" x2="360" y2="48"/>
+<text x="308.0" y="42" text-anchor="middle" style="font-size:11.5px">print</text>
+<text class="mut" x="308.0" y="65" text-anchor="middle" style="font-size:11.5px">⋯</text>
+<rect class="newr" x="256" y="84" width="104" height="46"/>
+
+<rect x="256" y="84" width="104" height="46"/>
+<line x1="256" y1="104" x2="360" y2="104"/>
+<text x="308.0" y="98" text-anchor="middle" style="font-size:11.5px">Method 1</text>
+<text class="mut" x="308.0" y="121" text-anchor="middle" style="font-size:11.5px">∅</text>
+<rect class="bar" x="10" y="206" width="350" height="18"/>
+<text class="st" x="16" y="219">새 Method: 맨 뒤(지금)</text>
+</svg></div><figcaption>partition을 선택하고 있어도 새 Method → 맨 뒤</figcaption></figure>
+</div>
+    </div>
+    <div class="tw">
+      <table>
+        <tr><th>만드는 길</th><th>1</th><th>2</th><th>3 (지금)</th></tr>
+        <tr><td>메뉴의 새 Event · 새 Method</td><td>바로 뒤</td><td>맨 뒤</td><td>맨 뒤</td></tr>
+        <tr><td>"새 Method를 만들고 호출", "Method 만들기"</td><td>바로 뒤</td><td>바로 뒤</td><td>맨 뒤</td></tr>
+        <tr><td>붙여넣기, 새 Method로 빼기</td><td>바로 뒤</td><td>바로 뒤</td><td>바로 뒤</td></tr>
+        <tr><td>지금 다이어그램과 종류가 다를 때 · 선택한 것이 없을 때</td><td colspan="3">그 종류의 맨 뒤(셋 모두)</td></tr>
+      </table>
+    </div>
+    <p class="q">추천은 <b>1</b>입니다. 만드는 길이 달라도 자리가 하나라 규칙이 한 줄이 되고(C2: 새 요소는 지금 요소의 곁), 흔한 도구의 "새 슬라이드 · 새 시트"와 같습니다. 2는 "지금 다이어그램에서 나온 것만 곁에"라는 기준이 분명하지만 자리가 둘로 남습니다. 3은 문서의 끝이 늘 새 다이어그램이라 찾기 쉬운 장점이 있습니다.</p>
+  </section>
+</main>

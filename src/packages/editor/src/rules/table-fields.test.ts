@@ -15,7 +15,7 @@ import type { Selection } from '../state/selection';
 import { selectBlock } from '../state/selection';
 import { around, blockOf, localCall, namedCall } from './rules-blocks';
 import { noticeKey, perform, refused } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase, Table } from './rules-table';
 
 const read = ruleTable('### 텍스트 필드', ['요소', '필드']);
@@ -409,14 +409,14 @@ const rows: Readonly<Record<string, Row>> = {
 const cases: ReadonlyArray<CellCase> = Object.entries(rows).flatMap(([row, entries]) =>
   entries.map((entry, i) => ({ row, column: columns[i] ?? '', ...entry })),
 );
-const { active } = split(cases);
+const named = withNames(cases);
 
 describe('the table of text fields', () => {
   it('T-1708: the table of text fields has the rows and columns that are tested', () => {
     expect(tableKeys(fields)).toEqual(caseKeys(cases));
   });
 
-  it.each(active)('T-1709: a cell of the text fields: $name', async (c) => {
+  it.each(named)('T-1709: a cell of the text fields: $name', async (c) => {
     expect(cellOf(fields, c.row, c.column), 'the cell in the document').toBe(c.doc);
     await c.check?.();
   });

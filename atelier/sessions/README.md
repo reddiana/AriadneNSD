@@ -100,3 +100,5 @@ updated: 2026-10-25
 - [[2026-11-28-15-gemini-handoff-gallery-tests|2026-11-28 Gemini handoff, 갤러리 테스트 보강]]
 - [[2026-11-28-16-interaction-changes|2026-11-28 조작 변경 여덟의 구현 (분신)]]
 - [[2026-11-28-17-interaction-abstraction-review|2026-11-28 조작 규칙 · 아키텍처 · 설계의 추상화 검토 (분신, 매듭)]]
+- [[2026-11-28-18-impl-bl3-bl4-un3|2026-11-28 BL3 · BL4 · UN3 구현 (분신)]]
+- [[2026-11-28-19-u3-u6-decisions|2026-11-28 U3 · U6 결정 (분신)]]

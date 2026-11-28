@@ -29,7 +29,7 @@ import {
   body,
 } from './rules-fixture';
 import type { Selector } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase } from './rules-table';
 
 const chains = ruleTable('### 명령마다 받는 대상', ['선택한 요소', '사슬']);
@@ -134,7 +134,7 @@ const rawMissing =
   (block: string): Selector =>
   () => ({ kind: 'missingDefault', block });
 
-type Entry = Pick<CellCase, 'doc' | 'check' | 'pending'>;
+type Entry = Pick<CellCase, 'doc' | 'check'>;
 const cell = (doc: string, check?: () => void | Promise<void>): Entry =>
   check === undefined ? { doc } : { doc, check };
 
@@ -338,9 +338,8 @@ const targetRows: Readonly<Record<string, Pair>> = {
   ],
   '접기 영역 만들기': [
     {
+      // The document still has the words from before BL4: they change at the cleanup.
       doc: '블록 범위(펴 보인 범위는 그 위치의 접기 영역이 된다)',
-      // BL4: a branch label gives the blocks of its branch.
-      pending: 'BL4',
       check: async () => {
         await takes('fold.make', select.range('a', 'w'), peekH, labelK);
         const engine = await after(labelK, 'fold.make');
@@ -354,9 +353,8 @@ const targetRows: Readonly<Record<string, Pair>> = {
   ],
   '새 Method로 빼기': [
     {
+      // The document still has the words from before BL4: they change at the cleanup.
       doc: '블록 범위, 접기 영역',
-      // BL4: a branch label gives the blocks of its branch.
-      pending: 'BL4',
       check: async () => {
         await takes('diagram.extractMethod', select.range('a', 'w'), foldF, labelK);
         const engine = await after(labelK, 'diagram.extractMethod');
@@ -378,15 +376,15 @@ const targetCases: ReadonlyArray<CellCase> = Object.entries(targetRows).flatMap(
     { row, column: '상위로 올라가는가', ...climbs },
   ],
 );
-const chainSplit = split(chainCases);
-const targetSplit = split(targetCases);
+const chainNamed = withNames(chainCases);
+const targetNamed = withNames(targetCases);
 
 describe('table 1: the containers around a selection', () => {
   it('T-1710: table 1 of the command targets has the rows that are tested', () => {
     expect(tableKeys(chains)).toEqual(caseKeys(chainCases));
   });
 
-  it.each(chainSplit.active)('T-1711: a row of table 1: $name', async (c) => {
+  it.each(chainNamed)('T-1711: a row of table 1: $name', async (c) => {
     expect(cellOf(chains, c.row, c.column), 'the cell in the document').toBe(c.doc);
     await c.check?.();
   });
@@ -402,16 +400,7 @@ describe('table 2: what each command takes', () => {
     expect(tableKeys(targets)).toEqual(caseKeys(targetCases));
   });
 
-  it.each(targetSplit.active)('T-1713: a cell of table 2: $name', run);
-
-  it('T-1714: extract and fold.make take block ranges today (BL4 adds the branch label)', async () => {
-    await takes('fold.make', select.range('a', 'w'), peekH);
-    await takes('diagram.extractMethod', select.range('a', 'w'), foldF);
-  });
-
-  describe.skip('cells waiting for BL4', () => {
-    it.each(targetSplit.pending)('T-1715: a cell of table 2 that BL4 changes: $name', run);
-  });
+  it.each(targetNamed)('T-1713: a cell of table 2: $name', run);
 });
 
 /**

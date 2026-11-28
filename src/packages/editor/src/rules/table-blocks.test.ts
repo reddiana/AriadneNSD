@@ -12,7 +12,7 @@ import { around, blockOf, localCall, namedCall } from './rules-blocks';
 import type { KindUnderTest } from './rules-blocks';
 import { noticeKey, perform, refused, seqOutline } from './rules-fixture';
 import type { Selector } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase } from './rules-table';
 
 const kinds = ruleTable('### 블록 종류', ['종류', '분류']);
@@ -115,7 +115,7 @@ async function insertedCall(title: string): Promise<unknown> {
   return open?.kind === 'call' ? open.part : open;
 }
 
-type Entry = Pick<CellCase, 'doc' | 'check' | 'pending'>;
+type Entry = Pick<CellCase, 'doc' | 'check'>;
 type Row = readonly [
   group: Entry,
   text: Entry,
@@ -322,14 +322,14 @@ const rows: Readonly<Record<string, Row>> = {
 const cases: ReadonlyArray<CellCase> = Object.entries(rows).flatMap(([row, entries]) =>
   entries.map((entry, i) => ({ row, column: columns[i] ?? '', ...entry })),
 );
-const { active } = split(cases);
+const named = withNames(cases);
 
 describe('the table of block kinds', () => {
   it('T-1706: the table of block kinds has the rows and columns that are tested', () => {
     expect(tableKeys(kinds)).toEqual(caseKeys(cases));
   });
 
-  it.each(active)('T-1707: a cell of the block kinds: $name', async (c) => {
+  it.each(named)('T-1707: a cell of the block kinds: $name', async (c) => {
     expect(cellOf(kinds, c.row, c.column), 'the cell in the document').toBe(c.doc);
     await c.check?.();
   });

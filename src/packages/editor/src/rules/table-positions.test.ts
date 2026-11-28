@@ -21,7 +21,7 @@ import {
   select,
 } from './rules-fixture';
 import type { Selector } from './rules-fixture';
-import { caseKeys, cellOf, ruleTable, split, tableKeys } from './rules-table';
+import { caseKeys, cellOf, ruleTable, tableKeys, withNames } from './rules-table';
 import type { CellCase } from './rules-table';
 
 const positions = ruleTable('### 삽입 위치', ['선택하거나 가리킨 요소']);
@@ -164,7 +164,7 @@ async function besideBranch(way: Way): Promise<void> {
   expect(converted.session.chrome().notice).not.toBeNull();
 }
 
-type Entry = Pick<CellCase, 'doc' | 'check' | 'pending'>;
+type Entry = Pick<CellCase, 'doc' | 'check'>;
 const cell = (doc: string, check: () => void | Promise<void>): Entry => ({ doc, check });
 
 const rows: Readonly<Record<string, readonly [after: Entry, before: Entry]>> = {
@@ -181,9 +181,8 @@ const rows: Readonly<Record<string, readonly [after: Entry, before: Entry]>> = {
   ],
   '분기 라벨': [
     {
+      // The document still has the words from before BL3: they change at the cleanup.
       doc: '그 분기의 오른쪽에 새 분기(처리 삽입은 빈 블록 하나를, 붙여넣기는 붙인 블록을 담는다). default 분기의 오른쪽이면 그 왼쪽에 놓고 알린다. If는 Case로 바꾸고 알린다. 처리가 아닌 블록의 삽입은 거절한다',
-      // BL3: a block that is not a process also makes a new branch, holding it.
-      pending: 'BL3',
       check: async () => {
         await besideBranch('after');
         const atDefault = await after(select.label('gd'), 'block.insert.process');
@@ -273,7 +272,7 @@ const cases: ReadonlyArray<CellCase> = Object.entries(rows).flatMap(([row, [belo
   { row, column: AFTER, ...below },
   { row, column: BEFORE, ...above },
 ]);
-const { active, pending } = split(cases);
+const named = withNames(cases);
 
 const run = async (c: CellCase): Promise<void> => {
   expect(cellOf(positions, c.row, c.column), 'the cell in the document').toBe(c.doc);
@@ -286,9 +285,5 @@ describe('the table of insert positions', () => {
     expect(tableKeys(positions, ['근거'])).toEqual(caseKeys(cases));
   });
 
-  it.each(active)('T-1704: a cell of the insert positions: $name', run);
-
-  describe.skip('cells waiting for BL3', () => {
-    it.each(pending)('T-1705: a cell of the insert positions that BL3 changes: $name', run);
-  });
+  it.each(named)('T-1704: a cell of the insert positions: $name', run);
 });
