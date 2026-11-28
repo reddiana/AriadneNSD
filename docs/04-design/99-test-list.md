@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 358 | - | 410 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1100 | 5 | 1479 |
+| 합계 | 87 | 287 | 1105 | 5 | 1484 |
 
 ## 읽는 법
 
@@ -252,9 +252,9 @@ copy, cut and paste · paste a copied diagram (UX HC1). Vitest · 테스트 11�
 | T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 블록을 붙여 넣으면 이름 호출이 된다 | - |
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 삭제한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-1638 | it goes after the selected diagram of its kind under a new name, keeping what it receives | [[ux-decisions\|UX HC1]] |
-| T-1639 | beside a diagram of the other kind or with nothing selected, it goes at the end of its kind | [[ux-decisions\|UX HC1]] |
-| T-1640 | its calls to itself call the copy; other calls find the Method by name or keep the name | [[ux-decisions\|UX HC1]] |
+| T-1643 | it goes after the selected diagram of its kind under a new name, keeping what it receives | [[ux-decisions\|UX HC1]] |
+| T-1644 | beside a diagram of the other kind or with nothing selected, it goes at the end of its kind | [[ux-decisions\|UX HC1]] |
+| T-1645 | its calls to itself call the copy; other calls find the Method by name or keep the name | [[ux-decisions\|UX HC1]] |
 
 ^t-packages-core-src-commands-clipboard-test-ts
 
@@ -436,10 +436,10 @@ move up and down with the name bands off (UX FM1) · move up and down · move le
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1633 | stepping out of a hidden region and trading places happen at once | [[ux-decisions\|UX FM1]] |
-| T-1634 | blocks trade places with one block of a hidden region at a time, in it only while between its blocks | [[ux-decisions\|UX FM1]] |
-| T-1635 | nested hidden regions are left in one press, and a drawn folded region is jumped over whole | [[ux-decisions\|UX FM1]] |
-| T-1636 | at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once | [[ux-decisions\|UX FM1]] |
+| T-1638 | stepping out of a hidden region and trading places happen at once | [[ux-decisions\|UX FM1]] |
+| T-1639 | blocks trade places with one block of a hidden region at a time, in it only while between its blocks | [[ux-decisions\|UX FM1]] |
+| T-1640 | nested hidden regions are left in one press, and a drawn folded region is jumped over whole | [[ux-decisions\|UX FM1]] |
+| T-1641 | at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once | [[ux-decisions\|UX FM1]] |
 | T-0156 | 블록이 아래나 위의 블록과 위치를 바꾼다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0157 | 블록은 제어 블록을 건너뛰고 그 안으로 들어가지 않는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0158 | 줄의 끝에서는 블록이 그것을 담은 제어 블록 밖으로 나간다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
@@ -669,12 +669,12 @@ id. Vitest · 테스트 5개.
 | T-1610 | 잘라내기는 그 분기의 블록을 복사하고 분기를 삭제하며, 실행 취소 한 단계다 | - |
 | T-1611 | 삭제가 분기를 거절하는 곳에서는 잘라내기도 같은 알림으로 거절하고 아무것도 복사하지 않는다 | - |
 | T-1612 | below puts the blocks into a new branch on the right, above on the left, and opens its label, in one undo step | [[ux-decisions\|UX BL2]] |
-| T-1641 | right of the default the branch goes left of it, with the same notice as inserting | [[ux-decisions\|UX BL2]] |
-| T-1642 | on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back | [[ux-decisions\|UX BL2]] |
-| T-1643 | on a parallel branch the new branch is only selected; a cut branch can be put back beside another | [[ux-decisions\|UX BL2]] |
-| T-1644 | copy on a header takes the whole diagram, as indented text and as model JSON | [[ux-decisions\|UX HC1]] |
-| T-1645 | pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected | [[ux-decisions\|UX HC1]] |
-| T-1646 | the blocks go at the end of the current diagram and are selected | [[ux-decisions\|UX PS1]] |
+| T-1646 | right of the default the branch goes left of it, with the same notice as inserting | [[ux-decisions\|UX BL2]] |
+| T-1647 | on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back | [[ux-decisions\|UX BL2]] |
+| T-1648 | on a parallel branch the new branch is only selected; a cut branch can be put back beside another | [[ux-decisions\|UX BL2]] |
+| T-1649 | copy on a header takes the whole diagram, as indented text and as model JSON | [[ux-decisions\|UX HC1]] |
+| T-1650 | pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected | [[ux-decisions\|UX HC1]] |
+| T-1651 | the blocks go at the end of the current diagram and are selected | [[ux-decisions\|UX PS1]] |
 | T-0562 | %s를 선택했을 때 %s의 이름은 %s다 | - |
 | T-1363 | 분기 라벨에서 풀면 If를 풀고 나온 블록들을 선택한다 | [[ux-decisions\|UX Q8]] |
 | T-1364 | 빈 default 칸에서 풀면 Case를 푼다 | [[ux-decisions\|UX Q8]] |
@@ -721,7 +721,7 @@ id. Vitest · 테스트 5개.
 | T-1105 | fold region: 같은 범위는 다시 만들지 않고, zd는 선택한 것을 담은 가장 작은 접기 영역을 푼다 | - |
 | T-1106 | fold region: 접기 영역 안의 블록에서 접으면 그 영역을 접고, 접힌 영역은 하나로 친다 | - |
 | T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
-| T-1637 | with the name bands off, one move leaves a region and trades places; with them on it takes two | [[ux-decisions\|UX FM1]] |
+| T-1642 | with the name bands off, one move leaves a region and trades places; with them on it takes two | [[ux-decisions\|UX FM1]] |
 | T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
 | T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
 | T-1426 | fold undo: f로 접은 것을 u가 펴고 U가 다시 접으며, 저장한 때로 돌아오면 문서는 바뀌지 않은 것이 된다 | - |
@@ -878,8 +878,8 @@ id. Vitest · 테스트 5개.
 | T-0626 | 선택이 있으면 휠 50px이 `↓`나 `↑` 한 번이고, 그보다 적으면 더 기다린다 | - |
 | T-0627 | 줄이나 쪽 단위로 센 휠은 바로 움직인다 | - |
 | T-0628 | 선택이 없거나, `Shift`를 누르거나, 옆으로 굴리거나, 텍스트를 입력하는 중이면 휠은 평소대로 스크롤한다 | - |
-| T-1647 | over the empty canvas the wheel scrolls, also with something selected | [[ux-decisions\|UX WH1]] |
-| T-1648 | up from the top and down from the bottom selection scroll the canvas | [[ux-decisions\|UX WH1]] |
+| T-1652 | over the empty canvas the wheel scrolls, also with something selected | [[ux-decisions\|UX WH1]] |
+| T-1653 | up from the top and down from the bottom selection scroll the canvas | [[ux-decisions\|UX WH1]] |
 | T-0629 | 선택한 것이 없으면 줌해도 캔버스의 가운데가 제자리에 있다 | - |
 | T-0630 | 줌해도 선택의 가운데가 제자리에 있다 | - |
 | T-0631 | 같은 단계나 한계 너머로의 줌은 더 아무 일도 하지 않는다 | - |
@@ -895,8 +895,8 @@ id. Vitest · 테스트 5개.
 | T-0640 | 캔버스 밖이나 드래그하는 블록 자신 위에는 드롭 위치가 없다 | - |
 | T-0641 | 보기 전용에서 누름은 드래그가 되지 않는다 | - |
 | T-1599 | M87 F2: 접기 영역이나 접힌 칸의 이름 띠를 눌러 드래그하면 접기 영역 전체를 드래그한다 | - |
-| T-1650 | over a parallel branch’s part of the top band, that part and the branch cell get the hover outline | [[ux-decisions\|UX PH1]] |
-| T-1649 | dragging a folded row moves all the blocks of its branch, in one undo step | [[ux-decisions\|UX DF4]] |
+| T-1655 | over a parallel branch’s part of the top band, that part and the branch cell get the hover outline | [[ux-decisions\|UX PH1]] |
+| T-1654 | dragging a folded row moves all the blocks of its branch, in one undo step | [[ux-decisions\|UX DF4]] |
 | T-0642 | 캔버스 가장자리 가까이에서 드래그하면 그쪽으로 스크롤된다 | - |
 | T-0643 | 블록 사이에 드롭하면 새 블록을 거기에 삽입하고 그 텍스트를 연다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0644 | 블록 위에 제어 블록을 드롭하면 그 블록을 감싸고, 라벨이 그렇다고 알린다 | [[01-requirements#^r-edit\|R-EDIT-06]] |
@@ -1155,7 +1155,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 19개, 테스트 132개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 20개, 테스트 137개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1296,14 +1296,28 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [단위] `apps/gallery/crisp-lines.test.ts`
 
-갤러리에 옮긴 편집기의 선명한 선 (M88, pages/crisp-lines.js). Vitest · 테스트 2개.
+갤러리에 옮긴 편집기의 선명한 선 (M88, pages/crisp-lines.js). Vitest + happy-dom · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1630 | 편집기처럼 화면 배율에서 모든 선의 굵기를 장치 픽셀의 정수로 맞춘다 | - |
 | T-1631 | 가장자리가 선명한 도형과 채우지 않은 곧은 경로는 맞추고, 대각선은 두며, 100%에서는 굵기를 지운다 | - |
+| T-1633 | 실제 셀렉터로 도형을 고른다: 가장자리가 선명한 요소와 채우지 않은 경로는 고르고, 채운 경로와 선 굵기가 없는 도형은 고르지 않는다 | - |
 
 ^t-apps-gallery-crisp-lines-test-ts
+
+### [단위] `apps/gallery/gallery-page.test.ts`
+
+빌드한 페이지에서 도는 갤러리 페이지의 스크립트 (M70, M88, pages/gallery.js). Vitest + happy-dom · 테스트 4개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1634 | 주소 해시의 항목을 페이지 안에 화면 배율로 맞춰 보이고, 파일은 한 번만 읽는다 | - |
+| T-1635 | 더는 선택되지 않은 항목의 늦은 응답은 선택된 그림을 바꾸지 않는다 | - |
+| T-1636 | 읽지 못한 파일은 `<img>`로 보이고, 다음에 다시 요청한다 | - |
+| T-1637 | 화면 배율이 바뀌면 보이는 그림을 다시 맞추고 새 배율을 지켜본다 | - |
+
+^t-apps-gallery-gallery-page-test-ts
 
 ### [단위] `apps/web/scripts/example-thumbnails.test.ts`
 

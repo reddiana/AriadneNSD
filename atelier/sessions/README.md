@@ -97,3 +97,4 @@ updated: 2026-10-25
 - [[2026-11-28-12-push-and-ci|2026-11-28 push 전 검사와 push, CI의 번들 크기, 서브 세션 규칙]]
 - [[2026-11-28-13-gallery-line-width|2026-11-28 갤러리 그림의 선 굵기 (분신)]]
 - [[2026-11-28-14-grand-principles|2026-11-28 조작의 디자인 원칙과 공통 규칙, UX 설계 문서의 말 (분신)]]
+- [[2026-11-28-15-gemini-handoff-gallery-tests|2026-11-28 Gemini handoff, 갤러리 테스트 보강]]
