@@ -10,7 +10,7 @@ import { findDrop } from '../input/drop';
 import type { Point } from '../input/hit-test';
 import { ancestorsOf } from '../model/doc-index';
 import type { EditorSession } from '../session/session';
-import { selectBlock, selectedBlocks, targetOf } from '../state/selection';
+import { foldBlocks, selectBlock, selectFold, selectedBlocks, targetOf } from '../state/selection';
 
 /** A press must move this far before it is a drag (03-editor 3.2). */
 export const dragThreshold = 4;
@@ -74,6 +74,32 @@ export class CanvasDrag {
     const firstBlock = first === undefined ? undefined : index.blocks.get(first)?.block;
     const text = firstBlock !== undefined && 'text' in firstBlock ? firstBlock.text : '';
     this.beginDrag(source, text.split('\n')[0] ?? '', null, event);
+  }
+
+  /**
+   * Starts dragging a whole fold region of the model: pressed on its name band or its folded
+   * cell (M87 F2). The region and its blocks move together, by the drop rules of blocks.
+   */
+  startFoldDrag(fold: Id, event: PointerEvent): void {
+    const session = this.host.session;
+    const index = session.index();
+    const blocks = foldBlocks(index, fold);
+    if (blocks.length === 0) {
+      return;
+    }
+    session.select(selectFold(fold, []));
+    const owner = index.folds.get(fold);
+    const mark =
+      owner === undefined
+        ? undefined
+        : index.seqs.get(owner)?.seq.folds.find((item) => item.id === fold);
+    const [first] = blocks;
+    const firstBlock = first === undefined ? undefined : index.blocks.get(first)?.block;
+    // The label is the region's name, or its first block's text as for dragged blocks.
+    const blockText = firstBlock !== undefined && 'text' in firstBlock ? firstBlock.text : '';
+    const text = mark?.name ?? blockText;
+    const label = text.split('\n')[0] ?? '';
+    this.beginDrag({ kind: 'blocks', target: { kind: 'fold', fold }, blocks }, label, null, event);
   }
 
   /** Starts dragging a new block from a toolbar icon (the UI calls this after 4 px). */

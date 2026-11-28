@@ -468,3 +468,62 @@ describe('dropping next to a fold region (interaction rules 7, M86)', () => {
     });
   });
 });
+
+describe('dragging a whole fold region (interaction rules 7, M87 F2)', () => {
+  const draggingFold = (fold: string, ...blocks: ReadonlyArray<string>): DragSource => ({
+    kind: 'blocks',
+    target: { kind: 'fold', fold },
+    blocks,
+  });
+
+  it('T-1597: a dragged region drops by the rules of blocks and moves with its blocks, in one undo step', () => {
+    const { boxOf, drop } = placesOf(docWith(plain));
+    const pz = boxOf('pz');
+    const got = drop({ x: middleX(pz), y: bottomOf(pz) - 2 }, draggingFold('f', 'p0', 'p1', 'p2'));
+    expect(got?.action).toEqual({
+      kind: 'move',
+      target: { kind: 'fold', fold: 'f' },
+      to: 'pz',
+      side: 'after',
+    });
+    if (got === null) {
+      throw new Error('no drop');
+    }
+    const engine = testEngine(plain);
+    expect(runDrop(engine.session, got.action)).toBe(true);
+    const d1 = engine.content().diagrams[0];
+    expect(d1?.body.blocks.map((b) => b.id)).toEqual(['pa', 'pz', 'p0', 'p1', 'p2']);
+    expect(d1?.body.folds).toEqual([{ id: 'f', first: 'p0', last: 'p2' }]);
+    expect(engine.session.state.undo).toHaveLength(1);
+    // The region stays selected as a region.
+    expect(engine.session.state.selection).toEqual({ kind: 'fold', fold: 'f' });
+  });
+
+  it('T-1598: a dragged region is not dropped on itself, inside itself, or on the regions inside it', () => {
+    const nested = headed(
+      [proc('pa'), proc('p0'), proc('p1'), proc('p2'), proc('pz')],
+      [
+        { id: 'f1', first: 'p0', last: 'p2' },
+        { id: 'f2', first: 'p1', last: 'p2' },
+      ],
+    );
+    const { boxOf, drop } = placesOf(docWith(nested));
+    const source = draggingFold('f1', 'p0', 'p1', 'p2');
+    const f1 = boxOf('f1');
+    const f2 = boxOf('f2');
+    const p1 = boxOf('p1');
+    expect(drop({ x: middleX(f1), y: f1.y + band / 2 }, source)).toBeNull();
+    expect(drop({ x: middleX(f1), y: bottomOf(f1) - 2 }, source)).toBeNull();
+    expect(drop({ x: middleX(f2), y: f2.y + band / 2 }, source)).toBeNull();
+    expect(drop({ x: middleX(p1), y: p1.y + p1.height / 2 }, source)).toBeNull();
+    // The inner region may be dragged out over the outer one's edge.
+    expect(
+      drop({ x: middleX(f1), y: f1.y + band / 2 }, draggingFold('f2', 'p1', 'p2'))?.action,
+    ).toMatchObject({
+      kind: 'move',
+      target: { kind: 'fold', fold: 'f2' },
+      to: 'p0',
+      side: 'before',
+    });
+  });
+});

@@ -11,7 +11,7 @@ import { ancestorsOf } from '../model/doc-index';
 import type { EditorSession } from '../session/session';
 import type { EditField } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import { extendPeekTo, extendTo, selectedBlocks } from '../state/selection';
+import { extendPeekTo, extendTo, foldPath, selectedBlocks } from '../state/selection';
 import type { CanvasDrag } from './canvas-drag';
 import { dragThreshold } from './canvas-drag';
 import type { InlineEditor } from './inline-editor';
@@ -25,6 +25,8 @@ type Press = {
   readonly x: number;
   readonly y: number;
   readonly block: Id | null;
+  /** A fold region of the model pressed on its name band or folded cell: dragged whole (M87 F2). */
+  readonly fold: Id | null;
   /** A click inside a selected range selects only on release, so the range can be dragged. */
   readonly deferred: Selection | null;
 };
@@ -284,8 +286,12 @@ export class CanvasInput {
       this.host.run('view.fold.toggle');
       return;
     }
-    // Only blocks of the model are dragged; they and the blocks shown in an opened call widen a
-    // range with Shift. Folded rows and fold regions are selected as they are.
+    // Only blocks and fold regions of the model are dragged (M87 F2); blocks and the blocks shown
+    // in an opened call widen a range with Shift. Folded rows are selected as they are.
+    const fold =
+      clicked?.kind === 'fold' && foldPath(clicked).length === 0 && index.folds.has(clicked.fold)
+        ? clicked.fold
+        : null;
     const isModelBlock = hit.kind === 'block' && index.blocks.has(hit.block);
     const selected = selectedBlocks(index, state.selection);
     const isInRange =
@@ -305,6 +311,7 @@ export class CanvasInput {
       x: event.clientX,
       y: event.clientY,
       block: isModelBlock ? hit.block : null,
+      fold: event.shiftKey ? null : fold,
       deferred: isInRange && !event.shiftKey ? clicked : null,
     };
     this.host.canvas.setPointerCapture(event.pointerId);
@@ -320,10 +327,15 @@ export class CanvasInput {
     const press = this.press;
     if (press !== null && press.pointerId === event.pointerId) {
       const distance = Math.hypot(event.clientX - press.x, event.clientY - press.y);
-      if (distance > dragThreshold && press.block !== null && !this.session.state.readOnly) {
+      if (distance > dragThreshold && !this.session.state.readOnly) {
         // The press becomes the drag.
-        this.press = null;
-        drag.startBlocksDrag(press.block, event);
+        if (press.block !== null) {
+          this.press = null;
+          drag.startBlocksDrag(press.block, event);
+        } else if (press.fold !== null) {
+          this.press = null;
+          drag.startFoldDrag(press.fold, event);
+        }
       }
       return;
     }

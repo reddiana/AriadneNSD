@@ -6,7 +6,7 @@ import { addDefaultBranch, insertBlock, moveTo, wrap } from '@ariadne-nsd/core';
 import type { DragSource, DropAction } from '../input/drop';
 import { indexDoc, placeOf } from '../model/doc-index';
 import type { After, EditorSession } from '../session/session';
-import { selectBlock, selectRange } from '../state/selection';
+import { selectBlock, selectFold, selectRange } from '../state/selection';
 
 /** The dropped or new blocks become the selection; a new block opens its text field. */
 function afterDrop(isNew: boolean) {
@@ -26,6 +26,14 @@ function afterDrop(isNew: boolean) {
       ? { selection, edit: { field: { kind: 'block', block: first }, caret: 'end' } }
       : { selection };
   };
+}
+
+/** After a fold region is dropped: the region stays selected, wherever it went. */
+function afterFoldDrop(fold: Id) {
+  return (ok: { readonly content: Content }): After =>
+    indexDoc(ok.content).folds.has(fold)
+      ? { selection: selectFold(fold, []) }
+      : afterDrop(false)({ content: ok.content, touched: [] });
 }
 
 /** What a source does when it lands on block `to` (`side` of it). */
@@ -79,7 +87,8 @@ function runAction(session: EditorSession, action: DropAction, content: Content)
           outsideFolds: action.outsideFolds === true,
           ...(action.outsideFold === undefined ? {} : { outsideFold: action.outsideFold }),
         }),
-        afterDrop(false),
+        // A dragged fold region stays selected as a region (M87 F2).
+        action.target.kind === 'fold' ? afterFoldDrop(action.target.fold) : afterDrop(false),
       );
     case 'intoMissingDefault': {
       // One generator for both steps, so the second never reuses an id of the first.

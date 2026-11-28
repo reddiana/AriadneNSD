@@ -992,6 +992,36 @@ describe('CanvasView: dragging blocks (03-editor 3.2, R-EDIT-09)', () => {
     expect(made.canvas.classList.contains('ans-is-dragging')).toBe(false);
   });
 
+  it('T-1599 · M87 F2: pressing and dragging the name band of a fold region or folded cell drags the whole region', () => {
+    const [d1] = three().diagrams;
+    if (d1 === undefined) throw new Error('no d1');
+    const folded: Content = {
+      ...three(),
+      diagrams: [{ ...d1, body: { ...d1.body, folds: [{ id: 'f', first: 'b1', last: 'b2' }] } }],
+    };
+    const made = make(folded);
+    const band = { clientX: middleOf(made, 'f').clientX, clientY: boxOf(made, 'f').y + 4 };
+    pointer(made.canvas, 'pointerdown', band);
+    expect(made.engine.session.state.selection).toEqual({ kind: 'fold', fold: 'f' });
+    pointer(made.canvas, 'pointermove', below(made, 'b3'));
+    expect(made.canvas.classList.contains('ans-is-dragging')).toBe(true);
+    pointer(made.canvas, 'pointerup', below(made, 'b3'));
+    expect(blockIds(made)).toEqual(['b3', 'b1', 'b2']);
+    expect(made.engine.content().diagrams[0]?.body.folds).toEqual([
+      { id: 'f', first: 'b1', last: 'b2' },
+    ]);
+    expect(made.engine.session.state.undo).toHaveLength(1);
+    expect(made.engine.session.state.selection).toEqual({ kind: 'fold', fold: 'f' });
+    // Folded, its cell drags the same way.
+    made.engine.session.setView({ ...made.engine.session.state.doc.view, folded: ['f'] });
+    const top = { clientX: middleOf(made, 'b3').clientX, clientY: boxOf(made, 'b3').y + 1 };
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'f'));
+    pointer(made.canvas, 'pointermove', top);
+    pointer(made.canvas, 'pointerup', top);
+    expect(blockIds(made)).toEqual(['b1', 'b2', 'b3']);
+    expect(made.engine.session.state.undo).toHaveLength(3);
+  });
+
   it('T-0642: a drag near the canvas edge scrolls that way', async () => {
     const made = make(three());
     const scrolls: [number, number][] = [];
