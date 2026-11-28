@@ -277,7 +277,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/diagram.test.ts`
 
-editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName · empty parentheses receive nothing (R-BLK-07, UX CB18). Vitest · 테스트 34개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-07]], [[ux-decisions|UX CB18]].
+헤더와 다이어그램의 명령(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName) · 빈 괄호는 받는 것이 없다(R-BLK-07, UX CB18). Vitest · 테스트 34개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-07]], [[ux-decisions|UX CB18]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -314,7 +314,7 @@ editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings
 | T-0130 | 헤더의 모양을 바꾼다 | [[01-requirements#^r-lay\|R-LAY-10]] |
 | T-0131 | 01-model 4: 같은 설정이면 내용은 그대로다 | - |
 | T-0132 | "Event n"이나 "Method n"이고, n은 쓰이지 않은 가장 작은 수다 | [[01-requirements#^r-blk\|R-BLK-10]] |
-| T-1800 | emptying the parentheses clears the arguments, and fills none | [[ux-decisions\|UX CB18]] |
+| T-1800 | 괄호 안을 비우면 인자를 지우고, 아무것도 채우지 않는다 | [[ux-decisions\|UX CB18]] |
 
 ^t-packages-core-src-commands-diagram-test-ts
 
@@ -717,7 +717,7 @@ id. Vitest · 테스트 5개.
 | T-1664 | 이름이 중복되어 거절된 헤더 이름도 다시 입력하면 같은 단계에 합쳐진다 | [[ux-decisions\|UX UN3]] |
 | T-1665 | 만든 것이 없으면 합쳐지지 않는다: 남아 있던 빈 블록의 텍스트는 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
 | T-1666 | 나중에 다시 편집한 것은 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
-| T-1801 | inserting it opens the result field only | [[ux-decisions\|UX CB18]] |
+| T-1801 | 삽입하면 결과 필드만 열린다 | [[ux-decisions\|UX CB18]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
@@ -727,8 +727,8 @@ id. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1802 | acting on what is selected says only that it folded | - |
-| T-1803 | going up names the branch, the loop or the region it folded | - |
+| T-1802 | 선택한 것에 적용하면 알림은 접었다고만 말한다 | - |
+| T-1803 | 상위에 적용하면 접은 분기 · 반복 · 접기 영역을 알림이 말한다 | - |
 | T-1097 | fold: If에서 f는 접을 수 있는 분기를 접고, 다시 누르면 편다 | - |
 | T-1098 | fold: 분기 안의 블록에서 접으면 그 분기를 접고 접힌 줄을 선택한다 | - |
 | T-1099 | fold: 단순한 블록 하나뿐인 본문은 접지 않고, 제어 블록 하나뿐인 본문은 접는다 | - |
