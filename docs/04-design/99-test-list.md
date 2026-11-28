@@ -1284,20 +1284,20 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | --- | --- | :---: |
 | T-1630 | 편집기처럼 화면 배율에서 모든 선의 굵기를 장치 픽셀의 정수로 맞춘다 | - |
 | T-1631 | 가장자리가 선명한 도형과 채우지 않은 곧은 경로는 맞추고, 대각선은 두며, 100%에서는 굵기를 지운다 | - |
-| T-1633 | picks its shapes with the real selector: crisp-edged elements and unfilled paths, not filled paths or shapes without a stroke width | - |
+| T-1633 | 실제 셀렉터로 도형을 고른다: 가장자리가 선명한 요소와 채우지 않은 경로는 고르고, 채운 경로와 선 굵기가 없는 도형은 고르지 않는다 | - |
 
 ^t-apps-gallery-crisp-lines-test-ts
 
 ### [단위] `apps/gallery/gallery-page.test.ts`
 
-The gallery page's own script (M70, M88. Vitest + happy-dom · 테스트 4개.
+빌드한 페이지에서 도는 갤러리 페이지의 스크립트 (M70, M88, pages/gallery.js). Vitest + happy-dom · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1634 | shows the entry of the address hash inline, snapped to the display scale, and reads each file once | - |
-| T-1635 | a late answer for an entry no longer selected does not replace the selected one | - |
-| T-1636 | a file that cannot be read shows as the <img>, and is asked for again next time | - |
-| T-1637 | when the display scale changes, snaps the shown diagram again and watches the new scale | - |
+| T-1634 | 주소 해시의 항목을 페이지 안에 화면 배율로 맞춰 보이고, 파일은 한 번만 읽는다 | - |
+| T-1635 | 더는 선택되지 않은 항목의 늦은 응답은 선택된 그림을 바꾸지 않는다 | - |
+| T-1636 | 읽지 못한 파일은 `<img>`로 보이고, 다음에 다시 요청한다 | - |
+| T-1637 | 화면 배율이 바뀌면 보이는 그림을 다시 맞추고 새 배율을 지켜본다 | - |
 
 ^t-apps-gallery-gallery-page-test-ts
 

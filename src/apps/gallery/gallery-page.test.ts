@@ -1,4 +1,4 @@
-// The gallery page's own script (M70, M88: pages/gallery.js) on the built page: which diagram it
+// The gallery page's own script on the built page (M70, M88, pages/gallery.js): which diagram it
 // shows, inline or as the <img> fallback, when answers come late or fail, and when the display
 // scale changes. Runs the built English page in happy-dom with fetch and the scale under control.
 import { execFileSync } from 'node:child_process';

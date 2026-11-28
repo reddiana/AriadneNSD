@@ -193,6 +193,7 @@ M77에서 정함(2026-11-27, 메인테이너: Q1 ②(처음 ①에서 바꿈) ·
 
 - [ ] 번들 크기 검사(`apps/web/scripts/check-size.mjs`)가 CI에서만 돌아 push 전 검사에서 놓침(2026-11-28). 마무리 8번 · `pnpm check`에 웹 앱 빌드 + 크기 검사를 넣을지
 - [ ] `atelier/` · `journal/`에 남은 지어 낸 말(예: 펴내다 → 배포)은 그 문서를 고칠 때 [[how-we-work#문서에서 쓰는 말]]의 원칙대로 맞춤(2026-11-28)
+- [ ] 갤러리 `gallery.js`: 손상된 `.ns.svg`의 파싱 오류(`<parsererror>`)를 보지 않아 오류 상자가 페이지에 들어감(Chromium은 루트를 `svg`로 두고 오류를 끼움). `parsererror`가 있으면 `<img>`로. 파일은 빌드가 만들어 가능성은 낮음 → [[2026-11-28-15-gemini-handoff-gallery-tests]]
 - [ ] 갤러리 밖(README · Obsidian 등 `<img>`로 보이는 곳)에서는 `.ns.svg`의 선이 화면 배율 125 ~ 175%에서 1 · 2칸으로 섞여 보임. 파일 안 CSS는 `<img>`에서 듣지 않음 → [[2026-11-28-13-gallery-line-width]]
 - [ ] 분신이 모듈을 나누거나 import를 바꾸면 루트 `pnpm lint` · `pnpm deps`도 돌리게 할지(2026-11-28 번들 크기 분신이 두 번 놓쳐 main의 전체 check에서 걸림) → [[2026-11-28-11-lazy-locales]]
 - [ ] 문서 검사 훅(`.claude/hooks/doc-check.py`)이 `atelier/sketchbook.md`를 고친 커밋에서 2분 넘게 멈춘 일이 두 번(2026-11-26). 2026-11-28에 두 세션에서 같은 일: 파일 이름을 인자로 손으로 부르면 stdin(훅 입력)을 기다리며 멈춤. 손으로는 `--all </dev/null`로. 인자로 부를 때 stdin을 읽지 않게 고칠지
