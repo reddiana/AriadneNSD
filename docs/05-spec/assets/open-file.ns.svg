@@ -1,0 +1,514 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1032" height="872" viewBox="0 0 1032 872">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="5bcbb9fb4bb0e31b3fd08409f11004ab353c50a36487b51ef816344546eaed28"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "openSvgFile(text)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "findModelElement"
+          },
+          "args": "text",
+          "result": "found"
+        },
+        {
+          "id": "b3",
+          "kind": "if",
+          "text": "!found.ok",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b2",
+                "kind": "exit",
+                "text": "return openFailure(found.reason)   // noModel · prototype"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b6",
+          "kind": "if",
+          "text": "found.element.text is not JSON",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b5",
+                "kind": "exit",
+                "text": "return openFailure('damaged')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b9",
+          "kind": "if",
+          "text": "version attribute !== JSON version",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b8",
+                "kind": "exit",
+                "text": "return openFailure('damaged')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b11",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "value",
+          "result": "result"
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "return result"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "parseModel(value)"
+      },
+      "body": [
+        {
+          "id": "b14",
+          "kind": "if",
+          "text": "value.format !== 'ariadne-nsd'",
+          "yes": {
+            "id": "r7",
+            "body": [
+              {
+                "id": "b13",
+                "kind": "exit",
+                "text": "return openFailure('damaged')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r8",
+            "body": [
+              {
+                "id": "b15",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b17",
+          "kind": "if",
+          "text": "version is not a whole number ≥ 0",
+          "yes": {
+            "id": "r9",
+            "body": [
+              {
+                "id": "b16",
+                "kind": "exit",
+                "text": "return openFailure('damaged')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r10",
+            "body": [
+              {
+                "id": "b18",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b20",
+          "kind": "if",
+          "text": "version === 0",
+          "yes": {
+            "id": "r11",
+            "body": [
+              {
+                "id": "b19",
+                "kind": "exit",
+                "text": "return openFailure('prototype')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r12",
+            "body": [
+              {
+                "id": "b21",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b23",
+          "kind": "if",
+          "text": "version > currentFormatVersion",
+          "yes": {
+            "id": "r13",
+            "body": [
+              {
+                "id": "b22",
+                "kind": "exit",
+                "text": "return openFailure('newerVersion')"
+              }
+            ]
+          },
+          "no": {
+            "id": "r14",
+            "body": [
+              {
+                "id": "b24",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b25",
+          "kind": "process",
+          "text": "migrated = value"
+        },
+        {
+          "id": "b31",
+          "kind": "for",
+          "text": "for (from = version; from < currentFormatVersion; from += 1)",
+          "body": [
+            {
+              "id": "b26",
+              "kind": "process",
+              "text": "migrate = migrations.get(from)"
+            },
+            {
+              "id": "b28",
+              "kind": "if",
+              "text": "migrate === undefined",
+              "yes": {
+                "id": "r15",
+                "body": [
+                  {
+                    "id": "b27",
+                    "kind": "exit",
+                    "text": "return openFailure('damaged')"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r16",
+                "body": [
+                  {
+                    "id": "b29",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b30",
+              "kind": "process",
+              "text": "migrated = migrate(migrated)"
+            }
+          ]
+        },
+        {
+          "id": "b32",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "readDocument"
+          },
+          "args": "migrated",
+          "result": "loaded"
+        },
+        {
+          "id": "b34",
+          "kind": "if",
+          "text": "loaded === null",
+          "yes": {
+            "id": "r17",
+            "body": [
+              {
+                "id": "b33",
+                "kind": "exit",
+                "text": "return openFailure('damaged')   // 필드 · id 형식 · 모르는 키"
+              }
+            ]
+          },
+          "no": {
+            "id": "r18",
+            "body": [
+              {
+                "id": "b35",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b36",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "invariantCheck"
+          },
+          "args": "loaded.doc.content",
+          "result": "problem"
+        },
+        {
+          "id": "b38",
+          "kind": "if",
+          "text": "problem !== null",
+          "yes": {
+            "id": "r19",
+            "body": [
+              {
+                "id": "b37",
+                "kind": "exit",
+                "text": "return openFailure('damaged')   // 불변식"
+              }
+            ]
+          },
+          "no": {
+            "id": "r20",
+            "body": [
+              {
+                "id": "b39",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b40",
+          "kind": "process",
+          "text": "return { ok: true, value: loaded }"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">openSvgFile(text)</tspan></text>
+<path d="M24 64 L481 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="457" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M474 64 L474 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve">found ← <tspan font-weight="600">findModelElement</tspan>(text)</text>
+<rect x="24" y="96" width="457" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 96 L429 144 L481 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="429" y="114" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">!found.ok</text>
+<text x="30" y="139" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="475" y="139" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="144" width="405" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 144 L24 160 L38 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(found.reason)   <tspan fill="#22702a">// noModel · prototype</tspan></text>
+<rect x="429" y="144" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="455" cy="160" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M450.5 164.5 L459.5 155.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="176" width="457" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 176 L395 224 L481 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="373.5" y="194" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">found.element.text is not JSON</text>
+<text x="30" y="219" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="475" y="219" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="224" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 224 L24 240 L38 256" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="244" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)</text>
+<rect x="395" y="224" width="86" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="438" cy="240" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M433.5 244.5 L442.5 235.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="256" width="457" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 256 L395 304 L481 256" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="360.5" y="274" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">version attribute !== JSON version</text>
+<text x="30" y="299" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="475" y="299" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="304" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 304 L24 320 L38 336" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="324" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)</text>
+<rect x="395" y="304" width="86" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="438" cy="320" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M433.5 324.5 L442.5 315.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="336" width="457" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 336 L31 368" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M474 336 L474 368" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="356" font-size="13" fill="#151a22" xml:space="preserve">result ← <tspan font-weight="600">parseModel</tspan>(value)</text>
+<rect x="24" y="368" width="457" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="388" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> result</text>
+<text x="525" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="525" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">parseModel(value)</tspan></text>
+<path d="M525 64 L1008 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="525" y="64" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 64 L917 112 L1008 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="900.5" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">value.format !== <tspan fill="#8a5a00">'ariadne-nsd'</tspan></text>
+<text x="531" y="107" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="112" width="392" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 112 L525 128 L539 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="132" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)</text>
+<rect x="917" y="112" width="91" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="962.5" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M958 132.5 L967 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="144" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 144 L917 192 L1008 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="890.5" y="162" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">version is not a whole number ≥ <tspan fill="#8a5a00">0</tspan></text>
+<text x="531" y="187" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="187" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="192" width="392" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 192 L525 208 L539 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="212" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)</text>
+<rect x="917" y="192" width="91" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="962.5" cy="208" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M958 212.5 L967 203.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="224" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 224 L921 272 L1008 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="921" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">version === <tspan fill="#8a5a00">0</tspan></text>
+<text x="531" y="267" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="272" width="396" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 272 L525 288 L539 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="292" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'prototype'</tspan>)</text>
+<rect x="921" y="272" width="87" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="964.5" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M960 292.5 L969 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="304" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 304 L926 352 L1008 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="900.5" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">version &gt; currentFormatVersion</text>
+<text x="531" y="347" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="352" width="401" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 352 L525 368 L539 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="372" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'newerVersion'</tspan>)</text>
+<rect x="926" y="352" width="82" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="967" cy="368" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M962.5 372.5 L971.5 363.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="384" width="483" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="535" y="404" font-size="13" fill="#151a22" xml:space="preserve">migrated = value</text>
+<rect x="525" y="416" width="483" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="535" y="436" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (from = version; from &lt; currentFormatVersion; from += <tspan fill="#8a5a00">1</tspan>)</text>
+<rect x="547" y="448" width="461" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="557" y="468" font-size="13" fill="#151a22" xml:space="preserve">migrate = migrations.get(from)</text>
+<rect x="547" y="480" width="461" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M547 480 L921 528 L1008 480" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="921" y="498" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">migrate === <tspan fill="#1f45d6">undefined</tspan></text>
+<text x="553" y="523" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="523" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="547" y="528" width="374" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M561 528 L547 544 L561 560" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="571" y="548" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)</text>
+<rect x="921" y="528" width="87" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="964.5" cy="544" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M960 548.5 L969 539.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="547" y="560" width="461" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="557" y="580" font-size="13" fill="#151a22" xml:space="preserve">migrated = migrate(migrated)</text>
+<rect x="525" y="592" width="483" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M532 592 L532 624" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1001 592 L1001 624" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="542" y="612" font-size="13" fill="#151a22" xml:space="preserve">loaded ← <tspan font-weight="600">readDocument</tspan>(migrated)</text>
+<rect x="525" y="624" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 624 L956 672 L1008 624" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="949" y="642" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">loaded === <tspan fill="#1f45d6">null</tspan></text>
+<text x="531" y="667" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="667" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="672" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 672 L525 688 L539 704" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="692" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)   <tspan fill="#22702a">// 필드 · id 형식 · 모르는 키</tspan></text>
+<rect x="956" y="672" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="982" cy="688" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M977.5 692.5 L986.5 683.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="704" width="483" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M532 704 L532 736" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1001 704 L1001 736" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="542" y="724" font-size="13" fill="#151a22" xml:space="preserve">problem ← <tspan font-weight="600">invariantCheck</tspan>(loaded.doc.content)</text>
+<rect x="525" y="736" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M525 736 L937 784 L1008 736" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="937" y="754" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">problem !== <tspan fill="#1f45d6">null</tspan></text>
+<text x="531" y="779" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1002" y="779" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="525" y="784" width="412" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M539 784 L525 800 L539 816" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="549" y="804" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> openFailure(<tspan fill="#8a5a00">'damaged'</tspan>)   <tspan fill="#22702a">// 불변식</tspan></text>
+<rect x="937" y="784" width="71" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="972.5" cy="800" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M968 804.5 L977 795.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="525" y="816" width="483" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="535" y="836" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> { ok: <tspan fill="#1f45d6">true</tspan>, value: loaded }</text>
+</g>
+</svg>

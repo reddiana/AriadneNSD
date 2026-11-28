@@ -278,6 +278,12 @@ sequenceDiagram
     E-->>-S: onStatus (열렸으면 파일 이름, 아니면 이유)
 ```
 
+`core/src/format`이 하는 판별의 차례입니다. 열지 못하는 이유(1장의 표)는 모두 왼쪽 쐐기의 탈출 블록에서 정해집니다.
+
+![[open-file.ns.svg]]
+
+AriadneNSD로 그린 NS 차트입니다(`openSvgFile` · `parseModel`). `readDocument`는 필드 · id 형식 · 모르는 키를, `invariantCheck`는 [[01-model#3. 불변식]]을 검사합니다.
+
 
 ## 6. 미결정 사항
 

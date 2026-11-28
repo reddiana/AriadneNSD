@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1129" height="504" viewBox="0 0 1129 504">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="9a3ff5fb03149a7426c6fd925499f21041c235936fb300c5aaf8061cc8552e37"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "placeItems(items, box)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "needed = 0"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for (const item of items)",
+          "body": [
+            {
+              "id": "b2",
+              "kind": "process",
+              "text": "needed += itemHeight(item)"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "each = floor(max(0, box.height - needed) / count)"
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "y = box.y"
+        },
+        {
+          "id": "b14",
+          "kind": "for",
+          "text": "for (const item of items)",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "if",
+              "text": "item is last",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "height = box.y + box.height - y"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "height = itemHeight(item) + each"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "itemBox = { x: box.x, y, width: box.width, height }"
+            },
+            {
+              "id": "b12",
+              "kind": "if",
+              "text": "item.kind === 'block'",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "call",
+                    "target": {
+                      "kind": "named",
+                      "name": "placeBlock"
+                    },
+                    "args": "item.block, itemBox",
+                    "result": ""
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "call",
+                    "target": {
+                      "kind": "named",
+                      "name": "placeFold"
+                    },
+                    "args": "item.fold, itemBox",
+                    "result": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "process",
+              "text": "y += height"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "splitWidth(total, minimums)"
+      },
+      "body": [
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "extra = total - sum(minimums)"
+        },
+        {
+          "id": "b16",
+          "kind": "process",
+          "text": "used = 0"
+        },
+        {
+          "id": "b22",
+          "kind": "for",
+          "text": "for (const minimum of minimums)",
+          "body": [
+            {
+              "id": "b19",
+              "kind": "if",
+              "text": "minimum is last",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": "width = total - used"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b18",
+                    "kind": "process",
+                    "text": "width = round(minimum + extra · minimum / sum(minimums))"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "widths.push(width)"
+            },
+            {
+              "id": "b21",
+              "kind": "process",
+              "text": "used += width"
+            }
+          ]
+        },
+        {
+          "id": "b23",
+          "kind": "process",
+          "text": "return widths"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeItems(items, box)</tspan></text>
+<path d="M24 64 L505 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="481" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">needed = <tspan fill="#8a5a00">0</tspan></text>
+<rect x="24" y="96" width="481" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> item <tspan fill="#1f45d6">of</tspan> items)</text>
+<rect x="46" y="128" width="459" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="148" font-size="13" fill="#151a22" xml:space="preserve">needed += itemHeight(item)</text>
+<rect x="24" y="160" width="481" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">each = floor(max(<tspan fill="#8a5a00">0</tspan>, box.height - needed) / count)</text>
+<rect x="24" y="192" width="481" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">y = box.y</text>
+<rect x="24" y="224" width="481" height="256" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="244" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> item <tspan fill="#1f45d6">of</tspan> items)</text>
+<rect x="46" y="256" width="459" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 256 L272 304 L505 256" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="272" y="274" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is last</text>
+<text x="52" y="299" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="499" y="299" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="304" width="226" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="324" font-size="13" fill="#151a22" xml:space="preserve">height = box.y + box.height - y</text>
+<rect x="272" y="304" width="233" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="282" y="324" font-size="13" fill="#151a22" xml:space="preserve">height = itemHeight(item) + each</text>
+<rect x="46" y="336" width="459" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="356" font-size="13" fill="#151a22" xml:space="preserve">itemBox = { x: box.x, y, width: box.width, height }</text>
+<rect x="46" y="368" width="459" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 368 L282 416 L505 368" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="282" y="386" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item.kind === <tspan fill="#8a5a00">'block'</tspan></text>
+<text x="52" y="411" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="499" y="411" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="416" width="236" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 416 L53 448" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M275 416 L275 448" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="436" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeBlock</tspan>(item.block, itemBox)</text>
+<rect x="282" y="416" width="223" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M289 416 L289 448" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M498 416 L498 448" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="299" y="436" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeFold</tspan>(item.fold, itemBox)</text>
+<rect x="46" y="448" width="459" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="468" font-size="13" fill="#151a22" xml:space="preserve">y += height</text>
+<text x="549" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="549" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">splitWidth(total, minimums)</tspan></text>
+<path d="M549 64 L1105 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="549" y="64" width="556" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="84" font-size="13" fill="#151a22" xml:space="preserve">extra = total - sum(minimums)</text>
+<rect x="549" y="96" width="556" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="116" font-size="13" fill="#151a22" xml:space="preserve">used = <tspan fill="#8a5a00">0</tspan></text>
+<rect x="549" y="128" width="556" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="148" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> minimum <tspan fill="#1f45d6">of</tspan> minimums)</text>
+<rect x="571" y="160" width="534" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M571 160 L721 208 L1105 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="721" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">minimum is last</text>
+<text x="577" y="203" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="1099" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="571" y="208" width="150" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="581" y="228" font-size="13" fill="#151a22" xml:space="preserve">width = total - used</text>
+<rect x="721" y="208" width="384" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="731" y="228" font-size="13" fill="#151a22" xml:space="preserve">width = round(minimum + extra · minimum / sum(minimums))</text>
+<rect x="571" y="240" width="534" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="581" y="260" font-size="13" fill="#151a22" xml:space="preserve">widths.push(width)</text>
+<rect x="571" y="272" width="534" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="581" y="292" font-size="13" fill="#151a22" xml:space="preserve">used += width</text>
+<rect x="549" y="304" width="556" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="559" y="324" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> widths</text>
+</g>
+</svg>
