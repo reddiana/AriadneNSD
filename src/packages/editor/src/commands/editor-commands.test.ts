@@ -129,17 +129,11 @@ const engineAt = (place: Place): TestEngine => {
 const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
   'edit.cut': {
     none: 'reason.nothingSelected',
-    label: 'reason.undecidedOnBranchLabel',
-    armLabel: 'reason.undecidedOnBranchLabel',
-    defaultLabel: 'reason.undecidedOnBranchLabel',
     missing: 'reason.nothingToCut',
     head: 'reason.notOnHead',
   },
   'edit.copy': {
     none: 'reason.nothingSelected',
-    label: 'reason.undecidedOnBranchLabel',
-    armLabel: 'reason.undecidedOnBranchLabel',
-    defaultLabel: 'reason.undecidedOnBranchLabel',
     missing: 'reason.nothingToCopy',
     head: 'reason.notOnHead',
   },
@@ -190,9 +184,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
   },
   'block.wrap.while': {
     none: 'reason.nothingSelected',
-    label: 'reason.undecidedOnBranchLabel',
-    armLabel: 'reason.undecidedOnBranchLabel',
-    defaultLabel: 'reason.undecidedOnBranchLabel',
     missing: 'reason.nothingSelected',
     head: 'reason.cannotWrapHead',
   },
@@ -471,6 +462,73 @@ describe('inserting and pasting below a header (M87 F4)', () => {
     await engine.settle();
     expect(notice(engine)).toBe('reason.cannotPasteOnHead');
     expect(engine.content()).toBe(before);
+  });
+});
+
+describe('copy, cut and wrap on a branch label (M87 F7)', () => {
+  it('T-1609: copy and wrap take all the blocks of the branch, as its folded row does', async () => {
+    const engine = testEngine(sample());
+    const content = engine.content();
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    engine.run('edit.copy');
+    await engine.settle();
+    expect(engine.content()).toBe(content);
+    expect(notice(engine)).toEqual({ key: 'notice.copied', params: { count: 1 } });
+    expect(engine.clipboard.data.text).toContain('p2');
+    engine.select({ kind: 'branchLabel', branch: 'o2' });
+    engine.keys('s', 'w');
+    const [loop] = bodyOf(engine, 'o2');
+    expect(engine.session.index().blocks.get(loop ?? '')?.block.kind).toBe('while');
+    expect(bodyOf(engine, loop ?? '')).toEqual(['p8']);
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1610: cut copies the blocks of the branch and deletes the branch, in one undo step', async () => {
+    const engine = testEngine(
+      contentOf([
+        caseBlock(
+          'k1',
+          [arm('a1', '1', [proc('p1'), proc('p2')]), arm('a2', '2', [proc('p3')])],
+          branch('o1', [proc('p4')]),
+        ),
+      ]),
+    );
+    engine.select({ kind: 'branchLabel', branch: 'a1' });
+    engine.run('edit.cut');
+    await engine.settle();
+    const block = engine.session.index().blocks.get('k1')?.block;
+    expect(block?.kind === 'case' ? block.arms.map((a) => a.id) : null).toEqual(['a2']);
+    expect(engine.session.state.selection).toEqual({ kind: 'branchLabel', branch: 'a2' });
+    expect(engine.session.state.undo).toHaveLength(1);
+    expect(engine.clipboard.data.text).toContain('p1');
+    expect(engine.clipboard.data.text).toContain('p2');
+    expect(notice(engine)).toEqual({ key: 'notice.cut', params: { count: 2 } });
+  });
+
+  it('T-1611: where delete refuses the branch, cut refuses with the same notice and copies nothing', async () => {
+    for (const [branchId, reason] of [
+      ['r1', 'reason.ifBranchesFixed'],
+      ['o2', 'reason.defaultBranchFixed'],
+      ['a2', 'reason.lastArm'],
+    ] as const) {
+      const engine = testEngine(sample());
+      const before = engine.content();
+      engine.select({ kind: 'branchLabel', branch: branchId });
+      engine.run('edit.delete');
+      expect(notice(engine)).toBe(reason);
+      engine.session.clearNotice();
+      engine.run('edit.cut');
+      await engine.settle();
+      expect(notice(engine)).toBe(reason);
+      expect(engine.content()).toBe(before);
+      expect(engine.clipboard.data.text).toBeNull();
+    }
+  });
+
+  it('T-1612: paste on a branch label still says it does not work there', () => {
+    const engine = engineAt('label');
+    engine.run('edit.paste');
+    expect(notice(engine)).toBe('reason.undecidedOnBranchLabel');
   });
 });
 

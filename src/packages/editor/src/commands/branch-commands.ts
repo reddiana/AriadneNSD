@@ -1,6 +1,6 @@
 // The branch commands.
 import type { CommandSpec } from '../contracts';
-import { branchesOf, indexDoc, isBranching } from '../model/doc-index';
+import { indexDoc } from '../model/doc-index';
 import type { EditorState } from '../state/editor-state';
 import { selectBlock } from '../state/selection';
 import type { Applies } from './spec';
@@ -8,7 +8,13 @@ import { spec } from './spec';
 import type { Id, Side } from '@ariadne-nsd/core';
 import { convertCaseToIf, convertIfToCase, deleteBranch } from '@ariadne-nsd/core';
 import type { CommandContext } from './command-helpers';
-import { blockArg, oneBlock, branchOfSelection, appliesIf } from './command-helpers';
+import {
+  afterBranchDelete,
+  appliesIf,
+  blockArg,
+  branchOfSelection,
+  oneBlock,
+} from './command-helpers';
 
 export function branchCommands(ctx: CommandContext) {
   const { session, index, content, runInsertBranch } = ctx;
@@ -37,15 +43,10 @@ export function branchCommands(ctx: CommandContext) {
       if (place === undefined) {
         return;
       }
-      session.commit(deleteBranch(content(), { branch: place.branch.id }), (ok) => {
-        const after = indexDoc(ok.content).blocks.get(place.block.id)?.block;
-        if (after === undefined || !isBranching(after)) {
-          return { selection: null };
-        }
-        const branches = branchesOf(after);
-        const next = branches[place.column] ?? branches[place.column - 1];
-        return { selection: next === undefined ? null : { kind: 'branchLabel', branch: next.id } };
-      });
+      session.commit(
+        deleteBranch(content(), { branch: place.branch.id }),
+        afterBranchDelete(place),
+      );
     },
     menu: { menu: 'diagram', group: 3, order: 3 },
     context: ['branchLabel'],

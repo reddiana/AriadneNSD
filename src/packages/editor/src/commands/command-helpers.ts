@@ -2,8 +2,15 @@
 // the helpers that look at the selection.
 import type { PastedDocumentPort, PickerItem, WriteResult } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
-import type { DocIndex } from '../model/doc-index';
-import { indexDoc, isEmptyBlock, placeOf, seqOfBlock } from '../model/doc-index';
+import type { BranchPlace, DocIndex } from '../model/doc-index';
+import {
+  branchesOf,
+  indexDoc,
+  isBranching,
+  isEmptyBlock,
+  placeOf,
+  seqOfBlock,
+} from '../model/doc-index';
 import { drawnDiagrams } from '../navigation/navigate';
 import type { After, ClipboardPort, EditorSession } from '../session/session';
 import type { EditField, EditorState } from '../state/editor-state';
@@ -188,6 +195,32 @@ export function unwrapHolder(index: DocIndex, selection: Selection | null): Id |
   }
   const owner = index.folds.get(selection.fold);
   return owner === undefined ? null : (index.seqs.get(owner)?.holder ?? null);
+}
+
+/**
+ * The blocks of a branch as a command target: what copy, cut and wrap take when its label is
+ * selected, as when its folded row is (M87 F7). `null` when the branch is gone.
+ */
+export function branchTarget(index: DocIndex, branch: Id): Target | null {
+  const blocks = index.branches.get(branch)?.branch.body.blocks;
+  const first = blocks?.[0];
+  const last = blocks?.at(-1);
+  return first === undefined || last === undefined
+    ? null
+    : { kind: 'blocks', first: first.id, last: last.id };
+}
+
+/** After deleting the branch at `place`: the label next to it is selected, or nothing. */
+export function afterBranchDelete(place: BranchPlace) {
+  return (ok: { readonly content: Content }): After => {
+    const after = indexDoc(ok.content).blocks.get(place.block.id)?.block;
+    if (after === undefined || !isBranching(after)) {
+      return { selection: null };
+    }
+    const branches = branchesOf(after);
+    const next = branches[place.column] ?? branches[place.column - 1];
+    return { selection: next === undefined ? null : { kind: 'branchLabel', branch: next.id } };
+  };
 }
 
 /** `true` when found, otherwise the reason: the `when` of a command. */
@@ -467,13 +500,16 @@ export function commandContext(deps: CommandDeps): CommandContext {
     }
   };
 
-  /** Commands that act on selected blocks. `onEmptyCell` is why one does not work on the empty default cell. */
+  /**
+   * Commands that act on selected blocks, also the blocks of a branch whose label is selected
+   * (M87 F7). `onEmptyCell` is why one does not work on the empty default cell.
+   */
   const blocksOnly =
     (onEmptyCell: EditorMessage) =>
     (state: EditorState): Applies => {
       const selection = state.selection;
       if (selection?.kind === 'branchLabel') {
-        return 'reason.undecidedOnBranchLabel';
+        return true;
       }
       if (selection?.kind === 'head') {
         return 'reason.notOnHead';

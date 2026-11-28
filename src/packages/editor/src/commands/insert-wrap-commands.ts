@@ -26,6 +26,7 @@ import {
   selectTouched,
   currentDiagram,
   headStart,
+  branchTarget,
 } from './command-helpers';
 
 export function insertWrapCommands(ctx: CommandContext) {
@@ -103,25 +104,29 @@ export function insertWrapCommands(ctx: CommandContext) {
       edits: true,
       when: (state) => {
         const selection = state.selection;
-        if (selection?.kind === 'branchLabel') {
-          return 'reason.undecidedOnBranchLabel';
-        }
         if (selection?.kind === 'head') {
           return 'reason.cannotWrapHead';
         }
-        return selection?.kind === 'blocks' || selection?.kind === 'fold'
+        // On a branch label the blocks of the branch are wrapped (M87 F7).
+        return selection?.kind === 'blocks' ||
+          selection?.kind === 'fold' ||
+          selection?.kind === 'branchLabel'
           ? true
           : 'reason.nothingSelected';
       },
       run: (state) => {
-        const target = targetOf(state.selection);
+        const selection = state.selection;
+        const target =
+          selection?.kind === 'branchLabel'
+            ? branchTarget(index(), selection.branch)
+            : targetOf(selection);
         if (target === null) {
           return;
         }
         session.commit(wrap(content(), { target, kind, ids: session.ids() }), afterInsert);
       },
       menu: { menu: 'diagram', group: 2, order: order + 1, submenu: 'wrap' },
-      context: ['blocks', 'fold'],
+      context: ['blocks', 'fold', 'branchLabel'],
     }),
   );
 

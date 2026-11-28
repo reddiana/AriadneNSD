@@ -16,9 +16,15 @@ import { foldPath, peekBlocks, selectBlock, selectedBlocks, targetOf } from '../
 import { regionPlace } from './fold-commands';
 import { spec } from './spec';
 import type { Content, Id, Side, Target } from '@ariadne-nsd/core';
-import { copy, cut, deleteBlocks, paste } from '@ariadne-nsd/core';
+import { copy, cut, deleteBlocks, deleteBranch, paste } from '@ariadne-nsd/core';
 import type { CommandContext } from './command-helpers';
-import { headStart, selectionAfterDelete, selectTouched } from './command-helpers';
+import {
+  afterBranchDelete,
+  branchTarget,
+  headStart,
+  selectionAfterDelete,
+  selectTouched,
+} from './command-helpers';
 
 export function clipboardCommands(ctx: CommandContext) {
   const { deps, session, index, content, intoMissingDefault, blocksOnly, pasting } = ctx;
@@ -47,6 +53,10 @@ export function clipboardCommands(ctx: CommandContext) {
     const last = peeked.at(-1);
     if (first !== undefined && last !== undefined) {
       return { kind: 'blocks', first, last };
+    }
+    // A branch label: the blocks of the branch (M87 F7).
+    if (selection?.kind === 'branchLabel') {
+      return branchTarget(index(), selection.branch);
     }
     if (selection?.kind !== 'fold' || foldPath(selection).length === 0) {
       return targetOf(selection);
@@ -80,13 +90,43 @@ export function clipboardCommands(ctx: CommandContext) {
     },
     menu: { menu: 'edit', group: 2, order: 2 },
     toolbar: { group: 3, order: 2, icon: 'edit.copy' },
-    context: ['blocks', 'fold', 'peek'],
+    context: ['blocks', 'fold', 'peek', 'branchLabel'],
   });
+
+  /**
+   * Cut on a branch label: copies the blocks of the branch and deletes the branch, as delete does
+   * there, in one undo step (M87 F7). A branch that cannot be deleted refuses as delete does.
+   */
+  const cutBranch = async (branch: Id): Promise<void> => {
+    const ix = index();
+    const place = ix.branches.get(branch);
+    const target = branchTarget(ix, branch);
+    if (place === undefined || target === null) {
+      return;
+    }
+    const deleted = deleteBranch(content(), { branch });
+    if (!deleted.ok) {
+      session.refuse(deleted.reason);
+      return;
+    }
+    const copied = copy(content(), { target });
+    if (!copied.ok) {
+      session.refuse(copied.reason);
+      return;
+    }
+    if (session.commit(deleted, afterBranchDelete(place))) {
+      await writeClip(copied.clip, message('notice.cut', { count: copied.clip.blocks.length }));
+    }
+  };
 
   const cutSpec = spec('edit.cut', {
     edits: true,
     when: blocksOnly('reason.nothingToCut'),
     run: async (state) => {
+      if (state.selection?.kind === 'branchLabel') {
+        await cutBranch(state.selection.branch);
+        return;
+      }
       const target = targetOf(state.selection);
       if (target === null) {
         return;
@@ -110,7 +150,7 @@ export function clipboardCommands(ctx: CommandContext) {
     },
     menu: { menu: 'edit', group: 2, order: 1 },
     toolbar: { group: 3, order: 1, icon: 'edit.cut' },
-    context: ['blocks', 'fold'],
+    context: ['blocks', 'fold', 'branchLabel'],
   });
 
   // A paste reads the system clipboard asynchronously. Saving waits for it, so Ctrl+V then
