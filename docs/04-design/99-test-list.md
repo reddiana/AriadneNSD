@@ -701,17 +701,17 @@ id. Vitest · 테스트 5개.
 | T-1391 | 선택한 것이 없어도 붙여넣기가 묻고, "텍스트로 붙여넣기"는 줄들을 끝에 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
 | T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
-| T-1656 | a control or exit block on a branch label goes into a new branch beside it | [[ux-decisions\|UX BL3]] |
-| T-1657 | on a branch label of an If the If becomes a Case, and the user is told | [[ux-decisions\|UX BL3]] |
-| T-1658 | a call on a branch label goes into a new branch, whose label opens | [[ux-decisions\|UX BL3]] |
-| T-1659 | a call needing a name opens that name first, in one undo step | [[ux-decisions\|UX BL3]] |
-| T-1660 | new Method from a branch label takes the blocks of the branch | [[ux-decisions\|UX BL4]] |
-| T-1661 | a fold region from a branch label holds the blocks of the branch; a folded branch opens | [[ux-decisions\|UX BL4]] |
-| T-1662 | a wrap and its condition are one undo step | [[ux-decisions\|UX UN3]] |
-| T-1663 | a new branch label and a new header name join the step that made them | [[ux-decisions\|UX UN3]] |
-| T-1664 | a header name refused for a clash still joins the step when typed again | [[ux-decisions\|UX UN3]] |
-| T-1665 | nothing made, nothing joined: text on a kept empty block is its own step | [[ux-decisions\|UX UN3]] |
-| T-1666 | editing again later is a step of its own | [[ux-decisions\|UX UN3]] |
+| T-1656 | 분기 라벨에서의 제어 · 탈출 블록은 옆의 새 분기에 들어간다 | [[ux-decisions\|UX BL3]] |
+| T-1657 | If의 분기 라벨에서 하면 If가 Case가 되고, 사용자에게 알린다 | [[ux-decisions\|UX BL3]] |
+| T-1658 | 분기 라벨에서의 호출은 새 분기에 들어가고, 그 라벨이 열린다 | [[ux-decisions\|UX BL3]] |
+| T-1659 | 이름이 필요한 호출은 그 이름부터 열며, 실행 취소 한 단계다 | [[ux-decisions\|UX BL3]] |
+| T-1660 | 분기 라벨에서의 새 Method는 그 분기의 블록을 뺀다 | [[ux-decisions\|UX BL4]] |
+| T-1661 | 분기 라벨에서 만든 접기 영역은 그 분기의 블록을 담고, 접힌 분기는 펴진다 | [[ux-decisions\|UX BL4]] |
+| T-1662 | 감싸기와 그 조건은 실행 취소 한 단계다 | [[ux-decisions\|UX UN3]] |
+| T-1663 | 새 분기 라벨과 새 헤더 이름은 그것을 만든 단계에 합쳐진다 | [[ux-decisions\|UX UN3]] |
+| T-1664 | 이름이 중복되어 거절된 헤더 이름도 다시 입력하면 같은 단계에 합쳐진다 | [[ux-decisions\|UX UN3]] |
+| T-1665 | 만든 것이 없으면 합쳐지지 않는다: 남아 있던 빈 블록의 텍스트는 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
+| T-1666 | 나중에 다시 편집한 것은 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
@@ -790,7 +790,7 @@ id. Vitest · 테스트 5개.
 | T-0859 | 헤더 없는 다이어그램의 블록에서 `m`은 묻는다: `1`은 빼기, `2`는 Method 헤더 달기 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0860 | 메뉴에서는 헤더 없는 다이어그램에서도 묻지 않고 빼고, Method 헤더 달기와 `e`는 그대로다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0861 | 헤더가 있는 다이어그램에서는 `m`이 묻지 않고 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
-| T-0862 | on the empty default cell, m tells to select blocks | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0862 | 빈 default 칸에서 `m`은 뺄 블록을 선택하라고 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
 | T-0222 | `a c`는 Method 목록을 보이고, 고른 Method를 호출하며 그 인자를 입력한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |
@@ -2793,73 +2793,73 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ### [단위] `packages/editor/src/rules/table-blocks.test.ts`
 
-The table of block kinds of the interaction rules ("블록 종류"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 블록 종류 표("블록 종류")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1706 | the table of block kinds has the rows and columns that are tested | - |
-| T-1707 | a cell of the block kinds: $name | - |
+| T-1706 | 블록 종류 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1707 | 블록 종류의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-blocks-test-ts
 
 ### [단위] `packages/editor/src/rules/table-containers.test.ts`
 
-The tables of elements and containers of the interaction rules ("요소와 컨테이너"), compared with the editor. Vitest · 테스트 5개.
+조작 규칙의 요소와 컨테이너 표("요소와 컨테이너")를 편집기와 대조합니다. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1716 | the table of containers has the rows and columns that are tested | - |
-| T-1717 | a cell of the containers: $name | - |
-| T-1718 | the table of container rules has the rules that are tested | - |
-| T-1719 | a rule of the containers: $row | - |
-| T-1720 | folding a region that is not drawn says which region it folded | - |
+| T-1716 | 컨테이너 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1717 | 컨테이너의 칸: $name | - |
+| T-1718 | 컨테이너 규칙 표는 테스트하는 규칙을 갖는다 | - |
+| T-1719 | 컨테이너의 규칙: $row | - |
+| T-1720 | 렌더링되지 않는 영역을 접으면 어느 영역을 접었는지 알린다 | - |
 
 ^t-packages-editor-src-rules-table-containers-test-ts
 
 ### [단위] `packages/editor/src/rules/table-fields.test.ts`
 
-The table of text fields of the interaction rules ("텍스트 필드"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 텍스트 필드 표("텍스트 필드")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1708 | the table of text fields has the rows and columns that are tested | - |
-| T-1709 | a cell of the text fields: $name | - |
+| T-1708 | 텍스트 필드 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1709 | 텍스트 필드의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-fields-test-ts
 
 ### [단위] `packages/editor/src/rules/table-matrix.test.ts`
 
-The command × target matrix of the interaction rules ("명령 × 대상 매트릭스"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 명령 × 대상 매트릭스("명령 × 대상 매트릭스")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1700 | the matrix has the rows and columns that are tested | - |
-| T-1701 | a cell of the matrix: $name | - |
+| T-1700 | 매트릭스는 테스트하는 행과 열을 갖는다 | - |
+| T-1701 | 매트릭스의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-matrix-test-ts
 
 ### [단위] `packages/editor/src/rules/table-positions.test.ts`
 
-The table of insert positions of the interaction rules ("삽입 위치"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 삽입 위치 표("삽입 위치")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1703 | the table of insert positions has the rows and columns that are tested | - |
-| T-1704 | a cell of the insert positions: $name | - |
+| T-1703 | 삽입 위치 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1704 | 삽입 위치의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-positions-test-ts
 
 ### [단위] `packages/editor/src/rules/table-targets.test.ts`
 
-The two tables of command targets of the interaction rules ("명령마다 받는 대상"), compared with the editor. Vitest · 테스트 5개.
+조작 규칙의 명령 대상 표 둘("명령마다 받는 대상")을 편집기와 대조합니다. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1710 | table 1 of the command targets has the rows that are tested | - |
-| T-1711 | a row of table 1: $name | - |
-| T-1712 | table 2 of the command targets has the rows and columns that are tested | - |
-| T-1713 | a cell of table 2: $name | - |
-| T-1721 | remove region on the empty default cell goes up to the region around | - |
+| T-1710 | 명령 대상 표 1은 테스트하는 행을 갖는다 | - |
+| T-1711 | 표 1의 행: $name | - |
+| T-1712 | 명령 대상 표 2는 테스트하는 행과 열을 갖는다 | - |
+| T-1713 | 표 2의 칸: $name | - |
+| T-1721 | 빈 default 칸에서 영역 제거는 그것을 둘러싼 영역으로 올라간다 | - |
 
 ^t-packages-editor-src-rules-table-targets-test-ts
 
