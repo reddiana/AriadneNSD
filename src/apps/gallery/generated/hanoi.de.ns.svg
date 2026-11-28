@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="839" height="264" viewBox="0 0 839 264">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="3f2641ba23615a9932a7dd195086a37eb321b4fca27dac72e43747abfc39d3ef"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = 3    # 2**3 - 1 = 7 Züge"
+        },
+        {
+          "id": "b2",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n, \"A\", \"C\", \"B\"",
+          "result": ""
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "hanoi(n, src, dst, via)"
+      },
+      "body": [
+        {
+          "id": "b3",
+          "kind": "if",
+          "text": "n == 0",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b4",
+                "kind": "exit",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b6",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n - 1, src, via, dst",
+          "result": ""
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "print(f\"Scheibe {n}: {src} -> {dst}\")    # die n - 1 oberen warten auf via"
+        },
+        {
+          "id": "b8",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "n - 1, via, dst, src",
+          "result": ""
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L226 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="202" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = 3    # 2**3 - 1 = 7 Züge</text>
+<rect x="24" y="96" width="202" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 96 L31 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M219 96 L219 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="116" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n, "A", "C", "B")</text>
+<text x="314" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="314" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi(n, src, dst, via)</tspan></text>
+<path d="M314 64 L815 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="314" y="64" width="501" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M314 64 L607 112 L815 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="607" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n == 0</text>
+<text x="320" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="809" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="314" y="112" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M328 112 L314 128 L328 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="338" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="607" y="112" width="208" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="711" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M706.5 132.5 L715.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="314" y="144" width="501" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M321 144 L321 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M808 144 L808 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="331" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n - 1, src, via, dst)</text>
+<rect x="314" y="176" width="501" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="324" y="196" font-size="13" fill="#151a22" xml:space="preserve">print(f"Scheibe {n}: {src} -&gt; {dst}")    # die n - 1 oberen warten auf via</text>
+<rect x="314" y="208" width="501" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M321 208 L321 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M808 208 L808 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="331" y="228" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">hanoi</tspan>(n - 1, via, dst, src)</text>
+</g>
+</svg>

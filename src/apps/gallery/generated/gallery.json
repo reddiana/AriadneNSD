@@ -4,15 +4,18 @@
     "category": "classic",
     "name": {
       "ko": "이진 탐색",
-      "en": "Binary search"
+      "en": "Binary search",
+      "de": "Binäre Suche"
     },
     "what": {
       "ko": "Event와 Method · 결과를 받는 호출",
-      "en": "Event and Method · call with a result"
+      "en": "Event and Method · call with a result",
+      "de": "Ereignis und Methode · Aufruf mit Ergebnis"
     },
     "files": {
       "en": "binary-search.en.ns.svg",
-      "ko": "binary-search.ko.ns.svg"
+      "ko": "binary-search.ko.ns.svg",
+      "de": "binary-search.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -22,11 +25,16 @@
       "ko": {
         "width": 790,
         "height": 376
+      },
+      "de": {
+        "width": 953,
+        "height": 376
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.jVRBbtswEPzKdoECDkKnkWwnrRr1Az3m0INtBLS5thahSIOinQiGrj33jX1JS8mulFpQC-hAEJyZ3dlZHdHInDDBFRvpynFB0q2zG1PcFIctCsytIo3JETfW5dJjgtKxVIbGplAo8ECuYGswiQQW5D2bbRGee3r1X9koTHCnJRsU6DOqlRRt5F57FJiRVI--1OHWs9eEArVdy_qCDFYCFcutk3mByfyIHOhUdEIGmedGgg5kAmFQxQRzyWZ0FeArq8oWugrQE2Tn7JqKogWx8SDnS0jhGAuYCJgJuBcQRQKiiYDovvqMlTgzxS2Tst8yrms_MT1TCe9SuMUL_cmAfkCl4EiqJzZ-dNVVm7a4tdQ6gKTbku9YUPuGfwwLdcXBAenCQFDWzTxTiQIdFcH_BLkjMWsleNNxBb40nZRUz7V-7KLL1u4GWts5Nn4zWuDG7o0C6eG9WizMAgVw6HNZCTS2pY8v6e__h95YD7VETd4wV8tAf85OfJmdnHxmVcvWLMJTswgjKcDUvvXF6eNAUdpCCrfdIX4aeJ0xpGBgDFEXEd22kJe3GdMWHlLI-NKpaCjkOStIQVu4hlHGMAZtr-ADxG9U4_4oyHnOaglpeorRm0RMegrppJ1eubOfjvzeGchZ9Qx_2sM0Hazooa-gWQ_N7F_zCvZc1zP4u6q7HrqhyNcDDXTjE13ztSYPBfrkz7hBLgUemF6an7BWpDCZLwXaHZnzeSWNKjDxbk_n9X4s85XVv6V-fv-BVVX9Ag",
-      "ko": "https://ariadnensd.com/#ns1.d.jVSxbtswEP2V6wEFHIROLdlOWjXqD3TM0ME2Ato8W4Qp0qAYJ4KhNejQoVunzN079Xu6Nh_RUrIruRbUAhoIgu-9u3fvtEPNU8II51Jzm_cz4naRXOjsItuukGFqBCmMdrg0NuUOI-RWcqGprzOBDLdkM2k0RgHDjJyTepX5544e3HupBUa4UVxqZOgSKpUELfmdcsgwIS5uXK78rZNOETJUZsHLi7XBgqGQfGV5mmE02aH0dCLYI73MupKgLWlP6FUxwpRL3Tvz8LkReQ2de-gesrFmQVlWg6R2wCcziGEXMhgyGDO4YhAEDIIhg-CqeIsFOzCFNZMwHxJZ1r5nWlMOL2IY4In-sEPfo2KwxMWt1K531lQb1bgFV8qDuF2Ra1hQ-oZ_DPN1hd4Bbv1AkJfNrClHhpYy73-EsiExriXksuEKvKs6yamca_nYBqetXXa0trFSu2Vvii_Fz28fn79-n071FBlI3-SsYKhNzR2ecl_9D_fzl8fnp08lc0VbzDz3ITXhaWpScokRNVW1ArfVCvQ4A1061hak1x0VKQMxDJrje9PxOpEQg4Y-BE1EMKgh98fpUgauY0jkqU1BV7xTKSAGZeAceomEPihzBq8gPFIN20PAJ6kUM4jjfYCOsjBsKaSRc3qQjc205O6shlSKlsmPWphGnRVdtxU0bqEZ_2te3p7zcgZ_V3XZQtcV9nKgnq6_p6u-2uSuNO_96VfIGcOtpPvq96sECYwmM4ZmQ_pwnnMtMoycvaPDYt_k6dyo31I_Hj9jURS_AA"
+      "ko": "https://ariadnensd.com/#ns1.d.jVSxbtswEP2V6wEFHIROLdlOWjXqD3TM0ME2Ato8W4Qp0qAYJ4KhNejQoVunzN079Xu6Nh_RUrIruRbUAhoIgu-9u3fvtEPNU8II51Jzm_cz4naRXOjsItuukGFqBCmMdrg0NuUOI-RWcqGprzOBDLdkM2k0RgHDjJyTepX5544e3HupBUa4UVxqZOgSKpUELfmdcsgwIS5uXK78rZNOETJUZsHLi7XBgqGQfGV5mmE02aH0dCLYI73MupKgLWlP6FUxwpRL3Tvz8LkReQ2de-gesrFmQVlWg6R2wCcziGEXMhgyGDO4YhAEDIIhg-CqeIsFOzCFNZMwHxJZ1r5nWlMOL2IY4In-sEPfo2KwxMWt1K531lQb1bgFV8qDuF2Ra1hQ-oZ_DPN1hd4Bbv1AkJfNrClHhpYy73-EsiExriXksuEKvKs6yamca_nYBqetXXa0trFSu2Vvii_Fz28fn79-n071FBlI3-SsYKhNzR2ecl_9D_fzl8fnp08lc0VbzDz3ITXhaWpScokRNVW1ArfVCvQ4A1061hak1x0VKQMxDJrje9PxOpEQg4Y-BE1EMKgh98fpUgauY0jkqU1BV7xTKSAGZeAceomEPihzBq8gPFIN20PAJ6kUM4jjfYCOsjBsKaSRc3qQjc205O6shlSKlsmPWphGnRVdtxU0bqEZ_2te3p7zcgZ_V3XZQtcV9nKgnq6_p6u-2uSuNO_96VfIGcOtpPvq96sECYwmM4ZmQ_pwnnMtMoycvaPDYt_k6dyo31I_Hj9jURS_AA",
+      "de": "https://ariadnensd.com/#ns1.d.jVTBbtpAEP2V6UiViLKksYGkdeP-QI859AAoWtgBj7LeReuFxEK-9txv7Je0a0PtFMut5INlzXtv5s0bH9HInDDBFRvpynFB0q2zG1PcFIctCsytIo3JETfW5dJjgtKxVIbGplAo8ECuYGswiQQW5D2bbRHKPb36r2wUJrjTkg0K9BnVSoo2cq89CsxIqkdf6vDVs9eEArVdS92UYSVQsdw6mReYzI_IgU5FJ2SQeW4k6EAmEAZVTDCXbEZXAb6yqmyhqwA9QXbOrqkoWhAbD3K-hBSOsYCJgJmAewFRJCCaCIjuq89YiTNT3DIp-y3juvcT0zOV8C6FW7zQnwzoB1QKjqR6YuNHV121aYtbS60DSLot-Y4FtW_4x7DQVxwckC4sBGU9zDOVKNBREfxPkDsSs1aCNx1X4EszSUn1XutiF12Odjcw2s6x8ZvRAre02RtFBqSBR09aE7xXi4VZoAAOEy8rgca2QvGl0P3_CBleZx7OcrVCQ18tg8Y5SvFllHLymVUtZXMXT81djKQAU9vYl66PA51pCyncdnf6aaA6Y0jBwBiiLiK6bSEvbyOnLTykkPGlXdFQ5nNWkIK2cA2jjGEM2l7BB4jfqMb9yZDznNUS0vSUqjcBmfQ00gk_vXLnXB35vTOQs-pJwLSHaTrY0UNfQ7Memtm_9hXsua538HdXdz10QxdQLzTQjU90zdOaPJTqkz_jBrkUeGB6af7JWpHCZL4UaHdkzu8raVSBiXd7Ol_7Y5mvrP4t9fP7D6yq6hc"
     }
   },
   {
@@ -34,15 +42,18 @@
     "category": "classic",
     "name": {
       "ko": "퀵소트",
-      "en": "Quicksort"
+      "en": "Quicksort",
+      "de": "Quicksort"
     },
     "what": {
       "ko": "Method 둘이 서로 부름",
-      "en": "Two Methods call each other"
+      "en": "Two Methods call each other",
+      "de": "Zwei Methoden rufen einander auf"
     },
     "files": {
       "en": "quicksort.en.ns.svg",
-      "ko": "quicksort.ko.ns.svg"
+      "ko": "quicksort.ko.ns.svg",
+      "de": "quicksort.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -52,11 +63,16 @@
       "ko": {
         "width": 540,
         "height": 424
+      },
+      "de": {
+        "width": 540,
+        "height": 424
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rVTNbuIwEH4Va06tcKsG2J-m5Qn22CPKYcADmdaxs7aBRSjXPe8z7pPs2iUkApRKq71F1nx_4885gMGKIIfvG16-eevCvfH3frsGCZVVpCE_wMq6CgPkgI5RGbozXoGELTnP1kCeSfAUApu1j-OBfoRvbBTkUGtkAxJCSUlF0Qo3OoCEklC9hL2Op4GDJpCg7RLTARloJCjGtcPKQz4_AEc6lR2RUebtXaKiUNpoJ8r2g9ygFNpKUfJtZFtYte-YFpHpyMCrDq2teBYlg4Q9pTBp2sXpM4JxR7BErSMFujWFnrWUB05BYoBxtIIuLgpO_kCCIx_3kkMNjWwlJv8kkV1K1OJOZH2Vnsj0f4jUYiSy8yjQFI0EY7s1ji_X-KmTr51dkvfdZUSCyNHe_vjj26_RBQ5szfDtfx5QrXlrg5gJnJdcPPU29WUAxGImtI1r7iO-DiBeE6I__dhN70pOL-I0eyzleYkfrrcY56-FeJ6JFOW8y5MrPNlQtNGo7zIbD8z6HdY3OOdCiujh9umyA9Mr8pOPStCpT4dWmpwWvemhdrVeY3WT35KT4Q491BJHYeOMSOgkWkjYMu3e_5dakYJ8XkiwNZn2e4FGeciD21D7TF721cLqv2q_f_6Cpmn-AA",
-      "ko": "https://ariadnensd.com/#ns1.d.rVTNjtowEH4Va067wrtqgP5llyfocY8ohwEPZBbHTm0DRSjXnvuMfZLWXkIiQFmp6i2y5vsbf84RDFYEOXzf8nLjrQuPxj_63RokVFaRhvwIK-sqDJADOkZl6MF4BRJ25DxbA3kmwVMIbNY-jgf6Eb6xUZBDrZENSAglJRVFK9zqABJKQvUSDjqeBg6aQIK2S0wHGwuNBMW4dlh5yOdH4EinshMyymzeJCoKpY12omw_yB1Koa0UJd9HtoVVh45pEZlODLzq0NqKZ1EySDhQCpOmXZy-IBh3BEvUOlKgW1PoWUt54BwkBhhHK-jiouDsDyQ48nEvOdTQyFZi8k8S2bVELR5E1lfpiUz_h0gtRiK7jAJN0Ugwtlvj-HqNHzv52tkled9dRiSIHO3tj9-__Rpd4MDWDN_-pwHVmnc2iJnAecnFU29TnwdALGZC27jmPuLLAOI1IfrTX7vpfcnpRZxnT6W8LPGH2y3G-WshnmciRbns8uQGTzYUbTTqu8zGA7N-j_UdzrmQInq4f7ruwPSG_OS9EnTq06GVJqdFb3qoXa3XWN3kt-RkuEMPtcRR2DojEjqJFhJ2TPu3_6VWpCCfFxJsTab9XqBRHvLgttQ-k5dDtbD6r9rvn7-gaZo_"
+      "ko": "https://ariadnensd.com/#ns1.d.rVTNjtowEH4Va067wrtqgP5llyfocY8ohwEPZBbHTm0DRSjXnvuMfZLWXkIiQFmp6i2y5vsbf84RDFYEOXzf8nLjrQuPxj_63RokVFaRhvwIK-sqDJADOkZl6MF4BRJ25DxbA3kmwVMIbNY-jgf6Eb6xUZBDrZENSAglJRVFK9zqABJKQvUSDjqeBg6aQIK2S0wHGwuNBMW4dlh5yOdH4EinshMyymzeJCoKpY12omw_yB1Koa0UJd9HtoVVh45pEZlODLzq0NqKZ1EySDhQCpOmXZy-IBh3BEvUOlKgW1PoWUt54BwkBhhHK-jiouDsDyQ48nEvOdTQyFZi8k8S2bVELR5E1lfpiUz_h0gtRiK7jAJN0Ugwtlvj-HqNHzv52tkled9dRiSIHO3tj9-__Rpd4MDWDN_-pwHVmnc2iJnAecnFU29TnwdALGZC27jmPuLLAOI1IfrTX7vpfcnpRZxnT6W8LPGH2y3G-WshnmciRbns8uQGTzYUbTTqu8zGA7N-j_UdzrmQInq4f7ruwPSG_OS9EnTq06GVJqdFb3qoXa3XWN3kt-RkuEMPtcRR2DojEjqJFhJ2TPu3_6VWpCCfFxJsTab9XqBRHvLgttQ-k5dDtbD6r9rvn7-gaZo_",
+      "de": "https://ariadnensd.com/#ns1.d.rVRLbtswEL0KMasEZoJKdn9KfIIuszS0GJtjaxKKVEnarmFo23XP2JO0pD8SbEMBiu4E4c37zDxpDwZrggK-r3nx5q0Lj8Y_-s0KJNRWkYZiD0vragxQADpGZejBeAUSNuQ8WwNFJsFTCGxWPsID_Qjf2CgooNHIBiSEipKKoiWudQAJFaF6CTsd3wYOmkCCtgvUBxi0EhTjymHtoZjtgSOdyo6TUebtIFFTqGy0E2X7Qe5QCm2lqPg-ss2t2nVM88h0ZOBlN62teBYVg4QdpTAJ7SL6giDvCBaodaRAt6LQs5bywDlIDJBHK-jiouDsDyQ48nEvBTTQypPE-J8ksmuJRjyIrK_SE5n8D5FGjER2GQXaspVgbLfG_HqNHzv5xtkFed8dIxJEjtP18_ev36ALHNia4et_GlBteGODmAqcVVw-9Tb1eWCIxVRoG9fcn_gyMPGaJvrorx16W3H6Is7YYykvS_zhdotx9lqK56lIUS67PL7Bkw1FG436LrN8AOu32NzhjEspoof7p-sOTG7Ij98rQac-GVppclr20EPtOnmN1U1-K06Gu-mhljgKa2dEmk6ipYQN0_bwv9SKFBSzUoJtyJye52iUhyK4NZ0-k5ddPbf6r9rvn7-gbds_"
     }
   },
   {
@@ -64,15 +80,18 @@
     "category": "classic",
     "name": {
       "ko": "병합 정렬",
-      "en": "Merge sort"
+      "en": "Merge sort",
+      "de": "Mergesort"
     },
     "what": {
       "ko": "Method 하나 · 자기를 부르는 호출",
-      "en": "One Method · calls itself"
+      "en": "One Method · calls itself",
+      "de": "Eine Methode · ruft sich selbst auf"
     },
     "files": {
       "en": "merge-sort.en.ns.svg",
-      "ko": "merge-sort.ko.ns.svg"
+      "ko": "merge-sort.ko.ns.svg",
+      "de": "merge-sort.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -82,11 +101,16 @@
       "ko": {
         "width": 318,
         "height": 504
+      },
+      "de": {
+        "width": 318,
+        "height": 504
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rZTPbtpAEMZfZTQnIjaoJkn_WJAX6DFHy6oWdsBL94-1u5Ag5GvPfcY-STsGY0JSq4ferNV8v2_mm5EP6KQlzNFSWNNt9CFNXJzE3RoFWq_IYH7AlQ9WJsxRBi2Vo1sXFQrcUYjaO8wzgZFS0m4duTzRS_qqncIcayO1Q4GpotZG0UpuTUKBFUn1lPaGX5NOhlCg8UvZPpDDRqDSch2kjZgXB9SMU9lJyTbfjxaWUuW5HbbtJvnGk4ykAOMFVPqGcQuv9j1qwagTQq96eaXhFoyHGUxR4J7aiVpFYMUVZNpD6EWnHhMobYPDpmwEOt8zpm8Zdz2jDn5JMfYYBjSiq7wfqLRawRxGxsOYB4bHR8iwlz700qU0hnUyrCldBNmmj-fYj3E3AmXgteIpTKs560CR18gNni0-_g8LqxUv7C8WnwYC0AI2ApKtYd41KqAoL9Sfe_VzpduL67Qw43qQTsEGZscGrtb05f17kYUuYTYHWWzK64O5e0vJPgyMkGw9kXVNTo0Ye3PRe5YNjQ7jOW_7-tju3_Gf_qv_5rX_0JVuzv7cwlkydK68pzGnpnOrVQljDjCv9OW-socBgCyM53qY887ZuxS40_R8_GEZRQrzohToa3Ld90I6FTFPYUvdgT3t7cKbP3a_fvzEpml-Aw",
-      "ko": "https://ariadnensd.com/#ns1.d.rZTPbtpAEMZfZTQnIjaoJkn_WJAX6DFHy6oWdsBL9o-1u5Ag5GvPfcY-STsGY0pSq4ferNV8v2_mm5EP6KQlzNFSWNNt9CFNXJzE3RoFWq_IYH7AlQ9WJsxRBi2Vo1sXFQrcUYjaO8wzgZFS0m4duTzRa_qqncIcayO1Q4GpotZG0UpuTUKBFUn1lPaGX5NOhlCg8UvZPjx7bAQqLddB2oh5cUDNOJWdlGzzfLSwlCrP7bBtN8k3nmQkBRgvoNI3jFt4te9RC0adEHrVyysNt2A8zGCKAvfUTtQqAiuuINMeQq869ZhAaRscNmUj0PmeMX3LuOsZdfBLirHHMKARXeX9QKXVCuYwMh7GPDA8PkKGvfShly6lMayTYU3pIsg2fTzHfoy7ESgDrxVPYVrNWQeKvEZu8Gzx8X9YWK14YX-x-DQQgBawEZBsDfOuUQFFeaH-3KtfKt1eXKeFGdeDdAo2MDs2cLWmL-_fiyx0CbM5yGJTXh_M3VtK9mFghGTriaxrcmrE2JuL3rNsaHQYz3nb18d2_47_9F_9N3_6D13p5uzPLZwlQ-fKexpzajq3WpUw5gDzSl_uK3sYAMjCeK6HOe-cvUuBO00vxx-WUaQwL0qBvibXfS-kUxHzFLbUHdjT3i68-W338_sPbJrmFw"
+      "ko": "https://ariadnensd.com/#ns1.d.rZTPbtpAEMZfZTQnIjaoJkn_WJAX6DFHy6oWdsBL9o-1u5Ag5GvPfcY-STsGY0pSq4ferNV8v2_mm5EP6KQlzNFSWNNt9CFNXJzE3RoFWq_IYH7AlQ9WJsxRBi2Vo1sXFQrcUYjaO8wzgZFS0m4duTzRa_qqncIcayO1Q4GpotZG0UpuTUKBFUn1lPaGX5NOhlCg8UvZPjx7bAQqLddB2oh5cUDNOJWdlGzzfLSwlCrP7bBtN8k3nmQkBRgvoNI3jFt4te9RC0adEHrVyysNt2A8zGCKAvfUTtQqAiuuINMeQq869ZhAaRscNmUj0PmeMX3LuOsZdfBLirHHMKARXeX9QKXVCuYwMh7GPDA8PkKGvfShly6lMayTYU3pIsg2fTzHfoy7ESgDrxVPYVrNWQeKvEZu8Gzx8X9YWK14YX-x-DQQgBawEZBsDfOuUQFFeaH-3KtfKt1eXKeFGdeDdAo2MDs2cLWmL-_fiyx0CbM5yGJTXh_M3VtK9mFghGTriaxrcmrE2JuL3rNsaHQYz3nb18d2_47_9F_9N3_6D13p5uzPLZwlQ-fKexpzajq3WpUw5gDzSl_uK3sYAMjCeK6HOe-cvUuBO00vxx-WUaQwL0qBvibXfS-kUxHzFLbUHdjT3i68-W338_sPbJrmFw",
+      "de": "https://ariadnensd.com/#ns1.d.rZTPbtpAEMZfZTQnIhZUk6RtLMgL9JijZVULO-Cl-8faXUgQ8rXnPmOfpB3AmJDU6iE3azXf75v5ZuQ9OmkJc7QUVjSKPqSxi-O4XaFA6xUZzPe49MHKhDnKoKVyNHJRocAthai9wzwTGCkl7VaRyxO9pG_aKcyxNlI7FJgqOtgoWsqNSSiwIqme0s7wa9LJEAo0fiHNsQwbgUrLVZA2Yl7sUTNOZScl2_w4WlhKled22Lad5DtPMpACjBdQ6RvGzb3adag5o04IvezklYYRGA9TmKDAHR0mOigCK64gkw5CLzp1mEBpExw2ZSPQ-Y4xecu47Rh18AuKscMwoBFt5V1PpdUKZjAwHoY8MDw-Qoad9L6TLqQxrJNhRekiyEP6eI79GHcjUAZeK57CtJqzDhR5jdzg2eLzR1hYrXhh_7D40hOAFrAWkGwNs7ZRAUV5of7aqZ8rfbi4VgtTrgfpFKxhemzgak0P79-LLHQJ0xnIYl1eH8ztW0r2qWeEZOuxrGtyasDYm4ves6xvdBjOeNvXx3b3jv_kf_3Xr_37rnR99ucWzpK-c-U9DTk1nVutShhygHmlL_eV3fcAZGE818OMd87epcCtpufjD8soUpgXpUBfk2u_59KpiHkKG2oP7Gln5978tfv98xc2TfMH"
     }
   },
   {
@@ -94,15 +118,18 @@
     "category": "classic",
     "name": {
       "ko": "힙 정렬",
-      "en": "Heap sort"
+      "en": "Heap sort",
+      "de": "Heapsort"
     },
     "what": {
       "ko": "최대 힙을 만들고 하나씩 꺼낸다",
-      "en": "Build a max-heap, then take the top out"
+      "en": "Build a max-heap, then take the top out",
+      "de": "Max-Heap aufbauen, dann die Spitze entnehmen"
     },
     "files": {
       "en": "heap-sort.en.ns.svg",
-      "ko": "heap-sort.ko.ns.svg"
+      "ko": "heap-sort.ko.ns.svg",
+      "de": "heap-sort.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -112,11 +139,16 @@
       "ko": {
         "width": 767,
         "height": 500
+      },
+      "de": {
+        "width": 815,
+        "height": 500
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rVWxbtswEP2Vw3VJWjqxFcdthbpD147pZggBbZ5sIhRpkHQSI_Daud_YL2lPsirCVtQOHQTRFN-7e--O5xe0siLMcUNyOwrOxysbrsLjGgVWTpHB_AVL5ysZMUfptVSWRjYoFPhIPmhnMZ8IDBSjtuvAxyM9x6_aKsxxa6S2KDBuqI6iqJQ7E1FwPHUX94Z3o46GUKBxK1lvkMWDQKXl2ssqYL54Qc10anJEcpiHJkRFceM4HQ57FHLPQi7kJbMsndp3DEtmOCK33q0ohA5qYQ6GbANsAVkHKJ3vDpfOgwZtwUu7pgsL19eQwQgmAkb1c4lnwW86rpU0hsmkX1NM5NQe4B_xLDpjGdKzuSgFaAFsqafATuaIh6LLdjqQLVmV5lunOn4l09sBm-RiXAiQC7KqgPlxwRvjAgDgDRgWFSJEB3FDsJSrh8TQ2f8wYSxYzqkNhcDSGZV0TMn1LrUPsa2lkd362PtfdtookFDJ5xG3T5dsmaXwaQKfdvBv8oFYaAVuF8FZguWeX2lhVPb3zg26jPfKPdmLY5X7-vd95x5ZZZrCnJz5MFC8tjZz0ElNPg4hBHiYQwZvQcM7bpp2mSUMk3FHocsEDZ_AgrQK5MIU8JlfTQoFCtxTPTFqCj85VzIZuq6dFFNbjdZ1ZFkPWTZAxgyJmpt-NT5R44fV3PQkMP0nNf5czbSHbOiKnqiZvVKbNiQ3w0n6tz0R09571jGxheLO2-by8wUC5xV52NR38UzMrId6qGVPxAz1qlzoehK1RanHU_uDP-giHe3jASrNfdUg69HCw-VR01Pzh2gUKcwXhUC3Jduul9Ly8Il-R-1kuttXS2d-R_v5_QceDodf",
-      "ko": "https://ariadnensd.com/#ns1.d.rVVNb9NAEP0ro-HSwqZN3LSARfgDHHuMrGrTXaerbnaj9fYjqiKVgnrqoaIgilQqVSoq3AIqEkL8Go5x8h9g7RhbSWo4cLCyWe-8mfdm9vkAFe1w9HGL024l0sYuqWgp2m0jwY5mXKJ_gKE2HWrRR2oEZYpXVMSQ4C43kdAK_RrBiFsrVDtyxy3ft8-EYuhjV1KhkKDd4kkWxkO6Iy0Sl4-t2550u1ZYyZGg1Js02djW2CfIBG0b2onQbx6gcHCsNol0abbTFB1ut7Qrx6WdENlwRBbookNpadbLEVoOYRLZNXqTR1EeqqABkqs0MAvw8oBQm_xwqA0IEAoMVW2-oGB5GTyoQI1AJXkWcSb5So61SaV0YNS0uS3QSTTAP-Qdac_RoMaJi5SAIOAkNTxySvqI_SCvtl5SLVesWG9SavWOSldLZKLNakCANrliATQmC7dRDQAA7sFwcDi6_ADj5wMYfnkxev8S4puPEL-6jq8uCsqu_Q81qsTxmtYjIBhqyQqjE7rGh8JENmuqpPl6cglGXy_ik0MYX76D-OYkPrsefhvkBYdeEaJegKjnEOM35_HR-ej1Jxh-_xEf3Trao7enEB-fJWB5r5j392GORGg3mN5TC5PGzxvph7mOXDGZ9mrqzKOSfkqnemShAaLQncdlEQQMNMCD-yDggZujbOkVEGrVHEKEhWh4AgqoYkCbMoCn7ictIUCCPZ6YSAJharNMamU3OKciE6lR6RzMmwPmlYA5hAKblflsTIGNKWezMqeA-j-xMbNs6nPAym7tFJu1O3qTpXTDMFX-6pyMxdnbF7YgC7c7RqV-4O7T6Gow_HzrvGB0czg-up0ltDYHvmxspwiVzSttisSgssYkrpX9cS9EUHT8agmUcLOVRiZG46xmV_C99DspGWfoNwOCustVtm5R5azImh2e-dR6r9PS8ne2n8en2O_3fwE"
+      "ko": "https://ariadnensd.com/#ns1.d.rVVNb9NAEP0ro-HSwqZN3LSARfgDHHuMrGrTXaerbnaj9fYjqiKVgnrqoaIgilQqVSoq3AIqEkL8Go5x8h9g7RhbSWo4cLCyWe-8mfdm9vkAFe1w9HGL024l0sYuqWgp2m0jwY5mXKJ_gKE2HWrRR2oEZYpXVMSQ4C43kdAK_RrBiFsrVDtyxy3ft8-EYuhjV1KhkKDd4kkWxkO6Iy0Sl4-t2550u1ZYyZGg1Js02djW2CfIBG0b2onQbx6gcHCsNol0abbTFB1ut7Qrx6WdENlwRBbookNpadbLEVoOYRLZNXqTR1EeqqABkqs0MAvw8oBQm_xwqA0IEAoMVW2-oGB5GTyoQI1AJXkWcSb5So61SaV0YNS0uS3QSTTAP-Qdac_RoMaJi5SAIOAkNTxySvqI_SCvtl5SLVesWG9SavWOSldLZKLNakCANrliATQmC7dRDQAA7sFwcDi6_ADj5wMYfnkxev8S4puPEL-6jq8uCsqu_Q81qsTxmtYjIBhqyQqjE7rGh8JENmuqpPl6cglGXy_ik0MYX76D-OYkPrsefhvkBYdeEaJegKjnEOM35_HR-ej1Jxh-_xEf3Trao7enEB-fJWB5r5j392GORGg3mN5TC5PGzxvph7mOXDGZ9mrqzKOSfkqnemShAaLQncdlEQQMNMCD-yDggZujbOkVEGrVHEKEhWh4AgqoYkCbMoCn7ictIUCCPZ6YSAJharNMamU3OKciE6lR6RzMmwPmlYA5hAKblflsTIGNKWezMqeA-j-xMbNs6nPAym7tFJu1O3qTpXTDMFX-6pyMxdnbF7YgC7c7RqV-4O7T6Gow_HzrvGB0czg-up0ltDYHvmxspwiVzSttisSgssYkrpX9cS9EUHT8agmUcLOVRiZG46xmV_C99DspGWfoNwOCustVtm5R5azImh2e-dR6r9PS8ne2n8en2O_3fwE",
+      "de": "https://ariadnensd.com/#ns1.d.rVXNbhMxEH6V0XBpwWmTbVpgRbhVQkKceoxWlRPPbiyccWQ7bUOVK2fegLfgBfomPAl4N8taSbpw4BDF2fj7Zr5vfvYRWS4Jc1yQXA28deGM_Zm_q1Dg0ioymD9iad1SBsxROi0V04C9QoF35Ly2jPlIoKcQNFc-Xg_0ED5qVpjjykjNKDAsqI6iqJRrE1DEeOombEx8GnQwhAKNnUvTXMOtQKVl5eTSYz59RB3p1GiHjGE-NyGWFBY2phPD7oTcRiEn8jSyzKzadAyzyLBDrpydk_cdlGEChrgBtoCsA5TWdZdL60CDZnCSKzphOD-HDAYwEjCoP6d4EPyi45pLYyKZdBWFRE7tAf4RH0VnUYZ00VyUArSAaKkjH53MEbdFl-24J1tileZbpzp8JtPLHpvkdFgIkFNiVcBkd4gPhgUAwAtQ0kPlnn48fQ8ELOcLWGgOxImrV__DiaGImva9KASW1qikbcpY9FI7H9qCGtmddwPwST4MPpBcgVyXM7lOsy2zFD9O8OMOf635CxkG4sC0WEZ8VxeV_b1xvS7DrbL3fLIr8rH2fd35RqxMU5e9O296ameiyz7ABHRSjbd9CAEOJpDBS9DwKvZMe8wShtGwo9BlgoZ3wCBZgZyaAt7HryaFAgVuqF4YNYUbHSoZ9U1rJ8XUViPbjiw7Qpb1kEWGRM3FcTUuUeP61VwcSWD8T2rcoZrxEbK-Cd1Tc_VMbdqQsRn20r88EjHtvQcdElsorB03sx9HaHCtK2I_X8gyQKVNOFR0dYS_r2_3FPU1rJzqehu1lalXVPsj_qGLdL0Pe6h0bK4GWW-WuFvuNN03L0WjSGE-LQTaFXF7nkmOuye4NbWL6WaznFnzO9rPr99wu93-Ag"
     }
   },
   {
@@ -124,15 +156,18 @@
     "category": "classic",
     "name": {
       "ko": "다익스트라 최단 경로",
-      "en": "Dijkstra's shortest path"
+      "en": "Dijkstra's shortest path",
+      "de": "Kürzester Weg nach Dijkstra"
     },
     "what": {
       "ko": "겹친 While · For · If",
-      "en": "Nested While · For · If"
+      "en": "Nested While · For · If",
+      "de": "Verschachtelte Schleifen und Verzweigungen"
     },
     "files": {
       "en": "dijkstra.en.ns.svg",
-      "ko": "dijkstra.ko.ns.svg"
+      "ko": "dijkstra.ko.ns.svg",
+      "de": "dijkstra.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -142,11 +177,16 @@
       "ko": {
         "width": 333,
         "height": 536
+      },
+      "de": {
+        "width": 333,
+        "height": 536
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.hZSxbtswEIZf5XCTjLCBnbhNKsQdCwQFumQUNNDmyWIikTRJyTEMrZ37jH2SlpJjCVEqbwRx__ffzzvwiIqXhDEK-fzivOXXyl27eosMSy2owPiImbYl9xgjt5ILRZ-UE8iwJuukVhgvGDryXqqtC-WeXv0PqQTGaAouFTL0OXUmlPGq8MgwJy6e_KEIt176gpBhoTe8vSCFDUMh-dby0mGcHFEGnFiclMHmpbMoyec6tBNsBzmireUmZ-BmgbXW4tBz1oFz0hurN-TcEOA8rOBYx_D48ztk2kINUkHLa7Bhb5CbC5DEpbCC-UBxO6EwO1hBEs1Dx-lAs-w1-1y273RW4CjY56meGFSwgpy4MdpEZjcb2HzphTIbaOAbtFmqFBkeqB1wq7CLsftdD6FX6XvMRisvVUXYpA1DpXvKzZhyP5EhAPqmv_aVmbZ9VTszBvvz2Lr23y_B_D-Zu7xwBXt46NLXo_S3H_AubVVSh4UY4Afvv5jaJmOp7sTVUDK1Tu2UK5dHZscgOrkzqGez8QyWH2RZXhpCGjDn8qm9s-Qrq9rcDEKUoE8Z1pL23fdSCBIYJylDbUi9nddcCYextxUxtOSqwj8dyrUu_jn--fUbm6b5Cw",
-      "ko": "https://ariadnensd.com/#ns1.d.hZSxbtswEIZf5XCTjLKBnbhNKtQdCxQFumQUNNDmyWItkTRJyTEMrZnzjH2SlpJjCVEqbwRx__ffzzvwhIqXhDEK-XvnvOU3yt24eosMSy2owPiEmbYl9xgjt5ILRR-VE8iwJuukVhgvGDryXqqtC-WenvxPqQTGaAouFTL0OXUmlPGq8MgwJy4e_bEIt176gpBhoTe8vdhpbBgKybeWlw7j5IQy4MTirAw2u86iJJ_r0E6wHeSItpabnIGbBdZai2PPWQfOWW-s3pBzQ4DzsIJTHcOPX98h0xZqkApaXoMNe4XcXoEkLoUVzAeKuwmF2cMKkmgeOk4HmmWvOeSyfaeLAkfBPk31xKCCFeTEjdEmMvvZwOZzL5TZQAPfoM1SpcjwSO2AW4VdjN3vewg9Sd9jNlp5qSrCJm0YKt1TbseUh4kMAdA3_aWvzLTtq9qZMThcxta1_3YJ5v_J3OWFD3CAr136epT-7h3eta1K6rAQA_zg_RdT22Qs1Z24Gkqm1qmdcuXyyOwZRGd3BvVsNp7B8p0sy2tDSAPmUj61d5Z8ZVWbm0GIEvQpw1rSofteCkEC4yRlqA2p1_OaK-Ew9rYihpZcVfjHY7nWxT_HP88v2DTNXw"
+      "ko": "https://ariadnensd.com/#ns1.d.hZSxbtswEIZf5XCTjLKBnbhNKtQdCxQFumQUNNDmyWItkTRJyTEMrZnzjH2SlpJjCVEqbwRx__ffzzvwhIqXhDEK-XvnvOU3yt24eosMSy2owPiEmbYl9xgjt5ILRR-VE8iwJuukVhgvGDryXqqtC-WenvxPqQTGaAouFTL0OXUmlPGq8MgwJy4e_bEIt176gpBhoTe8vdhpbBgKybeWlw7j5IQy4MTirAw2u86iJJ_r0E6wHeSItpabnIGbBdZai2PPWQfOWW-s3pBzQ4DzsIJTHcOPX98h0xZqkApaXoMNe4XcXoEkLoUVzAeKuwmF2cMKkmgeOk4HmmWvOeSyfaeLAkfBPk31xKCCFeTEjdEmMvvZwOZzL5TZQAPfoM1SpcjwSO2AW4VdjN3vewg9Sd9jNlp5qSrCJm0YKt1TbseUh4kMAdA3_aWvzLTtq9qZMThcxta1_3YJ5v_J3OWFD3CAr136epT-7h3eta1K6rAQA_zg_RdT22Qs1Z24Gkqm1qmdcuXyyOwZRGd3BvVsNp7B8p0sy2tDSAPmUj61d5Z8ZVWbm0GIEvQpw1rSofteCkEC4yRlqA2p1_OaK-Ew9rYihpZcVfjHY7nWxT_HP88v2DTNXw",
+      "de": "https://ariadnensd.com/#ns1.d.hZTBbtswEER_ZbEnG2UDO3GbVoh7LFAU6CVHQQfaXFlMKJImKTmGoWvP_cZ-SUvJsYQqlW-CsPNmRzvQCTUvCRMU8unZB8dvtL_x9Q4ZlkaQwuSEuXElD5ggd5ILTe-1F8iwJuel0ZgsGXoKQeqdj-OBXsJ3qQUmaBWXGhmGgjoTynmlAjIsiIvHcFTxbZBBETJUZstVN4YNQyH5zvHSY5KeUEacWJ6V0ea5sygpFCauE20HOWY7x23BwM8ja2PEsedsIuest85syfshwAdYw6lO4NuPr5AbBzVIDS2vwYa9Qm6vQFKfwRoWA8XdhMLuYQ3pbBE3zgaaVa85FLL9ThcFjoJ9mNqJQQVrKIhba-zM7ucDm4-9UOYDDXyBNkuVIcMjtQduFW45dr_vIfQiQ4_ZGh2krgibrGGoTU-5HVM-TWSIgH7pz_1kblw_1d6MweFytm79f0uw-E_mLi-8gwM8dOnrUfq7N3jXWpXWsRAD_OD7L6faZB3VnbgaSqbq1F658sXM7hnMzu4M6vl8fIPVG1lW146QRcxlfKp3jkLldJubQYwS9RnDWtKh-70oQQKTNGNoLOnX5w3XwmMSXEUMHflKhcdjuTHqr-Pvn7-waZo_"
     }
   },
   {
@@ -154,15 +194,18 @@
     "category": "classic",
     "name": {
       "ko": "너비 우선 탐색",
-      "en": "Breadth-first search"
+      "en": "Breadth-first search",
+      "de": "Breitensuche"
     },
     "what": {
       "ko": "격자에서 가장 적은 걸음",
-      "en": "The fewest steps on a grid"
+      "en": "The fewest steps on a grid",
+      "de": "Die wenigsten Schritte auf einem Gitter"
     },
     "files": {
       "en": "bfs.en.ns.svg",
-      "ko": "bfs.ko.ns.svg"
+      "ko": "bfs.ko.ns.svg",
+      "de": "bfs.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -172,11 +215,16 @@
       "ko": {
         "width": 509,
         "height": 504
+      },
+      "de": {
+        "width": 561,
+        "height": 504
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.hZSxbtswEIZf5XBdZIQxojhtUwEeOxXo4qGDoYEyTxYRipTJkxPD0Nq5z9gnaSnbkVsFyiYQ93__3X8HHdHKmjDDogxzG-Zhv0WBtVNkMDti6XwtGTOUXktl6dYGhQL35IN2FrNUYCBmbbchljO98DdtFWbYGKktCuSKer6iUraGUWBFUq34YOIrazaEAo3byP6BLHYClZZbL-uA2fqIOuJUelZGm6eTRU1cudhOtD2NkGy9VgICS88Ctk6aWeQVTh0GVhFZZ0bj3YZCGCBKB4YlHHtEBncdduKiu5_Q7WAJinYtJetems-uhItB-FzpfuKLDEfdPUy4NLCE3bxxjaGSk2uLj4NKl_8Iln0OKPBA_ZL6ep-OjT8NCHrRPEA8cestxGjWTY5d3gm0bmDdj1mfJ4aIgKHxx6GydH6oKp0HBdpC8l3AVwErAT9mY6MvE0YWltDADairnNK7t4OKhzN3DdnEzkBaBRas4-gfx_4_vcW4kfS9q1rbPN7IKUS4gRQA4AOU2gcG6b3eSwM6AFcEoXKeKfB145PXN5dNQ1YldjZez8MbzS7e208eMa_lUzd5vo7b8zyt9SQ3lSwMRVAucK_p-fQzMYoUZutcYEz68l1IqwJm7FsS6Cm0hleHunDmr_Xvn7-w67o_",
-      "ko": "https://ariadnensd.com/#ns1.d.hZS_btswEMZf5XBdZIQxojj9J8BjpwJdPHQwNNDhySYikTJJOzEMARmKIEAydCmaxZ3a3ejWqe_S0dZDtJTtyq0DZRJB3Pf77jseNEfFM8IIB4ltK9u20yEyzLSgFKM5Jtpk3GGE3EguFB0rK5DhlIyVWmEUMrTknFRD68sdXbm3UgmMME-5VMjQjajiC0r4JHXIcERc9Nws9bdOupSQYarPeXVxobFgKCQfGp5ZjPpzlB4nwq3S21xsLDJyI-3b8babCMHQSMHAOm4cg6HmacvzBlrMatbAs7aM3OhzsraGCGkddGFeISI4KbBgO91pg24MXRA0nlDQr6Rxa0_YqYWXI1kl3snwoLuzBpccujBu5zpPKXHBvsXzWiWTfwTdag7IcEbVI1X1Jjw0flEj6Eq6GmLITYwCP5p-HmMRFwyVrlmnh6yXDSE8oG78VV2ZaFNXJdqAAKkgeMfgDYMeg_etQ6PXDUYKupDDEYi9OYUnjw_KL05b56QC1QKuBChQ2nl_H_v_6XUOGwmf2qq-iv2ObIYIRxACADyD8vtDubiH9d3PcvEB1p_uV8trWC2vyy_f_Gf1Y7G--7ofoHEL2zzPSYlAtQ6f6eyRpjtPvVPsMX_Lm3ZzuyXH21yr5S2Utw9Qfr6pAsRFzHAq6XLzX0kFCYz6MUM_9N15wJWwGDkzIYaG7CR1vVk20Okf9183H7Eoit8"
+      "ko": "https://ariadnensd.com/#ns1.d.hZS_btswEMZf5XBdZIQxojj9J8BjpwJdPHQwNNDhySYikTJJOzEMARmKIEAydCmaxZ3a3ejWqe_S0dZDtJTtyq0DZRJB3Pf77jseNEfFM8IIB4ltK9u20yEyzLSgFKM5Jtpk3GGE3EguFB0rK5DhlIyVWmEUMrTknFRD68sdXbm3UgmMME-5VMjQjajiC0r4JHXIcERc9Nws9bdOupSQYarPeXVxobFgKCQfGp5ZjPpzlB4nwq3S21xsLDJyI-3b8babCMHQSMHAOm4cg6HmacvzBlrMatbAs7aM3OhzsraGCGkddGFeISI4KbBgO91pg24MXRA0nlDQr6Rxa0_YqYWXI1kl3snwoLuzBpccujBu5zpPKXHBvsXzWiWTfwTdag7IcEbVI1X1Jjw0flEj6Eq6GmLITYwCP5p-HmMRFwyVrlmnh6yXDSE8oG78VV2ZaFNXJdqAAKkgeMfgDYMeg_etQ6PXDUYKupDDEYi9OYUnjw_KL05b56QC1QKuBChQ2nl_H_v_6XUOGwmf2qq-iv2ObIYIRxACADyD8vtDubiH9d3PcvEB1p_uV8trWC2vyy_f_Gf1Y7G--7ofoHEL2zzPSYlAtQ6f6eyRpjtPvVPsMX_Lm3ZzuyXH21yr5S2Utw9Qfr6pAsRFzHAq6XLzX0kFCYz6MUM_9N15wJWwGDkzIYaG7CR1vVk20Okf9183H7Eoit8",
+      "de": "https://ariadnensd.com/#ns1.d.hZQ9jtswEIWvMpg0MpZrrNabPwEuUqQKkMZFCkMFZY5swtRQJinvOoba1DlQutwkJ0ko25ETLbSdQMz73sybgY7IsiLMsCj9lP3U79cosLKKDGZHLK2rZMAMpdNSMd2yVyhwT85ry5ilAj2FoHntY3mgp_BJs8IMayM1o8CwoY6vqJSNCShwQ1ItwsHE16CDIRRo7EqaUxm2ApWWaycrj9nyiDriVHpWRpvtyaKisLGxnWh7GiFZO60E-CBdELC20kwir7Dq0LOKyDozamdX5H0PUdoHmMOxQ2Rw12IrLrr7Ed0O5qBo11Cy7KT55Eo464WPG91NfJHhoLuHEZca5rCb1rY2VIbk2uJ1r9LlP4J5lwMKPFC3pK7epUPjNz2CnnToIY5C4xhiNMs6xzZvBbLtWfdD1tuRISKgb_xdX1la11eV1oECzZB8FvBRwELAl8nQ6P2IEcMcargBdZVTevd8UPFwprYmTngCkhUwsA3RP479f3qzYSPpS1e15DzeyClEuIEUAOAVKE1AzgeCD7xtuAwQLzC-bn_-cF_JB7puf_QGp7KuiVXCk-GSHp5pefbSlvKI-Vs-dpnnG7k9T9UwOUd6tSmki6Rc4F7T4-mfYhQpzJa5wBj45buQrDxmwTUk0JFvTFgcqsKaP96_vn3Htm1_Aw"
     }
   },
   {
@@ -184,15 +232,18 @@
     "category": "classic",
     "name": {
       "ko": "깊이 우선 탐색",
-      "en": "Depth-first search"
+      "en": "Depth-first search",
+      "de": "Tiefensuche"
     },
     "what": {
       "ko": "재귀 · 전위와 후위",
-      "en": "Recursion · pre-order and post-order"
+      "en": "Recursion · pre-order and post-order",
+      "de": "Rekursion · Preorder und Postorder"
     },
     "files": {
       "en": "dfs.en.ns.svg",
-      "ko": "dfs.ko.ns.svg"
+      "ko": "dfs.ko.ns.svg",
+      "de": "dfs.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -202,11 +253,16 @@
       "ko": {
         "width": 335,
         "height": 524
+      },
+      "de": {
+        "width": 478,
+        "height": 524
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.vZTPitswEMZfRUwvDiihzm7_CXooFHrocY_BFCUaO6Kyxkhjd03wtec-Y5-klZ2s082SLj30ZsTMb7759MkH8LpGUGDKuPJxFbsKJNRk0IE6QEmh1gwKdLDaeFz6aEBChyFa8qByCRGZra9iKme858_WG1DQOG09SOA9TnwsdesYJOxRmzvuXTplyw5BgqOdHg_QwyDBWF0FXUdQmwPYhDP5sTON-TqNqJH3lOSksdMKX7RzWRV0s18kzpZMPzO2iXHsbQLtMMa5ubPRMhopKBgM4r2IyNlCik0BgzwB1jOgpDA3lxREJ6wX42ghhHghsMPQix3VDXn0afFHam5mmC3PhAhPnFhHRSChx9HdsS3kl6TbmbTTziWWDhXymVejwfDgbHJrnRzSId0cjLql6EBCwJjuSQEMxSDB0zx6fTn61RVLEyAxTrWvr9QG5Db4yfyNUsu8mFzUgqkhR5XdaXe8GyqFFh8_fIIzuFk_Kx_ZcdH2qXi8-Xs8VtqYrF1M2sgL9Bx6kTUBl6O2xVlY3j4rLJu2uHT13b9F4-aSlL_8T9m4fWL2tff2OBz5-krx6O1KNw36P-2_tyyyhiI_2F8MhYTO4rfp9-UMGlCbQgI16E_fW-1NBMWhxdNSd329Jfdbyc_vP2AYhl8",
-      "ko": "https://ariadnensd.com/#ns1.d.vZTPi9NAFMf_leF5aWG2mO76K-BBEDx43GMJMu28tMMmM2FmGi0lh9UiBT0IYlmwgsLCKnjooUf_Go-b-D_oJKkpdqmLB29heO_zffN938kUJIsRfOCh6UjTMekQKMSKYwT-FEKlY2bBB6YF4xIPpOFAIUVthJLgexQMWivk0Lhyi8_sYyE5-JBETEigYEdY8TFk48gChREyfmwnkTu1wkYIFCI1YOXBiYKMAhdsqFlswO9NQTgc9-pOJ3NSScRoR8qN42SrKzxhUdQaapaM2o7TV3zSMPqOUfcmWg3QmKY5FUZY5JQozVGT-8SgbbUp6QWQ0Q2g2wBCpZvmUGmSEiFJKU0IITdIvvhcLNbFxYwUn1aXq9P8Yp6_OoedoQ4bpgi35iFSWYesBwMKEyxNLtu0t0s6akgDFkWOxfQQ7ZZlpc_w22BnWtcZxbRbIJTjU5ICBY3GrcsHyIKMglSNdHdX-tYeZx3AMTa1t_fUarRjLasd9Hz_wAsqMx8-eJR_-JZ_WZNiOStenJJivixmS9ji8u61EtKq7zi-KiB3_h6QDuO8NW7XO357XizWl6s5yd-9Jq3i46xYztpbgbl7rcD0xsGupff-LReHuyTv5n8KxtEV2vve3J_J8Lp7istMdFiSoNxawPOz4uxr5f6P97X7QRZQSAU-rf5gEUcOfi-goBKUm-8-k9yAb_UYN3c6nsR9Ff0a5PvLN5Bl2U8"
+      "ko": "https://ariadnensd.com/#ns1.d.vZTPi9NAFMf_leF5aWG2mO76K-BBEDx43GMJMu28tMMmM2FmGi0lh9UiBT0IYlmwgsLCKnjooUf_Go-b-D_oJKkpdqmLB29heO_zffN938kUJIsRfOCh6UjTMekQKMSKYwT-FEKlY2bBB6YF4xIPpOFAIUVthJLgexQMWivk0Lhyi8_sYyE5-JBETEigYEdY8TFk48gChREyfmwnkTu1wkYIFCI1YOXBiYKMAhdsqFlswO9NQTgc9-pOJ3NSScRoR8qN42SrKzxhUdQaapaM2o7TV3zSMPqOUfcmWg3QmKY5FUZY5JQozVGT-8SgbbUp6QWQ0Q2g2wBCpZvmUGmSEiFJKU0IITdIvvhcLNbFxYwUn1aXq9P8Yp6_OoedoQ4bpgi35iFSWYesBwMKEyxNLtu0t0s6akgDFkWOxfQQ7ZZlpc_w22BnWtcZxbRbIJTjU5ICBY3GrcsHyIKMglSNdHdX-tYeZx3AMTa1t_fUarRjLasd9Hz_wAsqMx8-eJR_-JZ_WZNiOStenJJivixmS9ji8u61EtKq7zi-KiB3_h6QDuO8NW7XO357XizWl6s5yd-9Jq3i46xYztpbgbl7rcD0xsGupff-LReHuyTv5n8KxtEV2vve3J_J8Lp7istMdFiSoNxawPOz4uxr5f6P97X7QRZQSAU-rf5gEUcOfi-goBKUm-8-k9yAb_UYN3c6nsR9Ff0a5PvLN5Bl2U8",
+      "de": "https://ariadnensd.com/#ns1.d.vZTPjtMwEMZfxRoureStSHf5F4kDCIkDB5BW4kAVIbeeJGbtcWRPAtUqV848I0_COmk3VbsqKw7comjm98188yW3QMoh5KDLuKC4iF0FEpzXaCG_hdIHpxhyUMEoTXhBUYOEDkM0niDPJERkNlTFVM74gz8Y0pBDY5UhkMA1jnwsVWsZJNSo9DVvbXrLhi2CBOs3yo5l0EvQRlVBuQj56hZMwuls15lkbkYJh1z7NE6SHVf4qqydVUE19Txx1l5vJ8Y6MXa9TfAbjHFq7kw0jFoKHzQG8VpE5NlcilUBvdwDlhOg9GFqLn0QnTAkBmkhhHgivqFG8aWNyjmkWlEVb7xrPCFx2vhotMuJbMqDqQR5TuDdeCBhi4PVQ1vITklXE2mjrE0sFSrkA-MGt-He5mTdMtmlQjojDEtI0YGEgDEdLQfoi14C-Ul6eSr97Iy_CZAY-9rnZ2oDchtovMQqzy-yYrR0jUagIXTi3Zv3w5Ng33jrKxM3NYqPQVNLFRzo6OWjcjPb7dw-FJsXf4_NQmk9a-f3YzrxFjkgI4nZp4DDJvODIL18VJBWbXFq8qt_S8rlKSl7-p-icvWA9rlv8Tgr2fJM8eDtQjUN0tEJPmOwKsbhBj7y_ghFX0joDH4ff3BWo4Z8VUjwDdL-ea1IR8g5tLhf7Xrr1t7ezfP75y_o-_4P"
     }
   },
   {
@@ -214,15 +270,18 @@
     "category": "classic",
     "name": {
       "ko": "위상 정렬 (Kahn)",
-      "en": "Topological sort (Kahn's)"
+      "en": "Topological sort (Kahn's)",
+      "de": "Topologische Sortierung (Kahn)"
     },
     "what": {
       "ko": "들어오는 간선이 없는 정점부터",
-      "en": "Vertices with no incoming edge first"
+      "en": "Vertices with no incoming edge first",
+      "de": "Knoten ohne eingehende Kante zuerst"
     },
     "files": {
       "en": "topological-sort.en.ns.svg",
-      "ko": "topological-sort.ko.ns.svg"
+      "ko": "topological-sort.ko.ns.svg",
+      "de": "topological-sort.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -232,11 +291,16 @@
       "ko": {
         "width": 556,
         "height": 650
+      },
+      "de": {
+        "width": 575,
+        "height": 650
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.nVRNj5swEP0ro-klUZ0o7GeLyqnHSr3sMUKVgwewamxiG3ajiGvP_Y39Ja1JsrCbiEi9GeT33ryZN96j5hVhjN7URplCZlwtnLF-qd3StQUyrIwghfEec2Mr7jFGbiUXmhbaCWTYknXSaIwjho68l7pw4bqnF_9NaoEx1opLjQx9Sb2YoJw3yiPDkrh48jvVlyC9ImSoTMb7H6SxYygkLyyvHMbrPcpAJ6IjMsj8PEhU5EsTygmyRz8_gpFZYXldzgPTxojdwLIJLEd0bU1Gzg1wqQUVkMC-jWEFubHQgtTQc3XYsRPHzcCRGzvgA6J5ReCZ9u0EblBaN-k59O5a2es2hY8JRNilXTqUej-B20ICgrYNzdp3ZkHm8MqaJLCaAwB8gJaslxk5eJa-BG1A6sxUUhdAoqBRhx4mZI0VZCGBdToCPA6A51L2iThVed6MTxPsDSSwXdamVpT72Xwk8flaTUte16TFrBmjotX_Dy26GrbQ30U_tUFwlC6ZX7gf5oEMd9QvXA-y0QXx26nRn7y28xAYhtoMZDcXyKbyFxjepi66v-xBkZ71rZ7DFwgfxzV95-b2QgGjRNGL9AOnJd9YDd-NpkNIfUmWQDrgkO0yRecG7y7wP14zOJibit-xmt4kdinD3CgxesXyMKlcWudPj5Hih3Po-vFZ_moa7d_uluv3mmEr6fnwLCtBAuN1ytDUpE_nDddBztuGGFpyjfJPu2pj1D-JP79-Y9d1fwE",
-      "ko": "https://ariadnensd.com/#ns1.d.nVS7btswFP2Vi9vFRmkjyqNpheoLCnTJaAgFHVI2EZpUKEqJYWhoEQRFuwToc0mRIWOHDB7yPR0T9R9aynakxoIMdKMEnnPuufdczlDRCUcfrY611CNxSGUv0cb2VdJPshESnGjGJfozjLSZUIs-UiMoU7ynEoYEM24SoRX6HsGEWyvUKHHXLT-1r4Ri6GMsqVBI0I55KcZ4RFNpkeCYU3Zgp7IsQVjJkaDUh7T8caQxJ8gEHRk6SdAfzFA4OuYtkU7maCEx4XasXTlOdunnjTPSGRkaj7uOaajZtGIZOpYlOjb6kCdJBReK8REEMMt82IJIG8hAKCi5cszJimO74oi0qfAOkT4gcE17pwVXKQ3ScB26u6nsQRbC0wA8zMM8rErda8EdQwCMH6e8kz0yCyKCB9YggK0uAMATuP90XXydF9-v7z98hrubs-LsqricQ_Ht3P0orr4UVxe1Pj1rEdeGcQMBDMIaYL8CnIxFmYtVrested7CnkIAx_1Yx5JHttOtSbzYVFOfxjFXrJPWUd7W_4_O2xg51-VeObtKsJYxETXcd1NBglNerl0JMl6D-E5bAFZes66LDUGlK7LtBrK2FDqGf7Pn7TV7kFx1ylZ34SW4j-WyPnKz01BALVH8VNiK03CbGgWvteKLqBbvfhaX899v52VAf7y__3i97nG3QWJ_k8fKX1sClwWVPjEPCUZastpzFrlhRcIkdvUqSbo4u8Yv3-eGfYPi7Pbu9qZcc4KZ4CeLV1oyztAfhAR1zNXqPKTKiVqTcoKGJ6m0B9PJUMu_Qr_OLzDP8z8"
+      "ko": "https://ariadnensd.com/#ns1.d.nVS7btswFP2Vi9vFRmkjyqNpheoLCnTJaAgFHVI2EZpUKEqJYWhoEQRFuwToc0mRIWOHDB7yPR0T9R9aynakxoIMdKMEnnPuufdczlDRCUcfrY611CNxSGUv0cb2VdJPshESnGjGJfozjLSZUIs-UiMoU7ynEoYEM24SoRX6HsGEWyvUKHHXLT-1r4Ri6GMsqVBI0I55KcZ4RFNpkeCYU3Zgp7IsQVjJkaDUh7T8caQxJ8gEHRk6SdAfzFA4OuYtkU7maCEx4XasXTlOdunnjTPSGRkaj7uOaajZtGIZOpYlOjb6kCdJBReK8REEMMt82IJIG8hAKCi5cszJimO74oi0qfAOkT4gcE17pwVXKQ3ScB26u6nsQRbC0wA8zMM8rErda8EdQwCMH6e8kz0yCyKCB9YggK0uAMATuP90XXydF9-v7z98hrubs-LsqricQ_Ht3P0orr4UVxe1Pj1rEdeGcQMBDMIaYL8CnIxFmYtVrested7CnkIAx_1Yx5JHttOtSbzYVFOfxjFXrJPWUd7W_4_O2xg51-VeObtKsJYxETXcd1NBglNerl0JMl6D-E5bAFZes66LDUGlK7LtBrK2FDqGf7Pn7TV7kFx1ylZ34SW4j-WyPnKz01BALVH8VNiK03CbGgWvteKLqBbvfhaX899v52VAf7y__3i97nG3QWJ_k8fKX1sClwWVPjEPCUZastpzFrlhRcIkdvUqSbo4u8Yv3-eGfYPi7Pbu9qZcc4KZ4CeLV1oyztAfhAR1zNXqPKTKiVqTcoKGJ6m0B9PJUMu_Qr_OLzDP8z8",
+      "de": "https://ariadnensd.com/#ns1.d.nVTLbtswEPyVxfZio4wR5dG0QnXsKUAvudUwCjpcSUTopUJSSlxD1577Ef2T_km_pKVsR2psyEBvEsCZ2dmd3Q2yXBGmGGxljS30vTRn3rowYz_zTYECV1aRwXSDuXUrGTBF6bRUTGfsFQpsyHltGdNEoKcQNBc-Pg_0HG41K0yxMlIzCgwldWKKclmbgAJLkuourE1Xgg6GUKCx99Jsn2ErUGlZOLnymM43qCOdSnbIKPOwlVhRKG0sJ8ru_HyNRiaFk1U5jUxLq9Y9yzKy7NCVs_fkfQ_XrKiADDZNCueQWwcNaIaOq8VW7Dkueo7cuh4fEfULAg-0L0dwvdK8XhxCr06VPW8W8DaDBNtFu-hLvR7BPUIGih5rmjSvzILO4YU1y-B8CgDwBm7ZBmKwJROQ5oJKYkVwKznQoD_vRkStU-Qgg_liALjpAU-l7vKwr_GwFe9H2GvI4HFW2cpQHibTgcSHUzXNZFURq0k9RCXn_z-y5GTUYnfPupn1goNs6fzI-zgNFLimbt06kEuOiF-ODX7vtZnGuAhk25NdHCEbS19k-DdzyfVxD4Z40rV6Ch8h_uyW9JWbyyMFDBJFzzr0nI5C7Rg-W6ZtRMlDoZchxpMYvqwfTO0PTV4d0bg5ZbI3OBbBXUWdUWwXAnNr1OCO5XFauXY-7M-Rkdvv2PndYf70arkYvv36WRribr0FNpqettfZKFKYzhcCbUW8_15KjprB1STQka9NuFuvltb81fn9_Qe2bfsH"
     }
   },
   {
@@ -244,15 +308,18 @@
     "category": "classic",
     "name": {
       "ko": "유니온-파인드",
-      "en": "Union-find"
+      "en": "Union-find",
+      "de": "Union-Find"
     },
     "what": {
       "ko": "경로 압축 · 랭크 · 크러스컬 MST",
-      "en": "Path compression · rank · Kruskal's MST"
+      "en": "Path compression · rank · Kruskal's MST",
+      "de": "Pfadkompression · Rang · MST nach Kruskal"
     },
     "files": {
       "en": "union-find.en.ns.svg",
-      "ko": "union-find.ko.ns.svg"
+      "ko": "union-find.ko.ns.svg",
+      "de": "union-find.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -262,11 +329,16 @@
       "ko": {
         "width": 757,
         "height": 684
+      },
+      "de": {
+        "width": 861,
+        "height": 684
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.pVbLbtswEPyV7faitEwQP_IS6msvPbY3wyhocy0TlkhjSTsSAl977jf2S1rKD8mWIhfJjRCWszO7s1y9oJEZYYxro625nmujboy7cZsEBWZWUYrxC84tZ9JjjJK1VIaujVMocEPstDUY9wQ68l6bxIVwT7n_po3CGFep1AYF-gWVaRTN5Tr1KHBBUn33RRq-eu1TQoGpncnyAxncClRaJiwzh_H4BXWAU739zZBmuUuRkV_YQCekxRiXvHZLmUZGAKmE3FWAmlpVVDDTALO_PpNpGi5LTsjXYEsueCQRkvcDkuQgEoMoJhe0xIhbcUDuV8grtjNyrmKWOQ8jGE9q4YMqfG65Cp1bhmcBawEb0AacZU8q2ukBAPgIqU4WnpwvRcJcswtVPdM5fJPOYU1nYFCXmhEnpGoK7qoUel7TuosTWFDpiTKYe02K990Fu5GrFRkVRYGIgOerK9xOtgKNrVD7TdSHDtQAEDAOsY8dsUx-zQYy57F2RfUv2zCTS_rpyLvItDnwqSPpSjKZYJVUOx-xNAlFJgg_Uu7ddnGWZhl8djuBT2BOeA8u8w5PQJS3Dk2vvdU7uuN8Ah9GkJ-3fNBsTq__JlsOarY85qx7k6319SINLtY4kB5BuLcbqpX0C5jZbMXkyqet4bVhi5zhJbNVlO4ue62SVu_c8HLnyic8ygUUrd27f3fR85Ni5_VSP7wbvDgBL-rgj-2-4xxGI-Di3HF3LS2qjRvl2jeK_lWmjnYekCmTVEV4dq0hcOSbLrhvpuh3jeSpC_qvDFIY3DHnE_gCu2MxOdf20JK4a-VwLoCL4PFCQGjZuZLHFsCuuTlT0mX9vZG5KGcs368t-0wMnolgbVQ4LggWOlkQ17foK1vlWKHQ-FdK9NSiqGvJHDE_j6DXLFD51J7jXVwvlZL_2C4_eE3h1kTgRtPz7o8rVaQwHk8E2hWZw3kqjXIYe17TYVy-F9nUpv9y_fn1G7fb7V8",
-      "ko": "https://ariadnensd.com/#ns1.d.pVZNb9NAEP0rw3BxYanIRz-wyJULR7hFEdp2J6kVezfa3bS2qkgVqjhwAqQKgagEB0BICCKEEAf4Mxzr9D_AJm3sxq6D4GatZt68N_Nm1_soeUTo41AGSt7oBlKsSrNqdnvIMFKCQvT3sat0xC36yHXAhaQb0ghkuEvaBEqiX2NoyNpA9owLtxTbu4EU6OMg5IFEhnaHpmUEdfkwtMhwh7i4Z5PQndrAhoQMQ7XNpwd9hSOGIuA9zSODfnsfAwcnameZrkx_ViIiu6McHVfW5eqh6fPQkwxI9MisOKgtJZIMZsvBnKVv8zB0yVz3yOZgp1xwTsIVrzskrp1IdKI0GafFRxyxc-R6hjzQapuMyZhFxkIL2p1ceCML7yqdhXaVhj0GQwa7EEgwSlsS3kwPAMBVOBkfpF9-TF5-hZPx4eTwdfrt4PRwjAWpzX-S2sxJdSTyaiPSPRI5EWtZiaCbkzuLY5jQ1BbTYF0rUlyv7tkqHwxICs9zRBjsrazgqDNiKFWGWi-iblSgOgCHcR67WRGryQ61hMhYzKWI-nInRrxPDwxZ48kyE96qKDrgmqRzSxgY62kue-RJJ3xOuXazijOXfWe1mx24BvIC78Zy3u4W8OLSvamVj3pGtx134EoL4sWRN4rDqdX_yZaNnC3nNfPe1ErZfJMaS3vsSLfA5Z3t1Zef6ZtXMDk6mnw7KhqtWaKlucxpGZ-15UbLdOXH1lw-tukV7sUMktLRrf93x-MLnY7zfd74b_DkAniSB98sN52OodUCnSzaba1kRLldoziwhabf4aGhmQEmx1_Tz9_hZPxicnwAk_dPT48-FH2wXixSr9rIiz6oX7JHbm_bOu7AbZh9Jp1FdRslhaseHR0z0ImzeMLADW1RyWYJYNXaLCipMv-ZlXUyXbF41t_04SfX2NPH39N3H9O3PyB99Cw7gHT8dPL8Sf5FveR5mffKmeCSZt0q0Vb12swxr7egVmzV9M5dxFv6zmRK_uKZua-H5LI6DHcD2pv9fYWCBPrtDkM1IHn-vcWlMOhbPaTz1bmXRFsq_FPr16MnOBqNfgM"
+      "ko": "https://ariadnensd.com/#ns1.d.pVZNb9NAEP0rw3BxYanIRz-wyJULR7hFEdp2J6kVezfa3bS2qkgVqjhwAqQKgagEB0BICCKEEAf4Mxzr9D_AJm3sxq6D4GatZt68N_Nm1_soeUTo41AGSt7oBlKsSrNqdnvIMFKCQvT3sat0xC36yHXAhaQb0ghkuEvaBEqiX2NoyNpA9owLtxTbu4EU6OMg5IFEhnaHpmUEdfkwtMhwh7i4Z5PQndrAhoQMQ7XNpwd9hSOGIuA9zSODfnsfAwcnameZrkx_ViIiu6McHVfW5eqh6fPQkwxI9MisOKgtJZIMZsvBnKVv8zB0yVz3yOZgp1xwTsIVrzskrp1IdKI0GafFRxyxc-R6hjzQapuMyZhFxkIL2p1ceCML7yqdhXaVhj0GQwa7EEgwSlsS3kwPAMBVOBkfpF9-TF5-hZPx4eTwdfrt4PRwjAWpzX-S2sxJdSTyaiPSPRI5EWtZiaCbkzuLY5jQ1BbTYF0rUlyv7tkqHwxICs9zRBjsrazgqDNiKFWGWi-iblSgOgCHcR67WRGryQ61hMhYzKWI-nInRrxPDwxZ48kyE96qKDrgmqRzSxgY62kue-RJJ3xOuXazijOXfWe1mx24BvIC78Zy3u4W8OLSvamVj3pGtx134EoL4sWRN4rDqdX_yZaNnC3nNfPe1ErZfJMaS3vsSLfA5Z3t1Zef6ZtXMDk6mnw7KhqtWaKlucxpGZ-15UbLdOXH1lw-tukV7sUMktLRrf93x-MLnY7zfd74b_DkAniSB98sN52OodUCnSzaba1kRLldoziwhabf4aGhmQEmx1_Tz9_hZPxicnwAk_dPT48-FH2wXixSr9rIiz6oX7JHbm_bOu7AbZh9Jp1FdRslhaseHR0z0ImzeMLADW1RyWYJYNXaLCipMv-ZlXUyXbF41t_04SfX2NPH39N3H9O3PyB99Cw7gHT8dPL8Sf5FveR5mffKmeCSZt0q0Vb12swxr7egVmzV9M5dxFv6zmRK_uKZua-H5LI6DHcD2pv9fYWCBPrtDkM1IHn-vcWlMOhbPaTz1bmXRFsq_FPr16MnOBqNfgM",
+      "de": "https://ariadnensd.com/#ns1.d.pVbLbtswEPyV7faitExQP_KoUF966KUoUCC9GUZBm2uZsEQaSyqRGvjac7-mP9A_6Ze0lBJLsRW5SG-GsJydmZ0lfYdGZoQx5kZbc7rURp0Zd-ZuEhSYWUUpxne4tJxJjzFK1lIZOjVOocAbYqetwXgg0JH32iQulHsq_EdtFMa4SaU2KNCvqGqjaCnz1KPAFUl17cs0fPXap4QCU7uQaV2GW4FKy4Rl5jCe3qEOcGpwfzK0WdctMvIrG-iEthjjmnO3lmlkBJBKyJ0EqLlVZQMzDzD3xxcyTcNhyQn5FmzFBXckQvNhQJIcRGIQxeSClhhxKx6Qhw3yhu2CnGuYZc7DBKazVvmoKV9abkqXluFWQC7gBrQBZ9mTimo9AAAvISW9WHlynuCjNJ7gW07sgrN7WsfP0jpuaQ0s2nIz4oRUS8V500IvW3rrOoElVbmoinlwSPGi37QzudmQUVEUiAi4PTnB7Wwr0NgGdXiIetmDGgACxkPtVU8tk8_ZQOY8to6o4fEoZnJNXx15F5muFL7tabqRTCbEJdXORyxNQpEJwneUB2_6OEuzDll7M4NXYB7xHh3nHa6BqOhcnEH3qGu602IGLyZQ7I98dDicwfBZsRy1Yrnr2c4mW-vbJo2OehxITyCcqxfr81Kqtc02TK663Q6iNu5QMz6WtYbR-fGoNcragxsfH1x1i0eFgLJzeBf_7XnxyOui7fTlf4OXj8DLNvhVd-y4gMkEuNwP3HnHiFrbRoX2B6Z_kKmjOgJusbIm3LukDTF8IpPQYQ4uDpsM-3bycQ6GT2xS2NwpFzN4B_XPcrav7rKjcd-7w4UALkPISwFhaPtKrjoA-xZnT0lf-O-jzGW1ZEXtr9GkWCfEZOC9zDPIjScGRQZWv36uwvf2k_rE87JzKkTgCavedijre212mK8nMDg0qrpz9_GOvjONkn94Zr5wXmVtJvBG02399ytVpDCezgTaDZmH33NplMPYc04Pi3NdZnOb_u31-_sP3G63fwA"
     }
   },
   {
@@ -274,15 +346,18 @@
     "category": "classic",
     "name": {
       "ko": "KMP 문자열 검색",
-      "en": "KMP string search"
+      "en": "KMP string search",
+      "de": "KMP-Textsuche"
     },
     "what": {
       "ko": "텍스트에서 물러나지 않는다",
-      "en": "Never steps back in the text"
+      "en": "Never steps back in the text",
+      "de": "Geht im Text nie zurück"
     },
     "files": {
       "en": "kmp.en.ns.svg",
-      "ko": "kmp.ko.ns.svg"
+      "ko": "kmp.ko.ns.svg",
+      "de": "kmp.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -292,11 +367,16 @@
       "ko": {
         "width": 870,
         "height": 472
+      },
+      "de": {
+        "width": 1000,
+        "height": 472
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.jZVNbtswEIWvMp1unIYJTOWvFeBeoMssDaGgxZFFiCIJkk5iBN523TP2JC1lO1IqR8lOIDTfvBm-Jz2jES1hjk3rLk24DA9rZNhaSRrzZ6ysb0XEHIVXQhq6MEEiwwfyQVmDOWcYKEZl1iG9Hukp_lBGYo5OC2WQYayp40uqxEZHZFiTkPdxq9NpVFETMtS2FN0BGdwxlEqsvWgD5stnVAkn-aEytWn2LVqKtU1yUtv9CD8DCV_Ws3TCwIl4lnArK7c9apVQB0QptE4A4dcUB-hOD74ISQKyRBI-DYpOpEE8hTRRjk7hjh3pWU933pYUQq-wFbGsKTBoYAHLgsF8UHjVF1bW90WV9aAYlKAMkNm05EWkbsIzHM123UMea9Xt9rgd-A5zEEZCCZ8WaTfLphgDbibkJ9VOLRu4AF4AAHyGSmgNK1E2SV2sKXEjeYO7op_stmeqqseVsBjo2FJnoa7C87Gwu0lh5wvgXU80tsdkY8zXCUwC9Kq_nVbdJNWazKxz13-6r8YN-fx9Q1wK58jImYILaOAc-Nlhu3Zj5MAinH_0dsa7uD4hbcqr3TIGl8ivJl72FDfewGGc4eXL7P3gOk-VevpZbUwZlTUzdzK11xP9nUqBmhfwZX81h_1pa9YUIjhvHXnY9wFbgVvm6pwXEGsRQQUQOlhQMUDYVJV6Gq78vUAMI8xvpzKcIuKFWdOMs4PMEwnmdx-IsFuqokvxyQzzKZOPbfJS9obju2aLl2avDH8z7p5NGf6tpN6e4EyZ_XVUsykjO9Xph-bVsNkH7Jy-68WuYPig6HH_O9SSJObLgqF1ZI7PK2FkwDz6DR1_C_fbdmX1v05_fv3G3W73Fw",
-      "ko": "https://ariadnensd.com/#ns1.d.jZXNTttAFIVf5fZ2E4pBcfhrLaUv0CXLyEITzyQZ2R6PxhMgQpEqhKpK7SIsECyAdtFKXSCVRRZZVH2YLol5h3YmPw51MOzike93z71zTnyEgsQMPQxjuS7S9XS_jQ7GCWURekfYSlRMNHpIFCdUsDWRUnRwn6mUJwI918GUac1FOzWva3ao33FB0UMZES7QQd1hlk9Zi3QjjQ52GKG7uheZU811xNDBKAmIPQgT7DtIOWkrEqfoNY6QGxx1p5WmTThpETPdSYwc03Yywl7KiAo6FXPigCR6xeCaCe3lqKZBTREBiSIDIKrN9ALa6sG5ECOgZkhEmUFREjOIYqmZyEPJse_M6LWcLlUSsDTNFcZEBx2WOhBCHRq-A9WFwo28sJWovKiVKOAOBMAFMNGNmSKa2QlXsDDbZg456HC729l24C1UgQgKAbyom900Qr8I2CqRb1RL3ghhDVwfAOAl3H_-cX8yhOzsY3Y-yE4uYXzza_zlZnx8Of70Dft-Pt52DuatnBlAfUFMj1kf2QrlFtXtlKpbrYNre6JIckytiHldgjGAXPWb5apDozpiomIt9p_ujWJDt_q0K9aJlEzQCoc1CGEV3JXJirPb39nZhV3nXJbrPveaivvYXCKvzLR2IQsX6W6UvKyY7ioB05EWDUBrTydYKtbih3utrgg0T0RFLo3vZkl_yU2yqj68mlzPdIey4fFV18-uLiD7ejo-HWTHN9nVMLse2OefI_s8grvb99n1d7gbDeFuNMquhos7fyoai2F2t8vSbKKsiGiziutMdS7JsrvzjDDLBvdtnpem2S1zetEn87JHbG-b1efNHrh-q9i9Vub6x-K6vYRT5vaHea2VOVlyqx_CB8PWnuFn8w_v930H9zk7mHwYI8ooeg3fwUQyMfvdJIKm6GnVZbMPxG4vbibRv05_Pgyw3-__BQ"
+      "ko": "https://ariadnensd.com/#ns1.d.jZXNTttAFIVf5fZ2E4pBcfhrLaUv0CXLyEITzyQZ2R6PxhMgQpEqhKpK7SIsECyAdtFKXSCVRRZZVH2YLol5h3YmPw51MOzike93z71zTnyEgsQMPQxjuS7S9XS_jQ7GCWURekfYSlRMNHpIFCdUsDWRUnRwn6mUJwI918GUac1FOzWva3ao33FB0UMZES7QQd1hlk9Zi3QjjQ52GKG7uheZU811xNDBKAmIPQgT7DtIOWkrEqfoNY6QGxx1p5WmTThpETPdSYwc03Yywl7KiAo6FXPigCR6xeCaCe3lqKZBTREBiSIDIKrN9ALa6sG5ECOgZkhEmUFREjOIYqmZyEPJse_M6LWcLlUSsDTNFcZEBx2WOhBCHRq-A9WFwo28sJWovKiVKOAOBMAFMNGNmSKa2QlXsDDbZg456HC729l24C1UgQgKAbyom900Qr8I2CqRb1RL3ghhDVwfAOAl3H_-cX8yhOzsY3Y-yE4uYXzza_zlZnx8Of70Dft-Pt52DuatnBlAfUFMj1kf2QrlFtXtlKpbrYNre6JIckytiHldgjGAXPWb5apDozpiomIt9p_ujWJDt_q0K9aJlEzQCoc1CGEV3JXJirPb39nZhV3nXJbrPveaivvYXCKvzLR2IQsX6W6UvKyY7ioB05EWDUBrTydYKtbih3utrgg0T0RFLo3vZkl_yU2yqj68mlzPdIey4fFV18-uLiD7ejo-HWTHN9nVMLse2OefI_s8grvb99n1d7gbDeFuNMquhos7fyoai2F2t8vSbKKsiGiziutMdS7JsrvzjDDLBvdtnpem2S1zetEn87JHbG-b1efNHrh-q9i9Vub6x-K6vYRT5vaHea2VOVlyqx_CB8PWnuFn8w_v930H9zk7mHwYI8ooeg3fwUQyMfvdJIKm6GnVZbMPxG4vbibRv05_Pgyw3-__BQ",
+      "de": "https://ariadnensd.com/#ns1.d.jZVNbtswEIWvMp1unIYJTOevFeBeoChQIEtDKGhxZBGiKIKknLiBt133EDlGd7lJT9JS_pFTOUpWFgTON2-G71kPaERFmGBZ2XPjz_1ygQyrWpLG5AHz2lUiYILCKSENnRkvkeGSnFe1wYQz9BSCMgsfjwe6D1-UkZig1UIZZBgKavmSctHogAwLEvI2rHR8G1TQhAx1nQm9OYZrhlKJhROVx2T2gCriJN9WxjblpkVFoaijnNh2M8J3T8JlxSi-YWBFOIm4eS1XHWoeUVtEJrSOAOEWFA7QrR7cC4kCJpEkXBwUrYiDOPJxogStwjXb0Scd3bo6I-87hZUIWUGeQQlTmKUMxgeFF11hXruuKK8dKAYZKANkmoqcCNROeIK92S47yF2h2t3utgOfYQzCSMjg3TTuZlamfcDVgPyo2qpZCWfAUwCA96Aq-Nr4QA5-NO7pd1bmQmsyuE67wa47pMo7WgbTAxkrah3UVjje13UzqOt0CrztiabuMJM-5uMAJgI61Z-Oqy6jak1m1JrrP90X_YZ8_LofzoW1ZORIwRmUcAr8ZLPcBeWNkXGbe1Wcv_V--uu4PKJuyK3tPg7ukV8MHHYUGmdgO9Hh_cvJ69G1jnJ1_z1vTBZUbUb2aG4vB_pbFSM1TuHD5na2K9RPj2bhA3mgrIg_39zTY67uYVkbsLNEnfKUgRQeRJMV4EkZuG3yeEL5cLj414JxGGV-PZTlGGQnzIJGnG3FHkkyv3lDlO1MpW2aj2aZD7m9b5Z92QvWb5tN982eOf-q330y5PyXInt9hDNk-eeZnQzZ2apWP5TPhp28wdTx_z1dpwyXiu42n0UtSWIySxnWlszueS6M9JgE19Du83C7qua1_tfpz89fuF6v_wI"
     }
   },
   {
@@ -304,15 +384,18 @@
     "category": "classic",
     "name": {
       "ko": "0/1 배낭 문제",
-      "en": "0/1 knapsack"
+      "en": "0/1 knapsack",
+      "de": "0/1-Rucksackproblem"
     },
     "what": {
       "ko": "동적 계획법 표 · 고른 물건 되짚기",
-      "en": "DP table · reading the items back"
+      "en": "DP table · reading the items back",
+      "de": "DP-Tabelle · Gegenstände zurückverfolgen"
     },
     "files": {
       "en": "knapsack.en.ns.svg",
-      "ko": "knapsack.ko.ns.svg"
+      "ko": "knapsack.ko.ns.svg",
+      "de": "knapsack.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -322,11 +405,16 @@
       "ko": {
         "width": 601,
         "height": 654
+      },
+      "de": {
+        "width": 705,
+        "height": 654
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.jVW9btswEH6V63VxGjqIEidNhbpjl27N4EEQCko8WYQpUhBpuUagtXOfsU_SkrYiJXaFbBTB7-eOH09PqHlFGONG89ryfHOl7ZVt18iwMoIUxk9YmKbiDmPkjeRC01xbgQxbaqw0GuOIoSXnpF5bf9zRT_dNaoEx1opLjQxdSUFEUMG3yiHDkrh4dHvld510ipChMjkPG6SxYygkXze8shgnTyg9nYiOSC-zOUhU5Erj7XjZUR2zHYOWwerCU2VG7AeazNMc4XVjcrJ2wGtYgiI923lgD7iZAIgalpAk1yl8gNkKLiG6gMI08AOkhobrNc102E0BAN5DRtZBy9WWwBTgSoJCNtaBBOmosrCTrpQadiTXpYN85OJ2cFGYZnDg1eSgFjE4COJJ4YsJhnxgWP0HfjfZhkSmSZ7CEvwS5hCFz1CzIt5SqA8kmK0bFXU_cMpioNsdKeDzEnJkuKeQrYBpolNrHyesOb6hl7ZgDr1ACpfQ9mLBbL11vVWpR04fzjsN7F-gr_-115tTr5_e1kZPjF3aMdRm4Ls95YuuJwg9wwnJ4gzJ1KM4kqRDM6KpJxGCzCD3DyNlsBo1MXpjiDWDawbzcymMFucv4rl1715G8PWN3J2hnEp2qOaK1zVpMQusF4eguFLaQ1J23IbrGsclup_gzGG-fI7g6SXfn7E4lfD-kp8PP0wcbshtG-1bpNNklbLD3MEuZVgYJUbztvCZCNOpHz-KD-vjj-OrVCqMMcczRUMDipsxOOSlR0cj-HfiIsDz0ljSxyGY8Xzji0oZtpJ2h7-QEiQwTlKGpibdrzOuvWfXbIlhQ3ar3OO-yoz6p_Tn12_suu4v",
-      "ko": "https://ariadnensd.com/#ns1.d.jZXBTttAEIZfZTq9hLJBmAKlUdMX6JFDDpZVbex1WMVeR_YmaYQscUAVAg5UAhWhULVqERcOgaYSSDxNj7b7Du2aGBuSWtzW1v7f_DP7r72JgroMa9gWtBNQs70ggoWg10KCrmcxB2ubaHu-SyXWkPqcWoJVRWAhwR7zA-4JrGkEAyYlF61AbZfsg3zHhYU17DiUCyQoN1haxGI27ToSCW4waq3LgaPeSi4dhgQdz6Tpi7aHIUGL05ZP3QBr-iZyhbO0iVKVad-VcJnc8JQdVbbQR6VPoEegMadQTc8a5JimwkzkHd8zWRDkegF1cJio9JUwEyyVCKwO1EHXFw14AZUGzIM2B7bnw3vgAnwqWqwi0rcGAMBzSI6-AI9Gw_jbEOKLcXS1D2Z0s5-cb0G8N453DyH5NYz3tyAabSU3xwUXL3MXtufnDlQ1nlfTCNwVxKnGl0sIZk5o_Ee-UjoGnRu6aUAd1BKqoKWPac88vtpJzq_js1uIt7-rVpOj3Xj3MN77UehvNcdzOyf3JzR4UwcTCQ5YGrNU42vTLl-VuJS0zR46hCpkBQyYh15WbIbvKcNrsw2nRd5CNpHHlpemLb9-2mAVGEMjJCi8nPdymqctlgAVYQqyPANSdk0mECMfhlZ2SbhkbkDAVFfFINAoDFF7YqwFgUUC1Vm51JZnH8T96J49DOXjE1mZgSzLetrNAu10mLAqKXVucrdPxxBf3EaX4-R0O436552HkdFWS7gmVOv3aZw-6NUZNsvCnh30_ea1ks0-k11fqDEJQ28YBNImMTQI2p5jFb7CtsqFzf1AZh8lh-brye_kz6chJJfbyckouh7l_dtLRW0amUysFdTRz6_x2fVklBAfHCfnJynHUH56nPXv_kuOxSys6QZBr8NEtm5SofxKv8sI-izoOnJ94DY951-Z3x8PMAzDvw"
+      "ko": "https://ariadnensd.com/#ns1.d.jZXBTttAEIZfZTq9hLJBmAKlUdMX6JFDDpZVbex1WMVeR_YmaYQscUAVAg5UAhWhULVqERcOgaYSSDxNj7b7Du2aGBuSWtzW1v7f_DP7r72JgroMa9gWtBNQs70ggoWg10KCrmcxB2ubaHu-SyXWkPqcWoJVRWAhwR7zA-4JrGkEAyYlF61AbZfsg3zHhYU17DiUCyQoN1haxGI27ToSCW4waq3LgaPeSi4dhgQdz6Tpi7aHIUGL05ZP3QBr-iZyhbO0iVKVad-VcJnc8JQdVbbQR6VPoEegMadQTc8a5JimwkzkHd8zWRDkegF1cJio9JUwEyyVCKwO1EHXFw14AZUGzIM2B7bnw3vgAnwqWqwi0rcGAMBzSI6-AI9Gw_jbEOKLcXS1D2Z0s5-cb0G8N453DyH5NYz3tyAabSU3xwUXL3MXtufnDlQ1nlfTCNwVxKnGl0sIZk5o_Ee-UjoGnRu6aUAd1BKqoKWPac88vtpJzq_js1uIt7-rVpOj3Xj3MN77UehvNcdzOyf3JzR4UwcTCQ5YGrNU42vTLl-VuJS0zR46hCpkBQyYh15WbIbvKcNrsw2nRd5CNpHHlpemLb9-2mAVGEMjJCi8nPdymqctlgAVYQqyPANSdk0mECMfhlZ2SbhkbkDAVFfFINAoDFF7YqwFgUUC1Vm51JZnH8T96J49DOXjE1mZgSzLetrNAu10mLAqKXVucrdPxxBf3EaX4-R0O436552HkdFWS7gmVOv3aZw-6NUZNsvCnh30_ea1ks0-k11fqDEJQ28YBNImMTQI2p5jFb7CtsqFzf1AZh8lh-brye_kz6chJJfbyckouh7l_dtLRW0amUysFdTRz6_x2fVklBAfHCfnJynHUH56nPXv_kuOxSys6QZBr8NEtm5SofxKv8sI-izoOnJ94DY951-Z3x8PMAzDvw",
+      "de": "https://ariadnensd.com/#ns1.d.jVW9btswEH6V63VxGjqIEidNjbprho4p4MEQCko8yYRpUiBpq27gtXMfIo-RzW_SJ2kpS5Ecu0I2Srjv544fyUfUfEk4xoXmhePp4kK7C7fOkeHSCFI4fsTM2CX3OEZuJReahtoJZLgm66TROI4YOvJe6tyFck8__FepBY6xUFxqZOjnVIkIyvhKeWQ4Jy4e_EaFv156RchQmZSrfRluGQrJc8uXDsezR5SBTkQ1Msgs9hJL8nMT7ATZTh-DksGawfQsUCVGbFqaJNDU8MKalJxr8RomoEgPygBsAFc9AFHABGazyxg-wGAK5xCdQWYsfAepwXKd00BXf2MAgPeQkPNkYUrWgyALZJ0nDRLuKSft_O5JC4JEOrinUqZzD2nHyXXrJDO2dREUZasYMdiL4lHzox6GtGWY_gd-0zuKmYxnaQwTCEsYQlR9Vn3X7XEtQEJJueLOke60dtsyy6wlLWsi-DyBFBluqEpZhbHRscGPPQY9X9ChORhCIxDDOawbsWPLJHXB08WB5bvTliuZL9CM47Xpq2PTn9421UCM23jLUJuW7_qYL7rsIQwMRySjEyR956QmidthRH2nRHpaOgZpOCsxg2lniNEbM60ZXDIYngplNDq9ES-je3eYyNc7cnOCsi_oVTcXvChIi0HFerZPjJDkyHaDU66sIMip3D3Nle-2fdsjkMJw8hLM4x2_PeG3L_fNjr8U3_UUW_Irq8O8dDybxgyqbnEbM8yMEp37OAsByaR1vrmaFG_X9cPyjSekFEG2e1aqe3qyqy66Sk8Djzr4-3p0dHhB_lzZ3XO6WJPNjMoDbxwcriWV-zdLCRI4nsUMTUG6WSdchw68XRFDS26l_MNmmRj1T_bPr9-43W7_Ag"
     }
   },
   {
@@ -334,15 +422,18 @@
     "category": "classic",
     "name": {
       "ko": "최장 공통 부분 수열",
-      "en": "Longest common subsequence"
+      "en": "Longest common subsequence",
+      "de": "Längste gemeinsame Teilfolge"
     },
     "what": {
       "ko": "동적 계획법 표 · 거꾸로 따라가기",
-      "en": "DP table · walking it back"
+      "en": "DP table · walking it back",
+      "de": "DP-Tabelle · rückwärts durchlaufen"
     },
     "files": {
       "en": "lcs.en.ns.svg",
-      "ko": "lcs.ko.ns.svg"
+      "ko": "lcs.ko.ns.svg",
+      "de": "lcs.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -352,11 +443,16 @@
       "ko": {
         "width": 629,
         "height": 574
+      },
+      "de": {
+        "width": 655,
+        "height": 574
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.nZXLbpwwFIZf5eh0EaZ1RiG3JkhkU6mbZpdFFwhVZnwYTIw9MibpKGLbdZ-xT9IaZmSamaKoEhLG-P9-nwvmBTVvCBNUq3ap22X7tEaGjRGkMHnB0tiGO0yQW8mFplPdCmT4RLaVRmMSM2zJOanXrV_u6Lv7IrXABDeKS40MXUUDX1DJO-WQYUVcPLit8rNOOkXIUJkVHyZIY89QSL62vGkxyV5QepyId0pv8zhaNOQq47fjbccQIs6gWHhEYcQ2yAsv38k21qyobYNOM2ggBUU64gs23AfGXns-o72HFLLsLIf3EDXwAeIFlMbCN5AaLNdrivQwmwMAvIP7Tw-ev3YVmBJ4lsgcuBZQZEmdTywvgmVpbLDzbBnYMYMRjwcBX84Q6r8IzT8IV4EgywDgmYRTiHNIUyiyehgjwy0NHTBIbXxIu55LYibzrM4hhfsdfMf1O8M-7xlqE-jnh_SPb6I3_HsUHHIG46vheeF9-tyb7aE3M1DJoGZgOgcp-P5hkE3rdxukz5UcWnwvhDs4G2pe-9FhKPHZ_-f94ghurvNN55Z8syEtoj1-MTYqh1XFLV85sr5ZCuOqSXjx3Cch4TT1ZQurL2ZW17vVr4t8eSSUy-OZmZQU7tJpUV_n5-oI9OoNobze3PURzlyDhyDHK6RmrnEtuc5qODlZ1kbqyJI_dklEpnML364MS6PE5JAsfa1LaVu3P0MUD-PdQf9ZKgWuInC8UBTKVJ5PxTcT8W0Qf-XqMYih4KtHH1XO8EnS8_jHUIIEJlnO0GxI78cF136rznbE0FLbKfewbQqj_jj8-vET-77_DQ",
-      "ko": "https://ariadnensd.com/#ns1.d.nZVNa9swGMe_ysOzQ51NDXXf1hrcy47rrUdjhlLJiVxbCrLSF0qghzHGdmmhsG60hcF2T2GHHMo-zI6J9x02OQl2m8yUgSGKrP_v_7xFOUVJU44eJvtZU2bN7LCNBFPFeILeKUZKp9Sgh1QLyiRflhlDgodcZ0JJ9FyCGTdGyHZmjxt-bF4LydDDbkKFRIKmwws-4xHtJQYJdjhle-YksbtGmIQjwUTt02LjQGGfIBO0rWmaoRecorA45k6V1uZgYpFy01E2HGs7ScGhBFoNi2gpdlLKW1Y-lXW12udZVuokgRR8SLh0aIMUnwVjpl2t0e6CD0GwEsJzcFJ4AW4DIqXhDQgJmso2d2SxGwIAPAMaeCLMP59BK_DiML-5gt1XezAaDvObHxXHtdIxUrp0s2hRol0CEzrO5bteQ4gfENJ_EDZKgohKAA0ELIMbgu9DK4iLNRI84cUAFFLtztM262oYiDCIQ_Bhdwqfcm1k2A_7BKUq6avz9JdPoqf02CkdQgKTV8X3hvXph9ZsBt2qgQoCMQHVM-CDHR8CQVjp33YpPeqIYsJnQtiBFaCSQWxX86m4K_9f97UFuLrBVz3TpN0ul8yZ4RuTOR1fXMH447f80znkt-_HHy5hNDzLb88rObp1PwsBy77tXXl6reZ0PD39uNPrC_JZX1yeSl9hx6929nGRNhZAN56QyuPgNhdw6qa8THLylKWpm17NTU9LWFpqxkpIR3N79XLmqJ5p2JklGKmEVS7KyDY8Ejozs4skoeV6etn_vriG_O5t_mUwGg7KLkWrVe1WRbv9QDv-fg-ju8Ho53D89RrGl4Pxzf1ocFawQhvToeBHk7-PhHGGXhASVF0uZ-sWlTZmo3ucoOZZLzF7J2lLJX-9fr07x36__wc"
+      "ko": "https://ariadnensd.com/#ns1.d.nZVNa9swGMe_ysOzQ51NDXXf1hrcy47rrUdjhlLJiVxbCrLSF0qghzHGdmmhsG60hcF2T2GHHMo-zI6J9x02OQl2m8yUgSGKrP_v_7xFOUVJU44eJvtZU2bN7LCNBFPFeILeKUZKp9Sgh1QLyiRflhlDgodcZ0JJ9FyCGTdGyHZmjxt-bF4LydDDbkKFRIKmwws-4xHtJQYJdjhle-YksbtGmIQjwUTt02LjQGGfIBO0rWmaoRecorA45k6V1uZgYpFy01E2HGs7ScGhBFoNi2gpdlLKW1Y-lXW12udZVuokgRR8SLh0aIMUnwVjpl2t0e6CD0GwEsJzcFJ4AW4DIqXhDQgJmso2d2SxGwIAPAMaeCLMP59BK_DiML-5gt1XezAaDvObHxXHtdIxUrp0s2hRol0CEzrO5bteQ4gfENJ_EDZKgohKAA0ELIMbgu9DK4iLNRI84cUAFFLtztM262oYiDCIQ_Bhdwqfcm1k2A_7BKUq6avz9JdPoqf02CkdQgKTV8X3hvXph9ZsBt2qgQoCMQHVM-CDHR8CQVjp33YpPeqIYsJnQtiBFaCSQWxX86m4K_9f97UFuLrBVz3TpN0ul8yZ4RuTOR1fXMH447f80znkt-_HHy5hNDzLb88rObp1PwsBy77tXXl6reZ0PD39uNPrC_JZX1yeSl9hx6929nGRNhZAN56QyuPgNhdw6qa8THLylKWpm17NTU9LWFpqxkpIR3N79XLmqJ5p2JklGKmEVS7KyDY8Ejozs4skoeV6etn_vriG_O5t_mUwGg7KLkWrVe1WRbv9QDv-fg-ju8Ho53D89RrGl4Pxzf1ocFawQhvToeBHk7-PhHGGXhASVF0uZ-sWlTZmo3ucoOZZLzF7J2lLJX-9fr07x36__wc",
+      "de": "https://ariadnensd.com/#ns1.d.nZVLbtswEIavMpguIre0EeXVRICy6bLepasKQkGZI5sKRRoU5cQIvO26h8gxsvNNcpKWkg2psSsEBQyYluf__nmZfkLNS8II1aya6GpSrebIsDSCFEZPmBtbcocRciu50DTWlUCGK7KVNBqjkGFFzkk9r3y4o0f3VWqBES4VlxoZugU1fEE5r5VDhgvi4s6tlX_qpFOEDJWZcdWG4YahkHxueVlhlDyh9DgR7pTe5r61KMktjE_H27YlBJxBNvKIzIh1J8-8fCdbWjOjqup0mkEJMSjSAR-x5r1h7LVnA9opxJAkpyl8hKCETxCOIDcWfoDUYLmeU6CbpykAwAeYfrkbT7fPek6wMhp4EskUai0gS6Ii7Xmed565sZ2fh8sOHjJo-XhQ8cUAofiLUP6DcNkRZN4BeCJhDGEKcQxZUjRnZLimZgUaqQ0PaVdDXUxkmhQpxDDdwXdcnxlu0g1DbTr62SH987voJX8MOoeUQftV83nkfTapN9tDrwegkkHBwNQOYvALxCDpz--mkz4sZLPjeyHcwilwLaDwp8NSwtP_7_v5EdzQ6pvaTfhySVoEe_yo3VSSGr6TnC1I-2XJSArSvQLDoV-FhHHsB9dFnw9EF7vot2O-OFLMxfHe9IYKt3F_rG87dHkEevmOUt4md3WEM7TiXZHtq2vN0OpacrXVcHIyKYzUgSV_85IITO1GfmEZ5kaJ3j2Z-2nn0lZuf4so3p13d_03npFSBPn2Ran-VPOzvvq6p745VNvty-z-YftsXQWitrOF4nXuaanPayXpof0HUYIERknK0CxJ788Z1z5vZ2tiaKmqlbtbl5lRf9xef_7CzWbzGw"
     }
   },
   {
@@ -364,15 +460,18 @@
     "category": "classic",
     "name": {
       "ko": "생산자-소비자",
-      "en": "Producer–consumer"
+      "en": "Producer–consumer",
+      "de": "Erzeuger-Verbraucher"
     },
     "what": {
       "ko": "유한 버퍼 · 함께 도는 두 스레드 · 끝 표시",
-      "en": "Bounded buffer · two threads at once · an end marker"
+      "en": "Bounded buffer · two threads at once · an end marker",
+      "de": "Begrenzter Puffer · zwei Threads gleichzeitig · eine Endmarke"
     },
     "files": {
       "en": "producer-consumer.en.ns.svg",
-      "ko": "producer-consumer.ko.ns.svg"
+      "ko": "producer-consumer.ko.ns.svg",
+      "de": "producer-consumer.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -382,11 +481,16 @@
       "ko": {
         "width": 731,
         "height": 676
+      },
+      "de": {
+        "width": 790,
+        "height": 676
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.nZVNbtswEIWvQkw2NqAYsZw4jQCfoEU2WSZeUOLIIswfhaTsGIG3XfeMPUlLSo7oHyhpd4Kg9x45883oHRSVCBnURrOmQHNdaGUbiWai7MRuVpCA1AwFZO9QaiOpgwyo4ZQpvFaWQQIbNJZrBdk0AYvOcbWy_nOHb-47V8y7C8oVJOAqDGkMS9oIBwlUSNmT2wn_1nEnEBIQuqDhBSrYJ8A4XRkqLWTP78C9HZt2Sh-zbiNwg8ob-lTIQFKuRmMvzzXb9dLcSztJbXSB1vaivCnJgjB8bTBoD5p0QIOydjuyIE8oaV1pg6PHMSGEXJHSIBIrtLOR1WzAqmyEOHK6CU7eiguB7MzsdsBMNg7fyIL80MX66DJ3kYgaKgSKXgUJ5IaqosKo3MbX7KSM896loCI4ULNCF3UktBE--uf7lvqGUOP58FEGracgA9gvPw5o0vO0-_9Kmw2k9Xn5t4Eq1oYrN3qBXLuKMK3wBcbxYVl6TqJEV2kWe7SjdRHHhz4cFRNt-CmyNwMn5A4lWZAuZNSx96gVkm2FKhw66v50iP_A8oQWrw03nRW5IlvKHSm1IbRHOnYcmo4tdxUJKGYkb8oJrWtUbOQPHTM5_WwsJgYFUns8ltOIf16elITbUARIYIdhHbVwzS6UN5oIfOPREskN0nVbBFchQcWIpGaNxrtzFUAApXv32wvu84GreYcjGNnsc54OG_ryerv_ClBDyIdyHzEQI6CIr27chIcvtr8D1VNQ61pg6Y537BDkLZiXGEin_87A3XlF0vQLDKy0O-HgnID5Be8huAMB_W2GNnrX98PweGyWCWw4btufs2DIIHteJqBrVIfnnCpmIXOmwcMKfNrJXIu_eb9__oL9fv8H",
-      "ko": "https://ariadnensd.com/#ns1.d.nZXPSxtBFMf_leF5ibAGk_ijLuQvaPHiUXOYzbyYIbMz6-xsNEig2lIEPVSKVKhCoba20IMHDxH61_Tobv-HdjaJu9Gwai8hLPu-3zff-by3uyCpj-BCoBWLmqjnmkqGkY-6LMNy2N0EB3zFUIC7Cy2lfWrABao5ZRLnZMjAgS7qkCsJbsWBEI3hcjO0rxvcMS-5ZFZdUC7BAdPG1I1hi0bCgANtpGzN9IR9argRCA4I1aTpg46CvgOM001N_RDc9V3gVo5VRpXWpjO0wC5KK2hdwQWfclmateWeYr2s1LOlo5JAqyaGYVbkRS1SJwy3IkxrxzXVghr0A9MjdbKGPg3aSmNpdZYQQmZIfHNAkpsBSQ5Oc1q1Aq1WJMSE1HwqRWZIcvVzitZCgZYfGdwhdfJKNTsTh1nMFVFNhUCRVYEDnqay2cZc3Npmdi_GpUylSUWqQPUmmtyNpNcId_dn761qL4Rqy4e10hhaClyAfuOuQV196Lb8X261ArfMz3tRkGKguTSlDYiPT0l8eEHivfN4__sGzOY7ZtWHOPpo2orlhYbzNZXJlawDlEwMO7jP7XxBm9ygT-pkZFIaA2gbvjyKP1zEP67JqpKYw6BSNAgp1GXa3Iq4HsllQCfn1yTe_0zik6Pbm6Pk8jW5HVzFhxfxN_ubtyiam21u2iSF1CVe1CrTIEDJSvYkeVorj81LWaNAGk4ObCU3Gbx1LyceDrNwoIfpohpiV5uSeW5WcIfn1ounkXZGqeydkz_HZ8nh2SiN-O2X5ONBGkWj74BUmcfCFI-lggNahQlYWe1x1MYbfPr6W34Ka0UjkYY-gcbderJkJG_ObweDJ8Cx8kQ4RmxbRgIVCGyZyd1cNBdDjqcRUq08n5DFh0lVq88iJP76i8RXn5KT06l4LE0xKOI_xSM7UtHnYATFeL4sUw0Huhy3h192wZCBu95wQAUox_89KlkIrtERjvfnWs_3lPjn9_vde-j3-38B"
+      "ko": "https://ariadnensd.com/#ns1.d.nZXPSxtBFMf_leF5ibAGk_ijLuQvaPHiUXOYzbyYIbMz6-xsNEig2lIEPVSKVKhCoba20IMHDxH61_Tobv-HdjaJu9Gwai8hLPu-3zff-by3uyCpj-BCoBWLmqjnmkqGkY-6LMNy2N0EB3zFUIC7Cy2lfWrABao5ZRLnZMjAgS7qkCsJbsWBEI3hcjO0rxvcMS-5ZFZdUC7BAdPG1I1hi0bCgANtpGzN9IR9argRCA4I1aTpg46CvgOM001N_RDc9V3gVo5VRpXWpjO0wC5KK2hdwQWfclmateWeYr2s1LOlo5JAqyaGYVbkRS1SJwy3IkxrxzXVghr0A9MjdbKGPg3aSmNpdZYQQmZIfHNAkpsBSQ5Oc1q1Aq1WJMSE1HwqRWZIcvVzitZCgZYfGdwhdfJKNTsTh1nMFVFNhUCRVYEDnqay2cZc3Npmdi_GpUylSUWqQPUmmtyNpNcId_dn761qL4Rqy4e10hhaClyAfuOuQV196Lb8X261ArfMz3tRkGKguTSlDYiPT0l8eEHivfN4__sGzOY7ZtWHOPpo2orlhYbzNZXJlawDlEwMO7jP7XxBm9ygT-pkZFIaA2gbvjyKP1zEP67JqpKYw6BSNAgp1GXa3Iq4HsllQCfn1yTe_0zik6Pbm6Pk8jW5HVzFhxfxN_ubtyiam21u2iSF1CVe1CrTIEDJSvYkeVorj81LWaNAGk4ObCU3Gbx1LyceDrNwoIfpohpiV5uSeW5WcIfn1ounkXZGqeydkz_HZ8nh2SiN-O2X5ONBGkWj74BUmcfCFI-lggNahQlYWe1x1MYbfPr6W34Ka0UjkYY-gcbderJkJG_ObweDJ8Cx8kQ4RmxbRgIVCGyZyd1cNBdDjqcRUq08n5DFh0lVq88iJP76i8RXn5KT06l4LE0xKOI_xSM7UtHnYATFeL4sUw0Huhy3h192wZCBu95wQAUox_89KlkIrtERjvfnWs_3lPjn9_vde-j3-38B",
+      "de": "https://ariadnensd.com/#ns1.d.nZVNbtswEIWvQkw2DqAYsZyfRoCXWbUIAmSZZDESRzZh_igk5cQJvO26h-hNepOepKUkW7IjKGl3gqB5j3zzzegNNCqCBApreJmRPcmMdqUiO9Zu7FZziEAZThKSN8iNVeghAbQCuaYT7ThEsCLrhNGQTCJw5L3Qcxc-9_TivwrNg7pEoSECv6DKjVOOpfQQwYKQ3_m1DG-98JIgAmkylPVnsImAC5xbVA6S-zcQQY5Pmspgs6wtaEU6CAZXSECh0KPjUJ4avm5L01DalBTWZORcW5SWOZsxTk8lVbXbmnighlTh12zG7khhsTCWRjfHjDF2xHJLgtit_PXTv1JHbTqglpdS7omdVmLsiKUkae779M4G9FTp6YXN2DeTLfeudN4pQotSkmyrIILUos4W1AndhuQOwrxoVTKUlQLaOflOX6pmwq6LoXtxaAvaQEmwsuQCCwnA5nF3QBu_d7v8L7fpgFvrl34ZSLGwQvvRA6QkOLGcrBfzBzjunpfH75FU5BeGd2XqGevl8qr1J81l7X_I7unAIYUnxWasMRk1EN4YTQwVu9a8y8xkaAwqpMeYPZXCNkLsiGGZMxKadA22ZrcS_St7RutJd6WHpuVZ-AWroExYWuZjLArSfBTO3qVz8tGMjC1JQrc_ppPOJIj8IBnhqiwggjVV66nGbNqTcmc26EV0lkpqCZd1GlxQyFShXRITzjNuha6AAG1a-bMe-YuBuwWFPS759GOutiu7f99dfgasIfqrvPdo2MHAriUp0r6HgqtPUtBgG2AoTCEp9_urdwj5GtQ-FOLJv6Nw_j6XOP4ECjsMyC5QVjEcYnDRIz2EeIVBe5mhDd80fztCgZ3HCFaCnutftuTEIbl_jMAUpLfPKWruIPG2pO1KvFur1Mi_fr-__4DNZvMH"
     }
   },
   {
@@ -394,15 +498,18 @@
     "category": "hard",
     "name": {
       "ko": "레드-블랙 트리 삽입",
-      "en": "Red-black tree insert"
+      "en": "Red-black tree insert",
+      "de": "Einfügen in einen Rot-Schwarz-Baum"
     },
     "what": {
       "ko": "고치기의 세 경우 · 회전 둘",
-      "en": "Three fix-up cases · two rotations"
+      "en": "Three fix-up cases · two rotations",
+      "de": "Drei Reparaturfälle · zwei Rotationen"
     },
     "files": {
       "en": "red-black-tree.en.ns.svg",
-      "ko": "red-black-tree.ko.ns.svg"
+      "ko": "red-black-tree.ko.ns.svg",
+      "de": "red-black-tree.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -412,11 +519,16 @@
       "ko": {
         "width": 1809,
         "height": 1054
+      },
+      "de": {
+        "width": 1849,
+        "height": 1054
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rVhLj9s2EP4rzPTSAFpj9fSuUB_6yCFITk1uwWJBW7RNrEwZFHdX8sLXnvsb-0ta6v2gRo4bwIANQ_NxODPfNzN6A0EPDEKQLLpZx3TzdKMkYwuRLtKXHVhwSCIWQ_gG20QeqIIQqOQ0EuxGpBFY8MJkyhMBoW1BypTiYpfqxxXL1CcuIgjhGFMuwAK1Z8VREdvS51iBBXtGoy8qj_W_iquYgQVxsqHFH0zA2YKI052khxTCb2_ANVxkV5b6mKfyiANT-0S7o4_Vt1k_cpEyqX7-apHTew20TqK8BVlrkMr4KJMNS9PWOicr8nUheAxnq37eQZ7PiudlkqiOgdsavO55cbXm8Xc1_sgtb8atrHOC3z7Lt-1jp8UTy8kvJNPfYEHOioQUNtIeHxnM3CxbxGyr4PxwtkAkLZQzhlrOQkm-2xdYGq42u0PMTosjlUwosiJ55-735rvnZNWGtndxd-ytfYucW-aTrMhpfHPPgGXjychNyfANOFid5UUmzD4FBiwXxSpSUYPpTxNcG6vCU-NEgzDkiu2j9pskTiRZkT8__NE16tThhsY6gYrKHVMdmhfaAI0oaDFwNLep1KIDmutggWSplpcQ4PxgwTaJo456bHWitlymqlaBmJa_dUlVYvix0A5CU8IFoWTNBZU5SRmVmz3R-gid8o2c79Cjxy3Pno_TqrScVI2aCHX4yviNEe6mCrHmkc5cBVV9Ffwe1ObSAH0_I05D3LI-CCE_kWexiVlXTm8nCDy8Xs-pu7FTDibkw5iR3z7_-vun0qMNTRmxQyJZNPYOZ2EPrWuGEW4YHDMLHJR64xiPheDeEKOpTtErhlKah_3i1gCHdYyuj51AOyFJlaT6CCaI2jNy4rsT3XWvvrxKAFxcAAbRsQ0N0MH6D_SU0cEoMFttbnc8wJrPZbXi2lcFzBsEbFBQg_CNI2jo-y7KF4MyFC3EKAyue40w2Ib27uJd7DplcLHWNq0MLkqZy7KNDVcXKYNtmFvcqXbRkwZTg7AN04uL0uNqZfBuf0ihzyiDYYLysObSVwYPo8B3KYP3_7uI5_0QKZ1Vhu4Q72HMKKdp0_V1wotJm6eExq80T0mxhvYmLHd-wtIl-igTRRXT01Vmmq48jIV5dz9pb4WuNM0EnFc7Ums3watqhH83saXYhrHLQ8euAq_dkTJDYRumJh_rPv3C9tFNuXNyozutqWMOQtZYTYXBMMT4GC2abS037KmGEcb3JjzTLmWY7DmGAcLHSr-HNuGhoaX66Fren7Ar0H7asMJtFsne6wRsDGpTVl2gpqZ3wfKjnZzjpj-3XGRDigVYDWdNuEeUDiZW9XojnuKmY5gxAnxRKABRcjqGnhxgld4nZ4C-L0LJGUwsBbPkdAyNP8CqFSWnoesGy6vJaZDP4JKyxshpkM8AK9YLyLnESrd9M9Nl5xKT4SE7Hyx44ey1fG0bRyyC8NuDBcmRifr3mgr9WkTJZ1b39S_5YZ3E_x32z19_w_l8_hc",
-      "ko": "https://ariadnensd.com/#ns1.d.rVhbaxtHFP4rk9OXFtbCe9HKXqqH3p7SpyZvwZiVdiQtXu2K3bGzKyMojQnUDSWFJISCaaElDSUPxvjBLWn7X_oorf9DOyvtffZIsQMCCTHnmzNnzvedc-YYXHNMwQCfWls9x-wfbDGf0pYbtIKjIUgw9izqgHEMA88fmwwMMH3btFy65QYWSHBE_cD2XDBkCQLKmO0OA76c0ZDdtV0LDJg4pu2CBGxEk60sOjAPHQYSjKhp3WORw_9lNnMoSOB4fTP548CDmQSWbQ59cxyA8eAYbA5nyStLvs3BcosxZSOPu8O35afp7dtuQH324X2JTD_iQD3PinKQHgdZGU98r0-DILeOSJfcb7m2AzMpXa8g68Nkve95rGCg5gYPR3ZytGz5nRS_5pa2xq2wsEM7X2sP8mXT1gGNyMck5N8gQUSTC0lsfLm-pb7mZGHLoQMGs72ZBK6XQyl1qM5aKN8ejhIsDpea7SBm09bE9KnLSJdEhbPvis8ekW4e2tLB1bq38jay7_I-SZdM6yfXBFgyfhmR6DLaAhwsz6LkJsQ-6QIsFcVKriIF458suDKWhdPMiQyhyhW5jdr3PcfzSZd89cXnRaNCHvZNh18gM_0hZQWaJ9oAmShwMVA4t02fiw5wroMEPg24vBgAsz0JBp5jFdRjwC9qYPsBS1XAMZe_eUqtxDA-u4x_OyHXj57Gj74l16dXi1dv4ouXi5_eksXJL_Orcyikr6W8gx7tD-zwcNKsSp1G1UiJkIZvGb86wk5TIqY84je3glp9Jfyu5GZHAL27RpyquMv8IIR8QOJv3saXT4p6ut3A4Or5Sl7t1L1SMCWvBo18-uUnn91dujS_-Cv-8ZzIxsq5-OySLP54PT9_XnQT52MJtmiGUa8aJjEfFJSE9WjXJWFXEKymmlFKi6VIVyvHtgAOqx1FH0sRVwwy__Pv-OyKLH5_Hb_4IT47IdffXy2--7V4_M6N5EDF5aASIVlQDhWsGkFJJxWMEBuknlpsF7BitFnGqPKNQqZVQlZJq0oA6zEU9AEqyhqBUiQlRSwUqnoToZAF9V7Fy9otlULFil6zUqgohTa7d6zt2kgpZEFHozYVkpJUiEqHLOhrVJQqt1IKbfu9pP0apRD0VxpWecpKoWGEeEel0G5fWzTtvYjrWqUoNvkaxo9lty0KwOKfJ4tXbxanz8ji9CWZX3wd__y81H2p67svnqT7vsdMRnnnFYo6Lw3jYVScXfIToeNO1h1Hq_kpt2tg1qq9v9MwwciClkxDW7IEL5-fQkFaCxqqNlaJymndRqfows6Z8uSmijgIYWbVFAZBW9PGKJFNcpFghhU0NW2twTPuUogJnyJoJ9pY2pfQGjwUlNc2OrKXu-8VaPnasMTNhszSUwPWFOVXtjpASk1tg8GIO7mOm-11g0dYpZiO5XCYhbtGab1hjE-n5SZuKoJ2Q8dHhwQQJaciqMo6lullcuroWxJKTr1hTFhLTkVQ-nUsW1FyCmqu3rkxOQXyqW-S1hg5BfKpY8m6ATk7WOrmrzZFdnYwGa6yc0-CI5s-XD7pOha1wHiwJ4E3oW76u2e6_MmE-Yc0ren3onHPc_7f7N_HT2E2m_0H"
+      "ko": "https://ariadnensd.com/#ns1.d.rVhbaxtHFP4rk9OXFtbCe9HKXqqH3p7SpyZvwZiVdiQtXu2K3bGzKyMojQnUDSWFJISCaaElDSUPxvjBLWn7X_oorf9DOyvtffZIsQMCCTHnmzNnzvedc-YYXHNMwQCfWls9x-wfbDGf0pYbtIKjIUgw9izqgHEMA88fmwwMMH3btFy65QYWSHBE_cD2XDBkCQLKmO0OA76c0ZDdtV0LDJg4pu2CBGxEk60sOjAPHQYSjKhp3WORw_9lNnMoSOB4fTP548CDmQSWbQ59cxyA8eAYbA5nyStLvs3BcosxZSOPu8O35afp7dtuQH324X2JTD_iQD3PinKQHgdZGU98r0-DILeOSJfcb7m2AzMpXa8g68Nkve95rGCg5gYPR3ZytGz5nRS_5pa2xq2wsEM7X2sP8mXT1gGNyMck5N8gQUSTC0lsfLm-pb7mZGHLoQMGs72ZBK6XQyl1qM5aKN8ejhIsDpea7SBm09bE9KnLSJdEhbPvis8ekW4e2tLB1bq38jay7_I-SZdM6yfXBFgyfhmR6DLaAhwsz6LkJsQ-6QIsFcVKriIF458suDKWhdPMiQyhyhW5jdr3PcfzSZd89cXnRaNCHvZNh18gM_0hZQWaJ9oAmShwMVA4t02fiw5wroMEPg24vBgAsz0JBp5jFdRjwC9qYPsBS1XAMZe_eUqtxDA-u4x_OyHXj57Gj74l16dXi1dv4ouXi5_eksXJL_Orcyikr6W8gx7tD-zwcNKsSp1G1UiJkIZvGb86wk5TIqY84je3glp9Jfyu5GZHAL27RpyquMv8IIR8QOJv3saXT4p6ut3A4Or5Sl7t1L1SMCWvBo18-uUnn91dujS_-Cv-8ZzIxsq5-OySLP54PT9_XnQT52MJtmiGUa8aJjEfFJSE9WjXJWFXEKymmlFKi6VIVyvHtgAOqx1FH0sRVwwy__Pv-OyKLH5_Hb_4IT47IdffXy2--7V4_M6N5EDF5aASIVlQDhWsGkFJJxWMEBuknlpsF7BitFnGqPKNQqZVQlZJq0oA6zEU9AEqyhqBUiQlRSwUqnoToZAF9V7Fy9otlULFil6zUqgohTa7d6zt2kgpZEFHozYVkpJUiEqHLOhrVJQqt1IKbfu9pP0apRD0VxpWecpKoWGEeEel0G5fWzTtvYjrWqUoNvkaxo9lty0KwOKfJ4tXbxanz8ji9CWZX3wd__y81H2p67svnqT7vsdMRnnnFYo6Lw3jYVScXfIToeNO1h1Hq_kpt2tg1qq9v9MwwciClkxDW7IEL5-fQkFaCxqqNlaJymndRqfows6Z8uSmijgIYWbVFAZBW9PGKJFNcpFghhU0NW2twTPuUogJnyJoJ9pY2pfQGjwUlNc2OrKXu-8VaPnasMTNhszSUwPWFOVXtjpASk1tg8GIO7mOm-11g0dYpZiO5XCYhbtGab1hjE-n5SZuKoJ2Q8dHhwQQJaciqMo6lullcuroWxJKTr1hTFhLTkVQ-nUsW1FyCmqu3rkxOQXyqW-S1hg5BfKpY8m6ATk7WOrmrzZFdnYwGa6yc0-CI5s-XD7pOha1wHiwJ4E3oW76u2e6_MmE-Yc0ren3onHPc_7f7N_HT2E2m_0H",
+      "de": "https://ariadnensd.com/#ns1.d.rVhLjuM2EL0Kp7JJALXR-ljuFuJFvpsJECA9wAAZNBq0RduEZcqg6G7JDW-zziFyjOzmJjnJDCXrT5U8zgAGbBisx2Kx3qsqvoKgOwYBSBbeLCK63N4oydhEJJPkeQ0W7OKQRRC8wiqWO6ogACo5DQW7EUkIFjwzmfBYQGBbkDCluFgnerliqXrLRQgB7CPKBVigNizfKmQreogUWLBhNHxQWaT_VVxFDCyI4iWNimVwsiDkdC3pLoHgwytwDRfaZ0u9zbbYYsfUJtbu6G31aRZPXCRMqm_fWeT4nQZaxGFWgyw0yNl4L-MlS5LaOiNz8m4ieAQnq1zvIOvTfL2MY9UwcGuDlw3Pj1Ytf1Pi99zyRtxKGztM67V8VS87TrYsI9-TVH-DBRnLLyS3kXZ_S3_kZOkkYisFp8eTBSKuoZw-1GwUSvL1JsfScKXZHWJ2nOypZEKROckaZ783nz0j8zq0rYO7fW_tW2Tf4j7JnBz7J_cMWDZ-GZnpMqYGHCzPsvwmzD75BiwXxcqvogTTnyq4NpaFx8qJCqHLFXuK2i_jKJZkTv745eemUSMPlzTSF6ioXDPVoHmuDVCJghYDR3ObSi06oLkOFkiWaHkJAE6PFqziKGyox0pf1IrLRJUqENHit06psxi-54xwQRgXTJAFFx__kUyQh8Nys6CHnf5_9fHfNRPQyOLQ-QJZelrx9LAfFqfZoHiUfCijWISxj3A3lI8lnfQFnqHOXznNOyk6M0Dfj2hUF7dIE0LIN-R3sWUtVb0d4HH3eC2n7vpOOZied2NGfvzth5_eFh79SqOI2AGRsWKy7x9OxxZe0wxjXjc8Zjo4KAf7Ue4rwr0hSkMlo5UOhUZ3C8etAQ4rHU0fG6F2AvInX26PdLklC7aWNOQ5keqDz67SARfXgU5sbEMddLAyBC2BdDAKjGab2-wSsBp0Waa49lUB8zoB66RTJ3z9CBrKv4uyxaAMeSUxCoPrXiMMtqHKu3gxu1YZXKzGDSuDi1LmsvvGuqyLlME2NDDuUMFoSYOpRNiGNsZFCXKlMni3XyXRR5TB0Eh5WHFpK4OHUeCLlMH7_zXE876KlI4qQ7OX9zBeFE216fghZ-T9QR5ZRHiiCN_tmCTJcvNC5bHVZbnjXZZO0icZK6qY7rBSU4flYTzMmqNKfTJ0uqma4ew8LtV2A8w6d_NvBgYW29B6eWjrlePV41JqSG5D5zTFKlA7uafo0NzYuVKe2tQxByGtrIbCYGhjphg1qsEtM4yshiZm6g14pl1KMeFzDE3EFEv_FtqAh4ayOkUn9HaXfQZtXxuWuNVM2XpZwFqh-srOByip6V0wAGknx7g5HRsw0i7FfCyH0yrcPUr7A1N7ORwPcdMx9Bk-PirkgCg5HUNV9rFMb5PTR5-OUHL6A2PBKDkdQ-n3sWxFyWmovP7sanIa5NO_JK0xchrk08eS9QJyzrDUrR9pmuycYTLcZeejBc-cvRQvuFHIQgg-PFoQ75kofy-o0C8kSh5YWdsfst0ijj5v9t9ff8PpdPoE"
     }
   },
   {
@@ -424,15 +536,18 @@
     "category": "hard",
     "name": {
       "ko": "A* 탐색",
-      "en": "A* search"
+      "en": "A* search",
+      "de": "A*-Suche"
     },
     "what": {
       "ko": "g + h 순서의 우선순위 큐",
-      "en": "A priority queue ordered by g + h"
+      "en": "A priority queue ordered by g + h",
+      "de": "Eine Prioritätswarteschlange nach g + h"
     },
     "files": {
       "en": "a-star.en.ns.svg",
-      "ko": "a-star.ko.ns.svg"
+      "ko": "a-star.ko.ns.svg",
+      "de": "a-star.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -442,11 +557,16 @@
       "ko": {
         "width": 701,
         "height": 680
+      },
+      "de": {
+        "width": 857,
+        "height": 680
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.jVVNj5swEP0ro-kFVG-0ZL-6qPRYqaq0lz1GqHJgAlbBRrYhG0Vce-5v7C9pTT5wNlm2N2T5vTczfvPYouQ1YYz8yliuZ9LMTFcgw1rlVGG8xZXSNbfuhhY8l3QlTY4MO9JGKIlxxNCQtUIWxl239GK_C5ljjE3FhUSGtqRBIqcVbyuLDEvi-bPdVO7UClsRMqxUxocDktgzzAUvNK8NxostCkeXR3ukk_m5k6jJlsqV42RdjT9cF0GheVMycN-WQaF4xaAMHe1S5ZuRcuko91SNVhkZM3IVkMB2oIjhugcA-ACZMhZWWtVgS9rxY88ObPMJtozX9GNAJrDtPdDNBEg1JCGBRVAGg1a47ylMPYLbkWBdimGWHhzPer6bEFwxaCGBknjTqCZwBKEndT9CxcpDwRcoFm0KH6EM2hAZbmgww4DS0XkNDyMRvQjrjUlJK2RLu3EbyysCklZvYuBgSqUtaWi4LWHNDaxUK3MwQmaEfdozlGqUnZ_Lfppo3RGMnT5e7rSFJBn89LrHm3Ox6HrkyHjlIJbrgqzn38H0eHS7c_nc2ZRrt02jaRi0yFCTcfsToxuA9yxR9NY4NdlWS9jdfz2g2ws1T1n4dEKRZ9yV0p4blIaOwRqEhGERF216Qel2QsmStNyKjiA5GGvt93t3-XVG2GcoZgXZoGPw7enrmSPvLtRz_z_Lu-hSSKDduXPnvlNb-lU-TIXLjulYsY-bcumwma0ph9VkEIwtu93rQgZdGJ4_9f2Fhh_fe-rU0Ryz7Xri-t5mT0ruF1eq0XOH-J6_H9-aMiWN1W1mA9_7l6J7PpXdQ0Ik4JzntTB_MylbZ9aj4vmw5lMp7RJzdMip5JTLXZEz3jQkc5eaJ9OeCmlvqRdxfBWlDpoy7AStd3_sKqcc40XKhl_A4XvJZW4wtrqlQ5Y8b-qlqv4p_vn1G_u-_ws",
-      "ko": "https://ariadnensd.com/#ns1.d.jVVNa9tAEP0rw_Ri0Y2JnK9G1D0WSiGXHI0Ia2stici7YrWSY4yglJBLKYTSkFASaCGQplDIobTppT-mx1j9D-3KH1JiR-lNSDvvzcy-9zRETnsMLaRLkaKyzqN6lLhIsCccFqA1xK6QPar0CelTh7MlHjlIMGEy8gVHyyQYMaV87kb6uGJ76qXPHbQwDKjPkaDyWE7hsC6NA4UEPUadbTUI9Fvlq4AhwUB0aP5iV2BK0PGpK2kvQqs1RF_DOeakUtPsjil6THlCt6NpdY87eoqaK2noEdDPioAraEDAMzRsWziDArKtISdQoRQdFkUFlgtNGOYQFiynAACPIPt-Oro6zT4eZseH2f4pZCefYfRzP_twiSmZgjYqQDu0x3a6UvQ0eFoqWqkoEiHj0IRWzavl_RiT0Qy7BLBaAPQ9P19pqRznRl-rIOwSiKEJHqNhKMKaBjBKVOtFqd8tVcEzcFuxDY_Bq8UGEhywXBN5lTTne9gogNier0prElz5PGbjrY9ef8rOXsGfo6-jL5cW3Py4htG78-z4EEZv30N2caG_3lxfZ2f7kF39yo5ORm_OMbVTglwUDTTmG3hSsQQNUMy8uXjmGJrNXGB3p12ZJzOXC4wODXSJotJlqiTo3AU4k7-WfUPrlkptr0I-BGIkKFmkDWVhSJVXuiDTvG-xkqlYchifv7ug1QU9V4n59obMkoS7QpZ0ISQkBPrgc8id2YrtBUyrFUyKcUWVnzBoTiXWL8-7tvh2irKn4NZdpmoJgRdbz-e0ubagn_X_sXErsaEJ8USnVWosmt2oCp0x4Kzxcl2VWHOrxpGXe5VArZhcmzExCCSGMX_j6wvm3nzoxm0NMwu75YrjE7VtCT5xcr6Wb5AdH0wdOg33xsPhLllH8EjJuKNqZSMsCvZGVbJr9es8jcv52WjcG6CxVu6McX5ljarw1kFayOU2ZZXkdZN1GoaMOzpMb-28KrtLDm9Z1pJp61KbYOKz_vh_HjjMQatlk_zPMH1uU-5EaCkZs2mwbA96bRH8Y_x9cIhpmv4F"
+      "ko": "https://ariadnensd.com/#ns1.d.jVVNa9tAEP0rw_Ri0Y2JnK9G1D0WSiGXHI0Ia2stici7YrWSY4yglJBLKYTSkFASaCGQplDIobTppT-mx1j9D-3KH1JiR-lNSDvvzcy-9zRETnsMLaRLkaKyzqN6lLhIsCccFqA1xK6QPar0CelTh7MlHjlIMGEy8gVHyyQYMaV87kb6uGJ76qXPHbQwDKjPkaDyWE7hsC6NA4UEPUadbTUI9Fvlq4AhwUB0aP5iV2BK0PGpK2kvQqs1RF_DOeakUtPsjil6THlCt6NpdY87eoqaK2noEdDPioAraEDAMzRsWziDArKtISdQoRQdFkUFlgtNGOYQFiynAACPIPt-Oro6zT4eZseH2f4pZCefYfRzP_twiSmZgjYqQDu0x3a6UvQ0eFoqWqkoEiHj0IRWzavl_RiT0Qy7BLBaAPQ9P19pqRznRl-rIOwSiKEJHqNhKMKaBjBKVOtFqd8tVcEzcFuxDY_Bq8UGEhywXBN5lTTne9gogNier0prElz5PGbjrY9ef8rOXsGfo6-jL5cW3Py4htG78-z4EEZv30N2caG_3lxfZ2f7kF39yo5ORm_OMbVTglwUDTTmG3hSsQQNUMy8uXjmGJrNXGB3p12ZJzOXC4wODXSJotJlqiTo3AU4k7-WfUPrlkptr0I-BGIkKFmkDWVhSJVXuiDTvG-xkqlYchifv7ug1QU9V4n59obMkoS7QpZ0ISQkBPrgc8id2YrtBUyrFUyKcUWVnzBoTiXWL8-7tvh2irKn4NZdpmoJgRdbz-e0ubagn_X_sXErsaEJ8USnVWosmt2oCp0x4Kzxcl2VWHOrxpGXe5VArZhcmzExCCSGMX_j6wvm3nzoxm0NMwu75YrjE7VtCT5xcr6Wb5AdH0wdOg33xsPhLllH8EjJuKNqZSMsCvZGVbJr9es8jcv52WjcG6CxVu6McX5ljarw1kFayOU2ZZXkdZN1GoaMOzpMb-28KrtLDm9Z1pJp61KbYOKz_vh_HjjMQatlk_zPMH1uU-5EaCkZs2mwbA96bRH8Y_x9cIhpmv4F",
+      "de": "https://ariadnensd.com/#ns1.d.jVXLbtswEPyVxfZioYwRKa9GqHtrgSJALjnkYAgBba0lIhIpUKQcx9C1535Qb_2TfklL-SEmdpTeBIk7M7ucHa1R8pIwRn5SG67Hsh7XTYYMS5VSgfEaF0qX3LgTWvBU0omsU2TYkK6FkhiHDGsyRsisdscNPZkbIVOMsSq4kMjQ5NRRpLTgtjDIMCee3plV4d4aYQpChoWa82JzDFuGqeCZ5mWN8XSNwsGl4bbS0TxuKEoyuXJyHK3T-OC6GGWaVzkD92wYZIoXDPLAwc5UuuohZw5yC1VpNae67rEymMC6g4jhtAUA-AA3qjYkoVEl3Lkv2LIdVDQANeclPSy0Kh1k6xWdDRSpiiRMYDrKR52KYNtQkHgA5z3AMhfdIL1yPGj4YoBwwcDCBHLiVaWqkQMIPKrLvlQsvCr4AtnUJvAR8pENkOGKOid0VTo81HDVA9GTMN6YlDRCWtrMuiHNC0OGNHwV0miexSDk81LU85wkLK1OCUhIePz9Sz-TJg33lEFGCytTktgmLUOpeinRoZRPA-NwAH3318e7tzCZdAZ73ffZIVl42mPMeeFKDNcZGc_Q3Rbg3v7O9pHzLdduvXojMbDIUFPtFirGipvcu6owfGvEmozVEjbnXw_o_IjmIVu_nFDomXmhtOcQpaFhsAQhodvMqU2OMJ0PMBmShhvREEx2Zlv6_V4cv52-7DNk44zMqGHw_fbbgUsvjui5_J-FnjYJTMBuHLszonxlxF7n1VDebLD2mv26IZ92-2rrvFtYBqO-abeRTcCgCYLDy7480vL1e5edOJh94p0OHN8a7VbJ7To_ulW9pww9iDR6P9I1zZWsjbZzM_LtfyzOo6E8d553eWr9_IyiNwPUOr_uGQ-nFQ2FtwvS3iQvKYeM7kSOeVWRTF2Yvhj3UHZ7ez2N45MwcaUJw0bQcvMXL1JKMZ4mrPsz7J5nXKY1xkZb2sXJ3aqcqeIf458fP7Ft278"
     }
   },
   {
@@ -454,15 +574,18 @@
     "category": "hard",
     "name": {
       "ko": "최대 유량 (에드먼즈-카프)",
-      "en": "Maximum flow (Edmonds–Karp)"
+      "en": "Maximum flow (Edmonds–Karp)",
+      "de": "Maximaler Fluss (Edmonds-Karp)"
     },
     "what": {
       "ko": "BFS로 찾은 증가 경로 · 잔여 그래프",
-      "en": "Augmenting paths by BFS · residual graph"
+      "en": "Augmenting paths by BFS · residual graph",
+      "de": "Augmentierende Pfade per Breitensuche · Restgraph"
     },
     "files": {
       "en": "max-flow.en.ns.svg",
-      "ko": "max-flow.ko.ns.svg"
+      "ko": "max-flow.ko.ns.svg",
+      "de": "max-flow.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -472,11 +595,16 @@
       "ko": {
         "width": 806,
         "height": 698
+      },
+      "de": {
+        "width": 938,
+        "height": 698
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.nVbLbts6EP2V6XTjoEwQK-lLgLosUFzgokCXhhBQ4sgmSpEySckxAm-77jf2S-4lJVtK4ipodzLBOY950Q-oeU2YYs3vLytldlfaXblujQxrI0hh-oCVsTX3mCK3kgtNl9oJZNiRddJoTJcMHXkv9dqF657u_T9SC0yxUVxqZOg3FEkEVbxVHhluiItvfq_CqZdeETJUpuTxgDQeGArJ15bXDtPVA8oAJ5ZDZKD53lPU5DcmyAm0vY-74GNR8oaBY-AvAlhhxH4EKgLQANBYU5JzI0KIhgyuAQBeQ8mbVZuvujwFS06Klqtwxkvp9wwshSwQkFiTA6lL1QoSeGBHomQkIi1UT_REzM14p-RKBSXcrslPXMbU4CknIRdJsMVtyDmevCJDSy6kOMWGW9J-ouV25JHV6NeDNh6khiGA4Z5iIWOUXT4X_HZi6l76EcqSb62GmMGYPW2At-uadOgOaLjf4CE_MNRmJEieE7ybKU8AGD29n7lZMOgggy__fg6ZGWM-jDG7jYytN0R08CqDMxX6OMPSQjZkbtXlE5bl9Zw0yKCWelGwscEupsFzDRpMtTGPp-vJC9en9pc3f-x_efs3CXg7E3RyDZcZFNOoudqHqC5ftTm8yaDoW8wZkB5KrqEgaLUwmqZwcw1yJpEfXloMb6LcnGFllJjspipUrJLW-WNbKt5_B8hhyX6WWoDfEBTGe0Wayu-j1iqZIsSSHiFiyQaMr63bRIwohyuj1_HncbhGNyJ5eV0WlbsLkS-sy7kB6GsPGTy4FNyhr8pREeykH-TSjpzvN-V0Qc6NyRYyELRtabFyj-YjWf62h7fAQ5KfLbUnlpK5kQktvb1qTKOo8otHxJPhqYydNIex0AXCvrPPEP5m_XaPlUb143R8guunC_nmDPbcqJ1ms-_20crcpG2veNOQFovu4vnGvj2jYG7O4sqedmaRzM3Z8Ioc3688TFsnadf_F1HhgU1XOUPTkD5-F1yHafS2peMT-G1fF0b9z_brx088HA7_AQ",
-      "ko": "https://ariadnensd.com/#ns1.d.nVZBa9RAFP4rz-dlxbR006o1EI-CCF48LqFMdia7wexMNplNW8pCFSkVBRXULuLWCq20orC0PXio_hiPm_Q_6CS7m7RdU_Q2hHnf97733vcma8hJi6GBLbIy43hieZaHs2HUQA1bgjIPjTV0RNAiEg0kgUsoZzM8pKhhxILQFRyNqoYhk9LljVBdl2xF3nc5RQN9j7gcNZRNlpJQ5pCOJ1HDJiP0oVz11FfpSo-hhp6ok_TDI4FdDalLGgFphWjU1tBVcLQ6ilQ0jzKKFpNNodJRtJmOJaWjUie-BqEG8poCswVdzYFsBTQC8ANRZ2GYI6hoMGEOAOAq1Ilf61i1yDIgfrKf9NcheX8Qf3wGlWTrWzw4OH23B8PB0-TpDpy-_Hr6dl_RjWn0nIZx6mU051KZz-_UieepPEjQYLKgMS0MTiqiKqErUSRQFceJUtQwYKEqsIE-CRiXhVwWch7XydVK4EKCy2EUoOEqS9uYRgXViwnfKIhacWUOFTDZCTik9Utrl3zuDwfrMDz8EX_6oE7J1kb8fBe7VldDLnIW_SLLzZIOKYBc2K2Sm7YGEZhw78FdVZ48ZjGPWW666fSNIiK4YsKUNt0uYemAOSpfLbIKLNW5stTAhJbLK7aWz1hxdqplM6pEddI6Tq7rl1wvyq_O_7P-6sL_FOBGSdBENcyYYBejynqvoiKr1rHgugl2Nmfxq1788kX8-RiSzR4k25vDwxdFvLIJmVLJxcuWw_U0X0tDR3i0sJ8c1TLHDUI5nkuPZGcFOVq0mRuSfg_io9fxlwNIBj-H3wd5vo5eREn7OoZJ-3YGJ947gfjNIO6fwGm_F-_sQnx0HD85ThGtgiyqX747bSdc8olsXrI7y6yQTQGYsBYaEHaz_oz2Y7LZS9fBYD3Z3oNk57HappmM4s4sM00bTKCs3WGVWnjGLXr1rxPdBsIpXNxz52TpZQZSA96e9YXvMUdWzhAXrOSIoDApIoBIEWZzPoXwLxs5Optpmn3ulTswd35Hz0_BLjPexKnZ6OdSynzXniW-zzitRNcu7u-FKRmUmS5d4MXptPUy040elvGTZinrRS5bzn5OPMooGjVLQ-EzPj7bhCtryqDDxq_iw9WWLbw_bL82XmG32_0N"
+      "ko": "https://ariadnensd.com/#ns1.d.nVZBa9RAFP4rz-dlxbR006o1EI-CCF48LqFMdia7wexMNplNW8pCFSkVBRXULuLWCq20orC0PXio_hiPm_Q_6CS7m7RdU_Q2hHnf97733vcma8hJi6GBLbIy43hieZaHs2HUQA1bgjIPjTV0RNAiEg0kgUsoZzM8pKhhxILQFRyNqoYhk9LljVBdl2xF3nc5RQN9j7gcNZRNlpJQ5pCOJ1HDJiP0oVz11FfpSo-hhp6ok_TDI4FdDalLGgFphWjU1tBVcLQ6ilQ0jzKKFpNNodJRtJmOJaWjUie-BqEG8poCswVdzYFsBTQC8ANRZ2GYI6hoMGEOAOAq1Ilf61i1yDIgfrKf9NcheX8Qf3wGlWTrWzw4OH23B8PB0-TpDpy-_Hr6dl_RjWn0nIZx6mU051KZz-_UieepPEjQYLKgMS0MTiqiKqErUSRQFceJUtQwYKEqsIE-CRiXhVwWch7XydVK4EKCy2EUoOEqS9uYRgXViwnfKIhacWUOFTDZCTik9Utrl3zuDwfrMDz8EX_6oE7J1kb8fBe7VldDLnIW_SLLzZIOKYBc2K2Sm7YGEZhw78FdVZ48ZjGPWW666fSNIiK4YsKUNt0uYemAOSpfLbIKLNW5stTAhJbLK7aWz1hxdqplM6pEddI6Tq7rl1wvyq_O_7P-6sL_FOBGSdBENcyYYBejynqvoiKr1rHgugl2Nmfxq1788kX8-RiSzR4k25vDwxdFvLIJmVLJxcuWw_U0X0tDR3i0sJ8c1TLHDUI5nkuPZGcFOVq0mRuSfg_io9fxlwNIBj-H3wd5vo5eREn7OoZJ-3YGJ947gfjNIO6fwGm_F-_sQnx0HD85ThGtgiyqX747bSdc8olsXrI7y6yQTQGYsBYaEHaz_oz2Y7LZS9fBYD3Z3oNk57HappmM4s4sM00bTKCs3WGVWnjGLXr1rxPdBsIpXNxz52TpZQZSA96e9YXvMUdWzhAXrOSIoDApIoBIEWZzPoXwLxs5Optpmn3ulTswd35Hz0_BLjPexKnZ6OdSynzXniW-zzitRNcu7u-FKRmUmS5d4MXptPUy040elvGTZinrRS5bzn5OPMooGjVLQ-EzPj7bhCtryqDDxq_iw9WWLbw_bL82XmG32_0N",
+      "de": "https://ariadnensd.com/#ns1.d.nVbLbtw4EPyV3t7LGKENj-w8VoD2FgOBgSBIjgMhoMSWRAxFaUhKY8eYa875CH9Gbv6TfMkuJc1Iticydm8Dg9XV1d1V8h1qXhKGWPKb00xV2zNtz2ybI8OyEqQwvMOsMiV3GCI3kgtNp9oKZNiSsbLSGC4ZWnJO6tz6545u3LXUAkOsFZcaGbqCOhJBGW-UQ4YFcfHF3Sr_VyedImSoqpSr_hnuGArJc8NLi-HqDqUvJ5YD0tOse4qSXFH5djxtr-Or17FIec3AMnAnvlhSiduxUOILDQVqU6Vk7VjBoyGCcwCAPyHl9aqJV20cwmeybs1r_k26h3vH4PPDz3S9fbg3zq65dqSBpM7JpoWqrCWNO7bnC0Y-0kL1fE96uhjfpFwp3xA3ObmJ2G5CeBiNH0ng1XHjR48HycjQkPWTDrHmhrSb9HI58shslO1AVw6khgHA8Ja6fXYos3ze8OuJqBvpxlKGXGM0dIPshrgmqYE3eUnaSTKkBRn4lHGBu3jHUFcjT_Cc583MsnyBUdrbmZcJgxYi-PDxyg9oxLwbMdtCdoc4IFr4I4Iji_prhqWBaBjgqo0nLMvzudYgglLqRcLGczuZgufO1YtqujkengcvPJ_KX178Z_3Ly_8zgNczoINqOI0gmaLmdu9RbbxqYngVQdJfmuCldEAGrEwL-NYY71FNRUka1MO9tY-0z93Lkbm-eyk1XnXdxwyzSolJcGV-gZk01u2vVPH-ty85JPB7ndfcWsikFtPwyIIpuFvuHt0tb4BfqcZaIO0U1zkIsp3BLNi0kOnaF4wnYkTwcpQmmf1ac1e8EKVzdugvASK4syHY3bCjwfzgVyVIw5a0zK0P0OsuR6fBOeebDUQgaNPQYmUfGSZY_vaoN8C1gOdh90RVMOchf-Obs7qqFWVu8Yh44qasMpPzqAy0nrA_9SOEv4nl9nGnXfejXf6G86dBfXGk9pz3Dmbt732UMme9zRmva9Ji0Z48j_DLIx3MOa3L8OlxJsGc04avy_67Fnu_tZK2_b8qSpDAcBUzrGrS-98J196PzjS0_zR-uS2TSv3L9uv7D9ztdv8A"
     }
   },
   {
@@ -484,15 +612,18 @@
     "category": "hard",
     "name": {
       "ko": "세그먼트 트리",
-      "en": "Segment tree"
+      "en": "Segment tree",
+      "de": "Segmentbaum"
     },
     "what": {
       "ko": "만들기 · 구간 합 · 값 바꾸기",
-      "en": "Build · range sum · point update"
+      "en": "Build · range sum · point update",
+      "de": "Aufbau · Bereichssumme · Punktänderung"
     },
     "files": {
       "en": "segment-tree.en.ns.svg",
-      "ko": "segment-tree.ko.ns.svg"
+      "ko": "segment-tree.ko.ns.svg",
+      "de": "segment-tree.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -502,11 +633,16 @@
       "ko": {
         "width": 1136,
         "height": 912
+      },
+      "de": {
+        "width": 1233,
+        "height": 912
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.vVdNc9owEP0rO9sLKUqCbb7iCb-gxxwZDiJasCayRGVBYTJce-5v7C9pJSAYMCYDnV7AePz27T69J5l31DwnTLGgaU7a3TtL9KCLh2IxRYa5EaQwfceJsTl3mCK3kgtN97oQyHBBtpBGYxoxLMg5qaeFf9zR0n2TWmCKM8WlRoYuo0AkaMLnyiHDjLh4cSvl7zrpFCFDZV55uEEa1wyF5FPL8wLT4TtKX05EW6SnedtQ0IK0L-hZMcWcS9248_CxEas9dOyhW8jMmlcqij2IwwCGHQZ9Bl0GCYOYQS98dke4ZrsScU0JDQNQpBv8rgRIagBea0_bGsFXaLThK-g7AIAv4DKC10wqYUmDmYA2guANuCWI34Br4b-aEJWI2nuiV66UZ-F2Sq6kUxAXP1T1asZeJm79qmHEoMVAwz14oSwVfplSLHF0ruJIqjmCuJ0yU1Gi6tboNrNSu0ax1Srql2C9qzpsn-swYRC1zojR_39iPH1ajLiD69EHUMSnYcnJZUbs8eO5VKLhDcZAGQaZrIxOa9-CnOzRysBgAJlEhisK0Q_PW--g4xJ18fNRGPomRjAAPlRmFOZAbfY144qadXnMpYABNJSBpp8KHh8hLokaJTcnJvaR_VAul-KMVaLbw7mj8qkPVJuLoHwlZeezaocfu_IjaB7e8DRhLcq2Si7b6vuc7OrAVgwUA1tprm61uSw8gzJgLGTSXx6bLKkwRGkDoKUsnQqW3NxqaG1yog2YBVnFZ6c-a1eU7deoGdTZC_90JinwPPDT-M3bjzMAezxP55Q4bl2Yp7SUYbDJXKkVSF1IQeEYsVxP6XTIbgVXXUAPh4xvyF18Xe6SutxtvFWOgqKJK5Nel8Aq0pMEnpJbOc0O2OvCuF1I3zA0YQstha19OWzzmeCOjtImGSyr0hafSdu5rbxX4ZTeZzeX5anz-hX16uJ1yU5n8hYittmSD8Z5OqVPWje_NVQ40ut_uDkfKxEO1eNeon_WS4VRq3oqvavWpfrKM2PEcCHpx-Y_hBIkMB2OGJoZ6d31mGtRYOrsnHatvazysVF_e_r98xeu1-s_",
-      "ko": "https://ariadnensd.com/#ns1.d.vVfBbts4FPyVh7cXp2FaS7IdR6i_YI89Gj7QIWMToUiXotMYgYEe2mLRXAK03U2BpqcA7aGHxWIXaH-nx1ofsUvZjmWbVgJn0YsgC5o37w1nSPkMFU04xpjyXsKV3bOG84cqfZie9JBgohmXGJ_hkTYJtRgjNYIyxfdUypDgCTep0ArjgGDKrRWql7rXLT-1vwrFMMaBpEIhQdvnORHjR3QoLRLsc8qe2JF0T62wkiNBqQ9p_uBY45ggE7RnaJJi3D5D4cqxYIZ0NMdTCn7ClSvoWDHGhApV2XHwrmajBbTroDPIwOhDnqYLEIUWtOsEmgQaBCICIYH9_Nro4JjMS4QlJRS0QHJVoTsFQFQCcFo72moHHkClBg9A7QAA_AKTl18nbz7AcXZ1CdnHi-z8Krt6DuFx9t5dYReCAkVtQXFIpXT1qelxW1AolxVv9HQ6hk4gatx6YUCgSkDBHjiJDE_dAsVY4KhvxRH5OXJZ60WmtEDVKFFsYISylXSmUtAswPa36rC2qcOIQFDdIEbz54lxcGcxwjqOOzdAFq7HJOG2r9kC3x0KySpKM05AagJ94Q1NddGCOFqgpYZWC_oCCY54Hvr8feMctFqiLHguBG3XRAdaQNtSd_I5UOlFzdBTsyyJiWDQgorUsOumgkePICyIGkT3TkzownqjXCLYBqsE9w_nnMqlPqea3uTKeynrd1U7_zEv34Hd5QeOJl-Loq2i2231dMjNaMlWBCQB4zVXw28uA49BatAG-sLdrpos8hiisAHwU1E4Dwy3Q6OgOs3Jj7--Zd8us0_PIXv3evL67eT8et1wNU_9ZomsuUyLFTjYEBl43HJjUcXyuVpgVgerrxOH1VsGK6zpdMJ_vvz48wVk737L_riAyfk1TN5cZ7__nV1-9g7b8HCWJXZ52PAeQQy3C2JUFsSp2YrZkPzIFkm3i6SPdC2S6-RG9PpL7GXpnC2oaxh2YQYtpK92e_qGA0YtX4mfIHDqi1-4IX6b9vZ9j1P277rbnK47r-mpVxaz2-y0IXd51KZ79NI4B-v0UfXenxEeRzr9l3frVSXyU3a1l-B_68VjVF9Phc_WslRveYh0CJ4I_mz6d0IyzjBudwjqAVfz-y5VLMXYmiGft_ZklHS1_K-n768ucDwe_ws"
+      "ko": "https://ariadnensd.com/#ns1.d.vVfBbts4FPyVh7cXp2FaS7IdR6i_YI89Gj7QIWMToUiXotMYgYEe2mLRXAK03U2BpqcA7aGHxWIXaH-nx1ofsUvZjmWbVgJn0YsgC5o37w1nSPkMFU04xpjyXsKV3bOG84cqfZie9JBgohmXGJ_hkTYJtRgjNYIyxfdUypDgCTep0ArjgGDKrRWql7rXLT-1vwrFMMaBpEIhQdvnORHjR3QoLRLsc8qe2JF0T62wkiNBqQ9p_uBY45ggE7RnaJJi3D5D4cqxYIZ0NMdTCn7ClSvoWDHGhApV2XHwrmajBbTroDPIwOhDnqYLEIUWtOsEmgQaBCICIYH9_Nro4JjMS4QlJRS0QHJVoTsFQFQCcFo72moHHkClBg9A7QAA_AKTl18nbz7AcXZ1CdnHi-z8Krt6DuFx9t5dYReCAkVtQXFIpXT1qelxW1AolxVv9HQ6hk4gatx6YUCgSkDBHjiJDE_dAsVY4KhvxRH5OXJZ60WmtEDVKFFsYISylXSmUtAswPa36rC2qcOIQFDdIEbz54lxcGcxwjqOOzdAFq7HJOG2r9kC3x0KySpKM05AagJ94Q1NddGCOFqgpYZWC_oCCY54Hvr8feMctFqiLHguBG3XRAdaQNtSd_I5UOlFzdBTsyyJiWDQgorUsOumgkePICyIGkT3TkzownqjXCLYBqsE9w_nnMqlPqea3uTKeynrd1U7_zEv34Hd5QeOJl-Loq2i2231dMjNaMlWBCQB4zVXw28uA49BatAG-sLdrpos8hiisAHwU1E4Dwy3Q6OgOs3Jj7--Zd8us0_PIXv3evL67eT8et1wNU_9ZomsuUyLFTjYEBl43HJjUcXyuVpgVgerrxOH1VsGK6zpdMJ_vvz48wVk737L_riAyfk1TN5cZ7__nV1-9g7b8HCWJXZ52PAeQQy3C2JUFsSp2YrZkPzIFkm3i6SPdC2S6-RG9PpL7GXpnC2oaxh2YQYtpK92e_qGA0YtX4mfIHDqi1-4IX6b9vZ9j1P277rbnK47r-mpVxaz2-y0IXd51KZ79NI4B-v0UfXenxEeRzr9l3frVSXyU3a1l-B_68VjVF9Phc_WslRveYh0CJ4I_mz6d0IyzjBudwjqAVfz-y5VLMXYmiGft_ZklHS1_K-n768ucDwe_ws",
+      "de": "https://ariadnensd.com/#ns1.d.vVfLctowFP2VO7cbkigJtnnFEzbdZpklw0KgC2iQJSoLCs2w7bof0L_pn_RLWhmIDRiTgU43YDw-99x7dI5k3lDzhDDGlMYJaXfvLNGDTh_SxRgZJkaQwvgNR8Ym3GGM3EouNN3rVCDDBdlUGo1xwDAl56Qep_5xR0v3IrXAGGeKS40M3YQyIkEjPlcOGU6Ii1e3Uv6uk04RMlRmyNXmMVwzFJKPLU9SjHtvKH05EWyRnma6oaAFaV_Qs2KMCZe6duPhAyNWOXTgoVvIzJohpWkO4tCFXpNBh0GLQcQgZNDOPlt9XLNdibCihIYuKNI1flMARBUAr7WnrffhFmoNuAV9AwDwCYQk8PqRhYXR8KKNIw1TSKUWEE5hvvm6g6BA1ciphlwpz8PtmFxBqUxefNfV6xl6obj164YBgzoDDffgpbKU-oWKscDRvIgjKufI5G0WmdICVatCuZmV2tXSrVpBpwBrX9Rh41SHEYOgfkKMzv8T4-nDYoRNXPffgSI8jktCbmJEjh_MpRI1bQQxUIbBRJaGp563IEc5WhnodmEikeGKsvBnz1vvoMMSVQH0Yej5JvrQBd5Tpp_NgdrkNcOSmlWJTKSALtSUgTs_FTw-QlgQNYiuTkzoQ_uuXCLFCasE14dzR-VTn1FtLjLlSymbH1U7-7Er34e7_RueJluLoq2i87b6Mie72rMVA8XAlpqrVW4uC8-gDBgLE-kvD00WlRiisAHQUhbOBUtubjXUNzmZktQEv34OyCo-m831-NhvjZLynQpVM5XyBXg6kRh47vqpuBbZWF2wh3M1j4nD-pm5CkuaDTjm-hvIBD6TJTmcHE_XKiGpSuj-dOEVwQsvC15UFbyNuYpZUDRyRdLLIlhGehTBY3Irx5M99qo0blfQNwx3sIUW0tY4n7b5THBHB3GTDJZlcQtPxO3UXt4ucUr7o7vL8th5nZJ6Vbk6Z6cTQcuytdmT98Z5OqaP6le_NpQ40uu_vzsfKpGdqoe9BP-slxKjlvVUeF2tSvWFh0af4ULS183fCCVIYNzrMzQz0rvrAdcixdjZOe1ae10lA6P-9vT7-w9cr9d_AA"
     }
   },
   {
@@ -514,15 +650,18 @@
     "category": "hard",
     "name": {
       "ko": "Raft 합의",
-      "en": "Raft consensus"
+      "en": "Raft consensus",
+      "de": "Raft-Konsens"
     },
     "what": {
       "ko": "Event 일곱 · Method 셋 · 가장 큼",
-      "en": "Seven Events · three Methods · the largest"
+      "en": "Seven Events · three Methods · the largest",
+      "de": "Sieben Ereignisse · drei Methoden · das größte"
     },
     "files": {
       "en": "raft.en.ns.svg",
-      "ko": "raft.ko.ns.svg"
+      "ko": "raft.ko.ns.svg",
+      "de": "raft.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -532,11 +671,16 @@
       "ko": {
         "width": 1853,
         "height": 1260
+      },
+      "de": {
+        "width": 2400,
+        "height": 1524
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.tVlNb-M2EP0rBC9JUHURS_5IjO0WafcStNgWm6I9rHNgxLHNXYp0SdqJsfC15_7G_pJ2KNmSLYp2UuSWGOYjhzNv3uP4K1WsADqmhk3dG2Xf2NWMJrTQHCQdf6VTbQrm6JgyIxhX8K2ynCZ0BcYKrei4l1ALzgk1s_h1B0_uJ6E4HdOFZELRhLo5-A04TNlSOprQOTB-59YSP3XCSaAJlTpn_gNQdJNQLtjMsMLS8aevVCAc71UrcZsv5RawAoWAuCsd0z_moIibAwEJuRNaEScKMMQslSV66RD4QfN1DfqAoBWYmNZINwW59UgSGAfzPU3oGnyAfpnBZQdIaY20MDoHa2s4urnfJFTpGiBtA2QRgB8g1wUQRnKmuODMAd0k24X9yMJblRtgFnwwDkxBHtZEq-byQWT579oBmWpDirUFOZ2o85V2YMl3pHfRgBhGID6CBRfKitOEEcMU14X_pIE3iuDdgeKEETwHMfDnEqxDKFiBWZMFgJmocww0IUJxeCJM8TJwPSXFmkhmHQHlzPoCs4KJ2RZYelqBHezNjBErsIHaugrX1sftofFQ7_BM-FerxLJ2hVzXgDmTEiGZmYFrHNjTiO7443lziWdjBglKaUINWKRhqCr77T17l0fqus5ar4NMewG_7Qx4ENg8RqqPsJDrMTHwGXIHvB3NMACYhY_4QTufVU7W4IjALiKsP2YyUdoQJg0wvq6-g4TwX9ixsRXMKLB3P7z3rfXs2GGdWSL1jDBLlgusbPwM_yuEau9zFdgnRugPWLpuzhy57QymQcTeS5jdXB9jcpVAz6aZYSqYxOtAgFfPq4oWpq_pQ9DrZ4M2e0f2zN6xkOtI50gvu5iE6440jl5InHqv3Tp6AUVL03AYd05I2RSzxHfp8nImyusN7LGwHWSgPaYxBb3hHHUPCYUV62WsUahpBznfN75OCvYFNbhgn7URbt0-VKB_pjE2VrJeG43miWLUuwNHgOVzL3hnlih4cqXeTZTTO50rFfAb0mvijl5UClenV0KgkacxyoY5GujeaYyjAVL2T3eMc2DGPQBzxy1j1kHOo54xoAnZy3j5jGQEBCI7ZlWbdzg4tbHlUoByJ9iirEODj95fQAqymPe9WSzQK3px1UXhjWBJZ6lnE8UsYUTBY-kG0R7u2k2DLtnglTOUBsQoi3H_N5CyDKq88frKzixhnBv89kEWh6dmEZ0HqpPImRf0E9I5-l-uLw2oVXaCwE-ZkEsDE3X-KNx8C38RuN_QU-v6Oda8soBYnixi-dKAJPUvX1t304Dm9Hsne_Z-3GEfNXj9DjJXurkwsBJ6aUuOndnDN1nBXO6TJ_WsfaEBIenHCP8eJDhAONxOgCVTg4_LOZCpMNaRXKupFLkjWjVjiEl0o4lsewUC142kCTQMX8bPW3ZiGxJbWX4XdvRpQPj6URvNhPVBN9HxEVwe0RZMSjBlf2t0iv1vY0b2XEPzed-_elEVX59exAFp7B8V-3qCEXujVv3CLvO8aowHewcUchAj0H4DCtiO0cubbfxZMOjw0yc9C9KAfA6y125PWUDdBh1e-65MUXsSEpCIQYyzJSN8_yntcdlm6t5T2-XmHKyDvbeWMBUwCWQOkuM4rX4RTJTSrmJWNUxoRxPQo8Fxfm9dzK59lMMB4ZoRvDZPs4DEDU4w5QcoAckaxij8s37EeWGdzzp_1Thzos7xYiyx6IjYjAlFmKu69pOr7f1FgK9Xbb4W4OaaHwwdq4a_P20M0HTY6B6Pc-HH2zviC4lPSFyJx5Uw9dNL6_F14F5i-vyryL-U8ryVOz_LYW47B_XyJ9zehVWyAIqXvkbhqxgXsr1bqme7sVd1NYztcI27SezOBuzLfzJR1cmTvdr2SWok6Pp4gm4W2AJr5h3otHU4RCtYPhd-9t265n5nythiIQXw6uhv9w4ayFesL-0N4_dxW1P5YewJUEbrM701VgcvnMOAd7Adbv3Y4ysLeLHhUZu-PU31UvFOHf-vWky7MwS8z_CE_tKoFT_bO8ZmBwvC9aPC8021lNhfAlUx6njp_-LmYIgVHGe1x8b4AWszitqLrZ3zwNUF6sMdmz-WxFrEjxIY_npTzh13s94SonX9ASs0itF_34aNYt589wtWfd_3m_uErgQ8lr8zSg6cjj_dJ1QvQG3_fmCKWzp2ZglbabpbFw9a_rfjP3_9TTebzb8",
-      "ko": "https://ariadnensd.com/#ns1.d.tVndUttGFH6Vnb0qUzWDJf-AJ20foJe5DFw4sQBPjJyxHVIm4xnbuBkXO1NoMFHAos7UiQlDpgKL1Ezcl-mldvUO7a4kS7JWa0PLHRj27Nnd8_2c4xdQyWzKMA2LmbXyPaV0r7S1DgW4WcjKeZh-AdcKxc1MGaZhppjLZBX5G6WUhQLckoulXEGB6ZgAS3K5nFPWS-Tfy_KP5R9ySham4dN8JqdAAZY3ZLpBVl7LPMuXoQA35Ez2QXk7Tz4t58p5GQowX3icoR88KcCKALO5zHoxs1mC6YcvYI6Ey8aclWSbJ_YW8paskIBkV5iGuNEzL3Rg7VSxZqDTkalXAappqK6ijwaJ-qiQ3fYiPiIRnUi5NS8Mqht05Ydz9OoAayTM91CA2zI9IV1aJEunooletKfFwmO5VPJCwspqRYBKwQsghgNInADWcQMN7bT2uqjVhxXBXRbnLMMnDXOko_djYHVUVFcBVs_RBz0YIMEJgOoqfrNnXraB1Ty39rtWh-y-onyF9GOsVYG13wXfgtiCL1ySl8_UC5HM0LmBT_ZxtwFwq2vqDdwdo3ddgFp93OoCNDjBn9Vgwilewmen6HUPWAdjfGgEUgf46ABffsJaA6Chgeoj-yD2FQkA1Q2ABk08qKLBz8DqfEJnH7GmAnTZtNQRflsF9n8ukLckz-nWpTizLsP768fklMyiXGIXpbtYddIA39GM7V9C5SmFq2vZi_s4k8-TyJniulz2pU0xCCfgo6BbJClmigTdEAqwKJcIhlkVHQ_vGVucgQnvTWMRYAyd-z7v3AlGDjxcmhc67jXtojaHPYBaV_Yv4eMlGaGliJw1A102nRzxmz2AOw08qE0gpOJBFeDOLu6o5oWO6uqKQpb8MQJYM4AN9SDqDpto94DFQylGVnF2Vk5cUtLvuuafNjuSoqe_oUHbqo0BvuriVi-C9JYYm_HIg3Ma-7pxr4YPDYD2D4IAj92YQ6LJIsZjCz-pzXj_Zcbhl25bWqHoFCnT4Zf_Q3g_Q0lzM5S2j1pXsxhKXIwqe3v1fBQVY0lo7K5JKsbQXVGM8gEq2j2YgNeBj2EOezZePYiTI-vnuHFh7XejDAODkkWe4nsC65NvtKuG5FuMwLsXgCDdHI6RrkYlx-BukWsLqDdi2hGRh11bltGAEAAFrdYm_Ej1eOxILXo_XlGCamz_AXwNYtQZTNOFmLpV2SzNXzUMXRF54GdjnCEhIg_jDCjHZ0O5o1q7I3TdsHZH81thKQLTc3lhhghJt0PyDZ6EIUbSLAvuv8nE7JusGUgbY83AhyNymfP5NynCFMx1kwyRkXj-Hp39hHrXJKUwIe00XRdLDfWKYgs9xdvnt1gbBUEkJe74xUSGxEk8snCvSgX49zF-2SY8iDtt1OsD3K_6lNR90uTMJ7WvAKDhFe7Na8il1P_hTEWG3Ek8CsGtvtU-Rdo4oO6k85psYgvDqflFXWBcN6vDXL5Fc7GiIHWPCKFTwa4QMitYZMhcfPGuVV1k6Fc8NnfvEefxxg3tZjyqJ-iccJrKoBcnn6PBSYTlFxliFOeSRCAwPjTMUcvxNnZG6HPVaugA_dqnEBtU8ZExdSquzfeYhkCJyzLxZAQ7elj_0kd6y5V8pxD9n4UvhKGrcZ7rD4SjR3anIgRe7Ezom7BMCe7vAzK_0KoAn_3lH4TEl25V98vzlz1DeOMzDYU39-F157hxYQ6vSMlPMRAjDYYUJ3joY1Mbw-2kbkroc_UviQi_f7P-RWRodUK6a6aTGCKaiGgA3CdkErXE0KMED-Xkmp2pGiEwSn1-bFAzz8KUf9IYgX63OTGAqVfxgOFmbH6hfz4y0Ct9RXHaMhukvpmKVgXm5Q6JhU-ipiYSQxsTN2IM80IntH3dptuyjnrX4JcYSpuYo5uYisJQziSPF6bKYPrV3TFzv2FTPyFU-38CfQnqtCci6s5iFxgEsBQmgE25vFHI8ge-zkiLKLUbncEDSR9HPd_I0a8hJmpNi4uuNnyVZe9C1NouLoB-eYs7TcYdcqeO3h06-dr9ryei5rCH3gfvz7ljR6prml17AsBvXtpMB9B1M3DLgaE8d9QQ5YoZY3K-jxFcR_G6LwT1k76u72WXZ7-svR7tdX0Xg3dq1k4XEOwNG3S02qvho4-ugoTfIR79xu5KV8nvBzNmPCrXBU2Fm_GlS5LX-dAC8S7Za_JmnH4SPKJlmacHlRj2MslrVKbaZKekzUudsDo1y5HOQWI4t-QcHOarIzo4nVFIVvsAvevi4zadHp2P0W_nqB5RMKmo4eZODbWrc3__wnBmKZ4lCjZ105uRvFlFlOI2LiENtYe8NJ5Gy8lz-qGXYXi6FI9DgtYyxetHJs_hnx-uVlYFuJWTn9tfOuezchamH64KsPBUVtyfH2WUbAmmy8VnsquND7Y3HxXy_-7598s9WKlU_gE"
+      "ko": "https://ariadnensd.com/#ns1.d.tVndUttGFH6Vnb0qUzWDJf-AJ20foJe5DFw4sQBPjJyxHVIm4xnbuBkXO1NoMFHAos7UiQlDpgKL1Ezcl-mldvUO7a4kS7JWa0PLHRj27Nnd8_2c4xdQyWzKMA2LmbXyPaV0r7S1DgW4WcjKeZh-AdcKxc1MGaZhppjLZBX5G6WUhQLckoulXEGB6ZgAS3K5nFPWS-Tfy_KP5R9ySham4dN8JqdAAZY3ZLpBVl7LPMuXoQA35Ez2QXk7Tz4t58p5GQowX3icoR88KcCKALO5zHoxs1mC6YcvYI6Ey8aclWSbJ_YW8paskIBkV5iGuNEzL3Rg7VSxZqDTkalXAappqK6ijwaJ-qiQ3fYiPiIRnUi5NS8Mqht05Ydz9OoAayTM91CA2zI9IV1aJEunooletKfFwmO5VPJCwspqRYBKwQsghgNInADWcQMN7bT2uqjVhxXBXRbnLMMnDXOko_djYHVUVFcBVs_RBz0YIMEJgOoqfrNnXraB1Ty39rtWh-y-onyF9GOsVYG13wXfgtiCL1ySl8_UC5HM0LmBT_ZxtwFwq2vqDdwdo3ddgFp93OoCNDjBn9Vgwilewmen6HUPWAdjfGgEUgf46ABffsJaA6Chgeoj-yD2FQkA1Q2ABk08qKLBz8DqfEJnH7GmAnTZtNQRflsF9n8ukLckz-nWpTizLsP768fklMyiXGIXpbtYddIA39GM7V9C5SmFq2vZi_s4k8-TyJniulz2pU0xCCfgo6BbJClmigTdEAqwKJcIhlkVHQ_vGVucgQnvTWMRYAyd-z7v3AlGDjxcmhc67jXtojaHPYBaV_Yv4eMlGaGliJw1A102nRzxmz2AOw08qE0gpOJBFeDOLu6o5oWO6uqKQpb8MQJYM4AN9SDqDpto94DFQylGVnF2Vk5cUtLvuuafNjuSoqe_oUHbqo0BvuriVi-C9JYYm_HIg3Ma-7pxr4YPDYD2D4IAj92YQ6LJIsZjCz-pzXj_Zcbhl25bWqHoFCnT4Zf_Q3g_Q0lzM5S2j1pXsxhKXIwqe3v1fBQVY0lo7K5JKsbQXVGM8gEq2j2YgNeBj2EOezZePYiTI-vnuHFh7XejDAODkkWe4nsC65NvtKuG5FuMwLsXgCDdHI6RrkYlx-BukWsLqDdi2hGRh11bltGAEAAFrdYm_Ej1eOxILXo_XlGCamz_AXwNYtQZTNOFmLpV2SzNXzUMXRF54GdjnCEhIg_jDCjHZ0O5o1q7I3TdsHZH81thKQLTc3lhhghJt0PyDZ6EIUbSLAvuv8nE7JusGUgbY83AhyNymfP5NynCFMx1kwyRkXj-Hp39hHrXJKUwIe00XRdLDfWKYgs9xdvnt1gbBUEkJe74xUSGxEk8snCvSgX49zF-2SY8iDtt1OsD3K_6lNR90uTMJ7WvAKDhFe7Na8il1P_hTEWG3Ek8CsGtvtU-Rdo4oO6k85psYgvDqflFXWBcN6vDXL5Fc7GiIHWPCKFTwa4QMitYZMhcfPGuVV1k6Fc8NnfvEefxxg3tZjyqJ-iccJrKoBcnn6PBSYTlFxliFOeSRCAwPjTMUcvxNnZG6HPVaugA_dqnEBtU8ZExdSquzfeYhkCJyzLxZAQ7elj_0kd6y5V8pxD9n4UvhKGrcZ7rD4SjR3anIgRe7Ezom7BMCe7vAzK_0KoAn_3lH4TEl25V98vzlz1DeOMzDYU39-F157hxYQ6vSMlPMRAjDYYUJ3joY1Mbw-2kbkroc_UviQi_f7P-RWRodUK6a6aTGCKaiGgA3CdkErXE0KMED-Xkmp2pGiEwSn1-bFAzz8KUf9IYgX63OTGAqVfxgOFmbH6hfz4y0Ct9RXHaMhukvpmKVgXm5Q6JhU-ipiYSQxsTN2IM80IntH3dptuyjnrX4JcYSpuYo5uYisJQziSPF6bKYPrV3TFzv2FTPyFU-38CfQnqtCci6s5iFxgEsBQmgE25vFHI8ge-zkiLKLUbncEDSR9HPd_I0a8hJmpNi4uuNnyVZe9C1NouLoB-eYs7TcYdcqeO3h06-dr9ryei5rCH3gfvz7ljR6prml17AsBvXtpMB9B1M3DLgaE8d9QQ5YoZY3K-jxFcR_G6LwT1k76u72WXZ7-svR7tdX0Xg3dq1k4XEOwNG3S02qvho4-ugoTfIR79xu5KV8nvBzNmPCrXBU2Fm_GlS5LX-dAC8S7Za_JmnH4SPKJlmacHlRj2MslrVKbaZKekzUudsDo1y5HOQWI4t-QcHOarIzo4nVFIVvsAvevi4zadHp2P0W_nqB5RMKmo4eZODbWrc3__wnBmKZ4lCjZ105uRvFlFlOI2LiENtYe8NJ5Gy8lz-qGXYXi6FI9DgtYyxetHJs_hnx-uVlYFuJWTn9tfOuezchamH64KsPBUVtyfH2WUbAmmy8VnsquND7Y3HxXy_-7598s9WKlU_gE",
+      "de": "https://ariadnensd.com/#ns1.d.tVnNjhs3En4VgqcY2xNY3fqZEZIsJll7HdhjBOsgBhz5wFaXurnDrjZI9igeY6573oeYZ8jJN73JPklCtvpHajbVnuzcBEEsVrGqvu-r0ieKLAe6pJJt9NeovlY3KQ1oXiQg6PIT3RQyZ5ouKZOcJQhnqBIa0BuQihdIl5OAKtCaY6rMzzX8pl9yTOiSfhCMIw2ozsBekMCGlULTgGbAkjf6ozDfaq4F0ICKYs1E9TN6F9CEs1SyXNHlr58oN-aSyf6kuea6ugJuAI1Bcytd0reASBKQ5C3LxNnPPAdJWCx29-VGG6NxkXxsDcbG4N4Q37RWvudI-Dqzhl4BS0D-nQb0I9j47ElpTh4ZC1tjH2SxBqVai_Tu_V1AsWgNhH0DkcfAS4YJT5gmW5AJIL0L6lNTz6nLXKtb4JqUOQGOioDMdr9nB-dnnvPPd58lyc1TKBCx0kRpnueAK_zqTfWJfEsmTzrW5h5r3ZyUG-MQkNtys7sXgqdA3hlHb0u5-7y-VqBvD7xcnLDLcCNZCoQhYUIA-QlAKqIAE-tt_RAB-RET-I2UmJDmcXLjiSIC9K0GJM84aslS9cQkzeStLr9wXPnZuLo-gTHIN84KPHdXYOObKcHLvZ3vKk8bx3tFGfVr6qK1v2ZCmBuYTEF3YrB9R5uGs4321LjKpOloSgMqQZm-ddXxtH_n5OmJTmjTOhnoQGf835yKf-bwxdeVl6i3hdSAS8LiFARkqPsRzh1WI7fbPyJJOCjjcx0AFuuMIF9nmqSw3d1nQq-wMGGpdVYg2ZgWs4eQ1E0O2Att4XBiOuCE0iRhirwqUpKA6lglOccElAZURBWEXesShCBbDvse6F177rjWBxi_gMxBXgMGxgVlUdQdIUnBgokmGYuh0-mTkRAyhBQTH1R0Ml4BGAGpgQtH2i8coZ8_oJh6hm17HFu-eJjlLjxFXwxP1qwXnsKno_qzMnQSnyYu1pw8NkJNHFQbhu64XptubbjWsISNqKqVFW4aPuS9Tu9H64Dj0MfxNaV6yDoc6PkXLAbrEamNmM9XkMnM6ZoDtUNfX1cqqC8-Ql-zvt7drzODNnvS_TcYOLLMvEKjAGy5YEO81a_-Riak19Th4kFVcj6-SBzcEfra3d3aDq4Ifa3taOPpeJH7ApjUMTB9WulGA408Ruo6uCd6WNd-QT4czBOdUtjdZ5x9ARr-IDigPrscodeiAeYf844ORol86v172EAmCBOKIJStMj1GnhUybBifYba7x_Sge6LZI2crdFBa5IOGf0C-f3ULVJeJBKXAypXq9RTJuTbMbAI5zOz8CzL7qkjP_gUfBL9mmheoxkjyaPH_1KShg_OikTrCpD8Ftc4ES-0Yk9fTSpv8J45suGbLi78waOwFa7yv8Zof-7E6GG_69LH5PXSQ2XQyegSZ-lBlhN6cDiDCT0yphtQO5k1T5TeF5Gln2CS3ZfXouanZ_ss66Gnqw44rm0BrfXdv5uKYJJATkJaPXxa4EfxaE7H7Xa0PJcbUpwNeQ3lg1Y8707n7aX4o8pzrs-ppuj2_L7w-doYOYp36hP5VJS0Obqr11Aq_MuojASTXwt4HSN6C1OSmODyywq53Jon7HB1Ilu7-Y3r-oHK_GF_tDjaenpQY7bbHN5t3oAfkphCpBL7OHD44yHnm67hBTHPon8VfgvfTI81sQPo_bKQJHaQ-ix4b8iIH384GRoNnbSb7CyMHOc18_X_F9Do7azENjyR-I_Cdm8YBOHixuxe6Smg9sZCqfdvlyQo3oLQtHMkhBhyWQ_0oHXw484HHAWrEXJGkkDrj6AzqsRs-cpDqbMRMcWTFQZJzHxYcD29tZuvx9Aak5JiCNIAaA8871dBMJmTLZUJAIpRmAWYXsvqJo-3P-22fg86KpDOEWprp73cdTT7voNE24_b_hXrKLgTDFKraAo7WFNl9jiVPCVfa8U4-hdCSYXfPZW2yUtmFn2UcQy2qIo_jpjEVdlvm5BkmEKzQPmX7gNfm0MGK3bdDGBK8jk34TSEzMCpEOkRKsMImsuCAE23yOom7OJ2450et21UQhog5kHel0gwTlTO1zgwSMNwOJnc6mFyT2S3DRDdBfXPgvCO5Pri7bMw1Qm54NzP3DTz7Wc6Wh2pV35jwG_sDc8mI0TNyyMe5bwjpzGe5pcScPJMpxMgVYTWZO7DKIdPmI7CqU052O3qint6VOXleCFFsO7pclxtntSzGrDD_CSmgAq7H_MviUGALn_q5OrDX5PzoXoaZaY7uf14-3LnqLCY70NNe00r7XpYc8m3hA5VDCbnwzR1NWupV4fu79wG94bCt_koWCSR0-ev7gBYfAOvPsal9utSyhJoL33zM40L8ed___vNfend39wc"
     }
   },
   {
@@ -544,15 +688,18 @@
     "category": "fun",
     "name": {
       "ko": "하노이의 탑",
-      "en": "Tower of Hanoi"
+      "en": "Tower of Hanoi",
+      "de": "Türme von Hanoi"
     },
     "what": {
       "ko": "자기를 두 번 부르는 세 줄",
-      "en": "Three lines that call themselves twice"
+      "en": "Three lines that call themselves twice",
+      "de": "Drei Zeilen, die sich zweimal selbst aufrufen"
     },
     "files": {
       "en": "hanoi.en.ns.svg",
-      "ko": "hanoi.ko.ns.svg"
+      "ko": "hanoi.ko.ns.svg",
+      "de": "hanoi.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -562,11 +709,16 @@
       "ko": {
         "width": 839,
         "height": 264
+      },
+      "de": {
+        "width": 839,
+        "height": 264
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rVO7btswFP2Vi9PFCeigttskIOACbceOGWMPtHhtE5EuDZJWYghaO_cb-yUt5YecpMjSTCQInuclG4ipGBprI95dSbyK9QoKlbdcQjdY-lCZBA0TnLHCQ4kWCjWH6LxAjxQip-RkFfP1xE_phxMLjU1pnEAhrblTsLw02zJBYc3G3qVdmU-TSyVDofSF6Q5Y0CpYZ1bBVBH6voHLdHZ0QGaZh70E1yyZMKtCozJOBhcZvvB210MXGXqAbIIvOMYeJDSlCRHRBxpfXk5oSCOa0g1VvuaIVh05xj1HYcoyE5iw4nRmp8uAk_lsepzdmJDLgSia4esMefm-X77NAIXAMRejgXZ-ErTj13krTmtve-_d0AaiKIZCkY1JUe3MvxqY9O7d8ln4KX2Ewo678XWXQ67rBf5Tj-cnd9Z54LQN0hmH-J5j_Jrj8xtTyAR919f_33We46GX2pmunOdNn8Ru3rC1CU7SYDmDdfGBGmk1NTEULQ2_UGNjame42L-dtGbqRMksfM30aFwiL1n8TOv2vYIdM3URXz6huULt-HH_fUvLFvp-ruA3LMf9woiN0Cls-Qi-21ULX_51-fvnL7Rt-wc",
-      "ko": "https://ariadnensd.com/#ns1.d.rVM9bxMxGP4rrx6WtHIqkgBFJwUJGBk7Nhmc2Ems3tmR7RyNTrdVqIIlAxKRGpiYq6piAIlfw9jcjwBfPq5pUReYfLL8fL7vZdA8kYgw4tqoA-0OXDoEQ2KEjBFlGBibcI8I3CoutKxrJ8CQSuuU0YgaDE56r_TQhedenvo3SgtEGMdcaTD4kSwVhBzwSezBMJJcHPlpHG698rEEQ2z6vLw4McgZhOJDyxOH6DiDCnSisUYGmZOVhEylDoRBFRESrnRtL8B7RkwraC9A15CxNX3pXAXS1KYWEdEjau7vt6hODWrT4fL6nIr55c33b8sPX5GzDVWzourzOA483A6lv-WqjIJthuC9GUxxGzqCZtTByw7C8Xp1vOoADFa60E8E5N2toGjej51IPzKiilDOrqYZOdtnJJxnlCr-tyJalXs12OmgTY_BMJXlFMvHNrR2B_-kwstTdat6K_3E6tI4tKk4mvc5nj4wjEBQdf3s37sO41z3kipelrPb9Fbs8AFbY6u0rw06KC5my6s5ZTqPKHO2n1P9BWXC-byDvdUSFYuz4vOcSuWbq8Xy_cegXHya0fLHWfFzQcWX892Vev6_Ym4SloHvLlSXIVXy7eqfjoUUiI67DGYs9ea7x7VwiLydyA34aJr0TPzH5a93M-R5_hs"
+      "ko": "https://ariadnensd.com/#ns1.d.rVM9bxMxGP4rrx6WtHIqkgBFJwUJGBk7Nhmc2Ems3tmR7RyNTrdVqIIlAxKRGpiYq6piAIlfw9jcjwBfPq5pUReYfLL8fL7vZdA8kYgw4tqoA-0OXDoEQ2KEjBFlGBibcI8I3CoutKxrJ8CQSuuU0YgaDE56r_TQhedenvo3SgtEGMdcaTD4kSwVhBzwSezBMJJcHPlpHG698rEEQ2z6vLw4McgZhOJDyxOH6DiDCnSisUYGmZOVhEylDoRBFRESrnRtL8B7RkwraC9A15CxNX3pXAXS1KYWEdEjau7vt6hODWrT4fL6nIr55c33b8sPX5GzDVWzourzOA483A6lv-WqjIJthuC9GUxxGzqCZtTByw7C8Xp1vOoADFa60E8E5N2toGjej51IPzKiilDOrqYZOdtnJJxnlCr-tyJalXs12OmgTY_BMJXlFMvHNrR2B_-kwstTdat6K_3E6tI4tKk4mvc5nj4wjEBQdf3s37sO41z3kipelrPb9Fbs8AFbY6u0rw06KC5my6s5ZTqPKHO2n1P9BWXC-byDvdUSFYuz4vOcSuWbq8Xy_cegXHya0fLHWfFzQcWX892Vev6_Ym4SloHvLlSXIVXy7eqfjoUUiI67DGYs9ea7x7VwiLydyA34aJr0TPzH5a93M-R5_hs",
+      "de": "https://ariadnensd.com/#ns1.d.rVO7btswFP2Vi9PFCeigttukIOACbceO3hp7oMRrmyhFGiStxBC0du4Hdeuf9Etayg85SZElmUgI9zwv1cCpiiGxVs6bKxevYr2CQOU1W8gGSx8qlSChglHa8dBFDYGaQzTeQY4EIqdk3Crm8cT36atxGhIbq4yDQFpzp6B5qbY2QWDNSs_SzuavySTLELC-VHY_hlZAG7UKqoqQtw1MptOjAzLLfN9LcM0uE2ZVSFTKuMFFhhde73pokaEHyCb4kmPsQY6mNCEiekPjy8sJDWlEU7qhb79_rbKVI8e45yiVtZlAhRWnMztdBpzMZ9Pj7EaFXA6coDk-zZGPL_vj8xwQCBxzMRJoFydBPX6at-K09rr33i1t4ATFUArSMQmqjfpfA5PevVk-CD-ltxDYcbe-bjjkuh7h3_V4vjdnnQdO2-A643C-5xg_5Xj_zBYyQd_19cu7zns89FIb1ZXzsOmT2M0ztjbBuDRYzjEr12wKpsa1kpoYypaGH6nRMbVzXOyfjzZMnS75ggM7ulMhsSO1XWYPZ5IfXivfMVqX9PFLWgjUhu_2f7HVrCFvFwJ-w-54L5TTETKFLR_Bs11VePvP5Z8fP9G27V8"
     }
   },
   {
@@ -574,15 +726,18 @@
     "category": "fun",
     "name": {
       "ko": "N-퀸",
-      "en": "N-Queens"
+      "en": "N-Queens",
+      "de": "N-Damen-Problem"
     },
     "what": {
       "ko": "되추적 · 놓고 되돌리기",
-      "en": "Backtracking · place and take back"
+      "en": "Backtracking · place and take back",
+      "de": "Backtracking · setzen und zurücknehmen"
     },
     "files": {
       "en": "n-queens.en.ns.svg",
-      "ko": "n-queens.ko.ns.svg"
+      "ko": "n-queens.ko.ns.svg",
+      "de": "n-queens.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -592,11 +747,16 @@
       "ko": {
         "width": 848,
         "height": 472
+      },
+      "de": {
+        "width": 848,
+        "height": 472
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.pZXBctpADIZfRaNezGRhYidNE3d4gh5zZDgsXgE7rLXO7pqEyXDtuc_YJ2nXBuwCcQ4dH2w00i_pkzS8I8uSMEcev9RE7CfsJ367QoGlVWQwf8eldaUMmKN0WiqmMXuFArfkvLaMeSrQUwiaVz66B3oLPzQrzLEyUjMKDGtqkihaytoEFLgmqZ7DzkRr0MEQCjS2kI2BGPcClZYrJ0uP-ewddZRT6SEyptm0KWhLHAVjVsyxlJqTUQxfWLXrQhcx9BBSOVuQ910QwxQecS-OvtmA78JKpwR4a-qgLXuYwmwuYDbvxd8NxBfWeAGxt7R9ZTAFTyEZiX9ePbn7Tq6QxkQt6VYUehQadHhiFlllEYJ0cSZ4iwId-Yg-x57y14FCK6c5JIY4OfU6GgEAfIGnrOsf9_OTnsou51NSWFvVkzWyoMTZ12tDeujq0csuxtlXmE4hbtKOmh1r3F2c6ZnCt4GOTjVPZFURq6SZ5SyfH9qiLbkdNGcATZmqh-qxE6Y33ds4R6F23GBAtl1x2WVxTwPFRYEuW3rbuS6t69yW1kEBmsFJXlHCo8ssaXqdYhMW1w-sg4h03Co1u3i03XS27Bz33ZVc2UdYCstBc00tWhmCLDakwL_U0tElrfsr2kNndIbr_rOLPY68OMw6uB3oAGuKxXQ6QwcR0U2kihrfW2jNrwPJgy072W6g6B9x-vDfV9yqph_ccjq0-i2DylbJsX-5oQhgIYtNX-TxMwCOSrulHoOD4RxDz9ySmMdH4FbTa_unYhQpzGdzgbYiPn4vJCuPeXA1Hft83pULa_6W9_vnL9zv938A",
-      "ko": "https://ariadnensd.com/#ns1.d.pZXBTttAEIZfZTW9OGKJsKEUXOUJeuQY5bDxTsIKe9fd3QQiFIkD4lAqFalFpap6Q60q9YCKKtHX6RHnIdq1k9gkwRwqH-yMZv6Z-WZGOQbJEoQQ5PrrAaI0TWmaZtgHConiGEN4DD2lE2YhBKYF4xLXpeFAYYjaCCUh9CkYtFbIvnHuFo_sKyE5hJDGTEigYPcxT8KxxwaxBQr7yPieHcXOaoWNESjEKmK54UDBmAIXrK9ZYiBsH4NwctyfRro0B0UKHKJ0gi4rhJAwIb2GC-8qPipDuy50GpJqFaExZZAkLbIDYzrzDWp8u4ppTolR8cAKJQ1pkXaHknanEr9ZEx-p2FDievOLV0BaxKD1GvTBqyK3VcpFLI6dFtN9tBUKOTqYM3OsAgeBaTcT2AAKGo1DH0JF-XlNoakW0noxSm_ea6NBCCHPyG5wf3My-XYC485ciwfLs0nQ7itekYxZhJ5Wh6sGtF3WInpljFaHpNUibotGmO9X7q7dPBcUXtR0M--hydIUJffyObbDzrSlyccfk0-Xky-nJDu_JtnZ-8nlVXZ-XWG1U6rjkaisnEY70DJnAVKVFQbLFe7WVOgEymz-RunaU7p06ylNIiIk0Uz20ZON5Sy-vxplHub2jyhNHNf1QilfxpltrbQFi8w3V-QKHsMSKWmFHGDB9_721_3P79nN5-zNBzL5fbeMa2uFeN0hLfDaeupmZ4OPphPPZ3xKstu7h3P2647C0Wsy7lReFtzyX1OYU1swt62RqHrI_vZ_X3Kh6j9yz37dCRQUUpV6MwIXV9m7t9nXmwUAO08B0JioIVYYTA2LGCrmgkTHPRSGAg-LP5aYI4ew3aGgUpSz7y6T3EBo9QBnfe6Nkq6K_5X35-wCxuPxXw"
+      "ko": "https://ariadnensd.com/#ns1.d.pZXBTttAEIZfZTW9OGKJsKEUXOUJeuQY5bDxTsIKe9fd3QQiFIkD4lAqFalFpap6Q60q9YCKKtHX6RHnIdq1k9gkwRwqH-yMZv6Z-WZGOQbJEoQQ5PrrAaI0TWmaZtgHConiGEN4DD2lE2YhBKYF4xLXpeFAYYjaCCUh9CkYtFbIvnHuFo_sKyE5hJDGTEigYPcxT8KxxwaxBQr7yPieHcXOaoWNESjEKmK54UDBmAIXrK9ZYiBsH4NwctyfRro0B0UKHKJ0gi4rhJAwIb2GC-8qPipDuy50GpJqFaExZZAkLbIDYzrzDWp8u4ppTolR8cAKJQ1pkXaHknanEr9ZEx-p2FDievOLV0BaxKD1GvTBqyK3VcpFLI6dFtN9tBUKOTqYM3OsAgeBaTcT2AAKGo1DH0JF-XlNoakW0noxSm_ea6NBCCHPyG5wf3My-XYC485ciwfLs0nQ7itekYxZhJ5Wh6sGtF3WInpljFaHpNUibotGmO9X7q7dPBcUXtR0M--hydIUJffyObbDzrSlyccfk0-Xky-nJDu_JtnZ-8nlVXZ-XWG1U6rjkaisnEY70DJnAVKVFQbLFe7WVOgEymz-RunaU7p06ylNIiIk0Uz20ZON5Sy-vxplHub2jyhNHNf1QilfxpltrbQFi8w3V-QKHsMSKWmFHGDB9_721_3P79nN5-zNBzL5fbeMa2uFeN0hLfDaeupmZ4OPphPPZ3xKstu7h3P2647C0Wsy7lReFtzyX1OYU1swt62RqHrI_vZ_X3Kh6j9yz37dCRQUUpV6MwIXV9m7t9nXmwUAO08B0JioIVYYTA2LGCrmgkTHPRSGAg-LP5aYI4ew3aGgUpSz7y6T3EBo9QBnfe6Nkq6K_5X35-wCxuPxXw",
+      "de": "https://ariadnensd.com/#ns1.d.pZWxctswDIZfhYcu8oXxRUqaJup563Vpt4w-D7QIS7xQoEpSTpyc1859mk7d-iZ9kpaSbCm2oww9D7JxwA_gAyA_A4kSIQU6_1YjkpuSm7p1DhxKI1FD-gwrY0vhIQVhlZCE5-QkcFijdcoQpDEHh94ryl1w9_jovyiSkEKlhSLg4AtskkhciVp74FCgkHd-o4PVK68ROGiTCd26wZaDVCK3onSQzp9BBTkZd5EhzX2bAtdIQTBkhRRKoSiahPClkZs-dBlCu5DKmgyd64OIzdgNbPnONxnxXRphJWfO6NorQ47N2HzB2XwxiL8cic-MdpyF3uL2kbAZc-ijCX_xGMhd9XKZ0DpoCZujH1Bo0MGeWWCVBAjChpnABXCw6AL6FAbK70cKrawiH2mkaN_rZMIYY-_YbcK-_v7pasqRYLvY68nkeD4l-sLIgawWGUbWPJwa0nVfj1r1MdY8sNmMhU3aYLNjjbsNMz1Q-DDS0b6PqagqJBk1s5yni64toTWyT6JEYjk69E9-gOqmF8ZHNdg4i762LQYg0xeXHBd3O1JcEOizxRe968rY3m1lLMuYImYF5RjR5DhLHJ-m2ISF9WPGsoD0vFVqdnFnO-ttySHuyxO5ktewZIa8ohpbtEuU1hQeHfuMWh7DujohPXZFB7Su3jrY3cSzbtSFQsvCC6zOirDDvdTYSQR4UyGDzMcWW_OrY9nZkr3tjGXDM46v__uOW9X4lWuOx5a_xVCZKuoQPNX296_snrAoXxK4eYuAxdKscQChMxxyGJhbFIvw4bBW-ND-r2iJEtL5goOpkHbfl4Kkg9TbGneN3m3KpdH_yvvz_Qdst9u_"
     }
   },
   {
@@ -604,15 +764,18 @@
     "category": "fun",
     "name": {
       "ko": "콘웨이의 생명 게임",
-      "en": "Conway's Game of Life"
+      "en": "Conway's Game of Life",
+      "de": "Conways Spiel des Lebens"
     },
     "what": {
       "ko": "한 세대 · 이웃 수의 Case",
-      "en": "One generation · a Case on the neighbours"
+      "en": "One generation · a Case on the neighbours",
+      "de": "Eine Generation · Fallauswahl über die Nachbarn"
     },
     "files": {
       "en": "game-of-life.en.ns.svg",
-      "ko": "game-of-life.ko.ns.svg"
+      "ko": "game-of-life.ko.ns.svg",
+      "de": "game-of-life.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -622,11 +785,16 @@
       "ko": {
         "width": 1011,
         "height": 696
+      },
+      "de": {
+        "width": 1154,
+        "height": 696
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rZVNbtswEIWvMp2igNzQgeX8tBXgE3SZpSAElDiSicqkMaT_EHjbdc_YkxQj25HQGGoW3cmE3vuGM_PkF3R6RZhho1c09fW0tTXdunAbtg0qXHlDLWYvWHte6YgZarbaOJq6YFDhljhY7zBLFQaK0bomyOuR9vG7dQYzXLfaOlQYl9SBDNV600ZUuCRtnuKhldNoY0uosPWV7g7I4VGhsbphvQqY5S9oxc6kZ6VgfpwQK4pLL-UIFjOUOzyHSOukYWsmYlR6c-hNSjE5i9fsKwqhV7PfBQWVbwMsoCV3MlGvj_msEMuL1XzEyu0jLCDPZwV8PjnWnuEZrAPWrqFEWJMCAOAjxCWBo32EhhyxjtY78A40ONpB6TWbAfWup9aee6L481_--Ob69yPqqldLxVfUD7260m0rcs0NxcFEujHi6_xkbnMZg2bZD5Q2KmAFFSpkCrIPGbrB_R6HjECDlqK4DDeCZZitLmVRcf623C_jA8q5yKsCFtDN9vSjm0eI-hBAB7ARbMBj8VodzwfEu7fEr-8kpidQ6dmBZwgb3totdahCoY9L4p0NJH09ca-wvr2TNTuxjKUAvobWO2qtoxCE7LfEFfudsa4RuhTQzyKdjaWF4oYduH0cdsjM35PSLT07ss2y9BySfieuBvY_JjYdjaz0avjyWNJMF7VkmiqYKUivZCUdi5qp_ikfZM3WvToxrMBUE_iwgGSmYCbaA4V-Ve6vmD2O3vvmHIGE4QYMT-ATSGOLPKnkoJID6fHgc0WmoQA71mvQ7DfOdDuAzvd1PFypYyyRV9ZvLE6X9TtnZmtpd_q7ag0ZzHLJ0Zrc5bnUzgTMIm_o8uF5OqxKL0H-_fMXHo_HPw",
-      "ko": "https://ariadnensd.com/#ns1.d.rVVbaxNBFP4rxyNCqlNJUq8L-QU-9jGEMtmZJIubmTIzvVECIRWRtkgexAs2RfH24kOkASPon_ExO_0PcnLpLjasffBtc9jvci7fZh8Vb0sMsMnbclU3VuOoIW8re9tuN5FhWwsZY7CPDW3a3GGA3ERcKLmqrECG29LYSCsMSgytdC5STUuvO7nrHkVKYICbMY8UMnQtORUSssG3YocMW5KLdbcXU9VFLpbIMNYhnxYea-wwFBFvGt62GFT3MSI6UZojSebxTKItXUuTHZLFAKmHDevkZqFpIrFCRHUt9lKSOpHMwZtGh9LaFG30jmUQ6thCBWKpZiTs4rFarBHlgqqcQ6V2HVSgWi3W4OaMsaENbECkwHDVlAXSWqkBAFyH5OijHxyDfzJOjrvJ4QvwB8_g_LjvX_UzcmupXEObVIqIzV_EeKnvOznoMEWT1SXouyk65HFMcG6a0mVWMd0fXiyOFlam-XNDh4E0PwaGQYgMjbR0CAGqTH_3shpWZmaJxJI9BUNbjHmdLhTLl-3ez99M1dSqYQ0qMF3q7Md0Eb43BP9j7Add8L3R5OwdJD-eLSqT79P1vD_BTu3CtSlnnKxddvLgik5KMwPnByf-5SjpvZ58Gya912QoOfpIgjWG2rWk2YmspKnP1JcoPryiYnHe8ptx8v7Ev-36AenC5OxnMqQuwX_4lRy-mMuTg3RVpWJeiqTbMgrUrssOSpSvkt5tuaFk1GzVtbGF9GSWBvk_JrmUG2UaVvblvCCKaRILqyUGRQalJVEq5SVRhP-EZ6IYNVJ0QRgGIlyBaxUoFBkUCbsnbXord5aQ3cvt-9Y8IQUDt0CYFbgBNNhatRBSIaQCzXiensmw608_-dN-8vkrfcWSL6d-0D1_Pp6c_QQ_GPmXI__lyfygGCqderu7xFteiJecZF7SFic5D9J2JHdmf22xkAKDKoVrU6rFc50rYTFwZksuvlXre-26poz_ftrHTqfzBw"
+      "ko": "https://ariadnensd.com/#ns1.d.rVVbaxNBFP4rxyNCqlNJUq8L-QU-9jGEMtmZJIubmTIzvVECIRWRtkgexAs2RfH24kOkASPon_ExO_0PcnLpLjasffBtc9jvci7fZh8Vb0sMsMnbclU3VuOoIW8re9tuN5FhWwsZY7CPDW3a3GGA3ERcKLmqrECG29LYSCsMSgytdC5STUuvO7nrHkVKYICbMY8UMnQtORUSssG3YocMW5KLdbcXU9VFLpbIMNYhnxYea-wwFBFvGt62GFT3MSI6UZojSebxTKItXUuTHZLFAKmHDevkZqFpIrFCRHUt9lKSOpHMwZtGh9LaFG30jmUQ6thCBWKpZiTs4rFarBHlgqqcQ6V2HVSgWi3W4OaMsaENbECkwHDVlAXSWqkBAFyH5OijHxyDfzJOjrvJ4QvwB8_g_LjvX_UzcmupXEObVIqIzV_EeKnvOznoMEWT1SXouyk65HFMcG6a0mVWMd0fXiyOFlam-XNDh4E0PwaGQYgMjbR0CAGqTH_3shpWZmaJxJI9BUNbjHmdLhTLl-3ez99M1dSqYQ0qMF3q7Md0Eb43BP9j7Add8L3R5OwdJD-eLSqT79P1vD_BTu3CtSlnnKxddvLgik5KMwPnByf-5SjpvZ58Gya912QoOfpIgjWG2rWk2YmspKnP1JcoPryiYnHe8ptx8v7Ev-36AenC5OxnMqQuwX_4lRy-mMuTg3RVpWJeiqTbMgrUrssOSpSvkt5tuaFk1GzVtbGF9GSWBvk_JrmUG2UaVvblvCCKaRILqyUGRQalJVEq5SVRhP-EZ6IYNVJ0QRgGIlyBaxUoFBkUCbsnbXord5aQ3cvt-9Y8IQUDt0CYFbgBNNhatRBSIaQCzXiensmw608_-dN-8vkrfcWSL6d-0D1_Pp6c_QQ_GPmXI__lyfygGCqderu7xFteiJecZF7SFic5D9J2JHdmf22xkAKDKoVrU6rFc50rYTFwZksuvlXre-26poz_ftrHTqfzBw",
+      "de": "https://ariadnensd.com/#ns1.d.rVXNbtNAEH6VYRBSCtsqCf-WeoUDNypxiaJq7Z04K9az1ewmaVXlypkH4MgzcOLWN-FJ0MRpbWhkeuDmrPz97HzzOdfItiEssLYNHcfFcfALOuF0ktY1Gmyio4DFNS6iNDZjgVa8dUzHnBwaXJMkHxmLicFEOXuuk76e6TJ_8OywwItgPaPBvKSdkKOFXYWMBpdk3Vm-CnqafQ6EBkOsbGhfw61B520ttklYzK7RK52b7JEq87mVaCgvo9pRWSxQ73CeMl2MavHuSInK6K46klJJ9uALiRWl1KElbpKBKoYEpxCIWxJz9zgbz5Xylmo6QMWXGU5hNhvP4WnLuIgC5-AZxHJNI9U6mgMAPAbnCfjme7VMmeA9MYnNPjLY1QLIMzCtKME7Cq6n_rxTX0TplFVH_tLBe2N4MYCuOrQ6P4B-2aErG4LCrdSUe8ns4sS7HDW_qcZhRfcEdZwGxECFBoWS7kWB3Lvfq75Got5oUVn6myEaarClLixO79t9PRzUTOazag6nsMu4_bHLpQzky2xg4wmSJ_Ap43Z-Z1GmPdnn92XfPFB20qptvDioqYxCDNGRwM3PkiRQuVOdG4x5SbLxiXTOrYUDsm8fKDtuZVP2UmawDJ9IyHOyzYrrvYFvJUlJ65sf4TPJims1ol66mCbjoUJRXgkDX_4xNzd9SJHXdM7k62UZJY26dTnY6f9Y6slgq3Vs_ZeHSuh2LRwdTwyMDUwO1Ggy1EJX_RPeq6FfdOiREwOuOoJHpzAaGxgr9opStzUvDpC9Grz3s307RgLPwMkRPAEd7Hw2qvSg0gOdce-L9vHmO-sSJc8OGp_Js90drEnKFTvi3VIgx87YywPGhtp7YB-HWne7j_s-rT1t2r-44MhhMdOOXRDfPpeWXcIiy4puP1JnV00Zte-_vnzF7Xb7Gw"
     }
   },
   {
@@ -634,15 +802,18 @@
     "category": "fun",
     "name": {
       "ko": "유클리드 호제법",
-      "en": "Euclid's algorithm"
+      "en": "Euclid's algorithm",
+      "de": "Euklidischer Algorithmus"
     },
     "what": {
       "ko": "최대공약수와 확장 유클리드",
-      "en": "GCD and extended Euclid"
+      "en": "GCD and extended Euclid",
+      "de": "ggT und erweiterter euklidischer Algorithmus"
     },
     "files": {
       "en": "gcd.en.ns.svg",
-      "ko": "gcd.ko.ns.svg"
+      "ko": "gcd.ko.ns.svg",
+      "de": "gcd.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -652,11 +823,16 @@
       "ko": {
         "width": 796,
         "height": 412
+      },
+      "de": {
+        "width": 813,
+        "height": 412
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.nVRNjtowFL7K6xtVgo6ZISGFYokTdDnLEars-BGsSWxkG4YIse26t5n9HKUnaR1-QkUVpNlZjr-_95MdGlERcixy9WD8g98UyLCyikrkO1xYV4mAHIXTQhkaGK-Q4Yac19YgTxh6CkGbwsfngbbhuzYKOa5KoQ0yDEtq-BUtxLoMyHBJQj2Fuoy3QYeSkGFpc9FckME9Q6VF4UTlkT_vUEc6lRyRUeblIEEbMpEwqiLHSmjT60e4tKpuoTJCj5BclGVECFdQuKBq9PEsHAXTyCRcDIZpNmSQjZGhIx9TcCxwz04CaSuwcjYn71tXK6dN6BV9AIA7SC9Qow_ZGt2wxWDLoL6QyW6ai4Cjv8EUsgmHNBu-v_UG0z7cQzZ-f8smMIve52dalV73o6KwtKplL3LVEwzk_3rytXX1utTNDBxREj7NYIhXiHFHjqgCM5AMBHwGechylodZc26-VlY1htokctJB7CisnQHxT_TR7ei0DT-64n9rNfXiMvvskL2mZp-axy65Lsa0xdNWh2vDDBIGw8Y2GttypddcybCjAJGhLVXysVW6nNlTj7qHNulaqWPGgkHNYAsD6Al4fIyN_gL1ofd-LX3QYR0IpMhfYoo5w42m18NfrVSkkD_PGdoVmdNZCqM88uDWdHL3VFfSln8t_f75C_f7_R8",
-      "ko": "https://ariadnensd.com/#ns1.d.nVRNjtMwFL7K4yGkFtyZJg0tjdQTsJzlqEJO_Zpak9iV7XYaVZXYwAYWbNiNkJA4AKyGFYs5Cssp3AGc_qSoKJVmZzn-_t5Plqh4ThhjOhJnyp7ZeYoMcy0ow3iJY21y7jBGbiQXilrKCmQ4J2OlVhgHDC05J1Vq_XNHC_dSKoExTjMuFTJ0Eyr5BY35LHPIcEJcXLgi87dOuoyQYaZHvLy40rhiKCRPDc8txpdLlJ5OBFukl7naSNCclCf0qhhjzqVqND080aKooImHbiEjnmUewU1K7oCq1Me9sBcMPRM3PhiGUZtB1EWGhqxPEWOKK7YTCCuBqdEjsrZyNTVSuUbaBAB4DOEBqvMgW50TthgsGBQHMtFJcx6w9dfqQ9SLIYzad7eNVr8JzyDq3t1GPRh478M9rQiP-5GTm2hRsacj0eAMkv_15Hnl6noiyxnYohJ4NIA2HiG6NTm8CgwgYcDhCSSbLHt5GJTn8muuRWmoSpL0aogNuZlRwP-J3jkdnRbuVV38F5WmHB9mH2yyF1TuU_nYBMfF6Fd4Wkh3bJhBwKBd2kalK67wmCto1xTAM1SlCh62Soczu-tR_dAGdSu1zZgyKBgsoAUNDufnvtFPodj0_v7b1_sf39efb2D9_vWvT29-f7xZv_viwwwZziVdb35umSCB8eWQoZ6S2p0TroTF2JkZ7UxeFHmis7_Ofr79gKvV6g8"
+      "ko": "https://ariadnensd.com/#ns1.d.nVRNjtMwFL7K4yGkFtyZJg0tjdQTsJzlqEJO_Zpak9iV7XYaVZXYwAYWbNiNkJA4AKyGFYs5Cssp3AGc_qSoKJVmZzn-_t5Plqh4ThhjOhJnyp7ZeYoMcy0ow3iJY21y7jBGbiQXilrKCmQ4J2OlVhgHDC05J1Vq_XNHC_dSKoExTjMuFTJ0Eyr5BY35LHPIcEJcXLgi87dOuoyQYaZHvLy40rhiKCRPDc8txpdLlJ5OBFukl7naSNCclCf0qhhjzqVqND080aKooImHbiEjnmUewU1K7oCq1Me9sBcMPRM3PhiGUZtB1EWGhqxPEWOKK7YTCCuBqdEjsrZyNTVSuUbaBAB4DOEBqvMgW50TthgsGBQHMtFJcx6w9dfqQ9SLIYzad7eNVr8JzyDq3t1GPRh478M9rQiP-5GTm2hRsacj0eAMkv_15Hnl6noiyxnYohJ4NIA2HiG6NTm8CgwgYcDhCSSbLHt5GJTn8muuRWmoSpL0aogNuZlRwP-J3jkdnRbuVV38F5WmHB9mH2yyF1TuU_nYBMfF6Fd4Wkh3bJhBwKBd2kalK67wmCto1xTAM1SlCh62Soczu-tR_dAGdSu1zZgyKBgsoAUNDufnvtFPodj0_v7b1_sf39efb2D9_vWvT29-f7xZv_viwwwZziVdb35umSCB8eWQoZ6S2p0TroTF2JkZ7UxeFHmis7_Ofr79gKvV6g8",
+      "de": "https://ariadnensd.com/#ns1.d.nVTNjtowEH6V6VSV2NbskpBCicQT9LjHFaqceAjWOjayzU-KuPbch-g77KWn3TfZJ2mdAKGiCtLeLGe-v5lxdqh5SZhikYtb7W7dukCGpRGkMN3h3NiSe0yRW8mFpr52AhmuyTppNKYRQ0feS124UO5p679KLTDFpeJSI0O_oJpf0JyvlEeGC-Li3lcq3HrpFSFDZXKumjLcMxSSF5aXDtOHHcpAJ6IDMsg8NhK0Jh0IgyqmWHKpezcBnhlRtdAsQA-QnCsVENwW5M-oan08CQfBODBxG4JhnAwYJCNkaMmFFCkWuGdHgbgVWFqTk3Otq6WV2veKGwCA9xCfoYZvsjW8YovBlkF1JpNcNRcAB3_9CSTjFOJk8PzU609u4BMko-enZAzT4H12ohXx5TxK8gsjWvYiFz3OIPvfTD63rjYLWe_AAZXBuykM8AIx6sgRVGAKGQMOHyBrspzkYVqf66-lEbWhNkk27iC25FdWA_8n-vB6dNr6b13xv7Sacn6efdpkr6h-T3WxjS6bMWnxtJX-0jCDiMGgto3atFzxJVc06GhAYGhbFb3tKZ3v7HFG3UsbdT2pQ8aCQcVgC33ocbi7C4P-CFUze_vyO3_cvPyy3gFJ7ch_Jx2yzBiuJW2af5sSJDB9mDE0S9LHc8a1cJh6u6Kjx_uqzIz6a-z1x0_c7_d_AA"
     }
   },
   {
@@ -664,15 +840,18 @@
     "category": "fun",
     "name": {
       "ko": "미로 찾기 (아리아드네의 실)",
-      "en": "Maze (Ariadne's thread)"
+      "en": "Maze (Ariadne's thread)",
+      "de": "Labyrinth (Ariadnefaden)"
     },
     "what": {
       "ko": "되추적 · 재귀",
-      "en": "Backtracking · recursion"
+      "en": "Backtracking · recursion",
+      "de": "Backtracking · Rekursion"
     },
     "files": {
       "en": "maze.en.ns.svg",
-      "ko": "maze.ko.ns.svg"
+      "ko": "maze.ko.ns.svg",
+      "de": "maze.de.ns.svg"
     },
     "sizes": {
       "en": {
@@ -682,11 +861,16 @@
       "ko": {
         "width": 676,
         "height": 520
+      },
+      "de": {
+        "width": 689,
+        "height": 520
       }
     },
     "links": {
       "en": "https://ariadnensd.com/#ns1.d.rVXLbtswEPwVYnuRUdaInbcAH9tLgV5SoIfECNbm2iJMkQRJ2XECX3vuN_ZLWtJ2pFqqAhS9CQJndh5L6QU0lgQ5lPhMQ-2Hfr0EDqURpCB_gYVxJQbIAZ1EoemD9gI4rMl5aTTkIw6eQpB66ePxQE_hs9QCcrAKpQYOoaA0QNACKxWAQ0Eo7sJWxbdBBkXAQZk5phekYcdBSFw6LD3k9y8gI50YHZBxzGo_gtakI2GcmixInQ0ifGbEtobOIvQAsc7Myfsm6JnYhDlC8RifE8EROK6Bc1QqotAtKTQ0JOHwqjgqHUcJ6GIiiZ6zFC7p4FDPo1tHPkaRw8JUWjQGntcD5aIWuT_GYUsp5XTWRVcnRi96jAqHm8dQRKOZxVAMYDfdcdCmZhy3GS97GK2TOmQPoA3b4JaZKjxAYo3Ex9rG7dpKCoURNY83ak3ZPinb1d9VdyqWTSaHaJ9kOI3nvG3muuY5IA5MjkLlNPvqKmqnctEmuulJJQXwWuhtt_SkeoNKZXbAjGOWSc3W0stArZ4v2_NHZ284-YTKd1i56qDquxx_ehmNe44exA9RiMw279DovG-FMBRDtJZ0RDHG2DtW6Y3UgoWC2H5dm2SNDd8UMn06Xu-IYyLGmH3h7CNnd5x9G3T4vfxPd9qy90w077JZNYX-ZWfN6rTe6w6N_7aoNx1Mb27qtKH59q2mrLFZamnfVOpJBjbDedP7-KyH53RBpxzWkjb7f40SJCC_n3IwlvTxeYZaeMiDq-gY9922nBn1e9jP7z9gt9v9Ag",
-      "ko": "https://ariadnensd.com/#ns1.d.rVU9bxMxGP4r1styESZq0u-TOsKCxFIkhjaqnPhNzorPtmwnaVplQx0oQ5GQWOjWkYEFJn4NYxv-A_iS9K654yohttPJz_M-H6_vzkGxFCGGlJ1hU7mmGw-AQqo5SojPoa9tyjzEwKxgXOEz5ThQGKN1QiuIWxQcei_UwIXjHk_9S6E4xGAkEwoo-ASzARz7bCQ9UEiQ8UM_leGtF14iUJC6x7IXQw0zClywgWWpg_joHESg460lMowZLkbgGFUgDFMzC0JFjQDvaj7Nod0AXUKM1T10rgg6Q3JALDJ-Ep4zghWwnQN7TMqAYnaAvqAhEw73ioPSdpDAbEgko6ckCxeVt0z1gluLLkQRQ1-PFC8M3MwHin4ucnGMwhSzlLOzNrhaM7pVY5RbNjnxSTAaGeaTBsw6MwpK54ztMuN2DaOxQvnoGObfP99--0Lmny7m1--PISMO3Kvm2uXmUvSJ5jmV03KM0SIsU1XhTnUwhhwcLNM9FX49oc2yn92cZ4lYMln0I6vIazvCcjBbZaK9mmCyAO473a-WnqmeMCkj0yDaEkOEImPhhMdS1dvl-a2NR5y8YNJVWNmpoKq7Hw-9tNo1R5fim4zzyBSvUWuzbouYT5rMGFQBRQghT8j88mZ-_Zb8-vDj7vKmSFRY8Ekisi_H_RWxhIcIo1eUPKfkkJI3jQqv2__pShvylPDiVdbDotC_7Kserle7W6Hx35Z0r4Lp0S3tFDTvP9aS0SbKGnrQ0u3Xq7t3Hx8W1d6o4Vpf0A6FscDJ4ncjOXKIjzoUtEG1eu4yxR3E3o5wFfnhNO1q-WfYz4srmM1mvwE"
+      "ko": "https://ariadnensd.com/#ns1.d.rVU9bxMxGP4r1styESZq0u-TOsKCxFIkhjaqnPhNzorPtmwnaVplQx0oQ5GQWOjWkYEFJn4NYxv-A_iS9K654yohttPJz_M-H6_vzkGxFCGGlJ1hU7mmGw-AQqo5SojPoa9tyjzEwKxgXOEz5ThQGKN1QiuIWxQcei_UwIXjHk_9S6E4xGAkEwoo-ASzARz7bCQ9UEiQ8UM_leGtF14iUJC6x7IXQw0zClywgWWpg_joHESg460lMowZLkbgGFUgDFMzC0JFjQDvaj7Nod0AXUKM1T10rgg6Q3JALDJ-Ep4zghWwnQN7TMqAYnaAvqAhEw73ioPSdpDAbEgko6ckCxeVt0z1gluLLkQRQ1-PFC8M3MwHin4ucnGMwhSzlLOzNrhaM7pVY5RbNjnxSTAaGeaTBsw6MwpK54ztMuN2DaOxQvnoGObfP99--0Lmny7m1--PISMO3Kvm2uXmUvSJ5jmV03KM0SIsU1XhTnUwhhwcLNM9FX49oc2yn92cZ4lYMln0I6vIazvCcjBbZaK9mmCyAO473a-WnqmeMCkj0yDaEkOEImPhhMdS1dvl-a2NR5y8YNJVWNmpoKq7Hw-9tNo1R5fim4zzyBSvUWuzbouYT5rMGFQBRQghT8j88mZ-_Zb8-vDj7vKmSFRY8Ekisi_H_RWxhIcIo1eUPKfkkJI3jQqv2__pShvylPDiVdbDotC_7Kserle7W6Hx35Z0r4Lp0S3tFDTvP9aS0SbKGnrQ0u3Xq7t3Hx8W1d6o4Vpf0A6FscDJ4ncjOXKIjzoUtEG1eu4yxR3E3o5wFfnhNO1q-WfYz4srmM1mvwE",
+      "de": "https://ariadnensd.com/#ns1.d.rVXLbtswEPwVYnuRUdaInbeAHHpoLgV6SYEeUiNYm2uLMEUSJGXHCXztud_YL2lJ25FiqQpQ9CYIO7Mzs7vSM2gsCXIo8YmG2g_9agEcSiNIQf4Mc-NKDJADOolC0wftBXBYkfPSaMhHHDyFIPXCx_JAj-Gz1AJysAqlBg6hoNRA0BwrFYBDQSjuwkbFt0EGRcBBmRmqXRlsOQiJC4elh_z-GWSkE6M9MrZZ7lrQinQkjF2TBamzQYRPjdjU0GmE7iHWmRl53wQ9EbthjlA8xOdEcACOa-AMlYoodAsKDQ1JOLwojkrHUQK6mEii5yyFSzo41LPo1pGPUeQwN5UWjYandUM5r0XuyjhsKKWcal10dWT0rMeocLh-CEU0mlkMxQC2ky0HbWrGcZvxvIfROqlD9h2WJDX7WPk1Lb5Doo3Mh7mN23MrKRRG1ETeqBVlu6hs1wAvumOx7OZmn-2jDMf5nLbdXNY8e8SeyVGonGZfXUXtWM7aRFc9saQAXiZ63S09qV6jUpkdMOOYZVKzlfQyUGvQ5-3-o5M3nNyi8h1WLjqo-q7jtZfRuKd0L36IQmS2eUSj074dwlAM0VrSEcUYY-_YLQrSDKdrOVuS0k2qxoKvC5m-HC8n4piIIWZfOPvE2R1n3wYdbs__00lb9p6J5imbZVPoXzbWLI-He9mh8d_W9KqD6c09nTQ0X781J2tslmb0ak7VvD2o8UkP1_GKTjisJK13vxslSEB-P-FgLOnD8xS18JAHV9Eh8rtNOTXqT7NfP37Cdrv9DQ"
     }
   }
 ]

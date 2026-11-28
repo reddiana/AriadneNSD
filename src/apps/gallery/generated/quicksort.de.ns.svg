@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="540" height="424" viewBox="0 0 540 424">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b0ab181b0b701b43e3a07e584278fc02046869e51bbbe8f04cfff61a4f6884e6"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "quicksort(a, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "if",
+          "text": "lo < hi",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b2",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d2"
+                },
+                "args": "a, lo, hi",
+                "result": "p"
+              },
+              {
+                "id": "b3",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d1"
+                },
+                "args": "a, lo, p - 1",
+                "result": ""
+              },
+              {
+                "id": "b4",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d1"
+                },
+                "args": "a, p + 1, hi",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "partition(a, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "pivot = a[hi];"
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "i = lo - 1;"
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "j = lo;"
+        },
+        {
+          "id": "b9",
+          "kind": "while",
+          "text": "j < hi",
+          "body": [
+            {
+              "id": "b10",
+              "kind": "if",
+              "text": "a[j] <= pivot",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "i++;"
+                  },
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": "swap(a[i], a[j]);"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b14",
+              "kind": "process",
+              "text": "j++;"
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "swap(a[i + 1], a[hi]);"
+        },
+        {
+          "id": "b16",
+          "kind": "process",
+          "text": "return i + 1;"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">quicksort(a, lo, hi)</tspan></text>
+<path d="M24 64 L267 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="243" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L215 112 L267 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="215" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">lo &lt; hi</text>
+<text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="261" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="112" width="191" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 112 L31 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M208 112 L208 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="132" font-size="13" fill="#151a22" xml:space="preserve">p ← <tspan font-weight="600">partition</tspan>(a, lo, hi)</text>
+<rect x="24" y="144" width="191" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 144 L31 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M208 144 L208 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="164" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">quicksort</tspan>(a, lo, p - 1)</text>
+<rect x="24" y="176" width="191" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 176 L31 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M208 176 L208 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">quicksort</tspan>(a, p + 1, hi)</text>
+<rect x="215" y="112" width="52" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="241" cy="160" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M236.5 164.5 L245.5 155.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="311" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="311" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">partition(a, lo, hi)</tspan></text>
+<path d="M311 64 L516 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="311" y="64" width="205" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="84" font-size="13" fill="#151a22" xml:space="preserve">pivot = a[hi];</text>
+<rect x="311" y="96" width="205" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="116" font-size="13" fill="#151a22" xml:space="preserve">i = lo - 1;</text>
+<rect x="311" y="128" width="205" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="148" font-size="13" fill="#151a22" xml:space="preserve">j = lo;</text>
+<rect x="311" y="160" width="205" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="180" font-size="13" fill="#151a22" xml:space="preserve">j &lt; hi</text>
+<rect x="333" y="192" width="183" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M333 192 L464 240 L516 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="463.5" y="210" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[j] &lt;= pivot</text>
+<text x="339" y="235" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="510" y="235" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="333" y="240" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="343" y="260" font-size="13" fill="#151a22" xml:space="preserve">i++;</text>
+<rect x="333" y="272" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="343" y="292" font-size="13" fill="#151a22" xml:space="preserve">swap(a[i], a[j]);</text>
+<rect x="464" y="240" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="490" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M485.5 276.5 L494.5 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="333" y="304" width="183" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="343" y="324" font-size="13" fill="#151a22" xml:space="preserve">j++;</text>
+<rect x="311" y="336" width="205" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="356" font-size="13" fill="#151a22" xml:space="preserve">swap(a[i + 1], a[hi]);</text>
+<rect x="311" y="368" width="205" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="321" y="388" font-size="13" fill="#151a22" xml:space="preserve">return i + 1;</text>
+</g>
+</svg>

@@ -1,0 +1,293 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="790" height="676" viewBox="0 0 790 676">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="ac0dfcce3e2af03d19501da7b1d51600e000befa8c8ea153fe466249285e62c6"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "buf = deque()"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "empty = Semaphore(N)    # freie Plätze"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "full = Semaphore(0)     # belegte Plätze"
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "mutex = Lock()"
+        },
+        {
+          "id": "b5",
+          "kind": "parallel",
+          "text": "",
+          "branches": [
+            {
+              "id": "r1",
+              "body": [
+                {
+                  "id": "b6",
+                  "kind": "call",
+                  "target": {
+                    "kind": "local",
+                    "diagram": "d2"
+                  },
+                  "args": "",
+                  "result": ""
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "body": [
+                {
+                  "id": "b7",
+                  "kind": "call",
+                  "target": {
+                    "kind": "local",
+                    "diagram": "d3"
+                  },
+                  "args": "",
+                  "result": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "print(\"beide fertig\")"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "producer()"
+      },
+      "body": [
+        {
+          "id": "b9",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b10",
+              "kind": "process",
+              "text": "item = produce()    # None am Ende"
+            },
+            {
+              "id": "b11",
+              "kind": "process",
+              "text": "empty.acquire()     # auf einen freien Platz warten"
+            },
+            {
+              "id": "b12",
+              "kind": "process",
+              "text": "with mutex: buf.append(item)"
+            },
+            {
+              "id": "b13",
+              "kind": "process",
+              "text": "full.release()"
+            },
+            {
+              "id": "b14",
+              "kind": "if",
+              "text": "item is None",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "exit",
+                    "text": "break    # die Endmarke ist drin"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b16",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "consumer()"
+      },
+      "body": [
+        {
+          "id": "b17",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "full.acquire()    # auf ein Element warten"
+            },
+            {
+              "id": "b19",
+              "kind": "process",
+              "text": "with mutex: item = buf.popleft()"
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "empty.release()"
+            },
+            {
+              "id": "b21",
+              "kind": "if",
+              "text": "item is None",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b22",
+                    "kind": "exit",
+                    "text": "break    # Endmarke erhalten"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b23",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b24",
+              "kind": "process",
+              "text": "consume(item)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L304 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">buf = deque()</text>
+<rect x="24" y="96" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">empty = Semaphore(N)    # freie Plätze</text>
+<rect x="24" y="128" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">full = Semaphore(0)     # belegte Plätze</text>
+<rect x="24" y="160" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">mutex = Lock()</text>
+<rect x="24" y="192" width="280" height="68" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M42 192 L24 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M286 192 L304 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M24 242 L42 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M304 242 L286 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="210" width="140" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 210 L31 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M157 210 L157 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="230" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">producer</tspan>()</text>
+<rect x="164" y="210" width="140" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M171 210 L171 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M297 210 L297 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="181" y="230" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">consumer</tspan>()</text>
+<rect x="24" y="260" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="280" font-size="13" fill="#151a22" xml:space="preserve">print("beide fertig")</text>
+<text x="392" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="392" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">producer()</tspan></text>
+<path d="M392 64 L766 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="392" y="64" width="374" height="252" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="414" y="86" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="106" font-size="13" fill="#151a22" xml:space="preserve">item = produce()    # None am Ende</text>
+<rect x="414" y="118" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="138" font-size="13" fill="#151a22" xml:space="preserve">empty.acquire()     # auf einen freien Platz warten</text>
+<rect x="414" y="150" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="170" font-size="13" fill="#151a22" xml:space="preserve">with mutex: buf.append(item)</text>
+<rect x="414" y="182" width="352" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="202" font-size="13" fill="#151a22" xml:space="preserve">full.release()</text>
+<rect x="414" y="214" width="352" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M414 214 L704 262 L766 214" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="704" y="232" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is None</text>
+<text x="420" y="257" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="760" y="257" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="414" y="262" width="290" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M428 262 L414 278 L428 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="438" y="282" font-size="13" fill="#151a22" xml:space="preserve">break    # die Endmarke ist drin</text>
+<rect x="704" y="262" width="62" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="735" cy="278" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M730.5 282.5 L739.5 273.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="392" y="372" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="392" y="389" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">consumer()</tspan></text>
+<path d="M392 400 L707 400" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="392" y="400" width="315" height="252" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="414" y="422" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="442" font-size="13" fill="#151a22" xml:space="preserve">full.acquire()    # auf ein Element warten</text>
+<rect x="414" y="454" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="474" font-size="13" fill="#151a22" xml:space="preserve">with mutex: item = buf.popleft()</text>
+<rect x="414" y="486" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="506" font-size="13" fill="#151a22" xml:space="preserve">empty.release()</text>
+<rect x="414" y="518" width="293" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M414 518 L650 566 L707 518" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="650" y="536" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is None</text>
+<text x="420" y="561" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="701" y="561" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="414" y="566" width="236" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M428 566 L414 582 L428 598" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="438" y="586" font-size="13" fill="#151a22" xml:space="preserve">break    # Endmarke erhalten</text>
+<rect x="650" y="566" width="57" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="678.5" cy="582" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M674 586.5 L683 577.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="414" y="598" width="293" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="618" font-size="13" fill="#151a22" xml:space="preserve">consume(item)</text>
+</g>
+</svg>

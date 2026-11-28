@@ -1,11 +1,11 @@
-// The algorithm gallery's build (M70): both language pages list every entry of gallery.json, and
+// The algorithm gallery's build (M70): every language page list every entry of gallery.json, and
 // every link and picture on them leads somewhere that exists.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-type Lang = 'en' | 'ko';
+type Lang = 'en' | 'ko' | 'de';
 type Entry = {
   id: string;
   category: string;
@@ -22,6 +22,7 @@ const entries = JSON.parse(
 const pages: { lang: Lang; path: string }[] = [
   { lang: 'en', path: 'index.html' },
   { lang: 'ko', path: 'ko/index.html' },
+  { lang: 'de', path: 'de/index.html' },
 ];
 const html = {} as Record<Lang, string>;
 
@@ -93,5 +94,17 @@ describe('gallery build', () => {
     expect(html.en).toContain(
       '<meta property="og:image" content="https://ariadnensd.com/gallery/og-image.png" />',
     );
+  });
+
+  it('T-1563 · R-NFR-04: the German page links to the other two, to the German user guide, and they link to it', () => {
+    expect(html.de).toMatch(/<a class="lang" href="..\/" hreflang="en"/);
+    expect(html.de).toMatch(/<a class="lang" href="..\/ko\/" hreflang="ko"/);
+    expect(html.en).toMatch(/<a class="lang" href="de\/" hreflang="de"/);
+    expect(html.ko).toMatch(/<a class="lang" href="..\/de\/" hreflang="de"/);
+    expect(attributes(html.de, 'href')).toEqual(
+      expect.arrayContaining(['../../', '../../manual/de/']),
+    );
+    expect(html.de).toContain('<html lang="de">');
+    expect(html.de).toContain('<meta property="og:locale" content="de_DE" />');
   });
 });

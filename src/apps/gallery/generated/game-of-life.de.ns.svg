@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1154" height="696" viewBox="0 0 1154 696">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="5d15fa9638d1dc999d7e535d57ac49a4423d5e893ee37bfff20ab8b353aeeca5"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "life_step(grid)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "rows, cols = len(grid), len(grid[0])"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "nxt = [[0] * cols for _ in range(rows)]    # die nächste Generation auf ein neues Feld"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for r in range(rows)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "for",
+              "text": "for c in range(cols)",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "call",
+                  "target": {
+                    "kind": "local",
+                    "diagram": "d2"
+                  },
+                  "args": "grid, r, c",
+                  "result": "n"
+                },
+                {
+                  "id": "b6",
+                  "kind": "case",
+                  "text": "n",
+                  "arms": [
+                    {
+                      "id": "r1",
+                      "label": "2",
+                      "body": [
+                        {
+                          "id": "b7",
+                          "kind": "process",
+                          "text": "nxt[r][c] = grid[r][c]    # bleibt, wie sie ist"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "r2",
+                      "label": "3",
+                      "body": [
+                        {
+                          "id": "b8",
+                          "kind": "process",
+                          "text": "nxt[r][c] = 1    # wird geboren oder überlebt"
+                        }
+                      ]
+                    }
+                  ],
+                  "otherwise": {
+                    "id": "r3",
+                    "body": [
+                      {
+                        "id": "b9",
+                        "kind": "process",
+                        "text": "nxt[r][c] = 0    # stirbt an Vereinsamung oder Überbevölkerung"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b10",
+          "kind": "process",
+          "text": "return nxt"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "live_neighbors(grid, r, c)"
+      },
+      "body": [
+        {
+          "id": "b11",
+          "kind": "process",
+          "text": "rows, cols = len(grid), len(grid[0])"
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "n = 0"
+        },
+        {
+          "id": "b13",
+          "kind": "for",
+          "text": "for dr in (-1, 0, 1)",
+          "body": [
+            {
+              "id": "b14",
+              "kind": "for",
+              "text": "for dc in (-1, 0, 1)",
+              "body": [
+                {
+                  "id": "b15",
+                  "kind": "if",
+                  "text": "(dr, dc) != (0, 0)",
+                  "yes": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b16",
+                        "kind": "process",
+                        "text": "n += grid[(r + dr) % rows][(c + dc) % cols]    # die Ränder sind miteinander verbunden"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r5",
+                    "body": [
+                      {
+                        "id": "b17",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return n"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">life_step(grid)</tspan></text>
+<path d="M24 64 L1130 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="1106" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">rows, cols = len(grid), len(grid[0])</text>
+<rect x="24" y="96" width="1106" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">nxt = [[0] * cols for _ in range(rows)]    # die nächste Generation auf ein neues Feld</text>
+<rect x="24" y="128" width="1106" height="188" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">for r in range(rows)</text>
+<rect x="46" y="160" width="1084" height="156" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="180" font-size="13" fill="#151a22" xml:space="preserve">for c in range(cols)</text>
+<rect x="68" y="192" width="1062" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M75 192 L75 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1123 192 L1123 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="85" y="212" font-size="13" fill="#151a22" xml:space="preserve">n ← <tspan font-weight="600">live_neighbors</tspan>(grid, r, c)</text>
+<rect x="68" y="224" width="1062" height="60" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 224 L707 284 L1130 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M394 254.61 L394 284" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="707" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">n</text>
+<text x="74" y="279" font-size="12" fill="#4b5567" xml:space="preserve">2</text>
+<text x="400" y="279" font-size="12" fill="#4b5567" xml:space="preserve">3</text>
+<text x="1124" y="279" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">sonst</text>
+<rect x="68" y="284" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="304" font-size="13" fill="#151a22" xml:space="preserve">nxt[r][c] = grid[r][c]    # bleibt, wie sie ist</text>
+<rect x="394" y="284" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="404" y="304" font-size="13" fill="#151a22" xml:space="preserve">nxt[r][c] = 1    # wird geboren oder überlebt</text>
+<rect x="707" y="284" width="423" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="717" y="304" font-size="13" fill="#151a22" xml:space="preserve">nxt[r][c] = 0    # stirbt an Vereinsamung oder Überbevölkerung</text>
+<rect x="24" y="316" width="1106" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="336" font-size="13" fill="#151a22" xml:space="preserve">return nxt</text>
+<text x="24" y="404" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="421" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">live_neighbors(grid, r, c)</tspan></text>
+<path d="M24 432 L699 432" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="432" width="675" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="452" font-size="13" fill="#151a22" xml:space="preserve">rows, cols = len(grid), len(grid[0])</text>
+<rect x="24" y="464" width="675" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="484" font-size="13" fill="#151a22" xml:space="preserve">n = 0</text>
+<rect x="24" y="496" width="675" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="516" font-size="13" fill="#151a22" xml:space="preserve">for dr in (-1, 0, 1)</text>
+<rect x="46" y="528" width="653" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="548" font-size="13" fill="#151a22" xml:space="preserve">for dc in (-1, 0, 1)</text>
+<rect x="68" y="560" width="631" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 560 L647 608 L699 560" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="630.5" y="578" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">(dr, dc) != (0, 0)</text>
+<text x="74" y="603" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="693" y="603" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="68" y="608" width="579" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="628" font-size="13" fill="#151a22" xml:space="preserve">n += grid[(r + dr) % rows][(c + dc) % cols]    # die Ränder sind miteinander verbunden</text>
+<rect x="647" y="608" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="673" cy="624" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M668.5 628.5 L677.5 619.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="640" width="675" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="660" font-size="13" fill="#151a22" xml:space="preserve">return n</text>
+</g>
+</svg>

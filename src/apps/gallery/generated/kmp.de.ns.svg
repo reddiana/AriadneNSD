@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="472" viewBox="0 0 1000 472">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="3a4cc7c2f587d91afe16df2cc7d836d1a7e6523c174ccf4fc360dd647b3a508e"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "kmp_search(text, pat)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "pat",
+          "result": "pi"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "matches, k = [], 0"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i, c in enumerate(text)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "while",
+              "text": "k > 0 and c != pat[k]",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "k = pi[k - 1]    # im Muster zurückfallen"
+                }
+              ]
+            },
+            {
+              "id": "b6",
+              "kind": "if",
+              "text": "c == pat[k]",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "k += 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b8",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b9",
+              "kind": "if",
+              "text": "k == len(pat)",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "process",
+                    "text": "matches.append(i - k + 1)    # gefunden"
+                  },
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "k = pi[k - 1]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b13",
+          "kind": "process",
+          "text": "return matches"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "prefix_function(p)"
+      },
+      "body": [
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "pi = [0] * len(p)    # längstes echtes Präfix von p[:i+1], das auch sein Suffix ist"
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "k = 0"
+        },
+        {
+          "id": "b16",
+          "kind": "for",
+          "text": "for i in range(1, len(p))",
+          "body": [
+            {
+              "id": "b17",
+              "kind": "while",
+              "text": "k > 0 and p[i] != p[k]",
+              "body": [
+                {
+                  "id": "b18",
+                  "kind": "process",
+                  "text": "k = pi[k - 1]"
+                }
+              ]
+            },
+            {
+              "id": "b19",
+              "kind": "if",
+              "text": "p[i] == p[k]",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b20",
+                    "kind": "process",
+                    "text": "k += 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b21",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b22",
+              "kind": "process",
+              "text": "pi[i] = k"
+            }
+          ]
+        },
+        {
+          "id": "b23",
+          "kind": "process",
+          "text": "return pi"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">kmp_search(text, pat)</tspan></text>
+<path d="M24 64 L372 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="348" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 64 L31 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M365 64 L365 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="84" font-size="13" fill="#151a22" xml:space="preserve">pi ← <tspan font-weight="600">prefix_function</tspan>(pat)</text>
+<rect x="24" y="96" width="348" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">matches, k = [], 0</text>
+<rect x="24" y="128" width="348" height="288" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">for i, c in enumerate(text)</text>
+<rect x="46" y="160" width="326" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="180" font-size="13" fill="#151a22" xml:space="preserve">k &gt; 0 and c != pat[k]</text>
+<rect x="68" y="192" width="304" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="212" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]    # im Muster zurückfallen</text>
+<rect x="46" y="224" width="326" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 224 L219 272 L372 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="219" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c == pat[k]</text>
+<text x="52" y="267" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="366" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="272" width="173" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="292" font-size="13" fill="#151a22" xml:space="preserve">k += 1</text>
+<rect x="219" y="272" width="153" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="295.5" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M291 292.5 L300 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="304" width="326" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L320 352 L372 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="319.5" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">k == len(pat)</text>
+<text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="366" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="352" width="274" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="372" font-size="13" fill="#151a22" xml:space="preserve">matches.append(i - k + 1)    # gefunden</text>
+<rect x="46" y="384" width="274" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]</text>
+<rect x="320" y="352" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="346" cy="384" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M341.5 388.5 L350.5 379.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="416" width="348" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="436" font-size="13" fill="#151a22" xml:space="preserve">return matches</text>
+<text x="416" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="416" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">prefix_function(p)</tspan></text>
+<path d="M416 64 L976 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="416" y="64" width="560" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="426" y="84" font-size="13" fill="#151a22" xml:space="preserve">pi = [0] * len(p)    # längstes echtes Präfix von p[:i+1], das auch sein Suffix ist</text>
+<rect x="416" y="96" width="560" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="426" y="116" font-size="13" fill="#151a22" xml:space="preserve">k = 0</text>
+<rect x="416" y="128" width="560" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="426" y="148" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, len(p))</text>
+<rect x="438" y="160" width="538" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="448" y="180" font-size="13" fill="#151a22" xml:space="preserve">k &gt; 0 and p[i] != p[k]</text>
+<rect x="460" y="192" width="516" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="470" y="212" font-size="13" fill="#151a22" xml:space="preserve">k = pi[k - 1]</text>
+<rect x="438" y="224" width="538" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M438 224 L724 272 L976 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="724" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p[i] == p[k]</text>
+<text x="444" y="267" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="970" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="438" y="272" width="286" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="448" y="292" font-size="13" fill="#151a22" xml:space="preserve">k += 1</text>
+<rect x="724" y="272" width="252" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="850" cy="288" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M845.5 292.5 L854.5 283.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="438" y="304" width="538" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="448" y="324" font-size="13" fill="#151a22" xml:space="preserve">pi[i] = k</text>
+<rect x="416" y="336" width="560" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="426" y="356" font-size="13" fill="#151a22" xml:space="preserve">return pi</text>
+</g>
+</svg>

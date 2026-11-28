@@ -1,0 +1,1008 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="2400" height="1524" viewBox="0 0 2400 1524">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="4cf9347961fb1ad922e062c74bceaed111c28d99c67bfe745a0b2434e201f2c0"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "Wenn der Wahl-Timer abläuft"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "if",
+          "text": "Bin ich der Leader?",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b2",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b3",
+                "kind": "process",
+                "text": "Kandidat werden"
+              },
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": "Amtszeit um eins erhöhen"
+              },
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": "Für mich selbst stimmen\n(Stimmen = 1)"
+              },
+              {
+                "id": "b6",
+                "kind": "process",
+                "text": "Wahl-Timer auf eine zufällige Zeit zurücksetzen"
+              },
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": "Wahlanfrage an alle Peers senden\n(Amtszeit, Index und Amtszeit meines letzten Eintrags)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "event",
+        "text": "Wenn eine Wahlanfrage eintrifft"
+      },
+      "body": [
+        {
+          "id": "b8",
+          "kind": "if",
+          "text": "Amtszeit der Anfrage > meine Amtszeit?",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b11",
+          "kind": "if",
+          "text": "Amtszeit der Anfrage < meine Amtszeit?",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b12",
+                "kind": "process",
+                "text": "Antworten: abgelehnt"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b13",
+                "kind": "if",
+                "text": "In dieser Amtszeit noch nicht gewählt\noder schon für diesen Kandidaten?",
+                "yes": {
+                  "id": "r7",
+                  "body": [
+                    {
+                      "id": "b14",
+                      "kind": "if",
+                      "text": "Ist das Log des Kandidaten mindestens so aktuell wie meines?",
+                      "yes": {
+                        "id": "r8",
+                        "body": [
+                          {
+                            "id": "b15",
+                            "kind": "process",
+                            "text": "Vermerken, dass ich für diesen Kandidaten gestimmt habe"
+                          },
+                          {
+                            "id": "b16",
+                            "kind": "process",
+                            "text": "Wahl-Timer zurücksetzen"
+                          },
+                          {
+                            "id": "b17",
+                            "kind": "process",
+                            "text": "Antworten: Stimme erteilt"
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r9",
+                        "body": [
+                          {
+                            "id": "b18",
+                            "kind": "process",
+                            "text": "Antworten: abgelehnt"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r10",
+                  "body": [
+                    {
+                      "id": "b19",
+                      "kind": "process",
+                      "text": "Antworten: abgelehnt"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "event",
+        "text": "Wenn eine Wahlantwort eintrifft"
+      },
+      "body": [
+        {
+          "id": "b20",
+          "kind": "if",
+          "text": "Amtszeit der Antwort > meine Amtszeit?",
+          "yes": {
+            "id": "r11",
+            "body": [
+              {
+                "id": "b21",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r12",
+            "body": [
+              {
+                "id": "b22",
+                "kind": "if",
+                "text": "Noch Kandidat und eine Stimme\nfür mich in dieser Amtszeit?",
+                "yes": {
+                  "id": "r13",
+                  "body": [
+                    {
+                      "id": "b23",
+                      "kind": "process",
+                      "text": "Stimmen um eins erhöhen"
+                    },
+                    {
+                      "id": "b24",
+                      "kind": "if",
+                      "text": "Haben die Stimmen die Mehrheit?",
+                      "yes": {
+                        "id": "r14",
+                        "body": [
+                          {
+                            "id": "b25",
+                            "kind": "process",
+                            "text": "Leader werden"
+                          },
+                          {
+                            "id": "b26",
+                            "kind": "process",
+                            "text": "Nächsten Index jedes Peers\nauf meinen letzten Index + 1 setzen"
+                          },
+                          {
+                            "id": "b27",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d8"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r15",
+                        "body": [
+                          {
+                            "id": "b28",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r16",
+                  "body": [
+                    {
+                      "id": "b29",
+                      "kind": "process",
+                      "text": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "event",
+        "text": "Wenn der Heartbeat-Timer abläuft"
+      },
+      "body": [
+        {
+          "id": "b30",
+          "kind": "if",
+          "text": "Bin ich der Leader?",
+          "yes": {
+            "id": "r17",
+            "body": [
+              {
+                "id": "b31",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d8"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r18",
+            "body": [
+              {
+                "id": "b32",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d5",
+      "head": {
+        "kind": "event",
+        "text": "Wenn eine Client-Anfrage eintrifft"
+      },
+      "body": [
+        {
+          "id": "b33",
+          "kind": "if",
+          "text": "Bin ich der Leader?",
+          "yes": {
+            "id": "r19",
+            "body": [
+              {
+                "id": "b34",
+                "kind": "process",
+                "text": "Befehl als neuen Eintrag dieser Amtszeit\nan das Log anhängen"
+              },
+              {
+                "id": "b35",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d8"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r20",
+            "body": [
+              {
+                "id": "b36",
+                "kind": "process",
+                "text": "Dem Client die Adresse des Leaders mitteilen"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d6",
+      "head": {
+        "kind": "event",
+        "text": "Wenn eine Log-Replikationsanfrage eintrifft"
+      },
+      "body": [
+        {
+          "id": "b37",
+          "kind": "if",
+          "text": "Amtszeit der Anfrage < meine Amtszeit?",
+          "yes": {
+            "id": "r21",
+            "body": [
+              {
+                "id": "b38",
+                "kind": "process",
+                "text": "Antworten: fehlgeschlagen\n(mit meiner Amtszeit)"
+              }
+            ]
+          },
+          "no": {
+            "id": "r22",
+            "body": [
+              {
+                "id": "b39",
+                "kind": "if",
+                "text": "Amtszeit der Anfrage > meine Amtszeit\noder bin ich Kandidat?",
+                "yes": {
+                  "id": "r23",
+                  "body": [
+                    {
+                      "id": "b40",
+                      "kind": "call",
+                      "target": {
+                        "kind": "local",
+                        "diagram": "d10"
+                      },
+                      "args": "",
+                      "result": ""
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r24",
+                  "body": [
+                    {
+                      "id": "b41",
+                      "kind": "process",
+                      "text": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b42",
+                "kind": "process",
+                "text": "Wahl-Timer zurücksetzen"
+              },
+              {
+                "id": "b43",
+                "kind": "if",
+                "text": "Passen Index und Amtszeit des vorigen Eintrags zu meinem Log?",
+                "yes": {
+                  "id": "r25",
+                  "body": [
+                    {
+                      "id": "b44",
+                      "kind": "process",
+                      "text": "Meine Einträge ab dem ersten Konflikt löschen"
+                    },
+                    {
+                      "id": "b45",
+                      "kind": "process",
+                      "text": "Neue Einträge an das Log anhängen"
+                    },
+                    {
+                      "id": "b46",
+                      "kind": "if",
+                      "text": "Commit-Index des Leaders > meiner?",
+                      "yes": {
+                        "id": "r26",
+                        "body": [
+                          {
+                            "id": "b47",
+                            "kind": "process",
+                            "text": "Meinen Commit-Index erhöhen\n(auf den kleineren Wert von Commit-Index\ndes Leaders und meinem letzten Index)"
+                          },
+                          {
+                            "id": "b48",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d9"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r27",
+                        "body": [
+                          {
+                            "id": "b49",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "b50",
+                      "kind": "process",
+                      "text": "Antworten: erfolgreich"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r28",
+                  "body": [
+                    {
+                      "id": "b51",
+                      "kind": "process",
+                      "text": "Antworten: fehlgeschlagen"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d7",
+      "head": {
+        "kind": "event",
+        "text": "Wenn eine Log-Replikationsantwort eintrifft"
+      },
+      "body": [
+        {
+          "id": "b52",
+          "kind": "if",
+          "text": "Amtszeit der Antwort > meine Amtszeit?",
+          "yes": {
+            "id": "r29",
+            "body": [
+              {
+                "id": "b53",
+                "kind": "call",
+                "target": {
+                  "kind": "local",
+                  "diagram": "d10"
+                },
+                "args": "",
+                "result": ""
+              }
+            ]
+          },
+          "no": {
+            "id": "r30",
+            "body": [
+              {
+                "id": "b54",
+                "kind": "if",
+                "text": "Erfolgreich?",
+                "yes": {
+                  "id": "r31",
+                  "body": [
+                    {
+                      "id": "b55",
+                      "kind": "process",
+                      "text": "Match-Index und nächsten Index des Peers erhöhen"
+                    },
+                    {
+                      "id": "b56",
+                      "kind": "if",
+                      "text": "Hält eine Mehrheit einen noch nicht\nfestgeschriebenen Eintrag dieser Amtszeit?",
+                      "yes": {
+                        "id": "r32",
+                        "body": [
+                          {
+                            "id": "b57",
+                            "kind": "process",
+                            "text": "Commit-Index bis dorthin erhöhen"
+                          },
+                          {
+                            "id": "b58",
+                            "kind": "call",
+                            "target": {
+                              "kind": "local",
+                              "diagram": "d9"
+                            },
+                            "args": "",
+                            "result": ""
+                          }
+                        ]
+                      },
+                      "no": {
+                        "id": "r33",
+                        "body": [
+                          {
+                            "id": "b59",
+                            "kind": "process",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r34",
+                  "body": [
+                    {
+                      "id": "b60",
+                      "kind": "process",
+                      "text": "Nächsten Index des Peers um eins verringern\n(beim nächsten Heartbeat wird erneut gesendet)"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d8",
+      "head": {
+        "kind": "method",
+        "text": "Log an alle Peers senden"
+      },
+      "body": [
+        {
+          "id": "b61",
+          "kind": "while",
+          "text": "Solange noch ein Peer übrig ist",
+          "body": [
+            {
+              "id": "b62",
+              "kind": "process",
+              "text": "Einträge für diesen Peer auswählen\n(von seinem nächsten Index bis zum Ende,\nbeim Heartbeat keine)"
+            },
+            {
+              "id": "b63",
+              "kind": "process",
+              "text": "Log-Replikationsanfrage senden\n(Amtszeit, vorheriger Index und Amtszeit,\nEinträge, Commit-Index)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d9",
+      "head": {
+        "kind": "method",
+        "text": "Festgeschriebene Einträge auf die Zustandsmaschine anwenden"
+      },
+      "body": [
+        {
+          "id": "b64",
+          "kind": "while",
+          "text": "angewandter Index < Commit-Index",
+          "body": [
+            {
+              "id": "b65",
+              "kind": "process",
+              "text": "Angewandten Index um eins erhöhen"
+            },
+            {
+              "id": "b66",
+              "kind": "process",
+              "text": "Befehl dieses Eintrags auf die Zustandsmaschine anwenden"
+            },
+            {
+              "id": "b67",
+              "kind": "if",
+              "text": "Bin ich der Leader?",
+              "yes": {
+                "id": "r35",
+                "body": [
+                  {
+                    "id": "b68",
+                    "kind": "process",
+                    "text": "Dem Client mit dem Ergebnis antworten"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r36",
+                "body": [
+                  {
+                    "id": "b69",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d10",
+      "head": {
+        "kind": "method",
+        "text": "Zum Follower zurückstufen"
+      },
+      "body": [
+        {
+          "id": "b70",
+          "kind": "if",
+          "text": "Amtszeit der Gegenseite > meine Amtszeit?",
+          "yes": {
+            "id": "r37",
+            "body": [
+              {
+                "id": "b71",
+                "kind": "process",
+                "text": "Meine Amtszeit auf die der Gegenseite anheben"
+              },
+              {
+                "id": "b72",
+                "kind": "process",
+                "text": "Meine Stimme für diese Amtszeit löschen"
+              }
+            ]
+          },
+          "no": {
+            "id": "r38",
+            "body": [
+              {
+                "id": "b73",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b74",
+          "kind": "process",
+          "text": "Follower werden"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn der Wahl-Timer abläuft</tspan></text>
+<path d="M24 64 L447 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="423" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L76 112 L447 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="96" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Bin ich der Leader?</text>
+<text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="441" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="112" width="52" height="196" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="50" cy="210" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M45.5 214.5 L54.5 205.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="76" y="112" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="132" font-size="13" fill="#151a22" xml:space="preserve">Kandidat werden</text>
+<rect x="76" y="144" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="164" font-size="13" fill="#151a22" xml:space="preserve">Amtszeit um eins erhöhen</text>
+<rect x="76" y="176" width="371" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="196" font-size="13" fill="#151a22" xml:space="preserve">Für mich selbst stimmen</text>
+<text x="86" y="214" font-size="13" fill="#151a22" xml:space="preserve">(Stimmen = 1)</text>
+<rect x="76" y="226" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="246" font-size="13" fill="#151a22" xml:space="preserve">Wahl-Timer auf eine zufällige Zeit zurücksetzen</text>
+<rect x="76" y="258" width="371" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="86" y="278" font-size="13" fill="#151a22" xml:space="preserve">Wahlanfrage an alle Peers senden</text>
+<text x="86" y="296" font-size="13" fill="#151a22" xml:space="preserve">(Amtszeit, Index und Amtszeit meines letzten Eintrags)</text>
+<text x="24" y="364" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="381" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn eine Wahlanfrage eintrifft</tspan></text>
+<path d="M24 392 L852 392" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="392" width="828" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 392 L679 440 L852 392" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="679" y="410" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Anfrage &gt; meine Amtszeit?</text>
+<text x="30" y="435" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="846" y="435" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="440" width="655" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 440 L31 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M672 440 L672 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="460" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Zum Follower zurückstufen</tspan></text>
+<rect x="679" y="440" width="173" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="765.5" cy="456" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M761 460.5 L770 451.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="472" width="828" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 472 L174 520 L852 472" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="174" y="490" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Anfrage &lt; meine Amtszeit?</text>
+<text x="30" y="515" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="846" y="515" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="520" width="150" height="210" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="540" font-size="13" fill="#151a22" xml:space="preserve">Antworten: abgelehnt</text>
+<rect x="174" y="520" width="678" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M174 520 L702 586 L852 520" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="702" y="538" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">In dieser Amtszeit noch nicht gewählt</text>
+<text x="702" y="556" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">oder schon für diesen Kandidaten?</text>
+<text x="180" y="581" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="846" y="581" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="174" y="586" width="528" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M174 586 L552 634 L702 586" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="497" y="604" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Ist das Log des Kandidaten mindestens so aktuell wie meines?</text>
+<text x="180" y="629" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="696" y="629" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="174" y="634" width="378" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="184" y="654" font-size="13" fill="#151a22" xml:space="preserve">Vermerken, dass ich für diesen Kandidaten gestimmt habe</text>
+<rect x="174" y="666" width="378" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="184" y="686" font-size="13" fill="#151a22" xml:space="preserve">Wahl-Timer zurücksetzen</text>
+<rect x="174" y="698" width="378" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="184" y="718" font-size="13" fill="#151a22" xml:space="preserve">Antworten: Stimme erteilt</text>
+<rect x="552" y="634" width="150" height="96" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="562" y="654" font-size="13" fill="#151a22" xml:space="preserve">Antworten: abgelehnt</text>
+<rect x="702" y="586" width="150" height="144" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="712" y="606" font-size="13" fill="#151a22" xml:space="preserve">Antworten: abgelehnt</text>
+<text x="24" y="786" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="803" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn eine Wahlantwort eintrifft</tspan></text>
+<path d="M24 814 L573 814" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="814" width="549" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 814 L221 862 L573 814" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="221" y="832" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Antwort &gt; meine Amtszeit?</text>
+<text x="30" y="857" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="567" y="857" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="862" width="197" height="260" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 862 L31 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M214 862 L214 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="882" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Zum Follower zurückstufen</tspan></text>
+<rect x="221" y="862" width="352" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M221 862 L521 928 L573 862" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="468.5" y="880" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Noch Kandidat und eine Stimme</text>
+<text x="468.5" y="898" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">für mich in dieser Amtszeit?</text>
+<text x="227" y="923" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="567" y="923" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="221" y="928" width="300" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="231" y="948" font-size="13" fill="#151a22" xml:space="preserve">Stimmen um eins erhöhen</text>
+<rect x="221" y="960" width="300" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M221 960 L469 1008 L521 960" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="410" y="978" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Haben die Stimmen die Mehrheit?</text>
+<text x="227" y="1003" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="515" y="1003" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="221" y="1008" width="248" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="231" y="1028" font-size="13" fill="#151a22" xml:space="preserve">Leader werden</text>
+<rect x="221" y="1040" width="248" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="231" y="1060" font-size="13" fill="#151a22" xml:space="preserve">Nächsten Index jedes Peers</text>
+<text x="231" y="1078" font-size="13" fill="#151a22" xml:space="preserve">auf meinen letzten Index + 1 setzen</text>
+<rect x="221" y="1090" width="248" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M228 1090 L228 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M462 1090 L462 1122" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="238" y="1110" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Log an alle Peers senden</tspan></text>
+<rect x="469" y="1008" width="52" height="114" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="495" cy="1065" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M490.5 1069.5 L499.5 1060.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="521" y="928" width="52" height="194" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="547" cy="1025" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M542.5 1029.5 L551.5 1020.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="24" y="1178" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="1195" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn der Heartbeat-Timer abläuft</tspan></text>
+<path d="M24 1206 L266 1206" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="1206" width="242" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 1206 L214 1254 L266 1206" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="194" y="1224" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Bin ich der Leader?</text>
+<text x="30" y="1249" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="260" y="1249" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="1254" width="190" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 1254 L31 1286" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 1254 L207 1286" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="1274" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Log an alle Peers senden</tspan></text>
+<rect x="214" y="1254" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="240" cy="1270" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M235.5 1274.5 L244.5 1265.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="24" y="1342" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="1359" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn eine Client-Anfrage eintrifft</tspan></text>
+<path d="M24 1370 L610 1370" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="1370" width="586" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 1370 L304 1418 L610 1370" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="304" y="1388" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Bin ich der Leader?</text>
+<text x="30" y="1413" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="604" y="1413" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="1418" width="280" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1438" font-size="13" fill="#151a22" xml:space="preserve">Befehl als neuen Eintrag dieser Amtszeit</text>
+<text x="34" y="1456" font-size="13" fill="#151a22" xml:space="preserve">an das Log anhängen</text>
+<rect x="24" y="1468" width="280" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 1468 L31 1500" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M297 1468 L297 1500" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="1488" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Log an alle Peers senden</tspan></text>
+<rect x="304" y="1418" width="306" height="82" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="314" y="1438" font-size="13" fill="#151a22" xml:space="preserve">Dem Client die Adresse des Leaders mitteilen</text>
+<text x="896" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="896" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn eine Log-Replikationsanfrage eintrifft</tspan></text>
+<path d="M896 64 L1732 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="896" y="64" width="836" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M896 64 L1079 112 L1732 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1079" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Anfrage &lt; meine Amtszeit?</text>
+<text x="902" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1726" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="896" y="112" width="183" height="422" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="906" y="132" font-size="13" fill="#151a22" xml:space="preserve">Antworten: fehlgeschlagen</text>
+<text x="906" y="150" font-size="13" fill="#151a22" xml:space="preserve">(mit meiner Amtszeit)</text>
+<rect x="1079" y="112" width="653" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1079 112 L1596 178 L1732 112" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1596" y="130" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Anfrage &gt; meine Amtszeit</text>
+<text x="1596" y="148" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">oder bin ich Kandidat?</text>
+<text x="1085" y="173" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1726" y="173" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1079" y="178" width="517" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1086 178 L1086 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1589 178 L1589 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1096" y="198" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Zum Follower zurückstufen</tspan></text>
+<rect x="1596" y="178" width="136" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1664" cy="194" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1659.5 198.5 L1668.5 189.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1079" y="210" width="653" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1089" y="230" font-size="13" fill="#151a22" xml:space="preserve">Wahl-Timer zurücksetzen</text>
+<rect x="1079" y="242" width="653" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1079 242 L1549 290 L1732 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1523.5" y="260" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Passen Index und Amtszeit des vorigen Eintrags zu meinem Log?</text>
+<text x="1085" y="285" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1726" y="285" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1079" y="290" width="470" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1089" y="310" font-size="13" fill="#151a22" xml:space="preserve">Meine Einträge ab dem ersten Konflikt löschen</text>
+<rect x="1079" y="322" width="470" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1089" y="342" font-size="13" fill="#151a22" xml:space="preserve">Neue Einträge an das Log anhängen</text>
+<rect x="1079" y="354" width="470" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1079 354 L1497 402 L1549 354" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1428.5" y="372" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Commit-Index des Leaders &gt; meiner?</text>
+<text x="1085" y="397" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1543" y="397" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1079" y="402" width="418" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1089" y="422" font-size="13" fill="#151a22" xml:space="preserve">Meinen Commit-Index erhöhen</text>
+<text x="1089" y="440" font-size="13" fill="#151a22" xml:space="preserve">(auf den kleineren Wert von Commit-Index</text>
+<text x="1089" y="458" font-size="13" fill="#151a22" xml:space="preserve">des Leaders und meinem letzten Index)</text>
+<rect x="1079" y="470" width="418" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1086 470 L1086 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1490 470 L1490 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1096" y="490" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Festgeschriebene Einträge auf die Zustandsmaschine anwenden</tspan></text>
+<rect x="1497" y="402" width="52" height="100" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1523" cy="452" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1518.5 456.5 L1527.5 447.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1079" y="502" width="470" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1089" y="522" font-size="13" fill="#151a22" xml:space="preserve">Antworten: erfolgreich</text>
+<rect x="1549" y="290" width="183" height="244" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1559" y="310" font-size="13" fill="#151a22" xml:space="preserve">Antworten: fehlgeschlagen</text>
+<text x="896" y="590" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="896" y="607" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Wenn eine Log-Replikationsantwort eintrifft</tspan></text>
+<path d="M896 618 L1882 618" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="896" y="618" width="986" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M896 618 L1093 666 L1882 618" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1093" y="636" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Antwort &gt; meine Amtszeit?</text>
+<text x="902" y="661" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1876" y="661" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="896" y="666" width="197" height="210" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M903 666 L903 876" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1086 666 L1086 876" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="913" y="686" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Zum Follower zurückstufen</tspan></text>
+<rect x="1093" y="666" width="789" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1093 666 L1563 714 L1882 666" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1563" y="684" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Erfolgreich?</text>
+<text x="1099" y="709" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1876" y="709" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1093" y="714" width="470" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1103" y="734" font-size="13" fill="#151a22" xml:space="preserve">Match-Index und nächsten Index des Peers erhöhen</text>
+<rect x="1093" y="746" width="470" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1093 746 L1511 812 L1563 746" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1416.5" y="764" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Hält eine Mehrheit einen noch nicht</text>
+<text x="1416.5" y="782" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">festgeschriebenen Eintrag dieser Amtszeit?</text>
+<text x="1099" y="807" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1557" y="807" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1093" y="812" width="418" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1103" y="832" font-size="13" fill="#151a22" xml:space="preserve">Commit-Index bis dorthin erhöhen</text>
+<rect x="1093" y="844" width="418" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1100 844 L1100 876" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1504 844 L1504 876" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1110" y="864" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Festgeschriebene Einträge auf die Zustandsmaschine anwenden</tspan></text>
+<rect x="1511" y="812" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1537" cy="844" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1532.5 848.5 L1541.5 839.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1563" y="714" width="319" height="162" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1573" y="734" font-size="13" fill="#151a22" xml:space="preserve">Nächsten Index des Peers um eins verringern</text>
+<text x="1573" y="752" font-size="13" fill="#151a22" xml:space="preserve">(beim nächsten Heartbeat wird erneut gesendet)</text>
+<text x="1970" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1970" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Log an alle Peers senden</tspan></text>
+<path d="M1970 64 L2279 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1970" y="64" width="309" height="168" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1980" y="84" font-size="13" fill="#151a22" xml:space="preserve">Solange noch ein Peer übrig ist</text>
+<rect x="1992" y="96" width="287" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="2002" y="116" font-size="13" fill="#151a22" xml:space="preserve">Einträge für diesen Peer auswählen</text>
+<text x="2002" y="134" font-size="13" fill="#151a22" xml:space="preserve">(von seinem nächsten Index bis zum Ende,</text>
+<text x="2002" y="152" font-size="13" fill="#151a22" xml:space="preserve">beim Heartbeat keine)</text>
+<rect x="1992" y="164" width="287" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="2002" y="184" font-size="13" fill="#151a22" xml:space="preserve">Log-Replikationsanfrage senden</text>
+<text x="2002" y="202" font-size="13" fill="#151a22" xml:space="preserve">(Amtszeit, vorheriger Index und Amtszeit,</text>
+<text x="2002" y="220" font-size="13" fill="#151a22" xml:space="preserve">Einträge, Commit-Index)</text>
+<text x="1970" y="288" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1970" y="305" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Festgeschriebene Einträge auf die Zustandsmaschine anwenden</tspan></text>
+<path d="M1970 316 L2376 316" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1970" y="316" width="406" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1980" y="336" font-size="13" fill="#151a22" xml:space="preserve">angewandter Index &lt; Commit-Index</text>
+<rect x="1992" y="348" width="384" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="2002" y="368" font-size="13" fill="#151a22" xml:space="preserve">Angewandten Index um eins erhöhen</text>
+<rect x="1992" y="380" width="384" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="2002" y="400" font-size="13" fill="#151a22" xml:space="preserve">Befehl dieses Eintrags auf die Zustandsmaschine anwenden</text>
+<rect x="1992" y="412" width="384" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1992 412 L2312 460 L2376 412" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="2304" y="430" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Bin ich der Leader?</text>
+<text x="1998" y="455" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="2370" y="455" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1992" y="460" width="320" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="2002" y="480" font-size="13" fill="#151a22" xml:space="preserve">Dem Client mit dem Ergebnis antworten</text>
+<rect x="2312" y="460" width="64" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="2344" cy="476" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M2339.5 480.5 L2348.5 471.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<text x="1970" y="548" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1970" y="565" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">Zum Follower zurückstufen</tspan></text>
+<path d="M1970 576 L2335 576" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1970" y="576" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1970 576 L2283 624 L2335 576" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="2191.5" y="594" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">Amtszeit der Gegenseite &gt; meine Amtszeit?</text>
+<text x="1976" y="619" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="2329" y="619" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1970" y="624" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1980" y="644" font-size="13" fill="#151a22" xml:space="preserve">Meine Amtszeit auf die der Gegenseite anheben</text>
+<rect x="1970" y="656" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1980" y="676" font-size="13" fill="#151a22" xml:space="preserve">Meine Stimme für diese Amtszeit löschen</text>
+<rect x="2283" y="624" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="2309" cy="656" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M2304.5 660.5 L2313.5 651.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1970" y="688" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1980" y="708" font-size="13" fill="#151a22" xml:space="preserve">Follower werden</text>
+</g>
+</svg>

@@ -1,0 +1,268 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="689" height="520" viewBox="0 0 689 520">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="f20df3d3efddbf9e2610cb0378bae2aa2fd5bab0588ca88d62748c023ed44e38"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "maze = read_maze()"
+        },
+        {
+          "id": "b2",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "maze, maze.entrance",
+          "result": "found"
+        },
+        {
+          "id": "b3",
+          "kind": "if",
+          "text": "found",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": "draw_thread(path)"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b5",
+                "kind": "process",
+                "text": "print(\"kein Ausweg\")"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "solve(maze, p)"
+      },
+      "body": [
+        {
+          "id": "b6",
+          "kind": "if",
+          "text": "p == maze.exit",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "exit",
+                "text": "return True"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b8",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b9",
+          "kind": "if",
+          "text": "maze.wall(p) or p in visited",
+          "yes": {
+            "id": "r5",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "exit",
+                "text": "return False"
+              }
+            ]
+          },
+          "no": {
+            "id": "r6",
+            "body": [
+              {
+                "id": "b11",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "visited.add(p)"
+        },
+        {
+          "id": "b13",
+          "kind": "process",
+          "text": "path.append(p)    # Faden abwickeln"
+        },
+        {
+          "id": "b14",
+          "kind": "while",
+          "text": "for d in (N, E, S, W)",
+          "body": [
+            {
+              "id": "b15",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "maze, p + d",
+              "result": "ok"
+            },
+            {
+              "id": "b16",
+              "kind": "if",
+              "text": "ok",
+              "yes": {
+                "id": "r7",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "exit",
+                    "text": "return True"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r8",
+                "body": [
+                  {
+                    "id": "b18",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b19",
+          "kind": "process",
+          "text": "path.pop()        # Faden aufwickeln"
+        },
+        {
+          "id": "b20",
+          "kind": "process",
+          "text": "return False"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L305 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="281" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">maze = read_maze()</text>
+<rect x="24" y="96" width="281" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 96 L31 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M298 96 L298 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="116" font-size="13" fill="#151a22" xml:space="preserve">found ← <tspan font-weight="600">solve</tspan>(maze, maze.entrance)</text>
+<rect x="24" y="128" width="281" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 128 L155 176 L305 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="155" y="146" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">found</text>
+<text x="30" y="171" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="299" y="171" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="176" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="196" font-size="13" fill="#151a22" xml:space="preserve">draw_thread(path)</text>
+<rect x="155" y="176" width="150" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="165" y="196" font-size="13" fill="#151a22" xml:space="preserve">print("kein Ausweg")</text>
+<text x="393" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="393" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">solve(maze, p)</tspan></text>
+<path d="M393 64 L665 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="393" y="64" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M393 64 L575 112 L665 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="575" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">p == maze.exit</text>
+<text x="399" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="659" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="393" y="112" width="182" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M407 112 L393 128 L407 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="417" y="132" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="575" y="112" width="90" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="620" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M615.5 132.5 L624.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="393" y="144" width="272" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M393 144 L579 192 L665 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="564" y="162" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">maze.wall(p) or p in visited</text>
+<text x="399" y="187" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="659" y="187" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="393" y="192" width="186" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M407 192 L393 208 L407 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="417" y="212" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+<rect x="579" y="192" width="86" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="622" cy="208" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M617.5 212.5 L626.5 203.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="393" y="224" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="403" y="244" font-size="13" fill="#151a22" xml:space="preserve">visited.add(p)</text>
+<rect x="393" y="256" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="403" y="276" font-size="13" fill="#151a22" xml:space="preserve">path.append(p)    # Faden abwickeln</text>
+<rect x="393" y="288" width="272" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="403" y="308" font-size="13" fill="#151a22" xml:space="preserve">for d in (N, E, S, W)</text>
+<rect x="415" y="320" width="250" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M422 320 L422 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M658 320 L658 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="432" y="340" font-size="13" fill="#151a22" xml:space="preserve">ok ← <tspan font-weight="600">solve</tspan>(maze, p + d)</text>
+<rect x="415" y="352" width="250" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M415 352 L583 400 L665 352" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="583" y="370" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">ok</text>
+<text x="421" y="395" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="659" y="395" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="415" y="400" width="168" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M429 400 L415 416 L429 432" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="439" y="420" font-size="13" fill="#151a22" xml:space="preserve">return True</text>
+<rect x="583" y="400" width="82" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="624" cy="416" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M619.5 420.5 L628.5 411.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="393" y="432" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="403" y="452" font-size="13" fill="#151a22" xml:space="preserve">path.pop()        # Faden aufwickeln</text>
+<rect x="393" y="464" width="272" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="403" y="484" font-size="13" fill="#151a22" xml:space="preserve">return False</text>
+</g>
+</svg>

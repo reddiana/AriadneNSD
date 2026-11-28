@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="318" height="504" viewBox="0 0 318 504">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="b5815be6e1821da85a192fd17c36cb7dae87e5ac8d1b882394730cb5cb19bf82"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "merge_sort(a, lo, hi)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "if",
+          "text": "hi - lo < 2",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b2",
+                "kind": "exit",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b3",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "mid = (lo + hi) >> 1"
+        },
+        {
+          "id": "b5",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d1"
+          },
+          "args": "a, lo, mid",
+          "result": ""
+        },
+        {
+          "id": "b6",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d1"
+          },
+          "args": "a, mid, hi",
+          "result": ""
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "i, j, tmp = lo, mid, []"
+        },
+        {
+          "id": "b8",
+          "kind": "while",
+          "text": "i < mid and j < hi",
+          "body": [
+            {
+              "id": "b9",
+              "kind": "if",
+              "text": "a[i] <= a[j]",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "process",
+                    "text": "tmp.append(a[i])"
+                  },
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "i += 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": "tmp.append(a[j])"
+                  },
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": "j += 1"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "tmp += a[i:mid] + a[j:hi]"
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "a[lo:hi] = tmp"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAAAyYAAsAAAAAEiwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAE8AAABgavRtJGNtYXAAAAFYAAAAdwAAAKQCyAO1Z2FzcAAAAdAAAAAQAAAAEAAXAAlnbHlmAAAB4AAABzEAAAmKR4RXXmhlYWQAAAkUAAAANgAAADY67EFKaGhlYQAACUwAAAAfAAAAJAblAr9obXR4AAAJbAAAAEQAAABGBncEOGxvY2EAAAmwAAAARgAAAEYkRiHUbWF4cAAACfgAAAAcAAAAIABMAYBuYW1lAAAKFAAAAmwAAAWisvBt9nBvc3QAAAyAAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgYGEIaDIM8INwYHBgWGUuag/1kMC5jbgWo4IGqY+Ji2ASkFBkYApT4P5AB42mNgYGACYmYgFgGSjGCahWECkFYAQhYwrcmgx2DEYMVgx+DLEM0QyxDPkMiQypDFUMBQ+v8/WIUGgzaDIVCFDZKKFIZ0hhyGov///z/8f+v/zf/X/1/4f/7/wf9b/m/+v+n/xv/r/6/7v/b/GrCdeAEAX58oZQAAAAADAAgAAgAQAAH//wADeNptVm1sG2cdf/53i90kjp2zfT6/xC/ni31+SZzE57tzOtuNEzt2Xmy3qds1XQlz35KwCkHVrohN69oOEB+QkOAD8IVJSBSJjYAWWtGiCaGuS+kkJjZa4BMMiUmIDyChCm3Nhf9jO1PG+HC+5+Tnfv+X3+/3v4cAubzzHPyE+YgIhDicAUbgpRSrZgqMrvBW9o9+raFU1KM5UcwdVStKQ/NDPv/ixdVo3/CZS9dK01cunBrui54+/zwizSLSxQ4SZFKMrCoBlndaGbOkFljw/V+o58+fRqhTF65Ml65dOoNQqxdfxNeJSKbhXcZD+jErVeEVXuIlVVJ/P7+5Ob8JR+7cqd6/X8V9x3cuQZX8jLgIEdIFRs1E5WhUzWhK2kVDS8dDelzwDPTbQ2FJjRbq8jG7P+IUnL37nHZXfDKXrKp+Gi8PA3ATlgmLD7yowk3jq7C8uIj/XCcBmCG3aCZ6F9ckhaPXU6FQil7nOrcURTlCBuFt5gax415V4SQri7Vrmq5wCv/Fr8FAJJ7gLGPLnqMvDc4xpn63y2med2Y82z+Yo29P4du/Yt4kmJAD3+qWYDaLmJBeQFKiUthkLorLytNfcAQT7u+D13jptjvisx7IhBvjzPSCIC4fjx7Ynw3crVQ+CKQn1JCm+EKEMOQ14ocpeIxVIDt76+D2rF9LBIPJZDCY2L2f7T7Cs90FZpnZ+QgeMmViJqRHAlB4AHi4ZrwJ6lnjAaR7YAI8FuPfxp8w6jDZgHdgA7uKu2lfe2hv3zGa8CpeG6XSL0slWrmEmL/uYOoAqgIgDcOo8buzMGn8Zs0MUbBYjA+M39K9buzSHzo9BlZiZZ6VHIpD0PFHYlU4V5+v9XFN38pKX1/rGWfTCobxH+jNyduPmR8av9A0qGwfZ1gZka7ufBleYR51cpOQIpGDV7a2jPeZR8VtU5F9Afc0cc/57h5OpJyqcN54f2uLefT45SLzYRH3JFD393Zep9pp13fPaNXyedr1UcLCTxkvsZA4IRHVbDLxTpeCOo10+eUkWTLR1qNkdb3LMLS+NKHEE0PpiMv4Z+yQcuzpOssItdTckfn6dyaUxKL8cNJpHhmNJd1y5i91t7D2GeP2TCJaK5cbAx7rAVXwY+wUxt5kHpBBGpv6EaG70VU27RJQkzS6lZXCKfRNgYFWnzcppvNK1p0IOq7IFTscPsSCySfF7Ho5ZrPHS1AY0pLez66tn+BlTYRcRIQntvdnbV57X2qhlRldWRzHyAmMfAe9ayIRVLKiYlFmPR1geF7kccIoaTQET6vuxL32d/PpZ51XJ+ZSgvGGVdTikVrYEl7Qckd1r1dbgoPsta9shfPNiUhPrJwJeLwNwSVXT+XyJ0sRWufOKtbpJU6yf7dOK9OJ065UU1WT2dQJpWtYN7qRToZwtD2goGXzJ4f4aIAzueLD4VFv/9erMyNL2Urc5hwpp6MFJ2NquJRmfvigz9IbkKLwpJiNC1x8ZiIwpYUDyRRn/PzUSl+VZeSZE5nMsWIUICxNGpemPzcfc3CLZptl3667byAf6L+IxFGmMU0OZcdRKWB34MbhWMadDNoPH+YqoxN5aWAQMoemPCOFiPFX5q7xKDQSmqyPUV1RrDeYbdJLeKpLVG5bmXt9DalvGle/+9xTMZ8vRi/GalTKZbhQ/vFQLDaEF8XJ75yDg4jD0ZkjuFAcKsJgfyiCrDr24M1xSXft8ntLs96c8xu7oNleSwPeKm//ozo7YJti/rULDeQ0Zngbqx2g+aHqcICjyKl7or0Dl78nxz7PPNj+dn9feTzETJRpf4bavvaRJD50GoLN2aXzk0tFaLsHeE8pKAu9NXaftd/ls/XUcWFx+gbNtSpjTQuJCLzVdI3NK8ZNWIykhyxCXAsY93A97u/3xLUh4z4YWkiKfMyO+9PstEN9gp3aE9zc/9IDRimU2mWHOu8u6t9BgjjPuipvg6DuZBRk2+boxQ9zjTG7Y6ye298Yc9J7UdeL05rGJqqtbLZVTSSqJ3W9NZcora88s7baWlmn3O+cRXRfx9d6x09tREzYgazhhxKzVgrsbsRv9QoJMT2tZd3xgP0Febpja7NPjNr12figY6T8572uNu5ExL8xP2qbemShpY2tLGBVQFaxQ+9hVfildQgU3YVHhWgnLoZ83WTyxdWQWPRahKnQsC47m4z1jD0m8oPcko0PqqXINhiI8yR25xbmj6A6VRxN/uNvdvv00W4OnkQ6p4e2EivJp0RlplibLp84Eq1LlgFJljl5zCZmhr2ZuCecXYilmuNXh3yS7EqL/rI6Ncs55ntt/aZggPO63bZ+3/B4MJaVBu1Dh2g1JWKCDeZWm+/2LGqLU1F1etTgnHRGwYYz551dWl9vXr9edye5k1O2gdkqqOWXY6+WjXcbll7EKSDOJmNtn57QN53x2p6s3QFX+JRs0Ilvd3QDfoPZ1c1/Afk83B0AAAAAAQAAAAEKPZT6hW1fDzz1IAsD6AAAAADRpuWtAAAAAObmDen/gf8JA78DiQAAAAgAAgAAAAAAAHjaY2BkYGAO+i/FEMD84n/j/93M+0EiKIARAKIKBqkAeNpj/MIAAvUMbgyKDFEMtgzLGUIZHBjWMpgwqDAoM0gwNDGEMGgx6DLoAUk9oIwDUE0KgwyQBvHSGawZXBjsAG6WCbEAAAAAAAAAJQBLAF8AgwCQAKYAxQDzARgBLgFCAVgBfQGPAaEBrgHsAikCYAK0AtoC/gMrA0QDgwOpA9gEFAQ4BHsEnwTFAAB42mNgZGBgUGL4wiDF0MXAA+YhADMDIwAqUAHNeNqdU0tuE0EQffaYTwJEKFJ2EWpFLEAKQ2wgi2QVMChGCUE4QgGxmfiHFce2xh4CC7YsOAFX4ARIwAI2hhNwCA7AigXv1fSQD5YgqDUzr6urq169qgFwHiMEyBUmiN8X5jzO4UKh4HEeU8EPjwN0gtceFxAGTzw+gaUgu3sS8/nM/xT6+Vcen8Zcvu7xBB7nJz2exChX9vgMSrlpj8/iEr57fA5v8MDjKSxi1vA048wCH2dGb9+9xDLcl4tfZ75tGRp++vzhJ9FTDLn6GGAJV7l6xA100STq8qSDNmpmGfAd0hqjhU3ea9PicMf7OVSJmkR7iOjToCX1OByhTktCXCeOiYeMJN8qKljjd8PnPxh57VCEeVoe2u0B7fJxKJKZnqyatJashph+z3la4z7EDvdHq96zFdI7wjOLLd+YHumtXfJLsG35xUiVOpRRwi3iOuN3qYpjDxr8JqxZGjh2aJVIDNtWcY+nMS19MpA20mmXVuWsW2Vd7pypK+Zp3H274r4gSoxFk7ciosTiDHDZbOLtsGJVR4za5dk98i+zlkemSAtXyDSiEg73jemOZgJ3jWF6vmp9FHPdkVUeVbPpfN24qTcNrmVmWGFXbjOuM02knd7il3bpT7XS+Yi8Di3bD039dE7UOVUgjVKWmfJ/zxaOVWDdznpW/8FOjZun63wWrOqb9GvTU5xKtJX4hxX5XcC1sVnc7zxHJ+J43sr9/8yOk1ka9jlZ8mnZ36HZrdlEKW4RN6hZihb/UX/NYIdL3c2iZjOv/yj2Uy/P/X9d3Va1LeOpurbJSx4bzLrJjBVscV/heQ3hL6Ao6iF42mNgZgCD/xUMVkCKEcJDAAAoAAG2AAA=); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort(a, lo, hi)</tspan></text>
+<path d="M24 64 L294 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="270" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L182 112 L294 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="182" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">hi - lo &lt; 2</text>
+<text x="30" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="288" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="112" width="158" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 112 L24 128 L38 144" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="132" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="182" y="112" width="112" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="238" cy="128" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M233.5 132.5 L242.5 123.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="144" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="164" font-size="13" fill="#151a22" xml:space="preserve">mid = (lo + hi) &gt;&gt; 1</text>
+<rect x="24" y="176" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 176 L31 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M287 176 L287 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, lo, mid)</text>
+<rect x="24" y="208" width="270" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 208 L31 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M287 208 L287 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="228" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">merge_sort</tspan>(a, mid, hi)</text>
+<rect x="24" y="240" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="260" font-size="13" fill="#151a22" xml:space="preserve">i, j, tmp = lo, mid, []</text>
+<rect x="24" y="272" width="270" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="292" font-size="13" fill="#151a22" xml:space="preserve">i &lt; mid and j &lt; hi</text>
+<rect x="46" y="304" width="248" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 304 L170 352 L294 304" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="170" y="322" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i] &lt;= a[j]</text>
+<text x="52" y="347" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="288" y="347" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="352" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="372" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[i])</text>
+<rect x="46" y="384" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="404" font-size="13" fill="#151a22" xml:space="preserve">i += 1</text>
+<rect x="170" y="352" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="180" y="372" font-size="13" fill="#151a22" xml:space="preserve">tmp.append(a[j])</text>
+<rect x="170" y="384" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="180" y="404" font-size="13" fill="#151a22" xml:space="preserve">j += 1</text>
+<rect x="24" y="416" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="436" font-size="13" fill="#151a22" xml:space="preserve">tmp += a[i:mid] + a[j:hi]</text>
+<rect x="24" y="448" width="270" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="468" font-size="13" fill="#151a22" xml:space="preserve">a[lo:hi] = tmp</text>
+</g>
+</svg>

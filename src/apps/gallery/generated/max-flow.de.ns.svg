@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="938" height="698" viewBox="0 0 938 698">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="5426d1e59b887a1b11580439f1423324e8a018a7b78f5fb0b38970031405041d"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "max_flow(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "flow = 0    # cap[u][v]: Restkapazität, Rückwärtskanten eingeschlossen"
+        },
+        {
+          "id": "b2",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "cap, s, t",
+              "result": "parent"
+            },
+            {
+              "id": "b4",
+              "kind": "if",
+              "text": "t not in parent",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b5",
+                    "kind": "exit",
+                    "text": "return flow    # kein augmentierender Pfad"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b7",
+              "kind": "process",
+              "text": "b, v = INF, t"
+            },
+            {
+              "id": "b8",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b9",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b10",
+                  "kind": "process",
+                  "text": "b = min(b, cap[u][v])"
+                },
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b12",
+              "kind": "process",
+              "text": "v = t"
+            },
+            {
+              "id": "b13",
+              "kind": "while",
+              "text": "v != s",
+              "body": [
+                {
+                  "id": "b14",
+                  "kind": "process",
+                  "text": "u = parent[v]"
+                },
+                {
+                  "id": "b15",
+                  "kind": "process",
+                  "text": "cap[u][v] -= b"
+                },
+                {
+                  "id": "b16",
+                  "kind": "process",
+                  "text": "cap[v][u] += b    # damit er sich zurücknehmen lässt"
+                },
+                {
+                  "id": "b17",
+                  "kind": "process",
+                  "text": "v = u"
+                }
+              ]
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "flow += b"
+            }
+          ],
+          "folds": [
+            {
+              "id": "f1",
+              "first": "b7",
+              "last": "b8",
+              "name": "Engpass finden"
+            },
+            {
+              "id": "f2",
+              "first": "b12",
+              "last": "b13",
+              "name": "Fluss entlang des Pfads schicken"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "bfs_path(cap, s, t)"
+      },
+      "body": [
+        {
+          "id": "b19",
+          "kind": "process",
+          "text": "parent = {s: s}    # der Pfad mit den wenigsten Kanten"
+        },
+        {
+          "id": "b20",
+          "kind": "process",
+          "text": "q = deque([s])"
+        },
+        {
+          "id": "b21",
+          "kind": "while",
+          "text": "q and t not in parent",
+          "body": [
+            {
+              "id": "b22",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b23",
+              "kind": "for",
+              "text": "for v in cap[u]",
+              "body": [
+                {
+                  "id": "b24",
+                  "kind": "if",
+                  "text": "v not in parent and cap[u][v] > 0",
+                  "yes": {
+                    "id": "r3",
+                    "body": [
+                      {
+                        "id": "b25",
+                        "kind": "process",
+                        "text": "parent[v] = u"
+                      },
+                      {
+                        "id": "b26",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b27",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b28",
+          "kind": "process",
+          "text": "return parent"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">max_flow(cap, s, t)</tspan></text>
+<path d="M24 64 L499 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="475" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">flow = 0    # cap[u][v]: Restkapazität, Rückwärtskanten eingeschlossen</text>
+<rect x="24" y="96" width="475" height="578" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="46" y="118" width="453" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 118 L53 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M492 118 L492 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="138" font-size="13" fill="#151a22" xml:space="preserve">parent ← <tspan font-weight="600">bfs_path</tspan>(cap, s, t)</text>
+<rect x="46" y="150" width="453" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 150 L433 198 L499 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="433" y="168" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">t not in parent</text>
+<text x="52" y="193" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="493" y="193" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="198" width="387" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 198 L46 214 L60 230" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="218" font-size="13" fill="#151a22" xml:space="preserve">return flow    # kein augmentierender Pfad</text>
+<rect x="433" y="198" width="66" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="466" cy="214" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M461.5 218.5 L470.5 209.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="248" width="453" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="268" font-size="13" fill="#151a22" xml:space="preserve">b, v = INF, t</text>
+<rect x="46" y="280" width="453" height="128" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="300" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="312" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="332" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="344" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="364" font-size="13" fill="#151a22" xml:space="preserve">b = min(b, cap[u][v])</text>
+<rect x="68" y="376" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="396" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="230" width="453" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="243" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Engpass finden</tspan></text>
+<rect x="47" y="231" width="451" height="176" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="428" width="453" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="448" font-size="13" fill="#151a22" xml:space="preserve">v = t</text>
+<rect x="46" y="460" width="453" height="160" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="480" font-size="13" fill="#151a22" xml:space="preserve">v != s</text>
+<rect x="68" y="492" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="512" font-size="13" fill="#151a22" xml:space="preserve">u = parent[v]</text>
+<rect x="68" y="524" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="544" font-size="13" fill="#151a22" xml:space="preserve">cap[u][v] -= b</text>
+<rect x="68" y="556" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="576" font-size="13" fill="#151a22" xml:space="preserve">cap[v][u] += b    # damit er sich zurücknehmen lässt</text>
+<rect x="68" y="588" width="431" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="608" font-size="13" fill="#151a22" xml:space="preserve">v = u</text>
+<rect x="46" y="410" width="453" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="66" y="423" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Fluss entlang des Pfads schicken</tspan></text>
+<rect x="47" y="411" width="451" height="208" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="46" y="620" width="453" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="640" font-size="13" fill="#151a22" xml:space="preserve">flow += b</text>
+<text x="543" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="543" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">bfs_path(cap, s, t)</tspan></text>
+<path d="M543 64 L914 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="543" y="64" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="553" y="84" font-size="13" fill="#151a22" xml:space="preserve">parent = {s: s}    # der Pfad mit den wenigsten Kanten</text>
+<rect x="543" y="96" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="553" y="116" font-size="13" fill="#151a22" xml:space="preserve">q = deque([s])</text>
+<rect x="543" y="128" width="371" height="208" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="553" y="148" font-size="13" fill="#151a22" xml:space="preserve">q and t not in parent</text>
+<rect x="565" y="160" width="349" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="575" y="180" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="565" y="192" width="349" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="575" y="212" font-size="13" fill="#151a22" xml:space="preserve">for v in cap[u]</text>
+<rect x="587" y="224" width="327" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M587 224 L806 272 L914 224" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="796.5" y="242" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">v not in parent and cap[u][v] &gt; 0</text>
+<text x="593" y="267" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="908" y="267" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="587" y="272" width="219" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="597" y="292" font-size="13" fill="#151a22" xml:space="preserve">parent[v] = u</text>
+<rect x="587" y="304" width="219" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="597" y="324" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="806" y="272" width="108" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="860" cy="304" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M855.5 308.5 L864.5 299.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="543" y="336" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="553" y="356" font-size="13" fill="#151a22" xml:space="preserve">return parent</text>
+</g>
+</svg>

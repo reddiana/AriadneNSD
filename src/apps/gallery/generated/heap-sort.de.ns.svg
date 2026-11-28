@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="815" height="500" viewBox="0 0 815 500">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="57821b3ef7d93b61886e2f5a71fb56055a0cce9cc0d7b38f2486a97342b035e3"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "heap_sort(a)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(a)"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for i in range(n // 2 - 1, -1, -1)",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, i, n",
+              "result": ""
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "for",
+          "text": "for end in range(n - 1, 0, -1)",
+          "body": [
+            {
+              "id": "b5",
+              "kind": "process",
+              "text": "a[0], a[end] = a[end], a[0]    # das größte nach hinten"
+            },
+            {
+              "id": "b6",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "a, 0, end",
+              "result": ""
+            }
+          ]
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b2",
+          "last": "b2",
+          "name": "Max-Heap aufbauen"
+        },
+        {
+          "id": "f2",
+          "first": "b4",
+          "last": "b4",
+          "name": "Einzeln entnehmen"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "sift_down(a, i, n)"
+      },
+      "body": [
+        {
+          "id": "b7",
+          "kind": "endless",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "largest = i"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "l, r = 2 * i + 1, 2 * i + 2"
+            },
+            {
+              "id": "b10",
+              "kind": "if",
+              "text": "l < n and a[l] > a[largest]",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "largest = l"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "if",
+              "text": "r < n and a[r] > a[largest]",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "process",
+                    "text": "largest = r"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b16",
+              "kind": "if",
+              "text": "largest == i",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "exit",
+                    "text": "return    # Heap-Eigenschaft gilt"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b18",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b19",
+              "kind": "process",
+              "text": "a[i], a[largest] = a[largest], a[i]"
+            },
+            {
+              "id": "b20",
+              "kind": "process",
+              "text": "i = largest"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">heap_sort(a)</tspan></text>
+<path d="M24 64 L424 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="400" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(a)</text>
+<rect x="24" y="114" width="400" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n // 2 - 1, -1, -1)</text>
+<rect x="46" y="146" width="378" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 146 L53 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M417 146 L417 178" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="166" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, i, n)</text>
+<rect x="24" y="96" width="400" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="109" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Max-Heap aufbauen</tspan></text>
+<rect x="25" y="97" width="398" height="80" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="198" width="400" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="218" font-size="13" fill="#151a22" xml:space="preserve">for end in range(n - 1, 0, -1)</text>
+<rect x="46" y="230" width="378" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="250" font-size="13" fill="#151a22" xml:space="preserve">a[0], a[end] = a[end], a[0]    # das größte nach hinten</text>
+<rect x="46" y="262" width="378" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 262 L53 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M417 262 L417 294" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="282" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down</tspan>(a, 0, end)</text>
+<rect x="24" y="180" width="400" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="193" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Einzeln entnehmen</tspan></text>
+<rect x="25" y="181" width="398" height="112" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<text x="468" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="468" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">sift_down(a, i, n)</tspan></text>
+<path d="M468 64 L791 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="468" y="64" width="323" height="412" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<rect x="490" y="86" width="301" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="106" font-size="13" fill="#151a22" xml:space="preserve">largest = i</text>
+<rect x="490" y="118" width="301" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="138" font-size="13" fill="#151a22" xml:space="preserve">l, r = 2 * i + 1, 2 * i + 2</text>
+<rect x="490" y="150" width="301" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M490 150 L682 198 L791 150" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="682" y="168" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">l &lt; n and a[l] &gt; a[largest]</text>
+<text x="496" y="193" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="785" y="193" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="490" y="198" width="192" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="218" font-size="13" fill="#151a22" xml:space="preserve">largest = l</text>
+<rect x="682" y="198" width="109" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="736.5" cy="214" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M732 218.5 L741 209.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="490" y="230" width="301" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M490 230 L682 278 L791 230" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="682" y="248" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">r &lt; n and a[r] &gt; a[largest]</text>
+<text x="496" y="273" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="785" y="273" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="490" y="278" width="192" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="298" font-size="13" fill="#151a22" xml:space="preserve">largest = r</text>
+<rect x="682" y="278" width="109" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="736.5" cy="294" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M732 298.5 L741 289.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="490" y="310" width="301" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M490 310 L739 358 L791 310" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="739" y="328" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">largest == i</text>
+<text x="496" y="353" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="785" y="353" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="490" y="358" width="249" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M504 358 L490 374 L504 390" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="514" y="378" font-size="13" fill="#151a22" xml:space="preserve">return    # Heap-Eigenschaft gilt</text>
+<rect x="739" y="358" width="52" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="765" cy="374" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M760.5 378.5 L769.5 369.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="490" y="390" width="301" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="410" font-size="13" fill="#151a22" xml:space="preserve">a[i], a[largest] = a[largest], a[i]</text>
+<rect x="490" y="422" width="301" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="500" y="442" font-size="13" fill="#151a22" xml:space="preserve">i = largest</text>
+</g>
+</svg>

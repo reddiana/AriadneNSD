@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="848" height="472" viewBox="0 0 848 472">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="0f844e2cf47d307be1a5284f809d332deb8dc0c0a020ffd23c65b18a7fbf1502"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "event",
+        "text": "main()"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = 8"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "board, solutions = [], []"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "cols, diag1, diag2 = set(), set(), set()"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "0",
+          "result": ""
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "print(len(solutions))    # 92 Lösungen"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "place(row)"
+      },
+      "body": [
+        {
+          "id": "b6",
+          "kind": "if",
+          "text": "row == n",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": "solutions.append(board[:])    # alle Damen gesetzt"
+              },
+              {
+                "id": "b8",
+                "kind": "exit",
+                "text": "return"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b9",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b10",
+          "kind": "for",
+          "text": "for c in range(n)",
+          "body": [
+            {
+              "id": "b11",
+              "kind": "if",
+              "text": "c in cols or row - c in diag1 or row + c in diag2",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b12",
+                    "kind": "exit",
+                    "text": "continue    # bedrohtes Feld"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b14",
+              "kind": "process",
+              "text": "board.append(c)    # hier versuchen"
+            },
+            {
+              "id": "b15",
+              "kind": "process",
+              "text": "cols.add(c); diag1.add(row - c); diag2.add(row + c)"
+            },
+            {
+              "id": "b16",
+              "kind": "call",
+              "target": {
+                "kind": "local",
+                "diagram": "d2"
+              },
+              "args": "row + 1",
+              "result": ""
+            },
+            {
+              "id": "b17",
+              "kind": "process",
+              "text": "board.pop()    # zurücknehmen"
+            },
+            {
+              "id": "b18",
+              "kind": "process",
+              "text": "cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Event</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">main()</tspan></text>
+<path d="M24 64 L304 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = 8</text>
+<rect x="24" y="96" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">board, solutions = [], []</text>
+<rect x="24" y="128" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve">cols, diag1, diag2 = set(), set(), set()</text>
+<rect x="24" y="160" width="280" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 160 L31 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M297 160 L297 192" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(0)</text>
+<rect x="24" y="192" width="280" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="212" font-size="13" fill="#151a22" xml:space="preserve">print(len(solutions))    # 92 Lösungen</text>
+<text x="392" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="392" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place(row)</tspan></text>
+<path d="M392 64 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="392" y="64" width="432" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M392 64 L767 112 L824 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="767" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">row == n</text>
+<text x="398" y="107" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="818" y="107" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="392" y="112" width="375" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="132" font-size="13" fill="#151a22" xml:space="preserve">solutions.append(board[:])    # alle Damen gesetzt</text>
+<rect x="392" y="144" width="375" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M406 144 L392 160 L406 176" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="416" y="164" font-size="13" fill="#151a22" xml:space="preserve">return</text>
+<rect x="767" y="112" width="57" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="795.5" cy="144" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M791 148.5 L800 139.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="392" y="176" width="432" height="272" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="402" y="196" font-size="13" fill="#151a22" xml:space="preserve">for c in range(n)</text>
+<rect x="414" y="208" width="410" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M414 208 L744 256 L824 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="654.5" y="226" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">c in cols or row - c in diag1 or row + c in diag2</text>
+<text x="420" y="251" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="818" y="251" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="414" y="256" width="330" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M428 256 L414 272 L428 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="438" y="276" font-size="13" fill="#151a22" xml:space="preserve">continue    # bedrohtes Feld</text>
+<rect x="744" y="256" width="80" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="784" cy="272" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M779.5 276.5 L788.5 267.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="414" y="288" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="308" font-size="13" fill="#151a22" xml:space="preserve">board.append(c)    # hier versuchen</text>
+<rect x="414" y="320" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="340" font-size="13" fill="#151a22" xml:space="preserve">cols.add(c); diag1.add(row - c); diag2.add(row + c)</text>
+<rect x="414" y="352" width="410" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M421 352 L421 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M817 352 L817 384" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="431" y="372" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">place</tspan>(row + 1)</text>
+<rect x="414" y="384" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="404" font-size="13" fill="#151a22" xml:space="preserve">board.pop()    # zurücknehmen</text>
+<rect x="414" y="416" width="410" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="424" y="436" font-size="13" fill="#151a22" xml:space="preserve">cols.remove(c); diag1.remove(row - c); diag2.remove(row + c)</text>
+</g>
+</svg>

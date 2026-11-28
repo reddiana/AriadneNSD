@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="478" height="524" viewBox="0 0 478 524">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="1f7f946dcf8d6f1af9db7b8fd3068de6fb83a33edd1c8d307b69dc3b01cb2f64"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "dfs_all(graph)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "visited, order = set(), []"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for v in graph    # jede Zusammenhangskomponente",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "if",
+              "text": "v not in visited",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b4",
+                    "kind": "call",
+                    "target": {
+                      "kind": "local",
+                      "diagram": "d2"
+                    },
+                    "args": "graph, v",
+                    "result": ""
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b5",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "return order[::-1]    # bei einem DAG eine topologische Ordnung"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "dfs(graph, u)"
+      },
+      "body": [
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "visited.add(u)    # beim Betreten (Preorder)"
+        },
+        {
+          "id": "b8",
+          "kind": "for",
+          "text": "for v in graph[u]",
+          "body": [
+            {
+              "id": "b9",
+              "kind": "if",
+              "text": "v not in visited",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "call",
+                    "target": {
+                      "kind": "local",
+                      "diagram": "d2"
+                    },
+                    "args": "graph, v",
+                    "result": ""
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "order.append(u)    # beim Verlassen (Postorder)"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">dfs_all(graph)</tspan></text>
+<path d="M24 64 L454 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="430" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">visited, order = set(), []</text>
+<rect x="24" y="96" width="430" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">for v in graph    # jede Zusammenhangskomponente</text>
+<rect x="46" y="128" width="408" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 128 L330 176 L454 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="330" y="146" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">v not in visited</text>
+<text x="52" y="171" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="448" y="171" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="176" width="284" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 176 L53 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M323 176 L323 208" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="196" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">dfs</tspan>(graph, v)</text>
+<rect x="330" y="176" width="124" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="392" cy="192" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M387.5 196.5 L396.5 187.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="208" width="430" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="228" font-size="13" fill="#151a22" xml:space="preserve">return order[::-1]    # bei einem DAG eine topologische Ordnung</text>
+<text x="24" y="296" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="313" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">dfs(graph, u)</tspan></text>
+<path d="M24 324 L350 324" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="324" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="344" font-size="13" fill="#151a22" xml:space="preserve">visited.add(u)    # beim Betreten (Preorder)</text>
+<rect x="24" y="356" width="326" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="376" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="46" y="388" width="304" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 388 L258 436 L350 388" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="258" y="406" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">v not in visited</text>
+<text x="52" y="431" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="344" y="431" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="436" width="212" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 436 L53 468" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M251 436 L251 468" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="456" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">dfs</tspan>(graph, v)</text>
+<rect x="258" y="436" width="92" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="304" cy="452" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M299.5 456.5 L308.5 447.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="468" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="488" font-size="13" fill="#151a22" xml:space="preserve">order.append(u)    # beim Verlassen (Postorder)</text>
+</g>
+</svg>

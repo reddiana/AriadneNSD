@@ -1,0 +1,811 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1849" height="1054" viewBox="0 0 1849 1054">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="dd65b8b288428625f7b324906269e736ebef9dbf8557eba6ed994414b7c79d91"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "rb_insert(T, z)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "y = T.nil"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "x = T.root"
+        },
+        {
+          "id": "b3",
+          "kind": "while",
+          "text": "x != T.nil",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "process",
+              "text": "y = x"
+            },
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "z.key < x.key",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "x = x.left"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "x = x.right"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "z.parent = y"
+        },
+        {
+          "id": "b9",
+          "kind": "if",
+          "text": "y == T.nil",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b10",
+                "kind": "process",
+                "text": "T.root = z"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b11",
+                "kind": "if",
+                "text": "z.key < y.key",
+                "yes": {
+                  "id": "r5",
+                  "body": [
+                    {
+                      "id": "b12",
+                      "kind": "process",
+                      "text": "y.left = z"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r6",
+                  "body": [
+                    {
+                      "id": "b13",
+                      "kind": "process",
+                      "text": "y.right = z"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b14",
+          "kind": "process",
+          "text": "z.left = z.right = T.nil"
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "z.color = RED"
+        },
+        {
+          "id": "b16",
+          "kind": "call",
+          "target": {
+            "kind": "local",
+            "diagram": "d2"
+          },
+          "args": "T, z",
+          "result": ""
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b9",
+          "name": "Wie in einen binären Suchbaum einfügen"
+        }
+      ]
+    },
+    {
+      "id": "d2",
+      "head": {
+        "kind": "method",
+        "text": "rb_insert_fixup(T, z)"
+      },
+      "body": [
+        {
+          "id": "b17",
+          "kind": "while",
+          "text": "z.parent.color == RED",
+          "body": [
+            {
+              "id": "b18",
+              "kind": "if",
+              "text": "z.parent == z.parent.parent.left",
+              "yes": {
+                "id": "r7",
+                "body": [
+                  {
+                    "id": "b19",
+                    "kind": "process",
+                    "text": "y = z.parent.parent.right    # Onkel"
+                  },
+                  {
+                    "id": "b20",
+                    "kind": "if",
+                    "text": "y.color == RED",
+                    "yes": {
+                      "id": "r8",
+                      "body": [
+                        {
+                          "id": "b21",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # Fall 1: roter Onkel"
+                        },
+                        {
+                          "id": "b22",
+                          "kind": "process",
+                          "text": "y.color = BLACK"
+                        },
+                        {
+                          "id": "b23",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b24",
+                          "kind": "process",
+                          "text": "z = z.parent.parent"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r9",
+                      "body": [
+                        {
+                          "id": "b25",
+                          "kind": "if",
+                          "text": "z == z.parent.right",
+                          "yes": {
+                            "id": "r10",
+                            "body": [
+                              {
+                                "id": "b26",
+                                "kind": "process",
+                                "text": "z = z.parent    # Fall 2: Zickzack begradigen"
+                              },
+                              {
+                                "id": "b27",
+                                "kind": "call",
+                                "target": {
+                                  "kind": "local",
+                                  "diagram": "d3"
+                                },
+                                "args": "T, z",
+                                "result": ""
+                              }
+                            ]
+                          },
+                          "no": {
+                            "id": "r11",
+                            "body": [
+                              {
+                                "id": "b28",
+                                "kind": "process",
+                                "text": ""
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "b29",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # Fall 3"
+                        },
+                        {
+                          "id": "b30",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b31",
+                          "kind": "call",
+                          "target": {
+                            "kind": "local",
+                            "diagram": "d4"
+                          },
+                          "args": "T, z.parent.parent",
+                          "result": ""
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "no": {
+                "id": "r12",
+                "body": [
+                  {
+                    "id": "b32",
+                    "kind": "process",
+                    "text": "y = z.parent.parent.left    # Onkel"
+                  },
+                  {
+                    "id": "b33",
+                    "kind": "if",
+                    "text": "y.color == RED",
+                    "yes": {
+                      "id": "r13",
+                      "body": [
+                        {
+                          "id": "b34",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # Fall 1: roter Onkel"
+                        },
+                        {
+                          "id": "b35",
+                          "kind": "process",
+                          "text": "y.color = BLACK"
+                        },
+                        {
+                          "id": "b36",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b37",
+                          "kind": "process",
+                          "text": "z = z.parent.parent"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r14",
+                      "body": [
+                        {
+                          "id": "b38",
+                          "kind": "if",
+                          "text": "z == z.parent.left",
+                          "yes": {
+                            "id": "r15",
+                            "body": [
+                              {
+                                "id": "b39",
+                                "kind": "process",
+                                "text": "z = z.parent    # Fall 2: Zickzack begradigen"
+                              },
+                              {
+                                "id": "b40",
+                                "kind": "call",
+                                "target": {
+                                  "kind": "local",
+                                  "diagram": "d4"
+                                },
+                                "args": "T, z",
+                                "result": ""
+                              }
+                            ]
+                          },
+                          "no": {
+                            "id": "r16",
+                            "body": [
+                              {
+                                "id": "b41",
+                                "kind": "process",
+                                "text": ""
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "b42",
+                          "kind": "process",
+                          "text": "z.parent.color = BLACK    # Fall 3"
+                        },
+                        {
+                          "id": "b43",
+                          "kind": "process",
+                          "text": "z.parent.parent.color = RED"
+                        },
+                        {
+                          "id": "b44",
+                          "kind": "call",
+                          "target": {
+                            "kind": "local",
+                            "diagram": "d3"
+                          },
+                          "args": "T, z.parent.parent",
+                          "result": ""
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b45",
+          "kind": "process",
+          "text": "T.root.color = BLACK    # die Wurzel ist immer schwarz"
+        }
+      ]
+    },
+    {
+      "id": "d3",
+      "head": {
+        "kind": "method",
+        "text": "left_rotate(T, x)"
+      },
+      "body": [
+        {
+          "id": "b46",
+          "kind": "process",
+          "text": "y = x.right"
+        },
+        {
+          "id": "b47",
+          "kind": "process",
+          "text": "x.right = y.left"
+        },
+        {
+          "id": "b48",
+          "kind": "if",
+          "text": "y.left != T.nil",
+          "yes": {
+            "id": "r17",
+            "body": [
+              {
+                "id": "b49",
+                "kind": "process",
+                "text": "y.left.parent = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r18",
+            "body": [
+              {
+                "id": "b50",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b51",
+          "kind": "process",
+          "text": "y.parent = x.parent"
+        },
+        {
+          "id": "b52",
+          "kind": "if",
+          "text": "x.parent == T.nil",
+          "yes": {
+            "id": "r19",
+            "body": [
+              {
+                "id": "b53",
+                "kind": "process",
+                "text": "T.root = y"
+              }
+            ]
+          },
+          "no": {
+            "id": "r20",
+            "body": [
+              {
+                "id": "b54",
+                "kind": "if",
+                "text": "x == x.parent.left",
+                "yes": {
+                  "id": "r21",
+                  "body": [
+                    {
+                      "id": "b55",
+                      "kind": "process",
+                      "text": "x.parent.left = y"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r22",
+                  "body": [
+                    {
+                      "id": "b56",
+                      "kind": "process",
+                      "text": "x.parent.right = y"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b57",
+          "kind": "process",
+          "text": "y.left = x"
+        },
+        {
+          "id": "b58",
+          "kind": "process",
+          "text": "x.parent = y"
+        }
+      ]
+    },
+    {
+      "id": "d4",
+      "head": {
+        "kind": "method",
+        "text": "right_rotate(T, x)"
+      },
+      "body": [
+        {
+          "id": "b59",
+          "kind": "process",
+          "text": "y = x.left"
+        },
+        {
+          "id": "b60",
+          "kind": "process",
+          "text": "x.left = y.right"
+        },
+        {
+          "id": "b61",
+          "kind": "if",
+          "text": "y.right != T.nil",
+          "yes": {
+            "id": "r23",
+            "body": [
+              {
+                "id": "b62",
+                "kind": "process",
+                "text": "y.right.parent = x"
+              }
+            ]
+          },
+          "no": {
+            "id": "r24",
+            "body": [
+              {
+                "id": "b63",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b64",
+          "kind": "process",
+          "text": "y.parent = x.parent"
+        },
+        {
+          "id": "b65",
+          "kind": "if",
+          "text": "x.parent == T.nil",
+          "yes": {
+            "id": "r25",
+            "body": [
+              {
+                "id": "b66",
+                "kind": "process",
+                "text": "T.root = y"
+              }
+            ]
+          },
+          "no": {
+            "id": "r26",
+            "body": [
+              {
+                "id": "b67",
+                "kind": "if",
+                "text": "x == x.parent.left",
+                "yes": {
+                  "id": "r27",
+                  "body": [
+                    {
+                      "id": "b68",
+                      "kind": "process",
+                      "text": "x.parent.left = y"
+                    }
+                  ]
+                },
+                "no": {
+                  "id": "r28",
+                  "body": [
+                    {
+                      "id": "b69",
+                      "kind": "process",
+                      "text": "x.parent.right = y"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b70",
+          "kind": "process",
+          "text": "y.right = x"
+        },
+        {
+          "id": "b71",
+          "kind": "process",
+          "text": "x.parent = y"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert(T, z)</tspan></text>
+<path d="M24 64 L286 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="82" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="102" font-size="13" fill="#151a22" xml:space="preserve">y = T.nil</text>
+<rect x="24" y="114" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">x = T.root</text>
+<rect x="24" y="146" width="262" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">x != T.nil</text>
+<rect x="46" y="178" width="240" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">y = x</text>
+<rect x="46" y="210" width="240" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 210 L161 258 L286 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="161" y="228" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.key &lt; x.key</text>
+<text x="52" y="253" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="280" y="253" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="258" width="115" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="278" font-size="13" fill="#151a22" xml:space="preserve">x = x.left</text>
+<rect x="161" y="258" width="125" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="171" y="278" font-size="13" fill="#151a22" xml:space="preserve">x = x.right</text>
+<rect x="24" y="290" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="310" font-size="13" fill="#151a22" xml:space="preserve">z.parent = y</text>
+<rect x="24" y="322" width="262" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 322 L109 370 L286 322" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="109" y="340" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y == T.nil</text>
+<text x="30" y="365" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="280" y="365" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="370" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="390" font-size="13" fill="#151a22" xml:space="preserve">T.root = z</text>
+<rect x="109" y="370" width="177" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M109 370 L194 418 L286 370" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="194" y="388" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.key &lt; y.key</text>
+<text x="115" y="413" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="280" y="413" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="109" y="418" width="85" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="119" y="438" font-size="13" fill="#151a22" xml:space="preserve">y.left = z</text>
+<rect x="194" y="418" width="92" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="204" y="438" font-size="13" fill="#151a22" xml:space="preserve">y.right = z</text>
+<rect x="24" y="64" width="262" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="77" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Wie in einen binären Suchbaum einfügen</tspan></text>
+<rect x="25" y="65" width="260" height="384" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="450" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="470" font-size="13" fill="#151a22" xml:space="preserve">z.left = z.right = T.nil</text>
+<rect x="24" y="482" width="262" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="502" font-size="13" fill="#151a22" xml:space="preserve">z.color = RED</text>
+<rect x="24" y="514" width="262" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 514 L31 546" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M279 514 L279 546" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="534" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert_fixup</tspan>(T, z)</text>
+<text x="24" y="602" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="619" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">rb_insert_fixup(T, z)</tspan></text>
+<path d="M24 630 L1428 630" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="630" width="1404" height="368" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="650" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color == RED</text>
+<rect x="46" y="662" width="1382" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 662 L737 710 L1428 662" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="737" y="680" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z.parent == z.parent.parent.left</text>
+<text x="52" y="705" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1422" y="705" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="710" width="691" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="730" font-size="13" fill="#151a22" xml:space="preserve">y = z.parent.parent.right    # Onkel</text>
+<rect x="46" y="742" width="691" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 742 L372 790 L737 742" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="372" y="760" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.color == RED</text>
+<text x="52" y="785" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="731" y="785" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="790" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="810" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # Fall 1: roter Onkel</text>
+<rect x="46" y="842" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="862" font-size="13" fill="#151a22" xml:space="preserve">y.color = BLACK</text>
+<rect x="46" y="894" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="914" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="46" y="946" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="966" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent.parent</text>
+<rect x="372" y="790" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M372 790 L685 838 L737 790" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="665" y="808" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z == z.parent.right</text>
+<text x="378" y="833" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="731" y="833" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="372" y="838" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="858" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent    # Fall 2: Zickzack begradigen</text>
+<rect x="372" y="870" width="313" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M379 870 L379 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M678 870 L678 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="389" y="890" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate</tspan>(T, z)</text>
+<rect x="685" y="838" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="711" cy="870" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M706.5 874.5 L715.5 865.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="372" y="902" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="922" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # Fall 3</text>
+<rect x="372" y="934" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="954" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="372" y="966" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M379 966 L379 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M730 966 L730 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="389" y="986" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate</tspan>(T, z.parent.parent)</text>
+<rect x="737" y="710" width="691" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="747" y="730" font-size="13" fill="#151a22" xml:space="preserve">y = z.parent.parent.left    # Onkel</text>
+<rect x="737" y="742" width="691" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M737 742 L1063 790 L1428 742" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1063" y="760" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.color == RED</text>
+<text x="743" y="785" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1422" y="785" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="737" y="790" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="747" y="810" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # Fall 1: roter Onkel</text>
+<rect x="737" y="842" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="747" y="862" font-size="13" fill="#151a22" xml:space="preserve">y.color = BLACK</text>
+<rect x="737" y="894" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="747" y="914" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="737" y="946" width="326" height="52" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="747" y="966" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent.parent</text>
+<rect x="1063" y="790" width="365" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1063 790 L1376 838 L1428 790" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1359.5" y="808" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">z == z.parent.left</text>
+<text x="1069" y="833" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1422" y="833" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1063" y="838" width="313" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1073" y="858" font-size="13" fill="#151a22" xml:space="preserve">z = z.parent    # Fall 2: Zickzack begradigen</text>
+<rect x="1063" y="870" width="313" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1070 870 L1070 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1369 870 L1369 902" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1080" y="890" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate</tspan>(T, z)</text>
+<rect x="1376" y="838" width="52" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1402" cy="870" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1397.5 874.5 L1406.5 865.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1063" y="902" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1073" y="922" font-size="13" fill="#151a22" xml:space="preserve">z.parent.color = BLACK    # Fall 3</text>
+<rect x="1063" y="934" width="365" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1073" y="954" font-size="13" fill="#151a22" xml:space="preserve">z.parent.parent.color = RED</text>
+<rect x="1063" y="966" width="365" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1070 966 L1070 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M1421 966 L1421 998" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1080" y="986" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate</tspan>(T, z.parent.parent)</text>
+<rect x="24" y="998" width="1404" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="1018" font-size="13" fill="#151a22" xml:space="preserve">T.root.color = BLACK    # die Wurzel ist immer schwarz</text>
+<text x="1472" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1472" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">left_rotate(T, x)</tspan></text>
+<path d="M1472 64 L1825 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1472" y="64" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="84" font-size="13" fill="#151a22" xml:space="preserve">y = x.right</text>
+<rect x="1472" y="96" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="116" font-size="13" fill="#151a22" xml:space="preserve">x.right = y.left</text>
+<rect x="1472" y="128" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1472 128 L1725 176 L1825 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1725" y="146" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.left != T.nil</text>
+<text x="1478" y="171" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="171" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1472" y="176" width="253" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="196" font-size="13" fill="#151a22" xml:space="preserve">y.left.parent = x</text>
+<rect x="1725" y="176" width="100" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1775" cy="192" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1770.5 196.5 L1779.5 187.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1472" y="208" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="228" font-size="13" fill="#151a22" xml:space="preserve">y.parent = x.parent</text>
+<rect x="1472" y="240" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1472 240 L1557 288 L1825 240" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1557" y="258" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x.parent == T.nil</text>
+<text x="1478" y="283" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="283" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1472" y="288" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="308" font-size="13" fill="#151a22" xml:space="preserve">T.root = y</text>
+<rect x="1557" y="288" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1557 288 L1688 336 L1825 288" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1688" y="306" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x == x.parent.left</text>
+<text x="1563" y="331" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="331" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1557" y="336" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1567" y="356" font-size="13" fill="#151a22" xml:space="preserve">x.parent.left = y</text>
+<rect x="1688" y="336" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1698" y="356" font-size="13" fill="#151a22" xml:space="preserve">x.parent.right = y</text>
+<rect x="1472" y="368" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="388" font-size="13" fill="#151a22" xml:space="preserve">y.left = x</text>
+<rect x="1472" y="400" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="420" font-size="13" fill="#151a22" xml:space="preserve">x.parent = y</text>
+<text x="1472" y="488" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="1472" y="505" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">right_rotate(T, x)</tspan></text>
+<path d="M1472 516 L1825 516" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="1472" y="516" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="536" font-size="13" fill="#151a22" xml:space="preserve">y = x.left</text>
+<rect x="1472" y="548" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="568" font-size="13" fill="#151a22" xml:space="preserve">x.left = y.right</text>
+<rect x="1472" y="580" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1472 580 L1728 628 L1825 580" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1728" y="598" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">y.right != T.nil</text>
+<text x="1478" y="623" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="623" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1472" y="628" width="256" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="648" font-size="13" fill="#151a22" xml:space="preserve">y.right.parent = x</text>
+<rect x="1728" y="628" width="97" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="1776.5" cy="644" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M1772 648.5 L1781 639.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="1472" y="660" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="680" font-size="13" fill="#151a22" xml:space="preserve">y.parent = x.parent</text>
+<rect x="1472" y="692" width="353" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1472 692 L1557 740 L1825 692" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1557" y="710" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x.parent == T.nil</text>
+<text x="1478" y="735" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="735" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1472" y="740" width="85" height="80" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="760" font-size="13" fill="#151a22" xml:space="preserve">T.root = y</text>
+<rect x="1557" y="740" width="268" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M1557 740 L1688 788 L1825 740" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="1688" y="758" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">x == x.parent.left</text>
+<text x="1563" y="783" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="1819" y="783" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="1557" y="788" width="131" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1567" y="808" font-size="13" fill="#151a22" xml:space="preserve">x.parent.left = y</text>
+<rect x="1688" y="788" width="137" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1698" y="808" font-size="13" fill="#151a22" xml:space="preserve">x.parent.right = y</text>
+<rect x="1472" y="820" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="840" font-size="13" fill="#151a22" xml:space="preserve">y.right = x</text>
+<rect x="1472" y="852" width="353" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="1482" y="872" font-size="13" fill="#151a22" xml:space="preserve">x.parent = y</text>
+</g>
+</svg>

@@ -1,11 +1,11 @@
 // Builds the algorithm gallery (M70, option G3) into dist/: the English page dist/index.html
-// (/gallery/) and the Korean one dist/ko/index.html (/gallery/ko/), the same split as the user
-// guide (DR-0020). A list of the algorithms on the left, the selected diagram large on the right.
+// (/gallery/), the Korean one dist/ko/index.html (/gallery/ko/) and the German one
+// dist/de/index.html (/gallery/de/), the same split as the user guide (DR-0020). A list of the algorithms on the left, the selected diagram large on the right.
 //
 // The entries come from generated/gallery.json and the pictures from generated/*.ns.svg, which
 // `pnpm --filter @ariadne-nsd/web gallery-images` writes. They are read here at build time, so a
 // regenerated diagram flows through without touching this script.
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 
 const root = new URL('./', import.meta.url);
 const dist = new URL('dist/', root);
@@ -18,6 +18,10 @@ const github = 'https://github.com/reddiana/AriadneNSD';
 /** Selected when the address has no hash (or one that names no entry). */
 const defaultId = 'dijkstra';
 const categories = ['classic', 'hard', 'fun'];
+/** The page languages, English first; each page links to the others under these names. */
+const langs = ['en', 'ko', 'de'];
+const langNames = { en: 'English', ko: '한국어', de: 'Deutsch' };
+const ogLocales = { en: 'en_US', ko: 'ko_KR', de: 'de_DE' };
 
 const text = {
   en: {
@@ -38,7 +42,6 @@ const text = {
     alt: (name) => `${name}, as a Nassi–Shneiderman diagram`,
     editor: 'Editor',
     guide: 'User guide',
-    other: { label: '한국어', lang: 'ko' },
     made: 'Every diagram here was drawn with AriadneNSD, a free NS chart editor.',
   },
   ko: {
@@ -59,8 +62,27 @@ const text = {
     alt: (name) => `${name}의 NS 차트`,
     editor: '편집기',
     guide: '사용법',
-    other: { label: 'English', lang: 'en' },
     made: '여기의 그림은 모두 무료 NS 차트 편집기 AriadneNSD로 그렸습니다.',
+  },
+  de: {
+    title: 'Algorithmengalerie',
+    description: (n) =>
+      `${n} Algorithmen, von der binären Suche bis Raft, als Struktogramme (Nassi-Shneiderman-Diagramme) gezeichnet. Öffnen Sie jeden davon im Editor AriadneNSD und ändern Sie ihn.`,
+    lead: (n) =>
+      `${n} Algorithmen, von der binären Suche bis Raft, als Struktogramme (Nassi-Shneiderman-Diagramme) gezeichnet. Öffnen Sie jeden davon im Editor und ändern Sie ihn.`,
+    category: { classic: 'Klassiker', hard: 'Die schweren', fun: 'Zum Spaß' },
+    listLabel: 'Algorithmen',
+    pick: 'Algorithmus',
+    keys: '↑ ↓ zum Blättern',
+    open: 'Im Editor öffnen',
+    download: '.ns.svg herunterladen',
+    about:
+      'Eine .ns.svg-Datei ist ein Bild, das überall angezeigt wird, und AriadneNSD öffnet sie wieder zum Bearbeiten.',
+    wide: 'Breites Diagramm: seitlich scrollen.',
+    alt: (name) => `${name} als Struktogramm`,
+    editor: 'Editor',
+    guide: 'Benutzerhandbuch',
+    made: 'Alle Diagramme hier wurden mit AriadneNSD gezeichnet, einem kostenlosen Struktogramm-Editor.',
   },
 };
 
@@ -72,7 +94,6 @@ const pages = [
     up: '',
     app: '../',
     manual: '../manual/',
-    other: 'ko/',
     url: `${site}/gallery/`,
   },
   {
@@ -81,10 +102,20 @@ const pages = [
     up: '../',
     app: '../../',
     manual: '../../manual/ko/',
-    other: '../',
     url: `${site}/gallery/ko/`,
   },
+  {
+    lang: 'de',
+    out: 'de/index.html',
+    up: '../',
+    app: '../../',
+    manual: '../../manual/de/',
+    url: `${site}/gallery/de/`,
+  },
 ];
+
+/** The relative address of the page in `lang` from `page`. */
+const pathTo = (page, lang) => `${page.up}${lang === 'en' ? '' : `${lang}/`}` || './';
 
 const escapeHtml = (value) =>
   String(value)
@@ -102,7 +133,7 @@ async function readEntries() {
     if (!categories.includes(entry.category)) {
       throw new Error(`gallery.json: ${entry.id} has an unknown category "${entry.category}"`);
     }
-    for (const lang of ['en', 'ko']) {
+    for (const lang of langs) {
       for (const field of ['name', 'what', 'files', 'links']) {
         if (typeof entry[field]?.[lang] !== 'string') {
           throw new Error(`gallery.json: ${entry.id} has no ${field}.${lang}`);
@@ -153,7 +184,16 @@ function render(page, entries, css, script) {
   const firstFile = `${page.up}files/${first.files[page.lang]}`;
   const description = t.description(n);
   const ogImage = `${site}/gallery/og-image.png`;
-  const otherUrl = pages.find((p) => p.lang === t.other.lang).url;
+  const others = pages.filter((p) => p.lang !== page.lang);
+  const alternates = others
+    .map((p) => `<link rel="alternate" hreflang="${p.lang}" href="${p.url}" />`)
+    .join('\n');
+  const langLinks = others
+    .map(
+      (p) =>
+        `<a class="lang" href="${pathTo(page, p.lang)}" hreflang="${p.lang}" lang="${p.lang}">${escapeHtml(langNames[p.lang])}</a>`,
+    )
+    .join('');
 
   return `<!doctype html>
 <html lang="${page.lang}">
@@ -164,7 +204,7 @@ function render(page, entries, css, script) {
 <meta name="description" content="${escapeHtml(description)}" />
 <link rel="canonical" href="${page.url}" />
 <link rel="alternate" hreflang="${page.lang}" href="${page.url}" />
-<link rel="alternate" hreflang="${t.other.lang}" href="${otherUrl}" />
+${alternates}
 <link rel="icon" href="${page.up}logo.svg" type="image/svg+xml" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="AriadneNSD" />
@@ -174,7 +214,7 @@ function render(page, entries, css, script) {
 <meta property="og:image" content="${ogImage}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:locale" content="${page.lang === 'ko' ? 'ko_KR' : 'en_US'}" />
+<meta property="og:locale" content="${ogLocales[page.lang]}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="${escapeHtml(t.title)} – AriadneNSD" />
 <meta name="twitter:description" content="${escapeHtml(description)}" />
@@ -186,7 +226,7 @@ ${css.trim()}
 <body>
 <header class="top">
 <a class="brand" href="${page.app}"><img src="${page.up}logo.svg" width="30" height="30" alt="" /><img class="word" src="${page.up}wordmark.svg" width="149" height="19" alt="AriadneNSD" /></a>
-<nav class="links"><a href="${page.app}">${escapeHtml(t.editor)}</a><a href="${page.manual}">${escapeHtml(t.guide)}</a><a href="${github}">GitHub</a><a class="lang" href="${page.other}" hreflang="${t.other.lang}" lang="${t.other.lang}">${escapeHtml(t.other.label)}</a></nav>
+<nav class="links"><a href="${page.app}">${escapeHtml(t.editor)}</a><a href="${page.manual}">${escapeHtml(t.guide)}</a><a href="${github}">GitHub</a>${langLinks}</nav>
 </header>
 <div class="intro">
 <h1>${escapeHtml(t.title)}</h1>
@@ -251,11 +291,16 @@ const entries = await readEntries();
 const css = await readFile(new URL('pages/style.css', root), 'utf8');
 const script = await readFile(new URL('pages/gallery.js', root), 'utf8');
 
-await rm(dist, { recursive: true, force: true });
-await mkdir(new URL('ko/', dist), { recursive: true });
-await mkdir(new URL('files/', dist), { recursive: true });
+// Empties dist/ rather than removing it, so a local server started in it keeps serving.
+await mkdir(dist, { recursive: true });
+for (const name of await readdir(dist)) {
+  await rm(new URL(name, dist), { recursive: true, force: true });
+}
+for (const folder of ['ko/', 'de/', 'files/']) {
+  await mkdir(new URL(folder, dist), { recursive: true });
+}
 for (const entry of entries) {
-  for (const lang of ['en', 'ko']) {
+  for (const lang of langs) {
     const file = entry.files[lang];
     await cp(new URL(file, generated), new URL(`files/${file}`, dist));
   }
@@ -270,5 +315,5 @@ for (const page of pages) {
   await writeFile(new URL(page.out, dist), render(page, entries, css, script));
 }
 process.stdout.write(
-  `gallery: ${String(entries.length)} entries → dist/index.html (en), dist/ko/index.html (ko)\n`,
+  `gallery: ${String(entries.length)} entries → dist/index.html (en), dist/ko/index.html (ko), dist/de/index.html (de)\n`,
 );

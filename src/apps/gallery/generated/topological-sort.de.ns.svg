@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="575" height="650" viewBox="0 0 575 650">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="4950dfe685ca475bf72a1c9cc48cdd1d881ea677470c3699c384d5649c64a2e1"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "topo_sort(graph)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "indeg = {v: 0 for v in graph}"
+        },
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for u in graph",
+          "body": [
+            {
+              "id": "b3",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b4",
+                  "kind": "process",
+                  "text": "indeg[v] += 1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "q = deque(v for v in graph if indeg[v] == 0)    # Knoten ohne eingehende Kante"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "order = []"
+        },
+        {
+          "id": "b7",
+          "kind": "while",
+          "text": "q",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "u = q.popleft()"
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "order.append(u)"
+            },
+            {
+              "id": "b10",
+              "kind": "for",
+              "text": "for v in graph[u]",
+              "body": [
+                {
+                  "id": "b11",
+                  "kind": "process",
+                  "text": "indeg[v] -= 1"
+                },
+                {
+                  "id": "b12",
+                  "kind": "if",
+                  "text": "indeg[v] == 0",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b13",
+                        "kind": "process",
+                        "text": "q.append(v)"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r2",
+                    "body": [
+                      {
+                        "id": "b14",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "if",
+          "text": "len(order) < len(graph)",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b16",
+                "kind": "exit",
+                "text": "return None    # es gibt einen Zyklus"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b17",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return order"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b1",
+          "last": "b2",
+          "name": "Eingehende Kanten zählen"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">topo_sort(graph)</tspan></text>
+<path d="M24 64 L551 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="82" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="102" font-size="13" fill="#151a22" xml:space="preserve">indeg = {v: 0 for v in graph}</text>
+<rect x="24" y="114" width="527" height="96" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">for u in graph</text>
+<rect x="46" y="146" width="505" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="166" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="178" width="483" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="198" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] += 1</text>
+<rect x="24" y="64" width="527" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="77" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Eingehende Kanten zählen</tspan></text>
+<rect x="25" y="65" width="525" height="144" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="210" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="230" font-size="13" fill="#151a22" xml:space="preserve">q = deque(v for v in graph if indeg[v] == 0)    # Knoten ohne eingehende Kante</text>
+<rect x="24" y="242" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="262" font-size="13" fill="#151a22" xml:space="preserve">order = []</text>
+<rect x="24" y="274" width="527" height="240" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="294" font-size="13" fill="#151a22" xml:space="preserve">q</text>
+<rect x="46" y="306" width="505" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="326" font-size="13" fill="#151a22" xml:space="preserve">u = q.popleft()</text>
+<rect x="46" y="338" width="505" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="358" font-size="13" fill="#151a22" xml:space="preserve">order.append(u)</text>
+<rect x="46" y="370" width="505" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="390" font-size="13" fill="#151a22" xml:space="preserve">for v in graph[u]</text>
+<rect x="68" y="402" width="483" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="422" font-size="13" fill="#151a22" xml:space="preserve">indeg[v] -= 1</text>
+<rect x="68" y="434" width="483" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 434 L377 482 L551 434" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="377" y="452" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">indeg[v] == 0</text>
+<text x="74" y="477" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="545" y="477" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="68" y="482" width="309" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="502" font-size="13" fill="#151a22" xml:space="preserve">q.append(v)</text>
+<rect x="377" y="482" width="174" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="464" cy="498" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M459.5 502.5 L468.5 493.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="514" width="527" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 514 L467 562 L551 514" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="466" y="532" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">len(order) &lt; len(graph)</text>
+<text x="30" y="557" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="545" y="557" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="24" y="562" width="443" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 562 L24 578 L38 594" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="582" font-size="13" fill="#151a22" xml:space="preserve">return None    # es gibt einen Zyklus</text>
+<rect x="467" y="562" width="84" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="509" cy="578" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M504.5 582.5 L513.5 573.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="594" width="527" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="614" font-size="13" fill="#151a22" xml:space="preserve">return order</text>
+</g>
+</svg>

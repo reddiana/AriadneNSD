@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="705" height="654" viewBox="0 0 705 654">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="1d3735bdfe3c2f0417185762489a49b7ca9e61bc25ae15e2e702b5c026b50b3f"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "knapsack(w, v, W)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n = len(w)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "dp = [[0] * (W + 1) for _ in range(n + 1)]    # bester Wert der ersten i Gegenstände bis Gewicht c"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i in range(1, n + 1)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "for",
+              "text": "for c in range(W + 1)",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "process",
+                  "text": "dp[i][c] = dp[i - 1][c]    # Gegenstand i weglassen"
+                },
+                {
+                  "id": "b6",
+                  "kind": "if",
+                  "text": "w[i - 1] <= c",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b7",
+                        "kind": "process",
+                        "text": "take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # Gegenstand i einpacken"
+                      },
+                      {
+                        "id": "b8",
+                        "kind": "if",
+                        "text": "take > dp[i][c]",
+                        "yes": {
+                          "id": "r2",
+                          "body": [
+                            {
+                              "id": "b9",
+                              "kind": "process",
+                              "text": "dp[i][c] = take"
+                            }
+                          ]
+                        },
+                        "no": {
+                          "id": "r3",
+                          "body": [
+                            {
+                              "id": "b10",
+                              "kind": "process",
+                              "text": ""
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r4",
+                    "body": [
+                      {
+                        "id": "b11",
+                        "kind": "process",
+                        "text": ""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b12",
+          "kind": "process",
+          "text": "items, c = [], W"
+        },
+        {
+          "id": "b13",
+          "kind": "for",
+          "text": "for i in range(n, 0, -1)",
+          "body": [
+            {
+              "id": "b14",
+              "kind": "if",
+              "text": "dp[i][c] != dp[i - 1][c]",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b15",
+                    "kind": "process",
+                    "text": "items.append(i - 1)    # dieser Gegenstand wurde gewählt"
+                  },
+                  {
+                    "id": "b16",
+                    "kind": "process",
+                    "text": "c -= w[i - 1]"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b17",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b18",
+          "kind": "process",
+          "text": "return dp[n][W], items"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b3",
+          "last": "b3",
+          "name": "Tabelle füllen"
+        },
+        {
+          "id": "f2",
+          "first": "b12",
+          "last": "b13",
+          "name": "Gewählte Gegenstände zurückverfolgen"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">knapsack(w, v, W)</tspan></text>
+<path d="M24 64 L681 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="657" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n = len(w)</text>
+<rect x="24" y="96" width="657" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">dp = [[0] * (W + 1) for _ in range(n + 1)]    # bester Wert der ersten i Gegenstände bis Gewicht c</text>
+<rect x="24" y="146" width="657" height="256" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, n + 1)</text>
+<rect x="46" y="178" width="635" height="224" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">for c in range(W + 1)</text>
+<rect x="68" y="210" width="613" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="230" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = dp[i - 1][c]    # Gegenstand i weglassen</text>
+<rect x="68" y="242" width="613" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 242 L620 290 L681 242" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="620" y="260" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">w[i - 1] &lt;= c</text>
+<text x="74" y="285" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="675" y="285" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="68" y="290" width="552" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="310" font-size="13" fill="#151a22" xml:space="preserve">take = dp[i - 1][c - w[i - 1]] + v[i - 1]    # Gegenstand i einpacken</text>
+<rect x="68" y="322" width="552" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 322 L451 370 L620 322" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="451" y="340" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">take &gt; dp[i][c]</text>
+<text x="74" y="365" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="614" y="365" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="68" y="370" width="383" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="390" font-size="13" fill="#151a22" xml:space="preserve">dp[i][c] = take</text>
+<rect x="451" y="370" width="169" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="535.5" cy="386" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M531 390.5 L540 381.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="620" y="290" width="61" height="112" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="650.5" cy="346" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M646 350.5 L655 341.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="128" width="657" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="141" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Tabelle füllen</tspan></text>
+<rect x="25" y="129" width="655" height="272" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="422" width="657" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="442" font-size="13" fill="#151a22" xml:space="preserve">items, c = [], W</text>
+<rect x="24" y="454" width="657" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="474" font-size="13" fill="#151a22" xml:space="preserve">for i in range(n, 0, -1)</text>
+<rect x="46" y="486" width="635" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 486 L605 534 L681 486" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="593" y="504" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">dp[i][c] != dp[i - 1][c]</text>
+<text x="52" y="529" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="675" y="529" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="534" width="559" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="554" font-size="13" fill="#151a22" xml:space="preserve">items.append(i - 1)    # dieser Gegenstand wurde gewählt</text>
+<rect x="46" y="566" width="559" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="586" font-size="13" fill="#151a22" xml:space="preserve">c -= w[i - 1]</text>
+<rect x="605" y="534" width="76" height="64" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="643" cy="566" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M638.5 570.5 L647.5 561.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="404" width="657" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="417" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Gewählte Gegenstände zurückverfolgen</tspan></text>
+<rect x="25" y="405" width="655" height="192" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="598" width="657" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="618" font-size="13" fill="#151a22" xml:space="preserve">return dp[n][W], items</text>
+</g>
+</svg>

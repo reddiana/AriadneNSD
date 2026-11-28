@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="655" height="574" viewBox="0 0 655 574">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="edebb2d629fc1700ccea2a842ab041dd4e3adb1e280a54cd2c86d899e4110be8"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "plain",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "de"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "lcs(a, b)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "n, m = len(a), len(b)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "L = [[0] * (m + 1) for _ in range(n + 1)]    # LCS-Länge von a[:i] und b[:j]"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for i in range(1, n + 1)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "for",
+              "text": "for j in range(1, m + 1)",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "if",
+                  "text": "a[i - 1] == b[j - 1]",
+                  "yes": {
+                    "id": "r1",
+                    "body": [
+                      {
+                        "id": "b6",
+                        "kind": "process",
+                        "text": "L[i][j] = L[i - 1][j - 1] + 1"
+                      }
+                    ]
+                  },
+                  "no": {
+                    "id": "r2",
+                    "body": [
+                      {
+                        "id": "b7",
+                        "kind": "process",
+                        "text": "L[i][j] = max(L[i - 1][j], L[i][j - 1])"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "i, j, out = n, m, []"
+        },
+        {
+          "id": "b9",
+          "kind": "while",
+          "text": "i > 0 and j > 0",
+          "body": [
+            {
+              "id": "b10",
+              "kind": "if",
+              "text": "a[i - 1] == b[j - 1]",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "process",
+                    "text": "out.append(a[i - 1])    # ein Zeichen in beiden"
+                  },
+                  {
+                    "id": "b12",
+                    "kind": "process",
+                    "text": "i -= 1"
+                  },
+                  {
+                    "id": "b13",
+                    "kind": "process",
+                    "text": "j -= 1"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "if",
+                    "text": "L[i - 1][j] >= L[i][j - 1]",
+                    "yes": {
+                      "id": "r5",
+                      "body": [
+                        {
+                          "id": "b15",
+                          "kind": "process",
+                          "text": "i -= 1"
+                        }
+                      ]
+                    },
+                    "no": {
+                      "id": "r6",
+                      "body": [
+                        {
+                          "id": "b16",
+                          "kind": "process",
+                          "text": "j -= 1"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b17",
+          "kind": "process",
+          "text": "return ''.join(reversed(out))"
+        }
+      ],
+      "folds": [
+        {
+          "id": "f1",
+          "first": "b3",
+          "last": "b3",
+          "name": "Tabelle füllen"
+        },
+        {
+          "id": "f2",
+          "first": "b8",
+          "last": "b9",
+          "name": "Tabelle rückwärts durchlaufen"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">lcs(a, b)</tspan></text>
+<path d="M24 64 L631 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="607" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">n, m = len(a), len(b)</text>
+<rect x="24" y="96" width="607" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">L = [[0] * (m + 1) for _ in range(n + 1)]    # LCS-Länge von a[:i] und b[:j]</text>
+<rect x="24" y="146" width="607" height="144" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">for i in range(1, n + 1)</text>
+<rect x="46" y="178" width="585" height="112" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="198" font-size="13" fill="#151a22" xml:space="preserve">for j in range(1, m + 1)</text>
+<rect x="68" y="210" width="563" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M68 210 L312 258 L631 210" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="312" y="228" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i - 1] == b[j - 1]</text>
+<text x="74" y="253" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="625" y="253" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="68" y="258" width="244" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="78" y="278" font-size="13" fill="#151a22" xml:space="preserve">L[i][j] = L[i - 1][j - 1] + 1</text>
+<rect x="312" y="258" width="319" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="322" y="278" font-size="13" fill="#151a22" xml:space="preserve">L[i][j] = max(L[i - 1][j], L[i][j - 1])</text>
+<rect x="24" y="128" width="607" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="141" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Tabelle füllen</tspan></text>
+<rect x="25" y="129" width="605" height="160" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="310" width="607" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="330" font-size="13" fill="#151a22" xml:space="preserve">i, j, out = n, m, []</text>
+<rect x="24" y="342" width="607" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="362" font-size="13" fill="#151a22" xml:space="preserve">i &gt; 0 and j &gt; 0</text>
+<rect x="46" y="374" width="585" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 374 L372 422 L631 374" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="372" y="392" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">a[i - 1] == b[j - 1]</text>
+<text x="52" y="417" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="625" y="417" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="46" y="422" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="442" font-size="13" fill="#151a22" xml:space="preserve">out.append(a[i - 1])    # ein Zeichen in beiden</text>
+<rect x="46" y="454" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="474" font-size="13" fill="#151a22" xml:space="preserve">i -= 1</text>
+<rect x="46" y="486" width="326" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="506" font-size="13" fill="#151a22" xml:space="preserve">j -= 1</text>
+<rect x="372" y="422" width="259" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M372 422 L502 470 L631 422" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="502" y="440" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">L[i - 1][j] &gt;= L[i][j - 1]</text>
+<text x="378" y="465" font-size="12" fill="#4b5567" xml:space="preserve">ja</text>
+<text x="625" y="465" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">nein</text>
+<rect x="372" y="470" width="130" height="48" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="382" y="490" font-size="13" fill="#151a22" xml:space="preserve">i -= 1</text>
+<rect x="502" y="470" width="129" height="48" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="512" y="490" font-size="13" fill="#151a22" xml:space="preserve">j -= 1</text>
+<rect x="24" y="292" width="607" height="18" fill="#e6ecfb" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="44" y="305" font-size="12" fill="#2c55c9" xml:space="preserve"><tspan font-weight="600">Tabelle rückwärts durchlaufen</tspan></text>
+<rect x="25" y="293" width="605" height="224" fill="none" stroke="#4f74d6" stroke-width="3" shape-rendering="crispEdges"/>
+<rect x="24" y="518" width="607" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="538" font-size="13" fill="#151a22" xml:space="preserve">return ''.join(reversed(out))</text>
+</g>
+</svg>
