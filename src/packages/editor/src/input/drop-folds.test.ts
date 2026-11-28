@@ -123,8 +123,10 @@ describe('dropping next to a fold region (interaction rules 7, M86)', () => {
         expect(got?.mark).toEqual(line);
       }
     }
-    // Above the band the last block answers as before.
-    expect(drop({ x: middleX(f), y: bottomOf(f) - betweenBand }, newIf)?.action.kind).toBe('wrap');
+    // Above the band and the inside end's band the last block answers as before.
+    expect(drop({ x: middleX(f), y: bottomOf(f) - 2 * betweenBand - 1 }, newIf)?.action.kind).toBe(
+      'wrap',
+    );
     const made = drop({ x: middleX(f), y: bottomOf(f) - 2 }, newProcess);
     if (made === null) {
       throw new Error('no drop');
@@ -343,5 +345,126 @@ describe('dropping next to a fold region (interaction rules 7, M86)', () => {
     expect(inLoop.drop({ x: middleX(g), y: g.y + band / 2 }, dragging('pa'))?.action).toMatchObject(
       { to: 'p0', side: 'before', outsideFold: 'g' },
     );
+  });
+  it('T-1593: the band above the bottom band means the inside end: after the last block, inside, never wrapping', () => {
+    const { boxOf, drop } = placesOf(docWith(plain));
+    const f = boxOf('f');
+    const bottom = bottomOf(f);
+    const line = {
+      kind: 'line',
+      x: f.x + edge,
+      y: bottom - foldInsideEndGap,
+      width: f.width - 2 * edge,
+    };
+    for (const blockKind of ['process', 'if', 'while', 'case', 'parallel'] as const) {
+      for (const y of [bottom - 2 * betweenBand, bottom - betweenBand - 1, bottom - betweenBand]) {
+        const got = drop({ x: middleX(f), y }, { kind: 'new', blockKind });
+        expect(got?.action).toEqual({ kind: 'insert', to: 'p2', side: 'after', blockKind });
+        expect(got?.mark).toEqual(line);
+        expect(got?.wraps).toBeNull();
+      }
+    }
+    // Its neighbours: the last block above, the outside below.
+    expect(drop({ x: middleX(f), y: bottom - 2 * betweenBand - 1 }, newIf)?.wraps).toBe('if');
+    expect(drop({ x: middleX(f), y: bottom - betweenBand + 1 }, newIf)?.action).toMatchObject({
+      outsideFold: 'f',
+    });
+    const moved = drop({ x: middleX(f), y: bottom - 12 }, dragging('pa'));
+    expect(moved?.action).toEqual({
+      kind: 'move',
+      target: { kind: 'blocks', first: 'pa', last: 'pa' },
+      to: 'p2',
+      side: 'after',
+    });
+    expect(moved?.mark).toEqual(line);
+    const made = drop({ x: middleX(f), y: bottom - 12 }, newIf);
+    if (made === null) {
+      throw new Error('no drop');
+    }
+    const { ids, folds } = afterDrop(plain, made.action);
+    expect(ids.slice(0, 4)).toEqual(['pa', 'p0', 'p1', 'p2']);
+    expect(folds).toEqual([`f:p0-${String(ids[4])}`]);
+  });
+
+  it('T-1594: the inside end is measured from the region, over whatever block is hit there', () => {
+    const withLoop = headed(
+      [proc('pa'), proc('p0'), whileBlock('w1', [proc('i1'), proc('i2')]), proc('pz')],
+      [{ id: 'f', first: 'p0', last: 'w1' }],
+    );
+    const { boxOf, drop } = placesOf(docWith(withLoop));
+    const f = boxOf('f');
+    const i2 = boxOf('i2');
+    expect(bottomOf(i2)).toBe(bottomOf(f));
+    const got = drop({ x: middleX(i2), y: bottomOf(f) - 12 }, newProcess);
+    expect(got?.action).toEqual({ kind: 'insert', to: 'w1', side: 'after', blockKind: 'process' });
+    expect(got?.mark).toEqual({
+      kind: 'line',
+      x: f.x + edge,
+      y: bottomOf(f) - foldInsideEndGap,
+      width: f.width - 2 * edge,
+    });
+  });
+
+  it('T-1595: with nested regions the innermost holding the point has the inside end; it joins that region and those around it', () => {
+    const nested = headed(
+      [proc('pa'), proc('p0'), proc('p1'), proc('p2'), proc('pz')],
+      [
+        { id: 'f1', first: 'p0', last: 'p2' },
+        { id: 'f2', first: 'p1', last: 'p2' },
+      ],
+    );
+    const { boxOf, drop } = placesOf(docWith(nested));
+    const f1 = boxOf('f1');
+    const f2 = boxOf('f2');
+    // Beside the inner frame: the outer region's inside end, outside the inner region.
+    const outer = drop({ x: f1.x + 1, y: bottomOf(f1) - 12 }, newProcess);
+    expect(outer?.action).toEqual({
+      kind: 'insert',
+      to: 'p2',
+      side: 'after',
+      blockKind: 'process',
+      outsideFold: 'f2',
+    });
+    expect(outer?.mark).toEqual({
+      kind: 'line',
+      x: f1.x + edge,
+      y: bottomOf(f1) - foldInsideEndGap,
+      width: f1.width - 2 * edge,
+    });
+    if (outer !== null) {
+      const { ids, folds } = afterDrop(nested, outer.action);
+      expect(folds).toEqual([`f1:p0-${String(ids[4])}`, 'f2:p1-p2']);
+    }
+    // In the inner frame: its inside end, inside both.
+    const inner = drop({ x: middleX(f2), y: bottomOf(f2) - 12 }, newProcess);
+    expect(inner?.action).toEqual({
+      kind: 'insert',
+      to: 'p2',
+      side: 'after',
+      blockKind: 'process',
+    });
+    expect(inner?.mark).toEqual({
+      kind: 'line',
+      x: f2.x + edge,
+      y: bottomOf(f2) - foldInsideEndGap,
+      width: f2.width - 2 * edge,
+    });
+    if (inner !== null) {
+      const { ids, folds } = afterDrop(nested, inner.action);
+      expect(folds).toEqual([`f1:p0-${String(ids[4])}`, `f2:p1-${String(ids[4])}`]);
+    }
+  });
+
+  it('T-1596: dragged blocks at the inside end, or holding it, are not dropped there', () => {
+    const { boxOf, drop } = placesOf(docWith(plain));
+    const f = boxOf('f');
+    const atInsideEnd = { x: middleX(f), y: bottomOf(f) - 12 };
+    expect(drop(atInsideEnd, dragging('p2'))).toBeNull();
+    expect(drop(atInsideEnd, dragging('p1', 'p2'))).toBeNull();
+    expect(drop(atInsideEnd, dragging('p1'))?.action).toMatchObject({
+      kind: 'move',
+      to: 'p2',
+      side: 'after',
+    });
   });
 });

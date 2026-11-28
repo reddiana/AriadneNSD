@@ -2,14 +2,16 @@
 import type {
   Box,
   DiagramLayout,
+  FoldMark,
   Id,
   LayoutResult,
   NewBlockKind,
+  Seq,
   Side,
   Target,
   WrapKind,
 } from '@ariadne-nsd/core';
-import { geometry } from '@ariadne-nsd/core';
+import { foldRange, geometry } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
 import { ancestorsOf, isEmptyBlock } from '../model/doc-index';
@@ -341,13 +343,20 @@ function frameEndingAt(layout: LayoutResult, index: DocIndex, block: Id): Box | 
 const area = (box: Box): number => box.width * box.height;
 
 /** A drop next to a fold region, outside it: which region, its box, and which side. */
-type FoldEdge = { readonly fold: Id; readonly box: Box; readonly side: Side };
+type FoldEdge = {
+  readonly fold: Id;
+  readonly box: Box;
+  readonly side: Side;
+  /** At the region's inside end: after its last block, inside it (M86 N3). */
+  readonly isInside?: boolean;
+};
 
 /**
- * Whether a point means "next to a fold region, outside it" (M86 N1): the name band of an open
- * region (before it), the upper or lower half of a folded cell (before or after it), or the
- * bottom band inside an open region's box (after it; the innermost region whose band holds the
- * point). Regions without a name band are not drawn as regions, so they have no edge here.
+ * Whether a point means an edge of a fold region (M86 N1, N3): the name band of an open region
+ * (before it, outside), the upper or lower half of a folded cell (before or after it, outside),
+ * the bottom band inside an open region's box (after it, outside) or the band above that (after
+ * its last block, inside it). Of the open regions whose box holds the point the innermost
+ * answers. Regions without a name band are not drawn as regions, so they have no edge here.
  */
 function foldEdgeOf(
   layout: LayoutResult,
@@ -364,7 +373,7 @@ function foldEdgeOf(
     const isUpper = point.y < hit.box.y + hit.box.height / 2;
     return { fold, box: hit.box, side: isUpper ? 'before' : 'after' };
   }
-  let inner: FoldEdge | null = null;
+  let inner: { readonly fold: Id; readonly box: Box } | null = null;
   for (const region of layout.regions) {
     if (region.kind !== 'fold' || region.isFolded || !index.folds.has(region.foldId)) {
       continue;
@@ -373,13 +382,17 @@ function foldEdgeOf(
     if (
       box !== undefined &&
       contains(box, point) &&
-      point.y > box.y + box.height - betweenBand &&
+      point.y >= box.y + box.height - 2 * betweenBand &&
       (inner === null || area(box) < area(inner.box))
     ) {
-      inner = { fold: region.foldId, box, side: 'after' };
+      inner = { fold: region.foldId, box };
     }
   }
-  return inner;
+  if (inner === null) {
+    return null;
+  }
+  const isInside = point.y <= inner.box.y + inner.box.height - betweenBand;
+  return { ...inner, side: 'after', isInside };
 }
 
 /**
@@ -391,13 +404,16 @@ function dropAtFoldEdge(index: DocIndex, edge: FoldEdge, source: DragSource): Dr
   const owner = index.folds.get(edge.fold);
   const seq = owner === undefined ? undefined : index.seqs.get(owner)?.seq;
   const mark = seq?.folds.find((fold) => fold.id === edge.fold);
-  if (mark === undefined) {
+  if (seq === undefined || mark === undefined) {
     return null;
   }
   const { side, box, fold } = edge;
   const to = side === 'before' ? mark.first : mark.last;
   if (source.kind === 'blocks' && ancestorsOf(index, to).some((a) => source.blocks.includes(a))) {
     return null;
+  }
+  if (edge.isInside === true) {
+    return dropAtInsideEnd(seq, mark, box, source);
   }
   return {
     action:
@@ -412,6 +428,51 @@ function dropAtFoldEdge(index: DocIndex, edge: FoldEdge, source: DragSource): Dr
     },
     wraps: null,
   };
+}
+
+/**
+ * A drop at the inside end of an open fold region (M86 N3): after its last block, joining it and
+ * the regions around it but not the regions inside it ending there, never wrapping. The line is
+ * drawn inside its border, as after its last block (M86 N2).
+ */
+function dropAtInsideEnd(seq: Seq, fold: FoldMark, box: Box, source: DragSource): Drop {
+  const to = fold.last;
+  const within = innerFoldAtEnd(seq, fold);
+  const keepOut = within === null ? {} : { outsideFold: within };
+  return {
+    action:
+      source.kind === 'new'
+        ? { kind: 'insert', to, side: 'after', blockKind: source.blockKind, ...keepOut }
+        : { kind: 'move', target: source.target, to, side: 'after', ...keepOut },
+    mark: {
+      kind: 'line',
+      x: box.x + foldEdge,
+      y: box.y + box.height - foldInsideEndGap,
+      width: box.width - 2 * foldEdge,
+    },
+    wraps: null,
+  };
+}
+
+/** The outermost fold region inside `fold` (not `fold` itself) that ends where it ends. */
+function innerFoldAtEnd(seq: Seq, fold: FoldMark): Id | null {
+  const range = foldRange(seq, fold);
+  if (range === null) {
+    return null;
+  }
+  let outer: { readonly id: Id; readonly first: number } | null = null;
+  for (const other of seq.folds) {
+    const r = other.id === fold.id ? null : foldRange(seq, other);
+    if (
+      r !== null &&
+      r[1] === range[1] &&
+      r[0] >= range[0] &&
+      (outer === null || r[0] < outer.first)
+    ) {
+      outer = { id: other.id, first: r[0] };
+    }
+  }
+  return outer?.id ?? null;
 }
 
 /** The smallest box holding all the boxes. */
