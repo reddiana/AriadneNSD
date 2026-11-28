@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 344 | - | 396 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 57 | - | 126 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1076 | 5 | 1455 |
+| 합계 | 87 | 287 | 1082 | 5 | 1461 |
 
 ## 읽는 법
 
@@ -1137,7 +1137,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 126개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 19개, 테스트 132개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1264,16 +1264,28 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [단위] `apps/gallery/build.test.ts`
 
-알고리즘 갤러리의 빌드 (M70). Vitest · 테스트 4개.
+알고리즘 갤러리의 빌드 (M70). Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1488 | gallery.json의 항목을 모두 그 이름으로 두 언어의 페이지에 나열한다 | - |
 | T-1489 | 페이지의 상대 링크와 그림은 모두 빌드된 파일을 가리킨다 | - |
+| T-1632 | the page script snaps the diagram lines (crisp-lines.js) before the gallery script uses them | - |
 | T-1490 | 페이지는 서로, 그리고 앱과 그 언어의 사용법으로 링크한다 | - |
 | T-1563 | 독일어 페이지는 다른 두 페이지와 독일어 사용법으로 링크하고, 그 페이지들도 독일어 페이지로 링크한다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-apps-gallery-build-test-ts
+
+### [단위] `apps/gallery/crisp-lines.test.ts`
+
+The gallery's copy of the editor's crisp lines (M88, pages/crisp-lines.js). Vitest · 테스트 2개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1630 | gives every stroke a whole number of device pixels at the display scale, as the editor does | - |
+| T-1631 | snaps crisp-edged shapes and straight unfilled paths, leaves diagonals, and clears the width at 100% | - |
+
+^t-apps-gallery-crisp-lines-test-ts
 
 ### [단위] `apps/web/scripts/example-thumbnails.test.ts`
 
@@ -1298,7 +1310,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `packages/core/src/i18n/messages.test.ts`
 
-메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 6개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]], [[01-requirements#^r-nfr|R-NFR-04]].
+메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 9개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]], [[01-requirements#^r-nfr|R-NFR-04]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1308,6 +1320,9 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0806 | 고른 언어가 먼저이고, 없으면 브라우저 언어, 그것도 아니면 영어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1561 | 독일어 브라우저 언어는 어느 지역이든 독일어가 된다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1620 | English is there at once; another language shows English until fetched | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1621 | the entries for checks need every language fetched | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+| T-1622 | a failed fetch leaves English and is tried again on the next load | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-core-src-i18n-messages-test-ts
 

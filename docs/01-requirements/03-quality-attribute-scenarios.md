@@ -303,7 +303,7 @@ AriadneNSD는 하나의 편집기를 여러 배포 대상에 제공합니다. �
 
 - **아키텍처:** 화면의 텍스트는 `editor`, 그림에 적는 텍스트는 `core`가 한 곳씩에서 관리한다 → [[01-architecture#6. 공통 관심사]]
 - **테스트:** 정적 분석: UI 코드(`.tsx`)의 JSX에 쓴 글자와 `title` · `aria-label` · `placeholder` · `alt` 속성의 글자를 ESLint가 차단한다(번역하지 않는 제품 이름과 확장자는 이름 붙은 상수로). 카탈로그 넷(그림 · 엔진 · UI · 웹 셸)이 언어마다 모든 키를 가지는지는 타입 검사가 검증한다. 단위 테스트는 빈 문자열이 없는지, `{name}` 자리표시가 언어마다 같은지, 엔진과 UI 카탈로그에 같은 키가 없는지 검증한다. 언어 목록은 `core`의 `locales` 한 줄이다. **실행할 때:** 모든 커밋
-- **테스트 ID:** [[99-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 6개([[99-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-1561). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[99-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
+- **테스트 ID:** [[99-test-list#^t-apps-web-src-shell-messages-test-ts|T-0530]], [[99-test-list#^t-apps-web-src-perf-perf-report-test-ts|T-1157]]. `packages/core/src/i18n/messages.test.ts`의 테스트 9개([[99-test-list#^t-packages-core-src-i18n-messages-test-ts|T-0531]] ~ T-1622). `packages/editor/src/i18n/messages.test.ts`의 테스트 3개([[99-test-list#^t-packages-editor-src-i18n-messages-test-ts|T-0533]] ~ T-0535). 테스트가 아닌 검사: JSX에 쓴 텍스트 금지 규칙 (`eslint.config.js`, `pnpm lint`), 카탈로그마다 모든 언어의 키 (`pnpm typecheck`)
 
 ### QA-14 DOM 독립 테스트 용이성
 
