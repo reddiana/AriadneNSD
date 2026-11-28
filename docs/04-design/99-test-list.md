@@ -17,15 +17,15 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 45 | 309 | - | 364 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 194 | - | 229 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 47 | 54 | - | 124 |
-| [[#5. 파일\|파일]] | 18 | 168 | 241 | - | 427 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 344 | - | 396 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 57 | - | 126 |
+| [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
-| [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 164 | - | 166 |
+| [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 290 | 1007 | 5 | 1389 |
+| 합계 | 87 | 287 | 1076 | 5 | 1455 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 25개, 테스트 364개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 396개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -110,7 +110,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ### [통합] `packages/editor/src/session/engine.test.ts`
 
-삽입과 텍스트 편집 · 명령 뒤의 선택(03-editor 2.3) · 클립보드 · 분기 · 키와 모드(03-keymap) · 보기 전용(03-editor 6.4) · 비주얼 모드(03-keymap "Visual") · 상태 표시줄의 질문 · 세션 자체(03-editor 3.4, 코딩 가이드 5). Vitest · 테스트 45개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-03]], [[01-requirements#^at|AT-12]], [[01-requirements#^r-edit|R-EDIT-11]], [[ux-decisions|UX MD3]].
+텍스트의 삽입과 편집(AT-03) · 명령 뒤의 선택(03-editor 2.3) · 클립보드(AT-12) · 분기(R-EDIT-11, UX MD3) · 키와 모드(03-keymap) · 보기 전용(03-editor 6.4) · 비주얼 모드(03-keymap "Visual") · 세션 자체(03-editor 3.4, 코딩 가이드 5). Vitest · 테스트 42개. 파일 전체가 확인하는 것: [[01-requirements#^at|AT-03]], [[01-requirements#^at|AT-12]], [[01-requirements#^r-edit|R-EDIT-11]], [[ux-decisions|UX MD3]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -132,8 +132,9 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0040 | 조작 규칙 "붙여넣기": 선택한 것이 없으면 아무것도 붙여넣지 않는다 | - |
 | T-0041 | 03-keymap: `v` 다음 `j` `j`와 `y`는 범위를 복사한다 | - |
 | T-0042 | 분기 라벨에서 `o`는 분기를 삽입하고 그 라벨을 연다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
-| T-0043 | 분기가 하나 남게 삭제하면 If로 바꿀지 묻고, `Esc`는 Case를 지킨다 | [[ux-decisions\|UX MD3]] |
-| T-0044 | If에 분기를 삽입하면 Case로 바꿀지 묻고, `Enter`가 바꾼다 | [[ux-decisions\|UX MD3]] |
+| T-0043 | M87 F6: 분기가 하나 남을 때까지 삭제해도 Case를 지키고 아무것도 묻지 않는다 | - |
+| T-0044 | M87 F6: If에 분기를 삽입하면 바로 Case가 되고 실행 취소 한 단계이며, 그렇다고 알린다 | - |
+| T-1608 | M87 F6: "Case를 If로 바꾸기"는 다이어그램 메뉴에 있고, 분기 하나가 남은 Case에서는 컨텍스트 메뉴에도 있다 | - |
 | T-0045 | If의 분기 라벨은 렌더링된 문구를 담고 열린다 | [[01-requirements#^r-edit\|R-EDIT-12]] |
 | T-0046 | 빈 default 칸에 텍스트를 입력하면 default 분기가 생기고, 실행 취소 한 단계다 | [[ux-decisions\|UX CD1]] |
 | T-0047 | 빈 default 칸에서 삽입하면 분기가 생기고, 삭제는 아무것도 하지 않는다 | [[ux-decisions\|UX CD1]] |
@@ -147,10 +148,6 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0542 | `v`를 다시 누르면 비주얼 모드를 떠나고, 범위는 끝난 위치로 줄어든다 | - |
 | T-0543 | `Esc`는 비주얼 모드도 같은 방법으로 떠나되, 선택은 풀지 않는다 | - |
 | T-0544 | 비주얼 모드에서 명령 키는 범위에 실행되고 비주얼 모드를 끝낸다 | - |
-| T-0545 | `Enter`는 첫째 선택지를 고른다: Case가 If가 된다 | - |
-| T-0546 | 숫자는 그 선택지를 고른다: `2`는 Case를 지킨다 | - |
-| T-0547 | 다른 키는 질문을 닫고 평소대로 동작한다 | - |
-| T-0548 | 선택지가 없는 숫자도 질문을 닫는다 | - |
 | T-0811 | ADR-0041: rerender는 문서의 언어로 다시 그리고, 내용과 실행 취소는 그대로 둔다 | - |
 | T-0550 | 불변식을 깨는 내용은 받지 않고, 문제를 기록하고 알린다 | - |
 | T-0551 | 되돌릴 것이 없는 실행 취소나 다시 실행은 그렇다고 알리고 false를 반환한다 | - |
@@ -162,6 +159,27 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ^t-packages-editor-src-session-engine-test-ts
 
+### [단위] `packages/core/src/commands/block-set.test.ts`
+
+무한 반복 · 탈출 · 병렬 처리 블록의 명령(R-BLK-15, R-BLK-12, R-BLK-13). Vitest · 테스트 12개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-15]], [[01-requirements#^r-blk|R-BLK-12]], [[01-requirements#^r-blk|R-BLK-13]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1526 | 새 무한 반복은 텍스트가 없고 본문에 빈 블록 하나를 가진다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1527 | 새 탈출 블록은 텍스트가 비어 있고 빈 블록의 자리를 차지한다(UX XB1) | [[01-requirements#^r-blk\|R-BLK-12]] |
+| T-1528 | 새 병렬 처리 블록은 텍스트가 비어 있고 빈 분기 둘을 가진다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1529 | 블록들을 무한 반복으로, 또는 병렬 처리 블록의 첫 분기로 감싼다(UX EL1 · PB1) | [[01-requirements#^r-edit\|R-EDIT-06]] |
+| T-1530 | 탈출 블록은 블록을 감쌀 수 없다(UX XB1) | [[01-requirements#^r-edit\|R-EDIT-06]] |
+| T-1531 | 무한 반복이나 병렬 처리 블록을 풀면 비지 않은 분기들의 블록이 남는다 | [[01-requirements#^r-edit\|R-EDIT-07]] |
+| T-1532 | 선택한 분기의 오른쪽이나 왼쪽에 라벨 없는 빈 분기를 삽입한다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1533 | 분기를 그 블록째 삭제하되 적어도 둘은 남긴다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1534 | 분기를 왼쪽이나 오른쪽으로 이동하되 양 끝을 넘지 않는다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1535 | 병렬 처리 분기에는 편집할 라벨이 없지만 블록에는 텍스트가 있다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1536 | 무한 반복에는 편집할 텍스트가 없고, 탈출 블록에는 있다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1537 | 새 블록들을 복사해 붙여넣으면 모두 새 id를 받는다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
+
+^t-packages-core-src-commands-block-set-test-ts
+
 ### [단위] `packages/core/src/commands/branch.test.ts`
 
 Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX MD3]], [[ux-decisions|UX CD1]].
@@ -171,7 +189,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 | T-0054 | 선택한 분기의 뒤나 앞에 쓰이지 않은 번호 라벨로 분기를 삽입한다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0055 | default 뒤에 삽입한 분기는 default 바로 앞에 간다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0056 | If에 분기를 삽입하면 Case로 바꿀지 묻는다(UX MD3) | [[01-requirements#^r-edit\|R-EDIT-11]] |
-| T-0057 | 분기를 블록째 삭제하고, 분기가 하나 남으면 If로 바꾸기를 묻는다(UX MD3) | [[01-requirements#^r-edit\|R-EDIT-11]] |
+| T-0057 | 분기를 그 블록째 삭제하고, 분기가 하나 남아도 Case로 남는다(M87 F6) | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0058 | default와 마지막 분기, 그리고 If의 분기는 삭제할 수 없다(UX MD3) | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0059 | default가 없는 Case에서 삭제할 때는 묻지 않는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0060 | 분기 하나와 default만 있는 Case는 id를 지킨 채 If가 된다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
@@ -222,12 +240,13 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/clipboard.test.ts`
 
-복사, 잘라내기, 붙여넣기. Vitest · 테스트 7개.
+복사, 잘라내기, 붙여넣기. Vitest · 테스트 8개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0089 | 복사는 하위 트리 전체와 범위 안의 접기 영역을 가져간다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0090 | 붙여넣기는 새 id의 사본을 선택한 블록 뒤에 둔다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
+| T-1603 | M87 F4: outsideFolds로 붙여넣으면 그 자리에서 시작하는 접기 영역들 밖에 남는다 | - |
 | T-0091 | 01-model 1.7: 붙여넣은 접기 영역은 새 id로 바뀐다 | - |
 | T-0092 | 빈 블록에 붙여넣으면 그 위치를 차지한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 블록을 붙여 넣으면 이름 호출이 된다 | - |
@@ -370,7 +389,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/src/commands/insert.test.ts`
 
-블록 삽입(insertBlock). Vitest · 테스트 14개.
+블록 삽입(insertBlock). Vitest · 테스트 15개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -385,6 +404,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 | T-0146 | 01-model 4.3 (UX MD1): 안의 블록을 선택했을 때 접기의 끝에 삽입한 블록은 접기에 든다 | - |
 | T-0147 | 01-model 4.3 (UX MD1): 선택한 접기 전체의 옆에 삽입한 블록은 밖에 남는다 | - |
 | T-1500 | 조작 규칙 7: 본문 끝에 드롭한 블록은 거기서 끝나는 접기 영역 밖에 놓인다 | - |
+| T-1583 | 조작 규칙 7: 접기 영역의 가장자리에 드롭한 블록은 그 밖에, 둘러싼 접기 영역들 안에 남는다 | - |
 | T-0148 | 01-model 4.3: 접기의 양 끝 사이에 삽입한 블록은 그 안에 든다 | - |
 | T-0149 | 01-model 1.7: 새 id는 주어진 생성기에서 온다 | - |
 | T-0150 | 없거나 이어지지 않은 대상은 거절한다 | [[01-requirements#^r-edit\|R-EDIT-01]] |
@@ -393,7 +413,7 @@ extractMethod(새 Method로 빼기). Vitest · 테스트 13개.
 
 ### [단위] `packages/core/src/commands/move-to.test.ts`
 
-moveTo(드래그 앤 드롭). Vitest · 테스트 6개.
+moveTo(드래그 앤 드롭). Vitest · 테스트 7개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -402,6 +422,7 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 6개.
 | T-0153 | 블록이 하나도 남지 않은 줄에는 빈 블록이 들어간다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0154 | 제자리에 드롭한 블록은 아무것도 바꾸지 않는다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-1501 | 조작 규칙 7: 본문 끝에 드롭한 블록들은 거기서 끝나는 접기 영역 밖에 놓인다 | - |
+| T-1584 | 조작 규칙 7: 접기 영역의 가장자리에 드롭한 블록들은 그 밖에, 둘러싼 접기 영역들 안에 남는다 | - |
 | T-0155 | 블록을 자기 안에 드롭하기는 거절한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 
 ^t-packages-core-src-commands-move-to-test-ts
@@ -549,6 +570,28 @@ id. Vitest · 테스트 5개.
 
 ^t-packages-editor-src-clipboard-clip-format-test-ts
 
+### [단위] `packages/editor/src/commands/block-set.test.ts`
+
+편집기의 무한 반복 · 탈출 · 병렬 처리 블록. Vitest · 테스트 13개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1547 | `a` `e` · `A` `e`는 무한 반복을 삽입하고, 편집하지 않은 채 선택한다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1548 | `a` `x`는 텍스트가 빈 탈출 블록을 삽입하고 그 텍스트를 연다(UX XB1, M84 D3) | [[01-requirements#^r-blk\|R-BLK-12]] |
+| T-1549 | `a` `t`는 빈 분기 둘을 가진 병렬 처리 블록을 삽입하고 그 텍스트를 연다(UX PB1, M84 D4) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1550 | `s` `e` · `s` `t`는 선택을 감싸고, 탈출 블록은 아무것도 감싸지 않는다(UX EL1 · PB1 · XB1) | [[01-requirements#^r-edit\|R-EDIT-06]] |
+| T-1551 | 분기의 첫 블록에서 위로 가면 분기를, 한 번 더 가면 블록을 선택한다. 왼쪽 · 오른쪽 · 아래는 Case 라벨에서와 같다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1552 | 분기를 선택한 채 `a` `p`는 오른쪽에, `A` `p`는 왼쪽에 분기를 삽입한다. 새 분기는 선택되고 편집하지 않는다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1553 | `x`는 분기를 그 블록째 삭제하되 분기 둘 아래로는 줄이지 않는다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1554 | `Alt`+`→` · `Alt`+`←`는 선택한 분기를 이동한다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1555 | 분기에는 편집할 라벨이 없고, 블록의 텍스트는 블록에서 편집한다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1556 | 무한 반복에는 편집할 텍스트가 없다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1557 | 선택한 병렬 처리 분기는 그 칸 전체에 테두리를 두른다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1558 | 분기 위의 위 띠는 분기를 고르고, 아래 띠 · 잘린 끝 · 무한 반복의 띠는 블록을 고른다(M84 B1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1559 | 텍스트로 복사하면 무한 반복과 병렬 처리 블록은 중첩을 지킨다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
+
+^t-packages-editor-src-commands-block-set-test-ts
+
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
 펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 42개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
@@ -602,7 +645,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
-명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 32개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
+명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 39개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -612,6 +655,13 @@ id. Vitest · 테스트 5개.
 | T-0798 | 헤더에서 붙여넣기 · 감싸기 · 풀기를 하면 선택한 것이 없다가 아니라 헤더라서 안 된다고 알린다 | [[defects#BUG-11\|BUG-11]] |
 | T-0560 | 할 일이 없으면 실행 취소 · 다시 실행 · 줌 초기화를 거절한다 | - |
 | T-0561 | 하나뿐인 다이어그램은 삭제를 거절한다 | - |
+| T-1604 | `o` · `a` 다음의 블록 종류와 툴바는 본문의 맨 앞, 그 자리에서 시작하는 접기 영역들 밖에 삽입한다 | - |
+| T-1605 | 헤더 아래에 삽입한 호출 블록도 본문의 맨 앞에 간다 | - |
+| T-1606 | `p`는 본문의 맨 앞에 붙여넣고, 헤더 위에서는 여전히 삽입과 붙여넣기를 거절한다 | - |
+| T-1609 | 복사와 감싸기는 접힌 줄과 같이 그 분기의 블록을 모두 가져간다 | - |
+| T-1610 | 잘라내기는 그 분기의 블록을 복사하고 분기를 삭제하며, 실행 취소 한 단계다 | - |
+| T-1611 | 삭제가 분기를 거절하는 곳에서는 잘라내기도 같은 알림으로 거절하고 아무것도 복사하지 않는다 | - |
+| T-1612 | 분기 라벨 위에서 붙여넣으면 여전히 그곳에서는 안 된다고 알린다 | - |
 | T-0562 | %s를 선택했을 때 %s의 이름은 %s다 | - |
 | T-1363 | 분기 라벨에서 풀면 If를 풀고 나온 블록들을 선택한다 | [[ux-decisions\|UX Q8]] |
 | T-1364 | 빈 default 칸에서 풀면 Case를 푼다 | [[ux-decisions\|UX Q8]] |
@@ -671,7 +721,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 17개, 테스트 229개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 18개, 테스트 250개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -757,7 +807,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/canvas-view.test.ts`
 
-다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 72개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
+다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 74개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -823,10 +873,12 @@ id. Vitest · 테스트 5개.
 | T-0635 | 선택한 범위 안에서 드래그하면 범위 전체를 드래그한다 | - |
 | T-0636 | 누르는 동안 선택이 바뀌면 누른 블록이 선택되고 그것만 드래그된다 | - |
 | T-0637 | 드래그 중의 `Esc`는 드래그를 취소하고, 아무것도 이동하지 않는다 | - |
+| T-1582 | 선택 테두리는 드래그하는 동안 사라지고, 드래그를 취소하거나 드롭하면 돌아온다 | - |
 | T-0638 | 드래그 중의 다른 키는 아무 일도 하지 않는다 | - |
 | T-0639 | 취소된 포인터는 드롭하지 않고 드래그를 끝낸다 | - |
 | T-0640 | 캔버스 밖이나 드래그하는 블록 자신 위에는 드롭 위치가 없다 | - |
 | T-0641 | 보기 전용에서 누름은 드래그가 되지 않는다 | - |
+| T-1599 | M87 F2: 접기 영역이나 접힌 칸의 이름 띠를 눌러 드래그하면 접기 영역 전체를 드래그한다 | - |
 | T-0642 | 캔버스 가장자리 가까이에서 드래그하면 그쪽으로 스크롤된다 | - |
 | T-0643 | 블록 사이에 드롭하면 새 블록을 거기에 삽입하고 그 텍스트를 연다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0644 | 블록 위에 제어 블록을 드롭하면 그 블록을 감싸고, 라벨이 그렇다고 알린다 | [[01-requirements#^r-edit\|R-EDIT-06]] |
@@ -865,7 +917,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/overlay.test.ts`
 
-선택 테두리 렌더링(overlayContent) · overlayContent: 펼침 삼각형의 위치(UX FD11) · overlayContent: 편집 레이어가 렌더링하는 것 · selectionBox · fieldBox: 인라인 편집기가 열리는 위치 · 모든 테마에서의 편집 색(시각 디자인 3.4, UX TM4). Vitest · 테스트 23개. 파일 전체가 확인하는 것: [[ux-decisions|UX FD11]], [[ux-decisions|UX TM4]].
+선택 테두리 렌더링(overlayContent) · overlayContent: 펼침 삼각형의 위치(UX FD11) · overlayContent: 편집 레이어가 렌더링하는 것 · selectionBox · fieldBox: 인라인 편집기가 열리는 위치 · 모든 테마에서의 편집 색(시각 디자인 3.4, UX TM4). Vitest · 테스트 25개. 파일 전체가 확인하는 것: [[ux-decisions|UX FD11]], [[ux-decisions|UX TM4]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -877,8 +929,10 @@ id. Vitest · 테스트 5개.
 | T-0649 | 마우스를 올린 블록에는 가장자리 안쪽 1px에 1px 테두리가 생긴다 | - |
 | T-0650 | 선택한 블록에는, 그리고 드롭 위치가 보이는 동안에는 호버를 렌더링하지 않는다 | - |
 | T-0651 | 드래그하는 블록은 제자리에서 종이 색으로 흐려진다 | - |
-| T-0652 | 블록 사이의 드롭 위치는 양 끝에 눈금이 있는 2px 선이다 | - |
-| T-0653 | 블록 위의 드롭 위치는 블록 안쪽 1px에 두른 2px 테두리다 | - |
+| T-0652 | 블록 사이의 드롭 위치는 흰 halo 위의 4px 선이고, 화살촉이 양 끝에서 7px 나온다 | - |
+| T-0653 | 블록 위의 드롭 위치는 흰 8px halo 위의 4px 테두리이고, 둘 다 블록 안쪽 4px에 중심을 둔다 | - |
+| T-1580 | 드래그하는 동안에는 드롭 위치가 있든 없든 선택 테두리가 없다 | - |
+| T-1581 | 어두운 종이 위의 드롭 위치는 주황 #f08a4b이고 halo는 종이 색이다 | - |
 | T-1310 | 열린 인라인 에디터 위에는 선택 하이라이트를 그리지 않고, 그 블록에 호버도 그리지 않는다 | - |
 | T-1311 | 인라인 에디터가 덮지 않는 블록의 선택 하이라이트는 그대로 그린다 | - |
 | T-0654 | 블록의 범위는 그 블록들을 모두 둘러싼 상자 하나로 테두리를 두른다 | - |
@@ -916,7 +970,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/input/drop-ends.test.ts`
 
-다이어그램 본문의 맨 앞 · 맨 끝에 드롭(조작 규칙 7, M75 P2). Vitest · 테스트 8개.
+다이어그램 본문의 맨 앞 · 맨 끝에 드롭(조작 규칙 7, M75 P2). Vitest · 테스트 11개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -928,8 +982,34 @@ id. Vitest · 테스트 5개.
 | T-1507 | 접기 영역이 접혔든 펴졌든, 본문 끝에 넣은 새 블록은 그 영역 밖에 놓인다 | - |
 | T-1508 | 맨 끝 띠는 다른 다이어그램에 닿지 않는다 | - |
 | T-1509 | 펴 보인 호출 블록 아래에 놓으면 펴 보인 내용 안이 아니라 호출 블록 뒤에 들어간다 | - |
+| T-1600 | 그 띠는 호출 블록 앞으로 드롭을 받고 감싸지 않으며, 선은 테두리 바로 밖에 그린다 | - |
+| T-1601 | 상자 안의 아래 띠는 호출 블록 뒤로 드롭을 받고, 안에 펴 보인 블록은 아무것도 받지 않는다 | - |
+| T-1602 | 드래그한 호출 블록은 자기 띠나 아래에 드롭하지 않는다 | - |
 
 ^t-packages-editor-src-input-drop-ends-test-ts
+
+### [단위] `packages/editor/src/input/drop-folds.test.ts`
+
+접기 영역 옆에 드롭(조작 규칙 7, M86). Vitest · 테스트 14개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1585 | 펼친 접기 영역의 이름 띠에서는 드롭이 그 앞, 그 밖에 가고, 삼각형은 아무것도 받지 않는다 | - |
+| T-1586 | 펼친 접기 영역 안의 아래 띠에서는 마지막 블록 위로, 그 밖의 뒤에 드롭한다 | - |
+| T-1587 | 중첩된 접기 영역의 아래 띠가 겹치는 곳에서는 가장 안쪽이 이기고, 바깥 것은 여전히 블록을 안으로 받는다 | - |
+| T-1588 | 접힌 칸은 위쪽 반에서 그 앞에, 아래쪽 반에서 그 뒤에, 그 밖으로 드롭을 받는다 | - |
+| T-1589 | 접기 영역 안의 블록 사이와 안쪽 맨 앞에서는 드롭이 전처럼 안에 머문다 | - |
+| T-1590 | 펼친 접기 영역 안의 마지막 블록 뒤에서는 선을 그 테두리 안쪽에 그린다 | - |
+| T-1591 | 이름 띠를 숨긴 접기 영역은 드롭 대상이 아니다 | - |
+| T-1592 | 접기 영역의 가장자리에 있거나 그 접기 영역을 담은 드래그한 블록은 그곳에 드롭하지 않는다 | - |
+| T-1593 | 아래 띠 바로 위의 띠는 안쪽 끝을 뜻한다: 마지막 블록 뒤, 안쪽, 감싸지 않음 | - |
+| T-1594 | 안쪽 끝은 그 자리에 맞는 블록이 무엇이든 접기 영역을 기준으로 잰다 | - |
+| T-1595 | 중첩된 접기 영역에서는 그 점을 담은 가장 안쪽 것이 안쪽 끝을 가지며, 드롭한 것은 그 접기 영역과 둘러싼 접기 영역들에 든다 | - |
+| T-1596 | 안쪽 끝에 있거나 그것을 담은 드래그한 블록은 그곳에 드롭하지 않는다 | - |
+| T-1597 | 드래그한 접기 영역은 블록의 규칙대로 드롭하고 그 블록들과 함께 이동하며, 실행 취소 한 단계다 | - |
+| T-1598 | 드래그한 접기 영역은 자기 위 · 자기 안 · 그 안의 접기 영역 위에 드롭하지 않는다 | - |
+
+^t-packages-editor-src-input-drop-folds-test-ts
 
 ### [단위] `packages/editor/src/input/hit-shown.test.ts`
 
@@ -1057,7 +1137,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 124개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 18개, 테스트 126개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1079,7 +1159,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0812 | ADR-0041 · UX Q9: 그림 문구의 언어를 바꾸면 If의 분기 라벨을 다시 그리고, 실행 취소하면 되돌아간다 | - |
 | T-0863 | 블록 텍스트의 언어를 고르면 화면에서 키워드를 칠하고, 실행 취소하면 되돌아간다 | [[01-requirements#^r-lay\|R-LAY-06]], [[01-requirements#^r-lay\|R-LAY-07]] |
 | T-0976 | 테마를 바꾸면 렌더링 결과와 인라인 에디터의 색이 바뀌고, 실행 취소하면 되돌아간다 | [[01-requirements#^r-lay\|R-LAY-08]], [[01-requirements#^r-nfr\|R-NFR-07]] |
-| T-1370 | 결과 기호는 문서 설정에서 고르고, 저장 안 됨으로 표시하며, 실행 취소의 대상이 아니다 | [[01-requirements#^r-blk\|R-BLK-08]] |
+| T-1370 | 결과 기호는 문서 설정에서 고르고, 저장 안 됨으로 표시하며, 실행 취소 한 단계다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-0977 | 운영체제가 더 높은 대비를 요청하면 화면 색이 고대비 화면 색으로 바뀐다 | [[01-requirements#^r-nfr\|R-NFR-07]] |
 
 ^t-apps-web-e2e-document-settings-spec-ts
@@ -1129,7 +1209,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [통합] `packages/editor/src/ui/editor-app.test.tsx`
 
-menu bar · toolbar block icons · toolbar wrap dropdown · command palette · status bar · key hint · modals · canvas slot · context menu · dialogs and notices from the shell · picker (interaction rules "호출 블록") · the dialog modal · the zoom buttons (M76 Z1) · screen language (R-NFR-04). Vitest + happy-dom · 테스트 47개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-04]].
+메뉴 바 · 툴바의 블록 아이콘 · 툴바의 감싸기 드롭다운 · 명령 팔레트 · 상태 표시줄 · 키 힌트 · 모달 · 캔버스 자리 · 컨텍스트 메뉴 · 셸의 대화상자와 알림 · 피커(조작 규칙 "호출 블록") · 대화상자 모달 · 확대 · 축소 버튼(M76 Z1) · 화면 언어(R-NFR-04). Vitest + happy-dom · 테스트 46개. 파일 전체가 확인하는 것: [[01-requirements#^r-nfr|R-NFR-04]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1151,7 +1231,6 @@ menu bar · toolbar block icons · toolbar wrap dropdown · command palette · s
 | T-0302 | `↑` · `↓`로 움직이고, `Esc`로 실행하지 않고 닫는다 | [[01-requirements#^r-edit\|R-EDIT-24]] |
 | T-0303 | 06-web 7: 선택한 것과 가장 최근 알림을 보인다 | - |
 | T-0304 | 04-visual-design 7.1: 편집 모드와 줌을 보인다 | - |
-| T-0305 | If ↔ Case를 버튼으로 묻고, 답을 엔진에 전달한다 | [[ux-decisions\|UX MD3]] |
 | T-0306 | 엔진이 힌트를 보일 때라고 하면 둘째 키를 보이고, 그 뒤에 숨긴다 | [[01-requirements#^r-edit\|R-EDIT-04]] |
 | T-0307 | `?`는 Vim 키와 표준 키의 두 열로 된 키 표를 열고, `Esc`가 닫는다 | [[01-requirements#^r-edit\|R-EDIT-21]] |
 | T-1300 | AriadneNSD에 대하여의 문서 · 저장소 링크는 화면 언어로 표시되고 새 탭으로 열린다 | [[ux-decisions\|UX W4]] |
@@ -1179,19 +1258,20 @@ menu bar · toolbar block icons · toolbar wrap dropdown · command palette · s
 | T-1513 | 확대 · 축소 묶음 위의 휠은 마우스 한 칸에 한 단계씩 줌하고, 페이지는 스크롤하지 않는다 | - |
 | T-1514 | 트랙패드의 작은 움직임은 모여서 한 단계가 되고, 가로로만 굴린 휠은 아무것도 하지 않는다 | - |
 | T-1515 | 한계에서 굴린 휠도 명령을 실행하므로, 상태 표시줄이 까닭을 알린다 | [[ux-decisions\|UX DD1]] |
-| T-1525 | not chosen yet, the preferences show the browser language, and English can be chosen | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1525 | 아직 고르지 않았으면 환경 설정은 브라우저 언어를 보이고, 영어를 고를 수 있다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-editor-src-ui-editor-app-test-tsx
 
 ### [단위] `apps/gallery/build.test.ts`
 
-알고리즘 갤러리의 빌드 (M70). Vitest · 테스트 3개.
+알고리즘 갤러리의 빌드 (M70). Vitest · 테스트 4개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1488 | gallery.json의 항목을 모두 그 이름으로 두 언어의 페이지에 나열한다 | - |
 | T-1489 | 페이지의 상대 링크와 그림은 모두 빌드된 파일을 가리킨다 | - |
 | T-1490 | 페이지는 서로, 그리고 앱과 그 언어의 사용법으로 링크한다 | - |
+| T-1563 | 독일어 페이지는 다른 두 페이지와 독일어 사용법으로 링크하고, 그 페이지들도 독일어 페이지로 링크한다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-apps-gallery-build-test-ts
 
@@ -1218,25 +1298,26 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 
 ### [단위] `packages/core/src/i18n/messages.test.ts`
 
-메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 5개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]], [[01-requirements#^r-nfr|R-NFR-04]].
+메시지 카탈로그(코딩 가이드 8). Vitest · 테스트 6개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-13]], [[01-requirements#^r-nfr|R-NFR-04]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-0531 | 그림 카탈로그는 모든 언어에 모든 키가 있음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]], [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0532 | 검사가 빠진 텍스트와 다른 자리표시를 찾음 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
-| T-0318 | a browser language in the list gets that language, every other English | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0318 | 목록에 있는 브라우저 언어는 그 언어가 되고, 그 밖은 모두 영어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-0806 | the chosen language wins; otherwise the browser language, otherwise English | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-0806 | 고른 언어가 먼저이고, 없으면 브라우저 언어, 그것도 아니면 영어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1561 | 독일어 브라우저 언어는 어느 지역이든 독일어가 된다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-core-src-i18n-messages-test-ts
 
 ### [단위] `packages/editor/src/examples/examples.test.ts`
 
-예제 · $id. Vitest · 테스트 11개.
+예제 · $id. Vitest · 테스트 12개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-0321 | 예제 열 개를 차례대로, 두 언어의 이름과 함께 보인다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
+| T-0321 | 예제 열 개를 차례로 나열하고, 각각 모든 언어로 이름을 붙인다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0322 | 두 헤더 모양 모두에서 모든 불변식을 지킨다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0323 | 주어진 헤더 모양과 새 문서의 설정 · 보기를 쓴다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0324 | 언제나 같은 문서를 만든다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
@@ -1244,6 +1325,7 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0326 | 짧은 표기의 텍스트를 모두 원문 그대로 지킨다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0837 | 영어 화면에서는 영어로 열리고, 어느 텍스트에도 한글이 없다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0838 | 한국어 화면에서는 한국어판이 열리고, 블록은 영어판과 같은 위치에 있다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
+| T-1560 | 독일어 화면은 독일어 페이지를 열고, 한글이 없으며 블록은 영어 페이지와 같은 자리에 있다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0327 | 모든 호출 블록을 문서의 Method에 잇는다 | [[01-requirements#^r-edit\|R-EDIT-25]] |
 | T-0328 | 모델 JSON으로 저장하고, 같은 문서로 연다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
 | T-0329 | SVG 파일로 저장하고, 같은 문서로 연다 | [[03-quality-attribute-scenarios#1. 목록\|QA-04]] |
@@ -1347,7 +1429,7 @@ commandViewSource. Vitest · 테스트 3개.
 
 ## 5. 파일
 
-파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 41개, 테스트 427개.
+파일 형식(모델이 든 SVG)의 쓰기 · 읽기 · 왕복, 손상된 파일, 편집기와 셸의 약속, 웹의 저장 · 열기 · 내려받기, 로컬 백업, 탭 잠금, 최근 파일, PNG · SVG · PDF 내보내기와 인쇄, 공유 링크와 보기 모드, 다른 AI를 위한 안내서와 모델의 JSON Schema → [[01-file-format]], [[06-web]]. 파일 42개, 테스트 431개.
 
 ### [E2E] `apps/web/e2e/export.spec.ts`
 
@@ -1539,7 +1621,7 @@ commandViewSource. Vitest · 테스트 3개.
 
 ### [통합] `packages/editor/src/create-editor.test.ts`
 
-셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 텍스트로 붙여넣은 문서(R-WEB-11) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 52개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
+셸과의 약속(03-editor 6) · 셸이 편집기를 거쳐 묻기(03-editor 6에 더한 것) · 텍스트로 붙여넣은 문서(R-WEB-11) · 헤더 모양 · 고르는 창(조작 규칙 "호출 블록") · 헤더와 호출 블록의 인라인 편집(03-editor 3.4) · 셸과의 약속 가운데 드문 부분(03-editor 6) · 문서의 그림 문구의 언어(ADR-0041). Vitest + happy-dom · 테스트 53개. 파일 전체가 확인하는 것: [[03-quality-attribute-scenarios#1. 목록|QA-10]], [[01-requirements#^r-web|R-WEB-11]], [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions|UX HS1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -1595,8 +1677,19 @@ commandViewSource. Vitest · 테스트 3개.
 | T-0818 | UX W5 · Q9: 그림 문구의 언어를 바꾸면 다이어그램을 다시 렌더링하고, 실행 취소하면 되돌아간다 | - |
 | T-0819 | 편집한 분기 라벨은 적은 그대로이고, 비어 있는 라벨은 문서의 언어로 된 고정 문구다 | - |
 | T-0820 | 이 설정은 문서 설정의 목록에 블록 텍스트의 언어 바로 뒤에 있다 | - |
+| T-1562 | 독일어 화면은 독일어 문서로 시작하고, DIN 66261처럼 ja · nein과 sonst를 렌더링한다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-editor-src-create-editor-test-ts
+
+### [단위] `apps/web/src/app-pages.test.ts`
+
+도움말 메뉴의 사용법과 갤러리는 화면 언어로 열린다(06-web 5, DR-0020). Vitest · 테스트 1개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1564 | 사용법과 갤러리는 영어 · 한국어 · 독일어로 열린다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
+
+^t-apps-web-src-app-pages-test-ts
 
 ### [단위] `apps/web/src/files/doc-examples.test.ts`
 
@@ -2047,7 +2140,7 @@ base64 인코딩. Vitest · 테스트 2개.
 
 ### [단위] `packages/core/src/format/parse-model.test.ts`
 
-모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041) · 텍스트를 외곽선으로 저장하는 설정(R-FMT-10). Vitest · 테스트 17개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
+모델 JSON 읽기 · 문서 설정의 그림 문구의 언어(ADR-0041) · 텍스트를 외곽선으로 저장하는 설정(R-FMT-10). Vitest · 테스트 18개. 파일 전체가 확인하는 것: [[01-requirements#^r-fmt|R-FMT-10]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2059,6 +2152,7 @@ base64 인코딩. Vitest · 테스트 2개.
 | T-0417 | 01-file-format 7: 버전 0의 파일은 프로토타입 파일이고 편집할 수 없다 | - |
 | T-0418 | 01-file-format 5: 더 새 버전은 편집할 수 없고 업데이트하라고 알린다 | - |
 | T-0419 | 망가진 입력은 이유와 함께 거절하고, 예외를 던지지 않는다 | [[03-quality-attribute-scenarios#1. 목록\|QA-02]] |
+| T-1546 | 무한 반복 · 탈출 · 병렬 처리 블록을 읽고, 잘못된 모양은 거절한다 | [[01-requirements#^r-blk\|R-BLK-15]], [[01-requirements#^r-blk\|R-BLK-12]], [[01-requirements#^r-blk\|R-BLK-13]] |
 | T-0420 | 01-model 2: 읽을 때 대상이 없는 뷰의 id도 지킨다(약한 참조) | - |
 | T-0421 | 01-model 3: 불변식을 깨는 문서는 고치지 않고 거절한다 | - |
 | T-0821 | 그림 문구의 언어가 기록된 파일은 연 사람의 화면 언어와 상관없이 그 값으로 읽고, 그대로 다시 기록한다 | [[01-requirements#^r-fmt\|R-FMT-02]] |
@@ -2127,7 +2221,7 @@ SVG 파일 · 순수 SVG(R-EXP-02) · 그림 지문 검사(R-FMT-09). Vitest · 
 
 ### [단위] `packages/editor/src/create-editor-export.test.ts`
 
-editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + happy-dom · 테스트 11개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-fmt|R-FMT-09]].
+editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + happy-dom · 테스트 12개. 파일 전체가 확인하는 것: [[01-requirements#^r-exp|R-EXP-02]], [[01-requirements#^r-fmt|R-FMT-10]], [[01-requirements#^r-fmt|R-FMT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2137,7 +2231,8 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1038 | 텍스트를 path로 저장하고 모델에는 텍스트를 남긴다 | - |
 | T-1039 | 다시 끄면 텍스트로 저장하고 설정 키를 기록하지 않는다 | - |
 | T-1040 | true · false가 아닌 값은 받지 않는다 | - |
-| T-1373 | 파일에 저장되는 문서 설정이고 실행 취소의 대상이 아니다 | [[01-requirements#^r-blk\|R-BLK-08]] |
+| T-1373 | 파일에 저장되는 문서 설정이다 | [[01-requirements#^r-blk\|R-BLK-08]] |
+| T-1607 | M87 F5: 바꾸는 것은 실행 취소 한 단계이고, 실행 취소 · 다시 실행으로 되돌아오며, 이름 띠는 그대로다 | - |
 | T-1374 | 같은 기호, 허용되지 않는 값, 보기 전용 문서에서는 아무것도 바뀌지 않는다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-1041 | 파일을 열 때 그 이름과 함께 알린다 | - |
 | T-1042 | 그런 파일이 열린 문서를 바꿀 때도 알린다 | - |
@@ -2215,7 +2310,7 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ## 7. 레이아웃 · 그리기 · 글자
 
-블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 15개, 테스트 166개.
+블록의 크기와 위치, SVG로 렌더링, 테마 색의 대비, 문자 폭 측정, 번들 글꼴과 그 서브셋, 텍스트 외곽선, 웹 화면 글꼴의 슬라이스 → [[02-layout]], [[0040-screen-font-slices|ADR-0040]]. 파일 16개, 테스트 173개.
 
 ### [E2E] `apps/web/e2e/fonts.spec.ts`
 
@@ -2238,9 +2333,26 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ^t-packages-core-node-outline-font-test-ts
 
+### [단위] `packages/core/src/layout/block-set.test.ts`
+
+무한 반복 · 탈출 · 병렬 처리 블록의 레이아웃(R-BLK-15, R-BLK-12, R-BLK-13). Vitest · 테스트 8개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-15]], [[01-requirements#^r-blk|R-BLK-12]], [[01-requirements#^r-blk|R-BLK-13]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1538 | 위 · 왼쪽 · 아래에 반복의 띠만큼 두꺼운 빈 띠가 있고, 본문은 오른쪽 끝까지 닿는다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1539 | 무한 반복으로 시작하는 접기 영역은 블록 종류로 이름을 붙인다(UX EL1) | [[01-requirements#^r-blk\|R-BLK-15]] |
+| T-1540 | 탈출 블록은 한 줄이고, 텍스트보다 쐐기만큼 넓으며, 상자 전체로 선택한다(UX XB1) | [[01-requirements#^r-blk\|R-BLK-12]] |
+| T-1541 | 텍스트가 없으면 두 띠 모두 얇고, 분기들은 그 사이에 나란히 선다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1542 | 텍스트가 있으면 위 띠는 조건 칸만큼 높고 그 안에 텍스트를 렌더링한다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1543 | 분기 위의 위 띠는 분기를 선택하고, 아래 띠와 잘린 끝은 블록을 선택한다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1544 | 빈 병렬 처리 분기는 빈 칸 표시로 렌더링한다(UX PB1, E1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+| T-1545 | 접힌 병렬 처리 분기는 그 열에서 한 줄이다(UX PB1) | [[01-requirements#^r-blk\|R-BLK-13]] |
+
+^t-packages-core-src-layout-block-set-test-ts
+
 ### [단위] `packages/core/src/layout/fold-layout.test.ts`
 
-접힌 것, 접기 영역, 펴 보인 호출 블록의 레이아웃과 렌더링 (02-layout 1.6). Vitest · 테스트 26개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[ux-decisions|UX NF1]], [[03-quality-attribute-scenarios#1. 목록|QA-07]].
+접힌 것, 접기 영역, 펴 보인 호출 블록의 레이아웃과 렌더링 (02-layout 1.6). Vitest · 테스트 25개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[ux-decisions|UX NF1]], [[03-quality-attribute-scenarios#1. 목록|QA-07]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -2269,7 +2381,6 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 | T-1381 | 들어간 만큼 바깥이 늘어나 안쪽 테두리의 폭은 줄지 않는다 | [[ux-decisions\|UX NF1]] |
 | T-1382 | 이름 띠의 히트 영역이 들어간 테두리를 따른다 | [[ux-decisions\|UX NF1]] |
 | T-1383 | 테두리가 아닌 블록은 테두리에 붙은 채로 있다 | [[ux-decisions\|UX NF1]] |
-| T-1126 | peek: 펴 보인 호출 블록으로 렌더링되는 블록 2,000개도 예산 안에서 레이아웃하고 렌더링한다 | - |
 
 ^t-packages-core-src-layout-fold-layout-test-ts
 

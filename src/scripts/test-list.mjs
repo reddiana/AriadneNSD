@@ -53,6 +53,7 @@ const areas = [
       'packages/editor/src/commands/editor-commands.test.ts',
       'packages/editor/src/commands/fold-commands.test.ts',
       'packages/editor/src/commands/call-commands.test.ts',
+      'packages/editor/src/commands/block-set.test.ts',
       'packages/editor/src/clipboard/',
       'apps/web/e2e/editing.spec.ts',
       'apps/web/e2e/folding.spec.ts',
@@ -177,11 +178,17 @@ const anyId = new RegExp(idPattern, 'g');
 function testFiles(dir) {
   const found = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    // manual-shots/ takes the user guide's pictures with Playwright; it is not a test (DR-0020).
+    // manual-shots/ takes the user guide's pictures and doc-shots/ the UX design documents'
+    // pictures with Playwright; they are not tests (DR-0020).
     if (
-      ['node_modules', 'dist', 'test-results', 'playwright-report', 'manual-shots'].includes(
-        entry.name,
-      )
+      [
+        'node_modules',
+        'dist',
+        'test-results',
+        'playwright-report',
+        'manual-shots',
+        'doc-shots',
+      ].includes(entry.name)
     )
       continue;
     const path = join(dir, entry.name);

@@ -95,7 +95,7 @@ test('T-0976 · R-LAY-08 · R-NFR-07: the theme recolors the drawing and the inl
   await expect(paper).toHaveAttribute('fill', '#ffffff');
 });
 
-test('T-1370 · R-BLK-08: the result symbol is chosen in Document Settings, marks the document unsaved and is no undo step', async ({
+test('T-1370 · R-BLK-08: the result symbol is chosen in Document Settings, marks the document unsaved and is one undo step', async ({
   page,
 }) => {
   await openApp(page);
@@ -113,7 +113,7 @@ test('T-1370 · R-BLK-08: the result symbol is chosen in Document Settings, mark
   await page.keyboard.press('Control+z');
   await page.getByRole('button', { name: 'Diagram', exact: true }).click();
   await page.getByRole('menuitem', { name: /Document Settings/ }).click();
-  await expect(dialog.getByLabel('Result symbol')).toHaveValue('1');
+  await expect(dialog.getByLabel('Result symbol')).toHaveValue('0');
 });
 
 test('T-0977 · R-NFR-07: the screen colors follow the OS asking for more contrast', async ({

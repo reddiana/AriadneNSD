@@ -17,3 +17,5 @@ coverage-e2e-raw/
 skills/*/plugin/skills/*/scripts/
 # The promo video's recording script: not part of the app or its checks.
 apps/web/promo/
+# Dumped by apps/gallery/verify/dump-specs.script.ts for local checks; not in git.
+apps/gallery/verify/specs.json
