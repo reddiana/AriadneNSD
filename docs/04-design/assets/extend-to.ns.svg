@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="506" height="556" viewBox="0 0 506 556">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="0b874b32182f8ca649d7a74a2be67be00973e5c6eb257844c1047c9327b535ca"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "extendTo(index, selection, to)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "from = selection?.kind === 'blocks' ? selection.anchor : null"
+        },
+        {
+          "id": "b2",
+          "kind": "if",
+          "text": "from === null\n|| !index.blocks.has(from)",
+          "yes": {
+            "id": "r1",
+            "body": [
+              {
+                "id": "b3",
+                "kind": "exit",
+                "text": "return selectBlock(index, to)"
+              }
+            ]
+          },
+          "no": {
+            "id": "r2",
+            "body": [
+              {
+                "id": "b4",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b5",
+          "kind": "if",
+          "text": "placeOf(index, from).diagram\n!== placeOf(index, to).diagram",
+          "yes": {
+            "id": "r3",
+            "body": [
+              {
+                "id": "b6",
+                "kind": "exit",
+                "text": "return selectBlock(index, to)"
+              }
+            ]
+          },
+          "no": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b7",
+                "kind": "process",
+                "text": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "toAncestors = ancestorsOf(index, to)"
+        },
+        {
+          "id": "b9",
+          "kind": "for",
+          "text": "for (const a of ancestorsOf(index, from))",
+          "body": [
+            {
+              "id": "b10",
+              "kind": "process",
+              "text": "owner = placeOf(index, a).owner"
+            },
+            {
+              "id": "b11",
+              "kind": "process",
+              "text": "b = toAncestors.find((id) => placeOf(index, id).owner === owner)"
+            },
+            {
+              "id": "b12",
+              "kind": "if",
+              "text": "b !== undefined",
+              "yes": {
+                "id": "r5",
+                "body": [
+                  {
+                    "id": "b13",
+                    "kind": "exit",
+                    "text": "return selectRange(index, a, b)"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r6",
+                "body": [
+                  {
+                    "id": "b14",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b15",
+          "kind": "process",
+          "text": "return selectBlock(index, to)"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">extendTo(index, selection, to)</tspan></text>
+<path d="M24 64 L482 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="458" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">from = selection?.kind === <tspan fill="#8a5a00">'blocks'</tspan> ? selection.anchor : <tspan fill="#1f45d6">null</tspan></text>
+<rect x="24" y="96" width="458" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 96 L395 162 L482 96" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="387.5" y="114" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">from === <tspan fill="#1f45d6">null</tspan></text>
+<text x="387.5" y="132" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">|| !index.blocks.has(from)</text>
+<text x="30" y="157" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="476" y="157" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="162" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 162 L24 178 L38 194" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="182" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> selectBlock(index, to)</text>
+<rect x="395" y="162" width="87" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="438.5" cy="178" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M434 182.5 L443 173.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="194" width="458" height="66" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 194 L395 260 L482 194" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="374.5" y="212" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">placeOf(index, from).diagram</text>
+<text x="374.5" y="230" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">!== placeOf(index, to).diagram</text>
+<text x="30" y="255" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="476" y="255" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="24" y="260" width="371" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M38 260 L24 276 L38 292" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="48" y="280" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> selectBlock(index, to)</text>
+<rect x="395" y="260" width="87" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="438.5" cy="276" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M434 280.5 L443 271.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="292" width="458" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="312" font-size="13" fill="#151a22" xml:space="preserve">toAncestors = ancestorsOf(index, to)</text>
+<rect x="24" y="324" width="458" height="176" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="344" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> a <tspan fill="#1f45d6">of</tspan> ancestorsOf(index, from))</text>
+<rect x="46" y="356" width="436" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="376" font-size="13" fill="#151a22" xml:space="preserve">owner = placeOf(index, a).owner</text>
+<rect x="46" y="388" width="436" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="408" font-size="13" fill="#151a22" xml:space="preserve">b = toAncestors.find((id) =&gt; placeOf(index, id).owner === owner)</text>
+<rect x="46" y="420" width="436" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 420 L403 468 L482 420" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="403" y="438" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">b !== <tspan fill="#1f45d6">undefined</tspan></text>
+<text x="52" y="463" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="476" y="463" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="468" width="357" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M60 468 L46 484 L60 500" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="70" y="488" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> selectRange(index, a, b)</text>
+<rect x="403" y="468" width="79" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="442.5" cy="484" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M438 488.5 L447 479.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="24" y="500" width="458" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="520" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> selectBlock(index, to)</text>
+</g>
+</svg>
