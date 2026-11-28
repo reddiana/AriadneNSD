@@ -12,6 +12,8 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "playwright.manual.config.ts",
+    "playwright.doc-shots.config.ts",
+    "doc-shots",
     "e2e",
     "src/perf/large-document.ts",
     "src/files/share-link.ts",
