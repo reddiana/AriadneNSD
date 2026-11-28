@@ -1,0 +1,963 @@
+<section id="screen">
+  <h2>Der Bildschirm</h2>
+  <div class="wide">
+    <img
+      src="../img/de/tour-0-screen.png"
+      width="1100"
+      height="700"
+      alt="Der Bildschirm von AriadneNSD"
+    />
+  </div>
+  <ul>
+    <li>
+      <b>Menüleiste:</b> Datei · Bearbeiten · Diagramm · Ansicht · Hilfe. Hier finden Sie jeden
+      Befehl, daneben seine Taste, sofern er eine hat.
+    </li>
+    <li>
+      <b>Symbolleiste:</b> Neu · Öffnen · Speichern · Exportieren, Rückgängig · Wiederholen,
+      Ausschneiden · Kopieren · Einfügen, acht Blocksymbole (Anweisung · Verzweigung · Fallauswahl ·
+      While-Schleife · Do-While-Schleife · Endlosschleife · Aussprung · Parallelverarbeitung),
+      Umschließen, Zoom, Beispiele.
+    </li>
+    <li>
+      <b>Zeichenfläche:</b> Hier zeichnen Sie. Mehrere Diagramme werden automatisch angeordnet.
+    </li>
+    <li>
+      <b>Statusleiste:</b> Was ausgewählt ist, und Meldungen. Das <code>●</code> neben dem
+      Dateinamen oben rechts bedeutet: Es gibt nicht gespeicherte Änderungen.
+    </li>
+  </ul>
+</section>
+
+<section id="blocks">
+  <h2>Blöcke</h2>
+  <p>
+    In einen Block schreiben Sie, was Sie möchten: Code oder ganz normale Sätze. Die Bedingung einer
+    Verzweigung, einer Fallauswahl oder einer Schleife steht in ihrer Bedingungszelle (oben, bei der
+    Do-While-Schleife unten). Text wird nicht von selbst umbrochen; lange Zeilen brechen Sie mit
+    <kbd>Shift</kbd>+<kbd>Enter</kbd> um. Das <code>∅</code> in einer leeren Zelle bedeutet „hier
+    steht nichts“. Eine Parallelverarbeitung kann in ihrem oberen Streifen Text haben (oder keinen);
+    eine Endlosschleife hat keinen Text.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="../img/de/ref-blocks.png"
+        alt="Anweisung, Verzweigung, Fallauswahl, While-Schleife, For-Schleife und Do-While-Schleife"
+      />
+      <figcaption>
+        Von oben: Anweisung · Verzweigung · Fallauswahl · While-Schleife · For-Schleife ·
+        Do-While-Schleife
+      </figcaption>
+    </figure>
+    <figure>
+      <img
+        src="../img/de/ref-blocks-more.png"
+        alt="Eine Endlosschleife mit einer Verzweigung und einem Aussprung, darunter eine Parallelverarbeitung"
+      />
+      <figcaption>
+        Ein Aussprung in einer Verzweigung innerhalb einer Endlosschleife, danach eine
+        Parallelverarbeitung mit zwei Zweigen
+      </figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Block</th>
+        <th>Bedeutung</th>
+        <th>Kennbuchstabe</th>
+      </tr>
+      <tr>
+        <td>Anweisung</td>
+        <td>Ein Arbeitsschritt</td>
+        <td><kbd>p</kbd> (nur zum Einfügen: <kbd>a</kbd> <kbd>p</kbd> = <kbd>o</kbd>)</td>
+      </tr>
+      <tr>
+        <td>Verzweigung</td>
+        <td>Zwei Zweige, ja und nein</td>
+        <td><kbd>i</kbd></td>
+      </tr>
+      <tr>
+        <td>Fallauswahl</td>
+        <td>Mehrere Zweige je nach Wert; der sonst-Zweig steht ganz rechts</td>
+        <td><kbd>k</kbd></td>
+      </tr>
+      <tr>
+        <td>While-Schleife</td>
+        <td>Prüft zuerst die Bedingung und wiederholt dann</td>
+        <td><kbd>w</kbd></td>
+      </tr>
+      <tr>
+        <td>For-Schleife</td>
+        <td>
+          Wiederholt eine festgelegte Anzahl von Malen (sieht aus wie die While-Schleife; der Text
+          in der Bedingungszelle unterscheidet sie). Nicht in der Symbolleiste: Verwenden Sie Tasten
+          oder Menüs
+        </td>
+        <td><kbd>f</kbd></td>
+      </tr>
+      <tr>
+        <td>Do-While-Schleife</td>
+        <td>Läuft einmal durch und prüft dann die Bedingung</td>
+        <td><kbd>d</kbd></td>
+      </tr>
+      <tr>
+        <td>Endlosschleife</td>
+        <td>Wiederholt ohne Bedingung. Hinaus führt ein Aussprung in ihrem Inneren</td>
+        <td><kbd>e</kbd></td>
+      </tr>
+      <tr>
+        <td>Aussprung</td>
+        <td>
+          Verlässt eine Schleife oder eine Methode vorzeitig; sein Text sagt, wie
+          (<code>break</code>, <code>continue</code>, <code>return x</code>). Er kann nichts
+          umschließen, daher nur zum Einfügen
+        </td>
+        <td><kbd>x</kbd> (nur zum Einfügen)</td>
+      </tr>
+      <tr>
+        <td>Parallelverarbeitung</td>
+        <td>
+          Ihre Zweige laufen gleichzeitig, und alle sind beendet, bevor der nächste Block beginnt.
+          Die Zweige haben keine Beschriftung; es sind zwei oder mehr
+        </td>
+        <td><kbd>t</kbd></td>
+      </tr>
+      <tr>
+        <td>Aufruf</td>
+        <td>Ruft eine Methode desselben Dokuments auf</td>
+        <td><kbd>c</kbd></td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Die Kennbuchstaben folgen auf die Einfügetasten (<kbd>a</kbd> <kbd>A</kbd>) und die
+    Umschließen-Taste (<kbd>s</kbd>).
+  </p>
+</section>
+
+<section id="select">
+  <h2>Bewegen und auswählen</h2>
+  <p>
+    Die Pfeiltasten bewegen sich in der Reihenfolge, die Sie in der Zeichnung sehen. Zusammen
+    auswählen lassen sich nur benachbarte Blöcke auf derselben Ebene. <kbd>Shift</kbd>+Klick auf
+    einen Block in einer anderen Tiefe erweitert die Auswahl auf den kleinsten Bereich, der beide
+    enthält.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Nach oben · unten · links · rechts</td>
+        <td><kbd>k</kbd> <kbd>j</kbd> <kbd>h</kbd> <kbd>l</kbd></td>
+        <td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>, Klick, Mausrad</td>
+      </tr>
+      <tr>
+        <td>Nach oben · unten, einen Kontrollblock als Ganzes</td>
+        <td><kbd>{</kbd> <kbd>}</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></td>
+      </tr>
+      <tr>
+        <td>Zum nächsten Zweig</td>
+        <td></td>
+        <td><kbd>Ctrl</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>Erster / letzter Block des Diagramms</td>
+        <td><kbd>gg</kbd> / <kbd>G</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Mehrere Blöcke auswählen</td>
+        <td><kbd>V</kbd>, dann <kbd>j</kbd> <kbd>k</kbd></td>
+        <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+Klick</td>
+      </tr>
+      <tr>
+        <td>Eine Zweigbeschriftung auswählen (bei der Parallelverarbeitung den Zweig)</td>
+        <td><kbd>k</kbd> auf dem ersten Block des Zweigs</td>
+        <td>
+          <kbd>↑</kbd> auf dem ersten Block des Zweigs, Klick auf die Beschriftung (bei der
+          Parallelverarbeitung auf den oberen Streifen über dem Zweig)
+        </td>
+      </tr>
+      <tr>
+        <td>Auswahl aufheben</td>
+        <td><kbd>Esc</kbd> <kbd>Esc</kbd></td>
+        <td>Klick auf die leere Zeichenfläche</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="insert">
+  <h2>Blöcke einfügen, Text bearbeiten</h2>
+  <p>
+    Ein neuer Block kommt unter die Auswahl, mit <kbd>Shift</kbd> darüber. Ist ein leerer Block
+    (<code>∅</code>) ausgewählt, tritt der neue Block an seine Stelle. Die Textbearbeitung (bei
+    einem Kontrollblock die seiner Bedingungszelle) beginnt sofort. Mit <kbd>Enter</kbd> oder
+    <kbd>Esc</kbd> beenden Sie die Bearbeitung.
+  </p>
+  <div class="wide">
+    <img
+      src="../img/de/ref-insert-hint.png"
+      width="1100"
+      height="700"
+      alt="Nach a und kurzem Warten erscheinen die Blockarten unter der Auswahl"
+    />
+  </div>
+  <p class="caption">
+    Drücken Sie <kbd>a</kbd> und warten Sie einen Moment: Die möglichen nächsten Buchstaben
+    erscheinen direkt unter der Auswahl.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Eine Anweisung darunter / darüber einfügen</td>
+        <td>
+          <kbd>o</kbd> (oder <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (oder <kbd>A</kbd>
+          <kbd>p</kbd>)
+        </td>
+        <td>Das Anweisungssymbol in der Symbolleiste / <kbd>Shift</kbd>+Klick</td>
+      </tr>
+      <tr>
+        <td>Einen anderen Block darunter / darüber einfügen</td>
+        <td><kbd>a</kbd> / <kbd>A</kbd> + Kennbuchstabe</td>
+        <td>
+          Sein Symbol in der Symbolleiste / <kbd>Shift</kbd>+Klick, oder das Symbol zwischen Blöcke
+          ziehen und ablegen
+        </td>
+      </tr>
+      <tr>
+        <td>Textbearbeitung beginnen</td>
+        <td><kbd>i</kbd>, <kbd>cc</kbd> (leeren und neu schreiben)</td>
+        <td><kbd>Enter</kbd>, <kbd>F2</kbd>, Doppelklick</td>
+      </tr>
+      <tr>
+        <td>Bearbeitung beenden</td>
+        <td><kbd>Esc</kbd></td>
+        <td><kbd>Enter</kbd></td>
+      </tr>
+      <tr>
+        <td>Aufruf: Ergebnisfeld ↔ Argumentfeld</td>
+        <td></td>
+        <td><kbd>Tab</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="move">
+  <h2>Verschieben, kopieren, löschen</h2>
+  <p>
+    Beim Verschieben tauscht die Auswahl den Platz mit dem Block darüber oder darunter. Wird sie
+    über das Ende hinaus verschoben, verlässt sie den Block, der sie enthält. Um sie in einen
+    anderen Block zu setzen, ziehen Sie sie dorthin und legen sie ab, oder Sie schneiden sie aus und
+    fügen sie ein. Aus einem anderen Programm kopierter Text wird als eine Anweisung je Zeile
+    eingefügt; ist der Text ein ganzes AriadneNSD-Dokument (Modell-JSON oder ein Freigabelink),
+    fragt die App, ob sie es stattdessen als neues Dokument öffnen soll (<a href="#ai"
+      >Von einer KI zeichnen lassen</a
+    >). In ein anderes Programm kopierte Blöcke werden zu eingerücktem Text; ein Aufruf lautet wie
+    gezeichnet <code>Ergebnis ← Name(Argumente)</code>.
+  </p>
+  <div class="pair">
+    <figure>
+      <img src="../img/de/ref-move-before.png" alt="a, b, c, wobei c ausgewählt ist" />
+      <figcaption><code>c</code> ist ausgewählt</figcaption>
+    </figure>
+    <span class="to" aria-hidden="true">→</span>
+    <figure>
+      <img src="../img/de/ref-move-after.png" alt="c steht jetzt über b" />
+      <figcaption><kbd>Alt</kbd>+<kbd>k</kbd> verschiebt es nach oben</figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Nach oben · unten verschieben (Zweige nach links · rechts)</td>
+        <td><kbd>Alt</kbd>+<kbd>k</kbd> <kbd>j</kbd> (<kbd>h</kbd> <kbd>l</kbd>)</td>
+        <td>
+          <kbd>Alt</kbd>+<kbd>↑</kbd> <kbd>↓</kbd> (<kbd>←</kbd> <kbd>→</kbd>), den Block ziehen und
+          ablegen
+        </td>
+      </tr>
+      <tr>
+        <td>Kopieren</td>
+        <td><kbd>yy</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>C</kbd></td>
+      </tr>
+      <tr>
+        <td>Ausschneiden</td>
+        <td><kbd>dd</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>X</kbd></td>
+      </tr>
+      <tr>
+        <td>Darunter / darüber einfügen</td>
+        <td><kbd>p</kbd> / <kbd>P</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>V</kbd> (darunter)</td>
+      </tr>
+      <tr>
+        <td>Löschen (ohne zu kopieren)</td>
+        <td><kbd>x</kbd></td>
+        <td><kbd>Delete</kbd>, <kbd>Backspace</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="wrap-branches">
+  <h2>Umschließen, Umschließung aufheben, Zweige einfügen</h2>
+  <p>
+    Umschließen setzt die ausgewählten Blöcke in einen neuen Kontrollblock (in den ja-Zweig einer
+    Verzweigung, in den ersten Zweig einer Fallauswahl). Die Umschließung aufheben entfernt die
+    Hülle und behält, was darin steht. Die Zweige einer Fallauswahl fügen Sie wie Blöcke ein und
+    löschen sie ebenso, während ihre Beschriftung ausgewählt ist. Der sonst-Zweig steht immer ganz
+    rechts. Die Zweige einer Parallelverarbeitung nehmen dieselben Tasten an, wenn der Zweig
+    ausgewählt ist, und es bleiben immer mindestens zwei. Beim Umschließen mit einer
+    Parallelverarbeitung kommt die Auswahl in ihren ersten Zweig.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="../img/de/ref-branch-label.png"
+        alt="Die Zweigbeschriftung 1 der Fallauswahl ist ausgewählt"
+      />
+      <figcaption>Die Beschriftung <code>1</code> der Fallauswahl ist ausgewählt</figcaption>
+    </figure>
+    <span class="to" aria-hidden="true">→</span>
+    <figure>
+      <img src="../img/de/ref-branch-added.png" alt="Ein neuer Zweig 3 rechts von 1" />
+      <figcaption>
+        <kbd>o</kbd> fügt rechts davon einen Zweig mit der Beschriftung <code>3</code> ein
+      </figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Umschließen</td>
+        <td><kbd>s</kbd> + Kennbuchstabe</td>
+        <td>
+          <kbd>Ctrl</kbd>+Klick auf ein Blocksymbol, „Umschließen“ in der Symbolleiste, oder das
+          Symbol auf die Blöcke ziehen und ablegen
+        </td>
+      </tr>
+      <tr>
+        <td>Umschließung aufheben (den nächsten Kontrollblock um die Auswahl)</td>
+        <td><kbd>ds</kbd></td>
+        <td>Das Kontextmenü</td>
+      </tr>
+      <tr>
+        <td>Zweig rechts / links einfügen (Beschriftung ausgewählt)</td>
+        <td><kbd>o</kbd> / <kbd>O</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Zweig löschen (Beschriftung ausgewählt)</td>
+        <td><kbd>x</kbd></td>
+        <td><kbd>Delete</kbd></td>
+      </tr>
+      <tr>
+        <td>Zweigbeschriftung bearbeiten (von überall im Zweig)</td>
+        <td><kbd>L</kbd></td>
+        <td>Doppelklick auf die Beschriftung</td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Wenn Sie an der Beschriftung einer Verzweigung einen Zweig einfügen, fragt die App, ob sie die
+    Verzweigung in eine Fallauswahl umwandeln soll. Werden der ja- und der nein-Zweig einer
+    Verzweigung vertauscht, bleibt die Bedingung gleich, und damit ändert sich die Bedeutung: Passen
+    Sie die Bedingung an.
+  </p>
+</section>
+
+<section id="folds">
+  <h2>Einklappen</h2>
+  <p>
+    Ein langes Diagramm klappen Sie zum Lesen ein. Wählen Sie einen Kontrollblock und drücken Sie
+    <kbd>f</kbd> (oder <kbd>za</kbd>): Sein Inneres wird zu einer Zeile „⋯ n Blöcke“ eingeklappt.
+    Verzweigung und Fallauswahl werden Zweig für Zweig eingeklappt; ein Zweig, der nur aus einer
+    Anweisung besteht, wird nicht eingeklappt. Auf einem Block klappt die Taste das Nächstliegende
+    ein, das ihn enthält (einen Faltbereich, einen Zweig). Wählen Sie eine eingeklappte Zeile und
+    drücken Sie die Taste noch einmal, um sie auszuklappen.
+  </p>
+  <p>
+    Ein <b>Faltbereich</b> fasst einige Blöcke unter einem Namen zusammen. Wählen Sie die Blöcke und
+    drücken Sie <kbd>zf</kbd>: Sie werden zusammengefasst, sofort eingeklappt, und Sie werden nach
+    einem Namen gefragt. Drücken Sie einfach <kbd>Enter</kbd>, dann erscheint „Text des ersten
+    Blocks und n weitere“ als Name. Ausgeklappt zeigen ein dicker Rahmen und ein Namensstreifen, wo
+    er endet; die Streifen schalten Sie mit Ansicht › Faltbereiche anzeigen aus. Was eingeklappt ist
+    und die Namen werden in der Datei gespeichert, und die gespeicherte Zeichnung sieht aus wie auf
+    dem Bildschirm. Ein- und Ausklappen lassen sich rückgängig machen, je ein Schritt.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Tasten</th>
+        <th>Standardtasten · Maus</th>
+      </tr>
+      <tr>
+        <td>Einklappen · ausklappen</td>
+        <td><kbd>za</kbd>, <kbd>f</kbd></td>
+        <td>
+          Klick auf das Dreieck <code>▸</code> <code>▾</code>, Doppelklick auf eine eingeklappte
+          Zeile
+        </td>
+      </tr>
+      <tr>
+        <td>Nur ausklappen / nur einklappen</td>
+        <td><kbd>zo</kbd> / <kbd>zc</kbd></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Faltbereich erstellen</td>
+        <td><kbd>zf</kbd></td>
+        <td><kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>Faltbereich entfernen (die Blöcke bleiben)</td>
+        <td><kbd>zd</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td>
+      </tr>
+      <tr>
+        <td>Faltbereich umbenennen (sein Streifen oder seine eingeklappte Zelle ausgewählt)</td>
+        <td><kbd>i</kbd>, <kbd>cc</kbd></td>
+        <td><kbd>Enter</kbd>, Doppelklick</td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Die Pfeiltasten überspringen eine eingeklappte Zelle oder Zeile wie einen einzigen Block. Vom
+    ersten Block eines ausgeklappten Faltbereichs aus wählt <kbd>↑</kbd> seinen Namensstreifen.
+    Etwas Eingeklapptes wird als Ganzes verschoben, kopiert und gelöscht.
+  </p>
+</section>
+
+<section id="diagrams">
+  <h2>Ereignisse, Methoden und mehrere Diagramme</h2>
+  <p>
+    Ein Dokument kann mehrere Diagramme enthalten. Mit einem Kopf wird ein Diagramm zu einem
+    <b>Ereignis</b> (etwas, das von außen angestoßen wird, etwa durch einen Interrupt oder einen
+    Timer) oder zu einer <b>Methode</b> (etwas, das ein Aufruf aufruft). Die Anordnung ist
+    automatisch: Ereignisse links, Methoden rechts. Der Name eines Aufrufs folgt dem Methodenkopf;
+    jeder Aufruf hat eigene Argumente und ein eigenes Ergebnis.
+  </p>
+  <p>
+    Wählen Sie Blöcke und drücken Sie <kbd>m</kbd>: Sie werden zu einer <b>neuen Methode</b>, und an
+    ihrer Stelle bleibt ein Aufruf zurück, der sie aufruft. Geben Sie den Namen der neuen Methode
+    ein und drücken Sie <kbd>Enter</kbd>, um zu diesem Aufruf zurückzukehren. In einem Diagramm ohne
+    Kopf zeigt <kbd>m</kbd> eine kleine Liste, in der Sie „In neue Methode extrahieren“ oder
+    „Methodenkopf hinzufügen“ wählen. Ein einziges Rückgängig stellt die Blöcke wieder her.
+  </p>
+  <p>
+    Wählen Sie einen Aufruf und drücken Sie <kbd>f</kbd>: Die Blöcke der Methode werden
+    <b>an Ort und Stelle angezeigt</b> (mit violettem Rahmen und Streifen). Nur die Ansicht ändert
+    sich; die angezeigten Blöcke lassen sich daher auswählen und kopieren, aber nicht bearbeiten.
+    Beim ersten Öffnen übernimmt die Anzeige, was in der Methode eingeklappt ist; danach lässt
+    Einklappen eines Faltbereichs, eines Zweigs oder eines Schleifenrumpfs hier die Methode und
+    andere Aufrufe unverändert, und Einklappen in der Methode lässt diesen Aufruf unverändert.
+    Wählen Sie angezeigte Blöcke und drücken Sie <kbd>zf</kbd> für einen Faltbereich nur an diesem
+    Aufruf. <kbd>ds</kbd> (Umschließung aufheben) ersetzt den Aufruf durch eine Kopie der Blöcke der
+    Methode (das Gegenteil von Extrahieren). Um eine Funktion aufzurufen, die das Dokument nicht
+    enthält, wählen Sie in der Liste „Mit geschriebenem Namen aufrufen“ und geben ihren Namen ein.
+    Um sie später zu zeichnen, drücken Sie <kbd>gd</kbd> auf diesem Aufruf (oder „Methode
+    erstellen“): Eine Methode mit diesem Namen wird erstellt, jeder Aufruf mit diesem Namen ruft sie
+    auf, und die Auswahl springt zu ihrem Kopf. Wird eine Methode gelöscht, behalten die Aufrufe,
+    die sie aufgerufen haben, ihren Namen als Aufruf mit geschriebenem Namen. Um eine Methode ganz
+    aufzulösen, wählen Sie auf einem Aufruf oder auf ihrem Kopf „Methode einsetzen und löschen“ (im
+    Kontextmenü oder im Menü Diagramm): Jeder Aufruf, der sie aufruft, wird zu einer Kopie ihrer
+    Blöcke, die Methode wird gelöscht, und ein einziges Rückgängig nimmt alles zurück. Eine Methode,
+    die sich selbst aufruft, lässt sich so nicht einsetzen.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="../img/de/ref-event-method.png"
+        alt="Das Beispiel Binäre Suche: Das Ereignis main ruft die Methode binary_search auf"
+      />
+      <figcaption>
+        Das Beispiel „Binäre Suche“: Ein Aufruf im Ereignis <code>main()</code> ruft die Methode
+        <code>binary_search</code> auf
+      </figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>
+          Ereignis- / Methodenkopf hinzufügen oder seine Art ändern (<kbd>m</kbd> auf einem Kopf)
+        </td>
+        <td><kbd>e</kbd> / <kbd>m</kbd></td>
+        <td>Das Menü Diagramm</td>
+      </tr>
+      <tr>
+        <td>Die ausgewählten Blöcke in eine neue Methode extrahieren</td>
+        <td><kbd>m</kbd></td>
+        <td>Das Menü Diagramm, das Kontextmenü</td>
+      </tr>
+      <tr>
+        <td>Neues Ereignis- / Methodendiagramm</td>
+        <td><kbd>E</kbd> / <kbd>M</kbd></td>
+        <td>Das Menü Diagramm</td>
+      </tr>
+      <tr>
+        <td>Einen Aufruf einfügen (die Methode aus einer Liste wählen)</td>
+        <td><kbd>a</kbd> <kbd>c</kbd></td>
+        <td>Kontextmenü › Block darunter einfügen</td>
+      </tr>
+      <tr>
+        <td>
+          Die aufgerufene Methode ändern („Mit geschriebenem Namen aufrufen“ steht ebenfalls in
+          dieser Liste)
+        </td>
+        <td></td>
+        <td>Das Menü Diagramm, das Kontextmenü</td>
+      </tr>
+      <tr>
+        <td>
+          Zur aufgerufenen Methode (von einem angezeigten Block zu seinem eigenen Block; bei einem
+          Aufruf mit geschriebenem Namen wird die Methode erstellt)
+        </td>
+        <td><kbd>gd</kbd></td>
+        <td>Das Menü Diagramm, das Kontextmenü</td>
+      </tr>
+      <tr>
+        <td>Methode erstellen (bei einem Aufruf mit geschriebenem Namen)</td>
+        <td><kbd>gd</kbd></td>
+        <td>Das Menü Diagramm, das Kontextmenü</td>
+      </tr>
+      <tr>
+        <td>Einen Aufruf an Ort und Stelle öffnen · schließen</td>
+        <td><kbd>f</kbd>, <kbd>za</kbd></td>
+        <td>Klick auf das Dreieck <code>▾</code> in seinem Streifen</td>
+      </tr>
+      <tr>
+        <td>Einen Aufruf durch die Blöcke der Methode ersetzen (Umschließung aufheben)</td>
+        <td><kbd>ds</kbd></td>
+        <td>Diagramm › Umschließung aufheben</td>
+      </tr>
+      <tr>
+        <td>
+          Methode einsetzen und löschen (jeder Aufruf wird zu den Blöcken der Methode, und die
+          Methode verschwindet)
+        </td>
+        <td></td>
+        <td>Das Menü Diagramm, das Kontextmenü (auf einem Aufruf oder einem Methodenkopf)</td>
+      </tr>
+      <tr>
+        <td>Vorheriges / nächstes Diagramm</td>
+        <td><kbd>[[</kbd> / <kbd>]]</kbd></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>Diagramme umordnen (Kopf ausgewählt)</td>
+        <td><kbd>Alt</kbd>+<kbd>h</kbd> <kbd>l</kbd></td>
+        <td><kbd>Alt</kbd>+<kbd>←</kbd> <kbd>→</kbd></td>
+      </tr>
+      <tr>
+        <td>Diagramm löschen</td>
+        <td></td>
+        <td><kbd>Shift</kbd>+<kbd>Delete</kbd></td>
+      </tr>
+    </table>
+  </div>
+  <p class="tip">
+    Die Form des Kopfes („Wie ein Titel“ oder „Hut · Bogen“) wählen Sie unter Diagramm ›
+    Dokumenteinstellungen. Die zuletzt gewählte Form wird gespeichert. „Sprache der gezeichneten
+    Beschriftungen“ an derselben Stelle ist die Sprache der Wörter, die der Editor zeichnet (ja ·
+    nein einer Verzweigung, „⋯ n Blöcke“). Sie gilt je Dokument und wird in der Datei gespeichert,
+    sodass die Zeichnung gleich aussieht, egal in welcher Sprache die Oberfläche der Lesenden
+    eingestellt ist. Ein neues Dokument beginnt in Ihrer Oberflächensprache.
+  </p>
+  <p class="tip">
+    „Sprache des Blocktexts“ oben in den Dokumenteinstellungen färbt den Blocktext wie Code:
+    Schlüsselwörter, Zeichenketten und Zahlen sowie Kommentare erhalten jeweils eine eigene Farbe.
+    Zur Wahl stehen Nur Text (keine Farben), C, C++, Java, JavaScript · TypeScript, Python und Bash.
+    Nur die Farben ändern sich; die Blöcke behalten Größe und Position. Gefärbt werden Anweisungen
+    und Bedingungen, nicht aber Köpfe, Zweigbeschriftungen und Aufrufe. Gespeicherte Datei und PNG
+    haben dieselben Farben. Ein neues Dokument beginnt mit Nur Text.
+  </p>
+  <p class="tip">
+    „Ergebnissymbol“ in den Dokumenteinstellungen ist das Zeichen zwischen dem Ergebnis eines
+    Aufrufs und dem Aufruf (<code>←</code> oder <code>=</code>). Es gilt je Dokument und wird in der
+    Datei gespeichert. Wie das Einklappen betrifft es nur die Darstellung des Dokuments und ist
+    daher kein Schritt für Rückgängig. Ein neues Dokument beginnt mit <code>←</code>.
+  </p>
+</section>
+
+<section id="theme">
+  <h2>Design, hoher Kontrast</h2>
+  <p>
+    Das Design bestimmt die Farben der Zeichnung. Sie wählen es unter Diagramm ›
+    Dokumenteinstellungen › Design: Hell, Dunkel, Hoher Kontrast (weiße Linien und weißer Text auf
+    Schwarz) oder Schwarzweißdruck. Es gilt je Dokument und wird in der Datei gespeichert; das
+    gespeicherte Bild, das PNG und der Ausdruck haben also die Farben, die Sie sehen. Eine Änderung
+    lässt sich rückgängig machen. Form und Größe der Blöcke sind in jedem Design gleich.
+  </p>
+  <p class="tip">
+    Menüs und Symbolleiste folgen dem hellen oder dunklen Modus Ihres Computers. Verlangt Ihr
+    Computer mehr Kontrast (Kontrastdesigns unter Windows, „Kontrast erhöhen“ unter macOS), wechseln
+    sie zu kontrastreichen Farben. Das Design des Dokuments ändert das nicht: Wählen Sie für die
+    Zeichnung Hoher Kontrast.
+  </p>
+</section>
+
+<section id="undo-zoom">
+  <h2>Rückgängig, Zoom</h2>
+  <p>
+    Befehle, die mehrere Stellen auf einmal ändern, etwa Umschließen, werden auch in einem Schritt
+    rückgängig gemacht. Bis zu 500 Schritte werden aufbewahrt.
+  </p>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Rückgängig / Wiederholen</td>
+        <td><kbd>u</kbd> / <kbd>U</kbd></td>
+        <td>
+          <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd>, <kbd>Ctrl</kbd>+<kbd>R</kbd>
+        </td>
+      </tr>
+      <tr>
+        <td>Vergrößern / Verkleinern (jeweils 10 %)</td>
+        <td><kbd>+</kbd> / <kbd>-</kbd></td>
+        <td><kbd>Ctrl</kbd>+Mausrad (um den Mauszeiger), Zoom in der Symbolleiste</td>
+      </tr>
+      <tr>
+        <td>Zurück auf 100 %</td>
+        <td></td>
+        <td>Das Menü Ansicht</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="files">
+  <h2>Dateien</h2>
+  <p>
+    AriadneNSD läuft im Browser, ohne Server. Ihre Dateien bleiben auf Ihrem Computer oder, wenn Sie
+    sie dort speichern, in diesem Browser. Eine gespeicherte <code>.ns.svg</code> ist selbst ein
+    Bild, wird also überall angezeigt, und wenn Sie sie wieder öffnen, können Sie weiter bearbeiten.
+  </p>
+  <div class="wide">
+    <img
+      src="../img/de/ref-file-menu.png"
+      width="1100"
+      height="700"
+      alt="Das Menü Datei: Neu, Öffnen, Zuletzt verwendete Dateien, Speichern, Speichern unter, Exportieren, Einstellungen"
+    />
+  </div>
+  <ul>
+    <li>
+      <b>Öffnen:</b> über das Menü Datei, die Symbolleiste oder indem Sie eine Datei auf die Seite
+      ziehen und ablegen. Öffnet <code>.ns.svg</code> und <code>.ns</code>.
+    </li>
+    <li>
+      <b>Wohin:</b> Datei › Öffnen…, Speichern unter… und das erste Speichern eines neuen Dokuments
+      fragen zuerst: „Dateien auf diesem Computer“ oder „Dieser Browser“. Geöffnet wird die Seite,
+      die Sie zuletzt verwendet haben. Unter „Dateien auf diesem Computer“ öffnet eine weitere
+      Schaltfläche den Dateidialog Ihres Computers. <kbd>←</kbd> <kbd>→</kbd> wechseln die Seite,
+      <kbd>Esc</kbd> schließt.
+    </li>
+    <li>
+      <b>Speichern:</b> <kbd>Ctrl</kbd>+<kbd>S</kbd>; Speichern unter ist
+      <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. Chrome und Edge schreiben in die Originaldatei
+      und speichern nach dem ersten Speichern automatisch. Firefox und Safari laden die Datei bei
+      jedem Speichern herunter und fragen beim ersten Speichern eines neuen Dokuments nach dem
+      Namen.
+    </li>
+    <li>
+      <b>Dokumente in diesem Browser:</b> Unter „Dieser Browser“ geben Sie dem Dokument einen Namen
+      und speichern es ohne Datei. Neben seinem Namen erscheint dann ein Chip „Browser“, und
+      <kbd>Ctrl</kbd>+<kbd>S</kbd> sowie das automatische Speichern schreiben dorthin, in jedem
+      Browser. Die Liste zeigt Name, Änderungszeit und Größe, das neueste zuerst: Öffnen
+      (Doppelklick oder <kbd>Enter</kbd>), „Umbenennen…“, „In Datei exportieren“ und „Löschen“
+      (<kbd>Delete</kbd>, mit Rückfrage). Speichern unter… verschiebt ein Dokument in eine Datei.
+    </li>
+    <li>
+      <b>Eine Kopie aufbewahren:</b> Dokumente in diesem Browser gibt es nur in diesem Browser. Wenn
+      Sie die Websitedaten des Browsers löschen, werden sie mitgelöscht; exportieren Sie sie daher
+      hin und wieder: „Alle in Dateien exportieren (.zip)“ speichert alle in einer ZIP-Datei, und
+      „Aus Dateien importieren…“ holt <code>.ns.svg</code>-Dateien oder diese ZIP-Datei zurück, auch
+      in einen anderen Browser oder auf einen anderen Computer.
+    </li>
+    <li>
+      <b>Zuletzt verwendete Dateien:</b> im Menü Datei, bis zu zehn Dateien, die Sie geöffnet oder
+      gespeichert haben. Dokumente in diesem Browser tragen den Zusatz „(Browser)“.
+    </li>
+    <li>
+      <b>Lokale Sicherung:</b> Nicht gespeicherte Arbeit wird im Browser aufbewahrt; wenn Sie die
+      Seite wieder öffnen, fragt die App, ob sie wiederhergestellt werden soll. Ein aus einer Datei
+      geöffnetes Dokument behält seine lokale Sicherung, wenn Sie ein anderes öffnen; öffnen Sie
+      diese Datei erneut, fragt die App, ob sie wiederhergestellt werden soll.
+    </li>
+    <li>
+      <b>Exportieren:</b> Datei › Exportieren ▸ PNG, SVG oder PDF. Jedes sieht genauso aus wie das
+      gespeicherte Bild. <b>SVG (nur Zeichnung)</b> ist das gespeicherte Bild ohne das Modell darin:
+      Es öffnet sich überall als Bild, aber nicht in AriadneNSD; teilen Sie also dieses und behalten
+      Sie die <code>.ns.svg</code> zum Bearbeiten. <b>PDF</b> teilt ein großes Diagramm in Seiten im
+      Druckformat (A4, in den USA und Kanada Letter), wo möglich zwischen Blöcken, und nummeriert
+      sie. Der Text wird als Formen gezeichnet, lässt sich also nicht markieren, und Zeichen, die
+      der mitgelieferten Schrift fehlen (etwa chinesische Schriftzeichen), erscheinen als leere
+      Kästchen; drucken Sie solche Diagramme aus dem Browser als PDF.
+    </li>
+    <li>
+      <b>Drucken:</b> Datei › Drucken… oder <kbd>Ctrl</kbd>+<kbd>P</kbd>. Dieselben Seiten wie im
+      PDF gehen an den Druckdialog des Browsers, und nur das Diagramm steht darauf.
+    </li>
+    <li>
+      <b>Text als Pfade:</b> Diagramm › Dokumenteinstellungen › Text als Pfade speichern. Das
+      gespeicherte Bild zeichnet seinen Text als Formen, sodass jedes Programm dieselben Glyphen
+      zeigt, auch wo in Dateien eingebettete Schriften nicht verwendet werden. Der Text bleibt im
+      Dokument, Sie können ihn also weiter bearbeiten; die Datei wird größer.
+    </li>
+    <li>
+      <b>Ein mit einem anderen Werkzeug geändertes Bild:</b> Wurde die Zeichnung in einer Datei in
+      einem anderen Programm (etwa Inkscape) bearbeitet, weist die App beim Öffnen darauf hin.
+      AriadneNSD zeichnet immer aus dem Modell darin, und beim Speichern wird das Bild neu
+      gezeichnet; Änderungen, die nur an der Zeichnung vorgenommen wurden, gehen also verloren.
+    </li>
+    <li>
+      <b>Freigabelink:</b> Datei › Freigabelink kopieren kopiert einen Link, der das ganze Diagramm
+      enthält. Wer ihn öffnet, sieht das Diagramm im Ansichtsmodus ohne Menüs und Symbolleiste und
+      kann zoomen und scrollen; „Bearbeiten“ macht daraus ein eigenes neues Dokument. Nichts wird
+      hochgeladen: Das Diagramm steckt im Link selbst (im Teil nach <code>#</code>, den Browser
+      nicht an den Server senden). Jeder mit dem Link kann es lesen; teilen Sie auf diesem Weg also
+      keine Geheimnisse. Ein Link über 8 KB wird mit einer Warnung kopiert (manche Apps kürzen lange
+      Links), und ein sehr großes Diagramm teilen Sie stattdessen als Datei.
+    </li>
+    <li>
+      <b>Aus eingefügtem JSON öffnen:</b> Datei › Aus eingefügtem JSON öffnen… öffnet das
+      Modell-JSON oder einen Freigabelink, den Sie in das Feld einfügen, als neues Dokument, das Sie
+      bearbeiten können. Das ist für das gedacht, was Ihnen eine KI gegeben hat (<a href="#ai"
+        >Von einer KI zeichnen lassen</a
+      >).
+    </li>
+    <li>
+      <b>Neue Dokumente:</b> Haben Sie ein neues, nie gespeichertes Dokument (ein neues oder ein
+      Beispiel) bearbeitet und öffnen ein anderes Dokument, fragt die App zuerst: „… ist ein neues
+      Dokument, das noch nie gespeichert wurde. Sobald ein anderes Dokument geöffnet wird, lässt es
+      sich nicht zurückholen. Zuerst speichern?“ „Speichern“ (<kbd>Enter</kbd>) speichert und öffnet
+      dann, „Im Browser speichern“ speichert es unter dem Namen seines ersten Diagramms in diesem
+      Browser und öffnet dann, „Verwerfen und öffnen“ verwirft es und öffnet, und „Abbrechen“
+      (<kbd>Esc</kbd>) öffnet nichts.
+    </li>
+    <li>
+      <b>Beispiele:</b> „Beispiele“ in der Symbolleiste oder Hilfe › Beispiele… öffnet zehn davon.
+      Ein Beispiel öffnet sich als neues Dokument; Sie können es also nach Belieben bearbeiten. Die
+      Beispiele sind in Ihrer Oberflächensprache geschrieben. Weitere Algorithmen, von KMP bis Raft,
+      finden Sie in der <a href="../../gallery/de/">Algorithmengalerie</a>.
+    </li>
+  </ul>
+  <p class="tip">
+    AriadneNSD hat Version 1.0 noch nicht erreicht. Jetzt gespeicherte Dateien lassen sich in
+    späteren Versionen möglicherweise nicht öffnen.
+  </p>
+</section>
+
+<section id="ai">
+  <h2>Von einer KI zeichnen lassen</h2>
+  <p>
+    Fügen Sie den folgenden Text bei einer KI wie ChatGPT, Gemini oder Claude ein und senden Sie ihn
+    ab. Ersetzen Sie nur <mark>○○</mark> durch das, was gezeichnet werden soll.
+  </p>
+  <div class="request">
+    <p id="ai-request">
+      Lies https://ariadnensd.com/llms.txt und zeichne dann <mark>○○</mark> als Struktogramm
+      (Nassi-Shneiderman-Diagramm). Gib mir den Freigabelink und das Modell-JSON.
+    </p>
+    <button type="button" data-copy="ai-request" data-copied="Kopiert">Anfrage kopieren</button>
+  </div>
+  <p>
+    Die KI kann diesen Editor nicht bedienen, aber sie liest die Anleitung der Website für
+    KI-Assistenten (<a href="../../llms.txt">llms.txt</a>) und erstellt einen Freigabelink, der das
+    Diagramm enthält. Weil die Adresse der Anleitung in der Anfrage steht, hält sich auch eine KI
+    daran, die keine Seiten öffnet. Auch Hilfe › Von einer KI zeichnen lassen öffnet diesen
+    Abschnitt.
+  </p>
+  <p class="tip">
+    Wenn Sie Claude verwenden, installieren Sie den AriadneNSD-Skill. Dann genügt „Erkläre Quicksort
+    als Struktogramm“ ohne Anfragetext, und er kann außerdem Code in Diagramme umsetzen sowie
+    Diagramme lesen oder ändern → <a href="#claude-skill">Claude-Skill</a>
+  </p>
+  <p>
+    Wenn sich der Link nicht öffnen lässt, kopieren Sie das JSON, das die KI geliefert hat, und
+    fügen Sie es unter Datei › Aus eingefügtem JSON öffnen… ein.
+  </p>
+  <ul>
+    <li>
+      <b>Auf den Link klicken:</b> Das Diagramm öffnet sich im Ansichtsmodus. „Bearbeiten“ macht
+      daraus Ihr eigenes neues Dokument.
+    </li>
+    <li>
+      <b>Das JSON einfügen:</b> in das Feld von Datei › Aus eingefügtem JSON öffnen… oder direkt im
+      Bearbeitungsbildschirm. Dort fragt die App „Der eingefügte Text ist ein AriadneNSD-Dokument.
+      Als neues Dokument öffnen?“: „Als neues Dokument öffnen“ (<kbd>Enter</kbd>) öffnet es als
+      neues, bearbeitbares Dokument, und „Als Text einfügen“ fügt wie bisher eine Anweisung je Zeile
+      ein. Ein eingefügter Freigabelink funktioniert genauso.
+    </li>
+    <li>
+      <b>Von der KI ändern lassen:</b> Nachdem Sie es in der App geändert haben, geben Sie der KI
+      den Link aus Datei › Freigabelink kopieren zurück. Dieser Link ist komprimiert; eine KI, die
+      keinen Code ausführen kann, bittet daher womöglich um die gespeicherte Datei: Hängen Sie die
+      <code>.ns.svg</code>-Datei aus Datei › Speichern an.
+    </li>
+    <li>
+      <b>Wenn sich der Link oder das JSON nicht öffnen lässt:</b> Die App sagt, was nicht stimmt
+      (den Grund). Drücken Sie „Grund kopieren“ und fügen Sie ihn bei der KI ein, die ihn erstellt
+      hat, um eine korrigierte Fassung zu erhalten.
+    </li>
+  </ul>
+  <p class="tip">
+    Das Diagramm steckt im Link selbst; AriadneNSD lädt also nichts hoch. Was Sie an eine KI senden,
+    einschließlich des Links, unterliegt den Regeln dieses KI-Dienstes.
+  </p>
+</section>
+
+<section id="claude-skill">
+  <h2>Claude-Skill</h2>
+  <p>
+    Mit dem AriadneNSD-Skill zeichnet Claude (claude.ai und Claude Code) das Diagramm selbst: Sie
+    erhalten eine gespeicherte Datei (<code>.ns.svg</code>) und einen Freigabelink, beide genau so,
+    wie diese App sie schreibt. Der Skill prüft das Diagramm mit dem Code der App selbst, braucht
+    kein Netzwerk und lädt nichts hoch. Bitten Sie in Ihren eigenen Worten darum, zum Beispiel:
+  </p>
+  <ul>
+    <li><b>Einen Algorithmus erklären:</b> „Erkläre Quicksort als Struktogramm.“</li>
+    <li>
+      <b>Code zeichnen (Claude Code):</b> „Zeichne die Funktion <code>partition</code> in
+      <code>src/sort.py</code> als Struktogramm.“ Die Datei wird neben dem Code oder in
+      <code>docs/</code> gespeichert.
+    </li>
+    <li>
+      <b>Ein Diagramm lesen oder ändern:</b> „Erkläre dieses Diagramm und extrahiere den
+      wiederholten Teil in eine Methode:“ und dazu einen Freigabelink einfügen oder eine
+      <code>.ns.svg</code>-Datei anhängen.
+    </li>
+  </ul>
+  <p>
+    <b>In claude.ai:</b> Öffnen Sie Plugins, wählen Sie Add › Add marketplace › Add from repository,
+    geben Sie <code>reddiana/AriadneNSD</code> ein und fügen Sie dann das AriadneNSD-Plugin hinzu.
+    Die Codeausführung muss eingeschaltet sein (Settings › Capabilities).
+  </p>
+  <p><b>In Claude Code:</b> Führen Sie in einer Sitzung diese beiden Befehle aus.</p>
+  <div class="request">
+    <p id="skill-marketplace">/plugin marketplace add reddiana/AriadneNSD</p>
+    <button type="button" data-copy="skill-marketplace" data-copied="Kopiert">Kopieren</button>
+  </div>
+  <div class="request">
+    <p id="skill-install">/plugin install ariadne-nsd@ariadne-nsd</p>
+    <button type="button" data-copy="skill-install" data-copied="Kopiert">Kopieren</button>
+  </div>
+  <p>
+    Was Claude liefert, öffnet sich hier: Klicken Sie auf den Link (Ansichtsmodus, dann
+    „Bearbeiten“), oder öffnen Sie die <code>.ns.svg</code>-Datei mit Datei › Öffnen bzw. ziehen Sie
+    sie auf die Seite. Die Datei ist zugleich ein gewöhnliches Bild und wird daher auch auf GitHub
+    und in Markdown angezeigt. Damit Claude sie erneut ändert, geben Sie ihm die Datei oder einen
+    Link aus Datei › Freigabelink kopieren.
+  </p>
+</section>
+
+<section id="commands">
+  <h2>Befehlspalette, Kontextmenü</h2>
+  <p>
+    Wenn Ihnen eine Taste nicht einfällt, tippen Sie einen Teil des Befehlsnamens in die
+    Befehlspalette. Jede Zeile zeigt die Taste, die dasselbe tut. Das Kontextmenü zeigt nur die
+    Befehle für das, was ausgewählt ist.
+  </p>
+  <div class="pair">
+    <figure>
+      <img
+        src="../img/de/ref-palette.png"
+        width="1100"
+        height="700"
+        alt="Die Befehlspalette mit der Eingabe „umschl“"
+      />
+      <figcaption>„umschl“ in die Befehlspalette getippt</figcaption>
+    </figure>
+    <figure>
+      <img
+        src="../img/de/ref-context-menu.png"
+        width="1100"
+        height="700"
+        alt="Das Kontextmenü einer Anweisung"
+      />
+      <figcaption>Das Kontextmenü einer Anweisung</figcaption>
+    </figure>
+  </div>
+  <div class="tbl">
+    <table class="keys">
+      <tr>
+        <th>Aktion</th>
+        <th>Vim-Taste</th>
+        <th>Standardtaste · Maus</th>
+      </tr>
+      <tr>
+        <td>Befehlspalette</td>
+        <td></td>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, <kbd>F1</kbd></td>
+      </tr>
+      <tr>
+        <td>Kontextmenü</td>
+        <td></td>
+        <td>Rechtsklick, <kbd>Shift</kbd>+<kbd>F10</kbd>, die Menütaste</td>
+      </tr>
+      <tr>
+        <td>In der Liste bewegen / ausführen / schließen</td>
+        <td><kbd>j</kbd> <kbd>k</kbd></td>
+        <td><kbd>↓</kbd> <kbd>↑</kbd> / <kbd>Enter</kbd> / <kbd>Esc</kbd></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section id="report">
+  <h2>Ein Problem melden</h2>
+  <p>
+    Wenn sich etwas seltsam verhält oder eine Zeichnung falsch ist, sagen Sie uns bitte Bescheid.
+    Beschreiben Sie, was Sie getan haben (Tasten, Klicks), was Sie erwartet haben und was passiert
+    ist. Geben Sie die Version aus Hilfe › Über AriadneNSD sowie Ihren Browser und Ihr
+    Betriebssystem an.
+  </p>
+  <ul>
+    <li>
+      <b>Öffentlich:</b> <a href="https://github.com/reddiana/AriadneNSD/issues">GitHub-Issues</a>,
+      wo andere es sehen und bestätigen können.
+    </li>
+    <li>
+      <b>Vertraulich:</b> Wenn Sie Ihr Diagramm lieber nicht teilen möchten, schreiben Sie an
+      <code>report@ariadnensd.com</code>. Hängen Sie die <code>.ns.svg</code> nur an, wenn Sie
+      möchten.
+    </li>
+  </ul>
+</section>

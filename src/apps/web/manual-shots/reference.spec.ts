@@ -6,15 +6,26 @@ import { fileURLToPath } from 'node:url';
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type { Locale } from '@ariadne-nsd/core';
+import { isLocale } from '@ariadne-nsd/core';
+
 import { openApp } from '../e2e/support';
 
 test.use({ viewport: { width: 1100, height: 700 } });
 
 const manualDirectory = new URL('../../manual/', import.meta.url);
 
-function lang(): 'ko' | 'en' {
-  return test.info().project.name === 'ko' ? 'ko' : 'en';
+function lang(): Locale {
+  const name = test.info().project.name;
+  return isLocale(name) ? name : 'en';
 }
+
+/** What the menu shots type and click, in each screen language. */
+const words: Readonly<Record<Locale, { step: string; file: string; wrap: string }>> = {
+  en: { step: 'step', file: 'File', wrap: 'wrap' },
+  ko: { step: '처리', file: '파일', wrap: '감싸' },
+  de: { step: 'Schritt', file: 'Datei', wrap: 'umschl' },
+};
 
 async function pathOf(name: string): Promise<string> {
   const directory = new URL(`img/${lang()}/`, manualDirectory);
@@ -131,11 +142,8 @@ test('an example with an Event, a Method and a call', async ({ page }) => {
 test('menus: file, context menu, command palette', async ({ page }) => {
   await openApp(page);
   await page.keyboard.press('Enter');
-  await type(page, lang() === 'ko' ? '처리' : 'step');
-  await page
-    .getByRole('menubar')
-    .getByText(lang() === 'ko' ? '파일' : 'File', { exact: true })
-    .click();
+  await type(page, words[lang()].step);
+  await page.getByRole('menubar').getByText(words[lang()].file, { exact: true }).click();
   await shot(page, 'file-menu', true);
   await page.keyboard.press('Escape');
   await page.locator('.ans-canvas[tabindex]').focus();
@@ -143,6 +151,6 @@ test('menus: file, context menu, command palette', async ({ page }) => {
   await shot(page, 'context-menu', true);
   await page.keyboard.press('Escape');
   await page.keyboard.press('Control+Shift+P');
-  await page.keyboard.type(lang() === 'ko' ? '감싸' : 'wrap');
+  await page.keyboard.type(words[lang()].wrap);
   await shot(page, 'palette', true);
 });

@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Benutzerhandbuch – AriadneNSD</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <nav aria-label="Inhalt">
+        <div class="brand"><a href="../../">AriadneNSD</a> Benutzerhandbuch</div>
+        <div class="lang">
+          <a href="../" hreflang="en">English</a> · <a href="../ko/" hreflang="ko">한국어</a> ·
+          <b>Deutsch</b>
+        </div>
+        <div>
+          <div class="part">5-Minuten-Tour</div>
+          <ol>
+            <li><a href="#first-block">Den ersten Block schreiben</a></li>
+            <li><a href="#more-blocks">Weitere Blöcke einfügen</a></li>
+            <li><a href="#wrap">Mit While-Schleife umschließen</a></li>
+            <li><a href="#if">Eine Verzweigung einfügen</a></li>
+            <li><a href="#save">Speichern</a></li>
+          </ol>
+        </div>
+        <div>
+          <div class="part">Referenz</div>
+          <ul>
+            <li><a href="#screen">Der Bildschirm</a></li>
+            <li><a href="#blocks">Blöcke</a></li>
+            <li><a href="#select">Bewegen und Auswählen</a></li>
+            <li><a href="#insert">Blöcke einfügen, Text bearbeiten</a></li>
+            <li><a href="#move">Verschieben, Kopieren, Löschen</a></li>
+            <li><a href="#wrap-branches">Umschließen, Zweige einfügen</a></li>
+            <li><a href="#folds">Einklappen</a></li>
+            <li><a href="#diagrams">Ereignisse, Methoden, mehrere Diagramme</a></li>
+            <li><a href="#theme">Design, hoher Kontrast</a></li>
+            <li><a href="#undo-zoom">Rückgängig, Zoom</a></li>
+            <li><a href="#files">Dateien</a></li>
+            <li><a href="#ai">Von einer KI zeichnen lassen</a></li>
+            <li><a href="#claude-skill">Claude-Skill</a></li>
+            <li><a href="#commands">Befehlspalette, Kontextmenü</a></li>
+            <li><a href="#shortcuts">Alle Tastenkombinationen</a></li>
+            <li><a href="#report">Ein Problem melden</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main>
+        <section id="tour">
+          <h1>5-Minuten-Tour</h1>
+          <p class="lead">
+            Zeichnen Sie ausgehend von einem leeren Dokument ein Nassi-Shneiderman-Diagramm
+            (Struktogramm), das die Elemente eines Arrays summiert und den Mittelwert bildet. Dafür
+            genügt allein die Tastatur oder allein die Maus. In den Tastentabellen steht links die
+            Vim-Taste, rechts die Standardtaste und die Maus. Nehmen Sie, was Ihnen besser in der
+            Hand liegt.
+          </p>
+          <div class="videos">
+            <div class="tabs" role="tablist" aria-label="Videos zu Heapsort">
+              <button
+                type="button"
+                role="tab"
+                id="vt-keys"
+                aria-controls="vp-keys"
+                aria-selected="true"
+              >
+                Nur Tastatur
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="vt-mouse"
+                aria-controls="vp-mouse"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Nur Maus
+              </button>
+            </div>
+            <figure role="tabpanel" id="vp-keys" aria-labelledby="vt-keys">
+              <video
+                controls
+                preload="none"
+                playsinline
+                poster="../video/de/heap-sort-keys.png"
+                width="1080"
+                height="1080"
+                aria-label="Bildschirmaufnahme: Das Struktogramm für Heapsort wird ausgehend von einem leeren Dokument nur mit der Tastatur gezeichnet"
+                title="Heapsort nur mit der Tastatur zeichnen"
+              >
+                <source src="../video/de/heap-sort-keys.mp4" type="video/mp4" />
+              </video>
+              <figcaption>
+                Nur Tastatur: Unten rechts erscheinen die gedrückten Tasten und was sie bewirken.
+              </figcaption>
+            </figure>
+            <figure role="tabpanel" id="vp-mouse" aria-labelledby="vt-mouse" hidden>
+              <video
+                controls
+                preload="none"
+                playsinline
+                poster="../video/de/heap-sort-mouse.png"
+                width="1080"
+                height="1080"
+                aria-label="Bildschirmaufnahme: Das Struktogramm für Heapsort wird ausgehend von einem leeren Dokument nur mit der Maus gezeichnet"
+                title="Heapsort nur mit der Maus zeichnen"
+              >
+                <source src="../video/de/heap-sort-mouse.mp4" type="video/mp4" />
+              </video>
+              <figcaption>
+                Nur Maus: Unten rechts erscheint, was angeklickt wird. Nur der Text wird getippt.
+              </figcaption>
+            </figure>
+          </div>
+          <p class="caption">
+            Derselbe Heapsort, einmal nur mit Tasten und einmal nur mit der Maus gezeichnet. Zum
+            Nachvollziehen in Textform lesen Sie die Tour unten; alle Tasten finden Sie unter
+            <a href="#shortcuts">Alle Tastenkombinationen</a>.
+          </p>
+          <div class="wide">
+            <img
+              src="../img/de/tour-0-screen.png"
+              width="1100"
+              height="700"
+              alt="AriadneNSD mit einem neuen Dokument: oben die Menüs und die Symbolleiste, in der Mitte ein leerer Block"
+            />
+          </div>
+          <p>
+            Wenn Sie die <a href="../../">App</a> öffnen, sehen Sie ein neues Dokument, in dem ein
+            leerer Block ausgewählt ist. Oben befinden sich die Menüs und die Symbolleiste; die
+            Statusleiste unten zeigt, was ausgewählt ist.
+          </p>
+        </section>
+
+        <section id="first-block">
+          <h2><span class="n">1</span>Den ersten Block schreiben</h2>
+          <p>
+            Um Text in den ausgewählten Block zu schreiben, drücken Sie <kbd>Enter</kbd> und
+            beginnen damit die Bearbeitung. Wenn Sie fertig sind, drücken Sie erneut
+            <kbd>Enter</kbd>, um die Bearbeitung zu beenden. Auch <kbd>Esc</kbd> beendet die
+            Bearbeitung.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="../img/de/tour-1a-empty.png" alt="Ein leerer Block, ausgewählt" />
+              <figcaption>Ein leerer Block, ausgewählt</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/de/tour-1b-done.png" alt="Im Block steht sum ← 0" />
+              <figcaption>Nach dem Schreiben von <code>sum ← 0</code></figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>Aktion</th>
+                <th>Vim-Taste</th>
+                <th>Standardtaste · Maus</th>
+              </tr>
+              <tr>
+                <td>Bearbeitung beginnen</td>
+                <td><kbd>i</kbd> (Cursor am Anfang), <kbd>cc</kbd> (leeren und neu schreiben)</td>
+                <td><kbd>Enter</kbd>, <kbd>F2</kbd>, Doppelklick</td>
+              </tr>
+              <tr>
+                <td>Bearbeitung beenden</td>
+                <td><kbd>Esc</kbd></td>
+                <td><kbd>Enter</kbd></td>
+              </tr>
+              <tr>
+                <td>Neue Zeile innerhalb eines Blocks</td>
+                <td></td>
+                <td><kbd>Shift</kbd>+<kbd>Enter</kbd></td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            Solange ein Block ausgewählt ist, sind Buchstabentasten Befehle und kein Text (wie in
+            Vim). Beginnen Sie zuerst die Bearbeitung, um zu schreiben.
+          </p>
+        </section>
+
+        <section id="more-blocks">
+          <h2><span class="n">2</span>Weitere Blöcke einfügen</h2>
+          <p>
+            Ein neuer Block wird direkt unter dem ausgewählten eingefügt. Beim Einfügen einer
+            Anweisung beginnt die Bearbeitung sofort, Sie können also gleich tippen, ohne vorher
+            <kbd>Enter</kbd> zu drücken. Nachdem Sie den Text geschrieben und
+            <kbd>Enter</kbd> gedrückt haben, bleibt der Block ausgewählt; fügen Sie also einfach
+            erneut ein, um den nächsten zu schreiben. Schreiben Sie auf diese Weise
+            <code>i ← 0</code>, <code>sum ← sum + a[i]</code> und <code>i ← i + 1</code>. Halten Sie
+            <kbd>Shift</kbd> (Umschalt) gedrückt, um stattdessen darüber einzufügen.
+          </p>
+          <div class="pair">
+            <figure>
+              <img src="../img/de/tour-1b-done.png" alt="Ein Block" />
+              <figcaption>Ein Block</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img src="../img/de/tour-2-more.png" alt="Vier Blöcke" />
+              <figcaption>Drei weitere eingefügt</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>Aktion</th>
+                <th>Vim-Taste</th>
+                <th>Standardtaste · Maus</th>
+              </tr>
+              <tr>
+                <td>Anweisung darunter / darüber einfügen und schreiben</td>
+                <td>
+                  <kbd>o</kbd> (oder <kbd>a</kbd> <kbd>p</kbd>) / <kbd>O</kbd> (oder <kbd>A</kbd>
+                  <kbd>p</kbd>)
+                </td>
+                <td>Das Anweisungssymbol in der Symbolleiste / <kbd>Shift</kbd>+Klick</td>
+              </tr>
+              <tr>
+                <td>Zwischen Blöcken wechseln</td>
+                <td><kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>↓</kbd> <kbd>↑</kbd>, Klick</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="wrap">
+          <h2><span class="n">3</span>Mit While-Schleife umschließen</h2>
+          <p>
+            Setzen Sie die letzten beiden Blöcke, <code>sum ← sum + a[i]</code> und
+            <code>i ← i + 1</code>, in eine Schleife.
+          </p>
+          <ol class="steps">
+            <li>
+              <b>Beide Blöcke auswählen.</b> Während <code>i ← i + 1</code> (der gerade geschriebene
+              Block) ausgewählt ist, drücken Sie einmal <kbd>Shift</kbd>+<kbd>↑</kbd>: Der Block
+              darüber kommt zur Auswahl hinzu, und der orangefarbene Rahmen umfasst beide. Mit der
+              Maus klicken Sie auf <code>sum ← sum + a[i]</code> und dann mit <kbd>Shift</kbd>+Klick
+              auf <code>i ← i + 1</code>.
+            </li>
+            <li>
+              <b>Mit While-Schleife umschließen.</b> Drücken Sie <kbd>s</kbd> und dann <kbd>w</kbd>.
+              Mit der Maus klicken Sie mit <kbd>Ctrl</kbd>+Klick (Strg) auf das Symbol der
+              While-Schleife in der Symbolleiste.
+            </li>
+            <li>
+              <b>Die Schleifenbedingung schreiben.</b> Die Bearbeitung beginnt sofort in der
+              Bedingungszelle der While-Schleife: Schreiben Sie <code>i &lt; n</code> und drücken
+              Sie <kbd>Enter</kbd>.
+            </li>
+          </ol>
+          <div class="pair">
+            <figure>
+              <img src="../img/de/tour-2-more.png" alt="Der letzte Block ausgewählt" />
+              <figcaption>Ein Block ausgewählt</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img
+                src="../img/de/tour-3s-two-selected.png"
+                alt="Die letzten beiden Blöcke gemeinsam ausgewählt"
+              />
+              <figcaption>1. <kbd>Shift</kbd>+<kbd>↑</kbd>: zwei Blöcke</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img
+                src="../img/de/tour-3e-done.png"
+                alt="Die beiden Blöcke in einer While-Schleife"
+              />
+              <figcaption>2 · 3. <kbd>s</kbd> <kbd>w</kbd>, Bedingung schreiben</figcaption>
+            </figure>
+          </div>
+          <p class="caption">
+            Dasselbe auf dem ganzen Bildschirm. Warten Sie nach <kbd>s</kbd> einen Moment: Direkt
+            unter der Auswahl erscheint ein Hinweis auf die nächsten Tasten.
+          </p>
+          <div
+            class="movie"
+            role="img"
+            aria-label="Auf dem letzten Block wählt Umschalt+↑ zwei Blöcke aus; s zeigt direkt unter der Auswahl einen Tastenhinweis; w umschließt sie mit einer While-Schleife und beginnt die Bearbeitung ihrer Bedingung"
+          >
+            <img src="../img/de/tour-3a-start.png" alt="" />
+            <img src="../img/de/tour-3b-selected.png" alt="" />
+            <img src="../img/de/tour-3c-hint.png" alt="" />
+            <img src="../img/de/tour-3d-done.png" alt="" />
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>Aktion</th>
+                <th>Vim-Taste</th>
+                <th>Standardtaste · Maus</th>
+              </tr>
+              <tr>
+                <td>Mehrere Blöcke auswählen</td>
+                <td><kbd>V</kbd>, dann <kbd>j</kbd> <kbd>k</kbd></td>
+                <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+Klick</td>
+              </tr>
+              <tr>
+                <td>Mit While-Schleife umschließen</td>
+                <td><kbd>s</kbd> <kbd>w</kbd></td>
+                <td>
+                  <kbd>Ctrl</kbd>+Klick auf das Symbol der While-Schleife in der Symbolleiste,
+                  „Umschließen“ in der Symbolleiste oder das Symbol per Drag-and-drop auf die Blöcke
+                  ziehen
+                </td>
+              </tr>
+              <tr>
+                <td>Mit einer anderen Art umschließen</td>
+                <td>
+                  <kbd>s</kbd> + <kbd>i</kbd> Verzweigung · <kbd>k</kbd> Fallauswahl ·
+                  <kbd>d</kbd> Do-While-Schleife · <kbd>f</kbd> For-Schleife ·
+                  <kbd>e</kbd> Endlosschleife · <kbd>t</kbd> Parallelverarbeitung
+                </td>
+                <td>Ebenso, mit dem jeweiligen Symbol</td>
+              </tr>
+              <tr>
+                <td>Umschließung aufheben</td>
+                <td><kbd>ds</kbd></td>
+                <td>Das Kontextmenü (Rechtsklick)</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            Bei Befehlen aus zwei Tasten drücken Sie die erste Taste und warten einen Moment: Die
+            Tasten, die Sie als Nächstes drücken können, erscheinen direkt unter dem ausgewählten
+            Block. Auswendig lernen müssen Sie sie also nicht.
+          </p>
+        </section>
+
+        <section id="if">
+          <h2><span class="n">4</span>Eine Verzweigung einfügen</h2>
+          <p>
+            Fügen Sie nach der Schleife eine Verzweigung ein und schreiben Sie die Bedingung in ihre
+            Bedingungszelle. Gehen Sie dann hinunter in den leeren Block des ja-Zweigs und schreiben
+            Sie den Mittelwert. Das <code>∅</code> im nein-Zweig bedeutet „hier steht nichts“.
+          </p>
+          <div class="pair">
+            <figure>
+              <img
+                src="../img/de/tour-3e-done.png"
+                alt="Die Blöcke, mit einer While-Schleife umschlossen"
+              />
+              <figcaption>Mit ausgewählter While-Schleife</figcaption>
+            </figure>
+            <span class="to" aria-hidden="true">→</span>
+            <figure>
+              <img
+                src="../img/de/tour-4-done.png"
+                alt="Eine Verzweigung hinzugefügt, avg ← sum / n im ja-Zweig"
+              />
+              <figcaption>Verzweigung <code>n &gt; 0</code>, der Mittelwert im ja-Zweig</figcaption>
+            </figure>
+          </div>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>Aktion</th>
+                <th>Vim-Taste</th>
+                <th>Standardtaste · Maus</th>
+              </tr>
+              <tr>
+                <td>Verzweigung darunter / darüber einfügen</td>
+                <td><kbd>a</kbd> <kbd>i</kbd> / <kbd>A</kbd> <kbd>i</kbd></td>
+                <td>Das Symbol der Verzweigung in der Symbolleiste / <kbd>Shift</kbd>+Klick</td>
+              </tr>
+              <tr>
+                <td>Andere Blöcke einfügen</td>
+                <td>
+                  <kbd>a</kbd> + <kbd>k</kbd> Fallauswahl · <kbd>w</kbd> While-Schleife ·
+                  <kbd>d</kbd> Do-While-Schleife · <kbd>f</kbd> For-Schleife ·
+                  <kbd>e</kbd> Endlosschleife · <kbd>x</kbd> Aussprung ·
+                  <kbd>t</kbd> Parallelverarbeitung · <kbd>c</kbd> Aufruf
+                </td>
+                <td>Das jeweilige Symbol in der Symbolleiste</td>
+              </tr>
+              <tr>
+                <td>In einen Zweig / zum nächsten Zweig</td>
+                <td><kbd>j</kbd> / <kbd>l</kbd> <kbd>h</kbd></td>
+                <td><kbd>↓</kbd> / <kbd>→</kbd> <kbd>←</kbd>, Klick</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="save">
+          <h2><span class="n">5</span>Speichern</h2>
+          <p>
+            Beim Speichern entsteht eine <code>.ns.svg</code>-Datei. Die Datei ist selbst ein Bild:
+            Browser, GitHub und Dokumente zeigen sie unverändert an, und AriadneNSD öffnet sie
+            wieder zum Bearbeiten.
+          </p>
+          <div class="wide">
+            <img
+              src="../img/de/tour-5-screen.png"
+              width="1100"
+              height="700"
+              alt="Das fertige Diagramm. Ein Punkt neben dem Dateinamen oben rechts: noch nicht gespeichert"
+            />
+          </div>
+          <p>
+            Der Punkt (<code>●</code>) neben dem Dateinamen oben rechts bedeutet, dass es nicht
+            gespeicherte Änderungen gibt.
+          </p>
+          <div class="tbl">
+            <table class="keys">
+              <tr>
+                <th>Aktion</th>
+                <th>Vim-Taste</th>
+                <th>Standardtaste · Maus</th>
+              </tr>
+              <tr>
+                <td>Speichern / Speichern unter</td>
+                <td></td>
+                <td>
+                  <kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>, das
+                  Speichersymbol in der Symbolleiste
+                </td>
+              </tr>
+              <tr>
+                <td>Rückgängig / Wiederholen</td>
+                <td><kbd>u</kbd> / <kbd>U</kbd></td>
+                <td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td>
+              </tr>
+              <tr>
+                <td>Alle Tasten anzeigen</td>
+                <td><kbd>?</kbd></td>
+                <td>Hilfe › Tastenkombinationen</td>
+              </tr>
+            </table>
+          </div>
+          <p class="tip">
+            Beim ersten Speichern werden Sie gefragt, wohin: in eine Datei auf diesem Computer oder
+            in diesen Browser. In Chrome und Edge wird eine einmal gespeicherte Datei danach
+            automatisch gespeichert. In Firefox und Safari wird die Datei bei jedem Speichern
+            heruntergeladen; ein in diesem Browser gespeichertes Dokument wird in jedem Browser
+            automatisch gespeichert. Nicht gespeicherte Arbeit wird außerdem als lokale Sicherung im
+            Browser aufbewahrt: Wenn Sie die Seite wieder öffnen, werden Sie gefragt, ob Sie sie
+            wiederherstellen möchten.
+          </p>
+        </section>
+
+        <!-- reference -->
+
+        <section id="shortcuts">
+          <h2>Alle Tastenkombinationen</h2>
+          <p>Dieselbe Tabelle, die <kbd>?</kbd> in der App anzeigt.</p>
+          <div class="tbl">
+            <!-- keys -->
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../copy.js"></script>
+    <!-- Cloudflare Web Analytics: counts page views without cookies. Loaded only on the real site, never on localhost or in tests. -->
+    <script>
+      // ?nocount keeps this browser out of the count, ?count counts it again.
+      var cfOff = false;
+      try {
+        var cfKey = 'ariadne-nsd.setting.nocount',
+          cfQuery = new URLSearchParams(location.search);
+        if (cfQuery.has('nocount')) localStorage.setItem(cfKey, 'true');
+        else if (cfQuery.has('count')) localStorage.removeItem(cfKey);
+        cfOff = localStorage.getItem(cfKey) === 'true';
+      } catch (e) {}
+      if (!cfOff && /(^|[.])ariadnensd[.]com$/.test(location.hostname)) {
+        var cfBeacon = document.createElement('script');
+        cfBeacon.type = 'module';
+        cfBeacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        cfBeacon.setAttribute('data-cf-beacon', '{"token": "b248de05a82341d081728426e6cc5878"}');
+        document.body.appendChild(cfBeacon);
+      }
+    </script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
+</html>

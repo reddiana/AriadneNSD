@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url';
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type { Locale } from '@ariadne-nsd/core';
+import { isLocale } from '@ariadne-nsd/core';
+
 import { openApp } from '../e2e/support';
 
 test.use({ viewport: { width: 1100, height: 700 } });
@@ -15,8 +18,9 @@ test.use({ viewport: { width: 1100, height: 700 } });
 const manualDirectory = new URL('../../manual/', import.meta.url);
 
 /** The screen language of this run: the project name in playwright.manual.config.ts. */
-function lang(): 'ko' | 'en' {
-  return test.info().project.name === 'ko' ? 'ko' : 'en';
+function lang(): Locale {
+  const name = test.info().project.name;
+  return isLocale(name) ? name : 'en';
 }
 
 /** Saves the diagram with a margin, or the whole window. */

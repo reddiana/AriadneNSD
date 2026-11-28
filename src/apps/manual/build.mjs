@@ -1,5 +1,6 @@
 // Builds the user guide (DR-0020) into dist/: pages/en.html → dist/index.html (/manual/),
-// pages/ko.html → dist/ko/index.html (/manual/ko/), with the style and the pictures. The
+// pages/ko.html → dist/ko/index.html (/manual/ko/), pages/de.html → dist/de/index.html
+// (/manual/de/), with the style, the pictures and the videos. The
 // reference part comes from pages/ref-<lang>.html.
 // The shortcut table comes from generated/keys-<lang>.html, which the app wrote
 // (apps/web/manual-shots). Pictures and the table are refreshed with:
@@ -12,10 +13,11 @@ const dist = new URL('dist/', root);
 const pages = [
   { lang: 'en', out: 'index.html' },
   { lang: 'ko', out: 'ko/index.html' },
+  { lang: 'de', out: 'de/index.html' },
 ];
 
 await rm(dist, { recursive: true, force: true });
-await mkdir(new URL('ko/', dist), { recursive: true });
+for (const folder of ['ko/', 'de/']) await mkdir(new URL(folder, dist), { recursive: true });
 await cp(new URL('img/', root), new URL('img/', dist), { recursive: true });
 // The videos (mp4 and their poster png) without the recording script and its README.
 await cp(new URL('video/', root), new URL('video/', dist), {
@@ -36,4 +38,6 @@ for (const { lang, out } of pages) {
   const html = page.replace('<!-- reference -->', reference.trim()).replace('<!-- keys -->', keys);
   await writeFile(new URL(out, dist), html);
 }
-process.stdout.write('manual: dist/index.html (en), dist/ko/index.html (ko)\n');
+process.stdout.write(
+  'manual: dist/index.html (en), dist/ko/index.html (ko), dist/de/index.html (de)\n',
+);

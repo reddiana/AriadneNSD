@@ -13,5 +13,6 @@ export default defineConfig({
   projects: [
     { name: 'ko', use: { ...devices['Desktop Chrome'], locale: 'ko-KR' } },
     { name: 'en', use: { ...devices['Desktop Chrome'], locale: 'en-US' } },
+    { name: 'de', use: { ...devices['Desktop Chrome'], locale: 'de-DE' } },
   ],
 });
