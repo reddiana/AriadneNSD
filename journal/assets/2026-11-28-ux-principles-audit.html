@@ -1,0 +1,367 @@
+<meta charset="utf-8">
+<title>M87 조작 규칙의 원칙 점검</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M86과 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbece2; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2518; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2518; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1400px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 86ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul, .sum ul, .sum ol { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .sum li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.fig { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-x: auto; max-width: 100%; }
+.fig svg { display: block; max-width: none; }
+figure { margin: 0; display: grid; gap: 4px; }
+figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+figcaption b { color: var(--fg); font-weight: 600; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 110ch; }
+.tw { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; background: var(--panel); min-width: 640px; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--box); font-weight: 600; }
+td.k { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; color: var(--accent); font-weight: 600; }
+.new { color: var(--pick); font-weight: 600; }
+.chg { color: var(--accent); font-weight: 600; }
+.find { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.find h3 { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.find p { font-size: 14px; color: var(--muted); max-width: 100ch; }
+.find p b { color: var(--fg); }
+.kind { font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 1px 9px; background: var(--warn-soft); color: var(--warn); }
+.kind.info { background: var(--box); color: var(--muted); }
+.mock { font-size: 13px; border: 1px solid #c9d1de; border-radius: 6px; background: #ffffff; color: #1c2230; overflow: hidden; }
+.mock .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 10px; border-top: 1px solid #e3e8f0; }
+.mock .row:first-child { border-top: 0; }
+.mock .ttl { background: #f2f4f8; font-weight: 600; }
+.mock .u { font-family: var(--mono); font-size: 12px; }
+.mock .u.y { color: #1d7a46; } .mock .u.n { color: #a8501a; }
+.status { font-size: 12.5px; background: #f2f4f8; color: #1c2230; border: 1px solid #c9d1de; border-radius: 6px; padding: 6px 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.status .btn { border: 1px solid #9aa6bb; border-radius: 4px; padding: 0 8px; background: #fff; }
+.status .btn.def { border-color: #2c55c9; color: #2c55c9; font-weight: 600; }
+.ba { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 13px; }
+.ba .l { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.ba del { color: var(--warn); } .ba ins { color: var(--pick); text-decoration: none; font-weight: 600; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M87 · 조작 규칙의 원칙 점검</h1>
+    <p class="lede">메인테이너(2026-11-28): "그동안 interaction-rules을 많이 추가하고 고쳤습니다. 일관성이 떨어질 것이 걱정됩니다. UX엑스퍼트로서 점검해주세요. UX엑스퍼트는 큰 원칙들로 정리할 수 있을 것 같아요."</p>
+    <p class="lede">읽은 것: UX 개요(원칙 7개 · 공통 규칙 R1 ~ R7), 조작 규칙 1 ~ 9장 전체, UX 결정 모음, 그리고 드롭 · 삽입 코드(<code>input/drop.ts</code> · <code>hit-test.ts</code> · <code>commands/insert-wrap-commands.ts</code>). 규칙마다 어느 원칙에서 나왔는지 이어 보니 <b>원칙에 이어지지 않는 규칙이 일곱 묶음</b> 나왔고, 모두 이미 여러 번 같은 쪽으로 정한 것들이었습니다. 그것을 원칙으로 올리면 <b>어긋난 곳 일곱(F2 ~ F8)</b>이 원칙에 비추어 답이 나옵니다.</p>
+  </div>
+
+  <div class="sum">
+    <h2>요약</h2>
+    <ul>
+      <li><b>원칙은 대체로 지켜지고 있습니다.</b> 서로 정면으로 부딪히는 규칙은 하나(결과 기호의 실행 취소, F5)이고, 나머지는 "새 규칙이 생겼을 때 옆 경우를 함께 맞추지 않은" 틈입니다.</li>
+      <li><b>원칙에 없던 생각 일곱(A ~ G)이 규칙 수십 개를 이끌고 있었습니다.</b> 가장 큰 것은 A "보이는 상자 하나가 조작의 한 단위"(MD1 · FD5 · 이동 · M86 · CB5 · BI1)와 B "선택한 것이 대상, 아니면 가장 가까운 담은 것"(Q8 · FD1 · 풀기 · XM3)입니다.</li>
+      <li><b>낡은 원칙 하나:</b> "뷰 상태와 내용을 구분한다"는 UN1(접고 펴기도 실행 취소) 뒤로 문장이 지금 규칙과 맞지 않습니다.</li>
+      <li><b>추천:</b> 원칙을 열 개로 다시 묶고(새 셋, 고친 둘, 그대로 다섯), 어긋난 곳 F1 ~ F8은 새 원칙 쪽으로 맞춥니다. 물음은 Q1(원칙 체계)부터 하나씩 묻습니다.</li>
+    </ul>
+  </div>
+
+  <section>
+    <span class="part">1 · 규칙을 원칙에 잇기</span>
+    <h2>지금 원칙으로 설명되는 규칙</h2>
+    <p class="q">규칙과 UX 결정을 한 줄씩 원칙에 이었습니다. 왼쪽 원칙에 이어지는 대표 규칙만 적습니다.</p>
+    <div class="tw"><table>
+      <tr><th>지금 원칙</th><th>이 원칙에서 나온 규칙(대표)</th><th>판정</th></tr>
+      <tr><td>구조를 편집하면 그림이 따라온다</td><td>다이어그램 배치 자동(5장), 감싸기 · 풀기, 저장 그림은 화면 그대로(ADR-0018)</td><td class="good">지켜짐</td></tr>
+      <tr><td>같은 일은 같은 방법으로 (R1 ~ R7)</td><td>Q1 · Q2 편집 시작, Q4 비울 수 없는 칸, Q5 · NM1 삽입 위치, Q6 이동, Q7 풀기, FD1 접기, UN1 실행 취소</td><td class="good">지켜짐</td></tr>
+      <tr><td>키보드만으로 모두</td><td>KP1 · KP2, FD5 · CB5(접힌 것 · 펴 보인 것을 키로 지나감), Q11 좌우 세 겹, <code>Shift</code>+<code>F10</code></td><td class="good">지켜짐</td></tr>
+      <tr><td>Vim의 손에 맞게</td><td>K1 · K3 두 키 조합, <code>ds</code>, <code>o</code> · <code>O</code> · <code>P</code>, 목록의 <code>j</code> <code>k</code>, <code>Esc</code> 두 번</td><td class="good">지켜짐</td></tr>
+      <tr><td>뷰 상태와 내용을 구분한다</td><td>Q9 → UN1, CB13 · CB14, 6장</td><td class="bad">문장이 낡음: UN1 뒤로 접고 펴기도 실행 취소 대상. 결과 기호는 F5</td></tr>
+      <tr><td>화면은 다이어그램에게</td><td>MB1 · MB2 좁은 화면, CF2 포커스 테두리는 잠깐</td><td class="good">지켜짐</td></tr>
+      <tr><td>막지 않고 알린다</td><td>Q14-a, TB3, DD1, CD1의 알림, XB1(위치 검사 없음)</td><td class="good">지켜짐 (예외: 중복 헤더 이름은 칸을 다시 엶, 문서에 적힌 예외)</td></tr>
+    </table></div>
+
+    <h2>어느 원칙에도 이어지지 않는 규칙 → 원칙 후보 A ~ G</h2>
+    <div class="tw"><table>
+      <tr><th>후보</th><th>한 줄</th><th>이 생각으로 이미 정한 규칙</th></tr>
+      <tr><td class="k">A</td><td><b>보이는 상자 하나가 조작의 한 단위다.</b> 접기 영역 · 접힌 칸 · 접힌 줄 · 펴 보인 호출 블록 · 분기는 바깥에서 보면 블록 하나. 경계(이름 띠 · 가장자리)를 가리키면 밖, 안의 블록을 가리키면 안</td><td>MD1, FD5, 이동(접기 영역을 통째로 건너뜀), M86 N1 ~ N3, CB5, NF1, Q10(분기 라벨), BI1(분기 칸), "접힌 줄 선택 = 그 분기의 블록 전체"</td></tr>
+      <tr><td class="k">B</td><td><b>선택한 것이 대상이다.</b> 그것에 듣지 않는 명령은 가장 가까운 담은 것에 듣고, 무엇에 들었는지 알린다</td><td>Q8, FD1, FD6, 풀기(담은 제어 블록), 분기 명령(분기 안의 블록에서도), 헤더에서 이동 = 다이어그램 순서, XM3(<code>e</code> · <code>m</code>), 선택한 블록 위의 드롭은 선택 전체 감싸기</td></tr>
+      <tr><td class="k">C</td><td><b>말과 차례는 그림의 방향을 따른다.</b> 위 · 아래 · 왼쪽 · 오른쪽, <code>Shift</code>는 늘 반대쪽(위 · 왼쪽)</td><td>R3, NM1, MO1, <code>O</code> · <code>A</code> · <code>P</code> · <code>Shift</code>+클릭, 이전 · 다음 다이어그램</td></tr>
+      <tr><td class="k">D</td><td><b>명령 뒤에는 바뀐 것을 선택하고, 새로 만든 것은 바로 적게 한다</b></td><td>Q19, FD4, FD7, FD10, XM2, CB15, 감싼 직후 편집, 새 헤더 이름 편집, 드롭 뒤 선택, OP1(새 문서는 빈 블록 선택)</td></tr>
+      <tr><td class="k">E</td><td><b>되돌릴 수 있으면 묻지 않고, 되돌릴 수 없을 때만 묻는다</b></td><td>다이어그램 삭제(묻지 않고 "실행 취소로 되돌릴 수 있습니다"), 새 Method로 빼기, Method 만들기, CB16 / 묻는 곳: US1, 브라우저 문서 삭제, 같은 이름으로 저장, JP2 — 모두 되돌릴 수 없음. 예외는 MD3(F6)</td></tr>
+      <tr><td class="k">F</td><td><b>받아들이기는 넓게, 만들기는 좁게.</b> 파일에 있는 모양은 그대로 열고 그리며, 편집 명령은 그런 모양을 새로 만들지 않는다</td><td>MD3의 "모델은 넓게", CD1 · CD2, 분기 하나인 병렬 처리(ADR-0052), 중복 헤더 그대로 열기, DC1, XB1, 인자 개수 검사 없음</td></tr>
+      <tr><td class="k">G</td><td><b>할 일은 미리 보이고, 한 일은 알린다</b></td><td>드롭 표시 · "If로 감싸기"(DI1), 키 힌트(K3), 툴팁의 키(W2), Q8 "무엇에 적용되었는지", 복사 n개, DD1 까닭 툴팁</td></tr>
+    </table></div>
+    <p class="q">A의 모습: M86으로 접기 영역에 정한 것을 일반화한 것입니다. ① 경계를 가리키면 영역 밖, ② 안의 블록을 가리키면 영역 안.</p>
+    <div class="fig" style="width:max-content" data-fig="A"></div>
+  </section>
+
+  <section>
+    <span class="part">2 · Q1 원칙 체계</span>
+    <h2>Q1. 원칙을 어떻게 다시 묶을까요?</h2>
+    <p class="q">후보 일곱을 그대로 더하면 원칙이 열넷이 되어 외우기 어렵습니다. 비슷한 것끼리 묶어 <b>큰 원칙 열 개</b>로 하는 안을 추천합니다.</p>
+    <div class="cards">
+      <div class="card pick">
+        <header><span class="tag">Q1 · 1번</span><h3>큰 원칙 열 개로 다시 묶기</h3><span class="badge">★ 추천</span></header>
+        <div class="tw"><table style="min-width:0">
+          <tr><th>#</th><th>원칙</th><th>어디서</th></tr>
+          <tr><td>1</td><td>구조를 편집하면 그림이 따라온다</td><td>그대로</td></tr>
+          <tr><td>2</td><td>보이는 대로 다룬다 (상자 하나가 한 단위, 말과 차례는 그림의 방향)</td><td class="new">새: A + C</td></tr>
+          <tr><td>3</td><td>선택한 것이 대상이다 (아니면 담은 것, 뒤에는 바뀐 것을 선택)</td><td class="new">새: B + D</td></tr>
+          <tr><td>4</td><td>같은 일은 같은 방법으로 (명령 하나, 입구는 키 · 메뉴 · 툴바 · 팔레트 · 드래그)</td><td class="chg">고침: + ADR-0033</td></tr>
+          <tr><td>5</td><td>키보드만으로 모두</td><td>그대로</td></tr>
+          <tr><td>6</td><td>Vim의 손에 맞게</td><td>그대로</td></tr>
+          <tr><td>7</td><td>실행 취소 한 번으로 돌아온다 (되돌릴 수 없을 때만 묻는다)</td><td class="chg">고침: "뷰 상태와 내용" + E</td></tr>
+          <tr><td>8</td><td>막지 않고 알린다 (미리 보이고, 한 뒤에 알린다)</td><td class="chg">고침: + G</td></tr>
+          <tr><td>9</td><td>받아들이기는 넓게, 만들기는 좁게</td><td class="new">새: F</td></tr>
+          <tr><td>10</td><td>화면은 다이어그램에게</td><td>그대로</td></tr>
+        </table></div>
+        <ul><li>공통 규칙 R1 ~ R7은 원칙 4의 "한 규칙"으로 그대로 둡니다.</li><li>조작 규칙의 절마다 첫머리에 "따르는 원칙: 2 · 3"처럼 답니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="tag">Q1 · 2번</span><h3>지금 일곱 + 새 일곱 = 열넷</h3></header>
+        <ul><li>A ~ G를 따로 더합니다. 하나하나는 뚜렷하지만 원칙이 많아 절마다 다는 원칙도 길어집니다.</li><li>"뷰 상태와 내용을 구분한다"의 문장만 UN1에 맞게 고칩니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="tag">Q1 · 3번</span><h3>원칙은 그대로, 후보는 공통 규칙 R8 ~ R14로</h3></header>
+        <ul><li>원칙 표는 손대지 않고 공통 규칙 표에 일곱 줄을 더합니다.</li><li>공통 규칙은 "같은 종류의 일을 한 규칙으로"인데, A ~ G는 일의 종류가 아니라 판단의 기준이라 자리가 맞지 않습니다.</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">3 · 어긋난 곳</span>
+    <h2>어긋난 곳과 물음 F1 ~ F8</h2>
+    <p class="q">새 원칙에 비춘 추천을 ★로 두었습니다. 코드는 읽어서 확인했고, 앱에서 손으로 해 본 것은 아닙니다(F2 · F3은 코드로 읽은 동작).</p>
+
+    <div class="find">
+      <h3><span class="tag">F1</span> 문서와 코드: 7장 표의 "접힌 칸 · 이름 띠에는 드롭할 수 없다" <span class="kind info">물음 없음 · 정리 때 고침</span></h3>
+      <p>M86(<code>10c09e9</code> · <code>905a08d</code>)으로 이름 띠는 앞, 접힌 칸은 위 · 아래 반, 아래 가장자리 8px는 뒤로 바뀌었는데 7장 표와 03-editor 3.2가 그대로입니다. <code>status.md</code>에 "정리 남음"으로 있는 일이라, 원칙을 정한 뒤 정리에서 함께 맞춥니다.</p>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F2</span> 접기 영역은 옆에 놓을 수는 있는데 끌어 옮길 수는 없다 <span class="kind">원칙 2(A)와 어긋남</span></h3>
+      <p>7장: "드래그는 모델의 블록만 시작한다. 접힌 줄 · 접힌 칸 · 이름 띠 · 펴 보인 블록을 누르면 선택만 한다. 접힌 것을 옮기려면 이동 명령을 쓴다." 키보드 이동(<code>Alt</code>+방향키)과 복사 · 삭제는 접기 영역을 통째로 다루는데 드래그만 못 합니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F2 · 1번</span><span class="badge">★ 추천</span></header><div class="fig" data-fig="F2a"></div><figcaption><b>이름 띠 · 접힌 칸을 끌면 접기 영역을 통째로 옮긴다.</b> ① 이름 띠를 눌러 끌고 ② 놓으면 영역째 그 자리로. 펴 보인 블록과 접힌 줄은 지금처럼 끌지 않음(접힌 줄은 분기 전체라 옮길 곳이 모호)</figcaption></figure>
+        <figure class="card"><header><span class="tag">F2 · 2번</span></header><div class="fig" data-fig="F2b"></div><figcaption><b>지금대로.</b> ① 이름 띠를 끌어도 선택만 된다. 옮기려면 이동 명령</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F3</span> 펴 보인 호출 블록의 아래 가장자리에는 놓을 수 없다 <span class="kind">NF1 · 원칙 2(A)와 어긋남</span></h3>
+      <p>NF1은 "호출 블록과 접기 영역은 펼침 · 접힘에서 같은 UX 기준"이라고 적었는데, M86은 접기 영역에만 들어갔습니다. 코드(<code>findDrop</code>)에서 펴 보인 호출 블록의 아래 가장자리는 안쪽의 펴 보인 블록에 맞아 드롭할 수 없습니다. 그 뒤에 놓으려면 다음 블록의 위 띠를 찾아야 합니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F3 · 1번</span><span class="badge">★ 추천</span></header><div class="fig" data-fig="F3a"></div><figcaption><b>접기 영역과 같게.</b> ① 띠에 놓으면 호출 블록 앞, ② 아래 가장자리 8px에 놓으면 호출 블록 뒤. 줄은 보라 테두리 밖으로 비킴(M86 N2와 같음)</figcaption></figure>
+        <figure class="card"><header><span class="tag">F3 · 2번</span></header><div class="fig" data-fig="F3b"></div><figcaption><b>지금대로.</b> ② 아래 가장자리는 드롭할 수 없다. 뒤에 놓으려면 다음 블록의 위 띠</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F4</span> 헤더에서 "아래에 삽입"은 거절인데, 헤더 아래 띠에 드롭하면 본문 맨 앞 <span class="kind">원칙 4 · 원칙 2(C)와 어긋남</span></h3>
+      <p>2장: "헤더를 선택했으면 블록을 삽입하지 않고 알린다." DE1(M75)로 마우스는 헤더 안쪽 아래 8px에 놓아 본문 맨 앞에 넣게 되었습니다. 키보드로 본문 맨 앞에 넣으려면 첫 블록을 고르고 <code>O</code>를 써야 합니다. 헤더의 "아래"는 그림에서 본문의 맨 앞입니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F4 · 1번</span><span class="badge">★ 추천</span></header><div class="fig" data-fig="F4a"></div><figcaption><b>헤더에서 아래에 삽입 · 아래에 붙여넣기는 본문 맨 앞에.</b> ① 헤더 선택 + <code>o</code> → ② 본문 첫 자리에 새 블록. 위에 삽입 · 위에 붙여넣기는 지금처럼 거절하고 알림</figcaption></figure>
+        <figure class="card"><header><span class="tag">F4 · 2번</span></header><div class="fig" data-fig="F4b"></div><figcaption><b>지금대로.</b> ① 헤더 선택 + <code>o</code> → 상태 표시줄에 거절. 키보드는 첫 블록에서 <code>O</code></figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F5</span> 결과 기호는 문서 설정에 있는데 실행 취소의 대상이 아니다 <span class="kind">문서 안에서 서로 어긋남</span></h3>
+      <p>6장은 "내용은 … 문서 설정이다(실행 취소 대상)"라고 쓰고, 바로 아래에 "결과 기호(<code>←</code> / <code>=</code>)는 대상이 아니다"라고 씁니다. 그런데 결과 기호는 "문서 설정의 결과 기호"에서 고릅니다(1장 호출 블록). 같은 창의 헤더 모양 · 테마(TM3)는 실행 취소 대상입니다. 코드에서 결과 기호는 뷰 상태(<code>view.resultSymbol</code>, 이름 띠와 함께)에 있습니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F5 · 1번</span><span class="badge">★ 추천</span></header>
+          <div class="mock"><div class="row ttl"><span>문서 설정</span><span class="u">실행 취소</span></div><div class="row"><span>그림 문구의 언어</span><span class="u y">↶ 됨</span></div><div class="row"><span>헤더 모양</span><span class="u y">↶ 됨</span></div><div class="row"><span>테마</span><span class="u y">↶ 됨</span></div><div class="row"><span>① 결과 기호 ← / =</span><span class="u y">↶ 됨</span></div></div>
+          <figcaption><b>결과 기호도 실행 취소 대상으로.</b> "문서 설정에서 바꾼 것은 모두 되돌린다" 한 줄이 된다. 예외는 보기 메뉴의 이름 띠 켜고 끄기 하나(누르면 다시 돌아오는 토글)</figcaption></figure>
+        <figure class="card"><header><span class="tag">F5 · 2번</span></header>
+          <div class="mock"><div class="row ttl"><span>보기 메뉴</span><span class="u">실행 취소</span></div><div class="row"><span>접기 영역 보기</span><span class="u n">✗</span></div><div class="row"><span>① 결과 기호 ← / =</span><span class="u n">✗</span></div></div>
+          <figcaption><b>결과 기호를 보기 메뉴로 옮긴다.</b> 대상이 아닌 둘이 한 메뉴에 모인다. 다만 결과 기호는 그림(저장 파일)의 글자를 바꾸므로 "보기"라고 하기 어렵다</figcaption></figure>
+        <figure class="card"><header><span class="tag">F5 · 3번</span></header>
+          <div class="mock"><div class="row ttl"><span>문서 설정</span><span class="u">실행 취소</span></div><div class="row"><span>헤더 모양</span><span class="u y">↶ 됨</span></div><div class="row"><span>① 결과 기호 ← / =</span><span class="u n">✗ 예외</span></div></div>
+          <figcaption><b>지금대로 두고 6장의 문장만 고친다.</b> "문서 설정 가운데 결과 기호만 예외"라고 적는다</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F6</span> If에 분기를 삽입하면 Case로 바꿀지 묻는다 (되돌릴 수 있는데 묻는 유일한 곳) <span class="kind">원칙 7(E)의 예외</span></h3>
+      <p>MD3는 메인테이너가 직접 더한 규칙입니다. 다른 곳은 되돌릴 수 있으면 묻지 않고 하고 알립니다(다이어그램 삭제, 새 Method로 빼기). 이 물음은 명령의 이름("분기 삽입")과 다른 일(블록의 종류가 바뀜)이 일어나서 묻는 것이라, 원칙을 "명령 이름대로의 일이면 묻지 않는다"로 다듬으면 예외가 아니게 됩니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F6 · 1번</span><span class="badge">★ 추천</span></header>
+          <div class="status"><span>① If에는 분기를 더할 수 없습니다. Case로 바꿀까요?</span><span class="btn def">Case로 바꾸기</span><span class="btn">If 그대로 두기</span></div>
+          <figcaption><b>지금대로 묻고, 원칙 7에 "명령의 이름과 다른 일이 일어날 때도 묻는다"를 더한다.</b> Case → If도 같음</figcaption></figure>
+        <figure class="card"><header><span class="tag">F6 · 2번</span></header>
+          <div class="status"><span>① If를 Case로 바꾸고 분기를 삽입했습니다. 실행 취소로 되돌릴 수 있습니다.</span></div>
+          <figcaption><b>묻지 않고 바꾸고 알린다.</b> 원칙 7은 예외 없이 짧아지지만, 실수로 누른 <code>o</code> 하나에 블록의 종류가 바뀐다</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F7</span> 분기 라벨을 선택했을 때의 복사 · 잘라내기 · 감싸기 (9장의 미결정) <span class="kind">원칙 2(A)로 답이 나옴</span></h3>
+      <p>분기 라벨 선택은 삽입 · 삭제 · 이동 · 접기에서 "그 분기"를 뜻합니다(Q10, FD6). 접힌 줄을 선택한 것은 "그 분기의 블록을 모두 선택한 것과 같다"는 규칙도 이미 있습니다. 지금은 "분기 라벨에서는 아직 되지 않습니다"라고 알립니다.</p>
+      <div class="cards">
+        <figure class="card pick"><header><span class="tag">F7 · 1번</span><span class="badge">★ 추천</span></header><div class="fig" data-fig="F7a"></div><figcaption><b>분기 = 그 분기의 블록 묶음.</b> ① 라벨 선택 → ② 복사 · 감싸기는 분기의 블록 전체. 잘라내기는 복사 + 분기 삭제(삭제와 같게, If처럼 분기를 지울 수 없으면 거절). 붙여넣기는 지금처럼 알림</figcaption></figure>
+        <figure class="card"><header><span class="tag">F7 · 2번</span></header><div class="fig" data-fig="F7b"></div><figcaption><b>셋 다 블록 전체, 분기는 남긴다.</b> 잘라내면 ② 분기에 빈 블록이 남는다. 다만 라벨에서 삭제는 분기째 지우므로 "잘라내기 = 복사 + 삭제"가 깨진다</figcaption></figure>
+        <figure class="card"><header><span class="tag">F7 · 3번</span></header><div class="fig" data-fig="F7c"></div><figcaption><b>지금대로.</b> ① 라벨에서는 아직 되지 않는다고 알린다</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">F8</span> 같은 것을 다르게 부르는 말 <span class="kind">말</span></h3>
+      <p>"띠"가 다섯 가지를 가리킵니다: 반복 블록의 왼쪽 띠 · 접기 영역의 이름 띠 · 펴 보인 호출 블록의 띠 · 병렬 처리의 위 · 아래 띠, 그리고 드롭 판정의 "가장자리 띠(8px)" · "아래 띠(12px)". 앞의 넷은 그림의 부분이고 마지막은 보이지 않는 판정 구역입니다. 또 분기를 고르는 것을 If · Case는 "분기 라벨 선택", 병렬 처리는 "분기 칸 선택"으로 따로 부릅니다.</p>
+      <div class="cards">
+        <div class="card pick"><header><span class="tag">F8 · 1번</span><h3>판정 구역은 "히트 영역", 분기는 "분기 선택"</h3><span class="badge">★ 추천</span></header>
+          <div class="ba"><span class="l">전</span><span><del>가리킨 블록의 위아래 가장자리 띠(8px)는 "사이"</del></span><span class="l">후</span><span><ins>가리킨 블록의 위아래 히트 영역(8px)은 "사이"</ins></span>
+          <span class="l">전</span><span><del>다이어그램 바로 아래 12px 띠</del></span><span class="l">후</span><span><ins>다이어그램 바로 아래 12px 히트 영역</ins></span>
+          <span class="l">전</span><span><del>분기 라벨 선택 / 분기 칸 전체를 선택</del></span><span class="l">후</span><span><ins>분기 선택(If · Case는 분기 라벨을, 병렬 처리는 위 띠의 그 구간을 누름)</ins></span></div>
+          <ul><li>"띠"는 그림에 보이는 부분에만 쓴다. 용어집에 "히트 영역" · "분기 선택"을 더한다.</li></ul>
+        </div>
+        <div class="card"><header><span class="tag">F8 · 2번</span><h3>지금대로</h3></header><ul><li>문맥으로 구분된다고 보고 그대로 둔다.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="find">
+      <h3><span class="tag">—</span> 그대로 두어도 되는 다름 <span class="kind info">물음 없음</span></h3>
+      <p><b>이동 명령은 옆 제어 블록 안으로 들어가지 않는데 드래그는 들어간다</b>(7장에 이미 적힘): 키는 한 칸씩, 마우스는 놓는 자리를 직접 가리키므로 원칙 2에 맞습니다. <b>선택한 것이 없을 때</b> 키 · 아이콘 삽입은 다이어그램 맨 끝, 붙여넣기는 거절: 붙여넣기는 클립보드의 블록이 여럿일 수 있어 자리를 모르고 넣으면 놀랄 수 있으니 원칙 3("선택한 것이 대상")의 쪽에 맞습니다. 다만 아이콘 삽입의 "맨 끝"이 예외라 원칙 3에 한 줄로 적어 둡니다. <b>중복 헤더 이름에서 칸을 다시 여는 것</b>: 원칙 8의 알려진 예외로 이미 적혀 있습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">4 · 정한 뒤</span>
+    <div class="sum">
+      <ul>
+        <li>정한 원칙은 UX 개요 2장에 반영하고, 조작 규칙의 각 절 첫머리에 그 절이 따르는 원칙을 답니다.</li>
+        <li>결정은 UX 결정 한 항목씩(원칙 체계는 DR), F2 · F3 · F4 · F5 · F7의 바뀐 동작은 코드 변경이라 에이전트에게 맡깁니다.</li>
+        <li>F1(M86 정리)은 같은 정리에서 함께 합니다.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', sel: '#d0500b', fold: '#4f74d6', band: '#e6ecfb', foldName: '#2c55c9', no: '#a8501a', call: '#7a4fc4', callBand: '#efe6fb', ok: '#1d7a46' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const rect = (x, y, w, h, fill) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '"/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '" font-size="' + (o.size || 13) + '"' + (o.bold ? ' font-weight="600"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + ' font-family="' + (o.sans ? 'IBM Plex Sans KR, sans-serif' : 'IBM Plex Mono, IBM Plex Sans KR, monospace') + '">' + esc(s) + '</text>'; };
+const pointer = (x, y) => '<path d="M' + x + ',' + y + ' l0,15 l4,-3.5 l2.8,6 l2.4,-1.1 l-2.8,-5.8 l5,-.3 z" fill="#ffffff" stroke="#151a22" stroke-width="1" stroke-linejoin="round"/>';
+const forbid = (x, y) => '<circle cx="' + (x + 18) + '" cy="' + (y + 16) + '" r="7" fill="#ffffff" stroke="' + C.no + '" stroke-width="2"/><line x1="' + (x + 13) + '" y1="' + (y + 21) + '" x2="' + (x + 23) + '" y2="' + (y + 11) + '" stroke="' + C.no + '" stroke-width="2"/>';
+// M85에서 정한 드롭 줄.
+const dropLine = (x, y, w) => {
+  const x1 = x - 7, x2 = x + w + 7;
+  return '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" stroke="#ffffff" stroke-width="8"/>' +
+    '<line x1="' + (x1 + 6) + '" y1="' + y + '" x2="' + (x2 - 6) + '" y2="' + y + '" stroke="' + C.sel + '" stroke-width="4"/>' +
+    '<path d="M' + x1 + ',' + (y - 6) + ' l8,6 l-8,6 z M' + x2 + ',' + (y - 6) + ' l-8,6 l8,6 z" fill="' + C.sel + '" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>';
+};
+const selBox = (x, y, w, h) => '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="' + (w - 2) + '" height="' + (h - 2) + '" fill="none" stroke="' + C.sel + '" stroke-width="3"/>';
+const dashBox = (x, y, w, h, col) => '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="' + (w - 2) + '" height="' + (h - 2) + '" fill="none" stroke="' + (col || C.sel) + '" stroke-width="2" stroke-dasharray="5 3"/>';
+// 번호 딱지: 크고 가운데 맞춤.
+const badge = (n, x, y) => '<circle cx="' + x + '" cy="' + y + '" r="10" fill="#151a22"/>' + text(x, y + 4.5, String(n), { fill: '#fff', size: 12.5, bold: true, anchor: 'middle', sans: true });
+const W = 300, ROW = 32, TOP = 46, BAND = 18, STRIP = 22;
+const foldBand = (x, y, w, name) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + BAND + '" fill="' + C.band + '" stroke="' + C.line + '"/>' + text(x + 8, y + 13, '▾', { size: 10, fill: C.foldName, sans: true }) + text(x + 20, y + 13.5, name, { size: 11.5, bold: true, fill: C.foldName, sans: true });
+const foldEdge = (x, y, w, h, col) => '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="' + (w - 2) + '" height="' + (h - 2) + '" fill="none" stroke="' + (col || C.fold) + '" stroke-width="3"/>';
+const head = (name) => text(0, 13, 'Method', { size: 11.5, fill: C.muted, sans: true }) + text(0, 34, name || '평균(a, n)', { bold: true, size: 14.5 });
+const proc = (x, y, w, s, fill) => rect(x, y, w, ROW, fill || C.proc) + text(x + 10, y + 21, s);
+const svg = (s, h, w) => '<svg width="' + ((w || W) + 40) + '" height="' + h + '" viewBox="-12 0 ' + ((w || W) + 40) + ' ' + h + '">' + s + '</svg>';
+
+// A: 접기 영역의 경계는 밖, 안의 블록은 안.
+function figA() {
+  let s = head();
+  const fy = TOP, fh = BAND + ROW * 2;
+  s += foldBand(0, fy, W, '초기화') + proc(0, fy + BAND, W, 'i ← 0') + proc(0, fy + BAND + ROW, W, '합 ← 0');
+  s += proc(0, fy + fh, W, '평균 ← 합 / n');
+  s += foldEdge(0, fy, W, fh);
+  s += dropLine(1, fy - 3, W) + badge(1, W + 20, fy - 3);
+  s += dropLine(1, fy + fh + 3, W) + badge(1, W + 20, fy + fh + 4);
+  s += dropLine(4, fy + BAND + ROW, W - 6) + badge(2, W + 20, fy + BAND + ROW);
+  s += text(150, fy + fh + ROW + 22, '① 경계 → 밖   ② 안의 블록 사이 → 안', { size: 12, fill: C.muted, sans: true, anchor: 'middle' });
+  return svg(s, fy + fh + ROW + 32);
+}
+// F2: 접기 영역을 끌어 옮기기.
+function figF2(drag) {
+  let s = head();
+  const fy = TOP, fh = BAND + ROW * 2, y2 = fy + fh;
+  s += foldBand(0, fy, W, '초기화') + proc(0, fy + BAND, W, 'i ← 0') + proc(0, fy + BAND + ROW, W, '합 ← 0');
+  s += proc(0, y2, W, '읽기(a, n)') + proc(0, y2 + ROW, W, '평균 ← 합 / n');
+  s += foldEdge(0, fy, W, fh);
+  if (drag) {
+    s += dashBox(40, y2 + ROW * 2 + 18, 200, BAND + 4, C.fold) + text(52, y2 + ROW * 2 + 34, '▾ 초기화', { size: 11.5, bold: true, fill: C.foldName, sans: true });
+    s += dropLine(1, y2 + ROW + 1, W) + badge(2, W + 20, y2 + ROW + 1);
+    s += pointer(120, y2 + ROW * 2 + 26) + badge(1, 22, fy + 9);
+    return svg(s, y2 + ROW * 2 + 52);
+  }
+  s += selBox(0, fy, W, fh) + pointer(120, fy + 6) + badge(1, W + 20, fy + 9);
+  s += text(0, y2 + ROW * 2 + 22, '끌어도 움직이지 않음 → Alt+↓', { size: 12, fill: C.no, sans: true });
+  return svg(s, y2 + ROW * 2 + 32);
+}
+// F3: 펴 보인 호출 블록의 아래 가장자리.
+function figF3(ok) {
+  let s = head('통계(a, n)');
+  const cy = TOP + ROW, ch = BAND + ROW * 2, after = cy + ch;
+  s += proc(0, TOP, W, '읽기(a, n)');
+  s += '<rect x="0.5" y="' + (cy + .5) + '" width="' + W + '" height="' + BAND + '" fill="' + C.callBand + '" stroke="' + C.line + '"/>' + text(8, cy + 13, '▾', { size: 10, fill: C.call, sans: true }) + text(20, cy + 13.5, 's ← 합계(a, n)', { size: 11.5, bold: true, fill: C.call });
+  s += proc(0, cy + BAND, W, '합 ← 0', '#f3f0f8') + proc(0, cy + BAND + ROW, W, '합 ← 합 + a[i]', '#f3f0f8');
+  s += foldEdge(0, cy, W, ch, C.call);
+  s += proc(0, after, W, '평균 ← s / n');
+  s += badge(1, W + 20, cy + 9) + badge(2, W + 20, after - 4);
+  if (ok) { s += dropLine(1, after + 3, W) + pointer(150, after - 4); }
+  else { s += pointer(150, after - 4) + forbid(150, after - 4); }
+  return svg(s, after + ROW + 10);
+}
+// F4: 헤더 선택 + 아래에 삽입.
+function figF4(ok) {
+  let s = head();
+  s += selBox(-4, 0, 140, 42) + badge(1, 152, 22);
+  if (ok) {
+    s += rect(0, TOP, W, ROW, '#fff7f1') + text(10, TOP + 21, '∅', { fill: C.muted }) + selBox(0, TOP, W, ROW) + badge(2, W + 20, TOP + 16);
+    s += proc(0, TOP + ROW, W, 'i ← 0') + proc(0, TOP + ROW * 2, W, '평균 ← 합 / n');
+    return svg(s, TOP + ROW * 3 + 10);
+  }
+  s += proc(0, TOP, W, 'i ← 0') + proc(0, TOP + ROW, W, '평균 ← 합 / n');
+  s += '<rect x="0.5" y="' + (TOP + ROW * 2 + 12.5) + '" width="' + W + '" height="24" rx="4" fill="#fbece2" stroke="#e2b89a"/>' + text(8, TOP + ROW * 2 + 29, '헤더에서는 되지 않습니다. 블록을 선택하세요.', { size: 11.5, fill: C.no, sans: true });
+  return svg(s, TOP + ROW * 2 + 46);
+}
+// F7: If의 분기 라벨을 선택하고 복사 · 잘라내기 · 감싸기.
+function figF7(mode) {
+  let s = head();
+  const y = TOP, cond = 40, hw = W / 2;
+  s += rect(0, y, W, cond, C.proc) + '<path d="M0.5,' + (y + .5) + ' L' + hw + ',' + (y + cond) + ' L' + (W + .5) + ',' + (y + .5) + '" fill="none" stroke="' + C.line + '"/>' + text(hw, y + 16, 'n > 0', { anchor: 'middle' });
+  s += text(6, y + cond - 5, '참', { size: 11.5, sans: true }) + text(W - 6, y + cond - 5, '거짓', { size: 11.5, sans: true, anchor: 'end' });
+  s += selBox(0, y + cond - 20, 40, 20) + badge(1, -2, y + cond - 26);
+  const by = y + cond;
+  if (mode === 'b') {
+    s += rect(0, by, hw, ROW * 2, '#fff7f1') + text(10, by + 21, '∅', { fill: C.muted }) + badge(2, hw - 16, by + 16);
+  } else {
+    s += proc(0, by, hw, '합 ← 0') + proc(0, by + ROW, hw, '평균 ← 합 / n');
+  }
+  s += rect(hw, by, hw, ROW * 2, C.proc) + text(hw + 10, by + 21, '평균 ← 0');
+  if (mode === 'a') s += dashBox(0, by, hw, ROW * 2) + badge(2, hw - 16, by + ROW * 2 - 14);
+  if (mode === 'c') s += '<rect x="0.5" y="' + (by + ROW * 2 + 10.5) + '" width="' + W + '" height="24" rx="4" fill="#fbece2" stroke="#e2b89a"/>' + text(8, by + ROW * 2 + 27, '분기 라벨에서는 아직 되지 않습니다', { size: 11.5, fill: C.no, sans: true });
+  return svg(s, by + ROW * 2 + (mode === 'c' ? 44 : 12));
+}
+const figs = { A: figA, F2a: () => figF2(true), F2b: () => figF2(false), F3a: () => figF3(true), F3b: () => figF3(false), F4a: () => figF4(true), F4b: () => figF4(false), F7a: () => figF7('a'), F7b: () => figF7('b'), F7c: () => figF7('c') };
+document.querySelectorAll('[data-fig]').forEach(el => { el.innerHTML = figs[el.dataset.fig](); });
+})();
+</script>

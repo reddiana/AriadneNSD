@@ -28,6 +28,7 @@ updated: 2026-11-28
 | M84 | 블록 셋 구현 때 정할 것 (정함: B1 1번, B2 1번, D1 ~ D5 그대로) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
 | M85 | 선택한 블록 곁의 드롭 위치 (정함: 2번 + 4번의 드롭 표시) | https://claude.ai/artifact/Psd323PXgcsTTKFWmpZFZ9 | `journal/assets/2026-11-28-drop-indicator-study.html` |
 | M86 | 접기 영역 곁의 드롭 규칙 (정함: N1 · N2 · N3 2번) | https://claude.ai/artifact/TBNJi5Dqn7WhGDEgchHYAb | `journal/assets/2026-11-28-drop-near-fold-study.html` |
+| M87 | 조작 규칙의 원칙 점검 (답을 기다림: Q1부터 하나씩) | https://claude.ai/artifact/KGGZjKgapKTnDW6aXruM5J | `journal/assets/2026-11-28-ux-principles-audit.html` |
 
 ## 지금 단계
 
