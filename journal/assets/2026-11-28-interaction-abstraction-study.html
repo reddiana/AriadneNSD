@@ -5,18 +5,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
-/* M89 · M90과 같은 틀. 위에서 아래로: 결론 → 대응표 → 지금과 제안의 그림 → 근거 → 물음 둘 */
+/* M89 · M90과 같은 틀. 위에서 아래로: 결론 → 수준 표 → 숨은 개념 여섯 → 컨테이너 그림 → 매트릭스를 만드는 표 둘 → 단계 → 물음 → 드러난 칸 → 근거 */
 :root {
   --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
   --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbece2; --box: #f5f7fb;
-  --sel: #d9730d; --ink: #1c2230; --paper: #ffffff;
+  --sel: #d9730d; --ink: #1c2230; --paper: #ffffff; --hl: #dbe5fb; --peek: #8a4fbf; --peek-soft: #efe4f8;
   --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; --hl: #26355e; --peek: #c79bee; --peek-soft: #33274a; color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2a1e; --box: #20252f; --sel: #f0a46c; --ink: #e5e8ee; --paper: #1a1e26; --hl: #26355e; --peek: #c79bee; --peek-soft: #33274a; color-scheme: dark; }
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
@@ -24,255 +24,341 @@ h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em;
 h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
 h3 { font-size: 15px; font-weight: 600; margin: 0; }
 p { margin: 0; }
-.lede, .q { color: var(--muted); max-width: 86ch; }
+.lede, .q { color: var(--muted); max-width: 90ch; }
 .lede b, .q b { color: var(--fg); font-weight: 600; }
 section { display: grid; gap: 14px; min-width: 0; }
 .part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
 .card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
 .card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 .num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 15px; line-height: 1; flex: none; }
 .badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
-.card ul, .sum ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card ul, .sum ul, .sum ol { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.sum ol { font-size: 14.5px; gap: 6px; }
 .card li b, .sum li b { color: var(--fg); font-weight: 600; }
-.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 13.5px; }
-.card dt { color: var(--muted); white-space: nowrap; }
+.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13.5px; }
+.card dt { color: var(--muted); white-space: nowrap; font-weight: 600; font-size: 12px; padding-top: 2px; }
 .card dd { margin: 0; }
 .bad { color: var(--warn); font-weight: 600; }
 .good { color: var(--pick); font-weight: 600; }
-.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 110ch; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 112ch; }
 .tw { overflow-x: auto; max-width: 100%; }
 table { border-collapse: collapse; font-size: 13.5px; background: var(--panel); min-width: 760px; }
 th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
 th { background: var(--box); font-weight: 600; white-space: nowrap; }
-td.n { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.k { font-family: var(--mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+tr.a td:first-child { box-shadow: inset 4px 0 0 var(--pick); }
+tr.b td:first-child, tr.c td:first-child, tr.d td:first-child { box-shadow: inset 4px 0 0 var(--warn); }
 .lv { font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 1px 9px; white-space: nowrap; background: var(--box); color: var(--muted); border: 1px solid var(--line); }
 .lv.ok { background: var(--pick-soft); color: var(--pick); border-color: transparent; }
 .lv.off { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.lv.new { background: var(--hl); color: var(--accent); border-color: transparent; }
 code { font-family: var(--mono); font-size: 12.5px; }
 figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
 figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.5; max-width: 100ch; }
 figcaption b { color: var(--fg); font-weight: 600; }
-.fig { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; overflow-x: auto; max-width: 100%; }
-/* 흐름 그림: 상자와 화살표 */
-.flow { display: flex; align-items: stretch; gap: 0; min-width: 900px; }
-.flow .st { flex: 1 1 0; border: 1.5px solid var(--line); border-radius: 6px; background: var(--box); padding: 8px 10px; display: grid; gap: 3px; align-content: start; font-size: 12.5px; min-width: 0; }
-.flow .st b { font-size: 13.5px; }
-.flow .st small { color: var(--muted); font-size: 12px; line-height: 1.45; }
-.flow .st.has { border-color: var(--pick); }
-.flow .st.new { border-color: var(--accent); border-width: 2px; background: var(--panel); }
-.flow .st.gap { border-style: dashed; border-color: var(--warn); background: var(--warn-soft); }
-.flow .ar { flex: none; width: 26px; display: grid; place-items: center; color: var(--muted); font-size: 18px; }
-.tagk { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .03em; }
-.has .tagk { color: var(--pick); } .new .tagk { color: var(--accent); } .gap .tagk { color: var(--warn); }
-.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
-pre { margin: 0; font-family: var(--mono); font-size: 12px; line-height: 1.55; background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; }
-pre .k { color: var(--warn); font-weight: 600; } pre .g { color: var(--pick); font-weight: 600; } pre .m { color: var(--muted); }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); }
-.legend i { display: inline-block; width: 22px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; border: 1.5px solid var(--line); background: var(--box); }
-.legend i.has { border-color: var(--pick); } .legend i.new { border-color: var(--accent); border-width: 2px; background: var(--panel); } .legend i.gap { border-style: dashed; border-color: var(--warn); background: var(--warn-soft); }
-/* NS 그림 */
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; align-items: start; }
 .scene { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
 .scene svg { display: block; max-width: none; font-family: var(--font); }
 .ns rect, .ns line, .ns path { stroke: var(--ink); stroke-width: 1.2; fill: none; }
-.ns text { fill: var(--ink); font-size: 12.5px; }
+.ns text { fill: var(--ink); font-size: 12.5px; stroke: none; }
 .ns .selr { stroke: var(--sel); stroke-width: 2.5; }
 .ns .newr { stroke: var(--pick); stroke-width: 2.5; fill: var(--pick-soft); }
 .ns .st { fill: var(--muted); font-size: 12px; }
 .ns .bar { fill: var(--box); stroke: var(--line); }
+.ns .h { fill: var(--hl); }
+.ns .hp { fill: var(--peek-soft); }
+.ns .reg { stroke: var(--accent); stroke-width: 2.2; }
+.ns .pk { stroke: var(--peek); stroke-width: 2.2; }
+.ns .mut { fill: var(--muted); }
+.ns .bd { fill: var(--accent); stroke: none; }
+.ns .bt { fill: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 12px; }
+/* 단계 흐름 */
+.steps { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: center; font-size: 13px; }
+.steps span { border: 1px solid var(--line); background: var(--box); border-radius: 5px; padding: 2px 9px; white-space: nowrap; }
+.steps i { color: var(--muted); font-style: normal; }
+.steps .r { border-color: transparent; background: var(--warn-soft); color: var(--warn); font-weight: 600; }
+.steps .g { border-color: transparent; background: var(--pick-soft); color: var(--pick); font-weight: 600; }
 </style>
 
 <main>
   <div>
     <h1>M91 · 조작 규칙과 설계의 대응</h1>
-    <p class="lede">메인테이너(2026-11-28): "ux interaction rules의 정의에 비추어 아키텍처와 설계를 개선할 수 있는지 깊게 생각해서 검토해주세요." 오늘 정한 조작 규칙의 추상화(디자인 원칙 다섯, 모든 명령의 규칙 C1 ~ C5, 명령 × 대상 매트릭스)가 아키텍처 · 상세 설계 · 코드의 요소에 <b>하나씩 대응하는지</b> 보았습니다. 코드는 고치지 않았고, 기준은 0.6.3(<code>3308941</code>)입니다. 글로 된 검토는 저장소의 <code>atelier/interaction-abstraction-review.md</code>에 있습니다.</p>
+    <p class="lede">메인테이너(2026-11-28): "ux interaction rules의 정의에 비추어 아키텍처와 설계를 개선할 수 있는지 깊게 생각해서 검토해주세요.", "전체를 검토해야해요.", "<b>interaction rules가 추상화가 훌륭했다면, 그것을 구현한 아키텍처와 설계도 추상화가 훌륭해질 것이라는 신념입니다.</b> 그래서 interaction rules와 아키텍처와 설계를 함께 검토해달라 요청드리는 것입니다." 조작 규칙 전체(디자인 원칙, 공통 규칙, 1 ~ 9장)와 아키텍처 · 상세 설계 · 코드를 함께 보았습니다. 코드는 수정하지 않았고, 기준은 0.6.3(<code>3308941</code>)입니다. 글로 된 검토는 저장소의 <code>atelier/interaction-abstraction-review.md</code>에 있습니다.</p>
   </div>
 
   <section>
     <p class="part">1 · 결론</p>
     <div class="sum">
-      <ul>
-        <li><b>잘 맞는 곳:</b> 명령(진입점은 여럿, 명령은 하나) = 명령 레지스트리. C4 실행 취소 = 세션의 <code>commit</code>. C5 읽기 전용 = <code>spec()</code>의 검사 한 곳. 그래서 오늘의 UN2(이름 띠 보기도 실행 취소)는 두 파일로 끝났습니다.</li>
-        <li><b>맞지 않는 곳:</b> <span class="bad">대상</span>(선택한 요소와 그것이 대표하는 컨테이너), <span class="bad">C1 대상 결정</span>, <span class="bad">C2 삽입 위치</span>, <span class="bad">명령 × 대상 매트릭스</span>에 대응하는 요소가 아키텍처 · 설계 · 코드 어디에도 없습니다. 명령마다 <code>when</code> · <code>run</code> · <code>context</code>에서 선택의 종류를 <code>if</code>로 갈라 매트릭스의 한 행을 손으로 다시 만듭니다.</li>
-        <li><b>추천:</b> 매트릭스를 테스트로 대조해 안전망을 두고(안 A), 대상 해석을 <code>editor</code>의 한 모듈로 모읍니다(안 B). 아래 Q1.</li>
-      </ul>
+      <ol>
+        <li><b>전제가 데이터로 확인됩니다.</b> 규칙이 개념 하나로 서 있는 곳은 코드도 요소 하나이고, 규칙이 사례의 나열이나 "X는 Y처럼 다룬다"로 적힌 곳은 코드도 종류마다 분기합니다(아래 2).</li>
+        <li><b>조작 규칙에는 이름 없이 되풀이되는 개념이 여섯 있습니다:</b> 컨테이너와 대표 요소, 명령마다 받는 대상, 삽입 위치, 블록 종류의 분류, 텍스트 필드, 실행 취소 단계의 묶음(아래 3).</li>
+        <li><b>공통 규칙 C1 · C2 · C4의 문장은 실제 규칙과 범위가 다릅니다.</b> C1의 "가장 가까운 상위 컨테이너에 적용"은 명령 넷에만, C4의 "입력한 이름은 생성과 한 단계"는 셋에만 해당하고, C2의 "예외는 둘"은 여섯입니다.</li>
+        <li><b>명령 × 대상 매트릭스 72칸은 작은 표 둘과 예외 세 묶음으로 생성됩니다.</b> 그 두 표가 그대로 코드의 두 요소가 됩니다(아래 5).</li>
+        <li><b>코드가 먼저 가진 추상화가 있습니다: 보이는 나무.</b> 방향키는 이것 덕분에 종류별 분기가 거의 없습니다. 규칙이 이것을 "컨테이너"로 받아들이고, 설계가 이것을 드롭 · 명령의 대상 · 이동 명령까지 넓히는 것이 가장 큰 개선입니다.</li>
+        <li><b>추천:</b> 규칙과 설계를 한 쌍으로 고칩니다. 규칙의 표를 먼저 세우고, 표를 테스트로 대조하고, 코드를 단계별로 맞춥니다(아래 6 · Q).</li>
+      </ol>
     </div>
   </section>
 
   <section>
-    <p class="part">2 · 개념 대응표</p>
-    <h2>조작 규칙의 개념이 코드에서 무엇인가</h2>
+    <p class="part">2 · 규칙의 추상화 수준과 코드의 모습</p>
+    <h2>규칙이 선 만큼 코드가 섭니다</h2>
     <div class="tw">
       <table>
-        <tr><th>조작 규칙</th><th>아키텍처 · 상세 설계</th><th>코드</th><th>판정</th></tr>
-        <tr><td>명령 (진입점 여럿, 명령 하나)</td><td>명령 레지스트리, <code>CommandSpec</code></td><td><code>commands/spec.ts</code> · <code>registry.ts</code></td><td><span class="lv ok">1:1</span></td></tr>
-        <tr><td>C4 실행 취소 단위</td><td>ADR-0048 (아키텍처 5.1 · 6장의 글은 옛 규칙)</td><td><code>session.commit</code> · <code>setView</code></td><td><span class="lv ok">1:1</span></td></tr>
-        <tr><td>C5 읽기 전용</td><td><code>edits</code></td><td><code>spec()</code>의 <code>onPeek</code> 검사</td><td><span class="lv ok">1:1</span></td></tr>
-        <tr><td>C3 명령 후 선택</td><td>"touched로 다음 선택"</td><td><code>commit(result, after)</code> 한 길 + <code>after</code> 함수 여섯</td><td><span class="lv">반쯤</span></td></tr>
-        <tr><td>대상 (매트릭스의 열 여섯)</td><td><code>Selection</code> 6종 · core <code>Target</code> 3종. 열과 같은 것은 없음</td><td><code>Hit</code> · <code>ShownMeaning</code> · <code>Selection</code> · <code>Target</code> · <code>FoldTarget</code> · <code>Placement</code> · <code>EditField</code></td><td><span class="lv off">어휘 일곱 벌</span></td></tr>
-        <tr><td>C1 대상 결정 (대표 요소 → 컨테이너, 안 되면 가장 가까운 상위 + 알림)</td><td>없음</td><td><code>unwrapHolder</code> · <code>foldTargets</code> · <code>branchOfSelection</code> · <code>copyTarget</code> · <code>extractTarget</code> · <code>fieldOfSelection</code> · <code>targetOf</code></td><td><span class="lv off">명령마다 7곳</span></td></tr>
-        <tr><td>C2 삽입 위치 (바로 옆, 같은 레벨의 형제)</td><td><code>Target</code> + <code>side</code></td><td><code>runInsert</code> · <code>runPaste</code> · <code>runInsertBranch</code> · <code>headStart</code> · <code>currentDiagram</code>, 드롭은 따로</td><td><span class="lv off">명령마다</span></td></tr>
-        <tr><td>명령 × 대상 매트릭스 (12행 × 6열)</td><td>없음</td><td>명령마다 <code>when</code> · <code>run</code> · <code>context</code></td><td><span class="lv off">없음</span></td></tr>
-        <tr><td>② 보이지 않는 요소는 조작에 영향 없음</td><td>화면 트리 (이동 키만)</td><td>이동 키는 화면 트리, 이동 명령은 인자 <code>hiddenFolds</code>, 드롭은 따로</td><td><span class="lv off">진입점마다</span></td></tr>
+        <tr><th>수준</th><th>규칙에서의 모습</th><th>예</th><th>설계 · 코드에서의 모습</th></tr>
+        <tr class="a"><td><span class="lv ok">A 개념 하나</span></td><td>한 문장의 규칙, 문장 밖의 예외 없음</td><td>명령은 하나 · 진입점은 여럿, C4 실행 취소 단위, C5 읽기 전용, 선택은 연속 범위, 유효한 구조만, 방향키는 그림에 보이는 순서</td><td><b>요소 하나.</b> 명령 레지스트리, 세션의 <code>commit</code>, <code>spec()</code>의 검사, 불변식 검사, 보이는 나무 위의 방향키(블록 종류 분기 10곳)</td></tr>
+        <tr class="b"><td><span class="lv off">B 한 문장 + 예외</span></td><td>문장의 범위가 실제 규칙과 다름</td><td>C1 대상 결정, C2 삽입 위치, C3 명령 후 선택</td><td>상위 컨테이너를 찾는 구현 <b>넷</b>, 삽입 위치의 구현 <b>둘</b>(키보드 · 드롭), 명령 후 선택을 명령마다 작성(<b>41곳</b>)</td></tr>
+        <tr class="c"><td><span class="lv off">C "X는 Y처럼"</span></td><td>개념에 이름이 없어 둘씩 견주어 적음</td><td>접기 영역 ≈ 제어 블록 ≈ 펴 보인 호출 블록, 이름 띠 ≈ 분기 라벨, For ≈ While, Case ≈ If</td><td>방향키만 통일. 이동 명령 · 드롭 · 접기 대상은 종류마다 평행한 코드. 블록 종류 분기 core <b>237곳</b> · editor <b>143곳</b></td></tr>
+        <tr class="d"><td><span class="lv off">D 사례 · 별도의 표</span></td><td>공통 규칙과 연결되지 않음</td><td>드롭 표 17행, 만들자마자 입력한 이름의 실행 취소 묶음(사례 셋), 새 다이어그램의 위치 셋, 필드마다의 기본값</td><td>드롭 전용 구현(<b>17행 중 13행</b>이 자기 분기), 묶음 메커니즘 <b>셋</b>, 필드 → 기본값의 표 없음, 만든 직후 여는 필드를 정하는 곳 <b>8곳</b></td></tr>
+      </table>
+    </div>
+    <p class="q">오늘의 변경도 같습니다. 수준 A의 규칙(UN2: 이름 띠 보기도 실행 취소)은 두 파일로 끝났고, 수준 B ~ D의 규칙(PS1 · HC1 · BL2 · FM1)은 칸 하나에 서너 곳을 고쳤습니다.</p>
+  </section>
+
+  <section>
+    <p class="part">3 · 숨은 개념 여섯</p>
+    <h2>규칙과 설계를 한 쌍으로</h2>
+    <div class="cards">
+      <div class="card">
+        <header><h3>① 컨테이너와 대표 요소</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>목록과 공통 규칙이 한곳에 없음. 결정 여섯(MD1 · DF1 · DF3 · FD5 · FM1 · BL1)이 규칙 둘의 사례</dd>
+          <dt>코드에서</dt><dd>방향키는 보이는 나무 하나. 이동 명령 · 드롭 · 접기 대상 · 풀기는 각자. "보이지 않는 요소"의 구현 <span class="bad">넷</span></dd>
+          <dt>제안</dt><dd><b>규칙:</b> 컨테이너의 표와 규칙 넷. <b>설계:</b> 보이는 나무를 컨테이너 트리로 올려 모든 조작이 사용</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <header><h3>② 명령마다 받는 대상</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>C1의 "상위로 올라간다"가 모든 명령의 규칙으로 적힘. 실제는 넷(풀기, 접기 · 펴기, 접기 영역 풀기, 좌우 이동)</dd>
+          <dt>코드에서</dt><dd>선택의 종류 분기 21개 파일 <span class="bad">약 200곳</span>. 명령마다 <code>when</code> · <code>run</code> · <code>context</code> 세 곳</dd>
+          <dt>제안</dt><dd><b>규칙:</b> 표 둘(요소 → 사슬, 명령 → 받는 대상). <b>설계:</b> 대상 해석기와 명령의 표</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <header><h3>③ 삽입 위치와 드롭</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>C2의 "예외는 둘"은 여섯. 드롭은 17행의 표로 따로. 분기 라벨은 키보드에서 "그 분기", 드롭에서 "그 If · Case"</dd>
+          <dt>코드에서</dt><dd>키보드와 드롭이 따로 구현. 같은 규칙의 사본 <span class="bad">넷</span>. 드롭은 명령 레지스트리를 거치지 않음</dd>
+          <dt>제안</dt><dd><b>규칙:</b> 삽입 위치의 표 하나, 드롭은 "구역 → 요소와 앞 · 뒤"만. <b>설계:</b> 삽입 위치 타입 하나를 키보드와 드롭이 공유</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <header><h3>④ 블록 종류의 분류</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>"For는 While과 같다", "Case는 If와 같은 규칙". 분류의 이름이 일정하지 않고 성질이 1 · 3 · 7장에 나뉨</dd>
+          <dt>코드에서</dt><dd>종류의 표 없음. 블록 셋을 추가할 때 core 24개 + editor 18개 파일(로직 <span class="bad">12개</span>) 수정</dd>
+          <dt>제안</dt><dd><b>규칙:</b> 블록 종류의 표(처리류 · 반복류 · 분기류 · 호출). <b>설계:</b> core의 종류 기술자 하나</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <header><h3>⑤ 텍스트 필드</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>"필수 필드를 비우면 기본값"은 공통 규칙. 필드마다의 값은 한 문장과 종류마다의 반복</dd>
+          <dt>코드에서</dt><dd>비웠을 때의 규칙이 core 명령마다. 편집 불가 판정 두 곳. 만든 직후 여는 필드 <span class="bad">8곳</span></dd>
+          <dt>제안</dt><dd><b>규칙:</b> 필드의 표. <b>설계:</b> 필드의 기술자 하나</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <header><h3>⑥ 실행 취소 단계의 묶음</h3></header>
+        <dl>
+          <dt>규칙에서</dt><dd>C4는 일반 문장, 본문은 사례 셋(접기 영역의 이름, 뺀 Method의 이름, 빈 default 칸)</dd>
+          <dt>코드에서</dt><dd>묶음 메커니즘 <span class="bad">셋</span>. If를 삽입하고 조건을 입력하면 실행 취소 두 번</dd>
+          <dt>제안</dt><dd><b>규칙:</b> 범위를 정해 한 문장으로(아래 U5). <b>설계:</b> 메커니즘 하나</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">4 · 컨테이너</p>
+    <h2>다섯 가지가 같은 개념입니다</h2>
+    <p class="q">조작 규칙은 "이름 띠는 분기 라벨처럼", "접기 영역도 제어 블록처럼", "펴 보인 호출 블록은 반복 블록처럼"으로 둘씩 견줍니다. 파란 칸이 <b>대표 요소</b>입니다. 대표 요소를 선택하거나 가리키면 컨테이너 전체이고, 그 곁은 컨테이너의 밖입니다.</p>
+    <div class="two" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 600px), 1fr))">
+      <figure>
+        <div class="scene">
+          <svg class="ns" width="580" height="436" viewBox="0 0 580 436" role="img" aria-label="한 다이어그램 안의 컨테이너 다섯과 대표 요소: 헤더, 반복 블록의 조건 칸, 분기 라벨, 이름 띠, 접힌 칸, 펴 보인 호출 블록의 띠">
+            <!-- 헤더 -->
+            <rect class="h" x="20" y="10" width="520" height="26"/><text x="280" y="28" text-anchor="middle">Method sort(a)</text>
+            <!-- While -->
+            <rect class="h" x="20" y="36" width="520" height="22"/><rect class="h" x="20" y="58" width="24" height="40"/>
+            <rect x="20" y="36" width="520" height="62"/><rect x="44" y="58" width="496" height="40"/>
+            <text x="32" y="52">i &lt; n</text><text x="292" y="83" text-anchor="middle">swap(a[i], a[min])</text>
+            <!-- If -->
+            <rect x="20" y="98" width="520" height="84"/>
+            <path d="M20 98 L280 134 L540 98"/><line x1="20" y1="134" x2="540" y2="134"/><line x1="280" y1="134" x2="280" y2="182"/>
+            <text x="280" y="116" text-anchor="middle">a[i] &gt; x</text>
+            <rect class="h" x="26" y="117" width="40" height="15" style="stroke:none"/><text x="46" y="129" text-anchor="middle">참</text>
+            <rect class="h" x="486" y="117" width="48" height="15" style="stroke:none"/><text x="510" y="129" text-anchor="middle">거짓</text>
+            <text x="150" y="163" text-anchor="middle">x ← a[i]</text><text x="410" y="163" text-anchor="middle">∅</text>
+            <!-- 펴진 접기 영역 -->
+            <rect class="h" x="20" y="182" width="520" height="20"/><text x="30" y="197">▾ 초기화</text>
+            <rect x="24" y="202" width="512" height="30"/><rect x="24" y="232" width="512" height="30"/>
+            <text x="280" y="222" text-anchor="middle">lo ← 0</text><text x="280" y="252" text-anchor="middle">hi ← n − 1</text>
+            <rect class="reg" x="21.5" y="183.5" width="517" height="80"/>
+            <!-- 접힌 칸 -->
+            <rect class="h" x="20" y="266" width="520" height="28"/><rect class="reg" x="21.5" y="267.5" width="517" height="25"/><text x="30" y="285">▸ 정리 외 2개</text>
+            <!-- 펴 보인 호출 블록 -->
+            <rect class="hp" x="20" y="298" width="520" height="22"/><text x="30" y="314">▾ p ← partition(a, lo, hi)</text>
+            <rect x="24" y="320" width="512" height="30"/><rect x="24" y="350" width="512" height="30"/>
+            <text class="mut" x="280" y="340" text-anchor="middle">pivot ← a[hi]</text><text class="mut" x="280" y="370" text-anchor="middle">i ← lo − 1</text>
+            <rect class="pk" x="21.5" y="299.5" width="517" height="82"/>
+            <rect x="20" y="10" width="520" height="374"/>
+            <!-- 번호 -->
+            <circle class="bd" cx="562" cy="23" r="11"/><text class="bt" x="562" y="27" text-anchor="middle">1</text>
+            <circle class="bd" cx="562" cy="47" r="11"/><text class="bt" x="562" y="51" text-anchor="middle">2</text>
+            <circle class="bd" cx="562" cy="125" r="11"/><text class="bt" x="562" y="129" text-anchor="middle">3</text>
+            <circle class="bd" cx="562" cy="192" r="11"/><text class="bt" x="562" y="196" text-anchor="middle">4</text>
+            <circle class="bd" cx="562" cy="280" r="11"/><text class="bt" x="562" y="284" text-anchor="middle">5</text>
+            <circle class="bd" cx="562" cy="309" r="11"/><text class="bt" x="562" y="313" text-anchor="middle">6</text>
+            <text class="st" x="20" y="408">파란 칸 = 대표 요소, 굵은 파란 테두리 = 접기 영역,</text>
+            <text class="st" x="20" y="426">보라 = 펴 보인 호출 블록(안의 블록은 읽기 전용)</text>
+          </svg>
+        </div>
+      </figure>
+      <div class="tw">
+        <table style="min-width: 520px">
+          <tr><th>#</th><th>컨테이너</th><th>대표 요소</th><th>지금 규칙이 적힌 곳</th></tr>
+          <tr><td class="k">1</td><td>다이어그램</td><td>헤더</td><td>매트릭스의 헤더 열(의도한 예외)</td></tr>
+          <tr><td class="k">2</td><td>반복 블록</td><td>조건 칸과 왼쪽 띠</td><td>2장 방향키, 4장 접기</td></tr>
+          <tr><td class="k">3</td><td>분기</td><td>분기 라벨(병렬 처리는 위 띠의 구간)</td><td>2장 "분기 라벨 선택", BL1 · BL2</td></tr>
+          <tr><td class="k">4</td><td>접기 영역(펴짐)</td><td>이름 띠</td><td>MD1(삽입), DF1(드롭), FD5(방향키), FM1(이동)</td></tr>
+          <tr><td class="k">5</td><td>접기 영역(접힘)</td><td>접힌 칸</td><td>같은 결정들과 4장</td></tr>
+          <tr><td class="k">6</td><td>펴 보인 호출 블록</td><td>띠</td><td>CB5(방향키), DF3(드롭), C5(읽기 전용)</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <tr><th>조작</th><th>지금 컨테이너를 표현하는 방법</th><th>제안</th></tr>
+        <tr><td>방향키 · 클릭</td><td><span class="lv ok">보이는 나무</span> 접기 영역 · 펴 보인 호출 블록을 본문을 가진 블록으로 변환</td><td rowspan="5" style="vertical-align: middle"><span class="lv new">컨테이너 트리 하나</span><br>보이는 나무를 올려 모든 조작이 사용합니다. 대표 요소, 읽기 전용, 보이는지를 노드가 가집니다. 펴 보인 곳을 위한 사본 함수가 없어집니다</td></tr>
+        <tr><td>이동 명령</td><td><span class="lv off">core의 평행한 경로</span> 제어 블록의 경로와 접기 영역의 경로가 따로, 인자 <code>hiddenFolds</code></td></tr>
+        <tr><td>드롭</td><td><span class="lv off">모델의 색인 + 클릭 영역</span> 접기 영역 · 펴 보인 호출 블록마다 분기</td></tr>
+        <tr><td>접기 · 펴기의 대상</td><td><span class="lv off">자체 사슬</span> <code>outward</code>와 펴 보인 곳의 사본 <code>peekOutward</code></td></tr>
+        <tr><td>풀기 · 분기 명령</td><td><span class="lv off">각자</span> <code>unwrapHolder</code>, <code>branchAround</code></td></tr>
       </table>
     </div>
   </section>
 
   <section>
-    <p class="part">3 · 그림</p>
-    <h2>지금: 매트릭스의 한 행이 코드의 세 곳</h2>
-    <figure>
-      <div class="fig">
-        <div class="flow">
-          <div class="st has"><span class="tagk">있음</span><b>명령 레지스트리</b><small>키 · 메뉴 · 툴바 · 드래그가 같은 명령 id로</small></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음 · C5</span><b>읽기 전용 검사</b><small><code>spec()</code> 한 곳</small></div>
-          <div class="ar">→</div>
-          <div class="st gap"><span class="tagk">없음 · C1 · C2 · 매트릭스</span><b>명령마다의 if 사슬</b><small><code>when</code>: 선택의 종류로 이유를 고름<br><code>run</code>: 선택의 종류로 길을 고름<br><code>context</code>: 종류의 목록을 또 적음</small></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음</span><b>core 편집 명령</b><small>순수 함수, <code>Target</code> 3종</small></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음 · C3 · C4</span><b>세션 commit</b><small>명령 후 선택, 실행 취소 한 단계</small></div>
+    <p class="part">5 · 매트릭스</p>
+    <h2>72칸은 표 둘에서 나옵니다</h2>
+    <p class="q">매트릭스(명령 12행 × 선택한 요소 6열)는 "칸이 C1 ~ C5에서 나온다"고 하지만, C1의 문장만으로는 칸을 맞힐 수 없습니다. 명령마다 <b>무엇을 받는가, 상위로 올라가는가</b>가 빠져 있습니다. 아래 표 둘을 규칙에 추가하면 매트릭스는 그 결과가 됩니다(초안이고, 대조 테스트로 확인합니다). 이 두 표가 코드에서는 대상 해석기와 명령의 표입니다.</p>
+    <div class="two">
+      <figure>
+        <div class="tw">
+          <table style="min-width: 420px">
+            <tr><th>선택한 요소</th><th>컨테이너 사슬(가까운 것부터)</th></tr>
+            <tr><td>블록(하나 · 범위 · 접힌 줄)</td><td>블록 범위 → (제어 블록 · 호출 블록 하나면 그 블록) → 담은 접기 영역 → 분기 · 본문 → 상위 제어 블록 → … → 다이어그램</td></tr>
+            <tr><td>분기 라벨</td><td>분기 → 그 If · Case · 병렬 처리 → …</td></tr>
+            <tr><td>헤더</td><td>다이어그램</td></tr>
+            <tr><td>접기 영역</td><td>접기 영역 → 분기 · 본문 → 상위 제어 블록 → …</td></tr>
+            <tr><td>펴 보인 블록</td><td>펴 보인 범위 → 그 위치의 접기 영역 → … → 펴 보인 호출 블록(읽기 전용)</td></tr>
+            <tr><td>선택 없음</td><td>없음(삽입 · 붙여넣기만 지금 다이어그램의 끝)</td></tr>
+          </table>
         </div>
+        <figcaption><b>표 1.</b> 요소 → 컨테이너 사슬. 코드에서는 컨테이너 트리를 올라가는 함수 하나.</figcaption>
+      </figure>
+      <figure>
+        <div class="tw">
+          <table style="min-width: 460px">
+            <tr><th>명령</th><th>받는 대상</th><th>올라감</th></tr>
+            <tr><td>복사</td><td>블록 범위 · 분기(그 블록 전체) · 접기 영역 · 다이어그램 · 펴 보인 범위</td><td>아니오</td></tr>
+            <tr><td>삭제</td><td>블록 범위 · 분기 · 접기 영역</td><td>아니오</td></tr>
+            <tr><td>감싸기</td><td>블록 범위 · 분기(그 블록 전체) · 접기 영역</td><td>아니오</td></tr>
+            <tr><td>새 Method로 빼기</td><td>블록 범위 · 접기 영역</td><td>아니오</td></tr>
+            <tr><td>이동(위 · 아래)</td><td>블록 범위 · 접기 영역 · 다이어그램</td><td>아니오</td></tr>
+            <tr><td>이동(왼쪽 · 오른쪽)</td><td>분기</td><td><b>예</b></td></tr>
+            <tr><td>풀기</td><td>제어 블록 · 호출 블록</td><td><b>예</b></td></tr>
+            <tr><td>접기 · 펴기</td><td>제어 블록의 안쪽 · 분기 · 접기 영역 · 호출 블록</td><td><b>예</b></td></tr>
+            <tr><td>접기 영역 풀기</td><td>접기 영역</td><td><b>예</b></td></tr>
+          </table>
+        </div>
+        <figcaption><b>표 2</b>(줄임). 명령 → 받는 대상. 컨테이너의 상태를 바꾸는 명령 넷만 상위로 올라갑니다. 텍스트 편집은 필드의 표, 삽입 · 붙여넣기는 삽입 위치의 표를 따릅니다.</figcaption>
+      </figure>
+    </div>
+    <p class="q">표 둘로 설명되지 않는 칸은 예외 세 묶음입니다: <b>헤더의 열</b>(삭제는 헤더만, 삽입은 본문의 맨 앞), <b>분기 라벨에서 블록 범위를 받는 명령</b>(복사 · 감싸기는 그 분기의 블록 전체인데 새 Method로 빼기 · 접기 영역 만들기 · 제어 블록 삽입은 거절 → 아래 U1 · U2), <b>빈 블록</b>(제어 블록 삽입과 붙여넣기는 교체, 처리 삽입은 곁에).</p>
+  </section>
+
+  <section>
+    <p class="part">6 · 단계</p>
+    <h2>규칙의 표를 먼저 세우고, 코드를 표에 맞춥니다</h2>
+    <div class="tw">
+      <table>
+        <tr><th>단계</th><th>조작 규칙에서</th><th>설계 · 코드에서</th><th>효과</th><th>비용 · 위험</th></tr>
+        <tr><td class="k">0</td><td>공통 규칙을 다시 세움: 요소와 컨테이너, 명령마다 받는 대상(표 1 · 2), 삽입 위치의 표, 블록 종류의 표, 필드의 표. C1 · C2 · C4의 문장을 실제 범위에 맞춤. <b>동작은 바꾸지 않음</b></td><td>표를 앱의 동작과 대조하는 테스트. 설계 문서의 지금과 다른 문장 수정</td><td>규칙이 명세가 됨. 표와 앱이 다른 칸의 목록이 나옴</td><td>중간(조작 규칙의 절반쯤을 다시 기술). 위험 낮음</td></tr>
+        <tr><td class="k">1</td><td>0의 표가 기준</td><td>컨테이너 트리, 대상 해석기, 삽입 위치 타입. 명령 묶음을 차례로 이전하고 드롭을 같은 위치 타입과 명령으로</td><td>상위 컨테이너 찾기 넷 → 하나, 삽입 위치 둘 → 하나, 칸 하나를 바꿀 때 한 곳</td><td>중간 ~ 큼. 0의 테스트가 안전망</td></tr>
+        <tr><td class="k">1′</td><td></td><td>이동 명령을 컨테이너 트리에서 목적지를 구해 실행(core의 접기 영역 경로와 <code>hiddenFolds</code> 제거)</td><td>"보이지 않는 요소"의 규칙이 한 곳</td><td>가설. 스파이크로 확인한 뒤 정함</td></tr>
+        <tr><td class="k">2</td><td>0의 블록 종류의 표가 기준</td><td>core의 종류 기술자. 명령과 editor의 종류 분기를 이전</td><td>블록 종류 추가 = 기술자 한 항목 + 모양 + 직렬화 + 키 · 아이콘</td><td>중간. 기계적인 변경이 많음</td></tr>
+        <tr><td class="k">3</td><td>C3 · C4를 U5의 답에 맞춰 기술</td><td>필드의 기술자, 묶음 메커니즘 하나, 명령 후 선택의 기본 동작</td><td>필드 · 묶음 · 선택이 한 곳</td><td>작음 ~ 중간</td></tr>
+      </table>
+    </div>
+    <p class="q">하지 않을 것: 대상 결정을 <code>core</code>로 옮기기(선택 · 펴 보기는 화면의 개념), 레이아웃 · 씬 · 파일 형식의 종류별 분기 줄이기(모양과 직렬화가 다름), 방향키 수정, 조작 규칙의 장 번호 변경.</p>
+  </section>
+
+  <section>
+    <p class="part">Q · 어느 범위로 갈까</p>
+    <h2>Q. 규칙과 설계를 어디까지 함께 고칠까</h2>
+    <p class="q">앞서 "매트릭스 대조 테스트 → 대상 해석기"에 1번을 주셨습니다. 전체를 검토하니 범위가 넓어져 다시 여쭙니다. 구현은 정한 뒤에 따로 하고, <b>core의 편집 명령과 파일 형식은 어느 안에서도 그대로입니다.</b></p>
+    <div class="cards">
+      <div class="card pick">
+        <header><span class="num">1</span><h3>규칙과 설계를 함께: 0 → 1 → 2 → 3</h3><span class="badge">추천</span></header>
+        <ul>
+          <li>규칙의 표 하나에 코드의 요소 하나가 대응합니다</li>
+          <li>0단계(규칙)는 이 세션에서 초안을 시안으로 먼저 보여 드립니다</li>
+          <li>1 ~ 3단계는 단계마다 따로 구현합니다</li>
+        </ul>
       </div>
-      <figcaption>
-        <span class="legend"><span><i class="has"></i>조작 규칙의 개념이 코드의 한 요소</span><span><i class="gap"></i>요소가 없어 명령마다 따로 구현</span><span><i class="new"></i>제안: 새로 두는 요소</span></span>
-      </figcaption>
-    </figure>
+      <div class="card">
+        <header><span class="num">2</span><h3>0과 1까지</h3></header>
+        <ul>
+          <li>가장 큰 불일치(대상 · 삽입 위치 · 드롭)를 해소합니다</li>
+          <li>블록 종류와 필드는 규칙의 표만 생기고 코드는 그대로입니다</li>
+        </ul>
+      </div>
+      <div class="card">
+        <header><span class="num">3</span><h3>0만: 규칙을 다시 세우고 대조 테스트까지</h3></header>
+        <ul>
+          <li>비용이 가장 작습니다</li>
+          <li>코드의 구조는 그대로이고, 규칙과 달라지면 테스트가 검출합니다</li>
+        </ul>
+      </div>
+      <div class="card">
+        <header><span class="num">4</span><h3>코드만: 앞서의 A → B</h3></header>
+        <ul>
+          <li>매트릭스 대조 테스트와 대상 해석기만 합니다</li>
+          <li>규칙의 문장(C1 · C2 · C4)이 그대로라 코드의 표가 다시 규칙과 달라집니다</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">U · 추상화가 드러낸 칸</p>
+    <h2>표로 세우면 다르게 정해진 칸이 보입니다</h2>
+    <p class="q">동작이 바뀌는 것이라 Q의 답 뒤에 <b>하나씩</b> 여쭙니다. 지금은 목록입니다.</p>
+    <div class="tw">
+      <table>
+        <tr><th>#</th><th>칸</th><th>지금</th><th>규칙을 고르게 하면</th><th>추천</th></tr>
+        <tr><td class="k">U1</td><td>분기 라벨에서 처리가 아닌 블록(제어 블록 · 탈출 · 호출) 삽입</td><td>거절. 처리 삽입은 새 분기, 붙여넣기는 새 분기에 그 블록</td><td>옆에 새 분기를 만들어 그 안에</td><td>바꿈</td></tr>
+        <tr><td class="k">U2</td><td>분기 라벨에서 새 Method로 빼기 · 접기 영역 만들기</td><td>거절. 복사 · 감싸기는 그 분기의 블록 전체</td><td>그 분기의 블록 전체를 받음</td><td>바꿈</td></tr>
+        <tr><td class="k">U3</td><td>분기 라벨 위에 블록 아이콘을 드롭</td><td>그 If · Case 전체를 감쌈. 키보드의 감싸기는 그 분기의 블록을 감쌈</td><td>그 분기의 블록을 감쌈</td><td>바꿈(확신은 중간)</td></tr>
+        <tr><td class="k">U4</td><td>분기를 드래그로 옮기기, 분기 사이에 드롭</td><td>없음(이동 명령만)</td><td>분기 라벨을 드래그하면 분기를 옮김</td><td>백로그</td></tr>
+        <tr><td class="k">U5</td><td>만든 직후 입력한 텍스트의 실행 취소</td><td>접기 영역의 이름 · 뺀 Method의 이름 · 빈 default 칸만 한 단계. 새 블록 · 분기 라벨 · 헤더 · 호출은 두 단계</td><td>모든 생성에서 한 단계</td><td>바꿈</td></tr>
+        <tr><td class="k">U6</td><td>새 Event · Method 다이어그램의 위치</td><td>그 종류의 맨 뒤. 붙여넣은 다이어그램과 뺀 Method는 지금 다이어그램의 바로 뒤</td><td>지금 다이어그램의 바로 뒤</td><td>판단을 구함</td></tr>
+        <tr><td class="k">U7</td><td>접기 · 펴기의 알림</td><td>"접었습니다." · "폈습니다."</td><td>무엇을 접고 폈는지 알림(규칙대로)</td><td>규칙에 맞춤</td></tr>
+        <tr><td class="k">U8</td><td>컨텍스트 메뉴의 항목</td><td>접기 영역을 선택하면 삽입 · 붙여넣기가 없고, 헤더를 선택하면 삽입이 없음</td><td>그 요소에 적용되는 명령 전부(규칙대로)</td><td>규칙에 맞춤</td></tr>
+        <tr><td class="k">U9</td><td>병렬 처리의 분기에서 텍스트 편집</td><td>키보드는 거절, 그 분기 위의 띠를 더블클릭하면 블록의 텍스트 편집</td><td>진입점이 달라도 같은 결과</td><td>유지하고 트레이드오프에 기술</td></tr>
+      </table>
+    </div>
 
     <div class="two">
       <figure>
-        <pre><span class="m">// 지금: 붙여넣기의 run (clipboard-commands.ts, 줄임)</span>
-<span class="k">if</span> (diagram !== null)                 → pasteDiagram   <span class="m">// HC1</span>
-<span class="k">if</span> (selection.kind === 'branchLabel') → 새 분기 + paste <span class="m">// BL2</span>
-<span class="k">if</span> (selection.kind === 'missingDefault') → default 달고 paste
-<span class="k">if</span> (selection.kind === 'head')        → 위는 거절, 아래는 본문 맨 앞
-<span class="k">if</span> (selection === null)              → 지금 다이어그램의 끝 <span class="m">// PS1</span>
-<span class="k">else</span>                                  → targetOf(selection)
-
-<span class="m">// 삽입의 run (insert-wrap-commands.ts)에 같은 사슬이 한 벌 더</span>
-<span class="m">// context: ['blocks','missingDefault','branchLabel','head']</span></pre>
-        <figcaption><b>지금.</b> 오늘 PS1 · HC1 · BL2는 이 사슬에 <code>if</code>를 하나씩 더했습니다. 같은 C2 규칙을 삽입과 붙여넣기가 따로 갖고 있습니다.</figcaption>
-      </figure>
-      <figure>
-        <pre><span class="m">// 제안: 해석기가 삽입 위치를 주고, 명령은 받는 종류만 적는다</span>
-<span class="g">placeOf</span>(selection, side)   <span class="m">// C2 한 곳</span>
-  → { 줄의 사이 } | { 분기의 사이 } | 거절 이유
-  <span class="m">// 예외 두 줄: 헤더 = 본문 맨 앞, 선택 없음 = 맨 끝</span>
-
-paste: {
-  줄의 사이:   paste,
-  분기의 사이: 새 분기를 만들어 그 안에 paste,
-  다이어그램:  pasteDiagram,
-}
-insert: { 줄의 사이: insertBlock, 분기의 사이: insertBranch }
-<span class="m">// when · context는 이 표에서 나온다</span></pre>
-        <figcaption><b>제안(안 B).</b> 매트릭스의 한 행이 명령 하나의 표가 됩니다. 칸 하나를 바꾸면 한 줄입니다.</figcaption>
-      </figure>
-    </div>
-
-    <h2>제안: 대상 해석기를 한 요소로</h2>
-    <figure>
-      <div class="fig">
-        <div class="flow">
-          <div class="st has"><span class="tagk">있음</span><b>명령 레지스트리</b></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음 · C5</span><b>읽기 전용 검사</b></div>
-          <div class="ar">→</div>
-          <div class="st new"><span class="tagk">새로 · C1 · C2</span><b>대상 해석기</b><small>요소 → 컨테이너 사슬 (분기 라벨 → 분기 → If → 줄 → 다이어그램)<br>삽입 위치 (줄의 사이 · 분기의 사이)</small></div>
-          <div class="ar">→</div>
-          <div class="st new"><span class="tagk">새로 · 매트릭스</span><b>명령 × 대상 표</b><small>명령마다 "받는 컨테이너 종류 → 처리". 헤더의 예외도 여기 한 칸</small></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음</span><b>core 편집 명령</b><small>그대로</small></div>
-          <div class="ar">→</div>
-          <div class="st has"><span class="tagk">있음 · C3 · C4</span><b>세션 commit</b></div>
-        </div>
-      </div>
-      <figcaption>풀기는 "제어 블록 · 호출 블록"만 받는다고 적습니다. 분기 라벨에서 실행하면 해석기가 사슬을 올라가 그 If · Case에 적용하고 "어디에 적용했는지"를 알립니다. C1의 "가장 가까운 상위 컨테이너"가 코드 한곳이 됩니다.</figcaption>
-    </figure>
-  </section>
-
-  <section>
-    <p class="part">4 · 근거</p>
-    <h2>오늘의 조작 변경이 코드의 몇 곳을 고쳤나</h2>
-    <div class="tw">
-      <table>
-        <tr><th>변경</th><th>조작 규칙에서</th><th>코드에서 고친 곳</th><th>한곳에서 끝났나</th></tr>
-        <tr><td>UN2 이름 띠 보기도 실행 취소</td><td>C4의 범위</td><td>세션, 상태</td><td><span class="lv ok">예</span> C4가 한 요소</td></tr>
-        <tr><td>PS1 선택 없을 때 붙여넣기</td><td>"선택 없음" 열의 칸 하나</td><td>붙여넣기의 <code>when</code> · <code>run</code>, 의존, 대화상자, 문구</td><td><span class="lv off">아니오</span> 삽입은 같은 규칙을 이미 따로 가짐</td></tr>
-        <tr><td>HC1 헤더에서 복사하면 다이어그램</td><td>"헤더" 열의 칸 둘</td><td>복사의 <code>when</code> · <code>run</code> · <code>context</code>, 붙여넣기의 <code>run</code>, core</td><td><span class="lv off">아니오</span> 칸 하나에 세 곳</td></tr>
-        <tr><td>BL2 분기 라벨에서 붙여넣기</td><td>"분기 라벨" 열의 칸 하나</td><td>붙여넣기의 <code>run</code>, 분기 삽입에 인자 <code>fill</code></td><td><span class="lv">반쯤</span></td></tr>
-        <tr><td>FM1 이름 띠를 끈 접기 영역에서의 이동</td><td>② 보이지 않는 요소</td><td>core <code>move</code>의 인자 <code>hiddenFolds</code></td><td><span class="lv off">아니오</span> 이동만의 인자</td></tr>
-        <tr><td>DF4 · WH1 · PH1 마우스 셋</td><td>입력의 진입점</td><td>캔버스 입력</td><td><span class="lv ok">예</span></td></tr>
-      </table>
-    </div>
-    <div class="tw">
-      <table style="min-width: 520px">
-        <tr><th>셈 (<code>editor/src</code>, 테스트 제외)</th><th>지금</th><th>안 B의 목표</th></tr>
-        <tr><td>선택의 종류를 가르는 분기</td><td class="n">21개 파일, 약 200곳</td><td class="n">명령 쪽은 해석기 한 곳</td></tr>
-        <tr><td>그 가운데 컴파일러가 못 잡는 <code>if</code> 사슬</td><td class="n">77</td><td class="n">표의 빠진 칸은 타입 오류</td></tr>
-        <tr><td>선택의 종류 하나를 아는 <code>commands/</code> 파일</td><td class="n">6 ~ 8</td><td class="n">1</td></tr>
-        <tr><td>매트릭스의 칸 하나를 바꿀 때 고치는 곳</td><td class="n">3 ~ 4</td><td class="n">1</td></tr>
-        <tr><td>매트릭스와 코드를 대조하는 테스트</td><td class="n">없음</td><td class="n">72칸 (안 A)</td></tr>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <p class="part">Q1 · 어느 안으로 갈까</p>
-    <h2>Q1. 대상 해석을 코드의 한 요소로 만들까</h2>
-    <p class="q">구현은 정한 뒤에 따로 합니다. <b>core의 편집 명령과 파일 형식은 어느 안에서도 바뀌지 않습니다.</b></p>
-    <div class="cards">
-      <div class="card pick">
-        <header><span class="num">1</span><h3>A → B: 대조 테스트 뒤에 대상 해석기</h3><span class="badge">추천</span></header>
-        <dl>
-          <dt>무엇</dt><dd>매트릭스 72칸을 테스트로 대조(A). 그 위에서 C1 · C2를 <code>editor</code>의 한 모듈로 모으고 명령은 표만 적음(B)</dd>
-          <dt>효과</dt><dd>칸 하나 = 한 줄. 새 대상 = 해석기 하나. C1의 알림과 C2의 예외가 한 번만</dd>
-          <dt>비용</dt><dd>중간. 명령 묶음 여섯을 네 단계로, 단계마다 커밋</dd>
-          <dt>위험</dt><dd>중간. 미묘한 칸에서 동작이 바뀔 수 있음. A의 테스트가 먼저 잡음</dd>
-        </dl>
-      </div>
-      <div class="card">
-        <header><span class="num">2</span><h3>A만: 대조 테스트와 문서 정합</h3></header>
-        <dl>
-          <dt>무엇</dt><dd>구조는 그대로. 테스트 하나, 아키텍처의 낡은 문장 셋, QA 시나리오 "새 명령 · 새 대상"</dd>
-          <dt>효과</dt><dd>어긋나면 테스트가 잡음. 고칠 곳의 수는 그대로</dd>
-          <dt>비용</dt><dd>작음</dd>
-          <dt>위험</dt><dd>낮음</dd>
-        </dl>
-      </div>
-      <div class="card">
-        <header><span class="num">3</span><h3>A → B → C: 표에서 문서의 매트릭스까지 생성</h3></header>
-        <dl>
-          <dt>무엇</dt><dd>B의 표를 데이터 하나로 두고, 조작 규칙의 매트릭스를 테스트 목록처럼 코드에서 뽑음</dd>
-          <dt>효과</dt><dd>문서와 코드의 원본이 하나</dd>
-          <dt>비용</dt><dd>큼. 생성 스크립트와 문서 형식의 약속</dd>
-          <dt>위험</dt><dd>중간. 칸의 글이 딱딱해짐. B 뒤에 정해도 됨</dd>
-        </dl>
-      </div>
-      <div class="card">
-        <header><span class="num">4</span><h3>지금은 하지 않음</h3></header>
-        <dl>
-          <dt>무엇</dt><dd>검토 문서만 남기고, 낡은 문장 셋은 정리 때 고침</dd>
-          <dt>효과</dt><dd>없음. 새 조작마다 서너 곳을 고치는 것이 이어짐</dd>
-          <dt>비용</dt><dd>없음</dd>
-          <dt>위험</dt><dd>명령이 늘수록 어긋남이 쌓임</dd>
-        </dl>
-      </div>
-    </div>
-    <p class="q">검토했지만 선택지에서 뺀 안: C1을 <code>core</code>로 내리기. 선택 · 펴 보기 · 빈 default 칸은 화면의 개념이라 <code>core</code>가 UI를 알게 됩니다(의존 규칙).</p>
-  </section>
-
-  <section>
-    <p class="part">Q2 · 추상화가 드러낸 칸</p>
-    <h2>Q2. 분기 라벨에서 제어 블록을 삽입하면</h2>
-    <p class="q">C2는 "분기 라벨 옆에는 분기"입니다. 분기 라벨에서 <b>처리 삽입</b>은 새 분기(빈 블록 하나), <b>붙여넣기</b>는 새 분기에 그 블록(오늘의 BL2)인데, <b>제어 블록 삽입만 거절</b>입니다. C2를 한 규칙으로 구현하면 이 칸만 예외로 남습니다(원칙 ③ 체크리스트 2: 같은 명령이 대상에 따라 다른 결과를 내는가).</p>
-    <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr))">
-      <div class="card pick">
-        <header><span class="num">1</span><h3>새 분기를 만들어 그 안에</h3><span class="badge">추천</span></header>
         <div class="scene">
-          <svg class="ns" width="400" height="150" viewBox="0 0 400 150" role="img" aria-label="Case의 분기 라벨 2를 선택하고 If를 삽입하면 오른쪽에 새 분기가 생기고 그 안에 If가 들어간다">
+          <svg class="ns" width="400" height="150" viewBox="0 0 400 150" role="img" aria-label="U1: Case의 분기 라벨 2를 선택하고 If를 삽입하면 오른쪽에 새 분기가 생기고 그 안에 If가 들어간다">
             <rect x="10" y="10" width="380" height="110"/>
             <text x="200" y="28" text-anchor="middle">state</text>
             <line x1="10" y1="38" x2="390" y2="38"/>
@@ -289,33 +375,34 @@ insert: { 줄의 사이: insertBlock, 분기의 사이: insertBranch }
             <rect class="bar" x="10" y="128" width="380" height="18"/><text class="st" x="16" y="141">분기 3을 만들고 If를 넣었습니다</text>
           </svg>
         </div>
-        <ul>
-          <li>처리 삽입 · 붙여넣기와 <b>같은 규칙</b>이 됩니다. 매트릭스의 "거절" 칸이 하나 줄어듭니다</li>
-          <li>If의 라벨에서는 지금의 분기 삽입처럼 Case로 바뀝니다(M87 F6)</li>
-        </ul>
-      </div>
-      <div class="card">
-        <header><span class="num">2</span><h3>지금대로 거절</h3></header>
-        <div class="scene">
-          <svg class="ns" width="400" height="150" viewBox="0 0 400 150" role="img" aria-label="Case의 분기 라벨 2를 선택하고 If를 삽입하면 아무것도 바뀌지 않고 상태 표시줄에 이유가 나온다">
-            <rect x="10" y="10" width="380" height="110"/>
-            <text x="200" y="28" text-anchor="middle">state</text>
-            <line x1="10" y1="38" x2="390" y2="38"/>
-            <line x1="130" y1="38" x2="130" y2="120"/><line x1="260" y1="38" x2="260" y2="120"/>
-            <line x1="10" y1="60" x2="390" y2="60"/>
-            <text x="70" y="54" text-anchor="middle">1</text>
-            <rect class="selr" x="131.5" y="39.5" width="127" height="19"/><text x="195" y="54" text-anchor="middle">2</text>
-            <text x="325" y="54" text-anchor="middle">default</text>
-            <text x="70" y="94" text-anchor="middle">start()</text><text x="195" y="94" text-anchor="middle">stop()</text>
-            <rect class="bar" x="10" y="128" width="380" height="18"/><text class="st" x="16" y="141">분기 라벨에서는 분기 삽입 · 삭제 · 이동만 됩니다.</text>
-          </svg>
+        <figcaption><b>U1의 "바꿈".</b> 분기 라벨 2를 선택하고 If를 삽입하면 옆에 새 분기를 만들어 그 안에 넣습니다. 지금은 "분기 라벨에서는 분기 삽입 · 삭제 · 이동만 됩니다."로 거절합니다. 주황 = 선택한 분기 라벨, 녹색 = 새로 생긴 것.</figcaption>
+      </figure>
+      <figure>
+        <div class="card" style="gap: 12px">
+          <div class="steps"><span>If 삽입</span><i>→</i><span>조건 입력</span><i>→</i><span>Enter</span><i>→</i><span>Ctrl+Z</span><i>→</i><span class="r">지금: 조건만 지워짐. 한 번 더 눌러야 If가 없어짐</span></div>
+          <div class="steps"><span>If 삽입</span><i>→</i><span>조건 입력</span><i>→</i><span>Enter</span><i>→</i><span>Ctrl+Z</span><i>→</i><span class="g">통일: If가 없어짐</span></div>
+          <div class="steps"><span>접기 영역 만들기</span><i>→</i><span>이름 입력</span><i>→</i><span>Enter</span><i>→</i><span>Ctrl+Z</span><i>→</i><span class="g">지금도: 접기 영역이 없어짐</span></div>
         </div>
-        <ul>
-          <li>지금의 동작. 매트릭스의 예외 칸으로 남기고, 표에 "의도한 예외"로 적습니다</li>
-          <li>알림 문구가 이미 맞지 않습니다: 분기 라벨에서 복사 · 감싸기 · 붙여넣기도 됩니다</li>
-        </ul>
-      </div>
+        <figcaption><b>U5.</b> 접기 영역과 새 Method로 빼기는 만들기와 이름이 한 단계인데, 새 블록의 조건은 두 단계입니다. Vim에서 <code>o</code> + 입력 + <code>Esc</code>가 실행 취소 한 단계인 것(원칙 ④)과 같게 맞출 수 있습니다.</figcaption>
+      </figure>
     </div>
-    <p class="q">범례: 주황 테두리 = 선택한 분기 라벨, 녹색 = 새로 생긴 것, 아래 띠 = 상태 표시줄의 알림.</p>
+  </section>
+
+  <section>
+    <p class="part">근거</p>
+    <h2>수치와 세는 법</h2>
+    <div class="tw">
+      <table>
+        <tr><th>수치</th><th>값</th><th>세는 법</th></tr>
+        <tr><td>선택의 종류를 구분하는 분기</td><td class="n">editor 21개 파일, 약 200곳</td><td>선택 종류 여섯의 <code>kind === '…'</code> · <code>case '…'</code>, 테스트 제외. 컴파일러가 누락을 검출하는 <code>switch</code> 15곳, <code>if</code> 77곳</td></tr>
+        <tr><td>블록 종류를 구분하는 분기</td><td class="n">core 237곳 · editor 143곳 · 웹 셸 0곳</td><td>종류 열의 <code>case</code> · <code>kind ===</code> · <code>kind !==</code>, 각 20개 파일, 테스트 제외</td></tr>
+        <tr><td>블록 종류 셋을 추가한 커밋의 파일</td><td class="n">core 24 + 2, editor 18, 셸 0</td><td><code>c35a824</code> · <code>c51c252</code>의 <code>git show --name-only</code>, 테스트 제외. editor 18개 가운데 키 표 · 아이콘 · 이름 6개, 로직 12개</td></tr>
+        <tr><td>상위 컨테이너를 찾는 구현</td><td class="n">명령 4 + 방향키 2 + 포함 여부 1</td><td><code>outward</code> · <code>peekOutward</code> · <code>branchAround</code> · <code>unwrapHolder</code></td></tr>
+        <tr><td>드롭 표의 행 가운데 자기 분기</td><td class="n">17행 중 13행</td><td><code>input/drop.ts</code>의 행마다의 구현</td></tr>
+        <tr><td>명령 후 선택을 전달하는 곳</td><td class="n">41곳</td><td><code>commands/</code>의 <code>session.commit</code> 호출</td></tr>
+        <tr><td>앞 단계에 합치는 곳</td><td class="n">2곳</td><td>접기 영역의 이름, 뺀 Method의 이름</td></tr>
+      </table>
+    </div>
+    <p class="q">조사: 조작 규칙 744줄을 모두 읽고, 코드의 사실 확인은 읽기 전용 에이전트 여섯이 주제별로 했습니다(텍스트 필드, 보이는 나무와 방향키, 드래그 앤 드롭, 접기 대상, 블록 종류, 진입점과 실행 취소). 위 수치는 보고를 받은 뒤 다시 세었고, 사실이 아닌 보고 한 건은 제외했습니다.</p>
   </section>
 </main>
