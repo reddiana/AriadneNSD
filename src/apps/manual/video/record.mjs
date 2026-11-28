@@ -1,10 +1,10 @@
 // Records the user manual's videos: the web editor building the gallery's heap sort from an empty
-// document, once by keys only and once by mouse only, in English or Korean. In the key version a
+// document, once by keys only and once by mouse only, in English, Korean or German. In the key version a
 // pill shows each key combination with a short label (plain typing shows none); in the mouse
 // version an overlay cursor follows the mouse, a ripple marks each click, and the pill names what
 // was clicked. Not a test: no test runs it (lint and format checks do read it).
 //
-//   node apps/manual/video/record.mjs --mode keys|mouse --lang en|ko   (from src/, ffmpeg with
+//   node apps/manual/video/record.mjs --mode keys|mouse --lang en|ko|de   (from src/, ffmpeg with
 //   libx264 on PATH or $FFMPEG; --crf N changes the quality, default 23)
 //
 // It serves the app on port 5191 (unless something already answers there), captures PNG frames
@@ -31,7 +31,9 @@ const { values: options } = parseArgs({
 const mode = options.mode;
 const lang = options.lang;
 if (mode !== 'keys' && mode !== 'mouse') throw new Error('--mode is keys or mouse');
-if (lang !== 'en' && lang !== 'ko') throw new Error('--lang is en or ko');
+/** The video's languages, in the order of core's `locales` (the drawing language setting). */
+const langs = ['en', 'ko', 'de'];
+if (!langs.includes(lang)) throw new Error('--lang is en, ko or de');
 
 const port = 5191;
 const url = `http://localhost:${String(port)}/`;
@@ -49,6 +51,7 @@ const mouseState = {};
 const words = {
   en: { largestToBack: 'largest to the back', heapOrderHolds: 'heap order holds' },
   ko: { largestToBack: '가장 큰 것을 맨 뒤로', heapOrderHolds: '힙 조건을 지킴' },
+  de: { largestToBack: 'das größte nach hinten', heapOrderHolds: 'Heap-Eigenschaft gilt' },
 }[lang];
 
 /** The overlay's labels, and the app's own names the mouse version looks for on the screen. */
@@ -79,15 +82,16 @@ const text = {
     rightClick: 'Right-click',
     drag: 'Drag',
     toolbar: 'Toolbar',
+    whileBlock: 'While',
     // The app's names (en-US screen).
     app: {
       diagramMenu: 'Diagram',
       addMethodHeader: 'Add Method Header',
-      insert: 'Insert',
-      for: 'Insert For',
-      insertProcess: 'Insert Process',
-      insertIf: 'Insert If',
-      call: 'Insert Call…',
+      insert: 'Insert Below',
+      for: 'Insert For Below',
+      insertProcess: 'Insert Process Below',
+      insertIf: 'Insert If Below',
+      call: 'Insert Call Below…',
       extract: 'Extract into New Method',
       process: 'Process',
     },
@@ -118,16 +122,57 @@ const text = {
     rightClick: '우클릭',
     drag: '드래그',
     toolbar: '툴바',
+    whileBlock: 'While',
     app: {
       diagramMenu: '다이어그램',
       addMethodHeader: 'Method 헤더 달기',
-      insert: '삽입',
-      for: 'For 삽입',
-      insertProcess: '처리 삽입',
-      insertIf: 'If 삽입',
-      call: '호출 삽입…',
+      insert: '아래에 삽입',
+      for: '아래에 For 삽입',
+      insertProcess: '아래에 처리 삽입',
+      insertIf: '아래에 If 삽입',
+      call: '아래에 호출 삽입…',
       extract: '새 Method로 빼기',
       process: '처리',
+    },
+  },
+  de: {
+    method: 'Methode…',
+    addHeader: 'Methodenkopf hinzufügen',
+    down: 'Nach unten',
+    edit: 'Block bearbeiten',
+    insertFor: 'For-Schleife einfügen',
+    insertWhile: 'While-Schleife einfügen',
+    insertIf: 'Verzweigung einfügen',
+    insertCall: 'Aufruf einfügen',
+    intoBody: 'In den Schleifenrumpf',
+    intoTrue: 'In den ja-Zweig',
+    newAfter: 'Neuer Block danach',
+    upToIf: 'Hoch zur Verzweigung',
+    up: 'Nach oben',
+    upToWhile: 'Hoch zur While-Schleife',
+    upToFor: 'Hoch zur For-Schleife',
+    extract: 'In neue Methode extrahieren',
+    callSift: 'sift_down aufrufen',
+    zoomOut: 'Verkleinern',
+    click: 'Klick',
+    doubleClick: 'Doppelklick',
+    tripleClick: 'Dreifachklick',
+    selectArgs: 'Argumente auswählen',
+    rightClick: 'Rechtsklick',
+    drag: 'Ziehen',
+    toolbar: 'Symbolleiste',
+    whileBlock: 'While-Schleife',
+    // The app's names (de-DE screen).
+    app: {
+      diagramMenu: 'Diagramm',
+      addMethodHeader: 'Methodenkopf hinzufügen',
+      insert: 'Block darunter einfügen',
+      for: 'For-Schleife darunter einfügen',
+      insertProcess: 'Anweisung darunter einfügen',
+      insertIf: 'Verzweigung darunter einfügen',
+      call: 'Aufruf darunter einfügen…',
+      extract: 'In neue Methode extrahieren',
+      process: 'Anweisung',
     },
   },
 }[lang];
@@ -281,7 +326,7 @@ try {
   const page = await browser.newPage({
     viewport: { width: size, height: size },
     deviceScaleFactor: scale,
-    locale: lang === 'ko' ? 'ko-KR' : 'en-US',
+    locale: { en: 'en-US', ko: 'ko-KR', de: 'de-DE' }[lang],
     colorScheme: 'light',
   });
   await page.addInitScript(() => {
@@ -291,13 +336,16 @@ try {
   await page.goto(url);
   await page.waitForSelector('html[data-ready="true"]');
 
-  // Before recording: the drawing's labels in the video's language (ADR-0041) and a large zoom
-  // (170%).
+  // Before recording: the drawing's labels in the video's language (ADR-0041), headers shaped
+  // like a title, and a large zoom (170%).
   await page.locator('.ans-menu-button').filter({ hasText: text.app.diagramMenu }).click();
-  await page.getByRole('menuitem', { name: /Document Settings|문서 설정/ }).click();
+  await page
+    .getByRole('menuitem', { name: /Document Settings|문서 설정|Dokumenteinstellungen/ })
+    .click();
   await page
     .locator('select[id="ans-setting-document.locale"]')
-    .selectOption(lang === 'ko' ? '1' : '0');
+    .selectOption(String(langs.indexOf(lang)));
+  await page.locator('select[id="ans-setting-document.headStyle"]').selectOption('0');
   await page.keyboard.press('Escape');
   const canvas = page.locator('.ans-canvas[tabindex]');
   await canvas.focus();
@@ -502,7 +550,7 @@ async function byKeys(page, wait) {
   await type('a, 0, end');
   await wait(600);
   // The whole drawing.
-  for (let i = 0; i < 6; i += 1) await step('-', text.zoomOut, 200);
+  for (let i = 0; i < 7; i += 1) await step('-', text.zoomOut, 200);
   await wait(600);
 }
 
@@ -683,7 +731,7 @@ async function byMouse(page, wait) {
   // open field accepts it first); the While once by a drag, to show that the icons drag.
   await contextMenu(field, app.insert, app.for);
   await type('for i in range(n // 2 - 1, -1, -1)');
-  await drag('block.insert.while', 'While', () => emptyBelow('for i in range'));
+  await drag('block.insert.while', text.whileBlock, () => emptyBelow('for i in range'));
   await type('True');
   await click(await emptyBelow(field), text.edit, { double: true, pause: 300 });
   await type('largest = i');
@@ -723,7 +771,7 @@ async function byMouse(page, wait) {
   // The whole drawing: accept the field with a click on the empty canvas, then zoom out by the
   // key (as in the key version; the maintainer's choice for zoom).
   await click({ x: size / 2, y: size - 90 }, null, { pause: 400 });
-  for (let i = 0; i < 6; i += 1) {
+  for (let i = 0; i < 7; i += 1) {
     await page.evaluate(([k, l]) => window.promoKeys(k, l), [['−'], text.zoomOut]);
     await page.keyboard.press('-');
     await wait(200);

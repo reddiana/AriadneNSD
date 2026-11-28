@@ -1,8 +1,8 @@
 # 사용법 동영상
 
-사용법에 넣을 화면 동영상(웹 편집기가 빈 문서에서 갤러리의 힙 정렬을 그려 가는 모습)을 녹화하는 스크립트입니다. 키보드만 쓰는 판(`keys`)과 마우스만 쓰는 판(`mouse`)이 있고, 영어 · 한국어로 찍습니다. 키보드 판의 순서는 LinkedIn 홍보 동영상(`apps/web/promo/record.mjs`)과 같습니다. 테스트가 아니어서 `pnpm e2e`와 `pnpm check`의 테스트는 이 폴더를 돌리지 않습니다(lint · 포맷 검사는 함).
+사용법에 넣을 화면 동영상(웹 편집기가 빈 문서에서 갤러리의 힙 정렬을 그려 가는 모습)을 녹화하는 스크립트입니다. 키보드만 쓰는 판(`keys`)과 마우스만 쓰는 판(`mouse`)이 있고, 영어 · 한국어 · 독일어로 찍습니다. 헤더는 제목 모양(`title`)입니다. 키보드 판의 순서는 LinkedIn 홍보 동영상(`apps/web/promo/record.mjs`)과 같습니다. 테스트가 아니어서 `pnpm e2e`와 `pnpm check`의 테스트는 이 폴더를 돌리지 않습니다(lint · 포맷 검사는 함).
 
-`src/`에서 `node apps/manual/video/record.mjs --mode keys|mouse --lang en|ko`로 실행하면 포트 5191에 개발 서버를 띄우고(이미 떠 있으면 그것을 씀) `apps/manual/video/<lang>/heap-sort-<mode>.mp4`(H.264, 1080x1080, 30 fps)와 끝 장면 `heap-sort-<mode>.png`를 만듭니다. `--crf N`으로 화질(기본 23)을 바꿉니다. libx264가 든 ffmpeg가 필요합니다(`PATH`에 있거나 환경 변수 `FFMPEG`).
+`src/`에서 `node apps/manual/video/record.mjs --mode keys|mouse --lang en|ko|de`로 실행하면 포트 5191에 개발 서버를 띄우고(이미 떠 있으면 그것을 씀) `apps/manual/video/<lang>/heap-sort-<mode>.mp4`(H.264, 1080x1080, 30 fps)와 끝 장면 `heap-sort-<mode>.png`를 만듭니다. `--crf N`으로 화질(기본 23)을 바꿉니다. libx264가 든 ffmpeg가 필요합니다(`PATH`에 있거나 환경 변수 `FFMPEG`).
 
 - 키보드 판: 누른 키와 짧은 설명을 오른쪽 아래의 알약에 보입니다. 글자를 치는 것은 보이지 않습니다.
 - 마우스 판: 헤드리스 화면에는 커서가 없어서 화살표 커서와 클릭 물결을 얹고, 한 일(예: "드래그 · 툴바 › While", "우클릭 · 삽입 › For 삽입")을 상태 표시줄 위의 작은 알약에 보입니다. 블록은 키보드 판과 같은 차례로, 앞 블록을 우클릭해 컨텍스트 메뉴의 삽입 › …으로 넣습니다(Method 헤더 · 새 Method로 빼기도 우클릭). While 하나만 툴바 아이콘을 드래그해 넣어 드래그도 보입니다. 텍스트 칸은 더블클릭 · 삽입 · 드롭으로 열리고 다음 클릭으로 확정됩니다(칸은 포커스를 잃으면 확정됨). 글자와 확대 · 축소(`-`)만 키보드입니다.
