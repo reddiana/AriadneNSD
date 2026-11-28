@@ -218,14 +218,16 @@ export type NewMethodAndCallArgs = WithIds & {
   readonly side: Side;
   /** The header text of the new Method. Left out, it gets the default name ("Method 1" …). */
   readonly text?: string;
+  /** The diagram holding the selection, or `null` when nothing is selected (see `newDiagram`). */
+  readonly after?: Id | null;
   /** The call block goes outside the fold regions starting or ending there (see `InsertBlockArgs`). */
   readonly outsideFolds?: boolean;
 };
 
 /**
  * Makes a new empty Method and inserts a call block calling it, in one undo step ("새 Method를
- * 만들고 호출" in the list of Methods, interaction rules "호출 블록"). The Method goes after the
- * last Method, like `newDiagram`; the call block goes where `insertCall` would put it. A given
+ * 만들고 호출" in the list of Methods, interaction rules "호출 블록"). The Method is placed like
+ * `newDiagram`'s (UX NP1); the call block goes where `insertCall` would put it. A given
  * name must be valid (`emptyHeadName`, `duplicateHeadName`). Touched: the new diagram, then the
  * new call block.
  */
@@ -242,7 +244,7 @@ export function newMethodAndCall(content: Content, args: NewMethodAndCallArgs): 
     }
   }
   const ids = idsFor(content, args);
-  const made = addDiagram(content, 'method', text, ids);
+  const made = addDiagram(content, 'method', text, ids, args.after ?? null);
   const method = made.content.diagrams.find((d) => d.id === made.diagram);
   const block = newCall(ids.next('block'), made.diagram, paramsOf(method));
   // The new diagram does not hold the target's sequence, so the range still names it.
@@ -263,8 +265,8 @@ export type MakeMethodArgs = WithIds & {
 /**
  * Makes the Method a call by a written name calls, in one undo step (R-EDIT-26, "Method
  * 만들기"). The new Method's header is `name(args)` with the call block's arguments, or `name`
- * when it has none, and its body one empty block; it goes after the last Method, like
- * `newDiagram`. Every call block of the document calling the same name then calls it, with the
+ * when it has none, and its body one empty block; it goes right after the call block's diagram
+ * when that is a Method, otherwise after the last Method (UX NP1). Every call block of the document calling the same name then calls it, with the
  * arguments refilled like `setCallTarget`. When a Method of that name is already there (a file
  * written by hand), the call blocks call it and nothing is made. Refused: not a call by name
  * (`wrongKind`), an empty name (`emptyHeadName`), an Event of that name (`duplicateHeadName`).
@@ -292,7 +294,7 @@ export function makeMethod(content: Content, args: MakeMethodArgs): Result {
     if (clash !== null) {
       return failWith({ ...clash, node: call.id });
     }
-    const made = addDiagram(content, 'method', text, idsFor(content, args));
+    const made = addDiagram(content, 'method', text, idsFor(content, args), entry.diagram);
     next = made.content;
     const found = next.diagrams.find((d) => d.id === made.diagram);
     if (found === undefined) {

@@ -194,7 +194,7 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
     expect(engine.session.state.editing?.field).toEqual({ kind: 'head', diagram: 'd4' });
     engine.session.commitEditing('push(x)');
     engine.keys('E');
-    // Each goes at the end of its kind (interaction rules 5).
+    // Each goes at the end of its kind: neither is of the kind of the selected diagram (UX NP1).
     expect(engine.content().diagrams.map((d) => d.head?.text ?? null)).toEqual([
       'tick',
       'sort(xs)',
@@ -202,6 +202,29 @@ describe('header and diagram commands (interaction rules "새 Method로 빼기�
       null,
       'Event 1',
     ]);
+  });
+
+  it('T-1854 · R-EDIT-18 · UX NP1: M in a Method puts the new Method right after it', () => {
+    const engine = testEngine(
+      withHeads(contentOf([proc('a')], [proc('b')], [proc('c')]), {
+        d1: ['method', 'f'],
+        d2: ['method', 'g'],
+        d3: ['event', 'tick'],
+      }),
+    );
+    const ids = (): ReadonlyArray<string> => engine.content().diagrams.map((d) => d.id);
+    select(engine, 'a');
+    engine.keys('M');
+    expect(ids()).toEqual(['d1', 'd4', 'd2', 'd3']);
+    engine.session.commitEditing('h');
+    // A new Event while a Method is selected goes at the end of the Events.
+    engine.keys('E');
+    expect(ids()).toEqual(['d1', 'd4', 'd2', 'd3', 'd5']);
+    engine.session.commitEditing('irq');
+    // With nothing selected, at the end of its kind.
+    engine.session.select(null);
+    engine.run('diagram.newMethod');
+    expect(ids()).toEqual(['d1', 'd4', 'd2', 'd6', 'd3', 'd5']);
   });
 
   it('T-0218 · R-BLK-07: removing a Method header makes its calls call by name and selects the first block', () => {

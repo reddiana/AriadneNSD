@@ -237,6 +237,35 @@ describe('newDiagram', () => {
     expect(diagramOf(result.content, 'd5').head).toEqual(event('Event 1'));
   });
 
+  it('T-1850 · R-EDIT-18 · UX NP1: goes right after the selected diagram of its kind', () => {
+    const content = contentWith(
+      diagram('d1', event('Main'), [proc('b1')]),
+      diagram('d2', method('a'), [proc('b2')]),
+      diagram('d3', null, [proc('b3')]),
+      diagram('d4', method('b'), [proc('b4')]),
+    );
+    const methodAfter = runOk(newDiagram, content, { kind: 'method', after: 'd2' });
+    expect(diagramIds(methodAfter.content)).toEqual(['d1', 'd2', 'd5', 'd3', 'd4']);
+    // A diagram without a header is on the Event side.
+    const eventAfter = runOk(newDiagram, content, { kind: 'event', after: 'd1' });
+    expect(diagramIds(eventAfter.content)).toEqual(['d1', 'd5', 'd2', 'd3', 'd4']);
+  });
+
+  it('T-1851 · UX NP1: after a diagram of the other kind, or none, it goes last of its kind', () => {
+    const content = contentWith(
+      diagram('d1', event('Main'), [proc('b1')]),
+      diagram('d2', method('a'), [proc('b2')]),
+      diagram('d3', event('Tick'), [proc('b3')]),
+      diagram('d4', method('b'), [proc('b4')]),
+    );
+    for (const after of ['d1', 'd9', null]) {
+      const result = runOk(newDiagram, content, { kind: 'method', after });
+      expect(diagramIds(result.content), String(after)).toEqual(['d1', 'd2', 'd3', 'd4', 'd5']);
+    }
+    const events = runOk(newDiagram, content, { kind: 'event', after: 'd2' });
+    expect(diagramIds(events.content)).toEqual(['d1', 'd2', 'd3', 'd5', 'd4']);
+  });
+
   it('T-0123 · R-EDIT-18: the first of its kind goes first (Event) or last (Method)', () => {
     const methods = contentWith(diagram('d1', method('sort'), [proc('b1')]));
     expect(diagramIds(runOk(newDiagram, methods, { kind: 'event' }).content)).toEqual(['d2', 'd1']);

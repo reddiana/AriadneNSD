@@ -111,16 +111,18 @@ export function setHead(content: Content, args: SetHeadArgs): Result {
 /** Arguments of `newDiagram`. */
 export type NewDiagramArgs = WithIds & {
   readonly kind: HeadKind;
+  /** The diagram holding the selection. Left out or `null` when nothing is selected. */
+  readonly after?: Id | null;
 };
 
 /**
  * Adds a new diagram with a header of the given kind and the default name, holding one empty
- * block (R-EDIT-18, R-EDIT-19). It goes at the end of its kind: after the last Method, or after
- * the last Event or diagram without a header (interaction rules 5). The editor then opens the
- * header name for editing. Touched: the new diagram.
+ * block (R-EDIT-18, R-EDIT-19). It goes where `insertDiagramAt` puts it: right after the diagram
+ * `after` (interaction rules 5, UX NP1). The editor then opens the header name for editing.
+ * Touched: the new diagram.
  */
 export function newDiagram(content: Content, args: NewDiagramArgs): Result {
-  const made = addDiagram(content, args.kind, null, idsFor(content, args));
+  const made = addDiagram(content, args.kind, null, idsFor(content, args), args.after ?? null);
   return done(made.content, [made.diagram]);
 }
 
@@ -209,7 +211,7 @@ export function setSettings(content: Content, args: SetSettingsArgs): Result {
 // Helpers shared with the call block commands.
 
 /**
- * Adds a diagram with a header of the given kind at the end of its kind (interaction rules 5).
+ * Adds a diagram with a header of the given kind, placed as `insertDiagramAt` does with `after`.
  * `text` is the header text; `null` gives the default name. The caller checks a given text.
  */
 export function addDiagram(
@@ -217,24 +219,26 @@ export function addDiagram(
   kind: HeadKind,
   text: string | null,
   ids: IdGenerator,
+  after: Id | null,
 ): { readonly content: Content; readonly diagram: Id } {
   const diagram: Diagram = {
     id: ids.next('diagram'),
     head: { kind, text: text ?? defaultHeadName(content, kind) },
     body: emptySeq(ids),
   };
-  return { content: insertDiagramAt(content, diagram, null), diagram: diagram.id };
+  return { content: insertDiagramAt(content, diagram, after), diagram: diagram.id };
 }
 
 /**
- * Puts a diagram into the document right after the diagram `after`, or, with `null`, at the end
- * of its kind: after the last Method, or after the last Event or diagram without a header
- * (interaction rules 5, UX XM1).
+ * Puts a new diagram into the document: every way of making one places it by this rule
+ * (interaction rules 5, UX NP1). It goes right after the diagram `after` when that one is of its
+ * kind. Otherwise, and with `null`, it goes at the end of its kind: after the last Method, or
+ * after the last Event or diagram without a header.
  */
 export function insertDiagramAt(content: Content, diagram: Diagram, after: Id | null): Content {
-  let at = after === null ? -1 : content.diagrams.findIndex((d) => d.id === after) + 1;
+  const side = isMethod(diagram);
+  let at = content.diagrams.findIndex((d) => d.id === after && isMethod(d) === side) + 1;
   if (at <= 0) {
-    const side = isMethod(diagram);
     content.diagrams.forEach((d, index) => {
       if (isMethod(d) === side) {
         at = index + 1;

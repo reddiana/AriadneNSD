@@ -17,15 +17,15 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 373 | - | 425 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 377 | - | 429 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 31 | 226 | - | 262 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 29 | - | 29 |
-| 합계 | 87 | 287 | 1138 | 5 | 1517 |
+| 합계 | 87 | 288 | 1149 | 5 | 1529 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 425개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 429개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -202,7 +202,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 
 ### [단위] `packages/core/src/commands/call.test.ts`
 
-editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vitest · 테스트 29개.
+editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vitest · 테스트 31개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -227,9 +227,11 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0083 | Method는 자기 자신을 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0084 | Method만 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0085 | 선택한 것에서 새 Method를 만들고 호출하기를 한 번에 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-1852 | 새 Method는 선택한 Method 바로 뒤에 놓인다 | [[ux-decisions\|UX NP1]] |
 | T-0086 | 적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 | - |
 | T-0088 | 비거나 중복되는 이름과 없는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
+| T-1853 | Method는 호출을 담은 Method 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX NP1]] |
 | T-1433 | 이름 호출이 가리키는 Method를 인자와 함께 만들고 잇는다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1434 | 인자가 없으면 헤더는 이름만이다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1435 | 같은 이름을 호출하는 호출 블록은 모두 새 Method를 호출한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
@@ -275,7 +277,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/diagram.test.ts`
 
-editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName · empty parentheses receive nothing (R-BLK-07, UX CB18). Vitest · 테스트 32개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-07]], [[ux-decisions|UX CB18]].
+editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName · empty parentheses receive nothing (R-BLK-07, UX CB18). Vitest · 테스트 34개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-07]], [[ux-decisions|UX CB18]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -300,6 +302,8 @@ editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings
 | T-0120 | 01-model 4: 같은 종류로 바꾸면 내용은 그대로다 | - |
 | T-0121 | 새 Method는 마지막 Method 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0122 | 새 Event는 마지막 Event나 헤더 없는 다이어그램 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-1850 | 선택한 같은 종류의 다이어그램 바로 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
+| T-1851 | 다른 종류의 다이어그램 뒤이거나 선택한 것이 없으면 같은 종류의 맨 끝에 간다 | [[ux-decisions\|UX NP1]] |
 | T-0123 | 그 종류의 첫 것은 맨 앞(Event)이나 맨 뒤(Method)에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0124 | 불변식 7: 새 문서의 빈 다이어그램은 다른 다이어그램이 오면 없어진다 | - |
 | T-0125 | 01-model 1.7: id를 주어진 생성기에서 받는다 | - |
@@ -702,17 +706,17 @@ id. Vitest · 테스트 5개.
 | T-1391 | 선택한 것이 없어도 붙여넣기가 묻고, "텍스트로 붙여넣기"는 줄들을 끝에 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
 | T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
-| T-1656 | a control or exit block on a branch label goes into a new branch beside it | [[ux-decisions\|UX BL3]] |
-| T-1657 | on a branch label of an If the If becomes a Case, and the user is told | [[ux-decisions\|UX BL3]] |
-| T-1658 | a call on a branch label goes into a new branch, whose label opens | [[ux-decisions\|UX BL3]] |
-| T-1659 | a call needing a name opens that name first, in one undo step | [[ux-decisions\|UX BL3]] |
-| T-1660 | new Method from a branch label takes the blocks of the branch | [[ux-decisions\|UX BL4]] |
-| T-1661 | a fold region from a branch label holds the blocks of the branch; a folded branch opens | [[ux-decisions\|UX BL4]] |
-| T-1662 | a wrap and its condition are one undo step | [[ux-decisions\|UX UN3]] |
-| T-1663 | a new branch label and a new header name join the step that made them | [[ux-decisions\|UX UN3]] |
-| T-1664 | a header name refused for a clash still joins the step when typed again | [[ux-decisions\|UX UN3]] |
-| T-1665 | nothing made, nothing joined: text on a kept empty block is its own step | [[ux-decisions\|UX UN3]] |
-| T-1666 | editing again later is a step of its own | [[ux-decisions\|UX UN3]] |
+| T-1656 | 분기 라벨에서의 제어 · 탈출 블록은 옆의 새 분기에 들어간다 | [[ux-decisions\|UX BL3]] |
+| T-1657 | If의 분기 라벨에서 하면 If가 Case가 되고, 사용자에게 알린다 | [[ux-decisions\|UX BL3]] |
+| T-1658 | 분기 라벨에서의 호출은 새 분기에 들어가고, 그 라벨이 열린다 | [[ux-decisions\|UX BL3]] |
+| T-1659 | 이름이 필요한 호출은 그 이름부터 열며, 실행 취소 한 단계다 | [[ux-decisions\|UX BL3]] |
+| T-1660 | 분기 라벨에서의 새 Method는 그 분기의 블록을 뺀다 | [[ux-decisions\|UX BL4]] |
+| T-1661 | 분기 라벨에서 만든 접기 영역은 그 분기의 블록을 담고, 접힌 분기는 펴진다 | [[ux-decisions\|UX BL4]] |
+| T-1662 | 감싸기와 그 조건은 실행 취소 한 단계다 | [[ux-decisions\|UX UN3]] |
+| T-1663 | 새 분기 라벨과 새 헤더 이름은 그것을 만든 단계에 합쳐진다 | [[ux-decisions\|UX UN3]] |
+| T-1664 | 이름이 중복되어 거절된 헤더 이름도 다시 입력하면 같은 단계에 합쳐진다 | [[ux-decisions\|UX UN3]] |
+| T-1665 | 만든 것이 없으면 합쳐지지 않는다: 남아 있던 빈 블록의 텍스트는 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
+| T-1666 | 나중에 다시 편집한 것은 따로 한 단계다 | [[ux-decisions\|UX UN3]] |
 | T-1801 | inserting it opens the result field only | [[ux-decisions\|UX CB18]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
@@ -750,7 +754,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 18개, 테스트 254개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 19개, 테스트 262개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -768,7 +772,7 @@ id. Vitest · 테스트 5개.
 
 ### [통합] `packages/editor/src/session/diagrams.test.ts`
 
-헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 새 Method로 빼기(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 29개.
+헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 새 Method로 빼기(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 30개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -782,6 +786,7 @@ id. Vitest · 테스트 5개.
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-1854 | Method 안에서 `M`을 누르면 새 Method가 그 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
 | T-0218 | Method 헤더를 제거하면 그 호출 블록들은 이름 호출이 되고, 첫 블록을 선택한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
@@ -794,7 +799,7 @@ id. Vitest · 테스트 5개.
 | T-0859 | 헤더 없는 다이어그램의 블록에서 `m`은 묻는다: `1`은 빼기, `2`는 Method 헤더 달기 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0860 | 메뉴에서는 헤더 없는 다이어그램에서도 묻지 않고 빼고, Method 헤더 달기와 `e`는 그대로다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
 | T-0861 | 헤더가 있는 다이어그램에서는 `m`이 묻지 않고 뺀다 | [[01-requirements#^r-edit\|R-EDIT-19]], [[ux-decisions\|UX XM3]] |
-| T-0862 | on the empty default cell, m tells to select blocks | [[01-requirements#^r-edit\|R-EDIT-19]] |
+| T-0862 | 빈 default 칸에서 `m`은 뺄 블록을 선택하라고 알린다 | [[01-requirements#^r-edit\|R-EDIT-19]] |
 | T-0222 | `a c`는 Method 목록을 보이고, 고른 Method를 호출하며 그 인자를 입력한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0223 | "새 Method를 만들고 호출"은 Method를 만들고 그 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0224 | 03-keymap: 목록을 닫으면 아무것도 삽입하지 않는다 | - |
@@ -1043,6 +1048,22 @@ id. Vitest · 테스트 5개.
 | T-1598 | 드래그한 접기 영역은 자기 위 · 자기 안 · 그 안의 접기 영역 위에 드롭하지 않는다 | - |
 
 ^t-packages-editor-src-input-drop-folds-test-ts
+
+### [단위] `packages/editor/src/input/drop-labels.test.ts`
+
+분기 라벨 위의 드롭은 그 분기에 대한 드롭이다(조작 규칙 7, UX BL5). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL5]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1855 | 제어 블록 아이콘은 그 분기의 블록만 감싼다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1856 | 처리 · 탈출 블록 아이콘은 옆의 새 분기에 들어가며, 실행 취소 한 단계다 | - |
+| T-1857 | 드래그한 블록은 옆의 새 분기로 이동한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1858 | If는 새 분기가 든 Case가 되고, 상태 표시줄이 그렇게 알린다 | - |
+| T-1859 | default 옆에서는 새 분기가 그 왼쪽에 생기고, 그렇게 알린다 | - |
+| T-1860 | 병렬 처리 블록에는 새 분기가 생기고, 위쪽 띠는 여전히 그 블록 앞을 뜻한다 | - |
+| T-1861 | If의 머리는 여전히 전체를 감싸며, 자기 분기 옆에는 둘 수 없다 | - |
+
+^t-packages-editor-src-input-drop-labels-test-ts
 
 ### [단위] `packages/editor/src/input/hit-shown.test.ts`
 
@@ -2797,73 +2818,73 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 
 ### [단위] `packages/editor/src/rules/table-blocks.test.ts`
 
-The table of block kinds of the interaction rules ("블록 종류"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 블록 종류 표("블록 종류")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1706 | the table of block kinds has the rows and columns that are tested | - |
-| T-1707 | a cell of the block kinds: $name | - |
+| T-1706 | 블록 종류 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1707 | 블록 종류의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-blocks-test-ts
 
 ### [단위] `packages/editor/src/rules/table-containers.test.ts`
 
-The tables of elements and containers of the interaction rules ("요소와 컨테이너"), compared with the editor. Vitest · 테스트 5개.
+조작 규칙의 요소와 컨테이너 표("요소와 컨테이너")를 편집기와 대조합니다. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1716 | the table of containers has the rows and columns that are tested | - |
-| T-1717 | a cell of the containers: $name | - |
-| T-1718 | the table of container rules has the rules that are tested | - |
-| T-1719 | a rule of the containers: $row | - |
-| T-1720 | folding a region that is not drawn says which region it folded | - |
+| T-1716 | 컨테이너 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1717 | 컨테이너의 칸: $name | - |
+| T-1718 | 컨테이너 규칙 표는 테스트하는 규칙을 갖는다 | - |
+| T-1719 | 컨테이너의 규칙: $row | - |
+| T-1720 | 렌더링되지 않는 영역을 접으면 어느 영역을 접었는지 알린다 | - |
 
 ^t-packages-editor-src-rules-table-containers-test-ts
 
 ### [단위] `packages/editor/src/rules/table-fields.test.ts`
 
-The table of text fields of the interaction rules ("텍스트 필드"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 텍스트 필드 표("텍스트 필드")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1708 | the table of text fields has the rows and columns that are tested | - |
-| T-1709 | a cell of the text fields: $name | - |
+| T-1708 | 텍스트 필드 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1709 | 텍스트 필드의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-fields-test-ts
 
 ### [단위] `packages/editor/src/rules/table-matrix.test.ts`
 
-The command × target matrix of the interaction rules ("명령 × 대상 매트릭스"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 명령 × 대상 매트릭스("명령 × 대상 매트릭스")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1700 | the matrix has the rows and columns that are tested | - |
-| T-1701 | a cell of the matrix: $name | - |
+| T-1700 | 매트릭스는 테스트하는 행과 열을 갖는다 | - |
+| T-1701 | 매트릭스의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-matrix-test-ts
 
 ### [단위] `packages/editor/src/rules/table-positions.test.ts`
 
-The table of insert positions of the interaction rules ("삽입 위치"), compared with the editor cell by cell. Vitest · 테스트 2개.
+조작 규칙의 삽입 위치 표("삽입 위치")를 칸마다 편집기와 대조합니다. Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1703 | the table of insert positions has the rows and columns that are tested | - |
-| T-1704 | a cell of the insert positions: $name | - |
+| T-1703 | 삽입 위치 표는 테스트하는 행과 열을 갖는다 | - |
+| T-1704 | 삽입 위치의 칸: $name | - |
 
 ^t-packages-editor-src-rules-table-positions-test-ts
 
 ### [단위] `packages/editor/src/rules/table-targets.test.ts`
 
-The two tables of command targets of the interaction rules ("명령마다 받는 대상"), compared with the editor. Vitest · 테스트 5개.
+조작 규칙의 명령 대상 표 둘("명령마다 받는 대상")을 편집기와 대조합니다. Vitest · 테스트 5개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1710 | table 1 of the command targets has the rows that are tested | - |
-| T-1711 | a row of table 1: $name | - |
-| T-1712 | table 2 of the command targets has the rows and columns that are tested | - |
-| T-1713 | a cell of table 2: $name | - |
-| T-1721 | remove region on the empty default cell goes up to the region around | - |
+| T-1710 | 명령 대상 표 1은 테스트하는 행을 갖는다 | - |
+| T-1711 | 표 1의 행: $name | - |
+| T-1712 | 명령 대상 표 2는 테스트하는 행과 열을 갖는다 | - |
+| T-1713 | 표 2의 칸: $name | - |
+| T-1721 | 빈 default 칸에서 영역 제거는 그것을 둘러싼 영역으로 올라간다 | - |
 
 ^t-packages-editor-src-rules-table-targets-test-ts
 

@@ -12,6 +12,7 @@ import type {
   If,
   Parallel,
   Seq,
+  Target,
 } from '@ariadne-nsd/core';
 
 /** Where a block sits. */
@@ -207,4 +208,17 @@ export function visibleOrder(index: DocIndex, diagram: Id): ReadonlyArray<Id> {
     walk(found.body);
   }
   return out;
+}
+
+/**
+ * The blocks of a branch as a command target: what copy, cut and wrap take when its label is
+ * selected, as when its folded row is (M87 F7). `null` when the branch is gone.
+ */
+export function branchTarget(index: DocIndex, branch: Id): Target | null {
+  const blocks = index.branches.get(branch)?.branch.body.blocks;
+  const first = blocks?.[0];
+  const last = blocks?.at(-1);
+  return first === undefined || last === undefined
+    ? null
+    : { kind: 'blocks', first: first.id, last: last.id };
 }

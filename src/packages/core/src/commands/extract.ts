@@ -26,7 +26,7 @@ export type ExtractResult = (OkResult & { readonly removedFolds: number }) | Fai
  * - The range is blocks of one sequence (ADR-0008), with everything inside them. Taking the whole
  *   sequence leaves the call block alone in it.
  * - The new Method goes right after the Method the blocks came from; from an Event or a diagram
- *   without a header, after the last Method (UX XM1).
+ *   without a header, after the last Method (UX XM1, NP1).
  * - Its name is the default name ("Method n"). Extracting one fold region (`fold` target) takes
  *   the region's name instead, when it is a valid new name, and the region goes away.
  * - The call block's arguments and result start empty; a name with parentheses fills the
@@ -94,8 +94,7 @@ export function extractMethod(content: Content, args: ExtractMethodArgs): Extrac
   const left = updateSeq(content, range.owner, () =>
     replaceRange(seq, lo, hi, { blocks: [call], folds: [] }),
   );
-  const after = sourceDiagram.head?.kind === 'method' ? sourceDiagram.id : null;
-  const next = insertDiagramAt(left, diagram, after);
+  const next = insertDiagramAt(left, diagram, sourceDiagram.id);
   return { ...done(next, [diagram.id, call.id]), removedFolds };
 }
 

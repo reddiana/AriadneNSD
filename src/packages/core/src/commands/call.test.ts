@@ -222,6 +222,19 @@ describe('newMethodAndCall', () => {
     expect(result.touched).toEqual(['d4', 'b93']);
   });
 
+  it('T-1852 · UX NP1: the new Method goes right after the selected Method', () => {
+    const content = contentWith(
+      diagram('d1', method('a'), [proc('b1')]),
+      diagram('d2', method('b'), [proc('b2')]),
+    );
+    const result = runOk(newMethodAndCall, content, {
+      target: { ...blocks, first: 'b1', last: 'b1' },
+      side: 'after',
+      after: 'd1',
+    });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd3', 'd2']);
+  });
+
   it('T-0086 · R-BLK-07: the written name becomes the header, its parameters the arguments', () => {
     const content = program(empty('b1'));
     const result = runOk(newMethodAndCall, content, {
@@ -260,6 +273,15 @@ describe('newMethodAndCall', () => {
 });
 
 describe('makeMethod', () => {
+  it('T-1853 · R-EDIT-26 · UX NP1: the Method goes right after the Method holding the call', () => {
+    const content = contentWith(
+      diagram('d1', method('a'), [call('b1', { kind: 'named', name: 'sort' })]),
+      diagram('d2', method('b'), [proc('b2')]),
+    );
+    const result = runOk(makeMethod, content, { block: 'b1' });
+    expect(diagramIds(result.content)).toEqual(['d1', 'd3', 'd2']);
+  });
+
   const named = (name: string) => ({ kind: 'named', name }) as const;
 
   it('T-1433 · R-EDIT-26: makes the Method a call by name calls, with its arguments, and links it', () => {

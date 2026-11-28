@@ -4,6 +4,7 @@ import type { PastedDocumentPort, PickerItem, WriteResult } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
 import type { BranchPlace, DocIndex } from '../model/doc-index';
 import {
+  branchTarget,
   branchesOf,
   indexDoc,
   isBranching,
@@ -195,19 +196,6 @@ export function unwrapHolder(index: DocIndex, selection: Selection | null): Id |
   }
   const owner = index.folds.get(selection.fold);
   return owner === undefined ? null : (index.seqs.get(owner)?.holder ?? null);
-}
-
-/**
- * The blocks of a branch as a command target: what copy, cut and wrap take when its label is
- * selected, as when its folded row is (M87 F7). `null` when the branch is gone.
- */
-export function branchTarget(index: DocIndex, branch: Id): Target | null {
-  const blocks = index.branches.get(branch)?.branch.body.blocks;
-  const first = blocks?.[0];
-  const last = blocks?.at(-1);
-  return first === undefined || last === undefined
-    ? null
-    : { kind: 'blocks', first: first.id, last: last.id };
 }
 
 /** The empty block of a branch just made, as the target of what fills it (UX BL2, BL3). */
