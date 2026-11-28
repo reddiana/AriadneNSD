@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import { copy, cut, paste } from './clipboard';
+import { copy, cut, paste, pasteDiagram } from './clipboard';
 import {
   blockOf,
   branch,
+  call,
   contentOf,
+  contentWith,
+  diagram,
+  diagramIds,
+  diagramOf,
   empty,
+  event,
   expectRefused,
   foldsIn,
   idsIn,
   ifBlock,
+  method,
   proc,
   run,
   runOk,
@@ -139,5 +146,57 @@ describe('copy, cut and paste', () => {
     expect(result.clip.blocks.map((b) => b.id)).toEqual(['b2', 'b4']);
     // Both regions shrink to b1; the second one, now the same range, goes (invariant 5).
     expect(foldsIn(result.content, 'd1')).toEqual(['f1:b1-b1']);
+  });
+});
+
+describe('paste a copied diagram (UX HC1)', () => {
+  const sort = diagram('d2', method('sort(a)'), [
+    proc('b2'),
+    call('b3', 'd2', 'a'),
+    call('b4', 'd3'),
+  ]);
+  const content = contentWith(
+    diagram('d1', event('main'), [proc('b1')]),
+    sort,
+    diagram('d3', method('swap'), [proc('b5')]),
+  );
+
+  it('T-1638 · UX HC1: it goes after the selected diagram of its kind under a new name, keeping what it receives', () => {
+    const result = runOk(pasteDiagram, content, { diagram: sort, after: 'd2' });
+    const [made = ''] = result.touched;
+    expect(diagramIds(result.content)).toEqual(['d1', 'd2', made, 'd3']);
+    expect(diagramOf(result.content, made).head).toEqual(method('sort 2(a)'));
+    const again = runOk(pasteDiagram, result.content, { diagram: sort, after: null });
+    expect(diagramOf(again.content, again.touched[0] ?? '').head).toEqual(method('sort 3(a)'));
+  });
+
+  it('T-1639 · UX HC1: beside a diagram of the other kind or with nothing selected, it goes at the end of its kind', () => {
+    for (const after of ['d1', null]) {
+      const result = runOk(pasteDiagram, content, { diagram: sort, after });
+      expect(diagramIds(result.content)).toEqual(['d1', 'd2', 'd3', result.touched[0]]);
+    }
+  });
+
+  it('T-1640 · UX HC1: its calls to itself call the copy; other calls find the Method by name or keep the name', () => {
+    const names = new Map([['d3', 'swap']]);
+    const here = runOk(pasteDiagram, content, { diagram: sort, after: null, names });
+    const made = here.touched[0] ?? '';
+    const targets = diagramOf(here.content, made).body.blocks.flatMap((block) =>
+      block.kind === 'call' ? [block.target] : [],
+    );
+    expect(targets).toEqual([
+      { kind: 'local', diagram: made },
+      { kind: 'local', diagram: 'd3' },
+    ]);
+    const elsewhere = runOk(pasteDiagram, contentWith(diagram('d1', null, [empty('b1')])), {
+      diagram: sort,
+      after: null,
+      names,
+    });
+    const copied = diagramOf(elsewhere.content, elsewhere.touched[0] ?? '');
+    // The blank diagram it was pasted next to is gone (invariant 7).
+    expect(elsewhere.content.diagrams).toEqual([copied]);
+    expect(copied.head).toEqual(method('sort(a)'));
+    expect(copied.body.blocks.at(-1)).toMatchObject({ target: { kind: 'named', name: 'swap' } });
   });
 });

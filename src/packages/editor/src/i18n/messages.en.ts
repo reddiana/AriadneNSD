@@ -148,7 +148,6 @@ export const english = {
   'reason.selectInBranch': 'Select a block inside a branch of an If or a Case.',
   'reason.notOnBranchLabel':
     'On a branch label, only inserting and deleting branches and moving them work.',
-  'reason.undecidedOnBranchLabel': 'This does not work on a branch label yet.',
   'reason.noDefaultToDelete': 'There is no default branch to delete.',
   'reason.nothingToCopy': 'There is no block to copy in an empty cell.',
   'reason.nothingToCut': 'There is no block to cut in an empty cell.',
@@ -198,6 +197,7 @@ export const english = {
   'notice.sameParentOnly': 'A range stays under one parent.',
   'notice.visual': 'Selecting a range: j k extend, y copy, d cut, x delete, s wrap. v or Esc ends.',
   'notice.copied': 'Copied {count} block(s).',
+  'notice.copiedDiagram': 'Copied the diagram.',
   'notice.cut': 'Cut {count} block(s).',
   'notice.checkCondition':
     'The true and false branches were swapped but the condition was not. Fix the condition.',

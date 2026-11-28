@@ -783,24 +783,21 @@ describe('the dialog modal', () => {
     ...fields,
   });
 
-  it('T-1394 · UX JP2: the question about a pasted document dims "Paste as Text" when it cannot paste', () => {
+  it('T-1394 · UX JP2: the question about a pasted document has "Paste as Text" between cancel and "Open as New Document"', () => {
     const answers: unknown[] = [];
     const engine = fakeEngine(editCommands);
     renderApp(engine);
     act(() => {
       engine.setChrome({
-        dialog: dialogOf({ second: 'choice.pasteAsText', isSecondDisabled: true }, answers),
+        dialog: dialogOf({ second: 'choice.pasteAsText' }, answers),
       });
     });
     const dialog = within(screen.getByRole('dialog'));
     const buttons = dialog.getAllByRole('button').map((button) => button.textContent);
     expect(buttons.slice(-3)).toEqual(['Cancel', 'Paste as Text', 'Open as New Document']);
-    const pasteAsText = dialog.getByRole('button', { name: 'Paste as Text' });
-    expect(pasteAsText).toHaveProperty('disabled', true);
-    fireEvent.click(pasteAsText);
-    expect(answers).toEqual([]);
+    fireEvent.click(dialog.getByRole('button', { name: 'Paste as Text' }));
     fireEvent.click(dialog.getByRole('button', { name: 'Open as New Document' }));
-    expect(answers).toEqual(['']);
+    expect(answers).toEqual(['second', '']);
   });
 
   it('T-1395 · UX JP3: a text box of several lines keeps Enter for a new line and answers with Ctrl+Enter', () => {

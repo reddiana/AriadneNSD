@@ -5,6 +5,9 @@ import {
   clipNamesFromJson,
   clipToJson,
   clipToText,
+  diagramFromJson,
+  diagramToJson,
+  diagramToText,
 } from '../clipboard/clip-format';
 import type { CommandSpec, ToolbarPlace } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
@@ -12,15 +15,24 @@ import { message } from '../i18n/messages';
 import { indexDoc } from '../model/doc-index';
 import type { After } from '../session/session';
 import type { Selection } from '../state/selection';
-import { foldPath, peekBlocks, selectBlock, selectedBlocks, targetOf } from '../state/selection';
+import {
+  diagramOf,
+  foldPath,
+  peekBlocks,
+  selectBlock,
+  selectedBlocks,
+  targetOf,
+} from '../state/selection';
 import { regionPlace } from './fold-commands';
 import { spec } from './spec';
-import type { Content, Id, Side, Target } from '@ariadne-nsd/core';
-import { copy, cut, deleteBlocks, deleteBranch, paste } from '@ariadne-nsd/core';
+import type { CallTextContext, Clip, Content, Diagram, Id, Side, Target } from '@ariadne-nsd/core';
+import { copy, cut, deleteBlocks, deleteBranch, paste, pasteDiagram } from '@ariadne-nsd/core';
 import type { CommandContext } from './command-helpers';
 import {
   afterBranchDelete,
+  afterHead,
   branchTarget,
+  currentDiagram,
   headStart,
   selectionAfterDelete,
   selectTouched,
@@ -28,23 +40,29 @@ import {
 
 export function clipboardCommands(ctx: CommandContext) {
   const { deps, session, index, content, intoMissingDefault, blocksOnly, pasting } = ctx;
+  const { runInsertBranch } = ctx;
 
   // Clipboard and delete.
-  const writeClip = async (
-    clip: Parameters<typeof clipToText>[0],
-    notice: EditorMessage,
-  ): Promise<void> => {
-    const where = await deps.clipboard.write({
-      text: clipToText(clip, {
-        // The fixed words as drawn: in the document's drawing language (ADR-0041).
-        locale: content().settings.locale,
-        resultSymbol: session.state.doc.view.resultSymbol,
-        diagrams: new Map(content().diagrams.map((diagram) => [diagram.id, diagram])),
-      }),
-      json: clipToJson(clip, index().diagrams),
-    });
+  /** How copied blocks are drawn as text: as in the diagram. */
+  const drawn = (): CallTextContext => ({
+    // The fixed words as drawn: in the document's drawing language (ADR-0041).
+    locale: content().settings.locale,
+    resultSymbol: session.state.doc.view.resultSymbol,
+    diagrams: new Map(content().diagrams.map((diagram) => [diagram.id, diagram])),
+  });
+  const write = async (text: string, json: string, notice: EditorMessage): Promise<void> => {
+    const where = await deps.clipboard.write({ text, json });
     session.notify(where === 'memory' ? 'notice.clipboardLocal' : notice);
   };
+  const writeClip = (clip: Clip, notice: EditorMessage): Promise<void> =>
+    write(clipToText(clip, drawn()), clipToJson(clip, index().diagrams), notice);
+  /** Copy on a header takes the whole diagram (UX HC1). */
+  const writeDiagram = (diagram: Diagram): Promise<void> =>
+    write(
+      diagramToText(diagram, drawn()),
+      diagramToJson(diagram, index().diagrams),
+      'notice.copiedDiagram',
+    );
 
   /** What copy takes: blocks shown in an opened call, a region shown there, or the selection. */
   const copyTarget = (selection: Selection | null): Target | null => {
@@ -74,8 +92,17 @@ export function clipboardCommands(ctx: CommandContext) {
     edits: false,
     // Blocks shown in an opened call are copied as the Method has them (R-EDIT-15).
     when: (state) =>
-      state.selection?.kind === 'peek' ? true : blocksOnly('reason.nothingToCopy')(state),
+      state.selection?.kind === 'peek' || state.selection?.kind === 'head'
+        ? true
+        : blocksOnly('reason.nothingToCopy')(state),
     run: async (state) => {
+      if (state.selection?.kind === 'head') {
+        const diagram = index().diagrams.get(state.selection.diagram);
+        if (diagram !== undefined) {
+          await writeDiagram(diagram);
+        }
+        return;
+      }
       const target = copyTarget(state.selection);
       if (target === null) {
         session.notify('reason.nothingToCopy', 'warn');
@@ -90,7 +117,7 @@ export function clipboardCommands(ctx: CommandContext) {
     },
     menu: { menu: 'edit', group: 2, order: 2 },
     toolbar: { group: 3, order: 2, icon: 'edit.copy' },
-    context: ['blocks', 'fold', 'peek', 'branchLabel'],
+    context: ['blocks', 'fold', 'peek', 'branchLabel', 'head'],
   });
 
   /**
@@ -164,9 +191,7 @@ export function clipboardCommands(ctx: CommandContext) {
     if (data.json === null && data.text !== null && pasted?.isDocument(data.text) === true) {
       // Saving no longer waits: the modals that follow may save (UX US1).
       release();
-      const canPasteText = session.state.selection !== null;
-      const answer =
-        deps.askPastedDocument === undefined ? 'open' : await deps.askPastedDocument(canPasteText);
+      const answer = deps.askPastedDocument === undefined ? 'open' : await deps.askPastedDocument();
       if (answer === 'open') {
         await pasted.open(data.text);
         return;
@@ -175,7 +200,9 @@ export function clipboardCommands(ctx: CommandContext) {
         return;
       }
     }
+    const diagram = data.json === null ? null : diagramFromJson(data.json);
     const clip =
+      diagram?.body ??
       (data.json === null ? null : clipFromJson(data.json)) ??
       (data.text === null ? null : clipFromText(data.text));
     if (clip === null) {
@@ -197,6 +224,27 @@ export function clipboardCommands(ctx: CommandContext) {
       selection: selectTouched(ok.content, ok.touched),
     });
     const selection = state.selection;
+    if (diagram !== null) {
+      // A copied diagram comes back as a new one, whatever is selected (UX HC1).
+      const beside = diagramOf(index(), selection);
+      session.commit(
+        pasteDiagram(content(), { diagram, after: beside, names, ids: session.ids() }),
+        (ok) => {
+          const [made] = ok.touched;
+          return made === undefined ? { selection } : afterHead(made, false);
+        },
+      );
+      return;
+    }
+    if (selection?.kind === 'branchLabel') {
+      // A new branch beside the label takes the blocks (UX BL2).
+      runInsertBranch(selection.branch, side, (made, branch, ids) => {
+        const [empty] = indexDoc(made).branches.get(branch)?.branch.body.blocks ?? [];
+        const target = { kind: 'blocks', first: empty?.id ?? '', last: empty?.id ?? '' } as const;
+        return paste(made, { target, side: 'after', clip, names, ids });
+      });
+      return;
+    }
     if (selection?.kind === 'missingDefault') {
       intoMissingDefault(
         selection.block,
@@ -213,6 +261,10 @@ export function clipboardCommands(ctx: CommandContext) {
       return;
     }
     if (selection?.kind === 'head') {
+      if (side === 'before') {
+        session.notify('reason.cannotPasteOnHead', 'warn');
+        return;
+      }
       // Below a header is the very start of its body (M87 F4).
       const start = headStart(index(), selection.diagram);
       if (start !== null) {
@@ -220,12 +272,12 @@ export function clipboardCommands(ctx: CommandContext) {
       }
       return;
     }
-    const target = targetOf(selection);
+    // With nothing selected the blocks go at the end of the current diagram, as inserted blocks
+    // do (UX PS1).
+    const current = selection === null ? currentDiagram(index(), state) : null;
+    const target: Target | null =
+      current === null ? targetOf(selection) : { kind: 'diagramEnd', diagram: current };
     if (target === null) {
-      if (selection === null) {
-        // Paste runs without a selection only to look for a pasted document (UX JP2).
-        session.notify('reason.nothingSelected', 'warn');
-      }
       return;
     }
     session.commit(paste(content(), { target, side, clip, names, ids: session.ids() }), after);
@@ -246,31 +298,14 @@ export function clipboardCommands(ctx: CommandContext) {
   const pasteSpec = (side: Side, id: string, order: number, toolbar?: ToolbarPlace): CommandSpec =>
     spec(id, {
       edits: true,
-      when: (state) => {
-        const selection = state.selection;
-        if (selection?.kind === 'branchLabel') {
-          return 'reason.undecidedOnBranchLabel';
-        }
-        if (selection?.kind === 'head') {
-          // Below a header is the start of its body (M87 F4); above it there is nothing.
-          return side === 'after' ? true : 'reason.cannotPasteOnHead';
-        }
-        if (selection === null && deps.pastedDocument !== undefined) {
-          // The clipboard may hold a document to open (UX JP2); otherwise it says why.
-          return true;
-        }
-        return selection?.kind === 'blocks' ||
-          selection?.kind === 'missingDefault' ||
-          selection?.kind === 'fold'
-          ? true
-          : 'reason.nothingSelected';
-      },
+      // What the clipboard holds decides the rest: above a header only a diagram can go.
+      when: (state) => (state.selection?.kind === 'peek' ? 'reason.peekReadOnly' : true),
       run: async () => {
         await runPaste(side);
       },
       menu: { menu: 'edit', group: 2, order },
       ...(toolbar === undefined ? {} : { toolbar }),
-      context: ['blocks', 'missingDefault'],
+      context: ['blocks', 'missingDefault', 'branchLabel', 'head'],
     });
 
   const deleteSpec = spec('edit.delete', {

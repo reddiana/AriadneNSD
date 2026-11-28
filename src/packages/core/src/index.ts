@@ -144,8 +144,14 @@ export type { MoveToArgs } from './commands/move-to';
 export { moveTo } from './commands/move-to';
 export type { UnwrapArgs, WrapArgs } from './commands/wrap';
 export { unwrap, wrap } from './commands/wrap';
-export type { CopyArgs, CopyResult, CutResult, PasteArgs } from './commands/clipboard';
-export { copy, cut, paste } from './commands/clipboard';
+export type {
+  CopyArgs,
+  CopyResult,
+  CutResult,
+  PasteArgs,
+  PasteDiagramArgs,
+} from './commands/clipboard';
+export { copy, cut, paste, pasteDiagram } from './commands/clipboard';
 export type {
   AddDefaultBranchArgs,
   ConvertArgs,

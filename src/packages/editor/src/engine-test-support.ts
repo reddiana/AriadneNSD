@@ -177,7 +177,7 @@ export type TestEngine = {
 /** What a test gives the engine in place of the shell (R-WEB-11, UX JP1 · JP2). */
 export type TestPorts = {
   readonly pastedDocument?: PastedDocumentPort;
-  readonly askPastedDocument?: (canPasteText: boolean) => Promise<'open' | 'text' | 'cancel'>;
+  readonly askPastedDocument?: () => Promise<'open' | 'text' | 'cancel'>;
 };
 
 /** Makes a test engine on a content. */

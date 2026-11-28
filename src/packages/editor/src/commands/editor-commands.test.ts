@@ -135,14 +135,8 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
   'edit.copy': {
     none: 'reason.nothingSelected',
     missing: 'reason.nothingToCopy',
-    head: 'reason.notOnHead',
   },
-  'edit.paste': {
-    none: 'reason.nothingSelected',
-    label: 'reason.undecidedOnBranchLabel',
-    armLabel: 'reason.undecidedOnBranchLabel',
-    defaultLabel: 'reason.undecidedOnBranchLabel',
-  },
+  'edit.paste': {},
   'edit.delete': {
     none: 'reason.nothingSelected',
     missing: 'reason.noDefaultToDelete',
@@ -353,9 +347,11 @@ describe('why a command is not available (03-editor 5)', () => {
     expect(notice(engine)).toBe('reason.noDefaultToDelete');
   });
 
-  it('T-0798 · BUG-11: paste, wrap and unwrap on a header say it is a header, not that nothing is selected', () => {
+  it('T-0798 · BUG-11: paste, wrap and unwrap on a header say it is a header, not that nothing is selected', async () => {
     const engine = engineAt('head');
+    engine.clipboard.data = { text: 'x = 0', json: null };
     engine.run('edit.pasteBefore');
+    await engine.settle();
     expect(notice(engine)).toBe('reason.cannotPasteOnHead');
     engine.run('block.wrap.while');
     expect(notice(engine)).toBe('reason.cannotWrapHead');
@@ -524,11 +520,169 @@ describe('copy, cut and wrap on a branch label (M87 F7)', () => {
       expect(engine.clipboard.data.text).toBeNull();
     }
   });
+});
 
-  it('T-1612: paste on a branch label still says it does not work there', () => {
-    const engine = engineAt('label');
+describe('paste on a branch label (UX BL2)', () => {
+  const threeArms = (): Content =>
+    contentOf([
+      caseBlock(
+        'k1',
+        [arm('a1', 'one', [proc('p1')]), arm('a2', 'two', [proc('p2')])],
+        branch('o1', [proc('p3')]),
+      ),
+    ]);
+  /** The first block's text of each branch of `k1`, left to right, the default last. */
+  const columns = (engine: TestEngine): ReadonlyArray<ReadonlyArray<string>> => {
+    const block = engine.session.index().blocks.get('k1')?.block;
+    if (block?.kind !== 'case') {
+      return [];
+    }
+    return [...block.arms, ...(block.otherwise === null ? [] : [block.otherwise])].map((item) =>
+      item.body.blocks.map((inner) => ('text' in inner ? inner.text : '')),
+    );
+  };
+  const copied = { text: 'x\ny', json: null };
+
+  it('T-1612 · UX BL2: below puts the blocks into a new branch on the right, above on the left, and opens its label, in one undo step', async () => {
+    for (const [command, expected] of [
+      ['edit.paste', [['p1'], ['x', 'y'], ['p2'], ['p3']]],
+      ['edit.pasteBefore', [['x', 'y'], ['p1'], ['p2'], ['p3']]],
+    ] as const) {
+      const engine = testEngine(threeArms());
+      engine.select({ kind: 'branchLabel', branch: 'a1' });
+      engine.clipboard.data = copied;
+      engine.run(command);
+      await engine.settle();
+      expect(columns(engine)).toEqual(expected);
+      expect(engine.session.state.undo).toHaveLength(1);
+      const selection = engine.session.state.selection;
+      expect(selection?.kind).toBe('branchLabel');
+      expect(engine.session.state.editing?.field).toEqual({
+        kind: 'branchLabel',
+        branch: selection?.kind === 'branchLabel' ? selection.branch : '',
+      });
+    }
+  });
+
+  it('T-1641 · UX BL2: right of the default the branch goes left of it, with the same notice as inserting', async () => {
+    const engine = testEngine(threeArms());
+    engine.select({ kind: 'branchLabel', branch: 'o1' });
+    engine.clipboard.data = copied;
     engine.run('edit.paste');
-    expect(notice(engine)).toBe('reason.undecidedOnBranchLabel');
+    await engine.settle();
+    expect(columns(engine)).toEqual([['p1'], ['p2'], ['x', 'y'], ['p3']]);
+    expect(notice(engine)).toBe('notice.defaultStaysLast');
+  });
+
+  it('T-1642 · UX BL2: on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back', async () => {
+    const engine = engineAt('label');
+    const before = engine.content();
+    engine.clipboard.data = copied;
+    engine.run('edit.paste');
+    await engine.settle();
+    const block = engine.session.index().blocks.get('i1')?.block;
+    expect(block?.kind === 'case' ? block.arms[1]?.body.blocks.length : 0).toBe(2);
+    expect(notice(engine)).toBe('notice.convertedIfToCase');
+    engine.session.cancelEditing();
+    engine.run('edit.undo');
+    expect(engine.content()).toBe(before);
+  });
+
+  it('T-1643 · UX BL2: on a parallel branch the new branch is only selected; a cut branch can be put back beside another', async () => {
+    const engine = testEngine(
+      contentOf([
+        {
+          id: 'x1',
+          kind: 'parallel',
+          text: '',
+          branches: [
+            branch('r1', [proc('p1')]),
+            branch('r2', [proc('p2')]),
+            branch('r3', [proc('p3')]),
+          ],
+        },
+      ]),
+    );
+    const texts = (): ReadonlyArray<string> => {
+      const block = engine.session.index().blocks.get('x1')?.block;
+      return block?.kind === 'parallel'
+        ? block.branches.map((item) =>
+            item.body.blocks.map((inner) => ('text' in inner ? inner.text : '')).join(),
+          )
+        : [];
+    };
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    engine.run('edit.cut');
+    await engine.settle();
+    engine.select({ kind: 'branchLabel', branch: 'r3' });
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(texts()).toEqual(['p2', 'p3', 'p1']);
+    expect(engine.session.state.selection?.kind).toBe('branchLabel');
+    expect(engine.session.state.editing).toBeNull();
+  });
+});
+
+describe('copy on a header and paste of a diagram (UX HC1)', () => {
+  const heads = (engine: TestEngine): ReadonlyArray<string> =>
+    engine.content().diagrams.map((d) => d.head?.text ?? '');
+  /** An engine on a Method between two diagrams without a header, its header selected. */
+  const atMethod = (): TestEngine => {
+    const engine = testEngine(
+      withHeads(contentOf([proc('b1')], [proc('b2', 'work')], [proc('b3')]), {
+        d2: ['method', 'm(x)'],
+      }),
+    );
+    engine.select({ kind: 'head', diagram: 'd2' });
+    return engine;
+  };
+
+  it('T-1644 · UX HC1: copy on a header takes the whole diagram, as indented text and as model JSON', async () => {
+    const engine = atMethod();
+    const before = engine.content();
+    engine.run('edit.copy');
+    await engine.settle();
+    expect(notice(engine)).toBe('notice.copiedDiagram');
+    expect(engine.clipboard.data.text).toBe('m(x)\n    work');
+    expect(engine.content()).toBe(before);
+    engine.run('edit.cut');
+    expect(notice(engine)).toBe('reason.notOnHead');
+  });
+
+  it('T-1645 · UX HC1: pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected', async () => {
+    for (const [place, command] of [
+      ['head', 'edit.paste'],
+      ['head', 'edit.pasteBefore'],
+      ['b2', 'edit.paste'],
+    ] as const) {
+      const engine = atMethod();
+      engine.run('edit.copy');
+      await engine.settle();
+      if (place !== 'head') {
+        engine.select(selectBlock(indexDoc(engine.content()), place));
+      }
+      engine.run(command);
+      await engine.settle();
+      expect(heads(engine)).toEqual(['', 'm(x)', 'm 2(x)', '']);
+      expect(engine.session.state.selection).toEqual({
+        kind: 'head',
+        diagram: engine.content().diagrams[2]?.id,
+      });
+      expect(engine.session.state.undo).toHaveLength(1);
+    }
+  });
+});
+
+describe('paste with nothing selected (UX PS1)', () => {
+  it('T-1646 · UX PS1: the blocks go at the end of the current diagram and are selected', async () => {
+    const engine = testEngine(sample());
+    engine.select(selectionAt(engine.content(), 'p6'));
+    engine.select(null);
+    engine.clipboard.data = { text: 'x\ny', json: null };
+    engine.run('edit.paste');
+    await engine.settle();
+    expect(bodyOf(engine, 'd2')).toHaveLength(3);
+    expect(selected(engine)).toEqual(bodyOf(engine, 'd2').slice(1));
   });
 });
 
@@ -809,7 +963,7 @@ describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () 
   /** An engine whose shell recognizes `documentText`, with the answers the question gets. */
   const pastingEngine = (place: Place, answers: ('open' | 'text' | 'cancel')[]) => {
     const opened: string[] = [];
-    const asked: boolean[] = [];
+    const asked: true[] = [];
     const engine = testEngine(
       sample(),
       {},
@@ -821,8 +975,8 @@ describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () 
             return Promise.resolve();
           },
         },
-        askPastedDocument: (canPasteText) => {
-          asked.push(canPasteText);
+        askPastedDocument: () => {
+          asked.push(true);
           return Promise.resolve(answers.shift() ?? 'cancel');
         },
       },
@@ -837,7 +991,7 @@ describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () 
     const before = engine.content();
     engine.run('edit.paste');
     await engine.settle();
-    expect(asked).toEqual([true]);
+    expect(asked).toHaveLength(1);
     expect(opened).toEqual([documentText]);
     expect(engine.content()).toBe(before);
     expect(engine.session.state.undo).toHaveLength(0);
@@ -856,20 +1010,19 @@ describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () 
     expect(opened).toEqual([]);
   });
 
-  it('T-1391 · R-WEB-11 · UX JP2: with nothing selected, paste asks with "Paste as Text" dimmed; other text says to select first', async () => {
-    const { engine, opened, asked } = pastingEngine('none', ['open']);
+  it('T-1391 · R-WEB-11 · UX JP2 · UX PS1: with nothing selected, paste asks too, and "Paste as Text" puts the lines at the end', async () => {
+    const { engine, opened, asked } = pastingEngine('none', ['open', 'text']);
     expect(applies(engine, 'edit.paste')).toBe(true);
     engine.clipboard.data = { text: documentText, json: null };
     engine.run('edit.paste');
     await engine.settle();
-    expect(asked).toEqual([false]);
+    expect(asked).toHaveLength(1);
     expect(opened).toEqual([documentText]);
-    engine.clipboard.data = { text: 'x = 0', json: null };
-    const before = engine.content();
+    const before = bodyOf(engine, 'd1').length;
     engine.run('edit.paste');
     await engine.settle();
-    expect(engine.content()).toBe(before);
-    expect(notice(engine)).toBe('reason.nothingSelected');
+    expect(bodyOf(engine, 'd1')).toHaveLength(before + 1);
+    expect(opened).toEqual([documentText]);
   });
 
   it('T-1392 · R-WEB-11 · UX JP1: blocks copied in the app and other text paste without asking', async () => {

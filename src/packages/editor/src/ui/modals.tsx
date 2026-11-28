@@ -431,7 +431,6 @@ export function DialogModal({ dialog }: { readonly dialog: Dialog }): ReactEleme
           {dialog.second !== undefined && (
             <button
               type="button"
-              disabled={dialog.isSecondDisabled === true}
               onClick={() => {
                 dialog.answerSecond?.();
               }}

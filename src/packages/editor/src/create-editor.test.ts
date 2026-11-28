@@ -414,27 +414,21 @@ describe('a document pasted as text (R-WEB-11)', () => {
       second: 'choice.pasteAsText',
       cancel: 'choice.cancel',
     });
-    // A new document has its empty block selected, so "Paste as Text" is not dimmed.
-    expect(handle.chromeState().dialog).not.toHaveProperty('isSecondDisabled');
     handle.chromeState().dialog?.answer('');
     await tick();
     expect(opened).toEqual(['{"format":"ariadne-nsd"}']);
   });
 
-  it('T-1403 · UX JP2: with nothing selected the same question comes, and "Paste as Text" is dimmed and does nothing', async () => {
+  it('T-1403 · UX JP2 · UX PS1: with nothing selected the same question comes, and "Paste as Text" answers it', async () => {
     const { handle, opened } = makePasting('{"format":"ariadne-nsd"}');
     handle.commands.run('select.clear');
     expect(handle.state().selection).toBeNull();
     handle.commands.run('edit.paste');
     await tick();
-    const dialog = handle.chromeState().dialog;
-    expect(dialog).toMatchObject({ isSecondDisabled: true });
-    dialog?.answerSecond?.();
-    expect(handle.chromeState().dialog).not.toBeNull();
-    handle.chromeState().dialog?.answer(null);
+    handle.chromeState().dialog?.answerSecond?.();
     await tick();
-    expect(opened).toEqual([]);
     expect(handle.chromeState().dialog).toBeNull();
+    expect(opened).toEqual([]);
   });
 
   it('T-1404 · UX JP3: prompt may have a title, a confirm button and a box of several lines', async () => {

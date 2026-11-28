@@ -50,14 +50,14 @@ export type CommandDeps = {
   ) => Promise<number | null>;
   /**
    * Addition: the shell that opens a pasted document (R-WEB-11, UX JP1). Absent: pasted text is
-   * always blocks, and paste needs a selection.
+   * always blocks.
    */
   readonly pastedDocument?: PastedDocumentPort;
   /**
-   * Addition: asks whether to open a pasted document as a new document (UX JP2). "Paste as Text"
-   * is dimmed when `canPasteText` is false (nothing selected). Absent: opens without asking.
+   * Addition: asks whether to open a pasted document as a new document (UX JP2). Absent: opens
+   * without asking.
    */
-  readonly askPastedDocument?: (canPasteText: boolean) => Promise<'open' | 'text' | 'cancel'>;
+  readonly askPastedDocument?: () => Promise<'open' | 'text' | 'cancel'>;
 };
 
 /**
@@ -397,7 +397,15 @@ export type CommandContext = {
     readonly touched: ReadonlyArray<Id>;
   }) => After;
   readonly insertWhen: (kind: NewBlockKind, side: Side) => (state: EditorState) => Applies;
-  readonly runInsertBranch: (branch: Id, side: Side) => void;
+  /**
+   * Inserts a branch beside `branch`, turning an If into a Case (M87 F6), and opens its label.
+   * `fill` changes the new branch in the same undo step (paste on a branch label, UX BL2).
+   */
+  readonly runInsertBranch: (
+    branch: Id,
+    side: Side,
+    fill?: (made: Content, branch: Id, ids: IdGenerator) => Result,
+  ) => void;
   readonly blocksOnly: (onEmptyCell: EditorMessage) => (state: EditorState) => Applies;
   /** The paste in flight: saving waits for it. */
   readonly pasting: { pending: Promise<void> };
@@ -458,14 +466,23 @@ export function commandContext(deps: CommandDeps): CommandContext {
       return true;
     };
 
-  const runInsertBranch = (branch: Id, side: Side): void => {
+  const runInsertBranch: CommandContext['runInsertBranch'] = (branch, side, fill) => {
     const place = index().branches.get(branch);
+    const ids = session.ids();
+    const filled = (result: Result): Result => {
+      const [made] = result.ok ? result.touched : [];
+      if (!result.ok || fill === undefined || made === undefined) {
+        return result;
+      }
+      const next = fill(result.content, made, ids);
+      return next.ok ? { ...result, content: next.content } : next;
+    };
     if (place?.block.kind === 'if') {
       // An If has two branches: it becomes a Case with a new branch at once, one undo step, and
       // the status bar says so (M87 F6).
       const block = place.block.id;
       const isConverted = session.commit(
-        convertIfToCase(content(), { block, ids: session.ids() }),
+        filled(convertIfToCase(content(), { block, ids })),
         (ok) => {
           const [made] = ok.touched;
           return made === undefined
@@ -481,7 +498,7 @@ export function commandContext(deps: CommandDeps): CommandContext {
       }
       return;
     }
-    const result = insertBranch(content(), { branch, side, ids: session.ids() });
+    const result = filled(insertBranch(content(), { branch, side, ids }));
     const isApplied = session.commit(result, (ok) => {
       const [made] = ok.touched;
       if (made === undefined) {

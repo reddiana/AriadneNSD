@@ -281,8 +281,6 @@ export type Dialog = {
   readonly other: Message | null;
   /** A fourth button between "cancel" and "do it" (`choose` with `second`). Absent: none. */
   readonly second?: Message;
-  /** Addition: the fourth button is shown dimmed and does nothing (UX JP2 "Paste as Text"). */
-  readonly isSecondDisabled?: boolean;
   /** Addition: the text box has several lines (UX JP3: pasted JSON). Enter adds a line. */
   readonly isMultiline?: boolean;
   /** The user's answer: the text (or `''` for a yes/no question), or `null` when cancelled. */

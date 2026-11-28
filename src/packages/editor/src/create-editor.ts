@@ -238,7 +238,6 @@ export function createEditor(options: EditorOptions): EditorHandle {
       readonly second?: Message;
       readonly cancel?: Message;
       readonly title?: Message;
-      readonly isSecondDisabled?: boolean;
       readonly isMultiline?: boolean;
     },
   ): Promise<Answer> => {
@@ -273,11 +272,8 @@ export function createEditor(options: EditorOptions): EditorHandle {
           ? {}
           : {
               second: buttons.second,
-              ...(buttons.isSecondDisabled === true ? { isSecondDisabled: true } : {}),
               answerSecond: () => {
-                if (buttons.isSecondDisabled !== true) {
-                  close('second');
-                }
+                close('second');
               },
             }),
       };
@@ -389,13 +385,12 @@ export function createEditor(options: EditorOptions): EditorHandle {
       ? {}
       : {
           pastedDocument: options.pastedDocument,
-          // UX JP2: "Open as New Document" is the default; "Paste as Text" needs a selection.
-          askPastedDocument: async (canPasteText: boolean) => {
+          // UX JP2: "Open as New Document" is the default.
+          askPastedDocument: async () => {
             const answer = await ask('question.pastedDocument', null, {
               confirm: 'choice.openAsNew',
               second: 'choice.pasteAsText',
               title: productName,
-              isSecondDisabled: !canPasteText,
             });
             return answer === null ? 'cancel' : answer === 'second' ? 'text' : 'open';
           },

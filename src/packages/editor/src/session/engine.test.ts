@@ -229,13 +229,13 @@ describe('the clipboard (AT-12)', () => {
     ).toBe('while');
   });
 
-  it('T-0040: interaction rules "붙여넣기": nothing selected pastes nothing', async () => {
+  it('T-0040 · UX PS1: interaction rules "붙여넣기": with nothing selected the blocks go at the end', async () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.clipboard.data = { text: 'x', json: null };
     engine.run('edit.paste');
     await engine.settle();
-    expect(bodyOf(engine)).toEqual(['b1']);
-    expect(engine.session.chrome().notice?.message).toBe('reason.nothingSelected');
+    expect(bodyOf(engine)).toHaveLength(2);
+    expect(selected(engine)).toEqual([bodyOf(engine)[1]]);
   });
 
   it('T-0041: 03-keymap: v, then j j and y copies the range', async () => {

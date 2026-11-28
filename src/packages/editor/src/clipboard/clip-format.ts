@@ -132,24 +132,72 @@ export function clipToText(clip: Clip, drawn: CallTextContext): string {
  */
 export function clipToJson(clip: Clip, diagrams: ReadonlyMap<Id, Diagram> = new Map()): string {
   const doc = createDoc();
-  const called = [...new Set(calledMethods(clip))].flatMap((id) => {
+  const body = { id: 'd0', head: null, body: clip };
+  const stubs = methodStubs(clip, diagrams, { settings: doc.content.settings, diagrams: [body] });
+  const ownId = `d${String(Math.max(0, ...stubs.map(({ id }) => parseId(id)?.number ?? 0)) + 1)}`;
+  return serializeModelJson({
+    ...doc,
+    content: { ...doc.content, diagrams: [{ ...body, id: ownId }, ...stubs] },
+  });
+}
+
+/**
+ * A copied diagram as indented lines: its header text, then its blocks one level in (UX HC1).
+ */
+export function diagramToText(diagram: Diagram, drawn: CallTextContext): string {
+  const body = clipToText(diagram.body, drawn)
+    .split('\n')
+    .filter((line) => line !== '')
+    .map((line) => indentUnit + line);
+  return [diagram.head?.text ?? '', ...body].join('\n');
+}
+
+/**
+ * A copied diagram as model JSON (UX HC1): the diagram comes first, with its header, which tells
+ * it from copied blocks, whose diagram has none. The Methods it calls follow as in `clipToJson`.
+ */
+export function diagramToJson(diagram: Diagram, diagrams: ReadonlyMap<Id, Diagram>): string {
+  const others = new Map(diagrams);
+  others.delete(diagram.id);
+  const stubs = methodStubs(diagram.body, others, {
+    settings: createDoc().content.settings,
+    diagrams: [diagram],
+  });
+  const doc = createDoc();
+  return serializeModelJson({
+    ...doc,
+    content: { ...doc.content, diagrams: [diagram, ...stubs] },
+  });
+}
+
+/** Reads a copied diagram back from model JSON, or `null` when the JSON holds none. */
+export function diagramFromJson(json: string): Diagram | null {
+  const opened = parseModelJson(json);
+  const first = opened.ok ? opened.value.doc.content.diagrams[0] : undefined;
+  return first === undefined || first.head === null ? null : first;
+}
+
+/**
+ * An empty Method with its header for each Method the call blocks of `seq` call among
+ * `diagrams`, with block ids unused in `content`.
+ */
+function methodStubs(
+  seq: Seq,
+  diagrams: ReadonlyMap<Id, Diagram>,
+  content: Parameters<typeof contentIds>[0],
+): Diagram[] {
+  const called = [...new Set(calledMethods(seq))].flatMap((id) => {
     const method = diagrams.get(id);
     return method?.head?.kind === 'method' ? [{ id, head: method.head }] : [];
   });
-  const body = { id: 'd0', head: null, body: clip };
-  let block = largest({ settings: doc.content.settings, diagrams: [body] }, 'b');
-  const stubs: Diagram[] = called.map(({ id, head }) => {
+  let block = largest(content, 'b');
+  return called.map(({ id, head }) => {
     block += 1;
     return {
       id,
       head,
       body: { blocks: [{ id: `b${String(block)}`, kind: 'process', text: '' }], folds: [] },
     };
-  });
-  const ownId = `d${String(Math.max(0, ...called.map(({ id }) => parseId(id)?.number ?? 0)) + 1)}`;
-  return serializeModelJson({
-    ...doc,
-    content: { ...doc.content, diagrams: [{ ...body, id: ownId }, ...stubs] },
   });
 }
 
@@ -201,7 +249,10 @@ export function clipFromJson(json: string): Clip | null {
   return opened.value.doc.content.diagrams[0]?.body ?? null;
 }
 
-/** The names of the Methods a clip's call blocks call, by Method id (`clipToJson`). */
+/**
+ * The names of the Methods a clip's call blocks call, by Method id (`clipToJson`,
+ * `diagramToJson`).
+ */
 export function clipNamesFromJson(json: string): ReadonlyMap<Id, string> {
   const opened = parseModelJson(json);
   const names = new Map<Id, string>();

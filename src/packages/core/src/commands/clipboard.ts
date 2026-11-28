@@ -1,7 +1,19 @@
 import type { IdGenerator } from '../model/id';
 import { headName } from '../model/head';
-import type { Arm, Block, Branch, CallTarget, Content, FoldMark, Id, Seq } from '../model/types';
+import type {
+  Arm,
+  Block,
+  Branch,
+  CallTarget,
+  Content,
+  Diagram,
+  FoldMark,
+  Head,
+  Id,
+  Seq,
+} from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget } from './common';
+import { insertDiagramAt } from './diagram';
 import { deleteBlocks } from './delete';
 import { keepingOut, putBlocks } from './insert';
 import { foldRange, sliceSeq } from './seq-edit';
@@ -83,6 +95,60 @@ export function paste(content: Content, args: PasteArgs): Result {
     next,
     fresh.blocks.map((block) => block.id),
   );
+}
+
+/** Arguments of `pasteDiagram`. */
+export type PasteDiagramArgs = WithIds & {
+  /** The copied diagram: its header and body. */
+  readonly diagram: Diagram;
+  /** The diagram holding the selection, or `null` when nothing is selected. */
+  readonly after: Id | null;
+  /** As in `PasteArgs`. */
+  readonly names?: ReadonlyMap<Id, string>;
+};
+
+/**
+ * Pastes a copied diagram as a new one (R-EDIT-10, UX HC1). It goes right after the diagram
+ * holding the selection when that one is of its kind, otherwise at the end of its kind. A name
+ * another header already has gets a number after it (`sort 2`). Calls of the copied diagram to
+ * itself call the new one; its other calls are linked as `paste` links them.
+ * Touched: the new diagram.
+ */
+export function pasteDiagram(content: Content, args: PasteDiagramArgs): Result {
+  const source = args.diagram;
+  if (source.head === null) {
+    return fail('noHead', source.id);
+  }
+  const ids = idsFor(content, args);
+  const id = ids.next('diagram');
+  const others = methodsOf(content, args.names);
+  const methods: Methods = (called) =>
+    called === source.id ? { kind: 'local', diagram: id } : others(called);
+  const head = freeHead(content, source.head);
+  const diagram: Diagram = { id, head, body: renewSeq(source.body, ids, methods) };
+  const beside = content.diagrams.find((d) => d.id === args.after);
+  const isSameKind =
+    beside !== undefined && (beside.head?.kind === 'method') === (head.kind === 'method');
+  return done(insertDiagramAt(content, diagram, isSameKind ? beside.id : null), [id]);
+}
+
+/** The header with a name no other header has: the same text, or its name followed by a number. */
+function freeHead(content: Content, head: Head): Head {
+  const used = new Set(
+    content.diagrams.flatMap((d) => (d.head === null ? [] : [headName(d.head)])),
+  );
+  const name = headName(head);
+  if (!used.has(name)) {
+    return head;
+  }
+  let n = 2;
+  while (used.has(`${name} ${String(n)}`)) {
+    n += 1;
+  }
+  // A Method keeps what it receives: the text from its first parenthesis.
+  const open = head.kind === 'method' ? head.text.indexOf('(') : -1;
+  const rest = open < 0 ? '' : head.text.slice(open);
+  return { kind: head.kind, text: `${name} ${String(n)}${rest}` };
 }
 
 /**

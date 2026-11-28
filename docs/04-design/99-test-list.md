@@ -17,7 +17,7 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 349 | - | 401 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 358 | - | 410 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
@@ -25,7 +25,7 @@ status: 생성됨
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1087 | 5 | 1466 |
+| 합계 | 87 | 287 | 1096 | 5 | 1475 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 401개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 410개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -129,7 +129,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0810 | ADR-0041: 텍스트로 복사하면 If의 분기 이름을 렌더링된 대로 문서의 언어로 표시한다 | - |
 | T-0038 | 다른 프로그램의 텍스트는 한 줄에 처리 블록 하나가 된다 | [[01-requirements#^at\|AT-12]] |
 | T-0039 | 사용자 정의 형식이 텍스트보다 먼저다 | [[01-requirements#^at\|AT-12]] |
-| T-0040 | 조작 규칙 "붙여넣기": 선택한 것이 없으면 아무것도 붙여넣지 않는다 | - |
+| T-0040 | interaction rules "붙여넣기": with nothing selected the blocks go at the end | [[ux-decisions\|UX PS1]] |
 | T-0041 | 03-keymap: `v` 다음 `j` `j`와 `y`는 범위를 복사한다 | - |
 | T-0042 | 분기 라벨에서 `o`는 분기를 삽입하고 그 라벨을 연다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0043 | M87 F6: 분기가 하나 남을 때까지 삭제해도 Case를 지키고 아무것도 묻지 않는다 | - |
@@ -240,7 +240,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/clipboard.test.ts`
 
-복사, 잘라내기, 붙여넣기. Vitest · 테스트 8개.
+copy, cut and paste · paste a copied diagram (UX HC1). Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX HC1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -252,6 +252,9 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 블록을 붙여 넣으면 이름 호출이 된다 | - |
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 삭제한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
+| T-1638 | it goes after the selected diagram of its kind under a new name, keeping what it receives | [[ux-decisions\|UX HC1]] |
+| T-1639 | beside a diagram of the other kind or with nothing selected, it goes at the end of its kind | [[ux-decisions\|UX HC1]] |
+| T-1640 | its calls to itself call the copy; other calls find the Method by name or keep the name | [[ux-decisions\|UX HC1]] |
 
 ^t-packages-core-src-commands-clipboard-test-ts
 
@@ -649,7 +652,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
-명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 39개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
+명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 45개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL2]], [[ux-decisions|UX HC1]], [[ux-decisions|UX PS1]], [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -665,7 +668,13 @@ id. Vitest · 테스트 5개.
 | T-1609 | 복사와 감싸기는 접힌 줄과 같이 그 분기의 블록을 모두 가져간다 | - |
 | T-1610 | 잘라내기는 그 분기의 블록을 복사하고 분기를 삭제하며, 실행 취소 한 단계다 | - |
 | T-1611 | 삭제가 분기를 거절하는 곳에서는 잘라내기도 같은 알림으로 거절하고 아무것도 복사하지 않는다 | - |
-| T-1612 | 분기 라벨 위에서 붙여넣으면 여전히 그곳에서는 안 된다고 알린다 | - |
+| T-1612 | below puts the blocks into a new branch on the right, above on the left, and opens its label, in one undo step | [[ux-decisions\|UX BL2]] |
+| T-1641 | right of the default the branch goes left of it, with the same notice as inserting | [[ux-decisions\|UX BL2]] |
+| T-1642 | on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back | [[ux-decisions\|UX BL2]] |
+| T-1643 | on a parallel branch the new branch is only selected; a cut branch can be put back beside another | [[ux-decisions\|UX BL2]] |
+| T-1644 | copy on a header takes the whole diagram, as indented text and as model JSON | [[ux-decisions\|UX HC1]] |
+| T-1645 | pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected | [[ux-decisions\|UX HC1]] |
+| T-1646 | the blocks go at the end of the current diagram and are selected | [[ux-decisions\|UX PS1]] |
 | T-0562 | %s를 선택했을 때 %s의 이름은 %s다 | - |
 | T-1363 | 분기 라벨에서 풀면 If를 풀고 나온 블록들을 선택한다 | [[ux-decisions\|UX Q8]] |
 | T-1364 | 빈 default 칸에서 풀면 Case를 푼다 | [[ux-decisions\|UX Q8]] |
@@ -689,7 +698,7 @@ id. Vitest · 테스트 5개.
 | T-0575 | %s(%s)의 다이어그램을 삭제하면 렌더링된 순서로 다음 다이어그램을 선택한다: %j | - |
 | T-1389 | 붙여넣은 문서는 먼저 묻고, "새 문서로 열기"는 그것을 열며 지금 문서는 그대로 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 | T-1390 | "텍스트로 붙여넣기"는 지금처럼 줄마다 처리 블록을 붙이고, 취소는 아무것도 하지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
-| T-1391 | 선택한 것이 없으면 "텍스트로 붙여넣기"를 흐리게 하여 묻고, 그 밖의 텍스트는 먼저 선택하라고 알린다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
+| T-1391 | with nothing selected, paste asks too, and "Paste as Text" puts the lines at the end | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
 | T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 
@@ -1254,7 +1263,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0315 | 06-web 7: 경고는 닫을 때까지 상태 표시줄에 남는다 | - |
 | T-0316 | Method들과 "새 Method"를 보이고, `j` · `k`는 지금 것에서 움직이며 `Enter`가 고른다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 | - |
-| T-1394 | 붙여넣은 문서에 대한 질문은 붙여넣을 수 없을 때 "텍스트로 붙여넣기"를 흐리게 한다 | [[ux-decisions\|UX JP2]] |
+| T-1394 | the question about a pasted document has "Paste as Text" between cancel and "Open as New Document" | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
 | T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
 | T-1510 | [축소] [NN%] [확대]가 이 차례로 있고, 한 번 누를 때마다 배율을 바꾼다 | - |
@@ -1669,7 +1678,7 @@ commandViewSource. Vitest · 테스트 3개.
 | T-0373 | 둘째 대화 상자가 첫째를 취소한다 | - |
 | T-0834 | US1: choose는 누른 버튼을 반환한다: 확인, 셋째, 취소 | - |
 | T-1402 | 문서를 붙여넣으면 제목이 AriadneNSD인 모달로 묻고, "새 문서로 열기"는 그것을 연다 | [[ux-decisions\|UX JP2]] |
-| T-1403 | 선택한 것이 없어도 같은 질문이 오고, "텍스트로 붙여넣기"는 흐리며 아무 일도 하지 않는다 | [[ux-decisions\|UX JP2]] |
+| T-1403 | with nothing selected the same question comes, and "Paste as Text" answers it | [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1404 | prompt는 제목, 확인 버튼, 여러 줄 입력 칸을 받을 수 있다 | [[ux-decisions\|UX JP3]] |
 | T-0374 | 마지막에 고른 모양을 기억하고 새 문서가 그 모양으로 시작한다 | [[ux-decisions\|UX HS1]] |
 | T-0375 | 파일을 열면 그 파일의 모양을 지키고, 기억해 둔 모양은 바꾸지 않는다 | [[ux-decisions\|UX HS1]] |

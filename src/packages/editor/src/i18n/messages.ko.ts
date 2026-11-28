@@ -138,7 +138,6 @@ export const korean: Readonly<Record<MessageKey, string>> = {
   'reason.selectBranchLabel': '먼저 분기 라벨을 선택하세요.',
   'reason.selectInBranch': 'If · Case의 분기 안의 블록을 선택하세요.',
   'reason.notOnBranchLabel': '분기 라벨에서는 분기 삽입 · 삭제 · 이동만 됩니다.',
-  'reason.undecidedOnBranchLabel': '분기 라벨에서는 아직 되지 않습니다.',
   'reason.noDefaultToDelete': '삭제할 default 분기가 없습니다.',
   'reason.nothingToCopy': '빈 칸에는 복사할 블록이 없습니다.',
   'reason.nothingToCut': '빈 칸에는 잘라낼 블록이 없습니다.',
@@ -183,6 +182,7 @@ export const korean: Readonly<Record<MessageKey, string>> = {
   'notice.visual':
     '영역 선택: j k로 넓히고 y 복사 · d 잘라내기 · x 삭제 · s 감싸기. v나 Esc로 끝냅니다.',
   'notice.copied': '블록 {count}개를 복사했습니다.',
+  'notice.copiedDiagram': '다이어그램을 복사했습니다.',
   'notice.cut': '블록 {count}개를 잘라냈습니다.',
   'notice.checkCondition':
     '참 · 거짓 분기의 블록을 맞바꿨습니다. 조건은 그대로라 뜻이 바뀌었습니다. 조건을 수정하세요.',
