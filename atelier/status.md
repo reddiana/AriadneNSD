@@ -107,7 +107,7 @@ push · E2E · 전체 검사 · 커버리지 · 사이트 빌드는 허브가 �
 - [ ] 메인테이너: 페이스북 그룹에 올림(초안 5, 후보는 [[promotion#페이스북 그룹 후보]])
 - [ ] LinkedIn 글(https://www.linkedin.com/feed/update/urn:li:activity:7530170940547289088/, 2026-11-22 다시 올림)의 댓글: 지금은 메인테이너가 앱 알림으로 보고, 부탁하면 Claude가 Chrome으로 한 번 읽고 답글 초안. Gmail 알림 메일로 정기 확인할지는 미룸(어느 Gmail 계정을 연결할지 — ariadnensd · reddiana, 2026-11-22 메인테이너)
 - [ ] Anthropic Directory: 검증에서 "스크립트(`nsd.mjs`)는 Verified 조직만"으로 막힘 → 도메인 `ariadnensd.com` 증명(Cloudflare TXT, 지우지 않음), Verified 요청 CASE-44465F27(2026-11-27, Anthropic 사람이 검토). 답은 claude.ai/directory/manage/help의 Your cases에서(예약 작업 "Verified 답 확인"이 매일 09:00에 봄, 답이 오면 끔). 승인되면 제출 양식(저장소 폴더 `src/skills/ariadne-nsd/plugin`)을 다시 검증, 거절되면 스크립트 없는 판 · 우리 마켓플레이스만 가운데 고름 → [[2026-11-27-04-skill-directory]]
-- [ ] 시간 테스트: T-0171은 시간 제한을 늘리고, T-1126은 로컬에서 `SKIP_TIMING=1`이면 skip(판정은 CI). 에이전트가 구현 중, 정리 남음(테스트 아키텍처 문서 · `src/README.md`) → [[backlog#MVP 개발]]
+- [ ] 시간 테스트: T-0171은 시간 제한을 늘리고, T-1126은 로컬에서 `SKIP_TIMING=1`이면 skip(판정은 CI). 구현함 `1b7b814`, 정리 남음(테스트 아키텍처 문서 · `src/README.md`) → [[backlog#MVP 개발]]
 - [ ] 메인테이너: 써 보며 [[outbox#확인해 주세요]]를 확인(바꿀 것만)
 - [ ] 설계 대조의 중 206건 · 하 71건 → [[backlog#설계]]
 - [ ] 메인테이너: C&C 그림(`docs/03-architecture/assets/*.drawio.svg`)을 draw.io로 고침 → 그 뒤 Claude가 [[01-architecture#3. 실행 중의 모습]]의 카탈로그 표와 맞춤
