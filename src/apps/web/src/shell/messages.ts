@@ -109,9 +109,8 @@ export function shellMessage(
   key: ShellMessageKey,
   values: Readonly<Record<string, string>> = {},
 ): string {
-  return catalogs
-    .table(locale)
-    [key].replaceAll(/\{(\w+)\}/g, (match, name: string) => values[name] ?? match);
+  const text = catalogs.table(locale)[key];
+  return text.replaceAll(/\{(\w+)\}/g, (match, name: string) => values[name] ?? match);
 }
 
 /** Every key of the shell catalog with its text in every screen language, for checks (QA-13). */

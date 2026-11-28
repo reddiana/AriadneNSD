@@ -396,11 +396,10 @@ export function formatMessage(locale: Locale, value: Message): string {
   if (!isMessageKey(key)) {
     return key;
   }
-  return catalogs
-    .table(locale)
-    [key].replace(/\{(\w+)\}/g, (whole, name: string) =>
-      name in params ? String(params[name]) : whole,
-    );
+  const text = catalogs.table(locale)[key];
+  return text.replace(/\{(\w+)\}/g, (whole, name: string) =>
+    name in params ? String(params[name]) : whole,
+  );
 }
 
 /** Every key with its text in every screen language, for checks (QA-13). */

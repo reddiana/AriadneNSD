@@ -129,9 +129,9 @@ export function catalogEntriesOf<Key extends string>(
 }
 
 /** The tables of a catalog other than English's, each fetched by a dynamic import when first used. */
-export type CatalogImports<Key extends string> = {
-  readonly [L in Exclude<Locale, 'en'>]: () => Promise<Readonly<Record<Key, string>>>;
-};
+export type CatalogImports<Key extends string> = Readonly<
+  Record<Exclude<Locale, 'en'>, () => Promise<Readonly<Record<Key, string>>>>
+>;
 
 /**
  * A screen string catalog whose English table is in the first download and whose other languages
