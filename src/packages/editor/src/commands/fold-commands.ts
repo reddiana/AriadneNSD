@@ -19,6 +19,7 @@ import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
 import { childSeqs, indexDoc, isControl } from '../model/doc-index';
+import { branchTarget } from './command-helpers';
 import type { After, EditorSession } from '../session/session';
 import type { EditorState } from '../state/editor-state';
 import type { Selection } from '../state/selection';
@@ -711,14 +712,15 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
   });
 
   /** After making a region: select it, fold it and open its name (interaction rules 4). */
-  const afterMade = (state: EditorState, made: Id | undefined, path: Path): After => {
+  const afterMade = (state: EditorState, made: Id | undefined, path: Path, owner?: Id): After => {
     if (made === undefined) {
       return { selection: state.selection };
     }
     const view = state.doc.view;
     return {
       selection: selectFold(made, path),
-      view: { ...view, folded: [...view.folded, made] },
+      // A folded branch or loop body (`owner`) opens, so the new region and its name show.
+      view: { ...view, folded: [...view.folded.filter((id) => id !== owner), made] },
       edit: {
         field: { kind: 'fold', fold: made, ...(path.length === 0 ? {} : { path }) },
         caret: 'selectAll',
@@ -737,13 +739,14 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
         return 'reason.nothingSelected';
       }
       switch (selection.kind) {
+        // On a branch label the blocks of the branch (UX BL4).
         case 'blocks':
         case 'peek':
+        case 'branchLabel':
           return true;
         case 'fold':
           return 'reason.foldExists';
         case 'head':
-        case 'branchLabel':
         case 'missingDefault':
           return 'reason.selectBlocksToFold';
       }
@@ -767,17 +770,25 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
         }
         return;
       }
-      const target = targetOf(selection);
+      const target =
+        selection?.kind === 'branchLabel'
+          ? branchTarget(index(), selection.branch)
+          : targetOf(selection);
       if (target === null) {
         return;
       }
       const result = makeFold(content(), { target, ids: session.ids() });
-      if (session.commit(result, (ok) => afterMade(state, ok.touched[0], []))) {
+      const isMade = session.commit(result, (ok) => {
+        const [made] = ok.touched;
+        const owner = made === undefined ? undefined : indexDoc(ok.content).folds.get(made);
+        return afterMade(state, made, [], owner);
+      });
+      if (isMade) {
         session.notify('notice.foldMade');
       }
     },
     menu: { menu: 'view', group: 2, order: 1 },
-    context: ['blocks', 'peek'],
+    context: ['blocks', 'peek', 'branchLabel'],
   });
 
   const removeSpec = spec('fold.remove', {

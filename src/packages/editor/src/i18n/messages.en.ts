@@ -146,8 +146,6 @@ export const english = {
   'reason.selectOneBlock': 'Select one block.',
   'reason.selectBranchLabel': 'Select a branch label first.',
   'reason.selectInBranch': 'Select a block inside a branch of an If or a Case.',
-  'reason.notOnBranchLabel':
-    'On a branch label, only inserting and deleting branches and moving them work.',
   'reason.noDefaultToDelete': 'There is no default branch to delete.',
   'reason.nothingToCopy': 'There is no block to copy in an empty cell.',
   'reason.nothingToCut': 'There is no block to cut in an empty cell.',

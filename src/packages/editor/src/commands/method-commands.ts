@@ -49,7 +49,7 @@ export function methodCommands(ctx: CommandContext) {
   // Extract into a new Method (R-EDIT-19): the name is typed at once, and closing the field goes
   // back to the call block left in place (UX XM2).
   const runExtract = (): void => {
-    const target = extractTarget(session.state.selection);
+    const target = extractTarget(index(), session.state.selection);
     if (!('value' in target)) {
       return;
     }
@@ -105,19 +105,19 @@ export function methodCommands(ctx: CommandContext) {
 
   const extractSpec = spec('diagram.extractMethod', {
     edits: true,
-    when: (state) => appliesIf(extractTarget(state.selection)),
+    when: (state) => appliesIf(extractTarget(index(), state.selection)),
     run: async (state, args) => {
       const diagram = diagramOf(index(), state.selection);
       const isHeaderless =
         diagram !== null && (index().diagrams.get(diagram)?.head ?? null) === null;
-      if (isKeyArg(args) && isHeaderless && 'value' in extractTarget(state.selection)) {
+      if (isKeyArg(args) && isHeaderless && 'value' in extractTarget(index(), state.selection)) {
         await askExtractOrHead(diagram);
         return;
       }
       runExtract();
     },
     menu: { menu: 'diagram', group: 4, order: 2 },
-    context: ['blocks', 'fold'],
+    context: ['blocks', 'fold', 'branchLabel'],
   });
 
   const removeHeadSpec = spec('diagram.removeHead', {

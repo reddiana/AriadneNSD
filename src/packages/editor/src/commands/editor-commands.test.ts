@@ -166,16 +166,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     missing: 'reason.nothingSelected',
   },
   'edit.move.left': { none: 'reason.nothingSelected', missing: 'reason.nothingSelected' },
-  'block.insert.if': {
-    label: 'reason.notOnBranchLabel',
-    armLabel: 'reason.notOnBranchLabel',
-    defaultLabel: 'reason.notOnBranchLabel',
-  },
-  'block.insert.call': {
-    label: 'reason.notOnBranchLabel',
-    armLabel: 'reason.notOnBranchLabel',
-    defaultLabel: 'reason.notOnBranchLabel',
-  },
   'block.wrap.while': {
     none: 'reason.nothingSelected',
     missing: 'reason.nothingSelected',
@@ -269,9 +259,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
   'diagram.method': { none: 'reason.nothingSelected', p6: 'reason.hasHead' },
   'diagram.extractMethod': {
     none: 'reason.nothingSelected',
-    label: 'reason.selectBlocksToExtract',
-    armLabel: 'reason.selectBlocksToExtract',
-    defaultLabel: 'reason.selectBlocksToExtract',
     missing: 'reason.selectBlocksToExtract',
     head: 'reason.selectBlocksToExtract',
   },
@@ -1062,5 +1049,174 @@ describe('pasting an AriadneNSD document as text (R-WEB-11, UX JP1 · JP2)', () 
     expect(engine.saves).toHaveLength(1);
     answer('cancel');
     await engine.settle();
+  });
+});
+
+const kindOf = (engine: TestEngine, id: string): string | undefined =>
+  engine.session.index().blocks.get(id)?.block.kind;
+
+/** The arms of the Case `id`, and the blocks of the arm at `at`. */
+const armsOf = (engine: TestEngine, id: string) => {
+  const block = engine.session.index().blocks.get(id)?.block;
+  return block?.kind === 'case' ? block.arms : [];
+};
+
+const kindsIn = (engine: TestEngine, id: string, at: number): ReadonlyArray<string> =>
+  armsOf(engine, id)[at]?.body.blocks.map((b) => b.kind) ?? [];
+
+describe('commands on a branch label take blocks (UX BL3, BL4)', () => {
+  it('T-1656 · UX BL3: a control or exit block on a branch label goes into a new branch beside it', () => {
+    for (const [command, kind] of [
+      ['block.insert.while', 'while'],
+      ['block.insert.exit', 'exit'],
+      ['block.insert.endless', 'endless'],
+    ] as const) {
+      const engine = engineAt('armLabel');
+      engine.run(command);
+      expect(armsOf(engine, 'k1')).toHaveLength(2);
+      expect(kindsIn(engine, 'k1', 1)).toEqual([kind]);
+      const made = armsOf(engine, 'k1')[1]?.id;
+      expect(engine.session.state.selection).toEqual({ kind: 'branchLabel', branch: made });
+      expect(engine.session.state.editing?.field).toEqual({ kind: 'branchLabel', branch: made });
+      engine.session.commitEditing('two');
+      expect(armsOf(engine, 'k1')[1]?.label).toBe('two');
+      // The branch, its block and its label are one undo step (UX UN3).
+      expect(engine.session.state.undo).toHaveLength(1);
+    }
+    const before = engineAt('armLabel');
+    before.run('block.insertBefore.if');
+    expect(kindsIn(before, 'k1', 0)).toEqual(['if']);
+  });
+
+  it('T-1657 · UX BL3: on a branch label of an If the If becomes a Case, and the user is told', () => {
+    const engine = engineAt('label');
+    engine.run('block.insert.for');
+    expect(kindOf(engine, 'i1')).toBe('case');
+    expect(kindsIn(engine, 'i1', 1)).toEqual(['for']);
+    expect(notice(engine)).toBe('notice.convertedIfToCase');
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1658 · UX BL3: a call on a branch label goes into a new branch, whose label opens', async () => {
+    const engine = engineAt('armLabel');
+    engine.run('block.insert.call');
+    engine.picker()?.choose(0);
+    await engine.settle();
+    expect(kindsIn(engine, 'k1', 1)).toEqual(['call']);
+    expect(engine.session.state.editing?.field.kind).toBe('branchLabel');
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1659 · UX BL3: a call needing a name opens that name first, in one undo step', async () => {
+    // The list: the one Method m, then "New Method", then "Call by a written name".
+    const made = engineAt('armLabel');
+    made.run('block.insert.call');
+    made.picker()?.choose(1);
+    await made.settle();
+    expect(kindsIn(made, 'k1', 1)).toEqual(['call']);
+    expect(made.session.state.editing?.field.kind).toBe('head');
+    made.session.commitEditing('twice');
+    expect(made.session.state.undo).toHaveLength(1);
+
+    const named = engineAt('armLabel');
+    named.run('block.insert.call');
+    named.picker()?.choose(2);
+    await named.settle();
+    expect(named.session.state.editing?.field).toMatchObject({ kind: 'call', part: 'name' });
+    named.session.commitEditing('later');
+    expect(named.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1660 · UX BL4: new Method from a branch label takes the blocks of the branch', () => {
+    const engine = engineAt('armLabel');
+    engine.run('diagram.extractMethod');
+    expect(kindsIn(engine, 'k1', 0)).toEqual(['call']);
+    const field = engine.session.state.editing?.field;
+    expect(field?.kind).toBe('head');
+    expect(bodyOf(engine, field?.kind === 'head' ? field.diagram : '')).toEqual(['p4']);
+  });
+
+  it('T-1661 · UX BL4: a fold region from a branch label holds the blocks of the branch; a folded branch opens', () => {
+    for (const isFolded of [false, true]) {
+      const engine = engineAt('label');
+      if (isFolded) {
+        engine.run('view.fold.toggle');
+      }
+      engine.run('fold.make');
+      const marks = engine.session.index().seqs.get('r1')?.seq.folds ?? [];
+      expect(marks).toMatchObject([{ first: 'p2', last: 'p2' }]);
+      const made = marks[0]?.id ?? '';
+      expect(engine.session.state.doc.view.folded).toEqual([made]);
+      expect(engine.session.state.selection).toEqual({ kind: 'fold', fold: made });
+      expect(engine.session.state.editing?.field).toEqual({ kind: 'fold', fold: made });
+    }
+  });
+});
+
+describe('text typed on something just made joins its undo step (UX UN3)', () => {
+  it('T-1662 · UX UN3: a wrap and its condition are one undo step', () => {
+    const engine = engineAt('p1');
+    engine.run('block.wrap.while');
+    engine.session.commitEditing('more');
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.run('edit.undo');
+    expect(bodyOf(engine, 'd1')[0]).toBe('p1');
+    engine.run('edit.redo');
+    expect(engine.session.index().blocks.get(bodyOf(engine, 'd1')[0] ?? '')?.block).toMatchObject({
+      kind: 'while',
+      text: 'more',
+    });
+  });
+
+  it('T-1663 · UX UN3: a new branch label and a new header name join the step that made them', () => {
+    const branched = engineAt('armLabel');
+    branched.run('branch.insert');
+    branched.session.commitEditing('two');
+    expect(branched.session.state.undo).toHaveLength(1);
+
+    const converted = engineAt('i1');
+    converted.run('branch.convertIfToCase');
+    converted.session.commitEditing('maybe');
+    expect(converted.session.state.undo).toHaveLength(1);
+
+    const headed = engineAt('p1');
+    headed.run('diagram.newMethod');
+    headed.session.commitEditing('twice');
+    expect(headed.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1664 · UX UN3: a header name refused for a clash still joins the step when typed again', () => {
+    const engine = engineAt('p1');
+    engine.run('diagram.newMethod');
+    engine.session.commitEditing('m(x)');
+    expect(notice(engine)).toBe('reason.duplicateHeadName');
+    engine.session.commitEditing('twice');
+    expect(engine.session.state.undo).toHaveLength(1);
+  });
+
+  it('T-1665 · UX UN3: nothing made, nothing joined: text on a kept empty block is its own step', () => {
+    // Below a header, a process block takes the place of an empty first block: nothing changes.
+    const engine = testEngine(
+      withHeads(contentOf([proc('p1')], [empty('p6')]), { d2: ['method', 'm'] }),
+    );
+    engine.select(selectBlock(engine.session.index(), 'p1'));
+    engine.run('block.insert.process');
+    engine.session.commitEditing('a');
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.select({ kind: 'head', diagram: 'd2' });
+    engine.run('block.insert.process');
+    engine.session.commitEditing('b');
+    expect(engine.session.state.undo).toHaveLength(2);
+    engine.run('edit.undo');
+    expect(bodyOf(engine, 'd1')).toHaveLength(2);
+  });
+
+  it('T-1666 · UX UN3: editing again later is a step of its own', () => {
+    const engine = engineAt('p1');
+    engine.run('block.insert.while');
+    engine.session.commitEditing('a');
+    engine.run('edit.text');
+    engine.session.commitEditing('b');
+    expect(engine.session.state.undo).toHaveLength(2);
   });
 });

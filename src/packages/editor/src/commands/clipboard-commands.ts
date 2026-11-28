@@ -33,6 +33,7 @@ import {
   afterHead,
   branchTarget,
   currentDiagram,
+  emptyOfNewBranch,
   headStart,
   selectionAfterDelete,
   selectTouched,
@@ -238,11 +239,9 @@ export function clipboardCommands(ctx: CommandContext) {
     }
     if (selection?.kind === 'branchLabel') {
       // A new branch beside the label takes the blocks (UX BL2).
-      runInsertBranch(selection.branch, side, (made, branch, ids) => {
-        const [empty] = indexDoc(made).branches.get(branch)?.branch.body.blocks ?? [];
-        const target = { kind: 'blocks', first: empty?.id ?? '', last: empty?.id ?? '' } as const;
-        return paste(made, { target, side: 'after', clip, names, ids });
-      });
+      runInsertBranch(selection.branch, side, (made, branch, ids) =>
+        paste(made, { target: emptyOfNewBranch(made, branch), side: 'after', clip, names, ids }),
+      );
       return;
     }
     if (selection?.kind === 'missingDefault') {

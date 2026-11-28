@@ -49,9 +49,9 @@ describe('inserting and editing text (AT-03)', () => {
     expect(engine.session.state.editing?.field).toEqual({ kind: 'block', block: 'b3' });
     engine.session.commitEditing('n > 0');
     expect(textOf(engine, 'b3')).toBe('n > 0');
-    // Inserting and writing are two undo steps (01-model 4.4).
-    expect(engine.session.state.undo).toHaveLength(2);
-    engine.keys('u', 'u');
+    // Inserting and writing the new block are one undo step (UX UN3).
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.keys('u');
     expect(bodyOf(engine)).toEqual(['b1', 'b2']);
   });
 
