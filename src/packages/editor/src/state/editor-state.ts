@@ -66,8 +66,8 @@ export type Extracted = { readonly call: Id; readonly count: number };
 export type EditorState = {
   readonly doc: Doc;
   /**
-   * Snapshots of the document: the content with its folding (ADR-0048) and the result symbol
-   * (M87 F5). Undo brings them back; the name bands stay as they are now (01-model 4.4).
+   * Snapshots of the document: the content with its view state, which is the folding (ADR-0048),
+   * the result symbol (M87 F5) and the name bands (UX UN2). Undo brings them back.
    */
   readonly undo: ReadonlyArray<Doc>;
   readonly redo: ReadonlyArray<Doc>;
@@ -137,11 +137,16 @@ export function withSelection(state: EditorState, selection: Selection | null): 
   };
 }
 
-/** Whether two views fold and open the same things (what an undo step keeps, ADR-0048). */
-export function isSameFolding(a: View, b: View): boolean {
+/**
+ * Whether two views show the same: what is folded and opened, the name bands and the result
+ * symbol. A change of any of these is an undo step (ADR-0048, M87 F5, UX UN2).
+ */
+export function isSameView(a: View, b: View): boolean {
   return (
     a === b ||
-    (sameItems(a.folded, b.folded) &&
+    (a.bands === b.bands &&
+      a.resultSymbol === b.resultSymbol &&
+      sameItems(a.folded, b.folded) &&
       a.opened.length === b.opened.length &&
       a.opened.every((path, at) => sameItems(path, b.opened[at] ?? [])))
   );
@@ -189,18 +194,6 @@ export function withContent(
   };
 }
 
-/**
- * The document an undo step brings back: its content, folding and result symbol, with the name
- * bands as they are now, which are not undone (ADR-0048, M87 F5).
- */
-function restored(step: Doc, now: View): Doc {
-  const { view } = step;
-  if (view.bands === now.bands) {
-    return step;
-  }
-  return { content: step.content, view: { ...view, bands: now.bands } };
-}
-
 /** Undo or redo one step. `null` when there is nothing to undo or redo. */
 export function stepHistory(
   state: EditorState,
@@ -215,7 +208,7 @@ export function stepHistory(
   }
   const rest = from.slice(0, -1);
   const pushed = direction === 'undo' ? state.redo : state.undo;
-  const doc = restored(step, state.doc.view);
+  const doc = step;
   const { content } = doc;
   return {
     content,

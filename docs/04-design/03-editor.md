@@ -68,7 +68,7 @@ updated: 2026-11-27
 ```ts
 type EditorState = {
   doc: Doc;                       // 내용 + 뷰 상태 → [[01-model]]
-  undo: Doc[]; redo: Doc[];       // 내용과 뷰 상태의 스냅숏. 되돌릴 때 이름 띠 · 결과 기호는 지금 값 → [[0048-folding-is-undoable|ADR-0048]]. 500단계까지
+  undo: Doc[]; redo: Doc[];       // 내용과 뷰 상태의 스냅숏 → [[0048-folding-is-undoable|ADR-0048]]. 500단계까지
   selection: Selection | null;
   lastSelected: Id | null;        // 선택한 것을 푼 뒤 이동 키를 누르면 여기서 시작
   editing: Editing | null;        // 인라인 에디터가 열려 있으면
@@ -175,11 +175,11 @@ type Extracted = { call: Id; count: number };        // 그 위치에 남은 호
 | --- | --- |
 | `commit(result, after)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(If를 Case로 바꿨다는 알림, 조건을 확인하라는 알림)도 처리합니다 |
 | `apply(content, after)` | 내용을 undo 한 단계로 바꿉니다. 내용이 바뀌었으면 먼저 불변식을 검사하고(3장), 다음 선택 · 뷰 상태와 인라인 에디터(`After`)를 적용합니다 |
-| `setView(view, selection?)` | 뷰 상태만 바꿉니다. 접힘 · 펴 보기(`folded` · `opened`)가 값으로 달라지면 undo 한 단계를 만들고 redo를 비웁니다. 이름 띠 · 결과 기호만 바뀌면 단계를 만들지 않습니다. 읽기 전용이면 단계도 dirty도 없습니다 |
+| `setView(view, selection?)` | 뷰 상태만 바꿉니다. 접힘 · 펴 보기(`folded` · `opened`), 이름 띠(`bands`), 결과 기호 가운데 하나라도 값으로 달라지면 undo 한 단계를 만들고 redo를 비웁니다. 읽기 전용이면 단계도 dirty도 없습니다 |
 | `select(selection)` | 선택을 바꿉니다. 없어진 id를 가리키는 선택은 버립니다(`validSelection`) |
 | `handleKey(stroke)` | 다이어그램 영역의 키 하나를 읽습니다. 처리했는지를 반환합니다(4장) |
 | `startEditing` · `commitEditing` · `cancelEditing` · `switchCallPart` | 인라인 에디터를 열고, 닫고, 호출 블록의 칸을 바꿉니다(3.4) |
-| `history(direction)` | 실행 취소 · 다시 하기. 스냅숏의 내용과 접힘 · 펴 보기로 돌아가고, 이름 띠 · 결과 기호는 지금 값을 둡니다 |
+| `history(direction)` | 실행 취소 · 다시 하기. 스냅숏의 내용과 뷰 상태로 돌아갑니다 |
 | `load(doc, options)` | 문서를 전체 교체합니다. undo를 비우고 선택은 옵션의 값으로 둡니다 |
 | `notify(message, level?)` · `refuse(reason)` · `ask(question, choices)` | 상태 표시줄의 알림, 명령이 거절한 이유, 버튼이 달린 물음 |
 | `index()` · `shown()` | 모델의 색인과 보이는 나무(2.2)를 계산합니다. 문서가 바뀔 때까지 재사용합니다 |
@@ -364,7 +364,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 - "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 입력하는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 입력하는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
 - "Method 풀어 넣고 지우기"(`diagram.inlineMethod`, [[01-requirements#^r-edit|R-EDIT-27]])는 같은 문서의 Method를 호출하는 호출 블록이나 Method 헤더를 선택했을 때 그 Method에 적용됩니다. `core`의 `inlineMethod`를 실행하고(실행 취소 한 단계), 자리마다 펴 보기 · 접힘(`view.opened` · `view.folded`)을 호출 블록 풀기처럼 사본으로 옮긴 뒤, 들어온 블록을 선택하고 "호출 n곳에 풀어 넣고 {이름}을(를) 지웠습니다."를 알립니다. `when`은 `core`와 같은 검사로 `recursiveMethod` · `noCallers`를 미리 돌려주어 메뉴에서 흐리게 합니다. 컨텍스트 메뉴(`context: ['blocks', 'head']`)에는 호출 블록 · Method 헤더에서만 보입니다(`inContext`). 키는 없습니다 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
 - 보기 메뉴의 접기 명령: "접기 · 펴기"(`view.fold.toggle`), "접기 영역 만들기"(`fold.make`), "접기 영역 풀기"(`fold.remove`), "접기 영역 보기 ✓"(`view.bands`, 이름 띠 켜고 끄기). 키로만 실행하는 "펴기"(`view.fold.open`, `zo`)와 "접기"(`view.fold.close`, `zc`)는 커맨드 팔레트에도 있습니다. 모두 접기 · 모두 펴기([[01-requirements#^r-edit|R-EDIT-17]], `P2`)는 아직 없습니다.
-- 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기는 실행 취소 한 단계이고, 이름 띠 켜고 끄기는 실행 취소 스택에 저장하지 않습니다([[0048-folding-is-undoable|ADR-0048]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
+- 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기와 이름 띠 켜고 끄기는 하나가 실행 취소 한 단계입니다([[0048-folding-is-undoable|ADR-0048]], [[ux-decisions#UN2. 이름 띠 보기도 실행 취소의 대상|UN2]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
 - 메뉴 항목 옆에는 키를 표시합니다. 키가 둘이면(`dd`와 `Ctrl`+`X`) 표준 키를 표시하고, Vim 키는 커맨드 팔레트와 단축키 목록에서 보입니다.
 
 ### 5.2 툴바

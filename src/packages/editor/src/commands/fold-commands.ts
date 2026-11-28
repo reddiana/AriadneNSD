@@ -1,7 +1,7 @@
 // The fold commands (interaction rules "접기 · 펼치기", R-EDIT-13, R-EDIT-14, R-EDIT-15,
 // R-EDIT-16): fold and unfold, open call blocks in place, make and remove fold regions, and show
-// or hide the name bands. Folding and opening change the view state only, so they are not undo
-// steps (UX Q9); making and removing a region changes the content.
+// or hide the name bands. Folding, opening and the name bands change the view state only; each
+// change is an undo step (UX UN1, UN2). Making and removing a region changes the content.
 import type { Content, Id, Path, Seq, View } from '@ariadne-nsd/core';
 import {
   foldRange,

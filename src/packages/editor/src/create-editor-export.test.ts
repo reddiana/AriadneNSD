@@ -146,17 +146,21 @@ describe('the result symbol (interaction rules "호출 블록")', () => {
     expect(handle.status().dirty).toBe(false);
   });
 
-  it('T-1607 · M87 F5: changing it is one undo step; undo and redo bring it back, the name bands stay', () => {
+  it('T-1607 · M87 F5 · UX UN2: changing it is one undo step, and so is hiding the name bands; undo and redo bring each back', () => {
     const { handle } = make();
     handle.setDocumentSetting(documentSettingIds.resultSymbol, '=');
     expect(handle.state().undo).toHaveLength(1);
     handle.commands.run('view.bands');
     expect(handle.state().doc.view.bands).toBe(false);
-    expect(handle.state().undo).toHaveLength(1);
+    expect(handle.state().undo).toHaveLength(2);
+    handle.commands.run('edit.undo');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
+    expect(handle.state().doc.view.bands).toBe(true);
     handle.commands.run('edit.undo');
     expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('←');
-    expect(handle.state().doc.view.bands).toBe(false);
-    expect(handle.status().dirty).toBe(true);
+    // Back as saved.
+    expect(handle.status().dirty).toBe(false);
+    handle.commands.run('edit.redo');
     handle.commands.run('edit.redo');
     expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
     expect(handle.state().doc.view.bands).toBe(false);

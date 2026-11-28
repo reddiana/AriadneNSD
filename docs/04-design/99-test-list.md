@@ -713,7 +713,7 @@ id. Vitest · 테스트 5개.
 | T-1426 | fold undo: f로 접은 것을 u가 펴고 U가 다시 접으며, 저장한 때로 돌아오면 문서는 바뀌지 않은 것이 된다 | - |
 | T-1427 | fold undo: 접은 뒤의 편집이 먼저 되돌려지고 접힘은 남으며, 다음 실행 취소가 편다 | - |
 | T-1428 | fold undo: 만들자마자 접힌 접기 영역은 실행 취소 한 번에 펴진 모습으로 사라진다 | - |
-| T-1429 | fold undo: 이름 띠 보기는 실행 취소 단계가 아니고, 접기를 되돌려도 그대로 남는다 | - |
+| T-1429 | fold undo: showing and hiding the name bands is one undo step, undone and redone on its own | [[ux-decisions\|UX UN2]] |
 | T-1430 | fold undo: 보기 모드에서 접으면 실행 취소 단계가 생기지 않고 문서는 저장한 그대로다 | - |
 | T-1431 | fold undo: 실행 취소 뒤에 접으면 다시 실행할 것이 비워진다 | - |
 
@@ -2247,7 +2247,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1039 | 다시 끄면 텍스트로 저장하고 설정 키를 기록하지 않는다 | - |
 | T-1040 | true · false가 아닌 값은 받지 않는다 | - |
 | T-1373 | 파일에 저장되는 문서 설정이다 | [[01-requirements#^r-blk\|R-BLK-08]] |
-| T-1607 | M87 F5: 바꾸는 것은 실행 취소 한 단계이고, 실행 취소 · 다시 실행으로 되돌아오며, 이름 띠는 그대로다 | - |
+| T-1607 | M87 F5 · UX UN2: changing it is one undo step, and so is hiding the name bands; undo and redo bring each back | - |
 | T-1374 | 같은 기호, 허용되지 않는 값, 보기 전용 문서에서는 아무것도 바뀌지 않는다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-1041 | 파일을 열 때 그 이름과 함께 알린다 | - |
 | T-1042 | 그런 파일이 열린 문서를 바꿀 때도 알린다 | - |

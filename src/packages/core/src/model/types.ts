@@ -256,8 +256,7 @@ export type SiteFold = {
 // 2. View state
 
 /**
- * The view state. Folding, opening and the result symbol are undo steps; the bands are not
- * (ADR-0048, M87 F5). It refers to content ids weakly: dangling ids are not errors, layout ignores them,
+ * The view state. Each change of it is an undo step (ADR-0048, M87 F5, UX UN2). It refers to content ids weakly: dangling ids are not errors, layout ignores them,
  * and serialization writes only existing ids (01-model 2).
  */
 export type View = {

@@ -42,7 +42,7 @@ import { shownIndexOf } from '../model/shown-index';
 import type { CallPart, Caret, EditField, EditorState, Extracted } from '../state/editor-state';
 import {
   clampZoom,
-  isSameFolding,
+  isSameView,
   pushUndo,
   stepHistory,
   withContent,
@@ -422,9 +422,8 @@ export class EditorSession {
   }
 
   /**
-   * Changes the view state: what is folded, opened and banded (01-model 2). A change of what is
-   * folded or opened is one undo step (ADR-0048), and so is one of the result symbol (M87 F5);
-   * the name bands are not.
+   * Changes the view state: what is folded, opened and banded, and the result symbol (01-model 2).
+   * A change of any of them is one undo step (ADR-0048, M87 F5, UX UN2).
    * Either way the document is changed (unsaved). While it is view only (03-editor 6.4) nothing
    * is a step and the document stays as saved. The selection becomes `selection` (when given),
    * dropped if it is no longer shown.
@@ -440,12 +439,10 @@ export class EditorSession {
     );
     // Folding, unfolding, opening and closing is one undo step (ADR-0048). Opening a call block
     // for the first time copies the Method's fold regions there: the same step (ADR-0047).
-    // The result symbol is undone like the header shape and the theme (M87 F5).
+    // The result symbol is undone like the header shape and the theme (M87 F5), and so are the
+    // name bands (UX UN2).
     const isStep =
-      !this.current.readOnly &&
-      (isCopied ||
-        !isSameFolding(this.current.doc.view, doc.view) ||
-        doc.view.resultSymbol !== this.current.doc.view.resultSymbol);
+      !this.current.readOnly && (isCopied || !isSameView(this.current.doc.view, doc.view));
     this.setState({
       ...state,
       doc,

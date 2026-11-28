@@ -274,15 +274,21 @@ describe('folding and unfolding are undo steps (UX Q9a, ADR-0048)', () => {
     expect(engine.session.state.undo).toHaveLength(0);
   });
 
-  it('T-1429: fold undo: the name bands are no undo step, and undoing a fold keeps them as they are', () => {
+  it('T-1429 · UX UN2: fold undo: showing and hiding the name bands is one undo step, undone and redone on its own', () => {
     const engine = testEngine(ifContent);
     select(engine, 'b2');
     engine.keys('f');
     engine.session.runCommand('view.bands');
     expect(engine.session.state.doc.view.bands).toBe(false);
-    expect(engine.session.state.undo).toHaveLength(1);
+    expect(engine.session.state.undo).toHaveLength(2);
+    engine.keys('u');
+    expect(engine.session.state.doc.view.bands).toBe(true);
+    expect(folded(engine)).toEqual(['r1']);
     engine.keys('u');
     expect(folded(engine)).toEqual([]);
+    engine.session.runCommand('edit.redo');
+    engine.session.runCommand('edit.redo');
+    expect(folded(engine)).toEqual(['r1']);
     expect(engine.session.state.doc.view.bands).toBe(false);
   });
 
