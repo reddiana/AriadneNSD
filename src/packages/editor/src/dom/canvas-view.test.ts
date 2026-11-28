@@ -819,14 +819,14 @@ describe('CanvasView: the wheel (interaction rules 2)', () => {
     expect(made.runs).toEqual([]);
   });
 
-  it('T-1647 · UX WH1: over the empty canvas the wheel scrolls, also with something selected', () => {
+  it('T-1652 · UX WH1: over the empty canvas the wheel scrolls, also with something selected', () => {
     const made = make(three());
     made.engine.select(selectBlock(made.engine.session.index(), 'b2'));
     expect(wheel(made.canvas, { deltaY: 100, ...nowhere }).defaultPrevented).toBe(false);
     expect(made.runs).toEqual([]);
   });
 
-  it('T-1648 · UX WH1: up from the top and down from the bottom selection scroll the canvas', () => {
+  it('T-1653 · UX WH1: up from the top and down from the bottom selection scroll the canvas', () => {
     const made = make(contentOf([proc('b1'), whileBlock('b2', [proc('b3'), proc('b4')])]));
     const turn = (id: string, deltaY: number): boolean => {
       made.engine.select(selectBlock(made.engine.session.index(), id));
@@ -1052,7 +1052,7 @@ describe('CanvasView: dragging blocks (03-editor 3.2, R-EDIT-09)', () => {
     expect(made.engine.session.state.undo).toHaveLength(3);
   });
 
-  it('T-1650 · UX PH1: over a parallel branch’s part of the top band, that part and the branch cell get the hover outline', () => {
+  it('T-1655 · UX PH1: over a parallel branch’s part of the top band, that part and the branch cell get the hover outline', () => {
     const made = make(
       contentOf([
         {
@@ -1080,7 +1080,7 @@ describe('CanvasView: dragging blocks (03-editor 3.2, R-EDIT-09)', () => {
     );
   });
 
-  it('T-1649 · UX DF4: dragging a folded row moves all the blocks of its branch, in one undo step', () => {
+  it('T-1654 · UX DF4: dragging a folded row moves all the blocks of its branch, in one undo step', () => {
     const made = make(
       contentOf([
         ifBlock('b1', branch('r1', [proc('b2'), proc('b3')]), branch('r2', [proc('b4')])),

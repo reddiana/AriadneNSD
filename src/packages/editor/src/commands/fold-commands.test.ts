@@ -203,7 +203,7 @@ describe('fold regions (R-EDIT-14, R-EDIT-23)', () => {
     expect(selected(engine)).toEqual(['b1']);
   });
 
-  it('T-1637 · UX FM1: with the name bands off, one move leaves a region and trades places; with them on it takes two', () => {
+  it('T-1642 · UX FM1: with the name bands off, one move leaves a region and trades places; with them on it takes two', () => {
     const blocks = contentOf([proc('b1'), proc('b2'), proc('b3')]);
     const order = (engine: TestEngine): ReadonlyArray<string> =>
       engine.content().diagrams[0]?.body.blocks.map((block) => block.id) ?? [];

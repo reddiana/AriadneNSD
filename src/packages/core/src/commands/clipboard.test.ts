@@ -161,7 +161,7 @@ describe('paste a copied diagram (UX HC1)', () => {
     diagram('d3', method('swap'), [proc('b5')]),
   );
 
-  it('T-1638 · UX HC1: it goes after the selected diagram of its kind under a new name, keeping what it receives', () => {
+  it('T-1643 · UX HC1: it goes after the selected diagram of its kind under a new name, keeping what it receives', () => {
     const result = runOk(pasteDiagram, content, { diagram: sort, after: 'd2' });
     const [made = ''] = result.touched;
     expect(diagramIds(result.content)).toEqual(['d1', 'd2', made, 'd3']);
@@ -170,14 +170,14 @@ describe('paste a copied diagram (UX HC1)', () => {
     expect(diagramOf(again.content, again.touched[0] ?? '').head).toEqual(method('sort 3(a)'));
   });
 
-  it('T-1639 · UX HC1: beside a diagram of the other kind or with nothing selected, it goes at the end of its kind', () => {
+  it('T-1644 · UX HC1: beside a diagram of the other kind or with nothing selected, it goes at the end of its kind', () => {
     for (const after of ['d1', null]) {
       const result = runOk(pasteDiagram, content, { diagram: sort, after });
       expect(diagramIds(result.content)).toEqual(['d1', 'd2', 'd3', result.touched[0]]);
     }
   });
 
-  it('T-1640 · UX HC1: its calls to itself call the copy; other calls find the Method by name or keep the name', () => {
+  it('T-1645 · UX HC1: its calls to itself call the copy; other calls find the Method by name or keep the name', () => {
     const names = new Map([['d3', 'swap']]);
     const here = runOk(pasteDiagram, content, { diagram: sort, after: null, names });
     const made = here.touched[0] ?? '';

@@ -564,7 +564,7 @@ describe('paste on a branch label (UX BL2)', () => {
     }
   });
 
-  it('T-1641 · UX BL2: right of the default the branch goes left of it, with the same notice as inserting', async () => {
+  it('T-1646 · UX BL2: right of the default the branch goes left of it, with the same notice as inserting', async () => {
     const engine = testEngine(threeArms());
     engine.select({ kind: 'branchLabel', branch: 'o1' });
     engine.clipboard.data = copied;
@@ -574,7 +574,7 @@ describe('paste on a branch label (UX BL2)', () => {
     expect(notice(engine)).toBe('notice.defaultStaysLast');
   });
 
-  it('T-1642 · UX BL2: on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back', async () => {
+  it('T-1647 · UX BL2: on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back', async () => {
     const engine = engineAt('label');
     const before = engine.content();
     engine.clipboard.data = copied;
@@ -588,7 +588,7 @@ describe('paste on a branch label (UX BL2)', () => {
     expect(engine.content()).toBe(before);
   });
 
-  it('T-1643 · UX BL2: on a parallel branch the new branch is only selected; a cut branch can be put back beside another', async () => {
+  it('T-1648 · UX BL2: on a parallel branch the new branch is only selected; a cut branch can be put back beside another', async () => {
     const engine = testEngine(
       contentOf([
         {
@@ -637,7 +637,7 @@ describe('copy on a header and paste of a diagram (UX HC1)', () => {
     return engine;
   };
 
-  it('T-1644 · UX HC1: copy on a header takes the whole diagram, as indented text and as model JSON', async () => {
+  it('T-1649 · UX HC1: copy on a header takes the whole diagram, as indented text and as model JSON', async () => {
     const engine = atMethod();
     const before = engine.content();
     engine.run('edit.copy');
@@ -649,7 +649,7 @@ describe('copy on a header and paste of a diagram (UX HC1)', () => {
     expect(notice(engine)).toBe('reason.notOnHead');
   });
 
-  it('T-1645 · UX HC1: pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected', async () => {
+  it('T-1650 · UX HC1: pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected', async () => {
     for (const [place, command] of [
       ['head', 'edit.paste'],
       ['head', 'edit.pasteBefore'],
@@ -674,7 +674,7 @@ describe('copy on a header and paste of a diagram (UX HC1)', () => {
 });
 
 describe('paste with nothing selected (UX PS1)', () => {
-  it('T-1646 · UX PS1: the blocks go at the end of the current diagram and are selected', async () => {
+  it('T-1651 · UX PS1: the blocks go at the end of the current diagram and are selected', async () => {
     const engine = testEngine(sample());
     engine.select(selectionAt(engine.content(), 'p6'));
     engine.select(null);

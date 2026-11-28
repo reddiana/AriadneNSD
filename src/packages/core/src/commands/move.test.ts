@@ -26,14 +26,14 @@ describe('move up and down with the name bands off (UX FM1)', () => {
   const blocks = (...folds: ReturnType<typeof region>[]) =>
     contentOf(seq([proc('b1'), proc('b2'), proc('b3'), proc('b4')], folds));
 
-  it('T-1633 · UX FM1: stepping out of a hidden region and trading places happen at once', () => {
+  it('T-1638 · UX FM1: stepping out of a hidden region and trading places happen at once', () => {
     const content = blocks(region('f1', 'b1', 'b2'));
     const down = runOk(move, content, { target: range('b2'), direction: 'down', hiddenFolds });
     expect(idsIn(down.content, 'd1')).toEqual(['b1', 'b3', 'b2', 'b4']);
     expect(foldsIn(down.content, 'd1')).toEqual(['f1:b1-b1']);
   });
 
-  it('T-1634 · UX FM1: blocks trade places with one block of a hidden region at a time, in it only while between its blocks', () => {
+  it('T-1639 · UX FM1: blocks trade places with one block of a hidden region at a time, in it only while between its blocks', () => {
     const content = blocks(region('f1', 'b2', 'b3'));
     const args = { target: range('b1'), direction: 'down', hiddenFolds } as const;
     const first = runOk(move, content, args);
@@ -47,7 +47,7 @@ describe('move up and down with the name bands off (UX FM1)', () => {
     expect(back.content).toEqual(first.content);
   });
 
-  it('T-1635 · UX FM1: nested hidden regions are left in one press, and a drawn folded region is jumped over whole', () => {
+  it('T-1640 · UX FM1: nested hidden regions are left in one press, and a drawn folded region is jumped over whole', () => {
     const nested = blocks(
       region('f1', 'b1', 'b2'),
       region('f2', 'b2', 'b2'),
@@ -57,7 +57,7 @@ describe('move up and down with the name bands off (UX FM1)', () => {
     expect(idsIn(result.content, 'd1')).toEqual(['b1', 'b3', 'b4', 'b2']);
   });
 
-  it('T-1636 · UX FM1: at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once', () => {
+  it('T-1641 · UX FM1: at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once', () => {
     const top = blocks(region('f1', 'b3', 'b4'));
     expectRefused(move, top, { target: range('b4'), direction: 'down', hiddenFolds }, 'atBottom');
     const inner = contentOf([
