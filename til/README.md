@@ -78,6 +78,7 @@ TIL은 Today I Learned("오늘 배운 것")의 줄임말로, 개발자가 배운
 
 ### 작업 환경
 
+- [[orchestrator-and-sub-sessions]] — 허브와 곁 세션: AI 에이전트 여럿을 부리는 흔한 구조 orchestrator-workers(supervisor, hub-and-spoke)와 계층형, 우리 세션 운영 (2026-11-28)
 - [[lock-screen-and-sleep]] — 화면 잠금과 절전의 차이, 긴 작업을 맡기고 자리를 비울 때 (2026-11-19)
 - [[video-for-sharing]] — 홍보용 동영상: MP4와 WebM, GitHub README의 동영상, LinkedIn 글의 빈 줄 (2026-11-22)
 - [[web-analytics]] — 정적 사이트의 방문 수 세기: 볼 수 있는 숫자들, 쿠키 없는 집계, URL에서 무엇이 나가나 (2026-11-23)
