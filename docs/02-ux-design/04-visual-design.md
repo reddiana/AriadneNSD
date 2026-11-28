@@ -20,7 +20,7 @@ updated: 2026-11-27
 
 > [!info] 읽는 법
 > - 바쁘면 **1장**(원칙), **7장**(상태 표), **10장**(접근성 검증)을 보세요.
-> - 그림은 화면에서 찍거나 스크립트로 그린 것입니다: `src/apps/web/doc-shots/ux-design.spec.ts`(화면과 그림의 캡처, 앱에서 찍음. 다시 찍기 `pnpm --filter @ariadne-nsd/web doc-shots`), `journal/assets/2026-10-17-color-check.py`(대비 · 색각 · 명도 계산). 해부도는 SVG를 직접 고칩니다
+> - 그림은 화면에서 찍거나 스크립트로 그린 것입니다: `src/apps/web/doc-shots/ux-design.spec.ts`(화면과 그림의 캡처, 앱에서 찍음. 다시 찍기 `pnpm --filter @ariadne-nsd/web doc-shots`), `journal/assets/2026-10-17-color-check.py`(대비 · 색각 · 명도 계산). 해부도는 SVG를 직접 수정합니다
 > - **용어.**
 > 	- **대비율**은 WCAG 2.2의 contrast ratio(상대 휘도의 비)입니다. 텍스트는 4.5:1(AA, 1.4.3), 뜻을 가진 선과 도형은 3:1(1.4.11)이 기준입니다.
 > 	- **테마**는 그림의 색 묶음입니다. 문서마다 선택하고 파일과 함께 갑니다. 밝은 테마 · 어두운 테마 · 고대비 · 흑백 인쇄의 넷이 있습니다. **화면 색**은 툴바 · 캔버스 배경 같은 편집 화면의 색이고, 테마와 따로 갑니다(2장, 8장).
@@ -36,7 +36,7 @@ updated: 2026-11-27
 
 ### 원칙 1. 로직이 상자보다 먼저 읽힌다
 
-NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. 블록의 배경은 흰 종이와 1.03 ~ 1.26:1밖에 벌어지지 않는 옅은 색으로 두고(가장 진한 배경인 펴 보기의 띠도 1.42:1), 블록 텍스트는 그 위에서 13.9:1 이상입니다. 그림에서 가장 진한 것은 언제나 텍스트입니다.
+NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. 블록의 배경은 흰 종이와 1.03 ~ 1.26:1밖에 벌어지지 않는 옅은 색으로 두고(가장 진한 배경인 펴 보기의 띠도 1.42:1), 블록 텍스트는 그 위에서 13.9:1 이상입니다. 그림에서 가장 진한 것은 항상 텍스트입니다.
 
 - 근거: 종류별 진한 색(Scratch식)과 옅은 단색(EasyCODE식)을 같은 그림으로 비교했고, 진한 색은 "글자보다 상자가 먼저 보인다"는 이유로 떨어졌습니다 → [[dr-0003-default-visual-style|DR-0003]]
 - 확인: 블록 배경 위의 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#151a22;border:1px solid #8888;vertical-align:-0.1em"></span> `text.primary` 대비율이 그 배경과 종이의 대비율보다 열 배 이상 높은가(13.9 ÷ 1.26 ≈ 11). 보조 텍스트와 펴 보기의 띠는 이 확인에 넣지 않습니다(10.1절).
@@ -50,10 +50,10 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | 블록 | 모양 (의미 전달) | 배경 (보조) |
 | --- | --- | --- |
 | 처리 | 직사각형 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
-| If | 조건 칸에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 분기 라벨(처음은 "참" · "거짓"으로 그림 문구의 언어를 따름. 독일어는 "ja" · "nein" → [[ux-decisions#DL1. 독일어의 그림 문구\|DL1]]. 편집할 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
+| If | 조건 칸에 V자 빗금(꼭짓점이 아래인 삼각형), 아래 양쪽 구석에 분기 라벨(기본값은 "참" · "거짓"으로 그림 문구의 언어를 따름. 독일어는 "ja" · "nein" → [[ux-decisions#DL1. 독일어의 그림 문구\|DL1]]. 편집할 수 있음) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | Case | 조건 칸에 긴 빗금과 짧은 빗금, 분기마다 세로선과 분기 라벨. 분기 라벨은 칸의 왼쪽에 붙이고, **default 분기의 라벨만 오른쪽에** 붙인다(짧은 빗금 아래 오른쪽 구석 → [[ux-decisions#Q25. Case의 default 이름의 자리\|Q25]]). 코드에서 가져와 default가 없으면 빈 default 칸(`∅`)을 그려 두고, default만 있으면 짧은 빗금 하나만 그린다(→ [[ux-decisions#CD1. default가 없는 Case\|CD1]] · [[ux-decisions#CD2. default만 있는 Case\|CD2]]) | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f6ebdc;border:1px solid #8888;vertical-align:-0.1em"></span> `block.branch` |
 | While / Do-While | 왼쪽 띠 안에 본문. 조건 칸이 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
-| 호출 블록 | 양옆 안쪽의 세로 이중선, 언제나 실선. Method가 없는 호출 블록(이름을 적는 호출 블록, Method를 삭제하거나 헤더를 제거함)도 모양이 같다 → [[0049-call-without-method-is-named\|ADR-0049]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
+| 호출 블록 | 양옆 안쪽의 세로 이중선, 항상 실선. Method가 없는 호출 블록(이름을 적는 호출 블록, Method를 삭제하거나 헤더를 제거함)도 모양이 같다 → [[0049-call-without-method-is-named\|ADR-0049]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
 | For | While과 같은 모양(왼쪽 띠 안에 본문, 조건 칸이 위). While과는 **조건 칸의 텍스트로만** 구분한다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 무한 반복 | 위 · 왼쪽 · 아래에 빈 띠, 띠에는 텍스트가 없음. 위 · 아래 띠의 두께는 왼쪽 띠의 폭(`size.loop-strip`, 22px)과 같고, 본문의 오른쪽은 바깥 틀에 붙는다. DIN 66261의 그림 그대로다 → [[ux-decisions#EL1. 무한 반복 블록\|EL1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 탈출 | 왼쪽에 꼭짓점이 왼쪽을 향하는 쐐기(선이 (14px, 위) → (0, 가운데) → (14px, 아래)), 텍스트는 쐐기 오른쪽. DIN 66261의 Aussprung → [[ux-decisions#XB1. 탈출 블록\|XB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
@@ -61,11 +61,11 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | Event 헤더 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 헤더 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("호출하는 것과 호출되는 것"이라 같은 색) |
 
-- **빈 분기:** If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 보입니다. 저장되는 그림에도 들어가고, 텍스트를 적으면 사라집니다. 기호는 도형(path)으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^r-lay|R-LAY-09]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
-- **헤더 모양 "제목처럼":** 문서 설정에서 헤더 모양을 "제목처럼"으로 선택하면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 텍스트 `Event` · `Method` 라벨을, 아래에 가는 줄 하나를 둡니다. 배경은 칠하지 않습니다(종이 그대로). 헤더는 여전히 블록이라 선택하고 편집할 수 있습니다. 타이포그래피는 4.2절, 치수는 5장에 있습니다. 문서 설정의 자리는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
+- **빈 분기:** If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅`를 `text.muted`로 표시합니다. 저장되는 그림에도 들어가고, 텍스트를 입력하면 사라집니다. 기호는 도형(path)으로 그립니다(2장). 반복의 빈 본문에는 넣지 않습니다. → [[01-requirements#^r-lay|R-LAY-09]], [[ux-decisions#E1. 빈 갈래의 기호|E1]]
+- **헤더 모양 "제목처럼":** 문서 설정에서 헤더 모양을 "제목처럼"으로 선택하면 Event 모자와 Method 아치를 그리지 않습니다. 이름을 굵게 쓰고, 그 위에 흐린 작은 텍스트 `Event` · `Method` 라벨을, 아래에 가는 줄 하나를 둡니다. 배경은 칠하지 않습니다(종이 그대로). 헤더는 여전히 블록이라 선택하고 편집할 수 있습니다. 타이포그래피는 4.2절, 치수는 5장에 있습니다. 문서 설정의 위치는 [[01-model]]의 `settings.headStyle`입니다. → [[01-requirements#^r-lay|R-LAY-10]], [[ux-decisions#H1. 머리 모양 제목처럼|H1]]
 
   > [!example] 헤더 모양 설정: "모자 · 아치"(왼쪽)와 "제목처럼"(오른쪽)
-  > 같은 퀵소트입니다. 이 문서의 다른 그림은 모두 "제목처럼"으로 그렸습니다. 새 문서의 처음 값과 고르는 법은 [[02-interaction-rules#헤더 모양]]에 있습니다.
+  > 같은 퀵소트입니다. 이 문서의 다른 그림은 모두 "제목처럼"으로 그렸습니다. 새 문서의 기본값과 고르는 법은 [[02-interaction-rules#헤더 모양]]에 있습니다.
   >
   > ![[visual-design-head-shape.png|380]] ![[visual-design-head-title.png|380]]
 
@@ -74,15 +74,15 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 ### 원칙 3. 문서의 표시와 편집의 표시는 다른 레이어다
 
-그림 위의 모든 표시는 **문서 레이어**(파일에 저장됨)와 **편집 레이어**(화면에만 있음) 가운데 하나에 속합니다. 사용자는 화면을 보고 언제나 "이것이 파일에 들어가는가"를 알 수 있어야 합니다. 그래서 이렇게 약속합니다.
+그림 위의 모든 표시는 **문서 레이어**(파일에 저장됨)와 **편집 레이어**(화면에만 있음) 가운데 하나에 속합니다. 사용자는 화면을 보고 항상 "이것이 파일에 들어가는가"를 알 수 있어야 합니다. 그래서 이렇게 약속합니다.
 
 > [!important] 레이어의 약속
-> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 레이어에 둘(펴진 접기 영역은 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500`, 펴 보인 호출 블록은 보라 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.500`, 둘 다 맨 위에 띠), 편집 레이어에 하나(선택한 것 · 인라인 에디터 · 블록 위 드롭 표시, 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`, 띠 없음)뿐이다. 그 밖의 문서 레이어의 색(1px 구조선의 회청, 키워드의 파랑 텍스트)은 두르는 표시가 아니므로 편집 레이어와 헷갈리지 않는다.
+> **2px 이상의 선으로 무언가를 두르는 표시**는 문서 레이어에 둘(펴진 접기 영역은 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500`, 펴 보인 호출 블록은 보라 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `violet.500`, 둘 다 맨 위에 띠), 편집 레이어에 하나(선택한 요소 · 인라인 에디터 · 블록 위 드롭 표시, 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600`, 띠 없음)뿐이다. 그 밖의 문서 레이어의 색(1px 구조선의 회청, 키워드의 파랑 텍스트)은 두르는 표시가 아니므로 편집 레이어와 헷갈리지 않는다.
 
 | 구분하는 것 | 펴진 접기 영역 (문서 레이어) | 선택 하이라이트 (편집 레이어) |
 | --- | --- | --- |
 | 색 | 파랑 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `blue.500` | 주황 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `orange.600` |
-| 밝기 | L* 51 | L* 51. 흑백으로는 같음(대비 1.01:1). 그래서 색상(서로 반대색)과 모양(띠, 자리)으로 구분한다. 적록 · 청황 색각 이상에서도 파랑과 주황은 구분된다 |
+| 밝기 | L* 51 | L* 51. 흑백으로는 같음(대비 1.01:1). 그래서 색상(서로 반대색)과 모양(띠, 위치)으로 구분한다. 적록 · 청황 색각 이상에서도 파랑과 주황은 구분된다 |
 | 모양 | 맨 위에 이름 띠가 붙음 | 띠 없는 실선 상자 |
 | 인쇄 | 인쇄됨 | 인쇄되지 않음. 그래서 흑백 인쇄 팔레트에서 둘이 같은 검정이 되어도 문제없음 |
 
@@ -103,15 +103,15 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 
 ### 원칙 5. 두드러짐은 지금의 중요도 순서를 따른다
 
-화면에서 눈에 띄는 순서는 "사용자가 지금 다루는 것 → 사용자가 묶거나 펴 본 것 → 구조"입니다. 두드러짐은 색의 채도, 선 굵기, 선 모양을 함께 써서 만듭니다. 같은 두드러짐의 표시가 다른 뜻을 갖지 않습니다. 선 굵기의 표는 6장에 있습니다.
+화면에서 눈에 띄는 순서는 "사용자가 지금 다루는 것 → 사용자가 묶거나 펴 본 것 → 구조"입니다. 시각적 위계는 색의 채도, 선 굵기, 선 모양을 함께 써서 만듭니다. 같은 강조 표시가 다른 뜻으로 쓰이지 않습니다. 선 굵기의 표는 6장에 있습니다.
 
-- 펴 보인 호출 블록은 펴진 접기 영역과 두드러짐이 같습니다. 모양이 같고 색(보라 · 파랑)으로 구분합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]], 시안 M60: https://claude.ai/artifact/Gwz1JEezrZMY9w2pYKYNi6, 사본 `journal/assets/2026-11-18-call-peek-frame-study.html`
+- 펴 보인 호출 블록은 펴진 접기 영역과 시각적 위계가 같습니다. 모양이 같고 색(보라 · 파랑)으로 구분합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]], 시안 M60: https://claude.ai/artifact/Gwz1JEezrZMY9w2pYKYNi6, 사본 `journal/assets/2026-11-18-call-peek-frame-study.html`
 - 펴 보인 곳 안의 접기 영역은 보통 접기 영역과 **똑같이** 그립니다. 같은 것은 어디서나 같게 보여야 한다는 메인테이너의 결정입니다([[ux-decisions#4.1 호출 블록 펴 보기 (R6)|P1]], 시안 M11).
 - 확인: 그림을 흐리게 보았을 때(블러 테스트) 선택한 것 → 접기 영역 · 펴 보인 호출 블록 → 나머지 순서로 보이는가.
 
 ### 원칙 6. 테마는 색만 바꾸고 기하는 바꾸지 않는다
 
-테마를 바꿔도 블록의 크기와 자리는 한 픽셀도 바뀌지 않습니다. 그래서 테마는 git 기록에 그림의 이동을 남기지 않고, 다른 사람이 다른 테마로 열어도 그림의 모양은 같습니다([[01-requirements#^r-nfr|R-NFR-02]]).
+테마를 바꿔도 블록의 크기와 위치는 한 픽셀도 바뀌지 않습니다. 그래서 테마는 git 기록에 그림의 이동을 남기지 않고, 다른 사람이 다른 테마로 열어도 그림의 모양은 같습니다([[01-requirements#^r-nfr|R-NFR-02]]).
 
 - 그래서 **글꼴은 테마에 넣지 않습니다.** 블록의 폭은 번들한 글꼴의 문자 폭 표로 계산하므로, 글꼴이 바뀌면 레이아웃이 바뀝니다([[0026-bundled-font-metrics|ADR-0026]]). 문서 설정인 "블록 텍스트의 언어"([[01-requirements#^r-lay|R-LAY-06]])도 글꼴을 바꾸지 않고 구문 강조의 색만 정합니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 그래서 **선 굵기도 테마에 넣지 않습니다.** 접기 영역 테두리의 굵기는 안쪽에 겹친 테두리가 들어가는 깊이(`size.nest-inset`)를 정하므로, 굵기가 바뀌면 레이아웃이 바뀝니다.
@@ -238,9 +238,9 @@ flowchart LR
 | `ui.accent` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#1f3fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `#1f3fb8` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#a8bdff;border:1px solid #8888;vertical-align:-0.1em"></span> `#a8bdff` | 포커스, 상태 표시줄의 모드, 캔버스 포커스, 기본 버튼, 링크 |
 | `ui.warn` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7f3c06;border:1px solid #8888;vertical-align:-0.1em"></span> `#7f3c06` | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#f5b97a;border:1px solid #8888;vertical-align:-0.1em"></span> `#f5b97a` | 키 힌트의 왼쪽 줄, 경고 알림 · 삭제 버튼의 글자 |
 
-고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.disabled`와 `ui.line` 4.70 / 5.19 (패널 위), `ui.warn` 7.27 / 10.54 (배경 위). `ui.disabled`는 쓸 수 없는 항목의 글자라 WCAG의 대비 기준에서 빠지므로 흐린 정도를 보이는 값이고(보통 화면 2.60 / 2.90), 고대비에서는 `ui.line`과 같은 값으로 읽을 수 있게 합니다 → [[ux-decisions#DD1. 흐린 메뉴 항목과 까닭 툴팁|DD1]]. 나머지 텍스트는 모두 7:1을 넘습니다.
+고대비 화면 색의 대비율(밝은 / 어두운): `ui.text` 21.00 / 16.70, `ui.muted` 9.64 / 10.34 (패널 위), `ui.accent` 8.53 / 9.06 (호버 배경 위 7.09 / 7.50), `ui.disabled`와 `ui.line` 4.70 / 5.19 (패널 위), `ui.warn` 7.27 / 10.54 (배경 위). `ui.disabled`는 비활성 항목의 글자라 WCAG의 대비 기준에서 빠지므로 흐린 정도를 보이는 값이고(보통 화면 2.60 / 2.90), 고대비에서는 `ui.line`과 같은 값으로 읽을 수 있게 합니다 → [[ux-decisions#DD1. 흐린 메뉴 항목과 까닭 툴팁|DD1]]. 나머지 텍스트는 모두 7:1을 넘습니다.
 
-편집 레이어의 표시는 종이 위에 그려지므로, 화면 색이 아니라 **테마의 종류**(종이가 밝은가 어두운가)를 따릅니다. 밝은 종이(밝은 테마 · 흑백 인쇄)에는 주황 `orange.600`을, 어두운 종이(어두운 테마 · 고대비)에는 더 밝은 주황을 씁니다. 인라인 에디터의 바탕과 글자도 그 테마의 `paper` · `text.primary`이고, 자리 표시 글자는 `text.muted`입니다 → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
+편집 레이어의 표시는 종이 위에 그려지므로, 화면 색이 아니라 **테마의 종류**(종이가 밝은가 어두운가)를 따릅니다. 밝은 종이(밝은 테마 · 흑백 인쇄)에는 주황 `orange.600`을, 어두운 종이(어두운 테마 · 고대비)에는 더 밝은 주황을 씁니다. 인라인 에디터의 바탕과 글자도 그 테마의 `paper` · `text.primary`이고, 플레이스홀더 텍스트는 `text.muted`입니다 → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
 
 | 토큰 | 밝은 종이 | 어두운 종이 | 역할 |
 | --- | --- | --- | --- |
@@ -348,7 +348,7 @@ flowchart LR
 | 그림의 모든 텍스트 | 고정폭 (기본 블록 글꼴) | 고정. 블록 텍스트의 언어와 상관없음 → [[0042-text-kind-keeps-block-font\|ADR-0042]] |
 | 화면 | 배포 대상의 기본 글꼴 | 배포 대상 (Obsidian이면 Obsidian의 글꼴) |
 
-- **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 적지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 포함하고 한자는 포함하지 않습니다 → [[0034-default-block-font|ADR-0034]]
+- **기본 블록 글꼴은 D2Coding**(고정폭, 보통 굵기)입니다. 블록 텍스트의 언어를 지정하지 않은 문서는 이 글꼴로 그립니다. 나중에 블록 텍스트의 언어나 문서마다 글꼴을 고르는 기능이 들어와도, 그 값이 없는 파일(MVP로 저장한 파일 전부)은 이 글꼴로 그립니다. 라틴 · 유럽 확장, 한글, 그리스, 키릴, 가나를 포함하고 한자는 포함하지 않습니다 → [[0034-default-block-font|ADR-0034]]
 - 번들한 글꼴 파일 안의 이름(패밀리 이름)은 `AriadneNSD Mono`입니다. "D2Coding"은 OFL의 예약 글꼴 이름(Reserved Font Name)이라, 문자를 추려 고친 글꼴에는 쓸 수 없습니다. 고정폭 글꼴의 관례(JetBrains Mono 등)를 따른 이름이고, 비례폭 글꼴을 번들하면 `AriadneNSD Sans`로 합니다 → [[dr-0019-bundled-font-name|DR-0019]]. 그림의 `font-family`는 이 이름 다음에 폴백 글꼴 목록을 적습니다 → [[01-file-format#2. 문서 구조]]
 - 글꼴은 하나뿐입니다. 언어를 바꾸면 색만 바뀌고 블록의 폭은 그대로라, MVP로 저장한 파일(일반 텍스트)도 그대로 열립니다 → [[0042-text-kind-keeps-block-font|ADR-0042]]
 - 블록 텍스트의 공백은 그대로 둡니다(`white-space: pre`). 코드의 들여쓰기가 그림에서도 보여야 합니다.
@@ -486,22 +486,22 @@ flowchart LR
 | 블록 하나를 선택함 | 블록 안쪽 3px 테두리 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 분기 라벨을 선택함 | 조건 칸 아래쪽의 분기 라벨 칸(높이 If `size.if-label` 16px, Case `size.case-label` 28px → [[02-layout#1.4 블록]]) 안쪽 3px 테두리. 블록 선택과 같은 모습 → [[02-interaction-rules#분기 라벨 선택]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
 | 여러 블록을 선택함 | 선택한 블록들을 감싸는 상자 하나. 블록 하나와 같은 모습 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.select` | 있음 |
-| 텍스트를 편집하는 중 | 블록 자리에 종이 색(테마의 `paper`) 입력 칸 + 2px 테두리 + 커서. 상태 표시줄 오른쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
+| 텍스트를 편집하는 중 | 블록 위치에 종이 색(테마의 `paper`) 입력 필드 + 2px 테두리 + 커서. 상태 표시줄 오른쪽에 `-- 편집 --` | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.field` | 있음 |
 | 영역을 선택하는 중 (`v` `V`) | 선택 테두리는 여러 블록을 선택한 것과 같음. 상태 표시줄 오른쪽에 `-- 영역 --` | 편집 (UI) | `edit.select` | 있음 |
-| 받아들일 수 없는 입력 | 입력 칸의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 중복될 때만 → [[02-interaction-rules#Event 헤더]]) |
+| 받아들일 수 없는 입력 | 입력 필드의 테두리가 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error`로 바뀌고, 상태 표시줄에 이유를 적음. 색에만 기대지 않음 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#b42318;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.error` | 있음 (헤더 이름이 중복될 때만 → [[02-interaction-rules#Event 헤더]]) |
 | 선택한 것이 없음 | 그림에는 표시가 없음. 캔버스 안쪽의 2px 포커스 테두리는 포커스가 올 때 · 빈 곳을 클릭할 때 · 아무 일도 하지 않은 키를 누를 때 1초 보이고 0.3초에 걸쳐 사라짐. 환경 설정으로 항상 보이게 할 수 있음 → [[ux-decisions#CF2. 캔버스의 포커스는 잠깐 보인다\|CF2]] | 편집 (UI) | `ui.accent` | 있음 |
 | 드래그 중 | 선택 하이라이트를 그리지 않는다(놓거나 취소하면 다시 그림 → [[ux-decisions#DI1. 드롭 표시와 선택\|DI1]]). 드래그하고 있는 블록은 제자리에서 불투명도 40%(툴바의 블록 아이콘을 드래그할 때는 제자리 표시 없음). 커서 곁에 블록의 텍스트 첫 줄(12px, `ui.panel` 배경, 1px `ui.line` 테두리, 반지름 4px) | 편집 | | 있음 |
 | 드롭 위치 | 블록 사이(본문의 맨 앞 · 맨 끝은 본문의 윗선 · 다이어그램의 아랫선)에 4px 가로줄. 밑에 위아래 2px씩의 테두리(8px 줄, 밝은 종이는 흰색, 어두운 종이는 종이 색)를 깐다. 줄은 블록의 양 끝보다 7px 바깥까지 가고, 양 끝에 꼭짓점이 안쪽을 향하는 채운 화살촉(테두리 1.5px) → [[ux-decisions#DI1. 드롭 표시와 선택\|DI1]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
-| 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록 안쪽 4px에 가운데를 둔 4px 실선 테두리. 밑에 같은 자리의 8px 테두리(드롭 위치와 같은 색)를 깔아 안팎 2px씩 떨어져 보인다. 칠과 점선은 없다. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
+| 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록 안쪽 4px에 가운데를 둔 4px 실선 테두리. 밑에 같은 위치의 8px 테두리(드롭 위치와 같은 색)를 깔아 안팎 2px씩 떨어져 보인다. 칠과 점선은 없다. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
 | 빈 분기 | If · Case · 병렬 처리의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
 | 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름. 글자가 다이어그램의 왼쪽 선에 붙어 있으므로 선택 테두리는 왼쪽 · 위 · 오른쪽으로 4px 넓혀(아래는 그대로) 글자를 덮지 않음 | 문서 | `text.*`, `line.structure` | 있음 |
-| 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 선택 바로 아래(선택의 왼쪽 끝에서 최대 24px 안쪽, 선택 아래 4px → [[ux-decisions#KA1. 키 힌트와 키보드 메뉴의 가로 위치\|KA1]])에 키 힌트. 맨 위에 첫 키와 묶음 이름(`ui.muted`), 그 아래에 한 줄에 하나씩 이어 누를 키(화면 글꼴 굵게 `ui.accent`)와 명령 이름(`ui.text`). 배경 `ui.panel`, 테두리 1px `ui.line`, 왼쪽 띠 3px `ui.warn`, 그림자. 아래에 자리가 모자라면 선택 위로 뒤집고, 창 밖으로 나가지 않게 밀어 넣음 → [[03-keymap]], [[ux-decisions#K3. 두 키 조합의 안내 자리 (다시)\|K3]] | 편집 (UI) | `ui.*` | 있음 |
+| 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 선택 바로 아래(선택의 왼쪽 끝에서 최대 24px 안쪽, 선택 아래 4px → [[ux-decisions#KA1. 키 힌트와 키보드 메뉴의 가로 위치\|KA1]])에 키 힌트. 맨 위에 첫 키와 묶음 이름(`ui.muted`), 그 아래에 한 줄에 하나씩 이어 누를 키(화면 글꼴 굵게 `ui.accent`)와 명령 이름(`ui.text`). 배경 `ui.panel`, 테두리 1px `ui.line`, 왼쪽 띠 3px `ui.warn`, 그림자. 아래에 공간이 모자라면 선택 위로 뒤집고, 뷰포트 밖으로 나가지 않게 밀어 넣음 → [[03-keymap]], [[ux-decisions#K3. 두 키 조합의 안내 자리 (다시)\|K3]] | 편집 (UI) | `ui.*` | 있음 |
 
 **겹칠 때의 규칙:**
 
-- 편집 레이어는 언제나 문서 레이어 위에 그립니다. 선택 하이라이트는 접기 영역과 펴 보인 호출 블록의 테두리 위에 옵니다.
-- 인라인 에디터가 열리면 그 블록의 선택 하이라이트는 그리지 않습니다(같은 자리에 두 테두리를 겹치지 않음) → [[ux-decisions#IE1. 인라인 에디터가 열린 동안의 선택 하이라이트|IE1]]
+- 편집 레이어는 항상 문서 레이어 위에 그립니다. 선택 하이라이트는 접기 영역과 펴 보인 호출 블록의 테두리 위에 옵니다.
+- 인라인 에디터가 열리면 그 블록의 선택 하이라이트는 그리지 않습니다(같은 위치에 두 테두리를 겹치지 않음) → [[ux-decisions#IE1. 인라인 에디터가 열린 동안의 선택 하이라이트|IE1]]
 - 드래그하는 동안(캔버스의 블록, 툴바의 블록 아이콘)에는 선택 하이라이트를 그리지 않습니다. 선택한 블록의 곁 · 위에 놓을 때 드롭 표시가 같은 주황의 선택 테두리에 묻히지 않게 하려는 것입니다 → [[ux-decisions#DI1. 드롭 표시와 선택|DI1]]
 - 펴 보인 블록도 선택할 수 있고 모습은 같습니다. 편집할 수 없다는 것은 보라색 테두리와 띠가 이미 알립니다 → [[02-interaction-rules#호출 블록 펴 보기]]
 
@@ -540,10 +540,10 @@ flowchart LR
 | 고대비 (High contrast) | `high-contrast` | 어두움 | 3.6절 | 텍스트 7:1, 선 7:1 |
 | 흑백 인쇄 (Black and white print) | `print` | 밝음 | 9.3절 | 21:1 |
 
-- 새 문서는 밝은 테마로 시작합니다. 테마를 바꾸는 것은 문서를 고치는 것이라 실행 취소의 대상이고, 저장하지 않은 표시(`●`)가 붙습니다. 저장되는 그림은 고른 테마 그대로입니다(화면 그대로 저장, [[0018-save-as-shown|ADR-0018]]) → [[ux-decisions#TM2. 테마는 문서 설정의 한 줄|TM2]], [[ux-decisions#TM3. 테마를 바꾸는 것은 실행 취소의 대상|TM3]]
-- 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 지원하지 않는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 그대로 두어 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
+- 새 문서는 밝은 테마로 시작합니다. 테마를 바꾸는 것은 문서를 수정하는 것이라 실행 취소의 대상이고, 저장하지 않은 표시(`●`)가 붙습니다. 저장되는 그림은 고른 테마 그대로입니다(화면 그대로 저장, [[0018-save-as-shown|ADR-0018]]) → [[ux-decisions#TM2. 테마는 문서 설정의 한 줄|TM2]], [[ux-decisions#TM3. 테마를 바꾸는 것은 실행 취소의 대상|TM3]]
+- 파일에는 테마의 **이름만** 적습니다(`settings.theme`). 지원하지 않는 이름(뒤 버전의 테마)으로 그린 문서는 밝은 테마로 그리고, 이름은 유지하므로 다시 저장해도 사라지지 않습니다 → [[0044-document-themes|ADR-0044]], [[01-file-format]]
 - **종류**(밝음 · 어두움)는 종이의 밝기입니다. 편집 레이어(선택 · 호버 · 드롭 위치 · 인라인 에디터)는 화면 색이 아니라 이 종류를 따릅니다(3.4절) → [[ux-decisions#TM4. 편집 레이어는 종이의 종류를 따른다|TM4]]
-- **흑백 인쇄**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나입니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 그대로 둡니다. 원칙 2 덕분에 뜻은 그대로입니다. 펴진 접기 영역과 펴 보인 호출 블록은 모양이 같아지고 띠의 글자(영역 이름과 호출문)로 구별합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]. 값은 9.3절에 있습니다.
+- **흑백 인쇄**([[01-requirements#^r-lay|R-LAY-08]]의 흑백 인쇄 모드)는 문서의 테마 하나입니다. 모든 배경은 흰색, 선과 텍스트는 검정, 구문 강조는 끄고, 점선과 테두리 굵기는 유지합니다. 원칙 2 덕분에 뜻은 그대로입니다. 펴진 접기 영역과 펴 보인 호출 블록은 모양이 같아지고 띠의 글자(영역 이름과 호출문)로 구별합니다 → [[ux-decisions#4.1 호출 블록 펴 보기 (R6)|Q15-a]]. 값은 9.3절에 있습니다.
 - **화면 색**(메뉴 바, 툴바, 캔버스 배경, 메뉴)은 테마에 넣지 않습니다. 사용자의 설정이고 파일에 저장되지 않습니다. 밝은 화면 색과 어두운 화면 색이 있고, Obsidian에서는 Obsidian의 밝기를, 데스크톱과 웹에서는 기기의 밝기를 따릅니다([[01-requirements#^r-obs-3|R-OBS-10]]). 그래서 어두운 화면에 밝은 테마의 종이가 놓일 수 있습니다(M17의 TH2 · 1번). 반대로 밝은 화면에 어두운 테마의 종이도 놓입니다.
 - **고대비**([[01-requirements#^r-nfr|R-NFR-07]])는 두 곳에 나뉩니다. 화면은 운영체제가 더 높은 대비를 요청할 때(`prefers-contrast: more`) 고대비 화면 색으로 바뀝니다(3.4절). 그림은 문서의 테마로 고대비를 고릅니다(3.6절). 운영체제의 설정이 문서의 테마를 바꾸지는 않습니다. 바꾸면 저장되는 그림과 다른 사람이 보는 그림이 달라지기 때문입니다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
 - 테마가 바꿀 수 없는 것: 5장의 치수, 6장의 선 굵기, 블록의 모양, 글꼴(원칙 6).
@@ -590,7 +590,7 @@ flowchart LR
 
 - 상태 표시줄의 알림은 나타날 때 색을 바꾸지 않습니다 → [[ux-decisions#NT1. 상태 표시줄의 알림은 나타날 때 색을 바꾸지 않는다|NT1]]. `info` 알림은 6초 뒤 사라지고, `warn` 알림은 닫거나 다음 알림이 올 때까지 남습니다.
 - 키 힌트는 0.4초를 기다렸다가 한 번에 나타나고 한 번에 사라집니다(서서히 나타나지 않음). 기다리는 것은 키를 잘 아는 사람의 화면이 깜박이지 않게 하려는 것입니다.
-- 키나 휠로 선택한 블록이 화면 밖으로 나가면 캔버스가 따라 움직입니다. 이것은 바로 이동합니다(부드러운 스크롤 없음).
+- 키나 휠로 선택한 블록이 화면 밖으로 나가면 캔버스가 따라 스크롤합니다. 이것은 바로 이동합니다(부드러운 스크롤 없음).
 - 운영체제의 "움직임 줄이기" 설정(`prefers-reduced-motion`)을 따릅니다.
 
 ## 10. 접근성 검증
@@ -639,5 +639,5 @@ flowchart LR
 - 이름이 중복된 헤더에 붙이는 표시의 모양 ([[01-requirements#^r-blk|R-BLK-10]])
 - 어두운 화면 색에서 종이를 화면에서만 조금 어둡게 할지 (저장되는 색은 그대로)
 - 화면에서만 그림을 고대비로 보는 "보기 전용" 선택(저장되는 그림과 다른 사람의 화면은 문서의 테마 그대로)을 둘지. 지금은 고대비가 필요하면 문서의 테마를 고대비로 바꾼다 → [[ux-decisions#TM5. 고대비는 화면 색과 테마로 나눈다|TM5]]
-- 운영체제의 강제 색 모드(`forced-colors: active`, Windows의 대비 테마)에서 그림을 그대로 둘지, 운영체제의 색으로 바꿀지. 지금은 따로 다루지 않는다(테스트하지 않음)
+- 운영체제의 강제 색 모드(`forced-colors: active`, Windows의 대비 테마)에서 그림을 그대로 유지할지, 운영체제의 색으로 바꿀지. 지금은 따로 다루지 않는다(테스트하지 않음)
 - 사용자가 테마를 더 만들 수 있게 할지(사용자 정의 테마)
