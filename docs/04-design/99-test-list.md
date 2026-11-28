@@ -227,11 +227,11 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0083 | Method는 자기 자신을 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0084 | Method만 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0085 | 선택한 것에서 새 Method를 만들고 호출하기를 한 번에 | [[01-requirements#^r-blk\|R-BLK-07]] |
-| T-1852 | the new Method goes right after the selected Method | [[ux-decisions\|UX NP1]] |
+| T-1852 | 새 Method는 선택한 Method 바로 뒤에 놓인다 | [[ux-decisions\|UX NP1]] |
 | T-0086 | 적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 | - |
 | T-0088 | 비거나 중복되는 이름과 없는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
-| T-1853 | the Method goes right after the Method holding the call | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX NP1]] |
+| T-1853 | Method는 호출을 담은 Method 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX NP1]] |
 | T-1433 | 이름 호출이 가리키는 Method를 인자와 함께 만들고 잇는다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1434 | 인자가 없으면 헤더는 이름만이다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1435 | 같은 이름을 호출하는 호출 블록은 모두 새 Method를 호출한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
@@ -302,8 +302,8 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0120 | 01-model 4: 같은 종류로 바꾸면 내용은 그대로다 | - |
 | T-0121 | 새 Method는 마지막 Method 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0122 | 새 Event는 마지막 Event나 헤더 없는 다이어그램 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
-| T-1850 | goes right after the selected diagram of its kind | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
-| T-1851 | after a diagram of the other kind, or none, it goes last of its kind | [[ux-decisions\|UX NP1]] |
+| T-1850 | 선택한 같은 종류의 다이어그램 바로 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
+| T-1851 | 다른 종류의 다이어그램 뒤이거나 선택한 것이 없으면 같은 종류의 맨 끝에 간다 | [[ux-decisions\|UX NP1]] |
 | T-0123 | 그 종류의 첫 것은 맨 앞(Event)이나 맨 뒤(Method)에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0124 | 불변식 7: 새 문서의 빈 다이어그램은 다른 다이어그램이 오면 없어진다 | - |
 | T-0125 | 01-model 1.7: id를 주어진 생성기에서 받는다 | - |
@@ -782,7 +782,7 @@ id. Vitest · 테스트 5개.
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
-| T-1854 | M in a Method puts the new Method right after it | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
+| T-1854 | Method 안에서 `M`을 누르면 새 Method가 그 바로 뒤에 놓인다 | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
 | T-0218 | Method 헤더를 제거하면 그 호출 블록들은 이름 호출이 되고, 첫 블록을 선택한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
@@ -1047,17 +1047,17 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/input/drop-labels.test.ts`
 
-A drop on a branch label is a drop on that branch (interaction rules 7, UX BL5). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL5]].
+분기 라벨 위의 드롭은 그 분기에 대한 드롭이다(조작 규칙 7, UX BL5). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL5]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1855 | a control block icon wraps the blocks of that branch only | [[01-requirements#^r-edit\|R-EDIT-09]] |
-| T-1856 | a process or exit icon goes into a new branch beside it, in one undo step | - |
-| T-1857 | dragged blocks move into a new branch beside it | [[01-requirements#^r-edit\|R-EDIT-09]] |
-| T-1858 | an If becomes a Case with the new branch, and the status bar says so | - |
-| T-1859 | beside the default the new branch goes on its left, and it says so | - |
-| T-1860 | a parallel block gets a new branch; its top band still means before it | - |
-| T-1861 | the head of an If still wraps all of it; it cannot go beside its own branch | - |
+| T-1855 | 제어 블록 아이콘은 그 분기의 블록만 감싼다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1856 | 처리 · 탈출 블록 아이콘은 옆의 새 분기에 들어가며, 실행 취소 한 단계다 | - |
+| T-1857 | 드래그한 블록은 옆의 새 분기로 이동한다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1858 | If는 새 분기가 든 Case가 되고, 상태 표시줄이 그렇게 알린다 | - |
+| T-1859 | default 옆에서는 새 분기가 그 왼쪽에 생기고, 그렇게 알린다 | - |
+| T-1860 | 병렬 처리 블록에는 새 분기가 생기고, 위쪽 띠는 여전히 그 블록 앞을 뜻한다 | - |
+| T-1861 | If의 머리는 여전히 전체를 감싸며, 자기 분기 옆에는 둘 수 없다 | - |
 
 ^t-packages-editor-src-input-drop-labels-test-ts
 
