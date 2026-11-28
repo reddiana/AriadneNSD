@@ -80,8 +80,8 @@
     {
       "id": "C10",
       "when": [
-        "src/apps/web/src/shell/messages.ts",
-        "src/packages/editor/src/{i18n,ui}/messages.ts",
+        "src/apps/web/src/shell/messages*.ts",
+        "src/packages/editor/src/{i18n,ui}/messages*.ts",
         "src/packages/core/src/i18n/messages.ts"
       ],
       "then": [

@@ -1320,9 +1320,9 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0806 | 고른 언어가 먼저이고, 없으면 브라우저 언어, 그것도 아니면 영어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1561 | 독일어 브라우저 언어는 어느 지역이든 독일어가 된다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-1620 | English is there at once; another language shows English until fetched | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-1621 | the entries for checks need every language fetched | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
-| T-1622 | a failed fetch leaves English and is tried again on the next load | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1613 | English is there at once; another language shows English until fetched | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1614 | the entries for checks need every language fetched | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+| T-1615 | a failed fetch leaves English and is tried again on the next load | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-core-src-i18n-messages-test-ts
 

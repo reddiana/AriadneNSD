@@ -691,6 +691,7 @@ type SettingSpec = {
 
 - **화면 언어**는 `core`의 `screenLocale` 하나로 정합니다: 환경 설정에서 고른 값(`ui.locale`)이 `locales`에 있으면 그것, 없으면 셸이 준 언어(웹은 브라우저 언어 `navigator.language`의 BCP 47 앞부분이 `locales`에 있으면 그것, `de-AT`는 `de`), 그것도 아니면 영어입니다. 셸과 편집기가 같은 함수를 써서 늘 같은 언어를 보입니다. 언어의 목록은 `core`의 `locales` 한 곳에만 있습니다 → [[01-requirements#^r-nfr|R-NFR-04]]
 - 환경 설정 창의 "화면 언어"는 고르지 않았을 때 지금 쓰는 언어를 보입니다(`specsWithScreenLocale`). 설정 명세 상수(`settingSpecs`)의 기본값은 아무것도 모를 때의 영어입니다. 그래서 한국어 브라우저에서는 "한국어"가 보이고, 영어를 고르면 바뀐 것으로 저장됩니다.
+- 화면 문자열의 카탈로그(엔진 · UI)는 영어 표만 번들에 있고, 다른 언어는 처음 보일 때 받습니다(`core`의 `lazyCatalog` → [[0053-lazy-screen-language-catalogs|ADR-0053]]). 셸이 첫 화면 전에 그 언어를 받아 둡니다(`loadLocale`). 화면 언어를 바꾸면 `editor`는 그 언어를 받은 뒤에 바꾸고, 그동안은 앞 언어를 보입니다. 셸이 받아 두지 않았으면 영어로 보이다가 받은 뒤 다시 렌더링합니다. 받지 못하면(오프라인) 로그를 남기고 바꾼 언어로 가되, 받지 못한 문자열은 영어입니다.
 - 독일어(`de`)의 그림 문구는 If의 분기 라벨 `ja` · `nein`, Case의 default `sonst`입니다 → [[ux-decisions#DL1. 독일어의 그림 문구|DL1]]. 화면의 용어는 [[ux-decisions#DL2. 독일어 화면의 용어|DL2]]
 
 ## 미결정 사항
