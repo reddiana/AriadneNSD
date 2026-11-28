@@ -3,7 +3,7 @@
 import type { PastedDocumentPort, PickerItem, WriteResult } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
-import { indexDoc, placeOf, seqOfBlock } from '../model/doc-index';
+import { indexDoc, isEmptyBlock, placeOf, seqOfBlock } from '../model/doc-index';
 import { drawnDiagrams } from '../navigation/navigate';
 import type { After, ClipboardPort, EditorSession } from '../session/session';
 import type { EditField, EditorState } from '../state/editor-state';
@@ -104,6 +104,30 @@ export function blockArg(args: unknown): Id | null {
 /** Whether command arguments say the command came from its key (`{ fromKey: true }`). */
 export function isKeyArg(args: unknown): boolean {
   return typeof args === 'object' && args !== null && 'fromKey' in args && args.fromKey === true;
+}
+
+/** Where blocks go next to a target: the side, and whether they stay outside fold regions. */
+export type Placement = {
+  readonly target: Target;
+  readonly side: Side;
+  readonly outsideFolds: boolean;
+};
+
+/**
+ * Where "insert below" and "paste below" put blocks when a diagram's header is selected (M87 F4):
+ * at the very start of its body, outside the fold regions starting there, as a drop on the
+ * header's inner bottom band does (UX DE1). An empty first block takes their place. `null` when
+ * the diagram is gone.
+ */
+export function headStart(index: DocIndex, diagram: Id): Placement | null {
+  const first = index.diagrams.get(diagram)?.body.blocks[0];
+  if (first === undefined) {
+    return null;
+  }
+  const target = { kind: 'blocks', first: first.id, last: first.id } as const;
+  return isEmptyBlock(first)
+    ? { target, side: 'after', outsideFolds: false }
+    : { target, side: 'before', outsideFolds: true };
 }
 
 /** Something found, or why not. */
@@ -339,7 +363,7 @@ export type CommandContext = {
     readonly content: Content;
     readonly touched: ReadonlyArray<Id>;
   }) => After;
-  readonly insertWhen: (kind: NewBlockKind) => (state: EditorState) => Applies;
+  readonly insertWhen: (kind: NewBlockKind, side: Side) => (state: EditorState) => Applies;
   readonly runInsertBranch: (branch: Id, side: Side) => void;
   readonly blocksOnly: (onEmptyCell: EditorMessage) => (state: EditorState) => Applies;
   /** The paste in flight: saving waits for it. */
@@ -388,14 +412,15 @@ export function commandContext(deps: CommandDeps): CommandContext {
   };
 
   const insertWhen =
-    (kind: NewBlockKind) =>
+    (kind: NewBlockKind, side: Side) =>
     (state: EditorState): Applies => {
       const selection = state.selection;
       if (selection?.kind === 'branchLabel') {
         return kind === 'process' ? true : 'reason.notOnBranchLabel';
       }
       if (selection?.kind === 'head') {
-        return 'reason.notOnHead';
+        // Below a header is the start of its body (M87 F4); above it there is nothing.
+        return side === 'after' ? true : 'reason.notOnHead';
       }
       return true;
     };

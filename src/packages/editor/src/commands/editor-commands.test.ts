@@ -7,6 +7,7 @@ import {
   branch,
   caseBlock,
   contentOf,
+  empty,
   ifBlock,
   proc,
   testEngine,
@@ -147,7 +148,6 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     label: 'reason.undecidedOnBranchLabel',
     armLabel: 'reason.undecidedOnBranchLabel',
     defaultLabel: 'reason.undecidedOnBranchLabel',
-    head: 'reason.cannotPasteOnHead',
   },
   'edit.delete': {
     none: 'reason.nothingSelected',
@@ -178,18 +178,15 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     missing: 'reason.nothingSelected',
   },
   'edit.move.left': { none: 'reason.nothingSelected', missing: 'reason.nothingSelected' },
-  'block.insert.process': { head: 'reason.notOnHead' },
   'block.insert.if': {
     label: 'reason.notOnBranchLabel',
     armLabel: 'reason.notOnBranchLabel',
     defaultLabel: 'reason.notOnBranchLabel',
-    head: 'reason.notOnHead',
   },
   'block.insert.call': {
     label: 'reason.notOnBranchLabel',
     armLabel: 'reason.notOnBranchLabel',
     defaultLabel: 'reason.notOnBranchLabel',
-    head: 'reason.notOnHead',
   },
   'block.wrap.while': {
     none: 'reason.nothingSelected',
@@ -347,7 +344,7 @@ describe('why a command is not available (03-editor 5)', () => {
   it('T-0559: a refused command changes nothing and tells why in the status bar as a warning', () => {
     const engine = engineAt('head');
     const before = engine.content();
-    engine.run('block.insert.if');
+    engine.run('block.insertBefore.if');
     expect(engine.content()).toBe(before);
     expect(engine.session.chrome().notice).toMatchObject({
       message: 'reason.notOnHead',
@@ -367,7 +364,7 @@ describe('why a command is not available (03-editor 5)', () => {
 
   it('T-0798 · BUG-11: paste, wrap and unwrap on a header say it is a header, not that nothing is selected', () => {
     const engine = engineAt('head');
-    engine.run('edit.paste');
+    engine.run('edit.pasteBefore');
     expect(notice(engine)).toBe('reason.cannotPasteOnHead');
     engine.run('block.wrap.while');
     expect(notice(engine)).toBe('reason.cannotWrapHead');
@@ -389,6 +386,91 @@ describe('why a command is not available (03-editor 5)', () => {
     const engine = testEngine(contentOf([proc('b1')]));
     engine.select(selectBlock(indexDoc(engine.content()), 'b1'));
     expect(applies(engine, 'diagram.delete')).toBe('reason.lastDiagram');
+  });
+});
+
+describe('inserting and pasting below a header (M87 F4)', () => {
+  // d1: Event "e" { fold region f over p1, p2; p3 }; d2: Method "m" { an empty block }
+  const headed = (): Content => {
+    const content = withHeads(contentOf([proc('p1'), proc('p2'), proc('p3')], [empty('e1')]), {
+      d1: ['event', 'e'],
+      d2: ['method', 'm'],
+    });
+    const [d1, d2] = content.diagrams;
+    if (d1 === undefined || d2 === undefined) {
+      throw new Error('no diagrams');
+    }
+    return {
+      ...content,
+      diagrams: [
+        { ...d1, body: { ...d1.body, folds: [{ id: 'f', first: 'p1', last: 'p2' }] } },
+        d2,
+      ],
+    };
+  };
+  const onHead = (diagram = 'd1'): TestEngine => {
+    const engine = testEngine(headed());
+    engine.select({ kind: 'head', diagram });
+    return engine;
+  };
+  const folds = (engine: TestEngine): ReadonlyArray<string> =>
+    (engine.content().diagrams[0]?.body.folds ?? []).map((f) => `${f.id}:${f.first}-${f.last}`);
+
+  it('T-1604: o, a then a kind and the toolbar insert at the very start of the body, outside the regions starting there', () => {
+    for (const run of [
+      (engine: TestEngine) => engine.keys('o'),
+      (engine: TestEngine) => engine.keys('a', 'i'),
+      (engine: TestEngine) => {
+        engine.run('block.insert.while');
+      },
+    ]) {
+      const engine = onHead();
+      run(engine);
+      const ids = bodyOf(engine, 'd1');
+      expect(ids.slice(1)).toEqual(['p1', 'p2', 'p3']);
+      expect(folds(engine)).toEqual(['f:p1-p2']);
+      expect(engine.session.state.selection).toMatchObject({ anchor: ids[0], focus: ids[0] });
+      expect(engine.session.state.undo).toHaveLength(1);
+    }
+    // An empty body: the new block takes the empty block's place.
+    const engine = onHead('d2');
+    engine.keys('a', 'i');
+    const [only] = bodyOf(engine, 'd2');
+    expect(bodyOf(engine, 'd2')).toHaveLength(1);
+    expect(engine.session.index().blocks.get(only ?? '')?.block.kind).toBe('if');
+  });
+
+  it('T-1605: a call inserted below a header goes at the start of the body too', async () => {
+    const engine = onHead();
+    engine.run('block.insert.call');
+    engine.picker()?.choose(0);
+    await engine.settle();
+    const ids = bodyOf(engine, 'd1');
+    expect(ids.slice(1)).toEqual(['p1', 'p2', 'p3']);
+    expect(engine.session.index().blocks.get(ids[0] ?? '')?.block.kind).toBe('call');
+    expect(folds(engine)).toEqual(['f:p1-p2']);
+  });
+
+  it('T-1606: p pastes at the very start of the body; above a header insert and paste are still refused', async () => {
+    const engine = testEngine(headed());
+    engine.select(selectBlock(engine.session.index(), 'p3'));
+    engine.run('edit.copy');
+    await engine.settle();
+    engine.select({ kind: 'head', diagram: 'd1' });
+    engine.keys('p');
+    await engine.settle();
+    const ids = bodyOf(engine, 'd1');
+    expect(ids.slice(1)).toEqual(['p1', 'p2', 'p3']);
+    expect(engine.session.index().blocks.get(ids[0] ?? '')?.block).toMatchObject({ text: 'p3' });
+    expect(folds(engine)).toEqual(['f:p1-p2']);
+    const before = engine.content();
+    engine.select({ kind: 'head', diagram: 'd1' });
+    engine.keys('O');
+    expect(notice(engine)).toBe('reason.notOnHead');
+    engine.keys('P');
+    await engine.settle();
+    expect(notice(engine)).toBe('reason.cannotPasteOnHead');
+    expect(engine.content()).toBe(before);
   });
 });
 

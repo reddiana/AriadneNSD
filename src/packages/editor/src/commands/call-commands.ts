@@ -39,6 +39,7 @@ import {
   appliesIf,
   selectTouched,
   currentDiagram,
+  headStart,
   methodsOf,
   afterHead,
 } from './command-helpers';
@@ -102,13 +103,20 @@ export function callCommands(ctx: CommandContext) {
       return;
     }
     const { method, isNamed } = picked;
-    const op = (made: Content, target: Target, ids: IdGenerator): Result => {
+    // Below a selected header the call goes at the very start of its body (M87 F4).
+    const start = selection?.kind === 'head' ? headStart(index(), selection.diagram) : null;
+    const op = (
+      made: Content,
+      target: Target,
+      ids: IdGenerator,
+      place: { readonly side: Side; readonly outsideFolds?: boolean } = { side },
+    ): Result => {
       if (isNamed) {
-        return insertNamedCall(made, { target, side, name: '', ids });
+        return insertNamedCall(made, { target, ...place, name: '', ids });
       }
       return method === null
-        ? newMethodAndCall(made, { target, side, ids })
-        : insertCall(made, { target, side, diagram: method.id, ids });
+        ? newMethodAndCall(made, { target, ...place, ids })
+        : insertCall(made, { target, ...place, diagram: method.id, ids });
     };
     const after = (ok: {
       readonly content: Content;
@@ -134,6 +142,10 @@ export function callCommands(ctx: CommandContext) {
       );
       return;
     }
+    if (start !== null) {
+      session.commit(op(content(), start.target, session.ids(), start), after);
+      return;
+    }
     const diagram = currentDiagram(index(), { ...session.state, selection });
     const target: Target | null =
       targetOf(selection) ?? (diagram === null ? null : { kind: 'diagramEnd', diagram });
@@ -150,7 +162,7 @@ export function callCommands(ctx: CommandContext) {
       when: (state) =>
         state.selection?.kind === 'branchLabel'
           ? 'reason.notOnBranchLabel'
-          : insertWhen('process')(state),
+          : insertWhen('process', 'after')(state),
       run: () => runInsertCall('after'),
       menu: { menu: 'diagram', group: 1, order: 17, submenu: 'insert' },
       context: ['blocks', 'missingDefault'],
@@ -160,7 +172,7 @@ export function callCommands(ctx: CommandContext) {
       when: (state) =>
         state.selection?.kind === 'branchLabel'
           ? 'reason.notOnBranchLabel'
-          : insertWhen('process')(state),
+          : insertWhen('process', 'before')(state),
       run: () => runInsertCall('before'),
       menu: { menu: 'diagram', group: 1, order: 7, submenu: 'insertBefore' },
     }),

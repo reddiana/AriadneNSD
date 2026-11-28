@@ -3,7 +3,7 @@ import { headName, headParams } from '../model/head';
 import type { Call, Content, Diagram, Id } from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget, unchanged } from './common';
 import { addDiagram, calls, checkHeadName, filledArgs } from './diagram';
-import { putBlocks } from './insert';
+import { keepingOut, putBlocks } from './insert';
 import { indexContent, mapCalls, replaceBlock } from './tree';
 import type { FailResult, Result, Side, Target, WithIds } from './types';
 
@@ -71,6 +71,8 @@ export type InsertNamedCallArgs = WithIds & {
   readonly side: Side;
   /** The name to call, as written. Usually empty: the editor opens the name field at once. */
   readonly name: string;
+  /** The call block goes outside the fold regions starting or ending there (see `InsertBlockArgs`). */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -93,7 +95,10 @@ export function insertNamedCall(content: Content, args: InsertNamedCallArgs): Re
     siteFolds: [],
   };
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const next = putBlocks(content, range, side, { blocks: [block], folds: [] });
+  const next = putBlocks(content, keepingOut(range, args.outsideFolds), side, {
+    blocks: [block],
+    folds: [],
+  });
   return done(next, [block.id]);
 }
 
@@ -177,6 +182,8 @@ export type InsertCallArgs = WithIds & {
   readonly side: Side;
   /** The Method to call: a diagram of this document with a Method header. */
   readonly diagram: Id;
+  /** The call block goes outside the fold regions starting or ending there (see `InsertBlockArgs`). */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -198,7 +205,10 @@ export function insertCall(content: Content, args: InsertCallArgs): Result {
   const ids = idsFor(content, args);
   const block = newCall(ids.next('block'), method.id, paramsOf(method));
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const next = putBlocks(content, range, side, { blocks: [block], folds: [] });
+  const next = putBlocks(content, keepingOut(range, args.outsideFolds), side, {
+    blocks: [block],
+    folds: [],
+  });
   return done(next, [block.id]);
 }
 
@@ -208,6 +218,8 @@ export type NewMethodAndCallArgs = WithIds & {
   readonly side: Side;
   /** The header text of the new Method. Left out, it gets the default name ("Method 1" …). */
   readonly text?: string;
+  /** The call block goes outside the fold regions starting or ending there (see `InsertBlockArgs`). */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -235,7 +247,10 @@ export function newMethodAndCall(content: Content, args: NewMethodAndCallArgs): 
   const block = newCall(ids.next('block'), made.diagram, paramsOf(method));
   // The new diagram does not hold the target's sequence, so the range still names it.
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const next = putBlocks(made.content, range, side, { blocks: [block], folds: [] });
+  const next = putBlocks(made.content, keepingOut(range, args.outsideFolds), side, {
+    blocks: [block],
+    folds: [],
+  });
   return done(next, [made.diagram, block.id]);
 }
 

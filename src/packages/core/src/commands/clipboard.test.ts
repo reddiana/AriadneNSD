@@ -52,6 +52,20 @@ describe('copy, cut and paste', () => {
     expect(result.touched).toEqual(['b5']);
   });
 
+  it('T-1603 · M87 F4: paste with outsideFolds stays outside the fold regions starting there', () => {
+    const clip = seq([proc('x')]);
+    const joined = runOk(paste, content, { target: range('b1'), side: 'before', clip });
+    expect(foldsIn(joined.content, 'd1')).toEqual(['f1:b5-b2', 'f2:b5-b4']);
+    const outside = runOk(paste, content, {
+      target: range('b1'),
+      side: 'before',
+      clip,
+      outsideFolds: true,
+    });
+    expect(idsIn(outside.content, 'd1')).toEqual(['b5', 'b1', 'b2', 'b4']);
+    expect(foldsIn(outside.content, 'd1')).toEqual(['f1:b1-b2', 'f2:b1-b4']);
+  });
+
   it('T-0091: 01-model 1.7: pasted fold regions are mapped to the new ids', () => {
     const copied = copy(content, { target: range('b1', 'b2') });
     if (!copied.ok) {

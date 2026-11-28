@@ -3,7 +3,7 @@ import { headName } from '../model/head';
 import type { Arm, Block, Branch, CallTarget, Content, FoldMark, Id, Seq } from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget } from './common';
 import { deleteBlocks } from './delete';
-import { putBlocks } from './insert';
+import { keepingOut, putBlocks } from './insert';
 import { foldRange, sliceSeq } from './seq-edit';
 import { indexContent } from './tree';
 import type { Clip, FailResult, OkResult, Result, Side, Target, WithIds } from './types';
@@ -56,6 +56,8 @@ export type PasteArgs = WithIds & {
    * its target keeping the name; without them it calls the Method with the same id.
    */
   readonly names?: ReadonlyMap<Id, string>;
+  /** The blocks go outside the fold regions starting or ending there (see `InsertBlockArgs`). */
+  readonly outsideFolds?: boolean;
 };
 
 /**
@@ -76,7 +78,7 @@ export function paste(content: Content, args: PasteArgs): Result {
   const methods = methodsOf(content, args.names);
   const fresh = renewSeq(args.clip, idsFor(content, args), methods);
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const next = putBlocks(content, range, side, fresh);
+  const next = putBlocks(content, keepingOut(range, args.outsideFolds), side, fresh);
   return done(
     next,
     fresh.blocks.map((block) => block.id),

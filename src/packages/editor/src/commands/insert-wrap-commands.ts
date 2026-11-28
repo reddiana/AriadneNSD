@@ -25,6 +25,7 @@ import {
   unwrapHolder,
   selectTouched,
   currentDiagram,
+  headStart,
 } from './command-helpers';
 
 export function insertWrapCommands(ctx: CommandContext) {
@@ -54,6 +55,13 @@ export function insertWrapCommands(ctx: CommandContext) {
       );
       return;
     }
+    if (selection?.kind === 'head') {
+      const start = headStart(index(), selection.diagram);
+      if (start !== null) {
+        session.commit(insertBlock(content(), { ...start, kind, ids: session.ids() }), afterInsert);
+      }
+      return;
+    }
     const diagram = currentDiagram(index(), state);
     const target: Target | null =
       targetOf(selection) ?? (diagram === null ? null : { kind: 'diagramEnd', diagram });
@@ -71,7 +79,7 @@ export function insertWrapCommands(ctx: CommandContext) {
   const insertSpecs = blockKinds.flatMap((kind, order) => [
     spec(`block.insert.${kind}`, {
       edits: true,
-      when: insertWhen(kind),
+      when: insertWhen(kind, 'after'),
       run: () => {
         runInsert(kind, 'after');
       },
@@ -82,7 +90,7 @@ export function insertWrapCommands(ctx: CommandContext) {
     }),
     spec(`block.insertBefore.${kind}`, {
       edits: true,
-      when: insertWhen(kind),
+      when: insertWhen(kind, 'before'),
       run: () => {
         runInsert(kind, 'before');
       },

@@ -18,7 +18,7 @@ import { spec } from './spec';
 import type { Content, Id, Side, Target } from '@ariadne-nsd/core';
 import { copy, cut, deleteBlocks, paste } from '@ariadne-nsd/core';
 import type { CommandContext } from './command-helpers';
-import { selectionAfterDelete, selectTouched } from './command-helpers';
+import { headStart, selectionAfterDelete, selectTouched } from './command-helpers';
 
 export function clipboardCommands(ctx: CommandContext) {
   const { deps, session, index, content, intoMissingDefault, blocksOnly, pasting } = ctx;
@@ -172,6 +172,14 @@ export function clipboardCommands(ctx: CommandContext) {
       );
       return;
     }
+    if (selection?.kind === 'head') {
+      // Below a header is the very start of its body (M87 F4).
+      const start = headStart(index(), selection.diagram);
+      if (start !== null) {
+        session.commit(paste(content(), { ...start, clip, names, ids: session.ids() }), after);
+      }
+      return;
+    }
     const target = targetOf(selection);
     if (target === null) {
       if (selection === null) {
@@ -204,7 +212,8 @@ export function clipboardCommands(ctx: CommandContext) {
           return 'reason.undecidedOnBranchLabel';
         }
         if (selection?.kind === 'head') {
-          return 'reason.cannotPasteOnHead';
+          // Below a header is the start of its body (M87 F4); above it there is nothing.
+          return side === 'after' ? true : 'reason.cannotPasteOnHead';
         }
         if (selection === null && deps.pastedDocument !== undefined) {
           // The clipboard may hold a document to open (UX JP2); otherwise it says why.
