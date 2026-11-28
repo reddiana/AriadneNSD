@@ -1,6 +1,6 @@
-// The Korean table of messages.ts, fetched when the screen first shows Korean (core `lazyCatalog`).
+// The Korean table of messages.ts (keys from messages.en.ts), fetched when the screen first shows Korean (core `lazyCatalog`).
 
-import type { MessageKey } from './messages';
+import type { MessageKey } from './messages.en';
 
 export const korean: Readonly<Record<MessageKey, string>> = {
   'command.file.new': '새로',

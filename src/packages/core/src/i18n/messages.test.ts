@@ -75,7 +75,7 @@ describe('lazy catalogs: only the languages the screen shows are fetched', () =>
   const english = { hello: 'Hello {name}' } as const;
   type Key = keyof typeof english;
 
-  it('T-1620 · R-NFR-04: English is there at once; another language shows English until fetched', async () => {
+  it('T-1613 · R-NFR-04: English is there at once; another language shows English until fetched', async () => {
     let fetches = 0;
     const catalog = lazyCatalog<Key>(english, {
       ko: () => {
@@ -96,7 +96,7 @@ describe('lazy catalogs: only the languages the screen shows are fetched', () =>
     expect(catalog.table('de').hello).toBe('Hello {name}');
   });
 
-  it('T-1621 · QA-13: the entries for checks need every language fetched', async () => {
+  it('T-1614 · QA-13: the entries for checks need every language fetched', async () => {
     const catalog = lazyCatalog<Key>(english, {
       ko: () => Promise.resolve({ hello: '안녕 {name}' }),
       de: () => Promise.resolve({ hello: 'Hallo {name}' }),
@@ -108,7 +108,7 @@ describe('lazy catalogs: only the languages the screen shows are fetched', () =>
     ]);
   });
 
-  it('T-1622 · R-NFR-04: a failed fetch leaves English and is tried again on the next load', async () => {
+  it('T-1615 · R-NFR-04: a failed fetch leaves English and is tried again on the next load', async () => {
     let fails = true;
     const catalog = lazyCatalog<Key>(english, {
       ko: () => Promise.resolve({ hello: '안녕 {name}' }),
