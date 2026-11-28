@@ -82,6 +82,31 @@ test('blocks, insert hint, branches, move', async ({ page }) => {
   await shot(page, 'branch-added');
 });
 
+test('endless loop, exit, parallel', async ({ page }) => {
+  await openApp(page);
+  await page.keyboard.press('Enter');
+  await type(page, 'connect()');
+  // An endless loop opens no text; a parallel block opens its top band's text.
+  await press(page, 'a', 'e');
+  await press(page, 'a', 't');
+  await type(page, 'shut down');
+  await press(page, 'j', 'Enter');
+  await type(page, 'save(log)');
+  await press(page, 'l', 'Enter');
+  await type(page, 'close(socket)');
+  // Into the endless loop's body: a step, then an If that exits (the exit takes the empty
+  // block's place).
+  await press(page, 'g', 'g', 'j', 'j', 'Enter');
+  await type(page, 'msg ← receive()');
+  await press(page, 'a', 'i');
+  await type(page, 'msg = quit');
+  await press(page, 'j', 'A', 'x');
+  await type(page, 'break');
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await shot(page, 'blocks-more');
+});
+
 test('move a block', async ({ page }) => {
   await openApp(page);
   await page.keyboard.press('Enter');

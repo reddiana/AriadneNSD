@@ -9,8 +9,9 @@
       to it if it has one.
     </li>
     <li>
-      <b>Toolbar:</b> New · Open · Save · Export, Undo · Redo, Cut · Copy · Paste, five block icons
-      (Process · If · Case · While · Do-While), Wrap, Zoom, Examples.
+      <b>Toolbar:</b> New · Open · Save · Export, Undo · Redo, Cut · Copy · Paste, eight block icons
+      (Process · If · Case · While · Do-While · Endless Loop · Exit · Parallel), Wrap, Zoom,
+      Examples.
     </li>
     <li><b>Canvas:</b> where you draw. Several diagrams are laid out automatically.</li>
     <li>
@@ -26,12 +27,22 @@
     Write anything in a block: code or plain sentences. The condition of an If, a Case or a loop
     goes in its condition cell (at the top; at the bottom for a Do-While). Text does not wrap by
     itself; break long lines with
-    <kbd>Shift</kbd>+<kbd>Enter</kbd>. The <code>∅</code> in an empty cell means "nothing here".
+    <kbd>Shift</kbd>+<kbd>Enter</kbd>. The <code>∅</code> in an empty cell means "nothing here". A
+    Parallel block may have text in its top band (or none); an Endless Loop has no text.
   </p>
   <div class="pair">
     <figure>
       <img src="img/en/ref-blocks.png" alt="Process, If, Case, While, For and Do-While blocks" />
       <figcaption>From the top: Process · If · Case · While · For · Do-While</figcaption>
+    </figure>
+    <figure>
+      <img
+        src="img/en/ref-blocks-more.png"
+        alt="An Endless Loop holding an If with an Exit, and a Parallel block below"
+      />
+      <figcaption>
+        An Exit in an If inside an Endless Loop, then a Parallel block of two branches
+      </figcaption>
     </figure>
   </div>
   <div class="tbl">
@@ -73,6 +84,27 @@
         <td>Do-While</td>
         <td>Runs once, then checks the condition</td>
         <td><kbd>d</kbd></td>
+      </tr>
+      <tr>
+        <td>Endless Loop</td>
+        <td>Repeats with no condition. The way out is an Exit block inside it</td>
+        <td><kbd>e</kbd></td>
+      </tr>
+      <tr>
+        <td>Exit</td>
+        <td>
+          Leaves a loop or a Method early; its text says how (<code>break</code>,
+          <code>continue</code>, <code>return x</code>). It cannot wrap, so insert only
+        </td>
+        <td><kbd>x</kbd> (insert only)</td>
+      </tr>
+      <tr>
+        <td>Parallel</td>
+        <td>
+          Its branches run at the same time, and all of them end before the next block. Branches
+          have no labels; there are two or more
+        </td>
+        <td><kbd>t</kbd></td>
       </tr>
       <tr>
         <td>Call</td>
@@ -126,9 +158,12 @@
         <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+click</td>
       </tr>
       <tr>
-        <td>Select a branch label</td>
+        <td>Select a branch label (a Parallel block's branch)</td>
         <td><kbd>k</kbd> on the branch's first block</td>
-        <td><kbd>↑</kbd> on the branch's first block, click the label</td>
+        <td>
+          <kbd>↑</kbd> on the branch's first block, click the label (for Parallel, the top band
+          above the branch)
+        </td>
       </tr>
       <tr>
         <td>Clear the selection</td>
@@ -264,7 +299,9 @@
   <p>
     Wrapping puts the selected blocks in a new control block (an If's true branch, a Case's first
     branch). Unwrapping removes the shell and keeps what is inside. Insert and delete a Case's
-    branches like blocks, with its label selected. The default branch always comes rightmost.
+    branches like blocks, with its label selected. The default branch always comes rightmost. A
+    Parallel block's branches take the same keys with the branch selected, and never drop below two.
+    Wrapping in a Parallel block puts the selection in its first branch.
   </p>
   <div class="pair">
     <figure>

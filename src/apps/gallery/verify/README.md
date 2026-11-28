@@ -1,6 +1,6 @@
 # Gallery verification (dev tool, not shipped)
 
-Runs the code text of the 16 algorithm diagrams in `packages/editor/src/gallery/` as real Python and
+Runs the code text of the 17 algorithm diagrams in `packages/editor/src/gallery/` as real Python and
 checks it against references (brute force, stdlib, independent implementations).
 
 How it works:
@@ -22,5 +22,6 @@ python src/apps/gallery/verify/verify.py MaxFlow   # one class
 
 Assumptions the diagrams leave implicit (the harness supplies them): module-level shared state
 (`visited`/`order`, `parent`/`rank`, the N-Queens sets, the segment tree's `a`/`tree`), a
-`defaultdict`-of-`defaultdict(int)` capacity map for max flow with `s != t`, and a non-empty
-pattern for KMP.
+`defaultdict`-of-`defaultdict(int)` capacity map for max flow with `s != t`, a non-empty
+pattern for KMP, and for producer–consumer the buffer size `N`, `Semaphore`, `Lock`, `produce()`
+and `consume()`. A parallel block's branches run as threads that are joined before the next block.

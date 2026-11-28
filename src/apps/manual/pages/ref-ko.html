@@ -10,7 +10,8 @@
     </li>
     <li>
       <b>툴바:</b> 새로 · 열기 · 저장 · 내보내기, 실행 취소 · 다시 하기, 잘라내기 · 복사 · 붙여넣기,
-      블록 아이콘 다섯(처리 · If · Case · While · Do-While), 감싸기, 확대 · 축소, 예제.
+      블록 아이콘 여덟(처리 · If · Case · While · Do-While · 무한 반복 · 탈출 · 병렬 처리), 감싸기,
+      확대 · 축소, 예제.
     </li>
     <li><b>캔버스:</b> 다이어그램을 그리는 곳. 다이어그램이 여럿이면 자동으로 늘어놓습니다.</li>
     <li>
@@ -26,12 +27,17 @@
     블록 안의 텍스트는 자유롭게 적습니다. 코드든 문장이든 됩니다. 텍스트는 자동으로 줄을 바꾸지
     않으니, 길면 <kbd>Shift</kbd>+<kbd>Enter</kbd>로 나눕니다. If · Case · 반복 블록의 조건은 조건
     칸(While · For · If · Case는 위, Do-While은 아래)에 적습니다. 빈 칸의 <code>∅</code>는 "여기는
-    비어 있음"이라는 표시입니다.
+    비어 있음"이라는 표시입니다. 병렬 처리는 위 띠에 텍스트를 적을 수 있고(비워 두어도 됨), 무한
+    반복에는 텍스트가 없습니다.
   </p>
   <div class="pair">
     <figure>
       <img src="../img/ko/ref-blocks.png" alt="처리, If, Case, While, For, Do-While 블록" />
       <figcaption>위에서부터 처리 · If · Case · While · For · Do-While</figcaption>
+    </figure>
+    <figure>
+      <img src="../img/ko/ref-blocks-more.png" alt="무한 반복 안에 If와 탈출, 그 아래 병렬 처리" />
+      <figcaption>무한 반복 안의 If에 탈출, 그 아래 분기 둘의 병렬 처리</figcaption>
     </figure>
   </div>
   <div class="tbl">
@@ -73,6 +79,24 @@
         <td>Do-While</td>
         <td>한 번 하고 나서 조건을 보고 반복</td>
         <td><kbd>d</kbd></td>
+      </tr>
+      <tr>
+        <td>무한 반복</td>
+        <td>조건 없이 반복. 빠져나가는 길은 안의 탈출 블록</td>
+        <td><kbd>e</kbd></td>
+      </tr>
+      <tr>
+        <td>탈출</td>
+        <td>
+          반복이나 Method를 중간에 빠져나감. 텍스트로 어떻게 나가는지 적음(<code>break</code>,
+          <code>continue</code>, <code>return x</code>). 감쌀 수 없어 삽입에만
+        </td>
+        <td><kbd>x</kbd> (삽입에만)</td>
+      </tr>
+      <tr>
+        <td>병렬 처리</td>
+        <td>분기들이 함께 돌고, 모두 끝나야 다음 블록으로. 분기에는 라벨이 없고 둘 이상</td>
+        <td><kbd>t</kbd></td>
       </tr>
       <tr>
         <td>호출</td>
@@ -125,9 +149,9 @@
         <td><kbd>Shift</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>, <kbd>Shift</kbd>+클릭</td>
       </tr>
       <tr>
-        <td>분기 라벨 선택</td>
+        <td>분기 라벨 선택 (병렬 처리는 분기 선택)</td>
         <td>분기의 첫 블록에서 <kbd>k</kbd></td>
-        <td>분기의 첫 블록에서 <kbd>↑</kbd>, 이름을 클릭</td>
+        <td>분기의 첫 블록에서 <kbd>↑</kbd>, 이름을 클릭(병렬 처리는 위 띠의 그 분기 위 부분)</td>
       </tr>
       <tr>
         <td>선택 풀기</td>
@@ -259,7 +283,9 @@
   <p>
     감싸기는 선택한 블록들을 새 제어 블록 안에 넣습니다(If는 참 분기, Case는 첫 분기에). 풀기는
     반대로 껍데기만 없애고 안의 블록을 남깁니다. Case의 분기는 분기 라벨을 선택하고 블록처럼
-    삽입하고 삭제합니다. default는 늘 맨 오른쪽입니다.
+    삽입하고 삭제합니다. default는 늘 맨 오른쪽입니다. 병렬 처리의 분기도 같은 키로 다루며(분기를
+    선택한 채), 분기는 둘 아래로 줄지 않습니다. 병렬 처리로 감싸면 선택한 블록이 첫 분기에
+    들어갑니다.
   </p>
   <div class="pair">
     <figure>
