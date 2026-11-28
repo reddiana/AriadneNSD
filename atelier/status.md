@@ -27,6 +27,7 @@ updated: 2026-11-28
 | M83 | 삽입 · 붙여넣기의 앞 · 뒤 (정함: W1 1번) | https://claude.ai/artifact/A4crRvr8crouTNLy84rMfU | `journal/assets/2026-11-28-before-after-naming-study.html` |
 | M84 | 블록 셋 구현 때 정할 것 (정함: B1 1번, B2 1번, D1 ~ D5 그대로) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
 | M85 | 선택한 블록 곁의 드롭 위치 (정함: 2번 + 4번의 드롭 표시) | https://claude.ai/artifact/Psd323PXgcsTTKFWmpZFZ9 | `journal/assets/2026-11-28-drop-indicator-study.html` |
+| M86 | 선택 영역 곁의 드롭 규칙 (답을 기다림: N1 · N2) | https://claude.ai/artifact/3g6oe6eanBA2cWeGFfiurx | `journal/assets/2026-11-28-drop-near-selection-study.html` |
 
 ## 지금 단계
 
@@ -86,7 +87,7 @@ updated: 2026-11-28
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 선택 영역의 가장자리에 붙여 놓으면 영역 밖에 넣는 드롭 규칙: 시안(M86)으로 장면 · 판정 구간 · 대안을 보이고 메인테이너가 고른 뒤 구현 → [[2026-11-28-05-blocks-rest-german-drop#inbox에서 옮긴 원문]]
+- [ ] 선택 영역의 가장자리에 붙여 놓으면 영역 밖에 넣는 드롭 규칙: 시안 M86을 올림(N1 판정 · N2 끄는 동안의 선택 영역 표시), 메인테이너가 고른 뒤 구현 → [[2026-11-28-05-blocks-rest-german-drop#inbox에서 옮긴 원문]]
 - [ ] 마무리(push 전): `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e`(블록 셋 · 독일어 · 드롭 표시로 편집기 동작이 바뀜), 그 뒤 push와 웹 판 올리기(블록 셋 · 독일어가 들어간 새 판). 로컬 서버 8080 · 8081 · 8082 · 8083 끄기
 - [ ] 메인테이너: 로컬 앱 http://localhost:5173 에서 블록 셋 · 독일어(브라우저 언어 또는 설정) · 드롭 표시를 써 보고 [[outbox#확인해 주세요]]의 2026-11-28 항목 확인. 독일어 사용법은 독일어를 아는 사람이 읽어 보면 좋음
 - [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]

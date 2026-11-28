@@ -1,0 +1,255 @@
+<meta charset="utf-8">
+<title>M86 선택 영역 곁의 드롭 규칙</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M85와 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1400px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 86ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.figrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.figrow figure { margin: 0; display: grid; gap: 4px; justify-items: start; max-width: 300px; }
+.figrow figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.figrow figcaption b { color: var(--fg); font-weight: 600; }
+.fig { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-x: auto; max-width: 100%; }
+.fig svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 96ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M86 · 선택 영역 곁의 드롭 규칙</h1>
+    <p class="lede">메인테이너의 inbox(2026-11-28): "드래그드랍을 선택영역 앞/뒤에 붙여서 하면 선택영역 밖에 적용". 결함이 아니라 규칙으로 정하기로 했습니다. 지금은 포인터 밑의 <b>가장 안쪽 블록</b>의 위 · 아래 8px 띠로 "사이"를 판정합니다(<code>drop.ts</code>의 <code>zoneOf</code>). 그래서 선택한 While · If의 <b>아래</b> 가장자리에 붙여 놓으면, 그 가장자리를 함께 쓰는 안쪽 블록(본문 · 갈래의 마지막 블록)의 아래, 곧 <b>선택 영역 안</b>에 들어갑니다. 위 가장자리는 헤더가 가장 바깥 블록이라 지금도 영역 밖입니다.</p>
+    <p class="lede">캔버스의 블록을 끌면 그 블록이 선택되므로(끄는 것이 곧 선택 영역), 이 규칙이 실제로 듣는 곳은 <b>선택이 있는 채로 툴바의 블록 아이콘을 끌어 올 때</b>입니다. 그림은 모두 툴바의 처리 아이콘을 끌어 오는 장면이고, 드롭 표시는 M85에서 정한 모양(4px 주황 + 흰 테두리 + 블록 밖 화살촉)입니다. 끄는 동안 선택 하이라이트는 감춰지므로(DI1), N1의 그림은 선택 영역을 <b>회색 점선</b>(N2의 ★ 2번)으로 보입니다. 흰 화살표가 마우스 포인터, 주황 줄이 놓일 자리입니다. ★ 표시가 Claude의 추천입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">장면</span>
+    <h2>다섯 장면</h2>
+    <div class="sum"><ul>
+      <li><b>①</b> 블록 하나(처리 <code>i ← i + 1</code>, While 본문의 마지막)를 선택하고 그 <b>아래</b> 가장자리에. 선택한 블록의 아래 가장자리가 While의 아래 가장자리와 겹칩니다.</li>
+      <li><b>②</b> 제어 블록 하나(While)를 선택하고 그 <b>아래</b> 가장자리에. 포인터 밑은 본문의 마지막 블록입니다.</li>
+      <li><b>③</b> 여러 블록 범위(<code>입력 x</code> + If)를 선택하고 그 <b>아래</b> 가장자리에. 포인터 밑은 참 갈래의 블록입니다.</li>
+      <li><b>④</b> 제어 블록 하나(While)를 선택하고 그 <b>위</b> 가장자리에. 모든 안에서 같습니다(지금도 밖).</li>
+      <li><b>⑤</b> 같은 While에서 <b>안쪽 끝</b>(본문의 맨 끝)에 넣고 싶을 때. 안마다 손이 가는 곳이 다릅니다.</li>
+    </ul></div>
+  </section>
+
+  <section>
+    <span class="part">N1</span>
+    <h2>N1. 선택 영역의 가장자리에 놓으면 어디에 들어가나</h2>
+    <p class="q">그림 아래의 <span class="good">✓</span>는 메인테이너가 바란 결과(선택 영역 밖, 선택과 같은 층), <span class="bad">✗</span>는 아닌 결과입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">N1 · 1번</span><h3>지금 그대로: 가장 안쪽 블록의 띠</h3></header>
+        <div class="figrow" data-opt="now"></div>
+        <ul><li>선택과 관계없이 포인터 밑의 가장 안쪽 블록의 8px 띠로 판정합니다.</li><li><span class="bad">②③에서 선택한 While · If의 안으로 들어갑니다. 바깥에 놓으려면 While의 왼쪽 띠(22px) 아래쪽을 노리거나, 다음 블록의 위쪽 띠에 놓아야 합니다(선택 영역이 다이어그램의 끝이면 아래 12px 띠). If는 왼쪽 띠가 없어 다음 블록 쪽만 됩니다.</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">N1 · 2번</span><h3>선택 영역의 띠가 이김</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="figrow" data-opt="sel"></div>
+        <ul><li>선택이 있으면 <b>선택 영역 전체를 블록 하나처럼</b> 보고, 그 위 · 아래 가장자리 안쪽 8px(지금의 띠와 같은 폭)는 선택 영역의 앞 · 뒤입니다. 선택과 같은 층에 들어가고, 드롭 줄은 선택 영역의 폭으로 그립니다(②③의 줄이 왼쪽 끝까지 가는 것이 ①과 다름).</li><li>선택이 없거나 포인터가 선택 영역 밖이면 지금 그대로입니다. 띠의 폭 · 판정 방식은 그대로라 새로 익힐 것이 없습니다.</li><li>⑤ 안쪽 끝: 띠보다 조금 위, 마지막 블록 위에 놓습니다. 처리 · 탈출 아이콘은 그 아래(본문 끝)에 들어가고, 제어 블록 아이콘은 그 블록을 감쌉니다. 제어 블록을 본문 끝에 넣으려면 마지막 블록을 고르고 <kbd>a</kbd>(아래에 삽입).</li><li><span class="bad">끄는 동안 선택 영역이 보이지 않으면 결과가 갑자기 바뀌어 보입니다 → N2.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 3번</span><h3>가장자리 띠를 둘로: 바깥 4px는 밖, 안쪽 4px는 안</h3></header>
+        <div class="figrow" data-opt="split"></div>
+        <ul><li>선택 영역의 가장자리 8px 띠를 반으로 나눠, 가장자리 쪽 4px는 선택 영역 밖, 그 안쪽 4px는 안쪽 블록의 사이(지금과 같음)입니다.</li><li>드래그만으로 안 · 밖을 모두 고를 수 있습니다.</li><li><span class="bad">과녁이 4px라 마우스로 맞추기 어렵고(터치는 더), 줄이 포인터의 1 ~ 2px 움직임에 폭이 바뀌며 깜박입니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 4번</span><h3>선택과 관계없이 가장 바깥 블록이 이김</h3></header>
+        <div class="figrow" data-opt="outer"></div>
+        <ul><li>가장자리를 여러 블록이 함께 쓰면 늘 가장 바깥 블록의 앞 · 뒤로 봅니다. 선택과 상관없어 끄는 동안 선택이 보이지 않아도 됩니다.</li><li><span class="bad">①처럼 본문의 마지막 블록을 골라도 한 층 위(While 아래)로 나갑니다. 여러 층이 같은 가장자리를 쓰면(If 안의 While 안의 …) 단번에 맨 바깥까지 나가 놀랍니다. 지금의 동작이 모든 곳에서 바뀝니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <span class="part">N2</span>
+    <h2>N2. 끄는 동안 선택 영역을 어떻게 알아보게 하나</h2>
+    <p class="q">M85(DI1)로 끄는 동안 주황 선택 테두리를 감췄습니다. N1의 2 · 3번은 선택 영역에 따라 결과가 바뀌므로, 끄는 동안에도 선택 영역이 어디인지 보이는 편이 낫습니다. 주황은 드롭 표시만 쓰도록(DI1) 남겨 둡니다. 장면은 N1 2번의 ②, 왼쪽은 포인터가 선택 영역에서 먼 곳, 오른쪽은 아래 가장자리입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">N2 · 1번</span><h3>보이지 않음 (지금, DI1)</h3></header>
+        <div class="figrow" data-show="none"></div>
+        <ul><li>드롭 표시만 보입니다.</li><li><span class="bad">N1 2번이면 왜 줄이 왼쪽 끝까지 가는지(While 밖인지) 줄의 폭으로만 알 수 있습니다.</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">N2 · 2번</span><h3>회색 점선 테두리</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="figrow" data-show="dash"></div>
+        <ul><li>끄는 동안 선택 하이라이트 자리에 1.5px 회색(<code>ui.muted</code>) 점선. 놓거나 취소하면 주황 선택 테두리로 돌아옵니다.</li><li>주황 드롭 표시와 색 · 모양이 모두 달라 M85의 문제(묻힘)가 다시 생기지 않고, 끄는 내내 같은 자리에 있어 예측할 수 있습니다. 파일 탐색기에서 잘라낸 항목을 점선으로 보이는 것과 비슷합니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N2 · 3번</span><h3>옅은 칠</h3></header>
+        <div class="figrow" data-show="fill"></div>
+        <ul><li>선택 영역에 옅은 회색 칠(10%).</li><li><span class="bad">블록 색(처리 · 반복의 바탕)이 칠과 섞여, 끄는 블록의 40% 흐림 · 빈 블록과 헷갈립니다. 어두운 테마에서 대비를 따로 맞춰야 합니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N2 · 4번</span><h3>가장자리 띠에 있을 때만 점선</h3></header>
+        <div class="figrow" data-show="near"></div>
+        <ul><li>평소에는 보이지 않다가, 포인터가 선택 영역의 가장자리 띠에 들어와 결과가 "영역 밖"이 될 때만 2번의 점선이 나타납니다.</li><li><span class="bad">끄는 도중에 테두리가 나타났다 사라져, 왜 생겼는지 처음에는 알기 어렵습니다. 띠에 들어가기 전에는 선택 영역이 어디인지 모릅니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>N1의 <b>번호</b> 또는 고칠 점(띠의 폭 등).</li>
+      <li>N2의 <b>번호</b> 또는 고칠 점.</li>
+      <li>정하면 Claude가 구현하고(<code>drop.ts</code>의 판정, 끄는 동안의 선택 표시), 규칙은 UX 결정 한 항목과 상호작용 규칙 7장 한 줄로 적습니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', cond: '#e6ecf5', sel: '#d0500b', dash: '#5a6476', good: '#1d7a46', bad: '#a8501a' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const rect = (x, y, w, h, fill) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '"/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '" font-size="' + (o.size || 13) + '"' + (o.bold ? ' font-weight="600"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + ' font-family="' + (o.sans ? 'IBM Plex Sans KR, sans-serif' : 'IBM Plex Mono, IBM Plex Sans KR, monospace') + '">' + esc(s) + '</text>'; };
+const pointer = (x, y) => '<path d="M' + x + ',' + y + ' l0,15 l4,-3.5 l2.8,6 l2.4,-1.1 l-2.8,-5.8 l5,-.3 z" fill="#ffffff" stroke="#151a22" stroke-width="1" stroke-linejoin="round"/>';
+// M85에서 정한 드롭 줄: 4px 주황 + 위아래 흰 테두리 2px + 블록 밖 7px 화살촉.
+const dropLine = (x, y, w) => {
+  const x1 = x - 7, x2 = x + w + 7;
+  return '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" stroke="#ffffff" stroke-width="8"/>' +
+    '<line x1="' + (x1 + 6) + '" y1="' + y + '" x2="' + (x2 - 6) + '" y2="' + y + '" stroke="' + C.sel + '" stroke-width="4"/>' +
+    '<path d="M' + x1 + ',' + (y - 6) + ' l8,6 l-8,6 z M' + x2 + ',' + (y - 6) + ' l-8,6 l8,6 z" fill="' + C.sel + '" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>';
+};
+// 끄는 동안의 선택 영역 표시(N2).
+const selMark = (b, how) => {
+  if (how === 'dash') return '<rect x="' + (b.x + 2.5) + '" y="' + (b.y + 2.5) + '" width="' + (b.w - 4) + '" height="' + (b.h - 4) + '" fill="none" stroke="' + C.dash + '" stroke-width="1.5" stroke-dasharray="5 3"/>';
+  if (how === 'fill') return '<rect x="' + (b.x + 1) + '" y="' + (b.y + 1) + '" width="' + (b.w - 1) + '" height="' + (b.h - 1) + '" fill="#1c2230" fill-opacity=".10"/>';
+  return '';
+};
+
+const W = 300, STRIP = 22, ROW = 32, TOP = 46;
+// 장면 A: Method 평균(a, n). While 본문 둘.
+const A = {
+  init: { x: 0, y: TOP, w: W, h: ROW },
+  loop: { x: 0, y: TOP + ROW, w: W, h: ROW * 3 },
+  c1: { x: STRIP, y: TOP + ROW * 2, w: W - STRIP, h: ROW },
+  c2: { x: STRIP, y: TOP + ROW * 3, w: W - STRIP, h: ROW },
+  avg: { x: 0, y: TOP + ROW * 4, w: W, h: ROW },
+};
+function drawA() {
+  let s = text(0, 13, 'Method', { size: 11.5, fill: C.muted, sans: true }) + text(0, 34, '평균(a, n)', { bold: true, size: 14.5 });
+  s += rect(A.init.x, A.init.y, A.init.w, A.init.h, C.proc) + text(10, A.init.y + 21, '합 ← 0');
+  s += rect(A.loop.x, A.loop.y, A.loop.w, A.loop.h, C.loop) + text(10, A.loop.y + 21, 'i < n');
+  s += rect(A.c1.x, A.c1.y, A.c1.w, A.c1.h, C.proc) + text(A.c1.x + 10, A.c1.y + 21, '합 ← 합 + a[i]');
+  s += rect(A.c2.x, A.c2.y, A.c2.w, A.c2.h, C.proc) + text(A.c2.x + 10, A.c2.y + 21, 'i ← i + 1');
+  s += rect(A.avg.x, A.avg.y, A.avg.w, A.avg.h, C.proc) + text(10, A.avg.y + 21, '평균 ← 합 / n');
+  return s;
+}
+// 장면 B: Method 절댓값 출력. 입력 x, If x < 0 (참: x ← -x, 거짓: ∅), 출력 x.
+const HEAD = 40;
+const Bs = {
+  inp: { x: 0, y: TOP, w: W, h: ROW },
+  iff: { x: 0, y: TOP + ROW, w: W, h: HEAD + ROW },
+  t: { x: 0, y: TOP + ROW + HEAD, w: W / 2, h: ROW },
+  f: { x: W / 2, y: TOP + ROW + HEAD, w: W / 2, h: ROW },
+  out: { x: 0, y: TOP + ROW * 2 + HEAD, w: W, h: ROW },
+};
+function drawB() {
+  let s = text(0, 13, 'Method', { size: 11.5, fill: C.muted, sans: true }) + text(0, 34, '절댓값 출력', { bold: true, size: 14.5 });
+  s += rect(Bs.inp.x, Bs.inp.y, Bs.inp.w, Bs.inp.h, C.proc) + text(10, Bs.inp.y + 21, '입력 x');
+  const y = Bs.iff.y;
+  s += rect(0, y, W, HEAD, C.cond);
+  s += '<line x1=".5" y1="' + (y + .5) + '" x2="' + (W / 2 + .5) + '" y2="' + (y + HEAD + .5) + '" stroke="' + C.line + '"/><line x1="' + (W + .5) + '" y1="' + (y + .5) + '" x2="' + (W / 2 + .5) + '" y2="' + (y + HEAD + .5) + '" stroke="' + C.line + '"/>';
+  s += text(W / 2, y + 17, 'x < 0', { anchor: 'middle' }) + text(8, y + HEAD - 6, '참', { size: 11.5, sans: true }) + text(W - 8, y + HEAD - 6, '거짓', { size: 11.5, sans: true, anchor: 'end' });
+  s += rect(Bs.t.x, Bs.t.y, Bs.t.w, Bs.t.h, C.proc) + text(10, Bs.t.y + 21, 'x ← -x');
+  s += rect(Bs.f.x, Bs.f.y, Bs.f.w, Bs.f.h, C.proc) + text(Bs.f.x + Bs.f.w / 2, Bs.f.y + 21, '∅', { anchor: 'middle', fill: C.muted });
+  s += rect(Bs.out.x, Bs.out.y, Bs.out.w, Bs.out.h, C.proc) + text(10, Bs.out.y + 21, '출력 x');
+  return s;
+}
+const rangeB = { x: 0, y: Bs.inp.y, w: W, h: Bs.inp.h + Bs.iff.h };
+
+// 결과: [포인터 x, 포인터 y, 줄 x, 줄 y, 줄 폭, 표시, 설명]
+const bottomA = A.c2.y + ROW; // While · 본문 마지막 블록이 함께 쓰는 아랫선
+const bottomB = Bs.t.y + ROW;
+const R = {
+  now: {
+    1: [170, bottomA - 3, STRIP, bottomA, W - STRIP, 'good', '<b>i ← i + 1 아래</b>(While 안, 선택한 블록 밖)'],
+    2: [170, bottomA - 3, STRIP, bottomA, W - STRIP, 'bad', '<b>While 본문의 끝</b> — 선택한 While 안'],
+    3: [60, bottomB - 3, 0, bottomB, W / 2, 'bad', '<b>참 갈래의 끝</b> — 선택한 If 안'],
+    4: [170, A.loop.y + 3, 0, A.loop.y, W, 'good', '<b>While 위</b>(헤더가 가장 바깥이라 지금도 밖)'],
+    5: [170, bottomA - 3, STRIP, bottomA, W - STRIP, 'good', '가장자리 띠 그대로 → <b>본문의 끝</b>'],
+  },
+  sel: {
+    1: [170, bottomA - 3, STRIP, bottomA, W - STRIP, 'good', '<b>i ← i + 1 아래</b>(선택과 같은 층, 지금과 같음)'],
+    2: [170, bottomA - 3, 0, bottomA, W, 'good', '<b>While 아래</b> — 줄이 왼쪽 끝까지'],
+    3: [60, bottomB - 3, 0, bottomB, W, 'good', '<b>If 아래</b>(출력 x 위) — 줄이 전체 폭'],
+    4: [170, A.loop.y + 3, 0, A.loop.y, W, 'good', '<b>While 위</b>(지금과 같음)'],
+    5: [170, A.c2.y + 12, STRIP, bottomA, W - STRIP, 'good', '띠보다 위, <b>마지막 블록 위</b>에 놓음 → 그 아래(본문의 끝)'],
+  },
+  split: {
+    1: [170, bottomA - 3, STRIP, bottomA, W - STRIP, 'good', '<b>i ← i + 1 아래</b>(지금과 같음)'],
+    2: [170, bottomA - 3, 0, bottomA, W, 'good', '가장자리에서 4px 안 → <b>While 아래</b>'],
+    3: [60, bottomB - 3, 0, bottomB, W, 'good', '가장자리에서 4px 안 → <b>If 아래</b>'],
+    4: [170, A.loop.y + 3, 0, A.loop.y, W, 'good', '<b>While 위</b>(지금과 같음)'],
+    5: [170, bottomA - 7, STRIP, bottomA, W - STRIP, 'good', '가장자리에서 4 ~ 8px → <b>본문의 끝</b>(과녁 4px)'],
+  },
+  outer: {
+    1: [170, bottomA - 3, 0, bottomA, W, 'bad', '<b>While 아래</b> — 고른 블록의 층을 벗어남'],
+    2: [170, bottomA - 3, 0, bottomA, W, 'good', '<b>While 아래</b>'],
+    3: [60, bottomB - 3, 0, bottomB, W, 'good', '<b>If 아래</b>'],
+    4: [170, A.loop.y + 3, 0, A.loop.y, W, 'good', '<b>While 위</b>'],
+    5: [170, A.c2.y + 12, STRIP, bottomA, W - STRIP, 'good', '<b>마지막 블록 위</b>에 놓음 → 그 아래(본문의 끝)'],
+  },
+};
+const selOf = { 1: A.c2, 2: A.loop, 3: rangeB, 4: A.loop, 5: A.loop };
+const caps = { 1: '① 블록 하나 · 아래', 2: '② While 하나 · 아래', 3: '③ 범위(입력 x + If) · 아래', 4: '④ While 하나 · 위', 5: '⑤ While 안쪽 끝에 넣기' };
+const svg = (s, h) => '<svg width="' + (W + 16) + '" height="' + h + '" viewBox="-8 0 ' + (W + 16) + ' ' + h + '">' + s + '</svg>';
+function scene(opt, n, how) {
+  const r = R[opt][n];
+  let s = n === 3 ? drawB() : drawA();
+  s += selMark(selOf[n], how);
+  s += dropLine(r[2] + 1, r[3] + 1, r[4]);
+  s += pointer(r[0], r[1]);
+  const h = (n === 3 ? Bs.out.y : A.avg.y) + ROW + 8;
+  return svg(s, h);
+}
+const mark = k => k === 'good' ? '<span class="good">✓</span> ' : '<span class="bad">✗</span> ';
+document.querySelectorAll('[data-opt]').forEach(el => {
+  const opt = el.dataset.opt;
+  el.innerHTML = [1, 2, 3, 4, 5].map(n => '<figure><div class="fig">' + scene(opt, n, 'dash') + '</div><figcaption><b>' + caps[n] + '</b><br>' + mark(R[opt][n][5]) + R[opt][n][6] + '</figcaption></figure>').join('');
+});
+// N2: 왼쪽은 포인터가 먼 곳(헤더 아래 띠 → 본문 맨 앞), 오른쪽은 선택 영역 아래 가장자리.
+function showScene(how, near) {
+  let s = drawA();
+  const draw = how === 'near' ? (near ? 'dash' : '') : how;
+  s += selMark(A.loop, draw);
+  if (near) s += dropLine(1, bottomA + 1, W) + pointer(170, bottomA - 3);
+  else s += dropLine(1, A.init.y + 1, W) + pointer(170, A.init.y - 4);
+  return svg(s, A.avg.y + ROW + 8);
+}
+document.querySelectorAll('[data-show]').forEach(el => {
+  const how = el.dataset.show;
+  el.innerHTML = [false, true].map(near => '<figure><div class="fig">' + showScene(how, near) + '</div><figcaption>' + (near ? '포인터가 선택한 While의 아래 가장자리' : '포인터가 선택 영역에서 먼 곳(본문 맨 앞)') + '</figcaption></figure>').join('');
+});
+})();
+</script>
