@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0048: 접고 펴기도 실행 취소의 단계로 하고, undo 스택에는 내용과 접힘을 함께 저장한다
 
+> [!NOTE] 이후 변경
+> - 2026-11-28: 이름 띠 보기(`bands`)도 실행 취소의 대상으로 정했다. 되돌릴 때 지금 값을 두는 것은 없어진다. 아직 코드에는 없다 → [[ux-decisions#UN2. 이름 띠 보기도 실행 취소의 대상|UN2]]
+
 ## 배경
 
 2026-10-13부터 실행 취소의 대상은 내용(`Content`)뿐이었다. 뷰 상태(`View`: 접힘 · 펴 보기 · 이름 띠 · 결과 기호)는 파일에 저장되지만 실행 취소의 대상이 아니었다([[0018-save-as-shown|ADR-0018]], 그때의 UX 결정 [[ux-decisions#Q9. 실행 취소의 대상 (R7)|Q9]]). 그래서 undo 스택(`editor`의 `EditorState.undo` · `redo`)은 `Content`의 스냅숏만 저장했다([[0029-immutable-document-undo|ADR-0029]]).

@@ -1,0 +1,533 @@
+<meta charset="utf-8">
+<title>M89 조작의 대원칙 검토</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M87과 같은 틀. 위에서 아래로: 진단 → 기준 → 제안(대응 그림, 원칙 카드 다섯) → 부딪힌 기록 → 살필 곳 → 물음 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --warn-soft: #fbece2; --box: #f5f7fb;
+  --p1: #2c55c9; --p2: #1d7a46; --p3: #8a4fbf; --p4: #a8501a; --p5: #0f7b8a; --out: #7a8496;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2518; --box: #222833; --p1: #8ba7ff; --p2: #6fd197; --p3: #c59bf0; --p4: #f0a46c; --p5: #5fd0de; --out: #8892a4; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --warn-soft: #3a2518; --box: #222833; --p1: #8ba7ff; --p2: #6fd197; --p3: #c59bf0; --p4: #f0a46c; --p5: #5fd0de; --out: #8892a4; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 86ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.num { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--panel); font-family: var(--mono); font-weight: 600; font-size: 15px; line-height: 1; flex: none; }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul, .sum ul, .sum ol, .pr ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b, .sum li b, .pr li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 110ch; }
+.tw { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; background: var(--panel); min-width: 640px; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--box); font-weight: 600; }
+td.k { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; color: var(--accent); font-weight: 600; }
+td.n { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.lv { font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 1px 9px; white-space: nowrap; background: var(--box); color: var(--muted); border: 1px solid var(--line); }
+.lv.ok { background: var(--pick-soft); color: var(--pick); border-color: transparent; }
+.lv.off { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.fig { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; max-width: 100%; }
+.fig svg { display: block; max-width: none; font-family: var(--font); }
+figure { margin: 0; display: grid; gap: 6px; }
+figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.5; max-width: 100ch; }
+figcaption b { color: var(--fg); font-weight: 600; }
+/* 원칙 카드 */
+.pr { background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--c); border-radius: 0 0 8px 8px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.pr > header { display: grid; gap: 4px; }
+.pr .no { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--c); letter-spacing: .04em; }
+.pr h3 { font-size: 21px; letter-spacing: -.01em; }
+.pr .def { font-size: 15px; color: var(--fg); max-width: 80ch; }
+.pr .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px 22px; }
+.pr .cols > div { display: grid; gap: 5px; align-content: start; min-width: 0; }
+.pr h4 { margin: 0; font-size: 12px; font-weight: 600; color: var(--c); letter-spacing: .02em; }
+.pr p.t { font-size: 13.5px; color: var(--muted); }
+.pr p.t b { color: var(--fg); font-weight: 600; }
+.pr ol.ask { margin: 0; padding-left: 1.3em; font-size: 14px; color: var(--fg); display: grid; gap: 3px; }
+.find { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.find h3 { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.find p { font-size: 14px; color: var(--muted); max-width: 100ch; }
+.find p b { color: var(--fg); }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.kind { font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 1px 9px; background: var(--warn-soft); color: var(--warn); }
+.kind.info { background: var(--box); color: var(--muted); }
+.stack { display: grid; gap: 4px; }
+.stack .bar { border: 1px solid var(--line); background: var(--box); border-radius: 5px; padding: 3px 8px; font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.stack .bar.top { background: var(--pick-soft); border-color: transparent; color: var(--fg); font-weight: 600; }
+.chip { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; background: var(--panel); color: var(--muted); }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+.scene { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.scene svg { display: block; max-width: none; font-family: var(--font); }
+/* 대응 그림 */
+.mp text { fill: var(--fg); font-size: 13px; }
+.mp .s { fill: var(--muted); font-size: 11.5px; }
+.mp .l { fill: var(--panel); stroke: var(--line); }
+.mp .r { fill: var(--panel); stroke-width: 2; }
+.mp path { fill: none; stroke-width: 2; opacity: .85; }
+</style>
+
+<main>
+  <div>
+    <h1>M89 · 조작의 대원칙 검토</h1>
+    <p class="lede">메인테이너(2026-11-28): "interaction rules를 Fable로 깊게 생각해서 UX엑스퍼트로서 검토해주세요. 추상화하여 대원칙들이 적절하게 정의되었는지를 검토합니다. 거장이라면 몇개의 대원칙으로 추상화하고 읽는 사람이 쉽게 수긍이가고 앱을 평가할 수 있을 것입니다."</p>
+    <p class="lede">읽은 것: UX 개요의 원칙 열 개와 공통 규칙 R1 ~ R7, 조작 규칙 1 ~ 9장 전체, DR-0024, UX 결정 가운데 Q3 · Q7 · KP2 · UN1 · TW1 · UP1. 앱을 직접 조작해 확인한 것은 없고, <b>아래의 "살필 곳"은 모두 문서에 적힌 규칙을 원칙에 대 본 결과</b>입니다.</p>
+  </div>
+
+  <div class="sum">
+    <h2>요약</h2>
+    <ul>
+      <li><b>지금의 열 개는 틀린 것이 없지만, 높이가 다른 것이 한 줄에 서 있습니다.</b> 제품의 전제(1), 판단의 기준(2 · 3 · 4 · 7 · 8), 요구사항(5), 관례 하나의 선택(6), 좁은 영역의 방침(9), 화면 배치의 규칙(10)이 같은 번호를 받았습니다.</li>
+      <li><b>원칙 표에 없는데 규칙 여럿을 이끄는 생각이 둘 있습니다.</b> "편집기는 텍스트의 뜻을 판정하지 않는다"(탈출의 위치, 인자의 개수, For의 한 칸 등)와 "저장되는 그림은 화면 그대로"(ADR-0018).</li>
+      <li><b>원칙마다 "새 기능에 물어볼 질문"이 없어 잣대로 쓰기 어렵습니다.</b> 원칙끼리 부딪혔을 때 어느 쪽이 이겼는지도 원칙 절에는 없습니다.</li>
+      <li><b>제안: 제품의 약속 한 문장과 대원칙 다섯.</b> ① 구조를 말하면 그림이 따라온다 ② 보이는 대로 다룬다 ③ 고르고, 명령한다 ④ 손에 익은 대로 ⑤ 멈춰 세우지 않는다. 지금의 열 개는 버리지 않고 다섯 아래의 따름 규칙이 됩니다.</li>
+      <li>다섯을 잣대로 지금의 규칙을 대 보니 <b>살필 곳 아홉(G1 ~ G9)</b>이 나왔습니다. 물음은 Q1(원칙 체계)부터 하나씩 묻습니다.</li>
+    </ul>
+  </div>
+
+  <div class="sum" style="border-left-color: var(--pick)">
+    <h2>정한 것 (메인테이너, 2026-11-28)</h2>
+    <ul>
+      <li><b>Q1 1번:</b> 제품의 약속 한 문장과 대원칙 다섯, 원칙마다 잣대. 지금의 열 개는 다섯 아래의 따름 규칙이 되고 10은 화면 배치 문서로 옮깁니다.</li>
+      <li><b>Q2 1번:</b> 원칙끼리 부딪힌 결정을 원칙 절에 판례로 적습니다.</li>
+      <li><b>G2 1번:</b> 접힌 줄도 드래그해 옮깁니다. <b>G3 1번:</b> 이름 띠를 껐으면 접기 영역 끝의 블록이 한 번에 이동합니다. <b>G4 1번:</b> 병렬 처리의 분기 선택 구간에 호버 표시를 합니다. <b>G5 1번:</b> 선택이 없을 때 붙여넣기는 지금 다이어그램의 맨 끝에 붙입니다. <b>G8 1번:</b> 이름 띠 켜고 끄기도 실행 취소의 대상입니다.</li>
+      <li><b>G7 (메인테이너가 적은 규칙):</b> "마우스가 캔버스에 호버 중이면 페이지 스크롤. 다이어그램에 호버 중이면 선택 이동. 맨 위 선택에서 휠 업은 스크롤 업. 맨 아래 선택에서 휠 다운은 스크롤 다운."</li>
+      <li>문서(<code>docs/</code> · DR · UX 결정)와 코드에는 아직 반영하지 않았습니다. G1 · G6(문서 한 줄)과 G9(backlog 후보)는 반영할 때 함께 넣습니다.</li>
+    </ul>
+  </div>
+
+  <section>
+    <p class="part">1 · 진단</p>
+    <h2>지금의 열 개는 무엇인가</h2>
+    <p class="q">원칙마다 "이것은 어떤 종류의 문장인가"와 "조작 규칙의 몇 개 절이 이 원칙을 단다고 적었나"(절 첫머리의 "따르는 원칙")를 보았습니다. 조작 규칙은 1 ~ 8장, 여덟 절입니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>지금의 원칙</th><th>문장의 종류</th><th>다는 절</th><th>진단</th></tr></thead>
+        <tbody>
+          <tr><td class="k">1</td><td>구조를 편집하면 그림이 따라온다</td><td><span class="lv">제품의 전제</span></td><td class="n">2</td><td>다른 아홉이 여기서 나옵니다. 판단 기준이라기보다 "이 도구는 무엇인가"의 답입니다(R-CORE-01).</td></tr>
+          <tr><td class="k">2</td><td>보이는 대로 다룬다</td><td><span class="lv ok">판단의 기준</span></td><td class="n">3</td><td>대원칙입니다. 다만 뜻에 세부 규칙("<code>Shift</code>는 늘 위 · 왼쪽")이 들어 있습니다.</td></tr>
+          <tr><td class="k">3</td><td>선택한 것이 대상이다</td><td><span class="lv ok">판단의 기준</span></td><td class="n">3</td><td>대원칙입니다. 4번과 한 생각의 두 면입니다(무엇에 적용되나 / 어디서나 같게 적용되나).</td></tr>
+          <tr><td class="k">4</td><td>같은 일은 같은 방법으로</td><td><span class="lv ok">판단의 기준</span></td><td class="n">4</td><td>이름만으로는 어느 앱에나 붙는 말입니다. 이 앱의 내용은 "명령은 적게, 대상은 여럿, 입구도 여럿"입니다.</td></tr>
+          <tr><td class="k">5</td><td>키보드만으로 모두</td><td><span class="lv off">요구사항</span></td><td class="n">1</td><td>R-NFR-05 그대로입니다. 4번("입구가 달라도 명령은 하나")에서 나오는 검사 항목입니다.</td></tr>
+          <tr><td class="k">6</td><td>Vim의 손에 맞게</td><td><span class="lv off">관례 하나의 선택</span></td><td class="n">1</td><td>DR-0009의 결정입니다. 규칙은 이미 다른 관례도 근거로 적습니다(파일 탐색기의 사이 · 위, IDE의 Surround With). 더 큰 원칙의 한 사례입니다.</td></tr>
+          <tr><td class="k">7</td><td>실행 취소 한 번으로 돌아온다</td><td><span class="lv ok">판단의 기준</span></td><td class="n">3</td><td>대원칙입니다. 8번과 같은 목적을 나눠 적었습니다(묻지 않는다 / 막지 않는다).</td></tr>
+          <tr><td class="k">8</td><td>막지 않고 알린다</td><td><span class="lv ok">판단의 기준</span></td><td class="n">3</td><td>대원칙입니다. 세 가지(모드를 늘리지 않음, 미리 보임, 한 뒤에 알림)가 한 문장에 있습니다.</td></tr>
+          <tr><td class="k">9</td><td>받아들이기는 넓게, 만들기는 좁게</td><td><span class="lv off">좁은 영역의 방침</span></td><td class="n">1</td><td>파일을 열 때의 방침입니다. "만들기는 좁게"는 R-CORE-02(잘못된 구조는 만들 수 없다)와 같은 말이고, 1번의 다른 면입니다.</td></tr>
+          <tr><td class="k">10</td><td>화면은 다이어그램에게</td><td><span class="lv off">화면 배치의 규칙</span></td><td class="n">0</td><td>조작 규칙의 어느 절도 달지 않습니다. 좁은 화면에서 툴바를 접는 규칙이라 화면 배치(05-screen-layout)의 것입니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cards">
+      <div class="find"><h3><span class="tag">D1</span> 높이가 섞였다</h3><p>판단의 기준 다섯과 그렇지 않은 다섯이 한 줄에 있습니다. 읽는 사람은 "Vim의 손에 맞게"와 "보이는 대로 다룬다"를 같은 무게로 읽게 됩니다.</p></div>
+      <div class="find"><h3><span class="tag">D2</span> 빠진 생각 둘</h3><p><b>텍스트는 자유다:</b> 탈출의 위치를 검사하지 않음(XB1), 인자의 개수가 달라도 알리지 않음, For를 칸으로 나누지 않음(FB1), 변수를 찾아 제안하지 않음, 참 · 거짓을 맞바꿔도 조건은 그대로. <b>화면 그대로 저장:</b> 접힘 · 이름 띠 · 펴 보기가 파일과 그림에 들어감(ADR-0018).</p></div>
+      <div class="find"><h3><span class="tag">D3</span> 잣대가 없다</h3><p>원칙이 "뜻"으로만 적혀 있어, 새 기능을 대 볼 예/아니오 질문이 없습니다. DR-0024의 기준 "규칙을 더할 때 어느 원칙을 따르는지 바로 말할 수 있어야"는 채웠지만 "이 규칙이 원칙에 맞는가"는 아직 사람의 기억에 맡깁니다.</p></div>
+      <div class="find"><h3><span class="tag">D4</span> 부딪힌 기록이 없다</h3><p>원칙끼리 부딪혀 한쪽이 이긴 결정이 적어도 넷 있습니다(4부). 원칙 절만 읽으면 그 예외가 어긋난 것으로 보입니다.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">2 · 기준</p>
+    <h2>대원칙이 갖출 것 넷</h2>
+    <p class="q">원칙을 줄일 때 쓴 기준입니다. 넷을 모두 채우는 문장만 대원칙으로 올렸습니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>기준</th><th>대 보는 법</th></tr></thead>
+        <tbody>
+          <tr><td class="k">가</td><td><b>반대편도 말이 되는 선택이다</b></td><td>"쓰기 쉽게"는 반대로 하는 도구가 없어 원칙이 아닙니다. "구조를 편집한다"는 draw.io가 반대로 하므로 원칙입니다.</td></tr>
+          <tr><td class="k">나</td><td><b>예/아니오로 물을 수 있다</b></td><td>새 기능을 놓고 한두 개의 질문으로 맞는지 답할 수 있어야 합니다.</td></tr>
+          <tr><td class="k">다</td><td><b>높이가 같고 중복되지 않는다</b></td><td>한 규칙이 두 원칙 가운데 어느 쪽인지 망설여지면 둘은 하나입니다.</td></tr>
+          <tr><td class="k">라</td><td><b>한 손에 꼽힌다</b></td><td>설계 회의에서 문서를 열지 않고 말할 수 있는 수(다섯 안팎)여야 합니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">3 · 제안</p>
+    <h2>약속 한 문장과 대원칙 다섯</h2>
+    <div class="sum" style="border-left-color: var(--pick)">
+      <p class="q"><b>제품의 약속:</b> AriadneNSD는 구조 편집기다. 사용자는 키보드로 로직의 구조를 말하고, 그림은 편집기가 그린다. 그 그림은 남는 문서다.</p>
+      <p class="q">이 문장은 UX 개요 1장("누구를 위한 편집기인가")과 R-CORE-01 · 03 · 04에 이미 있습니다. 원칙은 여기서 나옵니다: 구조(①), 그림(②), 말하는 법(③ · ④), 일하는 흐름(⑤).</p>
+    </div>
+
+    <figure>
+      <div class="fig">
+        <svg class="mp" viewBox="0 0 960 404" width="960" height="404" role="img" aria-label="지금의 원칙 열 개가 제안하는 대원칙 다섯으로 가는 대응">
+          <g id="mp-lines"></g>
+          <g id="mp-left"></g>
+          <g id="mp-right"></g>
+        </svg>
+      </div>
+      <figcaption><b>범례:</b> 왼쪽은 지금의 원칙 열 개, 오른쪽은 제안하는 대원칙 다섯. 선의 색은 가는 곳의 색입니다. 오른쪽 상자의 둘째 줄 "+"는 지금 원칙 표에 없어 새로 적는 내용입니다. 점선 상자는 조작의 원칙에서 빼서 화면 배치 문서로 옮기는 것입니다.</figcaption>
+    </figure>
+
+    <article class="pr" style="--c: var(--p1)">
+      <header>
+        <p class="no">대원칙 ①</p>
+        <h3>구조를 말하면 그림이 따라온다</h3>
+        <p class="def">편집기는 구조를 책임지고, 구조만 책임진다. 좌표 · 크기 · 정렬은 사용자가 다루지 않고, 편집 명령은 올바른 구조만 만든다. 텍스트의 뜻은 사용자의 것이라 편집기가 판정하지 않는다.</p>
+      </header>
+      <div class="cols">
+        <div><h4>왜 수긍이 가나</h4>
+          <p class="t">NS 차트는 goto를 그릴 수 없게 만든 표기입니다. 표기가 잘못된 구조를 막듯이 편집기도 막습니다. <b>반대편:</b> 도형을 자유롭게 놓는 그림판(draw.io), 텍스트까지 검사하는 IDE. 둘 사이에서 "구조까지만"이라고 선을 그은 것이 이 원칙입니다.</p></div>
+        <div><h4>잣대</h4>
+          <ol class="ask"><li>사용자가 좌표 · 크기 · 간격을 정하는 곳이 있는가?</li><li>편집 명령으로 표준에 없는 구조를 만들 수 있는가?</li><li>편집기가 텍스트의 뜻을 판정해 막거나 고치는가?</li></ol>
+          <p class="t">셋 다 "아니오"여야 합니다.</p></div>
+        <div><h4>이 아래의 규칙</h4>
+          <ul><li>지금의 원칙 <b>1</b> · <b>9</b></li><li>자동 배치(5장, ADR-0004), 연속 선택과 자동 확장(ADR-0008), 줄이 비면 빈 블록 하나, default는 늘 맨 오른쪽, 분기의 최소 수(MD3)</li><li>파일의 모양은 그대로 열고 새로 만들지는 않음(CD1 · CD2 · ADR-0052 · DC1)</li><li>새로 적는 것: 탈출의 위치(XB1), 인자의 개수, For의 한 칸(FB1), 이름을 적는 호출 블록(CB6), 조건을 다시 쓰지 않음</li></ul></div>
+        <div><h4>살필 곳</h4>
+          <ul><li><b>G1</b> 편집기가 텍스트 안을 읽는 곳은 Method 헤더의 <code>(</code> 하나입니다. 원칙을 적으면 이 예외도 적어야 합니다.</li></ul></div>
+      </div>
+    </article>
+
+    <article class="pr" style="--c: var(--p2)">
+      <header>
+        <p class="no">대원칙 ②</p>
+        <h3>보이는 대로 다룬다</h3>
+        <p class="def">화면에 하나로 보이는 것은 조작에서도 하나다. 명령의 말은 그림의 방향을 따른다. 화면에 보이는 그대로 저장된다.</p>
+      </header>
+      <div class="cols">
+        <div><h4>왜 수긍이 가나</h4>
+          <p class="t">직접 조작과 WYSIWYG입니다. 사용자는 모델의 트리를 보지 않고 그림을 봅니다. 그림과 다르게 동작하는 곳마다 설명이 필요해집니다. <b>반대편:</b> 모델의 노드가 조작 단위인 편집기(접기 영역이 "범위"일 뿐 상자가 아닌 것), 화면과 내보낸 그림이 다른 도구.</p></div>
+        <div><h4>잣대</h4>
+          <ol class="ask"><li>상자 하나로 보이는 것을 하나로 선택 · 이동 · 복사 · 드래그할 수 있는가?</li><li>보이지 않는 것이 조작의 결과를 바꾸는가?</li><li>명령 이름의 위 · 아래 · 왼쪽 · 오른쪽이 그림의 방향과 같은가?</li><li>화면과 저장된 그림이 같은가?</li></ol></div>
+        <div><h4>이 아래의 규칙</h4>
+          <ul><li>지금의 원칙 <b>2</b></li><li>상자 하나가 한 단위(MD1 · DF1 ~ DF3 · FD5 · CB5 · NF1 · Q10 · BI1), 그림의 방향(NM1 · Q5)</li><li>새로 적는 것: 저장은 화면 그대로(ADR-0018), 편집 표시(선택, 펼침 삼각형)는 그림에 넣지 않음</li></ul></div>
+        <div><h4>살필 곳</h4>
+          <ul><li><b>G2</b> 접힌 줄은 상자인데 끌 수 없고 그 위에 놓을 수도 없습니다.</li><li><b>G3</b> 이름 띠를 끈 접기 영역은 보이지 않는데 접기 · 풀기가 적용됩니다.</li><li><b>G4</b> 병렬 처리의 분기 선택 자리는 그림에 표시가 없습니다.</li></ul></div>
+      </div>
+    </article>
+
+    <article class="pr" style="--c: var(--p3)">
+      <header>
+        <p class="no">대원칙 ③</p>
+        <h3>고르고, 명령한다</h3>
+        <p class="def">먼저 선택하고, 그다음 명령한다. 명령은 적고, 선택한 것이 무엇이든 같은 뜻으로 적용된다. 입구(키, 메뉴, 툴바, 커맨드 팔레트, 드래그)가 달라도 명령은 하나다. 명령이 끝나면 결과가 선택되어 다음 명령으로 이어진다.</p>
+      </header>
+      <div class="cols">
+        <div><h4>왜 수긍이 가나</h4>
+          <p class="t">명령 10개와 대상 5종을 따로 외우면 50가지지만, 조합으로 익히면 15가지입니다. Vim의 operator와 text object가 같은 생각이고, 모드를 두지 않는 Macintosh 계열의 "대상 먼저, 동작 나중"도 같습니다. <b>반대편:</b> 대상마다 전용 명령(분기 삽입 키, 접기 영역 이동 키), 도구를 먼저 고르고 자리를 찍는 그림판, 삽입 위치 모드.</p></div>
+        <div><h4>잣대</h4>
+          <ol class="ask"><li>이미 있는 명령을 이 대상에 적용해 풀 수 있는데 새 명령을 만들었는가?</li><li>같은 명령이 대상이나 입구에 따라 다른 결과를 내는가?</li><li>마우스 없이 끝까지 할 수 있는가?</li><li>명령 뒤에 다음 명령을 바로 이을 수 있게 선택이 남는가?</li></ol></div>
+        <div><h4>이 아래의 규칙</h4>
+          <ul><li>지금의 원칙 <b>3</b> · <b>4</b> · <b>5</b></li><li>공통 규칙 R1 ~ R7 전부</li><li>선택한 것, 아니면 가장 가까운 담은 것(Q8 · FD1 · FD6), 명령 뒤의 선택(Q19 · FD7 · FD10 · XM2), 분기 라벨에서도 같은 명령(Q5 · BL1 · Q6), 명령 목록 하나(ADR-0033), 키보드만으로(R-NFR-05)</li></ul></div>
+        <div><h4>살필 곳</h4>
+          <ul><li><b>G5</b> 선택이 없을 때 툴바의 삽입은 맨 끝에 넣고, 붙여넣기는 거절합니다.</li><li><b>G6</b> 이동 명령은 옆 제어 블록 안으로 들어가지 못하고 드래그는 들어갑니다.</li></ul></div>
+      </div>
+    </article>
+
+    <article class="pr" style="--c: var(--p4)">
+      <header>
+        <p class="no">대원칙 ④</p>
+        <h3>손에 익은 대로</h3>
+        <p class="def">이미 널리 쓰는 약속이 있으면 새로 짓지 않는다. 캔버스의 키는 Vim, 창과 파일은 운영체제 표준, 마우스는 탐색기와 IDE의 관례를 따른다. 다르게 만들 때는 이유를 적는다.</p>
+      </header>
+      <div class="cols">
+        <div><h4>왜 수긍이 가나</h4>
+          <p class="t">사용자는 이 앱보다 다른 도구에서 훨씬 많은 시간을 보냅니다(Jakob의 법칙). 손이 이미 아는 것은 익힐 것이 없습니다. <b>반대편:</b> 자기만의 키 체계를 가진 도구. 지금의 원칙 6은 이 원칙의 Vim 부분만 적은 것입니다.</p></div>
+        <div><h4>잣대</h4>
+          <ol class="ask"><li>이 조작에 이미 널리 쓰는 약속이 있는가(Vim, 표준 단축키, 탐색기, IDE)?</li><li>있다면 그대로인가? 다르다면 이유가 문서에 있는가?</li><li>두 약속이 다르면 어느 쪽을 따르는지 정해져 있는가?</li></ol></div>
+        <div><h4>이 아래의 규칙</h4>
+          <ul><li>지금의 원칙 <b>6</b></li><li>Vim 키(DR-0009), <code>Esc</code>(Q3), 푸는 명령 둘(Q7), <code>o</code> · <code>O</code>(KP2)</li><li>이미 따르고 있지만 원칙에는 없던 것: 드롭의 사이 · 위(W2, 파일 탐색기), 감싸기(IDE의 Surround With), 더블클릭은 편집(Q2), <code>Shift</code>+클릭 범위, <code>Shift</code>+<code>F10</code>, 커맨드 팔레트(W6), 모달의 <code>Enter</code> · <code>Esc</code></li></ul></div>
+        <div><h4>살필 곳</h4>
+          <ul><li><b>G7</b> 블록을 선택하면 마우스 휠이 스크롤이 아니라 선택을 옮깁니다.</li></ul></div>
+      </div>
+    </article>
+
+    <article class="pr" style="--c: var(--p5)">
+      <header>
+        <p class="no">대원칙 ⑤</p>
+        <h3>멈춰 세우지 않는다</h3>
+        <p class="def">묻는 대신 되돌릴 수 있게 하고, 막는 대신 알린다. 할 일은 미리 보이고, 한 일과 할 수 없는 일은 이유와 함께 알린다. 묻는 것은 되돌릴 수 없는 일뿐이다.</p>
+      </header>
+      <div class="cols">
+        <div><h4>왜 수긍이 가나</h4>
+          <p class="t">확인 창은 습관적으로 눌려 보호가 되지 않고, 실행 취소는 실제로 보호합니다(Apple HIG의 forgiveness, Raskin의 <i>The Humane Interface</i>). 모달과 모드는 손을 멈추게 합니다. <b>반대편:</b> "정말 삭제할까요?", 입력을 받지 않는 검증, 아무 반응 없는 키.</p></div>
+        <div><h4>잣대</h4>
+          <ol class="ask"><li>되돌릴 수 있는 일인데 묻는가?</li><li>묻는 일을 되돌릴 수 있게 만들 방법은 없는가?</li><li>명령이 아무 일도 하지 않을 때 이유를 알리는가?</li><li>결과를 하기 전에 볼 수 있는가(드롭 표시, 키 힌트, 툴팁)?</li><li>그림이 바뀌는 일이 모두 실행 취소 한 번으로 돌아오는가?</li></ol></div>
+        <div><h4>이 아래의 규칙</h4>
+          <ul><li>지금의 원칙 <b>7</b> · <b>8</b></li><li>실행 취소의 단위와 대상(UN1 · AR2 · MD2 · FD4), 묻지 않음(MD4, 다이어그램 삭제, 새 Method로 빼기), 묻는 곳(US1 · BS3 · JP2)</li><li>미리 보임과 알림(DI1 · K3 · TB3 · Q14-a, 재귀를 펴고 나서 알림), 모달 대신 인라인 편집(접기 영역의 이름)</li></ul></div>
+        <div><h4>살필 곳</h4>
+          <ul><li><b>G8</b> 이름 띠 켜고 끄기만 실행 취소가 되지 않습니다.</li><li><b>G9</b> 지금 묻는 두 곳은 되돌릴 수 있게 만들 수 있습니다.</li></ul></div>
+      </div>
+    </article>
+
+    <div class="sum">
+      <h2>다섯으로 새 기능을 대 보면</h2>
+      <p class="q">미결정으로 남은 "<b>If ↔ Case로 바꿀 때 조건 텍스트를 다시 쓸까</b>"(조작 규칙 9장)에 대 봅니다.</p>
+      <ul>
+        <li><b>①의 잣대 3</b>(편집기가 텍스트의 뜻을 판정해 고치는가): <code>key == 1</code>로 다시 쓰려면 조건의 뜻을 읽어야 합니다. → 다시 쓰지 않습니다.</li>
+        <li><b>⑤의 잣대 3</b>(알리는가): 바꾸고 나서 "조건을 확인하세요"라고 알립니다. 참 · 거짓을 맞바꿀 때 이미 그렇게 합니다.</li>
+        <li>지금 "정할 때까지 그대로 둔다"는 임시 규칙이 원칙에서 나오는 답과 같습니다. 원칙이 있었다면 미결정으로 남지 않았을 물음입니다. 정할지는 따로 묻지 않고 backlog 후보로 둡니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">4 · 부딪힌 기록</p>
+    <h2>원칙끼리 부딪혀 한쪽이 이긴 결정 넷</h2>
+    <p class="q">어긋난 곳이 아니라 이미 정한 것입니다. 원칙 절에 함께 적어 두면 "예외"가 "판례"로 읽힙니다. 다시 정하자는 제안이 아닙니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>결정</th><th>부딪힌 원칙</th><th>이긴 쪽</th><th>진 쪽을 받친 것</th></tr></thead>
+        <tbody>
+          <tr><td>헤더 이름이 중복되면 받아들이지 않고 칸을 다시 연다</td><td>① 올바른 구조만 ↔ ⑤ 막지 않는다</td><td><b>①</b></td><td>다시 열린 칸에서 <code>Esc</code>는 편집 전으로 되돌림. 입력을 막는 유일한 곳</td></tr>
+          <tr><td><code>Esc</code>는 적은 대로 편집 완료(Q3)</td><td>④ 안에서 Vim ↔ 표준(<code>Esc</code>는 취소)</td><td><b>Vim</b></td><td>⑤: 잘못 적은 것은 실행 취소로. 모달과 목록 안의 <code>Esc</code>는 표준대로 취소</td></tr>
+          <tr><td>푸는 명령은 둘: 풀기와 접기 영역 풀기(Q7)</td><td>④ Vim의 <code>ds</code>와 <code>zd</code>는 다른 가족 ↔ ③ 명령 하나</td><td><b>④</b></td><td>접기 영역을 선택하고 풀기를 쓰면 그것을 담은 제어 블록에 적용되고, 무엇에 적용되었는지 알림</td></tr>
+          <tr><td>빈 블록에서 <code>o</code> · <code>O</code>는 삽입, 제어 블록 삽입은 빈 블록을 교체(KP2)</td><td>④ Vim의 <code>o</code>는 늘 새 줄 ↔ ③ 같은 명령은 같은 결과</td><td><b>④</b></td><td>없음. "아래에 If 삽입"이 빈 블록에서만 그 자리에 들어감</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="q">기록에서 읽히는 순서는 둘입니다: <b>①은 ⑤보다 먼저</b>, <b>캔버스의 키에서는 ④(Vim)가 ③보다 먼저</b>. 나머지 쌍은 부딪힌 적이 없습니다.</p>
+  </section>
+
+  <section>
+    <p class="part">5 · 살필 곳</p>
+    <h2>다섯을 잣대로 대 보니 걸린 곳 아홉</h2>
+    <p class="q">문서의 규칙을 대 본 것이라, 앱의 실제 동작은 정할 때 확인해야 합니다. 딱지의 뜻: <span class="kind">어긋남</span>은 원칙의 잣대에 "예"로 걸린 곳, <span class="kind info">적을 것</span>은 동작은 그대로 두고 문서에 한 줄 적으면 되는 곳, <span class="kind info">다음 걸음</span>은 원칙이 가리키는 개선입니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>원칙</th><th>걸린 곳</th><th>종류</th><th>추천</th></tr></thead>
+        <tbody>
+          <tr><td class="k">G1</td><td>①</td><td>Method 헤더의 괄호를 지우면 그 Method를 호출하는 호출 블록의 인자가 모두 사라집니다. 편집기가 텍스트 안을 읽는 유일한 곳입니다(ADR-0022).</td><td><span class="kind info">적을 것</span></td><td>원칙 ①에 "헤더의 첫 <code>(</code>만은 구조로 읽는다"를 예외로 적습니다.</td></tr>
+          <tr><td class="k">G2</td><td>②</td><td>접힌 줄("⋯ 블록 n개")은 선택 · 복사 · 삭제 · 이동 명령이 되는데, 드래그로 옮길 수 없고 드롭 대상도 아닙니다. 접힌 칸은 됩니다(DF2).</td><td><span class="kind">어긋남</span></td><td>접힌 줄도 접힌 칸처럼 드래그하고, 위 · 아래 반으로 앞 · 뒤에 놓게 합니다.</td></tr>
+          <tr><td class="k">G3</td><td>②</td><td>이름 띠를 끄면 접기 영역은 "없는 것과 똑같이 보이는데", 접기 · 펴기와 접기 영역 풀기는 선택을 담은 그 영역에 적용됩니다. 이동 명령이 그 영역을 건너뛰는지는 규칙에 없습니다.</td><td><span class="kind">어긋남</span></td><td>드롭(DF1)과 방향키(FD5)처럼 "띠를 끄면 이동도 접기 영역이 없는 것과 같다"로 맞추고, 접기 명령이 보이지 않던 영역을 접을 때는 지금처럼 알립니다.</td></tr>
+          <tr><td class="k">G4</td><td>②</td><td>병렬 처리의 분기는 "위 띠 가운데 그 분기 바로 위 구간"을 눌러 선택합니다(TW1). 그 구간은 그림에서 구분되지 않습니다.</td><td><span class="kind">어긋남</span></td><td>호버할 때 그 구간과 분기 칸을 표시합니다(편집 표시라 저장되는 그림에는 넣지 않음).</td></tr>
+          <tr><td class="k">G5</td><td>③</td><td>선택한 것이 없을 때 툴바의 블록 아이콘은 다이어그램 맨 끝에 삽입하고, 붙여넣기는 "먼저 블록을 선택하세요"라고 거절합니다.</td><td><span class="kind">어긋남</span></td><td>붙여넣기도 맨 끝에 붙입니다(새 블록이 들어오는 일은 같은 규칙으로).</td></tr>
+          <tr><td class="k">G6</td><td>③</td><td>이동 명령은 옆 제어 블록 안으로 들어가지 않고("잘라내고 붙인다"), 드래그는 들어갑니다. 규칙은 "드래그는 같은 일을 마우스로 하는 방법"이라고 적습니다.</td><td><span class="kind info">적을 것</span></td><td>동작은 그대로 둡니다(키로는 잘라내기 · 붙여넣기로 가능). "드래그는 이동과 붙여넣기를 마우스로 하는 방법"으로 문장만 고칩니다.</td></tr>
+          <tr><td class="k">G7</td><td>④</td><td>블록을 선택했으면 휠 한 칸이 <code>↑</code> <code>↓</code> 한 번이고, 선택이 없으면 스크롤입니다. 휠은 스크롤이라는 약속과 다르고, 선택이 있는지에 따라 휠의 뜻이 바뀝니다.</td><td><span class="kind">어긋남</span></td><td>이유를 문서에서 찾지 못했습니다. 휠은 늘 스크롤로 하거나, 지금대로 둔다면 이유를 적습니다. 써 보고 정할 일입니다.</td></tr>
+          <tr><td class="k">G8</td><td>⑤</td><td>이름 띠 켜고 끄기는 그림이 길어지고 파일에 저장되고 "저장 안 됨"이 뜨는데, 실행 취소의 대상이 아닙니다. 헤더 모양과 결과 기호는 대상입니다(AR2).</td><td><span class="kind">어긋남</span></td><td>대상으로 넣습니다. 그러면 "그림이 바뀌는 일은 모두 실행 취소 한 번"에 예외가 없어집니다.</td></tr>
+          <tr><td class="k">G9</td><td>⑤</td><td>묻는 곳 가운데 둘은 되돌릴 수 있게 만들 수 있습니다: 저장하지 않은 새 문서를 두고 다른 문서 열기(US1), 브라우저 문서 삭제(BS3). 파일로 연 문서는 로컬 백업이 있어 이미 묻지 않습니다.</td><td><span class="kind info">다음 걸음</span></td><td>backlog 후보: 새 문서도 백업에 남겨 묻지 않기, 삭제한 브라우저 문서를 잠시 복원할 수 있게 하기.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="part">6 · 물음</p>
+    <h2>Q1. 원칙 체계를 어떻게 할까</h2>
+    <p class="q">칩의 숫자는 지금의 원칙 번호입니다. 어느 안을 골라도 조작 규칙의 세부(동작)는 바뀌지 않습니다.</p>
+    <div class="cards">
+      <div class="card pick">
+        <header><span class="num">1</span><h3>약속 한 문장 + 대원칙 다섯</h3><span class="badge">추천</span></header>
+        <div class="stack">
+          <div class="bar top">제품의 약속</div>
+          <div class="bar">① 구조 <span class="chip">1</span><span class="chip">9</span><span class="chip">+텍스트는 자유</span></div>
+          <div class="bar">② 보이는 대로 <span class="chip">2</span><span class="chip">+화면 그대로 저장</span></div>
+          <div class="bar">③ 고르고, 명령한다 <span class="chip">3</span><span class="chip">4</span><span class="chip">5</span></div>
+          <div class="bar">④ 손에 익은 대로 <span class="chip">6</span><span class="chip">+표준 · 탐색기 · IDE</span></div>
+          <div class="bar">⑤ 멈춰 세우지 않는다 <span class="chip">7</span><span class="chip">8</span></div>
+        </div>
+        <ul><li>원칙마다 잣대(질문 3 ~ 5개)를 함께 적습니다.</li><li>지금의 열 문장은 다섯 아래의 따름 규칙으로 남습니다. 10은 화면 배치로 옮깁니다.</li><li>감수할 것: 절마다 단 원칙 번호를 다시 답니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="num">2</span><h3>대원칙 셋</h3></header>
+        <div class="stack">
+          <div class="bar top">제품의 약속</div>
+          <div class="bar">구조를 말하면 그림이 따라온다 <span class="chip">1</span><span class="chip">9</span></div>
+          <div class="bar">보이는 것을 고르고, 익은 손으로 명령한다 <span class="chip">2</span><span class="chip">3</span><span class="chip">4</span><span class="chip">5</span><span class="chip">6</span></div>
+          <div class="bar">멈춰 세우지 않는다 <span class="chip">7</span><span class="chip">8</span></div>
+        </div>
+        <ul><li>외우기는 가장 쉽습니다.</li><li>가운데 원칙에 세 생각이 들어가 잣대가 흐려집니다. DR-0024가 감수한 "한 원칙에 두 생각"이 더 커집니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="num">3</span><h3>열 개 그대로, 묶음 이름만</h3></header>
+        <div class="stack">
+          <div class="bar">구조 <span class="chip">1</span><span class="chip">9</span></div>
+          <div class="bar">그림 <span class="chip">2</span><span class="chip">10</span></div>
+          <div class="bar">명령 <span class="chip">3</span><span class="chip">4</span><span class="chip">5</span><span class="chip">6</span></div>
+          <div class="bar">흐름 <span class="chip">7</span><span class="chip">8</span></div>
+        </div>
+        <ul><li>번호와 문장이 그대로라 문서를 거의 고치지 않습니다.</li><li>빠진 생각 둘과 잣대는 들어가지 않고, 높이가 섞인 것도 그대로입니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="num">4</span><h3>지금 그대로</h3></header>
+        <div class="stack">
+          <div class="bar"><span class="chip">1</span><span class="chip">2</span><span class="chip">3</span><span class="chip">4</span><span class="chip">5</span><span class="chip">6</span><span class="chip">7</span><span class="chip">8</span><span class="chip">9</span><span class="chip">10</span></div>
+        </div>
+        <ul><li>오늘 정한 DR-0024를 그대로 둡니다.</li><li>살필 곳 G1 ~ G9만 따로 봅니다.</li></ul>
+      </div>
+    </div>
+
+    <h2>Q2. 부딪힌 기록을 원칙 절에 적을까</h2>
+    <div class="cards">
+      <div class="card pick">
+        <header><span class="num">1</span><h3>판례로 적는다</h3><span class="badge">추천</span></header>
+        <ul><li>4부의 표를 원칙 절 아래에 "원칙이 부딪힌 곳"으로 둡니다.</li><li>순서는 기록에 있는 둘만 적습니다(①이 ⑤보다, 캔버스의 키에서 Vim이 ③보다).</li><li>새로 부딪히면 정하고 한 줄 더합니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="num">2</span><h3>다섯 모두에 순서를 매긴다</h3></header>
+        <ul><li>"앞 번호가 이긴다"로 적습니다.</li><li>부딪힌 적 없는 쌍까지 미리 정하게 되어, 근거 없는 순서가 생깁니다.</li></ul>
+      </div>
+      <div class="card">
+        <header><span class="num">3</span><h3>적지 않는다</h3></header>
+        <ul><li>지금처럼 UX 결정의 항목마다에만 둡니다.</li><li>원칙 절만 읽으면 Q3 · Q7 · KP2가 어긋난 것으로 보입니다.</li></ul>
+      </div>
+    </div>
+
+    <h2>G2 ~ G8. 살필 곳 가운데 앱의 동작이 바뀌는 여섯</h2>
+    <p class="q">여섯 모두 코드에서 확인했습니다(<code>canvas-input.ts</code>의 휠, <code>core/commands/move.ts</code>의 접기 영역, <code>clipboard-commands.ts</code> · <code>insert-wrap-commands.ts</code>의 선택 없음, <code>fold-commands.ts</code>의 이름 띠, 호버는 블록에만). 그림의 왼쪽은 하기 전, 오른쪽은 한 뒤입니다. <b>범례:</b> 주황 테두리는 선택, 왼쪽의 파란 점선은 보이지 않는 접기 영역의 범위(설명용), 회색 줄은 상태 표시줄입니다.</p>
+
+    <h2>G2. 접힌 줄을 드래그하면</h2>
+    <p class="q">원칙 ②. 접힌 줄("⋯ 블록 3개")은 상자 하나로 보이고 이동 · 복사 · 삭제 명령이 적용됩니다. 드래그만 되지 않습니다. 접힌 칸(접기 영역)은 오늘 DF2로 드래그하게 했습니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>접힌 줄도 드래그해 옮긴다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g2a"></div><ul><li>접힌 줄을 끌면 그 안의 블록 전체가 옮겨집니다(접힌 칸과 같음).</li><li>접힌 줄 위에 놓으면 위 반은 앞, 아래 반은 뒤입니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로: 누르면 선택만</h3></header><div class="scene" data-fig="g2b"></div><ul><li>옮기려면 이동 명령이나 잘라내기 · 붙여넣기를 씁니다.</li><li>원칙 절의 부딪힌 기록에 예외로 적습니다.</li></ul></div>
+    </div>
+
+    <h2>G3. 이름 띠를 끈 접기 영역 끝에서 이동하면</h2>
+    <p class="q">원칙 ②. 띠를 끄면 접기 영역은 "없는 것과 똑같이 보입니다". 그런데 영역의 마지막 블록 C에서 아래로 이동을 누르면 C가 영역 밖으로 나오는 한 걸음에 쓰여, 화면에는 아무것도 바뀌지 않습니다. 한 번 더 눌러야 D와 자리를 바꿉니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>띠를 끄면 한 번에 이동</h3><span class="badge">추천</span></header><div class="scene" data-fig="g3a"></div><ul><li>드롭(DF1) · 방향키(FD5)와 같게 "띠를 끄면 접기 영역이 없는 것과 같다"로 맞춥니다.</li><li>영역에서 나오는 것과 자리 바꾸기를 한 번에 합니다. 영역은 남은 블록으로 줄어듭니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로, 알림만 더함</h3></header><div class="scene" data-fig="g3b"></div><ul><li>동작은 그대로 두고 "접기 영역 ○○ 밖으로 나왔습니다"를 알립니다.</li><li>키 한 번에 화면이 바뀌지 않는 것은 남습니다.</li></ul></div>
+      <div class="card"><header><span class="num">3</span><h3>지금대로</h3></header><div class="scene" data-fig="g3c"></div><ul><li>띠를 켰을 때와 같은 동작입니다.</li><li>띠를 끈 사용자에게는 키가 동작하지 않은 것으로 보입니다.</li></ul></div>
+    </div>
+
+    <h2>G4. 병렬 처리의 분기 선택 자리</h2>
+    <p class="q">원칙 ②. 분기는 위 띠 가운데 그 분기 바로 위 구간을 눌러 선택합니다(TW1). 그 구간은 그림에서 구분되지 않고, 호버 표시는 블록에만 있습니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>호버하면 구간과 분기 칸을 표시</h3><span class="badge">추천</span></header><div class="scene" data-fig="g4a"></div><ul><li>위 띠의 그 구간과 분기 칸에 호버 표시를 합니다.</li><li>편집 표시라 저장되는 그림에는 들어가지 않습니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로</h3></header><div class="scene" data-fig="g4b"></div><ul><li>눌러 보아야 분기가 선택되는 것을 압니다.</li><li>키보드로는 분기의 첫 블록에서 <code>↑</code>로 선택합니다.</li></ul></div>
+    </div>
+
+    <h2>G5. 선택한 것이 없을 때 붙여넣기</h2>
+    <p class="q">원칙 ③. 선택한 것이 없을 때 블록 삽입(키 · 툴바)은 지금 다이어그램의 맨 끝에 넣는데, 붙여넣기는 거절합니다. 둘 다 새 블록이 들어오는 일입니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>삽입처럼 맨 끝에 붙인다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g5a"></div><ul><li>삽입과 같은 규칙: 선택이 없으면 지금 다이어그램의 맨 끝.</li><li>붙인 블록이 선택됩니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로: 거절하고 알림</h3></header><div class="scene" data-fig="g5b"></div><ul><li>"먼저 블록을 선택하세요."</li><li>삽입과 다른 것은 부딪힌 기록에 적습니다.</li></ul></div>
+    </div>
+
+    <h2>G7. 블록을 선택했을 때의 마우스 휠</h2>
+    <p class="q">원칙 ④. 휠은 스크롤이라는 약속과 다릅니다. 다만 이 동작은 2026-10-15에 메인테이너가 요청해 넣었고, 화면이 선택을 따라가 검토할 때 블록을 하나씩 짚어 갑니다. 치르는 값: 다른 곳을 보려고 휠을 굴리면 편집하던 블록에서 선택이 떠납니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>지금대로, 부딪힌 기록에 적는다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g7a"></div><ul><li>써 보고 정한 동작이라 그대로 둡니다.</li><li>"④의 예외: 휠은 선택을 옮긴다"를 판례에 한 줄 적습니다.</li><li>선택을 두고 화면만 옮기려면 <code>Shift</code>+휠입니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>휠은 늘 스크롤</h3></header><div class="scene" data-fig="g7b"></div><ul><li>선택은 그대로 두고 화면만 움직입니다.</li><li>블록을 하나씩 짚는 것은 <code>j</code> <code>k</code> · <code>↑</code> <code>↓</code>로 합니다.</li></ul></div>
+    </div>
+
+    <h2>G8. 이름 띠 켜고 끄기의 실행 취소</h2>
+    <p class="q">원칙 ⑤. 이름 띠를 끄면 그림이 짧아지고, 파일에 저장되고, "저장 안 됨"이 뜹니다. 그런데 실행 취소로 돌아오지 않습니다. 헤더 모양과 결과 기호(AR2)는 대상입니다. UN1에서 범위를 접고 펴기까지로 정해 남은 마지막 하나입니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>실행 취소의 대상에 넣는다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g8a"></div><ul><li>"그림이 바뀌는 일은 모두 실행 취소 한 번"에 예외가 없어집니다.</li><li>실행 취소하면 "저장 안 됨"도 꺼집니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로</h3></header><div class="scene" data-fig="g8b"></div><ul><li>보기 메뉴에서 다시 켜면 됩니다.</li><li>원칙 ⑤의 따름 규칙에 "이름 띠 보기만 예외"로 남깁니다.</li></ul></div>
+    </div>
+
+    <p class="q">G1 · G6은 문서에 한 줄 적는 것이고 G9는 backlog 후보라, 원칙을 문서에 반영할 때 함께 넣습니다.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (n, a, t) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; };
+  const C = ['var(--p1)', 'var(--p2)', 'var(--p3)', 'var(--p4)', 'var(--p5)', 'var(--out)'];
+  const LX = 8, LW = 330, LH = 30, LG = 8, RX = 570, RW = 382, RH = 48;
+  const left = [
+    ['1', '구조를 편집하면 그림이 따라온다', 0], ['2', '보이는 대로 다룬다', 1], ['3', '선택한 것이 대상이다', 2],
+    ['4', '같은 일은 같은 방법으로', 2], ['5', '키보드만으로 모두', 2], ['6', 'Vim의 손에 맞게', 3],
+    ['7', '실행 취소 한 번으로 돌아온다', 4], ['8', '막지 않고 알린다', 4], ['9', '받아들이기는 넓게, 만들기는 좁게', 0], ['10', '화면은 다이어그램에게', 5],
+  ];
+  const right = [
+    ['① 구조를 말하면 그림이 따라온다', '+ 텍스트의 뜻은 판정하지 않는다', 8],
+    ['② 보이는 대로 다룬다', '+ 화면에 보이는 그대로 저장된다', 70],
+    ['③ 고르고, 명령한다', '명령은 적게, 대상과 입구는 여럿', 132],
+    ['④ 손에 익은 대로', '+ 표준 단축키, 탐색기, IDE의 관례', 194],
+    ['⑤ 멈춰 세우지 않는다', '묻는 대신 되돌리고, 막는 대신 알린다', 256],
+    ['화면 배치 문서로 옮김', '조작의 원칙에서는 뺀다', 346],
+  ];
+  const gl = document.getElementById('mp-left'), gr = document.getElementById('mp-right'), gp = document.getElementById('mp-lines');
+  left.forEach(([n, t, to], i) => {
+    const y = 8 + i * (LH + LG), cy = y + LH / 2, ty = right[to][2] + RH / 2;
+    gl.append(el('rect', { class: 'l', x: LX, y, width: LW, height: LH, rx: 5 }));
+    gl.append(el('text', { x: LX + 12, y: cy + 4.5, style: 'font-family: var(--mono); font-weight: 600; fill: ' + C[to] }, n));
+    gl.append(el('text', { x: LX + 40, y: cy + 4.5 }, t));
+    const x1 = LX + LW, x2 = RX, mx = (x1 + x2) / 2;
+    gp.append(el('path', { d: `M${x1} ${cy} C${mx} ${cy} ${mx} ${ty} ${x2} ${ty}`, stroke: C[to], 'stroke-dasharray': to === 5 ? '5 4' : '' }));
+  });
+  right.forEach(([t, s, y], i) => {
+    gr.append(el('rect', { class: 'r', x: RX, y, width: RW, height: RH, rx: 6, stroke: C[i], 'stroke-dasharray': i === 5 ? '5 4' : '' }));
+    gr.append(el('text', { x: RX + 12, y: y + 20, style: 'font-weight: 600; font-size: 14px' }, t));
+    gr.append(el('text', { class: 's', x: RX + 12, y: y + 38 }, s));
+  });
+})();
+(() => {
+  // 장면 그림: 왼쪽은 하기 전, 오른쪽은 한 뒤. 색은 밝은 기본 테마의 값(그림 바탕은 늘 흰색)
+  const W = 150, H = 24, GAP = 46, IN = 14;
+  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function col(rows, x0) {
+    let s = '', y = 0;
+    for (const r of rows) {
+      if (r.k === 'st') { s += `<rect x="${x0}" y="${y + 6}" width="${W}" height="20" rx="3" fill="#f2f4f8" stroke="#c9d1de"/><text x="${x0 + 6}" y="${y + 20}" font-size="10.5" fill="#1c2230">${esc(r.t)}</text>`; y += 28; continue; }
+      const x = x0 + (r.in ? IN : 0), w = W - (r.in ? IN : 0);
+      const fill = r.k === 'ctl' ? '#e7eefc' : r.k === 'band' ? '#dbe6fb' : r.k === 'fl' ? '#f5f7fb' : '#ffffff';
+      if (r.in) s += `<rect x="${x0 + .5}" y="${y + .5}" width="${IN}" height="${H - 1}" fill="#e7eefc" stroke="#1c2230"/>`;
+      s += `<rect x="${x + .5}" y="${y + .5}" width="${w - 1}" height="${H - 1}" fill="${fill}" stroke="#1c2230"/>`;
+      s += `<text x="${x + 7}" y="${y + 16}" font-size="11.5" fill="${r.k === 'fl' ? '#5a6476' : '#1c2230'}">${esc(r.t)}</text>`;
+      if (r.reg) s += `<line x1="${x0 - 5}" y1="${y + 2}" x2="${x0 - 5}" y2="${y + H - 2}" stroke="#2c55c9" stroke-width="2" stroke-dasharray="3 2"/>`;
+      if (r.sel) s += `<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${H - 3}" fill="none" stroke="#e8710a" stroke-width="2.5"/>`;
+      y += H;
+    }
+    return [s, y];
+  }
+  function pair(a, key, b) {
+    const [sa, ha] = col(a, 8), [sb, hb] = col(b, 8 + W + GAP);
+    const h = Math.max(ha, hb, 44) + 4, mx = 8 + W + GAP / 2;
+    return `<svg viewBox="0 0 ${W * 2 + GAP + 16} ${h}" width="${W * 2 + GAP + 16}" height="${h}"><text x="${mx}" y="16" font-size="10" text-anchor="middle" fill="#5a6476">${esc(key)}</text><text x="${mx}" y="36" font-size="16" text-anchor="middle" fill="#5a6476">→</text>${sa}${sb}</svg>`;
+  }
+  // 병렬 처리: 위 띠, 분기 둘, 아래 띠
+  function par(hover) {
+    const w = 190, x = 8, half = w / 2;
+    let s = `<rect x="${x + .5}" y=".5" width="${w - 1}" height="85" fill="#e7eefc" stroke="#1c2230"/>`;
+    if (hover) s += `<rect x="${x + half}" y="1" width="${half - 1}" height="14" fill="#2c55c9" opacity=".4"/>`;
+    s += `<path d="M${x} 15 L${x + 12} .5 M${x + w} 15 L${x + w - 12} .5 M${x} 73 L${x + 12} 85.5 M${x + w} 73 L${x + w - 12} 85.5" stroke="#1c2230" fill="none"/>`;
+    s += `<rect x="${x + .5}" y="15.5" width="${half}" height="57" fill="#fff" stroke="#1c2230"/><rect x="${x + half + .5}" y="15.5" width="${half - 1}" height="57" fill="#fff" stroke="#1c2230"/>`;
+    s += `<text x="${x + 8}" y="48" font-size="11.5" fill="#1c2230">센서 읽기</text><text x="${x + half + 8}" y="48" font-size="11.5" fill="#1c2230">로그 쓰기</text>`;
+    if (hover) s += `<rect x="${x + half + 2}" y="17" width="${half - 4}" height="54" fill="#2c55c9" opacity=".12"/>`;
+    s += `<path d="M${x + half + 44} 5 l0 14 l3.5 -3 l3 6 l2 -1 l-3 -6 l4.5 0 z" fill="#1c2230" stroke="#fff" stroke-width=".8"/>`;
+    return `<svg viewBox="0 0 ${w + 16} 90" width="${w + 16}" height="90">${s}</svg>`;
+  }
+  const B = (t, o) => ({ k: 'b', t, ...o }), sel = { sel: true }, reg = { reg: true };
+  const loop = [{ k: 'ctl', t: 'while 남은 것이 있다' }, { k: 'fl', t: '⋯ 블록 3개', in: 1, sel: true }, B('결과 출력')];
+  const g3 = [B('A'), B('B', reg), B('C', { reg: true, sel: true }), B('D')];
+  const g5 = [B('합 ← 0'), B('n ← 0')];
+  const g7 = [B('A'), B('B'), B('C', sel), B('D')];
+  const g8off = [B('합 ← 0'), B('n ← 0'), B('평균 ← 합 / n'), { k: 'st', t: '● 저장 안 됨' }];
+  const scenes = {
+    g2a: () => pair(loop, '드래그', [{ k: 'ctl', t: 'while 남은 것이 있다' }, B('∅', { in: 1 }), B('결과 출력'), B('읽기', sel), B('더하기', sel), B('세기', sel)]),
+    g2b: () => pair(loop, '드래그', [...loop, { k: 'st', t: '(선택만 됨)' }]),
+    g3a: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('D'), B('C', sel)]),
+    g3b: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('C', sel), B('D'), { k: 'st', t: '접기 영역 밖으로 나옴' }]),
+    g3c: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('C', sel), B('D')]),
+    g4a: () => par(true), g4b: () => par(false),
+    g5a: () => pair(g5, 'Ctrl+V', [...g5, B('붙인 블록', sel)]),
+    g5b: () => pair(g5, 'Ctrl+V', [...g5, { k: 'st', t: '먼저 블록을 선택하세요.' }]),
+    g7a: () => pair(g7, '휠 ↓', [B('A'), B('B'), B('C'), B('D', sel)]),
+    g7b: () => pair(g7, '휠 ↓', [B('B'), B('C', sel), B('D'), B('E')]),
+    g8a: () => pair(g8off, 'Ctrl+Z', [{ k: 'band', t: '▾ 초기화' }, B('합 ← 0'), B('n ← 0'), B('평균 ← 합 / n')]),
+    g8b: () => pair(g8off, 'Ctrl+Z', g8off),
+  };
+  document.querySelectorAll('[data-fig]').forEach((el) => { el.innerHTML = scenes[el.dataset.fig](); });
+})();
+</script>
+
+<footer data-license-note style="max-width:1240px;margin:32px auto 0;padding:14px 20px 40px;font-size:13px;line-height:1.6;opacity:.8;border-top:1px solid currentColor">이 페이지는 <a href="https://github.com/reddiana/AriadneNSD" style="color:inherit">AriadneNSD</a>의 시안입니다. 글과 그림은 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" style="color:inherit">CC BY 4.0</a>으로 공개합니다. 출처를 "AriadneNSD (https://github.com/reddiana/AriadneNSD)"로 밝히면 옮기거나 고쳐 쓸 수 있습니다. <span lang="en">A design study from the AriadneNSD project. Text and figures are licensed under CC BY 4.0.</span></footer>
