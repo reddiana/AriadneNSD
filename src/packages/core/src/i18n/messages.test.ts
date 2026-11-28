@@ -5,6 +5,10 @@ import {
   catalogProblems,
   drawingCatalogEntries,
   isLocale,
+  isLocaleLoaded,
+  lazyCatalog,
+  loadAllLocales,
+  loadLocale,
   localeFromLanguageTag,
   screenLocale,
 } from './messages';
@@ -64,5 +68,57 @@ describe('screen language (R-NFR-04)', () => {
     expect(screenLocale(undefined, 'de-DE')).toBe('de');
     expect(screenLocale('en', 'de-DE')).toBe('en');
     expect(screenLocale('de', 'ko-KR')).toBe('de');
+  });
+});
+
+describe('lazy catalogs: only the languages the screen shows are fetched', () => {
+  const english = { hello: 'Hello {name}' } as const;
+  type Key = keyof typeof english;
+
+  it('T-1620 · R-NFR-04: English is there at once; another language shows English until fetched', async () => {
+    let fetches = 0;
+    const catalog = lazyCatalog<Key>(english, {
+      ko: () => {
+        fetches += 1;
+        return Promise.resolve({ hello: '안녕 {name}' });
+      },
+      de: () => Promise.resolve({ hello: 'Hallo {name}' }),
+    });
+    expect(catalog.table('en').hello).toBe('Hello {name}');
+    expect(catalog.table('ko').hello).toBe('Hello {name}');
+    expect(isLocaleLoaded('en')).toBe(true);
+    expect(isLocaleLoaded('ko')).toBe(false);
+    await Promise.all([loadLocale('ko'), loadLocale('ko')]);
+    expect(catalog.table('ko').hello).toBe('안녕 {name}');
+    expect(isLocaleLoaded('ko')).toBe(true);
+    await loadLocale('ko');
+    expect(fetches).toBe(1);
+    expect(catalog.table('de').hello).toBe('Hello {name}');
+  });
+
+  it('T-1621 · QA-13: the entries for checks need every language fetched', async () => {
+    const catalog = lazyCatalog<Key>(english, {
+      ko: () => Promise.resolve({ hello: '안녕 {name}' }),
+      de: () => Promise.resolve({ hello: 'Hallo {name}' }),
+    });
+    expect(() => catalog.entries()).toThrow(/not loaded/);
+    await loadAllLocales();
+    expect(catalog.entries()).toEqual([
+      { key: 'hello', text: { en: 'Hello {name}', ko: '안녕 {name}', de: 'Hallo {name}' } },
+    ]);
+  });
+
+  it('T-1622 · R-NFR-04: a failed fetch leaves English and is tried again on the next load', async () => {
+    let fails = true;
+    const catalog = lazyCatalog<Key>(english, {
+      ko: () => Promise.resolve({ hello: '안녕 {name}' }),
+      de: () =>
+        fails ? Promise.reject(new Error('offline')) : Promise.resolve({ hello: 'Hallo' }),
+    });
+    await expect(loadLocale('de')).rejects.toThrow('offline');
+    expect(catalog.table('de').hello).toBe('Hello {name}');
+    fails = false;
+    await loadLocale('de');
+    expect(catalog.table('de').hello).toBe('Hallo');
   });
 });

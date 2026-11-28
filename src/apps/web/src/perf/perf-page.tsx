@@ -8,7 +8,7 @@
 // store that refuses to save. The measured document is thrown away at the end.
 
 import type { Locale } from '@ariadne-nsd/core';
-import { screenLocale } from '@ariadne-nsd/core';
+import { loadLocale, screenLocale } from '@ariadne-nsd/core';
 import type { Appearance, EditorHandle } from '@ariadne-nsd/editor';
 import { createEditor, EditorApp, editorVersion } from '@ariadne-nsd/editor';
 import type { ReactElement } from 'react';
@@ -319,6 +319,8 @@ export async function startPerfMode(root: HTMLElement): Promise<void> {
   const locale = screenLocale(settings.get(localeSettingKey), navigator.language);
   document.documentElement.lang = locale;
   document.title = perfMessage(locale, 'perf.title');
+  // The editor's strings in this language, before it shows (core `lazyCatalog`).
+  await loadLocale(locale);
   const appearance = watchAppearance(() => undefined).current;
   const fontLoading = loadBlockFont();
   const canvas = document.createElement('div');

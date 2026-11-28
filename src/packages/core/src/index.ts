@@ -35,13 +35,23 @@ export { contentIds, createIdGenerator, parseId } from './model/id';
 export { headName, headParams } from './model/head';
 
 // Text, layout and rendering (02-layout).
-export type { CatalogEntry, DrawingMessageKey, Locale } from './i18n/messages';
+export type {
+  CatalogEntry,
+  CatalogImports,
+  DrawingMessageKey,
+  LazyCatalog,
+  Locale,
+} from './i18n/messages';
 export {
   catalogEntriesOf,
   catalogProblems,
   drawingCatalogEntries,
   drawingMessage,
   isLocale,
+  isLocaleLoaded,
+  lazyCatalog,
+  loadAllLocales,
+  loadLocale,
   localeFromLanguageTag,
   locales,
   screenLocale,
