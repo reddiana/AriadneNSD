@@ -62,6 +62,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 	- 작은 조작 · 화면 결정은 UX 결정 한 항목과 설계 문서 한 줄로 끝낸다. ADR과 "이후 변경" 콜아웃은 코드 구조 · 모델 · 파일 형식 · 기술 선택이 바뀔 때만.
 	- 나란히 돌 에이전트에게는 처음 지시에 테스트 ID · ADR 번호 · 포트의 범위를 나눠 적는다.
 	- 시간을 재는 테스트(성능 · 시작 시간)는 다른 에이전트가 돌지 않을 때만 믿는다. 나란히 도는 동안의 실패로 원인을 찾거나 한도를 바꾸지 않는다.
+- **세션은 허브 하나가 연다.** 메인테이너와 대화하며 `atelier/`를 맡는 세션(허브)만 `start_session`을 부른다. 허브가 연 곁 세션은 세션을 열지 않고, 새 세션이 필요하면 보고에 "새 세션 추천: …"만 적는다(손자 세션을 만들지 않음). 코드를 쓰는 곁 세션은 worktree로 연다. 곁 세션은 `status` · `outbox` · 세션 기록을 쓰지 않는다.
 - 문서 검사 훅(`.claude/hooks/doc-check.py`, 설정 `.claude/settings.json`)이 고친 문서의 표 칸 수와 `[[문서#제목]]` 링크를 검사한다. 알리면 그 자리에서 고친다. 전체 검사 `python .claude/hooks/doc-check.py --all`.
 - 함께 바뀌는 곳의 훅(`.claude/hooks/co-change-commit.mjs`, 규칙 `src/scripts/co-change.json`)이 `git commit` 때 함께 고칠 문서가 그대로면 막는다. 문서를 고치거나, 필요 없으면 커밋 메시지에 `Co-change-skip: C3 — 까닭` → [[07-coding-guide#13. 문서와 코드의 정합성]]
 - 말로 비교하기 어려운 결정이나 될지 모르는 일이 나오면 시안 · 스파이크 · 프로토타입을 요청을 기다리지 않고 **바로 제안한다** → [[spike-prototype-mvp]]
@@ -93,7 +94,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 8. (마무리만) push 전 전체 검사: `pnpm test-list:strict`로 번역을 채우고, `pnpm check` 전체와 `pnpm e2e`. 실패하면 고치거나 알린다. 지난 push 뒤로 코드가 바뀌지 않았으면(`git diff --stat origin/main -- src`) 테스트 · E2E는 하지 않고, 바뀐 설정의 검사(lint · 포맷 등)만. 마지막 코드 변경 뒤에 이 세션에서 이미 돌린 검사(에이전트의 E2E 포함)는 다시 돌리지 않는다. E2E는 편집기의 동작이 바뀐 때만(localhost에서 돌지 않는 코드 · 문구 · 정적 HTML은 아님), 사이트 쪽은 `SKIP_APP=1 bash site/build.sh`. 시간 테스트(T-0171 · T-1126)는 다른 일이 돌지 않을 때만 믿는다.
 9. 바뀐 파일을 모두 커밋한다. 마무리면 push하고, push한 뒤 `status.md`의 "정한 것이 어디까지 갔나"의 그 줄들을 "사이트에 있음"으로.
 10. 정리를 다 마치면(매듭은 커밋까지, 마무리는 push까지) 보고한 뒤 다음으로 넘어간다. 매듭이든 마무리든 같다. 정리가 끝나지 않았으면(검사 실패, 답을 기다림) 넘어가지 않는다.
-	- **다음 할 일이 분명하면**(정한 일이라 묻지 않고 시작할 수 있음): 새 세션을 시작하고(`start_session`, `initiation: "user_asked"`, `context: "fresh"`, 지시문은 `status.md`의 그 할 일 · 읽을 문서 · 끝난 모습) 지금 세션은 보관한다(`archive_session`). 물을 것이 생기면 새 세션이 시안을 만들어 두고 기다린다.
+	- **다음 할 일이 분명하면**(정한 일이라 묻지 않고 시작할 수 있음): 새 세션을 시작하고(`start_session`, `initiation: "user_asked"`, `context: "fresh"`, 지시문은 `status.md`의 그 할 일 · 읽을 문서 · 끝난 모습), 그 세션을 맨 위로 떼어 새 허브로 삼은 뒤(`detach_session`) 지금 세션은 보관한다(`archive_session`). 곁 세션은 이 10번을 하지 않고 허브에 보고한다(아래 "세션은 허브 하나가 연다"). 물을 것이 생기면 새 세션이 시안을 만들어 두고 기다린다.
 	- **분명하지 않으면**(메인테이너의 답 · 선택을 기다림): 지금 세션을 비운다(`/clear`: `mcp__ccd_session_mgmt__clear_session`에 `session_id: "self"`).
 	- 어느 쪽이든 그 뒤는 새 세션이고 세션 기록도 그날의 다음 번호로 새로 쓴다(앞 기록에 덧붙이지 않음).
 
