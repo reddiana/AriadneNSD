@@ -35,7 +35,7 @@ NS 차트(Nassi-Shneiderman Diagram) 편집기. 옛 이름은 `NSDrawing`(세션
 	- "남은 일"(확인 · 써 보기 · 고칠 것)은 `docs/`에 두지 않고 `atelier/`(대개 `backlog.md`)로.
 	- `atelier/`는 결정 기록, 현재 상태, 남은 일, 협업(inbox: 메인테이너 → Claude, outbox: Claude → 메인테이너). 다음 세션의 Claude가 이어 갈 수 있게 적는다.
 - 공학의 순서: 요구사항(`01-requirements`) → UX 설계(`02-ux-design`)와 아키텍처(`03-architecture`) → 상세 설계(`04-design`). 검토하다 나온 "앞 문서를 고칠 것"은 `atelier/`의 작업 목록에.
-- 요구사항에는 "무엇을"만, 하나에 한두 줄. 세부 규칙은 UX 설계(`docs/02-ux-design/`: 개요와 제품의 약속 `01-ux-overview`, 조작의 원칙 · 공통 규칙 · 조작 규칙 `02-interaction-rules`, 키 표 `03-keymap`, 색 · 선 · 글자 · 치수 `04-visual-design`, 화면 배치 `05-screen-layout`, 물음은 각 문서의 미결정 절)에 쓰고 요구사항에서 "→ 상세"로 링크. 근거는 ADR(`atelier/adr/`, 템플릿 `0000-template.md`) · DR로 링크.
+- 요구사항에는 "무엇을"만, 하나에 한두 줄. 세부 규칙은 UX 설계(`docs/02-ux-design/`: 개요와 제품 정의 `01-ux-overview`, 조작의 디자인 원칙 · 공통 규칙 · 조작 규칙 `02-interaction-rules`, 키 표 `03-keymap`, 색 · 선 · 글자 · 치수 `04-visual-design`, 화면 배치 `05-screen-layout`, 물음은 각 문서의 미결정 절)에 쓰고 요구사항에서 "→ 상세"로 링크. 근거는 ADR(`atelier/adr/`, 템플릿 `0000-template.md`) · DR로 링크.
 - 요구사항 ID(`R-WEB-02`: `R-`, 영역, 두 자리 번호)는 절마다의 표(`| ID | 요구사항 | 우선순위 |`) 첫 칸. 표마다 뒤에 블록 ID(`^r-web`). 다른 문서에서는 `[[01-requirements#^r-web|R-WEB-02]]`(표 안에서는 `\|`)로, 보이는 글자는 언제나 ID. 글 속의 요구사항 ID는 언제나 이 링크로(형식 설명의 예시만 코드 표기) → [[dr-0016-requirement-ids|DR-0016]].
 - 요구사항 ID는 불변. 새 것은 그 영역의 다음 번호. 철회하면 `01-requirements`에서 지우고 `atelier/requirement-changes.md`에 원문 · 날짜 · 까닭과 함께 옮긴다. 번호는 다시 쓰지 않고, 철회한 ID로 가는 링크는 변경 기록으로 돌린다.
 - 우선순위 `P0`~`P3`은 표의 "우선순위" 칸에 그냥 글자로. Obsidian 태그(`#P0`)로 달지 않는다. 글 속에서는 코드 표기(`` `P2`로 올림 ``).

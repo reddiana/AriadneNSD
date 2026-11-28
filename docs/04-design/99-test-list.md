@@ -210,7 +210,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0066 | 빠진 필드는 그대로 둔다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0067 | 무언가를 받는 Method의 비운 인자는 다시 채워진다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0068 | 아무것도 받지 않는 Method는 빈 인자로 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
-| T-0069 | 이름을 적어 호출한 블록은 적힌 그대로 편집한다 | [[01-requirements#^r-blk\|R-BLK-08]] |
+| T-0069 | 이름을 입력해 호출한 블록은 적힌 그대로 편집한다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-0070 | 01-model 4: 같은 텍스트면 내용은 그대로다 | - |
 | T-1432 | Method가 없어진 호출 블록은 이름 호출이 되고 편집할 수 있다 | - |
 | T-0072 | 호출 블록이 아닌 블록과 정의되지 않은 블록은 거절한다 | - |
@@ -594,14 +594,14 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/call-commands.test.ts`
 
-펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 적는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 42개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
+펴 보인 호출 블록, 그 위치의 접기 영역, 호출 블록을 Method로 바꾸기, 이름을 입력하는 호출 블록 (R-EDIT-15, R-EDIT-16, R-EDIT-08, R-BLK-08). Vitest · 테스트 42개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-15]], [[01-requirements#^r-edit|R-EDIT-16]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-08]], [[ux-decisions|UX CB14]], [[ux-decisions|UX CB13]], [[01-requirements#^r-edit|R-EDIT-26]], [[ux-decisions|UX CB15]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1087 | peek: 호출 블록에서 f는 펴 보이고, Method의 블록은 선택하고 복사할 수 있지만 편집할 수 없다 | - |
 | T-1088 | peek: 펴 보인 안쪽에서 접으면 그 호출 블록을 접고 호출 블록을 선택한다 | - |
 | T-1089 | peek: 펴 보인 안쪽에서 편 호출 블록은 경로를 갖고, 같은 Method를 세 번째로 펴면 알린다 | - |
-| T-1090 | peek: 호출 블록에서 gd는 그 Method로 간다. 이름을 적어 호출한 블록은 펼 수 없다 | - |
+| T-1090 | peek: 호출 블록에서 gd는 그 Method로 간다. 이름을 입력해 호출한 블록은 펼 수 없다 | - |
 | T-1091 | peek: 펴 보인 곳의 zf는 그 호출 블록 자리에만 있는 접기 영역을 만들고, 이름은 같은 단계이며, zd가 푼다 | - |
 | T-1416 | peek: 그 자리로 복사한 Method의 접기 영역은 그 호출 블록에서만 풀고 이름을 바꾼다 | - |
 | T-1423 | Shift+↓는 그 자리의 범위를 넓히고 줄의 끝에서 멈추며, zf가 그 범위로 접기 영역을 만든다 | - |
@@ -630,7 +630,7 @@ id. Vitest · 테스트 5개.
 | T-1359 | 그 자리에서 접힌 선택은 접힌 줄에 남고, 이동 키로 지나갔다 돌아올 수 있다 | [[01-requirements#^r-edit\|R-EDIT-15]] |
 | T-1422 | 본문 전체가 그 자리의 접기 영역 하나이면 그 접기 영역을 접고, `zd`는 그 자리에서만 그것을 푼다 | [[01-requirements#^r-edit\|R-EDIT-16]] |
 | T-1093 | inline: 호출 블록에서 ds는 그 위치에 Method의 블록을 접힌 모습 그대로 넣는다 | - |
-| T-1094 | named call: "이름을 적어 호출하기"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다 | - |
+| T-1094 | named call: "이름을 입력해 호출하기"는 호출 블록을 삽입하고 이름을 입력하게 하며, Tab은 칸을 돈다 | - |
 | T-1095 | named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다 | - |
 | T-1096 | paste: 복사한 호출 블록은 id가 아니라 이름으로 Method를 잇는다 | - |
 | T-1438 | 이름 호출에서 gd는 그 Method를 만들고, 같은 이름의 호출을 이은 뒤 그리로 간다 | [[01-requirements#^r-edit\|R-EDIT-26]] |

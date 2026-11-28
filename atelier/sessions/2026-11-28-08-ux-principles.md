@@ -21,7 +21,7 @@ tags:
 
 ## 결정
 
-- 조작의 원칙을 큰 원칙 열 개로 → [[dr-0024-ten-interaction-principles|DR-0024]], [[02-interaction-rules#원칙]]
+- 조작의 원칙을 큰 원칙 열 개로 → [[dr-0024-ten-interaction-principles|DR-0024]], [[02-interaction-rules#디자인 원칙]]
 - M87의 F2 ~ F8 → [[ux-decisions#UP1. 조작의 원칙 열 개|UP1]] · [[ux-decisions#DF2. 접기 영역을 끌어 옮기기|DF2]] · [[ux-decisions#DF3. 펴 보인 호출 블록 곁에 놓기|DF3]] · [[ux-decisions#HD1. 헤더에서 아래에 삽입|HD1]] · [[ux-decisions#AR2. 결과 기호도 실행 취소의 대상|AR2]] · [[ux-decisions#MD4. If ↔ Case는 묻지 않는다|MD4]] · [[ux-decisions#BL1. 분기 라벨에서 복사 · 잘라내기 · 감싸기|BL1]] · [[ux-decisions#TW1. 히트 영역과 분기 선택|TW1]]
 - 조작 규칙 9장의 미결정 "분기 라벨을 선택했을 때의 복사 · 감싸기"를 닫음
 

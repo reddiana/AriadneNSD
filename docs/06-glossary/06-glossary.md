@@ -46,7 +46,7 @@ updated: 2026-11-18
 | 탈출 블록 | exit / break / return | `Exit` | 반복이나 Method를 중간에 끝내는 블록. 텍스트 하나(`break`, `return x` …) → [[ux-decisions#XB1. 탈출 블록\|XB1]] |
 | 병렬 처리 블록 | parallel | `Parallel` | 분기 여럿을 동시에(또는 순서 없이) 실행하고, 모두 끝나면 다음으로 가는 블록. 분기 라벨이 없다 → [[ux-decisions#PB1. 병렬 처리 블록\|PB1]] |
 | 호출 블록 | call | `Call` | Method를 호출하는 블록. 같은 문서의 Method나 이름만 적은 함수(Method가 없는 것)를 호출한다. 양옆 세로 이중선으로 그린다(NS 차트 표준의 서브루틴 호출 표기). `결과 ← 이름(인자)` 형태로 보인다 → [[0022-call-name-follows-head\|ADR-0022]] |
-| 이름을 적는 호출 블록 | call by name | `named` (`CallTarget`) | 문서에 없는 것(라이브러리 함수, 아직 그리지 않은 서브루틴)을 이름 · 인자 · 결과를 적어 호출하는 호출 블록. 보통 호출 블록과 같은 모양이고, 펴 보거나 풀 수 없다 → [[01-requirements#^r-blk\|R-BLK-08]], [[02-interaction-rules#호출 블록]] |
+| 이름을 입력하는 호출 블록 | call by name | `named` (`CallTarget`) | 문서에 없는 것(라이브러리 함수, 아직 그리지 않은 서브루틴)을 이름 · 인자 · 결과를 적어 호출하는 호출 블록. 보통 호출 블록과 같은 모양이고, 펴 보거나 풀 수 없다 → [[01-requirements#^r-blk\|R-BLK-08]], [[02-interaction-rules#호출 블록]] |
 | 인자 · 결과 | arguments · result | `args` · `result` | 호출 블록마다 적는 텍스트. 이름은 적지 않고 Method의 헤더를 따른다 |
 | 결과 기호 | result symbol | `resultSymbol` | 결과를 받는 기호 `←` 또는 `=`. 문서마다 하나이고, 뷰 상태다(파일에 저장되지만 실행 취소의 대상이 아님) → [[ux-decisions#Q9. 실행 취소의 대상 (R7)\|Q9]] |
 | 분기 | branch | `Branch` · `Arm` | If · Case 안의 각 경로. 줄 하나를 가진다. 분기마다 분기 라벨이 있다(If는 처음에 "참" · "거짓", Case는 사용자가 적음). If의 분기와 default 분기는 `Branch`, Case의 나머지 분기는 `Arm`. 예전에는 "갈래"라고 적었다(분기 라벨은 "갈래 이름") |

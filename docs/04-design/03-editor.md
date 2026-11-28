@@ -162,7 +162,7 @@ type EditField =
   | { kind: 'head'; diagram: Id }                    // 다이어그램의 헤더
   | { kind: 'call'; block: Id; part: CallPart }      // 호출 블록의 칸 하나
   | { kind: 'fold'; fold: Id; path?: Path };         // 접기 영역의 이름. path는 펴 보인 곳의 접기 영역
-type CallPart = 'args' | 'result' | 'name';          // 이름 칸은 이름을 적는 호출 블록에만
+type CallPart = 'args' | 'result' | 'name';          // 이름 칸은 이름을 입력하는 호출 블록에만
 type Caret = 'selectAll' | 'start' | 'end';          // 커서의 시작 위치
 type Extracted = { call: Id; count: number };        // 그 위치에 남은 호출 블록, 뺀 블록의 수
 ```
@@ -231,7 +231,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 편집 명령은 `core`의 순수 함수입니다. `when`을 지나도 명령이 사전 조건으로 거절할 수 있습니다(`{ ok: false, reason }`). 결과의 타입은 [[01-model#4. 편집 명령]]에 있습니다. 선택은 명령의 인자로 전달하고, 명령은 선택을 바꾸지 않습니다. 선택은 2.3의 규칙으로 `editor`가 정합니다.
 - "적용되는가"(`when`)는 지금의 `EditorState`를 받는 함수입니다. 메뉴의 흐린 항목, 커맨드 팔레트의 흐린 줄, 툴바의 꺼진 버튼이 모두 이것을 씁니다.
-- 실행하면 안 되는 상태(펴 보인 블록에 내용 명령)는 명령이 아니라 `when`이 차단하고, 이유를 알립니다("막지 않고 알린다" → [[02-interaction-rules#원칙]]).
+- 실행하면 안 되는 상태(펴 보인 블록에 내용 명령)는 명령이 아니라 `when`이 차단하고, 이유를 알립니다("막지 않고 알린다" → [[02-interaction-rules#디자인 원칙]]).
 - `run` 앞뒤의 처리입니다.
 	- **앞(`beforeRun`):** 인라인 에디터가 열려 있으면 먼저 입력한 대로 편집을 완료합니다. 그래서 명령은 항상 편집이 끝난 문서에서 실행됩니다.
 	- **내용을 바꾸기 전(`apply`):** 새 내용의 불변식을 검사합니다(`checkInvariants`). 위반이면 버그이므로 문서를 그대로 두고, 로그에 남기고 "내부 오류" 알림(`notice.internalError`)을 보입니다.
@@ -266,7 +266,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 
 - 복사 · 잘라내기는 시스템 클립보드에 둘을 함께 씁니다:
 	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게). 호출 블록은 렌더링된 대로 `ys ← MergeSort(xs)`. 무한 반복은 그림 문구 "(무한 반복)"(`endless.name`) 줄 아래에 본문을, 병렬 처리는 위 띠의 텍스트(있으면) 아래에 분기마다 `∥` 줄과 그 블록을 한 단 더 들여 적습니다
-	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식). 첫 다이어그램(헤더 없음)이 복사한 블록이고, 그 블록의 호출 블록이 호출하는 Method마다 헤더만 있는 빈 Method가 뒤따릅니다. 그래서 클립이 그 자체로 올바른 문서이고(불변식 6), 호출 블록이 부르던 Method의 이름이 따라갑니다. 붙여넣으면 호출 블록은 붙이는 문서에서 **이름이 같은 Method**를 호출하고, 없으면 그 이름을 적은 호출 블록이 됩니다 → [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]]
+	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식). 첫 다이어그램(헤더 없음)이 복사한 블록이고, 그 블록의 호출 블록이 호출하는 Method마다 헤더만 있는 빈 Method가 뒤따릅니다. 그래서 클립이 그 자체로 올바른 문서이고(불변식 6), 호출 블록이 부르던 Method의 이름이 따라갑니다. 붙여넣으면 호출 블록은 붙이는 문서에서 **이름이 같은 Method**를 호출하고, 없으면 그 이름을 입력한 호출 블록이 됩니다 → [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]]
 - 붙여넣기는 사용자 정의 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
 - 셸이 `pastedDocument`(6장의 `createEditor` 옵션)를 전달했고 사용자 정의 형식이 없으며 `pastedDocument.isDocument(text)`가 참이면(AriadneNSD 문서인 텍스트, [[01-requirements#^r-web|R-WEB-11]] → [[06-web#3.2 붙여넣은 문서]]), 블록을 만들기 전에 모달(`Dialog`, 제목 "AriadneNSD")로 묻습니다. "새 문서로 열기"(확인 버튼)면 `pastedDocument.open(text)`를 호출하고 지금 문서는 바꾸지 않으며, "텍스트로 붙여넣기"(넷째 버튼, 선택한 것이 없으면 `isSecondDisabled`)면 위의 규칙대로 붙이고, 취소면 아무것도 하지 않습니다 → [[ux-decisions#JP2. 알아본 뒤의 동작|JP2]]
 	- 그래서 `pastedDocument`가 있으면 붙여넣기 명령의 `when`은 선택한 것이 없어도 참입니다. 문서가 아닌 텍스트이면 그때 "먼저 블록을 선택하세요."(`reason.nothingSelected`)를 알립니다. 헤더에서 위에 붙여넣기, 분기 라벨, 읽기 전용에서의 거절은 그대로입니다(헤더에서 아래에 붙여넣기는 본문의 맨 앞 → [[ux-decisions#HD1. 헤더에서 아래에 삽입|HD1]]).
@@ -309,7 +309,7 @@ type CommandSpec = {
   menu?: MenuPlace;                   // 메뉴 바의 자리
   toolbar?: { group: number; order: number; icon: string };  // icon: 툴바 아이콘의 id ('file.save', 'block.if' …)
   context?: SelectionKind[];          // 컨텍스트 메뉴에 보일 선택의 종류
-  inContext?(ctx: CommandContext): boolean;    // 그 종류 가운데서도 지금 선택에 컨텍스트 메뉴로 보일지. 없으면 늘 ("Method 만들기"는 이름을 적는 호출 블록에서만)
+  inContext?(ctx: CommandContext): boolean;    // 그 종류 가운데서도 지금 선택에 컨텍스트 메뉴로 보일지. 없으면 늘 ("Method 만들기"는 이름을 입력하는 호출 블록에서만)
   edits: boolean;                     // 문서를 바꾸는가. 읽기 전용이면 적용되지 않는다 → 6.4
   when(ctx: CommandContext): true | Message;   // 적용되는가, 아니면 이유
   run(ctx: CommandContext, args?: unknown): void | Promise<void>;
@@ -321,7 +321,7 @@ type SubmenuId = 'recent' | 'export' | 'insert' | 'insertBefore' | 'wrap';  // �
 type CommandContext = { state: EditorState; store: DocumentStore; settings: SettingsStore };
 ```
 
-- 메뉴 · 커맨드 팔레트의 흐린 항목(`when`이 이유를 반환함)도 누를 수 있습니다. 누르면 실행하지 않고 그 이유를 상태 표시줄에 알립니다. 메뉴(컨텍스트 메뉴 포함)의 흐린 항목은 마우스를 올리면 같은 이유를 툴팁으로 바로 보이고(`@media (hover: hover)`일 때만, 브라우저의 `title`이 아니라 `aria-describedby`로 연결한 요소), 제목과 키를 `ui.disabled`로 칠하며 hover 배경은 없습니다(키보드 포커스의 배경은 유지). 커맨드 팔레트는 글자 색만, 툴바 버튼은 글자 색만 흐립니다("막지 않고 알린다" → [[02-interaction-rules#원칙]]).
+- 메뉴 · 커맨드 팔레트의 흐린 항목(`when`이 이유를 반환함)도 누를 수 있습니다. 누르면 실행하지 않고 그 이유를 상태 표시줄에 알립니다. 메뉴(컨텍스트 메뉴 포함)의 흐린 항목은 마우스를 올리면 같은 이유를 툴팁으로 바로 보이고(`@media (hover: hover)`일 때만, 브라우저의 `title`이 아니라 `aria-describedby`로 연결한 요소), 제목과 키를 `ui.disabled`로 칠하며 hover 배경은 없습니다(키보드 포커스의 배경은 유지). 커맨드 팔레트는 글자 색만, 툴바 버튼은 글자 색만 흐립니다("막지 않고 알린다" → [[02-interaction-rules#디자인 원칙]]).
 - `Modal`의 `size="narrow"`는 짧은 안내를 위한 좁은 창(폭 440px)이고 정보 창이 씁니다. 정보 창의 로고(그림 · 문자)는 `ui/about-logo.ts`의 별도 모듈이라 창을 열 때 동적 `import`로 받고(첫 다운로드에 들지 않음), 오기 전에는 같은 크기의 빈 상자가 자리를 지킵니다. 그림 로고는 장식(`alt=""`), 문자 로고의 대체 글자가 "AriadneNSD"입니다 → [[ux-decisions#AL1. 정보 창의 로고|AL1]]
 - UI의 한 부분을 여는 명령(환경 설정 · 커맨드 팔레트 · 문서 설정 · 사용법 · 알고리즘 갤러리 · AI에게 그려 달라고 하기 · 단축키 목록 · 이 버전에서 바뀐 것 · AriadneNSD에 대하여)은 그 UI(`editor`의 React 주변 UI)가 직접 등록합니다. 메뉴의 `group`을 90으로 두어 같은 메뉴의 다른 묶음 뒤에 옵니다. 키(`Ctrl`+`,` · `Ctrl`+`Shift`+`P` · `F1` · `?`)는 4장의 키 표가 이 명령 id로 보냅니다.
 
@@ -359,9 +359,9 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 - "AI에게 그려 달라고 하기"(`help.askAi`)는 사용법의 "AI에게 그려 달라고 하기" 꼭지(`#ai`)를 새 탭으로 엽니다. 사용법처럼 화면 언어의 것(셸이 준 사용법 주소 + `#ai`)입니다. AI가 화면을 조작하려 할 때 사용자가 할 일(AI에게 공유 링크를 청함)을 찾게 합니다 → [[ux-decisions#LG7. 화면을 조작하는 AI에게도 안내가 보이게|LG7]]
 - "Event 헤더" · "Method 헤더"는 선택한 것에 따라 이름이 바뀝니다: 헤더 없는 다이어그램에서는 "… 헤더 달기", 헤더에서는 "…로 바꾸기"입니다. 헤더가 있는 다이어그램의 블록에서는 흐리게 보입니다(헤더를 선택하라고 알림) → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
 - "새 Method로 빼기"(`diagram.extractMethod`)는 블록이나 접기 영역을 선택했을 때 됩니다. 메뉴 · 컨텍스트 메뉴 · 커맨드 팔레트에서는 묻지 않고 뺍니다. 키 `m`으로 실행하면(인자 `fromKey`) 헤더 없는 다이어그램에서만 고르는 목록(`ChromeState.picker`, 6장) "1 새 Method로 빼기 · 2 Method 헤더 달기"를 먼저 엽니다 → [[ux-decisions#XM3. 헤더 없는 다이어그램에서 블록에 m은 고르는 목록|XM3]]
-- "호출…" · "호출할 Method 바꾸기…"는 고르는 목록(`ChromeState.picker`, 6장)을 엽니다. 목록은 문서의 Method 전부(렌더링된 순서), "새 Method를 만들고 호출", "이름을 적어 호출하기"입니다.
-- "호출하는 Method로 가기"(`call.goTo`, `gd`)는 다이어그램 메뉴의 "새 Method로 빼기" 다음에 둡니다. 선택을 바꾸는 명령이라 읽기 전용에서도 됩니다. 이름을 적는 호출 블록에서는 "Method 만들기"를 실행합니다(읽기 전용이면 거절).
-- "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 적는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 적는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
+- "호출…" · "호출할 Method 바꾸기…"는 고르는 목록(`ChromeState.picker`, 6장)을 엽니다. 목록은 문서의 Method 전부(렌더링된 순서), "새 Method를 만들고 호출", "이름을 입력해 호출하기"입니다.
+- "호출하는 Method로 가기"(`call.goTo`, `gd`)는 다이어그램 메뉴의 "새 Method로 빼기" 다음에 둡니다. 선택을 바꾸는 명령이라 읽기 전용에서도 됩니다. 이름을 입력하는 호출 블록에서는 "Method 만들기"를 실행합니다(읽기 전용이면 거절).
+- "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 입력하는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 입력하는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
 - "Method 풀어 넣고 지우기"(`diagram.inlineMethod`, [[01-requirements#^r-edit|R-EDIT-27]])는 같은 문서의 Method를 호출하는 호출 블록이나 Method 헤더를 선택했을 때 그 Method에 적용됩니다. `core`의 `inlineMethod`를 실행하고(실행 취소 한 단계), 자리마다 펴 보기 · 접힘(`view.opened` · `view.folded`)을 호출 블록 풀기처럼 사본으로 옮긴 뒤, 들어온 블록을 선택하고 "호출 n곳에 풀어 넣고 {이름}을(를) 지웠습니다."를 알립니다. `when`은 `core`와 같은 검사로 `recursiveMethod` · `noCallers`를 미리 돌려주어 메뉴에서 흐리게 합니다. 컨텍스트 메뉴(`context: ['blocks', 'head']`)에는 호출 블록 · Method 헤더에서만 보입니다(`inContext`). 키는 없습니다 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
 - 보기 메뉴의 접기 명령: "접기 · 펴기"(`view.fold.toggle`), "접기 영역 만들기"(`fold.make`), "접기 영역 풀기"(`fold.remove`), "접기 영역 보기 ✓"(`view.bands`, 이름 띠 켜고 끄기). 키로만 실행하는 "펴기"(`view.fold.open`, `zo`)와 "접기"(`view.fold.close`, `zc`)는 커맨드 팔레트에도 있습니다. 모두 접기 · 모두 펴기([[01-requirements#^r-edit|R-EDIT-17]], `P2`)는 아직 없습니다.
 - 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기는 실행 취소 한 단계이고, 이름 띠 켜고 끄기는 실행 취소 스택에 저장하지 않습니다([[0048-folding-is-undoable|ADR-0048]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
