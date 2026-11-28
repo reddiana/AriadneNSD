@@ -165,11 +165,14 @@ const chainRows: Readonly<Record<string, Entry>> = {
     expect(holderOf(head)).toBeNull();
     await refused(nestedEngine(), head, 'block.unwrap');
   }),
-  '접기 영역(이름 띠 · 접힌 칸)': cell('접기 영역 → 분기 · 본문 → 상위 제어 블록 → …', () => {
-    expect(chainOf(rawFold('F1'))).toEqual(['F1', 'F2', 'w1']);
-    expect(holderOf(rawFold('F1'))).toBe('w1');
-    expect(regionOf(rawFold('F2'))).toEqual({ fold: 'F2' });
-  }),
+  '접기 영역(이름 띠 · 접힌 칸)': cell(
+    '접기 영역 → 그것을 포함하는 접기 영역(작은 것부터) → 분기 · 본문 → 상위 제어 블록 → …',
+    () => {
+      expect(chainOf(rawFold('F1'))).toEqual(['F1', 'F2', 'w1']);
+      expect(holderOf(rawFold('F1'))).toBe('w1');
+      expect(regionOf(rawFold('F2'))).toEqual({ fold: 'F2' });
+    },
+  ),
   '빈 default 칸': cell('그 Case → …', () => {
     expect(chainOf(rawMissing('k'))).toEqual(chainOf(blockIn('k')));
     expect(chainOf(rawMissing('k'))).toEqual(['k1r', 'w1']);
@@ -337,30 +340,22 @@ const targetRows: Readonly<Record<string, Pair>> = {
     }),
   ],
   '접기 영역 만들기': [
-    {
-      // The document still has the words from before BL4: they change at the cleanup.
-      doc: '블록 범위(펴 보인 범위는 그 위치의 접기 영역이 된다)',
-      check: async () => {
-        await takes('fold.make', select.range('a', 'w'), peekH, labelK);
-        const engine = await after(labelK, 'fold.make');
-        expect(outlineOf(engine, 'k')).toContain('<');
-      },
-    },
+    cell('블록 범위(펴 보인 범위는 그 위치의 접기 영역이 된다), 분기(그 블록 전체)', async () => {
+      await takes('fold.make', select.range('a', 'w'), peekH, labelK);
+      const engine = await after(labelK, 'fold.make');
+      expect(outlineOf(engine, 'k')).toContain('<');
+    }),
     cell('아니오', async () => {
       await refusesAll(missingK, 'fold.make');
       await refusesAll(foldF, 'fold.make');
     }),
   ],
   '새 Method로 빼기': [
-    {
-      // The document still has the words from before BL4: they change at the cleanup.
-      doc: '블록 범위, 접기 영역',
-      check: async () => {
-        await takes('diagram.extractMethod', select.range('a', 'w'), foldF, labelK);
-        const engine = await after(labelK, 'diagram.extractMethod');
-        expect(diagramNames(engine)).toHaveLength(4);
-      },
-    },
+    cell('블록 범위, 분기(그 블록 전체), 접기 영역', async () => {
+      await takes('diagram.extractMethod', select.range('a', 'w'), foldF, labelK);
+      const engine = await after(labelK, 'diagram.extractMethod');
+      expect(diagramNames(engine)).toHaveLength(4);
+    }),
     cell('아니오', () => refusesAll(missingK, 'diagram.extractMethod')),
   ],
 };

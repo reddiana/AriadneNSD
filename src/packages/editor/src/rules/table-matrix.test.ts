@@ -162,17 +162,12 @@ const rows: Readonly<Record<string, Row>> = {
         expect(bodyOf(await after(select.block('e'), command), 'd3')).toBe('o1 while()[∅]');
       }
     }),
-    {
-      // The document still has the words from before BL3 · BL4: they change at the cleanup.
-      doc: '거절',
-      // BL3: a new branch beside the label holds the block.
-      check: async () => {
-        const engine = await after(block.label, 'block.insert.while');
-        expect(outlineOf(engine, 'k')).toMatch(
-          /^case\(k\)\[1: k1 k2 \| [^|]*: while\(\)\[∅\] \| 2: k3 k4\]$/,
-        );
-      },
-    },
+    cell('새 분기를 오른쪽 · 왼쪽에 만들어 그 안에', async () => {
+      const engine = await after(block.label, 'block.insert.while');
+      expect(outlineOf(engine, 'k')).toMatch(
+        /^case\(k\)\[1: k1 k2 \| [^|]*: while\(\)\[∅\] \| 2: k3 k4\]$/,
+      );
+    }),
     cell('본문의 맨 앞(위는 거절)', async () => {
       starts(await after(block.head, 'block.insert.while'), 'while()[∅] a ');
       await refusesAll(block.head, 'block.insertBefore.while');
@@ -400,15 +395,10 @@ const rows: Readonly<Record<string, Row>> = {
       const engine = await after(select.range('a', 'w'), 'fold.make');
       expect(bodyOf(engine)).toMatch(/^<\w+: a while\(w\)\[w1 w2\]> if/);
     }),
-    {
-      // The document still has the words from before BL3 · BL4: they change at the cleanup.
-      doc: '거절',
-      // BL4: the blocks of the branch become the region.
-      check: async () => {
-        const engine = await after(block.label, 'fold.make');
-        expect(outlineOf(engine, 'k')).toMatch(/^case\(k\)\[1: <\w+: k1 k2> \| 2: k3 k4\]$/);
-      },
-    },
+    cell('분기의 블록 전체를 접기 영역으로', async () => {
+      const engine = await after(block.label, 'fold.make');
+      expect(outlineOf(engine, 'k')).toMatch(/^case\(k\)\[1: <\w+: k1 k2> \| 2: k3 k4\]$/);
+    }),
     no(block.head, 'fold.make'),
     no(block.fold, 'fold.make'),
     no(block.missing, 'fold.make'),
@@ -454,16 +444,12 @@ const rows: Readonly<Record<string, Row>> = {
       expect(diagramNames(engine)).toHaveLength(4);
       starts(engine, 'call while(w)');
     }),
-    {
-      // The document still has the words from before BL3 · BL4: they change at the cleanup.
-      doc: '거절',
-      // BL4: the blocks of the branch become the Method, and the call stays in the branch.
-      check: async () => {
-        const engine = await after(block.label, 'diagram.extractMethod');
-        expect(diagramNames(engine)).toHaveLength(4);
-        expect(outlineOf(engine, 'k')).toBe('case(k)[1: call | 2: k3 k4]');
-      },
-    },
+    cell('분기의 블록 전체', async () => {
+      const engine = await after(block.label, 'diagram.extractMethod');
+      expect(diagramNames(engine)).toHaveLength(4);
+      // The call stays in the branch.
+      expect(outlineOf(engine, 'k')).toBe('case(k)[1: call | 2: k3 k4]');
+    }),
     cell('거절(키 m은 Method로 바꾸기)', async () => {
       await refusesAll(block.head, 'diagram.extractMethod');
       const engine = rulesEngine();

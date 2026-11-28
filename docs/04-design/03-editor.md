@@ -134,6 +134,7 @@ AriadneNSD로 그린 NS 차트입니다. 왼쪽 쐐기가 있는 칸은 탈출 �
 | 명령 | 다음 선택 |
 | --- | --- |
 | 삽입 · 붙여넣기 · 감싸기 · 이동 | `touched`(삽입한 것, 감싼 새 블록, 이동한 것) |
+| 분기 라벨에서의 삽입 · 붙여넣기 | 새 분기의 라벨(칸을 엶. 병렬 처리는 선택만). 이름을 먼저 입력해야 하는 호출은 그 호출 블록 · 새 Method의 이름 칸 → [[ux-decisions#BL3. 분기 라벨에서 처리가 아닌 블록 삽입\|BL3]] |
 | 삭제 · 잘라내기 | 삭제한 범위의 다음 블록 → 앞 블록 → 담고 있던 블록 (삭제 **전**에 계산해 둔다) |
 | 풀기 | 남은 안의 블록들. 안쪽에서 풀었으면 선택한 것 그대로(접기 영역도 그대로). 분기 라벨 · 빈 default 칸에서 풀었으면 남은 안의 블록들 |
 | Method 풀어 넣고 지우기 | 들어온 블록들: 호출 블록에서 했으면 그 자리의 것, Method 헤더에서 했으면 문서 순서로 첫 자리의 것(`sites`) → [[ux-decisions#CB16. Method 풀어 넣고 지우기\|CB16]] |
@@ -153,7 +154,7 @@ type Editing = {
   call?: { args: string; result: string; name?: string };  // 호출 블록의 칸들에 지금까지 입력한 것. 닫을 때 editCall 한 번으로 기록
   isRejected?: boolean;             // 이름이 중복되어 다시 연 칸. Esc는 편집 전의 이름으로 되돌림
   extracted?: Extracted;            // 새 Method로 빼기가 연 이름 칸. 이름을 빼기의 undo 단계에 합침
-  joinsLast?: true;                 // 만든 직후의 접기 영역 이름. 만들기의 undo 단계에 합침
+  joinsLast?: true;                 // 만든 직후 연 칸. 입력한 텍스트를 만들기의 undo 단계에 합침
 };
 type EditField =
   | { kind: 'block'; block: Id }                     // 처리 블록의 텍스트, 제어 블록의 조건
@@ -173,8 +174,8 @@ type Extracted = { call: Id; count: number };        // 그 위치에 남은 호
 
 | 메서드 | 하는 일 |
 | --- | --- |
-| `commit(result, after)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(If를 Case로 바꿨다는 알림, 조건을 확인하라는 알림)도 처리합니다 |
-| `apply(content, after)` | 내용을 undo 한 단계로 바꿉니다. 내용이 바뀌었으면 먼저 불변식을 검사하고(3장), 다음 선택 · 뷰 상태와 인라인 에디터(`After`)를 적용합니다 |
+| `commit(result, after, isAmend?)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(If를 Case로 바꿨다는 알림, 조건을 확인하라는 알림)도 처리합니다 |
+| `apply(content, after, isAmend?)` | 내용을 undo 한 단계로 바꿉니다. `isAmend`이면 새 단계를 추가하지 않고 앞 단계에 합칩니다. 내용이 바뀌었으면 먼저 불변식을 검사하고(3장), 다음 선택 · 뷰 상태와 인라인 에디터(`After`)를 적용합니다 |
 | `setView(view, selection?)` | 뷰 상태만 바꿉니다. 접힘 · 펴 보기(`folded` · `opened`), 이름 띠(`bands`), 결과 기호 가운데 하나라도 값으로 달라지면 undo 한 단계를 만들고 redo를 비웁니다. 읽기 전용이면 단계도 dirty도 없습니다 |
 | `select(selection)` | 선택을 바꿉니다. 없어진 id를 가리키는 선택은 버립니다(`validSelection`) |
 | `handleKey(stroke)` | 다이어그램 영역의 키 하나를 읽습니다. 처리했는지를 반환합니다(4장) |
@@ -275,7 +276,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 선택한 것이 없으면 삽입처럼 지금 다이어그램의 맨 끝(`diagramEnd`)에 붙입니다 → [[ux-decisions#PS1. 선택한 것이 없을 때의 붙여넣기|PS1]]
 	- 저장은 진행 중인 붙여넣기를 기다리지만(`Ctrl`+`V` 뒤의 `Ctrl`+`S`), 문서인 텍스트를 알아본 순간 더 기다리지 않습니다. 그 뒤의 모달(US1의 "저장")이 저장을 호출하기 때문입니다.
 - 브라우저가 시스템 클립보드를 막으면(권한 거절, 지원하지 않음) 편집기 안의 클립보드(메모리)를 씁니다. 그때 다른 탭과는 나누지 못하고, 그렇다고 상태 표시줄에 알립니다.
-- 분기 라벨을 선택했을 때 복사 · 감싸기는 그 분기의 블록 전체에, 잘라내기는 그 블록들의 복사 + 분기 삭제(분기 삭제의 거절 조건 그대로)로 적용합니다. 붙여넣기는 분기 삽입(`runInsertBranch`)과 같은 길로 새 분기를 만들고 그 빈 블록을 붙인 블록으로 바꾼 것까지 한 번에 반영합니다(실행 취소 한 단계, [[ux-decisions#BL2. 분기 라벨에서 붙여넣기|BL2]]) → [[ux-decisions#BL1. 분기 라벨에서 복사 · 잘라내기 · 감싸기|BL1]]
+- 분기 라벨을 선택했을 때 복사 · 감싸기는 그 분기의 블록 전체에, 잘라내기는 그 블록들의 복사 + 분기 삭제(분기 삭제의 거절 조건 그대로)로 적용합니다. 붙여넣기는 분기 삽입(`runInsertBranch`)과 같은 길로 새 분기를 만들고 그 빈 블록을 붙인 블록으로 바꾼 것까지 한 번에 반영합니다(실행 취소 한 단계, [[ux-decisions#BL2. 분기 라벨에서 붙여넣기|BL2]]). 처리가 아닌 블록과 호출 블록의 삽입도 같은 `runInsertBranch`가 합니다([[ux-decisions#BL3. 분기 라벨에서 처리가 아닌 블록 삽입|BL3]]). 새 Method로 빼기와 접기 영역 만들기는 감싸기처럼 `branchTarget`으로 그 분기의 블록 전체를 대상으로 받습니다([[ux-decisions#BL4. 분기 라벨에서 새 Method로 빼기 · 접기 영역 만들기|BL4]]) → [[ux-decisions#BL1. 분기 라벨에서 복사 · 잘라내기 · 감싸기|BL1]]
 - 붙여넣은 블록은 모두 새 id를 받습니다 → [[01-model#4.1 내용을 바꾸는 명령]]
 
 ### 3.4 텍스트 편집
@@ -283,6 +284,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 인라인 에디터는 `<textarea>` 하나를 다시 씁니다. 편집할 상자의 위치(`LayoutResult`)에 배율을 곱해 놓고, 블록 글꼴과 같은 글꼴 · 크기로 둡니다.
 - 칸을 열고 닫을 때까지가 명령 하나입니다. 닫을 때 세션이 텍스트 편집 명령을 한 번 실행합니다(명령 목록의 `run`을 거치지 않습니다). 처음과 같으면 실행하지 않습니다 → [[01-model#4.4 텍스트 편집과 undo]]
 - 비울 수 없는 칸을 비우면 기본 텍스트로 되돌리고 닫습니다. 헤더의 이름이 중복될 때만 칸을 다시 엽니다 → [[02-interaction-rules#텍스트 편집]]. 다시 연 칸은 테두리를 `edit.error`로 그리고(→ [[04-visual-design#7.1 상태 표]]), 그 칸의 `Esc`만 편집 전의 이름으로 되돌리고 닫습니다.
+- 만든 직후에 여는 칸은 `After.edit`에 `joinsLast: true`를 줍니다(블록의 텍스트 · 조건, 분기의 라벨, 헤더의 이름, 호출 블록의 칸, 접기 영역의 이름). 세션은 그 명령이 내용을 바꾼 때만 `Editing.joinsLast`를 켜고, 닫을 때의 텍스트 편집 명령을 `commit`의 `isAmend`로 반영해 만들기와 실행 취소 한 단계로 만듭니다. `Tab`으로 호출 블록의 칸을 바꾸거나 중복되는 이름으로 다시 연 칸도 유지합니다. 내용을 바꾸지 않은 삽입(헤더 아래의 빈 첫 블록에서 처리 삽입) 뒤의 입력은 합치면 앞의 다른 단계에 붙으므로 따로 한 단계입니다. 빈 default 칸(`missingDefault`)은 칸을 닫을 때 default 분기와 텍스트를 한 번에 반영합니다 → [[02-interaction-rules#6. 실행 취소]], [[ux-decisions#UN3. 만든 직후 입력한 텍스트는 만들기와 한 단계|UN3]]
 - 새 Method로 빼기가 연 이름 칸(`Editing.extracted`)은 닫을 때의 `editHead`를 빼기의 실행 취소 단계에 합칩니다(새 단계를 추가하지 않음). 그래서 빼기와 이름이 실행 취소 한 단계입니다. 칸을 닫으면(`Enter` · `Esc` · 다른 곳 클릭) 남은 호출 블록을 선택하고, 중복되는 이름이면 다른 헤더처럼 칸을 다시 엽니다 → [[02-interaction-rules#새 Method로 빼기와 새 다이어그램]]
 - 호출 블록의 칸(인자 · 결과)도 같은 `<textarea>`를 씁니다. 위치는 세로 이중선의 안쪽이고, 빈 칸에는 칸의 이름("인자" · "결과")을 흐리게 보입니다. `Tab`으로 칸을 바꾸면 적은 것을 기억해 두고, 닫을 때 두 칸을 `editCall` 한 번으로 실행합니다. 그래서 두 칸을 고쳐도 실행 취소 한 단계입니다 → [[02-interaction-rules#호출 블록]]
 - 한글 입력(IME) 조합 중의 `Enter`(`isComposing`)는 편집 완료로 보지 않습니다.
@@ -297,12 +299,12 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 | 조작 규칙 | 구현하는 곳 |
 | --- | --- |
 | 요소와 컨테이너(T1 ~ T4) | 방향키와 클릭은 보이는 나무(`model/shown-index.ts`, 2.2). 이동 명령은 `core`의 `move`(접기 영역의 경로와 인자 `hiddenFolds`), 드롭은 `input/drop.ts`의 접기 영역 · 펴 보인 호출 블록 판정(3.2), 접기 · 펴기의 대상은 `commands/fold-commands.ts`의 `foldTargets` |
-| 명령마다 받는 대상(표 1 · 표 2), C1 | 명령마다의 `when` · `run`(5장). 상위 컨테이너를 찾는 곳: `foldTargets`(접기 · 펴기, 접기 영역 풀기), `unwrapHolder`(풀기), `branchOfSelection`(분기 명령). 선택을 `core`의 `Target`으로 바꾸는 곳: `state/selection.ts`의 `targetOf` |
+| 명령마다 받는 대상(표 1 · 표 2), C1 | 명령마다의 `when` · `run`(5장). 상위 컨테이너를 찾는 곳: `foldTargets`(접기 · 펴기, 접기 영역 풀기), `unwrapHolder`(풀기), `branchOfSelection`(분기 명령). 선택을 `core`의 `Target`으로 바꾸는 곳: `state/selection.ts`의 `targetOf`, 분기 라벨은 `commands/command-helpers.ts`의 `branchTarget`(복사, 감싸기, 새 Method로 빼기(`extractTarget`), 접기 영역 만들기가 각자 호출) |
 | 삽입 위치, C2 | 키보드: `targetOf`와 `side`, `headStart`(헤더), `currentDiagram`(선택 없음), `intoMissingDefault`(빈 default 칸), `runInsertBranch`(분기 라벨). 드롭: `input/drop.ts`의 `findDrop`이 `DropAction`을 만들고 `commands/drop-command.ts`의 `runDrop`이 실행한다 |
 | 블록 종류 | `model/doc-index.ts`의 `childSeqs` · `isControl` · `isBranching`, `commands/command-helpers.ts`의 `blockKinds` · `wrapKinds`, `core`의 `newBlock` · `makeWrapper`와 종류별 분기 |
 | 텍스트 필드 | `EditField`(2.4), `session/text-editing.ts`의 `fieldText`(편집할 수 있는지), `core`의 편집 명령(비웠을 때의 처리), `session/call-names.ts`의 `callParts`(호출 블록의 필드 순서), 명령마다의 `After.edit`(만든 직후 여는 필드) |
 | C3 명령 후 선택 | `commit(result, after)`의 `after`(2.3). 함께 쓰는 함수: `selectTouched` · `selectionAfterDelete` · `afterBranchDelete` · `afterHead` · `afterInsert` |
-| C4 실행 취소 단위 | 세션의 `commit` · `apply` · `setView`(2.5). 앞 단계에 합치는 것: `Editing`의 `joinsLast`(접기 영역의 이름)와 `extracted`(뺀 Method의 이름) |
+| C4 실행 취소 단위 | 세션의 `commit` · `apply` · `setView`(2.5). 앞 단계에 합치는 것: 만든 직후 연 칸의 `Editing.joinsLast`(3.4)와 `extracted`(뺀 Method의 이름) |
 | C5 읽기 전용 | `commands/spec.ts`의 `spec()`(`edits` · `onPeek`)과 명령 목록의 읽기 전용 검사(6.4) |
 | 명령은 하나, 진입점은 여럿 | 명령 목록의 `run(id, args)`(3장). 드롭 · 더블클릭 편집 · 문서 설정 창은 거치지 않는다 |
 
@@ -385,7 +387,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 - "Method 만들기"(`call.makeMethod`, [[01-requirements#^r-edit|R-EDIT-26]])는 이름을 입력하는 호출 블록 하나를 선택했을 때 됩니다. `core`의 `makeMethod`로 Method를 만들고 같은 이름의 호출 블록을 이은 뒤(실행 취소 한 단계), 선택을 새 Method의 헤더로 옮깁니다. 컨텍스트 메뉴에는 이름을 입력하는 호출 블록에서만 보이고(`inContext`), 그때 "호출하는 Method로 가기"는 컨텍스트 메뉴에서 빠집니다 → [[ux-decisions#CB15. Method 만들기|CB15]]
 - "Method 풀어 넣고 지우기"(`diagram.inlineMethod`, [[01-requirements#^r-edit|R-EDIT-27]])는 같은 문서의 Method를 호출하는 호출 블록이나 Method 헤더를 선택했을 때 그 Method에 적용됩니다. `core`의 `inlineMethod`를 실행하고(실행 취소 한 단계), 자리마다 펴 보기 · 접힘(`view.opened` · `view.folded`)을 호출 블록 풀기처럼 사본으로 옮긴 뒤, 들어온 블록을 선택하고 "호출 n곳에 풀어 넣고 {이름}을(를) 지웠습니다."를 알립니다. `when`은 `core`와 같은 검사로 `recursiveMethod` · `noCallers`를 미리 돌려주어 메뉴에서 흐리게 합니다. 컨텍스트 메뉴(`context: ['blocks', 'head']`)에는 호출 블록 · Method 헤더에서만 보입니다(`inContext`). 키는 없습니다 → [[ux-decisions#CB16. Method 풀어 넣고 지우기|CB16]]
 - 보기 메뉴의 접기 명령: "접기 · 펴기"(`view.fold.toggle`), "접기 영역 만들기"(`fold.make`), "접기 영역 풀기"(`fold.remove`), "접기 영역 보기 ✓"(`view.bands`, 이름 띠 켜고 끄기). 키로만 실행하는 "펴기"(`view.fold.open`, `zo`)와 "접기"(`view.fold.close`, `zc`)는 커맨드 팔레트에도 있습니다. 모두 접기 · 모두 펴기([[01-requirements#^r-edit|R-EDIT-17]], `P2`)는 아직 없습니다.
-- 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기와 이름 띠 켜고 끄기는 하나가 실행 취소 한 단계입니다([[0048-folding-is-undoable|ADR-0048]], [[ux-decisions#UN2. 이름 띠 보기도 실행 취소의 대상|UN2]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`), 이름 칸을 엽니다. 그 칸에서 적은 이름은 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
+- 뷰 상태를 바꾸는 명령(`edits: false`)은 세션의 `setView`로 뷰 상태만 바꿉니다. 접기 · 펴기 · 펴 보기와 이름 띠 켜고 끄기는 하나가 실행 취소 한 단계입니다([[0048-folding-is-undoable|ADR-0048]], [[ux-decisions#UN2. 이름 띠 보기도 실행 취소의 대상|UN2]]). 읽기 전용이 아니면 저장 안 됨(`dirty`)을 켭니다(읽기 전용이면 단계도 만들지 않음). 접기 영역을 만들면 내용을 바꾸는 명령 하나가 그 영역을 접은 뷰 상태까지 함께 정하고(`After.view`, 접힌 분기 · 본문에 만들면 그것은 폄), 이름 칸을 엽니다. 그 칸에서 적은 이름은 다른 새 요소처럼 만들기의 실행 취소 단계에 합칩니다(`Editing.joinsLast` → 3.4, [[ux-decisions#FD4. 만들 때 적은 이름은 만들기와 한 단계|FD4]]).
 - 메뉴 항목 옆에는 키를 표시합니다. 키가 둘이면(`dd`와 `Ctrl`+`X`) 표준 키를 표시하고, Vim 키는 커맨드 팔레트와 단축키 목록에서 보입니다.
 
 ### 5.2 툴바

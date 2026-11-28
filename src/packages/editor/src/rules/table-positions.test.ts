@@ -181,8 +181,7 @@ const rows: Readonly<Record<string, readonly [after: Entry, before: Entry]>> = {
   ],
   '분기 라벨': [
     {
-      // The document still has the words from before BL3: they change at the cleanup.
-      doc: '그 분기의 오른쪽에 새 분기(처리 삽입은 빈 블록 하나를, 붙여넣기는 붙인 블록을 담는다). default 분기의 오른쪽이면 그 왼쪽에 놓고 알린다. If는 Case로 바꾸고 알린다. 처리가 아닌 블록의 삽입은 거절한다',
+      doc: '그 분기의 오른쪽에 새 분기(처리 삽입은 빈 블록 하나를, 그 밖의 블록 삽입과 붙여넣기는 삽입하거나 붙인 블록을 담는다). default 분기의 오른쪽이면 그 왼쪽에 놓고 알린다. If는 Case로 바꾸고 알린다',
       check: async () => {
         await besideBranch('after');
         const atDefault = await after(select.label('gd'), 'block.insert.process');

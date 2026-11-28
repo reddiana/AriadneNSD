@@ -166,6 +166,9 @@ const refusals: Readonly<Record<string, Partial<Record<Place, string>>>> = {
     missing: 'reason.nothingSelected',
   },
   'edit.move.left': { none: 'reason.nothingSelected', missing: 'reason.nothingSelected' },
+  // Nothing refuses these two (UX BL3). The rows stay: T-0558 checks only the commands listed here.
+  'block.insert.if': {},
+  'block.insert.call': {},
   'block.wrap.while': {
     none: 'reason.nothingSelected',
     missing: 'reason.nothingSelected',
