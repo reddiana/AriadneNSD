@@ -37,7 +37,7 @@ updated: 2026-11-28
 
 ### 2026-11-28 세션 03에 Claude(에이전트)가 정한 것
 
-- [ ] 독일어에서 에이전트가 정한 것: 용어 Struktogramm · Anweisung · Verzweigung · Fallauswahl · Endlosschleife · Aussprung · Parallelverarbeitung · Methode · Ereignis · Faltbereich, 메뉴 Datei · Bearbeiten · Diagramm · Ansicht · Hilfe, 삽입은 "Block darunter/darüber einfügen"(붙여넣기 "Darunter einfügen"과 겹치지 않게), 키 이름 `Ctrl` · `Shift`는 영어 그대로(툴팁만 Strg · Umschalt), 소개(`/about`) 링크는 "(Englisch)", 자판기 예제는 € 대신 "EUR"(글꼴에 €가 없음). 사용법 번역은 독일어를 아는 사람이 한 번 읽으면 좋음 → `188da36` `85071c4` `5cd33cf`
+- [ ] 독일어에서 에이전트가 정한 것: 용어 Struktogramm · Anweisung · Verzweigung · Fallauswahl · Endlosschleife · Aussprung · Parallelverarbeitung · Methode · Ereignis · Faltbereich, 메뉴 Datei · Bearbeiten · Diagramm · Ansicht · Hilfe, 삽입은 "Block darunter/darüber einfügen"(붙여넣기 "Darunter einfügen"과 겹치지 않게), 키 이름 `Ctrl` · `Shift`는 영어 그대로(툴팁만 Strg · Umschalt), 소개(`/about`) 링크는 "(Englisch)". 사용법 번역은 독일어를 아는 사람이 한 번 읽으면 좋음 → `188da36` `85071c4` `5cd33cf`
 - [ ] 동영상(폭 864px)에서 영어 · 독일어는 툴바가 두 줄로 접혀 "Examples" · "Beispiele"가 아랫줄로 감(한국어는 한 줄). 앱의 반응형 그대로 녹화 → `787fafd`
 - [ ] 블록 셋의 남은 일에서 에이전트가 정한 것: 갤러리 · 예제 14곳의 `while True` · `break` · `continue` · 중간 `return`을 무한 반복 · 탈출로(끝의 `return`은 처리 블록 그대로, 탈출 글자에 원래 주석을 그대로), 병렬 처리로 바꿀 곳은 없음(raft의 "피어마다"는 반복), 새 갤러리 항목 생산자-소비자(고전 선반, 22 → 23개), 스킬 안내에 `throw` · 이른 `return`도 탈출 · `Promise.all` · 스레드 시작과 기다림은 병렬 처리, 사용법 새 그림(무한 반복 안의 `receive` · 탈출 `break` + 병렬 처리 "shut down") → 로컬 앱 http://localhost:5173 , `3b0ee89` `3e45ba6` `1bd6271`
 - [ ] 화면 언어: `kok-IN`처럼 `ko`로 시작하지만 다른 언어는 이제 영어(BCP 47 앞부분으로 판정), 설정 명세 상수의 기본값은 `en` 그대로 두고 설정 창에만 실제 언어를 넣음 → [[2026-11-28-03-locale-blocks-impl]]
