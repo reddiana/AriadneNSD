@@ -125,7 +125,7 @@ UML 클래스 다이어그램으로 나타낸 XML 요소의 포함 관계입니�
 | `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]), 텍스트를 외곽선으로 저장([[01-requirements#^r-fmt\|R-FMT-10]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 헤더(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
 | 블록 | 처리 · If · Case · While · Do-While · For · 무한 반복 · 탈출 · 병렬 처리 · 호출(`kind`로 판별하는 유니온 → [[0052-endless-exit-parallel-blocks\|ADR-0052]]). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
-| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]] → [[01-requirements#^r-blk\|R-BLK-08]]). 이름 문자열을 복사해 갖지 않는다. 참조하던 Method가 없어지면 마지막에 보이던 이름을 적은 호출 블록이 된다 → [[0022-call-name-follows-head\|ADR-0022]], [[0049-call-without-method-is-named\|ADR-0049]] | 대상 |
+| 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 입력하는 호출 블록은 id 대신 적은 이름을 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]] → [[01-requirements#^r-blk\|R-BLK-08]]). 이름 문자열을 복사해 갖지 않는다. 참조하던 Method가 없어지면 마지막에 보이던 이름을 입력한 호출 블록이 된다 → [[0022-call-name-follows-head\|ADR-0022]], [[0049-call-without-method-is-named\|ADR-0049]] | 대상 |
 | 접기 영역 | 한 줄 안의 연속된 블록 범위(처음 · 끝 블록의 id)와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 속한다([[01-requirements#^r-edit\|R-EDIT-16]]) | 대상 |
 | `view` | 뷰 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
 

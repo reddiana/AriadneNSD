@@ -182,7 +182,7 @@ MVP 열은 [[01-requirements#5. MVP 범위|MVP 범위]](웹의 `P0`)에서 그 �
 - 1a. 처음부터 Event나 Method 다이어그램을 새로 만들어 나란히 둔다
 - 2a. 거꾸로, 호출 블록을 풀어 Method의 블록들로 바꾼다
 - 3a. 호출할 것이 문서에 없으면(라이브러리 함수 등) 이름을 적어 호출한다. 나중에 그 이름의 Method를 그리기로 하면 그 호출 블록에서 Method를 만든다
-- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 보이던 이름을 적은 호출 블록이 된다
+- 4a. 호출 블록이 호출하던 Method를 삭제하면 그 호출 블록은 보이던 이름을 입력한 호출 블록이 된다
 
 **요구사항:** [[01-requirements#^r-edit|R-EDIT-18]], [[01-requirements#^r-edit|R-EDIT-19]], [[01-requirements#^r-edit|R-EDIT-08]], [[01-requirements#^r-blk|R-BLK-10]], [[01-requirements#^r-blk|R-BLK-11]], [[01-requirements#^r-blk|R-BLK-07]], [[01-requirements#^r-blk|R-BLK-08]], [[01-requirements#^r-edit|R-EDIT-26]]
 

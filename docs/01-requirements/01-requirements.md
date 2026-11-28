@@ -208,7 +208,7 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 | R-BLK-05 | 다중 선택(Case) 블록: 조건 하나에 분기 여러 개와 default 분기 → [[02-interaction-rules#Case 블록\|상세]]                                                                                     | P0   |
 | R-BLK-06 | 횟수 반복(For) 블록: While의 변형                                                                                                                                              | P0   |
 | R-BLK-07 | 호출 블록: 같은 문서의 Method를 호출한다. NS 차트 표준의 서브루틴 호출 표기로 그린다 → [[02-interaction-rules#호출 블록\|상세]]                                                                            | P0   |
-| R-BLK-08 | 이름을 적는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]]                               | P1   |
+| R-BLK-08 | 이름을 입력하는 호출 블록: 호출할 것이 문서에 없으면(라이브러리 함수, 아직 그리지 않은 서브루틴) 이름 · 인자 · 결과를 직접 적어 호출한다. 보통 호출 블록과 같은 모양이다 → [[02-interaction-rules#호출 블록\|상세]]                               | P1   |
 | R-BLK-10 | Event 헤더(이벤트 헤더): 다이어그램 맨 위에 "버튼을 누르면", "타이머가 끝나면" 같은 이벤트를 다는 헤더. NS 차트 표준에는 없고 [Scratch](https://scratch.mit.edu/)에서 가져온 표기다 → [[02-interaction-rules#Event 헤더\|상세]] | P0   |
 | R-BLK-11 | Method 헤더: 호출 블록이 호출하는 다이어그램(Method, Sub process)의 헤더. Event 헤더와 다른 모양으로 그려 구분한다 (→ [[0021-event-and-method\|ADR-0021]]) → [[02-interaction-rules#Method 헤더\|상세]]     | P0   |
 | R-BLK-12 | 탈출(Exit / Break / Return) 블록: 반복 · 함수 탈출                                                                                                                              | P1   |
@@ -248,7 +248,7 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 | R-EDIT-23 | 접기 영역에 이름을 붙인다 → [[0017-fold-name-in-model\|ADR-0017]], [[02-interaction-rules#접기 · 펼치기\|상세]]                                                                                                        | P1   |
 | R-EDIT-24 | 커맨드 팔레트: 명령 이름의 일부를 쳐서 명령을 찾아 실행한다(VS Code의 Command Palette, IntelliJ의 Find Action). 찾은 명령마다 같은 일을 하는 키를 함께 보인다 → 상세 [[02-interaction-rules#커맨드 팔레트\|커맨드 팔레트]] | P0  |
 | R-EDIT-25 | 예제: 만들어 둔 예제 다이어그램을 골라 연다. 처음 온 사람에게는 예제를 볼지 묻는다 → [[05-screen-layout\|상세]] | P0  |
-| R-EDIT-26 | Method 만들기: 이름을 적는 호출 블록([[#^r-blk\|R-BLK-08]])에서 그 이름의 Method 다이어그램을 만들어 잇는다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
+| R-EDIT-26 | Method 만들기: 이름을 입력하는 호출 블록([[#^r-blk\|R-BLK-08]])에서 그 이름의 Method 다이어그램을 만들어 잇는다 → [[02-interaction-rules#호출 블록\|상세]] | P1  |
 | R-EDIT-27 | Method 풀어 넣고 지우기: Method를 호출하는 모든 호출 블록을 그 Method의 블록들로 바꾸고 Method를 지운다 → [[02-interaction-rules#감싸기 · 풀기\|상세]] | P1  |
 
 ^r-edit
@@ -378,7 +378,7 @@ Claude와 대화하며 NS 다이어그램을 만들고 읽는다. 알고리즘�
 - 비기능 요구사항 가운데 `P0`인 것 ([[#^r-nfr|R-NFR-01]] ~ [[#^r-nfr|R-NFR-06]], [[#^r-nfr|R-NFR-08]] ~ [[#^r-nfr|R-NFR-10]]. 다국어는 영어와 한국어, 접근성은 키보드 전용 조작, 휴대폰은 Android의 Chrome)
 - 배포 대상: 웹 ([[#^r-tgt|R-TGT-01]], [[dr-0002-development-order|DR-0002]]에서 정한 첫 번째 대상)
 
-MVP 다음 버전들로 미룬 것: 이름을 적는 호출 블록, 호출 블록 펴 보기 · 풀기, 접기, 블록 텍스트의 언어와 구문 강조, 테마 선택(모두 `0.2.0`에 들어감).
+MVP 다음 버전들로 미룬 것: 이름을 입력하는 호출 블록, 호출 블록 펴 보기 · 풀기, 접기, 블록 텍스트의 언어와 구문 강조, 테마 선택(모두 `0.2.0`에 들어감).
 
 ### 5.1 MVP 다음의 단계
 
