@@ -21,6 +21,17 @@
         "8090"
       ],
       "port": 8090
+    },
+    {
+      "name": "gallery",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "serve",
+        "src/apps/gallery/dist",
+        "-l",
+        "8095"
+      ],
+      "port": 8095
     }
   ]
 }
