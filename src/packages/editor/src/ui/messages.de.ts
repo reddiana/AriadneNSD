@@ -60,7 +60,7 @@ export const de: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub-Repository',
   'whatsNew.title': 'Neu in dieser Version',
   'whatsNew.body':
-    '0.6.2 bringt drei neue Blöcke, Deutsch und Verbesserungen beim Zeichnen.\n' +
+    '0.6.3 bringt drei neue Blöcke, Deutsch und Verbesserungen beim Zeichnen.\n' +
     '- Neue Blöcke: Endlosschleife, Aussprung (break · continue · return) und Parallelverarbeitung, dazu das neue Beispiel Erzeuger-Verbraucher in der Algorithmengalerie\n' +
     '- Deutsche Oberfläche: Bedienung, Beispiele, Galerie und Handbuch gibt es jetzt auf Deutsch\n' +
     '- Währungssymbole wie € ₩ £ erscheinen jetzt in der Diagrammschrift\n' +

@@ -58,7 +58,7 @@ export const en = {
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
-    '0.6.2 adds three new blocks, German and drawing improvements.\n' +
+    '0.6.3 adds three new blocks, German and drawing improvements.\n' +
     '- New blocks: Endless Loop, Exit (break · continue · return) and Parallel, with a new producer–consumer example in the algorithm gallery\n' +
     '- German screen language: the interface, examples, gallery and manual are available in German\n' +
     '- Currency symbols such as € ₩ £ now show in the diagram font\n' +

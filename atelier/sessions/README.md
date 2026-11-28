@@ -98,3 +98,4 @@ updated: 2026-10-25
 - [[2026-11-28-13-gallery-line-width|2026-11-28 갤러리 그림의 선 굵기 (분신)]]
 - [[2026-11-28-14-grand-principles|2026-11-28 조작의 디자인 원칙과 공통 규칙, UX 설계 문서의 말 (분신)]]
 - [[2026-11-28-15-gemini-handoff-gallery-tests|2026-11-28 Gemini handoff, 갤러리 테스트 보강]]
+- [[2026-11-28-16-interaction-changes|2026-11-28 조작 변경 여덟의 구현 (분신)]]

@@ -59,7 +59,7 @@ export const ko: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub 저장소',
   'whatsNew.title': '이 버전에서 바뀐 것',
   'whatsNew.body':
-    '0.6.2는 새 블록 셋과 독일어, 그리기의 개선을 더했습니다.\n' +
+    '0.6.3는 새 블록 셋과 독일어, 그리기의 개선을 더했습니다.\n' +
     '- 새 블록: 무한 반복 · 탈출(break · continue · return) · 병렬 처리. 알고리즘 갤러리에 생산자-소비자 예제 추가\n' +
     '- 화면 언어에 독일어 추가: 화면 · 예제 · 갤러리 · 매뉴얼이 독일어로\n' +
     '- €, ₩, £ 같은 통화 기호를 다이어그램 글꼴로 표시\n' +
