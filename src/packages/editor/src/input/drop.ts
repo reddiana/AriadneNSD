@@ -14,7 +14,7 @@ import type {
 import { foldRange, geometry } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
-import { ancestorsOf, isEmptyBlock } from '../model/doc-index';
+import { ancestorsOf, branchTarget, isEmptyBlock } from '../model/doc-index';
 import type { Selection } from '../state/selection';
 import { selectedBlocks, targetOf } from '../state/selection';
 import type { Hit, Point } from './hit-test';
@@ -77,6 +77,11 @@ export type DropAction =
       readonly outsideFolds?: boolean;
       readonly outsideFold?: Id;
     }
+  /**
+   * Make a branch beside `branch` (an If becomes a Case) and put the new or dragged blocks in it
+   * (UX BL5), as an insert or a paste on its label does.
+   */
+  | { readonly kind: 'intoNewBranch'; readonly branch: Id; readonly source: DragSource }
   /** Make the missing default of a Case (UX CD1) and put the new or dragged blocks in it. */
   | {
       readonly kind: 'intoMissingDefault';
@@ -130,7 +135,7 @@ export function findDrop(
   if (hit === null) {
     return null;
   }
-  // A branch label row counts as the header of its If or Case.
+  // The empty default of a Case is made first (UX CD1), from its cell or its label.
   if (hit.kind === 'missingDefault' || (hit.kind === 'branchLabel' && hit.branch === null)) {
     return {
       action: { kind: 'intoMissingDefault', caseBlock: hit.block, source },
@@ -161,6 +166,10 @@ export function findDrop(
   if (zone !== 'on') {
     return between(layout, index, source, id, box, zone);
   }
+  // A branch label is its branch, as for the keys (interaction rules T1, UX BL5).
+  if (hit.kind === 'branchLabel' && hit.branch !== null) {
+    return dropOnBranchLabel(layout, index, hit.branch, hit.box, source);
+  }
   if (source.kind === 'blocks') {
     const side = point.y < box.y + box.height / 2 ? 'before' : 'after';
     return between(layout, index, source, id, box, side);
@@ -189,6 +198,33 @@ export function findDrop(
     mark: { kind: 'outline', box },
     wraps: kind,
   };
+}
+
+/**
+ * A drop on a branch label (UX BL5): a control block icon wraps the blocks of the branch; a
+ * process or exit icon, and dragged blocks, go into a new branch beside it. The outline is
+ * drawn around the branch, its label and its blocks.
+ */
+function dropOnBranchLabel(
+  layout: LayoutResult,
+  index: DocIndex,
+  branch: Id,
+  label: Box,
+  source: DragSource,
+): Drop | null {
+  const column = layout.boxes.get(branch);
+  const mark: DropMark = {
+    kind: 'outline',
+    box: union(column === undefined ? [label] : [label, column]),
+  };
+  if (source.kind === 'new' && source.blockKind !== 'process' && source.blockKind !== 'exit') {
+    const target = branchTarget(index, branch);
+    const kind = source.blockKind;
+    return target === null
+      ? null
+      : { action: { kind: 'wrap', target, blockKind: kind }, mark, wraps: kind };
+  }
+  return { action: { kind: 'intoNewBranch', branch, source }, mark, wraps: null };
 }
 
 /**

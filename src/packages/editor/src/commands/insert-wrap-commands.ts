@@ -1,7 +1,7 @@
 // The insert, wrap, unwrap and inline commands.
 import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
-import { indexDoc, isControl, seqOfBlock } from '../model/doc-index';
+import { branchTarget, indexDoc, isControl, seqOfBlock } from '../model/doc-index';
 import type { Selection } from '../state/selection';
 import { foldPath, selectedBlocks, targetOf } from '../state/selection';
 import { isOpenable } from './fold-commands';
@@ -26,7 +26,6 @@ import {
   selectTouched,
   currentDiagram,
   headStart,
-  branchTarget,
   emptyOfNewBranch,
 } from './command-helpers';
 

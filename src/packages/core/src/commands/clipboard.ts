@@ -108,9 +108,8 @@ export type PasteDiagramArgs = WithIds & {
 };
 
 /**
- * Pastes a copied diagram as a new one (R-EDIT-10, UX HC1). It goes right after the diagram
- * holding the selection when that one is of its kind, otherwise at the end of its kind. A name
- * another header already has gets a number after it (`sort 2`). Calls of the copied diagram to
+ * Pastes a copied diagram as a new one (R-EDIT-10, UX HC1), placed by `insertDiagramAt` after
+ * the diagram holding the selection (UX NP1). A name another header already has gets a number after it (`sort 2`). Calls of the copied diagram to
  * itself call the new one; its other calls are linked as `paste` links them.
  * Touched: the new diagram.
  */
@@ -126,10 +125,7 @@ export function pasteDiagram(content: Content, args: PasteDiagramArgs): Result {
     called === source.id ? { kind: 'local', diagram: id } : others(called);
   const head = freeHead(content, source.head);
   const diagram: Diagram = { id, head, body: renewSeq(source.body, ids, methods) };
-  const beside = content.diagrams.find((d) => d.id === args.after);
-  const isSameKind =
-    beside !== undefined && (beside.head?.kind === 'method') === (head.kind === 'method');
-  return done(insertDiagramAt(content, diagram, isSameKind ? beside.id : null), [id]);
+  return done(insertDiagramAt(content, diagram, args.after), [id]);
 }
 
 /** The header with a name no other header has: the same text, or its name followed by a number. */

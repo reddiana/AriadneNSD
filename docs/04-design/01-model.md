@@ -318,12 +318,12 @@ type Target =                                        // 명령이 적용되는 �
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 슬롯)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |
 | 호출 | 호출 블록 삽입 (`insertCall`) | 같은 문서의 Method를 호출하는 호출 블록을 삽입한다(빈 블록이면 그것을 바꾼다). `args`는 그 Method의 괄호 안 텍스트로 시작하고 `result`는 빈 채다. Method가 아니면 `wrongKind`. `touched`는 새 호출 블록 |
-| | 새 Method를 만들고 호출 (`newMethodAndCall`) | 빈 Method(Method의 맨 뒤)와 그것을 호출하는 호출 블록을 undo 한 단계로 만든다. 이름을 전달하면 헤더 이름의 규칙으로 검사한다(`emptyHeadName` · `duplicateHeadName`). `touched`는 새 다이어그램, 새 호출 블록 |
+| | 새 Method를 만들고 호출 (`newMethodAndCall`) | 빈 Method(놓는 위치는 새 다이어그램과 같고 `after`는 선택한 요소가 있는 다이어그램)와 그것을 호출하는 호출 블록을 undo 한 단계로 만든다. 이름을 전달하면 헤더 이름의 규칙으로 검사한다(`emptyHeadName` · `duplicateHeadName`). `touched`는 새 다이어그램, 새 호출 블록 |
 | | 호출할 것 바꾸기 (`setCallTarget`) | `target`을 바꾸고 `args` · `result`는 남긴다. 다만 `args`가 비어 있으면 새 Method의 괄호 안 텍스트로 채우고, 호출 위치의 접기 영역(`siteFolds`)은 비운다(이전 Method의 블록을 가리키므로). Method가 아니면 `wrongKind`, 이미 호출하는 Method면 바뀌는 것이 없다. 이름을 적어 호출하게 바꾸는 것은 `nameCallTarget`(이 자리의 접기 영역은 없어진다) |
 | | 이름을 입력하는 호출 블록 삽입 (`insertNamedCall`) | `named` 대상의 호출 블록을 삽입한다([[01-requirements#^r-blk\|R-BLK-08]]). 이름은 한 줄, 앞뒤 공백 없이. 보통 빈 이름으로 넣고 `editor`가 이름 칸을 연다 |
 | | 인자 · 결과 · 이름 편집 (`editCall`) | 이름(`name`)은 `named` 대상에만 기록한다(아니면 `wrongKind`). 한 번 적은 이름을 비우면 `emptyCallName` |
-| | Method 만들기 (`makeMethod`) | `named` 호출 블록에서 헤더가 `이름(인자)`(인자가 비면 `이름`)이고 본문이 빈 블록 하나인 Method를 Method의 맨 뒤에 만들고, 이름이 같은 `named` 호출 블록을 모두 그 Method의 `local`로 바꾼다(빈 `args`는 괄호 안 텍스트로 채우고 `siteFolds`는 비움). undo 한 단계([[01-requirements#^r-edit\|R-EDIT-26]]). 이름이 같은 Method가 이미 있으면 만들지 않고 그것에 잇는다. `named`가 아니면 `wrongKind`, 이름이 비거나 같은 이름의 Event가 있으면 `emptyHeadName` · `duplicateHeadName`. `touched`는 Method, 그다음 이은 호출 블록들 |
-| 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
+| | Method 만들기 (`makeMethod`) | `named` 호출 블록에서 헤더가 `이름(인자)`(인자가 비면 `이름`)이고 본문이 빈 블록 하나인 Method를 만들고(놓는 위치는 새 다이어그램과 같고 `after`는 호출 블록의 다이어그램), 이름이 같은 `named` 호출 블록을 모두 그 Method의 `local`로 바꾼다(빈 `args`는 괄호 안 텍스트로 채우고 `siteFolds`는 비움). undo 한 단계([[01-requirements#^r-edit\|R-EDIT-26]]). 이름이 같은 Method가 이미 있으면 만들지 않고 그것에 잇는다. `named`가 아니면 `wrongKind`, 이름이 비거나 같은 이름의 Event가 있으면 `emptyHeadName` · `duplicateHeadName`. `touched`는 Method, 그다음 이은 호출 블록들 |
+| 다이어그램 | 새 다이어그램 (Event · Method) | `after`(선택한 요소가 있는 다이어그램)가 같은 종류면 그 바로 뒤, 종류가 다르거나 없으면 그 종류의 맨 뒤다. 새 다이어그램을 만드는 명령은 모두 이 규칙(`insertDiagramAt`)을 쓴다([[ux-decisions#NP1. 새 다이어그램의 자리\|NP1]]) |
 | | 삭제 | 이 Method를 호출하던 호출 블록을 보이던 이름의 `named`로 바꾼다 |
 | | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 보이던 이름의 `named`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
 | | 헤더 이름 편집 | 중복되거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |

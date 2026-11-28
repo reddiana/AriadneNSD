@@ -1,12 +1,20 @@
 // Running a drop (03-editor 3.2): one insert, wrap or move, so one undo step. Dragging itself is
 // not a command; Esc before the drop does nothing.
 import type { Content, Id, IdGenerator, Result } from '@ariadne-nsd/core';
-import { addDefaultBranch, insertBlock, moveTo, wrap } from '@ariadne-nsd/core';
+import {
+  addDefaultBranch,
+  convertIfToCase,
+  insertBlock,
+  insertBranch,
+  moveTo,
+  wrap,
+} from '@ariadne-nsd/core';
 
 import type { DragSource, DropAction } from '../input/drop';
 import { indexDoc, placeOf } from '../model/doc-index';
 import type { After, EditorSession } from '../session/session';
 import { selectBlock, selectFold, selectRange } from '../state/selection';
+import { emptyOfNewBranch } from './command-helpers';
 
 /** The dropped or new blocks become the selection; a new block opens its text field. */
 function afterDrop(isNew: boolean) {
@@ -45,6 +53,54 @@ function land(content: Content, source: DragSource, to: Id, ids: IdGenerator): R
   return source.kind === 'new'
     ? insertBlock(content, { target, side: 'after', kind: source.blockKind, ids })
     : moveTo(content, { target: source.target, to, side: 'after', ids });
+}
+
+/**
+ * Drops into a branch made beside `branch` (UX BL5), one undo step. As with an insert on a label,
+ * an If becomes a Case and the status bar says so, and a branch put beside the default goes on
+ * its left (M87 F6).
+ */
+function intoNewBranch(
+  session: EditorSession,
+  action: Extract<DropAction, { kind: 'intoNewBranch' }>,
+  content: Content,
+): boolean {
+  const place = session.index().branches.get(action.branch);
+  if (place === undefined) {
+    return false;
+  }
+  const isIf = place.block.kind === 'if';
+  // One generator for both steps, so the second never reuses an id of the first.
+  const ids = session.ids();
+  const made = isIf
+    ? convertIfToCase(content, { block: place.block.id, ids })
+    : insertBranch(content, { branch: action.branch, side: 'after', ids });
+  const [branch] = made.ok ? made.touched : [];
+  if (!made.ok || branch === undefined) {
+    if (!made.ok) {
+      session.refuse(made.reason);
+    }
+    return false;
+  }
+  const empty = emptyOfNewBranch(made.content, branch);
+  const { source } = action;
+  // A process block is the empty block of the new branch.
+  const filled: Result =
+    source.kind === 'new' && source.blockKind === 'process' && empty.kind === 'blocks'
+      ? { ok: true, content: made.content, touched: [empty.first] }
+      : land(made.content, source, empty.kind === 'blocks' ? empty.first : '', ids);
+  const isApplied = session.commit(
+    filled,
+    source.kind === 'blocks' && source.target.kind === 'fold'
+      ? afterFoldDrop(source.target.fold)
+      : afterDrop(source.kind === 'new'),
+  );
+  if (isApplied && isIf) {
+    session.notify('notice.convertedIfToCase');
+  } else if (isApplied && place.isDefault) {
+    session.notify('notice.defaultStaysLast');
+  }
+  return isApplied;
 }
 
 /**
@@ -93,6 +149,8 @@ function runAction(session: EditorSession, action: DropAction, content: Content)
         // A dragged fold region stays selected as a region (M87 F2).
         action.target.kind === 'fold' ? afterFoldDrop(action.target.fold) : afterDrop(false),
       );
+    case 'intoNewBranch':
+      return intoNewBranch(session, action, content);
     case 'intoMissingDefault': {
       // One generator for both steps, so the second never reuses an id of the first.
       const ids = session.ids();

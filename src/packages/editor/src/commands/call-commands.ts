@@ -5,7 +5,7 @@ import { indexDoc } from '../model/doc-index';
 import type { After } from '../session/session';
 import type { EditorState } from '../state/editor-state';
 import type { Selection } from '../state/selection';
-import { selectBlock, targetOf } from '../state/selection';
+import { diagramOf, selectBlock, targetOf } from '../state/selection';
 import type { Applies } from './spec';
 import { spec } from './spec';
 import type {
@@ -112,6 +112,8 @@ export function callCommands(ctx: CommandContext) {
     const { method, isNamed } = picked;
     // Below a selected header the call goes at the very start of its body (M87 F4).
     const start = selection?.kind === 'head' ? headStart(index(), selection.diagram) : null;
+    // A new Method goes after the diagram holding the selection (UX NP1).
+    const beside = diagramOf(index(), selection);
     const op = (
       made: Content,
       target: Target,
@@ -122,7 +124,7 @@ export function callCommands(ctx: CommandContext) {
         return insertNamedCall(made, { target, ...place, name: '', ids });
       }
       return method === null
-        ? newMethodAndCall(made, { target, ...place, ids })
+        ? newMethodAndCall(made, { target, ...place, after: beside, ids })
         : insertCall(made, { target, ...place, diagram: method.id, ids });
     };
     const after = (ok: {
@@ -231,7 +233,11 @@ export function callCommands(ctx: CommandContext) {
         return;
       }
       // A new Method to call: made and chosen in one undo step, then its name is written.
-      const made = newDiagram(content(), { kind: 'method', ids: session.ids() });
+      const made = newDiagram(content(), {
+        kind: 'method',
+        after: diagramOf(index(), state.selection),
+        ids: session.ids(),
+      });
       const [diagram] = made.ok ? made.touched : [];
       if (!made.ok || diagram === undefined) {
         if (!made.ok) {

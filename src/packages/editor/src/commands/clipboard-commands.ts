@@ -12,7 +12,7 @@ import {
 import type { CommandSpec, ToolbarPlace } from '../contracts';
 import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
-import { indexDoc } from '../model/doc-index';
+import { branchTarget, indexDoc } from '../model/doc-index';
 import type { After } from '../session/session';
 import type { Selection } from '../state/selection';
 import {
@@ -31,7 +31,6 @@ import type { CommandContext } from './command-helpers';
 import {
   afterBranchDelete,
   afterHead,
-  branchTarget,
   currentDiagram,
   emptyOfNewBranch,
   headStart,

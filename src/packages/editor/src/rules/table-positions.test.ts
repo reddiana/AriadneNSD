@@ -70,6 +70,17 @@ const onBlock =
   (drawn: LayoutResult): Point =>
     edgeOf(boxOf(drawn, id(name)), edge);
 
+/** The middle of a branch's label row. */
+const onLabel =
+  (branch: string) =>
+  (drawn: LayoutResult): Point => {
+    const found = drawn.regions.find((r) => r.kind === 'branchLabel' && r.branchId === id(branch));
+    if (found === undefined) {
+      throw new Error(`no label of ${branch}`);
+    }
+    return center(found.box);
+  };
+
 /** The region of the drawing of one kind that belongs to a block. */
 const onRegion =
   (kind: 'missingDefault' | 'peekBand', block: string) =>
@@ -190,6 +201,10 @@ const rows: Readonly<Record<string, readonly [after: Entry, before: Entry]>> = {
         expect(atDefault.session.chrome().notice).not.toBeNull();
         const loop = await after(select.label('k1r'), 'block.insert.while');
         expect(branches(loop)).toMatch(/\| [^|]*: while\(\)\[∅\] \| 2: k3 k4\]$/);
+        // A drop of a process icon on the label makes the same branch (UX BL5).
+        const drop = rulesEngine();
+        expect(dropAt(drop, onLabel('k1r'))).toBe(true);
+        expect(branches(drop)).toMatch(/^case\(k\)\[1: k1 k2 \| [^|]*: ∅ \| 2: k3 k4\]$/);
       },
     },
     cell('그 분기의 왼쪽에 새 분기', () => besideBranch('before')),

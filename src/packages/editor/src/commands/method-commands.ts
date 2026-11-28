@@ -144,8 +144,10 @@ export function methodCommands(ctx: CommandContext) {
     spec(id, {
       edits: true,
       when: always,
-      run: () => {
-        session.commit(newDiagram(content(), { kind, ids: session.ids() }), (ok) => {
+      run: (state) => {
+        // After the diagram holding the selection (UX NP1).
+        const after = diagramOf(index(), state.selection);
+        session.commit(newDiagram(content(), { kind, after, ids: session.ids() }), (ok) => {
           const [diagram] = ok.touched;
           return diagram === undefined ? { selection: null } : afterHead(diagram, true);
         });

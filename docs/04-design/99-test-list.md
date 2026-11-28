@@ -17,15 +17,15 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 369 | - | 421 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 373 | - | 425 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 31 | 226 | - | 262 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 29 | - | 29 |
-| 합계 | 87 | 287 | 1134 | 5 | 1513 |
+| 합계 | 87 | 288 | 1145 | 5 | 1525 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 421개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 425개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -202,7 +202,7 @@ Case의 분기 · If와 Case의 변환 · 빠진 default 분기. Vitest · 테�
 
 ### [단위] `packages/core/src/commands/call.test.ts`
 
-editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vitest · 테스트 29개.
+editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vitest · 테스트 31개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -227,9 +227,11 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0083 | Method는 자기 자신을 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0084 | Method만 호출할 수 있다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0085 | 선택한 것에서 새 Method를 만들고 호출하기를 한 번에 | [[01-requirements#^r-blk\|R-BLK-07]] |
+| T-1852 | the new Method goes right after the selected Method | [[ux-decisions\|UX NP1]] |
 | T-0086 | 적은 이름이 헤더가 되고, 그 매개변수가 인자가 된다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0087 | 불변식 7: 새 문서에서 호출은 빈 다이어그램을 채우고, 그 다이어그램은 남는다 | - |
 | T-0088 | 비거나 중복되는 이름과 없는 대상은 거절한다 | [[01-requirements#^r-blk\|R-BLK-11]] |
+| T-1853 | the Method goes right after the Method holding the call | [[01-requirements#^r-edit\|R-EDIT-26]], [[ux-decisions\|UX NP1]] |
 | T-1433 | 이름 호출이 가리키는 Method를 인자와 함께 만들고 잇는다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1434 | 인자가 없으면 헤더는 이름만이다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
 | T-1435 | 같은 이름을 호출하는 호출 블록은 모두 새 Method를 호출한다 | [[01-requirements#^r-edit\|R-EDIT-26]] |
@@ -275,7 +277,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/diagram.test.ts`
 
-헤더와 다이어그램의 명령(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName). Vitest · 테스트 31개.
+헤더와 다이어그램의 명령(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName). Vitest · 테스트 33개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -300,6 +302,8 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0120 | 01-model 4: 같은 종류로 바꾸면 내용은 그대로다 | - |
 | T-0121 | 새 Method는 마지막 Method 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0122 | 새 Event는 마지막 Event나 헤더 없는 다이어그램 뒤에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-1850 | goes right after the selected diagram of its kind | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
+| T-1851 | after a diagram of the other kind, or none, it goes last of its kind | [[ux-decisions\|UX NP1]] |
 | T-0123 | 그 종류의 첫 것은 맨 앞(Event)이나 맨 뒤(Method)에 간다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
 | T-0124 | 불변식 7: 새 문서의 빈 다이어그램은 다른 다이어그램이 오면 없어진다 | - |
 | T-0125 | 01-model 1.7: id를 주어진 생성기에서 받는다 | - |
@@ -746,7 +750,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 18개, 테스트 254개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 19개, 테스트 262개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -764,7 +768,7 @@ id. Vitest · 테스트 5개.
 
 ### [통합] `packages/editor/src/session/diagrams.test.ts`
 
-헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 새 Method로 빼기(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 29개.
+헤더 선택(조작 규칙 2 "키보드로 이동하고 삽입하기") · 헤더 이름 편집(조작 규칙 "Event 헤더", "Method 헤더") · 헤더와 다이어그램의 명령(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 새 Method로 빼기(조작 규칙 "새 Method로 빼기와 새 다이어그램") · 호출 블록(조작 규칙 "호출 블록"). Vitest · 테스트 30개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -778,6 +782,7 @@ id. Vitest · 테스트 5개.
 | T-0214 | 헤더 없는 다이어그램에서 `e`는 헤더를 달고 이름을 편집한다 | [[01-requirements#^r-blk\|R-BLK-10]] |
 | T-0215 | 헤더에서 `m`은 종류를 바꾸고, 호출되는 Method는 Event가 될 수 없다 | [[01-requirements#^r-blk\|R-BLK-11]] |
 | T-0217 | `E` · `M`은 그 종류의 새 다이어그램을 만들고 이름을 편집한다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
+| T-1854 | M in a Method puts the new Method right after it | [[01-requirements#^r-edit\|R-EDIT-18]], [[ux-decisions\|UX NP1]] |
 | T-0218 | Method 헤더를 제거하면 그 호출 블록들은 이름 호출이 되고, 첫 블록을 선택한다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0219 | 불변식 7: 아무것도 없는 다이어그램에서 헤더를 없애면 다이어그램도 없어진다 | - |
 | T-0220 | `Shift`+`Delete`는 다이어그램을 삭제하고, 하나뿐인 다이어그램은 삭제할 수 없다 | [[01-requirements#^r-edit\|R-EDIT-18]] |
@@ -1039,6 +1044,22 @@ id. Vitest · 테스트 5개.
 | T-1598 | 드래그한 접기 영역은 자기 위 · 자기 안 · 그 안의 접기 영역 위에 드롭하지 않는다 | - |
 
 ^t-packages-editor-src-input-drop-folds-test-ts
+
+### [단위] `packages/editor/src/input/drop-labels.test.ts`
+
+A drop on a branch label is a drop on that branch (interaction rules 7, UX BL5). Vitest · 테스트 7개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL5]].
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1855 | a control block icon wraps the blocks of that branch only | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1856 | a process or exit icon goes into a new branch beside it, in one undo step | - |
+| T-1857 | dragged blocks move into a new branch beside it | [[01-requirements#^r-edit\|R-EDIT-09]] |
+| T-1858 | an If becomes a Case with the new branch, and the status bar says so | - |
+| T-1859 | beside the default the new branch goes on its left, and it says so | - |
+| T-1860 | a parallel block gets a new branch; its top band still means before it | - |
+| T-1861 | the head of an If still wraps all of it; it cannot go beside its own branch | - |
+
+^t-packages-editor-src-input-drop-labels-test-ts
 
 ### [단위] `packages/editor/src/input/hit-shown.test.ts`
 
