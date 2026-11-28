@@ -930,6 +930,29 @@ describe('CanvasView: dragging blocks (03-editor 3.2, R-EDIT-09)', () => {
     expect(made.engine.session.state.undo).toHaveLength(0);
   });
 
+  it('T-1582: the selection outline goes while dragging and comes back when the drag is cancelled or dropped', () => {
+    const made = make(three());
+    const outline = (): boolean =>
+      made.host.querySelector('.ans-overlay')?.innerHTML.includes('stroke-width="3"') === true;
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'b1'));
+    made.view.draw();
+    expect(outline()).toBe(true);
+    pointer(made.canvas, 'pointermove', below(made, 'b3'));
+    made.view.draw();
+    expect(outline()).toBe(false);
+    key(made.canvas, { key: 'Escape', code: 'Escape' });
+    made.view.draw();
+    expect(outline()).toBe(true);
+    pointer(made.canvas, 'pointerup', below(made, 'b3'));
+    pointer(made.canvas, 'pointerdown', middleOf(made, 'b1'));
+    pointer(made.canvas, 'pointermove', below(made, 'b3'));
+    made.view.draw();
+    expect(outline()).toBe(false);
+    pointer(made.canvas, 'pointerup', below(made, 'b3'));
+    made.view.draw();
+    expect(outline()).toBe(true);
+  });
+
   it('T-0638: other keys during a drag do nothing', () => {
     const made = make(three());
     pointer(made.canvas, 'pointerdown', middleOf(made, 'b1'));

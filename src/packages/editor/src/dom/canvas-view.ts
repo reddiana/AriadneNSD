@@ -286,6 +286,7 @@ export class CanvasView {
       hover: this.hover,
       drop: drag?.drop ?? null,
       dragged: drag?.source.kind === 'blocks' ? drag.source.blocks : [],
+      isDragging: drag !== null,
       paper: svg.paper,
       edit: this.editColors,
     });

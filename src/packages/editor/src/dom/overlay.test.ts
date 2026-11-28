@@ -189,7 +189,7 @@ describe('overlayContent: what the edit layer draws', () => {
     );
   });
 
-  it('T-0652: a drop between blocks is a 2px line with a tick at each end', () => {
+  it('T-0652: a drop between blocks is a 4px line on a white halo, with arrowheads 7px past both edges', () => {
     const { svg } = overlayOf(contentOf([proc('b1')]), {
       drop: {
         action: { kind: 'insert', to: 'b1', side: 'after', blockKind: 'if' },
@@ -197,16 +197,17 @@ describe('overlayContent: what the edit layer draws', () => {
         wraps: null,
       },
     });
+    // The block's lines fill x 10..11 and 110..111: 7px past them is 3 and 118.
     expect(svg).toBe(
       [
-        '<line x1="10" y1="20" x2="110" y2="20" stroke="#d0500b" stroke-width="2"/>',
-        '<line x1="11" y1="16" x2="11" y2="24" stroke="#d0500b" stroke-width="2"/>',
-        '<line x1="109" y1="16" x2="109" y2="24" stroke="#d0500b" stroke-width="2"/>',
+        '<line x1="3" y1="20" x2="118" y2="20" stroke="#ffffff" stroke-width="8"/>',
+        '<line x1="9" y1="20" x2="112" y2="20" stroke="#d0500b" stroke-width="4"/>',
+        '<path d="M3,14 l8,6 l-8,6 z M118,14 l-8,6 l8,6 z" fill="#d0500b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>',
       ].join(''),
     );
   });
 
-  it('T-0653: a drop on a block is a 2px outline 1px inside it', () => {
+  it('T-0653: a drop on a block is a 4px outline on a white 8px halo, both centered 4px inside it', () => {
     const { svg } = overlayOf(contentOf([proc('b1')]), {
       drop: {
         action: {
@@ -219,8 +220,52 @@ describe('overlayContent: what the edit layer draws', () => {
       },
     });
     expect(svg).toBe(
-      '<rect x="12" y="22" width="97" height="37" fill="none" stroke="#d0500b" stroke-width="2"/>',
+      [
+        // The block's lines fill x 10..11 and 110..111: white covers 10..18 and 103..111.
+        '<rect x="14" y="24" width="93" height="33" fill="none" stroke="#ffffff" stroke-width="8"/>',
+        '<rect x="14" y="24" width="93" height="33" fill="none" stroke="#d0500b" stroke-width="4"/>',
+      ].join(''),
     );
+  });
+
+  it('T-1580: no selection outline while a drag is in progress, with or without a drop place', () => {
+    const content = contentOf([proc('b1'), proc('b2')]);
+    const { index, layout } = overlayOf(content);
+    const selection = selectBlock(index, 'b1');
+    expect(overlayOf(content, { selection }).svg).toContain('stroke-width="3"');
+    expect(overlayOf(content, { selection, isDragging: true }).svg).toBe('');
+    const dropping = overlayOf(content, {
+      selection,
+      isDragging: true,
+      drop: {
+        action: { kind: 'insert', to: 'b1', side: 'after', blockKind: 'if' },
+        mark: { kind: 'line', x: 0, y: boxOf(layout, 'b1').height, width: 100 },
+        wraps: null,
+      },
+    }).svg;
+    expect(dropping).not.toContain('stroke-width="3"');
+    expect(dropping).toContain('stroke-width="4"');
+  });
+
+  it('T-1581: on dark paper the drop place is orange #f08a4b with a halo of the paper color', () => {
+    const drop = (kind: 'line' | 'outline'): OverlayInput['drop'] => ({
+      action: { kind: 'insert', to: 'b1', side: 'after', blockKind: 'if' },
+      mark:
+        kind === 'line'
+          ? { kind: 'line', x: 10, y: 20, width: 100 }
+          : { kind: 'outline', box: { x: 10, y: 20, width: 100, height: 40 } },
+      wraps: null,
+    });
+    for (const kind of ['line', 'outline'] as const) {
+      const { svg } = overlayOf(contentOf([proc('b1')]), {
+        drop: drop(kind),
+        paper: '#1b1f27',
+        edit: editColorsOnDark,
+      });
+      expect(svg).toContain('#f08a4b');
+      expect(svg).toContain('stroke="#1b1f27"');
+      expect(svg).not.toContain('#ffffff');
+    }
   });
 
   it('T-1310: draws no selection outline over the open inline editor, and no hover on that block either', () => {

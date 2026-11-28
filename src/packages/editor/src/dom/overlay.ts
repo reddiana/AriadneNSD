@@ -64,6 +64,11 @@ export type OverlayInput = {
   readonly drop: Drop | null;
   /** Blocks being dragged: drawn faded in place (visual design 7.1). */
   readonly dragged: ReadonlyArray<Id>;
+  /**
+   * Whether a drag is in progress (blocks or a toolbar icon). The selection outline is not drawn
+   * meanwhile, so the drop place next to or on the selected block shows (sketch M85). Default: no.
+   */
+  readonly isDragging?: boolean;
   /** The paper color, to fade the dragged blocks with. */
   readonly paper: string;
   /** The edit layer colors for the document's theme (`editColorsFor`). Default: light paper. */
@@ -280,6 +285,44 @@ function triangle(box: Box, isOpen: boolean, color: string): string {
   return `<polygon points="${d}" fill="${color}"/>`;
 }
 
+/**
+ * The halo round a drop place on light paper: white, so the drop place stands apart from the
+ * block lines it lies on (sketch M85). On dark paper the halo is the paper color: white there
+ * would be a glaring stripe.
+ */
+const haloOnLight = '#ffffff';
+
+/** How far a drop line's arrowheads stick out past the block's left and right edges (M85). */
+const dropArrowOut = 7;
+
+/**
+ * A drop place between blocks (sketch M85): a 4px line on a 8px halo, and at both ends an
+ * arrowhead with a thin halo outline that sticks out 7px past the block's edges and points in.
+ * The block's right line fills the pixel past `x + width` (visual design 9.1).
+ */
+function dropLine(
+  mark: { readonly x: number; readonly y: number; readonly width: number },
+  color: string,
+  halo: string,
+): string {
+  const { y } = mark;
+  const x1 = mark.x - dropArrowOut;
+  const x2 = mark.x + mark.width + 1 + dropArrowOut;
+  return [
+    `<line x1="${n(x1)}" y1="${n(y)}" x2="${n(x2)}" y2="${n(y)}" stroke="${halo}" stroke-width="8"/>`,
+    `<line x1="${n(x1 + 6)}" y1="${n(y)}" x2="${n(x2 - 6)}" y2="${n(y)}" stroke="${color}" stroke-width="4"/>`,
+    `<path d="M${n(x1)},${n(y - 6)} l8,6 l-8,6 z M${n(x2)},${n(y - 6)} l-8,6 l8,6 z" fill="${color}" stroke="${halo}" stroke-width="1.5" stroke-linejoin="round"/>`,
+  ].join('');
+}
+
+/**
+ * A drop place on a block (sketch M85): a solid 4px outline on a 8px halo, both centered 4px
+ * inside the block, so the halo covers the block's lines and the 4px orange lies 2px to 6px in.
+ */
+function dropOutline(box: Box, color: string, halo: string): string {
+  return insetRect(box, 0, 8, halo) + insetRect(box, 2, 4, color);
+}
+
 /** The overlay's SVG content (the inside of the overlay `<svg>`). */
 export function overlayContent(input: OverlayInput): string {
   const parts: string[] = [];
@@ -311,25 +354,19 @@ export function overlayContent(input: OverlayInput): string {
   const editing = input.editing ?? null;
   const field = editing === null ? null : fieldBox(layout, editing);
   // The inline editor has its own outline: two are not drawn in one place (visual design 7.1).
-  if (box !== null && (field === null || !overlaps(box, field))) {
+  if (box !== null && input.isDragging !== true && (field === null || !overlaps(box, field))) {
     parts.push(insetRect(box, 0, 3, colors['edit.select']));
   }
   const drop = input.drop;
   if (drop !== null) {
     const color = colors['edit.drop'];
+    const halo = colors === editColorsOnDark ? input.paper : haloOnLight;
     switch (drop.mark.kind) {
-      case 'line': {
-        const { x, y, width } = drop.mark;
-        parts.push(
-          `<line x1="${n(x)}" y1="${n(y)}" x2="${n(x + width)}" y2="${n(y)}" stroke="${color}" stroke-width="2"/>`,
-          `<line x1="${n(x + 1)}" y1="${n(y - 4)}" x2="${n(x + 1)}" y2="${n(y + 4)}" stroke="${color}" stroke-width="2"/>`,
-          `<line x1="${n(x + width - 1)}" y1="${n(y - 4)}" x2="${n(x + width - 1)}" y2="${n(y + 4)}" stroke="${color}" stroke-width="2"/>`,
-        );
+      case 'line':
+        parts.push(dropLine(drop.mark, color, halo));
         break;
-      }
       case 'outline':
-        // 2px, 1px inside the block's outer line, like the hover.
-        parts.push(insetRect(drop.mark.box, 1, 2, color));
+        parts.push(dropOutline(drop.mark.box, color, halo));
         break;
     }
   }
