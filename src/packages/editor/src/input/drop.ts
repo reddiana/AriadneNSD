@@ -9,13 +9,14 @@ import type {
   Target,
   WrapKind,
 } from '@ariadne-nsd/core';
+import { geometry } from '@ariadne-nsd/core';
 
 import type { DocIndex } from '../model/doc-index';
 import { ancestorsOf, isEmptyBlock } from '../model/doc-index';
 import type { Selection } from '../state/selection';
 import { selectedBlocks, targetOf } from '../state/selection';
 import type { Hit, Point } from './hit-test';
-import { hitTest } from './hit-test';
+import { contains, hitTest } from './hit-test';
 
 /** The band at the top and bottom of a block that means "between blocks" (px). */
 export const betweenBand = 8;
@@ -29,6 +30,20 @@ export const smallBlockHeight = 24;
  */
 export const bodyEndBand = 12;
 
+/**
+ * How far outside a fold region's border the line of a drop next to the region is drawn (px,
+ * M86 N2): the blocks go outside it.
+ */
+export const foldOutsideGap = 3;
+
+/**
+ * How far above a fold region's bottom edge the line of a drop at its inside end is drawn (px,
+ * M86 N2): inside the border, which is `size.fold-edge` thick.
+ */
+export const foldInsideEndGap = 6;
+
+const foldEdge = geometry['size.fold-edge'];
+
 /** What is dragged: blocks of the diagram (a range), or a new block from a toolbar icon. */
 export type DragSource =
   | { readonly kind: 'blocks'; readonly target: Target; readonly blocks: ReadonlyArray<Id> }
@@ -39,6 +54,7 @@ export type DropAction =
   /**
    * Insert a new block next to `to`; on an empty block it takes its place. `outsideFolds`: at
    * the very start or end of a diagram body, it does not join a fold region ending there.
+   * `outsideFold`: next to that fold region, outside it (and the regions inside it).
    */
   | {
       readonly kind: 'insert';
@@ -46,6 +62,7 @@ export type DropAction =
       readonly side: Side;
       readonly blockKind: NewBlockKind;
       readonly outsideFolds?: boolean;
+      readonly outsideFold?: Id;
     }
   /** Wrap blocks in a new control block. */
   | { readonly kind: 'wrap'; readonly target: Target; readonly blockKind: WrapKind }
@@ -56,6 +73,7 @@ export type DropAction =
       readonly to: Id;
       readonly side: Side;
       readonly outsideFolds?: boolean;
+      readonly outsideFold?: Id;
     }
   /** Make the missing default of a Case (UX CD1) and put the new or dragged blocks in it. */
   | {
@@ -96,7 +114,14 @@ export function findDrop(
   }
   // Nothing is dropped on the rest of a diagram's header (blocks go into its body) or a fold
   // triangle.
-  if (hit === null || hit.kind === 'diagramHead' || hit.kind === 'toggle') {
+  if (hit?.kind === 'diagramHead' || hit?.kind === 'toggle') {
+    return null;
+  }
+  const atFold = foldEdgeOf(layout, index, hit, point);
+  if (atFold !== null) {
+    return dropAtFoldEdge(index, atFold, source);
+  }
+  if (hit === null) {
     return null;
   }
   // A branch label row counts as the header of its If or Case.
@@ -128,15 +153,16 @@ export function findDrop(
   }
   const zone = zoneOf(box, point);
   if (zone !== 'on') {
-    return between(source, id, box, zone);
+    return between(layout, index, source, id, box, zone);
   }
   if (source.kind === 'blocks') {
-    return between(source, id, box, point.y < box.y + box.height / 2 ? 'before' : 'after');
+    const side = point.y < box.y + box.height / 2 ? 'before' : 'after';
+    return between(layout, index, source, id, box, side);
   }
   const kind = source.blockKind;
   // A process or exit block holds nothing, so it goes below instead of wrapping (UX XB1).
   if (kind === 'process' || kind === 'exit') {
-    return between(source, id, box, 'after');
+    return between(layout, index, source, id, box, 'after');
   }
   // On one of the selected blocks, the whole selection is wrapped (interaction rules 7).
   const selected = selectedBlocks(index, selection);
@@ -255,16 +281,133 @@ export function zoneOf(box: Box, point: Point): 'before' | 'after' | 'on' {
   return 'on';
 }
 
-function between(source: DragSource, to: Id, box: Box, side: Side): Drop {
+function between(
+  layout: LayoutResult,
+  index: DocIndex,
+  source: DragSource,
+  to: Id,
+  box: Box,
+  side: Side,
+): Drop {
+  // After the last block of an open fold region the blocks join it (UX MD1), so the line is
+  // drawn inside its border (M86 N2).
+  const frame = side === 'after' ? frameEndingAt(layout, index, to) : null;
+  const mark: DropMark =
+    frame === null
+      ? {
+          kind: 'line',
+          x: box.x,
+          y: side === 'before' ? box.y : box.y + box.height,
+          width: box.width,
+        }
+      : {
+          kind: 'line',
+          x: frame.x + foldEdge,
+          y: frame.y + frame.height - foldInsideEndGap,
+          width: frame.width - 2 * foldEdge,
+        };
   return {
     action:
       source.kind === 'new'
         ? { kind: 'insert', to, side, blockKind: source.blockKind }
         : { kind: 'move', target: source.target, to, side },
+    mark,
+    wraps: null,
+  };
+}
+
+/** The whole box of a fold region drawn with its border and name band, or `null`. */
+function frameOf(layout: LayoutResult, fold: Id): Box | null {
+  const isFramed = layout.regions.some(
+    (region) => region.kind === 'fold' && region.foldId === fold && !region.isFolded,
+  );
+  return isFramed ? (layout.boxes.get(fold) ?? null) : null;
+}
+
+/** The innermost bordered fold region whose last block is `block`, or `null`. */
+function frameEndingAt(layout: LayoutResult, index: DocIndex, block: Id): Box | null {
+  const place = index.blocks.get(block);
+  const seq = place === undefined ? undefined : index.seqs.get(place.owner)?.seq;
+  let inner: Box | null = null;
+  for (const fold of seq?.folds ?? []) {
+    const box = fold.last === block ? frameOf(layout, fold.id) : null;
+    if (box !== null && (inner === null || area(box) < area(inner))) {
+      inner = box;
+    }
+  }
+  return inner;
+}
+
+const area = (box: Box): number => box.width * box.height;
+
+/** A drop next to a fold region, outside it: which region, its box, and which side. */
+type FoldEdge = { readonly fold: Id; readonly box: Box; readonly side: Side };
+
+/**
+ * Whether a point means "next to a fold region, outside it" (M86 N1): the name band of an open
+ * region (before it), the upper or lower half of a folded cell (before or after it), or the
+ * bottom band inside an open region's box (after it; the innermost region whose band holds the
+ * point). Regions without a name band are not drawn as regions, so they have no edge here.
+ */
+function foldEdgeOf(
+  layout: LayoutResult,
+  index: DocIndex,
+  hit: Hit | null,
+  point: Point,
+): FoldEdge | null {
+  if (hit?.kind === 'block' && index.folds.has(hit.block)) {
+    const fold = hit.block;
+    if (hit.isHead) {
+      const box = layout.boxes.get(fold);
+      return box === undefined ? null : { fold, box, side: 'before' };
+    }
+    const isUpper = point.y < hit.box.y + hit.box.height / 2;
+    return { fold, box: hit.box, side: isUpper ? 'before' : 'after' };
+  }
+  let inner: FoldEdge | null = null;
+  for (const region of layout.regions) {
+    if (region.kind !== 'fold' || region.isFolded || !index.folds.has(region.foldId)) {
+      continue;
+    }
+    const box = layout.boxes.get(region.foldId);
+    if (
+      box !== undefined &&
+      contains(box, point) &&
+      point.y > box.y + box.height - betweenBand &&
+      (inner === null || area(box) < area(inner.box))
+    ) {
+      inner = { fold: region.foldId, box, side: 'after' };
+    }
+  }
+  return inner;
+}
+
+/**
+ * A drop before or after a fold region, outside it: next to its first or last block, without
+ * joining it or the regions inside it; regions around it still take the blocks in. The line is
+ * drawn just outside its border (M86 N2). Dragged blocks at that edge (or holding it) stay put.
+ */
+function dropAtFoldEdge(index: DocIndex, edge: FoldEdge, source: DragSource): Drop | null {
+  const owner = index.folds.get(edge.fold);
+  const seq = owner === undefined ? undefined : index.seqs.get(owner)?.seq;
+  const mark = seq?.folds.find((fold) => fold.id === edge.fold);
+  if (mark === undefined) {
+    return null;
+  }
+  const { side, box, fold } = edge;
+  const to = side === 'before' ? mark.first : mark.last;
+  if (source.kind === 'blocks' && ancestorsOf(index, to).some((a) => source.blocks.includes(a))) {
+    return null;
+  }
+  return {
+    action:
+      source.kind === 'new'
+        ? { kind: 'insert', to, side, blockKind: source.blockKind, outsideFold: fold }
+        : { kind: 'move', target: source.target, to, side, outsideFold: fold },
     mark: {
       kind: 'line',
       x: box.x,
-      y: side === 'before' ? box.y : box.y + box.height,
+      y: side === 'before' ? box.y - foldOutsideGap : box.y + box.height + foldOutsideGap,
       width: box.width,
     },
     wraps: null,

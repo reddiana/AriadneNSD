@@ -2,7 +2,7 @@
 // Fold regions are marks on a sequence given by block ids (ADR-0017), so most edits leave them
 // alone; these functions handle the cases where a region's ends leave the sequence.
 import type { IdGenerator } from '../model/id';
-import type { Block, FoldMark, Seq } from '../model/types';
+import type { Block, FoldMark, Id, Seq } from '../model/types';
 
 /** An index range `[first, last]` of a fold region in its sequence, or `null` if it is broken. */
 export function foldRange(seq: Seq, fold: FoldMark): readonly [number, number] | null {
@@ -92,12 +92,14 @@ export function replaceRange(seq: Seq, lo: number, hi: number, insert: Seq): Seq
  * Blocks inserted between the ends of a region join it on their own, because regions are given
  * by block ids. At a region's end, `join` says whether the new blocks join (UX MD1):
  * `after` extends regions ending at `index - 1`, `before` extends regions starting at `index`.
+ * Regions in `except` never join.
  */
 export function insertAt(
   seq: Seq,
   index: number,
   insert: Seq,
   join: 'after' | 'before' | 'none',
+  except: ReadonlySet<Id> = new Set(),
 ): Seq {
   const added = insert.blocks;
   if (added.length === 0) {
@@ -108,6 +110,9 @@ export function insertAt(
   const joinsBefore =
     join === 'before' && index < seq.blocks.length ? idAt(seq.blocks, index) : null;
   const folds = seq.folds.map((fold) => {
+    if (except.has(fold.id)) {
+      return fold;
+    }
     if (joinsAfter !== null && fold.last === joinsAfter) {
       return { ...fold, last: idAt(added, added.length - 1) };
     }

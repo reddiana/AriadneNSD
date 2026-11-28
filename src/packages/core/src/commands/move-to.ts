@@ -1,6 +1,6 @@
 import type { Block, Content, Id } from '../model/types';
 import { done, fail, failWith, idsFor, isReason, resolveTarget, unchanged } from './common';
-import { putBlocks } from './insert';
+import { keepingOut, putBlocks } from './insert';
 import { fillEmpty, replaceRange, sliceSeq } from './seq-edit';
 import { childSeqs, indexContent, updateSeq } from './tree';
 import type { Result, Side, Target, WithIds } from './types';
@@ -14,6 +14,8 @@ export type MoveToArgs = WithIds & {
   readonly side: Side;
   /** The blocks go outside the fold regions that end next to `to` (see `InsertBlockArgs`). */
   readonly outsideFolds?: boolean;
+  /** A fold region the blocks stay outside of at its edge (see `InsertBlockArgs`). */
+  readonly outsideFold?: Id;
 };
 
 /**
@@ -64,7 +66,7 @@ export function moveTo(content: Content, args: MoveToArgs): Result {
   if (isReason(place)) {
     throw new Error(`moveTo: the destination ${args.to} was lost`);
   }
-  const at = args.outsideFolds === true ? { ...place, join: false } : place;
+  const at = keepingOut(place, args.outsideFolds, args.outsideFold);
   return done(putBlocks(removed, at, args.side, clip), movedIds);
 }
 

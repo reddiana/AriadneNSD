@@ -71,6 +71,33 @@ describe('moveTo (drag and drop)', () => {
     expect(foldsIn(joined.content, 'd1')).toEqual(['f1:b2-b1']);
   });
 
+  it('T-1584: interaction rules 7: blocks dropped at a fold edge stay outside it, inside the folds around it', () => {
+    const folded = contentOf(
+      seq(
+        [proc('b1'), proc('b2'), proc('b3')],
+        [
+          { id: 'f1', first: 'b2', last: 'b3' },
+          { id: 'f2', first: 'b3', last: 'b3' },
+        ],
+      ),
+    );
+    const afterF2 = runOk(moveTo, folded, {
+      target: range('b1'),
+      to: 'b3',
+      side: 'after',
+      outsideFold: 'f2',
+    });
+    expect(idsIn(afterF2.content, 'd1')).toEqual(['b2', 'b3', 'b1']);
+    expect(foldsIn(afterF2.content, 'd1')).toEqual(['f1:b2-b1', 'f2:b3-b3']);
+    const afterF1 = runOk(moveTo, folded, {
+      target: range('b1'),
+      to: 'b3',
+      side: 'after',
+      outsideFold: 'f1',
+    });
+    expect(foldsIn(afterF1.content, 'd1')).toEqual(['f1:b2-b3', 'f2:b3-b3']);
+  });
+
   it('T-0155 · R-EDIT-09: refuses to drop blocks inside themselves', () => {
     expectRefused(moveTo, content, { target: range('b3'), to: 'b4', side: 'after' }, 'intoItself');
     expectRefused(moveTo, content, { target: range('b1'), to: 'b99', side: 'after' }, 'notFound');

@@ -1,4 +1,4 @@
-import type { Content, Seq } from '../model/types';
+import type { Content, Id, Seq } from '../model/types';
 import {
   done,
   failWith,
@@ -10,7 +10,7 @@ import {
   unchanged,
 } from './common';
 import type { Range } from './common';
-import { insertAt, replaceRange } from './seq-edit';
+import { foldRange, insertAt, replaceRange } from './seq-edit';
 import { indexContent, updateSeq } from './tree';
 import type { NewBlockKind, Result, Side, Target, WithIds } from './types';
 
@@ -29,6 +29,11 @@ export type InsertBlockArgs = WithIds & {
    * at the very start or end of a diagram body (interaction rules 7).
    */
   readonly outsideFolds?: boolean;
+  /**
+   * A fold region the block stays outside of when it goes at the region's edge (`Range.keepOut`):
+   * a drop on a region's name band, cell or bottom edge (interaction rules 7).
+   */
+  readonly outsideFold?: Id;
 };
 
 /**
@@ -52,7 +57,7 @@ export function insertBlock(content: Content, args: InsertBlockArgs): Result {
   const block = newBlock(args.kind, ids);
   // With nothing selected the block always goes at the very end.
   const side = args.target.kind === 'diagramEnd' ? 'after' : args.side;
-  const place = args.outsideFolds === true ? { ...range, join: false } : range;
+  const place = keepingOut(range, args.outsideFolds, args.outsideFold);
   const next = putBlocks(content, place, side, { blocks: [block], folds: [] }, !isBeside);
   return done(next, [block.id]);
 }
@@ -74,8 +79,35 @@ export function putBlocks(
       return replaceRange(seq, range.lo, range.hi, insert);
     }
     const join = range.join ? side : 'none';
+    const except = range.keepOut === undefined ? new Set<Id>() : foldsWithin(seq, range.keepOut);
     return side === 'after'
-      ? insertAt(seq, range.hi + 1, insert, join)
-      : insertAt(seq, range.lo, insert, join);
+      ? insertAt(seq, range.hi + 1, insert, join, except)
+      : insertAt(seq, range.lo, insert, join, except);
   });
+}
+
+/** A range with the fold options of an insert or a move: outside all folds, or outside one. */
+export function keepingOut(range: Range, outsideFolds?: boolean, outsideFold?: Id): Range {
+  if (outsideFolds === true) {
+    return { ...range, join: false };
+  }
+  return outsideFold === undefined ? range : { ...range, keepOut: outsideFold };
+}
+
+/** The fold region `fold` of a sequence and the regions inside it (their ids). */
+function foldsWithin(seq: Seq, fold: Id): ReadonlySet<Id> {
+  const mark = seq.folds.find((f) => f.id === fold);
+  const range = mark === undefined ? null : foldRange(seq, mark);
+  if (range === null) {
+    return new Set([fold]);
+  }
+  const [lo, hi] = range;
+  return new Set(
+    seq.folds
+      .filter((f) => {
+        const r = foldRange(seq, f);
+        return r !== null && lo <= r[0] && r[1] <= hi;
+      })
+      .map((f) => f.id),
+  );
 }

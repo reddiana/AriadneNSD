@@ -181,6 +181,44 @@ describe('insertBlock', () => {
     expect(foldsIn(atStart.content, 'd1')).toEqual(['f1:b1-b2']);
   });
 
+  it('T-1583: interaction rules 7: a block dropped at a fold edge stays outside it, inside the folds around it', () => {
+    // f1 (b1..b3) holds f2 (b2..b3), which holds f3 (b3): all three end at b3.
+    const content = contentOf(
+      seq(
+        [proc('b1'), proc('b2'), proc('b3')],
+        [
+          { id: 'f1', first: 'b1', last: 'b3' },
+          { id: 'f2', first: 'b2', last: 'b3' },
+          { id: 'f3', first: 'b3', last: 'b3' },
+        ],
+      ),
+    );
+    const afterF2 = runOk(insertBlock, content, {
+      target: { ...blocks, first: 'b3', last: 'b3' },
+      side: 'after',
+      kind: 'process',
+      outsideFold: 'f2',
+    });
+    expect(idsIn(afterF2.content, 'd1')).toEqual(['b1', 'b2', 'b3', 'b4']);
+    expect(foldsIn(afterF2.content, 'd1')).toEqual(['f1:b1-b4', 'f2:b2-b3', 'f3:b3-b3']);
+    const beforeF2 = runOk(insertBlock, content, {
+      target: { ...blocks, first: 'b2', last: 'b2' },
+      side: 'before',
+      kind: 'process',
+      outsideFold: 'f2',
+    });
+    expect(idsIn(beforeF2.content, 'd1')).toEqual(['b1', 'b4', 'b2', 'b3']);
+    expect(foldsIn(beforeF2.content, 'd1')).toEqual(['f1:b1-b3', 'f2:b2-b3', 'f3:b3-b3']);
+    const beforeF1 = runOk(insertBlock, content, {
+      target: { ...blocks, first: 'b1', last: 'b1' },
+      side: 'before',
+      kind: 'process',
+      outsideFold: 'f1',
+    });
+    expect(idsIn(beforeF1.content, 'd1')).toEqual(['b4', 'b1', 'b2', 'b3']);
+    expect(foldsIn(beforeF1.content, 'd1')).toEqual(['f1:b1-b3', 'f2:b2-b3', 'f3:b3-b3']);
+  });
+
   it('T-0148: 01-model 4.3: a block inserted between the ends of a fold is inside it', () => {
     const content = contentOf(
       seq([proc('b1'), proc('b2')], [{ id: 'f1', first: 'b1', last: 'b2' }]),

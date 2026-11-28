@@ -17,6 +17,11 @@ export type Range = {
   readonly hi: number;
   /** Whether blocks inserted at the ends join fold regions ending there (UX MD1). */
   readonly join: boolean;
+  /**
+   * A fold region the inserted blocks stay outside of, with the regions inside it, when they go
+   * at its edge; regions around it still join (a drop on a region's edge, interaction rules 7).
+   */
+  readonly keepOut?: Id;
 };
 
 /** Resolves a target, or returns why it cannot be used. `diagramEnd` resolves to the last block. */
