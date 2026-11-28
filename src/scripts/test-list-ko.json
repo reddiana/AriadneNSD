@@ -1029,7 +1029,7 @@
   "moving blocks puts them next to the target and keeps them selected as a range, without editing": "블록을 이동하면 대상 옆에 두고, 편집하지 않은 채 범위로 선택해 둔다",
   "moving keeps the moved blocks selected": "이동한 블록은 선택된 채로 남는다",
   "name the export after the document with its own extension": "내보낸 파일의 이름은 문서 이름에 그 형식의 확장자다",
-  "named call: \"Call by a written name\" inserts a call and types its name; Tab goes round": "named call: \"이름을 적어 호출하기\"는 호출 블록을 삽입하고 이름을 적게 하며, Tab은 칸을 돈다",
+  "named call: \"Call by a written name\" inserts a call and types its name; Tab goes round": "named call: \"이름을 입력해 호출하기\"는 호출 블록을 삽입하고 이름을 입력하게 하며, Tab은 칸을 돈다",
   "named call: any call block can be made to call a written name": "named call: 어느 호출 블록이든 적은 이름을 호출하게 바꿀 수 있다",
   "named call: changing the called Method to a written name starts from the name it showed": "named call: 호출할 Method를 적은 이름으로 바꾸면 보이던 이름에서 시작한다",
   "named call: inserts a call block calling a written name, one line and trimmed": "named call: 적은 이름을 호출하는 호출 블록을 삽입한다. 이름은 한 줄, 앞뒤 공백 없이",

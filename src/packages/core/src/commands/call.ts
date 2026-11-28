@@ -111,7 +111,7 @@ export type NameCallTargetArgs = {
 
 /**
  * Makes a call block call a written name instead of what it called (R-BLK-08, "호출할 Method
- * 바꾸기" → "이름을 적어 호출하기"). The arguments and the result stay; the fold regions of an
+ * 바꾸기" → "이름을 입력해 호출하기"). The arguments and the result stay; the fold regions of an
  * opened call site go, since there is nothing to open. Touched: the call block.
  */
 export function nameCallTarget(content: Content, args: NameCallTargetArgs): Result {

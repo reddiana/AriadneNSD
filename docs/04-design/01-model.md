@@ -168,7 +168,7 @@ stateDiagram-v2
     direction LR
     [*] --> local : 호출 블록 삽입 (목록에서 Method를 선택함)
     [*] --> named : 이름만 적어 삽입
-    local --> named : 다이어그램 삭제 · 헤더 제거 · 이름을 적어 호출하기
+    local --> named : 다이어그램 삭제 · 헤더 제거 · 이름을 입력해 호출하기
     named --> local : 호출할 것 바꾸기 · Method 만들기
 ```
 
