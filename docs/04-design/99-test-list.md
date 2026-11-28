@@ -129,7 +129,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 | T-0810 | ADR-0041: 텍스트로 복사하면 If의 분기 이름을 렌더링된 대로 문서의 언어로 표시한다 | - |
 | T-0038 | 다른 프로그램의 텍스트는 한 줄에 처리 블록 하나가 된다 | [[01-requirements#^at\|AT-12]] |
 | T-0039 | 사용자 정의 형식이 텍스트보다 먼저다 | [[01-requirements#^at\|AT-12]] |
-| T-0040 | interaction rules "붙여넣기": with nothing selected the blocks go at the end | [[ux-decisions\|UX PS1]] |
+| T-0040 | 조작 규칙 "붙여넣기": 선택한 것이 없으면 블록이 끝에 간다 | [[ux-decisions\|UX PS1]] |
 | T-0041 | 03-keymap: `v` 다음 `j` `j`와 `y`는 범위를 복사한다 | - |
 | T-0042 | 분기 라벨에서 `o`는 분기를 삽입하고 그 라벨을 연다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0043 | M87 F6: 분기가 하나 남을 때까지 삭제해도 Case를 지키고 아무것도 묻지 않는다 | - |
@@ -240,7 +240,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/clipboard.test.ts`
 
-copy, cut and paste · paste a copied diagram (UX HC1). Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX HC1]].
+복사, 잘라내기, 붙여넣기 · 복사한 다이어그램 붙여넣기(UX HC1). Vitest · 테스트 11개. 파일 전체가 확인하는 것: [[ux-decisions|UX HC1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -252,9 +252,9 @@ copy, cut and paste · paste a copied diagram (UX HC1). Vitest · 테스트 11�
 | T-0093 | 01-model 3.6: 이 문서에 없는 Method를 호출하는 블록을 붙여 넣으면 이름 호출이 된다 | - |
 | T-0094 | 붙여넣기는 빈 클립과 없는 대상을 거절한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
 | T-0095 | 잘라내기는 클립을 주고 블록을 삭제한다 | [[01-requirements#^r-edit\|R-EDIT-10]] |
-| T-1643 | it goes after the selected diagram of its kind under a new name, keeping what it receives | [[ux-decisions\|UX HC1]] |
-| T-1644 | beside a diagram of the other kind or with nothing selected, it goes at the end of its kind | [[ux-decisions\|UX HC1]] |
-| T-1645 | its calls to itself call the copy; other calls find the Method by name or keep the name | [[ux-decisions\|UX HC1]] |
+| T-1643 | 선택한 같은 종류의 다이어그램 뒤에 새 이름으로 가며, 받는 것은 그대로 둔다 | [[ux-decisions\|UX HC1]] |
+| T-1644 | 다른 종류의 다이어그램 옆이거나 선택한 것이 없으면 같은 종류의 맨 끝에 간다 | [[ux-decisions\|UX HC1]] |
+| T-1645 | 자기 자신을 부르는 호출은 사본을 호출하고, 다른 호출은 이름으로 Method를 찾거나 이름을 그대로 둔다 | [[ux-decisions\|UX HC1]] |
 
 ^t-packages-core-src-commands-clipboard-test-ts
 
@@ -432,14 +432,14 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 7개.
 
 ### [단위] `packages/core/src/commands/move.test.ts`
 
-move up and down with the name bands off (UX FM1) · move up and down · move left and right (branches). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[ux-decisions|UX FM1]].
+이름 띠를 끈 채 위아래로 이동(UX FM1) · 위아래로 이동 · 좌우로 이동(분기). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[ux-decisions|UX FM1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1638 | stepping out of a hidden region and trading places happen at once | [[ux-decisions\|UX FM1]] |
-| T-1639 | blocks trade places with one block of a hidden region at a time, in it only while between its blocks | [[ux-decisions\|UX FM1]] |
-| T-1640 | nested hidden regions are left in one press, and a drawn folded region is jumped over whole | [[ux-decisions\|UX FM1]] |
-| T-1641 | at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once | [[ux-decisions\|UX FM1]] |
+| T-1638 | 숨긴 영역에서 나오는 것과 자리 바꾸기가 한 번에 일어난다 | [[ux-decisions\|UX FM1]] |
+| T-1639 | 블록은 숨긴 영역의 블록과 한 번에 하나씩 자리를 바꾸고, 영역 안에 있는 것은 그 블록들 사이에 있는 동안뿐이다 | [[ux-decisions\|UX FM1]] |
+| T-1640 | 중첩된 숨긴 영역은 한 번에 벗어나고, 그려진 접힌 영역은 통째로 건너뛴다 | [[ux-decisions\|UX FM1]] |
+| T-1641 | 다이어그램의 끝에서는 달라지는 것이 보이지 않으므로 이동을 거절하고, 제어 블록의 끝에서는 블록이 바로 밖으로 나간다 | [[ux-decisions\|UX FM1]] |
 | T-0156 | 블록이 아래나 위의 블록과 위치를 바꾼다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0157 | 블록은 제어 블록을 건너뛰고 그 안으로 들어가지 않는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0158 | 줄의 끝에서는 블록이 그것을 담은 제어 블록 밖으로 나간다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
@@ -668,13 +668,13 @@ id. Vitest · 테스트 5개.
 | T-1609 | 복사와 감싸기는 접힌 줄과 같이 그 분기의 블록을 모두 가져간다 | - |
 | T-1610 | 잘라내기는 그 분기의 블록을 복사하고 분기를 삭제하며, 실행 취소 한 단계다 | - |
 | T-1611 | 삭제가 분기를 거절하는 곳에서는 잘라내기도 같은 알림으로 거절하고 아무것도 복사하지 않는다 | - |
-| T-1612 | below puts the blocks into a new branch on the right, above on the left, and opens its label, in one undo step | [[ux-decisions\|UX BL2]] |
-| T-1646 | right of the default the branch goes left of it, with the same notice as inserting | [[ux-decisions\|UX BL2]] |
-| T-1647 | on an If it becomes a Case holding the blocks in its new branch, and one undo brings the If back | [[ux-decisions\|UX BL2]] |
-| T-1648 | on a parallel branch the new branch is only selected; a cut branch can be put back beside another | [[ux-decisions\|UX BL2]] |
-| T-1649 | copy on a header takes the whole diagram, as indented text and as model JSON | [[ux-decisions\|UX HC1]] |
-| T-1650 | pasted, below or above and on any selection, it is a new diagram after the selected one, under a new name, its header selected | [[ux-decisions\|UX HC1]] |
-| T-1651 | the blocks go at the end of the current diagram and are selected | [[ux-decisions\|UX PS1]] |
+| T-1612 | 아래로 하면 블록을 오른쪽의 새 분기에, 위로 하면 왼쪽에 넣고 그 라벨을 열며, 실행 취소 한 단계다 | [[ux-decisions\|UX BL2]] |
+| T-1646 | default의 오른쪽에서는 분기가 그 왼쪽에 들어가며, 삽입할 때와 같은 알림을 띄운다 | [[ux-decisions\|UX BL2]] |
+| T-1647 | If에서는 Case가 되어 새 분기에 블록을 담고, 실행 취소 한 번이면 If로 돌아온다 | [[ux-decisions\|UX BL2]] |
+| T-1648 | 병렬 분기에서는 새 분기를 선택만 하고, 잘라낸 분기는 다른 분기 옆에 다시 붙여넣을 수 있다 | [[ux-decisions\|UX BL2]] |
+| T-1649 | 헤더에서 복사하면 다이어그램 전체를 들여쓰기 텍스트와 모델 JSON으로 가져간다 | [[ux-decisions\|UX HC1]] |
+| T-1650 | 붙여넣으면 아래든 위든 어떤 선택에서든 선택한 다이어그램 뒤에 새 이름의 새 다이어그램이 되고, 그 헤더가 선택된다 | [[ux-decisions\|UX HC1]] |
+| T-1651 | 블록은 현재 다이어그램의 끝에 가고 선택된다 | [[ux-decisions\|UX PS1]] |
 | T-0562 | %s를 선택했을 때 %s의 이름은 %s다 | - |
 | T-1363 | 분기 라벨에서 풀면 If를 풀고 나온 블록들을 선택한다 | [[ux-decisions\|UX Q8]] |
 | T-1364 | 빈 default 칸에서 풀면 Case를 푼다 | [[ux-decisions\|UX Q8]] |
@@ -698,7 +698,7 @@ id. Vitest · 테스트 5개.
 | T-0575 | %s(%s)의 다이어그램을 삭제하면 렌더링된 순서로 다음 다이어그램을 선택한다: %j | - |
 | T-1389 | 붙여넣은 문서는 먼저 묻고, "새 문서로 열기"는 그것을 열며 지금 문서는 그대로 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 | T-1390 | "텍스트로 붙여넣기"는 지금처럼 줄마다 처리 블록을 붙이고, 취소는 아무것도 하지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
-| T-1391 | with nothing selected, paste asks too, and "Paste as Text" puts the lines at the end | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
+| T-1391 | 선택한 것이 없어도 붙여넣기가 묻고, "텍스트로 붙여넣기"는 줄들을 끝에 둔다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1392 | 앱에서 복사한 블록과 그 밖의 텍스트는 묻지 않고 붙는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP1]] |
 | T-1393 | 저장은 붙여넣은 문서에 대한 질문을 기다리지 않는다 | [[01-requirements#^r-web\|R-WEB-11]], [[ux-decisions\|UX JP2]] |
 
@@ -721,13 +721,13 @@ id. Vitest · 테스트 5개.
 | T-1105 | fold region: 같은 범위는 다시 만들지 않고, zd는 선택한 것을 담은 가장 작은 접기 영역을 푼다 | - |
 | T-1106 | fold region: 접기 영역 안의 블록에서 접으면 그 영역을 접고, 접힌 영역은 하나로 친다 | - |
 | T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
-| T-1642 | with the name bands off, one move leaves a region and trades places; with them on it takes two | [[ux-decisions\|UX FM1]] |
+| T-1642 | 이름 띠를 끄면 한 번의 이동으로 영역을 벗어나 자리를 바꾸고, 켜면 두 번 걸린다 | [[ux-decisions\|UX FM1]] |
 | T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
 | T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
 | T-1426 | fold undo: f로 접은 것을 u가 펴고 U가 다시 접으며, 저장한 때로 돌아오면 문서는 바뀌지 않은 것이 된다 | - |
 | T-1427 | fold undo: 접은 뒤의 편집이 먼저 되돌려지고 접힘은 남으며, 다음 실행 취소가 편다 | - |
 | T-1428 | fold undo: 만들자마자 접힌 접기 영역은 실행 취소 한 번에 펴진 모습으로 사라진다 | - |
-| T-1429 | fold undo: showing and hiding the name bands is one undo step, undone and redone on its own | [[ux-decisions\|UX UN2]] |
+| T-1429 | fold undo: 이름 띠를 보이고 숨기는 것은 실행 취소 한 단계이며, 따로 실행 취소 · 다시 실행된다 | [[ux-decisions\|UX UN2]] |
 | T-1430 | fold undo: 보기 모드에서 접으면 실행 취소 단계가 생기지 않고 문서는 저장한 그대로다 | - |
 | T-1431 | fold undo: 실행 취소 뒤에 접으면 다시 실행할 것이 비워진다 | - |
 
@@ -878,8 +878,8 @@ id. Vitest · 테스트 5개.
 | T-0626 | 선택이 있으면 휠 50px이 `↓`나 `↑` 한 번이고, 그보다 적으면 더 기다린다 | - |
 | T-0627 | 줄이나 쪽 단위로 센 휠은 바로 움직인다 | - |
 | T-0628 | 선택이 없거나, `Shift`를 누르거나, 옆으로 굴리거나, 텍스트를 입력하는 중이면 휠은 평소대로 스크롤한다 | - |
-| T-1652 | over the empty canvas the wheel scrolls, also with something selected | [[ux-decisions\|UX WH1]] |
-| T-1653 | up from the top and down from the bottom selection scroll the canvas | [[ux-decisions\|UX WH1]] |
+| T-1652 | 빈 캔버스 위에서는 휠이 스크롤하고, 선택한 것이 있어도 마찬가지다 | [[ux-decisions\|UX WH1]] |
+| T-1653 | 맨 위에서 위로, 맨 아래에서 아래로 가면 캔버스를 스크롤한다 | [[ux-decisions\|UX WH1]] |
 | T-0629 | 선택한 것이 없으면 줌해도 캔버스의 가운데가 제자리에 있다 | - |
 | T-0630 | 줌해도 선택의 가운데가 제자리에 있다 | - |
 | T-0631 | 같은 단계나 한계 너머로의 줌은 더 아무 일도 하지 않는다 | - |
@@ -895,8 +895,8 @@ id. Vitest · 테스트 5개.
 | T-0640 | 캔버스 밖이나 드래그하는 블록 자신 위에는 드롭 위치가 없다 | - |
 | T-0641 | 보기 전용에서 누름은 드래그가 되지 않는다 | - |
 | T-1599 | M87 F2: 접기 영역이나 접힌 칸의 이름 띠를 눌러 드래그하면 접기 영역 전체를 드래그한다 | - |
-| T-1655 | over a parallel branch’s part of the top band, that part and the branch cell get the hover outline | [[ux-decisions\|UX PH1]] |
-| T-1654 | dragging a folded row moves all the blocks of its branch, in one undo step | [[ux-decisions\|UX DF4]] |
+| T-1655 | 병렬 분기에 해당하는 윗 띠 부분 위에서는 그 부분과 분기 칸에 호버 윤곽선이 생긴다 | [[ux-decisions\|UX PH1]] |
+| T-1654 | 접힌 줄을 드래그하면 그 분기의 블록을 모두 이동하며, 실행 취소 한 단계다 | [[ux-decisions\|UX DF4]] |
 | T-0642 | 캔버스 가장자리 가까이에서 드래그하면 그쪽으로 스크롤된다 | - |
 | T-0643 | 블록 사이에 드롭하면 새 블록을 거기에 삽입하고 그 텍스트를 연다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0644 | 블록 위에 제어 블록을 드롭하면 그 블록을 감싸고, 라벨이 그렇다고 알린다 | [[01-requirements#^r-edit\|R-EDIT-06]] |
@@ -1267,7 +1267,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | T-0315 | 06-web 7: 경고는 닫을 때까지 상태 표시줄에 남는다 | - |
 | T-0316 | Method들과 "새 Method"를 보이고, `j` · `k`는 지금 것에서 움직이며 `Enter`가 고른다 | [[01-requirements#^r-blk\|R-BLK-07]] |
 | T-0317 | 03-keymap: 숫자는 바로 고르고, `Esc`는 닫는다 | - |
-| T-1394 | the question about a pasted document has "Paste as Text" between cancel and "Open as New Document" | [[ux-decisions\|UX JP2]] |
+| T-1394 | 붙여넣은 문서에 대한 물음에는 취소와 "새 문서로 열기" 사이에 "텍스트로 붙여넣기"가 있다 | [[ux-decisions\|UX JP2]] |
 | T-1395 | 여러 줄 입력 칸은 Enter로 줄을 바꾸고 Ctrl+Enter로 답한다 | [[ux-decisions\|UX JP3]] |
 | T-1447 | 06-web 2: 다른 탭이 파일을 편집하면 "보기만 하는 중" 라벨이 까닭을 보이고, 툴팁이 벗어나는 법을 알린다 | [[defects#BUG-18\|BUG-18]], [[ux-decisions\|UX RO1]] |
 | T-1510 | [축소] [NN%] [확대]가 이 차례로 있고, 한 번 누를 때마다 배율을 바꾼다 | - |
@@ -1696,7 +1696,7 @@ commandViewSource. Vitest · 테스트 3개.
 | T-0373 | 둘째 대화 상자가 첫째를 취소한다 | - |
 | T-0834 | US1: choose는 누른 버튼을 반환한다: 확인, 셋째, 취소 | - |
 | T-1402 | 문서를 붙여넣으면 제목이 AriadneNSD인 모달로 묻고, "새 문서로 열기"는 그것을 연다 | [[ux-decisions\|UX JP2]] |
-| T-1403 | with nothing selected the same question comes, and "Paste as Text" answers it | [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
+| T-1403 | 선택한 것이 없어도 같은 물음이 나오고, "텍스트로 붙여넣기"가 그에 답한다 | [[ux-decisions\|UX JP2]], [[ux-decisions\|UX PS1]] |
 | T-1404 | prompt는 제목, 확인 버튼, 여러 줄 입력 칸을 받을 수 있다 | [[ux-decisions\|UX JP3]] |
 | T-0374 | 마지막에 고른 모양을 기억하고 새 문서가 그 모양으로 시작한다 | [[ux-decisions\|UX HS1]] |
 | T-0375 | 파일을 열면 그 파일의 모양을 지키고, 기억해 둔 모양은 바꾸지 않는다 | [[ux-decisions\|UX HS1]] |
@@ -2279,7 +2279,7 @@ editor가 셸의 내보내기에 주는 것과 열 때 알리는 것. Vitest + h
 | T-1039 | 다시 끄면 텍스트로 저장하고 설정 키를 기록하지 않는다 | - |
 | T-1040 | true · false가 아닌 값은 받지 않는다 | - |
 | T-1373 | 파일에 저장되는 문서 설정이다 | [[01-requirements#^r-blk\|R-BLK-08]] |
-| T-1607 | M87 F5 · UX UN2: changing it is one undo step, and so is hiding the name bands; undo and redo bring each back | - |
+| T-1607 | M87 F5 · UX UN2: 바꾸는 것은 실행 취소 한 단계이고 이름 띠를 숨기는 것도 마찬가지이며, 실행 취소 · 다시 실행으로 각각 되돌아온다 | - |
 | T-1374 | 같은 기호, 허용되지 않는 값, 보기 전용 문서에서는 아무것도 바뀌지 않는다 | [[01-requirements#^r-blk\|R-BLK-08]] |
 | T-1041 | 파일을 열 때 그 이름과 함께 알린다 | - |
 | T-1042 | 그런 파일이 열린 문서를 바꿀 때도 알린다 | - |
