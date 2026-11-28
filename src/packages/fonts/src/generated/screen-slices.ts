@@ -3,8 +3,8 @@ import type { ScreenSliceData } from '../screen-slice-types';
 
 /** The screen font in slices (ADR-0040), as written by the build. */
 export const screenSliceData: ReadonlyArray<ScreenSliceData> = [
-  // 00: Latin, punctuation, symbols, 23.7 KB
-  { file: 'ariadne-nsd-mono-regular.00.woff2', count: 779, unicodeRange: 'U+20-7E, U+A0-FF, U+2000-200B, U+2010-2023, U+2025-2026, U+202F-2037, U+2039-203F, U+2042, U+2044-2049, U+204B-204E, U+2051, U+205F, U+2190-2213, U+2215, U+2217-2220, U+2222-2223, U+2225-222E, U+2234-223D, U+2241-226B, U+226D-228B, U+228D-22A5, U+22B2-22B5, U+22B8, U+22BB-22BC, U+22C2-22C6, U+22CD-22D1, U+22DA-22E9, U+22EE-22EF, U+2500-257F, U+25A0-25FF, U+27DC, U+29A3' },
+  // 00: Latin, punctuation, symbols, 25.8 KB
+  { file: 'ariadne-nsd-mono-regular.00.woff2', count: 803, unicodeRange: 'U+20-7E, U+A0-FF, U+2000-200B, U+2010-2023, U+2025-2026, U+202F-2037, U+2039-203F, U+2042, U+2044-2049, U+204B-204E, U+2051, U+205F, U+20A0-20B5, U+20B8-20B9, U+2190-2213, U+2215, U+2217-2220, U+2222-2223, U+2225-222E, U+2234-223D, U+2241-226B, U+226D-228B, U+228D-22A5, U+22B2-22B5, U+22B8, U+22BB-22BC, U+22C2-22C6, U+22CD-22D1, U+22DA-22E9, U+22EE-22EF, U+2500-257F, U+25A0-25FF, U+27DC, U+29A3' },
   // 01: Latin Extended, Greek, Cyrillic, 16.3 KB
   { file: 'ariadne-nsd-mono-regular.01.woff2', count: 484, unicodeRange: 'U+100-1BF, U+374-375, U+37A, U+37E, U+384-38A, U+38C, U+38E-3A1, U+3A3-3CE, U+3D0-3E1, U+3F0-45F, U+462-463, U+472-475, U+490-49B, U+4A2-4A5, U+4AA-4B3, U+4BA-4BB, U+4C0-4C4, U+4C7-4C8, U+4CB-4CC, U+4CF-4F9' },
   // 02: CJK punctuation, kana, Hangul jamo, full width, 30.6 KB

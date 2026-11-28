@@ -117,9 +117,9 @@ const de: ReadonlyArray<DiagramSpec> = [
       'case',
       'Gewähltes Getränk',
       [
-        ['Kaffee', ['Preis = 1,20 EUR']],
-        ['Grüner Tee', ['Preis = 1,00 EUR']],
-        ['Wasser', ['Preis = 0,80 EUR']],
+        ['Kaffee', ['Preis = 1,20 €']],
+        ['Grüner Tee', ['Preis = 1,00 €']],
+        ['Wasser', ['Preis = 0,80 €']],
         ['default', ['Signalton ausgeben', 'Beenden']],
       ],
     ],

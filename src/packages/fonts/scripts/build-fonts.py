@@ -58,6 +58,7 @@ UNICODE_BLOCKS = {
     'Greek': (0x370, 0x3FF),
     'Cyrillic': (0x400, 0x4FF),
     'General Punctuation': (0x2000, 0x206F),
+    'Currency Symbols': (0x20A0, 0x20CF),
     'Arrows': (0x2190, 0x21FF),
     'Mathematical Operators': (0x2200, 0x22FF),
     'Box Drawing': (0x2500, 0x257F),
@@ -83,7 +84,7 @@ REPO_DIR = PACKAGE_DIR.parent.parent.parent
 # small slices; all others in code point order, in larger slices.
 SLICE_GROUPS: list[tuple[str, list[tuple[int, int]]]] = [
     ('Latin, punctuation, symbols', [
-        (0x20, 0xFF), (0x2000, 0x206F), (0x2190, 0x22FF), (0x2500, 0x25FF), (0x27C0, 0x29FF),
+        (0x20, 0xFF), (0x2000, 0x206F), (0x20A0, 0x20CF), (0x2190, 0x22FF), (0x2500, 0x25FF), (0x27C0, 0x29FF),
     ]),
     ('Latin Extended, Greek, Cyrillic', [(0x100, 0x24F), (0x370, 0x4FF)]),
     ('CJK punctuation, kana, Hangul jamo, full width', [
