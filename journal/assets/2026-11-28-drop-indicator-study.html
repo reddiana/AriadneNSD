@@ -55,6 +55,17 @@ a { color: var(--accent); }
   </div>
 
   <section>
+    <span class="part">정한 것</span>
+    <h2>정한 것: 2번 + 블록 사이의 줄만 4번</h2>
+    <div class="cards">
+      <article class="card pick"><header><span class="tag">D1 · 2번 + 4번의 줄</span><h3>끄는 동안 선택 테두리를 감추고, 블록 사이의 줄은 굵게 · 흰 테두리 · 화살촉</h3><span class="badge">메인테이너가 고름</span></header>
+        <div class="figrow" data-opt="final"></div>
+        <ul><li>끄는 동안 선택 하이라이트를 그리지 않습니다(놓거나 취소하면 다시).</li><li>①② 블록 사이: 4px 줄 + 위아래 흰 테두리 2px + 블록 밖으로 7px 나온 화살촉.</li><li>③ 블록 위에 놓을 때(감싸기 · 빈 칸 채우기): <b>지금 모양 그대로</b>(블록 안쪽 2px 테두리). 선택을 감추므로 겹칠 것이 없어 4번의 흰 틈 · 점선 · 칠은 쓰지 않습니다.</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
     <span class="part">D1</span>
     <h2>D1. 선택과 드롭 위치를 어떻게 가르나</h2>
     <div class="cards">
@@ -124,11 +135,13 @@ function scene(opt, kind) {
   s += rect(B.inc.x, B.inc.y, B.inc.w, B.inc.h, C.proc) + text(B.inc.x + 10, B.inc.y + 21, 'i ← i + 1');
   s += rect(B.avg.x, B.avg.y, B.avg.w, B.avg.h, C.proc) + text(10, B.avg.y + 21, '평균 ← 합 / n');
   // 선택: 2번은 끄는 동안 감춤.
-  if (opt !== 'hide') s += selBox(B.sel);
+  if (opt !== 'hide' && opt !== 'final') s += selBox(B.sel);
+  // 정한 것: 선택은 감추고, 줄은 4번, 블록 위는 지금 모양.
+  const lineOpt = opt === 'final' ? 'halo' : opt, boxOpt = opt === 'final' ? 'now' : opt;
   const lineY = kind === 'below' ? B.sel.y + ROW + 1 : B.sel.y + 1;
   const lx = STRIP + 1, lw = W - STRIP;
   if (kind === 'wrap') {
-    if (opt === 'now' || opt === 'hide') s += dropBox(B.sel, C.sel);
+    if (boxOpt === 'now' || opt === 'hide') s += dropBox(B.sel, C.sel);
     if (opt === 'green') s += dropBox(B.sel, C.green, 2.5);
     if (opt === 'halo') s += '<rect x="' + (B.sel.x + 5) + '" y="' + (B.sel.y + 5) + '" width="' + (B.sel.w - 9) + '" height="' + (B.sel.h - 9) + '" fill="' + C.sel + '" fill-opacity=".14" stroke="#ffffff" stroke-width="5"/><rect x="' + (B.sel.x + 5) + '" y="' + (B.sel.y + 5) + '" width="' + (B.sel.w - 9) + '" height="' + (B.sel.h - 9) + '" fill="none" stroke="' + C.sel + '" stroke-width="2" stroke-dasharray="5 3"/>';
     if (opt === 'gap') s += '<rect x="' + (B.sel.x + 3.5) + '" y="' + (B.sel.y + 3.5) + '" width="' + (B.sel.w - 6) + '" height="' + (B.sel.h - 6) + '" fill="' + C.sel + '" fill-opacity=".16"/>';
@@ -138,7 +151,7 @@ function scene(opt, kind) {
   } else {
     if (opt === 'now' || opt === 'hide') s += dropLine(lx, lineY, lw, C.sel);
     if (opt === 'green') s += dropLine(lx, lineY, lw, C.green, 3);
-    if (opt === 'halo') {
+    if (lineOpt === 'halo') {
       const x1 = lx - 7, x2 = lx + lw + 7;
       s += '<line x1="' + x1 + '" y1="' + lineY + '" x2="' + x2 + '" y2="' + lineY + '" stroke="#ffffff" stroke-width="8"/>';
       s += '<line x1="' + (x1 + 6) + '" y1="' + lineY + '" x2="' + (x2 - 6) + '" y2="' + lineY + '" stroke="' + C.sel + '" stroke-width="4"/>';
