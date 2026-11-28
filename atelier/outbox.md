@@ -23,7 +23,6 @@ updated: 2026-11-28
 
 ### 문서 · 저장소 · 일하는 방식
 
-- [ ] 서브 세션은 메인테이너가 작별 인사를 하면 마무리(세션 기록 커밋 · 허브 보고) 뒤 스스로를 보관(`archive_session("self")`) — M87 세션이 전한 홍월님의 말 "앞으로 서브 세션에서 안녕을 고하면 세션을 보관해주세요."를 CLAUDE.md · how-we-work에 넣을지 → [[2026-11-28-09-hub-control-and-tokens]]
 
 - [ ] 깨진 모델 JSON을 붙였을 때의 오류 글(`AriadneNSD could not open the pasted text (…)`)도 안내서 `llms.txt`에 한 줄 더할까? 지금은 공유 링크의 오류 글만 말함 → [[ux-decisions]] JP2
 

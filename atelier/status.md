@@ -94,7 +94,7 @@ push · E2E · 전체 검사 · 커버리지 · 사이트 빌드는 허브가 �
 
 | 세션 | 할 일 | 대상 커밋 | 상태 | 순서 · 조건 |
 | --- | --- | --- | --- | --- |
-| 허브가 정함 | `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e` | 지난 push 뒤 전부(블록 셋 · 독일어 · 드롭 표시 · M86 `10c09e9` `905a08d` · M87 F2 ~ F7, 테스트 ID T-1597 ~ T-1612 새로 · T-0305 · T-0545 ~ T-0548 지움) | 기다림 | M87 서브 세션은 마침(2026-11-28). 메인테이너가 마무리 · push를 하자고 할 때, 다른 세션이 돌지 않을 때 한 번. 그 전에 `pnpm test-list:check`의 실패(`apps/web/doc-shots/ux-design.spec.ts is in no area`)를 고치고 T-1583 ~ T-1596이 99-test-list에 들었는지 확인 |
+| 허브가 정함 | `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e` | 지난 push 뒤 전부(블록 셋 · 독일어 · 드롭 표시 · M86 `10c09e9` `905a08d` · M87 F2 ~ F7, 테스트 ID T-1597 ~ T-1612 새로 · T-0305 · T-0545 ~ T-0548 지움) | 도는 중(허브의 백그라운드 에이전트, 2026-11-28 메인테이너 "테스트/푸시 해주세요") | M87 서브 세션은 마침(2026-11-28). 메인테이너가 마무리 · push를 하자고 할 때, 다른 세션이 돌지 않을 때 한 번. 그 전에 `pnpm test-list:check`의 실패(`apps/web/doc-shots/ux-design.spec.ts is in no area`)를 고치고 T-1583 ~ T-1596이 99-test-list에 들었는지 확인 |
 | 허브가 정함 | push, 웹 판 올리기 | 위와 같음 | 기다림 | 위가 통과하면 |
 
 ## 이번과 다음 세션에 할 것
