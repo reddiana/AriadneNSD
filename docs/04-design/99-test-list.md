@@ -19,13 +19,13 @@ status: 생성됨
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 344 | - | 396 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
-| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
+| [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1082 | 5 | 1461 |
+| 합계 | 87 | 287 | 1087 | 5 | 1466 |
 
 ## 읽는 법
 
@@ -1137,7 +1137,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ## 4. 메뉴 · 화면 · 시작
 
-메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 19개, 테스트 132개.
+메뉴와 툴바, 화면 언어와 메시지 카탈로그, 예제와 알고리즘 갤러리, 버전 번호, 페이지가 뜨는 과정, 휴대폰 화면 → [[05-screen-layout]], [[06-web]]. 파일 20개, 테스트 137개.
 
 ### [E2E] `apps/web/e2e/boot.spec.ts`
 
@@ -1278,14 +1278,28 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [단위] `apps/gallery/crisp-lines.test.ts`
 
-갤러리에 옮긴 편집기의 선명한 선 (M88, pages/crisp-lines.js). Vitest · 테스트 2개.
+갤러리에 옮긴 편집기의 선명한 선 (M88, pages/crisp-lines.js). Vitest + happy-dom · 테스트 3개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
 | T-1630 | 편집기처럼 화면 배율에서 모든 선의 굵기를 장치 픽셀의 정수로 맞춘다 | - |
 | T-1631 | 가장자리가 선명한 도형과 채우지 않은 곧은 경로는 맞추고, 대각선은 두며, 100%에서는 굵기를 지운다 | - |
+| T-1633 | picks its shapes with the real selector: crisp-edged elements and unfilled paths, not filled paths or shapes without a stroke width | - |
 
 ^t-apps-gallery-crisp-lines-test-ts
+
+### [단위] `apps/gallery/gallery-page.test.ts`
+
+The gallery page's own script (M70, M88. Vitest + happy-dom · 테스트 4개.
+
+| ID | 테스트 | 확인하는 것 |
+| --- | --- | :---: |
+| T-1634 | shows the entry of the address hash inline, snapped to the display scale, and reads each file once | - |
+| T-1635 | a late answer for an entry no longer selected does not replace the selected one | - |
+| T-1636 | a file that cannot be read shows as the <img>, and is asked for again next time | - |
+| T-1637 | when the display scale changes, snaps the shown diagram again and watches the new scale | - |
+
+^t-apps-gallery-gallery-page-test-ts
 
 ### [단위] `apps/web/scripts/example-thumbnails.test.ts`
 
