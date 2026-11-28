@@ -84,6 +84,17 @@ describe('gallery build', () => {
     }
   });
 
+  it('T-1632: the page script snaps the diagram lines (crisp-lines.js) before the gallery script uses them', () => {
+    for (const { lang } of pages) {
+      const snap = html[lang].indexOf('function snapCrispStrokes(');
+      expect(snap, lang).toBeGreaterThan(0);
+      expect(
+        html[lang].indexOf('snapCrispStrokes(svg, window.devicePixelRatio)'),
+        lang,
+      ).toBeGreaterThan(snap);
+    }
+  });
+
   it('T-1490: the pages link to each other, to the app and to the user guide of their language', () => {
     expect(html.en).toMatch(/<a class="lang" href="ko\/" hreflang="ko"/);
     expect(html.ko).toMatch(/<a class="lang" href="..\/" hreflang="en"/);

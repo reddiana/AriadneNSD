@@ -222,10 +222,15 @@ h1 {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.pic img {
+.pic img,
+.pic svg {
   display: block;
   max-width: none;
   height: auto;
+}
+/* The <img> is only the fallback (gallery.js): hidden while the diagram's own <svg> shows. */
+.pic img[hidden] {
+  display: none;
 }
 .about {
   font-size: 13.5px;
