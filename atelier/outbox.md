@@ -31,6 +31,10 @@ updated: 2026-11-28
 
 ## 확인해 주세요
 
+### 2026-11-28 세션 04(곁가지)에 Claude가 정한 것
+
+- [ ] 설계 문서의 NS 차트는 흐름만: 레이아웃 그림에서 접기 영역 · 테두리(`insets`) · 펴 보기 처리와 인자 `context` · `at`을 빼고, `measureBlock`의 `return measureX(block)` 다섯 갈래를 default 한 칸으로 모음(뺀 것은 그림 아래에 한 줄). 그림 자리는 번호 목록 · 시퀀스 다이어그램 바로 아래 → [[2026-11-28-04-nsd-in-design-docs]]
+
 ### 2026-11-28 세션 03에 Claude(에이전트)가 정한 것
 
 - [ ] 독일어에서 에이전트가 정한 것: 용어 Struktogramm · Anweisung · Verzweigung · Fallauswahl · Endlosschleife · Aussprung · Parallelverarbeitung · Methode · Ereignis · Faltbereich, 메뉴 Datei · Bearbeiten · Diagramm · Ansicht · Hilfe, 삽입은 "Block darunter/darüber einfügen"(붙여넣기 "Darunter einfügen"과 겹치지 않게), 키 이름 `Ctrl` · `Shift`는 영어 그대로(툴팁만 Strg · Umschalt), 소개(`/about`) 링크는 "(Englisch)", 자판기 예제는 € 대신 "EUR"(글꼴에 €가 없음). 사용법 번역은 독일어를 아는 사람이 한 번 읽으면 좋음 → `188da36` `85071c4` `5cd33cf`
