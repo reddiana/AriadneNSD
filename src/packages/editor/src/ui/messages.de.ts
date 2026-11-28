@@ -60,12 +60,13 @@ export const de: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub-Repository',
   'whatsNew.title': 'Neu in dieser Version',
   'whatsNew.body':
-    '0.6.0 bringt Deutsch und einige Verbesserungen beim Zeichnen.\n' +
+    '0.6.1 bringt drei neue Blöcke, Deutsch und Verbesserungen beim Zeichnen.\n' +
+    '- Neue Blöcke: Endlosschleife, Aussprung (break · continue · return) und Parallelverarbeitung, dazu das neue Beispiel Erzeuger-Verbraucher in der Algorithmengalerie\n' +
     '- Deutsche Oberfläche: Bedienung, Beispiele, Galerie und Handbuch gibt es jetzt auf Deutsch\n' +
     '- Währungssymbole wie € ₩ £ erscheinen jetzt in der Diagrammschrift\n' +
     '- Ein ganzer Faltbereich lässt sich an seinem Namensstreifen oder seiner eingeklappten Zelle ziehen\n' +
     '- Die Ablagemarkierung beim Ziehen ist deutlicher: dickere Linie, weiße Kontur und Pfeilspitzen; das Ablegen neben Faltbereichen und aufgeklappten Aufrufblöcken verhält sich wie neben einem einzelnen Block\n' +
-    '- Neuer Befehl „Fallauswahl in Verzweigung umwandeln“; wer in eine Verzweigung einen Zweig einfügt, macht sie ohne Rückfrage zur Fallauswahl, mit einem einzigen Rückgängig\n' +
+    '- Wer in eine Verzweigung einen Zweig einfügt, macht sie ohne Rückfrage zur Fallauswahl, mit einem einzigen Rückgängig; der neue Befehl „Fallauswahl in Verzweigung umwandeln“ macht sie wieder zur Verzweigung\n' +
     '- Schnelleres erstes Laden: Nur die verwendete Sprache wird heruntergeladen',
   'modal.close': 'Schließen',
   'contextMenu.label': 'Kontextmenü',
