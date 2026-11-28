@@ -602,41 +602,50 @@ describe('frames inside frames through control blocks (02-layout 1.6, UX NF1)', 
   });
 });
 
+// Local runs can skip the time-budget test with SKIP_TIMING=1 (CI leaves it unset, so it still runs).
+// This package has no node types, so the environment is read through globalThis.
+const skipTiming =
+  (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env
+    ?.SKIP_TIMING === '1';
+
 describe('opened call blocks and the time budget (QA-07, 01-architecture 8)', () => {
-  it('T-1126: peek: 2,000 blocks drawn through opened calls lay out and render inside the budget', () => {
-    const big = largeDoc(500);
-    const [body] = big.content.diagrams;
-    if (body === undefined) {
-      throw new Error('no diagram');
-    }
-    const calls: Call[] = [1, 2, 3, 4].map((n) => ({
-      id: `c${String(n)}`,
-      kind: 'call',
-      target: { kind: 'local', diagram: 'dm' },
-      args: '',
-      result: '',
-      siteFolds: [],
-    }));
-    const doc: Doc = {
-      content: {
-        ...big.content,
-        diagrams: [
-          { id: 'd1', head: null, body: { blocks: calls, folds: [] } },
-          { ...body, id: 'dm', head: { kind: 'method', text: 'work' } },
-        ],
-      },
-      view: { ...big.view, opened: calls.map((block) => [block.id]) },
-    };
-    const result = layout(doc);
-    expect(result.nodes.filter((node) => node.kind !== 'peek').length).toBeGreaterThan(2000);
-    let best = Number.POSITIVE_INFINITY;
-    for (let run = 0; run < 5; run += 1) {
-      const start = performance.now();
-      toSvg(buildScene(layout(doc), defaultTheme));
-      best = Math.min(best, performance.now() - start);
-    }
-    // 02-layout 4 measured 2,000 drawn blocks well under 50ms in a browser. Recording coverage
-    // slows the code down, so the time is checked by `pnpm test` only.
-    if (!inject('coverageRun')) expect(best).toBeLessThan(100);
-  });
+  it.skipIf(skipTiming)(
+    'T-1126: peek: 2,000 blocks drawn through opened calls lay out and render inside the budget',
+    () => {
+      const big = largeDoc(500);
+      const [body] = big.content.diagrams;
+      if (body === undefined) {
+        throw new Error('no diagram');
+      }
+      const calls: Call[] = [1, 2, 3, 4].map((n) => ({
+        id: `c${String(n)}`,
+        kind: 'call',
+        target: { kind: 'local', diagram: 'dm' },
+        args: '',
+        result: '',
+        siteFolds: [],
+      }));
+      const doc: Doc = {
+        content: {
+          ...big.content,
+          diagrams: [
+            { id: 'd1', head: null, body: { blocks: calls, folds: [] } },
+            { ...body, id: 'dm', head: { kind: 'method', text: 'work' } },
+          ],
+        },
+        view: { ...big.view, opened: calls.map((block) => [block.id]) },
+      };
+      const result = layout(doc);
+      expect(result.nodes.filter((node) => node.kind !== 'peek').length).toBeGreaterThan(2000);
+      let best = Number.POSITIVE_INFINITY;
+      for (let run = 0; run < 5; run += 1) {
+        const start = performance.now();
+        toSvg(buildScene(layout(doc), defaultTheme));
+        best = Math.min(best, performance.now() - start);
+      }
+      // 02-layout 4 measured 2,000 drawn blocks well under 50ms in a browser. Recording coverage
+      // slows the code down, so the time is checked by `pnpm test` only.
+      if (!inject('coverageRun')) expect(best).toBeLessThan(100);
+    },
+  );
 });

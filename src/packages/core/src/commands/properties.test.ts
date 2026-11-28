@@ -195,7 +195,8 @@ describe('commands, property-based', () => {
     for (const name of new Set(opNames)) {
       expect(succeeded.get(name) ?? 0, name).toBeGreaterThan(50);
     }
-  });
+    // A correctness test, not a timing budget: it is slow under load, so give it a generous timeout.
+  }, 60_000);
 
   it('T-0172 · QA-01: ids stay unique even when the generator must avoid ids of the view state', () => {
     fc.assert(
