@@ -1,6 +1,7 @@
 // The gallery's copy of the editor's crisp lines (M88, pages/crisp-lines.js): the same cases as the
 // editor's T-1480, T-1481 and T-1483, so the gallery shows lines as the editor does.
 import { readFileSync } from 'node:fs';
+import { Window } from 'happy-dom';
 import { describe, expect, it } from 'vitest';
 
 type Shape = {
@@ -70,5 +71,32 @@ describe('gallery crisp lines', () => {
     expect(bar.style.strokeWidth).toBe('');
     crisp.snapCrispStrokes(root, Number.NaN);
     expect(rect.style.strokeWidth).toBe('');
+  });
+
+  it('T-1633: picks its shapes with the real selector: crisp-edged elements and unfilled paths, not filled paths or shapes without a stroke width', () => {
+    const window = new Window();
+    const svg = new window.DOMParser().parseFromString(
+      `<svg xmlns="http://www.w3.org/2000/svg">
+        <rect id="rect" shape-rendering="crispEdges" stroke-width="1" />
+        <line id="line" shape-rendering="crispEdges" stroke-width="1" />
+        <path id="bar" d="M31 64 L31 96" fill="none" stroke-width="1" />
+        <path id="filled" d="M0 0 L10 0" fill="#fff" stroke-width="1" />
+        <path id="default-fill" d="M0 0 L10 0" stroke-width="1" />
+        <g id="group" shape-rendering="crispEdges" />
+      </svg>`,
+      'image/svg+xml',
+    ).documentElement;
+    const style = (id: string) =>
+      (svg.querySelector(`#${id}`) as unknown as { style: Shape['style'] }).style;
+    crisp.snapCrispStrokes(svg as unknown as Parameters<Crisp['snapCrispStrokes']>[0], 1.5);
+    for (const id of ['rect', 'line', 'bar']) {
+      expect(style(id).strokeWidth, id).toBe(`${String(2 / 1.5)}px`);
+    }
+    expect(style('bar').shapeRendering).toBe('crispEdges');
+    for (const id of ['filled', 'default-fill', 'group']) {
+      expect(style(id).strokeWidth, id).toBe('');
+      expect(style(id).shapeRendering, id).toBe('');
+    }
+    void window.happyDOM.close();
   });
 });
