@@ -55,9 +55,9 @@ NS 차트를 읽는 사람이 알고 싶은 것은 조건과 처리입니다. �
 | While / Do-While | 왼쪽 띠 안에 본문. 조건 칸이 위(While)인지 아래(Do-While)인지 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | 호출 블록 | 양옆 안쪽의 세로 이중선, 언제나 실선. Method가 없는 호출 블록(이름을 적는 호출 블록, Method를 삭제하거나 헤더를 제거함)도 모양이 같다 → [[0049-call-without-method-is-named\|ADR-0049]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` |
 | For | While과 같은 모양(왼쪽 띠 안에 본문, 조건 칸이 위). While과는 **조건 칸의 텍스트로만** 구분한다(예: `for i ← 0 to n − 1`). NS 차트 표준(DIN 66261)의 그림 그대로다 → [[ux-decisions#FB1. For 블록의 모양\|FB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
-| 무한 반복 (미완성) | 위 · 왼쪽 · 아래에 빈 띠, 띠에는 텍스트가 없음. 위 · 아래 띠의 두께는 왼쪽 띠의 폭(`size.loop-strip`, 22px)과 같고, 본문의 오른쪽은 바깥 틀에 붙는다. DIN 66261의 그림 그대로다 → [[ux-decisions#EL1. 무한 반복 블록\|EL1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
-| 탈출 (미완성) | 왼쪽에 꼭짓점이 왼쪽을 향하는 쐐기(선이 (14px, 위) → (0, 가운데) → (14px, 아래)), 텍스트는 쐐기 오른쪽. DIN 66261의 Aussprung → [[ux-decisions#XB1. 탈출 블록\|XB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
-| 병렬 처리 (미완성) | 위 · 아래 띠, 띠의 양 끝을 빗금으로 자름. 분기는 세로선으로 나뉜 칸. 위 띠는 텍스트가 있으면 조건 칸의 높이, 없으면 얇은 띠(18px) → [[ux-decisions#PB1. 병렬 처리 블록\|PB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
+| 무한 반복 | 위 · 왼쪽 · 아래에 빈 띠, 띠에는 텍스트가 없음. 위 · 아래 띠의 두께는 왼쪽 띠의 폭(`size.loop-strip`, 22px)과 같고, 본문의 오른쪽은 바깥 틀에 붙는다. DIN 66261의 그림 그대로다 → [[ux-decisions#EL1. 무한 반복 블록\|EL1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
+| 탈출 | 왼쪽에 꼭짓점이 왼쪽을 향하는 쐐기(선이 (14px, 위) → (0, 가운데) → (14px, 아래)), 텍스트는 쐐기 오른쪽. DIN 66261의 Aussprung → [[ux-decisions#XB1. 탈출 블록\|XB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#edf0f5;border:1px solid #8888;vertical-align:-0.1em"></span> `block.process` |
+| 병렬 처리 | 위 · 아래 띠, 띠의 양 끝을 빗금으로 자름. 분기는 세로선으로 나뉜 칸. 위 띠는 텍스트가 있으면 조건 칸의 높이, 없으면 얇은 띠(18px) → [[ux-decisions#PB1. 병렬 처리 블록\|PB1]] | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#dce6f6;border:1px solid #8888;vertical-align:-0.1em"></span> `block.loop` |
 | Event 헤더 | 왼쪽에 솟은 모자 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#e2efdf;border:1px solid #8888;vertical-align:-0.1em"></span> `block.event` |
 | Method 헤더 | 폭 전체에 걸친 낮은 아치 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#ebe7f4;border:1px solid #8888;vertical-align:-0.1em"></span> `block.call` ("호출하는 것과 호출되는 것"이라 같은 색) |
 
@@ -355,9 +355,7 @@ flowchart LR
 
 ## 5. 기하와 해부도
 
-![[visual-design-anatomy.svg|720]]
-
-*블록마다의 치수와 상태. 위에서부터 블록의 종류, 여러 줄 텍스트, 빈 분기와 default가 없는 Case, 접힌 분기, 겹친 테두리(제어 블록을 거쳐 겹쳐도 틈은 같다), 다이어그램 사이, 편집 레이어의 순서다. 주황 선과 주황 글자는 치수선이고 그림에는 들어가지 않는다. 펼침 삼각형(`▸` `▾`)과 맨 아래의 편집 레이어는 편집 화면에만 보이고 저장되는 그림에는 들어가지 않는다.*
+*블록마다의 치수. 그림은 렌더러로 그린 실제 블록에 치수선을 얹은 것이다(`pnpm --filter @ariadne-nsd/editor anatomy-figures`로 다시 만듦). 초록 선과 초록 글자는 치수선이고 그림에는 들어가지 않는다. 그림마다 그 그림이 설명하는 배치 규칙 바로 뒤에 둔다.*
 
 | 토큰 | 값 | 무엇 |
 | --- | --- | --- |
@@ -376,6 +374,8 @@ flowchart LR
 | `size.title-tag` | 16px | 헤더 모양 "제목처럼"에서 라벨 줄의 높이. 그 아래 이름 줄은 `space.line` |
 | `size.title-gap` | 6px | "제목처럼" 헤더에서 이름 줄과 아랫줄 사이. 헤더의 높이는 16 + 18 + 6 = 40px. 텍스트는 다이어그램의 왼쪽 선에 맞춥니다(`space.pad-x` 없음) |
 | `size.call-bar` | 7px | 호출 블록 세로 이중선의 안쪽 거리 |
+| `size.exit-wedge` | 14px | 탈출 블록의 쐐기의 깊이(꼭짓점은 왼쪽 선의 가운데) → [[ux-decisions#XB1. 탈출 블록\|XB1]] |
+| `size.parallel-band` | 18px | 병렬 처리 블록의 아래 띠와 텍스트가 없는 위 띠의 두께, 띠 끝 빗금의 가로 폭 → [[ux-decisions#PB1. 병렬 처리 블록\|PB1]] |
 | `size.band` | 18px | 이름 띠의 높이 |
 | `size.band-text-x` | 10px | 이름 띠 · 펴 보기 띠의 왼쪽 끝에서 펼침 삼각형 자리까지 |
 | `size.band-icon-room` | 10px | 이름 띠 · 펴 보기 띠에서 텍스트 앞 펼침 삼각형(`▾`)의 자리. 텍스트는 왼쪽 끝에서 `size.band-text-x` + 10 = 20px(접힌 칸과 같은 자리)에서 시작합니다. 삼각형은 편집 레이어에만 그리지만 이 자리는 저장되는 그림에도 남습니다 → [[ux-decisions#FD8. 이름 띠의 텍스트 자리\|FD8]] |
@@ -394,16 +394,65 @@ flowchart LR
 
 - 블록은 서로 맞붙습니다(NS 차트의 표기). 블록 사이에 틈을 두지 않습니다.
 - 텍스트의 기준선은 그 줄(`space.line` 18px)의 아래 끝에서 5px 위입니다. If · Case의 조건 텍스트는 블록 텍스트보다 2px 더 위에 둡니다. 분기 라벨의 기준선은 조건 칸의 아래 끝에서 5px 위입니다(프로토타입의 그림과 같음).
+- 블록의 크기: 처리 블록의 높이는 줄 수 × `space.line` + 2 × `space.pad-y`(한 줄이면 32px), 가장 좁은 폭은 `size.block-min-w`와 텍스트 폭 + 2 × `space.pad-x` 가운데 큰 값입니다. 호출 블록의 높이는 32px, 폭은 텍스트 폭 + 2 × `space.pad-x` + 2 × `size.call-bar`입니다. 반복 블록의 조건 칸은 줄 수 × `space.line` + 2 × `space.pad-y`, If는 여기에 `size.if-label`, Case는 `size.case-label`을 더합니다(한 줄이면 32 · 48 · 60px). 모자 · 아치 헤더의 높이는 `size.hat` + 줄 수 × `space.line` + 2 × `space.pad-y`(한 줄이면 48px)입니다.
+
+![[visual-design-anatomy-process.svg|520]]
+
+*처리 블록의 여백과 줄, 여러 줄의 높이, 호출 블록의 세로 이중선.*
+
 - 빈 분기의 `∅`는 지름 7px의 원과 빗금이고 선은 1.1px입니다. 빗금의 양 끝은 원을 둘러싼 사각형보다 가로세로로 1px씩 더 나갑니다 → [[ux-decisions#E1. 빈 갈래의 기호|E1]]
 - If · Case의 조건 텍스트는 빗금의 꼭짓점 위 가운데에 두되, 블록 안 여백(`space.pad-x`)을 넘지 않게 밉니다. 조건 칸의 폭과 높이는 늘리지 않으므로(최소 폭은 텍스트 + 양옆 여백 20px + If 70px · Case 90px, 높이는 텍스트 줄 수로 정해짐), 조건이 길면 빗금이 텍스트에 닿을 수 있습니다. 그래서 조건 텍스트 뒤에 **조건 칸의 배경색(`block.branch`)으로 테두리**(`size.text-halo`)를 깔아, 닿는 곳에서만 빗금이 텍스트 둘레에서 끊기게 합니다. 닿지 않으면 테두리는 배경과 같은 색이라 보이지 않습니다 → [[ux-decisions#BH1. If · Case 머리의 폭과 높이|BH1]]
-- 펴진 접기 영역의 안쪽 블록은 테두리에 붙습니다. 테두리 안에 다른 테두리(겹친 접기 영역, 펴 보인 호출 블록)가 들어가면 `size.nest-gap`만큼 띄웁니다. 제어 블록을 몇 겹 거쳐 들어가도, 안쪽 테두리의 변이 바깥 테두리의 왼쪽 · 오른쪽 · 아래 변에 닿으면 똑같이 띄웁니다. 닿지 않는 변은 들이지 않습니다. 겹치거나 이어져도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]], [[ux-decisions#NF1. 제어 블록을 거쳐 겹친 테두리|NF1]]
-- 토큰이 없는 작은 값: 접힌 줄의 세 점이 차지하는 자리 16px, 펼침 삼각형의 클릭 영역의 폭 18px, 펼침 삼각형의 중심은 왼쪽 끝에서 11px이고, 이름 띠 · 펴 보기 띠에서는 위 끝에서 9px(띠의 가운데), 접힌 칸에서는 위 끝에서 16px(`space.pad-y` + `space.line` / 2, 이름 첫 줄의 가운데 → [[ux-decisions#FD11. 접힌 칸의 펼침 삼각형 자리|FD11]]), 한 줄에서 맞붙은 두 테두리 사이에 더하는 높이 2px(경계선 1px + `size.nest-gap`). 헤더 모양 "제목처럼"의 라벨은 기준선이 라벨 줄의 아래 끝에서 4px 위입니다.
-- 블록의 크기: 처리 블록의 높이는 줄 수 × `space.line` + 2 × `space.pad-y`(한 줄이면 32px), 가장 좁은 폭은 `size.block-min-w`와 텍스트 폭 + 2 × `space.pad-x` 가운데 큰 값입니다. 호출 블록의 높이는 32px, 폭은 텍스트 폭 + 2 × `space.pad-x` + 2 × `size.call-bar`입니다. 반복 블록의 조건 칸은 줄 수 × `space.line` + 2 × `space.pad-y`, If는 여기에 `size.if-label`, Case는 `size.case-label`을 더합니다(한 줄이면 32 · 46 · 60px). 모자 · 아치 헤더의 높이는 `size.hat` + 줄 수 × `space.line` + 2 × `space.pad-y`(한 줄이면 48px)입니다.
-- 헤더의 곡선: 헤더의 왼쪽 위를 (x, y), 폭을 w, 모자의 폭을 h라 하면, Event 모자는 (x, y + 16)에서 (x + h, y + 16)까지 제어점 (x + 22, y − 2) · (x + h − 22, y − 2)의 3차 베지에 곡선이고, Method 아치는 (x, y + 16)에서 (x + w, y + 16)까지 제어점 (x + 0.2w, y + 1) · (x + 0.8w, y + 1)의 3차 베지에 곡선입니다.
+
+![[visual-design-anatomy-if.svg|720]]
+
+*If의 조건 칸(조건 줄 + 분기 라벨 줄), 분기 라벨의 자리와 빗금의 꼭짓점, 여러 줄 조건, 빈 분기의 `∅`, 조건 텍스트의 배경색 테두리.*
+
 - Case의 선: 긴 빗금은 조건 칸의 왼쪽 위에서 default 칸의 왼쪽 아래까지, 짧은 빗금은 거기서 오른쪽 위까지입니다. 분기 사이의 세로선은 긴 빗금 위의 점에서 조건 칸의 아래 끝까지 내려옵니다. default만 있으면 오른쪽 위에서 왼쪽 아래까지 짧은 빗금 하나만 그립니다.
+
+![[visual-design-anatomy-case.svg|700]]
+
+*Case의 조건 칸과 분기 라벨(default만 오른쪽), default가 없는 Case와 default만 있는 Case.*
+
 - 접힌 분기 · 본문의 칸: 높이는 32px, 가장 좁은 폭은 `space.pad-x` + 16px + 텍스트 폭 + `space.pad-x`입니다. 세 점은 반지름 0.6px에 선 1.2px의 원이고, 중심은 칸의 왼쪽 끝에서 `space.pad-x` + 3 · 7 · 11px, 기준선에서 3.5px 위입니다. 텍스트는 `space.pad-x` + 16px에서 시작합니다.
+
+![[visual-design-anatomy-loop.svg|720]]
+
+*While · For · Do-While의 왼쪽 띠와 조건 칸, 접힌 본문의 칸(접힌 분기도 같다).*
+
+- 헤더의 곡선: 헤더의 왼쪽 위를 (x, y), 폭을 w, 모자의 폭을 h라 하면, Event 모자는 (x, y + 16)에서 (x + h, y + 16)까지 제어점 (x + 22, y − 2) · (x + h − 22, y − 2)의 3차 베지에 곡선이고, Method 아치는 (x, y + 16)에서 (x + w, y + 16)까지 제어점 (x + 0.2w, y + 1) · (x + 0.8w, y + 1)의 3차 베지에 곡선입니다.
+
+![[visual-design-anatomy-head.svg|690]]
+
+*두 헤더 모양: 모자 · 아치(위)와 "제목처럼"(아래). 다이어그램의 가장 좁은 폭.*
+
 - 이름 띠 · 펴 보기 띠: 가장 좁은 폭은 20px + 텍스트 폭 + `space.pad-x`입니다. 이름 띠의 이름은 줄 바꿈을 공백으로 바꿔 한 줄로 씁니다. 펼침 삼각형은 `▾`가 폭 8px · 높이 5px, `▸`가 폭 5px · 높이 8px입니다.
+- 토큰이 없는 작은 값: 접힌 줄의 세 점이 차지하는 자리 16px, 펼침 삼각형의 클릭 영역의 폭 18px, 펼침 삼각형의 중심은 왼쪽 끝에서 11px이고, 이름 띠 · 펴 보기 띠에서는 위 끝에서 9px(띠의 가운데), 접힌 칸에서는 위 끝에서 16px(`space.pad-y` + `space.line` / 2, 이름 첫 줄의 가운데 → [[ux-decisions#FD11. 접힌 칸의 펼침 삼각형 자리|FD11]]), 한 줄에서 맞붙은 두 테두리 사이에 더하는 높이 2px(경계선 1px + `size.nest-gap`). 헤더 모양 "제목처럼"의 라벨은 기준선이 라벨 줄의 아래 끝에서 4px 위입니다.
+
+![[visual-design-anatomy-fold.svg|720]]
+
+*펴진 접기 영역의 이름 띠와 테두리, 접힌 접기 영역의 칸, 이름이 없는 영역, 펴 보인 호출 블록. 펼침 삼각형(`▸` `▾`)은 편집 화면에만 보이고 저장되는 그림에는 들어가지 않는다.*
+
+- 펴진 접기 영역의 안쪽 블록은 테두리에 붙습니다. 테두리 안에 다른 테두리(겹친 접기 영역, 펴 보인 호출 블록)가 들어가면 `size.nest-gap`만큼 띄웁니다. 제어 블록을 몇 겹 거쳐 들어가도, 안쪽 테두리의 변이 바깥 테두리의 왼쪽 · 오른쪽 · 아래 변에 닿으면 똑같이 띄웁니다. 닿지 않는 변은 들이지 않습니다. 겹치거나 이어져도 상자가 따로 보입니다 → [[02-interaction-rules#접기 · 펼치기]], [[ux-decisions#NF1. 제어 블록을 거쳐 겹친 테두리|NF1]]
+
+![[visual-design-anatomy-nesting.svg|600]]
+
+*겹친 테두리를 두 배로 키워 그렸다. 테두리 안의 테두리와 이어진 테두리(위), 제어 블록을 거쳐 겹친 테두리(아래).*
+
+![[visual-design-anatomy-diagrams.svg|520]]
+
+*다이어그램 사이와 종이 둘레. Event 무리는 왼쪽, Method 무리는 오른쪽에 쌓는다.*
+
+- 무한 반복 · 탈출 · 병렬 처리의 크기: 무한 반복의 폭은 `size.loop-strip` + 본문의 폭, 높이는 위 · 아래 띠(`size.loop-strip`)와 본문의 높이를 더한 것입니다. 탈출의 높이는 처리 블록과 같고, 가장 좁은 폭은 `size.block-min-w`와 `size.exit-wedge` + 텍스트 폭 + 2 × `space.pad-x` 가운데 큰 값이며, 텍스트는 왼쪽 끝에서 `size.exit-wedge` + `space.pad-x`(24px)에서 시작합니다. 병렬 처리의 아래 띠는 `size.parallel-band`, 위 띠는 텍스트가 없으면 `size.parallel-band`, 있으면 줄 수 × `space.line` + 2 × `space.pad-y`이고 텍스트는 위 띠의 가운데에 둡니다. 띠 끝의 빗금은 가로로 `size.parallel-band`(폭의 반을 넘지 않음)입니다. 가장 좁은 폭은 2 × `size.parallel-band` + `size.block-min-w`, 텍스트 폭 + 2 × `space.pad-x` + 2 × `size.parallel-band`, 분기 폭의 합 가운데 큰 값입니다.
+
+![[visual-design-anatomy-endless-exit-parallel.svg|720]]
+
+*무한 반복의 세 띠, 탈출의 쐐기, 병렬 처리의 띠와 띠 끝의 빗금(위 띠에 텍스트가 없을 때와 있을 때).*
+
 - 편집 레이어의 사각형: 그림은 반 픽셀 옮겨 그리므로 블록의 오른쪽 · 아래 구조선은 상자에서 1px 바깥에 있습니다. 선택 · 호버 · 블록 위 드롭의 사각형은 그 선까지 덮도록 폭과 높이에 1px을 더해 계산합니다. 블록의 왼쪽 위에서 선의 가운데까지의 거리는 선택 1.5px(3px 선), 호버 1.5px(1px 선), 블록 위 드롭 2px(2px 선)입니다. 드롭 위치의 눈금은 줄의 양 끝에서 1px 안쪽에 둡니다.
+
+![[visual-design-anatomy-edit-layer.svg|640]]
+
+*편집 레이어(화면에만 보이고 저장되지 않음)를 두 배로 키워 그렸다. 선택, 호버, 드롭 위치, 드래그 중인 블록, 헤더와 분기 라벨의 선택. 인라인 에디터는 7.2의 그림에 있다.*
 
 ## 6. 선
 
