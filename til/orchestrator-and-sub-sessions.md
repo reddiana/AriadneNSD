@@ -26,7 +26,7 @@ worker가 다시 worker를 부리면 **hierarchical(계층형) multi-agent**(Lan
 
 ## AriadneNSD에서 어디에 쓰나
 
-2026-11-28부터 Claude Code 세션을 이 구조로 쓴다 → [[dr-0023-hub-and-side-sessions|DR-0023]], [[how-we-work#허브와 서브 세션]].
+2026-11-28부터 Claude Code 세션을 이 구조로 쓴다 → [[dr-0023-hub-and-side-sessions|DR-0023]], [[how-we-work#본체와 분신]].
 
 - 메인테이너와 대화하는 세션이 허브(orchestrator), 주제마다 연 세션이 서브 세션(worker).
 - 흔한 구조와 다른 점: 보통은 사람이 orchestrator하고만 이야기하지만, 여기서는 메인테이너가 서브 세션에 들어가 시안을 직접 고르기도 한다. "사람이 들어갈 수 있는 worker"를 둔 hub-and-spoke.
