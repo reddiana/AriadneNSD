@@ -26,6 +26,7 @@ updated: 2026-11-28
 | M81 | 병렬 처리 블록 (정함: P1 1번, P2 2번, P3 1번) | https://claude.ai/artifact/2WLTn2zLbwddkqphpK1dZU | `journal/assets/2026-11-28-parallel-block-study.html` |
 | M83 | 삽입 · 붙여넣기의 앞 · 뒤 (정함: W1 1번) | https://claude.ai/artifact/A4crRvr8crouTNLy84rMfU | `journal/assets/2026-11-28-before-after-naming-study.html` |
 | M84 | 블록 셋 구현 때 정할 것 (정함: B1 1번, B2 1번, D1 ~ D5 그대로) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
+| M85 | 선택한 블록 곁의 드롭 위치 (답을 기다림: D1) | https://claude.ai/artifact/Psd323PXgcsTTKFWmpZFZ9 | `journal/assets/2026-11-28-drop-indicator-study.html` |
 
 ## 지금 단계
 

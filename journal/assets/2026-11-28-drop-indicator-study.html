@@ -1,0 +1,157 @@
+<meta charset="utf-8">
+<title>M85 선택한 블록 곁의 드롭 위치</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M84와 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 80ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.figrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.figrow figure { margin: 0; display: grid; gap: 6px; justify-items: start; }
+.figrow figcaption { font-size: 12.5px; color: var(--muted); }
+.fig { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto; max-width: 100%; }
+.fig svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 90ch; }
+.sum ol { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M85 · 선택한 블록 곁의 드롭 위치</h1>
+    <p class="lede">메인테이너의 inbox(2026-11-28): "드롭위치(블록위치) 표시가 선택한 블록 색상과 같아서 선택한 블록 앞뒤에 넣으면 눈에 띄지 않습니다." 지금은 <b>선택</b>(블록 안쪽 3px 테두리)과 <b>드롭 위치</b>(2px 가로줄 + 양 끝 눈금, 블록 위에 놓을 때는 2px 테두리)가 둘 다 주황 <code>orange.600</code>입니다. 선택한 블록의 바로 위 · 아래 줄은 선택 테두리와 같은 자리에 겹치고, 선택한 블록 위에 놓아 감쌀 때의 테두리는 선택 테두리 안에 묻힙니다.</p>
+    <p class="lede">판마다 같은 세 장면입니다: <b>① 선택한 블록 아래에 놓기</b>, <b>② 위에 놓기</b>, <b>③ 선택한 블록 위에 놓아 감싸기</b>(툴바의 If 아이콘을 끌어 옴). 흰 화살표가 마우스 포인터입니다. ★ 표시가 Claude의 추천(2번)입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">D1</span>
+    <h2>D1. 선택과 드롭 위치를 어떻게 가르나</h2>
+    <div class="cards">
+      <article class="card"><header><span class="tag">D1 · 1번</span><h3>지금 그대로</h3></header>
+        <div class="figrow" data-opt="now"></div>
+        <ul><li>선택과 드롭 위치가 같은 주황, 같은 자리. <span class="bad">①②의 줄은 선택 테두리와 구분되지 않고, ③의 테두리는 선택 테두리에 묻힙니다.</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">D1 · 2번</span><h3>끄는 동안 선택 테두리를 감춤</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="figrow" data-opt="hide"></div>
+        <ul><li>드래그가 시작되면 선택 하이라이트를 그리지 않고, 놓거나 취소하면 다시 그립니다. 드롭 위치는 지금 모양 · 색 그대로입니다.</li><li>끄는 동안 화면의 주황은 드롭 위치 하나뿐이라 어디서나 보입니다. 끌고 있는 블록은 이미 제자리에서 40%로 흐려져 있어(지금 동작) 무엇을 끄는지는 그대로 보입니다. Figma · Keynote 같은 편집기도 끄는 동안 선택 손잡이를 감춥니다.</li><li>"편집 레이어의 색은 주황 하나"(시각 디자인 3.4)를 지키고, 새 색 · 새 모양이 없어 구현이 가장 작습니다.</li><li><span class="bad">툴바 아이콘을 끄는 동안 무엇이 선택되어 있었는지는 안 보입니다(그동안 선택은 쓰이지 않음).</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">D1 · 3번</span><h3>드롭 위치를 다른 색으로 (초록 <code>green.700</code>)</h3></header>
+        <div class="figrow" data-opt="green"></div>
+        <ul><li>선택은 주황, 드롭 위치는 초록 3px.</li><li><span class="bad">편집 레이어의 두르는 색이 둘이 됩니다(규칙 3.4를 바꿔야 함). 파랑 · 보라는 펴진 접기 영역 · 펴 보인 호출이 쓰고 있어 고를 수 없습니다. 주황과 초록은 적록 색각 이상(제1 · 2형)에서 비슷하게 보여, 이 판이 노린 구분이 그 사용자에게는 사라집니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">D1 · 4번</span><h3>드롭 표시를 더 굵게 + 흰 테두리 + 블록 밖으로 내민 화살촉</h3></header>
+        <div class="figrow" data-opt="halo"></div>
+        <ul><li>줄은 4px에 위아래 흰 테두리 2px, 양 끝은 블록 밖으로 7px 나온 화살촉. 블록 위에 놓을 때는 선택 테두리 안쪽 5px에 흰 틈을 두고 점선 테두리 + 옅은 주황 칠.</li><li>선택은 그대로 보이고 색도 하나입니다.</li><li><span class="bad">겹치는 자리에서 여전히 같은 색끼리 붙어 있어 한눈에 가르기가 2번보다 어렵습니다. 새 모양 셋(흰 테두리 · 화살촉 · 칠)이 시각 디자인 명세에 더해집니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">D1 · 5번</span><h3>놓을 자리를 벌려 틈을 보임</h3></header>
+        <div class="figrow" data-opt="gap"></div>
+        <ul><li>줄 대신 그 자리 아래 블록들을 14px 밀어 틈을 열고 틈 가운데에 줄. 블록 위에 놓을 때는 옅은 주황 칠.</li><li>선택과 겹치지 않고, 놓을 자리가 가장 분명합니다(Notion · 리스트 정렬 UI의 관례).</li><li><span class="bad">포인터가 움직일 때마다 아래 그림이 위아래로 움직여, 포인터 밑의 블록이 바뀌고 자리가 흔들립니다(NS 차트는 칸이 커서 더 큼). 레이아웃을 끄는 동안 다시 계산해야 해 구현이 가장 큽니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>D1의 <b>번호</b> 또는 고칠 점.</li>
+      <li>어두운 종이(어두운 · 고대비 테마)에서는 주황이 <code>#f08a4b</code>로 바뀔 뿐 같은 방식입니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', sel: '#d0500b', green: '#22702a', white: '#ffffff' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const rect = (x, y, w, h, fill) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '"/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '" font-size="' + (o.size || 13) + '"' + (o.bold ? ' font-weight="600"' : '') + ' font-family="' + (o.sans ? 'IBM Plex Sans KR, sans-serif' : 'IBM Plex Mono, IBM Plex Sans KR, monospace') + '">' + esc(s) + '</text>'; };
+const pointer = (x, y) => '<path d="M' + x + ',' + y + ' l0,15 l4,-3.5 l2.8,6 l2.4,-1.1 l-2.8,-5.8 l5,-.3 z" fill="#ffffff" stroke="#151a22" stroke-width="1" stroke-linejoin="round"/>';
+// 선택 하이라이트: 블록 안쪽 3px(04-visual-design 5장).
+const selBox = b => '<rect x="' + (b.x + 2) + '" y="' + (b.y + 2) + '" width="' + (b.w - 3) + '" height="' + (b.h - 3) + '" fill="none" stroke="' + C.sel + '" stroke-width="3"/>';
+// 지금의 드롭 줄: 2px + 양 끝 눈금 8px(1px 안쪽).
+const dropLine = (x, y, w, color, sw) => { sw = sw || 2; return '<line x1="' + x + '" y1="' + y + '" x2="' + (x + w) + '" y2="' + y + '" stroke="' + color + '" stroke-width="' + sw + '"/><line x1="' + (x + 1) + '" y1="' + (y - 4) + '" x2="' + (x + 1) + '" y2="' + (y + 4) + '" stroke="' + color + '" stroke-width="2"/><line x1="' + (x + w - 1) + '" y1="' + (y - 4) + '" x2="' + (x + w - 1) + '" y2="' + (y + 4) + '" stroke="' + color + '" stroke-width="2"/>'; };
+const dropBox = (b, color, sw) => '<rect x="' + (b.x + 2) + '" y="' + (b.y + 2) + '" width="' + (b.w - 3) + '" height="' + (b.h - 3) + '" fill="none" stroke="' + color + '" stroke-width="' + (sw || 2) + '"/>';
+const label = (x, y, s) => '<rect x="' + x + '" y="' + (y - 13) + '" width="' + (s.length * 12 + 12) + '" height="19" rx="4" fill="#151a22"/>' + text(x + 6, y + 1, s, { fill: '#fff', size: 11.5, sans: true });
+
+const W = 300, STRIP = 22, ROW = 32, TOP = 46;
+// 장면: Method 평균(a, n), 헤더는 "제목처럼". gap = [y, 높이]면 그 y부터 아래를 밀어 틈을 엶.
+function scene(opt, kind) {
+  const gapAt = opt === 'gap' && kind !== 'wrap' ? (kind === 'below' ? TOP + ROW * 3 : TOP + ROW * 2) : null, G = 14;
+  const Y = y => (gapAt !== null && y >= gapAt ? y + G : y);
+  const B = {
+    init: { x: 0, y: Y(TOP), w: W, h: ROW },
+    loop: { x: 0, y: Y(TOP + ROW), w: W, h: ROW * 3 + (gapAt !== null ? G : 0) },
+    sel: { x: STRIP, y: Y(TOP + ROW * 2), w: W - STRIP, h: ROW },
+    inc: { x: STRIP, y: Y(TOP + ROW * 3), w: W - STRIP, h: ROW },
+    avg: { x: 0, y: Y(TOP + ROW * 4), w: W, h: ROW },
+  };
+  let s = text(0, 13, 'Method', { size: 11.5, fill: C.muted }) + text(0, 34, '평균(a, n)', { bold: true, size: 14.5 });
+  s += rect(B.init.x, B.init.y, B.init.w, B.init.h, C.proc) + text(10, B.init.y + 21, '합 ← 0');
+  s += rect(B.loop.x, B.loop.y, B.loop.w, B.loop.h, C.loop) + text(10, B.loop.y + 21, 'i < n');
+  if (gapAt !== null) s += '<rect x="' + (STRIP + .5) + '" y="' + (gapAt + .5) + '" width="' + (W - STRIP) + '" height="' + G + '" fill="#ffffff" stroke="' + C.line + '" stroke-dasharray="3 3"/>';
+  s += rect(B.sel.x, B.sel.y, B.sel.w, B.sel.h, C.proc) + text(B.sel.x + 10, B.sel.y + 21, '합 ← 합 + a[i]');
+  s += rect(B.inc.x, B.inc.y, B.inc.w, B.inc.h, C.proc) + text(B.inc.x + 10, B.inc.y + 21, 'i ← i + 1');
+  s += rect(B.avg.x, B.avg.y, B.avg.w, B.avg.h, C.proc) + text(10, B.avg.y + 21, '평균 ← 합 / n');
+  // 선택: 2번은 끄는 동안 감춤.
+  if (opt !== 'hide') s += selBox(B.sel);
+  const lineY = kind === 'below' ? B.sel.y + ROW + 1 : B.sel.y + 1;
+  const lx = STRIP + 1, lw = W - STRIP;
+  if (kind === 'wrap') {
+    if (opt === 'now' || opt === 'hide') s += dropBox(B.sel, C.sel);
+    if (opt === 'green') s += dropBox(B.sel, C.green, 2.5);
+    if (opt === 'halo') s += '<rect x="' + (B.sel.x + 5) + '" y="' + (B.sel.y + 5) + '" width="' + (B.sel.w - 9) + '" height="' + (B.sel.h - 9) + '" fill="' + C.sel + '" fill-opacity=".14" stroke="#ffffff" stroke-width="5"/><rect x="' + (B.sel.x + 5) + '" y="' + (B.sel.y + 5) + '" width="' + (B.sel.w - 9) + '" height="' + (B.sel.h - 9) + '" fill="none" stroke="' + C.sel + '" stroke-width="2" stroke-dasharray="5 3"/>';
+    if (opt === 'gap') s += '<rect x="' + (B.sel.x + 3.5) + '" y="' + (B.sel.y + 3.5) + '" width="' + (B.sel.w - 6) + '" height="' + (B.sel.h - 6) + '" fill="' + C.sel + '" fill-opacity=".16"/>';
+    s += pointer(B.sel.x + 150, B.sel.y + 16) + label(B.sel.x + 168, B.sel.y + 46, 'If로 감싸기');
+  } else if (opt === 'gap') {
+    s += dropLine(lx, gapAt + G / 2, lw, C.sel) + pointer(lx + 150, gapAt + G / 2 + 2);
+  } else {
+    if (opt === 'now' || opt === 'hide') s += dropLine(lx, lineY, lw, C.sel);
+    if (opt === 'green') s += dropLine(lx, lineY, lw, C.green, 3);
+    if (opt === 'halo') {
+      const x1 = lx - 7, x2 = lx + lw + 7;
+      s += '<line x1="' + x1 + '" y1="' + lineY + '" x2="' + x2 + '" y2="' + lineY + '" stroke="#ffffff" stroke-width="8"/>';
+      s += '<line x1="' + (x1 + 6) + '" y1="' + lineY + '" x2="' + (x2 - 6) + '" y2="' + lineY + '" stroke="' + C.sel + '" stroke-width="4"/>';
+      s += '<path d="M' + x1 + ',' + (lineY - 6) + ' l8,6 l-8,6 z M' + x2 + ',' + (lineY - 6) + ' l-8,6 l8,6 z" fill="' + C.sel + '" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>';
+    }
+    s += pointer(lx + 150, lineY + 2);
+  }
+  const h = TOP + ROW * 5 + (gapAt !== null ? G : 0) + 8;
+  return '<svg width="' + (W + 16) + '" height="' + h + '" viewBox="-8 0 ' + (W + 16) + ' ' + h + '">' + s + '</svg>';
+}
+const caps = { below: '① 선택한 블록 아래에 놓기', above: '② 선택한 블록 위에 놓기', wrap: '③ 선택한 블록 위에 놓아 If로 감싸기' };
+document.querySelectorAll('[data-opt]').forEach(el => {
+  el.innerHTML = ['below', 'above', 'wrap'].map(k => '<figure><div class="fig">' + scene(el.dataset.opt, k) + '</div><figcaption>' + caps[k] + '</figcaption></figure>').join('');
+});
+})();
+</script>
