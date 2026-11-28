@@ -37,6 +37,7 @@ updated: 2026-11-18
 | 시퀀스 · 줄 | sequence | `Seq` | 위에서 아래로 차례로 실행되는 블록 목록. 다이어그램 · 분기 · 반복 블록 · 무한 반복의 본문이 모두 줄이다 |
 | 처리 블록 | process | `Process` | 한 단계의 명령 |
 | 제어 블록 | control block | — | 다른 블록을 안에 품는 블록 (If, Case, 반복, 무한 반복, 병렬 처리) |
+| 분기 블록 | branching block | — | 분기를 가진 제어 블록 (If, Case, 병렬 처리). 본문이 하나인 반복 블록(While, For, Do-While, 무한 반복)과 함께 제어 블록을 이룬다 → [[02-interaction-rules#블록 종류]] |
 | If 블록 | if-then-else | `If` | 조건에 따라 참 · 거짓 분기 가운데 하나를 실행 |
 | Case 블록 (다중 선택 블록) | switch/case | `Case` | 값에 따라 여러 분기 가운데 하나를 실행. 편집기로 만든 Case는 맨 끝에 default 분기가 있다. 코드에서 가져온 것은 없을 수도 있다 |
 | 전위 판정 반복 | while (pre-test loop) | `While` | 조건을 먼저 검사하는 반복 |
