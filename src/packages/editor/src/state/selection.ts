@@ -287,9 +287,10 @@ export function focusBlock(index: DocIndex, selection: Selection | null): Id | n
 }
 
 /**
- * Widens a selection to also hold block `to` (03-editor 2.1, ADR-0008). Shift+click and
- * Shift+↑ ↓ use it. The two blocks' ancestor lists are compared; the nearest sequence that holds
- * an ancestor of both gives the two ends. Blocks in different diagrams: only `to` is selected.
+ * Widens a selection to also hold block `to` (03-editor 2.1, ADR-0008). Shift+click uses it;
+ * Shift+↑ ↓ use `extendBy`. The two blocks' ancestor lists are compared; the nearest sequence
+ * that holds an ancestor of both gives the two ends. Blocks in different diagrams: only `to` is
+ * selected.
  */
 export function extendTo(index: DocIndex, selection: Selection | null, to: Id): Selection {
   const from = selection?.kind === 'blocks' ? selection.anchor : null;
