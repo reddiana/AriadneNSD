@@ -215,25 +215,11 @@ export type Notice = {
   readonly level: 'info' | 'warn';
 };
 
-/** A question in the status bar with buttons (If ↔ Case, UX MD3). */
-export type Question = {
-  readonly id: number;
-  readonly message: Message;
-  readonly choices: ReadonlyArray<{
-    readonly title: Message;
-    readonly isDefault?: boolean;
-    choose(): void;
-  }>;
-  /** The user dismissed it (Esc, or another key). */
-  dismiss(): void;
-};
-
 /** What the status bar and the key hint show, besides `DocStatus`. */
 export type ChromeState = {
   /** What is selected ("If block", "3 blocks"); `null` when nothing is. */
   readonly selection: Message | null;
   readonly notice: Notice | null;
-  readonly question: Question | null;
   /** The first key of a two-key sequence waiting for the second (`'d'`), or `null`. */
   readonly pendingKeys: string | null;
   /** `editing` while the inline editor is open, `visual` while selecting a range. */

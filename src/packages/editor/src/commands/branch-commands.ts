@@ -3,6 +3,7 @@ import type { CommandSpec } from '../contracts';
 import { branchesOf, indexDoc, isBranching } from '../model/doc-index';
 import type { EditorState } from '../state/editor-state';
 import { selectBlock } from '../state/selection';
+import type { Applies } from './spec';
 import { spec } from './spec';
 import type { Id, Side } from '@ariadne-nsd/core';
 import { convertCaseToIf, convertIfToCase, deleteBranch } from '@ariadne-nsd/core';
@@ -87,15 +88,19 @@ export function branchCommands(ctx: CommandContext) {
     },
   });
 
+  /** Whether "Case를 If로 바꾸기" applies: a Case with one branch and the default (UX MD3). */
+  const convertCaseWhen = (state: EditorState): Applies => {
+    const id = convertTarget(state, undefined);
+    const block = id === null ? undefined : index().blocks.get(id)?.block;
+    return block?.kind === 'case' && block.arms.length === 1 && block.otherwise !== null
+      ? true
+      : 'reason.notConvertible';
+  };
+
+  // No longer asked after deleting a branch: a command of its own (M87 F6).
   const convertCaseSpec = spec('branch.convertCaseToIf', {
     edits: true,
-    when: (state) => {
-      const id = convertTarget(state, undefined);
-      const block = id === null ? undefined : index().blocks.get(id)?.block;
-      return block?.kind === 'case' && block.arms.length === 1 && block.otherwise !== null
-        ? true
-        : 'reason.notConvertible';
-    },
+    when: convertCaseWhen,
     run: (state, args) => {
       const block = convertTarget(state, args);
       if (block !== null) {
@@ -104,6 +109,9 @@ export function branchCommands(ctx: CommandContext) {
         }));
       }
     },
+    menu: { menu: 'diagram', group: 3, order: 4 },
+    context: ['blocks', 'branchLabel'],
+    inContext: (state) => convertCaseWhen(state) === true,
   });
 
   return { branchInsertSpec, branchDeleteSpec, convertIfSpec, convertCaseSpec };

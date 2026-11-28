@@ -40,8 +40,8 @@ export type Reason = {
 /**
  * The reasons a command can refuse. The editor maps each code to a message in its catalog.
  * - `lastParallelBranches`: a parallel block keeps at least two branches (UX PB1, M84 B1).
- * - `askConvertIfToCase`: a branch was inserted on an If. The editor asks whether to convert
- *   the If to a Case and, if so, runs `convertIfToCase` (UX MD3).
+ * - `askConvertIfToCase`: a branch was inserted on an If, which has two. The editor converts the
+ *   If to a Case with `convertIfToCase` instead (M87 F6).
  * - `intoItself`: blocks were dropped inside one of themselves (`moveTo`).
  * - `noHead`: the diagram has no header, so it has no name to edit (`editHead`).
  * - `emptyHeadName`: a header name would be empty (interaction rules "Event 헤더").
@@ -94,13 +94,11 @@ export type ReasonCode =
 
 /**
  * A note returned with a successful command.
- * - `offerConvertCaseToIf`: a Case is left with one non-default branch; ask whether to convert
- *   it to an If (UX MD3). On yes the editor runs `convertCaseToIf` as its own undo step.
  * - `checkCondition`: the branches of an If were swapped but the condition was not negated;
  *   tell the user to fix the condition (interaction rules "이동").
  */
 export type Note = {
-  readonly kind: 'offerConvertCaseToIf' | 'checkCondition';
+  readonly kind: 'checkCondition';
   readonly node: Id;
 };
 

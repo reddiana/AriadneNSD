@@ -43,62 +43,34 @@ export function StatusBar(): ReactElement {
     state.notice?.id ?? null,
     state.notice?.level ?? null,
   );
-  const { question, notice } = state;
+  const { notice } = state;
 
   return (
     <div className="ans-statusbar" role="status" aria-label={text('status.label')}>
       <span className="ans-selection" data-testid="selection">
         {state.selection === null ? text('status.nothingSelected') : format(state.selection)}
       </span>
-      {question ? (
-        <span className="ans-question" key={question.id}>
-          <span>{format(question.message)}</span>
-          {question.choices.map((choice) => (
+      {notice && isNoticeVisible && (
+        <>
+          <span
+            className="ans-notice"
+            data-level={notice.level}
+            key={notice.id}
+            title={format(notice.message)}
+          >
+            {format(notice.message)}
+          </span>
+          {notice.level === 'warn' && (
             <button
               type="button"
-              key={format(choice.title)}
-              data-default={choice.isDefault === true}
-              onClick={() => {
-                choice.choose();
-              }}
+              className="ans-notice-close"
+              aria-label={text('notice.close')}
+              onClick={closeNotice}
             >
-              {format(choice.title)}
+              ✕
             </button>
-          ))}
-          <button
-            type="button"
-            aria-label={text('modal.close')}
-            onClick={() => {
-              question.dismiss();
-            }}
-          >
-            ✕
-          </button>
-        </span>
-      ) : (
-        notice &&
-        isNoticeVisible && (
-          <>
-            <span
-              className="ans-notice"
-              data-level={notice.level}
-              key={notice.id}
-              title={format(notice.message)}
-            >
-              {format(notice.message)}
-            </span>
-            {notice.level === 'warn' && (
-              <button
-                type="button"
-                className="ans-notice-close"
-                aria-label={text('notice.close')}
-                onClick={closeNotice}
-              >
-                ✕
-              </button>
-            )}
-          </>
-        )
+          )}
+        </>
       )}
       {state.mode !== 'normal' && (
         <span className="ans-mode">

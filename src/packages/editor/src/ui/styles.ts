@@ -137,11 +137,6 @@ export const chromeCss = `
   background: none; border: 0; border-radius: 4px; padding: 0 4px; color: var(--ui-muted);
 }
 .ans-notice-close:hover { background: var(--ui-accent-soft); }
-.ans-question { display: flex; align-items: center; gap: 6px; }
-.ans-question button {
-  padding: 1px 8px; border: 1px solid var(--ui-line); border-radius: 4px; background: var(--ui-bg);
-}
-.ans-question button[data-default='true'] { border-color: var(--ui-accent); color: var(--ui-accent); }
 .ans-mode { margin-left: auto; color: var(--ui-accent); }
 .ans-mode + .ans-mode { margin-left: 0; }
 

@@ -269,27 +269,57 @@ describe('branches (R-EDIT-11, UX MD3)', () => {
     });
   });
 
-  it('T-0043 · UX MD3: deleting down to one branch asks to make an If; Esc keeps the Case', () => {
+  it('T-0043 · M87 F6: deleting down to one branch keeps the Case and asks nothing', () => {
     const engine = testEngine(caseContent());
     engine.select({ kind: 'branchLabel', branch: 'r1' });
     engine.keys('x');
-    expect(engine.session.chrome().question?.message).toBe('question.convertCaseToIf');
     expect(engine.session.state.selection).toEqual({ kind: 'branchLabel', branch: 'r2' });
-    engine.keys('Escape');
-    expect(engine.session.chrome().question).toBeNull();
     expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
+    expect(engine.session.state.undo).toHaveLength(1);
   });
 
-  it('T-0044 · UX MD3: inserting a branch on an If asks to make it a Case; Enter converts', () => {
+  it('T-0044 · M87 F6: inserting a branch on an If makes it a Case at once, in one undo step, and says so', () => {
     const engine = testEngine(
       contentOf([ifBlock('b1', branch('r1', [proc('b2')]), branch('r2', [proc('b3')]))]),
     );
     engine.select({ kind: 'branchLabel', branch: 'r2' });
     engine.keys('o');
-    expect(engine.session.chrome().question?.message).toBe('question.convertIfToCase');
-    engine.keys('Enter');
-    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
-    expect(engine.session.state.editing?.field.kind).toBe('branchLabel');
+    const block = engine.session.index().blocks.get('b1')?.block;
+    expect(block?.kind).toBe('case');
+    if (block?.kind === 'case') {
+      // The true branch first, the new branch second, the false branch the default.
+      expect(block.arms.map((a) => a.id)).toEqual(['r1', 'r3']);
+      expect(block.otherwise?.id).toBe('r2');
+    }
+    expect(engine.session.state.editing?.field).toEqual({ kind: 'branchLabel', branch: 'r3' });
+    expect(engine.session.chrome().notice?.message).toBe('notice.convertedIfToCase');
+    expect(engine.session.state.undo).toHaveLength(1);
+    engine.session.commitEditing('x');
+    engine.run('edit.undo');
+    engine.run('edit.undo');
+    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('if');
+  });
+
+  it('T-1608 · M87 F6: "Case를 If로 바꾸기" is in the Diagram menu and, for a Case left with one branch, in the context menu', () => {
+    const engine = testEngine(caseContent());
+    const spec = engine.registry.list().find((item) => item.id === 'branch.convertCaseToIf');
+    expect(spec?.menu).toMatchObject({ menu: 'diagram' });
+    expect(spec?.context).toEqual(['blocks', 'branchLabel']);
+    const shown = (): boolean | undefined => spec?.inContext?.(engine.registry.context());
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    expect(shown()).toBe(false);
+    engine.keys('x');
+    for (const selection of [
+      { kind: 'branchLabel', branch: 'r2' },
+      { kind: 'branchLabel', branch: 'r3' },
+      selectBlock(engine.session.index(), 'b1'),
+    ] as const) {
+      engine.select(selection);
+      expect(shown()).toBe(true);
+    }
+    engine.run('branch.convertCaseToIf');
+    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('if');
+    expect(engine.session.state.undo).toHaveLength(2);
   });
 
   it('T-0045 · R-EDIT-12: an If branch label opens with its drawn word', () => {
@@ -450,51 +480,6 @@ describe('visual mode (03-keymap "Visual")', () => {
     engine.keys('v', 'j', 'x');
     expect(engine.session.state.mode).toBe('normal');
     expect(bodyOf(engine)).toEqual(['b3']);
-  });
-});
-
-describe('questions in the status bar (UX MD3)', () => {
-  const asked = (): TestEngine => {
-    const engine = testEngine(
-      contentOf([
-        caseBlock(
-          'b1',
-          [arm('r1', '1', [proc('b2')]), arm('r2', '2', [proc('b3')])],
-          branch('r3', [proc('b4')]),
-        ),
-      ]),
-    );
-    engine.select({ kind: 'branchLabel', branch: 'r1' });
-    engine.keys('x');
-    return engine;
-  };
-
-  it('T-0545: Enter takes the first choice: the Case becomes an If', () => {
-    const engine = asked();
-    expect(engine.keys('Enter')).toEqual([true]);
-    expect(engine.session.chrome().question).toBeNull();
-    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('if');
-  });
-
-  it('T-0546: a digit takes that choice: 2 keeps the Case', () => {
-    const engine = asked();
-    expect(engine.keys('2')).toEqual([true]);
-    expect(engine.session.chrome().question).toBeNull();
-    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
-  });
-
-  it('T-0547: another key closes the question and then works as usual', () => {
-    const engine = asked();
-    engine.keys('j');
-    expect(engine.session.chrome().question).toBeNull();
-    expect(engine.session.index().blocks.get('b1')?.block.kind).toBe('case');
-    expect(selected(engine)).toEqual(['b3']);
-  });
-
-  it('T-0548: a digit without a choice closes the question too', () => {
-    const engine = asked();
-    engine.keys('9');
-    expect(engine.session.chrome().question).toBeNull();
   });
 });
 

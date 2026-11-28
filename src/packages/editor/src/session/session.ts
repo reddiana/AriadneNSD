@@ -1,4 +1,4 @@
-// The editing session: the state, undo, notices and questions, without the DOM. The inline
+// The editing session: the state, undo and notices, without the DOM. The inline
 // editor's text flow (`text-editing.ts`) and the key reader (`key-reader.ts`) are its parts.
 // The DOM view and the commands drive it; tests drive it in Node.
 import type {
@@ -31,7 +31,7 @@ import {
 } from '@ariadne-nsd/core';
 
 import type { ClipboardData } from '../clipboard/clip-format';
-import type { ChromeState, Notice, Question } from '../contracts';
+import type { ChromeState, Notice } from '../contracts';
 import type { EditorMessage, Message, MessageKey } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { KeyBinding } from '../input/keys';
@@ -122,7 +122,6 @@ export class EditorSession {
   private keptSettings: KeptSettings;
   private readonly listeners = new Set<(state: EditorState) => void>();
   private noticeValue: Notice | null = null;
-  private questionValue: Question | null = null;
   private nextId = 1;
   private readonly text: TextEditing;
   private readonly keys: KeyReader;
@@ -142,7 +141,7 @@ export class EditorSession {
       this.setState(state);
     };
     this.text = new TextEditing(this, write);
-    this.keys = new KeyReader(this, write, () => this.questionValue, options);
+    this.keys = new KeyReader(this, write, options);
     this.rendered = this.render(doc);
     this.indexed = indexDoc(doc.content);
     this.saved = load.isDirty ? null : doc;
@@ -224,7 +223,7 @@ export class EditorSession {
     return renderDoc(doc, this.time);
   }
 
-  /** Calls the listeners again without a change (the notice or the question changed). */
+  /** Calls the listeners again without a change (the notice changed). */
   private touch(): void {
     this.setState(this.current);
   }
@@ -232,7 +231,6 @@ export class EditorSession {
   /** Puts another document in. Undo, redo and the selection start empty (03-editor 6). */
   load(opened: Doc, load: LoadOptions): void {
     const doc = settled(opened);
-    this.closeQuestion();
     this.noticeValue = null;
     this.keptSettings = load.kept;
     this.saved = load.isDirty ? null : doc;
@@ -275,7 +273,7 @@ export class EditorSession {
     this.setState({ ...this.current, layout: this.rendered.layout });
   }
 
-  // Notices and questions (the status bar).
+  // Notices (the status bar).
 
   /** Shows a message of the editor's catalog in the status bar. */
   notify(value: EditorMessage, level: Notice['level'] = 'info'): void {
@@ -296,49 +294,12 @@ export class EditorSession {
     }
   }
 
-  /**
-   * Asks a question with buttons in the status bar (UX MD3). The first choice is the default
-   * (Enter). Choosing or dismissing closes it.
-   */
-  ask(
-    text: EditorMessage,
-    choices: ReadonlyArray<{ readonly title: EditorMessage; readonly choose: () => void }>,
-  ): void {
-    const id = this.nextId++;
-    const close = (): void => {
-      if (this.questionValue?.id === id) {
-        this.questionValue = null;
-        this.touch();
-      }
-    };
-    this.questionValue = {
-      id,
-      message: text,
-      choices: choices.map((choice, i) => ({
-        title: choice.title,
-        ...(i === 0 ? { isDefault: true } : {}),
-        choose: () => {
-          close();
-          choice.choose();
-        },
-      })),
-      dismiss: close,
-    };
-    this.noticeValue = null;
-    this.touch();
-  }
-
-  private closeQuestion(): void {
-    this.questionValue = null;
-  }
-
   /** The status bar's content. Dialogs and pickers are the editor's (`createEditor`). */
   chrome(): Omit<ChromeState, 'dialog' | 'picker'> {
     const { editing, mode, pendingKeys, zoom } = this.current;
     return {
       selection: this.describeSelection(),
       notice: this.noticeValue,
-      question: this.questionValue,
       pendingKeys,
       mode: editing !== null ? 'editing' : mode,
       isKeyHintShown: this.keys.isHintShown,
@@ -529,8 +490,7 @@ export class EditorSession {
   }
 
   /**
-   * Applies a command's result: a refusal goes to the status bar (or asks, for
-   * `askConvertIfToCase`); a success replaces the content in one undo step and sets what comes
+   * Applies a command's result: a refusal goes to the status bar; a success replaces the content in one undo step and sets what comes
    * next. Returns whether the content was taken.
    */
   commit(result: Result, after: (ok: OkResult) => After): boolean {
@@ -599,44 +559,15 @@ export class EditorSession {
     return true;
   }
 
-  /** Tells why a command did not run, or asks when the reason is a question. */
+  /** Tells why a command did not run. */
   refuse(reason: Reason): void {
-    if (reason.code === 'askConvertIfToCase' && reason.node !== undefined) {
-      const block = reason.node;
-      this.ask('question.convertIfToCase', [
-        {
-          title: 'choice.convertToCase',
-          choose: () => {
-            this.runCommand('branch.convertIfToCase', { block });
-          },
-        },
-        { title: 'choice.keepIf', choose: () => undefined },
-      ]);
-      return;
-    }
     const key: MessageKey = `reason.${reason.code}`;
     this.notify(key, 'warn');
   }
 
+  /** A note of a command: the only one now is `checkCondition`. */
   private handleNote(note: Note): void {
-    switch (note.kind) {
-      case 'offerConvertCaseToIf': {
-        const block = note.node;
-        this.ask('question.convertCaseToIf', [
-          {
-            title: 'choice.convertToIf',
-            choose: () => {
-              this.runCommand('branch.convertCaseToIf', { block });
-            },
-          },
-          { title: 'choice.keepCase', choose: () => undefined },
-        ]);
-        return;
-      }
-      case 'checkCondition':
-        this.notify('notice.checkCondition', 'warn');
-        return;
-    }
+    this.notify(`notice.${note.kind}`, 'warn');
   }
 
   /** Undo or redo one step. The selection stays if what it names is still there (UX Q19). */

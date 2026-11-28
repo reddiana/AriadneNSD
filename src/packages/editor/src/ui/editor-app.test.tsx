@@ -350,27 +350,6 @@ describe('status bar', () => {
     expect(screen.getByRole('status').textContent).toContain('-- EDIT --');
     expect(screen.getByRole('button', { name: 'Zoom to 100%' }).textContent).toBe('150%');
   });
-
-  it('T-0305 · UX MD3: asks If ↔ Case with buttons and passes the answer to the engine', () => {
-    const engine = fakeEngine(editCommands);
-    renderApp(engine);
-    const choose = vi.fn();
-    act(() => {
-      engine.setChrome({
-        question: {
-          id: 1,
-          message: 'question.convertIfToCase',
-          choices: [
-            { title: 'choice.convertToCase', isDefault: true, choose },
-            { title: 'choice.keepIf', choose: () => undefined },
-          ],
-          dismiss: () => undefined,
-        },
-      });
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Convert to Case' }));
-    expect(choose).toHaveBeenCalledOnce();
-  });
 });
 
 describe('key hint', () => {

@@ -22,7 +22,7 @@ import type {
   Target,
   WrapKind,
 } from '@ariadne-nsd/core';
-import { addDefaultBranch, insertBranch } from '@ariadne-nsd/core';
+import { addDefaultBranch, convertIfToCase, insertBranch } from '@ariadne-nsd/core';
 
 /** What the editor's commands need besides the session. */
 export type CommandDeps = {
@@ -427,6 +427,27 @@ export function commandContext(deps: CommandDeps): CommandContext {
 
   const runInsertBranch = (branch: Id, side: Side): void => {
     const place = index().branches.get(branch);
+    if (place?.block.kind === 'if') {
+      // An If has two branches: it becomes a Case with a new branch at once, one undo step, and
+      // the status bar says so (M87 F6).
+      const block = place.block.id;
+      const isConverted = session.commit(
+        convertIfToCase(content(), { block, ids: session.ids() }),
+        (ok) => {
+          const [made] = ok.touched;
+          return made === undefined
+            ? { selection: selectBlock(indexDoc(ok.content), block) }
+            : {
+                selection: { kind: 'branchLabel', branch: made },
+                edit: { field: { kind: 'branchLabel', branch: made }, caret: 'selectAll' },
+              };
+        },
+      );
+      if (isConverted) {
+        session.notify('notice.convertedIfToCase');
+      }
+      return;
+    }
     const result = insertBranch(content(), { branch, side, ids: session.ids() });
     const isApplied = session.commit(result, (ok) => {
       const [made] = ok.touched;

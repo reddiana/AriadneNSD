@@ -58,11 +58,11 @@ describe('Case branches', () => {
     expectRefused(insertBranch, ifContent, { branch: 'r9', side: 'after' }, 'notFound');
   });
 
-  it('T-0057 · R-EDIT-11: deletes a branch with its blocks; offers If when one branch is left (UX MD3)', () => {
+  it('T-0057 · R-EDIT-11: deletes a branch with its blocks; with one branch left it stays a Case (M87 F6)', () => {
     const result = runOk(deleteBranch, content, { branch: 'r1' });
     expect(labels(result.content)).toEqual(['2']);
     expect(result.touched).toEqual(['b1']);
-    expect(result.note).toEqual({ kind: 'offerConvertCaseToIf', node: 'b1' });
+    expect(result.note).toBeUndefined();
   });
 
   it('T-0058 · R-EDIT-11 (UX MD3): the default and the last branch cannot be deleted, nor If branches', () => {

@@ -14,7 +14,6 @@ export type {
   MenuId,
   MenuPlace,
   Notice,
-  Question,
   SettingSpec,
   SettingsSchema,
   SettingsStore,

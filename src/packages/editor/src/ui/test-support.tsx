@@ -71,7 +71,6 @@ export function fakeEngine(
   let chrome: ChromeState = {
     selection: null,
     notice: null,
-    question: null,
     pendingKeys: null,
     mode: 'normal',
     isKeyHintShown: false,

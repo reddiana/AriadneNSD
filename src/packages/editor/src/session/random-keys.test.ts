@@ -33,7 +33,6 @@ describe('random keys (QA-01)', () => {
         }
         const stroke = strokes[Math.floor(next() * strokes.length)] ?? 'j';
         engine.keys(stroke);
-        engine.session.chrome().question?.choices[next() < 0.5 ? 0 : 1]?.choose();
         if (i % 25 === 0) {
           await engine.settle();
         }

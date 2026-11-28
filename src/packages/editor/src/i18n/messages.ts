@@ -217,6 +217,8 @@ const english = {
     'The true and false branches were swapped but the condition was not. Fix the condition.',
   'notice.defaultStaysLast':
     'The default branch always stays rightmost, so the new branch went to its left.',
+  'notice.convertedIfToCase':
+    'Converted the If to a Case and inserted a branch. Undo turns it back.',
   'notice.unwrapped': 'Unwrapped the {kind} block.',
   'notice.unwrappedEndless': 'Unwrapped the endless loop.',
   'notice.unwrappedParallel': 'Unwrapped the parallel block.',
@@ -251,13 +253,7 @@ const english = {
   'notice.inlined': 'Replaced the call block with the blocks of {name}.',
   'notice.methodInlined': 'Inlined {name} at every call site ({count}) and deleted it.',
 
-  // Questions in the status bar (UX MD3).
-  'question.convertIfToCase': 'An If cannot have more branches. Convert it to a Case?',
-  'question.convertCaseToIf': 'One branch is left. Convert the Case to an If?',
-  'choice.convertToCase': 'Convert to Case',
-  'choice.keepIf': 'Keep the If',
-  'choice.convertToIf': 'Convert to If',
-  'choice.keepCase': 'Keep the Case',
+  // Buttons of the modals.
   'choice.ok': 'OK',
   'choice.cancel': 'Cancel',
   // The modal for a pasted document (UX JP2).
@@ -546,6 +542,8 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'notice.checkCondition':
     '참 · 거짓 분기의 블록을 맞바꿨습니다. 조건은 그대로라 뜻이 바뀌었습니다. 조건을 수정하세요.',
   'notice.defaultStaysLast': 'default 분기는 늘 맨 오른쪽이라 그 왼쪽에 삽입했습니다.',
+  'notice.convertedIfToCase':
+    'If를 Case로 바꾸고 분기를 삽입했습니다. 실행 취소로 되돌릴 수 있습니다.',
   'notice.unwrapped': '{kind} 블록을 풀었습니다.',
   'notice.unwrappedEndless': '무한 반복을 풀었습니다.',
   'notice.unwrappedParallel': '병렬 처리 블록을 풀었습니다.',
@@ -578,12 +576,6 @@ const korean: Readonly<Record<MessageKey, string>> = {
   'notice.closed': '호출 블록을 접었습니다.',
   'notice.inlined': '호출 블록을 {name}의 블록들로 바꿨습니다.',
   'notice.methodInlined': '호출 {count}곳에 풀어 넣고 {name}을(를) 지웠습니다.',
-  'question.convertIfToCase': 'If에는 분기를 더할 수 없습니다. Case로 바꿀까요?',
-  'question.convertCaseToIf': '분기가 하나만 남았습니다. If로 바꿀까요?',
-  'choice.convertToCase': 'Case로 바꾸기',
-  'choice.keepIf': 'If 그대로 두기',
-  'choice.convertToIf': 'If로 바꾸기',
-  'choice.keepCase': 'Case 그대로 두기',
   'choice.ok': '확인',
   'choice.cancel': '취소',
   'question.pastedDocument': '붙여넣은 텍스트는 AriadneNSD 문서입니다. 새 문서로 열까요?',
@@ -872,6 +864,8 @@ const german: Readonly<Record<MessageKey, string>> = {
     'Der ja- und der nein-Zweig wurden vertauscht, die Bedingung aber nicht. Passen Sie die Bedingung an.',
   'notice.defaultStaysLast':
     'Der sonst-Zweig bleibt immer ganz rechts, daher wurde der neue Zweig links davon eingefügt.',
+  'notice.convertedIfToCase':
+    'Die Verzweigung wurde in eine Fallauswahl umgewandelt und ein Zweig eingefügt. Rückgängig nimmt das zurück.',
   'notice.unwrapped': 'Umschließung des {kind}-Blocks aufgehoben.',
   'notice.unwrappedEndless': 'Umschließung der Endlosschleife aufgehoben.',
   'notice.unwrappedParallel': 'Umschließung der Parallelverarbeitung aufgehoben.',
@@ -910,14 +904,6 @@ const german: Readonly<Record<MessageKey, string>> = {
   'notice.closed': 'Aufruf geschlossen.',
   'notice.inlined': 'Aufruf durch die Blöcke von {name} ersetzt.',
   'notice.methodInlined': '{name} an allen Aufrufstellen ({count}) eingesetzt und gelöscht.',
-  'question.convertIfToCase':
-    'Eine Verzweigung kann keine weiteren Zweige haben. In eine Fallauswahl umwandeln?',
-  'question.convertCaseToIf':
-    'Es ist nur ein Zweig übrig. Die Fallauswahl in eine Verzweigung umwandeln?',
-  'choice.convertToCase': 'In Fallauswahl umwandeln',
-  'choice.keepIf': 'Verzweigung beibehalten',
-  'choice.convertToIf': 'In Verzweigung umwandeln',
-  'choice.keepCase': 'Fallauswahl beibehalten',
   'choice.ok': 'OK',
   'choice.cancel': 'Abbrechen',
   'question.pastedDocument':

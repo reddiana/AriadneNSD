@@ -30,7 +30,6 @@ export type {
   Picker,
   PickerItem,
   PromptOptions,
-  Question,
   ReadOnlyReason,
   SaveFonts,
   SettingSpec,

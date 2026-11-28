@@ -1,6 +1,5 @@
 // The key reader of the diagram area (03-editor 4): key sequences, the key hint, the range
-// selection keys, Esc, and the keys that answer a question in the status bar.
-import type { Question } from '../contracts';
+// selection keys and Esc.
 import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { KeyBinding } from '../input/keys';
@@ -44,7 +43,6 @@ export class KeyReader {
   constructor(
     private readonly session: KeyReaderHost,
     private readonly setState: (state: EditorState) => void,
-    private readonly question: () => Question | null,
     private readonly options: KeyReaderOptions,
   ) {}
 
@@ -69,9 +67,6 @@ export class KeyReader {
   handleKey(stroke: string): boolean {
     if (this.current.editing !== null) {
       return false;
-    }
-    if (this.question() !== null && this.answerQuestion(stroke)) {
-      return true;
     }
     if (stroke === 'Escape') {
       this.escape();
@@ -176,29 +171,6 @@ export class KeyReader {
       this.isEscArmed = true;
       this.session.notify('notice.escAgain');
     }
-  }
-
-  private answerQuestion(stroke: string): boolean {
-    const question = this.question();
-    if (question === null) {
-      return false;
-    }
-    if (stroke === 'Enter') {
-      question.choices.find((choice) => choice.isDefault === true)?.choose();
-      return true;
-    }
-    if (stroke === 'Escape') {
-      question.dismiss();
-      return true;
-    }
-    const digit = /^[1-9]$/.test(stroke) ? Number(stroke) : null;
-    const chosen = digit === null ? undefined : question.choices[digit - 1];
-    if (chosen !== undefined) {
-      chosen.choose();
-      return true;
-    }
-    question.dismiss();
-    return false;
   }
 
   private setPending(first: string): void {

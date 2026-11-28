@@ -17,7 +17,8 @@ export type InsertBranchArgs = WithIds & {
  * On a parallel block the new branch has no label and holds an empty block (UX PB1).
  * The default branch stays last, so "after the default" inserts right before it. The new branch
  * holds an empty block and gets a number label not used yet; the editor opens its label.
- * On an If this is refused with `askConvertIfToCase` (UX MD3). Touched: the new branch.
+ * On an If this is refused with `askConvertIfToCase`: the editor converts it to a Case instead
+ * (`convertIfToCase`, M87 F6). Touched: the new branch.
  */
 export function insertBranch(content: Content, args: InsertBranchArgs): Result {
   const found = findBranch(content, args.branch);
@@ -64,8 +65,8 @@ export type DeleteBranchArgs = {
 
 /**
  * Deletes a Case branch with its blocks (R-EDIT-11, UX MD3). The default branch and the last
- * non-default branch cannot be deleted, nor can an If branch. When one non-default branch and
- * the default are left, the note `offerConvertCaseToIf` asks whether to make it an If.
+ * non-default branch cannot be deleted, nor can an If branch. A Case left with one non-default
+ * branch stays a Case; "Case를 If로 바꾸기" makes it an If (M87 F6).
  * A parallel block keeps at least two branches (`lastParallelBranches`, UX PB1).
  * Touched: the Case (or parallel block).
  */
@@ -96,10 +97,10 @@ export function deleteBranch(content: Content, args: DeleteBranchArgs): Result {
     return fail('lastArm', args.branch);
   }
   const arms = block.arms.filter((arm) => arm.id !== args.branch);
-  const next = replaceBlock(content, owner, () => ({ ...block, arms }));
-  return arms.length === 1 && block.otherwise !== null
-    ? done(next, [block.id], { kind: 'offerConvertCaseToIf', node: block.id })
-    : done(next, [block.id]);
+  return done(
+    replaceBlock(content, owner, () => ({ ...block, arms })),
+    [block.id],
+  );
 }
 
 /** Arguments of `convertCaseToIf` and `convertIfToCase`. */
@@ -139,8 +140,7 @@ export function convertCaseToIf(content: Content, args: ConvertArgs): Result {
 }
 
 /**
- * Turns an If into a Case and inserts one branch, as asked after inserting a branch on an If
- * (UX MD3): the true branch becomes the first branch (labelled `1` if it had no label), a new
+ * Turns an If into a Case and inserts one branch, as inserting a branch on an If does (M87 F6): the true branch becomes the first branch (labelled `1` if it had no label), a new
  * empty branch comes second, and the false branch becomes the default (its label is dropped,
  * since the default's label is fixed). The block and branch ids stay. Touched: the new branch.
  */
