@@ -4,10 +4,12 @@
 import type { Id } from '@ariadne-nsd/core';
 
 import type { ContextMenuRequest } from '../contracts';
-import type { Point } from '../input/hit-test';
+import type { Hit, Point } from '../input/hit-test';
 import { hitTest, selectionOfHit } from '../input/hit-test';
 import { strokeOf } from '../input/keys';
 import { ancestorsOf } from '../model/doc-index';
+import { hasFurther } from '../navigation/navigate';
+import { toShown } from '../navigation/shown-selection';
 import type { EditorSession } from '../session/session';
 import type { EditField } from '../state/editor-state';
 import type { Selection } from '../state/selection';
@@ -27,6 +29,8 @@ type Press = {
   readonly block: Id | null;
   /** A fold region of the model pressed on its name band or folded cell: dragged whole (M87 F2). */
   readonly fold: Id | null;
+  /** The blocks of a folded row of the model that was pressed: dragged together (UX DF4). */
+  readonly row: Selection | null;
   /** A click inside a selected range selects only on release, so the range can be dragged. */
   readonly deferred: Selection | null;
 };
@@ -49,7 +53,7 @@ export type InputHost = {
   readonly zoomTo: (zoom: number, anchor: Point | null) => void;
   readonly selectionAnchor: () => Point | null;
   readonly schedule: () => void;
-  /** The block under the pointer, drawn by the edit layer. */
+  /** The block (or parallel branch) under the pointer, drawn by the edit layer. */
   readonly hover: () => Id | null;
   readonly setHover: (block: Id | null) => void;
 };
@@ -286,13 +290,17 @@ export class CanvasInput {
       this.host.run('view.fold.toggle');
       return;
     }
-    // Only blocks and fold regions of the model are dragged (M87 F2); blocks and the blocks shown
-    // in an opened call widen a range with Shift. Folded rows are selected as they are.
+    // Blocks, folded rows (UX DF4) and fold regions (M87 F2) of the model are dragged; blocks and
+    // the blocks shown in an opened call widen a range with Shift.
     const fold =
       clicked?.kind === 'fold' && foldPath(clicked).length === 0 && index.folds.has(clicked.fold)
         ? clicked.fold
         : null;
     const isModelBlock = hit.kind === 'block' && index.blocks.has(hit.block);
+    const isModelRow =
+      hit.kind === 'block' &&
+      shown.meanings.get(hit.block)?.kind === 'row' &&
+      clicked?.kind === 'blocks';
     const selected = selectedBlocks(index, state.selection);
     const isInRange =
       isModelBlock &&
@@ -312,6 +320,7 @@ export class CanvasInput {
       y: event.clientY,
       block: isModelBlock ? hit.block : null,
       fold: event.shiftKey ? null : fold,
+      row: isModelRow && !event.shiftKey ? clicked : null,
       deferred: isInRange && !event.shiftKey ? clicked : null,
     };
     this.host.canvas.setPointerCapture(event.pointerId);
@@ -335,6 +344,9 @@ export class CanvasInput {
         } else if (press.fold !== null) {
           this.press = null;
           drag.startFoldDrag(press.fold, event);
+        } else if (press.row !== null) {
+          this.press = null;
+          drag.startRowDrag(press.row, event);
         }
       }
       return;
@@ -345,11 +357,27 @@ export class CanvasInput {
       this.session.shown().index,
       this.host.toDrawing(event.clientX, event.clientY),
     );
-    const hover = hit?.kind === 'block' ? hit.block : null;
+    const hover = this.hoverOf(hit);
     if (hover !== this.host.hover()) {
       this.host.setHover(hover);
       this.host.schedule();
     }
+  }
+
+  /**
+   * What the hover outline goes on: a block, or a parallel block's branch when the pointer is on
+   * the part of the top band that selects it (UX PH1).
+   */
+  private hoverOf(hit: Hit | null): Id | null {
+    if (hit?.kind === 'block') {
+      return hit.block;
+    }
+    if (hit?.kind !== 'branchLabel' || hit.branch === null) {
+      return null;
+    }
+    const isParallel =
+      this.session.shown().index.branches.get(hit.branch)?.block.kind === 'parallel';
+    return isParallel ? hit.branch : null;
   }
 
   private onPointerUp(event: PointerEvent): void {
@@ -421,6 +449,13 @@ export class CanvasInput {
     }
   }
 
+  private isOverDiagram(event: MouseEvent): boolean {
+    const { x, y } = this.host.toDrawing(event.clientX, event.clientY);
+    return this.session.state.layout.diagrams.some(
+      ({ box }) => x >= box.x && x <= box.x + box.width && y >= box.y && y <= box.y + box.height,
+    );
+  }
+
   private onWheel(event: WheelEvent): void {
     if (event.ctrlKey || event.metaKey) {
       // Ctrl+wheel zooms around the pointer (interaction rules 2).
@@ -434,7 +469,19 @@ export class CanvasInput {
     if (state.selection === null || state.editing !== null || event.shiftKey || !isVertical) {
       return;
     }
-    // With something selected, one wheel notch is one Up or Down (interaction rules 2).
+    // Over a diagram, with something selected, one wheel notch is one Up or Down; with nothing
+    // further that way, and over the empty canvas, the canvas scrolls (UX WH1).
+    const direction = event.deltaY < 0 ? 'up' : 'down';
+    const shown = this.session.shown();
+    const selection = toShown(shown, this.session.index(), state.selection);
+    if (
+      selection === null ||
+      !this.isOverDiagram(event) ||
+      !hasFurther(shown.index, selection, direction)
+    ) {
+      this.wheelRest = 0;
+      return;
+    }
     event.preventDefault();
     const pixels =
       event.deltaMode === 1

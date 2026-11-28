@@ -464,7 +464,7 @@ flowchart LR
 | 2 | 펴진 접기 영역 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#4f74d6;border:1px solid #8888;vertical-align:-0.1em"></span> `fold.edge` + 이름 띠 | 2.25pt |
 | 2 | 펴 보인 호출 블록 | 문서 | 3px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#7a5fb8;border:1px solid #8888;vertical-align:-0.1em"></span> `peek.edge` + 띠. 가운데가 블록의 바깥 선에서 1px 안 | 2.25pt |
 | 3 | 구조: 블록의 경계, 빗금, Case의 분기 세로선, 호출 블록의 세로 이중선, 이름 띠 · 펴 보기 띠의 아랫줄, "제목처럼" 헤더의 아랫줄 | 문서 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5b77ad;border:1px solid #8888;vertical-align:-0.1em"></span> `line.structure` | 0.75pt |
-| — | 호버 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음) | — |
+| — | 호버 | 편집 | 1px 실선 <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.hover`. 블록의 바깥 선에서 1px 안(구조선과 겹치지 않음). 병렬 처리의 분기 선택 구간에 호버하면 그 구간과 분기 칸을 합친 상자에 같은 선([[ux-decisions#PH1. 병렬 처리의 분기 선택 구간에 호버 표시\|PH1]]) | — |
 
 - 선택 하이라이트에 배경을 칠하지 않는 이유: 옅은 파랑을 덮으면 블록 배경의 색조가 흐려지고(원칙 2), 구조선의 대비가 2:1 아래로 떨어집니다(원칙 1).
 - 선택 하이라이트를 블록 **안쪽**에 그리는 이유: NS 차트의 블록은 서로 맞붙어 있어서, 바깥에 두르면 이웃 블록과 접기 영역의 테두리를 덮습니다.

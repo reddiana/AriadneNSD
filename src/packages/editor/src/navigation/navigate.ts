@@ -87,6 +87,26 @@ export function navigate(
 }
 
 /**
+ * Whether the wheel may take the selection up or down: there is something further that way. Down
+ * from the last block of a diagram's end, which the Down key takes back to the block holding it
+ * (UX ND1), is the end here, so the canvas scrolls (UX WH1).
+ */
+export function hasFurther(
+  index: DocIndex,
+  selection: Selection,
+  direction: 'up' | 'down',
+): boolean {
+  const result = navigate(index, selection, null, { kind: 'step', direction });
+  if (result.kind !== 'select') {
+    return false;
+  }
+  if (direction === 'up' || selection.kind !== 'blocks' || result.selection.kind !== 'blocks') {
+    return true;
+  }
+  return !ancestorsOf(index, selection.focus).slice(1).includes(result.selection.focus);
+}
+
+/**
  * A navigation key on a diagram's header (interaction rules 2): Down goes to the first block,
  * Left and Right to the side diagram's header (or first block). Up stays: the arrow keys leave
  * a diagram only sideways from its header.

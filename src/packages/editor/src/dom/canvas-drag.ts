@@ -10,6 +10,7 @@ import { findDrop } from '../input/drop';
 import type { Point } from '../input/hit-test';
 import { ancestorsOf } from '../model/doc-index';
 import type { EditorSession } from '../session/session';
+import type { Selection } from '../state/selection';
 import { foldBlocks, selectBlock, selectFold, selectedBlocks, targetOf } from '../state/selection';
 
 /** A press must move this far before it is a drag (03-editor 3.2). */
@@ -74,6 +75,22 @@ export class CanvasDrag {
     const firstBlock = first === undefined ? undefined : index.blocks.get(first)?.block;
     const text = firstBlock !== undefined && 'text' in firstBlock ? firstBlock.text : '';
     this.beginDrag(source, text.split('\n')[0] ?? '', null, event);
+  }
+
+  /** Starts dragging a folded row: all the blocks of its branch or body (UX DF4). */
+  startRowDrag(row: Selection, event: PointerEvent): void {
+    const session = this.host.session;
+    session.select(row);
+    const index = session.index();
+    const blocks = selectedBlocks(index, row);
+    const target = targetOf(row);
+    if (target === null || blocks.length === 0) {
+      return;
+    }
+    const [first] = blocks;
+    const firstBlock = first === undefined ? undefined : index.blocks.get(first)?.block;
+    const text = firstBlock !== undefined && 'text' in firstBlock ? firstBlock.text : '';
+    this.beginDrag({ kind: 'blocks', target, blocks }, text.split('\n')[0] ?? '', null, event);
   }
 
   /**

@@ -12,9 +12,10 @@ import {
   contentOf,
   ifBlock,
   proc,
+  whileBlock,
   testEngine,
 } from '../engine-test-support';
-import { selectBlock, selectRange } from '../state/selection';
+import { selectBlock, selectedBlocks, selectRange } from '../state/selection';
 import { CanvasView } from './canvas-view';
 import { canvasMargin } from './styles';
 
@@ -105,7 +106,10 @@ function key(target: EventTarget, init: KeyboardEventInit): KeyboardEvent {
 
 function wheel(target: EventTarget, init: WheelEventInit): WheelEvent {
   const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, ...init });
-  // happy-dom drops the modifier keys of a WheelEvent.
+  // happy-dom drops the modifier keys and the pointer position of a WheelEvent.
+  for (const name of ['clientX', 'clientY'] as const) {
+    Object.defineProperty(event, name, { value: init[name] ?? 0 });
+  }
   for (const name of ['ctrlKey', 'metaKey', 'shiftKey'] as const) {
     Object.defineProperty(event, name, { value: init[name] === true });
   }
@@ -768,6 +772,10 @@ describe('CanvasView: the selection outline while the inline editor is open (vis
 });
 
 describe('CanvasView: the wheel (interaction rules 2)', () => {
+  /** A wheel turn with the pointer over the diagram. */
+  const over = (made: Made, init: WheelEventInit): WheelEvent =>
+    wheel(made.canvas, { ...middleOf(made, 'b2'), ...init });
+
   it('T-0625: Ctrl+wheel zooms by 10% around the pointer', () => {
     const made = make(three());
     const event = wheel(made.canvas, { deltaY: -100, ctrlKey: true, clientX: 100, clientY: 50 });
@@ -780,35 +788,57 @@ describe('CanvasView: the wheel (interaction rules 2)', () => {
   it('T-0626: with something selected, 50px of wheel is one Down or Up; less waits for more', () => {
     const made = make(three());
     made.engine.select(selectBlock(made.engine.session.index(), 'b2'));
-    expect(wheel(made.canvas, { deltaY: 30 }).defaultPrevented).toBe(true);
+    expect(over(made, { deltaY: 30 }).defaultPrevented).toBe(true);
     expect(made.runs).toEqual([]);
-    wheel(made.canvas, { deltaY: 30 });
+    over(made, { deltaY: 30 });
     expect(made.runs).toEqual(['select.down']);
     // A turn the other way starts again from zero.
-    wheel(made.canvas, { deltaY: 30 });
-    wheel(made.canvas, { deltaY: -40 });
+    over(made, { deltaY: 30 });
+    over(made, { deltaY: -40 });
     expect(made.runs).toEqual(['select.down']);
-    wheel(made.canvas, { deltaY: -10 });
+    over(made, { deltaY: -10 });
     expect(made.runs).toEqual(['select.down', 'select.up']);
   });
 
   it('T-0627: a wheel counted in lines or pages moves at once', () => {
     const made = make(three());
     made.engine.select(selectBlock(made.engine.session.index(), 'b2'));
-    wheel(made.canvas, { deltaY: 2, deltaMode: 1 });
-    wheel(made.canvas, { deltaY: -1, deltaMode: 2 });
+    over(made, { deltaY: 2, deltaMode: 1 });
+    over(made, { deltaY: -1, deltaMode: 2 });
     expect(made.runs).toEqual(['select.down', 'select.up']);
   });
 
   it('T-0628: without a selection, with Shift, sideways or while typing, the wheel scrolls as usual', () => {
     const made = make(three());
-    expect(wheel(made.canvas, { deltaY: 100 }).defaultPrevented).toBe(false);
+    expect(over(made, { deltaY: 100 }).defaultPrevented).toBe(false);
     made.engine.select(selectBlock(made.engine.session.index(), 'b2'));
-    expect(wheel(made.canvas, { deltaY: 100, shiftKey: true }).defaultPrevented).toBe(false);
-    expect(wheel(made.canvas, { deltaY: 10, deltaX: 100 }).defaultPrevented).toBe(false);
+    expect(over(made, { deltaY: 100, shiftKey: true }).defaultPrevented).toBe(false);
+    expect(over(made, { deltaY: 10, deltaX: 100 }).defaultPrevented).toBe(false);
     key(made.canvas, { code: 'KeyI' });
-    expect(wheel(made.canvas, { deltaY: 100 }).defaultPrevented).toBe(false);
+    expect(over(made, { deltaY: 100 }).defaultPrevented).toBe(false);
     expect(made.runs).toEqual([]);
+  });
+
+  it('T-1647 · UX WH1: over the empty canvas the wheel scrolls, also with something selected', () => {
+    const made = make(three());
+    made.engine.select(selectBlock(made.engine.session.index(), 'b2'));
+    expect(wheel(made.canvas, { deltaY: 100, ...nowhere }).defaultPrevented).toBe(false);
+    expect(made.runs).toEqual([]);
+  });
+
+  it('T-1648 · UX WH1: up from the top and down from the bottom selection scroll the canvas', () => {
+    const made = make(contentOf([proc('b1'), whileBlock('b2', [proc('b3'), proc('b4')])]));
+    const turn = (id: string, deltaY: number): boolean => {
+      made.engine.select(selectBlock(made.engine.session.index(), id));
+      return wheel(made.canvas, { deltaY, ...middleOf(made, 'b1') }).defaultPrevented;
+    };
+    expect(turn('b1', -100)).toBe(false);
+    // The last block of the loop ending the diagram: the Down key would go back to the loop.
+    expect(turn('b4', 100)).toBe(false);
+    expect(made.runs).toEqual([]);
+    expect(turn('b3', 100)).toBe(true);
+    expect(turn('b1', 100)).toBe(true);
+    expect(made.runs).toEqual(['select.down', 'select.down']);
   });
 });
 
@@ -1020,6 +1050,65 @@ describe('CanvasView: dragging blocks (03-editor 3.2, R-EDIT-09)', () => {
     pointer(made.canvas, 'pointerup', top);
     expect(blockIds(made)).toEqual(['b1', 'b2', 'b3']);
     expect(made.engine.session.state.undo).toHaveLength(3);
+  });
+
+  it('T-1650 · UX PH1: over a parallel branch’s part of the top band, that part and the branch cell get the hover outline', () => {
+    const made = make(
+      contentOf([
+        {
+          id: 'b1',
+          kind: 'parallel',
+          text: '',
+          branches: [branch('r1', [proc('b2')]), branch('r2', [proc('b3')])],
+        },
+      ]),
+    );
+    const band = made.engine.session.state.layout.regions.find(
+      (region) => region.kind === 'branchLabel' && region.branchId === 'r2',
+    )?.box;
+    if (band === undefined) throw new Error('no band');
+    const cell = boxOf(made, 'r2');
+    pointer(made.canvas, 'pointermove', {
+      clientX: band.x + band.width / 2,
+      clientY: band.y + band.height / 2,
+    });
+    made.view.draw();
+    const height = cell.y + cell.height - band.y;
+    // The 1px outline lies 1px inside the box (visual design 7.1).
+    expect(made.host.querySelector('.ans-overlay')?.innerHTML).toContain(
+      `y="${String(band.y + 1.5)}" width="${String(cell.width - 2)}" height="${String(height - 2)}"`,
+    );
+  });
+
+  it('T-1649 · UX DF4: dragging a folded row moves all the blocks of its branch, in one undo step', () => {
+    const made = make(
+      contentOf([
+        ifBlock('b1', branch('r1', [proc('b2'), proc('b3')]), branch('r2', [proc('b4')])),
+        proc('b5'),
+      ]),
+    );
+    made.engine.session.setView({ ...made.engine.session.state.doc.view, folded: ['r1'] });
+    const found = made.engine.session.state.layout.regions.find(
+      (region) => region.kind === 'foldedSeq' && region.owner === 'r1',
+    );
+    if (found === undefined) throw new Error('no folded row');
+    const row = {
+      clientX: found.box.x + found.box.width / 2,
+      clientY: found.box.y + found.box.height / 2,
+    };
+    pointer(made.canvas, 'pointerdown', row);
+    pointer(made.canvas, 'pointerup', row);
+    // A click selects the row only.
+    expect(blockIds(made)).toEqual(['b1', 'b5']);
+    pointer(made.canvas, 'pointerdown', row);
+    pointer(made.canvas, 'pointermove', below(made, 'b5'));
+    expect(made.canvas.classList.contains('ans-is-dragging')).toBe(true);
+    pointer(made.canvas, 'pointerup', below(made, 'b5'));
+    expect(blockIds(made)).toEqual(['b1', 'b5', 'b2', 'b3']);
+    expect(made.engine.session.state.undo).toHaveLength(2);
+    expect(
+      selectedBlocks(made.engine.session.index(), made.engine.session.state.selection),
+    ).toEqual(['b2', 'b3']);
   });
 
   it('T-0642: a drag near the canvas edge scrolls that way', async () => {

@@ -18,14 +18,14 @@ status: 생성됨
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
 | [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 358 | - | 410 |
-| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
+| [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
 | [[#6. Claude skill\|Claude skill]] | - | - | 19 | - | 19 |
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1096 | 5 | 1475 |
+| 합계 | 87 | 287 | 1100 | 5 | 1479 |
 
 ## 읽는 법
 
@@ -735,7 +735,7 @@ id. Vitest · 테스트 5개.
 
 ## 3. 키 · 마우스 · 선택
 
-키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 18개, 테스트 250개.
+키가 어느 명령으로 가는지, 이동과 선택, 두 키 조합의 힌트, 클릭 · 드래그가 어느 블록을 가리키는지, 선택 테두리와 캔버스의 포커스 → [[03-keymap]], [[02-interaction-rules]]. 파일 18개, 테스트 254개.
 
 ### [E2E] `apps/web/e2e/canvas.spec.ts`
 
@@ -821,7 +821,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/dom/canvas-view.test.ts`
 
-다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 74개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
+다이어그램 영역(03-editor 1, 3). Vitest + happy-dom · 테스트 78개. 파일 전체가 확인하는 것: [[ux-decisions|UX Q2]], [[01-requirements#^r-edit|R-EDIT-09]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -878,6 +878,8 @@ id. Vitest · 테스트 5개.
 | T-0626 | 선택이 있으면 휠 50px이 `↓`나 `↑` 한 번이고, 그보다 적으면 더 기다린다 | - |
 | T-0627 | 줄이나 쪽 단위로 센 휠은 바로 움직인다 | - |
 | T-0628 | 선택이 없거나, `Shift`를 누르거나, 옆으로 굴리거나, 텍스트를 입력하는 중이면 휠은 평소대로 스크롤한다 | - |
+| T-1647 | over the empty canvas the wheel scrolls, also with something selected | [[ux-decisions\|UX WH1]] |
+| T-1648 | up from the top and down from the bottom selection scroll the canvas | [[ux-decisions\|UX WH1]] |
 | T-0629 | 선택한 것이 없으면 줌해도 캔버스의 가운데가 제자리에 있다 | - |
 | T-0630 | 줌해도 선택의 가운데가 제자리에 있다 | - |
 | T-0631 | 같은 단계나 한계 너머로의 줌은 더 아무 일도 하지 않는다 | - |
@@ -893,6 +895,8 @@ id. Vitest · 테스트 5개.
 | T-0640 | 캔버스 밖이나 드래그하는 블록 자신 위에는 드롭 위치가 없다 | - |
 | T-0641 | 보기 전용에서 누름은 드래그가 되지 않는다 | - |
 | T-1599 | M87 F2: 접기 영역이나 접힌 칸의 이름 띠를 눌러 드래그하면 접기 영역 전체를 드래그한다 | - |
+| T-1650 | over a parallel branch’s part of the top band, that part and the branch cell get the hover outline | [[ux-decisions\|UX PH1]] |
+| T-1649 | dragging a folded row moves all the blocks of its branch, in one undo step | [[ux-decisions\|UX DF4]] |
 | T-0642 | 캔버스 가장자리 가까이에서 드래그하면 그쪽으로 스크롤된다 | - |
 | T-0643 | 블록 사이에 드롭하면 새 블록을 거기에 삽입하고 그 텍스트를 연다 | [[01-requirements#^r-edit\|R-EDIT-09]] |
 | T-0644 | 블록 위에 제어 블록을 드롭하면 그 블록을 감싸고, 라벨이 그렇다고 알린다 | [[01-requirements#^r-edit\|R-EDIT-06]] |

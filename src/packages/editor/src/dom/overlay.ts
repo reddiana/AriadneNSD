@@ -59,7 +59,7 @@ export type OverlayInput = {
   readonly selection: Selection | null;
   /** The field the inline editor is open on. Default: none. */
   readonly editing?: EditField | null;
-  /** The block under the pointer, or `null`. */
+  /** The block under the pointer, or the parallel branch whose part of the top band is, or `null`. */
   readonly hover: Id | null;
   readonly drop: Drop | null;
   /** Blocks being dragged: drawn faded in place (visual design 7.1). */
@@ -134,6 +134,31 @@ function branchBox(layout: LayoutResult, isParallel: boolean, branch: Id): Box |
     layout.regions.find((region) => region.kind === 'branchLabel' && region.branchId === branch)
       ?.box ?? null
   );
+}
+
+/**
+ * The box the hover outline goes round: a block's, or for a parallel branch its part of the top
+ * band and its branch cell as one (UX PH1).
+ */
+function hoverBox(layout: LayoutResult, id: Id): Box | null {
+  const box = layout.boxes.get(id);
+  if (box === undefined) {
+    return null;
+  }
+  const band = layout.regions.find(
+    (region) => region.kind === 'branchLabel' && region.branchId === id,
+  )?.box;
+  if (band === undefined) {
+    return box;
+  }
+  const x = Math.min(box.x, band.x);
+  const y = Math.min(box.y, band.y);
+  return {
+    x,
+    y,
+    width: Math.max(box.x + box.width, band.x + band.width) - x,
+    height: Math.max(box.y + box.height, band.y + band.height) - y,
+  };
 }
 
 function isParallelBranch(index: DocIndex, branch: Id): boolean {
@@ -338,9 +363,16 @@ export function overlayContent(input: OverlayInput): string {
     }
   }
   const selected = selectedBlocks(index, input.selection);
-  if (input.hover !== null && !selected.includes(input.hover) && input.drop === null) {
-    const box = layout.boxes.get(input.hover);
-    if (box !== undefined) {
+  const isSelectedBranch =
+    input.selection?.kind === 'branchLabel' && input.selection.branch === input.hover;
+  if (
+    input.hover !== null &&
+    !selected.includes(input.hover) &&
+    !isSelectedBranch &&
+    input.drop === null
+  ) {
+    const box = hoverBox(layout, input.hover);
+    if (box !== null) {
       // 1px, 1px inside the block's outer line.
       parts.push(insetRect(box, 1, 1, colors['edit.hover']));
     }
