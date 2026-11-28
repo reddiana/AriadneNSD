@@ -288,6 +288,22 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 - 한글 입력(IME) 조합 중의 `Enter`(`isComposing`)는 편집 완료로 보지 않습니다.
 - 편집하는 중에도 처리하는 키가 넷 있습니다: `Ctrl`+`S`(저장), `Ctrl`+`Shift`+`S`(다른 이름으로 저장), `Ctrl`+`Shift`+`P` · `F1`(커맨드 팔레트). 문자를 넣지 않는 키라서, 다른 곳을 클릭한 것처럼 편집을 완료한 뒤 그 명령을 실행합니다. IME 조합 중에는 듣지 않습니다. 그 밖의 키는 인라인 에디터가 받습니다(4장) → [[03-keymap]]
 
+### 3.5 조작 규칙의 표를 구현하는 곳
+
+조작 규칙의 공통 규칙([[02-interaction-rules#공통 규칙]])마다 그것을 구현하는 코드의 위치입니다. 조작 규칙의 개념 하나에 요소 하나를 대응시키는 것이 방침이고(→ [[01-architecture#4.6 조작 규칙과 구성 요소의 대응]]), 아래 표에서 구현하는 곳이 여럿인 줄은 아직 그렇지 않은 곳입니다.
+
+| 조작 규칙 | 구현하는 곳 |
+| --- | --- |
+| 요소와 컨테이너(T1 ~ T4) | 방향키와 클릭은 보이는 나무(`model/shown-index.ts`, 2.2). 이동 명령은 `core`의 `move`(접기 영역의 경로와 인자 `hiddenFolds`), 드롭은 `input/drop.ts`의 접기 영역 · 펴 보인 호출 블록 판정(3.2), 접기 · 펴기의 대상은 `commands/fold-commands.ts`의 `foldTargets` |
+| 명령마다 받는 대상(표 1 · 표 2), C1 | 명령마다의 `when` · `run`(5장). 상위 컨테이너를 찾는 곳: `foldTargets`(접기 · 펴기, 접기 영역 풀기), `unwrapHolder`(풀기), `branchOfSelection`(분기 명령). 선택을 `core`의 `Target`으로 바꾸는 곳: `state/selection.ts`의 `targetOf` |
+| 삽입 위치, C2 | 키보드: `targetOf`와 `side`, `headStart`(헤더), `currentDiagram`(선택 없음), `intoMissingDefault`(빈 default 칸), `runInsertBranch`(분기 라벨). 드롭: `input/drop.ts`의 `findDrop`이 `DropAction`을 만들고 `commands/drop-command.ts`의 `runDrop`이 실행한다 |
+| 블록 종류 | `model/doc-index.ts`의 `childSeqs` · `isControl` · `isBranching`, `commands/command-helpers.ts`의 `blockKinds` · `wrapKinds`, `core`의 `newBlock` · `makeWrapper`와 종류별 분기 |
+| 텍스트 필드 | `EditField`(2.4), `session/text-editing.ts`의 `fieldText`(편집할 수 있는지), `core`의 편집 명령(비웠을 때의 처리), `session/call-names.ts`의 `callParts`(호출 블록의 필드 순서), 명령마다의 `After.edit`(만든 직후 여는 필드) |
+| C3 명령 후 선택 | `commit(result, after)`의 `after`(2.3). 함께 쓰는 함수: `selectTouched` · `selectionAfterDelete` · `afterBranchDelete` · `afterHead` · `afterInsert` |
+| C4 실행 취소 단위 | 세션의 `commit` · `apply` · `setView`(2.5). 앞 단계에 합치는 것: `Editing`의 `joinsLast`(접기 영역의 이름)와 `extracted`(뺀 Method의 이름) |
+| C5 읽기 전용 | `commands/spec.ts`의 `spec()`(`edits` · `onPeek`)과 명령 목록의 읽기 전용 검사(6.4) |
+| 명령은 하나, 진입점은 여럿 | 명령 목록의 `run(id, args)`(3장). 드롭 · 더블클릭 편집 · 문서 설정 창은 거치지 않는다 |
+
 ## 4. 단축키
 
 키 표는 [[03-keymap]]에 있습니다. 이 절은 키 이벤트를 명령 id로 바꾸는 구현입니다.

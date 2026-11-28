@@ -2794,5 +2794,6 @@ Claude skill(`ariadne-nsd`)의 스크립트 `nsd.mjs`가 앱과 같은 저장 �
 | [[03-quality-attribute-scenarios#1. 목록\|QA-14]] | 검사: `core` · `fonts`의 `tsconfig`에 `dom`이 없음 (`pnpm typecheck`) |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-15]] | 인수 테스트: [[01-requirements#^at\|AT-04]] |
 | [[03-quality-attribute-scenarios#1. 목록\|QA-17]] | 인수 테스트: [[01-requirements#^at\|AT-07]] |
+| [[03-quality-attribute-scenarios#1. 목록\|QA-22]] | 없음 |
 | [[defects#BUG-06\|BUG-06]] | 없음 |
 | [[defects#BUG-19\|BUG-19]] | 없음 |
