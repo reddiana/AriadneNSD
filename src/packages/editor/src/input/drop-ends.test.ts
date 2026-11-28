@@ -20,7 +20,7 @@ import {
 } from '../engine-test-support';
 import { indexDoc } from '../model/doc-index';
 import type { DragSource } from './drop';
-import { betweenBand, bodyEndBand, findDrop } from './drop';
+import { betweenBand, bodyEndBand, findDrop, foldOutsideGap } from './drop';
 
 const loop = (id: string, kind: 'doWhile' | 'for', blocks: ReadonlyArray<Block>): Block => ({
   id,
@@ -268,6 +268,92 @@ describe('dropping at the start and end of a diagram body (interaction rules 7)'
       side: 'after',
       blockKind: 'process',
       outsideFolds: true,
+    });
+  });
+});
+
+describe('dropping on an opened call block (interaction rules 7, M87 F3)', () => {
+  const dragging = (id: string): DragSource => ({
+    kind: 'blocks',
+    target: { kind: 'blocks', first: id, last: id },
+    blocks: [id],
+  });
+  const opened = (): Doc =>
+    docWith(headed([proc('p0'), call('c1', 'd2'), proc('pz')]), { opened: [['c1']] });
+
+  function callPlaces() {
+    const doc = opened();
+    const result = layout(doc);
+    const index = indexDoc(doc.content);
+    const box = result.boxes.get('c1');
+    const shown = result.boxes.get('c1/m1');
+    const band = result.regions.find((region) => region.kind === 'peekBand')?.box;
+    if (box === undefined || shown === undefined || band === undefined) {
+      throw new Error('no opened call');
+    }
+    const drop = (point: { x: number; y: number }, source: DragSource) =>
+      findDrop(result, index, point, source, null);
+    return { doc, box, shown, band, drop };
+  }
+
+  it('T-1600: its band takes the drop before the call block, never wrapping; the line is just outside its border', () => {
+    const { doc, box, band, drop } = callPlaces();
+    const x = band.x + band.width / 2;
+    for (const blockKind of ['process', 'if'] as const) {
+      const got = drop({ x, y: band.y + band.height / 2 }, { kind: 'new', blockKind });
+      expect(got?.action).toEqual({ kind: 'insert', to: 'c1', side: 'before', blockKind });
+      expect(got?.mark).toEqual({
+        kind: 'line',
+        x: box.x,
+        y: box.y - foldOutsideGap,
+        width: box.width,
+      });
+      expect(got?.wraps).toBeNull();
+    }
+    const engine = testEngine(doc.content);
+    const made = drop({ x, y: band.y + 2 }, dragging('pz'));
+    expect(made?.action).toMatchObject({ kind: 'move', to: 'c1', side: 'before' });
+    if (made !== null) {
+      expect(runDrop(engine.session, made.action)).toBe(true);
+    }
+    expect(engine.content().diagrams[0]?.body.blocks.map((b) => b.id)).toEqual(['p0', 'pz', 'c1']);
+    // The Method is as it was.
+    expect(engine.content().diagrams[1]?.body.blocks.map((b) => b.id)).toEqual(['m1']);
+  });
+
+  it('T-1601: the bottom band inside its box takes the drop after the call block; the blocks shown inside take nothing', () => {
+    const { box, shown, drop } = callPlaces();
+    const x = box.x + box.width / 2;
+    const after = drop({ x, y: box.y + box.height - 2 }, newProcess);
+    expect(after?.action).toEqual({
+      kind: 'insert',
+      to: 'c1',
+      side: 'after',
+      blockKind: 'process',
+    });
+    expect(after?.mark).toEqual({
+      kind: 'line',
+      x: box.x,
+      y: box.y + box.height + foldOutsideGap,
+      width: box.width,
+    });
+    expect(drop({ x, y: box.y + box.height - betweenBand - 1 }, newProcess)).toBeNull();
+    for (const y of [shown.y + 1, shown.y + shown.height / 2, shown.y + shown.height - 1]) {
+      if (y <= box.y + box.height - betweenBand) {
+        expect(drop({ x: shown.x + shown.width / 2, y }, newIf)).toBeNull();
+      }
+    }
+  });
+
+  it('T-1602: the dragged call block itself is not dropped on its own band or bottom', () => {
+    const { box, band, drop } = callPlaces();
+    const x = box.x + box.width / 2;
+    expect(drop({ x, y: band.y + band.height / 2 }, dragging('c1'))).toBeNull();
+    expect(drop({ x, y: box.y + box.height - 2 }, dragging('c1'))).toBeNull();
+    expect(drop({ x, y: box.y + box.height - 2 }, dragging('p0'))?.action).toMatchObject({
+      kind: 'move',
+      to: 'c1',
+      side: 'after',
     });
   });
 });

@@ -34,7 +34,7 @@ export const bodyEndBand = 12;
 
 /**
  * How far outside a fold region's border the line of a drop next to the region is drawn (px,
- * M86 N2): the blocks go outside it.
+ * M86 N2): the blocks go outside it. The same next to an opened call block (M87 F3).
  */
 export const foldOutsideGap = 3;
 
@@ -122,6 +122,10 @@ export function findDrop(
   const atFold = foldEdgeOf(layout, index, hit, point);
   if (atFold !== null) {
     return dropAtFoldEdge(index, atFold, source);
+  }
+  const atCall = openedCallOf(layout, index, point);
+  if (atCall !== null) {
+    return dropAtOpenedCall(index, atCall, point, source);
   }
   if (hit === null) {
     return null;
@@ -473,6 +477,67 @@ function innerFoldAtEnd(seq: Seq, fold: FoldMark): Id | null {
     }
   }
   return outer?.id ?? null;
+}
+
+/** An opened (peeked) call block of the model: its whole box and its band. */
+type OpenedCall = { readonly call: Id; readonly box: Box; readonly band: Box };
+
+/** The opened call block of the model whose box holds the point, or `null`. */
+function openedCallOf(layout: LayoutResult, index: DocIndex, point: Point): OpenedCall | null {
+  let inner: OpenedCall | null = null;
+  for (const region of layout.regions) {
+    if (region.kind !== 'peekBand' || !index.blocks.has(region.blockId)) {
+      continue;
+    }
+    const box = layout.boxes.get(region.blockId);
+    if (
+      box !== undefined &&
+      contains(box, point) &&
+      (inner === null || area(box) < area(inner.box))
+    ) {
+      inner = { call: region.blockId, box, band: region.box };
+    }
+  }
+  return inner;
+}
+
+/**
+ * A drop on an opened call block counts like one on an open fold region (M87 F3): its band puts
+ * the blocks before the call block, the bottom band inside its box after it; the line is drawn
+ * just outside its border. The blocks shown inside are the Method's: nothing is dropped there,
+ * and nothing goes into the Method.
+ */
+function dropAtOpenedCall(
+  index: DocIndex,
+  opened: OpenedCall,
+  point: Point,
+  source: DragSource,
+): Drop | null {
+  const { call, box, band } = opened;
+  const side: Side | null = contains(band, point)
+    ? 'before'
+    : point.y > box.y + box.height - betweenBand
+      ? 'after'
+      : null;
+  if (side === null) {
+    return null;
+  }
+  if (source.kind === 'blocks' && ancestorsOf(index, call).some((a) => source.blocks.includes(a))) {
+    return null;
+  }
+  return {
+    action:
+      source.kind === 'new'
+        ? { kind: 'insert', to: call, side, blockKind: source.blockKind }
+        : { kind: 'move', target: source.target, to: call, side },
+    mark: {
+      kind: 'line',
+      x: box.x,
+      y: side === 'before' ? box.y - foldOutsideGap : box.y + box.height + foldOutsideGap,
+      width: box.width,
+    },
+    wraps: null,
+  };
 }
 
 /** The smallest box holding all the boxes. */
