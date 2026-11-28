@@ -66,8 +66,8 @@ export type Extracted = { readonly call: Id; readonly count: number };
 export type EditorState = {
   readonly doc: Doc;
   /**
-   * Snapshots of the document: the content with its folding (ADR-0048). Undo brings back both;
-   * the name bands and the result symbol stay as they are now (01-model 4.4).
+   * Snapshots of the document: the content with its folding (ADR-0048) and the result symbol
+   * (M87 F5). Undo brings them back; the name bands stay as they are now (01-model 4.4).
    */
   readonly undo: ReadonlyArray<Doc>;
   readonly redo: ReadonlyArray<Doc>;
@@ -190,18 +190,15 @@ export function withContent(
 }
 
 /**
- * The document an undo step brings back: its content and folding, with the name bands and the
- * result symbol as they are now, which are not undone (ADR-0048).
+ * The document an undo step brings back: its content, folding and result symbol, with the name
+ * bands as they are now, which are not undone (ADR-0048, M87 F5).
  */
 function restored(step: Doc, now: View): Doc {
   const { view } = step;
-  if (view.bands === now.bands && view.resultSymbol === now.resultSymbol) {
+  if (view.bands === now.bands) {
     return step;
   }
-  return {
-    content: step.content,
-    view: { ...view, bands: now.bands, resultSymbol: now.resultSymbol },
-  };
+  return { content: step.content, view: { ...view, bands: now.bands } };
 }
 
 /** Undo or redo one step. `null` when there is nothing to undo or redo. */

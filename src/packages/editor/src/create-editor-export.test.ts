@@ -133,7 +133,7 @@ describe('text as outlines (R-FMT-10)', () => {
 });
 
 describe('the result symbol (interaction rules "호출 블록")', () => {
-  it('T-1373 · R-BLK-08: is a document setting saved in the file, and not an undo step', async () => {
+  it('T-1373 · R-BLK-08: is a document setting saved in the file', async () => {
     const { handle, store } = make();
     const spec = handle.settingsSchema.list().find((item) => item.id === 'document.resultSymbol');
     expect(spec).toMatchObject({ scope: 'document', values: ['←', '='], defaultValue: '←' });
@@ -141,12 +141,25 @@ describe('the result symbol (interaction rules "호출 블록")', () => {
     handle.setDocumentSetting(documentSettingIds.resultSymbol, '=');
     expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
     expect(handle.status().dirty).toBe(true);
-    expect(handle.state().undo).toHaveLength(0);
-    handle.commands.run('edit.undo');
-    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
     await handle.save();
     expect(store.written.at(-1) ?? '').toContain('"resultSymbol": "="');
     expect(handle.status().dirty).toBe(false);
+  });
+
+  it('T-1607 · M87 F5: changing it is one undo step; undo and redo bring it back, the name bands stay', () => {
+    const { handle } = make();
+    handle.setDocumentSetting(documentSettingIds.resultSymbol, '=');
+    expect(handle.state().undo).toHaveLength(1);
+    handle.commands.run('view.bands');
+    expect(handle.state().doc.view.bands).toBe(false);
+    expect(handle.state().undo).toHaveLength(1);
+    handle.commands.run('edit.undo');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('←');
+    expect(handle.state().doc.view.bands).toBe(false);
+    expect(handle.status().dirty).toBe(true);
+    handle.commands.run('edit.redo');
+    expect(handle.documentSetting(documentSettingIds.resultSymbol)).toBe('=');
+    expect(handle.state().doc.view.bands).toBe(false);
   });
 
   it('T-1374 · R-BLK-08: the same symbol, another value and a view-only document change nothing', () => {

@@ -462,7 +462,8 @@ export class EditorSession {
 
   /**
    * Changes the view state: what is folded, opened and banded (01-model 2). A change of what is
-   * folded or opened is one undo step (ADR-0048); the name bands and the result symbol are not.
+   * folded or opened is one undo step (ADR-0048), and so is one of the result symbol (M87 F5);
+   * the name bands are not.
    * Either way the document is changed (unsaved). While it is view only (03-editor 6.4) nothing
    * is a step and the document stays as saved. The selection becomes `selection` (when given),
    * dropped if it is no longer shown.
@@ -478,8 +479,12 @@ export class EditorSession {
     );
     // Folding, unfolding, opening and closing is one undo step (ADR-0048). Opening a call block
     // for the first time copies the Method's fold regions there: the same step (ADR-0047).
+    // The result symbol is undone like the header shape and the theme (M87 F5).
     const isStep =
-      !this.current.readOnly && (isCopied || !isSameFolding(this.current.doc.view, doc.view));
+      !this.current.readOnly &&
+      (isCopied ||
+        !isSameFolding(this.current.doc.view, doc.view) ||
+        doc.view.resultSymbol !== this.current.doc.view.resultSymbol);
     this.setState({
       ...state,
       doc,
