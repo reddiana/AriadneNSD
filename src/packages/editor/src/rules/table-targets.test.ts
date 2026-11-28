@@ -398,11 +398,7 @@ describe('table 2: what each command takes', () => {
   it.each(targetNamed)('T-1713: a cell of table 2: $name', run);
 });
 
-/**
- * Tables 1 and 2 say the empty default cell stands for its Case and that "remove region" goes
- * up, so a region holding the Case would go. The matrix says the cell is refused, and so does
- * the editor.
- */
+/** The empty default cell stands for its Case, so "remove region" takes the region around it. */
 async function missingGoesUp(): Promise<void> {
   const content: Content = {
     ...nested,
@@ -422,6 +418,6 @@ async function missingGoesUp(): Promise<void> {
   expect(engine.content().diagrams[0]?.body.folds).toEqual([]);
 }
 
-describe.skip('tables that differ from each other and from the editor (reported)', () => {
+describe('commands that go up from the empty default cell', () => {
   it('T-1721: remove region on the empty default cell goes up to the region around', missingGoesUp);
 });

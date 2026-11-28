@@ -34,6 +34,44 @@ const ifContent = contentOf([
   proc('b6'),
 ]);
 
+describe('what the fold notice names (interaction rules C1, T4)', () => {
+  const message = (engine: TestEngine): unknown => engine.session.chrome().notice?.message;
+
+  it('T-1802: acting on what is selected says only that it folded', () => {
+    const engine = testEngine(ifContent);
+    select(engine, 'b2');
+    engine.run('view.fold.toggle');
+    expect(message(engine)).toBe('notice.folded');
+    engine.run('view.fold.toggle');
+    engine.select({ kind: 'branchLabel', branch: 'r1' });
+    engine.run('view.fold.toggle');
+    expect(message(engine)).toBe('notice.folded');
+    // The folded row that is selected is what unfolds.
+    engine.select(selectRange(engine.session.index(), 'b3', 'b4'));
+    engine.run('view.fold.toggle');
+    expect(message(engine)).toBe('notice.unfolded');
+  });
+
+  it('T-1803: going up names the branch, the loop or the region it folded', () => {
+    const branched = testEngine(ifContent);
+    select(branched, 'b4');
+    branched.run('view.fold.toggle');
+    expect(message(branched)).toMatchObject({ key: 'notice.foldedBranch' });
+
+    const looped = testEngine(contentOf([whileBlock('w', [proc('w1'), proc('w2')])]));
+    select(looped, 'w1');
+    looped.run('view.fold.toggle');
+    expect(message(looped)).toEqual({ key: 'notice.foldedInside', params: { kind: 'While' } });
+
+    const regional = testEngine(
+      withFolds(ifContent, [{ id: 'f1', first: 'b1', last: 'b2', name: 'setup' }]),
+    );
+    select(regional, 'b1');
+    regional.run('view.fold.toggle');
+    expect(message(regional)).toEqual({ key: 'notice.foldedRegion', params: { name: 'setup' } });
+  });
+});
+
 describe('folding control blocks (R-EDIT-13)', () => {
   it('T-1097: fold: f on an If folds the branches that can fold; f again unfolds them', () => {
     const engine = testEngine(ifContent);

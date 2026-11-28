@@ -317,8 +317,8 @@ function nameCalls(content: Content, diagram: Id, name: string, touched: Id[]): 
 
 /**
  * Fits the arguments of the call blocks calling `diagram` to a header edit (interaction rules
- * "호출 블록"): when the parentheses go, nothing is passed any more and the arguments are cleared;
- * while there are parentheses, empty arguments take the text inside them.
+ * "호출 블록"): when the Method stops receiving (the parentheses go or are emptied), the arguments
+ * are cleared; while it receives something, empty arguments take the text inside the parentheses.
  */
 function fitCallArgs(
   content: Content,
@@ -344,7 +344,7 @@ function fitCallArgs(
 }
 
 /**
- * The arguments of a call block to a Method receiving `params` (`null`: no parentheses). A Method
+ * The arguments of a call block to a Method receiving `params` (`null`: nothing). A Method
  * that receives something cannot be called with empty arguments; the text inside its parentheses
  * fills them (interaction rules "호출 블록"). Other arguments stay as written.
  */

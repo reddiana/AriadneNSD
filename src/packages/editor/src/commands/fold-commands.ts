@@ -19,7 +19,7 @@ import type { EditorMessage } from '../i18n/messages';
 import { message } from '../i18n/messages';
 import type { DocIndex } from '../model/doc-index';
 import { childSeqs, indexDoc, isControl } from '../model/doc-index';
-import { branchTarget } from './command-helpers';
+import { branchTarget, kindNames } from './command-helpers';
 import type { After, EditorSession } from '../session/session';
 import type { EditorState } from '../state/editor-state';
 import type { Selection } from '../state/selection';
@@ -54,11 +54,20 @@ type FoldItem =
     }
   | { readonly kind: 'call'; readonly path: Path };
 
+/** The inside of a control block, one branch, one fold region, or a call block. */
+type FoldSubject =
+  | { readonly kind: 'block'; readonly block: Id }
+  | { readonly kind: 'branch'; readonly branch: Id }
+  | { readonly kind: 'fold'; readonly fold: Id }
+  | { readonly kind: 'call' };
+
 /**
  * What one fold command acts on: one thing, or the branches of a control block together. The
  * selection after folding is what is drawn in its place (`null`: keep the selection).
  */
 type FoldTarget = {
+  /** What the target is, to name it in the notice when it is not what was selected. */
+  readonly of: FoldSubject;
   readonly items: ReadonlyArray<FoldItem>;
   readonly afterClose: Selection | null;
 };
@@ -153,7 +162,7 @@ function controlTarget(index: DocIndex, block: Id, path: Path = []): FoldTarget 
       items.push({ kind: 'seq', entry: seqEntry(path, child.owner) });
     }
   }
-  return items.length === 0 ? null : { items, afterClose: null };
+  return items.length === 0 ? null : { of: { kind: 'block', block }, items, afterClose: null };
 }
 
 /** The target folding a whole branch or loop body: it is then selected as its row. */
@@ -165,6 +174,10 @@ function seqTarget(index: DocIndex, owner: Id, path: Path = []): FoldTarget | nu
     return null;
   }
   return {
+    // A loop's body is the inside of the loop, whose id is its owner.
+    of: index.branches.has(owner)
+      ? { kind: 'branch', branch: owner }
+      : { kind: 'block', block: owner },
     items: [{ kind: 'seq', entry: seqEntry(path, owner) }],
     afterClose:
       path.length === 0
@@ -179,7 +192,11 @@ function seqTarget(index: DocIndex, owner: Id, path: Path = []): FoldTarget | nu
  */
 function foldTarget(index: DocIndex, fold: Id, path: Path): FoldTarget {
   const entry = path.length === 0 || index.siteFolds.has(fold) ? fold : sitePrefix(path) + fold;
-  return { items: [{ kind: 'fold', fold, entry }], afterClose: selectFold(fold, path) };
+  return {
+    of: { kind: 'fold', fold },
+    items: [{ kind: 'fold', fold, entry }],
+    afterClose: selectFold(fold, path),
+  };
 }
 
 /** Opening or closing the call block `path.at(-1)` seen through the rest of the path. */
@@ -187,6 +204,7 @@ function callTarget(index: DocIndex, path: Path): FoldTarget {
   const outer = path.slice(0, -1);
   const call = path.at(-1) ?? '';
   return {
+    of: { kind: 'call' },
     items: [{ kind: 'call', path }],
     afterClose:
       outer.length === 0
@@ -562,14 +580,12 @@ export function regionToRemove(index: DocIndex, selection: Selection | null): To
   if (selection.kind === 'head') {
     return { reason: 'reason.notOnHead' };
   }
-  if (selection.kind === 'missingDefault') {
-    return { reason: 'reason.noFoldRegion' };
-  }
-  const targets = foldTargets(
-    index,
-    { folded: [], opened: [], bands: true, resultSymbol: '←' },
-    selection,
-  );
+  // The empty default cell stands for its Case, so only a region around the Case goes.
+  const cell = selection.kind === 'missingDefault' ? index.blocks.get(selection.block) : undefined;
+  const targets =
+    cell === undefined
+      ? foldTargets(index, { folded: [], opened: [], bands: true, resultSymbol: '←' }, selection)
+      : outward(index, cell.owner, cell.index, cell.index);
   for (const target of targets) {
     const [item] = target.items;
     // Inside an opened call block only a region of the call site is drawn and can go.
@@ -582,6 +598,100 @@ export function regionToRemove(index: DocIndex, selection: Selection | null): To
     }
   }
   return { reason: 'reason.noFoldRegion' };
+}
+
+/**
+ * Whether the target is what was selected: a fold region, the branch of a selected label, one
+ * selected control block, or the folded row that is selected.
+ */
+function isSelectedItself(index: DocIndex, state: EditorState, target: FoldTarget): boolean {
+  const selection = state.selection;
+  const of = target.of;
+  switch (selection?.kind) {
+    case 'fold':
+      return of.kind === 'fold' && of.fold === selection.fold;
+    case 'branchLabel': {
+      if (of.kind === 'branch') {
+        return of.branch === selection.branch;
+      }
+      // A branch that is all one drawn region folds that region.
+      const seq = index.branches.get(selection.branch)?.branch.body;
+      return (
+        state.doc.view.bands &&
+        seq !== undefined &&
+        of.kind === 'fold' &&
+        of.fold === wholeRegion(seq)
+      );
+    }
+    case 'blocks':
+    case 'peek': {
+      const blocks =
+        selection.kind === 'peek' ? peekBlocks(index, selection) : selectedBlocks(index, selection);
+      const [first] = blocks;
+      if (first === undefined) {
+        return false;
+      }
+      if (blocks.length === 1 && of.kind === 'block' && of.block === first) {
+        return true;
+      }
+      // The folded row: every block of a branch or loop body that is folded.
+      const owner = index.blocks.get(first)?.owner ?? '';
+      const [item] = target.items;
+      return (
+        item?.kind === 'seq' &&
+        state.doc.view.folded.includes(item.entry) &&
+        item.entry.endsWith(owner) &&
+        blocks.length === index.seqs.get(owner)?.seq.blocks.length
+      );
+    }
+    case 'head':
+    case 'missingDefault':
+    case undefined:
+      return false;
+  }
+}
+
+/**
+ * What the status bar says after folding or unfolding: just that it did, or, when it acted on
+ * something other than what was selected, on what (interaction rules C1 and T4).
+ */
+function foldNotice(
+  session: EditorSession,
+  state: EditorState,
+  target: FoldTarget,
+  close: boolean,
+): EditorMessage {
+  const index = session.index();
+  const of = target.of;
+  if (of.kind === 'call' || isSelectedItself(index, state, target)) {
+    return close ? 'notice.folded' : 'notice.unfolded';
+  }
+  switch (of.kind) {
+    case 'fold':
+      return message(close ? 'notice.foldedRegion' : 'notice.unfoldedRegion', {
+        name: session.foldName(of.fold),
+      });
+    case 'branch':
+      // A parallel block's branches have no label.
+      if (index.branches.get(of.branch)?.block.kind === 'parallel') {
+        return close ? 'notice.foldedParallelBranch' : 'notice.unfoldedParallelBranch';
+      }
+      return message(close ? 'notice.foldedBranch' : 'notice.unfoldedBranch', {
+        label: session.labelText(of.branch),
+      });
+    case 'block': {
+      const kind = index.blocks.get(of.block)?.block.kind ?? '';
+      if (kind === 'endless') {
+        return close ? 'notice.foldedEndless' : 'notice.unfoldedEndless';
+      }
+      if (kind === 'parallel') {
+        return close ? 'notice.foldedParallel' : 'notice.unfoldedParallel';
+      }
+      return message(close ? 'notice.foldedInside' : 'notice.unfoldedInside', {
+        kind: kindNames[kind] ?? kind,
+      });
+    }
+  }
 }
 
 /** Makes the fold commands. */
@@ -624,13 +734,15 @@ export function foldCommands(deps: FoldDeps): ReadonlyArray<CommandSpec> {
             : { kind: 'peek', path, anchor: first, focus: last };
       }
     }
+    // Said about what was selected and the view as it was, before the change.
+    const notice = foldNotice(session, state, target, close);
     session.setView(view, selection);
     const [only] = target.items;
     if (only?.kind === 'call' && target.items.length === 1) {
       notifyCall(only.path, close);
       return;
     }
-    session.notify(close ? 'notice.folded' : 'notice.unfolded');
+    session.notify(notice);
   };
 
   /** Opening the same Method a third time along the path tells so, after opening (UX Q14). */

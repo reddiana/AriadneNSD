@@ -322,7 +322,6 @@ async function invisible(): Promise<void> {
 async function foldingSaysWhere(): Promise<void> {
   const engine = bandless();
   await perform(engine, select.block('f1'), 'view.fold.toggle');
-  // Today the notice is only "접었습니다." (notice.folded), which names nothing.
   expect(engine.session.chrome().notice?.message).toMatchObject({
     params: { name: 'region' },
   });
@@ -381,7 +380,5 @@ describe('the rules T1 ~ T4', () => {
     await c.check?.();
   });
 
-  describe.skip('differs from the editor (reported, U7)', () => {
-    it('T-1720: folding a region that is not drawn says which region it folded', foldingSaysWhere);
-  });
+  it('T-1720: folding a region that is not drawn says which region it folded', foldingSaysWhere);
 });

@@ -17,7 +17,7 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 369 | - | 421 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 373 | - | 425 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 219 | - | 254 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 68 | - | 137 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
@@ -25,7 +25,7 @@ status: 생성됨
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 29 | - | 29 |
-| 합계 | 87 | 287 | 1134 | 5 | 1513 |
+| 합계 | 87 | 287 | 1138 | 5 | 1517 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 421개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 425개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -275,7 +275,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 
 ### [단위] `packages/core/src/commands/diagram.test.ts`
 
-헤더와 다이어그램의 명령(editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName). Vitest · 테스트 31개.
+editHead · setHead · newDiagram · deleteDiagram · moveDiagram · setSettings · defaultHeadName · empty parentheses receive nothing (R-BLK-07, UX CB18). Vitest · 테스트 32개. 파일 전체가 확인하는 것: [[01-requirements#^r-blk|R-BLK-07]], [[ux-decisions|UX CB18]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -310,6 +310,7 @@ editCall · setCallTarget · insertCall · newMethodAndCall · makeMethod. Vites
 | T-0130 | 헤더의 모양을 바꾼다 | [[01-requirements#^r-lay\|R-LAY-10]] |
 | T-0131 | 01-model 4: 같은 설정이면 내용은 그대로다 | - |
 | T-0132 | "Event n"이나 "Method n"이고, n은 쓰이지 않은 가장 작은 수다 | [[01-requirements#^r-blk\|R-BLK-10]] |
+| T-1800 | emptying the parentheses clears the arguments, and fills none | [[ux-decisions\|UX CB18]] |
 
 ^t-packages-core-src-commands-diagram-test-ts
 
@@ -652,7 +653,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/editor-commands.test.ts`
 
-명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 56개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL2]], [[ux-decisions|UX HC1]], [[ux-decisions|UX PS1]], [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]], [[ux-decisions|UX BL3]], [[ux-decisions|UX UN3]].
+명령을 쓸 수 있는지와 거절(03-editor 5, 02-interaction-rules). Vitest · 테스트 57개. 파일 전체가 확인하는 것: [[ux-decisions|UX BL2]], [[ux-decisions|UX HC1]], [[ux-decisions|UX PS1]], [[ux-decisions|UX Q8]], [[01-requirements#^r-web|R-WEB-11]], [[ux-decisions|UX JP1]], [[ux-decisions|UX BL3]], [[ux-decisions|UX UN3]], [[ux-decisions|UX CB18]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -712,15 +713,18 @@ id. Vitest · 테스트 5개.
 | T-1664 | a header name refused for a clash still joins the step when typed again | [[ux-decisions\|UX UN3]] |
 | T-1665 | nothing made, nothing joined: text on a kept empty block is its own step | [[ux-decisions\|UX UN3]] |
 | T-1666 | editing again later is a step of its own | [[ux-decisions\|UX UN3]] |
+| T-1801 | inserting it opens the result field only | [[ux-decisions\|UX CB18]] |
 
 ^t-packages-editor-src-commands-editor-commands-test-ts
 
 ### [단위] `packages/editor/src/commands/fold-commands.test.ts`
 
-접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 20개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[ux-decisions|UX Q9]].
+접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 22개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[ux-decisions|UX Q9]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
+| T-1802 | acting on what is selected says only that it folded | - |
+| T-1803 | going up names the branch, the loop or the region it folded | - |
 | T-1097 | fold: If에서 f는 접을 수 있는 분기를 접고, 다시 누르면 편다 | - |
 | T-1098 | fold: 분기 안의 블록에서 접으면 그 분기를 접고 접힌 줄을 선택한다 | - |
 | T-1099 | fold: 단순한 블록 하나뿐인 본문은 접지 않고, 제어 블록 하나뿐인 본문은 접는다 | - |

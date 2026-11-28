@@ -340,7 +340,7 @@ function methodOf(diagrams: ReadonlyMap<Id, Diagram>, id: Id): Diagram | FailRes
   return diagram.head?.kind === 'method' ? diagram : fail('wrongKind', id);
 }
 
-/** What a diagram receives, `null` when it is not a Method with parentheses. */
+/** What a diagram receives, `null` when it is not a Method that receives something. */
 function paramsOf(diagram: Diagram | undefined): string | null {
   return diagram?.head === undefined || diagram.head === null ? null : headParams(diagram.head);
 }

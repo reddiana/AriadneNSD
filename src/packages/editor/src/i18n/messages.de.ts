@@ -234,6 +234,18 @@ export const german: Readonly<Record<MessageKey, string>> = {
   'notice.extractedNamed': 'Blöcke in die neue Methode {name} extrahiert: {count}.',
   'notice.folded': 'Eingeklappt.',
   'notice.unfolded': 'Ausgeklappt.',
+  'notice.foldedRegion': 'Faltbereich „{name}“ eingeklappt.',
+  'notice.unfoldedRegion': 'Faltbereich „{name}“ ausgeklappt.',
+  'notice.foldedBranch': 'Zweig „{label}“ eingeklappt.',
+  'notice.unfoldedBranch': 'Zweig „{label}“ ausgeklappt.',
+  'notice.foldedParallelBranch': 'Zweig des Parallelblocks eingeklappt.',
+  'notice.unfoldedParallelBranch': 'Zweig des Parallelblocks ausgeklappt.',
+  'notice.foldedInside': 'Inneres des {kind}-Blocks eingeklappt.',
+  'notice.unfoldedInside': 'Inneres des {kind}-Blocks ausgeklappt.',
+  'notice.foldedEndless': 'Inneres der Endlosschleife eingeklappt.',
+  'notice.unfoldedEndless': 'Inneres der Endlosschleife ausgeklappt.',
+  'notice.foldedParallel': 'Inneres des Parallelblocks eingeklappt.',
+  'notice.unfoldedParallel': 'Inneres des Parallelblocks ausgeklappt.',
   'notice.foldMade':
     'Faltbereich erstellt. Geben Sie seinen Namen ein oder drücken Sie Enter für den Standardnamen.',
   'notice.siteFoldMade':

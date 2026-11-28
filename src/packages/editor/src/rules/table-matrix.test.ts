@@ -428,7 +428,15 @@ const rows: Readonly<Record<string, Row>> = {
     cell('그 영역', async () => {
       holds(await after(block.fold, 'fold.remove'), 'call f1 f2 z');
     }),
-    no(block.missing, 'fold.remove'),
+    cell('그 Case를 포함하는 가장 작은 접기 영역', async () => {
+      // Without a region around the Case there is nothing to remove.
+      await refusesAll(block.missing, 'fold.remove');
+      const engine = await after(select.block('k'), 'fold.make');
+      engine.session.cancelEditing();
+      await perform(engine, block.missing, 'fold.remove');
+      holds(engine, 'case(k)');
+      expect(bodyOf(engine)).not.toMatch(/<\w+: case\(k\)/);
+    }),
     cell('그 위치의 접기 영역', async () => {
       const engine = await after(block.peek, 'fold.make');
       engine.session.cancelEditing();

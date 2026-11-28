@@ -17,8 +17,9 @@ export function headName(head: Head): string {
 
 /**
  * What a Method receives: the text inside its parentheses, without surrounding spaces, or `null`
- * when the header has no parentheses (an Event never receives anything). The inside runs from the
- * first '(' to the last ')' after it, or to the end when the ')' is missing.
+ * when it receives nothing: no parentheses, or nothing inside them (an Event never receives
+ * anything). The inside runs from the first '(' to the last ')' after it, or to the end when the
+ * ')' is missing.
  */
 export function headParams(head: Head): string | null {
   if (head.kind === 'event') {
@@ -29,5 +30,6 @@ export function headParams(head: Head): string | null {
     return null;
   }
   const close = head.text.lastIndexOf(')');
-  return (close > open ? head.text.slice(open + 1, close) : head.text.slice(open + 1)).trim();
+  const inside = close > open ? head.text.slice(open + 1, close) : head.text.slice(open + 1);
+  return inside.trim() === '' ? null : inside.trim();
 }

@@ -333,3 +333,17 @@ describe('defaultHeadName', () => {
     expect(defaultHeadName(content, 'method')).toBe('Method 1');
   });
 });
+
+describe('empty parentheses receive nothing (R-BLK-07, UX CB18)', () => {
+  it('T-1800 · UX CB18: emptying the parentheses clears the arguments, and fills none', () => {
+    const content = contentWith(
+      diagram('d1', event('Main'), [call('b1', 'd2', 'x', 'r'), call('b2', 'd3')]),
+      diagram('d2', method('sort(a)'), [proc('b3')]),
+      diagram('d3', method('swap'), [proc('b4')]),
+    );
+    const emptied = runOk(editHead, content, { diagram: 'd2', text: 'sort( )' });
+    expect(blockOf(emptied.content, 'b1')).toEqual(call('b1', 'd2', '', 'r'));
+    const added = runOk(editHead, content, { diagram: 'd3', text: 'swap()' });
+    expect(blockOf(added.content, 'b2')).toBe(blockOf(content, 'b2'));
+  });
+});

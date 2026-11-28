@@ -71,7 +71,7 @@ type Diagram = {
 
 type Head = {
   kind: 'event' | 'method';
-  text: string;        // Event는 텍스트 전체가 이름. Method는 첫 '(' 앞이 이름, 괄호 안이 받는 것
+  text: string;        // Event는 텍스트 전체가 이름. Method는 첫 '(' 앞이 이름, 괄호 안이 받는 것(비면 없음)
 };
 ```
 
@@ -326,7 +326,7 @@ type Target =                                        // 명령이 적용되는 �
 | 다이어그램 | 새 다이어그램 (Event · Method) | 그 종류의 맨 뒤에 놓는다. 새 Method로 빼기로 만든 Method만 예외다(위) |
 | | 삭제 | 이 Method를 호출하던 호출 블록을 보이던 이름의 `named`로 바꾼다 |
 | | 헤더 달기 · 제거 · 종류 바꾸기 | 제거하면 호출하던 호출 블록이 보이던 이름의 `named`가 된다. 호출하는 호출 블록이 있는 Method는 Event로 바꿀 수 없다 |
-| | 헤더 이름 편집 | 중복되거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하면 호출하는 호출 블록의 `args`를 비운다 |
+| | 헤더 이름 편집 | 중복되거나 빈 이름은 받지 않는다. 호출 블록은 id로 가리키므로 따로 수정할 것이 없다. 괄호를 삭제하거나 괄호 안을 비우면 호출하는 호출 블록의 `args`를 비운다([[ux-decisions#CB18. 빈 괄호의 Method는 받는 것이 없다\|CB18]]) |
 | | 순서 바꾸기 | Event는 Event끼리, Method는 Method끼리 |
 | 접기 영역 | 만들기 (`makeFold`) | [[02-interaction-rules#접기 · 펼치기]]. 한 줄의 연속 범위에 `FoldMark`를 붙인다. 이름은 없이 시작한다(`editor`가 바로 이름 칸을 연다). 같은 범위가 이미 있으면 `foldExists`, 다른 접기 영역의 끝에 걸치면 `foldsCross`(불변식 5). `touched`는 새 접기 영역 |
 | | 펴 보인 곳의 접기 영역 만들기 (`makeSiteFold`) | [[02-interaction-rules#펴 보인 곳의 접기 영역]]. 가장 바깥 호출 블록의 `siteFolds`에 `via` 경로와 함께 둔다. Method는 바뀌지 않는다. 두 끝이 Method의 다른 줄이면 `notContiguous`, 같은 자리의 접기 영역(Method에서 복사한 것 포함)과 같은 범위면 `foldExists`, 끝이 걸치면 `foldsCross`. Method의 접기 영역은 그 자리에 그려지지 않으므로 검사하지 않는다 |

@@ -1223,3 +1223,17 @@ describe('text typed on something just made joins its undo step (UX UN3)', () =>
     expect(engine.session.state.undo).toHaveLength(2);
   });
 });
+
+describe('a call to a Method with empty parentheses (UX CB18)', () => {
+  it('T-1801 · UX CB18: inserting it opens the result field only', async () => {
+    const engine = testEngine(
+      withHeads(contentOf([proc('p1')], [empty('p6')]), { d2: ['method', 'reset()'] }),
+    );
+    engine.select(selectBlock(engine.session.index(), 'p1'));
+    engine.run('block.insert.call');
+    engine.picker()?.choose(0);
+    await engine.settle();
+    expect(engine.session.state.editing?.field).toMatchObject({ kind: 'call', part: 'result' });
+    expect(engine.session.switchCallPart('r')).toBe(false);
+  });
+});
