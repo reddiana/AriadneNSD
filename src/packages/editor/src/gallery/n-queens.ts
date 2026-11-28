@@ -64,4 +64,11 @@ export const nQueens: LocalizedSpec = {
     place: 'try it here',
     undo: 'take it back',
   }),
+  de: nQueensWith({
+    solutions: '92 Lösungen',
+    allPlaced: 'alle Damen gesetzt',
+    attacked: 'bedrohtes Feld',
+    place: 'hier versuchen',
+    undo: 'zurücknehmen',
+  }),
 };

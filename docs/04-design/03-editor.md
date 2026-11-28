@@ -670,12 +670,12 @@ type SettingSpec = {
 
 | id | 범위 | 값 | 기본값 |
 | --- | --- | --- | --- |
-| `ui.locale` (화면 언어) | `user` | `en` · `ko` | `en` |
+| `ui.locale` (화면 언어) | `user` | `en` · `ko` · `de` | `en` |
 | `editor.keyHint` (키 힌트) | `user` | 켬 · 끔 | 켬 |
 | `editor.focusOutline` (캔버스 포커스 테두리 항상 보이기) | `user` | 켬 · 끔 | 끔 |
 | `file.autoSave` (자동 저장) | `user` | 켬 · 끔 | 켬 |
 | `document.textKind` (블록 텍스트의 언어) | `document` | `core`의 `textKinds` | `plain` |
-| `document.locale` (그림 문구의 언어) | `document` | `en` · `ko` | `en` |
+| `document.locale` (그림 문구의 언어) | `document` | `en` · `ko` · `de` | `en` |
 | `document.headStyle` (헤더 모양) | `document` | `title` · `shape` | `title` |
 | `document.textOutlines` (텍스트를 외곽선으로 저장) | `document` | 켬 · 끔 | 끔 |
 | `document.resultSymbol` (결과 기호) | `document` | `core`의 `resultSymbols` (`←` · `=`) | `←` |

@@ -129,4 +129,12 @@ export const redBlackTree: LocalizedSpec = {
     bstInsert: 'Insert as in a binary search tree',
     rootBlack: 'the root is always black',
   }),
+  de: redBlackWith({
+    uncle: 'Onkel',
+    case1: 'Fall 1: roter Onkel',
+    case2: 'Fall 2: Zickzack begradigen',
+    case3: 'Fall 3',
+    bstInsert: 'Wie in einen binären Suchbaum einfügen',
+    rootBlack: 'die Wurzel ist immer schwarz',
+  }),
 };

@@ -74,4 +74,14 @@ export const producerConsumer: LocalizedSpec = {
     markerSeen: 'got the end marker',
     bothDone: 'both done',
   }),
+  de: producerConsumerWith({
+    freeSlots: 'freie Plätze',
+    fullSlots: 'belegte Plätze',
+    noneAtEnd: 'None am Ende',
+    waitFree: 'auf einen freien Platz warten',
+    waitFull: 'auf ein Element warten',
+    markerSent: 'die Endmarke ist drin',
+    markerSeen: 'Endmarke erhalten',
+    bothDone: 'beide fertig',
+  }),
 };

@@ -42,4 +42,5 @@ function bfsWith(words: BfsWords): ReadonlyArray<DiagramSpec> {
 export const bfs: LocalizedSpec = {
   ko: bfsWith({ firstArrival: '처음 닿을 때가 가장 가깝다', unreachable: '갈 수 없다' }),
   en: bfsWith({ firstArrival: 'first arrival is the shortest', unreachable: 'unreachable' }),
+  de: bfsWith({ firstArrival: 'die erste Ankunft ist die kürzeste', unreachable: 'unerreichbar' }),
 };

@@ -332,7 +332,7 @@ describe('the drawing language in the settings (ADR-0041)', () => {
   });
 
   it('T-0822: a file without a locale opens in the language of the opener and the next save writes it', () => {
-    for (const locale of ['en', 'ko'] as const) {
+    for (const locale of ['en', 'ko', 'de'] as const) {
       const result = parseModel(withoutLocale(), { locale });
       if (!result.ok) {
         throw new Error(result.detail);

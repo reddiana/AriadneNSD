@@ -28,4 +28,5 @@ function uartCaseWith(head: string): ReadonlyArray<DiagramSpec> {
 export const uartCase: LocalizedSpec = {
   ko: uartCaseWith('UART 수신 인터럽트'),
   en: uartCaseWith('UART receive interrupt'),
+  de: uartCaseWith('UART-Empfangsinterrupt'),
 };

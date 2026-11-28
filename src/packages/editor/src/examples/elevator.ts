@@ -108,5 +108,58 @@ const en: ReadonlyArray<DiagramSpec> = [
   ]),
 ];
 
+const de: ReadonlyArray<DiagramSpec> = [
+  event('Wenn eine Etagentaste gedrückt wird', [
+    'Etage in die Anforderungsliste aufnehmen',
+    'Taste beleuchten',
+    ['if', 'Steht der Aufzug still?', [['call', 'Nächstes Ziel bestimmen']], ['']],
+  ]),
+  event('In jedem Steuerzyklus (100ms)', [
+    [
+      'case',
+      'Zustand',
+      [
+        [
+          'Fährt hoch',
+          [['if', 'Ziel erreicht?', ['Anhalten', 'Zustand = Türen offen'], ['Eine Etage hoch']]],
+        ],
+        [
+          'Fährt runter',
+          [['if', 'Ziel erreicht?', ['Anhalten', 'Zustand = Türen offen'], ['Eine Etage runter']]],
+        ],
+        [
+          'Türen offen',
+          [
+            [
+              'range',
+              'Türen öffnen und schließen',
+              [
+                'Türen öffnen',
+                '3 Sekunden warten',
+                ['while', 'Solange jemand in der Tür steht', ['1 Sekunde länger warten']],
+                'Türen schließen',
+              ],
+            ],
+            'Anforderungen dieser Etage löschen',
+            ['call', 'Nächstes Ziel bestimmen'],
+          ],
+        ],
+        ['Steht', ['']],
+      ],
+    ],
+  ]),
+  method('Nächstes Ziel bestimmen', [
+    [
+      'if',
+      'Ist die Anforderungsliste leer?',
+      ['Zustand = Steht'],
+      [
+        'Nächstgelegene Anforderung in Fahrtrichtung wählen',
+        ['if', 'Ziel > aktuelle Etage?', ['Zustand = Fährt hoch'], ['Zustand = Fährt runter']],
+      ],
+    ],
+  ]),
+];
+
 /** Elevator: a Case with four branches, a named fold region and two calls. */
-export const elevator: LocalizedSpec = { ko, en };
+export const elevator: LocalizedSpec = { ko, en, de };

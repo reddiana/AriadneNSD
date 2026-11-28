@@ -75,4 +75,9 @@ export const segmentTree: LocalizedSpec = {
     outside: 'no overlap',
     inside: 'fully inside the range',
   }),
+  de: segmentTreeWith({
+    children: 'die Kinder von Knoten k sind 2k und 2k + 1',
+    outside: 'keine Überlappung',
+    inside: 'ganz im Bereich',
+  }),
 };

@@ -73,4 +73,10 @@ export const aStar: LocalizedSpec = {
     better: 'found a shorter path',
     noPath: 'no path',
   }),
+  de: aStarWith({
+    costSoFar: 'Kosten vom Start',
+    stale: 'veralteter Eintrag: inzwischen wurde ein kürzerer Weg gefunden',
+    better: 'kürzeren Weg gefunden',
+    noPath: 'kein Weg',
+  }),
 };

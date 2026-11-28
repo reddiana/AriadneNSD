@@ -125,7 +125,73 @@ const korean: Record<PerfMessageKey, string> = {
   'perf.segment.paint': '브라우저',
 };
 
-const catalogs: Record<Locale, Record<PerfMessageKey, string>> = { en: english, ko: korean };
+const german: Record<PerfMessageKey, string> = {
+  'perf.title': 'Prüfmodus: Antwortzeit beim Bearbeiten (AT-05)',
+  'perf.intro':
+    'Diese Seite misst, wie schnell der Editor in einem Dokument mit {blocks} Blöcken reagiert. Sie erstellt das Dokument selbst, führt {commands} häufige Befehle jeweils {rounds}-mal am Anfang, in der Mitte und am Ende aus und misst jeweils die Zeit vom Tastendruck bis zum Frame nach der Änderung der Zeichnung.',
+  'perf.criterion': 'Ein Befehl besteht, wenn sein p95 höchstens {limit} ms beträgt (QA-07).',
+  'perf.advice':
+    'Schließen Sie die anderen Tabs und Apps, schließen Sie das Ladegerät an und berühren Sie die Seite während der Messung nicht. Sie dauert etwa eine Minute, auf einem langsamen Gerät länger.',
+  'perf.safe':
+    'Es wird nichts gespeichert: Das gemessene Dokument wird verworfen, und Ihre Dateien, die lokale Sicherung, die zuletzt verwendeten Dateien und die Dokumente in diesem Browser bleiben unverändert.',
+  'perf.start': 'Messung starten',
+  'perf.again': 'Erneut messen',
+  'perf.back': 'Zurück zum Editor',
+  'perf.preparing': 'Dokument mit {blocks} Blöcken wird erstellt…',
+  'perf.progress': '„{command}“ wird gemessen ({done} von {total})…',
+  'perf.failed': 'Die Messung wurde abgebrochen: {reason}',
+  'perf.verdict.pass': 'Bestanden. Der p95 jedes Befehls beträgt höchstens {limit} ms.',
+  'perf.verdict.fail':
+    'Nicht bestanden. {count} von {total} Befehlen haben einen p95 über {limit} ms.',
+  'perf.column.command': 'Befehl',
+  'perf.column.keys': 'Tasten',
+  'perf.column.median': 'Median (ms)',
+  'perf.column.p95': 'p95 (ms)',
+  'perf.column.max': 'Max. (ms)',
+  'perf.column.verdict': 'Ergebnis',
+  'perf.pass': 'Bestanden',
+  'perf.fail': 'Nicht bestanden',
+  'perf.copy': 'Ergebnisse kopieren',
+  'perf.copied': 'Ergebnisse als Markdown-Tabelle kopiert.',
+  'perf.copyManually':
+    'Die Zwischenablage ist nicht verfügbar. Kopieren Sie die Ergebnisse von hier:',
+  'perf.report.verdict': 'Ergebnis',
+  'perf.report.version': 'App-Version',
+  'perf.report.date': 'Datum',
+  'perf.report.document': 'Dokument',
+  'perf.report.documentValue':
+    '{blocks} Blöcke; {samples} Läufe pro Befehl ({warmup} Aufwärmläufe nicht gezählt)',
+  'perf.report.browser': 'Browser',
+  'perf.report.device': 'Gerät',
+  'perf.report.deviceValue':
+    'CPU-Kerne: {cores} · Arbeitsspeicher: {memory} · Bildschirm: {screen}',
+  'perf.report.unknown': 'unbekannt',
+  'perf.command.insert': 'Anweisung einfügen',
+  'perf.command.delete': 'Block löschen',
+  'perf.command.undo': 'Rückgängig',
+  'perf.command.redo': 'Wiederholen',
+  'perf.command.wrap': 'Mit Verzweigung umschließen',
+  'perf.command.move': 'Nach unten verschieben',
+  'perf.command.paste': 'Block einfügen',
+  'perf.command.text': 'Bearbeiteten Text übernehmen',
+  'perf.segments.title': 'Abschnitte (p95, ms)',
+  'perf.segments.note':
+    'Dieselben Läufe, aufgeteilt entlang des Wegs einer Bearbeitung (QA-07, die Konnektoren der C&C-Sicht unter jedem Titel). Jede Spalte ist der eigene p95 dieses Abschnitts, daher ergibt eine Zeile in der Summe nicht den p95 des Befehls.',
+  'perf.segment.input': 'Taste',
+  'perf.segment.command': 'Bearbeitung',
+  'perf.segment.check': 'Prüfung',
+  'perf.segment.layout': 'Layout',
+  'perf.segment.draw': 'Zeichnen',
+  'perf.segment.notify': 'Benachrichtigung',
+  'perf.segment.dom': 'DOM',
+  'perf.segment.paint': 'Browser',
+};
+
+const catalogs: Record<Locale, Record<PerfMessageKey, string>> = {
+  en: english,
+  ko: korean,
+  de: german,
+};
 
 /** Returns a check mode string in `locale`, with `{name}`-style placeholders filled. */
 export function perfMessage(

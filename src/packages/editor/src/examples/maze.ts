@@ -40,4 +40,9 @@ function mazeWith(words: MazeWords): ReadonlyArray<DiagramSpec> {
 export const maze: LocalizedSpec = {
   ko: mazeWith({ noExit: '출구 없음', unwind: '실을 푼다', windBack: '실을 감는다' }),
   en: mazeWith({ noExit: 'no way out', unwind: 'unwind the thread', windBack: 'wind it back' }),
+  de: mazeWith({
+    noExit: 'kein Ausweg',
+    unwind: 'Faden abwickeln',
+    windBack: 'Faden aufwickeln',
+  }),
 };

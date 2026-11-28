@@ -17,9 +17,9 @@ describe('message catalogs (coding guide 8)', () => {
   it('T-0532 · QA-13: the check finds a missing text and different placeholders', () => {
     expect(
       catalogProblems([
-        { key: 'a', text: { en: 'Open {name}', ko: '{name} 열기' } },
-        { key: 'b', text: { en: 'Saved {name}', ko: '저장함' } },
-        { key: 'c', text: { en: 'Close', ko: ' ' } },
+        { key: 'a', text: { en: 'Open {name}', ko: '{name} 열기', de: '{name} öffnen' } },
+        { key: 'b', text: { en: 'Saved {name}', ko: '저장함', de: '{name} gespeichert' } },
+        { key: 'c', text: { en: 'Close', ko: ' ', de: 'Schließen' } },
       ]),
     ).toEqual(['b: ko has placeholders , en name', 'c: no ko text']);
   });
@@ -53,5 +53,16 @@ describe('screen language (R-NFR-04)', () => {
     expect(isLocale('ko')).toBe(true);
     expect(isLocale('ko-KR')).toBe(false);
     expect(isLocale(1)).toBe(false);
+  });
+
+  it('T-1561 · R-NFR-04: a German browser language gets German, in any region', () => {
+    expect(localeFromLanguageTag('de')).toBe('de');
+    expect(localeFromLanguageTag('de-DE')).toBe('de');
+    expect(localeFromLanguageTag('de-AT')).toBe('de');
+    expect(localeFromLanguageTag('de-CH')).toBe('de');
+    expect(localeFromLanguageTag('dsb-DE')).toBe('en');
+    expect(screenLocale(undefined, 'de-DE')).toBe('de');
+    expect(screenLocale('en', 'de-DE')).toBe('en');
+    expect(screenLocale('de', 'ko-KR')).toBe('de');
   });
 });

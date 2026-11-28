@@ -35,4 +35,9 @@ export const hanoi: LocalizedSpec = {
     moves: '2**3 - 1 = 7 moves',
     outOfTheWay: 'the n - 1 above wait on via',
   }),
+  de: hanoiWith({
+    move: 'Scheibe {n}: {src} -> {dst}',
+    moves: '2**3 - 1 = 7 Züge',
+    outOfTheWay: 'die n - 1 oberen warten auf via',
+  }),
 };

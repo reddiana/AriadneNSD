@@ -327,5 +327,178 @@ function enRaft(): ReadonlyArray<DiagramSpec> {
   ];
 }
 
+function deRaft(): ReadonlyArray<DiagramSpec> {
+  const down: BlockSpec = ['call', 'Zum Follower zurückstufen'];
+  const apply: BlockSpec = ['call', 'Festgeschriebene Einträge auf die Zustandsmaschine anwenden'];
+  const send: BlockSpec = ['call', 'Log an alle Peers senden'];
+  return [
+    event('Wenn der Wahl-Timer abläuft', [
+      [
+        'if',
+        'Bin ich der Leader?',
+        [''],
+        [
+          'Kandidat werden',
+          'Amtszeit um eins erhöhen',
+          'Für mich selbst stimmen\n(Stimmen = 1)',
+          'Wahl-Timer auf eine zufällige Zeit zurücksetzen',
+          'Wahlanfrage an alle Peers senden\n(Amtszeit, Index und Amtszeit meines letzten Eintrags)',
+        ],
+      ],
+    ]),
+    event('Wenn eine Wahlanfrage eintrifft', [
+      ['if', 'Amtszeit der Anfrage > meine Amtszeit?', [down], ['']],
+      [
+        'if',
+        'Amtszeit der Anfrage < meine Amtszeit?',
+        ['Antworten: abgelehnt'],
+        [
+          [
+            'if',
+            'In dieser Amtszeit noch nicht gewählt\noder schon für diesen Kandidaten?',
+            [
+              [
+                'if',
+                'Ist das Log des Kandidaten mindestens so aktuell wie meines?',
+                [
+                  'Vermerken, dass ich für diesen Kandidaten gestimmt habe',
+                  'Wahl-Timer zurücksetzen',
+                  'Antworten: Stimme erteilt',
+                ],
+                ['Antworten: abgelehnt'],
+              ],
+            ],
+            ['Antworten: abgelehnt'],
+          ],
+        ],
+      ],
+    ]),
+    event('Wenn eine Wahlantwort eintrifft', [
+      [
+        'if',
+        'Amtszeit der Antwort > meine Amtszeit?',
+        [down],
+        [
+          [
+            'if',
+            'Noch Kandidat und eine Stimme\nfür mich in dieser Amtszeit?',
+            [
+              'Stimmen um eins erhöhen',
+              [
+                'if',
+                'Haben die Stimmen die Mehrheit?',
+                [
+                  'Leader werden',
+                  'Nächsten Index jedes Peers\nauf meinen letzten Index + 1 setzen',
+                  send,
+                ],
+                [''],
+              ],
+            ],
+            [''],
+          ],
+        ],
+      ],
+    ]),
+    event('Wenn der Heartbeat-Timer abläuft', [['if', 'Bin ich der Leader?', [send], ['']]]),
+    event('Wenn eine Client-Anfrage eintrifft', [
+      [
+        'if',
+        'Bin ich der Leader?',
+        ['Befehl als neuen Eintrag dieser Amtszeit\nan das Log anhängen', send],
+        ['Dem Client die Adresse des Leaders mitteilen'],
+      ],
+    ]),
+    event('Wenn eine Log-Replikationsanfrage eintrifft', [
+      [
+        'if',
+        'Amtszeit der Anfrage < meine Amtszeit?',
+        ['Antworten: fehlgeschlagen\n(mit meiner Amtszeit)'],
+        [
+          ['if', 'Amtszeit der Anfrage > meine Amtszeit\noder bin ich Kandidat?', [down], ['']],
+          'Wahl-Timer zurücksetzen',
+          [
+            'if',
+            'Passen Index und Amtszeit des vorigen Eintrags zu meinem Log?',
+            [
+              'Meine Einträge ab dem ersten Konflikt löschen',
+              'Neue Einträge an das Log anhängen',
+              [
+                'if',
+                'Commit-Index des Leaders > meiner?',
+                [
+                  'Meinen Commit-Index erhöhen\n(auf den kleineren Wert von Commit-Index\ndes Leaders und meinem letzten Index)',
+                  apply,
+                ],
+                [''],
+              ],
+              'Antworten: erfolgreich',
+            ],
+            ['Antworten: fehlgeschlagen'],
+          ],
+        ],
+      ],
+    ]),
+    event('Wenn eine Log-Replikationsantwort eintrifft', [
+      [
+        'if',
+        'Amtszeit der Antwort > meine Amtszeit?',
+        [down],
+        [
+          [
+            'if',
+            'Erfolgreich?',
+            [
+              'Match-Index und nächsten Index des Peers erhöhen',
+              [
+                'if',
+                'Hält eine Mehrheit einen noch nicht\nfestgeschriebenen Eintrag dieser Amtszeit?',
+                ['Commit-Index bis dorthin erhöhen', apply],
+                [''],
+              ],
+            ],
+            [
+              'Nächsten Index des Peers um eins verringern\n(beim nächsten Heartbeat wird erneut gesendet)',
+            ],
+          ],
+        ],
+      ],
+    ]),
+    method('Log an alle Peers senden', [
+      [
+        'while',
+        'Solange noch ein Peer übrig ist',
+        [
+          'Einträge für diesen Peer auswählen\n(von seinem nächsten Index bis zum Ende,\nbeim Heartbeat keine)',
+          'Log-Replikationsanfrage senden\n(Amtszeit, vorheriger Index und Amtszeit,\nEinträge, Commit-Index)',
+        ],
+      ],
+    ]),
+    method('Festgeschriebene Einträge auf die Zustandsmaschine anwenden', [
+      [
+        'while',
+        'angewandter Index < Commit-Index',
+        [
+          'Angewandten Index um eins erhöhen',
+          'Befehl dieses Eintrags auf die Zustandsmaschine anwenden',
+          ['if', 'Bin ich der Leader?', ['Dem Client mit dem Ergebnis antworten'], ['']],
+        ],
+      ],
+    ]),
+    method('Zum Follower zurückstufen', [
+      [
+        'if',
+        'Amtszeit der Gegenseite > meine Amtszeit?',
+        [
+          'Meine Amtszeit auf die der Gegenseite anheben',
+          'Meine Stimme für diese Amtszeit löschen',
+        ],
+        [''],
+      ],
+      'Follower werden',
+    ]),
+  ];
+}
+
 /** Raft consensus: seven Event handlers and three Methods. */
-export const raft: LocalizedSpec = { ko: koRaft(), en: enRaft() };
+export const raft: LocalizedSpec = { ko: koRaft(), en: enRaft(), de: deRaft() };

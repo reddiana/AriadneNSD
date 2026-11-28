@@ -25,7 +25,7 @@
         },
         "locale": {
           "description": "The language of the words the editor draws (True/False, default). Left out: the opener's screen language.",
-          "enum": ["en", "ko"]
+          "enum": ["en", "ko", "de"]
         },
         "textOutlines": {
           "description": "Save the text as outlines. Written only when true.",

@@ -52,4 +52,9 @@ export const topologicalSort: LocalizedSpec = {
     noIncoming: 'vertices with no incoming edge',
     cycle: 'there is a cycle',
   }),
+  de: topologicalSortWith({
+    countInDegrees: 'Eingehende Kanten zählen',
+    noIncoming: 'Knoten ohne eingehende Kante',
+    cycle: 'es gibt einen Zyklus',
+  }),
 };

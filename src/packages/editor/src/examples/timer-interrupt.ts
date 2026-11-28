@@ -58,4 +58,10 @@ export const timerInterrupt: LocalizedSpec = {
     readSensor: 'Read the sensor',
     writeLog: 'Log the reading',
   }),
+  de: timerInterruptWith({
+    head: 'TIM2-Interrupt (1ms)',
+    pressed: 'Tastendruck bestätigt',
+    readSensor: 'Sensor auslesen',
+    writeLog: 'Messwert protokollieren',
+  }),
 };

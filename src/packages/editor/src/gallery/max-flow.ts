@@ -83,4 +83,12 @@ export const maxFlow: LocalizedSpec = {
     undo: 'so it can be undone',
     shortest: 'the path with the fewest edges',
   }),
+  de: maxFlowWith({
+    residual: 'cap[u][v]: Restkapazität, Rückwärtskanten eingeschlossen',
+    noPath: 'kein augmentierender Pfad',
+    bottleneck: 'Engpass finden',
+    push: 'Fluss entlang des Pfads schicken',
+    undo: 'damit er sich zurücknehmen lässt',
+    shortest: 'der Pfad mit den wenigsten Kanten',
+  }),
 };

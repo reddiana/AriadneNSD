@@ -42,4 +42,5 @@ function binarySearchWith(found: string, notFound: string): ReadonlyArray<Diagra
 export const binarySearch: LocalizedSpec = {
   ko: binarySearchWith('printf("%d번째\\n", i);', 'printf("없음\\n");'),
   en: binarySearchWith('printf("found at %d\\n", i);', 'printf("not found\\n");'),
+  de: binarySearchWith('printf("gefunden an Stelle %d\\n", i);', 'printf("nicht gefunden\\n");'),
 };

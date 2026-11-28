@@ -169,7 +169,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 | 노드 | 필드 (순서대로) | 생략 |
 | --- | --- | --- |
 | 문서 | `format`(항상 `"ariadne-nsd"`) · `version` · `settings` · `diagrams` · `view` | 없음 |
-| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) · `locale`(`"en"` \| `"ko"`) · `textOutlines`(`true`) | `textOutlines`는 끔(`false`)이면 (읽을 때는 `locale`이 없어도 받고, `textOutlines: false`도 받는다) |
+| `settings` | `textKind` · `theme` · `headStyle`(`"shape"` \| `"title"`) · `locale`(`"en"` \| `"ko"` \| `"de"`) · `textOutlines`(`true`) | `textOutlines`는 끔(`false`)이면 (읽을 때는 `locale`이 없어도 받고, `textOutlines: false`도 받는다) |
 | 다이어그램 | `id` · `head` · `body` · `folds` | `head`는 헤더가 없으면, `folds`는 비면 |
 | `head` | `kind`(`"event"` \| `"method"`) · `text` | 없음 |
 | 처리 | `id` · `kind: "process"` · `text` | 없음 (빈 블록은 `text: ""`) |

@@ -58,4 +58,9 @@ export const kmp: LocalizedSpec = {
     found: 'found',
     longestBorder: 'longest proper prefix of p[:i+1] that is also its suffix',
   }),
+  de: kmpWith({
+    fallBack: 'im Muster zurückfallen',
+    found: 'gefunden',
+    longestBorder: 'längstes echtes Präfix von p[:i+1], das auch sein Suffix ist',
+  }),
 };

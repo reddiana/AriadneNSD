@@ -63,4 +63,10 @@ export const unionFind: LocalizedSpec = {
     lowerUnderHigher: 'lower tree under the higher',
     lightestFirst: 'lightest edge first',
   }),
+  de: unionFindWith({
+    pathCompression: 'Pfadkompression',
+    sameSet: 'schon in einer Menge',
+    lowerUnderHigher: 'niedrigeren Baum unter den höheren',
+    lightestFirst: 'leichteste Kante zuerst',
+  }),
 };

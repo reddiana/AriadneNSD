@@ -86,4 +86,12 @@ export const knapsack: LocalizedSpec = {
     readBack: 'Read the chosen items back',
     itemTaken: 'this item was taken',
   }),
+  de: knapsackWith({
+    table: 'Tabelle füllen',
+    cell: 'bester Wert der ersten i Gegenstände bis Gewicht c',
+    leaveOut: 'Gegenstand i weglassen',
+    putIn: 'Gegenstand i einpacken',
+    readBack: 'Gewählte Gegenstände zurückverfolgen',
+    itemTaken: 'dieser Gegenstand wurde gewählt',
+  }),
 };

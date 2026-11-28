@@ -175,7 +175,7 @@ describe('the guide for AI assistants', () => {
     expect(kinds.filter((kind) => kind !== 'named')).toEqual([...blockKinds]);
     expect(() => fillGuide('{{nothing}}')).toThrow(/unknown list/);
     expect(() => fillGuide('{{textKinds|bold}}')).toThrow(/unknown style/);
-    expect(fillGuide('{{locales|or}}, {{locales|plain}}')).toBe('`en` or `ko`, en, ko');
+    expect(fillGuide('{{locales|or}}, {{locales|plain}}')).toBe('`en`, `ko` or `de`, en, ko, de');
   });
 
   it('T-1135 · R-WEB-10: the file the guide offers instead of a link opens', () => {

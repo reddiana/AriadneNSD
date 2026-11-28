@@ -26,7 +26,7 @@ import { vendingMachine } from './vending-machine';
 
 /** A code-only example: the same diagrams and headers on every screen. */
 function same<T>(value: T): Readonly<Record<Locale, T>> {
-  return { ko: value, en: value };
+  return { ko: value, en: value, de: value };
 }
 
 // Hangul syllables and jamo: an English example has none (maintainer, 2026-11-03: "영어판은
@@ -58,6 +58,7 @@ const expected: ReadonlyArray<{
     heads: {
       ko: [{ kind: 'event', text: 'UART 수신 인터럽트' }],
       en: [{ kind: 'event', text: 'UART receive interrupt' }],
+      de: [{ kind: 'event', text: 'UART-Empfangsinterrupt' }],
     },
     blocks: 13,
     spec: uartCase,
@@ -67,6 +68,7 @@ const expected: ReadonlyArray<{
     heads: {
       ko: [{ kind: 'event', text: 'TIM2 인터럽트 (1ms)' }],
       en: [{ kind: 'event', text: 'TIM2 interrupt (1ms)' }],
+      de: [{ kind: 'event', text: 'TIM2-Interrupt (1ms)' }],
     },
     blocks: 17,
     spec: timerInterrupt,
@@ -111,6 +113,11 @@ const expected: ReadonlyArray<{
         { kind: 'event', text: 'When a drink button is pressed' },
         { kind: 'method', text: 'Light up the drinks you can buy' },
       ],
+      de: [
+        { kind: 'event', text: 'Wenn eine Münze eingeworfen wird' },
+        { kind: 'event', text: 'Wenn eine Getränketaste gedrückt wird' },
+        { kind: 'method', text: 'Kaufbare Getränke beleuchten' },
+      ],
     },
     blocks: 24,
     spec: vendingMachine,
@@ -127,6 +134,11 @@ const expected: ReadonlyArray<{
         { kind: 'event', text: 'When a floor button is pressed' },
         { kind: 'event', text: 'Every control cycle (100ms)' },
         { kind: 'method', text: 'Choose the next destination' },
+      ],
+      de: [
+        { kind: 'event', text: 'Wenn eine Etagentaste gedrückt wird' },
+        { kind: 'event', text: 'In jedem Steuerzyklus (100ms)' },
+        { kind: 'method', text: 'Nächstes Ziel bestimmen' },
       ],
     },
     blocks: 28,
@@ -158,6 +170,18 @@ const expected: ReadonlyArray<{
         { kind: 'method', text: 'Send the log to every peer' },
         { kind: 'method', text: 'Apply committed entries to the state machine' },
         { kind: 'method', text: 'Step down to follower' },
+      ],
+      de: [
+        { kind: 'event', text: 'Wenn der Wahl-Timer abläuft' },
+        { kind: 'event', text: 'Wenn eine Wahlanfrage eintrifft' },
+        { kind: 'event', text: 'Wenn eine Wahlantwort eintrifft' },
+        { kind: 'event', text: 'Wenn der Heartbeat-Timer abläuft' },
+        { kind: 'event', text: 'Wenn eine Client-Anfrage eintrifft' },
+        { kind: 'event', text: 'Wenn eine Log-Replikationsanfrage eintrifft' },
+        { kind: 'event', text: 'Wenn eine Log-Replikationsantwort eintrifft' },
+        { kind: 'method', text: 'Log an alle Peers senden' },
+        { kind: 'method', text: 'Festgeschriebene Einträge auf die Zustandsmaschine anwenden' },
+        { kind: 'method', text: 'Zum Follower zurückstufen' },
       ],
     },
     blocks: 74,
@@ -362,13 +386,13 @@ function specTexts(spec: ReadonlyArray<DiagramSpec>): string[] {
 }
 
 describe('examples', () => {
-  it('T-0321 · R-EDIT-25: lists the ten examples in order, each named in both languages', () => {
+  it('T-0321 · R-EDIT-25: lists the ten examples in order, each named in every language', () => {
     expect(examples.map((example) => example.id)).toEqual(expected.map((entry) => entry.id));
     for (const example of examples) {
-      expect(example.name.ko).not.toBe('');
-      expect(example.name.en).not.toBe('');
-      expect(example.what.ko).not.toBe('');
-      expect(example.what.en).not.toBe('');
+      for (const locale of locales) {
+        expect(example.name[locale]).not.toBe('');
+        expect(example.what[locale]).not.toBe('');
+      }
     }
   });
 
@@ -424,6 +448,13 @@ describe('examples', () => {
       const korean = example.build({ headStyle: 'title', locale: 'ko' });
       expect(docTexts(korean)).toEqual(specTexts(entry.spec.ko));
       expect(docShape(korean)).toEqual(docShape(doc));
+    });
+
+    it('T-1560 · R-NFR-04: a German screen opens the German one, with no Hangul and the blocks of the English one in the same places', () => {
+      const german = example.build({ headStyle: 'title', locale: 'de' });
+      expect(docTexts(german)).toEqual(specTexts(entry.spec.de));
+      expect(docTexts(german).filter((text) => hangul.test(text))).toEqual([]);
+      expect(docShape(german)).toEqual(docShape(doc));
     });
 
     it('T-0327 · R-EDIT-25: links every call block to a Method in the document', () => {

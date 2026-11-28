@@ -76,4 +76,10 @@ export const lcs: LocalizedSpec = {
     readBack: 'Walk the table back',
     common: 'a character in both',
   }),
+  de: lcsWith({
+    cell: 'LCS-Länge von a[:i] und b[:j]',
+    table: 'Tabelle füllen',
+    readBack: 'Tabelle rückwärts durchlaufen',
+    common: 'ein Zeichen in beiden',
+  }),
 };

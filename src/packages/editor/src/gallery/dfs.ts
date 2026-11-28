@@ -46,4 +46,10 @@ export const dfs: LocalizedSpec = {
     onLeave: 'on exit (post-order)',
     reversed: 'a topological order of a DAG',
   }),
+  de: dfsWith({
+    everyComponent: 'jede Zusammenhangskomponente',
+    onEnter: 'beim Betreten (Preorder)',
+    onLeave: 'beim Verlassen (Postorder)',
+    reversed: 'bei einem DAG eine topologische Ordnung',
+  }),
 };

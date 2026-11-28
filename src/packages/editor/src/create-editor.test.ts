@@ -925,8 +925,19 @@ describe('the drawing language in the document (ADR-0041)', () => {
     expect(specs[1]).toMatchObject({
       title: 'setting.documentLocale',
       hint: 'setting.documentLocale.hint',
-      values: ['en', 'ko'],
-      valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko'],
+      values: ['en', 'ko', 'de'],
+      valueTitles: ['setting.uiLocale.en', 'setting.uiLocale.ko', 'setting.uiLocale.de'],
     });
+  });
+
+  it('T-1562 · R-NFR-04: a German screen starts a German document and draws ja · nein and sonst, as in DIN 66261', async () => {
+    const german = await fileWithIf('de');
+    expect(german).toContain('"locale": "de"');
+    expect(german).toContain('>ja</text>');
+    expect(german).toContain('>nein</text>');
+    const handle = makeIn('de');
+    handle.commands.run('block.insert.case');
+    handle.commands.run('select.clear');
+    expect(await handle.serialize()).toContain('>sonst</text>');
   });
 });

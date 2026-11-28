@@ -31,4 +31,5 @@ function gcdWith(words: GcdWords): ReadonlyArray<DiagramSpec> {
 export const gcd: LocalizedSpec = {
   ko: gcdWith({ backSubstitute: '거꾸로 대입한다' }),
   en: gcdWith({ backSubstitute: 'substitute back' }),
+  de: gcdWith({ backSubstitute: 'rückwärts einsetzen' }),
 };

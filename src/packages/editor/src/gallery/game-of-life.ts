@@ -82,4 +82,11 @@ export const gameOfLife: LocalizedSpec = {
     dies: 'dies of loneliness or overcrowding',
     torus: 'the edges wrap around',
   }),
+  de: lifeWith({
+    newBoard: 'die nächste Generation auf ein neues Feld',
+    survives: 'bleibt, wie sie ist',
+    born: 'wird geboren oder überlebt',
+    dies: 'stirbt an Vereinsamung oder Überbevölkerung',
+    torus: 'die Ränder sind miteinander verbunden',
+  }),
 };

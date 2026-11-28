@@ -98,5 +98,62 @@ const en: ReadonlyArray<DiagramSpec> = [
   ]),
 ];
 
+const de: ReadonlyArray<DiagramSpec> = [
+  event('Wenn eine Münze eingeworfen wird', [
+    'Münzart erkennen',
+    [
+      'if',
+      'Münze angenommen?',
+      [
+        'Wert der Münze zum Guthaben addieren',
+        'Guthaben auf dem Display anzeigen',
+        ['call', 'Kaufbare Getränke beleuchten'],
+      ],
+      ['Münze in den Rückgabeschacht ausgeben'],
+    ],
+  ]),
+  event('Wenn eine Getränketaste gedrückt wird', [
+    [
+      'case',
+      'Gewähltes Getränk',
+      [
+        ['Kaffee', ['Preis = 1,20 EUR']],
+        ['Grüner Tee', ['Preis = 1,00 EUR']],
+        ['Wasser', ['Preis = 0,80 EUR']],
+        ['default', ['Signalton ausgeben', 'Beenden']],
+      ],
+    ],
+    [
+      'if',
+      'Guthaben ≥ Preis?',
+      [
+        'Getränk ausgeben',
+        'Preis vom Guthaben abziehen',
+        [
+          'while',
+          'Guthaben > 0',
+          ['Wechselgeld mit der größten Münze ausgeben', 'Wert dieser Münze vom Guthaben abziehen'],
+        ],
+        'Display zurücksetzen',
+      ],
+      ['„Guthaben reicht nicht“ anzeigen'],
+    ],
+  ]),
+  method('Kaufbare Getränke beleuchten', [
+    [
+      'while',
+      'Für jede Taste',
+      [
+        [
+          'if',
+          'Preis ≤ Guthaben und vorrätig?',
+          ['Taste beleuchten'],
+          ['Tastenbeleuchtung ausschalten'],
+        ],
+      ],
+    ],
+  ]),
+];
+
 /** Vending machine: written in sentences, two Events and a Method. */
-export const vendingMachine: LocalizedSpec = { ko, en };
+export const vendingMachine: LocalizedSpec = { ko, en, de };

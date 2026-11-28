@@ -172,7 +172,7 @@ classDiagram
 | `textKind` | string | 필수 | `"plain"` · `"c"` · `"cpp"` · `"java"` · `"javascript"` · `"python"` · `"bash"` | 블록 텍스트의 언어. 구문 강조의 색만 정하고 글꼴과 레이아웃은 바꾸지 않는다 |
 | `theme` | string | 필수 | `"default"` · `"dark"` · `"high-contrast"` · `"print"` | 테마의 이름. 색 값은 기록하지 않는다 |
 | `headStyle` | string | 필수 | `"title"` · `"shape"` | 헤더를 렌더링하는 모양: 다이어그램 위의 제목처럼(`title`), 또는 모양으로(`shape`) |
-| `locale` | string | 생략 가능 | `"en"` · `"ko"` | 편집기가 렌더링 결과에 표시하는 문구(참 · 거짓, default 등)의 언어. 없으면 연 사람의 화면 언어로 읽는다 |
+| `locale` | string | 생략 가능 | `"en"` · `"ko"` · `"de"` | 편집기가 렌더링 결과에 표시하는 문구(참 · 거짓, default 등)의 언어. 없으면 연 사람의 화면 언어로 읽는다 |
 | `textOutlines` | boolean | 생략 가능 | - | 텍스트를 외곽선으로 저장한다. `true`일 때만 기록한다 |
 
 ### 2.3 다이어그램
@@ -434,7 +434,7 @@ Case에서 값 하나의 분기입니다.
 >         },
 >         "locale": {
 >           "description": "The language of the words the editor draws (True/False, default). Left out: the opener's screen language.",
->           "enum": ["en", "ko"]
+>           "enum": ["en", "ko", "de"]
 >         },
 >         "textOutlines": {
 >           "description": "Save the text as outlines. Written only when true.",

@@ -70,4 +70,10 @@ export const heapSort: LocalizedSpec = {
     largestToBack: 'largest to the back',
     heapOrderHolds: 'heap order holds',
   }),
+  de: heapSortWith({
+    buildHeap: 'Max-Heap aufbauen',
+    sortDown: 'Einzeln entnehmen',
+    largestToBack: 'das größte nach hinten',
+    heapOrderHolds: 'Heap-Eigenschaft gilt',
+  }),
 };

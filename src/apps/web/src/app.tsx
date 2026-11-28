@@ -12,7 +12,7 @@ import { shellMessage } from './shell/messages';
  * folder of their name (`manual/ko/`). A table, so a new screen language must say where its pages
  * are (or that it has none yet).
  */
-const pageFolders: Readonly<Record<Locale, string>> = { en: '', ko: 'ko/' };
+const pageFolders: Readonly<Record<Locale, string>> = { en: '', ko: 'ko/', de: 'de/' };
 
 /**
  * The user guide on the same site, in the screen language (06-web 5, DR-0020): the app is the

@@ -5,7 +5,7 @@
  * The screen languages, English first (the default, R-NFR-04). Adding a language is this line and
  * one catalog entry per catalog (QA-13); the type checker then points at every catalog to fill.
  */
-export const locales = ['en', 'ko'] as const;
+export const locales = ['en', 'ko', 'de'] as const;
 
 /** A screen language, also the language of the drawing's fixed words. */
 export type Locale = (typeof locales)[number];
@@ -75,6 +75,16 @@ const catalog: Readonly<Record<Locale, Readonly<Record<DrawingMessageKey, string
     'fold.more': '{text} 외 {count}개',
     'fold.empty': '(빈 블록)',
     'endless.name': '(무한 반복)',
+  },
+  de: {
+    'if.yes': 'ja',
+    'if.no': 'nein',
+    'case.default': 'sonst',
+    'call.noName': '(ohne Namen)',
+    'folded.count': '{count} Blöcke',
+    'fold.more': '{text} und {count} weitere',
+    'fold.empty': '(leerer Block)',
+    'endless.name': '(Endlosschleife)',
   },
 };
 
