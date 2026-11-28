@@ -78,6 +78,8 @@ figcaption b { color: var(--fg); font-weight: 600; }
 .chip { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; background: var(--panel); color: var(--muted); }
 code, kbd { font-family: var(--mono); font-size: 12.5px; }
 a { color: var(--accent); }
+.scene { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 8px; overflow-x: auto; }
+.scene svg { display: block; max-width: none; font-family: var(--font); }
 /* 대응 그림 */
 .mp text { fill: var(--fg); font-size: 13px; }
 .mp .s { fill: var(--muted); font-size: 11.5px; }
@@ -373,8 +375,53 @@ a { color: var(--accent); }
       </div>
     </div>
 
-    <h2>Q3 ~. 살필 곳</h2>
-    <p class="q">Q1 · Q2를 정한 뒤, 5부의 G1 ~ G9를 하나씩 묻습니다. 추천은 표의 마지막 칸입니다.</p>
+    <h2>G2 ~ G8. 살필 곳 가운데 앱의 동작이 바뀌는 여섯</h2>
+    <p class="q">여섯 모두 코드에서 확인했습니다(<code>canvas-input.ts</code>의 휠, <code>core/commands/move.ts</code>의 접기 영역, <code>clipboard-commands.ts</code> · <code>insert-wrap-commands.ts</code>의 선택 없음, <code>fold-commands.ts</code>의 이름 띠, 호버는 블록에만). 그림의 왼쪽은 하기 전, 오른쪽은 한 뒤입니다. <b>범례:</b> 주황 테두리는 선택, 왼쪽의 파란 점선은 보이지 않는 접기 영역의 범위(설명용), 회색 줄은 상태 표시줄입니다.</p>
+
+    <h2>G2. 접힌 줄을 드래그하면</h2>
+    <p class="q">원칙 ②. 접힌 줄("⋯ 블록 3개")은 상자 하나로 보이고 이동 · 복사 · 삭제 명령이 적용됩니다. 드래그만 되지 않습니다. 접힌 칸(접기 영역)은 오늘 DF2로 드래그하게 했습니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>접힌 줄도 드래그해 옮긴다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g2a"></div><ul><li>접힌 줄을 끌면 그 안의 블록 전체가 옮겨집니다(접힌 칸과 같음).</li><li>접힌 줄 위에 놓으면 위 반은 앞, 아래 반은 뒤입니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로: 누르면 선택만</h3></header><div class="scene" data-fig="g2b"></div><ul><li>옮기려면 이동 명령이나 잘라내기 · 붙여넣기를 씁니다.</li><li>원칙 절의 부딪힌 기록에 예외로 적습니다.</li></ul></div>
+    </div>
+
+    <h2>G3. 이름 띠를 끈 접기 영역 끝에서 이동하면</h2>
+    <p class="q">원칙 ②. 띠를 끄면 접기 영역은 "없는 것과 똑같이 보입니다". 그런데 영역의 마지막 블록 C에서 아래로 이동을 누르면 C가 영역 밖으로 나오는 한 걸음에 쓰여, 화면에는 아무것도 바뀌지 않습니다. 한 번 더 눌러야 D와 자리를 바꿉니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>띠를 끄면 한 번에 이동</h3><span class="badge">추천</span></header><div class="scene" data-fig="g3a"></div><ul><li>드롭(DF1) · 방향키(FD5)와 같게 "띠를 끄면 접기 영역이 없는 것과 같다"로 맞춥니다.</li><li>영역에서 나오는 것과 자리 바꾸기를 한 번에 합니다. 영역은 남은 블록으로 줄어듭니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로, 알림만 더함</h3></header><div class="scene" data-fig="g3b"></div><ul><li>동작은 그대로 두고 "접기 영역 ○○ 밖으로 나왔습니다"를 알립니다.</li><li>키 한 번에 화면이 바뀌지 않는 것은 남습니다.</li></ul></div>
+      <div class="card"><header><span class="num">3</span><h3>지금대로</h3></header><div class="scene" data-fig="g3c"></div><ul><li>띠를 켰을 때와 같은 동작입니다.</li><li>띠를 끈 사용자에게는 키가 동작하지 않은 것으로 보입니다.</li></ul></div>
+    </div>
+
+    <h2>G4. 병렬 처리의 분기 선택 자리</h2>
+    <p class="q">원칙 ②. 분기는 위 띠 가운데 그 분기 바로 위 구간을 눌러 선택합니다(TW1). 그 구간은 그림에서 구분되지 않고, 호버 표시는 블록에만 있습니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>호버하면 구간과 분기 칸을 표시</h3><span class="badge">추천</span></header><div class="scene" data-fig="g4a"></div><ul><li>위 띠의 그 구간과 분기 칸에 호버 표시를 합니다.</li><li>편집 표시라 저장되는 그림에는 들어가지 않습니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로</h3></header><div class="scene" data-fig="g4b"></div><ul><li>눌러 보아야 분기가 선택되는 것을 압니다.</li><li>키보드로는 분기의 첫 블록에서 <code>↑</code>로 선택합니다.</li></ul></div>
+    </div>
+
+    <h2>G5. 선택한 것이 없을 때 붙여넣기</h2>
+    <p class="q">원칙 ③. 선택한 것이 없을 때 블록 삽입(키 · 툴바)은 지금 다이어그램의 맨 끝에 넣는데, 붙여넣기는 거절합니다. 둘 다 새 블록이 들어오는 일입니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>삽입처럼 맨 끝에 붙인다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g5a"></div><ul><li>삽입과 같은 규칙: 선택이 없으면 지금 다이어그램의 맨 끝.</li><li>붙인 블록이 선택됩니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로: 거절하고 알림</h3></header><div class="scene" data-fig="g5b"></div><ul><li>"먼저 블록을 선택하세요."</li><li>삽입과 다른 것은 부딪힌 기록에 적습니다.</li></ul></div>
+    </div>
+
+    <h2>G7. 블록을 선택했을 때의 마우스 휠</h2>
+    <p class="q">원칙 ④. 휠은 스크롤이라는 약속과 다릅니다. 다만 이 동작은 2026-10-15에 메인테이너가 요청해 넣었고, 화면이 선택을 따라가 검토할 때 블록을 하나씩 짚어 갑니다. 치르는 값: 다른 곳을 보려고 휠을 굴리면 편집하던 블록에서 선택이 떠납니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>지금대로, 부딪힌 기록에 적는다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g7a"></div><ul><li>써 보고 정한 동작이라 그대로 둡니다.</li><li>"④의 예외: 휠은 선택을 옮긴다"를 판례에 한 줄 적습니다.</li><li>선택을 두고 화면만 옮기려면 <code>Shift</code>+휠입니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>휠은 늘 스크롤</h3></header><div class="scene" data-fig="g7b"></div><ul><li>선택은 그대로 두고 화면만 움직입니다.</li><li>블록을 하나씩 짚는 것은 <code>j</code> <code>k</code> · <code>↑</code> <code>↓</code>로 합니다.</li></ul></div>
+    </div>
+
+    <h2>G8. 이름 띠 켜고 끄기의 실행 취소</h2>
+    <p class="q">원칙 ⑤. 이름 띠를 끄면 그림이 짧아지고, 파일에 저장되고, "저장 안 됨"이 뜹니다. 그런데 실행 취소로 돌아오지 않습니다. 헤더 모양과 결과 기호(AR2)는 대상입니다. UN1에서 범위를 접고 펴기까지로 정해 남은 마지막 하나입니다.</p>
+    <div class="cards">
+      <div class="card pick"><header><span class="num">1</span><h3>실행 취소의 대상에 넣는다</h3><span class="badge">추천</span></header><div class="scene" data-fig="g8a"></div><ul><li>"그림이 바뀌는 일은 모두 실행 취소 한 번"에 예외가 없어집니다.</li><li>실행 취소하면 "저장 안 됨"도 꺼집니다.</li></ul></div>
+      <div class="card"><header><span class="num">2</span><h3>지금대로</h3></header><div class="scene" data-fig="g8b"></div><ul><li>보기 메뉴에서 다시 켜면 됩니다.</li><li>원칙 ⑤의 따름 규칙에 "이름 띠 보기만 예외"로 남깁니다.</li></ul></div>
+    </div>
+
+    <p class="q">G1 · G6은 문서에 한 줄 적는 것이고 G9는 backlog 후보라, 원칙을 문서에 반영할 때 함께 넣습니다.</p>
   </section>
 </main>
 
@@ -411,6 +458,64 @@ a { color: var(--accent); }
     gr.append(el('text', { x: RX + 12, y: y + 20, style: 'font-weight: 600; font-size: 14px' }, t));
     gr.append(el('text', { class: 's', x: RX + 12, y: y + 38 }, s));
   });
+})();
+(() => {
+  // 장면 그림: 왼쪽은 하기 전, 오른쪽은 한 뒤. 색은 밝은 기본 테마의 값(그림 바탕은 늘 흰색)
+  const W = 150, H = 24, GAP = 46, IN = 14;
+  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function col(rows, x0) {
+    let s = '', y = 0;
+    for (const r of rows) {
+      if (r.k === 'st') { s += `<rect x="${x0}" y="${y + 6}" width="${W}" height="20" rx="3" fill="#f2f4f8" stroke="#c9d1de"/><text x="${x0 + 6}" y="${y + 20}" font-size="10.5" fill="#1c2230">${esc(r.t)}</text>`; y += 28; continue; }
+      const x = x0 + (r.in ? IN : 0), w = W - (r.in ? IN : 0);
+      const fill = r.k === 'ctl' ? '#e7eefc' : r.k === 'band' ? '#dbe6fb' : r.k === 'fl' ? '#f5f7fb' : '#ffffff';
+      if (r.in) s += `<rect x="${x0 + .5}" y="${y + .5}" width="${IN}" height="${H - 1}" fill="#e7eefc" stroke="#1c2230"/>`;
+      s += `<rect x="${x + .5}" y="${y + .5}" width="${w - 1}" height="${H - 1}" fill="${fill}" stroke="#1c2230"/>`;
+      s += `<text x="${x + 7}" y="${y + 16}" font-size="11.5" fill="${r.k === 'fl' ? '#5a6476' : '#1c2230'}">${esc(r.t)}</text>`;
+      if (r.reg) s += `<line x1="${x0 - 5}" y1="${y + 2}" x2="${x0 - 5}" y2="${y + H - 2}" stroke="#2c55c9" stroke-width="2" stroke-dasharray="3 2"/>`;
+      if (r.sel) s += `<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${H - 3}" fill="none" stroke="#e8710a" stroke-width="2.5"/>`;
+      y += H;
+    }
+    return [s, y];
+  }
+  function pair(a, key, b) {
+    const [sa, ha] = col(a, 8), [sb, hb] = col(b, 8 + W + GAP);
+    const h = Math.max(ha, hb, 44) + 4, mx = 8 + W + GAP / 2;
+    return `<svg viewBox="0 0 ${W * 2 + GAP + 16} ${h}" width="${W * 2 + GAP + 16}" height="${h}"><text x="${mx}" y="16" font-size="10" text-anchor="middle" fill="#5a6476">${esc(key)}</text><text x="${mx}" y="36" font-size="16" text-anchor="middle" fill="#5a6476">→</text>${sa}${sb}</svg>`;
+  }
+  // 병렬 처리: 위 띠, 분기 둘, 아래 띠
+  function par(hover) {
+    const w = 190, x = 8, half = w / 2;
+    let s = `<rect x="${x + .5}" y=".5" width="${w - 1}" height="85" fill="#e7eefc" stroke="#1c2230"/>`;
+    if (hover) s += `<rect x="${x + half}" y="1" width="${half - 1}" height="14" fill="#2c55c9" opacity=".4"/>`;
+    s += `<path d="M${x} 15 L${x + 12} .5 M${x + w} 15 L${x + w - 12} .5 M${x} 73 L${x + 12} 85.5 M${x + w} 73 L${x + w - 12} 85.5" stroke="#1c2230" fill="none"/>`;
+    s += `<rect x="${x + .5}" y="15.5" width="${half}" height="57" fill="#fff" stroke="#1c2230"/><rect x="${x + half + .5}" y="15.5" width="${half - 1}" height="57" fill="#fff" stroke="#1c2230"/>`;
+    s += `<text x="${x + 8}" y="48" font-size="11.5" fill="#1c2230">센서 읽기</text><text x="${x + half + 8}" y="48" font-size="11.5" fill="#1c2230">로그 쓰기</text>`;
+    if (hover) s += `<rect x="${x + half + 2}" y="17" width="${half - 4}" height="54" fill="#2c55c9" opacity=".12"/>`;
+    s += `<path d="M${x + half + 44} 5 l0 14 l3.5 -3 l3 6 l2 -1 l-3 -6 l4.5 0 z" fill="#1c2230" stroke="#fff" stroke-width=".8"/>`;
+    return `<svg viewBox="0 0 ${w + 16} 90" width="${w + 16}" height="90">${s}</svg>`;
+  }
+  const B = (t, o) => ({ k: 'b', t, ...o }), sel = { sel: true }, reg = { reg: true };
+  const loop = [{ k: 'ctl', t: 'while 남은 것이 있다' }, { k: 'fl', t: '⋯ 블록 3개', in: 1, sel: true }, B('결과 출력')];
+  const g3 = [B('A'), B('B', reg), B('C', { reg: true, sel: true }), B('D')];
+  const g5 = [B('합 ← 0'), B('n ← 0')];
+  const g7 = [B('A'), B('B'), B('C', sel), B('D')];
+  const g8off = [B('합 ← 0'), B('n ← 0'), B('평균 ← 합 / n'), { k: 'st', t: '● 저장 안 됨' }];
+  const scenes = {
+    g2a: () => pair(loop, '드래그', [{ k: 'ctl', t: 'while 남은 것이 있다' }, B('∅', { in: 1 }), B('결과 출력'), B('읽기', sel), B('더하기', sel), B('세기', sel)]),
+    g2b: () => pair(loop, '드래그', [...loop, { k: 'st', t: '(선택만 됨)' }]),
+    g3a: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('D'), B('C', sel)]),
+    g3b: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('C', sel), B('D'), { k: 'st', t: '접기 영역 밖으로 나옴' }]),
+    g3c: () => pair(g3, '아래로 이동', [B('A'), B('B', reg), B('C', sel), B('D')]),
+    g4a: () => par(true), g4b: () => par(false),
+    g5a: () => pair(g5, 'Ctrl+V', [...g5, B('붙인 블록', sel)]),
+    g5b: () => pair(g5, 'Ctrl+V', [...g5, { k: 'st', t: '먼저 블록을 선택하세요.' }]),
+    g7a: () => pair(g7, '휠 ↓', [B('A'), B('B'), B('C'), B('D', sel)]),
+    g7b: () => pair(g7, '휠 ↓', [B('B'), B('C', sel), B('D'), B('E')]),
+    g8a: () => pair(g8off, 'Ctrl+Z', [{ k: 'band', t: '▾ 초기화' }, B('합 ← 0'), B('n ← 0'), B('평균 ← 합 / n')]),
+    g8b: () => pair(g8off, 'Ctrl+Z', g8off),
+  };
+  document.querySelectorAll('[data-fig]').forEach((el) => { el.innerHTML = scenes[el.dataset.fig](); });
 })();
 </script>
 
