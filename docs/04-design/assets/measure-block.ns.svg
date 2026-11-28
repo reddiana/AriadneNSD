@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="736" height="384" viewBox="0 0 736 384">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="13137b24d29d15a50c04314470a31d259a1bcf63fedd6da4da1c63b3a6e1a3d2"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "measureBlock(block)"
+      },
+      "body": [
+        {
+          "id": "b7",
+          "kind": "case",
+          "text": "block.kind",
+          "arms": [
+            {
+              "id": "r1",
+              "label": "'process'",
+              "body": [
+                {
+                  "id": "b1",
+                  "kind": "process",
+                  "text": "text = measureText(\n  block.text)"
+                },
+                {
+                  "id": "b2",
+                  "kind": "process",
+                  "text": "m = { width: max(\n    blockMinWidth,\n    text.width + 2·padX),\n  height: text.height\n    + 2·padY }"
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "label": "'exit'",
+              "body": [
+                {
+                  "id": "b3",
+                  "kind": "process",
+                  "text": "text = measureText(\n  block.text)"
+                },
+                {
+                  "id": "b4",
+                  "kind": "process",
+                  "text": "m = { width: max(\n    blockMinWidth,\n    exitWedge\n    + text.width + 2·padX),\n  height: text.height\n    + 2·padY }"
+                }
+              ]
+            },
+            {
+              "id": "r3",
+              "label": "'if'",
+              "body": [
+                {
+                  "id": "b5",
+                  "kind": "call",
+                  "target": {
+                    "kind": "named",
+                    "name": "measureIf"
+                  },
+                  "args": "block",
+                  "result": "m"
+                }
+              ]
+            }
+          ],
+          "otherwise": {
+            "id": "r4",
+            "body": [
+              {
+                "id": "b6",
+                "kind": "process",
+                "text": "m = measureCall\n  · measureLoop\n  · measureEndless\n  · measureParallel\n  · measureCase\n  (block)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "measures.set(block.id, m)"
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "return m"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">measureBlock(block)</tspan></text>
+<path d="M24 64 L712 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="688" height="60" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M24 64 L568 124 L712 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M207 84.18 L207 124" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M403 105.8 L403 124" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="568" y="82" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">block.kind</text>
+<text x="30" y="119" font-size="12" fill="#4b5567" xml:space="preserve">'process'</text>
+<text x="213" y="119" font-size="12" fill="#4b5567" xml:space="preserve">'exit'</text>
+<text x="409" y="119" font-size="12" fill="#4b5567" xml:space="preserve">'if'</text>
+<text x="706" y="119" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">default</text>
+<rect x="24" y="124" width="183" height="59" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="144" font-size="13" fill="#151a22" xml:space="preserve">text = measureText(</text>
+<text x="34" y="162" font-size="13" fill="#151a22" xml:space="preserve">  block.text)</text>
+<rect x="24" y="183" width="183" height="113" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="203" font-size="13" fill="#151a22" xml:space="preserve">m = { width: max(</text>
+<text x="34" y="221" font-size="13" fill="#151a22" xml:space="preserve">    blockMinWidth,</text>
+<text x="34" y="239" font-size="13" fill="#151a22" xml:space="preserve">    text.width + <tspan fill="#8a5a00">2</tspan>·padX),</text>
+<text x="34" y="257" font-size="13" fill="#151a22" xml:space="preserve">  height: text.height</text>
+<text x="34" y="275" font-size="13" fill="#151a22" xml:space="preserve">    + <tspan fill="#8a5a00">2</tspan>·padY }</text>
+<rect x="207" y="124" width="196" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="217" y="144" font-size="13" fill="#151a22" xml:space="preserve">text = measureText(</text>
+<text x="217" y="162" font-size="13" fill="#151a22" xml:space="preserve">  block.text)</text>
+<rect x="207" y="174" width="196" height="122" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="217" y="194" font-size="13" fill="#151a22" xml:space="preserve">m = { width: max(</text>
+<text x="217" y="212" font-size="13" fill="#151a22" xml:space="preserve">    blockMinWidth,</text>
+<text x="217" y="230" font-size="13" fill="#151a22" xml:space="preserve">    exitWedge</text>
+<text x="217" y="248" font-size="13" fill="#151a22" xml:space="preserve">    + text.width + <tspan fill="#8a5a00">2</tspan>·padX),</text>
+<text x="217" y="266" font-size="13" fill="#151a22" xml:space="preserve">  height: text.height</text>
+<text x="217" y="284" font-size="13" fill="#151a22" xml:space="preserve">    + <tspan fill="#8a5a00">2</tspan>·padY }</text>
+<rect x="403" y="124" width="165" height="172" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M410 124 L410 296" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M561 124 L561 296" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="420" y="144" font-size="13" fill="#151a22" xml:space="preserve">m ← <tspan font-weight="600">measureIf</tspan>(block)</text>
+<rect x="568" y="124" width="144" height="172" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="578" y="144" font-size="13" fill="#151a22" xml:space="preserve">m = measureCall</text>
+<text x="578" y="162" font-size="13" fill="#151a22" xml:space="preserve">  · measureLoop</text>
+<text x="578" y="180" font-size="13" fill="#151a22" xml:space="preserve">  · measureEndless</text>
+<text x="578" y="198" font-size="13" fill="#151a22" xml:space="preserve">  · measureParallel</text>
+<text x="578" y="216" font-size="13" fill="#151a22" xml:space="preserve">  · measureCase</text>
+<text x="578" y="234" font-size="13" fill="#151a22" xml:space="preserve">  (block)</text>
+<rect x="24" y="296" width="688" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="316" font-size="13" fill="#151a22" xml:space="preserve">measures.set(block.id, m)</text>
+<rect x="24" y="328" width="688" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="348" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> m</text>
+</g>
+</svg>

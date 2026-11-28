@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="377" height="396" viewBox="0 0 377 396">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="feccec46fe6c98659864ecdbc83899b4654a1503efafa342ea17e94d8f8263d0"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "splitWidth(total, minimums)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "extra = total - sum(minimums)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "used = 0"
+        },
+        {
+          "id": "b8",
+          "kind": "for",
+          "text": "for (const minimum of minimums)",
+          "body": [
+            {
+              "id": "b5",
+              "kind": "if",
+              "text": "minimum is last",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b3",
+                    "kind": "process",
+                    "text": "width = total - used"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b4",
+                    "kind": "process",
+                    "text": "width = round(minimum\n  + extra · minimum\n    / sum(minimums))"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b6",
+              "kind": "process",
+              "text": "widths.push(width)"
+            },
+            {
+              "id": "b7",
+              "kind": "process",
+              "text": "used += width"
+            }
+          ]
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "return widths"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAAA3AAAsAAAAAE5wAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAFEAAABgavc552NtYXAAAAFcAAAAfAAAAKwpvB+cZ2FzcAAAAdgAAAAQAAAAEAAXAAlnbHlmAAAB6AAACD8AAAqyAxJPh2hlYWQAAAooAAAANgAAADY67EFKaGhlYQAACmAAAAAfAAAAJAblAt9obXR4AAAKgAAAAFcAAACIQqwIGWxvY2EAAArYAAAASAAAAEgn2SpmbWF4cAAACyAAAAAcAAAAIABNAYBuYW1lAAALPAAAAmwAAAWisvBt9nBvc3QAAA2oAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgagWiABA0GeEW4MDgwKZyyYg/5nMSxgbgeq4WAAK2HiY9oGpBQYGAG21RB2AAAAeNpjYGBgAmJmIBYBkoxgmoVhBpBWYlAAspiApCaDAYMtgy9DOEMiQxpDJkMBQylDBcP2NQUnL5+x+P8fqFaBQYNBG64mmSGDIYehiKEcoeb/w/+3/t/8f/b/vv9b/6/5v/r/qv8r/i//v+x/RvAGMz/jV2CbCQAApvEufgAAAAMACAACABAAAf//AAN42m1WfWwT9xn+/X6X2OTLjj/O5+/4fLHPdhIn8fnuHLBNPny2iR0bEhMgQIohLGSl29SRggBBIRRt07ShtX9skyZNm1YqJWo2NYUWplZtUVdEVyFRuq3qpk1Vq2r7p9of0zbqy96zQ5W2k3X2nc73vM/zvu/zvocwOr/+BH6ePEAMQharlzA0F6XEeJrIAm2g/uSRykJOnE6ybHJazAllyYNTqXOL88HW7qMnlzKjF04c6W4Nzj1+BpCygLTYQMLxKOFFwUvRVgPRc2Kawq7/C3Xm8TmAOnLiwmhm6eRRgJpfPAePIxaN4nvEgdqAlSjQAs3RnMiJ98fX1sbX8O5bt/J37uThfzPrJ3Ee/QbZEGJiaSLGg3wwKMYlIWbTQnMzPjnMODrazD4/JwbTJX6v2ROwMtaWLVazLTyU7MmLHi1eCnfg63gfouCCZkV8Xb2M9xWLcOcq8uIxdENjIm/g6jh/8GrU54tqx/HGT1RDGV5/Fa+RDzQUhsPCjyZxsDRCeeC6B1H4NnkNGZED+UHTBj1/FChLlpgErHnKZrP4dYzNxliC/5k77hZLg8JE3Lkwl1KaSRN13xANJEebMKHedZHXll86eKkSDFYuHXxpubb01NP+lFO9HvSToR88wyWcOLcTIYK60Sq+i1chvr6hq1nTdlet4BU4VjOZ32YyGm876sR/JNeQGS4ojuJpirMIFkaGL44S8fHS+ESrqeKanW1trR6yVgxYVf+NW5J87TPyrPqyJOFcbYZQPCARQPonIHUCkgWe19D08AVoFtxdoIIzysFduqapmex+jioSv3q6hN+uzeDLLKueBrB4CV/WmPdBvn5NnKgdhREKiHqdjrbaBKhwQJTqRTBxPKfTCgH5k2WoO+fX6XH11KAQjrhjAZv6aWiXsHd/iSLMRHTH7vHSjweFSJH/w5BV39sX6rHz8b+V7Myxg+rNsUhwQlHKHQ7DdpHxgIYRiP0i9J4PItMbMdIEgoI3ghDHQGgwihCT8Ytehf/2Sc+2PVv5MW+7Z4iLbOU6O7u39eYGz+90mr/zZGouy5sdRTvdJeZCkZzgiYO2KOCvkfcgR6BNcwpQ31AnUhBFMAmaOgPVaI80wdVWZw8bSwkJe6TLcoHPmfHULgrrXFzILCshozmcwWm31ON85NjCAZqXWJwMsLiptjVhdJpbo4VqvG+2OACRIxD5FijToQD0oCCCGL0c8xKaZhuSJHC9prgRd+nv+rlHrRcHd0QZ9RUDK4UDE/52f0FKTstOpzSJd1JLT73lT1UGA80hJe51OMuMjc8fSaYOZwKQRwV64VVyvz4PtPLQmo1N8BGFhkMZGr8QigRDy8uV06cndzr7aXLG0dMXVdQcflkRJ5SWtqzmKsC5BvkCnABn0ioNFQAcwaS1ArDH16ZCcXtPl3lqypTrG0xxHZ04vmvY0ZsOqB+SN9V/+Xp9Q6V+ra80rFdIDbUgGliZBPADJFvc7GwcvaJe/MkTe0IuV0g7iEHNKQo+oSy7QyE3HJpj5gDnJnDq0FCgdqAM2gSQcLCl4/xP+dA3yHu1Z9palQEfGVS0J9x1j7lgEiDcoA0S6sVvqNl0KjD1Hse0I9PFMy0T1BZDm81lbC7BSbvV1amfyBNDjIkE8O8qtv5xQb2Oi4GYu50JS171NpwPeNocYcmt3sGq5OO0WjRyaP9qDuuhvpDDiSbTji8nEasZX/RhDrX+fRO6yIK6YCZu9EodBEYaH5MaZoSO/m+y3G+29JeSW8v9Vu13RJZHRiWJiuSriUQ1H4nkD8tydUckszB76Nh8dXZBq9D61wDd1XCH3OjKOiIQtviDPCwCYC2kqYcRn25hImxsVErYw17zWX60YQ69iw2a5Wy409Kr/HWzN9RbAfZj8lzdGr2FqtQ/WwBVGM1Dht4FVbBJLIyGvsnuEPIFnc4VFn3siLOdGfZ1y7y1QgxHzSGW7jRNGsHfmUANq4CzDbJzA/gDqGwDU2vkP99J9e1aTw5s2sZ2hL7hxVzPHlYYG5kYVQ7sDpa49g6O5018v5GNdzvjYYc/UQhFKwMX3S6Ot8VYjyIOZ02W8RZjm67La3La7cY2V/dAVyjBdZrduzQ1GaTDq+RGvd4bM6zuO7nuQavmdLxqTTqzkwsLlatXS/Ye0+FhY0c2j0XlUmhFUe+V21sAJw04a8RQfzsQtEbXhlR9Pm2MifRX2gb88najb7BHJZ/3zcPdYKhvmfpy2bQcZAv2KTpdrDw5VW5qKk9N7hzQbxnDH6vvbE/j/SrBRbdbXYO9s5JTcH3XegDtfUCDvYwtHK/nLLzAyALuWa2eP/fI81eri6cOYYtau30bUw9efx2eWEEf4Dw+VX+n2OT3lYebHEcernKC9q6focaodtibDsCHGQGSTc1pSgbZkMdYTNYRPfH9fnq69ujeywcTralTyfmfZb+fM7x1Bx8p4NnPvok/+aj3Wxd/WCB4nLyj3nwMtnBm/TS1BKhdiEMJwPVSjB4Wv4HS81+A1skQTg8vApvuCjr8vkWQE86E9PUIVywV/EPKkwsF47ZjQwsrY2fzzcI/pqd/2fer+djeX4iOsfK+fjF7YneMmiX4gSMa6TZs91UELjkYaN9uLx44Jmm0Rhb/XPv5QO6wJWup5v3bBgKtinFQ2ZeIomZUXP8u9RxwdSIvCsLm0JLeIKTTfZkuZmm2uW5MWqBYE6uHa/zGvkVJPB5Nfm9Mzp06lLEmHkssLI9cym1Jqh/hTvVTcu/K9PSVK7W7ZGBaPYsv4TdG+7Yzw8GBApOkU0qxm2CFiIexK/vhJ8T8l9p+nCo+i/4HR2UlWwAAAQAAAAEKPVBen81fDzz1IAsD6AAAAADRpuWtAAAAAObmDen/gf8JA78DiQAAAAgAAgAAAAAAAHjaY2BkYGAO+i/FEMD84n/j/93M+0EiKEARAKIqBskAeNpj/MLAAMX1QOwGxIpAHAXEtkC8HIgdgFgbiFWAWAKImYBYF4gdgVgPiLWA2BWqDoRTgFgGygbJg+h0ILYGYhcgtoOaIQvEa5hfMEQwuDD4AADAoyfpAAAAAAAAAAAlAEsAXwCDAJAApgCzAO4BAgEnAUsBiQG5AfYCLQJRAncCmwK0AvMDGQNIA4QDqAPrBA8ENQRcBHUEiwS2BQwFWXjaY2BkYGBQZvjCIMXQxcAD5iEAMwMjACprAc542p1TS24TQRB99phPAkQoUnYRakUsQApDbCCLZBUwKEYJQThCAbGZ+IcVx7bGHgILtiw4AVfgBEjAAjaGE3AIDsCKBe/V9JAPliCoNTOvq6urXr2qAXAeIwTIFSaI3xfmPM7hQqHgcR5TwQ+PA3SC1x4XEAZPPD6BpSC7exLz+cz/FPr5Vx6fxly+7vEEHucnPZ7EKFf2+AxKuWmPz+ISvnt8Dm/wwOMpLGLW8DTjzAIfZ0Zv373EMtyXi19nvm0ZGn76/OEn0VMMufoYYAlXuXrEDXTRJOrypIM2amYZ8B3SGqOFTd5r0+Jwx/s5VImaRHuI6NOgJfU4HKFOS0JcJ46Jh4wk3yoqWON3w+c/GHntUIR5Wh7a7QHt8nEokpmerJq0lqyGmH7PeVrjPsQO90er3rMV0jvCM4st35ge6a1d8kuwbfnFSJU6lFHCLeI643epimMPGvwmrFkaOHZolUgM21Zxj6cxLX0ykDbSaZdW5axbZV3unKkr5mncfbviviBKjEWTtyKixOIMcNls4u2wYlVHjNrl2T3yL7OWR6ZIC1fINKISDveN6Y5mAneNYXq+an0Uc92RVR5Vs+l83bipNw2uZWZYYVduM64zTaSd3uKXdulPtdL5iLwOLdsPTf10TtQ5VSCNUpaZ8n/PFo5VYN3Oelb/wU6Nm6frfBas6pv0a9NTnEq0lfiHFfldwLWxWdzvPEcn4njeyv3/zI6TWRr2OVnyadnfodmt2UQpbhE3qFmKFv9Rf81gh0vdzaJmM6//KPZTL8/9f13dVrUt46m6tslLHhvMusmMFWxxX+F5DeEvoCjqIXjaY2BmAIP/FQxWQIoRwkMAACgAAbYAAA==); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">splitWidth(total, minimums)</tspan></text>
+<path d="M24 64 L353 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="329" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">extra = total - sum(minimums)</text>
+<rect x="24" y="96" width="329" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">used = <tspan fill="#8a5a00">0</tspan></text>
+<rect x="24" y="128" width="329" height="212" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="148" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> minimum <tspan fill="#1f45d6">of</tspan> minimums)</text>
+<rect x="46" y="160" width="307" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 160 L196 208 L353 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="196" y="178" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">minimum is last</text>
+<text x="52" y="203" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="347" y="203" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="208" width="150" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="228" font-size="13" fill="#151a22" xml:space="preserve">width = total - used</text>
+<rect x="196" y="208" width="157" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="206" y="228" font-size="13" fill="#151a22" xml:space="preserve">width = round(minimum</text>
+<text x="206" y="246" font-size="13" fill="#151a22" xml:space="preserve">  + extra · minimum</text>
+<text x="206" y="264" font-size="13" fill="#151a22" xml:space="preserve">    / sum(minimums))</text>
+<rect x="46" y="276" width="307" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="296" font-size="13" fill="#151a22" xml:space="preserve">widths.push(width)</text>
+<rect x="46" y="308" width="307" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="328" font-size="13" fill="#151a22" xml:space="preserve">used += width</text>
+<rect x="24" y="340" width="329" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="360" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> widths</text>
+</g>
+</svg>

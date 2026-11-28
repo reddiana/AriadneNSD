@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="529" height="558" viewBox="0 0 529 558">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="742dc5ee989b62d86e08661368fb3da3d09ae697b07c26ac52da8e5dd0b51510"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "placeItems(items, box)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "needed = 0"
+        },
+        {
+          "id": "b3",
+          "kind": "for",
+          "text": "for (const item of items)",
+          "body": [
+            {
+              "id": "b2",
+              "kind": "process",
+              "text": "needed += itemHeight(item)"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "kind": "process",
+          "text": "each = floor(max(0, box.height - needed)\n             / count)"
+        },
+        {
+          "id": "b5",
+          "kind": "process",
+          "text": "y = box.y"
+        },
+        {
+          "id": "b14",
+          "kind": "for",
+          "text": "for (const item of items)",
+          "body": [
+            {
+              "id": "b8",
+              "kind": "if",
+              "text": "item is last",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b6",
+                    "kind": "process",
+                    "text": "height = box.y\n  + box.height - y"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": "height = itemHeight(item)\n  + each"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b9",
+              "kind": "process",
+              "text": "itemBox = { x: box.x, y,\n  width: box.width, height }"
+            },
+            {
+              "id": "b12",
+              "kind": "if",
+              "text": "item.kind === 'block'",
+              "yes": {
+                "id": "r3",
+                "body": [
+                  {
+                    "id": "b10",
+                    "kind": "call",
+                    "target": {
+                      "kind": "named",
+                      "name": "placeBlock"
+                    },
+                    "args": "item.block, itemBox",
+                    "result": ""
+                  }
+                ]
+              },
+              "no": {
+                "id": "r4",
+                "body": [
+                  {
+                    "id": "b11",
+                    "kind": "call",
+                    "target": {
+                      "kind": "named",
+                      "name": "placeFold"
+                    },
+                    "args": "item.fold, itemBox",
+                    "result": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b13",
+              "kind": "process",
+              "text": "y += height"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,d09GRgABAAAAABBcAAsAAAAAF1AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAFAAAABgavU552NtYXAAAAFYAAAAhgAAALwqgR+dZ2FzcAAAAeAAAAAQAAAAEAAXAAlnbHlmAAAB8AAACq8AAA4aT2d7pGhlYWQAAAygAAAANgAAADY67EFKaGhlYQAADNgAAAAfAAAAJAblAulobXR4AAAM+AAAAGYAAACwVjQLTWxvY2EAAA1gAAAAXAAAAFxCuUZnbWF4cAAADbwAAAAcAAAAIABXAYBuYW1lAAAN2AAAAmwAAAWisvBt9nBvc3QAABBEAAAAFgAAACD/ewA7eNpjYGb8wjiBgZWBA0h/YWD4PwdGMxgx/OJgYOJm42RiZAQiBgYGMAEDQZ4RbgwODApnLJiD/mcxLGBuB0pzMICVMPExbQNSCgyMALZvEHR42mNgYGACYmYgFgGSjGCahWEFkFZjUACy2ICkJoMBgxWDLYMTgxuDJ4MvQyZDAUMpQyVDNUPtmoKTl89Y/P8PVK/AoM6gDVfnAVSXyJDNUMRQjqzu/8P/t//f+n/x//n/p/+f+H/8/5H/G/9v+L/+/7r/a/+vCd5lFmH8BewKIgAAZEUzQQAAAAAAAwAIAAIAEAAB//8AA3jabVZ5cBvlFd/v21iKZVv3ubLOtXZ1WLKt1e7KtuRLkiXb8hHbCOdy4lyOIbQdmpCQMIQcMIUpbabwR8tMO512mkATktKEJCQdGCClpKGZMBDaUtppS8MwhT+YMsOUEq37vpXNhGM0K620T+/33u+99/sehajfYj2K4Y8pmqIsvKC9btxmwvobN+DJ/sV70En8GeWAJ1YvdtjYBC2merAs2PT0nz3SuFAUK5lAIFMRi8K45EHZ7P275jldy9bdh/IDB3ZubtFxW+7eB54GwdOumieUSmBeFLy0zarHWlbsoZH7a13tu3sLuNq888BA/tDureBqftf98HcqQA2gN7CLaoCoRMEm2FgbK7Li9eEzZ4bPoNsuXSpduVICuzWLu1GJeoayU5Qj2YPFFMdznJiShKSdQLNr/HLE4WpqMPuDrMj1jPEzZk/I6rDWr7Sa7ZHOTKwkegheFjWhc2g14QfZAiI6pzyEVpfL8OQY5UU56gKJRF7yq2GD3LGE358g147aR4J46Vt8AZ3B7xAvDhYJP5hE3Fg/7YHvMYpGl/GLlIFyUUHIaSm8YAJClixJCaLmabvdEtQ47HaHhft0y45mcaxDGE0xC1uyhTq8gr6uT4QyAysQpt904xePn19/eJrjpg+vP3+8eujBx4JZRjnHBXHn9x5n0wwqTlAUpp6mPKgP3YTYoSa3Rm+65f7pqM8Xi/l80eXPbUtf0Z1LN+CphTqFrqFTkIm2xlAdYemaMo1OwHUqn/9NPk/B0wxlQH/CZykdZaF4yJO1CbWy0KxJSErLN14M2FqbXWXhk60z7njQ0tW7bj5TGor//kowJ/h72zNlb3oU33VVx0T8QkL5cJGS88Pdyjl81Bbp5nPFJly/Zqy12M4Q5jdRRvQm4Nar0ZGXiTWhN5V/Ia3yaQWfHXptRLmAj4JlBizPgyXUE4ENeQnwQucr1yqVa/hsdQ0qKs/ho8oHyEY8D4D9r5fsbWALeQsmVkQ/ufdR5cij94Lr6odDQ9g6BLZOsCXZm8GWZmneRrMWweKQ4Y2lRbRjbHhUZ5p2z87qdHMbrdN6pCj/RfUZvnoT8J6TJFSsrsE0D3zHoV9+hRmqkYpQVEjUajQ2q51QGRIltXQmlmc1pHzQP7IMvLJBjRbN7ekQItHmZMiufBReJcysHaOxYzQxdNvw2A87hGiZ/2OnVdsaD8ecfOofY07H9vXKxVyUGy0Uxptc+l7R4QHsPsB+Bb9FGQm2DJpQKxwb1GObrJau1rk8q1W5k6THTN6wM53OJgMxRndAyEfMxmhRNnMBRoPoVVPIXHwnIPG2dQvbNzAxqfnttpHZtuRcuU1nZgxp/IpyMxAC9voB91mYeT9kbFvKrQfA7aBJXA1eDUZGz3oL/Ld3e7pv7+Jz3kZPJxvtYo3Glu7WYsf+Ccb8nQeyWwZ5s6vstPnEYjhaFDwpyCsB/s8s50UUCihbYlWkAYW0AbCqp2tj2YPRnI6JBZJZIe2M+iwH+KIZTa2ikcbNhs1yIWwwR/Kop1mKMRu2L6yz8VIAZUIBtKLalTYwZl1iZC4Vny23A3IUkC9BZhoqBDMhiJCMVmUSGrXGL6gtybiGe+jf2i13Wg92DCUcyvP6gBQJjQYbgyNSpiIzjDSJJuhDD74azE53hOrChZTXxYw77Hxpcya7KU94LEAXvoCvqzpM2sJG5JM0uijUlNFhQ6fDUS58/Pj03r2TE0ybDe9zxeKJglJEzxXE0UJ9wyDha3Ee+GIoK9W1zNdyCVTGJFHUaDW1kGUJ+JMFk9oanCr9aM7giTXbOK9JY4+0BONMw8OlXOtkuhgxWFsLSa7HijXjdmE62zLhbqz3shzqDqQjDlMk1+Htk4LeWMKkPLt5VleiMZ9bl0rN9HMIBdlOZffAHcNhi6msNTSuVFUX8j0LdYV8Q6xpqVHVsSajAiyjs1PhlDPmM09NmYrxjizbZESpVX2u1p6Q8i603yf+Vn/nWBtRTOLreVwFHSHD//m036qdKHFEOfije24Pu91hcmG9UiwU0M7C8eZwuBkuEtMw+PkYYiKqYWF5LVEOkywg518Wfpmbmnp9O+pVXv908DSgV/4J9lvA/iLYNxFU6EmoGLQ/0Rmuvmn/E3z4G/it6uMNukK7H3cUCEKzqjVuOFkoVEsTUl4u0hdvBYeqGcjmyvt4R/0ovVLfYHcb6sbgptHqNmpHS1ifdERD6HfT9rZhQTmHyqFkc6MjInmVy3Df7mlwRaRm5QpSJD9LeqzGufOrnKtQX+B8dIVp6MukIyXvTyxzTubyFZgOC+UDvVmagdoZocf8kvaQSf1fZrzNbGkby3SNt1nJZ78s9w9IEh0tzaXTc6VotLRJlueGovmF2Y3b5+dmF0hFF7eBd/fXqpkFWhUWC4ha6KGXER+rd0QDyQEp7Yx4zffxA7Wh17oDnFkejBgtrYW/3zrzyqVQ4D38pDryrSNzUtvsCGSFqHn1RHKRzcTiIN5vkTGAPK3RuCOiP9DPNDr6/C0yb53G+q3mcMBmNE0aQLfyoSpSwE83sHMB4gensh3EigT/+Y6jbmsqObC51bYtdfyKsdsDQq5/dKCw7jZujG1sYnnexLcZAqkWJhVxBdMj4cR0+8FmN8vbkwFPQewbNFmG6w0NGp/XxDidhgZ3S7svnGaN5uZVJJs8pUGn8AW13kvarOqJrGqLlSgYOmXNMIOTCwvTx46NOWOmTX2GpsESEguHwycKyhvjjfXgpwf8nMF6ddsEtaiJr6q7S/LX85W2gfl6rdY3yKPgz/sGQW2N6D/gi5y26iFLjlwtvKlHLvIXNJrk+OTU+IoV41OTE+3alTn0nnK1twetVTAqNzcrZ+D8PVEsIHV384C3t8Hb8sSysCc7YGJjp+b237/h5LG5XXs2IotSvXwZ0Z+99BLZUaGz3oJ/OGHbEwW1NrJcAxdocopwvY16V72nxWC6OLtfq7175hmDLxT3mNgj+TotE82iG8oTDIO2VZV4b9i8gkTRtbgXncafqLsTqTUpM9ECEHGyMEGJyYlVUwfSxWxXOh4aHtywNuAVgwafy+gNrN0wOMTF02hHX/yR8XxvJH4yJtVjjYUJ2q7GI725iafi/eS0BaQLNSS05J+FiqqYoOcitJgKAD/Za6DoQjrODalYRpfPEBRVrOEQYLX0x5+ayAHWVVuQsWhwvRQ7CVj58UfifVCnmcV9dI5uhN3RBWigqFBwU10PLUPRCUBS1mAt9v+hUqneOfPQ+rQuuycz/+PB7xb1r15Bm0fQ7M1vovdvtH7r4PdHMBrGV5WLd8GumV/cSx8Crz6KpdLg10s7tLBG62kt/wXXGjiXWC2s1bc8FTTobYsgp5m0dEeULY+NBDsLDyyMGLq3dy6cyN1XqhM+qFR+Hv/FfHLmZ6IrN766TRzceVuSnsXoM1ci2qLv9U8LbKYj1NjrLK/bLpGw+nf9tfrT9uImy6BlrhTsbg/pCoaOwup0gqqjyosP009CrAzlpTjYB0jL1QLSaL4cLoLttU6VJZtAB0wBLXxHL6/eJYk7EplHcnJxz8a8NX1XeuF4/+HiyoxyAxmVj/AbRyqVI0eq13B7RbkPHUYvD8R7HX1c+4gjY8sWyi0YFbC4CbkH330fm/9WXYuy5aPU/wGQs9rAAAABAAAAAQo9WUnsG18PPPUgCwPoAAAAANGm5a0AAAAA5uYN6f+B/wkDvwOJAAAACAACAAAAAAAAeNpjYGRgYA76L8UQwPzif+P/3cz7QSIoQBsAojQG0wB42jXOvQ1AYBCA4cMSCgqJijCAvyAoxACiFIkxjKMyhl0MYADvl5ziyf3mctYrom4cGBBgQYkTNWJcCFFg1djCRaJ7DVJE6DU3fWPEBk/rf7YjR4cKNnz9IzM3nUdm6WT6ALxXNK8AAAAAAAAAAAANADIAWABsAJAAnQCzAMAA+wEgATQBcAGFAZ0BswHYAhYCUgKCAr8C9gMaA24DlAO4A9AD6QQoBE4EfQS5BN0FIAVEBWoFkQWqBdQGCQY/BmoGwAcNeNpjYGRgYNBl+MIgxdDFwAPmIQAzAyMAK3kB2HjanVNLbhNBEH32mE8CRChSdhFqRSxACkNsIItkFTAoRglBOEIBsZn4hxXHtsYeAgu2LDgBV+AESMACNoYTcAgOwIoF79X0kA+WIKg1M6+rq6tevaoBcB4jBMgVJojfF+Y8zuFCoeBxHlPBD48DdILXHhcQBk88PoGlILt7EvP5zP8U+vlXHp/GXL7u8QQe5yc9nsQoV/b4DEq5aY/P4hK+e3wOb/DA4yksYtbwNOPMAh9nRm/fvcQy3JeLX2e+bRkafvr84SfRUwy5+hhgCVe5esQNdNEk6vKkgzZqZhnwHdIao4VN3mvT4nDH+zlUiZpEe4jo06Al9TgcoU5LQlwnjomHjCTfKipY43fD5z8Yee1QhHlaHtrtAe3ycSiSmZ6smrSWrIaYfs95WuM+xA73R6vesxXSO8Iziy3fmB7prV3yS7Bt+cVIlTqUUcIt4jrjd6mKYw8a/CasWRo4dmiVSAzbVnGPpzEtfTKQNtJpl1blrFtlXe6cqSvmadx9u+K+IEqMRZO3IqLE4gxw2Wzi7bBiVUeM2uXZPfIvs5ZHpkgLV8g0ohIO943pjmYCd41her5qfRRz3ZFVHlWz6XzduKk3Da5lZlhhV24zrjNNpJ3e4pd26U+10vmIvA4t2w9N/XRO1DlVII1Slpnyf88WjlVg3c56Vv/BTo2bp+t8Fqzqm/Rr01OcSrSV+IcV+V3AtbFZ3O88RyfieN7K/f/MjpNZGvY5WfJp2d+h2a3ZRCluETeoWYoW/1F/zWCHS93NomYzr/8o9lMvz/1/Xd1WtS3jqbq2yUseG8y6yYwVbHFf4XkN4S+gKOoheNpjYGYAg/8VDFZAihHCQwAAKAABtgAA); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeItems(items, box)</tspan></text>
+<path d="M24 64 L505 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="481" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">needed = <tspan fill="#8a5a00">0</tspan></text>
+<rect x="24" y="96" width="481" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> item <tspan fill="#1f45d6">of</tspan> items)</text>
+<rect x="46" y="128" width="459" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="148" font-size="13" fill="#151a22" xml:space="preserve">needed += itemHeight(item)</text>
+<rect x="24" y="160" width="481" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve">each = floor(max(<tspan fill="#8a5a00">0</tspan>, box.height - needed)</text>
+<text x="34" y="198" font-size="13" fill="#151a22" xml:space="preserve">             / count)</text>
+<rect x="24" y="210" width="481" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="230" font-size="13" fill="#151a22" xml:space="preserve">y = box.y</text>
+<rect x="24" y="242" width="481" height="292" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="262" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> item <tspan fill="#1f45d6">of</tspan> items)</text>
+<rect x="46" y="274" width="459" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 274 L243 322 L505 274" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="243" y="292" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item is last</text>
+<text x="52" y="317" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="499" y="317" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="322" width="197" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="342" font-size="13" fill="#151a22" xml:space="preserve">height = box.y</text>
+<text x="56" y="360" font-size="13" fill="#151a22" xml:space="preserve">  + box.height - y</text>
+<rect x="243" y="322" width="262" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="253" y="342" font-size="13" fill="#151a22" xml:space="preserve">height = itemHeight(item)</text>
+<text x="253" y="360" font-size="13" fill="#151a22" xml:space="preserve">  + each</text>
+<rect x="46" y="372" width="459" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="392" font-size="13" fill="#151a22" xml:space="preserve">itemBox = { x: box.x, y,</text>
+<text x="56" y="410" font-size="13" fill="#151a22" xml:space="preserve">  width: box.width, height }</text>
+<rect x="46" y="422" width="459" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 422 L282 470 L505 422" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="282" y="440" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">item.kind === <tspan fill="#8a5a00">'block'</tspan></text>
+<text x="52" y="465" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="499" y="465" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="470" width="236" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 470 L53 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M275 470 L275 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="490" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeBlock</tspan>(item.block, itemBox)</text>
+<rect x="282" y="470" width="223" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M289 470 L289 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M498 470 L498 502" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="299" y="490" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeFold</tspan>(item.fold, itemBox)</text>
+<rect x="46" y="502" width="459" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="522" font-size="13" fill="#151a22" xml:space="preserve">y += height</text>
+</g>
+</svg>

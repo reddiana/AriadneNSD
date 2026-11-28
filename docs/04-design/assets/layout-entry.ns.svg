@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="416" height="514" viewBox="0 0 416 514">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="fcd5013aa3579a06d3e8a1fa14f7d70af54dd897e7b858b3ba557bb142925b77"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "layout(doc)"
+      },
+      "body": [
+        {
+          "id": "b2",
+          "kind": "for",
+          "text": "for (const diagram of doc.content.diagrams)",
+          "body": [
+            {
+              "id": "b1",
+              "kind": "call",
+              "target": {
+                "kind": "named",
+                "name": "measureDiagram"
+              },
+              "args": "diagram, headStyle",
+              "result": "measures[i]"
+            }
+          ]
+        },
+        {
+          "id": "b3",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "arrange"
+          },
+          "args": "measures",
+          "result": "arrangement"
+        },
+        {
+          "id": "b10",
+          "kind": "for",
+          "text": "for (const { measure, x, y }\n     of arrangement.placed)",
+          "body": [
+            {
+              "id": "b4",
+              "kind": "process",
+              "text": "box = { x: paper + x, y: paper + y,\n        width,\n        height: headHeight + bodyHeight }"
+            },
+            {
+              "id": "b6",
+              "kind": "if",
+              "text": "diagram.head !== null",
+              "yes": {
+                "id": "r1",
+                "body": [
+                  {
+                    "id": "b5",
+                    "kind": "process",
+                    "text": "nodes.push(diagramHead)"
+                  }
+                ]
+              },
+              "no": {
+                "id": "r2",
+                "body": [
+                  {
+                    "id": "b7",
+                    "kind": "process",
+                    "text": ""
+                  }
+                ]
+              }
+            },
+            {
+              "id": "b8",
+              "kind": "process",
+              "text": "body = { x: box.x, y: box.y + headHeight,\n         width, height: bodyHeight }"
+            },
+            {
+              "id": "b9",
+              "kind": "call",
+              "target": {
+                "kind": "named",
+                "name": "placeSeq"
+              },
+              "args": "diagram.body, body",
+              "result": ""
+            }
+          ]
+        },
+        {
+          "id": "b11",
+          "kind": "process",
+          "text": "return { width, height, diagrams,\n         boxes, regions, nodes }"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">layout(doc)</tspan></text>
+<path d="M24 64 L392 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="368" height="64" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> diagram <tspan fill="#1f45d6">of</tspan> doc.content.diagrams)</text>
+<rect x="46" y="96" width="346" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 96 L53 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M385 96 L385 128" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="116" font-size="13" fill="#151a22" xml:space="preserve">measures[i] ← <tspan font-weight="600">measureDiagram</tspan>(diagram, headStyle)</text>
+<rect x="24" y="128" width="368" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 128 L31 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M385 128 L385 160" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="148" font-size="13" fill="#151a22" xml:space="preserve">arrangement ← <tspan font-weight="600">arrange</tspan>(measures)</text>
+<rect x="24" y="160" width="368" height="280" fill="#dce6f6" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="180" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">for</tspan> (<tspan fill="#1f45d6">const</tspan> { measure, x, y }</text>
+<text x="34" y="198" font-size="13" fill="#151a22" xml:space="preserve">     <tspan fill="#1f45d6">of</tspan> arrangement.placed)</text>
+<rect x="46" y="210" width="346" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="230" font-size="13" fill="#151a22" xml:space="preserve">box = { x: paper + x, y: paper + y,</text>
+<text x="56" y="248" font-size="13" fill="#151a22" xml:space="preserve">        width,</text>
+<text x="56" y="266" font-size="13" fill="#151a22" xml:space="preserve">        height: headHeight + bodyHeight }</text>
+<rect x="46" y="278" width="346" height="48" fill="#f6ebdc" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M46 278 L311 326 L392 278" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="311" y="296" text-anchor="middle" font-size="13" fill="#151a22" stroke="#f6ebdc" stroke-width="6" stroke-linejoin="round" paint-order="stroke" xml:space="preserve">diagram.head !== <tspan fill="#1f45d6">null</tspan></text>
+<text x="52" y="321" font-size="12" fill="#4b5567" xml:space="preserve">참</text>
+<text x="386" y="321" text-anchor="end" font-size="12" fill="#4b5567" xml:space="preserve">거짓</text>
+<rect x="46" y="326" width="265" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="346" font-size="13" fill="#151a22" xml:space="preserve">nodes.push(diagramHead)</text>
+<rect x="311" y="326" width="81" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<circle cx="351.5" cy="342" r="3.5" fill="none" stroke="#5a6476" stroke-width="1.1"/>
+<path d="M347 346.5 L356 337.5" fill="none" stroke="#5a6476" stroke-width="1.1" stroke-linecap="round"/>
+<rect x="46" y="358" width="346" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="56" y="378" font-size="13" fill="#151a22" xml:space="preserve">body = { x: box.x, y: box.y + headHeight,</text>
+<text x="56" y="396" font-size="13" fill="#151a22" xml:space="preserve">         width, height: bodyHeight }</text>
+<rect x="46" y="408" width="346" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M53 408 L53 440" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M385 408 L385 440" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="63" y="428" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">placeSeq</tspan>(diagram.body, body)</text>
+<rect x="24" y="440" width="368" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="460" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> { width, height, diagrams,</text>
+<text x="34" y="478" font-size="13" fill="#151a22" xml:space="preserve">         boxes, regions, nodes }</text>
+</g>
+</svg>

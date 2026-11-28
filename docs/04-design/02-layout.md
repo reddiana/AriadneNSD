@@ -87,11 +87,17 @@ flowchart LR
 
 두 단계의 흐름입니다(`core/src/layout/layout.ts`). `layout`이 다이어그램마다 크기를 측정한 뒤 배치하고, 크기 측정은 블록의 종류마다 나뉩니다. 제어 블록은 If처럼 안쪽 줄을 먼저 측정해(`measureBody`) 자기 크기를 정합니다.
 
-![[layout-measure.ns.svg]]
+![[layout-entry.ns.svg]]
+
+![[measure-block.ns.svg]]
+
+![[measure-if.ns.svg]]
 
 배치에서 줄은 남는 높이를 블록마다 똑같이 나누고 마지막 블록이 나머지를 받습니다(`placeItems`). 분기의 폭은 최소 폭에 비례해 나누고 반올림하며, 역시 마지막 분기가 나머지를 받습니다(`splitWidth`).
 
-![[layout-place.ns.svg]]
+![[place-items.ns.svg]]
+
+![[split-width.ns.svg]]
 
 AriadneNSD로 그린 NS 차트입니다. 흐름만 보이려고 접기 영역 · 테두리(`insets`) · 펴 보인 호출 블록의 처리와 인자 `context` · `at`은 뺐습니다.
 

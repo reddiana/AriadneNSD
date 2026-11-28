@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="302" height="502" viewBox="0 0 302 502">
+  <metadata>
+    <ans:document xmlns:ans="https://github.com/reddiana/AriadneNSD" version="1" drawing-sha256="322bf6a78b16f5e5fa2e53fa9e52d8c91ff59e1f21f96ece8387b769b0694269"><![CDATA[
+{
+  "format": "ariadne-nsd",
+  "version": 1,
+  "settings": {
+    "textKind": "javascript",
+    "theme": "default",
+    "headStyle": "title",
+    "locale": "ko"
+  },
+  "diagrams": [
+    {
+      "id": "d1",
+      "head": {
+        "kind": "method",
+        "text": "measureIf(block)"
+      },
+      "body": [
+        {
+          "id": "b1",
+          "kind": "process",
+          "text": "text = measureText(block.text)"
+        },
+        {
+          "id": "b2",
+          "kind": "process",
+          "text": "headHeight = text.height + 2·padY\n  + geometry['size.if-label']"
+        },
+        {
+          "id": "b3",
+          "kind": "process",
+          "text": "headWidth = text.width + 2·padX\n  + geometry['size.if-head-extra']"
+        },
+        {
+          "id": "b4",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "measureBody"
+          },
+          "args": "block.yes.body",
+          "result": "yes"
+        },
+        {
+          "id": "b5",
+          "kind": "call",
+          "target": {
+            "kind": "named",
+            "name": "measureBody"
+          },
+          "args": "block.no.body",
+          "result": "no"
+        },
+        {
+          "id": "b6",
+          "kind": "process",
+          "text": "branchWidths = [\n  columnWidth(yes.width, '참'),\n  columnWidth(no.width, '거짓') ]"
+        },
+        {
+          "id": "b7",
+          "kind": "process",
+          "text": "width = max(headWidth,\n  branchWidths[0] + branchWidths[1])"
+        },
+        {
+          "id": "b8",
+          "kind": "process",
+          "text": "height = headHeight\n  + max(yes.height, no.height)"
+        },
+        {
+          "id": "b9",
+          "kind": "process",
+          "text": "return { width, height,\n         headHeight, branchWidths }"
+        }
+      ]
+    }
+  ],
+  "view": {
+    "folded": [],
+    "opened": [],
+    "bands": true,
+    "resultSymbol": "←"
+  }
+}
+    ]]></ans:document>
+  </metadata>
+  <style>
+    @font-face { font-family: "AriadneNSD Mono"; src: url(data:font/woff;base64,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); }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g class="ans-render" transform="translate(.5 .5)" font-family="'AriadneNSD Mono', D2Coding, Consolas, 'Malgun Gothic', 'Apple SD Gothic Neo', monospace" style="font-kerning:none">
+<text x="24" y="36" font-size="12" fill="#5a6476" xml:space="preserve">Method</text>
+<text x="24" y="53" font-size="13" fill="#151a22" xml:space="preserve"><tspan font-weight="600">measureIf(block)</tspan></text>
+<path d="M24 64 L278 64" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<rect x="24" y="64" width="254" height="32" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="84" font-size="13" fill="#151a22" xml:space="preserve">text = measureText(block.text)</text>
+<rect x="24" y="96" width="254" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="116" font-size="13" fill="#151a22" xml:space="preserve">headHeight = text.height + <tspan fill="#8a5a00">2</tspan>·padY</text>
+<text x="34" y="134" font-size="13" fill="#151a22" xml:space="preserve">  + geometry[<tspan fill="#8a5a00">'size.if-label'</tspan>]</text>
+<rect x="24" y="146" width="254" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="166" font-size="13" fill="#151a22" xml:space="preserve">headWidth = text.width + <tspan fill="#8a5a00">2</tspan>·padX</text>
+<text x="34" y="184" font-size="13" fill="#151a22" xml:space="preserve">  + geometry[<tspan fill="#8a5a00">'size.if-head-extra'</tspan>]</text>
+<rect x="24" y="196" width="254" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 196 L31 228" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M271 196 L271 228" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="216" font-size="13" fill="#151a22" xml:space="preserve">yes ← <tspan font-weight="600">measureBody</tspan>(block.yes.body)</text>
+<rect x="24" y="228" width="254" height="32" fill="#ebe7f4" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<path d="M31 228 L31 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<path d="M271 228 L271 260" fill="none" stroke="#5b77ad" stroke-width="1"/>
+<text x="41" y="248" font-size="13" fill="#151a22" xml:space="preserve">no ← <tspan font-weight="600">measureBody</tspan>(block.no.body)</text>
+<rect x="24" y="260" width="254" height="68" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="280" font-size="13" fill="#151a22" xml:space="preserve">branchWidths = [</text>
+<text x="34" y="298" font-size="13" fill="#151a22" xml:space="preserve">  columnWidth(yes.width, <tspan fill="#8a5a00">'참'</tspan>),</text>
+<text x="34" y="316" font-size="13" fill="#151a22" xml:space="preserve">  columnWidth(no.width, <tspan fill="#8a5a00">'거짓'</tspan>) ]</text>
+<rect x="24" y="328" width="254" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="348" font-size="13" fill="#151a22" xml:space="preserve">width = max(headWidth,</text>
+<text x="34" y="366" font-size="13" fill="#151a22" xml:space="preserve">  branchWidths[<tspan fill="#8a5a00">0</tspan>] + branchWidths[<tspan fill="#8a5a00">1</tspan>])</text>
+<rect x="24" y="378" width="254" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="398" font-size="13" fill="#151a22" xml:space="preserve">height = headHeight</text>
+<text x="34" y="416" font-size="13" fill="#151a22" xml:space="preserve">  + max(yes.height, no.height)</text>
+<rect x="24" y="428" width="254" height="50" fill="#edf0f5" stroke="#5b77ad" stroke-width="1" shape-rendering="crispEdges"/>
+<text x="34" y="448" font-size="13" fill="#151a22" xml:space="preserve"><tspan fill="#1f45d6">return</tspan> { width, height,</text>
+<text x="34" y="466" font-size="13" fill="#151a22" xml:space="preserve">         headHeight, branchWidths }</text>
+</g>
+</svg>
