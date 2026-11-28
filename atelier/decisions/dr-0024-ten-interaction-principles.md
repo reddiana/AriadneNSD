@@ -14,7 +14,7 @@ superseded-by: "[[dr-0025-five-grand-principles]]"
 
 메인테이너(2026-11-28): "이번을 포함해서 그동안 interaction-rules을 많이 추가하고 고쳤습니다. 일관성이 떨어질 것이 걱정됩니다. UX엑스퍼트로서 점검해주세요. UX엑스퍼트는 큰 원칙들로 정리할 수 있을 것 같아요."
 
-조작 규칙([[02-interaction-rules]])과 [[ux-decisions|UX 결정]]을 한 줄씩 [[01-ux-overview#2. UX 원칙|UX 원칙]] 일곱에 이어 보니, 어느 원칙에도 이어지지 않으면서 이미 여러 번 같은 쪽으로 정해 온 생각이 일곱 묶음(A ~ G) 있었다. 원칙 "뷰 상태와 내용을 구분한다"는 [[ux-decisions#UN1. 접고 펴기도 실행 취소의 대상|UN1]](접고 펴기도 실행 취소 대상) 뒤로 문장이 규칙과 맞지 않았다. 점검과 비교한 안은 시안 M87(https://claude.ai/artifact/KGGZjKgapKTnDW6aXruM5J, 사본 `journal/assets/2026-11-28-ux-principles-audit.html`)에 있다.
+조작 규칙([[02-interaction-rules]])과 [[ux-decisions|UX 결정]]을 한 줄씩 [[02-interaction-rules#원칙|UX 원칙]] 일곱에 이어 보니, 어느 원칙에도 이어지지 않으면서 이미 여러 번 같은 쪽으로 정해 온 생각이 일곱 묶음(A ~ G) 있었다. 원칙 "뷰 상태와 내용을 구분한다"는 [[ux-decisions#UN1. 접고 펴기도 실행 취소의 대상|UN1]](접고 펴기도 실행 취소 대상) 뒤로 문장이 규칙과 맞지 않았다. 점검과 비교한 안은 시안 M87(https://claude.ai/artifact/KGGZjKgapKTnDW6aXruM5J, 사본 `journal/assets/2026-11-28-ux-principles-audit.html`)에 있다.
 
 | 후보 | 한 줄 | 이 생각으로 이미 정한 규칙 |
 | --- | --- | --- |
@@ -51,7 +51,7 @@ superseded-by: "[[dr-0025-five-grand-principles]]"
 
 ## 결정
 
-**대안 A (메인테이너, 2026-11-28, M87의 Q1 1번).** 원칙은 아래 열 개다. 본문은 [[01-ux-overview#2. UX 원칙]].
+**대안 A (메인테이너, 2026-11-28, M87의 Q1 1번).** 원칙은 아래 열 개다. 본문은 [[02-interaction-rules#원칙]].
 
 1. 구조를 편집하면 그림이 따라온다 (그대로)
 2. 보이는 대로 다룬다 (새: A + C)
