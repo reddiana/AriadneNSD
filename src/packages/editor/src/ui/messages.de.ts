@@ -60,14 +60,13 @@ export const de: Readonly<Record<UiMessageKey, string>> = {
   'about.repository': 'GitHub-Repository',
   'whatsNew.title': 'Neu in dieser Version',
   'whatsNew.body':
-    '0.5.0 macht das tägliche Bearbeiten schneller.\n' +
-    '- Verkleinern, 100 % und Vergrößern sind Schaltflächen in der Symbolleiste; ein Klick auf die Zahl setzt 100 %, das Mausrad darüber zoomt\n' +
-    '- Blöcke lassen sich ganz am Anfang oder Ende eines Diagramms ablegen, auf dem Streifen unter dem Kopf oder unter dem Diagramm\n' +
-    '- Menüeinträge, die gerade nicht verfügbar sind, erscheinen blasser und nennen beim Daraufzeigen den Grund\n' +
-    '- Große Diagramme lassen sich schneller bearbeiten: Nur geänderte Blöcke werden neu gezeichnet\n' +
-    '- Linien sind bei Zoomstufen wie 110 % nicht mehr dicker\n' +
-    '- Hilfe › Algorithmengalerie öffnet 22 Algorithmen als Struktogramme\n' +
-    '- Der Claude-Skill lässt sich auch in claude.ai über den Plugin-Marketplace installieren',
+    '0.6.0 bringt Deutsch und einige Verbesserungen beim Zeichnen.\n' +
+    '- Deutsche Oberfläche: Bedienung, Beispiele, Galerie und Handbuch gibt es jetzt auf Deutsch\n' +
+    '- Währungssymbole wie € ₩ £ erscheinen jetzt in der Diagrammschrift\n' +
+    '- Ein ganzer Faltbereich lässt sich an seinem Namensstreifen oder seiner eingeklappten Zelle ziehen\n' +
+    '- Die Ablagemarkierung beim Ziehen ist deutlicher: dickere Linie, weiße Kontur und Pfeilspitzen; das Ablegen neben Faltbereichen und aufgeklappten Aufrufblöcken verhält sich wie neben einem einzelnen Block\n' +
+    '- Neuer Befehl „Fallauswahl in Verzweigung umwandeln“; wer in eine Verzweigung einen Zweig einfügt, macht sie ohne Rückfrage zur Fallauswahl, mit einem einzigen Rückgängig\n' +
+    '- Schnelleres erstes Laden: Nur die verwendete Sprache wird heruntergeladen',
   'modal.close': 'Schließen',
   'contextMenu.label': 'Kontextmenü',
   'dialog.label': 'Frage',

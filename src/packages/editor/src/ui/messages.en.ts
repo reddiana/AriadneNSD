@@ -58,14 +58,13 @@ export const en = {
   'about.repository': 'GitHub repository',
   'whatsNew.title': "What's New in This Version",
   'whatsNew.body':
-    '0.5.0 makes everyday editing quicker.\n' +
-    '- Zoom out, 100% and zoom in are buttons on the toolbar; click the number for 100%, or use the wheel over them\n' +
-    '- Drop blocks at the very start or end of a diagram, on the band under the header or under the diagram\n' +
-    '- Menu items you cannot use now are fainter and say why when you point at them\n' +
-    '- Editing a large diagram is faster: only the blocks that change are redrawn\n' +
-    '- Lines are no longer thicker at zoom levels like 110%\n' +
-    '- Help › Algorithm gallery opens 22 algorithms drawn as NS diagrams\n' +
-    '- The Claude skill installs in claude.ai from the plugin marketplace too',
+    '0.6.0 adds German and a few drawing improvements.\n' +
+    '- German screen language: the interface, examples, gallery and manual are available in German\n' +
+    '- Currency symbols such as € ₩ £ now show in the diagram font\n' +
+    '- Drag a whole folding region by its name strip or its collapsed cell\n' +
+    '- The drop indicator is clearer while dragging: a thicker line, a white outline and arrowheads; dropping beside folding regions and expanded call blocks works like dropping beside a single block\n' +
+    '- New Convert Case to If command; inserting a branch into an If turns it into a Case without asking, in one undo step\n' +
+    '- Faster first load: only the language in use is downloaded',
   'modal.close': 'Close',
   'contextMenu.label': 'Context menu',
   'dialog.label': 'Question',
