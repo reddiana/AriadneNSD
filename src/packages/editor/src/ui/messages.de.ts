@@ -1,6 +1,6 @@
-// The German table of messages.ts, fetched when the screen first shows German (core `lazyCatalog`).
+// The German table of messages.ts (keys from messages.en.ts), fetched when the screen first shows German (core `lazyCatalog`).
 
-import type { UiMessageKey } from './messages';
+import type { UiMessageKey } from './messages.en';
 
 export const de: Readonly<Record<UiMessageKey, string>> = {
   'menu.file': 'Datei',

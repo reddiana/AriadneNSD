@@ -10,6 +10,9 @@ superseded-by:
 
 # ADR-0053: 화면 언어의 문구는 영어만 첫 다운로드에 두고, 다른 언어는 쓸 때 받는다
 
+> [!NOTE] 이후 변경
+> - 2026-11-28: 영어 표와 키의 타입을 `messages.ts`에서 `messages.en.ts`로 옮김. 다른 언어의 표가 `messages.ts`의 타입을 가져와 생긴 순환(depcruise `no-circular`)을 끊으려고 → [[07-coding-guide#8. 화면의 문자열]]
+
 ## 배경
 
 화면의 문구는 카탈로그 셋(`editor`의 엔진 카탈로그와 UI 카탈로그, 웹 셸의 카탈로그)에 영어 · 한국어 · 독일어가 함께 들어 있었고, 모두 첫 다운로드의 한 청크에 묶였다. 블록 셋(무한 반복 · 탈출 · 병렬 처리 → [[0052-endless-exit-parallel-blocks|ADR-0052]])과 독일어를 더하자 첫 다운로드(gzip)가 252.5 KB가 되어 번들 사이즈 체크의 한도 250 KB([[03-quality-attribute-scenarios#QA-09 파일과 번들의 크기 (제안)|QA-09]])를 넘었다(커밋 `96fbbb8`의 CI). 한 사용자가 보는 언어는 하나인데 셋을 모두 받고, 언어를 더할 때마다 첫 다운로드가 커진다 → [[01-requirements#^r-nfr|R-NFR-04]], [[03-quality-attribute-scenarios#QA-13 화면 언어 추가|QA-13]]

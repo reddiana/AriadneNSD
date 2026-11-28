@@ -1,6 +1,6 @@
-// The German table of messages.ts, fetched when the screen first shows German (core `lazyCatalog`).
+// The German table of messages.ts (keys from messages.en.ts), fetched when the screen first shows German (core `lazyCatalog`).
 
-import type { ShellMessageKey } from './messages';
+import type { ShellMessageKey } from './messages.en';
 
 export const german: Record<ShellMessageKey, string> = {
   'file.recent.empty': 'Keine zuletzt verwendeten Dateien',
