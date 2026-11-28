@@ -59,7 +59,7 @@ a { color: var(--accent); }
 
   <section>
     <span class="part">장면</span>
-    <h2>여섯 장면</h2>
+    <h2>일곱 장면</h2>
     <div class="sum"><ul>
       <li><b>①</b> 펴진 접기 영역 "초기화"의 <b>이름 띠</b>에 놓기(위 가장자리).</li>
       <li><b>②</b> 아래 가장자리, <b>안쪽에서</b>(포인터가 마지막 블록 <code>합 ← 0</code>의 아래 띠).</li>
@@ -67,6 +67,7 @@ a { color: var(--accent); }
       <li><b>④</b> 접기 영역 "더하기"가 While 본문의 마지막일 때 아래 가장자리.</li>
       <li><b>⑤</b> <b>접힌</b> 접기 영역(접힌 칸)의 아래 반에 놓기.</li>
       <li><b>⑥</b> 접기 영역 "초기화"의 <b>안쪽 끝</b>에 넣고 싶을 때. 안마다 손이 가는 곳이 다릅니다.</li>
+      <li><b>⑦</b> 접기 영역 <b>안의 블록 사이</b>(<code>i ← 0</code>과 <code>합 ← 0</code> 사이). 모든 안에서 지금과 같이 영역 안에 들어갑니다. 바뀌는 것은 접기 영역 자신의 가장자리(이름 띠, 아래 가장자리 8px, 접힌 칸)뿐입니다.</li>
     </ul></div>
   </section>
 
@@ -167,7 +168,8 @@ function drawF() {
   s += rect(0, F.avg, W, ROW, C.proc) + text(10, F.avg + 21, '평균 ← 합 / n');
   return [s, F.avg + ROW + 8];
 }
-const draw = { 1: drawS, 2: drawS, 3: drawS, 4: drawL, 5: drawF, 6: drawS };
+const draw = { 1: drawS, 2: drawS, 3: drawS, 4: drawL, 5: drawF, 6: drawS, 7: drawS };
+const between = [150, S.b2.y + 3, 0, S.b2.y, W, 'good', '<b>i ← 0과 합 ← 0 사이</b>(초기화 안) — 모든 안에서 지금과 같음'];
 const sBottom = S.fold.y + S.fold.h, lBottom = L.fold.y + L.fold.h;
 // 결과: [포인터 x, 포인터 y, 줄 x, 줄 y, 줄 폭(0이면 놓을 수 없음), 표시, 설명]
 const no = (x, y, msg) => [x, y, 0, 0, 0, 'bad', msg];
@@ -205,7 +207,8 @@ const R = {
     6: [150, sBottom - 7, 0, sBottom, W, 'good', '가장자리에서 4 ~ 8px → <b>안쪽 끝</b>(과녁 4px)'],
   },
 };
-const caps = { 1: '① 이름 띠에 놓기', 2: '② 아래 가장자리, 안쪽에서', 3: '③ 아래 가장자리, 바깥에서', 4: '④ 반복 본문의 마지막인 접기 영역', 5: '⑤ 접힌 칸의 아래 반', 6: '⑥ 안쪽 끝에 넣기' };
+Object.keys(R).forEach(k => { R[k][7] = between; });
+const caps = { 1: '① 이름 띠에 놓기', 2: '② 아래 가장자리, 안쪽에서', 3: '③ 아래 가장자리, 바깥에서', 4: '④ 반복 본문의 마지막인 접기 영역', 5: '⑤ 접힌 칸의 아래 반', 6: '⑥ 안쪽 끝에 넣기', 7: '⑦ 접기 영역 안의 블록 사이' };
 function scene(opt, n) {
   const r = R[opt][n];
   let [s, h] = draw[n]();
@@ -217,7 +220,7 @@ function scene(opt, n) {
 const mark = k => k === 'good' ? '<span class="good">✓</span> ' : '<span class="bad">✗</span> ';
 document.querySelectorAll('[data-opt]').forEach(el => {
   const opt = el.dataset.opt;
-  el.innerHTML = [1, 2, 3, 4, 5, 6].map(n => '<figure><div class="fig">' + scene(opt, n) + '</div><figcaption><b>' + caps[n] + '</b><br>' + mark(R[opt][n][5]) + R[opt][n][6] + '</figcaption></figure>').join('');
+  el.innerHTML = [1, 2, 3, 4, 5, 6, 7].map(n => '<figure><div class="fig">' + scene(opt, n) + '</div><figcaption><b>' + caps[n] + '</b><br>' + mark(R[opt][n][5]) + R[opt][n][6] + '</figcaption></figure>').join('');
 });
 })();
 </script>
