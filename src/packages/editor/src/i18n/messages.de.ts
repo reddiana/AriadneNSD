@@ -147,8 +147,6 @@ export const german: Readonly<Record<MessageKey, string>> = {
   'reason.selectBranchLabel': 'Wählen Sie zuerst eine Zweigbeschriftung.',
   'reason.selectInBranch':
     'Wählen Sie einen Block in einem Zweig einer Verzweigung oder Fallauswahl.',
-  'reason.notOnBranchLabel':
-    'Auf einer Zweigbeschriftung lassen sich Zweige nur einfügen, löschen und verschieben.',
   'reason.noDefaultToDelete': 'Es gibt keinen sonst-Zweig zum Löschen.',
   'reason.nothingToCopy': 'In einer leeren Zelle gibt es keinen Block zum Kopieren.',
   'reason.nothingToCut': 'In einer leeren Zelle gibt es keinen Block zum Ausschneiden.',

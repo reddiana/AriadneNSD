@@ -99,7 +99,10 @@ export type After = {
     readonly caret: Caret | 'clear';
     /** The field names the Method an extract just made (UX XM2). */
     readonly extracted?: Extracted;
-    /** What is typed joins the undo step that opened the field (a new fold region's name). */
+    /**
+     * The field opens on something just made: what is typed joins that undo step (UX UN3).
+     * Ignored when the command left the content as it was, so there is no step to join.
+     */
     readonly joinsLast?: true;
   };
 };
@@ -488,14 +491,14 @@ export class EditorSession {
 
   /**
    * Applies a command's result: a refusal goes to the status bar; a success replaces the content in one undo step and sets what comes
-   * next. Returns whether the content was taken.
+   * next. `isAmend` joins the last undo step instead. Returns whether the content was taken.
    */
-  commit(result: Result, after: (ok: OkResult) => After): boolean {
+  commit(result: Result, after: (ok: OkResult) => After, isAmend = false): boolean {
     if (!result.ok) {
       this.refuse(result.reason);
       return false;
     }
-    const isApplied = this.apply(result.content, after(result));
+    const isApplied = this.apply(result.content, after(result), isAmend);
     if (isApplied && result.note !== undefined) {
       this.handleNote(result.note);
     }
@@ -525,6 +528,7 @@ export class EditorSession {
         return false;
       }
     }
+    const isChanged = content !== this.current.doc.content;
     const doc: Doc =
       content === this.current.doc.content && view === this.current.doc.view
         ? this.current.doc
@@ -550,7 +554,7 @@ export class EditorSession {
         after.edit.field,
         after.edit.caret,
         after.edit.extracted,
-        after.edit.joinsLast === true,
+        after.edit.joinsLast === true && isChanged,
       );
     }
     return true;

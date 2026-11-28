@@ -42,10 +42,11 @@ import {
   headStart,
   methodsOf,
   afterHead,
+  emptyOfNewBranch,
 } from './command-helpers';
 
 export function callCommands(ctx: CommandContext) {
-  const { deps, session, index, content, intoMissingDefault, insertWhen } = ctx;
+  const { deps, session, index, content, intoMissingDefault, insertWhen, runInsertBranch } = ctx;
 
   // Call blocks (R-BLK-07, interaction rules "호출 블록").
 
@@ -79,9 +80,14 @@ export function callCommands(ctx: CommandContext) {
   };
 
   /** After a call by a written name is made: its name is typed at once (R-BLK-08). */
-  const afterNamed = (call: Id, made: Content): After => ({
+  const afterNamed = (call: Id, made: Content, isNew: boolean): After => ({
     selection: selectBlock(indexDoc(made), call),
-    edit: { field: { kind: 'call', block: call, part: 'name' }, caret: 'selectAll' },
+    edit: {
+      field: { kind: 'call', block: call, part: 'name' },
+      caret: 'selectAll',
+      // Only the name of a block just made joins its undo step (UX UN3).
+      ...(isNew ? { joinsLast: true } : {}),
+    },
   });
 
   /** After inserting a call block: select it and type its arguments (or result) at once. */
@@ -92,6 +98,7 @@ export function callCommands(ctx: CommandContext) {
       edit: {
         field: { kind: 'call', block: call, part: receives ? 'args' : 'result' },
         caret: 'end',
+        joinsLast: true,
       },
     };
   };
@@ -124,7 +131,7 @@ export function callCommands(ctx: CommandContext) {
     }): After => {
       const [first, second] = ok.touched;
       if (isNamed) {
-        return first === undefined ? { selection: null } : afterNamed(first, ok.content);
+        return first === undefined ? { selection: null } : afterNamed(first, ok.content, true);
       }
       if (method === null) {
         // A new Method: its name is written now, and the call block follows it (ADR-0022).
@@ -134,6 +141,17 @@ export function callCommands(ctx: CommandContext) {
         ? { selection: null }
         : afterCall(method, second ?? first, ok.content);
     };
+    if (selection?.kind === 'branchLabel') {
+      // A new branch beside the label takes the call block (UX BL3). Its label opens, unless
+      // a name comes first: that of the new Method, or the written one.
+      runInsertBranch(
+        selection.branch,
+        side,
+        (made, branch, ids) => op(made, emptyOfNewBranch(made, branch), ids),
+        method === null || isNamed ? after : undefined,
+      );
+      return;
+    }
     if (selection?.kind === 'missingDefault') {
       intoMissingDefault(
         selection.block,
@@ -159,20 +177,14 @@ export function callCommands(ctx: CommandContext) {
   const insertCallSpecs: ReadonlyArray<CommandSpec> = [
     spec('block.insert.call', {
       edits: true,
-      when: (state) =>
-        state.selection?.kind === 'branchLabel'
-          ? 'reason.notOnBranchLabel'
-          : insertWhen('process', 'after')(state),
+      when: insertWhen('after'),
       run: () => runInsertCall('after'),
       menu: { menu: 'diagram', group: 1, order: 17, submenu: 'insert' },
       context: ['blocks', 'missingDefault'],
     }),
     spec('block.insertBefore.call', {
       edits: true,
-      when: (state) =>
-        state.selection?.kind === 'branchLabel'
-          ? 'reason.notOnBranchLabel'
-          : insertWhen('process', 'before')(state),
+      when: insertWhen('before'),
       run: () => runInsertCall('before'),
       menu: { menu: 'diagram', group: 1, order: 7, submenu: 'insertBefore' },
     }),
@@ -210,7 +222,7 @@ export function callCommands(ctx: CommandContext) {
         // The name it shows now is where the written name starts (UX CB6).
         const shown = block?.kind === 'call' ? session.callName(block) : '';
         session.commit(nameCallTarget(content(), { block: call, name: shown }), (ok) =>
-          afterNamed(call, ok.content),
+          afterNamed(call, ok.content, false),
         );
         return;
       }

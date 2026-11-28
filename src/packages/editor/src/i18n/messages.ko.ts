@@ -137,7 +137,6 @@ export const korean: Readonly<Record<MessageKey, string>> = {
   'reason.selectOneBlock': '블록 하나를 선택하세요.',
   'reason.selectBranchLabel': '먼저 분기 라벨을 선택하세요.',
   'reason.selectInBranch': 'If · Case의 분기 안의 블록을 선택하세요.',
-  'reason.notOnBranchLabel': '분기 라벨에서는 분기 삽입 · 삭제 · 이동만 됩니다.',
   'reason.noDefaultToDelete': '삭제할 default 분기가 없습니다.',
   'reason.nothingToCopy': '빈 칸에는 복사할 블록이 없습니다.',
   'reason.nothingToCut': '빈 칸에는 잘라낼 블록이 없습니다.',

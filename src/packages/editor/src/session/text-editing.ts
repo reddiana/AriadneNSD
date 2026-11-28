@@ -39,7 +39,7 @@ export type TextEditingHost = {
   foldName(fold: Id): string;
   callParts(block: Block): ReadonlyArray<CallPart>;
   ids(): IdGenerator;
-  commit(result: Result, after: (ok: OkResult) => AfterEdit): boolean;
+  commit(result: Result, after: (ok: OkResult) => AfterEdit, isAmend?: boolean): boolean;
   apply(changed: Content, after: AfterEdit, isAmend?: boolean): boolean;
   refuse(reason: Reason): void;
   select(selection: Selection | null): void;
@@ -190,7 +190,14 @@ export class TextEditing {
     const next = partOf(call, other);
     this.setState({
       ...this.current,
-      editing: { field: { ...field, part: other }, initial: next, text: next, caret: 'end', call },
+      editing: {
+        field: { ...field, part: other },
+        initial: next,
+        text: next,
+        caret: 'end',
+        call,
+        ...joined(editing),
+      },
     });
     return true;
   }
@@ -221,10 +228,13 @@ export class TextEditing {
     }
     const session = this.session;
     const keep = (): AfterEdit => ({ selection: this.current.selection });
+    // On something just made, the text joins the undo step that made it (UX UN3).
+    const isAmend = editing.joinsLast === true;
     if (field.kind === 'call') {
       // All fields in one command: one undo step. The same texts change nothing (UX MD2).
       const call = withPart(editing.call ?? { args: '', result: '' }, field.part, text);
-      session.commit(editCall(this.current.doc.content, { block: field.block, ...call }), keep);
+      const result = editCall(this.current.doc.content, { block: field.block, ...call });
+      session.commit(result, keep, isAmend);
       return;
     }
     if (text === editing.initial) {
@@ -232,21 +242,27 @@ export class TextEditing {
     }
     switch (field.kind) {
       case 'block':
-        session.commit(editText(this.current.doc.content, { node: field.block, text }), keep);
+        session.commit(
+          editText(this.current.doc.content, { node: field.block, text }),
+          keep,
+          isAmend,
+        );
         return;
       case 'branchLabel':
-        session.commit(editText(this.current.doc.content, { node: field.branch, text }), keep);
+        session.commit(
+          editText(this.current.doc.content, { node: field.branch, text }),
+          keep,
+          isAmend,
+        );
         return;
-      case 'fold': {
+      case 'fold':
         // An empty name brings the default name back (UX Q4); the region keeps no name.
-        const result = editText(this.current.doc.content, { node: field.fold, text });
-        if (editing.joinsLast === true && result.ok) {
-          session.apply(result.content, keep(), true);
-          return;
-        }
-        session.commit(result, keep);
+        session.commit(
+          editText(this.current.doc.content, { node: field.fold, text }),
+          keep,
+          isAmend,
+        );
         return;
-      }
       case 'missingDefault': {
         // Typing into the empty default cell makes the default branch: one undo step (UX CD1).
         const content = this.current.doc.content;
@@ -271,11 +287,18 @@ export class TextEditing {
           session.refuse(result.reason);
           this.setState({
             ...this.current,
-            editing: { field, initial: editing.initial, text, caret: 'end', isRejected: true },
+            editing: {
+              field,
+              initial: editing.initial,
+              text,
+              caret: 'end',
+              isRejected: true,
+              ...joined(editing),
+            },
           });
           return;
         }
-        session.commit(result, keep);
+        session.commit(result, keep, isAmend);
         return;
       }
     }
@@ -335,6 +358,11 @@ export class TextEditing {
       this.notifyExtracted(editing.field.diagram, editing.extracted);
     }
   }
+}
+
+/** An editor opened again joins the step the first one would have joined. */
+function joined(editing: Editing): { readonly joinsLast?: true } {
+  return editing.joinsLast === true ? { joinsLast: true } : {};
 }
 
 /** What the fields of a call block hold when the inline editor opens. */

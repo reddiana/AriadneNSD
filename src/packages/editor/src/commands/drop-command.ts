@@ -23,7 +23,10 @@ function afterDrop(isNew: boolean) {
         ? selectRange(index, first, last)
         : selectBlock(index, first);
     return isNew
-      ? { selection, edit: { field: { kind: 'block', block: first }, caret: 'end' } }
+      ? {
+          selection,
+          edit: { field: { kind: 'block', block: first }, caret: 'end', joinsLast: true },
+        }
       : { selection };
   };
 }
