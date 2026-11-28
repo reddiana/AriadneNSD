@@ -136,6 +136,7 @@ MVP를 출시하기 전에 모두 통과해야 하는 인수 테스트(AT-01 ~ A
 
 - 테스트가 하나라도 실패하면 `main`에 합치지 않습니다.
 - CI는 `.github/workflows/ci.yml`이고 Node 24, `pnpm install --frozen-lockfile`로 실행됩니다. E2E가 실패하면 Playwright 보고서를 7일 남깁니다.
+- 시간 예산을 재는 단위 테스트(T-1126)는 환경 변수 `SKIP_TIMING=1`이면 skip합니다. 다른 일이 도는 개발 PC에서는 느려져 거짓으로 실패하므로, 그때는 skip하고 판정은 이 변수를 두지 않는 CI에 맡깁니다(→ [[how-we-work#2. 세션의 리듬]]). T-0171(QA-01의 property-based 테스트)은 속도를 재지 않고 시간 제한만 60초로 둡니다.
 - 벤치마크는 `pnpm test`에 들지 않습니다. `pnpm --filter @ariadne-nsd/core exec vitest bench --run`으로 따로 실행합니다(`*.bench.ts`).
 - 지금 있는 문서 사이트의 빌드(`.github/workflows/pages.yml`)와는 따로 둡니다.
 - 커버리지(테스트가 실행한 코드 줄의 비율)는 `src/`에서 `pnpm coverage`로 측정합니다. 패키지마다 단위 테스트(Vitest, V8)를 실행하고, 웹 E2E를 소스맵을 넣은 빌드로 실행해 Chromium의 JS 커버리지를 원래 소스 파일에 매핑한 뒤(`apps/web`의 `e2e:coverage`, `monocart-coverage-reports`), 둘을 줄마다 합칩니다. 어느 쪽이든 실행한 줄은 커버된 것으로 집계합니다. 패키지마다의 표와, 테스트가 실행하지 않은 줄이 많은 파일을 보여 줍니다.

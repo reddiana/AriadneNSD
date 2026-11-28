@@ -64,7 +64,7 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 | `pnpm build`                                    | 웹 앱을 `apps/web/dist/`에 빌드                                   |
 | `pnpm --filter @ariadne-nsd/skill build`        | Claude skill의 `nsd.mjs`를 다시 빌드하고 `skills/ariadne-nsd/dist/ariadne-nsd.zip`을 만듦. `core`나 공유 링크를 고친 뒤에도 실행해 함께 커밋함 |
 | `pnpm check`                                    | 타입 검사 → 린트 → 포맷 확인 → 의존 방향 → 단위 테스트 → 뽑아 만든 문서(테스트 목록 등)가 낡지 않았는지. CI도 이것을 실행함 |
-| `pnpm test`                                     | 단위 테스트만 (`pnpm --filter @ariadne-nsd/core test`처럼 패키지 하나만도) |
+| `pnpm test`                                     | 단위 테스트만 (`pnpm --filter @ariadne-nsd/core test`처럼 패키지 하나만도). PC가 바쁠 때는 `SKIP_TIMING=1`(PowerShell `$env:SKIP_TIMING='1'`)로 시간 예산 테스트 T-1126을 skip, 판정은 CI |
 | `pnpm e2e`                                      | 웹 앱을 빌드해 Chromium으로 E2E                                     |
 | `pnpm coverage`                                 | 단위 테스트와 E2E를 커버리지와 함께 돌려 패키지마다의 줄 커버리지(둘을 합침)를 보여 줌 |
 | `pnpm coverage:check`                           | 위와 같고, 한 패키지라도 90%보다 낮거나 테스트가 실패하면 실패. CI의 `coverage` job이 실행함 |
