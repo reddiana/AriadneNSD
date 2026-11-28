@@ -58,7 +58,11 @@ if ($Name) {
 } elseif ($wts.Count -eq 1) {
   $wt = $wts[0]
 } else {
-  for ($i = 0; $i -lt $wts.Count; $i++) { Write-Host ("{0}. {1}  [{2}]" -f ($i + 1), $wts[$i].Name, $wts[$i].Branch) }
+  for ($i = 0; $i -lt $wts.Count; $i++) {
+    $subj = (& git -C $wts[$i].Path log -1 --format='%s' 2>$null)
+    Write-Host ("{0}. {1}  [{2}]" -f ($i + 1), $wts[$i].Name, $wts[$i].Branch)
+    if ($subj) { Write-Host ("     마지막 커밋: " + $subj) }
+  }
   $n = [int](Read-Host '번호')
   if ($n -lt 1 -or $n -gt $wts.Count) { throw '번호가 범위 밖입니다.' }
   $wt = $wts[$n - 1]
