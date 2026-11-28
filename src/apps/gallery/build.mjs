@@ -289,7 +289,10 @@ ${script.trim()}
 
 const entries = await readEntries();
 const css = await readFile(new URL('pages/style.css', root), 'utf8');
-const script = await readFile(new URL('pages/gallery.js', root), 'utf8');
+const script = [
+  await readFile(new URL('pages/crisp-lines.js', root), 'utf8'),
+  await readFile(new URL('pages/gallery.js', root), 'utf8'),
+].join('\n');
 
 // Empties dist/ rather than removing it, so a local server started in it keeps serving.
 await mkdir(dist, { recursive: true });
