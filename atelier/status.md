@@ -86,6 +86,8 @@ updated: 2026-11-28
 
 ## 이번과 다음 세션에 할 것
 
+- [ ] 마무리(push 전): `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e`(블록 셋 · 독일어 · 드롭 표시로 편집기 동작이 바뀜), 그 뒤 push와 웹 판 올리기(블록 셋 · 독일어가 들어간 새 판). 로컬 서버 8080 · 8081 · 8082 · 8083 끄기
+- [ ] 메인테이너: 로컬 앱 http://localhost:5173 에서 블록 셋 · 독일어(브라우저 언어 또는 설정) · 드롭 표시를 써 보고 [[outbox#확인해 주세요]]의 2026-11-28 항목 확인. 독일어 사용법은 독일어를 아는 사람이 읽어 보면 좋음
 - [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]
 - [ ] 메인테이너: report@를 받는 Gmail에서 개인 Gmail로 자동 전달을 켜고 시험 메일 → Claude가 예약 작업(https://claude.ai/code/routines/trig_01J1zeLEEXPSFnWbga9aaxei)의 실행 기록 확인 → [[2026-11-22-04-gallery-spa-geeknews-mail]]
 - [ ] GeekNews 글(https://news.hada.io/topic?id=37589)의 댓글을 보고 고칠 것 → 그다음 Show HN · Reddit(계정은 미리) → [[promotion]]
