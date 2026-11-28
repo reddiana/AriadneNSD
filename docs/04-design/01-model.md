@@ -277,7 +277,7 @@ type Result =
   | { ok: true; content: Content; touched: Id[]; note?: Note }  // touched: 새로 생기거나 바뀐 노드의 id. 명령 뒤의 선택을 editor가 정하는 데 쓴다
   | { ok: false; reason: Reason };                   // 사전 조건 불만족. 아무것도 바꾸지 않고 이유를 알린다 ("막지 않고 알린다")
 type Reason = { code: ReasonCode; node?: Id };       // node: 이유가 가리키는 노드. editor가 code를 카탈로그의 문장으로 바꾼다
-type Note = { kind: 'offerConvertCaseToIf' | 'checkCondition'; node: Id };  // 성공한 뒤 editor가 알리거나 물을 것
+type Note = { kind: 'checkCondition'; node: Id };  // 성공한 뒤 editor가 알릴 것
 type Target =                                        // 명령이 적용되는 곳. editor가 선택을 이것으로 변환해 전달한다
   | { kind: 'blocks'; first: Id; last: Id }          // 한 줄 안의 연속 범위 (순서는 아무래도 됨). 줄은 따로 적지 않고 블록에서 찾는다
   | { kind: 'fold'; fold: Id }                       // 접기 영역 전체. 그 곁에 삽입한 블록은 영역 밖 (4.3)
@@ -285,8 +285,8 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 반환합니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `lastParallelBranches`(병렬 처리의 분기가 둘뿐) · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) · `recursiveMethod`(자기를 호출하는 Method를 풀어 넣고 지움) · `noCallers`(호출하는 곳이 없는 Method를 풀어 넣고 지움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
-- `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `lastParallelBranches`(병렬 처리의 분기가 둘뿐) · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) · `recursiveMethod`(자기를 호출하는 Method를 풀어 넣고 지움) · `noCallers`(호출하는 곳이 없는 Method를 풀어 넣고 지움) 등입니다. `askConvertIfToCase`는 If에 분기를 삽입하면 돌아오는 거절입니다. `editor`는 If에서 `insertBranch`를 부르지 않고 묻지 않은 채 `convertIfToCase`로 바꾼 뒤 분기를 삽입합니다([[ux-decisions#MD4. If ↔ Case는 묻지 않는다|MD4]]).
+- `Note`: `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다. Case에 분기가 하나 남아도 묻지 않습니다(If로는 `convertCaseToIf` 명령으로 → [[ux-decisions#MD4. If ↔ Case는 묻지 않는다|MD4]]).
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 `Doc`(내용과 뷰 상태)을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
 - 명령 안에서 줄(`Seq`)은 따로 id가 없으므로 그 주인(다이어그램 · 분기 · 반복 블록)의 id로 가리킵니다.

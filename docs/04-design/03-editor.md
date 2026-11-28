@@ -173,7 +173,7 @@ type Extracted = { call: Id; count: number };        // 그 위치에 남은 호
 
 | 메서드 | 하는 일 |
 | --- | --- |
-| `commit(result, after)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(Case를 If로 바꿀지 묻기, 조건을 확인하라는 알림)도 처리합니다 |
+| `commit(result, after)` | 편집 명령의 결과를 반영합니다. `ok: false`면 이유를 알리고, 성공하면 `apply`합니다. 결과의 `note`(If를 Case로 바꿨다는 알림, 조건을 확인하라는 알림)도 처리합니다 |
 | `apply(content, after)` | 내용을 undo 한 단계로 바꿉니다. 내용이 바뀌었으면 먼저 불변식을 검사하고(3장), 다음 선택 · 뷰 상태와 인라인 에디터(`After`)를 적용합니다 |
 | `setView(view, selection?)` | 뷰 상태만 바꿉니다. 접힘 · 펴 보기(`folded` · `opened`)가 값으로 달라지면 undo 한 단계를 만들고 redo를 비웁니다. 이름 띠 · 결과 기호만 바뀌면 단계를 만들지 않습니다. 읽기 전용이면 단계도 dirty도 없습니다 |
 | `select(selection)` | 선택을 바꿉니다. 없어진 id를 가리키는 선택은 버립니다(`validSelection`) |
@@ -350,7 +350,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- |
 | 파일 | 새로 · 열기… · 붙여넣은 JSON으로 열기…(웹 → [[06-web#3.2 붙여넣은 문서]]) · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… · 공유 링크 복사(웹 → [[06-web#3. 공유 URL과 보기 모드]]) ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 위에 붙여넣기 · 아래에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 위에 삽입 ▸ · 아래에 삽입 ▸ (둘 다 처리 · If · Case · While · For · Do-While · 무한 반복 · 탈출 · 병렬 처리 · 호출…) ／ 감싸기 ▸ · 풀기 ／ 왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
+| 다이어그램 | 위에 삽입 ▸ · 아래에 삽입 ▸ (둘 다 처리 · If · Case · While · For · Do-While · 무한 반복 · 탈출 · 병렬 처리 · 호출…) ／ 감싸기 ▸ · 풀기 ／ 왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제 · Case를 If로 바꾸기 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · 알고리즘 갤러리 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
@@ -490,7 +490,6 @@ type ReadOnlyReason = 'otherTab';               // 다른 탭이 같은 문서�
 type ChromeState = {
   selection: Message | null;                     // 선택한 것 ("If 블록", "블록 3개")
   notice: Notice | null;                         // 상태 표시줄의 알림 { id, message, level: 'info' | 'warn' }
-  question: Question | null;                     // 상태 표시줄의 물음과 버튼 (If ↔ Case → MD3)
   pendingKeys: string | null;                    // 둘째 키를 기다리는 첫 키
   mode: 'normal' | 'editing' | 'visual';
   isKeyHintShown: boolean;                       // 첫 키 뒤 0.4초가 지났고 설정이 켜져 있다 (K1)
