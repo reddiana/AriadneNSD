@@ -3,13 +3,15 @@ title: 화면 배치
 tags:
   - ux
 status: 초안
-updated: 2026-11-21
+updated: 2026-11-28
 ---
 
 # 화면 배치
 
 
 편집 화면의 배치입니다. 웹 · 데스크톱이 같은 화면이고, Obsidian 플러그인은 편집 탭 안에 같은 툴바를 둡니다. 본보기는 [Structorizer](https://structorizer.fisch.lu/)(메뉴 바와 블록 모양 아이콘의 툴바)입니다. 정한 과정 → [[ux-decisions#W1. 웹 화면의 배치|W1]], 시안 M44 https://claude.ai/artifact/VpocjhpW3vtPJ8UHvoyFgX (사본 `journal/assets/2026-11-01-web-screen-study.html`)
+
+화면 배치의 원칙은 하나입니다. **화면은 다이어그램에게:** 캔버스가 메뉴 바 · 툴바 · 상태 표시줄을 뺀 나머지를 모두 쓰고, 화면이 좁으면 툴바와 설정은 접어 두고 다이어그램에 자리를 줍니다. 필요할 때 버튼 하나로 폅니다 → [[ux-decisions#MB1. 좁은 화면|MB1]]. 조작의 원칙은 [[01-ux-overview#2. UX 원칙]]에 있습니다.
 
 ![[web-screen-layout-annotated.png|800]]
 

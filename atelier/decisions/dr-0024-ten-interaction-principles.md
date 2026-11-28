@@ -2,10 +2,10 @@
 title: "DR-0024: 조작의 원칙을 열 개로 다시 묶는다"
 tags:
   - dr
-status: 승인
+status: 대체됨
 date: 2026-11-28
 supersedes:
-superseded-by:
+superseded-by: "[[dr-0025-five-grand-principles]]"
 ---
 
 # DR-0024: 조작의 원칙을 열 개로 다시 묶는다
