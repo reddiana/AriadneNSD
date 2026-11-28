@@ -18,6 +18,11 @@ import type { Result, Target, WithIds } from './types';
 export type MoveArgs = WithIds & {
   readonly target: Target;
   readonly direction: 'up' | 'down' | 'left' | 'right';
+  /**
+   * The fold regions that are not drawn (unfolded ones while the name bands are off). Moving up
+   * and down treats them as not there (UX FM1).
+   */
+  readonly hiddenFolds?: ReadonlySet<Id>;
 };
 
 /**
@@ -27,6 +32,9 @@ export type MoveArgs = WithIds & {
  *   a neighbouring control block. At the top or bottom of a diagram the move is refused.
  *   Fold regions act like the control blocks here: blocks at the end of a region first step out
  *   of it, and a region next to the blocks is jumped over whole.
+ *   Hidden regions (`hiddenFolds`) take no step of their own: stepping out of them and trading
+ *   places happen at once, and the blocks trade places with one block of a hidden region next to
+ *   them, joining it while they are between its blocks: they never end up at its far edge.
  * - Left · right: moves the branch holding the blocks (the nearest If, Case or parallel block),
  *   see `moveBranch`.
  * Touched: the moved blocks (or the moved branch).
@@ -49,21 +57,28 @@ export function move(content: Content, args: MoveArgs): Result {
 
   const down = args.direction === 'down';
   const { owner, lo, hi } = range;
-  const seq = shrinkCrossing(range.seq, lo, hi);
+  const hidden = args.hiddenFolds ?? new Set<Id>();
+  let seq = shrinkCrossing(range.seq, lo, hi);
   const moved = seq.blocks.slice(lo, hi + 1).map((block) => block.id);
 
-  const exited = stepOutOfFold(seq, lo, hi, down);
-  if (exited !== null) {
-    return done(
-      updateSeq(content, owner, () => exited),
-      moved,
-    );
+  for (let exit = stepOutOfFold(seq, lo, hi, down); exit !== null;) {
+    // Leaving a drawn region is a step of its own; leaving a hidden one is not seen.
+    if (!hidden.has(exit.fold)) {
+      const left = exit.seq;
+      return done(
+        updateSeq(content, owner, () => left),
+        moved,
+      );
+    }
+    seq = exit.seq;
+    exit = stepOutOfFold(seq, lo, hi, down);
   }
 
   const atEnd = down ? hi === seq.blocks.length - 1 : lo === 0;
   if (!atEnd) {
+    const swapped = swapWithNeighbour(seq, lo, hi, down, hidden);
     return done(
-      updateSeq(content, owner, () => swapWithNeighbour(seq, lo, hi, down)),
+      updateSeq(content, owner, () => stepOutOfHidden(swapped, moved, down, hidden)),
       moved,
     );
   }
@@ -80,17 +95,23 @@ export function move(content: Content, args: MoveArgs): Result {
   const next = updateSeq(inner, holderEntry.owner, (parent) => {
     const at = parent.blocks.findIndex((block) => block.id === holderEntry.block.id);
     return down
-      ? insertAt(parent, at + 1, leaving, 'after')
-      : insertAt(parent, at, leaving, 'before');
+      ? insertAt(parent, at + 1, leaving, 'after', hidden)
+      : insertAt(parent, at, leaving, 'before', hidden);
   });
   return done(next, moved);
 }
 
 /**
  * If the blocks sit at the moving end of a fold region that also holds other blocks, they step
- * out of the innermost such region. Returns the new sequence, or `null` if there is none.
+ * out of the innermost such region. Returns the new sequence and that region, or `null` if there
+ * is none.
  */
-function stepOutOfFold(seq: Seq, lo: number, hi: number, down: boolean): Seq | null {
+function stepOutOfFold(
+  seq: Seq,
+  lo: number,
+  hi: number,
+  down: boolean,
+): { readonly seq: Seq; readonly fold: Id } | null {
   let best: { id: Id; size: number } | null = null;
   for (const fold of seq.folds) {
     const range = foldRange(seq, fold);
@@ -118,19 +139,45 @@ function stepOutOfFold(seq: Seq, lo: number, hi: number, down: boolean): Seq | n
     }
     return down ? { ...fold, last: edge.id } : { ...fold, first: edge.id };
   });
-  return cleanFolds({ ...seq, folds });
+  return { seq: cleanFolds({ ...seq, folds }), fold: stepped };
+}
+
+/**
+ * After trading places: the moved blocks leave the hidden regions whose moving end they reached.
+ */
+function stepOutOfHidden(
+  seq: Seq,
+  moved: ReadonlyArray<Id>,
+  down: boolean,
+  hidden: ReadonlySet<Id>,
+): Seq {
+  const lo = seq.blocks.findIndex((block) => block.id === moved[0]);
+  const hi = lo + moved.length - 1;
+  let result = seq;
+  for (let exit = stepOutOfFold(result, lo, hi, down); exit !== null && hidden.has(exit.fold);) {
+    result = exit.seq;
+    exit = stepOutOfFold(result, lo, hi, down);
+  }
+  return result;
 }
 
 /**
  * Swaps `lo..hi` with the next item in the moving direction: the neighbouring block, or the whole
- * outermost fold region that starts (ends) there.
+ * outermost drawn fold region that starts (ends) there. A hidden region going on past that item
+ * takes the moved blocks in.
  */
-function swapWithNeighbour(seq: Seq, lo: number, hi: number, down: boolean): Seq {
+function swapWithNeighbour(
+  seq: Seq,
+  lo: number,
+  hi: number,
+  down: boolean,
+  hidden: ReadonlySet<Id>,
+): Seq {
   const near = down ? hi + 1 : lo - 1;
   let far = near;
   for (const fold of seq.folds) {
     const range = foldRange(seq, fold);
-    if (range === null) {
+    if (range === null || hidden.has(fold.id)) {
       continue;
     }
     const [a, b] = range;
@@ -155,7 +202,21 @@ function swapWithNeighbour(seq: Seq, lo: number, hi: number, down: boolean): Seq
         ...indices.slice(far, near + 1),
         ...indices.slice(hi + 1),
       ];
-  return permute(seq, order);
+  // Hidden regions that take the moved blocks in: they start (end) at the neighbour and go on
+  // past the item traded with. Their ends are block ids, so they stay as written and now hold the
+  // moved blocks between them.
+  const taking = seq.folds.filter((fold) => {
+    const range = hidden.has(fold.id) ? foldRange(seq, fold) : null;
+    return (
+      range !== null &&
+      (down ? range[0] === near && range[1] > far : range[1] === near && range[0] < far)
+    );
+  });
+  const others = { ...seq, folds: seq.folds.filter((fold) => !taking.includes(fold)) };
+  const swapped = permute(others, order);
+  return taking.length === 0
+    ? swapped
+    : cleanFolds({ ...swapped, folds: [...swapped.folds, ...taking] });
 }
 
 /** The branch (If, Case or parallel) nearest around the sequence owned by `owner`, or `null`. */

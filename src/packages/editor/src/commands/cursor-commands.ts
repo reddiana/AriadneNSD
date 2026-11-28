@@ -8,9 +8,21 @@ import type { Caret } from '../state/editor-state';
 import { zoomRange } from '../state/editor-state';
 import { extendBy, targetOf } from '../state/selection';
 import { always, spec } from './spec';
+import type { Id, View } from '@ariadne-nsd/core';
 import { move, moveBranch, moveDiagram } from '@ariadne-nsd/core';
+import type { DocIndex } from '../model/doc-index';
 import type { CommandContext } from './command-helpers';
 import { branchOfSelection, fieldOfSelection } from './command-helpers';
+
+/**
+ * The fold regions that are not drawn: the unfolded ones while the name bands are off. Moving
+ * blocks treats them as not there (UX FM1).
+ */
+function hiddenFolds(index: DocIndex, view: View): ReadonlySet<Id> {
+  return new Set(
+    view.bands ? [] : [...index.folds.keys()].filter((id) => !view.folded.includes(id)),
+  );
+}
 
 export function cursorCommands(ctx: CommandContext) {
   const { deps, session, index, content, blockField } = ctx;
@@ -52,7 +64,11 @@ export function cursorCommands(ctx: CommandContext) {
         }
         const target = targetOf(selection);
         if (target !== null) {
-          session.commit(move(content(), { target, direction, ids: session.ids() }), keep);
+          const hidden = hiddenFolds(index(), state.doc.view);
+          session.commit(
+            move(content(), { target, direction, hiddenFolds: hidden, ids: session.ids() }),
+            keep,
+          );
         }
       },
       menu: { menu: 'edit', group: 4, order },

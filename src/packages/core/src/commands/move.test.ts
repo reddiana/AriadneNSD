@@ -20,6 +20,55 @@ import {
 
 const range = (first: string, last = first) => ({ kind: 'blocks', first, last }) as const;
 
+describe('move up and down with the name bands off (UX FM1)', () => {
+  const hiddenFolds = new Set(['f1', 'f2']); // f3 is folded: drawn
+  const region = (id: string, first: string, last: string) => ({ id, first, last });
+  const blocks = (...folds: ReturnType<typeof region>[]) =>
+    contentOf(seq([proc('b1'), proc('b2'), proc('b3'), proc('b4')], folds));
+
+  it('T-1633 · UX FM1: stepping out of a hidden region and trading places happen at once', () => {
+    const content = blocks(region('f1', 'b1', 'b2'));
+    const down = runOk(move, content, { target: range('b2'), direction: 'down', hiddenFolds });
+    expect(idsIn(down.content, 'd1')).toEqual(['b1', 'b3', 'b2', 'b4']);
+    expect(foldsIn(down.content, 'd1')).toEqual(['f1:b1-b1']);
+  });
+
+  it('T-1634 · UX FM1: blocks trade places with one block of a hidden region at a time, in it only while between its blocks', () => {
+    const content = blocks(region('f1', 'b2', 'b3'));
+    const args = { target: range('b1'), direction: 'down', hiddenFolds } as const;
+    const first = runOk(move, content, args);
+    expect(idsIn(first.content, 'd1')).toEqual(['b2', 'b1', 'b3', 'b4']);
+    expect(foldsIn(first.content, 'd1')).toEqual(['f1:b2-b3']);
+    const second = runOk(move, first.content, args);
+    expect(idsIn(second.content, 'd1')).toEqual(['b2', 'b3', 'b1', 'b4']);
+    expect(foldsIn(second.content, 'd1')).toEqual(['f1:b2-b3']);
+    // And back up.
+    const back = runOk(move, second.content, { ...args, direction: 'up' });
+    expect(back.content).toEqual(first.content);
+  });
+
+  it('T-1635 · UX FM1: nested hidden regions are left in one press, and a drawn folded region is jumped over whole', () => {
+    const nested = blocks(
+      region('f1', 'b1', 'b2'),
+      region('f2', 'b2', 'b2'),
+      region('f3', 'b3', 'b4'),
+    );
+    const result = runOk(move, nested, { target: range('b2'), direction: 'down', hiddenFolds });
+    expect(idsIn(result.content, 'd1')).toEqual(['b1', 'b3', 'b4', 'b2']);
+  });
+
+  it('T-1636 · UX FM1: at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once', () => {
+    const top = blocks(region('f1', 'b3', 'b4'));
+    expectRefused(move, top, { target: range('b4'), direction: 'down', hiddenFolds }, 'atBottom');
+    const inner = contentOf([
+      whileBlock('b1', seq([proc('b2'), proc('b3')], [region('f1', 'b2', 'b3')])),
+    ]);
+    const out = runOk(move, inner, { target: range('b3'), direction: 'down', hiddenFolds });
+    expect(idsIn(out.content, 'd1')).toEqual(['b1', 'b3']);
+    expect(idsIn(out.content, 'b1')).toEqual(['b2']);
+  });
+});
+
 describe('move up and down', () => {
   it('T-0156 · R-EDIT-11: a block trades places with the block below or above', () => {
     const content = contentOf([proc('b1'), proc('b2'), proc('b3')]);

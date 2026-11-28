@@ -17,7 +17,7 @@ status: 생성됨
 | 영역 | E2E | 통합 | 단위 | 성능 | 합계 |
 | --- | :---: | :---: | :---: | :---: | :---: |
 | [[#1. 인수 테스트\|인수 테스트]] | 27 | - | - | - | 27 |
-| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 344 | - | 396 |
+| [[#2. 편집 명령과 모델\|편집 명령과 모델]] | 10 | 42 | 349 | - | 401 |
 | [[#3. 키 · 마우스 · 선택\|키 · 마우스 · 선택]] | 5 | 30 | 215 | - | 250 |
 | [[#4. 메뉴 · 화면 · 시작\|메뉴 · 화면 · 시작]] | 23 | 46 | 63 | - | 132 |
 | [[#5. 파일\|파일]] | 18 | 169 | 244 | - | 431 |
@@ -25,7 +25,7 @@ status: 생성됨
 | [[#7. 레이아웃 · 그리기 · 글자\|레이아웃 · 그리기 · 글자]] | 2 | - | 171 | - | 173 |
 | [[#8. 성능\|성능]] | 2 | - | 15 | 5 | 22 |
 | [[#9. 문서와 코드의 정합성\|문서와 코드의 정합성]] | - | - | 11 | - | 11 |
-| 합계 | 87 | 287 | 1082 | 5 | 1461 |
+| 합계 | 87 | 287 | 1087 | 5 | 1466 |
 
 ## 읽는 법
 
@@ -78,7 +78,7 @@ MVP의 인수 테스트 AT-01 ~ AT-17(01-requirements 5.2)을 브라우저에서
 
 ## 2. 편집 명령과 모델
 
-블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 396개.
+블록 삽입 · 삭제 · 이동 · 감싸기, 분기, 호출과 펴 보기, 접기, 다이어그램과 헤더, 복사 · 붙여넣기가 문서를 바르게 바꾸는지, 어떤 명령을 이어도 모델의 불변식이 지켜지는지 → [[01-model]]. 파일 27개, 테스트 401개.
 
 ### [E2E] `apps/web/e2e/editing.spec.ts`
 
@@ -429,10 +429,14 @@ moveTo(드래그 앤 드롭). Vitest · 테스트 7개.
 
 ### [단위] `packages/core/src/commands/move.test.ts`
 
-위아래로 이동 · 좌우로 이동(분기). Vitest · 테스트 12개.
+move up and down with the name bands off (UX FM1) · move up and down · move left and right (branches). Vitest · 테스트 16개. 파일 전체가 확인하는 것: [[ux-decisions|UX FM1]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
+| T-1633 | stepping out of a hidden region and trading places happen at once | [[ux-decisions\|UX FM1]] |
+| T-1634 | blocks trade places with one block of a hidden region at a time, in it only while between its blocks | [[ux-decisions\|UX FM1]] |
+| T-1635 | nested hidden regions are left in one press, and a drawn folded region is jumped over whole | [[ux-decisions\|UX FM1]] |
+| T-1636 | at the end of a diagram nothing would be seen to change, so the move is refused; at the end of a control block the blocks leave it at once | [[ux-decisions\|UX FM1]] |
 | T-0156 | 블록이 아래나 위의 블록과 위치를 바꾼다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0157 | 블록은 제어 블록을 건너뛰고 그 안으로 들어가지 않는다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
 | T-0158 | 줄의 끝에서는 블록이 그것을 담은 제어 블록 밖으로 나간다 | [[01-requirements#^r-edit\|R-EDIT-11]] |
@@ -693,7 +697,7 @@ id. Vitest · 테스트 5개.
 
 ### [단위] `packages/editor/src/commands/fold-commands.test.ts`
 
-접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 19개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[ux-decisions|UX Q9]].
+접기 명령과 접힌 것을 지나가는 이동 (조작 규칙 4, R-EDIT-13, R-EDIT-14, R-EDIT-23, R-FMT-11). Vitest · 테스트 20개. 파일 전체가 확인하는 것: [[01-requirements#^r-edit|R-EDIT-13]], [[01-requirements#^r-edit|R-EDIT-14]], [[01-requirements#^r-edit|R-EDIT-23]], [[01-requirements#^r-fmt|R-FMT-11]], [[ux-decisions|UX Q9]].
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
@@ -708,6 +712,7 @@ id. Vitest · 테스트 5개.
 | T-1105 | fold region: 같은 범위는 다시 만들지 않고, zd는 선택한 것을 담은 가장 작은 접기 영역을 푼다 | - |
 | T-1106 | fold region: 접기 영역 안의 블록에서 접으면 그 영역을 접고, 접힌 영역은 하나로 친다 | - |
 | T-1107 | fold region: 펴진 접기 영역의 첫 블록에서 위로 가면 이름 띠를 선택한다 | - |
+| T-1637 | with the name bands off, one move leaves a region and trades places; with them on it takes two | [[ux-decisions\|UX FM1]] |
 | T-1108 | fold region: 이름 띠를 끈 채 선택한 접기 영역을 펴면 그 블록들을 선택한다 | - |
 | T-1109 | fold: 접힘 상태와 이름을 저장하고, 열면 그대로다 | - |
 | T-1426 | fold undo: f로 접은 것을 u가 펴고 U가 다시 접으며, 저장한 때로 돌아오면 문서는 바뀌지 않은 것이 된다 | - |

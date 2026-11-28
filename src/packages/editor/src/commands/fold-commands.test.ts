@@ -203,6 +203,23 @@ describe('fold regions (R-EDIT-14, R-EDIT-23)', () => {
     expect(selected(engine)).toEqual(['b1']);
   });
 
+  it('T-1637 · UX FM1: with the name bands off, one move leaves a region and trades places; with them on it takes two', () => {
+    const blocks = contentOf([proc('b1'), proc('b2'), proc('b3')]);
+    const order = (engine: TestEngine): ReadonlyArray<string> =>
+      engine.content().diagrams[0]?.body.blocks.map((block) => block.id) ?? [];
+    const folds = [{ id: 'f1', first: 'b1', last: 'b2' }];
+    const shown = testEngine(withFolds(blocks, folds));
+    select(shown, 'b2');
+    shown.run('edit.move.down');
+    expect(order(shown)).toEqual(['b1', 'b2', 'b3']);
+    const hidden = testEngine(withFolds(blocks, folds));
+    hidden.run('view.bands');
+    select(hidden, 'b2');
+    hidden.run('edit.move.down');
+    expect(order(hidden)).toEqual(['b1', 'b3', 'b2']);
+    expect(selected(hidden)).toEqual(['b2']);
+  });
+
   it('T-1108: fold region: unfolding a selected region without name bands selects its blocks', () => {
     const engine = testEngine(withFolds(content, [{ id: 'f1', first: 'b1', last: 'b2' }]));
     engine.run('view.bands');
