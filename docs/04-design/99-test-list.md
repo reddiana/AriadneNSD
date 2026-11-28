@@ -1270,7 +1270,7 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 | --- | --- | :---: |
 | T-1488 | gallery.json의 항목을 모두 그 이름으로 두 언어의 페이지에 나열한다 | - |
 | T-1489 | 페이지의 상대 링크와 그림은 모두 빌드된 파일을 가리킨다 | - |
-| T-1632 | the page script snaps the diagram lines (crisp-lines.js) before the gallery script uses them | - |
+| T-1632 | 페이지 스크립트가 갤러리 스크립트보다 먼저 다이어그램의 선을 맞춘다 (crisp-lines.js) | - |
 | T-1490 | 페이지는 서로, 그리고 앱과 그 언어의 사용법으로 링크한다 | - |
 | T-1563 | 독일어 페이지는 다른 두 페이지와 독일어 사용법으로 링크하고, 그 페이지들도 독일어 페이지로 링크한다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
@@ -1278,12 +1278,12 @@ UX K3: 키 힌트는 선택 바로 아래에 간다. Vitest · 테스트 4개. �
 
 ### [단위] `apps/gallery/crisp-lines.test.ts`
 
-The gallery's copy of the editor's crisp lines (M88, pages/crisp-lines.js). Vitest · 테스트 2개.
+갤러리에 옮긴 편집기의 선명한 선 (M88, pages/crisp-lines.js). Vitest · 테스트 2개.
 
 | ID | 테스트 | 확인하는 것 |
 | --- | --- | :---: |
-| T-1630 | gives every stroke a whole number of device pixels at the display scale, as the editor does | - |
-| T-1631 | snaps crisp-edged shapes and straight unfilled paths, leaves diagonals, and clears the width at 100% | - |
+| T-1630 | 편집기처럼 화면 배율에서 모든 선의 굵기를 장치 픽셀의 정수로 맞춘다 | - |
+| T-1631 | 가장자리가 선명한 도형과 채우지 않은 곧은 경로는 맞추고, 대각선은 두며, 100%에서는 굵기를 지운다 | - |
 
 ^t-apps-gallery-crisp-lines-test-ts
 
@@ -1320,9 +1320,9 @@ src/examples/thumbnails의 썸네일이 예제와 렌더러에 맞는다. Vitest
 | T-0319 | 환경 설정이 브라우저 언어보다 먼저다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-0806 | 고른 언어가 먼저이고, 없으면 브라우저 언어, 그것도 아니면 영어다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 | T-1561 | 독일어 브라우저 언어는 어느 지역이든 독일어가 된다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-1613 | English is there at once; another language shows English until fetched | [[01-requirements#^r-nfr\|R-NFR-04]] |
-| T-1614 | the entries for checks need every language fetched | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
-| T-1615 | a failed fetch leaves English and is tried again on the next load | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1613 | 영어는 바로 있고, 다른 언어는 받을 때까지 영어로 보인다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
+| T-1614 | 검사용 진입점은 모든 언어를 받아 둔다 | [[03-quality-attribute-scenarios#1. 목록\|QA-13]] |
+| T-1615 | 받기에 실패하면 영어로 두고 다음 불러올 때 다시 받는다 | [[01-requirements#^r-nfr\|R-NFR-04]] |
 
 ^t-packages-core-src-i18n-messages-test-ts
 
