@@ -28,6 +28,7 @@ updated: 2026-11-28
 | [[0012-google-drive-integration\|0012]] | Google Drive 연동은 웹 버전 위에 얹는다 | 승인 |
 | [[0036-code-layout\|0036]] | 코드는 `src/` 아래의 pnpm 모노레포로 두고, `core`는 패키지 하나, Obsidian의 `manifest.json` 사본은 저장소 맨 위에 둔다 | 승인 |
 | [[0038-build-and-test-tools\|0038]] | 빌드는 Vite(웹) · esbuild(Obsidian), 시험은 Vitest · fast-check · Playwright, 코드 검사는 ESLint + Prettier, 시험 파일은 소스 옆 | 승인 |
+| [[0053-lazy-screen-language-catalogs\|0053]] | 화면 언어의 문구는 영어만 첫 다운로드에 두고, 다른 언어는 쓸 때 받는다(`core`의 `lazyCatalog`). 그림 글자의 카탈로그는 동기 그대로 | 승인 |
 | [[0050-claude-skill-bundle-and-distribution\|0050]] | Claude skill은 앱의 코드를 Node 스크립트 하나로 번들해 커밋하고, Release의 zip과 플러그인 마켓플레이스로 배포한다 | 승인 |
 | [[0051-cloudflare-web-analytics\|0051]] | 방문 수는 Cloudflare Web Analytics로 쿠키 없이 센다 | 승인 |
 
@@ -78,7 +79,7 @@ updated: 2026-11-28
 | [[0037-two-pass-full-layout\|0037]] | 레이아웃은 두 단계의 순수 함수로 하고, 고칠 때마다 문서 전체를 다시 센다. 폭 테이블은 구간 목록, 없는 글자는 전각 | 승인 |
 | [[0042-text-kind-keeps-block-font\|0042]] | 블록 텍스트의 언어는 글꼴을 바꾸지 않는다(모든 언어를 기본 블록 글꼴로). 언어마다의 렉서는 core에 둔다 | 승인 |
 
-새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0053부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
+새 결정은 [[0000-template|ADR 템플릿]]을 복사해서 다음 번호(0054부터)로 만들고, 위 목록의 맞는 묶음에 한 줄을 더합니다.
 
 상태(ADR · DR 같음): **제안됨**(검토 중) → **승인** → (필요하면) **대체됨** / **폐기**
 
