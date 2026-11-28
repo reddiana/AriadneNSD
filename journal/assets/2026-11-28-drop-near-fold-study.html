@@ -1,0 +1,223 @@
+<meta charset="utf-8">
+<title>M86 접기 영역 곁의 드롭 규칙</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* M85와 같은 틀과 렌더러. 블록 색은 시각 디자인 명세의 밝은 기본 테마 값 */
+:root {
+  --bg: #eef1f6; --panel: #ffffff; --fg: #1c2230; --muted: #5a6476; --line: #d4dbe6;
+  --accent: #2c55c9; --pick: #1d7a46; --pick-soft: #e3f3e8; --warn: #a8501a; --box: #f5f7fb;
+  --font: 'IBM Plex Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'IBM Plex Mono', 'IBM Plex Sans KR', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151b; --panel: #1a1e26; --fg: #e5e8ee; --muted: #9aa3b3; --line: #2b313c; --accent: #8ba7ff; --pick: #6fd197; --pick-soft: #1b3326; --warn: #f0a46c; --box: #222833; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.65; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1400px; margin-inline: auto; display: grid; gap: 44px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0; }
+p { margin: 0; }
+.lede, .q { color: var(--muted); max-width: 86ch; }
+.lede b, .q b { color: var(--fg); font-weight: 600; }
+section { display: grid; gap: 14px; min-width: 0; }
+.part { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.pick { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.badge { font-size: 11.5px; font-weight: 600; color: var(--pick); background: var(--pick-soft); border-radius: 999px; padding: 1px 9px; }
+.card ul { margin: 0; padding-left: 1.2em; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.card li b { color: var(--fg); font-weight: 600; }
+.bad { color: var(--warn); font-weight: 600; }
+.good { color: var(--pick); font-weight: 600; }
+.figrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.figrow figure { margin: 0; display: grid; gap: 4px; justify-items: start; max-width: 300px; }
+.figrow figcaption { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.figrow figcaption b { color: var(--fg); font-weight: 600; }
+.fig { background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-x: auto; max-width: 100%; }
+.fig svg { display: block; max-width: none; }
+.sum { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; display: grid; gap: 8px; max-width: 96ch; }
+.sum ol, .sum ul { margin: 0; padding-left: 1.3em; display: grid; gap: 5px; font-size: 14px; }
+code, kbd { font-family: var(--mono); font-size: 12.5px; }
+a { color: var(--accent); }
+</style>
+
+<main>
+  <div>
+    <h1>M86 · 접기 영역 곁의 드롭 규칙</h1>
+    <p class="lede">메인테이너의 inbox(2026-11-28): "드래그드랍을 접기영역 앞/뒤에 붙여서 하면 접기영역 밖에 적용"(원문의 "선택영역"은 "접기영역"을 잘못 쓴 것). 결함이 아니라 규칙으로 정하기로 했습니다.</p>
+    <p class="lede">지금은 포인터 밑의 <b>가장 안쪽 블록</b>의 위 · 아래 8px 띠로 "사이"를 판정하고, 접기 영역 자체는 판정에 들어가지 않습니다(<code>drop.ts</code>). 그래서 ⓐ 펴진 접기 영역의 <b>이름 띠</b>(18px)와 <b>접힌 칸</b>에는 놓을 수 없고(금지 커서), ⓑ <b>아래 가장자리</b>에서는 같은 자리에 같은 줄이 보이는데 안쪽 마지막 블록의 띠면 <b>영역 안</b>(끝에 붙음, UX MD1), 다음 블록의 띠면 <b>영역 밖</b>에 들어갑니다. ⓒ 접기 영역이 반복 본문의 마지막이면 "본문 안, 접기 영역 밖"에는 끌어서 놓을 곳이 없습니다.</p>
+    <p class="lede">그림은 모두 툴바의 처리 아이콘을 끌어 오는 장면이고, 캔버스의 블록을 끌어 옮길 때도 같습니다. 파란 3px 테두리와 이름 띠가 펴진 접기 영역, 주황 줄이 놓일 자리(M85에서 정한 모양), 흰 화살표가 마우스 포인터, ⊘는 놓을 수 없는 곳입니다. ★ 표시가 Claude의 추천입니다.</p>
+  </div>
+
+  <section>
+    <span class="part">장면</span>
+    <h2>여섯 장면</h2>
+    <div class="sum"><ul>
+      <li><b>①</b> 펴진 접기 영역 "초기화"의 <b>이름 띠</b>에 놓기(위 가장자리).</li>
+      <li><b>②</b> 아래 가장자리, <b>안쪽에서</b>(포인터가 마지막 블록 <code>합 ← 0</code>의 아래 띠).</li>
+      <li><b>③</b> 아래 가장자리, <b>바깥에서</b>(포인터가 다음 블록 While의 위 띠).</li>
+      <li><b>④</b> 접기 영역 "더하기"가 While 본문의 마지막일 때 아래 가장자리.</li>
+      <li><b>⑤</b> <b>접힌</b> 접기 영역(접힌 칸)의 아래 반에 놓기.</li>
+      <li><b>⑥</b> 접기 영역 "초기화"의 <b>안쪽 끝</b>에 넣고 싶을 때. 안마다 손이 가는 곳이 다릅니다.</li>
+    </ul></div>
+  </section>
+
+  <section>
+    <span class="part">N1</span>
+    <h2>N1. 접기 영역의 가장자리에 놓으면 어디에 들어가나</h2>
+    <p class="q">그림 아래의 <span class="good">✓</span>는 메인테이너가 바란 결과(접기 영역 밖), <span class="bad">✗</span>는 아닌 결과입니다. ⑥만은 "안쪽 끝에 넣을 수 있는가"입니다.</p>
+    <div class="cards">
+      <article class="card"><header><span class="tag">N1 · 1번</span><h3>지금 그대로</h3></header>
+        <div class="figrow" data-opt="now"></div>
+        <ul><li>접기 영역은 판정에 들어가지 않고, 가장 안쪽 블록의 8px 띠만 봅니다.</li><li><span class="bad">①⑤ 이름 띠 · 접힌 칸에는 놓을 수 없습니다. ②와 ③은 줄이 똑같은데 결과가 안 · 밖으로 갈립니다. ④는 "더하기" 밖 · While 안에 놓을 곳이 없습니다.</span></li></ul>
+      </article>
+      <article class="card pick"><header><span class="tag">N1 · 2번</span><h3>접기 영역을 블록 하나처럼</h3><span class="badge">★ Claude의 추천</span></header>
+        <div class="figrow" data-opt="block"></div>
+        <ul><li>펴진 접기 영역의 <b>이름 띠</b>에 놓으면 영역 앞, 영역의 <b>아래 가장자리 안쪽 8px</b>(지금의 띠와 같은 폭)에 놓으면 영역 뒤입니다. <b>접힌 칸</b>은 낮은 블록처럼 위 반이면 앞, 아래 반이면 뒤입니다. 모두 접기 영역 밖(같은 줄)에 들어갑니다.</li><li>키보드의 규칙(UX MD1: 영역 전체를 고르고 넣으면 밖, 안의 블록을 고르고 넣으면 안)과 같은 생각입니다. 접기 영역이 겹쳐 있어도 안쪽 테두리는 아래로 4px 들어가 있어(<code>size.nest-inset</code>) 가장자리가 겹치지 않습니다.</li><li>⑥ 안쪽 끝: 띠보다 조금 위, 마지막 블록 위에 놓습니다. 처리 · 탈출은 그 아래에 들어가고, 옮기는 블록은 가까운 사이(아래 반이면 아래)로 갑니다. 제어 블록 아이콘은 그 블록을 감싸므로, 제어 블록을 영역 끝에 넣으려면 마지막 블록을 고르고 <kbd>a</kbd>. 안쪽 맨 앞은 지금처럼 첫 블록의 위 띠(이름 띠 바로 아래)입니다.</li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 3번</span><h3>이름 띠 · 접힌 칸만 밖, 아래 가장자리는 그대로</h3></header>
+        <div class="figrow" data-opt="band"></div>
+        <ul><li>놓을 수 없던 이름 띠와 접힌 칸만 놓을 수 있게 합니다(①⑤는 2번과 같음). 아래 가장자리는 지금 그대로 안쪽 블록의 띠가 이깁니다.</li><li>바뀌는 것이 가장 적고, 안쪽 끝에는 지금처럼 가장자리에 놓아 넣습니다.</li><li><span class="bad">②④는 여전히 영역 안에 들어가고, ②와 ③의 줄이 같은 문제도 남습니다.</span></li></ul>
+      </article>
+      <article class="card"><header><span class="tag">N1 · 4번</span><h3>아래 가장자리 띠를 둘로: 바깥 4px는 밖, 안쪽 4px는 안</h3></header>
+        <div class="figrow" data-opt="split"></div>
+        <ul><li>이름 띠 · 접힌 칸은 2번과 같고, 아래 가장자리 8px 띠를 반으로 나눠 가장자리 쪽 4px(파란 테두리 3px + 1px)는 영역 밖, 그 위 4px는 영역 안입니다.</li><li>끌기만으로 안 · 밖을 모두 고를 수 있습니다.</li><li><span class="bad">과녁이 4px라 마우스로 맞추기 어렵고(터치는 더), 포인터가 1 ~ 2px 움직이면 결과가 바뀝니다. 줄이 같은 자리라 지금 어느 쪽인지도 보이지 않습니다.</span></li></ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>답하실 것</h2>
+    <div class="sum"><ol>
+      <li>N1의 <b>번호</b> 또는 고칠 점(띠의 폭 등).</li>
+      <li>그다음에 물을 것: 아래 가장자리에서 안 · 밖이 같은 자리의 줄로 보이는 문제(②③). 놓을 자리가 안인지 밖인지 줄만 보고 알 수 있게 할지, 한다면 어떻게(줄을 테두리 안 · 밖으로 비키기 등). N1의 답에 따라 장면이 달라져 따로 묻습니다.</li>
+    </ol></div>
+  </section>
+</main>
+
+<script>
+(() => {
+const C = { line: '#5b77ad', text: '#151a22', muted: '#5a6476', proc: '#edf0f5', loop: '#dce6f6', sel: '#d0500b', fold: '#4f74d6', band: '#e6ecfb', foldName: '#2c55c9', no: '#a8501a' };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const rect = (x, y, w, h, fill) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.line + '"/>';
+const text = (x, y, s, o) => { o = o || {}; return '<text x="' + x + '" y="' + y + '" fill="' + (o.fill || C.text) + '" font-size="' + (o.size || 13) + '"' + (o.bold ? ' font-weight="600"' : '') + (o.italic ? ' font-style="italic"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + ' font-family="' + (o.sans ? 'IBM Plex Sans KR, sans-serif' : 'IBM Plex Mono, IBM Plex Sans KR, monospace') + '">' + esc(s) + '</text>'; };
+const pointer = (x, y) => '<path d="M' + x + ',' + y + ' l0,15 l4,-3.5 l2.8,6 l2.4,-1.1 l-2.8,-5.8 l5,-.3 z" fill="#ffffff" stroke="#151a22" stroke-width="1" stroke-linejoin="round"/>';
+const forbid = (x, y) => '<circle cx="' + (x + 18) + '" cy="' + (y + 16) + '" r="7" fill="#ffffff" stroke="' + C.no + '" stroke-width="2"/><line x1="' + (x + 13) + '" y1="' + (y + 21) + '" x2="' + (x + 23) + '" y2="' + (y + 11) + '" stroke="' + C.no + '" stroke-width="2"/>';
+// M85에서 정한 드롭 줄: 4px 주황 + 위아래 흰 테두리 2px + 블록 밖 7px 화살촉.
+const dropLine = (x, y, w) => {
+  const x1 = x - 7, x2 = x + w + 7;
+  return '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" stroke="#ffffff" stroke-width="8"/>' +
+    '<line x1="' + (x1 + 6) + '" y1="' + y + '" x2="' + (x2 - 6) + '" y2="' + y + '" stroke="' + C.sel + '" stroke-width="4"/>' +
+    '<path d="M' + x1 + ',' + (y - 6) + ' l8,6 l-8,6 z M' + x2 + ',' + (y - 6) + ' l-8,6 l8,6 z" fill="' + C.sel + '" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>';
+};
+const W = 300, STRIP = 22, ROW = 32, TOP = 46, BAND = 18;
+// 펴진 접기 영역: 맨 위 이름 띠 18px + 3px 파란 테두리(안의 블록 위에 그림).
+const foldBand = (x, y, w, name) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="' + w + '" height="' + BAND + '" fill="' + C.band + '" stroke="' + C.line + '"/>' + text(x + 8, y + 13, '▾', { size: 10, fill: C.foldName, sans: true }) + text(x + 20, y + 13.5, name, { size: 11.5, bold: true, fill: C.foldName, sans: true });
+const foldEdge = (x, y, w, h) => '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="' + (w - 2) + '" height="' + (h - 2) + '" fill="none" stroke="' + C.fold + '" stroke-width="3"/>';
+const head = () => text(0, 13, 'Method', { size: 11.5, fill: C.muted, sans: true }) + text(0, 34, '평균(a, n)', { bold: true, size: 14.5 });
+
+// 장면 S: 접기 영역 "초기화"(i ← 0, 합 ← 0), While, 평균.
+const S = { fold: { x: 0, y: TOP, w: W, h: BAND + ROW * 2 } };
+S.b1 = { y: TOP + BAND }; S.b2 = { y: TOP + BAND + ROW };
+S.loop = { y: S.fold.y + S.fold.h }; S.avg = { y: S.loop.y + ROW * 3 };
+function drawS() {
+  let s = head();
+  s += foldBand(0, S.fold.y, W, '초기화');
+  s += rect(0, S.b1.y, W, ROW, C.proc) + text(10, S.b1.y + 21, 'i ← 0');
+  s += rect(0, S.b2.y, W, ROW, C.proc) + text(10, S.b2.y + 21, '합 ← 0');
+  s += rect(0, S.loop.y, W, ROW * 3, C.loop) + text(10, S.loop.y + 21, 'i < n');
+  s += rect(STRIP, S.loop.y + ROW, W - STRIP, ROW, C.proc) + text(STRIP + 10, S.loop.y + ROW + 21, '합 ← 합 + a[i]');
+  s += rect(STRIP, S.loop.y + ROW * 2, W - STRIP, ROW, C.proc) + text(STRIP + 10, S.loop.y + ROW * 2 + 21, 'i ← i + 1');
+  s += rect(0, S.avg.y, W, ROW, C.proc) + text(10, S.avg.y + 21, '평균 ← 합 / n');
+  s += foldEdge(S.fold.x, S.fold.y, S.fold.w, S.fold.h);
+  return [s, S.avg.y + ROW + 8];
+}
+// 장면 L: While 본문의 마지막이 접기 영역 "더하기".
+const L = { init: TOP, loop: TOP + ROW };
+L.fold = { x: STRIP, y: L.loop + ROW, w: W - STRIP, h: BAND + ROW * 2 };
+L.avg = L.fold.y + L.fold.h;
+function drawL() {
+  let s = head();
+  s += rect(0, L.init, W, ROW, C.proc) + text(10, L.init + 21, '합 ← 0, i ← 0');
+  s += rect(0, L.loop, W, ROW + L.fold.h, C.loop) + text(10, L.loop + 21, 'i < n');
+  s += foldBand(STRIP, L.fold.y, W - STRIP, '더하기');
+  s += rect(STRIP, L.fold.y + BAND, W - STRIP, ROW, C.proc) + text(STRIP + 10, L.fold.y + BAND + 21, '합 ← 합 + a[i]');
+  s += rect(STRIP, L.fold.y + BAND + ROW, W - STRIP, ROW, C.proc) + text(STRIP + 10, L.fold.y + BAND + ROW + 21, 'i ← i + 1');
+  s += rect(0, L.avg, W, ROW, C.proc) + text(10, L.avg + 21, '평균 ← 합 / n');
+  s += foldEdge(L.fold.x, L.fold.y, L.fold.w, L.fold.h);
+  return [s, L.avg + ROW + 8];
+}
+// 장면 F: 접힌 접기 영역 "초기화"(접힌 칸 36px).
+const CELL = 36, F = { cell: TOP, loop: TOP + CELL };
+F.avg = F.loop + ROW * 3;
+function drawF() {
+  let s = head();
+  s += rect(0, F.cell, W, CELL, C.band) + text(8, F.cell + 23, '▸', { size: 11, fill: C.foldName, sans: true }) + text(20, F.cell + 23, '초기화', { size: 13 });
+  s += rect(0, F.loop, W, ROW * 3, C.loop) + text(10, F.loop + 21, 'i < n');
+  s += rect(STRIP, F.loop + ROW, W - STRIP, ROW, C.proc) + text(STRIP + 10, F.loop + ROW + 21, '합 ← 합 + a[i]');
+  s += rect(STRIP, F.loop + ROW * 2, W - STRIP, ROW, C.proc) + text(STRIP + 10, F.loop + ROW * 2 + 21, 'i ← i + 1');
+  s += rect(0, F.avg, W, ROW, C.proc) + text(10, F.avg + 21, '평균 ← 합 / n');
+  return [s, F.avg + ROW + 8];
+}
+const draw = { 1: drawS, 2: drawS, 3: drawS, 4: drawL, 5: drawF, 6: drawS };
+const sBottom = S.fold.y + S.fold.h, lBottom = L.fold.y + L.fold.h;
+// 결과: [포인터 x, 포인터 y, 줄 x, 줄 y, 줄 폭(0이면 놓을 수 없음), 표시, 설명]
+const no = (x, y, msg) => [x, y, 0, 0, 0, 'bad', msg];
+const R = {
+  now: {
+    1: no(150, S.fold.y + 6, '<b>놓을 수 없음</b>'),
+    2: [150, sBottom - 3, 0, sBottom, W, 'bad', '<b>초기화 안</b>, 합 ← 0 아래'],
+    3: [150, sBottom + 3, 0, sBottom, W, 'good', '<b>초기화 밖</b>, While 위 — ②와 줄이 같음'],
+    4: [150, lBottom - 3, STRIP, lBottom, W - STRIP, 'bad', '<b>더하기 안</b>. 더하기 밖 · While 안에는 놓을 곳 없음'],
+    5: no(150, F.cell + 22, '<b>놓을 수 없음</b>'),
+    6: [150, sBottom - 3, 0, sBottom, W, 'good', '가장자리 띠 → <b>안쪽 끝</b>'],
+  },
+  block: {
+    1: [150, S.fold.y + 6, 0, S.fold.y, W, 'good', '<b>초기화 위</b>(밖)'],
+    2: [150, sBottom - 3, 0, sBottom, W, 'good', '<b>초기화 아래</b>(밖, While 위)'],
+    3: [150, sBottom + 3, 0, sBottom, W, 'good', '<b>초기화 아래</b>(밖, 지금과 같음)'],
+    4: [150, lBottom - 3, STRIP, lBottom, W - STRIP, 'good', '<b>더하기 아래</b>(밖, While 본문의 끝)'],
+    5: [150, F.cell + 22, 0, F.cell + CELL, W, 'good', '아래 반 → <b>초기화 아래</b>(위 반이면 위)'],
+    6: [150, S.b2.y + 12, 0, sBottom, W, 'good', '띠보다 위, <b>합 ← 0 위</b>에 놓음 → 그 아래(안쪽 끝)'],
+  },
+  band: {
+    1: [150, S.fold.y + 6, 0, S.fold.y, W, 'good', '<b>초기화 위</b>(밖)'],
+    2: [150, sBottom - 3, 0, sBottom, W, 'bad', '<b>초기화 안</b>(지금과 같음)'],
+    3: [150, sBottom + 3, 0, sBottom, W, 'good', '<b>초기화 밖</b> — ②와 줄이 같음'],
+    4: [150, lBottom - 3, STRIP, lBottom, W - STRIP, 'bad', '<b>더하기 안</b>(지금과 같음)'],
+    5: [150, F.cell + 22, 0, F.cell + CELL, W, 'good', '아래 반 → <b>초기화 아래</b>'],
+    6: [150, sBottom - 3, 0, sBottom, W, 'good', '가장자리 띠 → <b>안쪽 끝</b>(지금과 같음)'],
+  },
+  split: {
+    1: [150, S.fold.y + 6, 0, S.fold.y, W, 'good', '<b>초기화 위</b>(밖)'],
+    2: [150, sBottom - 2, 0, sBottom, W, 'good', '가장자리에서 4px 안 → <b>초기화 아래</b>'],
+    3: [150, sBottom + 3, 0, sBottom, W, 'good', '<b>초기화 아래</b>(지금과 같음)'],
+    4: [150, lBottom - 2, STRIP, lBottom, W - STRIP, 'good', '4px 안 → <b>더하기 아래</b>'],
+    5: [150, F.cell + 22, 0, F.cell + CELL, W, 'good', '아래 반 → <b>초기화 아래</b>'],
+    6: [150, sBottom - 7, 0, sBottom, W, 'good', '가장자리에서 4 ~ 8px → <b>안쪽 끝</b>(과녁 4px)'],
+  },
+};
+const caps = { 1: '① 이름 띠에 놓기', 2: '② 아래 가장자리, 안쪽에서', 3: '③ 아래 가장자리, 바깥에서', 4: '④ 반복 본문의 마지막인 접기 영역', 5: '⑤ 접힌 칸의 아래 반', 6: '⑥ 안쪽 끝에 넣기' };
+function scene(opt, n) {
+  const r = R[opt][n];
+  let [s, h] = draw[n]();
+  if (r[4] > 0) s += dropLine(r[2] + 1, r[3] + 1, r[4]);
+  s += pointer(r[0], r[1]);
+  if (r[4] === 0) s += forbid(r[0], r[1]);
+  return '<svg width="' + (W + 16) + '" height="' + h + '" viewBox="-8 0 ' + (W + 16) + ' ' + h + '">' + s + '</svg>';
+}
+const mark = k => k === 'good' ? '<span class="good">✓</span> ' : '<span class="bad">✗</span> ';
+document.querySelectorAll('[data-opt]').forEach(el => {
+  const opt = el.dataset.opt;
+  el.innerHTML = [1, 2, 3, 4, 5, 6].map(n => '<figure><div class="fig">' + scene(opt, n) + '</div><figcaption><b>' + caps[n] + '</b><br>' + mark(R[opt][n][5]) + R[opt][n][6] + '</figcaption></figure>').join('');
+});
+})();
+</script>
