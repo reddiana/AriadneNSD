@@ -228,6 +228,10 @@ h1 {
   max-width: none;
   height: auto;
 }
+/* The <img> is only the fallback (gallery.js): hidden while the diagram's own <svg> shows. */
+.pic img[hidden] {
+  display: none;
+}
 .about {
   font-size: 13.5px;
   color: var(--muted);
