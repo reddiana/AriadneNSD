@@ -154,11 +154,10 @@ export function uiMessage(
   key: UiMessageKey,
   params: Readonly<Record<string, string | number>> = {},
 ): string {
-  return catalog
-    .table(locale)
-    [key].replace(/\{(\w+)\}/g, (whole, name: string) =>
-      name in params ? String(params[name]) : whole,
-    );
+  const text = catalog.table(locale)[key];
+  return text.replace(/\{(\w+)\}/g, (whole, name: string) =>
+    name in params ? String(params[name]) : whole,
+  );
 }
 
 /** Whether a string is a key of the UI catalog (used for the UI's own command titles). */
