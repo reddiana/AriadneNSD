@@ -28,7 +28,7 @@ updated: 2026-11-28
 | M84 | 블록 셋 구현 때 정할 것 (정함: B1 1번, B2 1번, D1 ~ D5 그대로) | https://claude.ai/artifact/U9S8t8Sz8DVPKAee5G52X8 | `journal/assets/2026-11-28-block-impl-study.html` |
 | M85 | 선택한 블록 곁의 드롭 위치 (정함: 2번 + 4번의 드롭 표시) | https://claude.ai/artifact/Psd323PXgcsTTKFWmpZFZ9 | `journal/assets/2026-11-28-drop-indicator-study.html` |
 | M86 | 접기 영역 곁의 드롭 규칙 (정함: N1 · N2 · N3 2번) | https://claude.ai/artifact/TBNJi5Dqn7WhGDEgchHYAb | `journal/assets/2026-11-28-drop-near-fold-study.html` |
-| M87 | 조작 규칙의 원칙 점검 (답을 기다림: Q1부터 하나씩) | https://claude.ai/artifact/KGGZjKgapKTnDW6aXruM5J | `journal/assets/2026-11-28-ux-principles-audit.html` |
+| M87 | 조작 규칙의 원칙 점검 (정함: Q1 1번, F2 ~ F8) | https://claude.ai/artifact/KGGZjKgapKTnDW6aXruM5J | `journal/assets/2026-11-28-ux-principles-audit.html` |
 
 ## 지금 단계
 
@@ -94,12 +94,12 @@ push · E2E · 전체 검사 · 커버리지 · 사이트 빌드는 허브가 �
 
 | 세션 | 할 일 | 대상 커밋 | 상태 | 순서 · 조건 |
 | --- | --- | --- | --- | --- |
-| 허브가 정함 | `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e` | 지난 push 뒤 전부(블록 셋 · 독일어 · 드롭 표시 · M86 `10c09e9` `905a08d` · M87 F2 ~ F7, 테스트 ID T-1597 ~ T-1612 새로 · T-0305 · T-0545 ~ T-0548 지움) | 기다림 | 메인테이너가 M87을 로컬에서 확인한 뒤, 다른 세션이 돌지 않을 때 한 번. 그 전에 `pnpm test-list:check`의 실패(`apps/web/doc-shots/ux-design.spec.ts is in no area`)를 고치고 T-1583 ~ T-1596이 99-test-list에 들었는지 확인 |
+| 허브가 정함 | `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e` | 지난 push 뒤 전부(블록 셋 · 독일어 · 드롭 표시 · M86 `10c09e9` `905a08d` · M87 F2 ~ F7, 테스트 ID T-1597 ~ T-1612 새로 · T-0305 · T-0545 ~ T-0548 지움) | 기다림 | M87 서브 세션은 마침(2026-11-28). 메인테이너가 마무리 · push를 하자고 할 때, 다른 세션이 돌지 않을 때 한 번. 그 전에 `pnpm test-list:check`의 실패(`apps/web/doc-shots/ux-design.spec.ts is in no area`)를 고치고 T-1583 ~ T-1596이 99-test-list에 들었는지 확인 |
 | 허브가 정함 | push, 웹 판 올리기 | 위와 같음 | 기다림 | 위가 통과하면 |
 
 ## 이번과 다음 세션에 할 것
 
-- [ ] 메인테이너: M87(조작 원칙 열 개 · F2 ~ F7)을 로컬 앱 http://localhost:5173 에서 확인 → 그 뒤 UX 점검 서브 세션이 매듭(세션 기록), 허브가 긴 작업 대기열
+- [ ] 메인테이너: M87(조작 원칙 열 개 · F3 ~ F8)을 로컬 앱 http://localhost:5173 에서 확인(F2는 확인함) → [[outbox#확인해 주세요]]의 세션 08 항목. 서브 세션은 마침(기록 [[2026-11-28-08-ux-principles]])
 - [ ] 마무리(push 전): `pnpm test-list:strict`, `pnpm check` 전체, `pnpm e2e`(블록 셋 · 독일어 · 드롭 표시로 편집기 동작이 바뀜), 그 뒤 push와 웹 판 올리기(블록 셋 · 독일어가 들어간 새 판). 로컬 서버 8080 · 8081 · 8082 · 8083 끄기
 - [ ] 메인테이너: 로컬 앱 http://localhost:5173 에서 블록 셋 · 독일어(브라우저 언어 또는 설정) · 드롭 표시를 써 보고 [[outbox#확인해 주세요]]의 2026-11-28 항목 확인. 독일어 사용법은 독일어를 아는 사람이 읽어 보면 좋음
 - [ ] 메인테이너: Edge(와 쓰는 다른 브라우저 · 폰)에서 `https://ariadnensd.com/?nocount`를 한 번 열기 → [[06-web#5.2 방문 수]]
