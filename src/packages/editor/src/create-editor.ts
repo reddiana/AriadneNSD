@@ -1,6 +1,13 @@
 // Making an editor (03-editor 6): the shell calls `createEditor` and gets an `EditorHandle`.
 import type { Doc, KeptSettings, Locale, PhaseTimer } from '@ariadne-nsd/core';
-import { createDoc, resultSymbols, screenLocale, setSettings } from '@ariadne-nsd/core';
+import {
+  createDoc,
+  isLocaleLoaded,
+  loadLocale,
+  resultSymbols,
+  screenLocale,
+  setSettings,
+} from '@ariadne-nsd/core';
 
 import { editorCommands } from './commands/editor-commands';
 import { createRegistry } from './commands/registry';
@@ -96,7 +103,25 @@ export function createEditor(options: EditorOptions): EditorHandle {
   const { settings } = options;
   const log = options.log ?? (() => undefined);
   // The same rule as the shell's (core `screenLocale`), so the menus and the shell agree.
-  const locale = (): Locale => screenLocale(settings.get(settingIds.locale), options.locale);
+  const chosenLocale = (): Locale => screenLocale(settings.get(settingIds.locale), options.locale);
+  // The screen shows a language once its strings are fetched (core `lazyCatalog`): until then the
+  // one before, so a change of language never shows a screen with strings missing or in English.
+  let shownLocale = chosenLocale();
+  const locale = (): Locale => shownLocale;
+  const showChosenLocale = (): void => {
+    const wanted = chosenLocale();
+    const show = (): void => {
+      if (wanted === chosenLocale() && wanted !== shownLocale) {
+        shownLocale = wanted;
+        session.rerender();
+      }
+    };
+    loadLocale(wanted).then(show, (error: unknown) => {
+      // Offline: the strings that came show, the rest stay English, but the choice takes effect.
+      log('Fetching the screen language failed', error);
+      show();
+    });
+  };
   const clipboard = options.clipboard ?? createSystemClipboard(log);
   const fonts = cachedFonts(options.fonts);
   let store: DocumentStore = options.doc.store;
@@ -397,10 +422,23 @@ export function createEditor(options: EditorOptions): EditorHandle {
   });
 
   const stopSettings = settings.onChange((key) => {
-    if (key === settingIds.locale || key === settingIds.focusOutline) {
+    if (key === settingIds.locale) {
+      showChosenLocale();
+    } else if (key === settingIds.focusOutline) {
       session.rerender();
     }
   });
+  if (!isLocaleLoaded(shownLocale)) {
+    // The host did not fetch the strings first: English until they come, then the screen redraws.
+    loadLocale(shownLocale).then(
+      () => {
+        session.rerender();
+      },
+      (error: unknown) => {
+        log('Fetching the screen language failed', error);
+      },
+    );
+  }
 
   // Not chosen yet, the screen language shows the one in use (the browser's), not English: a
   // Korean browser shows 한국어, and choosing English is then a change.

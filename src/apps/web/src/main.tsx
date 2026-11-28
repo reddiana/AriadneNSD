@@ -1,6 +1,6 @@
 // The web app's entry: builds the shell and the editor and puts them on the page (06-web).
 
-import { screenLocale } from '@ariadne-nsd/core';
+import { loadLocale, screenLocale } from '@ariadne-nsd/core';
 import type { ExamplesHost } from '@ariadne-nsd/editor';
 import { createEditor, examples, rememberedHeadStyle } from '@ariadne-nsd/editor';
 import { StrictMode } from 'react';
@@ -70,7 +70,14 @@ const settings = createSettingsStore(browserLocalStorage(), log, window);
 let locale = screenLocale(settings.get(localeSettingKey), navigator.language);
 document.documentElement.lang = locale;
 bootStep('database');
-const db = await openBrowserDb(log);
+// The screen strings of a language other than English are fetched now, with the database, so the
+// first screen shows them (core `lazyCatalog`). Offline, the screen is English until a later try.
+const [db] = await Promise.all([
+  openBrowserDb(log),
+  loadLocale(locale).catch((error: unknown) => {
+    log(`Fetching the screen language failed: ${describe(error)}`);
+  }),
+]);
 bootStep('editor');
 
 // The wasm and the TTF for saving (2 MB, about 1 MB compressed) are fetched at the first edit, not
@@ -185,15 +192,28 @@ function render(): void {
 }
 render();
 
-// Preferences › screen language (R-NFR-04): the menus follow at once.
+// Preferences › screen language (R-NFR-04): the menus follow as soon as the language's strings
+// are fetched (the editor waits for the same fetch), the old language until then.
 settings.onChange((key) => {
   if (key !== localeSettingKey) {
     return;
   }
-  locale = screenLocale(settings.get(localeSettingKey), navigator.language);
-  document.documentElement.lang = locale;
-  shell.setLocale(locale);
-  render();
+  const chosen = (): typeof locale =>
+    screenLocale(settings.get(localeSettingKey), navigator.language);
+  const wanted = chosen();
+  const show = (): void => {
+    if (wanted !== chosen() || wanted === locale) {
+      return;
+    }
+    locale = wanted;
+    document.documentElement.lang = locale;
+    shell.setLocale(locale);
+    render();
+  };
+  loadLocale(wanted).then(show, (error: unknown) => {
+    log(`Fetching the screen language failed: ${describe(error)}`);
+    show();
+  });
 });
 
 // Leaving view mode (Edit, or another document) takes the link out of the address bar, so a

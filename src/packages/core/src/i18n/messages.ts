@@ -128,6 +128,95 @@ export function catalogEntriesOf<Key extends string>(
   });
 }
 
+/** The tables of a catalog other than English's, each fetched by a dynamic import when first used. */
+export type CatalogImports<Key extends string> = {
+  readonly [L in Exclude<Locale, 'en'>]: () => Promise<Readonly<Record<Key, string>>>;
+};
+
+/**
+ * A screen string catalog whose English table is in the first download and whose other languages
+ * are fetched when the screen first shows them, so a new language does not make the
+ * first download bigger.
+ */
+export type LazyCatalog<Key extends string> = {
+  /** The table of `locale` once fetched; English's before that, so a string never goes missing. */
+  readonly table: (locale: Locale) => Readonly<Record<Key, string>>;
+  /** Every key with its text in every language, for checks; `loadAllLocales` first. */
+  readonly entries: () => ReadonlyArray<CatalogEntry>;
+};
+
+type CatalogLoader = {
+  readonly isLoaded: (locale: Locale) => boolean;
+  readonly load: (locale: Locale) => Promise<void>;
+};
+
+/** Every lazy catalog made so far: `loadLocale` fetches a language for all of them. */
+const lazyCatalogs: CatalogLoader[] = [];
+
+/**
+ * Makes a lazy catalog and registers it, so `loadLocale` fetches its tables. Made at the top of a
+ * catalog module: every catalog the page imports is registered before it starts.
+ */
+export function lazyCatalog<Key extends string>(
+  english: Readonly<Record<Key, string>>,
+  imports: CatalogImports<Key>,
+): LazyCatalog<Key> {
+  const tables: Partial<Record<Locale, Readonly<Record<Key, string>>>> = { en: english };
+  const loading = new Map<Locale, Promise<void>>();
+  lazyCatalogs.push({
+    isLoaded: (locale) => tables[locale] !== undefined,
+    load: (locale) => {
+      if (locale === 'en' || tables[locale] !== undefined) {
+        return Promise.resolve();
+      }
+      let promise = loading.get(locale);
+      if (promise === undefined) {
+        promise = imports[locale]().then(
+          (table) => {
+            tables[locale] = table;
+          },
+          (error: unknown) => {
+            // Fetching may work later (back online): the next `loadLocale` tries again.
+            loading.delete(locale);
+            throw error;
+          },
+        );
+        loading.set(locale, promise);
+      }
+      return promise;
+    },
+  });
+  return {
+    table: (locale) => tables[locale] ?? english,
+    entries: () => {
+      const missing = locales.filter((locale) => tables[locale] === undefined);
+      if (missing.length > 0) {
+        throw new Error(`Catalog languages not loaded: ${missing.join(', ')} (loadAllLocales)`);
+      }
+      return catalogEntriesOf(tables as Readonly<Record<Locale, Readonly<Record<Key, string>>>>);
+    },
+  };
+}
+
+/** Whether every lazy catalog has the strings of `locale` (English always has). */
+export function isLocaleLoaded(locale: Locale): boolean {
+  return lazyCatalogs.every((catalog) => catalog.isLoaded(locale));
+}
+
+/**
+ * Fetches the strings of `locale` for every lazy catalog. A host awaits it before it shows the
+ * screen in that language, so the screen never shows English first. Rejects when a fetch fails;
+ * the strings then stay English until a later call succeeds.
+ */
+export async function loadLocale(locale: Locale): Promise<void> {
+  await Promise.all(lazyCatalogs.map((catalog) => catalog.load(locale)));
+}
+
+/** Fetches every language of every lazy catalog: for checks of the catalogs and for tests. */
+export async function loadAllLocales(): Promise<void> {
+  await Promise.all(locales.map(loadLocale));
+}
+
 /**
  * What is wrong with a catalog (QA-13): a key missing or empty in a language, or a language whose
  * text has other `{name}` placeholders than English's. An empty list means none.

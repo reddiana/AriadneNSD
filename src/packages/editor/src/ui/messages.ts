@@ -4,7 +4,7 @@
 // (../i18n/messages.ts) has the others, so the keys of the two never clash.
 
 import type { CatalogEntry, Locale } from '@ariadne-nsd/core';
-import { catalogEntriesOf } from '@ariadne-nsd/core';
+import { lazyCatalog } from '@ariadne-nsd/core';
 
 const en = {
   'menu.file': 'File',
@@ -143,280 +143,10 @@ const en = {
 /** The keys of the UI's screen strings. */
 export type UiMessageKey = keyof typeof en;
 
-const ko: Readonly<Record<UiMessageKey, string>> = {
-  'menu.file': '파일',
-  'menu.edit': '편집',
-  'menu.diagram': '다이어그램',
-  'menu.view': '보기',
-  'menu.help': '도움말',
-  'menu.all': '메뉴',
-  'submenu.recent': '최근 파일',
-  'submenu.export': '내보내기',
-  'submenu.insert': '아래에 삽입',
-  'submenu.insertBefore': '위에 삽입',
-  'submenu.wrap': '감싸기',
-  'toolbar.label': '툴바',
-  'toolbar.wrap': '감싸기',
-  'toolbar.zoom': '확대 · 축소',
-  'toolbar.zoomReset': '100%로',
-  'toolbar.blockTip':
-    '{name}: 아래에 삽입 ({after}) · Shift+클릭: 위에 ({before}) · Ctrl+클릭: 감싸기 ({wrap}) · 다이어그램에 드래그',
-  'toolbar.processTip':
-    '{name}: 아래에 삽입 ({after}) · Shift+클릭: 위에 ({before}) · 다이어그램에 드래그',
-  'block.process': '처리',
-  'block.if': 'If',
-  'block.case': 'Case',
-  'block.while': 'While',
-  'block.for': 'For',
-  'block.doWhile': 'Do-While',
-  'block.endless': '무한 반복',
-  'block.exit': '탈출',
-  'block.parallel': '병렬 처리',
-  'status.label': '상태',
-  'status.nothingSelected': '선택한 것 없음',
-  'status.readOnly': '보기만 하는 중',
-  'status.readOnly.otherTab': '보기만 하는 중 · 다른 탭에서 편집 중',
-  'status.readOnly.otherTab.hint': '그 탭을 닫으면 여기서 편집할 수 있습니다.',
-  'status.unsaved': '저장 안 됨',
-  'palette.label': '커맨드 팔레트',
-  'palette.placeholder': '명령 이름을 입력하세요',
-  'palette.empty': '맞는 명령이 없습니다',
-  'hint.label': '이어 누를 키',
-  'shortcuts.title': '단축키 목록',
-  'shortcuts.command': '명령',
-  'shortcuts.vimKey': 'Vim 키',
-  'shortcuts.standardKey': '표준 키',
-  'preferences.title': '환경 설정',
-  'preferences.empty': '아직 설정이 없습니다',
-  'documentSettings.title': '문서 설정',
-  'documentSettings.note': '파일에 저장됩니다. 파일을 받은 사람에게도 같게 보입니다.',
-  'preferences.note': '나에게만, 이 브라우저에 남습니다.',
-  'about.title': 'AriadneNSD에 대하여',
-  'about.body': 'NS 차트(Nassi-Shneiderman Diagram) 편집기.',
-  'about.version': '버전 {version}',
-  'about.preview': '1.0 전에 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
-  'about.docs': '문서',
-  'about.docsUrl': 'https://ariadnensd.com/about/ko',
-  'about.repository': 'GitHub 저장소',
-  'whatsNew.title': '이 버전에서 바뀐 것',
-  'whatsNew.body':
-    '0.5.0은 늘 하는 편집을 더 빠르게 했습니다.\n' +
-    '- 툴바의 축소 · 100% · 확대를 바로 누르는 버튼으로. 숫자를 누르면 100%, 그 위에서 휠로 배율\n' +
-    '- 다이어그램의 맨 앞 · 맨 끝(헤더 아래 띠 · 다이어그램 아래 띠)에 블록을 놓을 수 있음\n' +
-    '- 지금 쓸 수 없는 메뉴 항목은 더 흐리고, 가리키면 까닭을 보임\n' +
-    '- 큰 다이어그램의 편집이 빨라짐: 바뀐 블록만 다시 그림\n' +
-    '- 110% 같은 배율에서 선이 굵어지던 것을 고침\n' +
-    '- 도움말 › 알고리즘 갤러리: NS 차트로 그린 알고리즘 22개\n' +
-    '- Claude 스킬을 claude.ai에서도 플러그인 마켓플레이스로 설치',
-  'modal.close': '닫기',
-  'contextMenu.label': '컨텍스트 메뉴',
-  'dialog.label': '질문',
-  'notice.close': '알림 닫기',
-  'value.on': '켬',
-  'value.off': '끔',
-  'cmd.commandPalette': '커맨드 팔레트…',
-  'cmd.preferences': '환경 설정…',
-  'cmd.documentSettings': '문서 설정…',
-  'cmd.shortcuts': '단축키 목록',
-  'cmd.manual': '사용법',
-  'cmd.gallery': '알고리즘 갤러리',
-  'cmd.askAi': 'AI에게 그려 달라고 하기',
-  'cmd.whatsNew': '이 버전에서 바뀐 것',
-  'cmd.about': 'AriadneNSD에 대하여',
-  'cmd.examples': '예제…',
-  'toolbar.examples': '예제',
-  'examples.welcomeTitle': 'AriadneNSD에 오신 것을 환영합니다',
-  'examples.welcomeLead':
-    '예제를 하나 열어 보세요. 고친 것은 내 문서가 되고, 예제는 나중에 도움말 › 예제에서 다시 열 수 있습니다.',
-  'examples.welcomeFoot': '예제는 툴바의 "예제"와 도움말 › 예제…로 다시 열 수 있습니다.',
-  'examples.welcomePreview':
-    'AriadneNSD는 아직 1.0 전입니다. 지금 저장한 파일은 뒤의 버전에서 열리지 않을 수 있습니다.',
-  'examples.menuTitle': '예제 열기',
-  'examples.menuLead':
-    '예제는 새 문서로 열립니다. 지금 문서는 닫힙니다. 파일로 연 문서는 그 파일을 다시 열면 복원할 수 있습니다.',
-  'examples.blankWelcome': '빈 문서로 시작',
-  'examples.blankWelcomeWhat': '다시 묻지 않습니다',
-  'examples.blank': '빈 문서',
-  'examples.blankWhat': '새 문서',
-  'examples.openFile': '파일 열기…',
-  'view.label': '보기 모드',
-  'view.edit': '편집하기',
-  'view.editTip': '이 다이어그램을 편집합니다. 저장하기 전에는 이 브라우저에만 남습니다.',
-  'place.browser': '브라우저',
-  'place.browserTip': '파일이 아니라 이 브라우저에 저장된 문서',
-  'places.openTitle': '열기',
-  'places.saveTitle': '다른 이름으로 저장',
-  'places.sides': '어디에서',
-  'places.computer': '이 컴퓨터의 파일',
-  'places.browser': '이 브라우저',
-  'places.computerOpenLead': '이 컴퓨터의 .ns.svg · .ns 파일을 엽니다.',
-  'places.chooseFile': '파일 고르기…',
-  'places.computerSaveLead': '이 컴퓨터에 .ns.svg 파일로 저장합니다.',
-  'places.computerDownloadLead':
-    '이 브라우저는 이 컴퓨터의 파일에 쓸 수 없어, .ns.svg 파일을 내려받습니다(브라우저의 내려받기 폴더).',
-  'places.chooseWhere': '저장할 곳 고르기…',
-  'places.download': '내려받기…',
-  'places.name': '이름',
-  'places.list': '이 브라우저의 문서',
-  'places.modified': '고친 때',
-  'places.size': '크기',
-  'places.empty': '이 브라우저에 저장한 문서가 아직 없습니다.',
-  'places.yesterday': '어제',
-  'places.saveWarning':
-    '이 브라우저 안에만 저장됩니다. 브라우저의 사이트 데이터를 지우면 함께 지워집니다.',
-  'places.listWarning':
-    '이 브라우저 안에만 있습니다. 브라우저의 사이트 데이터를 지우면 함께 지워지니, 가끔 파일로 내보내 두세요.',
-  'places.open': '열기',
-  'places.save': '저장',
-  'places.cancel': '취소',
-  'places.rename': '이름 바꾸기…',
-  'places.export': '파일로 내보내기',
-  'places.delete': '삭제',
-  'places.exportAll': '모두 파일로 내보내기 (.zip)',
-  'places.import': '파일에서 가져오기…',
-};
-
-const de: Readonly<Record<UiMessageKey, string>> = {
-  'menu.file': 'Datei',
-  'menu.edit': 'Bearbeiten',
-  'menu.diagram': 'Diagramm',
-  'menu.view': 'Ansicht',
-  'menu.help': 'Hilfe',
-  'menu.all': 'Menü',
-  'submenu.recent': 'Zuletzt verwendete Dateien',
-  'submenu.export': 'Exportieren',
-  'submenu.insert': 'Block darunter einfügen',
-  'submenu.insertBefore': 'Block darüber einfügen',
-  'submenu.wrap': 'Umschließen mit',
-  'toolbar.label': 'Symbolleiste',
-  'toolbar.wrap': 'Umschließen',
-  'toolbar.zoom': 'Zoom',
-  'toolbar.zoomReset': 'Auf 100 % zoomen',
-  'toolbar.blockTip':
-    '{name}: darunter einfügen ({after}) · Umschalt+Klick: darüber ({before}) · Strg+Klick: umschließen ({wrap}) · auf das Diagramm ziehen',
-  'toolbar.processTip':
-    '{name}: darunter einfügen ({after}) · Umschalt+Klick: darüber ({before}) · auf das Diagramm ziehen',
-  'block.process': 'Anweisung',
-  'block.if': 'Verzweigung',
-  'block.case': 'Fallauswahl',
-  'block.while': 'While-Schleife',
-  'block.for': 'For-Schleife',
-  'block.doWhile': 'Do-While-Schleife',
-  'block.endless': 'Endlosschleife',
-  'block.exit': 'Aussprung',
-  'block.parallel': 'Parallelverarbeitung',
-  'status.label': 'Status',
-  'status.nothingSelected': 'Nichts ausgewählt',
-  'status.readOnly': 'Nur ansehen',
-  'status.readOnly.otherTab': 'Nur ansehen · wird in einem anderen Tab bearbeitet',
-  'status.readOnly.otherTab.hint': 'Schließen Sie diesen Tab, um hier zu bearbeiten.',
-  'status.unsaved': 'Nicht gespeichert',
-  'palette.label': 'Befehlspalette',
-  'palette.placeholder': 'Befehlsnamen eingeben',
-  'palette.empty': 'Kein passender Befehl',
-  'hint.label': 'Nächste Taste',
-  'shortcuts.title': 'Tastenkombinationen',
-  'shortcuts.command': 'Befehl',
-  'shortcuts.vimKey': 'Vim-Taste',
-  'shortcuts.standardKey': 'Standardtaste',
-  'preferences.title': 'Einstellungen',
-  'preferences.empty': 'Noch keine Einstellungen',
-  'documentSettings.title': 'Dokumenteinstellungen',
-  'documentSettings.note': 'In der Datei gespeichert. Wer sie öffnet, sieht dasselbe.',
-  'preferences.note': 'Nur für Sie, in diesem Browser gespeichert.',
-  'about.title': 'Über AriadneNSD',
-  'about.body': 'Ein Editor für Nassi-Shneiderman-Diagramme (Struktogramme).',
-  'about.version': 'Version {version}',
-  'about.preview':
-    'Vor Version 1.0 lassen sich gespeicherte Dateien in späteren Versionen möglicherweise nicht öffnen.',
-  'about.docs': 'Dokumentation (Englisch)',
-  'about.docsUrl': 'https://ariadnensd.com/about',
-  'about.repository': 'GitHub-Repository',
-  'whatsNew.title': 'Neu in dieser Version',
-  'whatsNew.body':
-    '0.5.0 macht das tägliche Bearbeiten schneller.\n' +
-    '- Verkleinern, 100 % und Vergrößern sind Schaltflächen in der Symbolleiste; ein Klick auf die Zahl setzt 100 %, das Mausrad darüber zoomt\n' +
-    '- Blöcke lassen sich ganz am Anfang oder Ende eines Diagramms ablegen, auf dem Streifen unter dem Kopf oder unter dem Diagramm\n' +
-    '- Menüeinträge, die gerade nicht verfügbar sind, erscheinen blasser und nennen beim Daraufzeigen den Grund\n' +
-    '- Große Diagramme lassen sich schneller bearbeiten: Nur geänderte Blöcke werden neu gezeichnet\n' +
-    '- Linien sind bei Zoomstufen wie 110 % nicht mehr dicker\n' +
-    '- Hilfe › Algorithmengalerie öffnet 22 Algorithmen als Struktogramme\n' +
-    '- Der Claude-Skill lässt sich auch in claude.ai über den Plugin-Marketplace installieren',
-  'modal.close': 'Schließen',
-  'contextMenu.label': 'Kontextmenü',
-  'dialog.label': 'Frage',
-  'notice.close': 'Meldung schließen',
-  'value.on': 'Ein',
-  'value.off': 'Aus',
-  'cmd.commandPalette': 'Befehlspalette…',
-  'cmd.preferences': 'Einstellungen…',
-  'cmd.documentSettings': 'Dokumenteinstellungen…',
-  'cmd.shortcuts': 'Tastenkombinationen',
-  'cmd.manual': 'Benutzerhandbuch',
-  'cmd.gallery': 'Algorithmengalerie',
-  'cmd.askAi': 'Von einer KI zeichnen lassen',
-  'cmd.whatsNew': 'Neu in dieser Version',
-  'cmd.about': 'Über AriadneNSD',
-  'cmd.examples': 'Beispiele…',
-  'toolbar.examples': 'Beispiele',
-  'examples.welcomeTitle': 'Willkommen bei AriadneNSD',
-  'examples.welcomeLead':
-    'Öffnen Sie zum Einstieg ein Beispiel. Was Sie ändern, wird Ihr Dokument; die Beispiele öffnen Sie jederzeit wieder über Hilfe › Beispiele….',
-  'examples.welcomeFoot':
-    'Die Beispiele öffnen Sie wieder über „Beispiele“ in der Symbolleiste oder über Hilfe › Beispiele….',
-  'examples.welcomePreview':
-    'AriadneNSD hat Version 1.0 noch nicht erreicht. Jetzt gespeicherte Dateien lassen sich in späteren Versionen möglicherweise nicht öffnen.',
-  'examples.menuTitle': 'Beispiel öffnen',
-  'examples.menuLead':
-    'Ein Beispiel öffnet sich als neues Dokument. Dieses Dokument wird geschlossen; ein aus einer Datei geöffnetes Dokument stellen Sie wieder her, indem Sie die Datei erneut öffnen.',
-  'examples.blankWelcome': 'Mit einem leeren Dokument beginnen',
-  'examples.blankWelcomeWhat': 'Wird nicht mehr gefragt',
-  'examples.blank': 'Leeres Dokument',
-  'examples.blankWhat': 'Neues Dokument',
-  'examples.openFile': 'Datei öffnen…',
-  'view.label': 'Ansichtsmodus',
-  'view.edit': 'Bearbeiten',
-  'view.editTip':
-    'Dieses Diagramm bearbeiten. Ihre Kopie bleibt in diesem Browser, bis Sie sie speichern.',
-  'place.browser': 'Browser',
-  'place.browserTip': 'In diesem Browser gespeichert, nicht in einer Datei',
-  'places.openTitle': 'Öffnen',
-  'places.saveTitle': 'Speichern unter',
-  'places.sides': 'Ort',
-  'places.computer': 'Dateien auf diesem Computer',
-  'places.browser': 'Dieser Browser',
-  'places.computerOpenLead': 'Eine .ns.svg- oder .ns-Datei auf diesem Computer öffnen.',
-  'places.chooseFile': 'Datei auswählen…',
-  'places.computerSaveLead': 'Als .ns.svg-Datei auf diesem Computer speichern.',
-  'places.computerDownloadLead':
-    'Dieser Browser kann keine Dateien auf diesem Computer schreiben, daher lädt er eine .ns.svg-Datei in Ihren Download-Ordner herunter.',
-  'places.chooseWhere': 'Speicherort auswählen…',
-  'places.download': 'Herunterladen…',
-  'places.name': 'Name',
-  'places.list': 'Dokumente in diesem Browser',
-  'places.modified': 'Geändert',
-  'places.size': 'Größe',
-  'places.empty': 'Noch keine Dokumente in diesem Browser.',
-  'places.yesterday': 'Gestern',
-  'places.saveWarning':
-    'Nur in diesem Browser gespeichert. Wenn Sie die Websitedaten des Browsers löschen, wird es mitgelöscht.',
-  'places.listWarning':
-    'Nur in diesem Browser gespeichert. Wenn Sie die Websitedaten des Browsers löschen, werden sie mitgelöscht – exportieren Sie sie daher hin und wieder in Dateien.',
-  'places.open': 'Öffnen',
-  'places.save': 'Speichern',
-  'places.cancel': 'Abbrechen',
-  'places.rename': 'Umbenennen…',
-  'places.export': 'In Datei exportieren',
-  'places.delete': 'Löschen',
-  'places.exportAll': 'Alle in Dateien exportieren (.zip)',
-  'places.import': 'Aus Dateien importieren…',
-};
-
-const catalog: Readonly<Record<Locale, Readonly<Record<UiMessageKey, string>>>> = {
-  en,
-  ko,
-  de,
-};
+const catalog = lazyCatalog<UiMessageKey>(en, {
+  ko: () => import('./messages.ko').then((module) => module.ko),
+  de: () => import('./messages.de').then((module) => module.de),
+});
 
 /** Returns a UI string, with `{name}` placeholders filled from `params`. */
 export function uiMessage(
@@ -424,9 +154,11 @@ export function uiMessage(
   key: UiMessageKey,
   params: Readonly<Record<string, string | number>> = {},
 ): string {
-  return catalog[locale][key].replace(/\{(\w+)\}/g, (whole, name: string) =>
-    name in params ? String(params[name]) : whole,
-  );
+  return catalog
+    .table(locale)
+    [key].replace(/\{(\w+)\}/g, (whole, name: string) =>
+      name in params ? String(params[name]) : whole,
+    );
 }
 
 /** Whether a string is a key of the UI catalog (used for the UI's own command titles). */
@@ -436,5 +168,5 @@ export function isUiMessageKey(text: string): text is UiMessageKey {
 
 /** Every key of the UI catalog with its text in every screen language, for checks (QA-13). */
 export function uiCatalogEntries(): ReadonlyArray<CatalogEntry> {
-  return catalogEntriesOf(catalog);
+  return catalog.entries();
 }
