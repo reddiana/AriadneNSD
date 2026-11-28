@@ -493,7 +493,7 @@ flowchart LR
 | 드롭 위치 | 블록 사이(본문의 맨 앞 · 맨 끝은 본문의 윗선 · 다이어그램의 아랫선)에 2px 가로줄 + 양 끝에 줄의 위아래로 4px씩(길이 8px, 굵기 2px) 세로 눈금 | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 블록 위에 드롭 (감싸기, 빈 블록 · 빈 default 칸 채우기) | 그 블록의 바깥 선에서 1px 안에 2px 테두리. 감싸기일 때만 커서 곁에 "If로 감싸기"처럼 결과의 이름 → [[02-interaction-rules#7. 드래그 앤 드롭]] | 편집 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#d0500b;border:1px solid #8888;vertical-align:-0.1em"></span> `edit.drop` | 있음 |
 | 드롭할 수 없는 곳 | 줄을 그리지 않고, 커서가 금지 모양 | 편집 | | 있음 |
-| 빈 분기 | If · Case의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
+| 빈 분기 | If · Case · 병렬 처리의 분기에 빈 블록 하나만 있으면 칸 가운데에 `∅` | 문서 | <span class="color-chip" style="display:inline-block;width:0.9em;height:0.9em;background:#5a6476;border:1px solid #8888;vertical-align:-0.1em"></span> `text.muted` | 있음 |
 | 헤더 모양 "제목처럼" | 모자 · 아치 없이 라벨 + 굵은 이름 + 아랫줄 1px. 선택하면 헤더 전체(라벨부터 아랫줄까지)를 블록 하나처럼 두름. 글자가 다이어그램의 왼쪽 선에 붙어 있으므로 선택 테두리는 왼쪽 · 위 · 오른쪽으로 4px 넓혀(아래는 그대로) 글자를 덮지 않음 | 문서 | `text.*`, `line.structure` | 있음 |
 | 두 키 조합을 기다림 | 첫 키 뒤 0.4초가 지나면 선택 바로 아래(선택의 왼쪽 끝에서 최대 24px 안쪽, 선택 아래 4px → [[ux-decisions#KA1. 키 힌트와 키보드 메뉴의 가로 위치\|KA1]])에 키 힌트. 맨 위에 첫 키와 묶음 이름(`ui.muted`), 그 아래에 한 줄에 하나씩 이어 누를 키(화면 글꼴 굵게 `ui.accent`)와 명령 이름(`ui.text`). 배경 `ui.panel`, 테두리 1px `ui.line`, 왼쪽 띠 3px `ui.warn`, 그림자. 아래에 자리가 모자라면 선택 위로 뒤집고, 창 밖으로 나가지 않게 밀어 넣음 → [[03-keymap]], [[ux-decisions#K3. 두 키 조합의 안내 자리 (다시)\|K3]] | 편집 (UI) | `ui.*` | 있음 |
 

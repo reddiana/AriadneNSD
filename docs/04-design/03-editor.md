@@ -84,7 +84,7 @@ type EditorState = {
 type Selection =
   | { kind: 'blocks'; seq: SeqRef; anchor: Id; focus: Id }   // 같은 줄 안의 연속 범위 → ADR-0008
   | { kind: 'head'; diagram: Id }
-  | { kind: 'branchLabel'; branch: Id }                      // 분기 라벨 (If · Case) → 조작 규칙 "분기 라벨 선택"
+  | { kind: 'branchLabel'; branch: Id }                      // 분기 라벨 (If · Case), 병렬 처리의 분기 칸 전체 → 조작 규칙 "분기 라벨 선택"
   | { kind: 'fold'; fold: Id; path?: Path }                  // 접기 영역 전체 (이름 띠나 접힌 칸). 펴 보인 호출 블록 안이면 그 경로
   | { kind: 'missingDefault'; block: Id }                    // default가 없는 Case에 그려 둔 빈 default 칸 (UX CD1)
   | { kind: 'peek'; path: Path; anchor: Id; focus: Id; branch?: Id }; // 펴 보인 호출 블록 안의 블록들: 경로와 Method의 한 줄 안의 범위. `branch`는 If · Case `anchor`의 분기 라벨을 선택한 것
@@ -262,7 +262,7 @@ UML 시퀀스 다이어그램입니다. 실선 화살표는 호출, 점선 화�
 ### 3.3 클립보드
 
 - 복사 · 잘라내기는 시스템 클립보드에 둘을 함께 씁니다:
-	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게). 호출 블록은 렌더링된 대로 `ys ← MergeSort(xs)`
+	- `text/plain`: 블록의 텍스트를 들여쓰기한 줄로(다른 프로그램에 붙여넣으면 의사코드처럼 보이게). 호출 블록은 렌더링된 대로 `ys ← MergeSort(xs)`. 무한 반복은 그림 문구 "(무한 반복)"(`endless.name`) 줄 아래에 본문을, 병렬 처리는 위 띠의 텍스트(있으면) 아래에 분기마다 `∥` 줄과 그 블록을 한 단 더 들여 적습니다
 	- `web application/x-ariadne-nsd+json`: 블록 목록의 모델 JSON(Chromium의 웹 사용자 정의 형식). 첫 다이어그램(헤더 없음)이 복사한 블록이고, 그 블록의 호출 블록이 호출하는 Method마다 헤더만 있는 빈 Method가 뒤따릅니다. 그래서 클립이 그 자체로 올바른 문서이고(불변식 6), 호출 블록이 부르던 Method의 이름이 따라갑니다. 붙여넣으면 호출 블록은 붙이는 문서에서 **이름이 같은 Method**를 호출하고, 없으면 그 이름을 적은 호출 블록이 됩니다 → [[ux-decisions#CB11. 다른 문서에 붙인 호출 블록|CB11]]
 - 붙여넣기는 사용자 정의 형식이 있으면 그것을 씁니다. 없으면(다른 브라우저, 다른 프로그램에서 복사) `text/plain`의 줄마다 처리 블록 하나를 만듭니다.
 - 셸이 `pastedDocument`(6장의 `createEditor` 옵션)를 전달했고 사용자 정의 형식이 없으며 `pastedDocument.isDocument(text)`가 참이면(AriadneNSD 문서인 텍스트, [[01-requirements#^r-web|R-WEB-11]] → [[06-web#3.2 붙여넣은 문서]]), 블록을 만들기 전에 모달(`Dialog`, 제목 "AriadneNSD")로 묻습니다. "새 문서로 열기"(확인 버튼)면 `pastedDocument.open(text)`를 호출하고 지금 문서는 바꾸지 않으며, "텍스트로 붙여넣기"(넷째 버튼, 선택한 것이 없으면 `isSecondDisabled`)면 위의 규칙대로 붙이고, 취소면 아무것도 하지 않습니다 → [[ux-decisions#JP2. 알아본 뒤의 동작|JP2]]
@@ -347,7 +347,7 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 | --- | --- |
 | 파일 | 새로 · 열기… · 붙여넣은 JSON으로 열기…(웹 → [[06-web#3.2 붙여넣은 문서]]) · 최근 파일 ▸ ／ 저장 · 다른 이름으로 저장… ／ 내보내기 ▸ (PNG · SVG(그림만) · PDF) · 인쇄… · 공유 링크 복사(웹 → [[06-web#3. 공유 URL과 보기 모드]]) ／ 환경 설정… |
 | 편집 | 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 위에 붙여넣기 · 아래에 붙여넣기 · 삭제 ／ 텍스트 편집 ／ 위로 · 아래로 · 왼쪽으로 · 오른쪽으로 이동 ／ 커맨드 팔레트… |
-| 다이어그램 | 위에 삽입 ▸ · 아래에 삽입 ▸ (둘 다 처리 · If · Case · While · For · Do-While · 호출…) ／ 감싸기 ▸ · 풀기 ／ 왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
+| 다이어그램 | 위에 삽입 ▸ · 아래에 삽입 ▸ (둘 다 처리 · If · Case · While · For · Do-While · 무한 반복 · 탈출 · 병렬 처리 · 호출…) ／ 감싸기 ▸ · 풀기 ／ 왼쪽에 분기 삽입 · 오른쪽에 분기 삽입 · 분기 삭제 ／ 호출할 Method 바꾸기… · 새 Method로 빼기 · 호출하는 Method로 가기 · Method 만들기 · Method 풀어 넣고 지우기 ／ Event 헤더 · Method 헤더 · 헤더 제거 ／ 새 Event 다이어그램 · 새 Method 다이어그램 · 다이어그램 삭제 ／ 문서 설정… |
 | 보기 | 접기 · 펴기 · 모두 접기 · 모두 펴기 ／ 접기 영역 만들기 · 접기 영역 풀기 ／ 접기 영역 보기 ✓ ／ 확대 · 축소 · 100% |
 | 도움말 | 사용법 · 알고리즘 갤러리 · AI에게 그려 달라고 하기 · 단축키 목록 · 예제… ／ 이 버전에서 바뀐 것 · AriadneNSD에 대하여 |
 
@@ -366,14 +366,14 @@ type CommandContext = { state: EditorState; store: DocumentStore; settings: Sett
 
 ### 5.2 툴바
 
-[[05-screen-layout|화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 여덟(처리 · If · Case · While · Do-While · 무한 반복 · 탈출 · 병렬 처리, For 없음 → [[ux-decisions#TB1. 툴바에 For를 두지 않는다|TB1]]) ／ 감싸기 ▾ · 확대 · 축소 묶음 · 예제(예제 모달을 엶). 확대 · 축소 묶음(`ans-zoom-group`)은 [돋보기−] 지금 배율(`100%`) [돋보기+]의 세 버튼을 여백 없이 붙인 것으로, 배율을 누르면 100%로 돌아가고, 묶음 위의 휠은 50px마다 한 단계 배율을 바꿉니다(줄 단위는 16px, 방향을 바꾸면 새로 셈 → [[ux-decisions#ZM1. 툴바의 확대 · 축소 버튼|ZM1]]). "감싸기 ▾"(`DropdownButton`의 `isDimmedWhenNoneApply`)는 감싸기 명령 다섯이 모두 `when`에서 이유를 반환하면 `aria-disabled`로 흐려지고, 툴팁은 첫 감싸기 명령의 이유입니다. 누르면 목록을 열지 않고 그 명령을 실행해, 레지스트리가 이유를 상태 표시줄에 알립니다(흐린 메뉴 항목과 같음 → [[ux-decisions#TB3. 감쌀 것이 없을 때의 감싸기 ▾|TB3]]). 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
+[[05-screen-layout|화면 배치]]의 순서대로: 새로 · 열기 · 저장 · 내보내기 ／ 실행 취소 · 다시 하기 ／ 잘라내기 · 복사 · 붙여넣기 ／ 블록 아이콘 여덟(처리 · If · Case · While · Do-While · 무한 반복 · 탈출 · 병렬 처리, For 없음 → [[ux-decisions#TB1. 툴바에 For를 두지 않는다|TB1]]) ／ 감싸기 ▾ · 확대 · 축소 묶음 · 예제(예제 모달을 엶). 확대 · 축소 묶음(`ans-zoom-group`)은 [돋보기−] 지금 배율(`100%`) [돋보기+]의 세 버튼을 여백 없이 붙인 것으로, 배율을 누르면 100%로 돌아가고, 묶음 위의 휠은 50px마다 한 단계 배율을 바꿉니다(줄 단위는 16px, 방향을 바꾸면 새로 셈 → [[ux-decisions#ZM1. 툴바의 확대 · 축소 버튼|ZM1]]). "감싸기 ▾"(`DropdownButton`의 `isDimmedWhenNoneApply`)는 감싸기 명령 일곱이 모두 `when`에서 이유를 반환하면 `aria-disabled`로 흐려지고, 툴팁은 첫 감싸기 명령의 이유입니다. 누르면 목록을 열지 않고 그 명령을 실행해, 레지스트리가 이유를 상태 표시줄에 알립니다(흐린 메뉴 항목과 같음 → [[ux-decisions#TB3. 감쌀 것이 없을 때의 감싸기 ▾|TB3]]). 블록 아이콘의 누르기 · `Shift`+클릭 · `Ctrl`+클릭 · 드래그는 [[02-interaction-rules#블록 아이콘으로 삽입 · 감싸기]]에 있습니다.
 
 ### 5.3 명령 id 목록
 
 | 묶음 | 명령 id |
 | --- | --- |
-| 삽입 | `block.insert.<kind>` · `block.insertBefore.<kind>` (`process` `if` `case` `while` `for` `doWhile`), `block.insert.call` · `block.insertBefore.call` |
-| 감싸기 · 풀기 | `block.wrap.<kind>` (`if` `case` `while` `for` `doWhile`), `block.unwrap` |
+| 삽입 | `block.insert.<kind>` · `block.insertBefore.<kind>` (`process` `if` `case` `while` `for` `doWhile` `endless` `exit` `parallel`), `block.insert.call` · `block.insertBefore.call` |
+| 감싸기 · 풀기 | `block.wrap.<kind>` (`if` `case` `while` `for` `doWhile` `endless` `parallel`. 탈출은 감쌀 수 없음), `block.unwrap` |
 | 분기 | `branch.insert` · `branch.insertBefore` · `branch.delete`, `branch.convertIfToCase` · `branch.convertCaseToIf` |
 | 편집 | `edit.undo` · `edit.redo`, `edit.cut` · `edit.copy` · `edit.paste` · `edit.pasteBefore` · `edit.delete`, `edit.text` · `edit.textStart` · `edit.textClear` · `edit.branchLabel`, `edit.move.up` · `edit.move.down` · `edit.move.left` · `edit.move.right`, `edit.commandPalette` |
 | 선택 · 이동 | `select.up` · `select.down` · `select.left` · `select.right`, `select.unitUp` · `select.unitDown`, `select.branchLeft` · `select.branchRight`, `select.first` · `select.last`, `select.previousDiagram` · `select.nextDiagram`, `select.extendUp` · `select.extendDown`, `select.visual`, `select.clear` |

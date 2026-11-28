@@ -79,7 +79,7 @@ type Head = {
 
 ### 1.3 줄
 
-블록의 순서 있는 시퀀스(`Seq`)입니다. 다이어그램의 본문, 분기의 본문, 반복 블록의 본문이 모두 `Seq`입니다.
+블록의 순서 있는 시퀀스(`Seq`)입니다. 다이어그램의 본문, 분기의 본문, 반복 블록 · 무한 반복의 본문이 모두 `Seq`입니다.
 
 ```ts
 type Seq = {
@@ -101,7 +101,7 @@ type FoldMark = {
 ### 1.4 블록
 
 ```ts
-type Block = Process | If | Case | While | DoWhile | For | Call;
+type Block = Process | If | Case | While | DoWhile | For | Endless | Exit | Parallel | Call;
 
 type Process = { id: Id; kind: 'process'; text: string };
 
@@ -122,6 +122,13 @@ type Arm = { id: Id; label: string; body: Seq };      // Case의 분기. 라벨 
 type While   = { id: Id; kind: 'while';   text: string; body: Seq };
 type DoWhile = { id: Id; kind: 'doWhile'; text: string; body: Seq };  // Do-While과 Repeat-Until은 모양이 같고 텍스트만 다르다
 type For     = { id: Id; kind: 'for';     text: string; body: Seq };
+
+type Endless  = { id: Id; kind: 'endless'; body: Seq };              // 무한 반복: 텍스트 없음
+type Exit     = { id: Id; kind: 'exit'; text: string };             // 탈출: break, return x …
+type Parallel = {
+  id: Id; kind: 'parallel'; text: string;  // 위 띠의 텍스트. 비울 수 있다
+  branches: Branch[];                      // 왼쪽부터. label은 두지 않는다. 하나 이상
+};
 ```
 
 - 조건이나 반복의 텍스트는 모두 `text` 필드 하나에 둡니다. 텍스트 편집 명령이 블록 종류(`kind`)마다 다른 필드로 분기하지 않아도 됩니다.
@@ -130,11 +137,9 @@ type For     = { id: Id; kind: 'for';     text: string; body: Seq };
 - 분기(`Branch`)에도 id가 있습니다. If와 Case는 분기별로 접히므로, 뷰 상태가 분기를 id로 참조합니다.
 - **Case는 모델이 편집 명령보다 넓습니다.** 모델(타입과 불변식)은 default가 없는 Case와 default만 있는 Case도 표현할 수 있습니다. 코드에서 가져온 `switch`(리버스 엔지니어링 → [[01-requirements#^r-ide|R-IDE-03]])가 그런 모양일 수 있기 때문입니다. 사용자가 편집할 때는 편집 명령이 더 좁은 사전 조건을 지킵니다: 새 Case에는 항상 default가 있고, default는 삭제할 수 없고, default가 아닌 분기는 하나까지 줄일 수 있습니다 → [[02-interaction-rules#Case 블록]] → [[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]
 
-> [!info] 미완성: 무한 반복, 탈출(Exit / Break / Return), 병렬 처리
-> 모두 `P1`이고([[01-requirements#^r-blk|R-BLK-15]], [[01-requirements#^r-blk|R-BLK-12]], [[01-requirements#^r-blk|R-BLK-13]]) 모양과 조작은 정했습니다([[02-interaction-rules#블록의 모양]]). 넣을 때 이 판별 유니온(`kind`)에 멤버를 셋 더합니다.
-> - **무한 반복** `kind: 'endless'`: 본문(`body: Seq`)만 가집니다. `text`가 없습니다 → [[ux-decisions#EL1. 무한 반복 블록|EL1]]
-> - **탈출**: 처리 블록처럼 `text` 하나만 가집니다(`break`, `return x` …). 안에 블록이 없어 감쌀 수 없습니다. 어디에 놓였는지 불변식으로 검사하지 않습니다 → [[ux-decisions#XB1. 탈출 블록|XB1]]
-> - **병렬 처리**: Case처럼 분기 여럿(라벨이 없는 분기, 둘 이상)을 합성하고, 생략할 수 있는 `text`(위 띠의 텍스트)를 가집니다 → [[ux-decisions#PB1. 병렬 처리 블록|PB1]]
+- **무한 반복**(`Endless`)은 본문(`body: Seq`)만 가집니다. `text`가 없어서, 텍스트가 들어갈 자리(접기 영역의 기본 이름, 텍스트로 복사)에는 그림 문구 "(무한 반복)"을 씁니다 → [[ux-decisions#EL1. 무한 반복 블록|EL1]]
+- **탈출**(`Exit`)은 처리 블록처럼 `text` 하나만 가집니다(`break`, `return x` …). 안에 블록이 없어 감쌀 수 없습니다(`WrapKind`에 없음). 어디에 놓였는지 불변식으로 검사하지 않습니다 → [[ux-decisions#XB1. 탈출 블록|XB1]]
+- **병렬 처리**(`Parallel`)는 위 띠의 `text`(비울 수 있음)와 분기들(`branches`)을 가집니다. 분기는 If의 분기와 같은 `Branch`이고 `label`을 두지 않습니다. **모델이 편집 명령보다 넓습니다:** 모델은 분기가 하나 이상이면 되고(불변식 4), 편집 명령은 둘 이상을 지킵니다(새로 넣으면 빈 분기 둘, 둘뿐이면 분기 삭제를 `lastParallelBranches`로 거절) → [[ux-decisions#PB1. 병렬 처리 블록|PB1]], [[0052-endless-exit-parallel-blocks|ADR-0052]]
 
 ### 1.5 호출 블록
 
@@ -201,7 +206,7 @@ type Id = string;  // 예: "d1"(다이어그램), "b17"(블록), "r3"(분기), "
 
 ```ts
 type View = {
-  folded: Id[];        // 접힌 것: 접기 영역(FoldMark · SiteFold), 분기(If · Case), 반복 블록(본문). 펴 보인 곳의 접힘은 경로를 앞에 붙인다
+  folded: Id[];        // 접힌 것: 접기 영역(FoldMark · SiteFold), 분기(If · Case · 병렬 처리), 반복 블록 · 무한 반복(본문). 펴 보인 곳의 접힘은 경로를 앞에 붙인다
   opened: Path[];      // 인라인으로 펴 보인 호출 블록. 중첩해 편 것은 경로로 적는다
   bands: boolean;      // 이름 띠를 보이는가
   resultSymbol: '←' | '=';
@@ -226,7 +231,7 @@ type Path = Id[];      // [바깥 호출 블록 id, 그 안에서 편 호출 블
 | 1 | 다이어그램이 적어도 하나 있다 |
 | 2 | 모든 줄은 비지 않는다 |
 | 3 | 문서 안의 id(다이어그램, 블록, 분기, 접기 영역)는 모두 다르다 |
-| 4 | If는 분기가 둘이다. Case는 분기(default를 포함해)가 적어도 하나 있다 |
+| 4 | If는 분기가 둘이다. Case는 분기(default를 포함해)가 적어도 하나 있다. 병렬 처리는 분기가 적어도 하나 있다 |
 | 5 | 접기 영역의 `first`와 `last`는 그 줄의 블록이고, `first`가 `last`보다 앞이거나 같다. 한 줄의 접기 영역들은 서로 떨어져 있거나 하나가 다른 하나를 온전히 품는다(부분 중첩되지 않음). 범위가 똑같은 접기 영역은 둘이 없다 |
 | 6 | `local` 호출 블록이 가리키는 다이어그램은 있고, 그 헤더는 Method다 |
 | 7 | 헤더도 내용도 없는 다이어그램(헤더가 없고 본문이 빈 블록 하나)은 문서에 다이어그램이 그것 하나일 때만 있다 |
@@ -280,7 +285,7 @@ type Target =                                        // 명령이 적용되는 �
 ```
 
 - **바꿀 것이 없으면** `ok: true`에 받은 `content`를 그대로(같은 객체) 반환합니다(예: 빈 블록에 처리 블록 삽입, 같은 텍스트로 편집). `editor`는 같은 객체이면 undo 스택에 넣지 않습니다.
-- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) · `recursiveMethod`(자기를 호출하는 Method를 풀어 넣고 지움) · `noCallers`(호출하는 곳이 없는 Method를 풀어 넣고 지움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
+- `ReasonCode`는 `notFound` · `wrongKind` · `notContiguous` · `unsupported` · `atTop` · `atBottom` · `atLeftmost` · `atRightmost` · `defaultBranchFixed` · `lastArm` · `lastParallelBranches`(병렬 처리의 분기가 둘뿐) · `ifBranchesFixed` · `emptyLabel` · `defaultLabelFixed` · `cannotWrapWithProcess` · `noControlBlock` · `notConvertible` · `emptyClip` · `intoItself`(끌어 놓은 블록을 그 안쪽에 놓음) · `noHead`(헤더가 없는 다이어그램의 이름을 편집함) · `emptyHeadName` · `duplicateHeadName`(헤더의 이름이 비거나 다른 헤더와 겹침) · `methodHasCallers`(호출하는 호출 블록이 있는 Method를 Event로 바꿈) · `lastDiagram`(하나뿐인 다이어그램을 삭제함) · `foldExists`(같은 범위의 접기 영역이 이미 있음) · `foldsCross`(접기 영역이 다른 접기 영역의 끝에 걸침) · `notCallable`(같은 문서의 Method를 부르지 않는 호출 블록을 펴 보거나 풂) · `emptyCallName`(적은 호출 이름을 비움) · `recursiveMethod`(자기를 호출하는 Method를 풀어 넣고 지움) · `noCallers`(호출하는 곳이 없는 Method를 풀어 넣고 지움) 등입니다. `askConvertIfToCase`는 거절이 아니라 물음입니다: If에 분기를 삽입하면 이것으로 돌아오고, `editor`가 Case로 바꿀지 묻고 "예"이면 `convertIfToCase`를 실행합니다([[ux-decisions#MD3. Case 갈래의 최소 수|MD3]]).
 - `Note`: `offerConvertCaseToIf`는 Case에 default가 아닌 분기가 하나 남았을 때 If로 바꿀지 묻게 하고("예"이면 `convertCaseToIf`가 따로 undo 한 단계), `checkCondition`은 If의 분기를 맞바꾼 뒤 조건을 고치라고 알리게 합니다.
 - **undo 스택은 `core`가 아니라 `editor`에 있습니다**(`core`에는 history가 없음). 명령은 새 내용을 반환할 뿐이고, `editor`가 앞의 `Doc`(내용과 뷰 상태)을 스택에 저장합니다. 500단계까지 두고 그보다 오랜 것은 버립니다 → [[03-editor#2. 상태와 선택]]
 - 새 id가 드는 명령은 id 생성기를 인자(`ids`)로 받습니다(1.7).
@@ -302,12 +307,12 @@ type Target =                                        // 명령이 적용되는 �
 | | 이동 (`move`) | [[02-interaction-rules#이동\|이동]]. 위 · 아래로는 이웃 블록과 위치를 바꾸고, 줄 끝에서는 담은 제어 블록 바로 위 · 아래로 나간다. 이웃 제어 블록 안으로는 들어가지 않는다. 왼쪽 · 오른쪽은 담은 분기를 옮긴다 |
 | | 드래그 앤 드롭으로 이동 (`moveTo`) | 블록을 문서의 아무 블록 곁으로 옮긴다. id는 그대로이고 이웃 제어 블록 안으로도 들어간다. 빈 줄에는 빈 블록을 남기고, 놓은 곳이 빈 블록이면 그것을 바꾼다. 제자리에 놓으면 바뀌는 것이 없고, 자기 안쪽에 놓으면 `intoItself`로 거절한다 |
 | | 붙여넣기 | [[02-interaction-rules#붙여넣기]]. 새 id를 받는다. 클립이 Method의 이름(`names`)을 가지고 있으면 호출 블록은 이 문서에서 이름이 같은 Method를 호출하고, 없으면 그 이름의 `named`가 된다. 이름이 없으면 id가 같은 Method를 호출하고, 없으면 빈 이름의 `named`(불변식 6) |
-| | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복의 본문, If의 참 분기, Case의 첫 분기로 들어간다. 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 블록으로는 감싸지 않는다 |
+| | 감싸기 | [[02-interaction-rules#감싸기 · 풀기]]. 블록은 반복 · 무한 반복의 본문, If의 참 분기, Case · 병렬 처리의 첫 분기로 들어간다(병렬 처리의 둘째 분기는 빈 블록 하나). 새 블록의 텍스트는 비어 있고(`editor`가 바로 편집을 연다), 새 Case의 분기는 `1` · `2` · default다(새로 삽입한 Case도 같음). 처리 · 탈출 블록으로는 감싸지 않는다(`cannotWrapWithProcess`) |
 | | 풀기 (제어 블록) | 내용이 있는 분기를 순서대로 이어 붙인다 |
 | | 풀기 (호출 블록, `inlineCall`) | Method의 블록을 새 id로 깊은 복사해 그 위치에 인라인한다. 이 자리의 접기 영역(`via`가 `[]`)은 보통 접기 영역이 되고(Method의 접기 영역과 걸치거나 같은 범위면 버린다. 그 자리가 Method의 접기 영역을 이미 복사했으면(`ownRegions`, [[0047-copy-method-folds-at-first-open\|ADR-0047]]) Method의 접기 영역은 들어오지 않고 이 자리의 것만 들어온다), 더 안쪽 경로의 것은 그 안쪽 호출 블록의 사본에 한 단계 짧은 `via`로 옮긴다. 같은 문서의 Method를 호출하지 않으면(`named`) `notCallable`. `touched`는 들어온 블록들이고, 원래 id → 사본 id의 표(`renamed`)도 반환한다(`editor`가 뷰 상태를 옮기는 데 쓴다) |
 | | Method 풀어 넣고 지우기 (`inlineMethod`) | Method를 호출하는 `local` 호출 블록마다 문서 순서로 `inlineCall`을 하고(자리마다 `ownRegions`를 따로 묻는다) 그 Method 다이어그램을 지운다. undo 한 단계([[01-requirements#^r-edit\|R-EDIT-27]]). 다이어그램이 없으면 `notFound`, Method가 아니면 `wrongKind`, 그 Method 안에 자기를 호출하는 호출 블록이 있으면 `recursiveMethod`(서로 호출하는 Method는 거절하지 않음), 호출하는 호출 블록이 없으면 `noCallers`. `touched`는 자리마다 들어온 블록들(문서 순서)이고, 자리마다 바뀐 호출 블록 · 들어온 블록 · `renamed`의 목록(`sites`)도 반환한다(`editor`가 자리마다 뷰 상태를 옮기고 선택을 고르는 데 쓴다) |
 | | 새 Method로 빼기 (`extractMethod`) | 한 줄에 이어진 블록(또는 접기 영역 하나)이 새 Method의 본문이 되고, 그 위치에 그 Method를 호출하는 `local` 호출 블록 하나가 남는다(인자 · 결과는 빈 채, 이름에 괄호가 있으면 인자를 채움). 새 Method는 뺀 Method 바로 뒤, Event나 헤더 없는 다이어그램에서 뺐으면 Method의 맨 뒤에 놓인다([[ux-decisions#XM1. 새 Method의 자리\|XM1]]). 이름은 `Method n`, 접기 영역 하나를 뺐으면 그 이름(새 이름이 될 수 있을 때)이고 그 접기 영역은 없어진다. 범위 안의 접기 영역은 따라가고, 범위를 품은 것은 호출 블록을 품으며(규칙 F), 범위의 경계에 걸친 것은 없애고 그 수(`removedFolds`)를 반환한다. 안의 호출 블록은 호출하던 대상을 그대로 호출한다(재귀 포함). `touched`는 새 다이어그램, 호출 블록. `diagramEnd`는 `wrongKind` |
-| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 오른쪽(배열의 맨 뒤)에 있다("default 오른쪽에 분기 삽입"은 default 바로 왼쪽에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
+| 분기 | 분기 삽입 · 삭제 · 맞바꾸기 | [[02-interaction-rules#Case 블록]], [[02-interaction-rules#이동]], [[02-interaction-rules#분기 라벨 선택]]. 병렬 처리의 새 분기는 라벨 없이 빈 블록 하나를 담고, 분기가 둘뿐이면 삭제하지 않는다(`lastParallelBranches`). default가 아닌 분기는 하나까지 줄인다. default는 삭제하지 않고 항상 맨 오른쪽(배열의 맨 뒤)에 있다("default 오른쪽에 분기 삽입"은 default 바로 왼쪽에 삽입). 새 분기는 빈 블록 하나를 담고, 그 Case에서 아직 쓰지 않은 가장 작은 양의 정수를 라벨로 받는다 |
 | | default 분기 달기 (`addDefaultBranch`) | default가 없는 Case에 빈 default 분기를 단다([[ux-decisions#CD1. default가 없는 Case\|CD1]]). 렌더링해 둔 빈 default 칸에 텍스트를 적거나 삽입하면 `editor`가 그 편집과 함께 undo 한 단계로 실행한다 |
 | | If 분기 맞바꾸기 | 분기의 id는 블록을 따라가고, 라벨은 제자리(참 · 거짓 슬롯)에 남는다. 조건은 바꾸지 않고 `checkCondition`으로 알린다 |
 | | If를 Case로 · Case를 If로 바꾸기 | 분기가 하나만 남은 Case, 분기를 삽입하려 한 If(분기 라벨을 선택하고 삽입)에서 바꿀지 묻는다. If → Case는 참 분기가 첫 분기(라벨이 없으면 `1`), 새 빈 분기가 둘째, 거짓 분기가 default(라벨은 버림)가 된다. Case → If는 그 분기가 참(라벨도), default가 거짓이 된다. 블록과 분기의 id는 그대로다. 텍스트를 옮기는 법은 미결정 |

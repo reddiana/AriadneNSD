@@ -307,11 +307,11 @@ CI의 번들 사이즈 체크(bundle size budget)는 첫 방문에 내려받는 
 
 | 무엇 | 원본 · 규칙 |
 | --- | --- |
-| 알고리즘 22개 | `editor`의 `gallery`(`src/packages/editor/src/gallery/`): 예제([[01-requirements#^r-edit\|R-EDIT-25]]) 가운데 알고리즘인 6개(예제 항목을 그대로 씀)와 갤러리만의 16개. 칸은 고전 · 어려운 것 · 재미 셋. 예제 모달에는 나오지 않는다. 글은 예제와 같다: 코드는 코드 그대로, 주석과 접기 영역의 이름은 화면 언어 |
+| 알고리즘 23개 | `editor`의 `gallery`(`src/packages/editor/src/gallery/`): 예제([[01-requirements#^r-edit\|R-EDIT-25]]) 가운데 알고리즘인 6개(예제 항목을 그대로 씀)와 갤러리만의 17개. 칸은 고전 · 어려운 것 · 재미 셋. 예제 모달에는 나오지 않는다. 글은 예제와 같다: 코드는 코드 그대로, 주석과 접기 영역의 이름은 화면 언어 |
 | 그림과 링크 | `pnpm --filter @ariadne-nsd/web gallery-images`(`src/apps/web/scripts/gallery-images.script.ts`)가 항목 · 언어마다 앱이 저장하는 것과 같은 `.ns.svg`(헤더 모양 "제목")와 그것을 여는 공유 링크(`d`, 앱의 공유 링크 모듈)를 `src/apps/gallery/generated/`에 쓰고, 목록 `gallery.json`(이름 · 설명 · 칸 · 파일 · 링크 · 그림 크기)을 함께 쓴다. 갤러리나 그리기가 바뀌면 다시 실행해 커밋한다 |
 | 페이지 | `src/apps/gallery/build.mjs`가 `gallery.json`과 그림을 읽어 `dist/index.html`(`/gallery/`)과 `dist/ko/index.html`(`/gallery/ko/`)을 만들고, 그림을 `dist/files/`에 복사한다. 스크립트(`pages/gallery.js`)와 스타일(`pages/style.css`)은 HTML에 넣는다. 사용법과 같은 방식이다(→ [[dr-0020-user-guide\|DR-0020]]). 공유 카드용 Open Graph 그림은 `pages/og-image.png`(`scripts/make-og-image.mjs`가 만듦) |
 | 배포 | 사이트 워크플로(`.github/workflows/pages.yml`)와 로컬 사이트 빌드(`site/build.sh`)가 `dist/`를 사이트의 `/gallery/`에 넣는다 |
-| 그림의 검증 | `src/apps/gallery/verify/`(배포하지 않는 개발 도구): 갤러리만의 16개의 블록 텍스트를 Python으로 한 줄씩 옮겨 실행하고 참조 구현과 견준다. 사용법은 그 폴더의 `README.md` |
+| 그림의 검증 | `src/apps/gallery/verify/`(배포하지 않는 개발 도구): 갤러리만의 17개의 블록 텍스트를 Python으로 한 줄씩 옮겨 실행하고 참조 구현과 견준다. 사용법은 그 폴더의 `README.md` |
 
 - **사용법과의 연결:** 사용법의 예제 항목이 알고리즘 갤러리로 링크하고, 갤러리의 머리에는 편집기 · 사용법 · GitHub · 다른 언어로 가는 링크가 있다.
 

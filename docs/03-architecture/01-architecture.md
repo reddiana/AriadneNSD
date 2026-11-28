@@ -359,6 +359,9 @@ classDiagram
     class If
     class Case
     class Loop["While · DoWhile · For"]
+    class Endless["Endless (무한 반복)"]
+    class Exit["Exit (탈출)"]
+    class Parallel["Parallel (병렬 처리)"]
     class Call["Call (호출 블록)"]
     class Branch["Branch / Arm (분기)"]
     Doc *-- "1" Content
@@ -374,11 +377,16 @@ classDiagram
     Block <|-- If
     Block <|-- Case
     Block <|-- Loop
+    Block <|-- Endless
+    Block <|-- Exit
+    Block <|-- Parallel
     Block <|-- Call
     If *-- "2" Branch : yes, no
     Case *-- "0..*" Branch : arms, otherwise
     Branch *-- "1" Seq : body
     Loop *-- "1" Seq : body
+    Endless *-- "1" Seq : body
+    Parallel *-- "1..*" Branch : branches
     Call --> "0..1" Diagram : target (id)
     View ..> Content : id로 참조
 ```
@@ -388,7 +396,7 @@ UML 클래스 다이어그램입니다. 채운 마름모(`*--`)는 **합성**(�
 - **문서**(`Doc`)는 다이어그램의 목록과 문서 설정을 갖는다. 다이어그램은 적어도 하나 있다.
 - **다이어그램**(`Diagram`)은 헤더(`Head`)와 본문(`Seq`)을 갖는다. 헤더가 Event이면 이벤트 핸들러, Method이면 호출할 수 있는 서브루틴이다. → [[0021-event-and-method|ADR-0021]]
 - **줄**(`Seq`)은 블록의 순서 있는 목록이다. 비지 않는다(빈 분기는 빈 처리 블록 하나로 채운다).
-- **제어 블록**은 줄을 하나 이상 합성한다: While · Do-While · For는 본문 하나, If는 분기 둘, Case는 분기 여럿과 default.
+- **제어 블록**은 줄을 하나 이상 합성한다: While · Do-While · For · 무한 반복은 본문 하나, If는 분기 둘, Case는 분기 여럿과 default, 병렬 처리는 라벨 없는 분기 여럿. 탈출은 처리 블록처럼 텍스트 하나다 → [[0052-endless-exit-parallel-blocks|ADR-0052]]
 - **호출 블록**(`Call`)은 호출 대상 Method를 **id로 참조**한다. 이름 문자열을 복사해 갖지 않는다. 한 문서 안에서 헤더의 이름은 유일하다([[02-interaction-rules#Event 헤더]]). 그래서 헤더의 이름을 바꾸면 호출 블록의 표시가 모두 따라 바뀐다. 문서에 없는 것을 호출하는 호출 블록은 id 대신 이름을 적고, 참조하던 Method가 없어지면 마지막으로 보이던 이름을 적은 호출 블록이 된다. → [[0022-call-name-follows-head|ADR-0022]], [[0049-call-without-method-is-named|ADR-0049]]
 - **접기 영역**(`FoldMark`)은 한 줄 안의 연속된 블록 범위에 이름을 붙인 마커다. 중첩될 수 있다. 블록을 감싸는 컨테이너 노드가 아니라 줄에 붙은 주석(annotation)이라, 블록 트리는 접기 영역과 무관하게 같다. → [[0017-fold-name-in-model|ADR-0017]]
 - 블록과 다이어그램, 접기 영역은 모두 **안정 id**(문서가 바뀌어도 유지되는 식별자)를 갖는다. 선택, 접힘, 호출 대상은 모두 id로 참조한다.

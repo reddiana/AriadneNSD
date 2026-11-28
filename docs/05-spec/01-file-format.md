@@ -124,7 +124,7 @@ UML 클래스 다이어그램으로 나타낸 XML 요소의 포함 관계입니�
 | --- | --- | --- |
 | `settings` | 문서 설정: 블록 텍스트의 언어([[01-requirements#^r-lay\|R-LAY-06]]), 테마, 헤더 모양([[01-requirements#^r-lay\|R-LAY-10]]), 그림 문구의 언어([[01-requirements#^r-nfr\|R-NFR-04]], [[0041-drawing-locale-in-document\|ADR-0041]]), 텍스트를 외곽선으로 저장([[01-requirements#^r-fmt\|R-FMT-10]]) | 대상 |
 | `diagrams` | 다이어그램의 목록(순서가 있음). 헤더(없음 / Event / Method, [[0021-event-and-method\|ADR-0021]])와 본문 | 대상 |
-| 블록 | 처리 · If · Case · While · Do-While · For · 호출 등(`kind`로 판별하는 유니온). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
+| 블록 | 처리 · If · Case · While · Do-While · For · 무한 반복 · 탈출 · 병렬 처리 · 호출(`kind`로 판별하는 유니온 → [[0052-endless-exit-parallel-blocks\|ADR-0052]]). 제어 블록은 분기나 본문으로 블록의 줄(`Seq`)을 합성한다. 줄은 비지 않는다 | 대상 |
 | 호출 블록 | 호출 대상 Method의 **id**(참조), 인자, 결과. 이름을 적는 호출 블록은 id 대신 적은 이름을 가진다(필드는 [[01-model#1.5 호출 블록\|모델 1.5]] → [[01-requirements#^r-blk\|R-BLK-08]]). 이름 문자열을 복사해 갖지 않는다. 참조하던 Method가 없어지면 마지막에 보이던 이름을 적은 호출 블록이 된다 → [[0022-call-name-follows-head\|ADR-0022]], [[0049-call-without-method-is-named\|ADR-0049]] | 대상 |
 | 접기 영역 | 한 줄 안의 연속된 블록 범위(처음 · 끝 블록의 id)와 이름(없을 수 있음) → [[0017-fold-name-in-model\|ADR-0017]]. 펴 보인 곳의 접기 영역은 그 호출 블록에 속한다([[01-requirements#^r-edit\|R-EDIT-16]]) | 대상 |
 | `view` | 뷰 상태: 접힘, 펴 보기, 이름 띠 보기, 결과 기호 → [[0018-save-as-shown\|ADR-0018]], [[02-interaction-rules#6. 실행 취소]] | 대상 아님 |
@@ -141,7 +141,7 @@ UML 클래스 다이어그램으로 나타낸 XML 요소의 포함 관계입니�
 - 객체 키의 순서는 스키마에 정한 순서로 고정한다.
 - 기본값과 같은 속성을 생략할지는 스키마에서 속성마다 정하고, 항상 그대로 따른다.
 - `view`의 목록(`folded`, `opened`)은 id를 문서 순서(다이어그램 순서, 그 안의 깊이 우선 순서)로 늘어놓는다. 접고 편 차례에 따라 달라지지 않는다.
-	- `folded`에는 지금 문서에 있는, 접을 수 있는 것(접기 영역, 펴 보인 곳의 접기 영역, If · Case의 분기, 반복 블록)의 id만 기록한다. 없어진 id는 기록하지 않는다. 한 줄 안에서는 블록들(과 그 안)을 먼저, 그 줄의 접기 영역을 뒤에 기록한다.
+	- `folded`에는 지금 문서에 있는, 접을 수 있는 것(접기 영역, 펴 보인 곳의 접기 영역, If · Case · 병렬 처리의 분기, 반복 블록 · 무한 반복)의 id만 기록한다. 없어진 id는 기록하지 않는다. 한 줄 안에서는 블록들(과 그 안)을 먼저, 그 줄의 접기 영역을 뒤에 기록한다.
 	- `folded`의 뒤에는 펴 보인 호출 블록 자리의 접힘을 호출 경로의 문서 순서로 기록한다([[0046-site-folding-in-view|ADR-0046]]). `"b4/"`는 경로 `b4`가 자기 접힘과 자기 접기 영역을 갖는다는 표시이고(처음 펼 때 Method의 접기 영역을 그 호출 블록의 `siteFolds`로 복사했다 → [[0047-copy-method-folds-at-first-open|ADR-0047]]), 바로 뒤의 `"b4/r3"`은 그 자리에서 호출하는 Method의 분기 · 반복 블록 `r3`이 접혀 있다는 뜻이다. 겹쳐 폈으면 `"b4/b9/"`, `"b4/b9/r3"`이다. 그 자리의 접기 영역의 접힘은 그 id로 앞쪽에 기록한다.
 		- 경로가 끝나는 Method에 접기 영역이 있으면 `"b4/"`를 언제나 기록한다. 없으면 다시 열었을 때 같은 모습이 되는 자리는 기록하지 않는다: 펴 보인 자리는 접힘이 Method와 같으면, 닫힌 자리는 그 자리와 Method 모두 접힌 것이 없으면 기록하지 않는다. 그래서 펴 보인 Method에 접기 영역이 없고 그 안에 접힌 것이 없는 문서에는 이 항목이 없다.
 		- 펴 보인 경로에 `"b4/"`가 없는 파일(이 규칙 전에 저장한 파일)은 열 때 그 자리를 처음 펴는 것으로 보고 Method의 접힘과 접기 영역을 가져온다. 연 모습은 같고, 다시 저장하면 사본과 `"b4/"`가 더해진다.
@@ -178,13 +178,17 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 | 분기 (`yes` · `no` · `otherwise`) | `id` · `label` · `body` · `folds` | `label`은 편집하지 않았으면, `folds`는 비면 |
 | Case의 분기 (`arms`의 원소) | `id` · `label` · `body` · `folds` | `folds`는 비면 |
 | While · Do-While · For | `id` · `kind`(`"while"` \| `"doWhile"` \| `"for"`) · `text` · `body` · `folds` | `folds`는 비면 |
+| 무한 반복 | `id` · `kind: "endless"` · `body` · `folds` | `folds`는 비면 |
+| 탈출 | `id` · `kind: "exit"` · `text` | 없음 |
+| 병렬 처리 | `id` · `kind: "parallel"` · `text` · `branches` | 없음 (위 띠가 비면 `text: ""`) |
+| 병렬 처리의 분기 (`branches`의 원소) | `id` · `body` · `folds` | `folds`는 비면. `label`은 없다(있으면 깨진 파일) |
 | 호출 | `id` · `kind: "call"` · `target` · `args` · `result` · `siteFolds` | `siteFolds`는 비면 |
 | `target` | `kind` 다음에 그 종류의 필드 ([[01-model#1.5 호출 블록]]): `local`은 `diagram`, `named`는 `name`. 예전 파일의 `lost`(`lastName`, 선택 `file`)와 `external`(`file` · `diagram` · `lastName`)은 `lastName`을 `name`으로 한 `named`로 읽고, 저장할 때는 `named`로 쓴다 → [[0049-call-without-method-is-named\|ADR-0049]] | 없음 |
 | 접기 영역 (`folds`의 원소) | `id` · `first` · `last` · `name` | `name`은 없으면 |
 | 펴 보인 곳의 접기 영역 | `id` · `via` · `first` · `last` · `name` | `name`은 없으면 |
 | `view` | `folded` · `opened` · `bands` · `resultSymbol`(`"←"` \| `"="`) | 없음 (빈 목록도 적음) |
 
-- **줄(`Seq`)은 따로 객체를 두지 않는다.** 줄은 언제나 한 주인(다이어그램 · 분기 · 반복 블록)의 하나뿐인 본문이라, 블록의 배열을 주인의 `body`에, 그 줄의 접기 영역을 주인의 `folds`에 둔다. 그래서 파일이 한 겹 얕고, 접기 영역이 없는 문서에는 `folds`가 보이지 않는다.
+- **줄(`Seq`)은 따로 객체를 두지 않는다.** 줄은 언제나 한 주인(다이어그램 · 분기 · 반복 블록 · 무한 반복)의 하나뿐인 본문이라, 블록의 배열을 주인의 `body`에, 그 줄의 접기 영역을 주인의 `folds`에 둔다. 그래서 파일이 한 겹 얕고, 접기 영역이 없는 문서에는 `folds`가 보이지 않는다.
 - **id**는 종류마다의 접두사와 1 이상의 정수(앞에 0 없음)다: 다이어그램 `d`, 블록 `b`, 분기 `r`, 접기 영역 `f`(펴 보인 곳의 것도) → [[01-model#1.7 id]]. 이 형식이 아니면 깨진 파일이다. 블록을 가리키는 참조(접기 영역의 `first` · `last` 등)도 형식만 검사한다.
 - **정의되지 않은 키**가 있는 객체는 깨진 파일(`damaged`)로 거부한다. 정의되지 않은 키를 버리고 열면 "열고 바로 저장하면 그대로"([[03-quality-attribute-scenarios#QA-04 저장 왕복 무손실|QA-04]])를 지킬 수 없기 때문이다. 생략하는 목록을 빈 목록으로 적은 것(`"folds": []`)은 받는다(저장할 때는 생략한다).
 - **`textKind`**: 블록 텍스트의 언어. 값은 `"plain"`(일반 텍스트) · `"c"` · `"cpp"` · `"java"` · `"javascript"`(JavaScript · TypeScript) · `"python"` · `"bash"`다. 새 문서는 `"plain"`이다. 언어는 구문 강조의 색만 정하고 글꼴과 레이아웃은 바꾸지 않는다 → [[0042-text-kind-keeps-block-font|ADR-0042]]. 언어를 더해도 형식의 버전은 그대로다. 지원하지 않는 값(뒤의 버전이 더한 언어)을 만나면 모델에는 `"plain"`을 두고, 받은 값은 모델 밖에 따로 보존한다(`editor`의 세션이 가진다 → [[03-editor#2. 상태와 선택]]). 저장할 때 모델의 값이 아직 `"plain"`이면 보존한 값을 그대로 기록한다.
@@ -195,6 +199,7 @@ U+FFFE와 U+FFFF는 XML에 쓸 수 없는 문자다. 이 둘은 JSON의 문자�
 	- 문자열이 아니면 깨진 파일이다.
 - **`textOutlines`**: 텍스트를 외곽선으로 저장(4.3). `true`일 때만 기록한다. `true` · `false`가 아니면 깨진 파일이다.
 - 헤더 · 호출 블록 · 여러 다이어그램 · 접기 영역도 v1 형식에 들어 있다. 이것들의 뜻이 바뀌면 버전을 올리고 마이그레이션을 둔다(5장).
+- 무한 반복 · 탈출 · 병렬 처리는 버전을 올리지 않고 v1에 더했다. 예전 파일은 그대로 열리고, 새 블록이 든 파일은 그 전의 앱에서 모르는 `kind`라 깨진 파일이다 → [[0052-endless-exit-parallel-blocks|ADR-0052]]
 
 작은 예입니다. 처리 블록 하나와 If 하나가 든, 헤더 없는 다이어그램입니다.
 
