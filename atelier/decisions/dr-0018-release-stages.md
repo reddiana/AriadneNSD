@@ -11,6 +11,7 @@ superseded-by:
 # DR-0018: MVP 다음은 웹 베타와 웹 1.0이고, 파일 형식은 웹 1.0부터 약속한다
 
 > [!NOTE] 이후 변경
+> - 2026-11-28: 판을 내는 때: `0.y.z`의 `z`는 Claude가 마무리 push 때 묻지 않고 올리고, `y`는 Claude가 제안해 메인테이너가 정함(메인테이너: "z는 기준을 만들어 알아서 올려주세요. y는 적절한 시점에 제안해주세요.") → `src/README.md` "판을 낼 때"
 > - 2026-11-21: 메인테이너가 웹 베타의 문턱에서 "Firefox · Safari · 휴대폰에서 써 본다"를 뺐다("2: skip"). 다른 브라우저의 확인은 웹 1.0의 인수 테스트([[01-requirements#^at|AT-10]] · [[01-requirements#^at|AT-14]])에 남는다 → [[2026-11-21-03-call-without-method]], [[01-requirements#5.1 MVP 다음의 단계]]
 
 ## 배경

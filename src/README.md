@@ -79,6 +79,8 @@ pnpm --filter @ariadne-nsd/web exec playwright install chromium   # E2E를 실�
 `main`에 push할 때마다 웹 앱이 사이트에 올라가지만, 버전은 판을 낼 때만 올립니다. 버전은 SemVer이고 단계(MVP → 웹 베타 → 웹 1.0)는 [DR-0018](../atelier/decisions/dr-0018-release-stages.md)이 정합니다. 파일 형식의 버전(`v1`)과는 따로 갑니다.
 
 - 1.0 전에는 기능을 더한 판이 `0.y.0`, 고치기만 한 판이 `0.y.z`입니다. 웹 1.0이 `1.0.0`입니다.
+- `z`는 Claude가 묻지 않고 올립니다: 마무리의 push에 지난 태그 뒤 사용자에게 보이는 고침(앱 · 갤러리 · 스킬의 동작 · 화면 · 문구 · 성능)이 들어 있으면 그 push와 함께 판을 냅니다. 테스트 · 문서 · 빌드 설정만 바뀌었으면 내지 않습니다. 한 세션에 한 번입니다.
+- `y`는 메인테이너가 정합니다. 사용자에게 보이는 새 기능(새 명령 · 블록 · 조작 · 화면)이 main에 들어오거나 단계의 문턱([DR-0018](../atelier/decisions/dr-0018-release-stages.md))에 닿으면 Claude가 제안합니다.
 - 패키지 넷(`apps/web`, `packages/core` · `editor` · `fonts`)의 `package.json`과 `packages/editor/src/version.ts`는 늘 같은 버전입니다. 어긋나면 `version.test.ts`가 실패합니다. 이 버전이 도움말 › AriadneNSD에 대하여에 보입니다.
 - Claude skill의 `skills/ariadne-nsd/package.json`과 `skills/ariadne-nsd/plugin/.claude-plugin/plugin.json`도 같은 버전으로 올립니다. 둘이 어긋나면 T-1474가 실패하고, 태그와 `plugin.json`이 다르면 Release 워크플로가 실패합니다. Claude Code의 사용자는 `plugin.json`의 버전이 바뀔 때 업데이트를 받습니다.
 
